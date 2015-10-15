@@ -194,7 +194,7 @@ public class SchoolGroupManager {
     public static PersistentSchoolGroup findBySchoolAndRole(PersistentSchool school, RoleType role) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentSchool.findBySchoolAndRole");
+            javax.persistence.Query q = em.createNamedQuery("PersistentSchoolGroup.findBySchoolIDAndRole");
             q.setParameter("schoolID", school.getSchoolID());
             q.setParameter("rolename", role.name());
             PersistentSchoolGroup sg = (PersistentSchoolGroup) q.getSingleResult();

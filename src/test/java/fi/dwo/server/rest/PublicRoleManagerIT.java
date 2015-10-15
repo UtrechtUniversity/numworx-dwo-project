@@ -21,9 +21,9 @@ import static org.junit.Assert.*;
  * 
  * @author Gert van der Plas
  */
-public class PublicRoleManagerPIT {
+public class PublicRoleManagerIT {
 
-    public PublicRoleManagerPIT() {
+    public PublicRoleManagerIT() {
         DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
     }
 

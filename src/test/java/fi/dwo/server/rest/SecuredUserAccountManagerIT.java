@@ -11,11 +11,11 @@ import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,6 +26,7 @@ import org.junit.Test;
  * @author G.A.J. van der Plas
  */
 public class SecuredUserAccountManagerIT {
+    private static final Logger LOG = Logger.getLogger(SecuredUserAccountManagerIT.class.getName());
 
     static DatabaseManager instance = null;
 
@@ -56,7 +57,7 @@ public class SecuredUserAccountManagerIT {
 
     /**
      * Test of getCurrentUser method, of class SecuredUserAccountManager. Should
-     * retrieve the current user if it exists.
+     * retrieve the current user if it exists and not if the user does not exists.
      */
     @Test
     public void testGetCurrentUser() {
@@ -80,7 +81,8 @@ public class SecuredUserAccountManagerIT {
     }
 
     /**
-     * Test of updateCurrentUser method, of class SecuredUserAccountManager.
+     * Test of updateCurrentUser method, of class SecuredUserAccountManager. Should
+     * only update given name, insertion and family name, email and password.
      */
     @Test
     public void testUpdateCurrentUser() {
@@ -134,7 +136,8 @@ public class SecuredUserAccountManagerIT {
     }
 
     /**
-     * Test of removeCurrentUser method, of class SecuredUserAccountManager.
+     * Test of removeCurrentUser method, of class SecuredUserAccountManager. Tests
+     * if user in tblUser was removed.
      */
     @Test
     public void testRemoveCurrentUser() {
