@@ -47,7 +47,14 @@ public class TestDatabaseManagerIT {
 //        // TODO review the generated test code and remove the default call to fail.
 ////        fail("The test case is a prototype.");
 //    }
-
+//
+//    @Test
+//    public void testProfiler(){
+//     for(int i=0;i<1000;i++){
+//     testIntializeDatabase();
+//     }
+//
+//    }
     /**
      * Test of IntializeTestDatabase method, of class DatabaseManager.
      */
@@ -59,5 +66,4 @@ public class TestDatabaseManagerIT {
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
-    
 }
