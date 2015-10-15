@@ -5,15 +5,10 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
-import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestNewSchoolLogin;
-import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
 import fi.dwo.commons.rest.entities.RestSchoolsRolesAndClasses;
-import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.logging.Logger;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -26,12 +21,12 @@ import static org.junit.Assert.*;
  *
  * @author Gert van der Plas
  */
-public class SecuredUserAccountLoginsManagerTest {
-    private static final Logger LOG = Logger.getLogger(SecuredUserAccountLoginsManagerTest.class.getName());
+public class SecuredUserAccountLoginsManagerIT {
+    private static final Logger LOG = Logger.getLogger(SecuredUserAccountLoginsManagerIT.class.getName());
     
     static DatabaseManager instance = null;
     
-    public SecuredUserAccountLoginsManagerTest() {
+    public SecuredUserAccountLoginsManagerIT() {
     }
     
 
@@ -66,7 +61,7 @@ public class SecuredUserAccountLoginsManagerTest {
         System.out.println("getSchoolLogins");
         SecuredUserAccountLoginsManager instance = new SecuredUserAccountLoginsManager();
 
-        SecurityContext sc = new TestSecurityContext("user01", RoleType.STUDENT);
+        SecurityContext sc = new TestSecurityContext("user03", RoleType.STUDENT);
         RestSchoolsRolesAndClasses result = instance.getSchoolLogins(sc);
         if(result.getSchoolsRolesAndClassesList().size()!=5){
         fail("The number of schoollogins is wrong.");
