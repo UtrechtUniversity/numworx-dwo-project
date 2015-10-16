@@ -137,7 +137,7 @@ public class FromToManager {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentFromTo.findBySchoolFrom");
-            q.setParameter("schoolID", school.getSchoolID());
+            q.setParameter("schoolFrom", school.getSchoolID());
             List<PersistentFromTo> list = q.getResultList();
             LOG.log(Level.FINE, "FromTo-manager retrieved {0} PersistentFromTo with schoolid {1}", new Object[]{list.size(), school.getSchoolID()});
             return list;

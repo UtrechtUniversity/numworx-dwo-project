@@ -167,6 +167,22 @@ public class SchoolGroupManager {
         }
     }
 
+     public static PersistentSchoolGroup findEntity(PersistentSchool school, RoleType roleType) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentSchoolGroup.findBySchoolIDAndRole");
+            q.setParameter("schoolID", school.getSchoolID());
+            q.setParameter("rolename", roleType.name());
+            PersistentSchoolGroup result = (PersistentSchoolGroup) q.getSingleResult();
+            LOG.log(Level.FINE, "SchoolGroup-manager retrieved PersistentSchoolGroup of schoolid {0} with schoolgroupid {1} for RoleType {2}", new Object[]{school.getSchoolID(), result.getSchoolGroupID(), roleType.name()});
+            return result;
+        }
+        finally {
+            em.close();
+        }
+    }
+   
+    
     public static PersistentSchoolGroup findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {

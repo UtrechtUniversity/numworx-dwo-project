@@ -64,7 +64,7 @@ public class SecuredDwoAdminSchoolManager {
     private static final Logger LOG = Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName());
 
     /**
-     * Registers a new school.
+     * Registers a new school and only a school.
      *
      * @param sc
      * @param school
@@ -88,8 +88,8 @@ public class SecuredDwoAdminSchoolManager {
             PersistentSchool s = null;
             try {
                 SchoolManager.create(school);
-                LOG.log(Level.INFO, "Username {0}: created school with schoollogin {1} and id {2}.", new Object[]{sc.getUserPrincipal().getName(), s.getSchoolLogin(), s.getSchoolID()});
                 s = SchoolManager.findBySchoolLogin(school.getSchoolLogin());
+                LOG.log(Level.INFO, "Username {0}: created school with schoollogin {1} and id {2}.", new Object[]{sc.getUserPrincipal().getName(), s.getSchoolLogin(), s.getSchoolID()});
                 return s;
             }
             catch (Exception e) {
@@ -182,7 +182,7 @@ public class SecuredDwoAdminSchoolManager {
 
     /**
      * Updates the User data of the current user and returns a copy of the
-     * updated data.
+     * updated data. Ignores any schoolID values.
      *
      * @param sc
      * @param school
@@ -202,8 +202,15 @@ public class SecuredDwoAdminSchoolManager {
         }
         if (hr != null) {
             try {
+                PersistentSchool editSchool = SchoolManager.findBySchoolLogin(school.getSchoolLogin());
                 //User to update is logged in user.
-                SchoolManager.edit(school);
+                editSchool.setExpire(school.getExpire());
+                editSchool.setExport(school.getExport());
+                editSchool.setImage(school.getImage());
+                editSchool.setSchoolLogin(school.getSchoolLogin());
+                editSchool.setSchoolName(school.getSchoolName());
+                editSchool.setSchoolRights(school.getSchoolRights());
+                SchoolManager.edit(editSchool);
                 return SchoolManager.findBySchoolLogin(school.getSchoolLogin());
             }
             catch (Exception e) {
@@ -269,14 +276,14 @@ public class SecuredDwoAdminSchoolManager {
                         }
 
                         //Loop TeacherOf in hasRole
-                        List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
+                        List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(phr.getPersistentHasRolePK());
                         for (PersistentTeacherOfClass to : toList) {
                             //Remove TeacherOf
                             TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());
                         }
 
                         //Loop StudentScoContext in hasRole
-                        List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
+                        List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(phr.getPersistentHasRolePK());
                         for (PersistentStudentScoContext ssc : sscList) {
                             //Remove StudentScoData
                             StudentScoDataManager.destroy(ssc.getStudentSco());
@@ -284,8 +291,8 @@ public class SecuredDwoAdminSchoolManager {
                             StudentScoContextManager.destroy(ssc.getStudentSco());
                         }
                         //Remove hasRole
-                        HasRoleManager.destroy(hr.getPersistentHasRolePK());
-                        PersistentUser u = UserManager.findEntity(hr.getUser().getUserID());
+                        HasRoleManager.destroy(phr.getPersistentHasRolePK());
+                        PersistentUser u = UserManager.findEntity(phr.getUser().getUserID());
 
                         if (u != null && u.isSingleSchoolAccount()) {
                             //Loop samlusers in user
@@ -298,6 +305,16 @@ public class SecuredDwoAdminSchoolManager {
                             UserManager.destroy(u.getUserID());
                         }
                     }
+                    //Clear tblUser schoolgroup values
+                    PersistentSchoolGroup nulSg = (PersistentSchoolGroup) SchoolGroupManager.findEntity(SchoolManager.findBySchoolLogin("null"), RoleType.STUDENT);
+                    List<PersistentUser> userList = UserManager.findEntities(sg);
+                    if (userList != null) {
+                        for (PersistentUser u : userList) {
+                            u.setSchoolGroupID(nulSg.getSchoolGroupID());
+                            UserManager.edit(u);
+                        }
+                    }
+
                     //Remove SchoolGroup
                     SchoolGroupManager.destroy(sg.getSchoolGroupID());
                 }
@@ -312,6 +329,10 @@ public class SecuredDwoAdminSchoolManager {
                         ClassCourseManager.destroy(cc.getClassCourseID());
                     }
 
+                    //Remove FromTo
+                    SchoolClassManager.destroy(cl.getClassID());
+                }
+
                     //Loop Courses in School
                     List<PersistentCourse> cList = CourseManager.findEntities(school);
                     for (PersistentCourse c : cList) {
@@ -321,14 +342,12 @@ public class SecuredDwoAdminSchoolManager {
                             //Remove ScoData
                             ScoDataManager.destroy(psc.getScoID());
                             //Remove ScoContext
-                            ScoDataManager.destroy(psc.getScoID());
+                            ScoContextManager.destroy(psc.getScoID());
                         }
                         ///Remove Course
                         CourseManager.destroy(c.getCourseID());
                     }
-                    //Remove FromTo
-                    SchoolClassManager.destroy(cl.getClassID());
-                }
+                    SchoolManager.destroy(school.getSchoolID());
             }
             catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
@@ -341,5 +360,5 @@ public class SecuredDwoAdminSchoolManager {
 
         return true;
     }
-  
+
 }

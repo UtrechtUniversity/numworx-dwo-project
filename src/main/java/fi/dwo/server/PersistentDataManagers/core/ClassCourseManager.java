@@ -143,7 +143,7 @@ public class ClassCourseManager {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentClassCourse.findByClassID");
-            q.setParameter("userID", c.getClassID());
+            q.setParameter("classID", c.getClassID());
             List<PersistentClassCourse> list = q.getResultList();
             LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with userid {1}", new Object[]{list.size(), c.getClassID()});
             return list;

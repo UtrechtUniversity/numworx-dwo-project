@@ -5,6 +5,7 @@
  */
 package fi.dwo.server.PersistentDataManagers.core;
 
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -136,6 +137,27 @@ public class UserManager {
         }
     }
 
+
+
+    public static List<PersistentUser> findEntities(PersistentSchoolGroup sg) {
+        EntityManager em = DwoEmfFactory.getEntityManager();
+        List<PersistentUser> userList = null;
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findBySchoolGroupID");
+            q.setParameter("schoolGroupID", sg.getSchoolGroupID());
+            userList = (List<PersistentUser>) q.getResultList();
+            LOG.log(Level.FINE, "PersistentUser-manager retrieved {0} user with schoolGroupId {1}", new Object[]{userList.size(), sg.getGroupID()});
+        }catch(NoResultException e){
+            return null;
+        }catch(Exception e){
+            throw new PersistenceException(e);
+        }finally {
+            em.close();
+        }
+        return userList;
+    }
+    
+    
     public static PersistentUser findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {

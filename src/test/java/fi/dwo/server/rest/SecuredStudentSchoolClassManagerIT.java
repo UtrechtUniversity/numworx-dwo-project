@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author Gert van der Plas
  */
-public class SecuredStudentSchoolClassManagerTest {
+public class SecuredStudentSchoolClassManagerIT {
     
-    public SecuredStudentSchoolClassManagerTest() {
+    public SecuredStudentSchoolClassManagerIT() {
     }
     
     @BeforeClass
