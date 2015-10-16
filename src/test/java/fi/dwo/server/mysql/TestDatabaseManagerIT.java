@@ -3,7 +3,6 @@
  */
 package fi.dwo.server.mysql;
 
-import fi.dwo.server.testutil.Parameters;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,7 +14,6 @@ import org.junit.Test;
  * @author G.A.J. van der Plas
  */
 public class TestDatabaseManagerIT {
-    private String resourceString = Parameters.getResourceString();
     
     public TestDatabaseManagerIT() {
     }

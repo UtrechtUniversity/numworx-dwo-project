@@ -1,7 +1,7 @@
 /**
  * Copyrighted Oct 15, 2015
  */
-package fi.dwo.server.rest;
+package fi.dwo.server.testutil;
 
 import fi.dwo.commons.persistence.RoleType;
 import java.security.Identity;
