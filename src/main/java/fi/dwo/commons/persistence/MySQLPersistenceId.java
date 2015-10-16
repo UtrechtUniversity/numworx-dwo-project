@@ -22,11 +22,9 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
     /**
      * This constructor is only public because of jax-rs. Use a factory to
      * generate id's.
-     *
      * @param pid
-     * @param type the type to set
      */
-    private MySQLPersistenceId(PersistenceId pid) {
+    public MySQLPersistenceId(PersistenceId pid) {
         String[] strList = pid.getIdString().split(";");
         if (strList[0].equals("MYSQL")) {
             super.setIdString(pid.getIdString());
