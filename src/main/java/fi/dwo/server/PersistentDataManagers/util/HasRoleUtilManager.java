@@ -84,7 +84,7 @@ public class HasRoleUtilManager {
      */
     public static PersistentSchool getSchoolforHasRole(PersistentHasRole hr) throws Dwo2Exception {
         if (hr == null || hr.getPersistentHasRolePK() == null) {
-            LOG.log(Level.SEVERE, "Given hasRole {0} could not be found.", new Object[]{hr.getPersistentHasRolePK()});
+            LOG.log(Level.SEVERE, "Given hasRole {0} could not be found.");
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Given hasRole could not be found.");
         }
 
