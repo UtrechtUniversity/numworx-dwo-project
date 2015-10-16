@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
+import java.util.Collection;
+import java.util.Map.Entry;
+
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -23,7 +26,7 @@ public class OpdrNavContext implements OpdrNavIF {
 			}
 		};
 	private OpdrNavIF comRoot;
-	private String UUID;
+	private String UUID, UUIDpfx;
 	private Connector connector;
 	private CssColor background;
 	
@@ -40,10 +43,11 @@ public class OpdrNavContext implements OpdrNavIF {
 
 	private void buildUUID() {
 		UUID = comRoot.getUUID();
+		int k = UUID.lastIndexOf('-');
+		UUIDpfx = UUID.substring(0, k+1);
 		if(connector != null && connector.widgetId != null)
 		{
-			int k = UUID.lastIndexOf('-');
-			UUID = UUID.substring(0, k+1) + connector.widgetId;
+			UUID = UUIDpfx + connector.widgetId;
 		}
 	}
 
@@ -105,11 +109,37 @@ public class OpdrNavContext implements OpdrNavIF {
 	 * @return
 	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#addCBookEventListener(java.lang.String, nl.uu.fi.dwo.interaction.client.event.CBookEventListener)
 	 */
-	public HandlerRegistration addCBookEventListener(String command,
-			CBookEventListener listener) {
+	public HandlerRegistration addCBookEventListener(final String command,
+			final CBookEventListener listener) {
 		if(connector == null) return NULL_REGISTRATION;
-		String source = command + "." + connector.widgetId;
-		return getEventBus().addHandlerToSource(CBookEvent.TYPE, source, listener);
+		HandlerRegistration registration  = NULL_REGISTRATION;
+		Collection<Entry<String, String>> subscriptions = connector.getSubscriptions(command);
+		for (Entry<String, String> entry : subscriptions) {
+			String rid = entry.getKey();
+			String rcmd = entry.getValue();
+			String source = UUIDpfx + rid + "." + rcmd;
+			CBookEventListener handler = listener;
+			//if(! rcmd.equals(command) ) no optimalisation allowed.
+			{
+				handler = new CBookEventListener() {
+					
+					@Override
+					public void acceptCBookEvent(CBookEvent event) {
+						event = new CBookEvent(command, event.toObjectMap());
+						listener.acceptCBookEvent(event);
+					}
+				};
+			}
+			
+			HandlerRegistration r = 
+					getEventBus().addHandlerToSource(CBookEvent.TYPE, source, handler);
+			if(registration == NULL_REGISTRATION)
+				registration = r;
+			else {
+				// registration = PairRegistration(registration, r);
+			}
+		}
+		return registration;
 	}
 
 	private EventBus getEventBus() {
@@ -121,16 +151,12 @@ public class OpdrNavContext implements OpdrNavIF {
 	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#fireEvent(nl.uu.fi.dwo.interaction.client.event.CBookEvent)
 	 */
 	public void fireEvent(CBookEvent event) {
-		if(connector != null) {
-			java.util.List<String> wids = connector.getDest(event.getCommand());
-			for(String wid: wids)
-			{
-				String source = event.getCommand() + "." + wid;
-				getEventBus().fireEventFromSource(event, source);
-			}
-			event.setSource(connector.v);
+		if(connector != null)
+		{
+			event.setSource(UUID);
+			getEventBus().fireEventFromSource(event, UUID + "." + event.getCommand());
 		}
-		comRoot.fireEvent(event); // global event, logging, etc
+		///comRoot.fireEvent(event); // global event, logging, etc
 	}
 
 	@Override

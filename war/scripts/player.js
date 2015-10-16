@@ -145,3 +145,17 @@
     managedHub.subscribe('*.changed', onCheck)
     managedHub.subscribe('bootstrap', onBootstrap)
     managedHub.subscribe('*.logOption', onLogOption)
+    
+    var playerHub = {
+    	publish: function( topic, data) {
+    		logger("publishing topic");
+    		logger("data = " + (data) );
+    		managedHub.publish(topic, data);
+    	},
+    	subscribe: function (topic, handler, scope,  onerror, handlerdata) {
+    		logger("subscribe to " + topic);
+    		managedHub.subscribe(topic, handler, scope, onerror, handlerdata)
+    	}
+    }
+    
+    

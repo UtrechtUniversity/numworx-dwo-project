@@ -40,7 +40,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
@@ -96,7 +95,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int currentActiviteit = 0;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private Memento memento;
-	private final static EventBus BUS = new SimpleEventBus();
+	private final static EventBus BUS = 
+	//		 OpenAjaxEventBus.getManagedInstance();
+	//		new SimpleEventBus();
+			DWOplayer.PARAMETERS.getEventBus();
 	
 	public OpdrNav() {};
 	public void init(HashMap<String, Object> launchData, ViewModuleViewImpl ev, Memento memento)

@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
+import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 /**
@@ -59,5 +60,6 @@ public interface DWOplayerParameters {
 	ScoreNavIF  getScoreNav();
 	Logging getLogging();
 	String getHost();
+	EventBus getEventBus();
 // More to come....
 }

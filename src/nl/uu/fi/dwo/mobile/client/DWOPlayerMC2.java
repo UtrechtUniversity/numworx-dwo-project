@@ -1,10 +1,12 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import nl.uu.fi.dwo.interaction.client.event.OpenAjaxEventBus;
 import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.web.bindery.event.shared.EventBus;
 
 public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParameters {
 
@@ -31,6 +33,8 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 		return LaTransport.newInstance();
 	}
 
-	
-	
+	@Override
+	public EventBus getEventBus() {
+		return OpenAjaxEventBus.getManagedInstance();
+	}	
 }

@@ -2,10 +2,8 @@ package nl.uu.fi.dwo.interaction.client.event;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
-import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.Event.Type;
 import com.google.web.bindery.event.shared.EventBus;
@@ -15,37 +13,36 @@ public class OpenAjaxEventBus extends EventBus {
 	
 	private Hub hub;
 		
-	static class Hub extends JavaScriptObject {
-		native void publish(String topic, JavaScriptObject data) /*={
+	final static class Hub extends JavaScriptObject {
+		
+		/**
+		 * 
+		 */
+		protected Hub() {
+			super();
+		}
+
+		final native void publish(String topic, JavaScriptObject data) /*-{
 			this.publish(topic, data)
 		}-*/;
-		native Object subscribe(String topic, CallBack callback) /*-{
+		final native Object subscribe0(String topic, CallBack callback) /*-{
 			return this.subscribe(topic, function(topic, pdata, data) {
-				data.@nl.uu.fi.dwo.interaction.client.event.OpenAjaxEventBus.CallBack::call(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(topic, pdata)
-			}, null, data )
+				console.log("receiving " + topic)
+				data.@nl.uu.fi.dwo.interaction.client.event.CallBack::call(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(topic, pdata)
+			}, null, null, callback)
 		}-*/;
-		native void unsubscribe(Object o) /*-{
+		final native void unsubscribe(Object o) /*-{
 				this.unsubscribe(o);
 		}-*/;
 	}
 	
-	static class CallBack {
-		CBookEventListener listener;
-		
-		void call(String topic, JavaScriptObject jso) {
-			JSONObject j = new JSONObject(jso);
-			ObjectMap map = JSONUtilities.wrapMap(j);
-			CBookEvent event = new CBookEvent(map);
-			listener.acceptCBookEvent(event);
-		}
-		CallBack(CBookEventListener listener) {
-			this.listener = listener;
-		}
-	}
-
-// get the unmanaged hub.
+	// get the unmanaged hub.
 	static native JavaScriptObject getHub() /*-{
 		return $wnd.OpenAjax.hub;
+	}-*/;
+	// get the managed hub.
+	static native JavaScriptObject getManagedHub() /*-{
+		return $wnd.playerHub;
 	}-*/;
 	
 	
@@ -57,7 +54,7 @@ public class OpenAjaxEventBus extends EventBus {
 	
 	public static EventBus getManagedInstance() {
 		OpenAjaxEventBus bus = new OpenAjaxEventBus();
-		bus.hub = getHub().cast();
+		bus.hub = getManagedHub().cast();
 		return bus;
 		
 	}
@@ -77,13 +74,12 @@ public class OpenAjaxEventBus extends EventBus {
 		String topic = source.toString();
 		CBookEventListener listener = (CBookEventListener) handler;
 		CallBack callback = new CallBack(listener);
-		final Object o  = hub.subscribe(topic, callback);
+		final Object o  = hub.subscribe0(topic, callback);
 		return new HandlerRegistration() {
 			
 			@Override
 			public void removeHandler() {
 				hub.unsubscribe(o);
-				
 			}
 		};
 	}

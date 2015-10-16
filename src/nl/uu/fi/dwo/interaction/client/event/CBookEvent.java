@@ -79,7 +79,7 @@ public class CBookEvent extends Event<CBookEventListener> {
 		this.message = map.getString("message");
 		setSource(map.getString("source"));
 	}
-	CBookEvent(String command, ObjectMap map) {
+	public CBookEvent(String command, ObjectMap map) {
 		this.command = command;
 		this.parameters = map.getMap("parameters");
 		this.message = map.getString("message");

@@ -472,7 +472,8 @@ public class TekstBuffer
 	{
 		String value = null;
 		if(g.containsKey(CROSS_WIDGET_ID)) value = g.getString(CROSS_WIDGET_ID);
-		if(value != null) {
+		//if(value != null) 
+		{
 			ObjectList connections = null;
 			ObjectMap  subscriptions = null;
 // the old way, deprecated

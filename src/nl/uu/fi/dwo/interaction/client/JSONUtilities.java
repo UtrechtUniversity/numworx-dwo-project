@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.interaction.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -193,6 +194,8 @@ public class JSONUtilities {
 			Object[] objects = (Object[]) object;
 			return Arrays.asList(objects);
 		}
+		if (object instanceof Collection)
+			return new ArrayList<Object>( (Collection<?>) object );
 // FIXME fout voor primitive[] moet dan een List<Primitieve> komen.
 		return null;
 	}

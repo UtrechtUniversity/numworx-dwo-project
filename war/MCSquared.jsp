@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@ page import="com.google.appengine.api.utils.SystemProperty" %>
+<%@ page import="fi.dwoapp.Version" %>
 <meta charset="UTF-8">
 <title>MC Squared</title>
 <script type="text/javascript" language="javascript" src="scripts/sha1.js" ></script>
@@ -177,7 +177,7 @@ window.inner = {
 <!-- de.cinderella.CindyWidget: http://cinderella.de/services/widget -->
 <body>
 <%
-	String version = SystemProperty.applicationVersion.get();
+	String version = Version.VERSION;
 	int dot = version.indexOf('.');
 	version = version.substring(0,dot);
 %>

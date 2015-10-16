@@ -13,6 +13,8 @@ import nl.uu.fi.dwo.mobile.utils.NoLogging;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTStyle;
 import com.googlecode.mgwt.ui.client.OsDetection;
@@ -143,5 +145,10 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	@Override
 	public String getLaunchData() {
 		return launchData;
+	}
+
+	@Override
+	public EventBus getEventBus() {
+		return new SimpleEventBus();
 	}
 }
