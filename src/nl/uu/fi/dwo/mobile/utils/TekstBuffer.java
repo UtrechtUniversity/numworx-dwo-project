@@ -388,7 +388,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 1)
 		{
-			result = new FormuleEditorWithSteps(currentVakGegevens, true, randomVarNamen, randomVarWaarden, null);
+			result = x(map,new FormuleEditorWithSteps(currentVakGegevens, true, randomVarNamen, randomVarWaarden, null));
 		}
 		else if (soortVak == 2)
 		{
@@ -409,8 +409,10 @@ public class TekstBuffer
 		}
 		else if(soortVak == 11) 
 		{
-			result = //new BalansFruitGWT(currentVakGegevens);
-					new StubView("BalansFruitGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result =x(map,
+					//new fi.balansfruitgwt.client.BalansFruitGWT(currentVakGegevens)
+					new StubView("BalansFruitGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
+					);
 		}
 		else if(soortVak == 12)
 		{	

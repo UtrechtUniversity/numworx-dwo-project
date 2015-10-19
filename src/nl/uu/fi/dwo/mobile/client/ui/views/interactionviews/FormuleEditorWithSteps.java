@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.FacetAware.Type;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -2426,6 +2427,14 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if(editor != null) {
 			editor.setCommunicationRoot(comRoot);
 			//editor.zetMode(mode); // FIXME why null? after init?
+			if(isVergelijkingVak)
+				comRoot.addCBookEventListener("balansvergelijking", new CBookEventListener() {
+					
+					@Override
+					public void acceptCBookEvent(CBookEvent event) {
+						editor.acceptCBookEvent(event); // steeds een andere editor!
+					}
+				});
 		}
 		
 	}

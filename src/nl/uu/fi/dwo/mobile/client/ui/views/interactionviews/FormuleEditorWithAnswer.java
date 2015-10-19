@@ -1209,8 +1209,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	@Override
 	public void acceptCBookEvent(CBookEvent event) {
-		String message = event.getMessage();
+		String message;
+		if ("balansvergelijking".equals(event.getCommand()))
+		{
+			message = event.getParameter("balansvergelijking").toString();
+		} else
+		    message = event.getMessage();
 		message = strip$f(message);
+		clearMain();
 		insert(message); // Of zo iets.Strip $F en @
 		setCurrentElementRepaint();
 	}
