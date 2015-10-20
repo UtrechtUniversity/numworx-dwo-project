@@ -23,6 +23,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 /**
  * PersistentUser
@@ -85,6 +86,11 @@ public class PersistentUser implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn(name = "schoolGroupID")
     private PersistentSchoolGroup schoolGroup;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "singleschool", nullable = false)
+    private Boolean singleSchoolAccount;
+    
 
     public PersistentUser() {
     }
@@ -190,7 +196,7 @@ public class PersistentUser implements Serializable {
      * @return 
      */
     public boolean isSingleSchoolAccount() {
-        return this.username.contains("#");
+        return singleSchoolAccount;
     }
 
     @Override
