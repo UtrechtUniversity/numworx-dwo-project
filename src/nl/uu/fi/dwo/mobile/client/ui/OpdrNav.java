@@ -51,10 +51,10 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
  */
 public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 {
-	public static int OEFENEN = 0;
-	public static int OEFENEN_STRAFPUNTEN = 1;
-	public static int ZELFTOETS = 2;
-	public static int EINDTOETS = 3;
+	public final static int OEFENEN = 0;
+	public final static int OEFENEN_STRAFPUNTEN = 1;
+	public final static int ZELFTOETS = 2;
+	public final static int EINDTOETS = 3;
 	
 	private static String[][] objectives;
 	private static String[] categorieString;
@@ -81,6 +81,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int[][] scores;
 	private boolean[][] isCorrect;
 	private boolean[][] opdrachtenCorrect;
+	private int[] aantalNakijken; // per activiteit
 	
 	private int[][][][] scoresMaxObjectives;
 	private int[][][][] scoresObjectives;
@@ -230,8 +231,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 		
 		memento.getBezocht(entry.bezocht);
-		entry.zelftoetsGeenCorr = memento.getZelftoetsGeenCorr();
 		entry.zelftoetsNagekeken = memento.getZelftoetsNagekeken();
+		aantalNakijken = memento.getAantalNakijken();
 		
 		final HashMap<String, Object> state = states[currentActiviteit][currentOpdracht];
 
@@ -359,7 +360,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	{
 		TouchButton button = new TouchButton();
 // enable scores, geen toets en scoreMax > 0
-		if (scoresVisible() && !geefNoScore(currentActiviteit, j))
+		if (!geefNoScore(currentActiviteit, j))
 		{
 			TouchDown handler = new TouchDown(j);
 			button.addDomHandler(handler, MouseOverEvent.getType());
@@ -368,31 +369,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		
 		button.setStylePrimaryName("scoreBtn");
 		final int button_id = j;
-//		button.getElement().getStyle().setFloat(Style.Float.LEFT);
-//		button.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-//		button.getElement().getStyle().setMarginRight(10, Unit.PX);
-//		button.getElement().getStyle().setMarginTop(2, Unit.PX);
-//		button.getElement().getStyle().setMarginBottom(4, Unit.PX);
-//		button.getElement().getStyle().setPadding(10, Unit.PX);
-//		button.getElement().getStyle().setPaddingTop(5, Unit.PX);
-//		button.getElement().getStyle().setPaddingBottom(5, Unit.PX);
-//		button.getElement().getStyle().setBackgroundColor("#FFBBBB");
 		if (geefNoScore(currentActiviteit, j))
 		{
-//			button.getElement().getStyle().setBackgroundColor("#909090");
 			button.addStyleDependentName("max0");
 		}
 		if(!buttonsEnabled[currentActiviteit][j])
 		{
-//			button.getElement().getStyle().setBackgroundColor("white");
 			button.addStyleDependentName("disabled");
 		}
-//		button.getElement().getStyle().setProperty("borderRadius", "20px");
-//
-//		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
-//		button.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-//		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
-//		button.getElement().getStyle().setCursor(Cursor.POINTER);
 
 		button.setText(" " + (j + 1) + " ");
 		if (currentOpdracht == j)
@@ -452,6 +436,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	private Timer popupTimer;
+	private final int nakijkStraf = 5; // voorlopig final
 	
 	private void schedule(final int index, boolean touch) {
 		if(popupTimer != null) 
@@ -464,12 +449,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		
 		
 		if (geefNoScore(currentActiviteit, index) ||
-			!buttonsEnabled[currentActiviteit][index]
+			!buttonsEnabled[currentActiviteit][index] ||
+			!scoresVisible()
 		) 
 			return; 
 		
 		final TouchButton btn = buttons.get(index);
 		final int score = getItemScores()[index];
+		if(score == 0) return;
 		popupTimer = new Timer() {
 
 			@Override
@@ -569,22 +556,36 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		int totaalMax = 0;
 		for (int i = 0; i < aantalActiviteiten; i++)
 		{
-			if (mode == EINDTOETS)
+			switch(mode) {
+			case ZELFTOETS: {
+				int hulp = (getAantalNakijken(i) * nakijkStraf - nakijkStraf); // een keer gratis nakijken.
+				if (hulp < 0) hulp = 0;
+				hulp = - hulp; // aftrek!
+				int size = aantalOpdrachten[i];
+				for(int j = 0 ; j < size; j++) {
+					hulp += scores[i][j];
+				}
+				if (hulp > 0) totaalScore += hulp;
+			}
+			break;
+			case EINDTOETS:
 			{
 				for (int j = 0; j < aantalOpdrachten[i]; j++)
 				{
 					totaalScore += scores[i][j];
 				}
-			}
-			else
+			} break;
+			default:
+			
 			{ // TODO wat wordt hier bedoeld?
-				//totaalScore += or[i].geefScore() - ((mode == ZELFTOETS) ? (nakijkStraf * (Math.max(0, aantalNakijken[i] - 1))) : 0);
-		// nog geen nakijkstrqf!
+				
 				for (int j = 0; j < aantalOpdrachten[i]; j++)
 				{
 					totaalScore += scores[i][j];
 				}
-		}
+				
+			}
+			}
 			for (int j = 0; j < aantalOpdrachten[i]; j++)
 			{
 				totaalMax += scoresMax[i][j];
@@ -635,81 +636,50 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	{
 		states[currentActiviteit][currentOpdracht] = entry.getState();
 		ScoreNavIF source = entry.scoreNav;
-		int scoreCorrected = entry.getScore();
-		//strafpunten worden al in score meegenomen in de entry zelf.
-//		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN)
-//		{
-//			scoreCorrected -= strafpunten[currentActiviteit][currentOpdracht];
-//			if( scoreCorrected < 0 ) scoreCorrected = 0;
-//			memento.setStrafpunten(strafpunten);
-//		}
-		
-		source.setItemScore(currentOpdracht, 
-				scores[currentActiviteit][currentOpdracht] = scoreCorrected
-		);
-		if (objectives != null)
-			scoresObjectives[currentActiviteit][currentOpdracht] = entry.getScoreObjectives();
+
+		if(scoresEnabled()) {
+			fetchScores();
+		}
 		
 		
-		source.setBeantwoord(getAantalBeantwoord());
-		isCorrect[currentActiviteit][currentOpdracht] = Boolean.TRUE == entry.isCorrect();
+		
 		memento.setCurrentActiviteit(currentActiviteit);
 		memento.setCurrentOpdracht(currentOpdracht);
 		memento.setOrGoedFout(isCorrect);
 		double score = getScore();
 		memento.setScore(score);
 		memento.setScores(scores);
-		source.setTotaalScore((int) score); 
 		memento.setBezocht(entry.bezocht);
 		memento.setZelftoetsNagekeken(entry.zelftoetsNagekeken);
-		memento.setZelftoetsGeenCorr(entry.zelftoetsGeenCorr);
+		memento.setAantalNakijken(aantalNakijken);
 		memento.setCompletion(suspendDataCompleted(currentActiviteit, currentOpdracht));
 		memento.setOpdrContStates(states);
+// send data to GUI (why here?)
+		source.setItemScore(currentOpdracht, scores[currentActiviteit][currentOpdracht]);		
+		source.setBeantwoord(getAantalBeantwoord());
+		source.setTotaalScore((int) score); 
+
+	}
+	private void fetchScores() {
+		int scoreCorrected = entry.getScore();
+		scores[currentActiviteit][currentOpdracht] = scoreCorrected;
+		isCorrect[currentActiviteit][currentOpdracht] = Boolean.TRUE == entry.isCorrect();
+		if (objectives != null)
+			scoresObjectives[currentActiviteit][currentOpdracht] = entry.getScoreObjectives();
 	}	
 	
 	public void kijkToetsNa()
 	{
+		
+		incrAantalNakijken(currentActiviteit);
 		int opdrachtNr = currentOpdracht;
 		for (int j = 0; j < aantalOpdrachten[currentActiviteit]; j++)
 		{
 			gotoOpdracht(j);
-			/*
-			if (states[currentActiviteit][j] != null)
-			{	//entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][j], !(gekoppeldeOpdrachten || globalParam), states[currentActiviteit][j]);
-				//TODO: gekoppeldeOpdrachten en globalParam implementeren.
-				
-				entry.clearContentPanel();
-				entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][j], states[currentActiviteit][j]);
-			}
-			else
-			{	entry.clearContentPanel();
-				entry.zetOpdracht(opdrachten[currentActiviteit][j]);
-			}
-			*/
 			entry.kijkNa();
 			entry.zetNagekeken(true);
-			
-//			
-//			states[currentActiviteit][j] = entry.getState();
-//			scores[currentActiviteit][j] = entry.getScore();
-//			
-//			System.out.println("Pagina = " + j + " en score = " + entry.getScore());
-//			if (objectives != null)
-//				scoresObjectives[currentActiviteit][j] = entry.getScoreObjectives();
-//			Boolean correct = entry.isCorrect();
-//			isCorrect[currentActiviteit][j] = Boolean.TRUE == correct;
-//			
-//			if (buttons != null && buttons.size() > currentOpdracht)
-//				setButtonCorrect(buttons.get(j), Boolean.TRUE == correct, j);
-			
-			//or[currentActiviteit].zetScore(j + 1, score);
-			
-			//dit is de enige plek waar de zelftoets/toets de kleur van de bolletjes mag zetten:
-//			buttons.get(j).getElement().getStyle().setBackgroundColor(isCorrect[currentActiviteit][j] ? "#00BB00" : "#FFBBBB");
-			buttons.get(j).setStyleDependentName("correct", isCorrect[currentActiviteit][j]);
-//			if (geefNoScore(currentActiviteit, j))
-//				buttons.get(j).getElement().getStyle().setBackgroundColor("#909090");
-			buttons.get(j).setStyleDependentName("max0", geefNoScore(currentActiviteit, j));
+			fetchScores();
+			setButtonCorrect(buttons.get(j), isCorrect[currentActiviteit][j], j);
 		}
 		//entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], !(gekoppeldeOpdrachten || globalParam), states[currentActiviteit][currentOpdracht]);
 		
@@ -754,6 +724,20 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 	
 	
+	private void incrAantalNakijken(int i) {
+		if(aantalNakijken == null) aantalNakijken = new int[aantalActiviteiten]; // lazy initialization
+		if(i >= 0 && i < aantalActiviteiten) 
+			aantalNakijken[i] ++;		
+	}
+	
+	private int getAantalNakijken(int i) {
+		if(aantalNakijken == null) return 0;
+		if(i < 0 && i >= aantalActiviteiten) return 0;
+		return aantalNakijken[i];
+	}
+	
+	
+	
 	/**
 	 * Is er state bij alle andere opdrachten van deze activiteit? Behalve de opgegeven opdrNr, die heeft zeker state!
 	 * @param actNr
@@ -790,7 +774,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void gotoOpdracht(final int opdracht) {
 		saveCurrentState();
-		if(!(mode == 2 || mode == 3))
+		if(scoresVisible())
 			setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht], currentOpdracht);
 
 		removeButtonCursor(buttons.get(currentOpdracht));
@@ -972,6 +956,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			{	clearState(opdracht, source);
 				setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
 			}
+			if(getAantalNakijken(currentActiviteit) > 0)
+				aantalNakijken[currentActiviteit] = 0;
 		} 
 		else
 		{	clearState(opdracht,source);

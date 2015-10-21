@@ -40,7 +40,6 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 public class Memento implements ClosingHandler, CloseHandler<Window>
 {
 	private static final String BEZOCHT = "bezocht";
-	private static final String ZELFTOETS_GEEN_CORR = "zelftoetsGeenCorr";
 	private static final String ZELFTOETS_NAGEKEKEN = "zelftoetsNagekeken";
 	static Memento _instance;
 	static private Logger logger = Logger.getLogger("Memento");
@@ -62,6 +61,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private static final String GOED_FOUT = "orGoedFout";
 	private static final String SCORES = "orScores"; // TODO correct name? getPagina score gebruikt deze naam
 	private static final String ONS_STATE = "onsState";
+	private static final String AANTAL_NAKIJKEN = "aantalNakijken";
+
 	static final String SUSPEND_DATA = "cmi.suspend_data";
 	static final String SCORE_RAW = "cmi.score.raw";
 	static final String EXIT_STATUS = "cmi.exit";
@@ -87,6 +88,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private Date startDate = new Date();
 
 	private Number score;
+	private JSONArray aantalNakijken;
 
 	public Memento(Scorm2004IF api)
 	{
@@ -109,9 +111,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			opdrScores    = (JSONArray) onsState.get(SCORES);
 			opdrBezocht   = (JSONArray) onsState.get(BEZOCHT);
 			zelftoetsNagekeken = (JSONBoolean) onsState.get(ZELFTOETS_NAGEKEKEN);
-			zelftoetsGeenCorr = (JSONBoolean) onsState.get(ZELFTOETS_GEEN_CORR);
-			
-			
+			aantalNakijken = (JSONArray) onsState.get(AANTAL_NAKIJKEN);
 		}
 		catch (Exception e)
 		{
@@ -639,20 +639,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public void setZelftoetsNagekeken(boolean zelftoetsNagekeken) {
 		this.zelftoetsNagekeken = JSONBoolean.getInstance(zelftoetsNagekeken);
 		this.onsState.put(ZELFTOETS_NAGEKEKEN, this.zelftoetsNagekeken);
-		
 	}
 
-	public void setZelftoetsGeenCorr(boolean zelftoetsGeenCorr) {
-		this.zelftoetsGeenCorr = JSONBoolean.getInstance(zelftoetsGeenCorr);
-		this.onsState.put(ZELFTOETS_GEEN_CORR, this.zelftoetsGeenCorr);
-		
-	}
-
-	public boolean getZelftoetsGeenCorr() {
-		if (zelftoetsGeenCorr == null)
-			return false;
-		return zelftoetsGeenCorr.booleanValue();
-	}
 
 	public boolean getZelftoetsNagekeken() {
 		if (zelftoetsNagekeken == null)
@@ -671,5 +659,30 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	
 	public Role getRole() {
 		return api.getRole();
+	}
+
+	public void setAantalNakijken(int[] aantalNakijken) {
+		if(aantalNakijken == null)
+		{
+			this.aantalNakijken = null;
+		} else 
+		{		
+			this.aantalNakijken = new JSONArray();
+			for (int i = 0; i < aantalNakijken.length; i++) {
+				this.aantalNakijken.set(i, new JSONNumber(aantalNakijken[i]));
+			}
+		}
+		this.onsState.put(AANTAL_NAKIJKEN, this.aantalNakijken);
+	}
+	
+	public int[] getAantalNakijken() {
+		if(this.aantalNakijken == null) {
+			return null;
+		}
+		int[] result = new int[aantalNakijken.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = (int) aantalNakijken.get(i).isNumber().doubleValue();
+		}
+		return result;
 	}
 }
