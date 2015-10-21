@@ -337,6 +337,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		}
 		
 		wnd.fireEvent = function (event, viewer) {
+			if ( typeof event === 'string' )
+				event = JSON.parse(event)
 			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::fireJSEvent(Lcom/google/gwt/core/client/JavaScriptObject;)(event)
 		}
 		
@@ -360,8 +362,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		fireEvent(evt);
 	}
 	
-	private static native void acceptCBookEvent(JavaScriptObject jso, JavaScriptObject event) /*-{
-		jso.acceptCBookEvent(event)
+	private static native void acceptCBookEvent(JavaScriptObject jso, String event) /*-{
+		jso(event)
 	}-*/;
 	
 	
@@ -370,8 +372,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			
 			@Override
 			public void acceptCBookEvent(CBookEvent event) {
-				JSONObject ev = JSONUtilities.toJSONObject(event.toObjectMap()).isObject();
-				StubView.acceptCBookEvent(listener, ev.getJavaScriptObject());
+				JSONValue ev = JSONUtilities.toJSONObject(event.toObjectMap());
+				StubView.acceptCBookEvent(listener, ev.toString());
 			}
 		});
 	}

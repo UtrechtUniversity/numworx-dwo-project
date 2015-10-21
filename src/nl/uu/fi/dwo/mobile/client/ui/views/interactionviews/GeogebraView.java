@@ -30,13 +30,15 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import fi.wiskopdr.text.Text;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class GeogebraView implements InteractionView, LoadHandler
 {
 
-	private static final String KIJK_NA = "<span>kijk na</span>";
+	private static final String KIJK_NA = "<span>" + Text.constants.nakijkKnopLabel() + "</span>";
 	private static final int KIJK_NA_HEIGHT = 20;
 	private SimplePanel mainPanel;
 	private Object ggbApplet;

@@ -359,7 +359,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	{
 		TouchButton button = new TouchButton();
 // enable scores, geen toets en scoreMax > 0
-		if ((mode == 0 || mode == 1 ) && !geefNoScore(currentActiviteit, j))
+		if (scoresVisible() && !geefNoScore(currentActiviteit, j))
 		{
 			TouchDown handler = new TouchDown(j);
 			button.addDomHandler(handler, MouseOverEvent.getType());
@@ -403,6 +403,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		buttons.add(button);
 		fp_opdrachten.add(button);
+	}
+
+	public boolean scoresVisible() {
+		return 
+				entry.getZelftoetsNagekeken() ||
+				mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN;
+	}
+	
+	public boolean scoresEnabled() {
+		return mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN;
 	}
 	
 	public TouchButton getButton(int j)

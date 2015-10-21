@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.interaction.client;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -9,16 +8,14 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
-import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-
 
 public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	
@@ -170,8 +167,8 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return $wnd.getBackground($wnd.outer)
 	}-*/;
 	
-	private static native void fireEvent0(JavaScriptObject o) /*-{
-		$wnd.fireEvent(o, $wnd.outer)
+	private static native void fireEvent0(String string) /*-{
+		$wnd.fireEvent(string, $wnd.outer)
 	}-*/;
 	
 	
@@ -267,12 +264,15 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return $wnd.getUUID($wnd.outer)
 	}-*/;
 
-	@Override
-	public HandlerRegistration addCBookEventListener(String command,
-			CBookEventListener listener) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	private static native void addListener(String command,
+			ListenerForEvents listener) /*-{
+		$wnd.addCBookEventListener(command, function(event) {
+			if( typeof event === 'string' )
+				event = JSON.parse(event)
+			listener.@nl.uu.fi.dwo.interaction.client.ListenerForEvents::accept(Lcom/google/gwt/core/client/JavaScriptObject;)(event)
+		}, $wnd.outer);
+	}-*/;
 
 	FormuleClipboardIF clip = new FormuleClipboardIF() {
 		String content;
@@ -290,9 +290,10 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	};
 	
 	@Override
-	public void fireEvent(CBookEvent event) {	
+	public void fireEvent(CBookEvent event) {
+		event.setSource(GWT.getModuleName());
 		ObjectMap map = event.toObjectMap();
-		JavaScriptObject jso = JSONUtilities.toJSONObject(map).isObject().getJavaScriptObject();
+		String jso = JSONUtilities.toJSONObject(map).toString();
 		fireEvent0(jso);
 	}
 
@@ -319,6 +320,13 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	@Override
 	public Role getRole() {
 		return ROLE_LEARNER;
+	}
+
+	@Override
+	public HandlerRegistration addCBookEventListener(String command,
+			CBookEventListener listener) {
+		addListener(command, new ListenerForEvents(listener));
+		return null;
 	}
 
 }

@@ -294,6 +294,7 @@ try {
 					//on.saveCurrentState();
 					zetToetsNagekeken(source);
 					on.kijkToetsNa();
+					on.saveCurrentState(); // op speciaal verzoek 
 				}
 				
 			});
