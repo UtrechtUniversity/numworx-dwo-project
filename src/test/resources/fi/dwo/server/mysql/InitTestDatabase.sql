@@ -87,7 +87,7 @@ CREATE TABLE `tblclass` (
   KEY `CLASS_TEACHER_FK` (`userid`),
   KEY `CLASS_SCHOOL_FK` (`schoolID`),
   CONSTRAINT `tblclass_ibfk_2` FOREIGN KEY (`schoolID`) REFERENCES `tblschool` (`schoolID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,7 +96,7 @@ CREATE TABLE `tblclass` (
 
 LOCK TABLES `tblclass` WRITE;
 /*!40000 ALTER TABLE `tblclass` DISABLE KEYS */;
-INSERT INTO `tblclass` VALUES (1,0,3,0,'SchoolClass01','key'),(2,0,3,0,'SchoolClass02','key'),(3,0,4,0,'SchoolClass03','key'),(4,0,4,0,'SchoolClass04','key');
+INSERT INTO `tblclass` VALUES (0,0,1,0,'DWO','key'),(1,0,3,0,'SchoolClass01','key'),(2,0,3,0,'SchoolClass02','key'),(3,0,4,0,'SchoolClass03','key'),(4,0,4,0,'SchoolClass04','key');
 /*!40000 ALTER TABLE `tblclass` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -245,7 +245,7 @@ CREATE TABLE `tbldwosystemparameters` (
 
 LOCK TABLES `tbldwosystemparameters` WRITE;
 /*!40000 ALTER TABLE `tbldwosystemparameters` DISABLE KEYS */;
-INSERT INTO `tbldwosystemparameters` VALUES ('DBVersion Build','0'),('DBVersion Major','1'),('DBVersion Minor','4'),('DBVersion Revision','1'),('DwoSchoolIndex','1'),('NullSchoolIndex','2');
+INSERT INTO `tbldwosystemparameters` VALUES ('DBVersion Build','0'),('DBVersion Major','1'),('DBVersion Minor','4'),('DBVersion Revision','1'),('DwoSchoolIndex','0'),('NullSchoolClassIndex','0'),('NullSchoolIndex','1');
 /*!40000 ALTER TABLE `tbldwosystemparameters` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -690,4 +690,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-23 13:35:51
+-- Dump completed on 2015-10-23 14:43:05

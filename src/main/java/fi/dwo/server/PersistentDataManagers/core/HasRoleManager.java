@@ -61,7 +61,7 @@ public class HasRoleManager {
      * @param role
      * @throws Exception
      */
-    public static void edit(PersistentHasRole hasRole) throws PersistenceException, Exception {
+    public static void edit(PersistentHasRole hasRole) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();

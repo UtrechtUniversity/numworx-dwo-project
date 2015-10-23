@@ -69,8 +69,8 @@ public class SecuredStudentSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);
         RestSchoolClass restSchoolClass = new RestSchoolClass();
         //put in schoolgroup 5 , class 3 for user 9 (user02)
-        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchoolClass));
-        restSchoolClass.setSchoolClassName("SchoolClass03");
+        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        restSchoolClass.setSchoolClassName("SchoolClass02");
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         Boolean result = instance.setActiveSchoolClass(sc, restSchoolClass);
         assertEquals(true, result);
@@ -82,10 +82,9 @@ public class SecuredStudentSchoolClassManagerIT {
             Logger.getLogger(SecuredStudentSchoolClassManagerIT.class.getName()).log(Level.SEVERE, null, ex);
             fail("Setting the active school threw an error.");
         }
-        if (hr==null || hr.getPersistentHasRolePK().getUserID() != 3
-                || hr.getSchoolGroup().getSchoolGroupID() != 5
-                || UserManager.findByUserName("user02").getUserID() != 9) {
-            fail("The test case is a prototype.");
+        if (hr==null || (long) hr.getPersistentHasRolePK().getUserID() != (long) UserManager.findByUserName("user02").getUserID()
+                || hr.getSchoolGroup().getSchoolGroupID() != 2L || hr.getClassID()!=2L){
+            fail("Failed setting active login.");
         }
     }
 

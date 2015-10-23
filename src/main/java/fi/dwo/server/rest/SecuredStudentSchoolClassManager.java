@@ -11,6 +11,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import java.util.logging.Level;
@@ -45,7 +46,7 @@ public class SecuredStudentSchoolClassManager {
         PersistentSchool school = null;
         PersistentSchoolClass schoolClass = null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
@@ -56,10 +57,10 @@ public class SecuredStudentSchoolClassManager {
 
         schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         
-         if (schoolClass != null && schoolClass.getSchoolID() == school.getSchoolID()) {
+         if (schoolClass != null && (long) schoolClass.getSchoolID() == (long) school.getSchoolID()) {
             try {
                 phr.setClassID(schoolClass.getClassID());
-                SchoolClassManager.edit(schoolClass);
+                HasRoleManager.edit(phr);
             }
             catch (PersistenceException e) {
                 LOG.log(Level.WARNING, "Unexpected persistence exception", e);
