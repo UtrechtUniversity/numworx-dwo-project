@@ -252,6 +252,21 @@ public class VergelijkingMeerv
 		}
 		return isOplossing;
 	}
+	
+	public boolean isEindOplossingSignificant(Expressie[] subst, String var, String vergTeken)
+	{	String[] varNamen = geefVarNamen();
+		boolean isOplossing = false;
+		for(int j=0 ; j<vergelijkingen.length ; j++)
+		{	if(!isOplossing)
+			{	isOplossing = vergelijkingen[j].bevatOplossingP(subst, var, vergTeken);
+				if(isOplossing)
+				{	boolean exact = vergelijkingen[j].isEindOplossingSignificant(subst, var);
+					if(!exact)return false;
+				}
+			}	
+		}
+		return isOplossing;
+	}
 
 	/*public boolean bevatFouteOplossing(VergelijkingMeerv antw)
 	{	boolean isOplossing = true;
@@ -493,6 +508,13 @@ public class VergelijkingMeerv
 		{
 			if (!isEindOplossingExact(subst[i], var, vergTekens[i]))
 				return false;
+		}
+		return true;
+	}
+	
+	public boolean isEindOplossingSignificant(Expressie[][] subst, String var,  String[] vergTekens)
+	{	for(int i=0 ; i<subst.length ; i++)
+		{	if(!isEindOplossingSignificant(subst[i],var, vergTekens[i]))return false;
 		}
 		return true;
 	}

@@ -414,6 +414,17 @@ public class Vergelijking
 		}
 		return false;
 	}
+	
+	public boolean isEindOplossingSignificant(Expressie subst[],String var)
+	{	for(int i=0 ; i<subst.length ; i++)
+		{	boolean b =(kind1.isVar() && kind1.geefVarNaam().equals(var) && !Algebra.bevatVarNaam(kind2, var) && Algebra.isGelijkwaardig(subst[i], kind2) && Algebra.aantalSignificantGelijk(subst[i], kind2) 
+				|| kind2.isVar() && kind2.geefVarNaam().equals(var) && !Algebra.bevatVarNaam(kind1, var) && Algebra.isGelijkwaardig(subst[i], kind1) && Algebra.aantalSignificantGelijk(subst[i], kind1)
+				|| kind1.isVar() && kind1.geefVarNaam().equals("D?(D)") && !(kind2.isVar() && kind2.geefVarNaam().equals("D?(D)")) && !Algebra.bevatVarNaam(kind2, var)
+				|| kind1.isVar() && kind1.geefVarNaam().equals("Q?(Q)") && !(kind2.isVar() && kind2.geefVarNaam().equals("Q?(Q)")) && !Algebra.bevatVarNaam(kind2, var));
+			if(b)return b;
+		}
+		return false;
+	}
 
 	/*public boolean isEindOplossing()
 	{	return(kind1.isVar() && kind2.isWaarde() || kind2.isVar() && kind1.isWaarde());

@@ -66,6 +66,12 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String feedbackTekst16();
 	@DefaultStringValue("Deze vergelijking heeft niet de gevraagde vorm")
 	String feedbackTekst17();
+	@DefaultStringValue("De oplossing is goed, maar het aantal significante cijfers klopt niet.")
+	String feedbackTekst18();
+	@DefaultStringValue("Oplossing is goed, maar nog niet in de juiste vorm en de significantie klopt niet.")
+	String feedbackTekst19();
+	@DefaultStringValue("Oplossing is goed, significantie klopt maar heeft nog niet in de juiste vorm.")
+	String feedbackTekst20();
 	
 	
 

@@ -28,10 +28,12 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 
 	private boolean vorm;
 	private boolean eindOplossingNodig;
-	private boolean exact;
+	private boolean exactNodig;
+	private boolean significantNodig;
 	private boolean isDeelOplossing = false;
 	private boolean isGelijkwaardig = false;
 	private boolean isEindOplossing = false;
+	private boolean isEindOplossingSignificant = false;
 	private boolean isEindOplossingExact = false;
 	private boolean isJuisteVorm = false;
 
@@ -45,6 +47,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	private int puntenVorm = 0;
 	private int puntenEindOplossing = 10;
 	private int puntenExact = 0;
+	private int puntenSignificant = 0;
 
 	private int score;
 	private int scoreMax;
@@ -68,6 +71,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	
 	private String feedback;
 	private boolean exactP;
+	private boolean significantP;
 	private boolean vormP;
 	private boolean eindOplossingNodigP;
 	private boolean gelijkwaardigP;
@@ -134,9 +138,11 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		String startString = "$f@";
 		boolean vorm = false;
 		boolean exact = false;
+		boolean significant = false;
 		boolean stappen = true;
 		int puntenGelijkwaardig = 10;
 		int puntenExact = 0;
+		int puntenSignificant = 0;
 		boolean eindOplossingNodig = true;
 		int puntenEindOplossing = 0;
 		int puntenVorm = 0;
@@ -181,12 +187,16 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			vorm = map.getBoolean("vorm");
 		if (map.containsKey("exact"))
 			exact = map.getBoolean("exact");
+		if (map.containsKey("significant"))
+			significant = map.getBoolean("significant");
 		if (map.containsKey("stappen"))
 			stappen = map.getBoolean("stappen");
 		if (map.containsKey("puntenGelijkwaardig"))
 			puntenGelijkwaardig = map.getInt("puntenGelijkwaardig");
 		if (map.containsKey("puntenExact"))
 			puntenExact = map.getInt("puntenExact");
+		if (map.containsKey("puntenSignificant"))
+			puntenSignificant = map.getInt("puntenSignificant");
 		if (map.containsKey("puntenVorm"))
 			puntenVorm = map.getInt("puntenVorm");
 		if (map.containsKey("puntenEindOplossing"))
@@ -282,11 +292,13 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 
 		this.vorm = vorm;
 		this.eindOplossingNodig = eindOplossingNodig;
-		this.exact = exact;
+		this.exactNodig = exact;
+		this.significantNodig = significant;
 		this.puntenGelijkwaardig = puntenGelijkwaardig;
 		this.puntenVorm = puntenVorm;
 		this.puntenEindOplossing = puntenEindOplossing;
 		this.puntenExact = puntenExact;
+		this.puntenSignificant = puntenSignificant;
 		
 		try {
 			antwoordString = FormuleParser.randomizeString(antwoordString, randomVars, randomValues);
@@ -402,6 +414,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	{	isDeelOplossing = false;
 		isGelijkwaardig = false;
 		isEindOplossing = false;
+		isEindOplossingSignificant = false;
 		isEindOplossingExact = false;
 		isJuisteVorm = false;
 		syntaxFout = false;
@@ -437,6 +450,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		checkResults.put("isGelijkwaardig", new Boolean(isGelijkwaardig));
 		checkResults.put("isDeelOplossing", new Boolean(isDeelOplossing));
 		checkResults.put("isEindOplossing", new Boolean(isEindOplossing));
+		checkResults.put("isEindOplossingSignificant", new Boolean(isEindOplossingSignificant));
 		checkResults.put("isEindOplossingExact", new Boolean(isEindOplossingExact));
 		checkResults.put("isJuisteVorm", new Boolean(isJuisteVorm));
 		
@@ -531,6 +545,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		boolean vorm = false;
 		boolean eindOplossingNodig = false;
 		boolean exact = false;
+		boolean significant = false;
 		
 		int puntenFeedback = 0;
 		String feedback = "";
@@ -544,6 +559,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			if(map.containsKey("vorm")) vorm = map.getBoolean("vorm");
 			if(map.containsKey("eindOplossingNodig")) eindOplossingNodig = map.getBoolean("eindOplossingNodig");
 			if(map.containsKey("exact")) exact = map.getBoolean("exact");
+			if(map.containsKey("significant")) significant = map.getBoolean("significant");
 			if(map.containsKey("puntenFeedback")) puntenFeedback = map.getInt("puntenFeedback");
 			if(map.containsKey("feedback")) {
 				feedback = map.getString("feedback");
@@ -553,6 +569,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			
 		}	
 		exactP = exact;
+		significantP = significant;
 		vormP = vorm;
 		eindOplossingNodigP = eindOplossingNodig;
 		gelijkwaardigP = gelijkwaardig;
@@ -889,14 +906,14 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 					feedback = Text.constants.feedbackTekst02();
 					// "Niet alle oplossingen voldoen aan de oorspronkelijke vergelijking. Verwijder de oplossingen die niet voldoen."
 				} else if (isEindOplossing) {
-					if (exact) {
+					if (exactNodig) {
 						if (isEindOplossingExact) // isGelijkwaardig &&
 													// eindOplossingNodig &&
 													// isEindOplossing &&
 													// exactNodig &&
 													// isEindOplossingExact
 						{
-							score = puntenGelijkwaardig + puntenEindOplossing + puntenExact;
+							score = puntenGelijkwaardig + puntenEindOplossing + puntenSignificant + puntenExact;
 							if (gewensteEindOplossing.isOngelijkheid()) {
 								goedHalfFout = GOED;
 								correct = true;
@@ -920,12 +937,37 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 						else // isGelijkwaardig && eindOplossingNodig &&
 								// isEindOplossing && exactNodig &&
 								// isEindOplossingExact
-						{	goedHalfFout = DOOR;
-							score = puntenGelijkwaardig + puntenEindOplossing;
-							correct = false;
-							fout = false;
-							feedback = Text.constants.feedbackTekst10();
-							//"Oplossing is goed, maar nog niet in de juiste vorm."
+						{	
+							if(significantNodig)
+							{
+								if (isEindOplossingSignificant)
+								{
+									goedHalfFout = DOOR;
+									score = puntenGelijkwaardig + puntenEindOplossing + puntenSignificant;
+									correct = false;
+									fout = false;
+									feedback = Text.constants.feedbackTekst20();
+									// "Oplossing is goed, significantie klopt maar heeft nog niet in de juiste vorm."
+								}
+								else
+								{
+									goedHalfFout = DOOR;
+									score = puntenGelijkwaardig + puntenEindOplossing;
+									correct = false;
+									fout = false;
+									feedback = Text.constants.feedbackTekst19();
+									// "Oplossing is goed, maar nog niet in de juiste vorm en de significantie klopt niet."
+								}
+							}
+							else
+							{
+								goedHalfFout = DOOR;
+								score = puntenGelijkwaardig + puntenEindOplossing;
+								correct = false;
+								fout = false;
+								feedback = Text.constants.feedbackTekst10();
+								//"Oplossing is goed, maar nog niet in de juiste vorm."
+							}
 						}
 					} else // isGelijkwaardig && eindOplossingNodig &&
 							// isEindOplossing && ! exactNodig
@@ -942,12 +984,38 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 							fout = false;
 							feedback = Text.constants.feedbackTekst11();
 							// "De oplossing is correct afgerond"
-						} else {
-							goedHalfFout = GOED;
-							correct = true;
-							fout = false;
-							feedback = Text.constants.feedbackTekst04();
-							// "De vergelijking is correct opgelost"
+						} 
+						else 
+						{
+							if(significantNodig)
+							{
+								if(isEindOplossingSignificant)
+								{
+									score = puntenGelijkwaardig + puntenEindOplossing + puntenSignificant;
+									goedHalfFout = GOED;
+									correct = true;
+									fout = false;
+									feedback = Text.constants.feedbackTekst04();
+									// "De vergelijking is correct opgelost"
+								}
+								else
+								{
+									score = puntenGelijkwaardig + puntenEindOplossing;
+									goedHalfFout = DOOR;
+									correct = false;
+									fout = false;
+									feedback = Text.constants.feedbackTekst18();
+									// "De oplossing is goed, maar het aantal significante cijfers klopt niet."
+								}
+							}
+							else
+							{
+								goedHalfFout = GOED;
+								correct = true;
+								fout = false;
+								feedback = Text.constants.feedbackTekst04();
+								// "De vergelijking is correct opgelost"
+							}
 						}
 					}
 
@@ -1053,6 +1121,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			boolean pastVorm = isJuisteVorm;
 			boolean pastEindAntwoord = isEindOplossing;
 			boolean pastExact = isEindOplossingExact;
+			boolean pastSignificant = isEindOplossingSignificant;
 
 			if (!gelijkwaardigP)
 				pastGelijkwaardig = true;
@@ -1062,8 +1131,10 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 				pastEindAntwoord = true;
 			if (!exactP)
 				pastExact = true;
+			if (!significantP)
+				pastSignificant = true; 
 
-			boolean answerModelFits = pastGelijkwaardig && pastVorm && pastEindAntwoord && pastExact;
+			boolean answerModelFits = pastGelijkwaardig && pastVorm && pastEindAntwoord && pastExact && pastSignificant;
 			if (answerModelFits) {
 				break;
 			}
@@ -1169,6 +1240,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 				isGelijkwaardig = antwoord.isOplossing(gewensteTussenOplossing.geefEindOplossingen(var), var, gewensteTussenOplossing.geefVergTekens());
 
 			isEindOplossing = isGelijkwaardigEind && antwoord.isEindOplossing(var);
+
+			isEindOplossingSignificant = isGelijkwaardigEind && antwoord.isEindOplossingSignificant(gewensteEindOplossing.geefEindOplossingen(var), var, gewensteEindOplossing.geefVergTekens());
 
 			isEindOplossingExact = isGelijkwaardigEind
 					&& antwoord.isEindOplossingExact(gewensteEindOplossing.geefEindOplossingen(var), var, gewensteEindOplossing.geefVergTekens());
