@@ -58,6 +58,7 @@ public class FormuleParser
 	private static Logger logger = Logger.getLogger("FormuleParser");
 	private static boolean woordFormule = false;
 	private static boolean tweeHoofdletterVariabele = false;
+	private static boolean significantie = false;
 
 	private static String ofLabel = Text.constants.ofLabel();
 	
@@ -74,6 +75,11 @@ public class FormuleParser
 	{
 		tweeHoofdletterVariabele = b;
 	}
+	
+	public static void zetSignificantie(boolean b)
+    {
+	    significantie = b;
+    }
 
 	public static boolean isWoordFormule()
 	{
@@ -1172,6 +1178,7 @@ public class FormuleParser
 			if (isGetal)
 			{
 				exp = new BasisExpressie(Double.valueOf(s).doubleValue());
+				if(significantie) exp = new BasisExpressie(s);
 				//if ("MW".equals(WiskOpdr.deployVariant))
 				//exp = new BasisExpressie(s);
 				return exp;

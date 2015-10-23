@@ -639,6 +639,16 @@ public class Algebra
 		return false;*/
 		return zijnGelijk(e1, e2, true);
 	}
+	
+	public static boolean aantalSignificantGelijk(Expressie e1, Expressie e2)
+	{
+		if(!e1.isWaarde() || !e2.isWaarde()) return false;
+		double aantalSign1 = (new AantalSign(e1)).geefWaarde();
+		double aantalSign2 = (new AantalSign(e2)).geefWaarde();
+		//System.out.println("significante cijfers: "+aantalSign1 +" "+aantalSign2);
+		if(Double.isNaN(aantalSign1) || Double.isNaN(aantalSign2)) return false;
+		return aantalSign1==aantalSign2;
+	}
 
 	public static boolean zijnGelijk(Expressie e1, Expressie e2)
 	{

@@ -1,6 +1,7 @@
 package fi.wiskopdr;
 
 import java.util.*;
+
 import fi.wiskopdr.expressies.*;
 import fi.wiskopdr.FormuleParser;
 
@@ -149,6 +150,15 @@ public class AntwoordChecker
 		//boolean isExact = antwoord.toString().equals(juisteAntwoord.toString());
 		boolean isExact = Algebra.zijnGelijk(antwoord,juisteAntwoord);
 		return isExact;
+	}
+	
+	public static boolean checkSignificant(Expressie antwoord, Expressie juisteAntwoord)	
+	{	if(antwoord==null || juisteAntwoord==null) return false;
+		//boolean isExact = antwoord.toString().equals(juisteAntwoord.toString());
+		
+		boolean  aantalSignificantGelijk = Algebra.aantalSignificantGelijk(antwoord,juisteAntwoord);
+		boolean	isGelijkwaardig = Algebra.isGelijkwaardig(antwoord,juisteAntwoord);
+		return isGelijkwaardig && aantalSignificantGelijk;
 	}
 	
 	// ondervangt het probleem dat er geen onderscheid gemaakt kan worden tussen 1 1/2 en 1+1/2

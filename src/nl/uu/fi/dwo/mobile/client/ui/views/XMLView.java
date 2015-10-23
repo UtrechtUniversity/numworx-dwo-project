@@ -132,6 +132,8 @@ public abstract class XMLView {
 				FormuleParser.zetWoordFormule(wrap.getBoolean("woordFormule"));
 			if(wrap.containsKey("tweeHoofdletterVar"))
 				FormuleParser.zetTweeHoofdletterVariabele(wrap.getBoolean("tweeHoofdletterVar"));
+			if(wrap.containsKey("significantie"))
+				FormuleParser.zetSignificantie(wrap.getBoolean("significantie"));
 			if(wrap.containsKey("fontOvererving"))
 				TekstVakPanel.zetFontOvererving(wrap.getBoolean("fontOvererving"));
 			if(wrap.containsKey("fontOverervingForm"))

@@ -59,6 +59,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	
 	private String feedback;
 	private boolean exactP;
+	private boolean significantP;
 	private boolean herleidingP;
 	private boolean gelijkwaardigP;
 	private boolean hasFeedback;
@@ -325,6 +326,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		boolean gelijkwaardig = true;
 		boolean herleiding = false;
 		boolean exact = false;
+		boolean significant = false;
 		int soortHerleiding = 0;
 		int puntenGelijkwaardig = 10;
 		int puntenHerleiding = 0;
@@ -340,6 +342,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			if(map.containsKey("gelijkwaardig")) gelijkwaardig = map.getBoolean("gelijkwaardig");
 			if(map.containsKey("herleiding")) herleiding = map.getBoolean("herleiding");
 			if(map.containsKey("exact")) exact = map.getBoolean("exact");
+			if(map.containsKey("significant")) significant = map.getBoolean("significant");
 			if(map.containsKey("soortHerleiding")) soortHerleiding = map.getInt("soortHerleiding");
 			if(map.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = map.getInt("puntenGelijkwaardig");
 			if(map.containsKey("puntenHerleiding")) puntenHerleiding = map.getInt("puntenHerleiding");
@@ -354,6 +357,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		goedHalfFout = goedHalfFout==2 ? goedHalfFout+1 : goedHalfFout;
 				
 		exactP = exact;
+		significantP = significant;
 		herleidingP = herleiding;
 		gelijkwaardigP = gelijkwaardig;
 		this.goedHalfFout = goedHalfFout;
@@ -839,6 +843,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 				boolean pastGelijkwaardig = false;
 				boolean pastHerleid = false;
 				boolean pastExact = false;
+				boolean pastSignificant = false;
 				
 				if(casCheck)
 				{	/*checkCasStatement(expAntwoordString);	
@@ -854,6 +859,8 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 						else 
 							pastGelijkwaardig = pastGelijkwaardig || AntwoordChecker.checkGelijkwaardig(antwoord,juisteAntwoorden[i], absPrecisions[i]);
 						
+						pastSignificant = pastSignificant || AntwoordChecker.checkSignificant(antwoord, juisteAntwoorden[i]);
+					
 						if(Algebra.isBreukPlusGetal(juisteAntwoorden[i]))pastExact = pastExact || AntwoordChecker.checkExactBreukPlusGetal(expAntwoordString,juisteAntwoorden[i]);
 						else if(substitutie!=null)pastExact = pastExact || AntwoordChecker.checkExact(antwoordNonSub,juisteAntwoorden[i]);
                         else pastExact = pastExact || AntwoordChecker.checkExact(antwoord,juisteAntwoorden[i]);
@@ -864,6 +871,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 					if(!gelijkwaardigP)pastGelijkwaardig = true;
 					if(!herleidingP)pastHerleid = true;
 					if(!exactP)pastExact = true;
+					if(!significantP)pastSignificant = true;
 				}
 				
 				boolean answerModelFits = pastGelijkwaardig && pastHerleid && pastExact;
