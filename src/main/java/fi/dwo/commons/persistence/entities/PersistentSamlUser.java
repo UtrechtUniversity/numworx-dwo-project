@@ -53,10 +53,10 @@ public class PersistentSamlUser implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "userID", nullable = false)
-    private int userID;
+    private Long userID;
     @NotNull
     @Column(name = "authtoken", nullable = false)
-    private int authToken;
+    private Long authToken;
     @NotNull
     @Column(name = "timestampauthtoken", nullable = false)
     private long authTokenTimestamp;
@@ -68,7 +68,7 @@ public class PersistentSamlUser implements Serializable {
         this.id = id;
     }
 
-    public PersistentSamlUser(Long id, String samlorgid, String samluserid, int userID) {
+    public PersistentSamlUser(Long id, String samlorgid, String samluserid, Long userID) {
         this.id = id;
         this.samlorgid = samlorgid;
         this.samluserid = samluserid;
@@ -99,11 +99,11 @@ public class PersistentSamlUser implements Serializable {
         this.samluserid = samluserid;
     }
 
-    public int getUserID() {
+    public Long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(Long userID) {
         this.userID = userID;
     }
 
@@ -135,14 +135,14 @@ public class PersistentSamlUser implements Serializable {
     /**
      * @return the authToken
      */
-    public int getAuthToken() {
+    public Long getAuthToken() {
         return authToken;
     }
 
     /**
      * @param authToken the authToken to set
      */
-    public void setAuthToken(int authToken) {
+    public void setAuthToken(Long authToken) {
         this.authToken = authToken;
     }
 

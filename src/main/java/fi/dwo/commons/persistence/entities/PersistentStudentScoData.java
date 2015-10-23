@@ -82,6 +82,7 @@ public class PersistentStudentScoData implements Serializable {
         this.cocd = cocd;
     }
 
+  
     @Override
     public int hashCode() {
         int hash = 0;

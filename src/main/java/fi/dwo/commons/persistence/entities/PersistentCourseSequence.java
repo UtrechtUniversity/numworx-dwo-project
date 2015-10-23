@@ -40,11 +40,11 @@ public class PersistentCourseSequence implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "courseID", nullable = false)
-    private int courseID;
+    private Long courseID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolID", nullable = false)
-    private int schoolID;
+    private Long schoolID;
     @Column(name = "classID")
     private Long classID;
     @Column(name = "parent")
@@ -52,11 +52,11 @@ public class PersistentCourseSequence implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "profileID", nullable = false)
-    private int profileID;
+    private Long profileID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "sequencenr", nullable = false)
-    private int sequencenr;
+    private Long sequencenr;
 
     public PersistentCourseSequence() {
     }
@@ -65,7 +65,7 @@ public class PersistentCourseSequence implements Serializable {
         this.coursesequenceID = coursesequenceID;
     }
 
-    public PersistentCourseSequence(Long coursesequenceID, int courseID, int schoolID, int profileID, int sequencenr) {
+    public PersistentCourseSequence(Long coursesequenceID, Long courseID, Long schoolID, Long profileID, Long sequencenr) {
         this.coursesequenceID = coursesequenceID;
         this.courseID = courseID;
         this.schoolID = schoolID;
@@ -81,19 +81,19 @@ public class PersistentCourseSequence implements Serializable {
         this.coursesequenceID = coursesequenceID;
     }
 
-    public int getCourseID() {
+    public Long getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(int courseID) {
+    public void setCourseID(Long courseID) {
         this.courseID = courseID;
     }
 
-    public int getSchoolID() {
+    public Long getSchoolID() {
         return schoolID;
     }
 
-    public void setSchoolID(int schoolID) {
+    public void setSchoolID(Long schoolID) {
         this.schoolID = schoolID;
     }
 
@@ -113,19 +113,19 @@ public class PersistentCourseSequence implements Serializable {
         this.parent = parent;
     }
 
-    public int getProfileID() {
+    public Long getProfileID() {
         return profileID;
     }
 
-    public void setProfileID(int profileID) {
+    public void setProfileID(Long profileID) {
         this.profileID = profileID;
     }
 
-    public int getSequencenr() {
+    public Long getSequencenr() {
         return sequencenr;
     }
 
-    public void setSequencenr(int sequencenr) {
+    public void setSequencenr(Long sequencenr) {
         this.sequencenr = sequencenr;
     }
 
