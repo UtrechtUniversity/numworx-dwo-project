@@ -527,6 +527,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		regelVakken[aantalRegels].setFontStyle(font_style);
 		regelVakken[aantalRegels].setFontName(font_name);
 		regelVakken[aantalRegels].setFontSize(font_size);
+		regelVakken[aantalRegels].setColor(fgColor);
 		//regelVakken[aantalRegels].getElement().getStyle().setBackgroundColor(CssColor.make(20*aantalRegels, 255 - 20 * aantalRegels, 255).toString());
 		regelVakken[aantalRegels].getElement().getStyle().setColor(fgColor.toString());
 		
