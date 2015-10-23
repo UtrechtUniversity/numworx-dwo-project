@@ -34,7 +34,7 @@ public class PersistentStudentScoData implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "studentSco", nullable = false)
-    private Integer studentSco;
+    private Long studentSco;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -49,20 +49,20 @@ public class PersistentStudentScoData implements Serializable {
     public PersistentStudentScoData() {
     }
 
-    public PersistentStudentScoData(Integer studentSco) {
+    public PersistentStudentScoData(Long studentSco) {
         this.studentSco = studentSco;
     }
 
-    public PersistentStudentScoData(Integer studentSco, String suspendData) {
+    public PersistentStudentScoData(Long studentSco, String suspendData) {
         this.studentSco = studentSco;
         this.suspendData = suspendData;
     }
 
-    public Integer getStudentSco() {
+    public Long getStudentSco() {
         return studentSco;
     }
 
-    public void setStudentSco(Integer studentSco) {
+    public void setStudentSco(Long studentSco) {
         this.studentSco = studentSco;
     }
 

@@ -19,11 +19,11 @@ public class PersistentHasRolePK implements Serializable {
     @Basic(optional = false)
     @NotNull    
     @Column(name = "userID", nullable = false)
-    private int userID;
+    private Long userID;
     @Basic(optional = false)
     @NotNull    
     @Column(name = "schoolGroupID", nullable = false)
-    private int schoolGroupID;
+    private Long schoolGroupID;
 
    public  long getId(){
         long id = schoolGroupID;
@@ -35,32 +35,32 @@ public class PersistentHasRolePK implements Serializable {
     public PersistentHasRolePK() {
     }
 
-    public PersistentHasRolePK(int userID, int schoolGroupID) {
+    public PersistentHasRolePK(Long userID, Long schoolGroupID) {
         this.userID = userID;
         this.schoolGroupID = schoolGroupID;
     }
 
-    public int getUserID() {
+    public Long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(Long userID) {
         this.userID = userID;
     }
 
-    public int getSchoolGroupID() {
+    public Long getSchoolGroupID() {
         return schoolGroupID;
     }
 
-    public void setSchoolGroupID(int schoolGroupID) {
+    public void setSchoolGroupID(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) userID;
-        hash += (int) schoolGroupID;
+        hash += (int) (userID % ((long) Integer.MAX_VALUE));
+        hash += (int) (schoolGroupID % ((long) Integer.MAX_VALUE));
         return hash;
     }
 
@@ -71,10 +71,10 @@ public class PersistentHasRolePK implements Serializable {
             return false;
         }
         PersistentHasRolePK other = (PersistentHasRolePK) object;
-        if (this.userID != other.userID) {
+        if ((long) this.userID != (long) other.userID) {
             return false;
         }
-        if (this.schoolGroupID != other.schoolGroupID) {
+        if ((long) this.schoolGroupID != (long) other.schoolGroupID) {
             return false;
         }
         return true;

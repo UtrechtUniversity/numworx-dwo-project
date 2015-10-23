@@ -21,18 +21,18 @@ public class PersistentTeacherOfClassPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "userID", nullable = false)
-    private int userID;
+    private Long userID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolGroupID", nullable = false)
-    private int schoolGroupID;
+    private Long schoolGroupID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "classID", nullable = false)
-    private int classID;
+    private Long classID;
 
-    public long getId() {
-        long id = classID;
+    public Long getId() {
+        Long id = classID;
         id = id << 32;
         id = id & userID;
         return (id);
@@ -41,41 +41,41 @@ public class PersistentTeacherOfClassPK implements Serializable {
     public PersistentTeacherOfClassPK() {
     }
 
-    public PersistentTeacherOfClassPK(int userID, int classID, int schoolGroupID) {
+    public PersistentTeacherOfClassPK(Long userID, Long classID, Long schoolGroupID) {
         this.userID = userID;
         this.classID = classID;
         this.schoolGroupID = schoolGroupID;
     }
 
-    public int getUserID() {
+    public Long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(Long userID) {
         this.userID = userID;
     }
 
-    public int getClassID() {
+    public Long getClassID() {
         return classID;
     }
 
-    public void setClassID(int classID) {
+    public void setClassID(Long classID) {
         this.classID = classID;
     }
 
-    public int getSchoolGroupID() {
+    public Long getSchoolGroupID() {
         return schoolGroupID;
     }
 
-    public void setSchoolGroupID(int schoolGroupID) {
+    public void setSchoolGroupID(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) userID;
-        hash += (int) classID;
+        hash += (int) (userID % (long) Integer.MAX_VALUE);
+        hash += (int) (classID % (long) Integer.MAX_VALUE);
         return hash;
     }
 

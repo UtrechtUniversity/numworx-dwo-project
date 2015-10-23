@@ -37,7 +37,7 @@ public class PersistentRole implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "groupID", nullable = false)
-    private Integer groupID;
+    private Long groupID;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
@@ -53,26 +53,26 @@ public class PersistentRole implements Serializable {
     public PersistentRole() {
     }
 
-    public PersistentRole(Integer groupID) {
+    public PersistentRole(Long groupID) {
         this.groupID = groupID;
     }
 
     public PersistentRole(RoleType type) {
-        this.groupID = type.ordinal();
+        this.groupID = (long) type.ordinal();
         this.groupname = type.name();
     }
 
-    public PersistentRole(Integer groupID, String groupname, String description) {
+    public PersistentRole(Long groupID, String groupname, String description) {
         this.groupID = groupID;
         this.groupname = groupname;
         this.description = description;
     }
 
-    public Integer getGroupID() {
+    public Long getGroupID() {
         return groupID;
     }
 
-    public void setGroupID(Integer groupID) {
+    public void setGroupID(Long groupID) {
         this.groupID = groupID;
     }
 

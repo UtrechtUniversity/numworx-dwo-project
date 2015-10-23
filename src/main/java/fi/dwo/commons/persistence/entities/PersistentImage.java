@@ -29,7 +29,7 @@ public class PersistentImage implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "courseID", nullable = false)
-    private Integer courseID;
+    private Long courseID;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -39,20 +39,20 @@ public class PersistentImage implements Serializable {
     public PersistentImage() {
     }
 
-    public PersistentImage(Integer courseID) {
+    public PersistentImage(Long courseID) {
         this.courseID = courseID;
     }
 
-    public PersistentImage(Integer courseID, byte[] image) {
+    public PersistentImage(Long courseID, byte[] image) {
         this.courseID = courseID;
         this.image = image;
     }
 
-    public Integer getCourseID() {
+    public Long getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(Integer courseID) {
+    public void setCourseID(Long courseID) {
         this.courseID = courseID;
     }
 
@@ -78,7 +78,7 @@ public class PersistentImage implements Serializable {
             return false;
         }
         PersistentImage other = (PersistentImage) object;
-        if ((this.courseID == null && other.courseID != null) || (this.courseID != null && !this.courseID.equals(other.courseID))) {
+        if (!this.courseID.equals(other.courseID)) {
             return false;
         }
         return true;

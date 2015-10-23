@@ -40,7 +40,7 @@ public class PersistentClassCourse implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ClassCourseID", nullable = false)
-    private Integer classCourseID;
+    private Long classCourseID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "ClassID", nullable = false)
@@ -61,21 +61,21 @@ public class PersistentClassCourse implements Serializable {
     public PersistentClassCourse() {
     }
 
-    public PersistentClassCourse(Integer classCourseID) {
+    public PersistentClassCourse(Long classCourseID) {
         this.classCourseID = classCourseID;
     }
 
-    public PersistentClassCourse(Integer classCourseID, int classID, int courseID) {
+    public PersistentClassCourse(Long classCourseID, int classID, int courseID) {
         this.classCourseID = classCourseID;
         this.classID = classID;
         this.courseID = courseID;
     }
 
-    public Integer getClassCourseID() {
+    public Long getClassCourseID() {
         return classCourseID;
     }
 
-    public void setClassCourseID(Integer classCourseID) {
+    public void setClassCourseID(Long classCourseID) {
         this.classCourseID = classCourseID;
     }
 

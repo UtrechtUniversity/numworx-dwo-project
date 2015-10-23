@@ -35,7 +35,7 @@ public class PersistentDwoProfile implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "dwoProfileID", nullable = false)
-    private Integer dwoProfileID;
+    private Long dwoProfileID;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -55,20 +55,20 @@ public class PersistentDwoProfile implements Serializable {
     public PersistentDwoProfile() {
     }
 
-    public PersistentDwoProfile(Integer dwoProfileID) {
+    public PersistentDwoProfile(Long dwoProfileID) {
         this.dwoProfileID = dwoProfileID;
     }
 
-    public PersistentDwoProfile(Integer dwoProfileID, String dwoProfileName) {
+    public PersistentDwoProfile(Long dwoProfileID, String dwoProfileName) {
         this.dwoProfileID = dwoProfileID;
         this.dwoProfileName = dwoProfileName;
     }
 
-    public Integer getDwoProfileID() {
+    public Long getDwoProfileID() {
         return dwoProfileID;
     }
 
-    public void setDwoProfileID(Integer dwoProfileID) {
+    public void setDwoProfileID(Long dwoProfileID) {
         this.dwoProfileID = dwoProfileID;
     }
 

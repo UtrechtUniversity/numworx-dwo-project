@@ -18,41 +18,41 @@ public class PersistentFromToPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolFrom")
-    private int schoolFrom;
+    private Long schoolFrom;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolTo")
-    private int schoolTo;
+    private Long schoolTo;
 
     public PersistentFromToPK() {
     }
 
-    public PersistentFromToPK(int schoolFrom, int schoolTo) {
+    public PersistentFromToPK(Long schoolFrom, Long schoolTo) {
         this.schoolFrom = schoolFrom;
         this.schoolTo = schoolTo;
     }
 
-    public int getSchoolFrom() {
+    public Long getSchoolFrom() {
         return schoolFrom;
     }
 
-    public void setSchoolFrom(int schoolFrom) {
+    public void setSchoolFrom(Long schoolFrom) {
         this.schoolFrom = schoolFrom;
     }
 
-    public int getSchoolTo() {
+    public Long getSchoolTo() {
         return schoolTo;
     }
 
-    public void setSchoolTo(int schoolTo) {
+    public void setSchoolTo(Long schoolTo) {
         this.schoolTo = schoolTo;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) schoolFrom;
-        hash += (int) schoolTo;
+        hash += (int) (schoolFrom % ((long) Integer.MAX_VALUE));
+        hash += (int) (schoolTo % ((long) Integer.MAX_VALUE));
         return hash;
     }
 
@@ -63,10 +63,10 @@ public class PersistentFromToPK implements Serializable {
             return false;
         }
         PersistentFromToPK other = (PersistentFromToPK) object;
-        if (this.schoolFrom != other.schoolFrom) {
+        if ((long) this.schoolFrom != (long) other.schoolFrom) {
             return false;
         }
-        if (this.schoolTo != other.schoolTo) {
+        if ((long) this.schoolTo != (long) other.schoolTo) {
             return false;
         }
         return true;

@@ -35,7 +35,7 @@ public class PersistentAppletConfig implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "appletConfigID", nullable = false)
-    private Integer appletConfigID;
+    private Long appletConfigID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "appletID", nullable = false)
@@ -58,22 +58,22 @@ public class PersistentAppletConfig implements Serializable {
     public PersistentAppletConfig() {
     }
 
-    public PersistentAppletConfig(Integer appletConfigID) {
+    public PersistentAppletConfig(Long appletConfigID) {
         this.appletConfigID = appletConfigID;
     }
 
-    public PersistentAppletConfig(Integer appletConfigID, int appletID, String name, String launchdata) {
+    public PersistentAppletConfig(Long appletConfigID, int appletID, String name, String launchdata) {
         this.appletConfigID = appletConfigID;
         this.appletID = appletID;
         this.name = name;
         this.launchdata = launchdata;
     }
 
-    public Integer getAppletConfigID() {
+    public Long getAppletConfigID() {
         return appletConfigID;
     }
 
-    public void setAppletConfigID(Integer appletConfigID) {
+    public void setAppletConfigID(Long appletConfigID) {
         this.appletConfigID = appletConfigID;
     }
 

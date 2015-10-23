@@ -53,19 +53,19 @@ public class PersistentStudentScoContext implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "studentSco", nullable = false)
-    private Integer studentSco;
+    private Long studentSco;
     @Basic(optional = false)
     @NotNull
     @Column(name = "scoID", nullable = false)
-    private int scoID;
+    private Long scoID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "userID", nullable = false)
-    private int userID;
+    private Long userID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolGroupID", nullable = false)
-    private int schoolGroupID;
+    private Long schoolGroupID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "createDate", nullable = false)
@@ -79,11 +79,11 @@ public class PersistentStudentScoContext implements Serializable {
     public PersistentStudentScoContext() {
     }
 
-    public PersistentStudentScoContext(Integer studentSco) {
+    public PersistentStudentScoContext(Long studentSco) {
         this.studentSco = studentSco;
     }
 
-    public PersistentStudentScoContext(Integer studentSco, int scoID, int userID, Date createDate, float score) {
+    public PersistentStudentScoContext(Long studentSco, Long scoID, Long userID, Date createDate, float score) {
         this.studentSco = studentSco;
         this.scoID = scoID;
         this.userID = userID;
@@ -107,27 +107,27 @@ public class PersistentStudentScoContext implements Serializable {
         this.sessionTime = sessionTime;
     }
 
-    public Integer getStudentSco() {
+    public Long getStudentSco() {
         return studentSco;
     }
 
-    public void setStudentSco(Integer studentSco) {
+    public void setStudentSco(Long studentSco) {
         this.studentSco = studentSco;
     }
 
-    public int getScoID() {
+    public Long getScoID() {
         return scoID;
     }
 
-    public void setScoID(int scoID) {
+    public void setScoID(Long scoID) {
         this.scoID = scoID;
     }
 
-    public int getUserID() {
+    public Long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(Long userID) {
         this.userID = userID;
     }
 
@@ -175,14 +175,14 @@ public class PersistentStudentScoContext implements Serializable {
     /**
      * @return the schoolGroupID
      */
-    public int getSchoolGroupID() {
+    public Long getSchoolGroupID() {
         return schoolGroupID;
     }
 
     /**
      * @param schoolGroupID the schoolGroupID to set
      */
-    public void setSchoolGroupID(int schoolGroupID) {
+    public void setSchoolGroupID(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
     

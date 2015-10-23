@@ -38,15 +38,15 @@ public class PersistentScoContext implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "scoID", nullable = false)
-    private Integer scoID;
+    private Long scoID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "courseID", nullable = false)
-    private int courseID;
+    private Long courseID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "appletID", nullable = false)
-    private int appletID;
+    private Long appletID;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 40)
@@ -57,16 +57,16 @@ public class PersistentScoContext implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "sequencenr", nullable = false)
-    private int sequencenr;
+    private Long sequencenr;
 
     public PersistentScoContext() {
     }
 
-    public PersistentScoContext(Integer scoID) {
+    public PersistentScoContext(Long scoID) {
         this.scoID = scoID;
     }
 
-    public PersistentScoContext(Integer scoID, int courseID, int appletID, String sconame, int sequencenr) {
+    public PersistentScoContext(Long scoID, Long courseID, Long appletID, String sconame, Long sequencenr) {
         this.scoID = scoID;
         this.courseID = courseID;
         this.appletID = appletID;
@@ -74,27 +74,27 @@ public class PersistentScoContext implements Serializable {
         this.sequencenr = sequencenr;
     }
 
-    public Integer getScoID() {
+    public Long getScoID() {
         return scoID;
     }
 
-    public void setScoID(Integer scoID) {
+    public void setScoID(Long scoID) {
         this.scoID = scoID;
     }
 
-    public int getCourseID() {
+    public Long getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(int courseID) {
+    public void setCourseID(Long courseID) {
         this.courseID = courseID;
     }
 
-    public int getAppletID() {
+    public Long getAppletID() {
         return appletID;
     }
 
-    public void setAppletID(int appletID) {
+    public void setAppletID(Long appletID) {
         this.appletID = appletID;
     }
 
@@ -114,11 +114,11 @@ public class PersistentScoContext implements Serializable {
         this.showscore = showscore;
     }
 
-    public int getSequencenr() {
+    public Long getSequencenr() {
         return sequencenr;
     }
 
-    public void setSequencenr(int sequencenr) {
+    public void setSequencenr(Long sequencenr) {
         this.sequencenr = sequencenr;
     }
 

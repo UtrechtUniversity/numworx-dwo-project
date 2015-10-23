@@ -47,7 +47,7 @@ public class PersistentSchool implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "schoolID", nullable = false)
-    private Integer schoolID;
+    private Long schoolID;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 128)
@@ -73,21 +73,21 @@ public class PersistentSchool implements Serializable {
     public PersistentSchool() {
     }
 
-    public PersistentSchool(Integer schoolID) {
+    public PersistentSchool(Long schoolID) {
         this.schoolID = schoolID;
     }
 
-    public PersistentSchool(Integer schoolID, String schoolName, String schoollogin) {
+    public PersistentSchool(Long schoolID, String schoolName, String schoollogin) {
         this.schoolID = schoolID;
         this.schoolName = schoolName;
         this.schoolLogin = schoollogin;
     }
 
-    public Integer getSchoolID() {
+    public Long getSchoolID() {
         return schoolID;
     }
 
-    public void setSchoolID(Integer schoolID) {
+    public void setSchoolID(Long schoolID) {
         this.schoolID = schoolID;
     }
 

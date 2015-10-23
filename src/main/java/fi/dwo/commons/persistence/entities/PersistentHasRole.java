@@ -37,7 +37,7 @@ public class PersistentHasRole implements Serializable {
     @EmbeddedId
     protected PersistentHasRolePK persistentHasRolePK;
     @Column(name = "classID")
-    private Integer classID;
+    private Long classID;
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="classID", insertable=false, updatable=false )
     private PersistentSchoolClass schoolClass;
@@ -70,7 +70,7 @@ public class PersistentHasRole implements Serializable {
         this.registerDate = registerDate;
     }
 
-    public PersistentHasRole(int userID, int schoolGroupID) {
+    public PersistentHasRole(Long userID, Long schoolGroupID) {
         this.persistentHasRolePK = new PersistentHasRolePK(userID, schoolGroupID);
     }
 
@@ -82,11 +82,11 @@ public class PersistentHasRole implements Serializable {
         this.persistentHasRolePK = persistentHasRolePK;
     }
 
-    public Integer getClassID() {
+    public Long getClassID() {
         return classID;
     }
 
-    public void setClassID(Integer classID) {
+    public void setClassID(Long classID) {
         this.classID = classID;
     }
 

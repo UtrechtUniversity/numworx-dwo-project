@@ -39,7 +39,7 @@ public class PersistentSamlUser implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -64,22 +64,22 @@ public class PersistentSamlUser implements Serializable {
     public PersistentSamlUser() {
     }
 
-    public PersistentSamlUser(Integer id) {
+    public PersistentSamlUser(Long id) {
         this.id = id;
     }
 
-    public PersistentSamlUser(Integer id, String samlorgid, String samluserid, int userID) {
+    public PersistentSamlUser(Long id, String samlorgid, String samluserid, int userID) {
         this.id = id;
         this.samlorgid = samlorgid;
         this.samluserid = samluserid;
         this.userID = userID;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

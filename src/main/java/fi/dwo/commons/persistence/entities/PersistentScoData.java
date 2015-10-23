@@ -30,7 +30,7 @@ public class PersistentScoData implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "scoID", nullable = false)
-    private Integer scoID;
+    private Long scoID;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -48,20 +48,20 @@ public class PersistentScoData implements Serializable {
     public PersistentScoData() {
     }
 
-    public PersistentScoData(Integer scoID) {
+    public PersistentScoData(Long scoID) {
         this.scoID = scoID;
     }
 
-    public PersistentScoData(Integer scoID, String description) {
+    public PersistentScoData(Long scoID, String description) {
         this.scoID = scoID;
         this.description = description;
     }
 
-    public Integer getScoID() {
+    public Long getScoID() {
         return scoID;
     }
 
-    public void setScoID(Integer scoID) {
+    public void setScoID(Long scoID) {
         this.scoID = scoID;
     }
 

@@ -39,15 +39,15 @@ public class PersistentSchoolClass implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "classID", nullable = false)
-    private Integer classID;
+    private Long classID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "userID", nullable = false)
-    private int userID;
+    private Long userID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolID", nullable = false)
-    private int schoolID;
+    private Long schoolID;
     @Column(name = "iconizer")
     private Boolean iconizer;
     @Basic(optional = false)
@@ -62,38 +62,38 @@ public class PersistentSchoolClass implements Serializable {
     public PersistentSchoolClass() {
     }
 
-    public PersistentSchoolClass(Integer classID) {
+    public PersistentSchoolClass(Long classID) {
         this.classID = classID;
     }
 
-    public PersistentSchoolClass(Integer classID, int userID, int schoolID, String class1) {
+    public PersistentSchoolClass(Long classID, Long userID, Long schoolID, String class1) {
         this.classID = classID;
         this.userID = userID;
         this.schoolID = schoolID;
         this.class1 = class1;
     }
 
-    public Integer getClassID() {
+    public Long getClassID() {
         return classID;
     }
 
-    public void setClassID(Integer classID) {
+    public void setClassID(Long classID) {
         this.classID = classID;
     }
 
-    public int getUserID() {
+    public Long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(Long userID) {
         this.userID = userID;
     }
 
-    public int getSchoolID() {
+    public Long getSchoolID() {
         return schoolID;
     }
 
-    public void setSchoolID(int schoolID) {
+    public void setSchoolID(Long schoolID) {
         this.schoolID = schoolID;
     }
 

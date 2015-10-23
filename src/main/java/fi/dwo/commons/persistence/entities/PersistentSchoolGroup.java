@@ -38,7 +38,7 @@ public class PersistentSchoolGroup implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "schoolGroupID", nullable = false)
-    private Integer schoolGroupID;
+    private Long schoolGroupID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "groupID", nullable = false)
@@ -63,22 +63,22 @@ public class PersistentSchoolGroup implements Serializable {
     public PersistentSchoolGroup() {
     }
 
-    public PersistentSchoolGroup(Integer schoolGroupID) {
+    public PersistentSchoolGroup(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
 
-    public PersistentSchoolGroup(Integer schoolGroupID, int groupID, int schoolID, String passwd) {
+    public PersistentSchoolGroup(Long schoolGroupID, int groupID, int schoolID, String passwd) {
         this.schoolGroupID = schoolGroupID;
         this.groupID = groupID;
         this.schoolID = schoolID;
         this.passwd = passwd;
     }
 
-    public Integer getSchoolGroupID() {
+    public Long getSchoolGroupID() {
         return schoolGroupID;
     }
 
-    public void setSchoolGroupID(Integer schoolGroupID) {
+    public void setSchoolGroupID(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
 

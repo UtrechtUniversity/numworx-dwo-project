@@ -36,7 +36,7 @@ public class PersistentCourseSequence implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "coursesequenceID", nullable = false)
-    private Integer coursesequenceID;
+    private Long coursesequenceID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "courseID", nullable = false)
@@ -46,9 +46,9 @@ public class PersistentCourseSequence implements Serializable {
     @Column(name = "schoolID", nullable = false)
     private int schoolID;
     @Column(name = "classID")
-    private Integer classID;
+    private Long classID;
     @Column(name = "parent")
-    private Integer parent;
+    private Long parent;
     @Basic(optional = false)
     @NotNull
     @Column(name = "profileID", nullable = false)
@@ -61,11 +61,11 @@ public class PersistentCourseSequence implements Serializable {
     public PersistentCourseSequence() {
     }
 
-    public PersistentCourseSequence(Integer coursesequenceID) {
+    public PersistentCourseSequence(Long coursesequenceID) {
         this.coursesequenceID = coursesequenceID;
     }
 
-    public PersistentCourseSequence(Integer coursesequenceID, int courseID, int schoolID, int profileID, int sequencenr) {
+    public PersistentCourseSequence(Long coursesequenceID, int courseID, int schoolID, int profileID, int sequencenr) {
         this.coursesequenceID = coursesequenceID;
         this.courseID = courseID;
         this.schoolID = schoolID;
@@ -73,11 +73,11 @@ public class PersistentCourseSequence implements Serializable {
         this.sequencenr = sequencenr;
     }
 
-    public Integer getCoursesequenceID() {
+    public Long getCoursesequenceID() {
         return coursesequenceID;
     }
 
-    public void setCoursesequenceID(Integer coursesequenceID) {
+    public void setCoursesequenceID(Long coursesequenceID) {
         this.coursesequenceID = coursesequenceID;
     }
 
@@ -97,19 +97,19 @@ public class PersistentCourseSequence implements Serializable {
         this.schoolID = schoolID;
     }
 
-    public Integer getClassID() {
+    public Long getClassID() {
         return classID;
     }
 
-    public void setClassID(Integer classID) {
+    public void setClassID(Long classID) {
         this.classID = classID;
     }
 
-    public Integer getParent() {
+    public Long getParent() {
         return parent;
     }
 
-    public void setParent(Integer parent) {
+    public void setParent(Long parent) {
         this.parent = parent;
     }
 

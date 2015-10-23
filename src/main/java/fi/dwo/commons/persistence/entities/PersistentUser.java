@@ -54,9 +54,9 @@ public class PersistentUser implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "userID", nullable = false)
-    private Integer userID;
+    private Long userID;
     @Column(name = "schoolGroupID")
-    private Integer schoolGroupID;
+    private Long schoolGroupID;
     @Basic(optional = false)
     @Column(name = "firstname", nullable = false, length = 50)
     private String firstname;
@@ -95,11 +95,11 @@ public class PersistentUser implements Serializable {
     public PersistentUser() {
     }
 
-    public PersistentUser(Integer userID) {
+    public PersistentUser(Long userID) {
         this.userID = userID;
     }
 
-    public PersistentUser(Integer userID, String firstname, String lastname, String username, String passwd, String email, Date registerDate) {
+    public PersistentUser(Long userID, String firstname, String lastname, String username, String passwd, String email, Date registerDate) {
         this.userID = userID;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -109,19 +109,19 @@ public class PersistentUser implements Serializable {
         this.registerDate = registerDate;
     }
 
-    public Integer getUserID() {
+    public Long getUserID() {
         return userID;
     }
 
-    public void setUserID(Integer userID) {
+    public void setUserID(Long userID) {
         this.userID = userID;
     }
 
-    public Integer getSchoolGroupID() {
+    public Long getSchoolGroupID() {
         return schoolGroupID;
     }
 
-    public void setSchoolGroupID(Integer schoolGroupID) {
+    public void setSchoolGroupID(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
 

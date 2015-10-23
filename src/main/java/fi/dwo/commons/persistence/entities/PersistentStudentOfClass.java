@@ -56,7 +56,7 @@ public class PersistentStudentOfClass implements Serializable {
         this.registerDate = registerDate;
     }
 
-    public PersistentStudentOfClass(int userID, int classID, int schoolGroupID) {
+    public PersistentStudentOfClass(Long userID, Long classID, Long schoolGroupID) {
         this.persistentStudentOfClassPK = new PersistentStudentOfClassPK(userID, classID, schoolGroupID);
     }
 

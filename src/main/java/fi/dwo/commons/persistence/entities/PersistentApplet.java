@@ -38,7 +38,7 @@ public class PersistentApplet implements PersistentUpdate<PersistentApplet>, Ser
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "appletID", nullable = false)
-    private Integer appletID;
+    private Long appletID;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 128)
@@ -70,22 +70,22 @@ public class PersistentApplet implements PersistentUpdate<PersistentApplet>, Ser
     public PersistentApplet() {
     }
 
-    public PersistentApplet(Integer appletID) {
+    public PersistentApplet(Long appletID) {
         this.appletID = appletID;
     }
 
-    public PersistentApplet(Integer appletID, String appletName, String classname, String jarname) {
+    public PersistentApplet(Long appletID, String appletName, String classname, String jarname) {
         this.appletID = appletID;
         this.appletName = appletName;
         this.classname = classname;
         this.jarname = jarname;
     }
 
-    public Integer getAppletID() {
+    public Long getAppletID() {
         return appletID;
     }
 
-    public void setAppletID(Integer appletID) {
+    public void setAppletID(Long appletID) {
         this.appletID = appletID;
     }
 
