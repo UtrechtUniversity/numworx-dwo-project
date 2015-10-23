@@ -535,7 +535,7 @@ public class CheckSleepUnit implements InteractionStub{
         }
         if(show && check)
         {	
-        	if (ingevuld)
+        	if (ingevuld  && changed)
         		comRoot.setChanged(teltMee && !juist);
         	nakijkAchtergrond.setVisible(true);
     		if(correct)

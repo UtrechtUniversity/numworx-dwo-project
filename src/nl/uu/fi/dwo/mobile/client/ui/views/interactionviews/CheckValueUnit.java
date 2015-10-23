@@ -479,6 +479,12 @@ public class CheckValueUnit implements InteractionStub{
         boolean juist = true;
         ingevuld = false;
         answer = "";
+        boolean changed = false;
+    	for(int i=0 ; i<aantalValueObjects ; i++)
+        {   
+    		if(ipValueList[i].ipObjectIsChanged())
+    			changed = true;
+        }
         
         correct = false;
         fout = true;
@@ -629,12 +635,12 @@ public class CheckValueUnit implements InteractionStub{
         {
         	for(int i=0 ; i<aantalValueObjects ; i++)
 	        {   //changed opvragen en straks weer terugzetten; wordt altijd op false gezet door kijkNa in ipobjectIsCorrect.
-        		boolean changed = ipValueList[i].ipObjectIsChanged();
+        		boolean ipValueChanged = ipValueList[i].ipObjectIsChanged();
         		boolean stapJuist = ipValueList[i].ipObjectIsCorrect();
 	        	ingevuld = ingevuld || ipValueList[i].ipObjectIsIngevuld();
 	        	juist = juist && stapJuist;
 	        	if(view)ipValueList[i].zetGoedFout(stapJuist);
-	        	ipValueList[i].setChanged(changed);
+	        	ipValueList[i].setChanged(ipValueChanged);
 		    }
 	    }
         if(juist)
@@ -649,11 +655,11 @@ public class CheckValueUnit implements InteractionStub{
         {   
             correct = false;
             fout = true;
-            verhoogErrorCount();
+            verhoogErrorCount(changed);
             score = 0;
         }
         if(show && check)
-        {	if (ingevuld)
+        {	if (ingevuld && changed)
 				comRoot.setChanged(teltMee && !juist);
         	nakijkAchtergrond.setVisible(true);
 			if(correct)
@@ -666,14 +672,8 @@ public class CheckValueUnit implements InteractionStub{
         //if(show || mode==0 || mode==1)produceAction("changed");
     }
     
-    public void verhoogErrorCount()
+    public void verhoogErrorCount(boolean changed)
     {
-    	boolean changed = false;
-    	for(int i=0 ; i<aantalValueObjects ; i++)
-        {   
-    		if(ipValueList[i].ipObjectIsChanged())
-    			changed = true;
-        }
     	if(changed)
 		{
 			errorCount++;

@@ -763,6 +763,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		else
 			this.feedback = "";
 		this.syntaxFout = (Boolean) checkResults.get("syntaxFout");
+		if(!ingevuld)
+			return;
 		
 		
 
