@@ -484,7 +484,7 @@ public final class DwoHelper {
         currentUser = aCurrentUser;
         if(aCurrentUser != null){
             try {
-                currentFacadeUser = (User) PersistenceFacade.instance().get(aCurrentUser.getUserID(), User.class);
+                currentFacadeUser = (User) PersistenceFacade.instance().get((int) (long) aCurrentUser.getUserID(), User.class);
             } catch (PersistenceException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
