@@ -484,7 +484,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					regelVakken[aantalRegels - 1].addObject(currentObject);
 					regelBreedte = iv.getWidth();
 				}
-				iv.setAsHoogte(regelVakken[aantalRegels - 1].getTekstAsHoogte() + 4);
+				iv.setAsHoogte(regelVakken[aantalRegels - 1].getTekstAsHoogte());
 			}
 			else if (currentObject instanceof AnchorView)
 			{
