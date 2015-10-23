@@ -205,7 +205,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), phr.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (school != null && schoolClass.getSchoolID() == school.getSchoolID() && toc.getPersistentTeacherOfClassPK().getClassID() == schoolClass.getClassID()) {
             //Fetch TeacherOfClass
@@ -255,7 +255,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), phr.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (school != null && schoolClass.getSchoolID() == school.getSchoolID() && toc.getPersistentTeacherOfClassPK().getClassID() == schoolClass.getClassID()) {
             //Fetch TeacherOfClass
@@ -346,7 +346,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), phr.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (schoolClass.getSchoolID() == school.getSchoolID() && toc.getPersistentTeacherOfClassPK().getClassID() == schoolClass.getClassID()) {
             try {
@@ -394,7 +394,7 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
+            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restTeacher.getId()));
             if (teacher == null) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find teacher to add.");
             }
@@ -407,7 +407,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         if (schoolClass.getSchoolID() == school.getSchoolID()) {
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
             toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
@@ -442,7 +442,7 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            student = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
+            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(restStudent.getId()));
             if (student == null) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find teacher to add.");
             }
@@ -454,8 +454,8 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        fromClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restFromSchoolClass.getId()));
-        toClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restToSchoolClass.getId()));
+        fromClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restFromSchoolClass.getId()));
+        toClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restToSchoolClass.getId()));
         if (fromClass == null || toClass == null) {
             LOG.log(Level.WARNING, "Username {0}: Submitted classes do not exist.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "One or both submitted schoolclasses do not exist.");
@@ -536,7 +536,7 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
+            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restTeacher.getId()));
             thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
@@ -545,7 +545,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
 
         if (teacher != null && schoolClass != null && schoolClass.getSchoolID() == school.getSchoolID()) {
             try {
@@ -583,7 +583,7 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
+            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restStudent.getId()));
             thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
@@ -592,7 +592,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
 
         if (teacher != null && schoolClass != null && schoolClass.getSchoolID() == school.getSchoolID()) {
             try {
@@ -636,7 +636,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
 
         if (schoolClass != null && schoolClass.getSchoolID() == school.getSchoolID()) {
             try {
@@ -681,7 +681,7 @@ public class SecuredTeacherSchoolClassManager {
         }
 
         if (sg != null) {
-            PersistentUser user = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(nssStudent.getId()));
+            PersistentUser user = UserManager.findEntity((Long) MySQLPersistenceId.getId(nssStudent.getId()));
             if (user == null) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: could not find user with id to update {1}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getId()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getUsername() + ".");

@@ -3,7 +3,6 @@ package fi.dwo.server.PersistentDataManagers.core;
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
 import fi.dwo.commons.persistence.entities.PersistentFromToPK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;

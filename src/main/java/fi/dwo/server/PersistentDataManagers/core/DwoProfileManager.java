@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
@@ -12,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -70,7 +64,7 @@ public class DwoProfileManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = dwoProfile.getDwoProfileID();
+                Long id = dwoProfile.getDwoProfileID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentDwoProfile with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -89,7 +83,7 @@ public class DwoProfileManager {
      *
      * @param id
      */
-    public static void destroy(Integer id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -135,7 +129,7 @@ public class DwoProfileManager {
         }
     }
 
-    public static PersistentDwoProfile findEntity(Integer id) {
+    public static PersistentDwoProfile findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentDwoProfile.class, id);

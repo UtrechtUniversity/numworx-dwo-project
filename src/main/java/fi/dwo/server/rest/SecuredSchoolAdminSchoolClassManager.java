@@ -150,7 +150,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         if (schoolClass != null && schoolClass.getSchoolID() == school.getSchoolID()) {
             //Fetch TeacherOfClass
             List<PersistentTeacherOfClass> teachersOfClass = TeacherOfClassManager.findEntities(schoolClass);
@@ -295,7 +295,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
+            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restTeacher.getId()));
             thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
@@ -304,7 +304,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         if (schoolClass != null && schoolClass.getSchoolID() == school.getSchoolID()) {
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
             toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
@@ -336,7 +336,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
+            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restTeacher.getId()));
             thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
@@ -345,7 +345,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
 
         if (teacher != null && schoolClass != null && schoolClass.getSchoolID() == school.getSchoolID()) {
             try {

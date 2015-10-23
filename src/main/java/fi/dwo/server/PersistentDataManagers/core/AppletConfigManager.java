@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentAppletConfig;
@@ -12,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -70,7 +64,7 @@ public class AppletConfigManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = persistentAppletConfig.getAppletConfigID();
+                Long id = persistentAppletConfig.getAppletConfigID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentAppletConfig with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -89,7 +83,7 @@ public class AppletConfigManager {
      *
      * @param id
      */
-    public static void destroy(Integer id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -135,7 +129,7 @@ public class AppletConfigManager {
         }
     }
 
-    public static PersistentAppletConfig findEntity(Integer id) {
+    public static PersistentAppletConfig findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentAppletConfig.class, id);

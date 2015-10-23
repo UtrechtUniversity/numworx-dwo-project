@@ -212,7 +212,7 @@ public class UserManagerPIT {
 //    @Test
     public void testFindEntity() {
         System.out.println("findEntity");
-        Integer id = null;
+        Long id = null;
         PersistentUser expResult = null;
         PersistentUser result = UserManager.findEntity(id);
         assertEquals(expResult, result);

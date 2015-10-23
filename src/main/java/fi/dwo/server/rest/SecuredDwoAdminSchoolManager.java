@@ -123,7 +123,7 @@ public class SecuredDwoAdminSchoolManager {
         if (hr != null) {
             PersistentSchool s = null;
             try {
-                s = SchoolManager.findEntity((int) MySQLPersistenceId.getId(pid));
+                s = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(pid));
                 LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
                 return s;
             }
@@ -235,7 +235,7 @@ public class SecuredDwoAdminSchoolManager {
     @Path("/remove")
     public Boolean removeSchool(@Context SecurityContext sc, RestSchool4Admin restSchool) {
         //unwrap persistentid
-        PersistentSchool school = SchoolManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchool.getId()));
+        PersistentSchool school = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(restSchool.getId()));
 
         PersistentHasRole hr = null;
         try {

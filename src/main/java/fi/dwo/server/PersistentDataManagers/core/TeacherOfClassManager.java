@@ -5,9 +5,7 @@
  */
 package fi.dwo.server.PersistentDataManagers.core;
 
-import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;

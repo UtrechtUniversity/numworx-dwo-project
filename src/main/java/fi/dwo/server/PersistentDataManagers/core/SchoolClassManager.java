@@ -69,7 +69,7 @@ public class SchoolClassManager {
         catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = entity.getClassID();
+                Long id = entity.getClassID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentSchoolClass with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -89,7 +89,7 @@ public class SchoolClassManager {
      *
      * @param id
      */
-    public static void destroy(Integer id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -152,7 +152,7 @@ public class SchoolClassManager {
         }
     }
 
-    public static PersistentSchoolClass findEntity(Integer id) {
+    public static PersistentSchoolClass findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentSchoolClass.class, id);
@@ -177,7 +177,7 @@ public class SchoolClassManager {
         }
     }
 
-
+//TODO fix to long
     public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {

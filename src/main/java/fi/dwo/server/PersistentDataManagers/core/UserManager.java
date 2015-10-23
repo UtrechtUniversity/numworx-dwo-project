@@ -72,7 +72,7 @@ public class UserManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = persistentUser.getUserID();
+                Long id = persistentUser.getUserID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentUser with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -91,7 +91,7 @@ public class UserManager {
      *
      * @param id
      */
-    public static void destroy(Integer id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -158,7 +158,7 @@ public class UserManager {
     }
     
     
-    public static PersistentUser findEntity(Integer id) {
+    public static PersistentUser findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentUser.class, id);

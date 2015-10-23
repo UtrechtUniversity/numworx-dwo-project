@@ -289,7 +289,7 @@ public class SchoolManagerPIT {
      */
     public void testFindEntity() {
         System.out.println("findEntity");
-        Integer id = null;
+        Long id = null;
         PersistentSchool expResult = null;
         PersistentSchool result = SchoolManager.findEntity(id);
         assertEquals(expResult, result);

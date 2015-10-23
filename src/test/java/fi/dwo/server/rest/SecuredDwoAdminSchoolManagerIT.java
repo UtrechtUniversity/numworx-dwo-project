@@ -97,7 +97,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
         PersistentSchool expResult = null;
         PersistentSchool result = instance.getSchool(sc, MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));
-        expResult = SchoolManager.findEntity(3);
+        expResult = SchoolManager.findEntity(3L);
         assertEquals(expResult, result);
         if (!result.similar(expResult)) {
             fail("School fetched not similar with data directly from persistent store.");
@@ -144,7 +144,7 @@ public class SecuredDwoAdminSchoolManagerIT {
 
         //try illegal action updating index and/or schoollogin
         school = SchoolManager.findBySchoolLogin("school01");
-        school.setSchoolID(1);
+        school.setSchoolID(1L);
         try {
             result = instance.updateSchool(sc, school);
             if (result.getSchoolID() == school.getSchoolID()) {
@@ -166,7 +166,7 @@ public class SecuredDwoAdminSchoolManagerIT {
 
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
         PersistentSchool expResult = null;
-        expResult = SchoolManager.findEntity(3);
+        expResult = SchoolManager.findEntity(3L);
         RestSchool4Admin restSchool = new RestSchool4Admin(expResult);
         restSchool.setId(MySQLPersistenceId.createPersistenceId(expResult.getSchoolID(), PersistenceClassType.PersistentSchool));
         restSchool.setSchoolLogin("school01");
@@ -178,7 +178,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         catch (Dwo2RestException e) {
             fail("School failed to delete.");
         }
-        PersistentSchool result = SchoolManager.findEntity(3);
+        PersistentSchool result = SchoolManager.findEntity(3L);
         if (result != null) {
             fail("School failed to delete.");
         }

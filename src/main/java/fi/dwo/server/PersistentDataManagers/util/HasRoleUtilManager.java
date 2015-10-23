@@ -60,7 +60,7 @@ public class HasRoleUtilManager {
             LOG.log(Level.SEVERE, "Current HasRole of user for userlogin {0} could not be found.", new Object[]{usercode});
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "HasRole could not be found.");
         }
-        int roleId = 0;
+        Long roleId = 0L;
         try {
             roleId = hr.getSchoolGroup().getRole().getGroupID();
         }
@@ -68,7 +68,7 @@ public class HasRoleUtilManager {
             LOG.log(Level.SEVERE, "RoleId of hasRole {1} for userlogin {0} could not be found.", new Object[]{usercode, hr.getPersistentHasRolePK()});
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Current Role could not be found.");
         }
-        if (roleId != r.ordinal()) {
+        if ( (long) roleId != r.ordinal()) {
             return null;
         }
         return hr;

@@ -1,12 +1,6 @@
-/**
- * Copyrighted Sep 24, 2015
- */
-
 package fi.dwo.server.PersistentDataManagers.core;
 
-import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
-import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -14,7 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -73,7 +66,7 @@ public class SamlUserManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = persistentUser.getUserID();
+                Long id = persistentUser.getUserID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentSamlUser with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -92,7 +85,7 @@ public class SamlUserManager {
      *
      * @param id
      */
-    public static void destroy(Integer id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -153,7 +146,7 @@ public class SamlUserManager {
         }
     }    
 
-    public static PersistentSamlUser findEntity(Integer id) {
+    public static PersistentSamlUser findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentSamlUser.class, id);

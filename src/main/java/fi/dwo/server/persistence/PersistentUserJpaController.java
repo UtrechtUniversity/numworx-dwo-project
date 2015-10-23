@@ -55,7 +55,7 @@ public class PersistentUserJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = persistentUser.getUserID();
+                Long id = persistentUser.getUserID();
                 if (findPersistentUser(id) == null) {
                     throw new NonexistentEntityException("The persistentUser with id " + id + " no longer exists.");
                 }
@@ -68,7 +68,7 @@ public class PersistentUserJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Long id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -113,7 +113,7 @@ public class PersistentUserJpaController implements Serializable {
         }
     }
 
-    public PersistentUser findPersistentUser(Integer id) {
+    public PersistentUser findPersistentUser(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentUser.class, id);

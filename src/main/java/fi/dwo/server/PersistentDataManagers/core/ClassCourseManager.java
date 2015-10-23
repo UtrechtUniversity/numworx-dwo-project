@@ -1,9 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
-import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
-import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -70,7 +68,7 @@ public class ClassCourseManager {
         catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = classCourse.getClassCourseID();
+                Long id = classCourse.getClassCourseID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -90,7 +88,7 @@ public class ClassCourseManager {
      *
      * @param id
      */
-    public static void destroy(int id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -153,7 +151,7 @@ public class ClassCourseManager {
         }
     }
 
-    public static PersistentClassCourse findEntity(int id) {
+    public static PersistentClassCourse findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentClassCourse.class, id);

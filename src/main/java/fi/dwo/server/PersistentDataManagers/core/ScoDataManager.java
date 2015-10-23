@@ -65,7 +65,7 @@ public class ScoDataManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = sd.getScoID();
+                Long id = sd.getScoID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentScoData with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -84,7 +84,7 @@ public class ScoDataManager {
      *
      * @param id
      */
-    public static void destroy(Integer id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -130,7 +130,7 @@ public class ScoDataManager {
         }
     }
 
-    public static PersistentScoData findEntity(Integer id) {
+    public static PersistentScoData findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentScoData.class, id);

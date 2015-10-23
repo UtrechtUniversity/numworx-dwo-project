@@ -180,7 +180,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            student = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
+            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(restStudent.getId()));
             if (student == null) {
                 return false;
             }
@@ -325,7 +325,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
+            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restTeacher.getId()));
             if (teacher == null) {
                 return false;
             }
@@ -375,7 +375,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            student = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
+            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(restStudent.getId()));
             if (student == null) {
                 return false;
             }
@@ -420,7 +420,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            schoolAdmin = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolAdmin.getId()));
+            schoolAdmin = UserManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolAdmin.getId()));
             if (schoolAdmin == null) {
                 return false;
             }

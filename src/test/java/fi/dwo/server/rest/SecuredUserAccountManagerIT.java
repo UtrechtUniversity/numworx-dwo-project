@@ -111,7 +111,7 @@ public class SecuredUserAccountManagerIT {
         }
 
         user = UserManager.findByUserName("user01");
-        user.setSchoolGroupID(-1);
+        user.setSchoolGroupID(-1L);
         try {
             result = instance.updateCurrentUser(sc, user);
             if (result.getSchoolGroupID() == -1) {

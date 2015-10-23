@@ -197,7 +197,7 @@ public class SecuredUserAccountLoginsManager {
             em.getTransaction().begin();
             PersistentUser u = em.find(PersistentUser.class, user.getUserID());
             u.setSchoolGroupID(
-                    (int) (long) MySQLPersistenceId.getId(sarc.getSchoolGroupId()));
+                    (Long) MySQLPersistenceId.getId(sarc.getSchoolGroupId()));
             em.getTransaction()
                     .commit();
             LOG.log(Level.INFO,
@@ -317,8 +317,8 @@ public class SecuredUserAccountLoginsManager {
     public Boolean removeASchoolLogin(@Context SecurityContext sc, RestSchoolRoleAndClass sarc) {
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
 
-        int userId = (int) (long) MySQLPersistenceId.getId(sarc.getUserId());
-        int schoolGroupId = (int) (long) MySQLPersistenceId.getId(sarc.getSchoolId());
+        Long userId = (Long) MySQLPersistenceId.getId(sarc.getUserId());
+        Long schoolGroupId = (Long) MySQLPersistenceId.getId(sarc.getSchoolId());
 
         if (user.getUserID() != userId) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: tried to remove a school login of  user {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});

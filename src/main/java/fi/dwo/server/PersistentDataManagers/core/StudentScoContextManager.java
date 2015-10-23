@@ -70,7 +70,7 @@ public class StudentScoContextManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = studentOf.getScoID();
+                Long id = studentOf.getScoID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentStudentScoContext with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -89,7 +89,7 @@ public class StudentScoContextManager {
      *
      * @param id
      */
-    public static void destroy(int id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -150,7 +150,7 @@ public class StudentScoContextManager {
         }
     }
     
-    public static PersistentStudentScoContext findEntity(int id) {
+    public static PersistentStudentScoContext findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentStudentScoContext.class, id);

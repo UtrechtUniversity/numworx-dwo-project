@@ -90,7 +90,7 @@ public class SecuredUserAccountLoginsManagerIT {
         System.out.println("switchToSchoolLogin");
         SecurityContext sc = new TestSecurityContext("user03", RoleType.STUDENT);
         PersistentUser user = UserManager.findByUserName("user03");
-        int oldSchoolGroup = user.getSchoolGroupID();
+        Long oldSchoolGroup = user.getSchoolGroupID();
 
         RestSchoolRoleAndClass sarc = new RestSchoolRoleAndClass();
         sarc.setUserId(MySQLPersistenceId.createPersistenceId(user.getUserID(),PersistenceClassType.PersistentUser));

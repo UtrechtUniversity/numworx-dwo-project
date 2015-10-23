@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentApplet;
@@ -69,7 +64,7 @@ public class AppletManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = persistentApplet.getAppletID();
+                Long id = persistentApplet.getAppletID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentApplet with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -88,7 +83,7 @@ public class AppletManager {
      *
      * @param id
      */
-    public static void destroy(Integer id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -134,7 +129,7 @@ public class AppletManager {
         }
     }
 
-    public static PersistentApplet findEntity(Integer id) {
+    public static PersistentApplet findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentApplet.class, id);

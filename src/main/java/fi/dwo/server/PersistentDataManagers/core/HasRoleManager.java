@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -19,7 +14,6 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import static org.eclipse.persistence.sessions.remote.corba.sun.TransporterHelper.id;
 
 /**
  * Manages the hasRole's in the persistent storage.

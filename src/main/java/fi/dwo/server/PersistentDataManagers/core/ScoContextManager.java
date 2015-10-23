@@ -70,7 +70,7 @@ public class ScoContextManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = sc.getScoID();
+                Long id = sc.getScoID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentScoContext with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -89,7 +89,7 @@ public class ScoContextManager {
      *
      * @param id
      */
-    public static void destroy(Integer id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -150,7 +150,7 @@ public class ScoContextManager {
         }
     }
         
-    public static PersistentScoContext findEntity(Integer id) {
+    public static PersistentScoContext findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentScoContext.class, id);

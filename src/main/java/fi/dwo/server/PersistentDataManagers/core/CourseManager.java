@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentCourse;
@@ -71,7 +66,7 @@ public class CourseManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = course.getCourseID();
+                Long id = course.getCourseID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentCourse with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -90,7 +85,7 @@ public class CourseManager {
      *
      * @param id
      */
-    public static void destroy(Integer id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -151,7 +146,7 @@ public class CourseManager {
         }
     }
     
-    public static PersistentCourse findEntity(Integer id) {
+    public static PersistentCourse findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentCourse.class, id);

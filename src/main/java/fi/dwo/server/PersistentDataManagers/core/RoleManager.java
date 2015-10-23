@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentRole;
@@ -12,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -74,7 +68,7 @@ public class RoleManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = role.getGroupID();
+                Long id = role.getGroupID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentRole with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -93,7 +87,7 @@ public class RoleManager {
      *
      * @param id
      */
-    public static void destroy(int id) throws PersistenceException {
+    public static void destroy(Long id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -139,7 +133,7 @@ public class RoleManager {
         }
     }
 
-    public static PersistentRole findEntity(int id) {
+    public static PersistentRole findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentRole.class, id);
