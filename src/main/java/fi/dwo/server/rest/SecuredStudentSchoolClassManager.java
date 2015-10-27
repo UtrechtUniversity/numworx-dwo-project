@@ -100,7 +100,7 @@ public class SecuredStudentSchoolClassManager {
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
 
-        if (phr != null && schoolClass != null && schoolClass.getSchoolID() == school.getSchoolID()) {
+        if (phr != null && schoolClass != null &&   schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
                 StudentOfClassManager.destroy(socId);
@@ -144,7 +144,7 @@ public class SecuredStudentSchoolClassManager {
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
 
-        if (phr != null && schoolClass != null && schoolClass.getSchoolID() == school.getSchoolID()) {
+        if (phr != null && schoolClass != null && (long) schoolClass.getSchoolID() == (long) school.getSchoolID()) {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
                 StudentOfClassManager.destroy(socId);

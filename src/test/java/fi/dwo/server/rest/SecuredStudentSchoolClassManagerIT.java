@@ -4,11 +4,16 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
@@ -32,7 +37,7 @@ public class SecuredStudentSchoolClassManagerIT {
 
     private static final Logger LOG = Logger.getLogger(SecuredStudentSchoolClassManagerIT.class.getName());
 
-    static DatabaseManager instance = null;
+    static DatabaseManager dbInstance = null;
 
     public SecuredStudentSchoolClassManagerIT() {
     }
@@ -40,23 +45,23 @@ public class SecuredStudentSchoolClassManagerIT {
     @BeforeClass
     public static void setUpClass() {
         DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
-        instance = new DatabaseManager();
+        dbInstance = new DatabaseManager();
     }
 
     @AfterClass
     public static void tearDownClass() {
-        instance = new DatabaseManager();
+        dbInstance = new DatabaseManager();
         DwoEmfFactory.setDefaultEntityManagerFactory();
     }
 
     @Before
     public void setUp() {
-        instance.IntializeTestDatabase();
+        dbInstance.IntializeTestDatabase();
     }
 
     @After
     public void tearDown() {
-        instance.ClearDatabase();
+        dbInstance.ClearDatabase();
     }
 
     /**
@@ -74,7 +79,7 @@ public class SecuredStudentSchoolClassManagerIT {
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         Boolean result = instance.setActiveSchoolClass(sc, restSchoolClass);
         assertEquals(true, result);
-        PersistentHasRole hr=null;
+        PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole("user02", RoleType.STUDENT);
         }
@@ -82,8 +87,8 @@ public class SecuredStudentSchoolClassManagerIT {
             Logger.getLogger(SecuredStudentSchoolClassManagerIT.class.getName()).log(Level.SEVERE, null, ex);
             fail("Setting the active school threw an error.");
         }
-        if (hr==null || (long) hr.getPersistentHasRolePK().getUserID() != (long) UserManager.findByUserName("user02").getUserID()
-                || hr.getSchoolGroup().getSchoolGroupID() != 2L || hr.getClassID()!=2L){
+        if (hr == null || (long) hr.getPersistentHasRolePK().getUserID() != (long) UserManager.findByUserName("user02").getUserID()
+                || hr.getSchoolGroup().getSchoolGroupID() != 2L || hr.getClassID() != 2L) {
             fail("Failed setting active login.");
         }
     }
@@ -96,13 +101,23 @@ public class SecuredStudentSchoolClassManagerIT {
     public void testRemoveStudentFromSchoolClass() {
         System.out.println("removeStudentFromSchoolClass");
         SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);
-        RestSchoolClass restSchoolClass = null;
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
+        restSchoolClass.setSchoolClassName("SchoolClass01");
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
-        Boolean expResult = null;
         Boolean result = instance.removeStudentFromSchoolClass(sc, restSchoolClass);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("Removing the student from the schoolclass failed.", true, result);
+        PersistentStudentOfClassPK socKey =  new PersistentStudentOfClassPK();
+        socKey.setClassID(1L);
+        socKey.setSchoolGroupID(2L);
+        socKey.setUserID(9L);
+        try{
+            PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socKey);
+            if(soc==null) return;
+        }catch(Exception ex){
+            return;
+        }
+        fail("StudentOfClass was not removed!");
     }
 
     /**
