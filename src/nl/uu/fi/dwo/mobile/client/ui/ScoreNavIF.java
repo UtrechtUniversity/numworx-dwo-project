@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -61,6 +62,10 @@ public interface ScoreNavIF {
 	void setObjectivesHandler(ObjectivesHandler objectivesHandler);
 
 	PushButton getKijkNaButton();
+	Label getTotaalScoreLabel();
+	Label getKeerNagekekenLabel();
+	void setTotaalScoreLabel(int score);
+	void setKeerNagekekenLabel(int aantal);
 
 	void setVolgendeVisible(boolean visible);
 	void setVorigeVisible(boolean visible);
