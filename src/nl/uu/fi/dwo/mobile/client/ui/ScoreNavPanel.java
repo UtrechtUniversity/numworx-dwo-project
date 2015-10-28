@@ -408,6 +408,34 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 		
 	}
 
+	@Override
+	public Label getTotaalScoreLabel()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Label getKeerNagekekenLabel()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setTotaalScoreLabel(int score)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setKeerNagekekenLabel(int aantal)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }
