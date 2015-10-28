@@ -561,6 +561,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		vak.setSize(breedte - 23, hoogte);
 		vak.setMarges(2, 5);
 		vak.getElement().getStyle().setBackgroundColor(CssColor.make(238, 238, 238).toString());
+		vak.setFontName(XMLView.getDefaultFontName());
 		vak.setFontSize(XMLView.getDefaultFontSize());
 		vak.setColor(CssColor.make("black"));
 		vak.setCentering(false, true);
