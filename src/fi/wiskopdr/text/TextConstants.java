@@ -21,10 +21,10 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String volgendeKnopLabel();
 	@DefaultStringValue("Vorige")
 	String vorigeKnopLabel();
-	@DefaultStringValue("Nagekeken: ")
+	@DefaultStringValue("Totaal: ")
+	String totaalScoreLabel();
+	@DefaultStringValue(" keer nagekeken")
 	String nakijkLabel();
-	@DefaultStringValue(" keer ")
-	String nakijkLabel2();
 	@DefaultStringValue("opnieuw")
 	String opnieuwKnopLabel();
 	@DefaultStringValue("alles opnieuw")
