@@ -221,88 +221,125 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		for (int i = 0; i < buttons.size(); i++)
 			contentPanel.remove(buttons.get(i));
-try {
-		super.setupView(launchData);
-		ObjectMap wrap = (instellingen);
-// wanneer verschijnt de opnieuwknop?		
-		boolean opnieuwMogelijk = "true".equals(launchData.get("opnieuwMogelijk"));
-		boolean opnieuw = false;
-		if(wrap != null && wrap.containsKey("opnieuw"))
-		{	opnieuw = wrap.getBoolean("opnieuw");
+		try
+		{
+			super.setupView(launchData);
+			ObjectMap wrap = (instellingen);
+			// wanneer verschijnt de opnieuwknop?
+			boolean opnieuwMogelijk = "true".equals(launchData
+				.get("opnieuwMogelijk"));
+			boolean opnieuw = false;
+			if (wrap != null && wrap.containsKey("opnieuw"))
+			{
+				opnieuw = wrap.getBoolean("opnieuw");
+			}
+
+			if (wrap.containsKey(KEYBOARD))
+			{
+				sb.setKeyboard(wrap.getInt(KEYBOARD));
+			}
+			else
+				sb.setKeyboard(-1);
+			if (wrap.containsKey(WRITE_MATH_SET))
+			{
+				sb.setWriteMathSet(wrap.getInt(WRITE_MATH_SET));
+			}
+			else
+				sb.setKeyboard(-1);
+			//
+
+			contentPanel.getElement().getStyle()
+				.setFontSize(font_size, Unit.PX);
+			contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX
+																			// was
+																			// 15
+			// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet
+			// meer bij noordhoff
+
+			(on = new OpdrNav()).init(launchData, this, createMemento());
+			// voor noordhoff
+			int aantalOpdrachten = on.getAantalOpdrachten();
+			if (standalone && !bolletjesZichtbaar && !volgendeKnopZichtbaar
+				&& !vorigeKnopZichtbaar && aantalOpdrachten == 1)
+				removeTitle();
+
+			FlowPanel onp = (FlowPanel) on.getAsPanel();
+			if (bolletjesZichtbaar)
+				sb.addNavPanel(onp);
+			if (wrap != null && wrap.containsKey("itemOpnieuw"))
+			{
+				scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
+			}
+			scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
+
+			// pas vanaf hier toevoegen mogelijk.
+			scoreNav.setBeantwoord(on.getAantalBeantwoord());
+			scoreNav.setItemScores(on.getItemScores());
+			scoreNav.setTotaalScore((int) on.getScore());
+			scoreNav.setGotoOpdracht(on);
+		}
+		catch (Exception e)
+		{
+			logger.log(Level.SEVERE, "setupView()", e);
+			Window.alert("Exception in setup: " + e.toString()
+				+ "\nActivity might be instable");
+		}
+		if (DWOplayer.PARAMETERS.isNavTitle())
+			setTitle("Vraag " + (1 + on.getCurrentOpdracht()) + " van "
+				+ on.getAantalOpdrachten());
+		// call SetupDone Handler, if an object is provided
+		if (this.loadingHandler != null)
+		{
+			this.loadingHandler.viewModuleViewSetupDone();
+			;
 		}
 
-		if(wrap.containsKey(KEYBOARD))
-		{
-			sb.setKeyboard(wrap.getInt(KEYBOARD));
-		} else
-			sb.setKeyboard(-1);
-		if(wrap.containsKey(WRITE_MATH_SET))
-		{
-			sb.setWriteMathSet(wrap.getInt(WRITE_MATH_SET));
-		} else
-			sb.setKeyboard(-1);
-//
-		
-		
-		
-		
-		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
-		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
-		// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet meer bij noordhoff
-
-		(on =  new OpdrNav()).init(launchData, this, createMemento());
-// voor noordhoff
-		int aantalOpdrachten = on.getAantalOpdrachten();
-		if( standalone && !bolletjesZichtbaar && !volgendeKnopZichtbaar && !vorigeKnopZichtbaar && aantalOpdrachten == 1)
-			removeTitle();
-
-		FlowPanel onp = (FlowPanel) on.getAsPanel();
-		if(bolletjesZichtbaar)
-			sb.addNavPanel(onp);
-		if(wrap != null && wrap.containsKey("itemOpnieuw"))
-		{
-			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
-		}
-		scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
-		
-// pas vanaf hier toevoegen mogelijk.
-		scoreNav.setBeantwoord(on.getAantalBeantwoord());
-		scoreNav.setItemScores(on.getItemScores());
-		scoreNav.setTotaalScore((int)on.getScore());
-		scoreNav.setGotoOpdracht(on);
-} catch(Exception e) {
-		logger.log(Level.SEVERE, "setupView()", e);
-		Window.alert("Exception in setup: " + e.toString() + "\nActivity might be instable");
-}
-		if(DWOplayer.PARAMETERS.isNavTitle())
-			setTitle("Vraag " + (1+on.getCurrentOpdracht()) + " van " + on.getAantalOpdrachten());
-		//call SetupDone Handler, if an object is provided
-		if (this.loadingHandler != null){
-			this.loadingHandler.viewModuleViewSetupDone();;
-		}
-				
-		//benodigde knoppen toevoegen.
+		// benodigde knoppen toevoegen.
 		int mode = on.getMode();
-		if(mode == OpdrNav.ZELFTOETS)
+		if (mode == OpdrNav.ZELFTOETS)
 		{
 			scoreNav.setKijkNaEnabled(on.getAantalOpdrachten() == 1);
-			sb.addKnop(scoreNav.getKijkNaButton(), false);		
-			scoreNav.setKijkNa( new ScoreNavIF.Checker() {
+			sb.addKnop(scoreNav.getKijkNaButton(), false);
+			scoreNav.setKijkNa(new ScoreNavIF.Checker()
+			{
 
 				@Override
-				public void checkOpdracht(ScoreNavIF source) {
-					//on.saveCurrentState();
-					zetToetsNagekeken(source);
+				public void checkOpdracht(ScoreNavIF source)
+				{
+					// on.saveCurrentState();
+//					zetToetsNagekeken(source);
+//					on.kijkToetsNa();
+
+					// omgedraaid: keerNagekeken moet wel verhoogd zijn voor zetToetsNagekeken()
 					on.kijkToetsNa();
-					on.saveCurrentState(); // op speciaal verzoek 
+					zetToetsNagekeken(source);
+
+					on.saveCurrentState(); // op speciaal verzoek
 				}
-				
+
 			});
 		}
 		scoreNav.setNextPrevHandler(this);
-		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig() && mode != OpdrNav.EINDTOETS);
+		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig()
+			&& mode != OpdrNav.EINDTOETS);
 		scoreNav.setObjectivesHandler(this);
 		stelNavigatieIn();
+
+		if (mode == OpdrNav.ZELFTOETS)
+		{
+			// set values
+			scoreNav.setTotaalScoreLabel(on.getTotaalScore());
+			scoreNav.setKeerNagekekenLabel(on.getKeerNagekeken());
+
+			// add totaalscore and keer nagekeken labels
+			sb.addLabel(scoreNav.getTotaalScoreLabel());
+			sb.addLabel(scoreNav.getKeerNagekekenLabel());
+		}
+//		else if (mode == OpdrNav.OEFENEN || mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+//		{
+//			// Geen nakijkknop, dus ook niet keernagekeken
+//			// maar wel totaalscore
+//		}
 	}
 
 	protected Memento createMemento() {
@@ -330,7 +367,8 @@ try {
 			prev.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
 			scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig());
 			
-
+			scoreNav.setTotaalScoreLabel(on.getTotaalScore());
+			scoreNav.setKeerNagekekenLabel(on.getKeerNagekeken());
 //			totaal = Math.max(0, totaal - (Math.max(0, aantalNakijken[activiteitNr] - 1)) * nakijkStraf);
 //			aantalNakijkLabel.setText("" + aantalNakijken[activiteitNr] + " keer nagekeken");
 //			if (aantalNakijken[activiteitNr] > 0 && !zelftoetsGeenCorr)
