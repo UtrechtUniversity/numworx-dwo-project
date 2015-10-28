@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -555,6 +556,13 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 
 	@Override
 	public void showScore(ScoreNavIF scoreNav) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addLabel(Label label)
+	{
 		// TODO Auto-generated method stub
 		
 	}
