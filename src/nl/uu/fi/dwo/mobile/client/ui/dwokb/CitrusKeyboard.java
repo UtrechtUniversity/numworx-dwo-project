@@ -5,6 +5,7 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -112,6 +113,13 @@ public class CitrusKeyboard extends FlowPanel implements StatusBarIF, FormuleCli
 
 	@Override
 	public void showScore(ScoreNavIF scoreNav) {
+	}
+
+	@Override
+	public void addLabel(Label label)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }
