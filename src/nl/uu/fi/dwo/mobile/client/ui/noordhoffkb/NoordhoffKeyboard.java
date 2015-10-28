@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.noordhoffkb;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -104,6 +105,13 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 
 	@Override
 	public void showScore(ScoreNavIF scoreNav) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addLabel(Label label)
+	{
 		// TODO Auto-generated method stub
 		
 	}
