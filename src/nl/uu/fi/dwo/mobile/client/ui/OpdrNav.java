@@ -505,11 +505,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			return;
 		}
 		button.setStyleDependentName("max0", false);
-		if(mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN)
+		if(mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN
+			|| mode == ZELFTOETS)
 		{
 			button.setStyleDependentName("correct", b);
 			button.getElement().setPropertyInt("title", getItemScores()[j]);
 		}
+		// voor eindtoets groene bollen zodra verzegeld
 		
 		
 	}
@@ -550,57 +552,100 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 */
 	public double getScore()
 	{
+		int totaalScore = getTotaalScore();
+		int totaalMax = getTotaalMax();
+		
+		if (totaalMax == 0)
+			return 0;
 
-		//int mode = EINDTOETS; // TODO wat zijn de modes? Launchdata?
+		double doubleScore = Math.round(100.0 * totaalScore / totaalMax);
+		
+		if (Double.isInfinite(doubleScore) || Double.isNaN(doubleScore))
+			doubleScore = 0;
+		
+		return doubleScore;
+	}
+	
+	/**
+	 * Berekent de totale score van de activiteit (over alle activiteiten (?) en opdrachten),
+	 * inclusief nakijkstraf indien van toepassing.
+	 */
+	public int getTotaalScore()
+	{
+
+		// int mode = EINDTOETS; // TODO wat zijn de modes? Launchdata?
 		int totaalScore = 0;
-		int totaalMax = 0;
+
 		for (int i = 0; i < aantalActiviteiten; i++)
 		{
-			switch(mode) {
-			case ZELFTOETS: {
-				int hulp = (getAantalNakijken(i) * nakijkStraf - nakijkStraf); // een keer gratis nakijken.
-				if (hulp < 0) hulp = 0;
-				hulp = - hulp; // aftrek!
-				int size = aantalOpdrachten[i];
-				for(int j = 0 ; j < size; j++) {
-					hulp += scores[i][j];
-				}
-				if (hulp > 0) totaalScore += hulp;
-			}
-			break;
-			case EINDTOETS:
+			switch (mode)
 			{
-				for (int j = 0; j < aantalOpdrachten[i]; j++)
-				{
-					totaalScore += scores[i][j];
-				}
-			} break;
-			default:
-			
-			{ // TODO wat wordt hier bedoeld?
-				
-				for (int j = 0; j < aantalOpdrachten[i]; j++)
-				{
-					totaalScore += scores[i][j];
-				}
-				
+				case ZELFTOETS:
+					int hulp = (getAantalNakijken(i) * nakijkStraf - nakijkStraf); // een keer gratis nakijken.
+					
+					if (hulp < 0)
+						hulp = 0;
+					
+					hulp = -hulp; // aftrek!
+					int size = aantalOpdrachten[i];
+					
+					for (int j = 0; j < size; j++)
+					{
+						hulp += scores[i][j];
+					}
+					
+					if (hulp > 0)
+						totaalScore += hulp;
+					
+					break;
+				case EINDTOETS:
+					for (int j = 0; j < aantalOpdrachten[i]; j++)
+					{
+						totaalScore += scores[i][j];
+					}
+					break;
+				default:
+					for (int j = 0; j < aantalOpdrachten[i]; j++)
+					{
+						totaalScore += scores[i][j];
+					}
 			}
-			}
+
+		} // for-loop i
+
+		return totaalScore;
+	}
+
+	/**
+	 * Berekent het aantal keer nagekeken (over alle activiteiten (?)).
+	 */
+	public int getKeerNagekeken()
+	{
+		int keerNagekeken = 0;
+
+		for (int i = 0; i < aantalActiviteiten; i++)
+		{
+			keerNagekeken =+ getAantalNakijken(i);
+		}
+
+		return keerNagekeken;
+	}
+
+	private int getTotaalMax()
+	{
+		int totaalMax = 0;
+		
+		for (int i = 0; i < aantalActiviteiten; i++)
+		{
 			for (int j = 0; j < aantalOpdrachten[i]; j++)
 			{
 				totaalMax += scoresMax[i][j];
 			}
 		}
-		//System.out.println("TotaalMax " + totaalMax);
-		//System.out.println("TotaalScore " + totaalScore);
-		if (totaalMax == 0)
-			return 0;
-		double doubleScore = Math.round(100.0 * totaalScore / totaalMax);
-		if (Double.isInfinite(doubleScore) || Double.isNaN(doubleScore))
-			doubleScore = 0;
-		return doubleScore;
+
+		return totaalMax;
 	}
-	
+
 	public int getScore(int actNr, int opdrNr)
 	{
 		return scores[actNr][opdrNr];
@@ -670,6 +715,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	public void kijkToetsNa()
 	{
+		// isCorrect[] is niet juist, aan het eind van de methode is hij wel juist...
 		
 		incrAantalNakijken(currentActiviteit);
 		int opdrachtNr = currentOpdracht;
@@ -686,7 +732,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		gotoOpdracht(opdrachtNr);
 		
 		
-//		if (mode == 2 || mode == 3)
+//		if (mode == ZELFTOETS || mode == EINDTOETS) // if (mode == 2 || mode == 3)
 //		{
 //			if (mode == 2 && zelftoetsGeenCorr)
 //			{
@@ -715,7 +761,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 //				activiteitScoreLabels[0].setText(WiskOpdr.rb.getString("voortgang") + bepaalVoortgangPercentage(currentActiviteit, currentOpdracht) + "%");
 //		}
 
-//		if (mode == 0 || mode == OEFENEN_STRAFPUNTEN)
+//		if (mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN)
 //		{
 //			WiskOpdr.setLMSScore();
 //			WiskOpdr.setLMSState();
@@ -958,6 +1004,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			}
 			if(getAantalNakijken(currentActiviteit) > 0)
 				aantalNakijken[currentActiviteit] = 0;
+			//reset totaalscore en keer nagekeken
+			entry.scoreNav.setTotaalScoreLabel(getTotaalScore());
+			entry.scoreNav.setKeerNagekekenLabel(getKeerNagekeken());
 		} 
 		else
 		{	clearState(opdracht,source);
