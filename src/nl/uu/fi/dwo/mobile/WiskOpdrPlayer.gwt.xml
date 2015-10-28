@@ -25,5 +25,9 @@
   	<extend-property name="locale" values="en"/>
 <!--   	<extend-property name="locale" values="nl"/>  	
   	<set-property-fallback name="locale" value="nl"/> <!- - Dutch is the default -->
-		 
+	
+	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOIdeasClient">
+    	<when-type-is class="fi.wiskopdr.FailingIdeas" />
+    </replace-with>
+ 	 
 </module>
