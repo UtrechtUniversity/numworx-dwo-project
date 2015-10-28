@@ -341,11 +341,11 @@ public class FormuleTeken extends FormuleElement
 		if(fm.isItalic())
 		{	if(FormuleFont.formTimes)
 			{
-				if(teken.equals("f"))
+				if("f".equals(teken))
 					this.setSize((int) m.getWidth() + 8, fontheight);
-				else if(teken.equals("j"))
+				else if("j".equals(teken))
 					this.setSize((int) m.getWidth() + 5, fontheight);
-				else if(teken.equals("p") || teken.equals("y"))
+				else if("p".equals(teken) || "y".equals(teken))
 					this.setSize((int) m.getWidth() + 4, fontheight);
 				else
 					this.setSize((int) m.getWidth() + 2, fontheight);
