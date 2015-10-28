@@ -126,6 +126,7 @@ public abstract class XMLView {
 			//AntwoordKeuzeVakGWT.setFontSize(font_size);
 			defaultFontSize = font_size;
 			defaultFontName = font_name;
+			defaultFontName = defaultFontName.replace("SansSerif", "sans-serif");
 			//AntwoordKeuzeVakGWT.setFont(fontName);
 			
 			if(wrap.containsKey("woordFormule"))
