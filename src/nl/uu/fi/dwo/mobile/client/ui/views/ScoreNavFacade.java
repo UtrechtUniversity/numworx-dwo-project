@@ -53,6 +53,14 @@ public class ScoreNavFacade implements ScoreNavIF {
 	private NextPrevHandler nextprev;
 	private ObjectivesHandler objectivesHandler;
 	private PushButton allesOpnieuwKnop, opnieuwKnop;
+	/**
+	 * Label met de totaalscore, bijv. "Totaal: 35".
+	 */
+	private Label totaalScoreLabel;
+	/**
+	 * Label met het aantal keer nagekeken, bijv. "2 keer nagekeken".
+	 */
+	private Label keerNagekekenLabel;
 	private GotoOpdracht gotoOpdracht;
 	private int currentOpdracht;
 
@@ -96,6 +104,9 @@ public class ScoreNavFacade implements ScoreNavIF {
 		//Tijdelijk:
 		eindeKnop.setVisible(false);
 	
+		// De labels voor totaalscore en aantal keer nagekeken
+		totaalScoreLabel = new Label(Text.constants.totaalScoreLabel());
+		keerNagekekenLabel = new Label(0 + Text.constants.nakijkLabel());
 	}
 	
 	@Override
@@ -335,6 +346,30 @@ public class ScoreNavFacade implements ScoreNavIF {
 	@Override
 	public void showScore() {
 		sb.showScore(this);
+	}
+
+	@Override
+	public Label getTotaalScoreLabel()
+	{
+		return totaalScoreLabel;
+	}
+
+	@Override
+	public Label getKeerNagekekenLabel()
+	{
+		return keerNagekekenLabel;
+	}
+	
+	@Override
+	public void setTotaalScoreLabel(int score)
+	{
+		totaalScoreLabel.setText(Text.constants.totaalScoreLabel() + score);
+	}
+
+	@Override
+	public void setKeerNagekekenLabel(int aantal)
+	{
+		keerNagekekenLabel.setText(aantal + Text.constants.nakijkLabel());
 	}
 	
 }
