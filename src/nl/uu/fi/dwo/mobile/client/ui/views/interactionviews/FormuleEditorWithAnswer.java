@@ -749,7 +749,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkResults = avChecker.checkAnswer(useranswer);
 
 		this.goedHalfFout = (Integer) checkResults.get("goedHalfFout");
-		if(goedHalfFout == AntwoordVakChecker.FOUT)
+		this.syntaxFout = (Boolean) checkResults.get("syntaxFout");
+		if(goedHalfFout == AntwoordVakChecker.FOUT && !syntaxFout)
 			verhoogErrorCount();
 		this.correct = (Boolean) checkResults.get("correct");
 		this.score = (Integer) checkResults.get("score");
@@ -762,7 +763,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		else
 			this.feedback = "";
-		this.syntaxFout = (Boolean) checkResults.get("syntaxFout");
 		if(!ingevuld)
 			return;
 		
