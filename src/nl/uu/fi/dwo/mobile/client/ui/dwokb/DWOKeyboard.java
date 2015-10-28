@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -164,6 +165,14 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 //			}
 //		};
 //		scoreTimer.schedule(2000);
+	}
+
+	@Override
+	public void addLabel(Label label)
+	{
+		if (label == null) return;
+		
+		staticPanel.add(label);
 	}
 
 }
