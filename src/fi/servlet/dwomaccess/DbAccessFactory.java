@@ -19,7 +19,9 @@ public class DbAccessFactory {
 		try {
 			String param = context.getInitParameter("dbaccess.url");
 			Logger.getLogger(DbAccessFactory.class.getName()).info("dbaccess url = " + param);
-			return singleton = new DbAccessClient(new URL(param));
+			singleton = new DbAccessClient(new URL(param));
+			DbAccessCreator.setInstance(singleton);
+			return singleton;
 		} catch(Exception e) {
 			Logger.getLogger(DbAccessFactory.class.getName()).log(Level.SEVERE, "dbaccess url error", e);
 					
