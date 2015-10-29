@@ -115,7 +115,7 @@ public class SecuredUserAccountManagerIT {
         user.setSchoolGroupID(-1L);
         try {
             result = instance.updateCurrentUser(sc, user);
-            if (result.getSchoolGroupID() == -1) {
+            if (result.getSchoolGroupID().equals(-1)) {
                 fail("Did not fail schoolgroup change.");
             }
         }

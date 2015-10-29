@@ -345,7 +345,7 @@ public class SecuredUserAccountLoginsManager {
         HasRoleManager.destroy(hr.getPersistentHasRolePK());
         
         //Update the default hasRole to the null school if user is in the current role.
-        if(user.getSchoolGroupID() == hr.getPersistentHasRolePK().getSchoolGroupID()) //userid's already match...
+        if(user.getSchoolGroupID().equals(hr.getPersistentHasRolePK().getSchoolGroupID())) //userid's already match...
         {
             RoleType type = RoleType.STUDENT;
             PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(SchoolManager.findBySchoolLogin("null"), type);

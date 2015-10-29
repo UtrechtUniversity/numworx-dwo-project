@@ -147,7 +147,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         school.setSchoolID(1L);
         try {
             result = instance.updateSchool(sc, school);
-            if (result.getSchoolID() == school.getSchoolID()) {
+            if (result.getSchoolID().equals(school.getSchoolID())) {
                 fail("School id updated in persistent store to value:" + result.getSchoolID() + ".");
             }
         }
