@@ -149,6 +149,7 @@ public class SecuredStudentSchoolClassManager {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
                 PersistentStudentOfClass soc = new PersistentStudentOfClass();
+                soc.setPersistentStudentOfClassPK(socId);
                 soc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
                 StudentOfClassManager.create(soc);
             }
