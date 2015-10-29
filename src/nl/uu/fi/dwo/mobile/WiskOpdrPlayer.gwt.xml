@@ -29,5 +29,8 @@
 	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOIdeasClient">
     	<when-type-is class="fi.wiskopdr.FailingIdeas" />
     </replace-with>
+ 	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOIdeasClient">
+    	<when-type-is class="nl.uu.fi.dwo.ideas.client.IdeasIF" />
+    </replace-with>
  	 
 </module>
