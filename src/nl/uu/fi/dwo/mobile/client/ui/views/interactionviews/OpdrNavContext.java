@@ -27,6 +27,15 @@ public class OpdrNavContext implements OpdrNavIF {
 		};
 	private OpdrNavIF comRoot;
 	private String UUID, UUIDpfx;
+
+	public void pause() {
+		comRoot.pause();
+	}
+
+	public void unpause() {
+		comRoot.unpause();
+	}
+
 	private Connector connector;
 	private CssColor background;
 	

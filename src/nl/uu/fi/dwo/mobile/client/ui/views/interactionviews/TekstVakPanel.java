@@ -1635,7 +1635,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	public boolean ipObjectIsCorrect()
 	{
 		boolean juist = false;
-		
+		comRoot.pause();
 		for(int i = 0; i < interactionViewObjects.size(); i++)
 		{	Object object = interactionViewObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
@@ -1644,13 +1644,14 @@ public class TekstVakPanel implements InteractionView, FacetAware
 				juist = object2.isCorrectStrikt() != null && object2.isCorrectStrikt().booleanValue();
 			}
 		}
-		
+		comRoot.unpause();
 		return juist;
 	}
 	
 	public boolean ipObjectIsIngevuld()
 	{
 		boolean ingevuld = false;
+		comRoot.pause();
 		for(int i = 0; i < interactionViewObjects.size(); i++)
 		{	Object object = interactionViewObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
@@ -1659,7 +1660,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 				ingevuld = ingevuld || object2.isIngevuld();
 			}
 		}
-		
+		comRoot.unpause();
 		return ingevuld;
 	}
 	
@@ -2208,7 +2209,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		boolean vakinhoudCorrect = true;
 		//Vector v = parent.getOpdrachtObjects();
 		ArrayList<Object> opdrObjects = parent.getOpdrachtObjects();
-		
+		comRoot.pause();
 		for(int i = 0; i < opdrObjects.size(); i++)
 		{
 			Object object = opdrObjects.get(i);
@@ -2222,7 +2223,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 					vakinhoudCorrect = vakinhoudCorrect && ((InteractionView) object).isCorrect().booleanValue();
 			}
 		}
-		
+		comRoot.unpause();
 		return vakinhoudCorrect;
 		
 	}
@@ -2287,11 +2288,12 @@ public class TekstVakPanel implements InteractionView, FacetAware
 
 	@Override
 	public void kijkNa() {
+		comRoot.pause();
 		for (Object object : interactionViewObjects) {
 			if(object instanceof InteractionView)
 				((InteractionView) object).kijkNa();
 		}
-		
+		comRoot.unpause();
 	}
 
 	@Override

@@ -140,6 +140,8 @@ public class CheckButton implements InteractionStub
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
 //				correct = Boolean.TRUE;
+				logger.warning("CheckButton click start");
+				comRoot.pause();
 				for (int i = 0; i < lijst.size(); i++)
 				{	Object object = lijst.get(i);
 					if(object instanceof InteractionView) {
@@ -154,7 +156,8 @@ public class CheckButton implements InteractionStub
 	//						}
 					}
 				}
-				
+				comRoot.unpause();				
+				logger.warning("CheckButton click end");
 			}
 		});
 	}

@@ -329,4 +329,16 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return null;
 	}
 
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unpause() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

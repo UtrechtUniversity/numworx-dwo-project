@@ -149,8 +149,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			{
 				FormuleEditor other = FormuleEditorWithAnswer.this;
 				String useranswer = other.toString();
+// transfer 
+				if(getEditor() == null || getEditor().toString().equals(""))
+					backStep(false);
 				getEditor().clearMain();
 				getEditor().insert(useranswer);
+				
+				
 				getEditor().requestFocus();
 			}
 			if(TekstVakPanel.TVP_KLAPIN == event.getCommand())
@@ -523,7 +528,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//prefixPanel.getElement().getStyle().setBackgroundColor("yellow");
 			//this.getMainRegel().getCanvas().getElement().getStyle().setBackgroundColor("blue");
 			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
-			
+			lastanswer = "$f" + toString() + "@"; // initialize lastanswer voor kijkna not sendning
 		}
 	}
 
@@ -641,17 +646,21 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(fews != null)
 		{
 			fews.transfer = true;
-			//doen alsof het in de laatste regel van de fews is ingevuld; dan komt het automatisch terug naar de fewa.
-			if(fews.getEditor() == null || fews.getEditor().toString().equals(""))
-				fews.backStep(false);
-			fews.getEditor().clearAll();
-			fews.getEditor().insert(this.toString());
+			transferToFEWS();
 			fews.getEditor().enter();
 			fews.transfer = false;
 			return;
 		}
 		else
 			processAntwoord();
+	}
+
+	private void transferToFEWS() {
+		//doen alsof het in de laatste regel van de fews is ingevuld; dan komt het automatisch terug naar de fewa.
+		if(fews.getEditor() == null || fews.getEditor().toString().equals(""))
+			fews.backStep(false);
+		fews.getEditor().clearAll();
+		fews.getEditor().insert(this.toString());
 	}
 	
 	private void processAntwoord() {
@@ -702,6 +711,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void kijkNa()
 	{
+		if(fews != null) {
+			fews.transfer = true;
+			transferToFEWS();
+			fews.kijkNa();
+			fews.transfer = false;
+		}
 		kijkNa(false);
 	}
 	

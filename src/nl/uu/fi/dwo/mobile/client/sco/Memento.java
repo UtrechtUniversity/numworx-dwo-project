@@ -351,7 +351,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			}
 			opdrContStates.set(i, array);
 		}
-		flush();
+		setValue(SUSPEND_DATA, suspendData.toString());
 	}
 
 
@@ -384,7 +384,6 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 //		System.out.println("START SUSPENDDATA-----------");
 //		System.out.println(suspendData.toString());
 //		System.out.println("END SUSPENDDATA-----------");
-		setValue(SUSPEND_DATA, suspendData.toString());
 		logger.info("memento flush");
 		try
 		{

@@ -677,8 +677,35 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		saveCurrentState();
 	}
 
+	private int scsInUse;
+	private boolean scsPending;
 	public void saveCurrentState()
 	{
+		try {
+			if(scsInUse ++ == 0)
+			{
+				saveCurrentState0();
+				scsPending = false;
+			} else {
+				scsPending = true;
+			}
+		} finally {
+			--scsInUse;
+		}
+	}	
+	
+	public void pause() {
+		scsInUse++;
+	}
+
+	public void unpause() {
+		--scsInUse;
+		if(scsPending) saveCurrentState();
+	}
+	
+	
+	private void saveCurrentState0() {	
+		
 		states[currentActiviteit][currentOpdracht] = entry.getState();
 		ScoreNavIF source = entry.scoreNav;
 
@@ -692,6 +719,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		memento.setCurrentOpdracht(currentOpdracht);
 		memento.setOrGoedFout(isCorrect);
 		double score = getScore();
+// THIS ORDER!!!!!
 		memento.setScore(score);
 		memento.setScores(scores);
 		memento.setBezocht(entry.bezocht);
@@ -699,6 +727,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		memento.setAantalNakijken(aantalNakijken);
 		memento.setCompletion(suspendDataCompleted(currentActiviteit, currentOpdracht));
 		memento.setOpdrContStates(states);
+		memento.flush();
 // send data to GUI (why here?)
 		source.setItemScore(currentOpdracht, scores[currentActiviteit][currentOpdracht]);		
 		source.setBeantwoord(getAantalBeantwoord());

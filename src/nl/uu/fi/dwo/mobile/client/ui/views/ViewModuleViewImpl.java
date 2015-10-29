@@ -833,6 +833,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			this.randomVarWaarden = (HashMap<String, Object>) h.get(RANDOM_VAR_WAARDEN);
 		List<Object> states = JSONUtilities.toArrayList(h.get("interactiePanelStates"));
 		int stateNr = 5;
+		on.pause();
 		for (int i = 0; states != null && i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
@@ -843,13 +844,14 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				stateNr++;
 			}
 		}
-		
+		on.unpause();
 		stelNavigatieIn();
 
 	}
 	
 	public void kijkNa()
 	{
+		on.pause();
 		for (int i = 0; i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
@@ -858,6 +860,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				((InteractionView)currentObject).kijkNa();
 			}
 		}
+		on.unpause();
 	}
 	
 	public void zetNagekeken(boolean b)

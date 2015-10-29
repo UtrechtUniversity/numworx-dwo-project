@@ -48,6 +48,14 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  */
 public class StubView extends SimplePanel implements InteractionView, LoadHandler, OpdrNavIF, FormuleEditorIF {
 
+	public void pause() {
+		comRoot.pause();
+	}
+
+	public void unpause() {
+		comRoot.unpause();
+	}
+
 	private Frame frame;
 	private Object innerView;
 	private ObjectMap innerMap;
