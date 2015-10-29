@@ -1,6 +1,7 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.util.DwoDateUtilities;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -170,7 +171,7 @@ public class PersistentSchool implements Serializable {
         if (getExpire() == null) {
             return true;
         } else {
-            Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            Calendar c = DwoDateUtilities.getCurrentDwoDateAsCalendarDate();
             if (c.after(getExpire())) //compare on UTC calendar.
             {
                 return false;
