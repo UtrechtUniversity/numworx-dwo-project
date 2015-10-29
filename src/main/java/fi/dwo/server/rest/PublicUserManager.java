@@ -9,6 +9,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestNewUser;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
@@ -89,7 +90,7 @@ public class PublicUserManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "The license expired on " + school.getExpire());
         }
 
-        Date now = new Date();
+        Date now = DwoDateUtilities.getCurrentDwoDate();
 
         //invariant: usercode does not exists and school exists for schoollogin and schoolcode and has a valid licence.
         //adding user to school in role.         

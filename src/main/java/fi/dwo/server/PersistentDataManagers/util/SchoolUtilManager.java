@@ -11,6 +11,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.util.Date;
@@ -72,7 +73,7 @@ public class SchoolUtilManager {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
         }
 
-        Date now = new Date();
+        Date now = DwoDateUtilities.getCurrentDwoDate();
         //rewrite some user data
         user.setRegisterDate(now);
         user.setSchoolGroupID(sg.getSchoolGroupID());

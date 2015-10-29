@@ -20,6 +20,7 @@ import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestTeacher;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -170,7 +171,7 @@ public class SecuredTeacherSchoolClassManager {
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
             PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK(phr.getUser().getUserID(), schoolClass.getClassID(), phr.getSchoolGroup().getSchoolGroupID());
             toc.setPersistentTeacherOfClassPK(key);
-            java.util.Date d = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
+            java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
             toc.setRegisterDate(d);
             TeacherOfClassManager.create(toc);
         } else {
@@ -411,7 +412,7 @@ public class SecuredTeacherSchoolClassManager {
         if (schoolClass.getSchoolID() == school.getSchoolID()) {
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
             toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
-            java.util.Date d = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
+            java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
             toc.setRegisterDate(d);
             TeacherOfClassManager.create(toc);
         }
@@ -463,10 +464,10 @@ public class SecuredTeacherSchoolClassManager {
 
         toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), fromClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
 
-        if (toc != null && fromClass.getSchoolID() == school.getSchoolID() && toClass.getSchoolID() == school.getSchoolID()) {
+        if (toc != null && fromClass.getSchoolID().equals(school.getSchoolID()) && toClass.getSchoolID().equals(school.getSchoolID())) {
             PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
             toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getUserID(), toClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
-            java.util.Date d = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
+            java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
             toSoc.setRegisterDate(d);
             StudentOfClassManager.create(toSoc);
             return true;
@@ -475,47 +476,6 @@ public class SecuredTeacherSchoolClassManager {
         }
     }
 
-//    /**
-//     * Add a single school student to the school class.
-//     *
-//     * @param sc
-//     * @param restStudent
-//     * @param restSchoolClass
-//     * @return true, throws an exception otherwise.
-//     */
-//    @PUT
-//    @Produces({"application/json"})
-//    @Path("/submitStudent")
-//    public Boolean SubmitSingleSchoolStudentToSchoolClass(@Context SecurityContext sc, RestStudent restStudent, RestSchoolClass restSchoolClass) {
-//        PersistentHasRole phr;
-//        PersistentSchool school = null;
-//        PersistentUser student = null;
-//        PersistentHasRole thr = null;
-//        try {
-//            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-//            school = HasRoleUtilManager.getSchoolforHasRole(phr);
-//            student = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
-//            if (student == null) {
-//                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find student to add.");
-//            }
-//            thr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
-//        }
-//        catch (Dwo2Exception ex) {
-//            Logger.getLogger(SecuredTeacherSchoolClassManager.class
-//                    .getName()).log(Level.SEVERE, null, ex);
-//            throw new Dwo2RestException(ex);
-//        }
-//
-//        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
-//        if (schoolClass.getSchoolID() == school.getSchoolID() && student.isSingleSchoolAccount()) {
-//            PersistentStudentOfClass toc = new PersistentStudentOfClass();
-//            toc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
-//            java.util.Date d = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
-//            toc.setRegisterDate(d);
-//            StudentOfClassManager.create(toc);
-//        }
-//        return true;
-//    }
     /**
      * Removes a teacher from a school class and returns true if the remove
      * occurred.

@@ -5,6 +5,7 @@ package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +46,7 @@ public class SchoolManagerPIT {
     public void setUp() {
         schoolA.setSchoolName("De School A");
         schoolA.setImage(null);
-        Date d = new Date();
+        Date d = DwoDateUtilities.getCurrentDwoDate();
         schoolA.setExpire(d);
         schoolA.setExport(false);
         schoolA.setSchoolRights("_");
@@ -53,7 +54,7 @@ public class SchoolManagerPIT {
 
         schoolB.setSchoolName("De School B");
         schoolB.setImage(null);
-        d = new Date();
+        d = DwoDateUtilities.getCurrentDwoDate();
         schoolB.setExpire(d);
         schoolB.setExport(false);
         schoolB.setSchoolRights("_");

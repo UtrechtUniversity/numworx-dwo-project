@@ -5,6 +5,7 @@ package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +41,7 @@ public class UserManagerPIT {
         userA.setFirstname("Hamlet");
         userA.setMiddlename("of");
         userA.setLastname("Denmark");
-        Date d = new Date();
+        Date d = DwoDateUtilities.getCurrentDwoDate();
         userA.setRegisterDate(d);
         userA.setLastLogin(null);
         userA.setPasswd("bladiebla");
@@ -50,7 +51,7 @@ public class UserManagerPIT {
         userB.setFirstname("Yorick");
         userB.setMiddlename("of");
         userB.setLastname("Denmark");
-        d = new Date();
+        d = DwoDateUtilities.getCurrentDwoDate();
         userB.setRegisterDate(d);
         userB.setLastLogin(null);
         userB.setPasswd("bladiebla");

@@ -10,6 +10,7 @@ import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.*;
 import fi.dwo.commons.persistence.entities.*;
 import fi.dwo.commons.rest.entities.*;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -274,7 +275,7 @@ public class SecuredUserAccountLoginsManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "The license expired on " + school.getExpire());
         }
 
-        Date now = new Date();
+        Date now = DwoDateUtilities.getCurrentDwoDate();
 
         //invariant: have school data and user data and school has a valid licence.
         //check for hasRole

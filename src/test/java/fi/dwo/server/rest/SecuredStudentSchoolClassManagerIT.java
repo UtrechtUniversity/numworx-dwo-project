@@ -103,7 +103,7 @@ public class SecuredStudentSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);
         RestSchoolClass restSchoolClass = new RestSchoolClass();
         restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
-        restSchoolClass.setSchoolClassName("SchoolClass01");
+        restSchoolClass.setSchoolClassName("SchoolClass02");
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         Boolean result = instance.removeStudentFromSchoolClass(sc, restSchoolClass);
         assertEquals("Removing the student from the schoolclass failed.", true, result);
@@ -128,13 +128,22 @@ public class SecuredStudentSchoolClassManagerIT {
     public void testRegisterStudentForSchoolClass() {
         System.out.println("registerStudentForSchoolClass");
         SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);
-        RestSchoolClass restSchoolClass = null;
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
+        restSchoolClass.setSchoolClassName("SchoolClass04");
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
-        Boolean expResult = null;
         Boolean result = instance.registerStudentForSchoolClass(sc, restSchoolClass);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, result);
+        PersistentStudentOfClassPK socKey =  new PersistentStudentOfClassPK();
+        socKey.setClassID(1L);
+        socKey.setSchoolGroupID(2L);
+        socKey.setUserID(9L);
+        try{
+            PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socKey);
+            if(soc==null) fail("StudentOfClass not registered!");
+        }catch(Exception ex){
+            fail("StudentOfClass not registered!, exception:"+ex.getMessage());
+        }
     }
 
 }

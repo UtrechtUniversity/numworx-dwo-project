@@ -17,6 +17,7 @@ import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestTeacher;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
@@ -241,7 +242,7 @@ public class SecuredSchoolAdminSchoolManager {
         }
 
         if (sg != null) {
-            Date now = new Date();
+            Date now = DwoDateUtilities.getCurrentDwoDate();
             PersistentUser user = new PersistentUser();
             user.setEmail(nssStudent.getEmail());
             user.setFirstname(nssStudent.getGivenName());

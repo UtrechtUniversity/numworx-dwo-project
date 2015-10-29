@@ -7,6 +7,7 @@ import fi.dwo.server.testutil.TestSecurityContext;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -123,7 +124,7 @@ public class SecuredUserAccountManagerIT {
         }
 
         user = UserManager.findByUserName("user01");
-        user.setLastLogin(new Date());
+        user.setLastLogin(DwoDateUtilities.getCurrentDwoDate());
         try {
             result = instance.updateCurrentUser(sc, user);
             if (user.getLastLogin()!=null && result.getLastLogin()!=null && (new SimpleDateFormat("MM-dd-yyyy").format(user.getLastLogin())).equals(new SimpleDateFormat("MM-dd-yyyy").format(result.getLastLogin()))) {

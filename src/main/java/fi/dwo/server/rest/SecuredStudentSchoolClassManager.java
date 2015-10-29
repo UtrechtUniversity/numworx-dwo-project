@@ -9,11 +9,14 @@ import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
@@ -56,8 +59,8 @@ public class SecuredStudentSchoolClassManager {
         }
 
         schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
-        
-         if (schoolClass != null && (long) schoolClass.getSchoolID() == (long) school.getSchoolID()) {
+
+        if (schoolClass != null && (long) schoolClass.getSchoolID() == (long) school.getSchoolID()) {
             try {
                 phr.setClassID(schoolClass.getClassID());
                 HasRoleManager.edit(phr);
@@ -71,7 +74,6 @@ public class SecuredStudentSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
     }
-
 
     /**
      * Removes a student from a school class and returns true if the remove
@@ -100,7 +102,7 @@ public class SecuredStudentSchoolClassManager {
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
 
-        if (phr != null && schoolClass != null &&   schoolClass.getSchoolID().equals(school.getSchoolID())) {
+        if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
                 StudentOfClassManager.destroy(socId);
@@ -115,7 +117,6 @@ public class SecuredStudentSchoolClassManager {
 
         return true;
     }
-    
 
     /**
      * Removes a student from a school class and returns true if the remove
@@ -147,7 +148,9 @@ public class SecuredStudentSchoolClassManager {
         if (phr != null && schoolClass != null && (long) schoolClass.getSchoolID() == (long) school.getSchoolID()) {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
-                StudentOfClassManager.destroy(socId);
+                PersistentStudentOfClass soc = new PersistentStudentOfClass();
+                soc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
+                StudentOfClassManager.create(soc);
             }
             catch (PersistenceException e) {
                 return false;
@@ -158,6 +161,6 @@ public class SecuredStudentSchoolClassManager {
         }
 
         return true;
-    }    
+    }
 
 }
