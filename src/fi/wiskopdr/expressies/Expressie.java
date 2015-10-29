@@ -204,7 +204,7 @@ public class Expressie
 
 		}
 
-		
+		private static Logger logger = Logger.getLogger("Expressie");
 		private static Expressie evalWithIdeas(String evalCommand) throws RestartException
 		{
 			Expressie expr = (Expressie) casEvalStrings.get(evalCommand);
@@ -213,7 +213,8 @@ public class Expressie
 			if (expr != null)
 			{
 				return expr;
-			}			
+			}	
+			logger.fine("throw restart " + evalCommand);
 			throw new RestartException(evalCommand, new Restart());		
 		}
 

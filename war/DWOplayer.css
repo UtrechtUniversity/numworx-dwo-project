@@ -216,3 +216,20 @@ div.listItem-dwo-separator {
 	text-decoration: underline;
 	color: oldlace;
 }
+
+.textEditor {
+	background-color: #C0C0C0;
+}
+
+.textEditor-readonly {
+	background-color: #808080;
+} 
+.textEditor > div {
+	background-color: white;
+	overflow: auto;
+}
+
+.textEditor-readonly > div {
+	color: gray;
+}
+

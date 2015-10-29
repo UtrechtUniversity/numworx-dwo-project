@@ -42,10 +42,15 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
-public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware {
+public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener {
+	
+	private boolean editable = true;
+	
 	
 	class Tapper implements TapHandler {
 		private FormuleEditorIF deze;
@@ -115,6 +120,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 		@Override
 		public void setText(String text) {
+			if(!editable) return;
 			editor.clearMain();
 			editor.insert(text.substring(2, text.length()-1));
 		}
@@ -191,6 +197,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 		@Override
 		public void onClick(ClickEvent event) {
+			if(!editable) return;
 			FormulaVak panel = new FormulaVak();
 			//sb.insert(cursor, '@');
 			flow.insert(panel, cursor++);
@@ -201,6 +208,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	class CalcHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
+			if (!editable) return;
 			CalculatorVak panel = new CalculatorVak();
 			//sb.insert(cursor, '@');
 			flow.insert(panel, cursor++);
@@ -240,6 +248,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		boxMetRand = launchdata.getBoolean("boxMetRand", true);
 		boxsize = boxMetRand?2:0;
 		hbox = new FlowPanel();
+		hbox.setStylePrimaryName("textEditor");
+		initWidget(hbox);
 		
 		menubar = getMenuBar(launchdata);
 		if(menubar != null) {
@@ -252,17 +262,17 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding/2, Unit.PX);
-		style.setBackgroundColor("white");
-		style.setOverflow(Overflow.AUTO);
+		//style.setBackgroundColor("white");
+		//style.setOverflow(Overflow.AUTO);
 		hbox.add(content);
-		hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
+		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width-boxsize, height-boxsize);
 		if(boxMetRand)
 			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
-		initWidget(hbox);
 	}
 
 	private void setState(ObjectMap h) {
+		editable = true;
 		String tekst = h.getString("tekst");
 		if(tekst == null) tekst = "";
 		else if(tekst.endsWith("\n"))
@@ -273,6 +283,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		flow.add(setCursorWidget(new InlineHTML(" \u00A0")));
 		insert(tekst);
 		setCurrentElementRepaint();
+		editable = h.getBoolean("editable", true);
+		widget.setStyleDependentName("readonly", !editable);
 	}
 
 	private Widget cursorWidget;
@@ -364,6 +376,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		String sb = getAllText().append('\n').toString();
 		HashMap<String,Object> state = new HashMap<String,Object>();
 		state.put("tekst", sb);
+		state.put("editable", editable);
 		return state;
 	}
 
@@ -413,10 +426,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		
 	}
 	
+	private static final String ACTION_NOT_EDITIABLE = "action.setNotEditable";
+	private static final String TEXT = "text";
+	
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
-
+		comRoot.addCBookEventListener(ACTION_NOT_EDITIABLE, this);
+		comRoot.addCBookEventListener(TEXT, this);
 	}
 
 	@Override
@@ -434,6 +451,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public void insert(String text) {
+		if(!editable) return;
 		char[] chars = text.toCharArray();
 		int next = 1;
 		for (int i = 0; i < chars.length; i+=next) {
@@ -501,13 +519,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	@Override
 	public void enter() {
+		if(!editable) return;
 //		sb.insert( cursor, '\n');
 		flow.insert(new Enter(), cursor); cursor++;
 	}
 
 	@Override
 	public void removeCurrentElement() {
-		if(cursor > 0)
+		if(cursor > 0 && editable)
 		{	flow.remove(--cursor);
 //			sb.replace(cursor, cursor+1, "");
 		}
@@ -517,7 +536,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void removeNextElement() {
 		int max = flow.getWidgetCount()-1;
-		if(cursor < max){
+		if(cursor < max && editable){
 			flow.remove(cursor);
 			setCursorWidget(flow.getWidget(cursor));
 //			sb.replace(cursor, cursor+1, "");
@@ -571,6 +590,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	@Override
 	public void insert(char charAt) {
+		if(!editable) return;
 		SafeHtml html;
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		builder.append(charAt);
@@ -695,6 +715,23 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void getResponses(List<String> responses) {
 		responses.add(getAllText().toString());
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		String command = event.getCommand();
+		if(ACTION_NOT_EDITIABLE.equals(command)) {
+			editable = false;
+			widget.setStyleDependentName("readonly", !editable);
+		} else 
+		if(TEXT.equals(command))
+		{
+			String text = (String)event.getParameter("content");
+			if(text == null) text = "";
+			clearAll();
+			insert(text);
+		}
+		
 	}
 
 

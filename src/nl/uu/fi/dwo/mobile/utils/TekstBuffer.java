@@ -327,7 +327,7 @@ public class TekstBuffer
 			
 			return x(map, new MC2View(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 4: 
-			return new PopupFacade(map, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden ));
+			return x(map, new PopupFacade(map, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden )));
 		
 		
 		case 39: case 10: // geogebra3
@@ -405,7 +405,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 9)
 		{
-			result = x(new TekstVakPanel(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = x(map, x(new TekstVakPanel(currentVakGegevens, randomVarNamen, randomVarWaarden)));
 		}
 		else if(soortVak == 11) 
 		{

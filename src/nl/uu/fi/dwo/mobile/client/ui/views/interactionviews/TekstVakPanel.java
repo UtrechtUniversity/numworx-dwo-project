@@ -74,8 +74,8 @@ import fi.wiskopdr.expressies.Optelling;
 
 public class TekstVakPanel implements InteractionView, FacetAware
 {
-	public static final String TVP_KLAPUIT = "tvpKlapUit";
-	public static final String TVP_KLAPIN = "tvpKlapIn";
+	public static final String TVP_KLAPUIT = "action.unfold";
+	public static final String TVP_KLAPIN = "action.fold";
 	
 	private static final CBookEvent KLAPUIT_EVENT = new CBookEvent(TVP_KLAPUIT); 
 	private static final CBookEvent KLAPIN_EVENT = new CBookEvent(TVP_KLAPIN); 
@@ -2058,6 +2058,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 
 	private void fireEvent(CBookEvent event) {
 		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		comRoot.fireEvent(event);
 	}
 	
 	private static final int LEFT = 0;
