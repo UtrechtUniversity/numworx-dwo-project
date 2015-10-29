@@ -828,7 +828,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		Expressie antwoordEvalCAS = null;
 		boolean casNodig = false;
 		if(antwoord!=null) casNodig = antwoord.toString().indexOf("$i")>-1 || antwoord.toString().indexOf("$d")>-1 || antwoord.toString().indexOf("$T")>-1  || antwoord.toString().indexOf("$S")>-1  || antwoord.toString().indexOf("$P")>-1;
-		
+		logger.fine(antwoord + " needs " + casNodig);
 		if(casNodig)
 		{	antwoordEvalCAS = Expressie.evalWithCAS(antwoord);
 			
