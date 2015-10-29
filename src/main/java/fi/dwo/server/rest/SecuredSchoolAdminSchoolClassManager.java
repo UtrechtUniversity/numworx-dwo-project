@@ -116,7 +116,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
             for (PersistentHasRole hr : hrList) {
-                restTeachers.add(new RestTeacher(UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                restTeachers.add(new RestTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
             }
         }
         catch (Dwo2Exception ex) {

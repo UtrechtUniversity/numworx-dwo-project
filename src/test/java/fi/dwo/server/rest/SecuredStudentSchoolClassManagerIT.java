@@ -4,12 +4,10 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
@@ -127,17 +125,17 @@ public class SecuredStudentSchoolClassManagerIT {
     @Test
     public void testRegisterStudentForSchoolClass() {
         System.out.println("registerStudentForSchoolClass");
-        SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);
+        SecurityContext sc = new TestSecurityContext("user05", RoleType.STUDENT);
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
+        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
         restSchoolClass.setSchoolClassName("SchoolClass04");
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         Boolean result = instance.registerStudentForSchoolClass(sc, restSchoolClass);
         assertEquals(true, result);
         PersistentStudentOfClassPK socKey =  new PersistentStudentOfClassPK();
-        socKey.setClassID(1L);
-        socKey.setSchoolGroupID(2L);
-        socKey.setUserID(9L);
+        socKey.setClassID(4L);
+        socKey.setSchoolGroupID(5L);
+        socKey.setUserID(12L);
         try{
             PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socKey);
             if(soc==null) fail("StudentOfClass not registered!");
@@ -145,5 +143,4 @@ public class SecuredStudentSchoolClassManagerIT {
             fail("StudentOfClass not registered!, exception:"+ex.getMessage());
         }
     }
-
 }

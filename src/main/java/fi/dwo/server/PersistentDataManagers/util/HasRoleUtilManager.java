@@ -55,7 +55,7 @@ public class HasRoleUtilManager {
         }
 
         PersistentHasRolePK hrKey = new PersistentHasRolePK(u.getUserID(), u.getSchoolGroupID());
-        PersistentHasRole hr = HasRoleManager.findEntity(hrKey);
+        PersistentHasRole hr = (PersistentHasRole) HasRoleManager.findEntity(hrKey);
         if (hr == null) {
             LOG.log(Level.SEVERE, "Current HasRole of user for userlogin {0} could not be found.", new Object[]{usercode});
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "HasRole could not be found.");
