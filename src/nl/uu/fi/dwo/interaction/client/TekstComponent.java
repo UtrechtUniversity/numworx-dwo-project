@@ -42,6 +42,7 @@ public class TekstComponent {
 		ctx.setFont(fontString);
 		ashoogte = fm.getAscent();
 		this.tekst = tekst;
+		canvas.getElement().setInnerText(tekst);
 	}
 	
 //	public int getHeight()
