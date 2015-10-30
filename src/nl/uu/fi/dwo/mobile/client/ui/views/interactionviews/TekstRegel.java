@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -55,6 +56,7 @@ public class TekstRegel extends LayoutPanel
 	private FormuleFont fm;
 	private CssColor fgColor = CssColor.make(0, 0, 0);
 	
+	private Logger logger = Logger.getLogger("TekstRegel");
 	public TekstRegel(TekstVak tekstVak)
 	{
 		super();
@@ -168,6 +170,7 @@ public class TekstRegel extends LayoutPanel
 		else
 			fontString = fontTypeString + " " + font_size + "px " + font_name;
 		ctx.setFont(fontString);
+logger.info("ctx font =  " + ctx.getFont());
 	}
 	
 	public void setFontStyle(int font_style)
@@ -232,6 +235,7 @@ public class TekstRegel extends LayoutPanel
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
 				objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
+logger.info("objectbreedte |" + currentObject + "| :" + objectBreedte);
 				if(ctx.getFont().contains("italic"))
 					objectBreedte += 1;
 				objectHoogte = tekstHoogte;
@@ -321,6 +325,7 @@ public class TekstRegel extends LayoutPanel
 		}
 		breedte = horPositie + 1; //zie resize tekstRegel WiskOpdr.
 		//breedte = horPositie;
+logger.info("totaal breedte is "+ breedte);
 	}
 	
 	public void clear()
