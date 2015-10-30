@@ -12,6 +12,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.util.Date;
@@ -77,8 +78,22 @@ public class SchoolUtilManager {
         //rewrite some user data
         user.setRegisterDate(now);
         user.setSchoolGroupID(sg.getSchoolGroupID());
+        user.setSingleSchoolAccount(true);
 
+        try {
+            UserManager.create(user);
+            user = UserManager.findByUserName(user.getUsername());
+        }
+        catch (PersistenceException e) {
+            LOG.log(Level.SEVERE, "User creation failed.");
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
+        }  
 
+        if(user==null){
+            LOG.log(Level.SEVERE, "User creation failed.");
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "User created was not found.");
+        }
+        
         //make key
         PersistentHasRolePK pk = new PersistentHasRolePK();
         pk.setSchoolGroupID(sg.getSchoolGroupID());
@@ -92,13 +107,13 @@ public class SchoolUtilManager {
         hr.setUser(user);
 
         try {
-            UserManager.create(user);
+            HasRoleManager.create(hr);
         }
         catch (PersistenceException e) {
             LOG.log(Level.SEVERE, "User creation failed.");
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
-        }  
-
+        }
+        
         return true;
     }
     

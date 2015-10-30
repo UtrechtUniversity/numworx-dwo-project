@@ -115,8 +115,10 @@ public class SecuredSchoolAdminSchoolClassManager {
         List<PersistentHasRole> hrList;
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
+            restTeachers = new ArrayList<RestTeacher>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                restTeachers.add(new RestTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                RestTeacher t =new RestTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID()));
+                restTeachers.add(t);
             }
         }
         catch (Dwo2Exception ex) {
@@ -181,7 +183,6 @@ public class SecuredSchoolAdminSchoolClassManager {
      * @param sc
      * @param restTeacher
      * @param restSchoolClass
-     * @param existingUserReg
      * @return true, throws an exception otherwise.
      */
     @PUT
@@ -208,7 +209,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
             toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
-            toc.setRegisterDate(null);
+            toc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
             TeacherOfClassManager.create(toc);
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to add a teacher to a school class in a different school or is a schoolClass with id {1} that does not exist.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
@@ -222,6 +223,7 @@ public class SecuredSchoolAdminSchoolClassManager {
      *
      * @param sc
      * @param restSchoolClass
+     * @param restTeacher
      * @return true if success, false if the teacher does not exists to be
      * removed
      */
@@ -300,7 +302,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             user.setRegisterDate(now);
             user.setUsername(nssStudent.getUsername());
             user.setSchoolGroupID(sg.getSchoolGroupID());
-
+            user.setSingleSchoolAccount(true);
             try {
                 SchoolUtilManager.addSingleSchoolStudentAccount(user, school);
             }

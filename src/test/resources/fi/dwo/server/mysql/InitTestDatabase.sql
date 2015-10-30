@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
--- Host: 127.0.0.1    Database: dwojunittest
+-- Host: localhost    Database: dwojunittest
 -- ------------------------------------------------------
--- Server version	5.6.26-log
+-- Server version	5.5.42
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -663,7 +663,7 @@ CREATE TABLE `tblteacherof` (
 
 LOCK TABLES `tblteacherof` WRITE;
 /*!40000 ALTER TABLE `tblteacherof` DISABLE KEYS */;
-INSERT INTO `tblteacherof` VALUES (9,6,3,'2015-10-13'),(10,3,1,'2015-10-13'),(10,3,2,'2015-10-13'),(10,6,3,'2015-10-13');
+INSERT INTO `tblteacherof` VALUES (9,6,3,'2015-10-13'),(10,3,2,'2015-10-13'),(10,6,3,'2015-10-13');
 /*!40000 ALTER TABLE `tblteacherof` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -715,4 +715,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-29 15:38:56
+-- Dump completed on 2015-10-30 13:12:44
