@@ -199,6 +199,16 @@ public class PersistentUser implements Serializable {
         return singleSchoolAccount;
     }
 
+    /**
+     * Returns true if the username indicates a single user account. It contains
+     * a '#'token.
+     * 
+     * @return 
+     */
+    public void setSingleSchoolAccount(boolean b) {
+        singleSchoolAccount = b;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
