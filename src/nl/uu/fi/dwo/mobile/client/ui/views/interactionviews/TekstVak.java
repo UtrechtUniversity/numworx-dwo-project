@@ -295,7 +295,6 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		else
 			ctx.setFont(fontTypeString + " " + font_size + "px " + font_name);
 		double spatieBreedte = ctx.measureText(" ").getWidth();
-logger.info("ctx font = " + ctx.getFont() + " sp=" + spatieBreedte);		
 				
 		//Voor alle objecten bepalen op welke regel ze terechtkomen, door breedtes te meten.
 		for(int i = 0; i < opdrachtObjects.size(); i++)
@@ -304,84 +303,94 @@ logger.info("ctx font = " + ctx.getFont() + " sp=" + spatieBreedte);
 			if(currentObject instanceof String)
 			{
 				String s = (String) currentObject;
+				String sInRegel = "";
+				double width = 0;
+				//int stringBreedte = 0;
 				if(i > 0 && opdrachtObjects.get(i - 1) instanceof String && s.length() > 0 && s.startsWith(" "))
 				{
 					s = s.substring(1);
 				}
 				//s = s.replaceAll("  ", " &nbsp;");
 				//s = s.replaceAll("&nbsp; ", "&nbsp;&nbsp;");
-logger.info("start insert string  " + tekstVakBreedte + ": " + s);				
 				while(s.contains(" "))
 				{	String sub = s.substring(0, s.indexOf(" ") + 1); 
 					s = s.substring(s.indexOf(" ") + 1); 
 					//int width = (int) Math.round(ctx.measureText(sub.substring(0, sub.length() - 1)).getWidth());
 					String substring = sub.substring(0, sub.length() - 1);
-					double width = ctx.measureText(substring).getWidth();
-logger.info("breedte " + substring + ": " + width);
+					//double width = ctx.measureText(substring).getWidth();
+					width = ctx.measureText(sInRegel + substring).getWidth();
 					if(regelBreedte == 0)
 					{
-logger.info("marge aan begin regel");						
 						regelBreedte = 2;
 					}
-					if(regelBreedte <=2 || regelBreedte + width  <= tekstVakBreedte || pasAanB)
+					if(regelBreedte < 2 || sInRegel.length() == 0 || regelBreedte + width  <= tekstVakBreedte || pasAanB)
 					{
 						regelVakken[aantalRegels - 1].addObject(substring);
-						regelBreedte += width;
-						if(regelBreedte <= 2 || regelBreedte + spatieBreedte <= tekstVakBreedte || pasAanB)
+						sInRegel = sInRegel + substring;
+						//regelBreedte += width; regelBreedte = measureText van wat er nu in staat. Maar rekening houden met mogelijke ander vakjes..
+						if(regelBreedte + width <= 2 || regelBreedte + width + spatieBreedte <= tekstVakBreedte || pasAanB)
 						{
 							regelVakken[aantalRegels - 1].addObject(" ");
-							regelBreedte += spatieBreedte;
-logger.info("past met spatie "+ regelBreedte);
+							//regelBreedte += spatieBreedte;
+							sInRegel = sInRegel + " ";
+							width = ctx.measureText(sInRegel).getWidth();
 						}
 						else if(s.length() > 0)
 						{
-logger.info("spatie past niet meer " + regelBreedte);
 							voegRegelToe();
 							regelBreedte = 0;
+							sInRegel = "";
+							width = 0;
 						}
 					}
 					else
 					{
-logger.info("past niet " + regelBreedte);
 						voegRegelToe();
 						regelVakken[aantalRegels - 1].addObject(substring);
 						//regelBreedte = (int) width + 2;
-						regelBreedte = width + 2;
-						if(regelBreedte <= 2 || regelBreedte + spatieBreedte <= tekstVakBreedte)
+						sInRegel = substring;
+						width = ctx.measureText(substring).getWidth();
+						//regelBreedte = width + 2;
+						regelBreedte = 2;
+						if(regelBreedte + width <= 2 || regelBreedte + width + spatieBreedte <= tekstVakBreedte)
 						{
 							regelVakken[aantalRegels - 1].addObject(" ");
-							regelBreedte += spatieBreedte;
-logger.info("nu met spatie "+ regelBreedte);
+							//regelBreedte += spatieBreedte;
+							sInRegel = sInRegel + " ";
+							width = ctx.measureText(sInRegel).getWidth();
 						}
 						else if(s.length() > 0)
 						{
-logger.info("zonder spatie " + regelBreedte);
 							voegRegelToe();
 							regelBreedte = 0;
+							sInRegel = "";
+							width = 0;
 						}
 					}
 				}
 				if(s.length() > 0)//nu zitten er in s geen spaties meer. De rest nog proberen te plaatsen.
 				{
-					double width = ctx.measureText(s).getWidth();
-logger.info("laatste woord " + s + ": " + width + " " + regelBreedte);
+					//double width = ctx.measureText(s).getWidth();
+					width = ctx.measureText(sInRegel + s).getWidth();
 /// XXX if regelbreedte=0 then +2 hier niet?
-					if(regelBreedte <= 2 || regelBreedte + width  <= tekstVakBreedte || pasAanB)
+					if(regelBreedte < 2 || sInRegel.length() == 0 || regelBreedte + width  <= tekstVakBreedte || pasAanB)
 					{
 						regelVakken[aantalRegels - 1].addObject(s);
-						regelBreedte += width;
-logger.info("laatste woord past "+ regelBreedte);						
+						//regelBreedte += width;
+						sInRegel = sInRegel + s;
 					}	
 					else
 					{
-logger.info("laatste woord pas niet "+regelBreedte);						
 						voegRegelToe();
 						regelVakken[aantalRegels - 1].addObject(s);
 						//regelBreedte = (int) width + 2;
-						regelBreedte = width + 2;
-logger.info("laatste woord op nieuwe regel " + regelBreedte);						
+						regelBreedte = 2;
+						sInRegel = s;
+						width = ctx.measureText(s).getWidth();
 					}
 				}
+				
+				regelBreedte += width;
 				//nodig om nieuwe regels te krijgen bij enter. De tweede voorwaarde is een (enigszins) kunstmatige oplossing 
 				//om laatste regel (die in wiskopdr niet bestaat) niet te maken, maar anders gaat verticaal centreren niet goed.
 				
@@ -391,7 +400,7 @@ logger.info("laatste woord op nieuwe regel " + regelBreedte);
 				{	
 					voegRegelToe();
 					regelBreedte = 0;
-						
+					sInRegel = "";	
 				
 				}
 			}
