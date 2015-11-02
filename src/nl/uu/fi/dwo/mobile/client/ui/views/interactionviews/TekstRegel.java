@@ -170,7 +170,6 @@ public class TekstRegel extends LayoutPanel
 		else
 			fontString = fontTypeString + " " + font_size + "px " + font_name;
 		ctx.setFont(fontString);
-logger.info("ctx font =  " + ctx.getFont());
 	}
 	
 	public void setFontStyle(int font_style)
@@ -235,7 +234,6 @@ logger.info("ctx font =  " + ctx.getFont());
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
 				objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
-logger.info("objectbreedte |" + currentObject + "| :" + objectBreedte);
 				if(ctx.getFont().contains("italic"))
 					objectBreedte += 1;
 				objectHoogte = tekstHoogte;
@@ -325,7 +323,6 @@ logger.info("objectbreedte |" + currentObject + "| :" + objectBreedte);
 		}
 		breedte = horPositie + 1; //zie resize tekstRegel WiskOpdr.
 		//breedte = horPositie;
-logger.info("totaal breedte is "+ breedte);
 	}
 	
 	public void clear()

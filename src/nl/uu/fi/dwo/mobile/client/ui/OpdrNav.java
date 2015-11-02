@@ -240,12 +240,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		if (state == null)
 		{
-			logger.info("zetOpdracht no state");
+			//logger.info("zetOpdracht no state");
 			entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
 		}
 		else
 		{
-			logger.info("zetOpdracht plus state");
+			//logger.info("zetOpdracht plus state");
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], state);
 			
 		}
@@ -326,7 +326,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 //		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
 //			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
 		if (buttons != null && buttons.size() > currentOpdracht)
-		{	logger.fine("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
+		{	//logger.fine("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
 			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
 		}
 		saveCurrentState();
@@ -464,7 +464,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				popupTimer = null;
 				btn.setStyleDependentName("popupTime", false);
 				btn.setText(Integer.toString(index+1));
-				logger.info("timer for "+ index + " fired");
+				//logger.info("timer for "+ index + " fired");
 			} };
 		btn.setStyleDependentName("popupTime", true);
 		btn.setText(Integer.toString(score));

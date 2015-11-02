@@ -471,11 +471,15 @@ public class CheckValueUnit implements InteractionStub{
     }
     
     public void kijkNa(boolean show)
-    {	nakijkAchtergrond.setVisible(false);
-		goedKrulImage.setVisible(false);
-        //goedKrulHalfImage.setVisible(false);
-        foutKruisImage.setVisible(false);
-        
+    {	//Er wordt zonder show nagekeken vanuit getState. Als er dan al een checkimg staat, moet dit niet worden weggehaald. 
+    	if(show)
+    	{
+    		nakijkAchtergrond.setVisible(false);
+    		goedKrulImage.setVisible(false);
+    		//goedKrulHalfImage.setVisible(false);
+    		foutKruisImage.setVisible(false);
+        }
+    	
         boolean juist = true;
         ingevuld = false;
         answer = "";
@@ -485,8 +489,7 @@ public class CheckValueUnit implements InteractionStub{
     		if(ipValueList[i].ipObjectIsChanged())
     			changed = true;
         }
-        
-        correct = false;
+    	correct = false;
         fout = true;
         score = 0;
         
@@ -608,7 +611,8 @@ public class CheckValueUnit implements InteractionStub{
         			if(locationStrings!=null){
         				for(int i=0 ; i<locationStrings.length ; i++){
             				int location = Integer.parseInt(locationStrings[i].trim());
-            				(ipValueList[location-1]).zetGoedFout(stapJuist);
+            				if(show)
+            					(ipValueList[location-1]).zetGoedFout(stapJuist);
             			}
         			}
         			
@@ -639,7 +643,9 @@ public class CheckValueUnit implements InteractionStub{
         		boolean stapJuist = ipValueList[i].ipObjectIsCorrect();
 	        	ingevuld = ingevuld || ipValueList[i].ipObjectIsIngevuld();
 	        	juist = juist && stapJuist;
-	        	if(view)ipValueList[i].zetGoedFout(stapJuist);
+	        	if(view && show)
+	        	{	ipValueList[i].zetGoedFout(stapJuist);
+	        	}
 	        	ipValueList[i].setChanged(ipValueChanged);
 		    }
 	    }

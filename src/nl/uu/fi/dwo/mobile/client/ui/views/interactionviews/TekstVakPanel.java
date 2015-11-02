@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.Vector;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
@@ -66,10 +65,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
+import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Optelling;
+
+
 
 
 public class TekstVakPanel implements InteractionView, FacetAware
@@ -1455,19 +1457,32 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	
 	public void zetGoedFout(boolean b)
 	{
-		if (b)
-		{
-			randPanel.getElement().getStyle().setBorderColor(CssColor.make(50, 225, 50).toString());
-			randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
+//		if (b)
+//		{
+//			randPanel.getElement().getStyle().setBorderColor(CssColor.make(50, 225, 50).toString());
+//			randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
+//		}
+//		else
+//		{	randPanel.getElement().getStyle().setBorderColor(CssColor.make(225, 50, 50).toString());
+//			randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
+//		}
+		if(interactionViewObjects.size() > 0)
+		{	Object firstObject = interactionViewObjects.get(0);
+			if(firstObject instanceof FormuleEditorWithAnswer)
+				((FormuleEditorWithAnswer) firstObject).zetGoedFoutCheckWaarde(b?AntwoordVakChecker.GOED:AntwoordVakChecker.FOUT);
 		}
-		else
-		{	randPanel.getElement().getStyle().setBorderColor(CssColor.make(225, 50, 50).toString());
-			randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
+	}
+	
+	public void wisGoedFout()
+	{
+		if(interactionViewObjects.size() > 0)
+		{	Object firstObject = interactionViewObjects.get(0);
+			if(firstObject instanceof FormuleEditorWithAnswer)
+				((FormuleEditorWithAnswer) firstObject).resetimg();
 		}
-		
 	}
 
-	public void wisGoedFout()
+	public void wisGoedFoutSleep()
 	{
 		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
 		randPanel.getElement().getStyle().setOpacity(1);
@@ -1485,9 +1500,22 @@ public class TekstVakPanel implements InteractionView, FacetAware
 				int marge = sleepObjecten[i].geefSleepdoelMarge();
 				if (dx < Math.min(1, marge) && dy < Math.min(1, marge))
 				{
-					sleepObjecten[i].zetGoedFout(b);
+					sleepObjecten[i].zetGoedFoutSleep(b);
 					break;
 				}
+			}
+		}
+		
+		if(!sleepdoel)
+		{
+			if (b)
+			{
+				randPanel.getElement().getStyle().setBorderColor(CssColor.make(50, 225, 50).toString());
+				randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
+			}
+			else
+			{	randPanel.getElement().getStyle().setBorderColor(CssColor.make(225, 50, 50).toString());
+				randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
 			}
 		}
 	}
@@ -1640,7 +1668,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		{	Object object = interactionViewObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
 			{	FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
-				object2.kijkNa();
+				object2.kijkNa(false, false, false);
 				juist = object2.isCorrectStrikt() != null && object2.isCorrectStrikt().booleanValue();
 			}
 		}
@@ -1656,7 +1684,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		{	Object object = interactionViewObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
 			{	FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
-				object2.kijkNa();
+				object2.kijkNa(false, false, false);
 				ingevuld = ingevuld || object2.isIngevuld();
 			}
 		}
@@ -1683,7 +1711,8 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		{	Object object = interactionViewObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
 			{	FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
-				object2.setChanged(b);
+				if(!b || object2.wordtGecheckt())
+					object2.setChanged(b);
 			}
 		}
 	}

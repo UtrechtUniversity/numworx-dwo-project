@@ -1390,6 +1390,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		int errorCount = 0;
 		
 		if(editor != null && !(mode == 2 || mode == 3))
+			//Sietske: Hier wellicht ook beter editor.kijkNa(false, false, false); zie getState FormuleEditorWithAnswer.
 			editor.kijkNa();
 
 		stapNr = this.stapNr;

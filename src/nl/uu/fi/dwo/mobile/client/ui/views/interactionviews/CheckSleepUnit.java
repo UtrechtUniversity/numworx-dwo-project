@@ -388,7 +388,7 @@ public class CheckSleepUnit implements InteractionStub{
         if(checkFormule)
         {	if(formuleStrings!=null)
         	{	for(int i=0 ; i<sleepObjecten.length ; i++)
-    	        {   sleepObjecten[i].wisGoedFout();
+    	        {   sleepObjecten[i].wisGoedFoutSleep();
     	        }
         		
         		boolean hasLocationStrings = false;
@@ -470,7 +470,7 @@ public class CheckSleepUnit implements InteractionStub{
         else
         {
         	for(int i=0 ; i<aantalSleepObjects ; i++)
-	        {	ipListSleep[i].wisGoedFout();
+	        {	ipListSleep[i].wisGoedFoutSleep();
 	        }
         	boolean stapJuist = true;
 	        for(int i=0 ; i<aantalDoelObjects && i < aantalSleepObjects; i++)
@@ -485,15 +485,15 @@ public class CheckSleepUnit implements InteractionStub{
 	        	else answer = answer + i + "-" + i + ",";
 	        	
 	        	
-	        	if(view){
-    				if(stapJuist) ipListSleep[i].zetGoedFout(stapJuist);
+	        	if(view && show){
+    				if(stapJuist) ipListSleep[i].zetGoedFoutSleep(stapJuist);
     				else 
     					for(int j=0 ; j < aantalDoelObjects; j++)
 	    	            {
 	    	        		dx = (int) Math.abs(posities[i].getX() - doelPosities[j].getX());
 	    		        	dy = (int) Math.abs(posities[i].getY() - doelPosities[j].getY());
 	    		        	if(dx < acceptedMarge && dy < acceptedMarge) 
-	    		        	{	ipListSleep[i].zetGoedFout(false);
+	    		        	{	ipListSleep[i].zetGoedFoutSleep(false);
 	    		        		break;
 	    		        	}
 	    	            }
@@ -514,8 +514,8 @@ public class CheckSleepUnit implements InteractionStub{
 		        	}
 	            }
 	        	juist = juist && stapJuist;
-	        	if(view && !stapJuist)
-    				ipListSleep[i].zetGoedFout(stapJuist);
+	        	if(view && show && !stapJuist)
+    				ipListSleep[i].zetGoedFoutSleep(stapJuist);
 	        }
 	        if(answer.length()>0 && answer.charAt(answer.length()-1)==',')answer = answer.substring(0,answer.length()-1);
         }
@@ -791,7 +791,7 @@ public class CheckSleepUnit implements InteractionStub{
 		score = 0;
 		ingevuld = true;
 		for(int j = 0; j < ipListSleep.length; j++)
-			ipListSleep[j].wisGoedFout();
+			ipListSleep[j].wisGoedFoutSleep();
 		changed = true;
 	}
 	

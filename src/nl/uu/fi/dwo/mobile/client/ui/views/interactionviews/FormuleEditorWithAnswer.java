@@ -769,7 +769,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			verhoogErrorCount();
 		this.correct = (Boolean) checkResults.get("correct");
 		this.score = (Integer) checkResults.get("score");
-		this.scoreZonderAftrek = (Integer) checkResults.get("score");;
+		this.scoreZonderAftrek = (Integer) checkResults.get("score");
 		if(mode == 1)
 			score = Math.max(0, score - errorCount * foutStraf);
 		//System.out.println("score = " + score);
@@ -799,8 +799,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				
 				//TODO: feedback syntaxfout tonen.
 			}
-			if(setState)
-				comRoot.setChanged(teltMee && goedHalfFout == AntwoordVakChecker.FOUT);
+			if(setState && teltMee)
+				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
 			return;
 		}
 		
@@ -812,50 +812,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 //		if(fe != null)
 //			fe.zetStapOk(goedHalfFout);
-		if (goedHalfFout == AntwoordVakChecker.DOOR)
-		{
-			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
-//			if (this.fe != null)
-//			{
-//				if(backStep)
-//					fe.setAndAddFeedback(feedback);
-//				else
-//				{	fe.setFeedback(feedback);
-//					fe.addStep(useranswer);
-//				}
-//			}
-		}
-		else if (goedHalfFout == AntwoordVakChecker.HALF)
-		{
-//			if (this.fe != null)
-//				fe.setFeedback(feedback);
-			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
-		}
-		else if (goedHalfFout == AntwoordVakChecker.GOED)
-		{
-			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-//			if (this.fe != null)
-//			{
-//				fe.setFeedback(feedback);
-//				fe.lastStep(useranswer);
-//			}
-		}
-		else if (goedHalfFout == AntwoordVakChecker.FOUT)
-		{
-//			if (this.fe != null)
-//				fe.setAndAddFeedback(feedback);
-			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
-		}
-		
-		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
+		if(show)
+			zetGoedFout(goedHalfFout);
 		resize();
 		//logger.finer(String.valueOf(checkimg.isVisible()));
 		//sp.setPixelSize(breedte, -1);
 		if (this.fe == null && !useranswer.equals(lastanswer))
 		{
 			lastanswer = useranswer;
-			if(mode == 0 || mode ==1) 
-				comRoot.setChanged(teltMee && goedHalfFout == AntwoordVakChecker.FOUT);
+			if((mode == 0 || mode == 1) && teltMee) 
+				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
 		
 		}
 		//if(this.fe != null && !(mode == 2 || mode == 3))
@@ -868,6 +834,32 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(this.fe != null && ingevuld)
 		{	fe.maakNakijkenAf(backStep, show, setState);
 		}
+	}
+	
+	public void zetGoedFout(int uitslag)
+	{
+		
+		if(uitslag == AntwoordVakChecker.GOED)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+		else if(uitslag == AntwoordVakChecker.DOOR || uitslag == AntwoordVakChecker.HALF)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
+		else if(uitslag == AntwoordVakChecker.FOUT)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
+		
+		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
+	}
+	
+	public void zetGoedFoutCheckWaarde(int uitslag)
+	{
+		boolean checkWas = check;
+		check = true;
+		zetGoedFout(uitslag);
+		check = checkWas;
+	}
+	
+	public boolean wordtGecheckt()
+	{
+		return check;
 	}
 	
 	public void zetFeedback()
@@ -1022,7 +1014,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}			
 		else	
 		{
-			kijkNa();
+			//kijkNa moet gebeuren om bijvoorbeeld bolletje groen te maken als alles op de pagina correct is. 
+			//Er hoeft echter niets met vinkjes te gebeuren; daarom tweede argument (show) op false.
+			kijkNa(false, false, false);
 			
 			String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
 			if(!this.toString().equals(""))
