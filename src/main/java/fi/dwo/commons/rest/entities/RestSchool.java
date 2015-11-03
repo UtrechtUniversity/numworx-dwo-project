@@ -22,7 +22,7 @@ public class RestSchool {
         
     }
     
-    RestSchool(PersistentSchool s){
+    public RestSchool(PersistentSchool s){
         this.id = MySQLPersistenceId.createPersistentId(s);
         this.schoolName=s.getSchoolName();
     }
