@@ -3,13 +3,33 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.Dwo2RestException;
+import static fi.dwo.commons.persistence.PersistenceClassType.PersistentStudentScoContext;
+import fi.dwo.commons.persistence.RoleType;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestSchool;
 import fi.dwo.commons.rest.entities.RestSchoolAdmin;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestTeacher;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.mysql.DatabaseManager;
+import fi.dwo.server.persistence.DwoEmfFactory;
+import fi.dwo.server.testutil.TestSecurityContext;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -23,90 +43,144 @@ import static org.junit.Assert.*;
  * @author Gert van der Plas
  */
 public class SecuredSchoolAdminSchoolManagerIT {
-    
+
+    private static final Logger LOG = Logger.getLogger(SecuredSchoolAdminSchoolManagerIT.class.getName());
+
+    static DatabaseManager dbInstance = null;
+
     public SecuredSchoolAdminSchoolManagerIT() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
+        DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
+        dbInstance = new DatabaseManager();
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
+        dbInstance = new DatabaseManager();
+        DwoEmfFactory.setDefaultEntityManagerFactory();
     }
-    
+
     @Before
     public void setUp() {
+        dbInstance.IntializeTestDatabase();
     }
-    
+
     @After
     public void tearDown() {
+        dbInstance.ClearDatabase();
     }
 
     /**
-     * Test of getTeachersInSchool method, of class SecuredSchoolAdminSchoolManager.
+     * Test of getTeachersInSchool method, of class
+     * SecuredSchoolAdminSchoolManager.
      */
     @Test
     public void testGetTeachersInSchool() {
         System.out.println("getTeachersInSchool");
-        SecurityContext sc = null;
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        List<RestTeacher> expResult = null;
         List<RestTeacher> result = instance.getTeachersInSchool(sc);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(1, result.size());
     }
 
     /**
-     * Test of getStudentsInSchool method, of class SecuredSchoolAdminSchoolManager.
+     * Test of getStudentsInSchool method, of class
+     * SecuredSchoolAdminSchoolManager.
      */
     @Test
     public void testGetStudentsInSchool() {
         System.out.println("getStudentsInSchool");
-        SecurityContext sc = null;
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        List<RestStudent> expResult = null;
         List<RestStudent> result = instance.getStudentsInSchool(sc);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(3, result.size());
     }
 
     /**
-     * Test of getSchoolAdminInSchool method, of class SecuredSchoolAdminSchoolManager.
+     * Test of getSchoolAdminInSchool method, of class
+     * SecuredSchoolAdminSchoolManager.
      */
     @Test
     public void testGetSchoolAdminInSchool() {
         System.out.println("getSchoolAdminInSchool");
-        SecurityContext sc = null;
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        List<RestTeacher> expResult = null;
         List<RestTeacher> result = instance.getSchoolAdminInSchool(sc);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(1L, result.size());
     }
 
     /**
-     * Test of removeSingleSchoolStudentFromSchool method, of class SecuredSchoolAdminSchoolManager.
+     * Test of removeSingleSchoolStudentFromSchool method, of class
+     * SecuredSchoolAdminSchoolManager.
      */
     @Test
     public void testRemoveSingleSchoolStudentFromSchool() {
         System.out.println("removeSingleSchoolStudentFromSchool");
-        SecurityContext sc = null;
-        RestSchool restSchool = null;
-        RestStudent restStudent = null;
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+
+        RestSchool restSchool = new RestSchool( SchoolManager.findBySchoolLogin("school01"));
+//        restSchool.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchool));
+//        restSchool.setSchoolName("SchoolClass02");
+        PersistentUser user = (PersistentUser) UserManager.findByUserName("user02");
+        RestStudent restStudent = new RestStudent(user);
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        Boolean expResult = null;
+        try {
+            Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restSchool, restStudent);
+            assertEquals("Student was removed but is not a SingleSchoolStudent.", false, result);
+        }
+        catch (Dwo2RestException e) {
+            //success
+        }
+        user = (PersistentUser) UserManager.findByUserName("user02");
+        if (user == null) {
+            fail("Student was removed but is not a SingleSchoolStudent.");
+        }
+
+        //fetch user
+        user = (PersistentUser) UserManager.findByUserName("user04");
+        if (user == null) {
+            fail("Test student is missing from the test database.");
+        }
+        
+        //fetch hasrole
+        PersistentHasRole hr=null;
+        try {
+            hr = HasRoleUtilManager.getHasRoleInSchool(user,(PersistentSchool) SchoolManager.findBySchoolLogin("school01") , RoleType.STUDENT);
+        }
+        catch (Dwo2Exception ex) {
+            fail("Student did not have a hasRole in the test database. He should.");
+        }
+        
+        restStudent = new RestStudent(user);
         Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restSchool, restStudent);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("Student was not removed.", true, result);
+        PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user04");
+        if (userResult != null) {
+            fail("Student was not removed.");
+        }
+        try {
+            HasRoleUtilManager.getHasRoleInSchool(user,(PersistentSchool) SchoolManager.findBySchoolLogin("school01") , RoleType.STUDENT);
+            fail("HasRole was not removed.");
+        }
+        catch (Dwo2Exception ex) {
+            //success
+        }
+
+            List<PersistentStudentOfClass> soc = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
+            assertEquals(0L, soc.size());
+
+        // test for studentsco data
+            List<PersistentStudentScoContext> scoc = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
+            assertEquals(0L, scoc.size());
+        
     }
 
     /**
-     * Test of SubmitSingleSchoolStudent method, of class SecuredSchoolAdminSchoolManager.
+     * Test of SubmitSingleSchoolStudent method, of class
+     * SecuredSchoolAdminSchoolManager.
      */
     @Test
     public void testSubmitSingleSchoolStudent() {
@@ -122,63 +196,71 @@ public class SecuredSchoolAdminSchoolManagerIT {
     }
 
     /**
-     * Test of getSchoolClasses method, of class SecuredSchoolAdminSchoolManager.
+     * Test of getSchoolClasses method, of class
+     * SecuredSchoolAdminSchoolClassManager.
+     *
+     * Checks the number of SchoolClasses in a school.
      */
     @Test
     public void testGetSchoolClasses() {
         System.out.println("getSchoolClasses");
-        SecurityContext sc = null;
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        List<RestSchoolClass> expResult = null;
+        List<PersistentSchoolClass> expResult;
         List<RestSchoolClass> result = instance.getSchoolClasses(sc);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fetch classes
+        expResult = SchoolClassManager.findEntities(SchoolManager.findEntity(3L));
+        assertEquals(expResult.size(), result.size());
     }
 
     /**
-     * Test of removeTeacherFromSchool method, of class SecuredSchoolAdminSchoolManager.
+     * Test of removeTeacherFromSchool method, of class
+     * SecuredSchoolAdminSchoolManager.
      */
     @Test
     public void testRemoveTeacherFromSchool() {
         System.out.println("removeTeacherFromSchool");
-        SecurityContext sc = null;
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         RestTeacher restTeacher = null;
         Boolean expResult = null;
-        Boolean result = SecuredSchoolAdminSchoolManager.removeTeacherFromSchool(sc, restTeacher);
+        Boolean result = instance.removeTeacherFromSchool(sc, restTeacher);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of removeStudentFromSchool method, of class SecuredSchoolAdminSchoolManager.
+     * Test of removeStudentFromSchool method, of class
+     * SecuredSchoolAdminSchoolManager.
      */
     @Test
     public void testRemoveStudentFromSchool() {
         System.out.println("removeStudentFromSchool");
-        SecurityContext sc = null;
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         RestStudent restStudent = null;
         Boolean expResult = null;
-        Boolean result = SecuredSchoolAdminSchoolManager.removeStudentFromSchool(sc, restStudent);
+        Boolean result = instance.removeStudentFromSchool(sc, restStudent);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of removeSchoolAdminFromSchool method, of class SecuredSchoolAdminSchoolManager.
+     * Test of removeSchoolAdminFromSchool method, of class
+     * SecuredSchoolAdminSchoolManager.
      */
     @Test
     public void testRemoveSchoolAdminFromSchool() {
         System.out.println("removeSchoolAdminFromSchool");
-        SecurityContext sc = null;
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         RestSchoolAdmin restSchoolAdmin = null;
         Boolean expResult = null;
-        Boolean result = SecuredSchoolAdminSchoolManager.removeSchoolAdminFromSchool(sc, restSchoolAdmin);
+        Boolean result = instance.removeSchoolAdminFromSchool(sc, restSchoolAdmin);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-    
 }

@@ -74,15 +74,15 @@ public class SecuredSchoolAdminSchoolManager {
         List<PersistentHasRole> hrList;
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
+            restTeachers = new ArrayList<RestTeacher>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                restTeachers.add(new RestTeacher(UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                restTeachers.add(new RestTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
             }
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
-
         return restTeachers;
     }
 
@@ -95,7 +95,7 @@ public class SecuredSchoolAdminSchoolManager {
     @GET
     @Produces({"application/json"})
     @Path("/getStudentsInSchoolList")
-    public List<RestStudent> getStudentsInSchool(@Context SecurityContext sc) {
+    public static List<RestStudent> getStudentsInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         List<RestStudent> restStudents = null;
@@ -111,8 +111,9 @@ public class SecuredSchoolAdminSchoolManager {
         List<PersistentHasRole> hrList;
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.STUDENT);
+            restStudents = new ArrayList<RestStudent>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                restStudents.add(new RestStudent(UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                restStudents.add(new RestStudent((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
             }
         }
         catch (Dwo2Exception ex) {
@@ -132,7 +133,7 @@ public class SecuredSchoolAdminSchoolManager {
     @GET
     @Produces({"application/json"})
     @Path("/getSchoolAdminList")
-    public List<RestTeacher> getSchoolAdminInSchool(@Context SecurityContext sc) {
+    public static List<RestTeacher> getSchoolAdminInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         List<RestTeacher> restTeachers = null;
@@ -148,8 +149,9 @@ public class SecuredSchoolAdminSchoolManager {
         List<PersistentHasRole> hrList;
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.SCHOOLADMIN);
+            restTeachers = new ArrayList<RestTeacher>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                restTeachers.add(new RestTeacher(UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                restTeachers.add(new RestTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
             }
         }
         catch (Dwo2Exception ex) {
@@ -318,7 +320,7 @@ public class SecuredSchoolAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/removeTeacher")
-    public static Boolean removeTeacherFromSchool(@Context SecurityContext sc, RestTeacher restTeacher) {
+    public Boolean removeTeacherFromSchool(@Context SecurityContext sc, RestTeacher restTeacher) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser teacher = null;
@@ -368,7 +370,7 @@ public class SecuredSchoolAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/removeStudent")
-    public static Boolean removeStudentFromSchool(@Context SecurityContext sc, RestStudent restStudent) {
+    public Boolean removeStudentFromSchool(@Context SecurityContext sc, RestStudent restStudent) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser student = null;
@@ -413,7 +415,7 @@ public class SecuredSchoolAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/removeSchoolAdmin")
-    public static Boolean removeSchoolAdminFromSchool(@Context SecurityContext sc, RestSchoolAdmin restSchoolAdmin) {
+    public Boolean removeSchoolAdminFromSchool(@Context SecurityContext sc, RestSchoolAdmin restSchoolAdmin) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser schoolAdmin = null;
