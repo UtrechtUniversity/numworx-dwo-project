@@ -244,7 +244,8 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		if(kb!=null)
 		{
 			kb.setEditor(this);
-			if(isSoft()) kb.softFocus(); else kb.focus();			
+			if(isSoft()) kb.softFocus(); else kb.focus();
+			getCurrentRegel().getCanvas().getElement().scrollIntoView();
 		}
 	}
 	

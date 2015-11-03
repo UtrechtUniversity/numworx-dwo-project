@@ -2079,6 +2079,8 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			setCurrentSize( breedte, this.hoogte);
 			
 			fireEvent(KLAPUIT_EVENT);
+			if(tekstVakken.length >= 2)
+				tekstVakken[1][0].getElement().scrollIntoView();
 		}
 	}
 

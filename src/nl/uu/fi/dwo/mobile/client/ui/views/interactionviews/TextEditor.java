@@ -20,8 +20,10 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
@@ -45,6 +47,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener {
@@ -65,10 +68,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		@Override
 		public void onTap(TapEvent event) {
 			Element targetElement = event.getTargetElement();
-			if(targetElement == target || targetElement.getParentElement() == target)
+			if(targetElement == null || targetElement == target || targetElement.getParentElement() == target)
 			{	comRoot.getKeyboard().setEditor(deze);
-				setCursorWidget(cursorWidget);
 				comRoot.getKeyboard().softFocus();
+				setCursorWidget(cursorWidget);
 			}
 		}
 
@@ -306,6 +309,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		int c = flow.getWidgetIndex(widget);
 		if(c >= 0)
 			cursor = c;
+		showCursor();
 		return widget;
 	}
 
@@ -323,11 +327,22 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		rekentool = launchdata.getBoolean("rekenTool", rekentool);
 		
 		FlowPanel menubar = new FlowPanel();
-		Button fx = new Button("f(x)"); if(formuleKnop) menubar.add(fx);
+		//Button fx = new Button("f(x)"); 
+		PushButton fx = new PushButton(new Image(DWOplayer.PARAMETERS.getResource("images/resources/formuleknop.gif")));
+		fx.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		if(formuleKnop) menubar.add(fx);
 		fx.addClickHandler(new FXHandler());
-		Button calc = new Button("calc"); if(rekentool) menubar.add(calc);
+		//Button calc = new Button("calc"); 
+		Image upImage = new Image(DWOplayer.PARAMETERS.getResource("images/resources/rmknop.gif"));
+		upImage.getElement().setAttribute("width","18");
+		upImage.getElement().setAttribute("height","18");
+		PushButton calc = new PushButton(upImage);
+		calc.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		if(rekentool) menubar.add(calc);
 		calc.addClickHandler(new CalcHandler());
-		Button graph = new Button("gr");  if(graftool) menubar.add(graph);
+		//Button graph = new Button("gr");  
+		PushButton graph = new PushButton(new Image(DWOplayer.PARAMETERS.getResource("images/resources/grafiekknop.gif")));
+		if(graftool) menubar.add(graph);
 		
 		return menubar;
 	}
@@ -480,6 +495,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				break;
 			}
 		}
+		showCursor();
 	}
 
 	private int findAt(char[] chars, int i, int length) {
@@ -522,6 +538,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if(!editable) return;
 //		sb.insert( cursor, '\n');
 		flow.insert(new Enter(), cursor); cursor++;
+		showCursor();
 	}
 
 	@Override
@@ -529,8 +546,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if(cursor > 0 && editable)
 		{	flow.remove(--cursor);
 //			sb.replace(cursor, cursor+1, "");
+			showCursor();
 		}
-		
 	}
 
 	@Override
@@ -599,6 +616,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		InlineHTML w = new InlineHTML(html);
 		new TapForFocus(w);
 		flow.insert(w,cursor++);
+		showCursor();
+	}
+
+	private void showCursor() {
+		cursorWidget.getElement().scrollIntoView();
 	}
 
 	@Override
