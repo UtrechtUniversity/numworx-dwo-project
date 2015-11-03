@@ -183,7 +183,9 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	// werkt niet? @UiHandler("cells")
 	public void onCellSelected(CellSelectedEvent event) {
 		int index = event.getIndex();
-		selectItem(this.cellItems.get(index));
+		SelectModuleItem o = this.cellItems.get(index);
+		setTreeSelectedItem(o);
+		selectItem(o);
 	}
 
 	@UiHandler("navigationBackButton")
@@ -333,18 +335,22 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			{
 				addChildren(standardModel);
 			}
-			TreeItem node = inverseMap.get(item);
-			tree.setSelectedItem(null, false);
-			if(node != null) {
-				
-				tree.setSelectedItem(node, false);
-				tree.ensureSelectedItemVisible();
-			}
+			setTreeSelectedItem(item);
 		}
 		else
 		{
 			container.setWidget(new Label("DWO standaard modules")); // Uit het profiel halen!
 			addChildren(standardModel);
+		}
+	}
+
+	private void setTreeSelectedItem(SelectModuleItem item) {
+		TreeItem node = inverseMap.get(item);
+		tree.setSelectedItem(null, false);
+		if(node != null) {
+			
+			tree.setSelectedItem(node, false);
+			tree.ensureSelectedItemVisible();
 		}
 	}
 	
