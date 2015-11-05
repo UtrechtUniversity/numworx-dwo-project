@@ -233,7 +233,7 @@ public class SecuredSchoolAdminSchoolManager {
         PersistentSchool school = null;
         PersistentSchoolGroup sg = null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             sg = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
         }
@@ -254,6 +254,7 @@ public class SecuredSchoolAdminSchoolManager {
             user.setRegisterDate(now);
             user.setUsername(nssStudent.getUsername());
             user.setSchoolGroupID(sg.getSchoolGroupID());
+            user.setSingleSchoolAccount(true);
 
             try {
                 SchoolUtilManager.addSingleSchoolStudentAccount(user, school);
@@ -349,13 +350,6 @@ public class SecuredSchoolAdminSchoolManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        try {
-            UserManager.destroy(teacher.getUserID());
-        }
-        catch (PersistenceException e) {
-            return false;
-        }
-
         return true;
     }
 
@@ -389,6 +383,10 @@ public class SecuredSchoolAdminSchoolManager {
             LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
+        
+        if (student.isSingleSchoolAccount()) {
+            return false;
+        }
 
         try {
             HasRoleUtilManager.removeHasRoleAndItsData(shr);
@@ -398,16 +396,17 @@ public class SecuredSchoolAdminSchoolManager {
             LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-        if (!student.isSingleSchoolAccount()) {
-            return true;
-        }
-
-        try {
-            UserManager.destroy(student.getUserID());
-        }
-        catch (PersistenceException e) {
-            return false;
-        }
+        
+//        if (!student.isSingleSchoolAccount()) {
+//            return true;
+//        }
+//
+//        try {
+//            UserManager.destroy(student.getUserID());
+//        }
+//        catch (PersistenceException e) {
+//            return false;
+//        }
 
         return true;
     }

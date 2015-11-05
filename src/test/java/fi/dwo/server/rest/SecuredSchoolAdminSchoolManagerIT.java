@@ -5,30 +5,34 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2RestException;
-import static fi.dwo.commons.persistence.PersistenceClassType.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestNewUser;
 import fi.dwo.commons.rest.entities.RestSchool;
 import fi.dwo.commons.rest.entities.RestSchoolAdmin;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestTeacher;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
@@ -43,31 +47,31 @@ import static org.junit.Assert.*;
  * @author Gert van der Plas
  */
 public class SecuredSchoolAdminSchoolManagerIT {
-
+    
     private static final Logger LOG = Logger.getLogger(SecuredSchoolAdminSchoolManagerIT.class.getName());
-
+    
     static DatabaseManager dbInstance = null;
-
+    
     public SecuredSchoolAdminSchoolManagerIT() {
     }
-
+    
     @BeforeClass
     public static void setUpClass() {
         DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
         dbInstance = new DatabaseManager();
     }
-
+    
     @AfterClass
     public static void tearDownClass() {
         dbInstance = new DatabaseManager();
         DwoEmfFactory.setDefaultEntityManagerFactory();
     }
-
+    
     @Before
     public void setUp() {
         dbInstance.IntializeTestDatabase();
     }
-
+    
     @After
     public void tearDown() {
         dbInstance.ClearDatabase();
@@ -121,7 +125,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         System.out.println("removeSingleSchoolStudentFromSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
 
-        RestSchool restSchool = new RestSchool( SchoolManager.findBySchoolLogin("school01"));
+        RestSchool restSchool = new RestSchool(SchoolManager.findBySchoolLogin("school01"));
 //        restSchool.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchool));
 //        restSchool.setSchoolName("SchoolClass02");
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user02");
@@ -129,7 +133,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         try {
             Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restSchool, restStudent);
-            assertEquals("Student was removed but is not a SingleSchoolStudent.", false, result);
+            assertEquals("Student was removed but is not a SingleSchoolStudent.", true, result);
         }
         catch (Dwo2RestException e) {
             //success
@@ -144,11 +148,11 @@ public class SecuredSchoolAdminSchoolManagerIT {
         if (user == null) {
             fail("Test student is missing from the test database.");
         }
-        
+
         //fetch hasrole
-        PersistentHasRole hr=null;
+        PersistentHasRole hr = null;
         try {
-            hr = HasRoleUtilManager.getHasRoleInSchool(user,(PersistentSchool) SchoolManager.findBySchoolLogin("school01") , RoleType.STUDENT);
+            hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
             fail("Student did not have a hasRole in the test database. He should.");
@@ -162,19 +166,19 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("Student was not removed.");
         }
         try {
-            HasRoleUtilManager.getHasRoleInSchool(user,(PersistentSchool) SchoolManager.findBySchoolLogin("school01") , RoleType.STUDENT);
+            HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
             fail("HasRole was not removed.");
         }
         catch (Dwo2Exception ex) {
             //success
         }
-
-            List<PersistentStudentOfClass> soc = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
-            assertEquals(0L, soc.size());
+        
+        List<PersistentStudentOfClass> soc = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
+        assertEquals(0L, soc.size());
 
         // test for studentsco data
-            List<PersistentStudentScoContext> scoc = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
-            assertEquals(0L, scoc.size());
+        List<PersistentStudentScoContext> scoc = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
+        assertEquals(0L, scoc.size());
         
     }
 
@@ -185,14 +189,40 @@ public class SecuredSchoolAdminSchoolManagerIT {
     @Test
     public void testSubmitSingleSchoolStudent() {
         System.out.println("SubmitSingleSchoolStudent");
-        SecurityContext sc = null;
-        RestSingleSchoolStudent nssStudent = null;
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        RestSingleSchoolStudent nssStudent = new RestSingleSchoolStudent();
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        Boolean expResult = null;
-        Boolean result = instance.SubmitSingleSchoolStudent(sc, nssStudent);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("submitNewUser");
+        nssStudent.setUsername("testuser01");
+        nssStudent.setGivenName("a");
+        nssStudent.setInsertion("b");
+        nssStudent.setFamilyName("c");
+        nssStudent.setEmail("a@b.c");
+        nssStudent.setPassword("pwd");
+        
+        try {
+            Boolean result = instance.SubmitSingleSchoolStudent(sc, nssStudent);
+            assertEquals(true, result);
+        }
+        catch(Dwo2RestException ex) {
+            fail("Student submit failed.");
+        }
+        
+        PersistentUser user = UserManager.findByUserName(nssStudent.getUsername());
+        assertEquals(nssStudent.getGivenName(), user.getFirstname());
+        assertEquals(nssStudent.getInsertion(), user.getMiddlename());
+        assertEquals(nssStudent.getFamilyName(), user.getLastname());
+        assertEquals(nssStudent.getEmail(), user.getEmail());
+        assertEquals(nssStudent.getPassword(), user.getPasswd());
+        
+        try {
+            //check for hasRole
+            PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(user, SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Could not find created user's hasRole");
+        }
     }
 
     /**
@@ -222,12 +252,57 @@ public class SecuredSchoolAdminSchoolManagerIT {
         System.out.println("removeTeacherFromSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        RestTeacher restTeacher = null;
-        Boolean expResult = null;
+        PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
+        RestTeacher restTeacher = new RestTeacher(user);
+        try {
+            Boolean expResult = null;
+            Boolean result = instance.removeTeacherFromSchool(sc, restTeacher);
+            assertEquals(true, result);
+        }
+        catch (Dwo2RestException e) {
+            //success
+        }
+        user = (PersistentUser) UserManager.findByUserName("user03");
+        if (user == null) {
+            fail("User was removed but is not a Teacher.");
+        }
+
+        //fetch user
+        user = (PersistentUser) UserManager.findByUserName("user03");
+        if (user == null) {
+            fail("Test Teacher is missing from the test database.");
+        }
+
+        //fetch hasrole
+        PersistentHasRole hr = null;
+        try {
+            hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.TEACHER);
+        }
+        catch (Dwo2Exception ex) {
+            fail("Teacher did not have a hasRole in the test database. He should.");
+        }
+        
+        restTeacher = new RestTeacher(user);
         Boolean result = instance.removeTeacherFromSchool(sc, restTeacher);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("Teacher was not removed.", true, result);
+        PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user03");
+        if (userResult == null) {
+            fail("User was removed, while it should remain.");
+        }
+        try {
+            HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.TEACHER);
+            fail("HasRole was not removed.");
+        }
+        catch (Dwo2Exception ex) {
+            //success
+        }
+        
+        List<PersistentTeacherOfClass> soc = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
+        assertEquals(0L, soc.size());
+
+        // test for studentsco data
+        List<PersistentStudentScoContext> scoc = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
+        assertEquals(0L, scoc.size());        
     }
 
     /**
@@ -239,12 +314,58 @@ public class SecuredSchoolAdminSchoolManagerIT {
         System.out.println("removeStudentFromSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        RestStudent restStudent = null;
-        Boolean expResult = null;
+        RestSchool restSchool = new RestSchool(SchoolManager.findBySchoolLogin("school01"));
+        PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
+        RestStudent restStudent = new RestStudent(user);
+        try {
+            Boolean result = instance.removeStudentFromSchool(sc, restStudent);
+            assertEquals("SingleSchoolStudent was removed but should fail.", false, result);
+        }
+        catch (Dwo2RestException e) {
+            //success
+        }
+        user = (PersistentUser) UserManager.findByUserName("user04");
+        if (user == null) {
+            fail("Student was removed but is a SingleSchoolStudent.");
+        }
+
+        //fetch user
+        user = (PersistentUser) UserManager.findByUserName("user02");
+        if (user == null) {
+            fail("Test student is missing from the test database.");
+        }
+
+        //fetch hasrole
+        PersistentHasRole hr = null;
+        try {
+            hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
+        }
+        catch (Dwo2Exception ex) {
+            fail("Student did not have a hasRole in the test database. He should.");
+        }
+        
+        restStudent = new RestStudent(user);
         Boolean result = instance.removeStudentFromSchool(sc, restStudent);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("Student was not removed.", true, result);
+        PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user02");
+        if (userResult == null) {
+            fail("User was removed,while it should remain.");
+        }
+        try {
+            HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
+            fail("HasRole was not removed.");
+        }
+        catch (Dwo2Exception ex) {
+            //success
+        }
+        
+        List<PersistentStudentOfClass> soc = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
+        assertEquals(0L, soc.size());
+
+        // test for studentsco data
+        List<PersistentStudentScoContext> scoc = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
+        assertEquals(0L, scoc.size());
+        
     }
 
     /**
@@ -256,11 +377,52 @@ public class SecuredSchoolAdminSchoolManagerIT {
         System.out.println("removeSchoolAdminFromSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        RestSchoolAdmin restSchoolAdmin = null;
-        Boolean expResult = null;
+        PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
+        RestSchoolAdmin restSchoolAdmin = new RestSchoolAdmin(user);
+        try {
+            Boolean result = instance.removeSchoolAdminFromSchool(sc, restSchoolAdmin);
+            assertEquals(true, result);
+        }
+        catch (Dwo2RestException e) {
+            //success
+        }
+        user = (PersistentUser) UserManager.findByUserName("user04");
+        if (user == null) {
+            fail("User was removed but is not a SchoolAdmin.");
+        }
+
+        //fetch user
+        user = (PersistentUser) UserManager.findByUserName("user06");
+        if (user == null) {
+            fail("Test SchoolAdmin is missing from the test database.");
+        }
+
+        //fetch hasrole
+        PersistentHasRole hr = null;
+        try {
+            hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.SCHOOLADMIN);
+        }
+        catch (Dwo2Exception ex) {
+            fail("SchoolAdmin did not have a hasRole in the test database. He should.");
+        }
+        
+        restSchoolAdmin = new RestSchoolAdmin(user);
         Boolean result = instance.removeSchoolAdminFromSchool(sc, restSchoolAdmin);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("SchoolAdmin was not removed.", true, result);
+        PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user06");
+        if (userResult == null) {
+            fail("User was removed, while it should remain.");
+        }
+        try {
+            HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.SCHOOLADMIN);
+            fail("HasRole was not removed.");
+        }
+        catch (Dwo2Exception ex) {
+            //success
+        }
+
+        // test for studentsco data
+        List<PersistentStudentScoContext> scoc = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
+        assertEquals(0L, scoc.size());        
     }
 }
