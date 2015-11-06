@@ -13,7 +13,6 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
-import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
@@ -27,7 +26,6 @@ import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.ObjectivesHandler;
-import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
@@ -38,14 +36,11 @@ import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
-import com.google.gwt.animation.client.AnimationScheduler;
-import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -60,11 +55,11 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.CustomButton;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -73,8 +68,6 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.dom.client.recognizer.pinch.PinchEvent;
-import com.googlecode.mgwt.dom.client.recognizer.pinch.PinchHandler;
 import com.googlecode.mgwt.dom.client.recognizer.swipe.SwipeEndEvent;
 import com.googlecode.mgwt.dom.client.recognizer.swipe.SwipeEndHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
@@ -107,7 +100,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	OpdrNav on;
 	private FocusPanel mainPanel;
 	FlowPanel contentPanel = null;
-	SimplePanel contentScrollPanel = null;
+	LayoutPanel contentScrollPanel = null;
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
@@ -121,6 +114,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private HeaderButton hb;
 	private HeaderPanel hp;
 	private WaitScreen waitscreen = WaitScreen.instance();
+	Label disableScreen = new Label();
 	
 	private Widget next, prev, end;
 	
@@ -351,6 +345,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		int mode = on.getMode();
 		if (mode == 2 || mode == 3)
 		{
+			zelftoetsNagekeken = true;
+
 			if (mode == 2 && zelftoetsGeenCorr)
 			{
 				// laatste kans op update sessiontime
@@ -360,8 +356,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 //					times[activiteitNr][opdrachtNr] = opdrContainer.getSessionTime();
 //				}
 //				zetAfdekPanelLeeg(true);
+				
+				if (zelftoetsNagekeken)
+					zetAfdekPanel(true);
+				else
+					zetAfdekPanel(false);
 			}
-			zelftoetsNagekeken = true;
 			source.setKijkNaEnabled(!zelftoetsGeenCorr);
 			//scoresObjectivesKnop.setEnabled(true);//goed? nodig?
 			prev.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
@@ -875,6 +875,18 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 	}
 	
+	public void zetAfdekPanel(boolean b)
+	{
+		if (b)
+		{
+			contentScrollPanel.add(disableScreen);
+		}
+		else
+		{
+			contentScrollPanel.remove(disableScreen);
+		}
+	}
+	
 	/**
 	 * Hiermee wordt gevraagd of er supenddata zijn van alle opdrachten van
 	 * deze activiteit, behalve die met het meegegeven opdrachtnummer (huidige
@@ -1091,7 +1103,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			hp.setLeftWidget(hb);
 			fp.add(hp);
 		}
-		contentScrollPanel = new SimplePanel();contentScrollPanel.addStyleName("contentScrollPanel");
+		contentScrollPanel = new LayoutPanel();
+		contentScrollPanel.addStyleName("contentScrollPanel");
 		contentScrollPanel.setWidth("100%");
 		contentScrollPanel.setHeight("100%");
 		contentScrollPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
@@ -1126,10 +1139,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		//ipv addContentPanelTouchListener(contentPanel);
 
-		contentScrollPanel.setWidget(contentPanel);
+		contentScrollPanel.add(contentPanel);
 		contentPanel.getElement().getStyle().setOverflowY(Overflow.AUTO);
 		contentPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
-
+		
 		fp.add(contentScrollPanel);
 
 		Widget kbp = sb.asWidget();
@@ -1150,6 +1163,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			POPUP.addAutoHidePartner(hb.getElement());
 		}
 		//initWidget(mainPanel);
+		
+		disableScreen.getElement().getStyle().setBackgroundColor("transparent");
+		
 		return this;
 
 	}
