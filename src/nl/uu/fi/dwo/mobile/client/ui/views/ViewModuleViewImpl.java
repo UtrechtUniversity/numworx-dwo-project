@@ -300,11 +300,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				@Override
 				public void checkOpdracht(ScoreNavIF source)
 				{
-					// on.saveCurrentState();
+					on.saveCurrentState(); // de wijzigingen van het huidige bolletje moeten wel verwerkt worden
 //					zetToetsNagekeken(source);
 //					on.kijkToetsNa();
 
 					// omgedraaid: keerNagekeken moet wel verhoogd zijn voor zetToetsNagekeken()
+					zelftoetsNagekeken = true;
 					on.kijkToetsNa();
 					zetToetsNagekeken(source);
 
@@ -1485,8 +1486,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentScrollPanel.setPixelSize(-1, px);
 		setWebkitScrolling(true);
 	}
-
-	
 	
 	
 }
