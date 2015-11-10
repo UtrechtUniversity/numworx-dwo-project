@@ -684,4 +684,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 		return result;
 	}
+
+	public boolean isEindtoetsVerzegeld()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
