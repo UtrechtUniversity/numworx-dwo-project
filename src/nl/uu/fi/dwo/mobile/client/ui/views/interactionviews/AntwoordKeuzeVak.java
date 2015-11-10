@@ -616,6 +616,10 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		int attemptsCount = 0;
 		int errorCount = 0;
 
+		if(!checkExternal)
+			kijkNa(false);
+		
+		
 		ingevuld = this.ingevuld;
 		nagekeken = this.nagekeken;
 		if(selectedIndex > 0)
@@ -627,8 +631,6 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		errorCount = this.errorCount;
 
 		//if (!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant)))
-		if(!checkExternal)
-			kijkNa(false);
 		if (logOption)
 		{
 			HashMap<String, Object> logMap = new HashMap<String, Object>();
@@ -650,7 +652,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("ingevuld", new Boolean(ingevuld));
-		h.put("nagekeken", new Boolean(nagekeken));
+		h.put("nagekeken", new Boolean(nagekeken)); // deze is false net als this.nagekeken
 		h.put("antwoord", antwoord);
 		h.put("attempts", attempts);
 		h.put("attemptsCount", new Integer(attemptsCount));
@@ -822,6 +824,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	public void kijkNa(boolean show)
 	{
+//		System.out.println("AntwoordKeuzeVak.kijkNa(show=" + Boolean.toString(show) + ")");
+		
 		checkAntwoord(show);
 
 		//ingevuld = antwoordKV.getSelectedIndex() > 0;
