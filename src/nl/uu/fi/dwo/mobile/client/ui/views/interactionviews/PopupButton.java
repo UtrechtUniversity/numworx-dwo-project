@@ -286,6 +286,12 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 		if(box != null) box.hide();
 	}
 
+	public boolean popupShowing() {
+		if(view == null) return true; // use delegate all the time.
+		if(box != null) return box.isShowing(); // use delegate only if visible
+		return false;
+	}
+	
 	@Override
 	public void onTouchStart(TouchStartEvent event) {
 		Touch touch = event.getChangedTouches().get(0);
@@ -312,6 +318,20 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 				view.setState(state);
 		}
 		box.hide();
+	}
+
+	/**
+	 * @return the state
+	 */
+	public HashMap<String, Object> getState() {
+		return state;
+	}
+
+	/**
+	 * @param state the state to set
+	 */
+	public void setState(HashMap<String, Object> state) {
+		this.state = state;
 	}
 
 	

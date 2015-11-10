@@ -80,9 +80,13 @@ public class PopupFacade implements InteractionView, FacetAware {
 	}
 
 	public Widget wrap(Widget container) {
+		return wrap(container, null);
+	}
+	
+	public Widget wrap(Widget container, InteractionView view) {
 		if(popup) {
 			if(popupBtn==null)
-			{	popupBtn = new PopupButton(container, getImage(), null);
+			{	popupBtn = new PopupButton(container, getImage(), view);
 				list.add(popupBtn);
 			}
 			return popupBtn;
@@ -135,11 +139,24 @@ public class PopupFacade implements InteractionView, FacetAware {
 	}
 
 	public HashMap<String, Object> getState() {
+		if (popupBtn != null)
+		{
+			if(popupBtn.popupShowing()) {
+				return delegate.getState();
+			}
+			return popupBtn.getState();
+		}
 		return delegate.getState();
 	}
 
 	public void setState(HashMap<String, Object> h) {
-		delegate.setState(h);
+			setPopupState(h);
+			delegate.setState(h);
+	}
+
+	public void setPopupState(HashMap<String, Object> h) {
+		if( popupBtn != null)
+			popupBtn.setState(h);
 	}
 
 	public int getScore() {
@@ -238,6 +255,10 @@ public class PopupFacade implements InteractionView, FacetAware {
 	public void getResponses(List<String> responses) {
 		if(delegate instanceof FacetAware)
 			((FacetAware) delegate).getResponses(responses);
+	}
+
+	public boolean hasState() {
+		return popupBtn != null && !popupBtn.popupShowing();
 	}
 	
 }

@@ -975,6 +975,9 @@ public class TekstVakPanel implements InteractionView, FacetAware
 
 	public HashMap<String, Object> getState()
 	{
+		if(facade.hasState()) 
+			return facade.getState();
+		
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		ArrayList<Object> states = new ArrayList<Object>();
 		for (int i = 0; i < interactionViewObjects.size(); i++)
@@ -1005,6 +1008,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 
 	public void setState(HashMap<String, Object> h)
 	{
+		facade.setPopupState(h);
 		if(h == null || h.isEmpty()) return;
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		boolean ingeklapt = this.ingeklapt;
@@ -1163,7 +1167,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	@Override
 	public Widget asWidget()
 	{
-		return facade.wrap(getAsPanel());
+		return facade.wrap(getAsPanel(), this);
 	}
 	
 	public boolean isZwevend()

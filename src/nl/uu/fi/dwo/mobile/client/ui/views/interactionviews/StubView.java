@@ -1,8 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,25 +18,22 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -46,7 +41,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class StubView extends SimplePanel implements InteractionView, LoadHandler, OpdrNavIF, FormuleEditorIF {
+public class StubView extends SimplePanel implements InteractionView, LoadHandler, OpdrNavIF, FormuleEditorIF, AttachEvent.Handler  {
 
 	public void pause() {
 		comRoot.pause();
@@ -71,7 +66,18 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private boolean[][] logObjectives;
 	private int scoreMax, score;
 	private boolean teltmee = true;
-	private Boolean correct; 
+	private Boolean correct;
+	
+	@Override
+	public void onAttachOrDetach(AttachEvent event) {
+		boolean detach = !event.isAttached();
+		if( detach )
+			innerView = null;
+		else 
+			loadhandler = frame.addLoadHandler(this);
+		
+	}
+	private HandlerRegistration detachhandler; 
 
 	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -135,15 +141,22 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	
 	private void initFrame() {
 		frame.setPixelSize(width , height);
-		loadhandler = frame.addLoadHandler(this);
+		//loadhandler = frame.addLoadHandler(this);
+		detachhandler = frame.addAttachHandler(this);
 		setWidget(frame);
 	}
 
 	@Override
 	public HashMap<String, Object> getState() {
+		if (facade.hasState()) 
+			return facade.getState();
+		return getState0();
+	}
+
+	private HashMap<String, Object> getState0() {
 		if(innerView != null)
 		{
-			String jso = getState(innerView);
+			String jso = getState(innerView); // FIXME innerview := null als frame hides or disappears
 			if(jso != null)
 			{
 				JSONObject js = JSONParser.parseLenient(jso).isObject();
@@ -170,6 +183,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
+		facade.setPopupState(h);
+
 		if(h.containsKey("STUBVIEW_score"))
 			score = Integer.parseInt(h.get("STUBVIEW_score").toString());
 		if(h.containsKey("STUBVIEW_correct"))
