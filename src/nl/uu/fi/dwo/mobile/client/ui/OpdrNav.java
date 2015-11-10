@@ -389,14 +389,31 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		fp_opdrachten.add(button);
 	}
 
+	
+	/**
+	 * wordt gebruikt aan het begin, als de pagina gestart wordt.
+	 * 
+	 * @return
+	 */
 	public boolean scoresVisible() {
 		return 
-				entry.getZelftoetsNagekeken() ||
-				mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN;
+				entry.getZelftoetsNagekeken() 
+				||  (mode == EINDTOETS && memento.isEindtoetsVerzegeld()) 
+				|| mode == OEFENEN 
+				|| mode == OEFENEN_STRAFPUNTEN;
 	}
 	
-	public boolean scoresEnabled() {
-		return mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN;
+	/**
+	 * wordt gebruikt om bij verandering de scores automatisch bij te werken. 
+	 * bijv. bij savecurrentstate.
+	 * bij kijkna knop, die doet het zelf voor de hele activiteit.
+	 * @return
+	 */
+	public boolean scoresEnabled() 
+	{
+		return mode == OEFENEN 
+			|| mode == OEFENEN_STRAFPUNTEN 
+			|| ( mode == EINDTOETS && !memento.isEindtoetsVerzegeld() ) ;
 	}
 	
 	public TouchButton getButton(int j)
@@ -505,15 +522,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			return;
 		}
 		button.setStyleDependentName("max0", false);
-		if(mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN
-			|| mode == ZELFTOETS)
+		if(scoresVisible())
 		{
 			button.setStyleDependentName("correct", b);
 			button.getElement().setPropertyInt("title", getItemScores()[j]);
 		}
-		// voor eindtoets groene bollen zodra verzegeld
-		
-		
 	}
 	
 	public boolean geefNoScore(int actNr, int opdrNr)
@@ -679,6 +692,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	private int scsInUse;
 	private boolean scsPending;
+	
 	public void saveCurrentState()
 	{
 		try {
@@ -705,15 +719,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	
 	private void saveCurrentState0() {	
-		
-		states[currentActiviteit][currentOpdracht] = entry.getState();
+		if( ! memento.isEindtoetsVerzegeld())
+			states[currentActiviteit][currentOpdracht] = entry.getState();
 		ScoreNavIF source = entry.scoreNav;
 
-		if(scoresEnabled()) {
+		if(scoresEnabled()) 
+		{
 			fetchScores();
-		}
-		
-		
+		}		
 		
 		memento.setCurrentActiviteit(currentActiviteit);
 		memento.setCurrentOpdracht(currentOpdracht);
@@ -729,13 +742,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		memento.setOpdrContStates(states);
 		memento.flush();
 // send data to GUI (why here?)
-		source.setItemScore(currentOpdracht, scores[currentActiviteit][currentOpdracht]);		
-		source.setBeantwoord(getAantalBeantwoord());
-		source.setTotaalScore((int) score); 
-
+		if(scoresVisible())
+		{ 
+			source.setItemScore(currentOpdracht, scores[currentActiviteit][currentOpdracht]);		
+			source.setTotaalScore((int) score); 
+		}
+		source.setBeantwoord(getAantalBeantwoord()); // noordhoff
 	}
+
 	private void fetchScores() {
 		int scoreCorrected = entry.getScore();
+		
 		scores[currentActiviteit][currentOpdracht] = scoreCorrected;
 		isCorrect[currentActiviteit][currentOpdracht] = Boolean.TRUE == entry.isCorrect();
 		if (objectives != null)
@@ -744,10 +761,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	public void kijkToetsNa()
 	{
-		// isCorrect[] is niet juist, aan het eind van de methode is hij wel juist...
-		
 		incrAantalNakijken(currentActiviteit);
 		int opdrachtNr = currentOpdracht;
+		pause();
+		ScoreNavIF source = entry.scoreNav;
 		for (int j = 0; j < aantalOpdrachten[currentActiviteit]; j++)
 		{
 			gotoOpdracht(j);
@@ -755,11 +772,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			entry.zetNagekeken(true);
 			fetchScores();
 			setButtonCorrect(buttons.get(j), isCorrect[currentActiviteit][j], j);
+			source.setItemScore(j, scores[currentActiviteit][j]);
 		}
 		//entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], !(gekoppeldeOpdrachten || globalParam), states[currentActiviteit][currentOpdracht]);
-		
+		source.setTotaalScore((int)getScore());
 		gotoOpdracht(opdrachtNr);
-		
+		unpause();
 		
 //		if (mode == ZELFTOETS || mode == EINDTOETS) // if (mode == 2 || mode == 3)
 //		{
@@ -893,17 +911,21 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	@Override
-	public void gotoOpdracht(int i, ScoreNavIF source) {
-		if(i == currentOpdracht) return;
+	public void gotoOpdracht(int i, ScoreNavIF source) 
+	{
+		if (i == currentOpdracht) return;
 		int oldOpdr = currentOpdracht;
+		
 		gotoOpdracht(i);
-		if(source != null)
+		
+		if (source != null)
 		{ 	source.setBeantwoord(getAantalBeantwoord());
 			source.setOpdracht(getCurrentOpdracht());
 			source.setTotaalScore((int) getScore()); 
 			source.setItemScore(oldOpdr, getItemScores()[oldOpdr]);
 		}
-		if(DWOplayer.PARAMETERS.isNavTitle())
+		
+		if (DWOplayer.PARAMETERS.isNavTitle())
 			entry.setTitle("Vraag " + (getCurrentOpdracht()+1) + " van " + getAantalOpdrachten());
 	}
 
@@ -1024,21 +1046,24 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		saveCurrentState();
 		removeButtonCursor(buttons.get(currentOpdracht));
 		
-		if(opdracht < 0) 
+		if (opdracht < 0) 
 		{
 			currentOpdracht = 0;
-			for(opdracht = 0; opdracht < aantalOpdrachten[currentActiviteit]; opdracht ++)
+			for (opdracht = 0; opdracht < aantalOpdrachten[currentActiviteit]; opdracht ++)
 			{	clearState(opdracht, source);
 				setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
 			}
-			if(getAantalNakijken(currentActiviteit) > 0)
+			
+			if (getAantalNakijken(currentActiviteit) > 0)
 				aantalNakijken[currentActiviteit] = 0;
+			
 			//reset totaalscore en keer nagekeken
 			entry.scoreNav.setTotaalScoreLabel(getTotaalScore());
 			entry.scoreNav.setKeerNagekekenLabel(getKeerNagekeken());
 		} 
 		else
-		{	clearState(opdracht,source);
+		{	
+			clearState(opdracht,source);
 			setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
 		}
 		source.setBeantwoord(getAantalBeantwoord());
