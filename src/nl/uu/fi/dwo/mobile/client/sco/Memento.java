@@ -68,6 +68,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	static final String EXIT_STATUS = "cmi.exit";
 	private static final String SESSION_TIME = "cmi.session_time";
 	private static final String TOTAL_TIME = "cmi.total_time";
+	private static final String COMPLETION_STATUS = "cmi.completion_status";
+	private static final String COMPLETE = "complete";
 	
 	static final String EXIT_NORMAL = "normal";
 	static final String EXIT_SUSPEND = "suspend";
@@ -122,6 +124,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			suspendData.put(ONS_STATE, onsState);
 		}
 
+		value = getValue(COMPLETION_STATUS);
+		eindtoetsVerzegeld = COMPLETE.equals(value);
+		
 		instalOnBeforeUnload();
 	}
 
@@ -523,6 +528,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		{
 		}
 	};
+	private boolean eindtoetsVerzegeld;
 
 	public void setUnload(Runnable opdrNav)
 	{
@@ -687,7 +693,6 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	public boolean isEindtoetsVerzegeld()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return this.eindtoetsVerzegeld;
 	}
 }
