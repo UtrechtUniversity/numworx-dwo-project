@@ -11,7 +11,7 @@
 
 	<entry-point class='nl.uu.fi.dwo.mobile.NoordhoffPlayer'/>
 	
-	 <replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_guest">
+	 <replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_12_API">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
 

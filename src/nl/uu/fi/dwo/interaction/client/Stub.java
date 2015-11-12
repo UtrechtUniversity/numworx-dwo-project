@@ -270,7 +270,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		$wnd.addCBookEventListener(command, function(event) {
 			if( typeof event === 'string' )
 				event = JSON.parse(event)
-			//listener.@nl.uu.fi.dwo.interaction.client.ListenerForEvents::accept(Lcom/google/gwt/core/client/JavaScriptObject;)(event)
+			listener.@nl.uu.fi.dwo.interaction.client.ListenerForEvents::accept(Lcom/google/gwt/core/client/JavaScriptObject;)(event)
 		}, $wnd.outer);
 	}-*/;
 
