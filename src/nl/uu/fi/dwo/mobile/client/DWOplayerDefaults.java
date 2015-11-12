@@ -133,12 +133,12 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	}
 
 	protected String getDefaultHost() {
-		return "ws-dev.fisme.science.uu.nl";
+		return "ws.fisme.science.uu.nl";
 	}
 	
 	public String getHost() {
-		if(GWT.isProdMode()) 
-			return Window.Location.getHost();
+//		if(GWT.isProdMode()) 
+//			return Window.Location.getHost();
 		return getDefaultHost();
 	}
 

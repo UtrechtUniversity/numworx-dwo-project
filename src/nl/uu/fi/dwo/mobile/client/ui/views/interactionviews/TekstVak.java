@@ -681,6 +681,16 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public void resize()
 	{
+		hoogte = 0;
+		boolean opvulhoogteGecorrigeerd = corrigeerOpvulHoogte();
+		
+		for(int i=0 ; i<aantalRegels; i++)
+	    {	if(opvulhoogteGecorrigeerd || contentUitklapbaar())
+	    	{	regelVakken[i].bepaalAshoogte();	
+	    		regelVakken[i].hervulRegel();
+	    	}
+			hoogte += regelVakken[i].getHeight();
+	    }
 		if(pasAanB)
 		{
 			tekstVakBreedte = regelVakken[0].getWidth();
@@ -806,7 +816,70 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		 
 		return hoogte;
 	}
+	
+	
+	
+	public int geefRestHoogte()
+	{
+		int regelafstand = font_size +interlinie;
+		int actieveHoogte = 2 * bovenMarge + Math.max(regelafstand,regelVakken[0].getHeight());
+		int corr = 0;
+		for(int i=1 ; i<aantalRegels; i++)
+	    {	
+			corr = Math.max(regelafstand-(regelVakken[i-1].getHeight()-regelVakken[i-1].getAsHoogte()+regelVakken[i].getAsHoogte()), 0);
+			actieveHoogte += regelVakken[i].getHeight() + corr;
+		}
+		return getHeight()-actieveHoogte;
+	}
+	
+	public int geefOpgevuldeHoogte()
+	{
+		for(int i=0 ; i<opdrachtObjects.size() ; i++)
+		{
+			Object currentObject = opdrachtObjects.get(i);
+			if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).vulHoogteMogelijk())
+			{	return ((TekstVakPanel) currentObject).geefOpgevuldeHoogte();
+			}
+		}
+		return 0;
+	}
+	
+	public boolean corrigeerOpvulHoogte()
+	{
+		boolean correctieGedaan = false;
+		for(int i=0 ; i<opdrachtObjects.size() ; i++)  
+		{
+			Object currentObject = opdrachtObjects.get(i);
+			if(currentObject instanceof TekstVakPanel)
+			{
+				TekstVakPanel tvp = (TekstVakPanel) currentObject;
+				if(tvp.vulHoogteMogelijk())
+				{	tvp.corrigeerRestHoogte();
+					correctieGedaan = correctieGedaan || true;
+				}
+//				else
+//				{
+//					correctieGedaan = correctieGedaan || tvp.corrigeerOpvulHoogtes();
+//							
+//				}
+			}
+		}
+		return correctieGedaan;
+	}
 
+	public boolean contentUitklapbaar()
+	{
+		boolean uitklapbaar = false;
+		for(int i=0 ; i<opdrachtObjects.size() ; i++)
+		{
+			Object currentObject = opdrachtObjects.get(i);
+			if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isInklapbaar())
+			{	uitklapbaar = uitklapbaar || true;
+			}
+		}
+		return uitklapbaar;
+	}
+	
 	/*
 	@Override
 	public int getWidth() {

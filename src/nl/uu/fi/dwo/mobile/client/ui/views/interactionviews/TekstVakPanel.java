@@ -166,6 +166,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	private boolean sleepSnap = false;
 	private boolean pasAanH = false;
 	private boolean pasAanB = false;
+	private boolean vulHoogte = false;
 	
 	private boolean selectable;
 	private boolean sleepbaar;
@@ -259,7 +260,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		tekstVakken[0][0].setFontSize(font_size);
 		//tekstVakken[i][j].setRonding(ronding);
 		//tekstVakken[i][j].setCentering(centerH, centerV);
-		//tekstVakken[i][j].setPasHoogteBreedteAan(pasAanH, pasAanB);
+		tekstVakken[0][0].setPasHoogteBreedteAan(pasAanH, pasAanB);
 		//tekstVakken[i][j].setTekstVakBreedte(tekstVakBreedte);
 		//tekstVakken[i][j].setMarges(bovenMarge, cellMarge);
 		//tekstVakken[i][j].setInterlinie(interlinie);
@@ -443,6 +444,8 @@ public class TekstVakPanel implements InteractionView, FacetAware
 // launchState never null!
 		pasAanH = launchState.getBoolean("pasAanH",pasAanH);
 		pasAanB = launchState.getBoolean("pasAanB",pasAanB);
+		
+		vulHoogte = launchState.getBoolean("vulHoogte", vulHoogte);
 		
 // link feature of tekstVakPanel.		
 		isLink = launchState.getBoolean("isLink", false);
@@ -692,6 +695,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	//}
 	
 	public void setCurrentSize(int w, int h) {
+		System.out.println("TekstVakPanel setCurrentSize met breedte " + w + " en hoogte " + h);
 		int oldHeight = hoogte;
 		mainPanel2.setPixelSize(w, h);
 		if(w >= 0) breedte = w;
@@ -1170,6 +1174,11 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		return facade.wrap(getAsPanel(), this);
 	}
 	
+	public boolean isInklapbaar()
+	{
+		return inklapbaar;
+	}
+	
 	public boolean isZwevend()
 	{
 		return zwevend;
@@ -1319,8 +1328,6 @@ public class TekstVakPanel implements InteractionView, FacetAware
 				if(tekstVakken[i][j].getAsHoogte() > asHoogte)
 				{
 					asHoogte = tekstVakken[i][j].getAsHoogte();
-					
-					
 				}
 				
 			}
@@ -1349,7 +1356,9 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		
 		//if(pasAanH)
 		//{	
-			if(pasAanH)
+			if(vulHoogte)
+				totaleHoogte = geefOpgevuldeHoogte();
+			else if(pasAanH)
 				totaleHoogte = 0;
 			for(int i = 0; i < hoogtes.size(); i++)
 			{
@@ -1427,13 +1436,22 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			}
 		}
 		
+		//eventueel opvullen hoogtes in tekstvakken regelen (TODO: werkt nog niet goed: vak wordt wel groter, maar nooit meer kleiner.)
+				for(int i = 0; i < hoogtes.size(); i++)
+				{	for(int j = 0; j < breedtes.size(); j++)
+					{	//tekstVakken[i][j].resetOpvulHoogtes();
+						tekstVakken[i][j].corrigeerOpvulHoogte();
+					}
+				}
+		
 		if(parent != null)
 		{	if(isZwevend() && this.getAsPanel().isAttached())
 			{
 				parent.setWidgetLeftWidth(this.getAsPanel(), this.getLocationX(), Style.Unit.PX, totaleBreedte, Style.Unit.PX);
 				parent.setWidgetTopHeight(this.getAsPanel(), this.getLocationY(), Style.Unit.PX, totaleHoogte, Style.Unit.PX);
 			}
-			parent.resize();
+			if(!vulHoogte)
+				parent.resize();
 		
 		}
 	}
@@ -1778,6 +1796,26 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		return "".equals(getIpExpString()) || "$f@".equals(getIpExpString());
 	}
 
+	public int geefOpgevuldeHoogte()
+	{	return tekstVakken[0][0].geefRestHoogte();
+	}
+	
+	public boolean vulHoogteMogelijk()
+	{
+		return vulHoogte;
+	}
+	
+	public void corrigeerRestHoogte()
+	{
+		if(vulHoogte)
+		{	
+			int restHoogte = parent.geefRestHoogte();
+			setCurrentSize(breedte, Math.max(0, hoogte + restHoogte));
+			parent.setSize(breedte, hoogte);
+			tekstVakken[0][0].plaatsRegels(true); //checken of inderdaad nodig.
+		}
+	}
+	
 	
 	public void mouseDownTouchStartAction(int eventX, int eventY)
 	{

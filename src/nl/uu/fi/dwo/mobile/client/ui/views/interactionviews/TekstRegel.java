@@ -382,6 +382,9 @@ public class TekstRegel extends LayoutPanel
 				horPositie += 3;
 		}
 		breedte = horPositie  + 1; //zie resize tekstRegel WiskOpdr.
+//		if(regelObjects.size() == 0)
+//		{	this.setHeight(tekstHoogte);
+//		}
 		//breedte = horPositie;
 	}
 	
@@ -390,6 +393,7 @@ public class TekstRegel extends LayoutPanel
 	
 	public void bepaalAshoogte()
 	{
+		System.out.println("TekstRegel.bepaalAshoogte. Hoogte begin: " + hoogte);
 		int h1 = 0;
 		int h2 = 0;
 		for(int i = 0; i < regelObjects.size(); i++)
@@ -427,6 +431,7 @@ public class TekstRegel extends LayoutPanel
 			ashoogte = tekstAshoogte;
 		}
 		this.setHeight(this.hoogte);
+		System.out.println("TekstRegel.bepaalAshoogte. Hoogte eind: " + hoogte);
 		
 	}
 	
