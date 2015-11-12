@@ -554,7 +554,17 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	// !(holder instanceof FormuleEditorWithAnswer && ((FormuleEditorWithAnswer)holder).getFe()==null)
 	public boolean isInputNeeded() {
-		return fe != null;
+		
+		//nieuwe implementatie: alleen false teruggeven als er nog niets in het vakje staat, anders true teruggeven
+		if(fe != null)
+			return true;
+		if(this.toString().equals(""))
+			return false;
+		else 
+			return true;
+		
+		//oude implementatie: zorgt ervoor dat nooit vakjes verschijnen, ook niet nadat bijvoorbeeld een breukvak is ingevoerd. 
+		//return fe != null;
 	}
 	
 	public void setParentRegel(TekstRegel regel)
@@ -572,8 +582,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	@Override
 	public void addElement(FormuleElement e)
-	{
-		super.addElement(e);
+	{	super.addElement(e);
 		resetimg();
 		resize();
 	}
