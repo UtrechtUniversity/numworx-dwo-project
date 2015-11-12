@@ -695,7 +695,6 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	//}
 	
 	public void setCurrentSize(int w, int h) {
-		System.out.println("TekstVakPanel setCurrentSize met breedte " + w + " en hoogte " + h);
 		int oldHeight = hoogte;
 		mainPanel2.setPixelSize(w, h);
 		if(w >= 0) breedte = w;

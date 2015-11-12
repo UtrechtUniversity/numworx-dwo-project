@@ -565,7 +565,6 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public int getAsHoogte()
 	{
-		//System.out.println("tekstvak getAsHoogte: " + ashoogte);
 		return ashoogte;
 	}
 	

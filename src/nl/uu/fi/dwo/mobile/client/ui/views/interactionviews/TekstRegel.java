@@ -393,7 +393,6 @@ public class TekstRegel extends LayoutPanel
 	
 	public void bepaalAshoogte()
 	{
-		System.out.println("TekstRegel.bepaalAshoogte. Hoogte begin: " + hoogte);
 		int h1 = 0;
 		int h2 = 0;
 		for(int i = 0; i < regelObjects.size(); i++)
@@ -431,8 +430,6 @@ public class TekstRegel extends LayoutPanel
 			ashoogte = tekstAshoogte;
 		}
 		this.setHeight(this.hoogte);
-		System.out.println("TekstRegel.bepaalAshoogte. Hoogte eind: " + hoogte);
-		
 	}
 	
 	public void setColor(CssColor color)
