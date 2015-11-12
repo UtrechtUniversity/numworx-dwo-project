@@ -587,7 +587,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeightWithImage(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 		nagekeken = true;
-		correct = true;
+		correct = Boolean.TRUE;
 		score = scoreMax;
 		if(mode == 1)
 			score = Math.max(0, scoreMax - errorCount * foutStraf);
@@ -612,7 +612,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		//int goedHalfFout = editor.getGoedHalfFout();
 		stapOk = false;
 		nagekeken = false;
-		correct = false;//moet correct hier niet null zijn?
+		correct = Boolean.FALSE;//moet correct hier niet null zijn?
 		contentPanel.remove(feedbackPanel);
 		vervangEditorDoorViewer(useranswer, show, setState);
 		
@@ -724,7 +724,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	public void backStep(boolean setState)
 	{
 		nagekeken = false;
-		correct = false;
+		correct = Boolean.FALSE;
 		LayoutPanel current = stepPanels.get(stapNr);
 		//deze wordt null als je in een pijlvak zit. 
 		
@@ -1718,7 +1718,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 
 			}
 			else
-			{	for(int i = 0; i < viewers.size(); i++)
+			{	
+				// FIXME bepaal score voor 'getScore()' en haal daarna alle vinkjes weer weg....	kijkna(false,false,false)?		
+				
+				for(int i = 0; i < viewers.size(); i++)
 				{
 					viewers.get(i).showResult(FormuleViewer.NONE);
 				}
@@ -1850,7 +1853,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			return;
 		}
 		nagekeken = false;
-		correct = false;
+		correct = Boolean.FALSE;
 		score = 0;
 		
 		if((mode == 0 || mode == 1) && editor != null)
@@ -1942,6 +1945,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			ingevuld = true;
 		if(mode == 2 || mode ==3)
 		{
+			//correct = editor.isCorrect(); XXX wordt elders gezet, maar waar en waarom?
+			score = editor.getScore(); // altijd score ophalen, ook bij noshow
 			if(show)
 			{
 				if(stepPanels.size() < aantalStappen)
@@ -1952,7 +1957,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				else
 				{
 					nagekeken = true;
-					score = editor.getScore();
+					//score = editor.getScore();
 					if(goedHalfFout == AntwoordVakChecker.GOED)
 					{
 						setFeedback(editor.getFeedback());
@@ -1966,7 +1971,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				}
 				return;
 			}
-			else
+			else // hier ook score ophalen!!!! 
 			{	if(goedHalfFout == AntwoordVakChecker.FOUT && editor.isSyntaxFout())
 				{
 					nagekeken = true;
@@ -2245,7 +2250,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			//"De vergelijking is correct opgelost."
 			stapOk = false;
 			nagekeken = true;
-			correct = true;
+			correct = Boolean.TRUE;
 			score = scoreMax;
 			if(mode == 1)
 				score = Math.max(0, scoreMax - errorCount * foutStraf);
@@ -2353,7 +2358,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				//"De vergelijking is correct opgelost."
 				stapOk = false;
 				nagekeken = true;
-				correct = true;
+				correct = Boolean.TRUE;
 				score = scoreMax;
 				if(mode == 1)
 					score = Math.max(0, scoreMax - errorCount * foutStraf);

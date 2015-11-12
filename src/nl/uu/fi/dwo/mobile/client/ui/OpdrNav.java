@@ -254,6 +254,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	}
 	
+	public boolean isEindtoetsVerzegeld() {
+		return mode == EINDTOETS && memento.isEindtoetsVerzegeld();
+	}
 	public static void setObjectives(String[][] o)
 	{
 		objectives = o;
@@ -701,6 +704,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				saveCurrentState0();
 				scsPending = false;
 			} else {
+				saveCurrentState_stap1(); // dit MOET altijd voor kijkna.
 				scsPending = true;
 			}
 		} finally {
@@ -719,14 +723,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	
 	private void saveCurrentState0() {	
-		if( ! memento.isEindtoetsVerzegeld())
-			states[currentActiviteit][currentOpdracht] = entry.getState();
-		ScoreNavIF source = entry.scoreNav;
-
-		if(scoresEnabled()) 
-		{
-			fetchScores();
-		}		
+		saveCurrentState_stap1();		
 		
 		memento.setCurrentActiviteit(currentActiviteit);
 		memento.setCurrentOpdracht(currentOpdracht);
@@ -741,13 +738,29 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		memento.setCompletion(suspendDataCompleted(currentActiviteit, currentOpdracht));
 		memento.setOpdrContStates(states);
 		memento.flush();
+
 // send data to GUI (why here?)
+		saveCurrentState_stap3(score);
+	}
+	private void saveCurrentState_stap3(double score) {
+		ScoreNavIF source = entry.scoreNav;
 		if(scoresVisible())
 		{ 
 			source.setItemScore(currentOpdracht, scores[currentActiviteit][currentOpdracht]);		
 			source.setTotaalScore((int) score); 
 		}
 		source.setBeantwoord(getAantalBeantwoord()); // noordhoff
+	}
+	
+	
+	private void saveCurrentState_stap1() {
+		if( ! memento.isEindtoetsVerzegeld())
+			states[currentActiviteit][currentOpdracht] = entry.getState();
+
+		if(scoresEnabled()) 
+		{
+			fetchScores();
+		}
 	}
 
 	private void fetchScores() {

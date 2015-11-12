@@ -305,6 +305,11 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		if (item != null)
 		{
 			navigationLabel.setText(item.getName());
+			if ( item.isFromSchool() ) // set header of module..
+				moduleHeaderPanel.setCenter(Text.constants.schoolModules());
+			else
+				moduleHeaderPanel.setCenter(Text.constants.standaardModules());
+			
 			String description = item.getDescription();
 			if(description != null)
 			{

@@ -778,6 +778,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			verhoogErrorCount();
 		this.correct = (Boolean) checkResults.get("correct");
 		this.score = (Integer) checkResults.get("score");
+//		if(fe != null) { // waarom werkt dit überhaupt? normaal gebeurt dit in 'maakNakijkenAf'
+//			fe.correct = this.correct; // update correct van parent fe
+//			fe.score = this.score;     // update score van parent fe
+//		}
 		this.scoreZonderAftrek = (Integer) checkResults.get("score");
 		if(mode == 1)
 			score = Math.max(0, score - errorCount * foutStraf);

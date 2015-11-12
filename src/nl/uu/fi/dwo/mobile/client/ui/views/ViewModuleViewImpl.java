@@ -330,6 +330,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			sb.addLabel(scoreNav.getTotaalScoreLabel());
 			sb.addLabel(scoreNav.getKeerNagekekenLabel());
 		}
+		if ( on.isEindtoetsVerzegeld()) {
+			sb.addLabel(new Label(Text.constants.lockToetsLabel()));
+		}
 //		else if (mode == OpdrNav.OEFENEN || mode == OpdrNav.OEFENEN_STRAFPUNTEN)
 //		{
 //			// Geen nakijkknop, dus ook niet keernagekeken
@@ -580,8 +583,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		
 		setState(state);
-		
-	}
+		if(on.isEindtoetsVerzegeld()) {
+			zetNagekeken(true);
+			kijkNa();
+		}
+			
+ 	}
 	
 	public void stelNavigatieIn()
 	{	//Omzetting in GWT: overal opdrachtenCorrect[actNr][opdrNr] vervangen door on.getOpdrachtCorrect(actNr, opdrNr)

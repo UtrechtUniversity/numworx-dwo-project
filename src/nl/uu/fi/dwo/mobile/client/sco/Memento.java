@@ -69,7 +69,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private static final String SESSION_TIME = "cmi.session_time";
 	private static final String TOTAL_TIME = "cmi.total_time";
 	private static final String COMPLETION_STATUS = "cmi.completion_status";
-	private static final String COMPLETE = "complete";
+	private static final String COMPLETED = "completed";
 	
 	static final String EXIT_NORMAL = "normal";
 	static final String EXIT_SUSPEND = "suspend";
@@ -125,7 +125,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 
 		value = getValue(COMPLETION_STATUS);
-		eindtoetsVerzegeld = COMPLETE.equals(value);
+		eindtoetsVerzegeld = COMPLETED.equals(value);
 		
 		instalOnBeforeUnload();
 	}
@@ -174,14 +174,14 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	boolean setValue(String key, String value)
 	{
 		try
-		{
-			return "true".equals(api.SetValue(key, value));
+		{	if (!isEindtoetsVerzegeld())
+				return "true".equals(api.SetValue(key, value));
 		}
 		catch (Exception e)
 		{
 			logger.log(Level.SEVERE,"setValue", e);
-			return false;
 		}
+		return false;
 	}
 
 	public void setStrafpunten(int[][] o) {
@@ -584,18 +584,18 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	}
 	
 	public void setCompletion(boolean complete) {
-		api.SetValue(EXIT_STATUS, complete?EXIT_NORMAL:EXIT_SUSPEND);
+		setValue(EXIT_STATUS, complete?EXIT_NORMAL:EXIT_SUSPEND);
 	}
 
 	public String getLearnerId() {
-		return api.GetValue(LEARNER_ID);
+		return getValue(LEARNER_ID);
 	}
 	public String getLearnerName() {
-		return api.GetValue(LEARNER_NAME);
+		return getValue(LEARNER_NAME);
 	}
 	
 	public String getLanguage() {
-		return api.GetValue(LEARNER_PREFERENCE_LANGUAGE);	
+		return getValue(LEARNER_PREFERENCE_LANGUAGE);	
 	}
 
 	public void getBezocht(boolean[][] bezocht) {

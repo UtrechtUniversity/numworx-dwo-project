@@ -38,4 +38,7 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("Geen gegevens ontvangen. Open de activiteit in de editor en sla die opnieuw op")
 	String noJSONreceived();
+
+	@DefaultStringValue("Toets verzegeld")
+	String lockToetsLabel();
 }
