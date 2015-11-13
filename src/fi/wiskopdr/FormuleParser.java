@@ -2479,7 +2479,7 @@ public class FormuleParser
 				for (int j = 0; j < varnamen.length; j++)
 				{ 	String varnaam = varnamen[j];
 					varnaam = varnaam.replace('?', '$').replace('(', 's').replace(')', '@');
-					if(s.contains(varnaam))
+					if(s.contains(varnaam) && !varnaam.isEmpty()) // Bug in oude randomnamen
 					{
 						int value = ((Number) waarden.get(varnamen[j])).intValue();
 						e = e.substitueer(value, varnamen[j]);

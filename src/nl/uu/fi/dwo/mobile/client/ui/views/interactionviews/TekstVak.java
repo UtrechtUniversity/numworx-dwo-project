@@ -846,6 +846,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	public boolean corrigeerOpvulHoogte()
 	{
 		boolean correctieGedaan = false;
+		if(opdrachtObjects != null) // NPE voorkomen, why?
 		for(int i=0 ; i<opdrachtObjects.size() ; i++)  
 		{
 			Object currentObject = opdrachtObjects.get(i);
