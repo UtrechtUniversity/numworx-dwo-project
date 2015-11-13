@@ -98,7 +98,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         List<RestTeacher> result = instance.getTeachersInSchool(sc);
-        assertEquals("Number of teachers don't match.",1, result.size());        
+        assertEquals("Number of teachers don't match.",2, result.size());        
     }
 
     /**
@@ -115,7 +115,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         restSchoolClass.setSchoolClassName("SchoolClass02");
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         List<RestTeacher> result = instance.GetTeachersInSchoolClass(sc, restSchoolClass);
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
     }
 
     /**

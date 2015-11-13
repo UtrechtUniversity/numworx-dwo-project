@@ -13,14 +13,12 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestNewUser;
 import fi.dwo.commons.rest.entities.RestSchool;
 import fi.dwo.commons.rest.entities.RestSchoolAdmin;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestTeacher;
-import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -87,7 +85,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         List<RestTeacher> result = instance.getTeachersInSchool(sc);
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
     }
 
     /**

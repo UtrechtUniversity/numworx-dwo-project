@@ -48,7 +48,7 @@ public class HasRoleUtilManager {
      * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
     public static PersistentHasRole getCurrentHasRole(String usercode, RoleType r) throws Dwo2Exception {
-        PersistentUser u = UserManager.findByUserName(usercode);
+        PersistentUser u = (PersistentUser) UserManager.findByUserName(usercode);
         if (u == null || u.getSchoolGroupID() == null) {
             LOG.log(Level.SEVERE, "Given user or schoolGroup for userlogin {0} could not be found.", new Object[]{usercode});
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "User or SchoolGroup for userlogin could not be found.");
@@ -68,7 +68,7 @@ public class HasRoleUtilManager {
             LOG.log(Level.SEVERE, "RoleId of hasRole {1} for userlogin {0} could not be found.", new Object[]{usercode, hr.getPersistentHasRolePK()});
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Current Role could not be found.");
         }
-        if ( (long) roleId != r.ordinal()) {
+        if ( roleId.intValue() != r.ordinal()) {
             return null;
         }
         return hr;

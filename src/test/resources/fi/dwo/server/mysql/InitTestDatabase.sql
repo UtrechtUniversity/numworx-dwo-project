@@ -329,7 +329,7 @@ CREATE TABLE `tblhasrole` (
 
 LOCK TABLES `tblhasrole` WRITE;
 /*!40000 ALTER TABLE `tblhasrole` DISABLE KEYS */;
-INSERT INTO `tblhasrole` VALUES (1,NULL,1,'2015-10-13','_',NULL),(8,NULL,8,'2015-10-13','_',NULL),(9,NULL,2,'2015-10-13','_',NULL),(9,NULL,6,'2015-10-13','_',NULL),(10,NULL,2,'2015-10-13','_',NULL),(10,NULL,3,'2015-10-13','_',NULL),(10,NULL,5,'2015-10-13','_',NULL),(10,NULL,6,'2015-10-13','_',NULL),(10,NULL,7,'2015-10-13','_',NULL),(11,NULL,2,'2015-10-13','_',NULL),(12,NULL,5,'2015-10-13','_',NULL),(13,NULL,4,'2015-10-29','_',NULL);
+INSERT INTO `tblhasrole` VALUES (1,NULL,1,'2015-10-13','_',NULL),(8,NULL,8,'2015-10-13','_',NULL),(9,NULL,2,'2015-10-13','_',NULL),(9,NULL,6,'2015-10-13','_',NULL),(10,NULL,2,'2015-10-13','_',NULL),(10,NULL,3,'2015-10-13','_',NULL),(10,NULL,5,'2015-10-13','_',NULL),(10,NULL,6,'2015-10-13','_',NULL),(10,NULL,7,'2015-10-13','_',NULL),(11,NULL,2,'2015-10-13','_',NULL),(12,NULL,5,'2015-10-13','_',NULL),(13,NULL,4,'2015-10-29','_',NULL),(14,NULL,3,'2015-10-29','_',NULL);
 /*!40000 ALTER TABLE `tblhasrole` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -663,7 +663,7 @@ CREATE TABLE `tblteacherof` (
 
 LOCK TABLES `tblteacherof` WRITE;
 /*!40000 ALTER TABLE `tblteacherof` DISABLE KEYS */;
-INSERT INTO `tblteacherof` VALUES (9,6,3,'2015-10-13'),(10,3,2,'2015-10-13'),(10,6,3,'2015-10-13');
+INSERT INTO `tblteacherof` VALUES (9,6,3,'2015-10-13'),(10,3,2,'2015-10-13'),(10,6,3,'2015-10-13'),(14,3,2,'2015-10-13');
 /*!40000 ALTER TABLE `tblteacherof` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -693,7 +693,7 @@ CREATE TABLE `tbluser` (
   KEY `USER_GROUP_FK` (`schoolGroupID`),
   KEY `STUDENT_CLASS_FK` (`classID`),
   CONSTRAINT `tbluser_ibfk_1` FOREIGN KEY (`schoolGroupID`) REFERENCES `tblschoolgroup` (`schoolGroupID`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -702,7 +702,7 @@ CREATE TABLE `tbluser` (
 
 LOCK TABLES `tbluser` WRITE;
 /*!40000 ALTER TABLE `tbluser` DISABLE KEYS */;
-INSERT INTO `tbluser` VALUES (1,NULL,1,'John',NULL,'Doe','dwoadmin','d55b2dbcb757e1dc1725798bccda75cd','dwoadmin@dwo.nl','2015-10-13','_',NULL,0),(8,NULL,8,'FirstName01',NULL,'FamiliyName01','user01','user01','user01@dwo.nl','2015-10-13','_',NULL,0),(9,NULL,2,'FirstName02',NULL,'FamiliyName02','user02','user02','user02@dwo.nl','2015-10-13','_',NULL,0),(10,NULL,5,'FirstName03',NULL,'FamiliyName03','user03','user03','user03@dwo.nl','2015-10-13','_',NULL,0),(11,NULL,2,'FirstName04',NULL,'FamiliyName04','user04','user04','user04@dwo.nl','2015-10-13','_',NULL,1),(12,NULL,5,'FirstName05',NULL,'FamiliyName05','user05','user05','user05@dwo.nl','2015-10-13','_',NULL,1),(13,NULL,4,'FirstName06',NULL,'FamiliyName06','user06','user06','user06@dwo.nl','2015-10-13','_',NULL,1);
+INSERT INTO `tbluser` VALUES (1,NULL,1,'John',NULL,'Doe','dwoadmin','d55b2dbcb757e1dc1725798bccda75cd','dwoadmin@dwo.nl','2015-10-13','_',NULL,0),(8,NULL,8,'FirstName01',NULL,'FamiliyName01','user01','user01','user01@dwo.nl','2015-10-13','_',NULL,0),(9,NULL,2,'FirstName02',NULL,'FamiliyName02','user02','user02','user02@dwo.nl','2015-10-13','_',NULL,0),(10,NULL,5,'FirstName03',NULL,'FamiliyName03','user03','user03','user03@dwo.nl','2015-10-13','_',NULL,0),(11,NULL,2,'FirstName04',NULL,'FamiliyName04','user04','user04','user04@dwo.nl','2015-10-13','_',NULL,1),(12,NULL,5,'FirstName05',NULL,'FamiliyName05','user05','user05','user05@dwo.nl','2015-10-13','_',NULL,1),(13,NULL,4,'FirstName06',NULL,'FamiliyName06','user06','user06','user06@dwo.nl','2015-10-13','_',NULL,1),(14,NULL,3,'FirstName07',NULL,'FamiliyName07','user07','user07','user07@dwo.nl','2015-10-13','_',NULL,0);
 /*!40000 ALTER TABLE `tbluser` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -715,4 +715,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-30 13:12:44
+-- Dump completed on 2015-11-13 16:53:46

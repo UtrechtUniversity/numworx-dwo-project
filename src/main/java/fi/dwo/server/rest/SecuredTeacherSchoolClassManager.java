@@ -127,8 +127,9 @@ public class SecuredTeacherSchoolClassManager {
         List<PersistentHasRole> hrList;
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
+            restTeachers = new ArrayList<RestTeacher>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                restTeachers.add(new RestTeacher(UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                restTeachers.add(new RestTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
             }
         }
         catch (Dwo2Exception ex) {
@@ -603,6 +604,7 @@ public class SecuredTeacherSchoolClassManager {
                 schoolClass.setIconizer(1 == restSchoolClass.getIconizer());
                 schoolClass.setRegistrationKey(restSchoolClass.getRegistrationKey());
                 schoolClass.setClass1(restSchoolClass.getSchoolClassName());
+                SchoolClassManager.edit(schoolClass);
             }
             catch (PersistenceException e) {
                 return false;
