@@ -507,6 +507,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		
 	}
 
+	private FormuleEditorWithSteps() {
+	}
+
 	public void zetInstellingen(ObjectMap instellingen2)
 	{
 		this.instellingen = instellingen2;
@@ -1714,12 +1717,14 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		{	if(nagekeken)
 			{	
 				
-				kijkToetsNa(true);
+				kijkToetsNa(true, true);
 
 			}
 			else
 			{	
 				// FIXME bepaal score voor 'getScore()' en haal daarna alle vinkjes weer weg....	kijkna(false,false,false)?		
+				
+				bepaalScore();
 				
 				for(int i = 0; i < viewers.size(); i++)
 				{
@@ -1737,6 +1742,80 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		}
 		scrollToBottom();
 		
+		
+	}
+
+	/**
+	 * Bepaal de score zonder iets aan het beeld te doen.
+	 * <ol>
+	 * <li> Als we een niet lege editor hebben, bepaal dan zijn score.
+	 * <li> Als de editor leeg is, maak een editor van de laatste stap en dan 1
+	 * </ol>
+	 * @see #kijkToetsNa(boolean,boolean)
+	 */
+	private void bepaalScore() {
+		
+		if(editor != null && ! editor.toString().isEmpty())
+		{
+			// er is een editor, XXX pas op voor *linversie*.
+			editor.kijkNa(false, false, false); // roept maakNakijkenAf aan en zet zo score			
+		} else {
+			if( stapNr > 0) {
+				String formule = latest_answer_viewer.toString();
+				FormuleEditorWithAnswer editor = this.editor;
+				final FormuleEditorWithSteps deze = this;
+				FormuleEditorWithSteps not_this = new FormuleEditorWithSteps() {
+
+					@Override
+					public void maakNakijkenAf(boolean backStep, boolean show,
+							boolean setState) {
+						deze.score = ((FormuleEditorWithAnswer) this.getEditor()).getScore();
+						deze.correct = ((FormuleEditorWithAnswer) this.getEditor()).isCorrect();
+					}
+// alle upcalls in ed.kijkna hier overnemen
+// onder geen beding!
+					public void backStep(boolean setState) {}
+					public void resize() {}
+					public boolean controleerStap() {
+						return true; // MOET DIE OOK?
+					}
+					// getlatestanswer, getsubstitutie, getgebruikersubstitutie, verhoog error count
+					/* (non-Javadoc)
+					 * @see nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps#getLatestAnswer()
+					 */
+					@Override
+					public String getLatestAnswer() {
+						int size = deze.viewers.size();
+						if(size >= 2)
+							return deze.viewers.get(size-2).toString();
+						return null;
+						//return super.getLatestAnswer();
+					}
+					/* (non-Javadoc)
+					 * @see nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps#getSubstitutie()
+					 */
+					@Override
+					public Expressie getSubstitutie() {
+						return deze.getSubstitutie();
+					}
+					/* (non-Javadoc)
+					 * @see nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps#getGebruikersSubstituties()
+					 */
+					@Override
+					public Vergelijking[] getGebruikersSubstituties() {
+						return deze.getGebruikersSubstituties();
+					}
+					
+				};
+				FormuleEditorWithAnswer ed =new FormuleEditorWithAnswer(h, isVergelijkingVak, not_this, randomVarNamen, randomVarWaarden, avChecker);; // ed heeft this als fe, maar this niet ed als editor!
+				ed.zetMode(mode);
+				ed.insert(formule);
+				not_this.editor = ed; // voor de upcall maakNakijkenAf
+				ed.kijkNa(false,false,false);
+				this.editor = editor;
+			}
+			
+		}
 		
 	}
 
@@ -1863,28 +1942,27 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		}
 		else if(mode == 2 || mode == 3)
 		{
-			kijkToetsNa(setState);
+			kijkToetsNa(setState, true);
 		}
 	}
 	
-	public void kijkToetsNa(boolean setState)
+	/**
+	 * Kijk een toets na.
+	 * @param setState
+	 * @param show altijd <b>true</b>
+	 */
+	public void kijkToetsNa(boolean setState, boolean show)
 	{
 		int start = 0;
 		if (hasStartString)
 			start = 1;
 		if(editor != null && editor.toString().equals(""))
 		{	backStep(setState); 
-//			stepPanels.remove(stepPanels.size() - 1);
-//			haalPijlVakWeg();
-//			//stapNr--;
 		}
 		if (editor != null && !editor.toString().equals(""))
 		{	vervangEditorDoorViewer("$f" + editor.toString() + "@", true, true);
-			//editor = addNewEditor(stepPanels.get(stepPanels.size() - 1));
 		}
 				
-		//else
-			//editor = addNewEditor(stepPanels.get(stepPanels.size() - 1));
 		aantalStappen = viewers.size();
 		String[] viewersInhouden = new String[viewers.size()];
 		if(viewers.size() > 0)
@@ -1905,15 +1983,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			contentPanel.remove(imagesStappen.get(i));
 		}
 		imagesStappen.clear();
-		//System.out.println("stepPanel")
+
 		stapNr = start;
 		for (int i = start; i < aantalStappen; i++)
-		{	//System.out.println("viewers.size() = " + viewers.size());
-//			LayoutPanel current = stepPanels.get(i);
-//			current.remove(viewers.get(i).getAsPanel());
-//			editor = addNewEditor(stepPanels.get(i));
-			//editor.clearAll();
-			//System.out.println("i = " + i + "en correct is " + Boolean.toString(correct));
+		{
 			if(editor == null)
 				editor = addNewEditor(stepPanels.get(i));
 			editor.clearAll();
@@ -1922,8 +1995,6 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				currentTekst = removePrefix(currentTekst);
 			currentTekst = removeIsTeken(currentTekst);
 			editor.insert(currentTekst);
-			//editor.kijkNa(true);
-			
 			
 			if (stepsForLinKwad && start > 0)
 			{
@@ -1946,6 +2017,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if(mode == 2 || mode ==3)
 		{
 			//correct = editor.isCorrect(); XXX wordt elders gezet, maar waar en waarom?
+			System.out.println(correct + " " + editor.isCorrect());
 			score = editor.getScore(); // altijd score ophalen, ook bij noshow
 			if(show)
 			{
