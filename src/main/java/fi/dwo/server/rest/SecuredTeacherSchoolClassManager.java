@@ -77,7 +77,6 @@ public class SecuredTeacherSchoolClassManager {
         }
 
         if (phr != null && school != null) {
-            List<PersistentSchoolClass> schoolClasses = null;
             List<RestSchoolClass> restSchoolClasses;
             try {
                 List<PersistentTeacherOfClass> tocList = TeacherOfClassManager.findEntities(phr.getPersistentHasRolePK());
@@ -86,10 +85,7 @@ public class SecuredTeacherSchoolClassManager {
                     PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentTeacherOfClassPK().getClassID());
                     restSchoolClasses.add(new RestSchoolClass(s));
                 }
-                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1]. ", new Object[]{schoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
-                restSchoolClasses = new ArrayList<RestSchoolClass>(schoolClasses.size());
-                for (PersistentSchoolClass s : schoolClasses) {
-                }
+                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1]. ", new Object[]{restSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
             }
             catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
@@ -144,13 +140,13 @@ public class SecuredTeacherSchoolClassManager {
      * Adds a schoolClass
      *
      * @param sc
-     * @param schoolClass
+     * @param restSchoolClass
      * @return true, throws an exception otherwise.
      */
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Boolean SubmitSchoolClass(@Context SecurityContext sc, PersistentSchoolClass schoolClass) {
+    public Boolean SubmitSchoolClass(@Context SecurityContext sc, RestSchoolClass4Teacher restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
 
@@ -165,10 +161,15 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
+        if (phr != null && restSchoolClass != null) {
+            PersistentSchoolClass schoolClass = new PersistentSchoolClass();
+            schoolClass.setSchoolID(school.getSchoolID());
+            schoolClass.setClass1(restSchoolClass.getSchoolClassName());
+            schoolClass.setIconizer(restSchoolClass.getIconizer()==1);
+            schoolClass.setRegistrationKey(restSchoolClass.getRegistrationKey());
             SchoolClassManager.create(schoolClass);
             schoolClass = SchoolClassManager.findEntity(schoolClass.getClass1(), school);
-
+            if(schoolClass==null) return false;
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
             PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK(phr.getUser().getUserID(), schoolClass.getClassID(), phr.getSchoolGroup().getSchoolGroupID());
             toc.setPersistentTeacherOfClassPK(key);
@@ -208,7 +209,7 @@ public class SecuredTeacherSchoolClassManager {
         }
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
-        PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), phr.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
+        PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (school != null && schoolClass.getSchoolID().equals(school.getSchoolID()) && toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
             //Fetch TeacherOfClass
             List<PersistentTeacherOfClass> teachersOfClass = TeacherOfClassManager.findEntities(schoolClass);
@@ -338,7 +339,7 @@ public class SecuredTeacherSchoolClassManager {
         PersistentSchool school = null;
 
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
 
         }
@@ -349,7 +350,7 @@ public class SecuredTeacherSchoolClassManager {
         }
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
-        PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), phr.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
+        PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (schoolClass.getSchoolID().equals(school.getSchoolID()) && toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
             try {
                 //Loop students in class
