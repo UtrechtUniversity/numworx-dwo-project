@@ -185,6 +185,8 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	{
 		ScoMapper mapper = new ScoMapper();
 		Sco sco = (Sco) mapper.get(scoid);
+		if(sco == null)
+			return new Hashtable(); // empty if null not NPE
 		return sco.getLaunchdata();
 	}
 	
