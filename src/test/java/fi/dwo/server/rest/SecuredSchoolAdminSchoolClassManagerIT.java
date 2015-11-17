@@ -4,6 +4,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.RoleType;
@@ -44,6 +45,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
     private static final Logger LOG = Logger.getLogger(SecuredSchoolAdminSchoolClassManagerIT.class.getName());
 
     static DatabaseManager dbInstance = null;
+
     public SecuredSchoolAdminSchoolClassManagerIT() {
     }
 
@@ -69,11 +71,10 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         dbInstance.ClearDatabase();
     }
 
-
     /**
      * Test of getSchoolClasses method, of class
      * SecuredSchoolAdminSchoolClassManager.
-     * 
+     *
      * Checks the number of SchoolClasses in a school.
      */
     @Test
@@ -88,26 +89,28 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         assertEquals(expResult.size(), result.size());
     }
 
-/**
- * Test of getTeachersInSchool method, of class
- * SecuredSchoolAdminSchoolClassManager. Checks the number of teachers in a school.
- */
-@Test
-        public void testGetTeachersInSchool() {
+    /**
+     * Test of getTeachersInSchool method, of class
+     * SecuredSchoolAdminSchoolClassManager. Checks the number of teachers in a
+     * school.
+     */
+    @Test
+    public void testGetTeachersInSchool() {
         System.out.println("getTeachersInSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         List<RestTeacher> result = instance.getTeachersInSchool(sc);
-        assertEquals("Number of teachers don't match.",2, result.size());        
+        assertEquals("Number of teachers don't match.", 2, result.size());
     }
 
     /**
-     * Test of GetTeachersInSchoolClass method, of class SecuredSchoolAdminSchoolClassManager.
-     * 
+     * Test of GetTeachersInSchoolClass method, of class
+     * SecuredSchoolAdminSchoolClassManager.
+     *
      * Checks the number of teachers of a known class in a school.
      */
     @Test
-        public void testGetTeachersInSchoolClass() {
+    public void testGetTeachersInSchoolClass() {
         System.out.println("GetTeachersInSchoolClass");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
@@ -119,10 +122,11 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
     }
 
     /**
-     * Test of SubmitTeacherToSchoolClass method, of class SecuredSchoolAdminSchoolClassManager.
+     * Test of SubmitTeacherToSchoolClass method, of class
+     * SecuredSchoolAdminSchoolClassManager.
      */
     @Test
-        public void testSubmitTeacherToSchoolClass() {
+    public void testSubmitTeacherToSchoolClass() {
         System.out.println("SubmitTeacherToSchoolClass");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
@@ -142,14 +146,15 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         key.setClassID(01L);
         key.setSchoolGroupID(03L);
         PersistentTeacherOfClass newTeacher = TeacherOfClassManager.findEntity(key);
-        assertNotEquals("New teacher could not be found.",newTeacher, null);
+        assertNotEquals("New teacher could not be found.", newTeacher, null);
     }
 
     /**
-     * Test of removeTeacherFromSchoolClass method, of class SecuredSchoolAdminSchoolClassManager.
+     * Test of removeTeacherFromSchoolClass method, of class
+     * SecuredSchoolAdminSchoolClassManager.
      */
     @Test
-        public void testRemoveTeacherFromSchoolClass() {
+    public void testRemoveTeacherFromSchoolClass() {
         System.out.println("removeTeacherFromSchoolClass");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
@@ -169,14 +174,30 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         key.setClassID(02L);
         key.setSchoolGroupID(03L);
         PersistentTeacherOfClass newTeacher = TeacherOfClassManager.findEntity(key);
-        assertEquals("New teacher was not deleted.",newTeacher, null);        
+        assertEquals("New teacher was not deleted.", newTeacher, null);
+
+        //fail next
+        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        restSchoolClass.setSchoolClassName("SchoolClass03");
+        restTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        restTeacher.setUsername("user03");
+        restTeacher.setGivenName("User");
+        restTeacher.setFamilyName("Lastname 03");
+        try {
+            result = instance.removeTeacherFromSchoolClass(sc, restSchoolClass, restTeacher);
+            assertEquals("Teacher removed while this should not occur.", false, result);
+        }
+        catch (Dwo2RestException e) {
+            //success
+        }
     }
 
     /**
-     * Test of SubmitSingleSchoolStudent method, of class SecuredSchoolAdminSchoolClassManager.
+     * Test of SubmitSingleSchoolStudent method, of class
+     * SecuredSchoolAdminSchoolClassManager.
      */
     @Test
-        public void testSubmitSingleSchoolStudent() {
+    public void testSubmitSingleSchoolStudent() {
         System.out.println("SubmitSingleSchoolStudent");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
 
@@ -189,16 +210,16 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         rss.setPassword("pwd");
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean result = instance.SubmitSingleSchoolStudent(sc, rss);
-        assertEquals("Operation failed to be true.",true, result);
+        assertEquals("Operation failed to be true.", true, result);
 
         //fetch user and hasrole and class if given?
         PersistentUser user = UserManager.findByUserName(rss.getUsername());
-        assertEquals("Given name not as expected.",rss.getGivenName(), user.getFirstname());
-        assertEquals("Insertion not as expected.",rss.getInsertion(), user.getMiddlename());
-        assertEquals("Familyname not as expected.",rss.getFamilyName(), user.getLastname());
-        assertEquals("Email not as expected.",rss.getEmail(), user.getEmail());
-        assertEquals("Password not as expected.",rss.getPassword(), user.getPasswd());
-        assertEquals("Did not creat a single schoolstudent.",user.isSingleSchoolAccount(), true);
+        assertEquals("Given name not as expected.", rss.getGivenName(), user.getFirstname());
+        assertEquals("Insertion not as expected.", rss.getInsertion(), user.getMiddlename());
+        assertEquals("Familyname not as expected.", rss.getFamilyName(), user.getLastname());
+        assertEquals("Email not as expected.", rss.getEmail(), user.getEmail());
+        assertEquals("Password not as expected.", rss.getPassword(), user.getPasswd());
+        assertEquals("Did not creat a single schoolstudent.", user.isSingleSchoolAccount(), true);
         try {
             //check for hasRole
             PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findEntity(3L), RoleType.STUDENT);
@@ -206,7 +227,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, null, ex);
             fail("Could not find created user's hasRole");
-        } 
+        }
     }
-    
+
 }

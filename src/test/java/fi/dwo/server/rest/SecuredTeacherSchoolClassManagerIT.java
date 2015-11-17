@@ -9,6 +9,10 @@ import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
@@ -16,6 +20,8 @@ import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
@@ -121,11 +127,9 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testGetTeachersInSchoolClass() {
         System.out.println("GetTeachersInSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass4Teacher restSchoolClass = new RestSchoolClass4Teacher();
+        RestSchoolClass restSchoolClass = new RestSchoolClass4Teacher();
         PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
         restSchoolClass.setId(id);
-        restSchoolClass.setIconizer(0);
-        restSchoolClass.setRegistrationKey("Shaihulud");
         restSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         List<RestTeacher> result = instance.GetTeachersInSchoolClass(sc, restSchoolClass);
@@ -140,31 +144,30 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testGetStudentsInSchoolClass() {
         System.out.println("GetStudentsInSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass restSchoolClass = null;
+        RestSchoolClass restSchoolClass = new RestSchoolClass4Teacher();
+        PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
+        restSchoolClass.setId(id);
+        restSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        List<RestStudent> expResult = null;
         List<RestStudent> result = instance.GetStudentsInSchoolClass(sc, restSchoolClass);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(3L, result.size());
     }
 
-    /**
-     * Test of getSchoolClasses method, of class
-     * SecuredTeacherSchoolClassManager.
-     */
-    @Test
-    public void testGetSchoolClasses() {
-        System.out.println("getSchoolClasses");
-        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        List<PersistentSchoolClass> expResult;
-        List<RestSchoolClass> result = instance.getSchoolClasses(sc);
-        //fetch classes
-        expResult = SchoolClassManager.findEntities(SchoolManager.findEntity(3L));
-        assertEquals(expResult.size(), result.size());
-    }
-
+//    /**
+//     * Test of getSchoolClasses method, of class
+//     * SecuredTeacherSchoolClassManager.
+//     */
+//    @Test
+//    public void testGetSchoolClasses() {
+//        System.out.println("getSchoolClasses");
+//        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+//        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+//        List<PersistentSchoolClass> expResult;
+//        List<RestSchoolClass> result = instance.getSchoolClasses(sc);
+//        //fetch classes
+//        expResult = SchoolClassManager.findEntities(SchoolManager.findEntity(3L));
+//        assertEquals(expResult.size(), result.size());
+//    }
     /**
      * Test of removeSchoolClass method, of class
      * SecuredTeacherSchoolClassManager.
@@ -180,23 +183,24 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
         Boolean result = instance.removeSchoolClass(sc, restSchoolClass);
-        assertEquals("remove returned false",expResult, result);
+        assertEquals("remove returned false", expResult, result);
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(restSchoolClass.getId()));
-        if(schoolClass!=null){
+        if (schoolClass != null) {
             fail("SchoolClass still exists after removal.");
         }
         id = MySQLPersistenceId.createPersistenceId(3L, PersistenceClassType.PersistentSchoolClass);
         restSchoolClass.setId(id);
         restSchoolClass.setSchoolClassName("The worm wil eat you.");
         expResult = true;
-        try{
-        result = instance.removeSchoolClass(sc, restSchoolClass);
-        assertNotEquals("remove returned false",expResult, result);
-        }catch(Dwo2RestException e){
+        try {
+            result = instance.removeSchoolClass(sc, restSchoolClass);
+            assertNotEquals("remove returned false", expResult, result);
+        }
+        catch (Dwo2RestException e) {
             //succes
         }
         schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(restSchoolClass.getId()));
-        if(schoolClass==null){
+        if (schoolClass == null) {
             fail("Managed to delete a SchoolClass from another school.");
         }
     }
@@ -209,14 +213,18 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testSubmitTeacherToSchoolClass() {
         System.out.println("SubmitTeacherToSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestTeacher restTeacher = null;
-        RestSchoolClass restSchoolClass = null;
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
+        restSchoolClass.setSchoolClassName("SchoolClass01");
+        RestTeacher restTeacher = new RestTeacher();
+        restTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        restTeacher.setUsername("user03");
+        restTeacher.setGivenName("User");
+        restTeacher.setFamilyName("Lastname 03");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        Boolean expResult = null;
+        Boolean expResult = true;
         Boolean result = instance.SubmitTeacherToSchoolClass(sc, restTeacher, restSchoolClass);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -246,14 +254,39 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testRemoveTeacherFromSchoolClass() {
         System.out.println("removeTeacherFromSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass restSchoolClass = null;
-        RestTeacher restTeacher = null;
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        restSchoolClass.setSchoolClassName("SchoolClass02");
+        RestTeacher restTeacher = new RestTeacher();
+        restTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        restTeacher.setUsername("user03");
+        restTeacher.setGivenName("User");
+        restTeacher.setFamilyName("Lastname 03");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        Boolean expResult = null;
+        Boolean expResult = true;
         Boolean result = instance.removeTeacherFromSchoolClass(sc, restSchoolClass, restTeacher);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
+        key.setUserID(10L);
+        key.setClassID(02L);
+        key.setSchoolGroupID(03L);
+        PersistentTeacherOfClass newTeacher = TeacherOfClassManager.findEntity(key);
+        assertEquals("Teacher was not deleted.", newTeacher, null);
+
+        //fail next
+        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        restSchoolClass.setSchoolClassName("SchoolClass03");
+        restTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        restTeacher.setUsername("user03");
+        restTeacher.setGivenName("User");
+        restTeacher.setFamilyName("Lastname 03");
+        try {
+            result = instance.removeTeacherFromSchoolClass(sc, restSchoolClass, restTeacher);
+            assertEquals("Teacher removed while this should not occur.", false, result);
+        }
+        catch (Dwo2RestException e) {
+            //success
+        }
     }
 
     /**
@@ -264,14 +297,26 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testRemoveStudentFromSchoolClass() {
         System.out.println("removeStudentFromSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass restSchoolClass = null;
-        RestStudent restStudent = null;
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        restSchoolClass.setSchoolClassName("SchoolClass02");
+        RestStudent restStudent = new RestStudent();
+        restStudent.setId(MySQLPersistenceId.createPersistenceId(9L, PersistenceClassType.PersistentUser));
+        restStudent.setUsername("user02");
+        restStudent.setGivenName("User");
+        restStudent.setFamilyName("Lastname 02");
+        
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = null;
         Boolean result = instance.removeStudentFromSchoolClass(sc, restSchoolClass, restStudent);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        PersistentStudentOfClassPK key = new PersistentStudentOfClassPK();
+        key.setUserID(9L);
+        key.setClassID(02L);
+        key.setSchoolGroupID(02L);
+        PersistentStudentOfClass newStudent = StudentOfClassManager.findEntity(key);
+        assertEquals("Student was not deleted.", newStudent, null);
     }
 
     /**
