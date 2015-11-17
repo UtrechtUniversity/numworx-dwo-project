@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Logger;
 
+import sun.util.logging.resources.logging;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -1024,11 +1026,17 @@ public class TekstVakPanel implements InteractionView, FacetAware
 
 		
 		List<Object> states = JSONUtilities.toArrayList(h.get("interactiePanelStates"));
-		for (int i = 0; i < interactionViewObjects.size(); i++)
+		int size = interactionViewObjects.size();
+		if(size != states.size())
+			Logger.getLogger("TextVakPanel").severe("sizes " + size + " " + states.size());
+		size = Math.min(size, states.size()); // XXX komt voor dat niet alle states bewaard zijn
+		for (int i = 0; i < size; i++)
 		{
 			Object currentObject = interactionViewObjects.get(i);
-			HashMap<String, Object> state = (HashMap<String, Object>) states.get(i);
-			((InteractionView) currentObject).setState(state);
+			if(currentObject instanceof InteractionView) {
+				HashMap<String, Object> state = (HashMap<String, Object>) states.get(i);
+				((InteractionView) currentObject).setState(state);
+			}
 		}
 		if(map.containsKey("selected"))
 			selected = map.getBoolean("selected");
