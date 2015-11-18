@@ -64,6 +64,13 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private String[] geogebraCheckObjects;
 	private int[] geogebraCheckScores;
 	private OpdrNavIF comRoot;
+	private String dir;
+	private boolean bigdata;
+	private String filename;
+	
+	private static final String RESOURCE = "https://mc2-resource.appspot.com/dav/Unit/";
+	private String ggbFile;
+	private Map<String, Object> geogebraParams = new HashMap<String,Object>();
 	
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
@@ -108,17 +115,20 @@ public class GeogebraView implements InteractionView, LoadHandler
 
 	private GeogebraView init(HashMap<String, Object> launchData)
 	{
-		facade = new PopupFacade(launchData);
 		ObjectMap json = JSONUtilities.wrapMap(launchData);
-		Map<String, Object> geogebraParams = new HashMap<String,Object>();
+		facade = new PopupFacade(json);
 		String randje = "#FFFFFF";
 		if(json.getBoolean("border", false))
 			randje = "#000000";
 		geogebraParams.put("borderColor", randje);
 		ObjectMap ggbMap = json.getObjectMap("interactiePanelLaunchState");
 		ObjectMap object = ggbMap.getObjectMap("ggbFile"); // java:ByteArray struct
-		String string = object.getString("string");
-		ggb = string != null ? string.toString() : "";
+		bigdata = ggbMap.getBoolean("file", false);
+		if (!bigdata && object != null) 
+		{
+			String string = object.getString("string");
+			ggbFile = string != null ? string.toString() : "";
+		}
 		object = ggbMap.getObjectMap("geogebraParams");
 		if( object instanceof Map)
 		{
@@ -139,27 +149,22 @@ public class GeogebraView implements InteractionView, LoadHandler
 		
 		if(ggbMap.containsKey("scoreMax")) 
 			scoreMax = ggbMap.getInt("scoreMax");
-		
-		
+				
 		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
 		frame.setStylePrimaryName(".gwt-StubView");
 		frame.addStyleDependentName("borderless");
 		
+		if(bigdata)
+			filename = ggbMap.getString("fileUrl");
 		
-		ggb = "data-param-ggbbase64='" + ggb + "'";
-		StringBuilder params = new StringBuilder();
-		for(Map.Entry<String, Object> entry: geogebraParams.entrySet())
-		{
-			params.append( "data-param-" + entry.getKey() + "='" + entry.getValue() + "' ");
-		}
-		params.append( "data-param-language='" + StubView.getLocale() + "' ");
+		
+		createGgbParams();
+
+		barHeight = 0;
 		if("true".equals(geogebraParams.get("showMenuBar")))
 			barHeight += 33;
 		if("true".equals(geogebraParams.get("showToolBar")))
 			barHeight += 9; //57;
-		
-		params.append(ggb);
-		ggb = params.toString();
 		width = 400;
 		if (json.containsKey("breedte"))
 			width = json.getInt("breedte");
@@ -172,6 +177,27 @@ public class GeogebraView implements InteractionView, LoadHandler
 		//initFrame();
 		return this;
 
+	}
+	
+/**
+ * Bepaal ggb string en barheight.
+ */
+	private void createGgbParams() {
+	// normal		
+		if(!bigdata)
+			ggb = "data-param-ggbbase64='" + ggbFile + "'";
+	// big data	
+		else
+			ggb = "data-param-filename='" + RESOURCE + dir + filename + "'";
+		StringBuilder params = new StringBuilder();
+		for(Map.Entry<String, Object> entry: geogebraParams.entrySet())
+		{
+			params.append( "data-param-" + entry.getKey() + "='" + entry.getValue() + "' ");
+		}
+		
+		params.append( "data-param-language='" + StubView.getLocale() + "' ");
+		params.append(ggb);
+		ggb = params.toString();
 	}
 
 	private void initFrame() {
@@ -396,10 +422,15 @@ public class GeogebraView implements InteractionView, LoadHandler
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
+		dir = comRoot.getUUID();
+		if(dir != null) dir = dir.replace('-', '/')+'/'; else dir ="";
 		int mode = comRoot.getMode();
 		if(nakijken & mode > 1 && checkBtn != null) {
 			// FIXME haal checkbutton weg.
 			checkBtn.setVisible(false);
+		}
+		if(bigdata) {
+			createGgbParams();
 		}
 	}
 

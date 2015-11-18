@@ -331,7 +331,7 @@ public class TekstBuffer
 		
 		
 		case 39: case 10: // geogebra3
-			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return x(map, new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 45: // GraphTool
 			return x(map,
 					//new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
@@ -380,6 +380,7 @@ public class TekstBuffer
 			return new StubView("BinomVerdGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 27:
 			return new StubView("MozarchGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//return new PopupFacade(map, new fi.mozarchgwt.client.MozarchGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 
 		if (soortVak == 0)
