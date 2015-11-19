@@ -441,7 +441,6 @@ public class SecuredTeacherSchoolClassManager {
         PersistentUser student = null;
         PersistentHasRole shr = null;
         PersistentTeacherOfClass toc = null;
-        PersistentTeacherOfClass fromSoc = null;
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
@@ -653,7 +652,7 @@ public class SecuredTeacherSchoolClassManager {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by schooladmin {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
-
+            user.setUsername(nssStudent.getUsername());
             user.setEmail(nssStudent.getEmail());
             user.setFirstname(nssStudent.getGivenName());
             user.setMiddlename(nssStudent.getInsertion());

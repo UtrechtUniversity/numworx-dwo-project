@@ -75,7 +75,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
      * Test of getSchoolClasses method, of class
      * SecuredSchoolAdminSchoolClassManager.
      *
-     * Checks the number of SchoolClasses in a school.
+     * Tests for the number of SchoolClasses in a school.
      */
     @Test
     public void testGetSchoolClasses() {
@@ -91,8 +91,8 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
 
     /**
      * Test of getTeachersInSchool method, of class
-     * SecuredSchoolAdminSchoolClassManager. Checks the number of teachers in a
-     * school.
+     * SecuredSchoolAdminSchoolClassManager. Tests for the number of teachers in a
+     * known school.
      */
     @Test
     public void testGetTeachersInSchool() {
@@ -124,6 +124,8 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
     /**
      * Test of SubmitTeacherToSchoolClass method, of class
      * SecuredSchoolAdminSchoolClassManager.
+     * 
+     * Tests if a known teacher can be submitted to a known class of a proper school.
      */
     @Test
     public void testSubmitTeacherToSchoolClass() {
@@ -152,6 +154,9 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
     /**
      * Test of removeTeacherFromSchoolClass method, of class
      * SecuredSchoolAdminSchoolClassManager.
+     * 
+     * Tests if a known teacher can be removed from a school class.Tests for both
+     * legal and illegal teacher removal.
      */
     @Test
     public void testRemoveTeacherFromSchoolClass() {
@@ -194,7 +199,8 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
 
     /**
      * Test of SubmitSingleSchoolStudent method, of class
-     * SecuredSchoolAdminSchoolClassManager.
+     * SecuredSchoolAdminSchoolClassManager. Tests if a single student student
+     * can be added. Tests only for a proper request. 
      */
     @Test
     public void testSubmitSingleSchoolStudent() {
@@ -229,5 +235,4 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
             fail("Could not find created user's hasRole");
         }
     }
-
 }

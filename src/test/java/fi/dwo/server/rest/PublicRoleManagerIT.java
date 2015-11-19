@@ -44,7 +44,8 @@ public class PublicRoleManagerIT {
     }
 
     /**
-     * Test of getRoles method, of class PublicRoleManager.
+     * Test of getRoles method, of class PublicRoleManager. Tests for one-to-one
+     * of RoleTypes mapping between persistent store and enum class.
      */
     @Test
     public void testGetRoles() {

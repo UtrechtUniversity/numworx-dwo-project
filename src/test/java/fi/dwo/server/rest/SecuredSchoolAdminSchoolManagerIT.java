@@ -77,7 +77,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
     /**
      * Test of getTeachersInSchool method, of class
-     * SecuredSchoolAdminSchoolManager.
+     * SecuredSchoolAdminSchoolManager. Tests if the proper number of teachers
+     * is returned for a known school.
      */
     @Test
     public void testGetTeachersInSchool() {
@@ -90,7 +91,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
     /**
      * Test of getStudentsInSchool method, of class
-     * SecuredSchoolAdminSchoolManager.
+     * SecuredSchoolAdminSchoolManager. Tests if the proper number of students is 
+     * returned for a known school.
      */
     @Test
     public void testGetStudentsInSchool() {
@@ -103,7 +105,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
     /**
      * Test of getSchoolAdminInSchool method, of class
-     * SecuredSchoolAdminSchoolManager.
+     * SecuredSchoolAdminSchoolManager. Tests if the proper number of school admins
+     * is returned for a known school.
      */
     @Test
     public void testGetSchoolAdminInSchool() {
@@ -116,7 +119,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
     /**
      * Test of removeSingleSchoolStudentFromSchool method, of class
-     * SecuredSchoolAdminSchoolManager.
+     * SecuredSchoolAdminSchoolManager. Tests if a known single school student
+     * is removed from its school and whether all its data is removed.
      */
     @Test
     public void testRemoveSingleSchoolStudentFromSchool() {
@@ -182,7 +186,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
     /**
      * Test of SubmitSingleSchoolStudent method, of class
-     * SecuredSchoolAdminSchoolManager.
+     * SecuredSchoolAdminSchoolManager. Tests if a single school student can be
+     * added to a known school, has a proper hasRole and is a single school student.
      */
     @Test
     public void testSubmitSingleSchoolStudent() {
@@ -212,6 +217,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         assertEquals(nssStudent.getFamilyName(), user.getLastname());
         assertEquals(nssStudent.getEmail(), user.getEmail());
         assertEquals(nssStudent.getPassword(), user.getPasswd());
+        assertEquals(true, user.isSingleSchoolAccount());
         
         try {
             //check for hasRole
@@ -227,7 +233,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
      * Test of getSchoolClasses method, of class
      * SecuredSchoolAdminSchoolClassManager.
      *
-     * Checks the number of SchoolClasses in a school.
+     * Tests for the number of SchoolClasses in a known school.
      */
     @Test
     public void testGetSchoolClasses() {
@@ -243,7 +249,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
     /**
      * Test of removeTeacherFromSchool method, of class
-     * SecuredSchoolAdminSchoolManager.
+     * SecuredSchoolAdminSchoolManager. Tests if a teacher is removed from a school
+     * and whether all the school related data is removed.
      */
     @Test
     public void testRemoveTeacherFromSchool() {
@@ -305,7 +312,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
     /**
      * Test of removeStudentFromSchool method, of class
-     * SecuredSchoolAdminSchoolManager.
+     * SecuredSchoolAdminSchoolManager. Tests whether a student can be removed
+     * from a known school and all the school-related data is removed.
      */
     @Test
     public void testRemoveStudentFromSchool() {
@@ -368,7 +376,10 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
     /**
      * Test of removeSchoolAdminFromSchool method, of class
-     * SecuredSchoolAdminSchoolManager.
+     * SecuredSchoolAdminSchoolManager. Tests whether a schooladmin can be removed
+     * from a known school all the school-related data is removed. it also tests for
+     * removing StudentScoContext and StudentScoData. This is for the transition 
+     * from 1.0 to 2.0 as a schooladmin should not be able to create it in Dwo 2.0.
      */
     @Test
     public void testRemoveSchoolAdminFromSchool() {

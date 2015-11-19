@@ -58,7 +58,11 @@ public class PublicUserManagerIT {
 
     /**
      * Test of submitNewUser method, of class PublicUserManager.
+     * 
+     * Tests if user is added and the appropriate role is created. it does not
+     * test for proper null-school and null-class enlistment.
      */
+    //TODO test for proper null-school and null-class enlistment.
     @Test
     public void testSubmitNewUser() {
         System.out.println("submitNewUser");

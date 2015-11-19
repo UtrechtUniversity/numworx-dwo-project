@@ -60,6 +60,8 @@ public class SecuredDwoAdminSchoolManagerIT {
 
     /**
      * Test of submitSchool method, of class SecuredDwoAdminSchoolManager.
+     * 
+     * Tests whether a new school can be submitted.
      */
     @Test
     public void testSubmitSchool() {
@@ -87,7 +89,8 @@ public class SecuredDwoAdminSchoolManagerIT {
     }
 
     /**
-     * Test of getSchool method, of class SecuredDwoAdminSchoolManager.
+     * Test of getSchool method, of class SecuredDwoAdminSchoolManager. Tests if 
+     * a known school can be retrieved.
      */
     @Test
     public void testGetSchool() {
@@ -105,7 +108,8 @@ public class SecuredDwoAdminSchoolManagerIT {
     }
 
     /**
-     * Test of getSchools method, of class SecuredDwoAdminSchoolManager.
+     * Test of getSchools method, of class SecuredDwoAdminSchoolManager. Tests
+     * if the number of schools fetched is as expected.
      */
     @Test
     public void testGetSchools() {
@@ -118,7 +122,9 @@ public class SecuredDwoAdminSchoolManagerIT {
     }
 
     /**
-     * Test of updateSchool method, of class SecuredDwoAdminSchoolManager.
+     * Test of updateSchool method, of class SecuredDwoAdminSchoolManager. Tests
+     * if the properties of a known school are changed. It tests also if illegal
+     * changes of index and school login can occur.
      */
     @Test
     public void testUpdateSchool() {
@@ -157,7 +163,8 @@ public class SecuredDwoAdminSchoolManagerIT {
     }
 
     /**
-     * Test of removeSchool method, of class SecuredDwoAdminSchoolManager.
+     * Test of removeSchool method, of class SecuredDwoAdminSchoolManager. Tests
+     * if a known school can be removed.
      */
     @Test
     public void testRemoveSchool() {

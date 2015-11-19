@@ -13,6 +13,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
@@ -22,6 +23,7 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
@@ -85,7 +87,8 @@ public class SecuredTeacherSchoolClassManagerIT {
 
     /**
      * Test of getTeachersInSchool method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests if the proper number of teachers
+     * is returned for a known school.
      */
     //   @Test
     public void testGetTeachersInSchool() {
@@ -98,7 +101,8 @@ public class SecuredTeacherSchoolClassManagerIT {
 
     /**
      * Test of SubmitSchoolClass method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests if a proper new SchoolClass can
+     * be submitted in a known school
      */
     @Test
     public void testSubmitSchoolClass() {
@@ -121,7 +125,8 @@ public class SecuredTeacherSchoolClassManagerIT {
 
     /**
      * Test of GetTeachersInSchoolClass method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests whether the correct number of
+     * teachers is returned for a known school class.
      */
     @Test
     public void testGetTeachersInSchoolClass() {
@@ -138,7 +143,8 @@ public class SecuredTeacherSchoolClassManagerIT {
 
     /**
      * Test of GetStudentsInSchoolClass method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests whether the proper number of
+     * students is returned for a known school class.
      */
     @Test
     public void testGetStudentsInSchoolClass() {
@@ -170,7 +176,9 @@ public class SecuredTeacherSchoolClassManagerIT {
 //    }
     /**
      * Test of removeSchoolClass method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests whether a proper school class can
+     * be removed by a teacher. Tests whether a school class can't be removed
+     * from another school.
      */
     @Test
     public void testRemoveSchoolClass() {
@@ -207,7 +215,8 @@ public class SecuredTeacherSchoolClassManagerIT {
 
     /**
      * Test of SubmitTeacherToSchoolClass method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests if a proper teacher is properly
+     * be submitted to a school class.
      */
     @Test
     public void testSubmitTeacherToSchoolClass() {
@@ -224,31 +233,55 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
         Boolean result = instance.SubmitTeacherToSchoolClass(sc, restTeacher, restSchoolClass);
-        assertEquals(expResult, result);
+        assertEquals("Method returned false.", expResult, result);
+        PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
+        key.setClassID(1L);
+        key.setSchoolGroupID(3L);
+        key.setUserID(10L);
+        PersistentTeacherOfClass teacher = TeacherOfClassManager.findEntity(key);
+        assertNotEquals("Teacher not added to schoolclass", teacher, null);
     }
 
     /**
      * Test of SubmitStudentToSchoolClass method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests if a student is properly
+     * submitted to known school class.
      */
     @Test
     public void testSubmitStudentToSchoolClass() {
         System.out.println("SubmitStudentToSchoolClass");
-        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestStudent restStudent = null;
-        RestSchoolClass restFromSchoolClass = null;
-        RestSchoolClass restToSchoolClass = null;
+        SecurityContext sc = new TestSecurityContext("user02", RoleType.TEACHER);//school01
+        PersistentUser user = UserManager.findByUserName("user02");
+        user.setSchoolGroupID(6L);
+        UserManager.edit(user);
+        RestStudent restStudent = new RestStudent();
+        restStudent.setId(MySQLPersistenceId.createPersistenceId(12L, PersistenceClassType.PersistentUser));
+        restStudent.setUsername("user05");
+        restStudent.setGivenName("User");
+        restStudent.setFamilyName("Lastname 05");
+        RestSchoolClass restFromSchoolClass = new RestSchoolClass();;
+        restFromSchoolClass.setId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchoolClass));
+        restFromSchoolClass.setSchoolClassName("SchoolClass03");
+        RestSchoolClass restToSchoolClass = new RestSchoolClass();
+        restToSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
+        restToSchoolClass.setSchoolClassName("SchoolClass04");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        Boolean expResult = null;
+        Boolean expResult = true;
         Boolean result = instance.SubmitStudentToSchoolClass(sc, restStudent, restFromSchoolClass, restToSchoolClass);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("Method returned false.", expResult, result);
+        PersistentStudentOfClassPK key = new PersistentStudentOfClassPK();
+        key.setClassID(4L);
+        key.setSchoolGroupID(5L);
+        key.setUserID(12L);
+        PersistentStudentOfClass soc = StudentOfClassManager.findEntity(key);
+        assertNotEquals("Student not added to schoolclass", soc, null);
     }
 
     /**
      * Test of removeTeacherFromSchoolClass method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests if a proper teacher is removed
+     * from a known class. Tests if a teacher can't be removed from a class from
+     * a different school.
      */
     @Test
     public void testRemoveTeacherFromSchoolClass() {
@@ -291,7 +324,9 @@ public class SecuredTeacherSchoolClassManagerIT {
 
     /**
      * Test of removeStudentFromSchoolClass method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests if a proper teacher is removed
+     * from a known class. Tests if a teacher can't be removed from a class from
+     * a different school.
      */
     @Test
     public void testRemoveStudentFromSchoolClass() {
@@ -305,9 +340,9 @@ public class SecuredTeacherSchoolClassManagerIT {
         restStudent.setUsername("user02");
         restStudent.setGivenName("User");
         restStudent.setFamilyName("Lastname 02");
-        
+
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        Boolean expResult = null;
+        Boolean expResult = true;
         Boolean result = instance.removeStudentFromSchoolClass(sc, restSchoolClass, restStudent);
         assertEquals(expResult, result);
 
@@ -321,7 +356,8 @@ public class SecuredTeacherSchoolClassManagerIT {
 
     /**
      * Test of UpdateSchoolClass method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests if the properties of a school
+     * class can be updated by one of its teachers.
      */
     @Test
     public void testUpdateSchoolClass() {
@@ -344,19 +380,47 @@ public class SecuredTeacherSchoolClassManagerIT {
 
     /**
      * Test of updateSingleSchoolStudent method, of class
-     * SecuredTeacherSchoolClassManager.
+     * SecuredTeacherSchoolClassManager. Tests if only one of its single school 
+     * students can be updated.
      */
     @Test
     public void testUpdateSingleSchoolStudent() {
         System.out.println("updateSingleSchoolStudent");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSingleSchoolStudent nssStudent = null;
+        RestSingleSchoolStudent nssStudent = new RestSingleSchoolStudent();
+        nssStudent.setId(MySQLPersistenceId.createPersistenceId(11L, PersistenceClassType.PersistentUser));
+        nssStudent.setUsername("user04"); //changing is not allowed.
+        nssStudent.setGivenName("User");
+        nssStudent.setFamilyName("Lastname 04");
+        nssStudent.setPassword("bla");
+        nssStudent.setEmail("blamail");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        Boolean expResult = null;
+        Boolean expResult = true;
         Boolean result = instance.updateSingleSchoolStudent(sc, nssStudent);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        PersistentUser user = UserManager.findEntity(11L);
+        assertEquals(user.getEmail(), nssStudent.getEmail());
+        assertEquals(user.getFirstname(), nssStudent.getGivenName());
+        assertEquals(user.getLastname(), nssStudent.getFamilyName());
+        assertEquals(user.getMiddlename(), nssStudent.getInsertion());
+        assertEquals(user.getPasswd(), nssStudent.getPassword());
+        assertEquals(user.isSingleSchoolAccount(), true);
+        assertEquals(user.getUsername(), nssStudent.getUsername());
+
+        //try if a non-single school student can be updated
+        nssStudent.setUsername("user03");
+        nssStudent.setGivenName("User");
+        nssStudent.setFamilyName("Lastname 02");
+        nssStudent.setPassword("bla");
+        nssStudent.setEmail("blamail");
+        expResult = false;
+        try {
+            result = instance.updateSingleSchoolStudent(sc, nssStudent);
+            assertEquals(expResult, result);
+        }
+        catch (Dwo2RestException e) {
+            //success
+        }
     }
 
 }
