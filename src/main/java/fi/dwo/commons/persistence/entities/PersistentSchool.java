@@ -6,8 +6,6 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;

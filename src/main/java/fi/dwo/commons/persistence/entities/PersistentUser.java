@@ -259,4 +259,9 @@ public class PersistentUser implements Serializable {
         }
         return false;
     }
+    
+    
+//TODO    public static String hashStringToMd5(String plain){
+//        
+//    }
 }
