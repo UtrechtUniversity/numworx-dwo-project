@@ -74,8 +74,8 @@ public class SecuredUserAccountLoginsManager {
                     curSac.setSchoolClassId(null);
                     curSac.setSchoolClassName(null);
                 }
-                curSac.setUserId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Long) resultList.get(0)[5], PersistenceClassType.PersistentUser));
-                curSac.setSchoolGroupId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Long) resultList.get(0)[6], PersistenceClassType.PersistentSchoolGroup));
+                curSac.setUserId((PersistenceId) MySQLPersistenceId.createPersistenceId((Long) resultList.get(0)[5], PersistenceClassType.PersistentUser));
+                curSac.setSchoolGroupId((PersistenceId) MySQLPersistenceId.createPersistenceId((Long) resultList.get(0)[6], PersistenceClassType.PersistentSchoolGroup));
             }
         }
         catch (Exception e) {
@@ -129,19 +129,26 @@ public class SecuredUserAccountLoginsManager {
             for (Object[] oList : resultList) {
                 LOG.log(Level.FINE, "Fetched hasRole tuple <schoolID, schoolName, groupID, groupname, classID, userID, schoolGroupID>: {0}, {1}, {2}, {3}, {4}, {5}, {6}.", new Object[]{oList[0], oList[1], oList[2], oList[3], oList[4], oList[5], oList[6]});
                 sac = new RestSchoolRoleAndClass();
-                sac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Integer) oList[0]).longValue(), PersistenceClassType.PersistentSchool));
+                Integer i = (Integer) oList[0];
+                sac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId(i.longValue(), PersistenceClassType.PersistentSchool));
                 sac.setSchoolName((String) oList[1]);
-                sac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Integer) oList[2]).longValue(), PersistenceClassType.PersistentRole));
+                i = (Integer) oList[2];
+                sac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId(i.longValue(), PersistenceClassType.PersistentRole));
                 sac.setRoleName((String) oList[3]);
                 if (oList[4] != null) {
-                    sac.setSchoolClassId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Integer) oList[0]).longValue(), PersistenceClassType.PersistentSchoolClass));
-                    sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", (Long) oList[4]).getSingleResult());
+                    i = (Integer) oList[0];
+
+                    sac.setSchoolClassId((PersistenceId) MySQLPersistenceId.createPersistenceId(i.longValue(), PersistenceClassType.PersistentSchoolClass));
+                    i = (Integer) oList[4];
+                    sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", i.longValue()).getSingleResult());
                 } else {
                     sac.setSchoolClassId(null);
                     sac.setSchoolClassName(null);
                 }
-                sac.setUserId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Integer) oList[5]).longValue(), PersistenceClassType.PersistentUser));
-                sac.setSchoolGroupId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Integer) oList[6]).longValue(), PersistenceClassType.PersistentSchoolGroup));
+                Long j = (Long) oList[5];
+                sac.setUserId((PersistenceId) MySQLPersistenceId.createPersistenceId(j.longValue(), PersistenceClassType.PersistentUser));
+                j = (Long) oList[6];
+                sac.setSchoolGroupId((PersistenceId) MySQLPersistenceId.createPersistenceId(j.longValue(), PersistenceClassType.PersistentSchoolGroup));
                 sacList.add(sac);
             }
 
@@ -206,7 +213,7 @@ public class SecuredUserAccountLoginsManager {
             HasRoleManager.edit(hr);
 
             //update class in hasRole
-            LOG.log(Level.INFO,"Username {0}: Updated SchoolGroupID to {1} for User with username {2}", new Object[]{sc.getUserPrincipal().getName(), u.getSchoolGroupID(), user.getUsername()});
+            LOG.log(Level.INFO, "Username {0}: Updated SchoolGroupID to {1} for User with username {2}", new Object[]{sc.getUserPrincipal().getName(), u.getSchoolGroupID(), user.getUsername()});
         }
         catch (Exception e) {
             LOG.log(Level.WARNING, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception.", e);
@@ -229,13 +236,13 @@ public class SecuredUserAccountLoginsManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Response submitASchoolLogin(@Context SecurityContext sc, RestNewSchoolLogin existingUserReg) {
+    public Boolean submitASchoolLogin(@Context SecurityContext sc, RestNewSchoolLogin existingUserReg) {
         EntityManager em = DwoEmfFactory.getEntityManager();
 
         //Check for userid, should exist.
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
         if (user == null) {
-            LOG.log(Level.WARNING, "Username {0}: Authentication for schoollogin {1} and role {2} for usercode {3} failed.", new Object[]{sc.getUserPrincipal().getName(), existingUserReg.getSchoolLogin(), existingUserReg.getRole().getGroupname(), sc.getUserPrincipal().getName()});
+            LOG.log(Level.WARNING, "Username {0}: Authentication for schoollogin {1} and role {2} for usercode {3} failed.", new Object[]{sc.getUserPrincipal().getName(), existingUserReg.getSchoolLogin(), existingUserReg.getRole().name(), sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Authentication for " + sc.getUserPrincipal().getName() + " failed.");
         }
         //invariant: have user data
@@ -252,7 +259,7 @@ public class SecuredUserAccountLoginsManager {
             javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoollogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
             q.setParameter("schoollogin", existingUserReg.getSchoolLogin());
             q.setParameter("schoolcode", existingUserReg.getSchoolCode());
-            q.setParameter("role", (existingUserReg.getRole().getGroupname()));
+            q.setParameter("role", (existingUserReg.getRole().name()));
             sg = (PersistentSchoolGroup) q.getSingleResult();
             school = sg.getSchool(); // Sadly, another query.
             if (school == null) {
@@ -304,7 +311,7 @@ public class SecuredUserAccountLoginsManager {
         HasRoleManager.create(hasRole);
         LOG.log(Level.INFO, "Username {0}: Created a new HasRole for user index {1}, schoolgroup index {2} and role {3} was added to the database.", new Object[]{sc.getUserPrincipal().getName(), hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
         //success
-        return Response.status(200).entity(true).build();
+        return true;
     }
 
     /**

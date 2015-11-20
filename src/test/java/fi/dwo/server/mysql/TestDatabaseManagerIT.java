@@ -34,6 +34,8 @@ public class TestDatabaseManagerIT {
     public void tearDown() {
     }
 
+// DISABLED SO THE RUNNING OF THIS TESTCLASS FILLS THE DATABASE WITH THE TESTDATA
+// FOR DEVELOPEMENT PURPOSES.
 //    /**
 //     * Test of ClearDatabase method, of class DatabaseManager.
 //     */
