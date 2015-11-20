@@ -5,7 +5,6 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dwo.commons.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**

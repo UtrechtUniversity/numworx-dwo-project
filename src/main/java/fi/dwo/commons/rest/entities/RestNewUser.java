@@ -6,7 +6,6 @@
 package fi.dwo.commons.rest.entities;
 
 import fi.dwo.commons.persistence.RoleType;
-import fi.dwo.commons.persistence.entities.PersistentRole;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
