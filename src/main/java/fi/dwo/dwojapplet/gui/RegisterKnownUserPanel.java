@@ -349,7 +349,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
 
                     nur.setSchoolLogin(null);
                     nur.setSchoolCode(null);
-                    nur.setRole(DwoHelper.getRoles().get(RoleType.STUDENT.ordinal()));
+                    nur.setRole(RoleType.STUDENT);
                     SecureUserAccountLoginsManager.addASchoolLogin(nur);
                     JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
@@ -364,7 +364,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                 }
                 try {
                     RestNewSchoolLogin nur = new RestNewSchoolLogin();
-                    nur.setRole(role);
+                    nur.setRole(RoleType.valueOf(role.getGroupname()));
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
                     SecureUserAccountLoginsManager.addASchoolLogin(nur); //throws Dwo2RestException.
