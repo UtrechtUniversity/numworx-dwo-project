@@ -13,8 +13,10 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
+import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
@@ -181,14 +183,16 @@ public class SecuredSchoolAdminSchoolClassManager {
      * Registers an existing user into a new <school,hasRole> tuple.
      *
      * @param sc
-     * @param restTeacher
-     * @param restSchoolClass
+     * @param restData
      * @return true, throws an exception otherwise.
      */
     @PUT
     @Produces({"application/json"})
     @Path("/submitTeacher")
-    public Boolean SubmitTeacherToSchoolClass(@Context SecurityContext sc, RestTeacher restTeacher, RestSchoolClass restSchoolClass) {
+    public Boolean SubmitTeacherToSchoolClass(@Context SecurityContext sc, RestSubmitTeacherToSchoolClass restData){
+        RestTeacher restTeacher = restData.getTeacher();
+        RestSchoolClass restSchoolClass = restData.getSchoolClass();
+           
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser teacher = null;
@@ -222,15 +226,17 @@ public class SecuredSchoolAdminSchoolClassManager {
      * Removes a teacher from a school class and returns true.
      *
      * @param sc
-     * @param restSchoolClass
-     * @param restTeacher
+     * @param restData
      * @return true if success, false if the teacher does not exists to be
      * removed
      */
     @PUT
     @Produces({"application/json"})
     @Path("/removeTeacher")
-    public Boolean removeTeacherFromSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass, RestTeacher restTeacher) {
+    public Boolean removeTeacherFromSchoolClass(@Context SecurityContext sc, RestRemoveTeacherFromSchoolClass restData){
+        RestTeacher restTeacher = restData.getTeacher();
+        RestSchoolClass restSchoolClass = restData.getSchoolClass();
+           
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser teacher = null;

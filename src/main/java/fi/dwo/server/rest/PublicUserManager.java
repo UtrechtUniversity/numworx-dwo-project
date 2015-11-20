@@ -9,6 +9,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestNewUser;
+import fi.dwo.commons.rest.entities.RestSamlUser;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
@@ -36,7 +37,6 @@ public class PublicUserManager {
     /**
      * Registers a new user.
      *
-     * @param sc
      * @param newUserReg
      * @return
      */
@@ -139,22 +139,20 @@ public class PublicUserManager {
     /**
      * Retrieves a user from samluser.
      *
-     * @param sc
-     * @param newUserReg
+     * @param samlRestUser
      * @return
      */
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-
-    PersistentUser getSamlUser(String samlUserId, String samlOrgId, String authToken) {
+    public PersistentUser getSamlUser(RestSamlUser samlRestUser) {
         PersistentUser user;
 
-        PersistentSamlUser samlUser = SamlUserManager.findEntity(samlUserId, samlOrgId);
+        PersistentSamlUser samlUser = SamlUserManager.findEntity(samlRestUser.getSamlUserId(), samlRestUser.getSamlUserId());
         if (samlUser.tokenIsValid(1000)) {//milisseconden
             return UserManager.findEntity(samlUser.getUserID());
         } else {
-            LOG.log(Level.SEVERE, "Incorrect saml-athentication event for samlOrg {0} samlUser {1} and authToken {2}", new Object[]{samlOrgId, samlUserId, authToken});
+            LOG.log(Level.SEVERE, "Incorrect saml-athentication event for samlOrg {0} samlUser {1} and authToken {2}", new Object[]{samlRestUser.getSamlOrgId(), samlRestUser.getSamlUserId(), samlRestUser.getAuthToken()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The authentication is invalid, this event is logged.");
         }
     }

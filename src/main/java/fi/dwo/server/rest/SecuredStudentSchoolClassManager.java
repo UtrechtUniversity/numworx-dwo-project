@@ -16,12 +16,10 @@ import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
-import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -41,7 +39,7 @@ public class SecuredStudentSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredStudentSchoolClassManager.class.getName());
 
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/submit")
     public Boolean setActiveSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
@@ -129,7 +127,7 @@ public class SecuredStudentSchoolClassManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/remove")
+    @Path("/submitclass")
     public Boolean registerStudentForSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
