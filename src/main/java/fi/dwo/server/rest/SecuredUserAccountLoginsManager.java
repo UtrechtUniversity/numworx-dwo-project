@@ -256,7 +256,7 @@ public class SecuredUserAccountLoginsManager {
         }
 
         try {
-            javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoollogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
+            javax.persistence.Query q = em.createQuery(" select sg from PersistentSchool s join PersistentSchoolGroup sg where sg.school = s and s.schoolLogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
             q.setParameter("schoollogin", existingUserReg.getSchoolLogin());
             q.setParameter("schoolcode", existingUserReg.getSchoolCode());
             q.setParameter("role", (existingUserReg.getRole().name()));
@@ -309,7 +309,7 @@ public class SecuredUserAccountLoginsManager {
         hasRole.setRights("_");  //TODO make a rightsManager
 
         HasRoleManager.create(hasRole);
-        LOG.log(Level.INFO, "Username {0}: Created a new HasRole for user index {1}, schoolgroup index {2} and role {3} was added to the database.", new Object[]{sc.getUserPrincipal().getName(), hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
+        LOG.log(Level.INFO, "Username {0}: Created a new HasRole for user index {1}, schoolgroup index {2} and role {3} was added to the database.", new Object[]{sc.getUserPrincipal().getName(), hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), existingUserReg.getRole().name()});
         //success
         return true;
     }

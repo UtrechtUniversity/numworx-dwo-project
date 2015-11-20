@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.server.testutil.TestSecurityContext;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -18,7 +19,6 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.logging.Logger;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -76,9 +76,8 @@ public class SecuredUserAccountLoginsManagerIT {
             fail("The number of schoollogins is wrong.");
         }
         //test default user
-        if ( MySQLPersistenceId.getId(result.getActiveSchoolRoleAndClass().getSchoolGroupId()) != 5L
-                || MySQLPersistenceId.getId(result.getActiveSchoolRoleAndClass().getUserId()) != 10L
-                ) {
+        if (MySQLPersistenceId.getId(result.getActiveSchoolRoleAndClass().getSchoolGroupId()) != 5L
+                || MySQLPersistenceId.getId(result.getActiveSchoolRoleAndClass().getUserId()) != 10L) {
             fail("The retrieved selected user, group and class is wrong for the selected login.");
         }
     }
@@ -105,7 +104,7 @@ public class SecuredUserAccountLoginsManagerIT {
 
         long sgId = (long) MySQLPersistenceId.getId(result.getSchoolGroupId());
         long scId = (long) MySQLPersistenceId.getId(result.getSchoolClassId());
-        
+
         if ((MySQLPersistenceId.getId(result.getSchoolGroupId())) != oldSchoolGroup
                 || sgId != 5L || scId != 3) {
             fail("SchoolClass or SchoolGroup did not change.");
@@ -121,13 +120,31 @@ public class SecuredUserAccountLoginsManagerIT {
         System.out.println("submitASchoolLogin");
         SecurityContext sc = new TestSecurityContext("user03", RoleType.STUDENT);
         PersistentUser user = UserManager.findByUserName("user03");
-        RestNewSchoolLogin existingUserReg = null;
+        RestNewSchoolLogin existingUserReg = new RestNewSchoolLogin();
+        //should fail
+        existingUserReg = new RestNewSchoolLogin();
+        existingUserReg.setRole(RoleType.STUDENT);
+        existingUserReg.setSchoolLogin("school01");
+        existingUserReg.setSchoolCode("schooladmin");
         SecuredUserAccountLoginsManager instance = new SecuredUserAccountLoginsManager();
-        Response expResult = null;
-        Response result = instance.submitASchoolLogin(sc, existingUserReg);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        try {
+            Boolean result = instance.submitASchoolLogin(sc, existingUserReg);
+            assertEquals(false, result);
+        }
+        catch (Dwo2RestException e) {
+            //success
+        }
+        PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(10L, 4L));
+        assertEquals(hr, null);
+
+        //should succeed
+        existingUserReg.setRole(RoleType.SCHOOLADMIN);
+        existingUserReg.setSchoolLogin("school01");
+        existingUserReg.setSchoolCode("schooladmin");
+        Boolean result = instance.submitASchoolLogin(sc, existingUserReg);
+        assertEquals(true, result);
+        hr = HasRoleManager.findEntity(new PersistentHasRolePK(10L, 4L));
+        assertNotEquals(hr, null);
     }
 
     /**
@@ -145,12 +162,11 @@ public class SecuredUserAccountLoginsManagerIT {
         sarc.setRoleId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentRole));
         sarc.setSchoolClassId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
         sarc.setSchoolGroupId(MySQLPersistenceId.createPersistenceId(5, PersistenceClassType.PersistentSchoolGroup));
-        SecuredUserAccountLoginsManager instance = new SecuredUserAccountLoginsManager();
         Boolean expResult = true;
+        SecuredUserAccountLoginsManager instance = new SecuredUserAccountLoginsManager();
         Boolean result = instance.removeASchoolLogin(sc, sarc);
-        assertEquals(expResult, result); 
+        assertEquals(expResult, result);
         PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(10L, 5L));
         assertEquals("HasRole was not removed.", hr, null);
     }
 }
-
