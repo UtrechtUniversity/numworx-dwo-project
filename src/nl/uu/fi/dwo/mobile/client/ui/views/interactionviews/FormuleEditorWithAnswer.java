@@ -652,7 +652,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			return;
 		}
 		*/
-		if(fews != null)
+		if(fews != null) // is er een uitwerking
 		{
 			fews.transfer = true;
 			transferToFEWS();
@@ -661,7 +661,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			return;
 		}
 		else
-			processAntwoord();
+			processAntwoord(); // gewone geval 
 	}
 
 	private void transferToFEWS() {
@@ -763,7 +763,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			ingevuld = false;
 		else
 			ingevuld = true;
-		if(fe != null)
+		if(fe != null) // fe: onderdeel van formuleeditorwithsteps
 			fe.zetIngevuld(ingevuld);
 		
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
@@ -847,6 +847,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(this.fe != null && ingevuld)
 		{	fe.maakNakijkenAf(backStep, show, setState);
 		}
+		// in maakNakijkenAf wordt voor setState = false comRoot.setChanged(false) gedaan;
+		// als fe == null dus niet...
 	}
 	
 	public void zetGoedFout(int uitslag)

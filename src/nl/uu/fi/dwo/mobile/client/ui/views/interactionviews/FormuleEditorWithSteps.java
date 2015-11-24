@@ -688,7 +688,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 
 	public void copyStep()
 	{
-		if ( correct != Boolean.TRUE)
+		if ( correct != Boolean.TRUE) // FIXME copystep in mode 2 of 3
 		{
 			String currentTekst = "";
 			if(editor == null)
@@ -1395,7 +1395,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if(editor != null && !(mode == 2 || mode == 3))
 			//Sietske: Hier wellicht ook beter editor.kijkNa(false, false, false); zie getState FormuleEditorWithAnswer.
 			editor.kijkNa();
-
+// zet score/correct als editor nog open staat en gevuld is.
+		if(editor != null && (mode == 2 || mode == 3) && !editor.toString().isEmpty())
+			bepaalScore();
+		
 		stapNr = this.stapNr;
 		errorCount = this.errorCount;
 		formuleVakInhouden = new String[stapNr + 1];
@@ -1758,7 +1761,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if(editor != null && ! editor.toString().isEmpty())
 		{
 			// er is een editor, XXX pas op voor *linversie*.
-			editor.kijkNa(false, false, false); // roept maakNakijkenAf aan en zet zo score			
+			editor.kijkNa(false, false, false); // roept maakNakijkenAf aan en zet zo score		DEZE WERKT NIET	
 		} else {
 			if( stapNr > 0) {
 				String formule = latest_answer_viewer.toString();
@@ -2016,8 +2019,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			ingevuld = true;
 		if(mode == 2 || mode ==3)
 		{
-			//correct = editor.isCorrect(); XXX wordt elders gezet, maar waar en waarom?
-			System.out.println(correct + " " + editor.isCorrect());
+			correct = editor.isCorrect(); //XXX wordt elders gezet, maar waar en waarom?
 			score = editor.getScore(); // altijd score ophalen, ook bij noshow
 			if(show)
 			{
@@ -2338,7 +2340,6 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 					fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				else if(goedHalfFout == AntwoordVakChecker.FOUT)
 					fv.showResult(FormuleViewer.WRONG);
-				
 			}
 			else
 			{
