@@ -5,7 +5,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dwo.commons.persistence.RoleType;
+import fi.dom.commons.dom.entities.DomNewSchoolLogin;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -16,56 +16,22 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class RestNewSchoolLogin {
-    private String schoolLogin;
-    private String schoolCode;
-    private RoleType role;
+public class RestNewSchoolLogin extends DomNewSchoolLogin{
+    private RestContext restContext;
 
-    
-    public RestNewSchoolLogin(){
-        
+    /**
+     * @return the restContext
+     */
+    public RestContext getRestContext() {
+        return restContext;
     }
 
     /**
-     * @return the schoolLogin
+     * @param restContext the restContext to set
      */
-    public String getSchoolLogin() {
-        return schoolLogin;
+    public void setRestContext(RestContext restContext) {
+        this.restContext = restContext;
     }
 
-    /**
-     * @param schoolLogin the schoolLogin to set
-     */
-    public void setSchoolLogin(String schoolLogin) {
-        this.schoolLogin = schoolLogin;
-    }
-
-    /**
-     * @return the schoolCode
-     */
-    public String getSchoolCode() {
-        return schoolCode;
-    }
-
-    /**
-     * @param schoolCode the schoolCode to set
-     */
-    public void setSchoolCode(String schoolCode) {
-        this.schoolCode = schoolCode;
-    }
-
-    /**
-     * @return the role
-     */
-    public RoleType getRole() {
-        return role;
-    }
-
-    /**
-     * @param role the role to set
-     */
-    public void setRole(RoleType role) {
-        this.role = role;
-    }
     
 }
