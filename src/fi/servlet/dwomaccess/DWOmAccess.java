@@ -27,6 +27,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -36,6 +37,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -151,6 +155,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	public void init() throws ServletException
 	{
 		access = DbAccessFactory.getDbAccess(getServletContext());
+		executor = Executors.newCachedThreadPool();
 		unLock();
 	}
 	
@@ -204,10 +209,48 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			JSONEncoder.encode(map, out);
 			out.close();
 			bytes = bos.toByteArray();
+			setLaunchDataBytes(scoid);
 		}
 		return bytes;
 	}
 	
+	private ExecutorService executor = null;
+	
+	
+	
+	private void setLaunchDataBytes(final int scoid) {
+		Runnable run = new Runnable() {
+			public void run() {
+				try {
+					long tim = -System.currentTimeMillis();
+					Sco sco = (Sco) extraScoMapper.get(scoid);
+					if(sco == null) return;
+					String scoName = sco.getScoName();
+					String description = sco.getDescription();
+					boolean showScore = sco.isShowScore();
+					ByteArrayOutputStream bos = new ByteArrayOutputStream();
+					GZIPOutputStream zip = new GZIPOutputStream(bos);
+					OutputStreamWriter out = new OutputStreamWriter(zip, UTF_8);
+					@SuppressWarnings("rawtypes")
+					Map map = sco.getLaunchdata();
+					if(map == null) 
+						out.write("{}"); // Empty map
+					else 
+						JSONEncoder.encode(map, out);
+					out.close();
+					byte[] bytes = bos.toByteArray();
+					access.changeSco(scoid, scoName, description, false, bytes,
+							showScore);
+					tim += System.currentTimeMillis();
+					log("setLaunchDataBytes "+scoid+", " + scoName + " in " + tim + "ms");
+				} catch (Exception _) {
+					log("setLaunchDataBytes("+scoid+")", _);
+				}
+			}
+		};
+		executor.execute(run);
+	}
+
 	@SuppressWarnings("unchecked")
 	private Hashtable getCourseDescription_int( int courseid) throws IOException, XmlRpcException, SQLException
 	{
@@ -775,6 +818,12 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
 		resp.setContentType("text/plain");
 		resp.getOutputStream().close();
+	}
+
+	@Override
+	public void destroy() {
+		executor.shutdown();
+		executor = null;
 	}
 
 }
