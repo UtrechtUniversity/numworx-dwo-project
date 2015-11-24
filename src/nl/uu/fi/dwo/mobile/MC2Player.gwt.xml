@@ -18,6 +18,9 @@
 	 <replace-with class="nl.uu.fi.dwo.mobile.client.DWOPlayerMC2">
         <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
     </replace-with>
+   	<replace-with class="fi.wiskopdr.FailingIdeas">
+    	<when-type-is class="nl.uu.fi.dwo.ideas.client.IdeasIF" />
+    </replace-with>
  
     <set-property name="gwt.logging.enabled" value="TRUE"/>
 	<set-property name="gwt.logging.logLevel" value="FINEST"/>

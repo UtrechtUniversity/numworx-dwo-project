@@ -23,6 +23,9 @@
     <extend-property name="locale" values="gr"/> 	
 
   	<set-property-fallback name="locale" value="en"/> <!-- English is the default -->
+	  	<replace-with class="fi.wiskopdr.FailingIdeas">
+    	<when-type-is class="nl.uu.fi.dwo.ideas.client.IdeasIF" />
+    </replace-with>
 	
 	
 	<source path='' />
