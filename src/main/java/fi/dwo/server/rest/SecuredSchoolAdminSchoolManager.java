@@ -11,6 +11,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestRemoveStudentFromSchool;
 import fi.dwo.commons.rest.entities.RestSchool;
 import fi.dwo.commons.rest.entities.RestSchoolAdmin;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
@@ -167,6 +168,7 @@ public class SecuredSchoolAdminSchoolManager {
      * Removes a student from a school and returns true.
      *
      * @param sc
+     * @param msg
      * @param restSchool
      * @param restStudent
      * @return true if success, false if the teacher does not exists to be
@@ -175,7 +177,8 @@ public class SecuredSchoolAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/removeSingleSchoolStudentFromSchool")
-    public Boolean removeSingleSchoolStudentFromSchool(@Context SecurityContext sc, RestSchool restSchool, RestStudent restStudent) {
+    public Boolean removeSingleSchoolStudentFromSchool(@Context SecurityContext sc, RestStudent restStudent){
+
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser student = null;

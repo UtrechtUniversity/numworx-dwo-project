@@ -14,8 +14,10 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
+import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -141,7 +143,10 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         restTeacher.setFamilyName("Lastname 03");
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean expResult = true;
-        Boolean result = instance.SubmitTeacherToSchoolClass(sc, restTeacher, restSchoolClass);
+        RestSubmitTeacherToSchoolClass msg = new RestSubmitTeacherToSchoolClass();
+        msg.setSchoolClass(restSchoolClass);
+        msg.setTeacher(restTeacher);
+        Boolean result = instance.SubmitTeacherToSchoolClass(sc, msg);
         assertEquals(expResult, result);
         PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
         key.setUserID(10L);
@@ -170,9 +175,13 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         restTeacher.setUsername("user03");
         restTeacher.setGivenName("User");
         restTeacher.setFamilyName("Lastname 03");
+        RestRemoveTeacherFromSchoolClass msg = new RestRemoveTeacherFromSchoolClass();
+        msg.setSchoolClass(restSchoolClass);
+        msg.setTeacher(restTeacher);
+        
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean expResult = true;
-        Boolean result = instance.removeTeacherFromSchoolClass(sc, restSchoolClass, restTeacher);
+        Boolean result = instance.removeTeacherFromSchoolClass(sc, msg);
         assertEquals(expResult, result);
         PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
         key.setUserID(10L);
@@ -188,8 +197,9 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         restTeacher.setUsername("user03");
         restTeacher.setGivenName("User");
         restTeacher.setFamilyName("Lastname 03");
+        
         try {
-            result = instance.removeTeacherFromSchoolClass(sc, restSchoolClass, restTeacher);
+            result = instance.removeTeacherFromSchoolClass(sc,msg);
             assertEquals("Teacher removed while this should not occur.", false, result);
         }
         catch (Dwo2RestException e) {

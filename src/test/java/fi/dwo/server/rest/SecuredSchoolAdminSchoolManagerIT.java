@@ -127,14 +127,14 @@ public class SecuredSchoolAdminSchoolManagerIT {
         System.out.println("removeSingleSchoolStudentFromSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
 
-        RestSchool restSchool = new RestSchool(SchoolManager.findBySchoolLogin("school01"));
+//        RestSchool restSchool = new RestSchool(SchoolManager.findBySchoolLogin("school01"));
 //        restSchool.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchool));
 //        restSchool.setSchoolName("SchoolClass02");
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user02");
         RestStudent restStudent = new RestStudent(user);
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         try {
-            Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restSchool, restStudent);
+            Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restStudent);
             assertEquals("Student was removed but is not a SingleSchoolStudent.", true, result);
         }
         catch (Dwo2RestException e) {
@@ -161,7 +161,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         }
         
         restStudent = new RestStudent(user);
-        Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restSchool, restStudent);
+        Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restStudent);
         assertEquals("Student was not removed.", true, result);
         PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user04");
         if (userResult != null) {
@@ -320,7 +320,6 @@ public class SecuredSchoolAdminSchoolManagerIT {
         System.out.println("removeStudentFromSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        RestSchool restSchool = new RestSchool(SchoolManager.findBySchoolLogin("school01"));
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
         RestStudent restStudent = new RestStudent(user);
         try {

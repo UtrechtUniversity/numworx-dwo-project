@@ -304,7 +304,7 @@
                         <include>**/*Test.java</include>
                         <include>**/*IT.java</include>
                     </includes>
-<!--                    <skipTests>true</skipTests>-->
+                   <skipTests>true</skipTests>
                     <!--                   <systemProperties>
                         <property>
                             <name>jersey.config.test.container.factory</name>
@@ -332,12 +332,13 @@
         <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
     
-    <repositories>
+<!--    <repositories>
         <repository>
             <id>xmlrpc</id>
             <url>http://ws.apache.org/xmlrpc/</url>
         </repository>
     </repositories>
+-->
     <reporting>
         <plugins>
             <plugin>
