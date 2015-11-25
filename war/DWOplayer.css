@@ -233,3 +233,14 @@ div.listItem-dwo-separator {
 	color: gray;
 }
 
+.cursor_gum {
+	cursor: url(images/resources/gumcursor.gif) 10 10, auto; 
+}
+
+.cursor_teken {
+	cursor: url(images/resources/tekencursor.gif) 10 22, auto; 
+}
+
+.cursor_drag {
+	cursor: arrow; 
+}
