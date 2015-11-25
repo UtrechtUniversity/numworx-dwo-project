@@ -10,6 +10,7 @@ import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -55,7 +56,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private boolean editable = true;
 	
 	
-	class Tapper implements TapHandler {
+	class Tapper implements ClickHandler {
 		private FormuleEditorIF deze;
 		private Element target;
 		
@@ -66,9 +67,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 
 		@Override
-		public void onTap(TapEvent event) {
-			Element targetElement = event.getTargetElement();
-			if(targetElement == null || targetElement == target || targetElement.getParentElement() == target)
+		public void onClick(ClickEvent event) {
+//			Element targetElement = event.getTargetElement();
+//			if(targetElement == null || targetElement == target || targetElement.getParentElement() == target)
 			{	comRoot.getKeyboard().setEditor(deze);
 				comRoot.getKeyboard().softFocus();
 				setCursorWidget(cursorWidget);
@@ -77,7 +78,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	}
 	
-	class TapForFocus implements TouchStartHandler {
+	class TapForFocus implements TouchStartHandler, ClickHandler {
 		private Widget cursorWidget;
 		private HandlerRegistration registration;
 
@@ -88,6 +89,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			this.cursorWidget = cursorWidget;
 			TouchDelegate wrap = new TouchDelegate(cursorWidget);
 			registration = wrap.addTouchStartHandler(this);
+		}
+
+		TapForFocus(Widget cursorWidget, HasClickHandlers w) {
+			this.cursorWidget = cursorWidget;
+			registration = w.addClickHandler(this);
 		}
 
 		public void finalize() {
@@ -103,6 +109,16 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			comRoot.getKeyboard().softFocus();
 			event.stopPropagation();
 			event.preventDefault();
+		}
+
+		@Override
+		public void onClick(ClickEvent event) {
+			comRoot.getKeyboard().setEditor(TextEditor.this);
+			setCursorWidget(cursorWidget);
+			comRoot.getKeyboard().softFocus();
+			event.stopPropagation();
+			event.preventDefault();
+			
 		}
 		
 	}
@@ -135,8 +151,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			editor.insert("?");
 			Panel panel = editor.getAsPanel();
 			//comRoot.getKeyboard().setEditor(editor);
-			TouchDelegate wrap = new TouchDelegate(panel);
-			wrap.addTapHandler(new Tapper(editor, panel.getElement()));
+			//TouchDelegate wrap = new TouchDelegate(panel);
+			panel.addDomHandler(new Tapper(editor, panel.getElement()), ClickEvent.getType());
 			panel.setWidth("30px");
 			panel.setHeight("30px");
 			panel.getElement().getStyle().setBackgroundColor("#808080");
@@ -167,8 +183,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			editor.insert('0');
 			HorizontalPanel hbox = new HorizontalPanel();
 			Panel panel = editor.getAsPanel();
-			TouchDelegate wrap = new TouchDelegate(panel);
-			wrap.addTapHandler(new Tapper(editor, panel.getElement()));
+			//TouchDelegate wrap = new TouchDelegate(panel);
+			//wrap.addTapHandler(new Tapper(editor, panel.getElement()));
+			panel.addDomHandler(new Tapper(editor, panel.getElement()), ClickEvent.getType());
 			hbox.add(panel);
 			btn = new Button("=");
 			btn.addClickHandler(this);
@@ -294,8 +311,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private Widget widget;
 	
 	private Widget getContent(ObjectMap launchdata) {
-		TouchPanel touch = new TouchPanel();
-		touch.addTapHandler(new Tapper(this,touch.getElement()));
+		FlowPanel touch = new FlowPanel();
+		touch.addDomHandler(new Tapper(this,touch.getElement()), ClickEvent.getType());
 		flow = touch; // XXX voorlopig ok
 		setState(launchdata);
 		return touch;
@@ -614,7 +631,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		html = builder.toSafeHtml();
 //		sb.insert(cursor, charAt);
 		InlineHTML w = new InlineHTML(html);
-		new TapForFocus(w);
+		new TapForFocus(w,w);
 		flow.insert(w,cursor++);
 		showCursor();
 	}
