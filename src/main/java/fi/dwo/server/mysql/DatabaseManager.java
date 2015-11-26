@@ -98,8 +98,8 @@ public class DatabaseManager {
     private void RunScript(String script) {
         ScriptRunner runner = new ScriptRunner(con, false, false);
         try {
-            runner.runScript(new BufferedReader(new BufferedReader(new InputStreamReader(
-                    getClass().getResourceAsStream(script)))));
+            runner.runScript(new BufferedReader(new InputStreamReader(
+                    getClass().getResourceAsStream(script))));
         }
         catch (FileNotFoundException ex) {
             LOG.log(Level.SEVERE, null, ex);

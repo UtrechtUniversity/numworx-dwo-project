@@ -11,8 +11,6 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestRemoveStudentFromSchool;
-import fi.dwo.commons.rest.entities.RestSchool;
 import fi.dwo.commons.rest.entities.RestSchoolAdmin;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;

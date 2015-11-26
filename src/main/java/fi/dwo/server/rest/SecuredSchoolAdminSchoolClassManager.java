@@ -1,5 +1,7 @@
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomSchoolClass;
+import fi.dom.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
@@ -190,8 +192,8 @@ public class SecuredSchoolAdminSchoolClassManager {
     @Produces({"application/json"})
     @Path("/submitTeacher")
     public Boolean SubmitTeacherToSchoolClass(@Context SecurityContext sc, RestSubmitTeacherToSchoolClass restData){
-        RestTeacher restTeacher = restData.getTeacher();
-        RestSchoolClass restSchoolClass = restData.getSchoolClass();
+        DomTeacher domTeacher = restData.getTeacher();
+        DomSchoolClass domSchoolClass = restData.getSchoolClass();
            
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -200,7 +202,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restTeacher.getId()));
+            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(domTeacher.getId()));
             thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
@@ -209,7 +211,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domSchoolClass.getId()));
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
             toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
@@ -234,8 +236,8 @@ public class SecuredSchoolAdminSchoolClassManager {
     @Produces({"application/json"})
     @Path("/removeTeacher")
     public Boolean removeTeacherFromSchoolClass(@Context SecurityContext sc, RestRemoveTeacherFromSchoolClass restData){
-        RestTeacher restTeacher = restData.getTeacher();
-        RestSchoolClass restSchoolClass = restData.getSchoolClass();
+        DomTeacher domTeacher = restData.getTeacher();
+        DomSchoolClass domSchoolClass = restData.getSchoolClass();
            
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -244,7 +246,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restTeacher.getId()));
+            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(domTeacher.getId()));
             thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
@@ -253,7 +255,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domSchoolClass.getId()));
 
         if (teacher != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {

@@ -5,6 +5,8 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomSchoolRoleAndClass;
+import fi.dom.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.*;
@@ -102,8 +104,8 @@ public class SecuredUserAccountLoginsManager {
 
         RestSchoolsRolesAndClasses sacs = new RestSchoolsRolesAndClasses();
         PersistentUser user;
-        List<RestSchoolRoleAndClass> sacList = (List<RestSchoolRoleAndClass>) new ArrayList<RestSchoolRoleAndClass>();
-        RestSchoolRoleAndClass curSac;
+        List<DomSchoolRoleAndClass> sacList = (List<DomSchoolRoleAndClass>) new ArrayList<DomSchoolRoleAndClass>();
+        DomSchoolRoleAndClass curSac;
 
         // fetch the authenticated user
         try {

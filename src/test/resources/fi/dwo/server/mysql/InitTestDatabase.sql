@@ -258,12 +258,12 @@ DROP TABLE IF EXISTS `tblfromto`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblfromto` (
   `schoolFrom` int(11) NOT NULL DEFAULT '0',
-  `schoolto` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`schoolFrom`,`schoolto`),
+  `schoolTo` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`schoolFrom`,`schoolTo`),
   KEY `schoolFrom` (`schoolFrom`),
-  KEY `schoolto` (`schoolto`),
+  KEY `schoolTo` (`schoolTo`),
   CONSTRAINT `tblfromto_ibfk_1` FOREIGN KEY (`schoolFrom`) REFERENCES `tblschool` (`schoolID`) ON DELETE CASCADE,
-  CONSTRAINT `tblfromto_ibfk_2` FOREIGN KEY (`schoolto`) REFERENCES `tblschool` (`schoolID`) ON DELETE CASCADE
+  CONSTRAINT `tblfromto_ibfk_2` FOREIGN KEY (`schoolTo`) REFERENCES `tblschool` (`schoolID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

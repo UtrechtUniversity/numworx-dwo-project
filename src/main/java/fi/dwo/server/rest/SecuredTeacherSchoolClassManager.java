@@ -1,5 +1,8 @@
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomSchoolClass;
+import fi.dom.commons.dom.entities.DomStudent;
+import fi.dom.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
@@ -15,10 +18,13 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestRemoveStudentFromSchoolClass;
+import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
+import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
@@ -380,14 +386,15 @@ public class SecuredTeacherSchoolClassManager {
      * Add a teacher to the school class.
      *
      * @param sc
-     * @param restTeacher
-     * @param restSchoolClass
+     * @param restSubmitTeacherToSchoolClass
      * @return true, throws an exception otherwise.
      */
     @PUT
     @Produces({"application/json"})
     @Path("/submitTeacher")
-    public Boolean SubmitTeacherToSchoolClass(@Context SecurityContext sc, RestTeacher restTeacher, RestSchoolClass restSchoolClass) {
+    public Boolean SubmitTeacherToSchoolClass(@Context SecurityContext sc, RestSubmitTeacherToSchoolClass restSubmitTeacherToSchoolClass){
+        DomTeacher restTeacher =restSubmitTeacherToSchoolClass.getTeacher();
+        DomSchoolClass restSchoolClass = restSubmitTeacherToSchoolClass.getSchoolClass();
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser teacher = null;
@@ -487,7 +494,9 @@ public class SecuredTeacherSchoolClassManager {
     @PUT
     @Produces({"application/json"})
     @Path("/removeTeacher")
-    public Boolean removeTeacherFromSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass, RestTeacher restTeacher) {
+    public Boolean removeTeacherFromSchoolClass(@Context SecurityContext sc, RestRemoveTeacherFromSchoolClass  restRemoveTeacherFromSchoolClass){
+        DomSchoolClass domSchoolClass = restRemoveTeacherFromSchoolClass.getSchoolClass();
+        DomTeacher domTeacher = restRemoveTeacherFromSchoolClass.getTeacher();
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser teacher = null;
@@ -495,7 +504,7 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restTeacher.getId()));
+            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(domTeacher.getId()));
             thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
@@ -504,7 +513,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domSchoolClass.getId()));
 
         if (teacher != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
@@ -534,7 +543,9 @@ public class SecuredTeacherSchoolClassManager {
     @PUT
     @Produces({"application/json"})
     @Path("/removeStudent")
-    public Boolean removeStudentFromSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass, RestStudent restStudent) {
+    public Boolean removeStudentFromSchoolClass(@Context SecurityContext sc, RestRemoveStudentFromSchoolClass restRemoveStudentFromSchoolClass){
+        DomSchoolClass domSchoolClass = restRemoveStudentFromSchoolClass.getSchoolClass();
+        DomStudent domStudent = restRemoveStudentFromSchoolClass.getStudent();
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser teacher = null;
@@ -542,7 +553,7 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restStudent.getId()));
+            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(domStudent.getId()));
             thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
@@ -551,7 +562,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domSchoolClass.getId()));
 
         if (teacher != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {

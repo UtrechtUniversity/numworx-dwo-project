@@ -304,7 +304,7 @@
                         <include>**/*Test.java</include>
                         <include>**/*IT.java</include>
                     </includes>
-                   <skipTests>true</skipTests>
+<!--                   <skipTests>true</skipTests> -->
                     <!--                   <systemProperties>
                         <property>
                             <name>jersey.config.test.container.factory</name>

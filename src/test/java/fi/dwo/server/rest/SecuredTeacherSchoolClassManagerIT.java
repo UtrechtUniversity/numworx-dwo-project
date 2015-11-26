@@ -3,6 +3,9 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomSchoolClass;
+import fi.dom.commons.dom.entities.DomStudent;
+import fi.dom.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
@@ -14,10 +17,14 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestRemoveStudentFromSchoolClass;
+import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
+import fi.dwo.commons.rest.entities.RestSubmitStudentToSchoolClass;
+import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -132,7 +139,7 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testGetTeachersInSchoolClass() {
         System.out.println("GetTeachersInSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass restSchoolClass = new RestSchoolClass4Teacher();
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
         PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
         restSchoolClass.setId(id);
         restSchoolClass.setSchoolClassName("The worm wil eat you.");
@@ -150,7 +157,7 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testGetStudentsInSchoolClass() {
         System.out.println("GetStudentsInSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass restSchoolClass = new RestSchoolClass4Teacher();
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
         PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
         restSchoolClass.setId(id);
         restSchoolClass.setSchoolClassName("The worm wil eat you.");
@@ -222,17 +229,20 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testSubmitTeacherToSchoolClass() {
         System.out.println("SubmitTeacherToSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass restSchoolClass = new RestSchoolClass();
-        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
-        restSchoolClass.setSchoolClassName("SchoolClass01");
-        RestTeacher restTeacher = new RestTeacher();
-        restTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
-        restTeacher.setUsername("user03");
-        restTeacher.setGivenName("User");
-        restTeacher.setFamilyName("Lastname 03");
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setSchoolClassName("SchoolClass01");
+        DomTeacher domTeacher = new DomTeacher();
+        domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        domTeacher.setUsername("user03");
+        domTeacher.setGivenName("User");
+        domTeacher.setFamilyName("Lastname 03");
+        RestSubmitTeacherToSchoolClass restSubmitTeacherToSchoolClass = new RestSubmitTeacherToSchoolClass();
+        restSubmitTeacherToSchoolClass.setSchoolClass(domSchoolClass);
+        restSubmitTeacherToSchoolClass.setTeacher(domTeacher);
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
-        Boolean result = instance.SubmitTeacherToSchoolClass(sc, restTeacher, restSchoolClass);
+        Boolean result = instance.SubmitTeacherToSchoolClass(sc, restSubmitTeacherToSchoolClass);
         assertEquals("Method returned false.", expResult, result);
         PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
         key.setClassID(1L);
@@ -254,20 +264,25 @@ public class SecuredTeacherSchoolClassManagerIT {
         PersistentUser user = UserManager.findByUserName("user02");
         user.setSchoolGroupID(6L);
         UserManager.edit(user);
-        RestStudent restStudent = new RestStudent();
-        restStudent.setId(MySQLPersistenceId.createPersistenceId(12L, PersistenceClassType.PersistentUser));
-        restStudent.setUsername("user05");
-        restStudent.setGivenName("User");
-        restStudent.setFamilyName("Lastname 05");
-        RestSchoolClass restFromSchoolClass = new RestSchoolClass();;
-        restFromSchoolClass.setId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchoolClass));
-        restFromSchoolClass.setSchoolClassName("SchoolClass03");
-        RestSchoolClass restToSchoolClass = new RestSchoolClass();
-        restToSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
-        restToSchoolClass.setSchoolClassName("SchoolClass04");
+        DomStudent domStudent = new DomStudent();
+        domStudent.setId(MySQLPersistenceId.createPersistenceId(12L, PersistenceClassType.PersistentUser));
+        domStudent.setUsername("user05");
+        domStudent.setGivenName("User");
+        domStudent.setFamilyName("Lastname 05");
+        DomSchoolClass domFromSchoolClass = new DomSchoolClass();
+        domFromSchoolClass.setId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchoolClass));
+        domFromSchoolClass.setSchoolClassName("SchoolClass03");
+        DomSchoolClass domToSchoolClass = new DomSchoolClass();
+        domToSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
+        domToSchoolClass.setSchoolClassName("SchoolClass04");
+        RestSubmitStudentToSchoolClass restSubmitStudentToSchoolClass = new RestSubmitStudentToSchoolClass();
+        restSubmitStudentToSchoolClass.(domFromSchoolClass);
+        restSubmitStudentToSchoolClass.(domToSchoolClass);
+        restSubmitStudentToSchoolClass.setTeacher(domstudent);
+        
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
-        Boolean result = instance.SubmitStudentToSchoolClass(sc, restStudent, restFromSchoolClass, restToSchoolClass);
+        Boolean result = instance.SubmitStudentToSchoolClass(sc, restSubmitStudentToSchoolClass);
         assertEquals("Method returned false.", expResult, result);
         PersistentStudentOfClassPK key = new PersistentStudentOfClassPK();
         key.setClassID(4L);
@@ -287,17 +302,21 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testRemoveTeacherFromSchoolClass() {
         System.out.println("removeTeacherFromSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass restSchoolClass = new RestSchoolClass();
-        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
-        restSchoolClass.setSchoolClassName("SchoolClass02");
-        RestTeacher restTeacher = new RestTeacher();
-        restTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
-        restTeacher.setUsername("user03");
-        restTeacher.setGivenName("User");
-        restTeacher.setFamilyName("Lastname 03");
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setSchoolClassName("SchoolClass02");
+        DomTeacher domTeacher = new DomTeacher();
+        domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        domTeacher.setUsername("user03");
+        domTeacher.setGivenName("User");
+        domTeacher.setFamilyName("Lastname 03");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
-        Boolean result = instance.removeTeacherFromSchoolClass(sc, restSchoolClass, restTeacher);
+        RestRemoveTeacherFromSchoolClass restRemoveTeacherFromSchoolClass = new RestRemoveTeacherFromSchoolClass();
+        restRemoveTeacherFromSchoolClass.setSchoolClass(domSchoolClass);
+        restRemoveTeacherFromSchoolClass.setTeacher(domTeacher);
+
+        Boolean result = instance.removeTeacherFromSchoolClass(sc, restRemoveTeacherFromSchoolClass);
         assertEquals(expResult, result);
         PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
         key.setUserID(10L);
@@ -307,14 +326,17 @@ public class SecuredTeacherSchoolClassManagerIT {
         assertEquals("Teacher was not deleted.", newTeacher, null);
 
         //fail next
-        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
-        restSchoolClass.setSchoolClassName("SchoolClass03");
-        restTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
-        restTeacher.setUsername("user03");
-        restTeacher.setGivenName("User");
-        restTeacher.setFamilyName("Lastname 03");
+        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setSchoolClassName("SchoolClass03");
+        domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        domTeacher.setUsername("user03");
+        domTeacher.setGivenName("User");
+        domTeacher.setFamilyName("Lastname 03");
+        restRemoveTeacherFromSchoolClass = new RestRemoveTeacherFromSchoolClass();
+        restRemoveTeacherFromSchoolClass.setSchoolClass(domSchoolClass);
+        restRemoveTeacherFromSchoolClass.setTeacher(domTeacher);
         try {
-            result = instance.removeTeacherFromSchoolClass(sc, restSchoolClass, restTeacher);
+            result = instance.removeTeacherFromSchoolClass(sc, restRemoveTeacherFromSchoolClass);
             assertEquals("Teacher removed while this should not occur.", false, result);
         }
         catch (Dwo2RestException e) {
@@ -332,18 +354,21 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testRemoveStudentFromSchoolClass() {
         System.out.println("removeStudentFromSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass restSchoolClass = new RestSchoolClass();
-        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
-        restSchoolClass.setSchoolClassName("SchoolClass02");
-        RestStudent restStudent = new RestStudent();
-        restStudent.setId(MySQLPersistenceId.createPersistenceId(9L, PersistenceClassType.PersistentUser));
-        restStudent.setUsername("user02");
-        restStudent.setGivenName("User");
-        restStudent.setFamilyName("Lastname 02");
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setSchoolClassName("SchoolClass02");
+        DomStudent domStudent = new DomStudent();
+        domStudent.setId(MySQLPersistenceId.createPersistenceId(9L, PersistenceClassType.PersistentUser));
+        domStudent.setUsername("user02");
+        domStudent.setGivenName("User");
+        domStudent.setFamilyName("Lastname 02");
+        RestRemoveStudentFromSchoolClass restRemoveStudentFromSchoolClass = new RestRemoveStudentFromSchoolClass();
+        restRemoveStudentFromSchoolClass.setSchoolClass(domSchoolClass);
+        restRemoveStudentFromSchoolClass.setStudent(domStudent);
 
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
-        Boolean result = instance.removeStudentFromSchoolClass(sc, restSchoolClass, restStudent);
+        Boolean result = instance.removeStudentFromSchoolClass(sc, restRemoveStudentFromSchoolClass);
         assertEquals(expResult, result);
 
         PersistentStudentOfClassPK key = new PersistentStudentOfClassPK();
@@ -380,7 +405,7 @@ public class SecuredTeacherSchoolClassManagerIT {
 
     /**
      * Test of updateSingleSchoolStudent method, of class
-     * SecuredTeacherSchoolClassManager. Tests if only one of its single school 
+     * SecuredTeacherSchoolClassManager. Tests if only one of its single school
      * students can be updated.
      */
     @Test

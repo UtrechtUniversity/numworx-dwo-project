@@ -71,6 +71,5 @@ public class PublicRoleManagerIT {
                 fail("RoleType roles are missing in the Database.");
             }
         }
-
     }
 }
