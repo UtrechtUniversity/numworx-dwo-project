@@ -1,10 +1,8 @@
 /**
  * Copyrighted Nov 20, 2015
  */
-package fi.dwo.commons.rest.entities;
+package fi.dom.commons.dom.entities;
 
-import fi.dom.commons.dom.entities.DomSchoolClass;
-import fi.dom.commons.dom.entities.DomTeacher;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -12,10 +10,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Gert van der Plas
  */
 @XmlRootElement
-public class RestRemoveTeacherFromSchoolClass {
+public class DomSubmitTeacherToSchoolClass {
     private DomTeacher teacher;
     private DomSchoolClass schoolClass;
-    private RestContext restContext;
 
     /**
      * @return the teacher
@@ -43,19 +40,5 @@ public class RestRemoveTeacherFromSchoolClass {
      */
     public void setSchoolClass(DomSchoolClass schoolClass) {
         this.schoolClass = schoolClass;
-    }
-
-    /**
-     * @return the restContext
-     */
-    public RestContext getRestContext() {
-        return restContext;
-    }
-
-    /**
-     * @param restContext the restContext to set
-     */
-    public void setRestContext(RestContext restContext) {
-        this.restContext = restContext;
     }
 }

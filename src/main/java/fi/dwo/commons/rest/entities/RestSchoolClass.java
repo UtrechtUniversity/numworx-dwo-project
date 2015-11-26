@@ -3,8 +3,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.PersistenceId;
+import fi.dom.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -14,46 +13,29 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestSchoolClass {
-    private PersistenceId id;
-    private String schoolClassName;
-
+public class RestSchoolClass extends DomSchoolClass{
+    private RestContext restContext;
 
     public RestSchoolClass(){
         
     }
         
     public RestSchoolClass(PersistentSchoolClass sc) {
-        this.schoolClassName = sc.getClass1();
-        this.id = MySQLPersistenceId.createPersistentId(sc);
+        super(sc);
     }
 
     /**
-     * @return the id
+     * @return the restContext
      */
-    public PersistenceId getId() {
-        return id;
+    public RestContext getRestContext() {
+        return restContext;
     }
 
     /**
-     * @param classId the id to set
+     * @param restContext the restContext to set
      */
-    public void setId(PersistenceId classId) {
-        this.id = classId;
-    }
-
-    /**
-     * @return the schoolClassName
-     */
-    public String getSchoolClassName() {
-        return schoolClassName;
-    }
-
-    /**
-     * @param schoolClassName the schoolClassName to set
-     */
-    public void setSchoolClassName(String schoolClassName) {
-        this.schoolClassName = schoolClassName;
+    public void setRestContext(RestContext restContext) {
+        this.restContext = restContext;
     }
 
     

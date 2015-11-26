@@ -5,8 +5,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import java.util.ArrayList;
-import java.util.List;
+import fi.dom.commons.dom.entities.DomSchoolsRolesAndClasses;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -15,40 +14,21 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class RestSchoolsRolesAndClasses {
-    private RestSchoolRoleAndClass currentSchoolRoleAndClass;
-    private List<RestSchoolRoleAndClass> schoolsRolesAndClassesList;
+public class RestSchoolsRolesAndClasses extends DomSchoolsRolesAndClasses{
+    private RestContext restContext;
 
-    public void init(){
-        currentSchoolRoleAndClass = new RestSchoolRoleAndClass();
-        schoolsRolesAndClassesList = new ArrayList<RestSchoolRoleAndClass>();
-    }
     /**
-     * @return the currentSchoolRoleAndClass
+     * @return the restContext
      */
-    public RestSchoolRoleAndClass getActiveSchoolRoleAndClass() {
-        return currentSchoolRoleAndClass;
+    public RestContext getRestContext() {
+        return restContext;
     }
 
     /**
-     * @param currentSRC the currentSchoolRoleAndClass to set
+     * @param restContext the restContext to set
      */
-    public void setActiveSchoolRoleAndClass(RestSchoolRoleAndClass currentSRC) {
-        this.currentSchoolRoleAndClass = currentSRC;
-    }
-
-    /**
-     * @return the schoolsRolesAndClassesList
-     */
-    public List<RestSchoolRoleAndClass> getSchoolsRolesAndClassesList() {
-        return schoolsRolesAndClassesList;
-    }
-
-    /**
-     * @param srcList the schoolsRolesAndClassesList to set
-     */
-    public void setSchoolsRolesAndClassesList(List<RestSchoolRoleAndClass> srcList) {
-        this.schoolsRolesAndClassesList = srcList;
+    public void setRestContext(RestContext restContext) {
+        this.restContext = restContext;
     }
     
 }

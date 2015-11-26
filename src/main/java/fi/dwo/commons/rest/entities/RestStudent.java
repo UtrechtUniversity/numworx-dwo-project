@@ -3,7 +3,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dwo.commons.persistence.PersistenceId;
+import fi.dom.commons.dom.entities.DomUser;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,20 +13,24 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestStudent extends RestUser {
-    private PersistenceId id;
-    private String givenName;
-    private String familyName;
-    private String familyNamePrefix;
-
-
-    public RestStudent(){
-        super();
-    }
-        
+public class RestStudent extends DomUser {
+    private RestContext restContext;
+    
     public RestStudent(PersistentUser u) {
         super(u);
     }
 
+    /**
+     * @return the restContext
+     */
+    public RestContext getRestContext() {
+        return restContext;
+    }
 
+    /**
+     * @param restContext the restContext to set
+     */
+    public void setRestContext(RestContext restContext) {
+        this.restContext = restContext;
+    }
 }

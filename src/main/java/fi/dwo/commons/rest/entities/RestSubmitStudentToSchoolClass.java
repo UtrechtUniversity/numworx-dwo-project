@@ -3,7 +3,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dom.commons.dom.entities.DomSubmitTeacherToSchoolClass;
+import fi.dom.commons.dom.entities.DomSubmitStudentToSchoolClass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Gert van der Plas
  */
 @XmlRootElement
-public class RestSubmitTeacherToSchoolClass extends DomSubmitTeacherToSchoolClass{
+public class RestSubmitStudentToSchoolClass extends DomSubmitStudentToSchoolClass{
     private RestContext restContext;
 
     /**

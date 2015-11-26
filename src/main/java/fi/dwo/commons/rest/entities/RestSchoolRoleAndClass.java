@@ -5,7 +5,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dwo.commons.persistence.PersistenceId;
+import fi.dom.commons.dom.entities.DomSchoolRoleAndClass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,126 +14,22 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class RestSchoolRoleAndClass {
-    private PersistenceId schoolId;
-    private String schoolName;
-    private PersistenceId roleId;
-    private String roleName;
-    private PersistenceId schoolClassId;
-    private String schoolClassName;
-    private PersistenceId userId;
-    private PersistenceId schoolGroupId;
-    
+public class RestSchoolRoleAndClass extends DomSchoolRoleAndClass{
+    private RestContext restContext;
+
     /**
-     * @return the schoolId
+     * @return the restContext
      */
-    public PersistenceId getSchoolId() {
-        return schoolId;
+    public RestContext getRestContext() {
+        return restContext;
     }
 
     /**
-     * @param schoolId the schoolId to set
+     * @param restContext the restContext to set
      */
-    public void setSchoolId(PersistenceId schoolId) {
-        this.schoolId = schoolId;
+    public void setRestContext(RestContext restContext) {
+        this.restContext = restContext;
     }
 
-    /**
-     * @return the schoolName
-     */
-    public String getSchoolName() {
-        return schoolName;
-    }
 
-    /**
-     * @param schoolName the schoolName to set
-     */
-    public void setSchoolName(String schoolName) {
-        this.schoolName = schoolName;
-    }
-
-    /**
-     * @return the roleId
-     */
-    public PersistenceId getRoleId() {
-        return roleId;
-    }
-
-    /**
-     * @param roleId the roleId to set
-     */
-    public void setRoleId(PersistenceId roleId) {
-        this.roleId = roleId;
-    }
-
-    /**
-     * @return the roleName
-     */
-    public String getRoleName() {
-        return roleName;
-    }
-
-    /**
-     * @param roleName the roleName to set
-     */
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    /**
-     * @return the schoolClassId
-     */
-    public PersistenceId getSchoolClassId() {
-        return schoolClassId;
-    }
-
-    /**
-     * @param schoolClassId the schoolClassId to set
-     */
-    public void setSchoolClassId(PersistenceId schoolClassId) {
-        this.schoolClassId = schoolClassId;
-    }
-
-    /**
-     * @return the schoolClassName
-     */
-    public String getSchoolClassName() {
-        return schoolClassName;
-    }
-
-    /**
-     * @param schoolClassName the schoolClassName to set
-     */
-    public void setSchoolClassName(String schoolClassName) {
-        this.schoolClassName = schoolClassName;
-    }
-
-    /**
-     * @return the userId
-     */
-    public PersistenceId getUserId() {
-        return userId;
-    }
-
-    /**
-     * @param userId the userId to set
-     */
-    public void setUserId(PersistenceId userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * @return the groupId
-     */
-    public PersistenceId getSchoolGroupId() {
-        return schoolGroupId;
-    }
-
-    /**
-     * @param schoolGroupId
-     */
-    public void setSchoolGroupId(PersistenceId schoolGroupId) {
-        this.schoolGroupId = schoolGroupId;
-    }
-    
 }

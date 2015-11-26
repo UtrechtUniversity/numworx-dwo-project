@@ -1,17 +1,14 @@
-/**
- * Copyrighted Nov 20, 2015
- */
 package fi.dwo.commons.rest.entities;
 
-import fi.dom.commons.dom.entities.DomSubmitTeacherToSchoolClass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Transports a user exception to the server for debugging.
  * 
  * @author Gert van der Plas
  */
 @XmlRootElement
-public class RestSubmitTeacherToSchoolClass extends DomSubmitTeacherToSchoolClass{
+public class RestDwoExceptionMessage {
     private RestContext restContext;
 
     /**

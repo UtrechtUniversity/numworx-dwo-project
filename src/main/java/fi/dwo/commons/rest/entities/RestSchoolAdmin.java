@@ -3,6 +3,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
+import fi.dom.commons.dom.entities.DomSchoolAdmin;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -12,14 +13,25 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestSchoolAdmin extends RestUser {
-
-    public RestSchoolAdmin(){
-        super();
-    }
-        
+public class RestSchoolAdmin extends DomSchoolAdmin {
+    private RestContext restContext;
+    
     public RestSchoolAdmin(PersistentUser u) {
         super(u);
+    }
+
+    /**
+     * @return the restContext
+     */
+    public RestContext getRestContxt() {
+        return restContext;
+    }
+
+    /**
+     * @param restContxt the restContext to set
+     */
+    public void setRestContxt(RestContext restContxt) {
+        this.restContext = restContxt;
     }
 
 }

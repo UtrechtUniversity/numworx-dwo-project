@@ -3,7 +3,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dom.commons.dom.entities.DomSchool;
+import fi.dom.commons.dom.entities.DomSchoolClass;
 import fi.dom.commons.dom.entities.DomStudent;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -12,9 +12,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Gert van der Plas
  */
 @XmlRootElement
-public class RestRemoveStudentFromSchool {
+public class RestRemoveStudentFromSchoolClass {
     private DomStudent student;
-    private DomSchool school;
+    private DomSchoolClass schoolClass;
     private RestContext restContext;
 
     /**
@@ -32,17 +32,17 @@ public class RestRemoveStudentFromSchool {
     }
 
     /**
-     * @return the school
+     * @return the schoolClass
      */
-    public DomSchool getSchool() {
-        return school;
+    public DomSchoolClass getSchoolClass() {
+        return schoolClass;
     }
 
     /**
-     * @param school the school to set
+     * @param schoolClass the schoolClass to set
      */
-    public void setSchool(DomSchool school) {
-        this.school = school;
+    public void setSchoolClass(DomSchoolClass schoolClass) {
+        this.schoolClass = schoolClass;
     }
 
     /**
@@ -58,5 +58,4 @@ public class RestRemoveStudentFromSchool {
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
     }
-
 }

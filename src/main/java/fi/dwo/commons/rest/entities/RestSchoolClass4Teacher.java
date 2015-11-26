@@ -5,6 +5,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
+import fi.dom.commons.dom.entities.DomSchoolClass4Teacher;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,37 +14,24 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class RestSchoolClass4Teacher extends RestSchoolClass {
-    private String registrationKey;
-    private int iconizer;
+public class RestSchoolClass4Teacher extends DomSchoolClass4Teacher {
+    private RestContext restContext;
 
     /**
-     * @return the iconizer
+     * @return the restContext
      */
-    public int getIconizer() {
-        return iconizer;
+    public RestContext getRestContext() {
+        return restContext;
     }
 
     /**
-     * @param iconizer the iconizer to set
+     * @param restContext the restContext to set
      */
-    public void setIconizer(int iconizer) {
-        this.iconizer = iconizer;
+    public void setRestContext(RestContext restContext) {
+        this.restContext = restContext;
     }
-
-    /**
-     * @return the registrationKey
-     */
-    public String getRegistrationKey() {
-        return registrationKey;
-    }
-
-    /**
-     * @param registrationKey the registrationKey to set
-     */
-    public void setRegistrationKey(String registrationKey) {
-        this.registrationKey = registrationKey;
-    }
+    
+    
     
     
 }

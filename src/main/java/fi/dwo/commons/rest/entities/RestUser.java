@@ -3,9 +3,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.PersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dom.commons.dom.entities.DomUser;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -15,99 +13,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestUser {
-    private PersistenceId id;
-    private String username;
-    private String givenName;
-    private String familyName;
-    private String insertion;
+public class RestUser extends DomUser{
+    private RestContext restContext;
 
-
-    public RestUser(){
-        
-    }
-        
-    public RestUser(PersistentUser u) {
-        this.givenName = u.getFirstname();
-        this.insertion = u.getMiddlename();
-        this.familyName = u.getLastname();
-        this.id = MySQLPersistenceId.createPersistentId(u);
-        this.username = u.getUsername();
+    /**
+     * @return the restContext
+     */
+    public RestContext getRestContext() {
+        return restContext;
     }
 
     /**
-     * The persistence id of the {@Link PersistentUser}.
-     * 
-     * @return the classId
+     * @param restContext the restContext to set
      */
-    public PersistenceId getId() {
-        return id;
+    public void setRestContext(RestContext restContext) {
+        this.restContext = restContext;
     }
-
-
-    /**
-     * The persistence id of the {@Link PersistentUser}.
-     * 
-     * @param id the id to set
-     */
-    public void setId(PersistenceId id) {
-        this.id = id;
-    }
-
-    /**
-     * @return the givenName
-     */
-    public String getGivenName() {
-        return givenName;
-    }
-
-    /**
-     * @param givenName the givenName to set
-     */
-    public void setGivenName(String givenName) {
-        this.givenName = givenName;
-    }
-
-    /**
-     * @return the familyName
-     */
-    public String getFamilyName() {
-        return familyName;
-    }
-
-    /**
-     * @param familyName the familyName to set
-     */
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
-    }
-
-    /**
-     * @return the insertion
-     */
-    public String getInsertion() {
-        return insertion;
-    }
-
-    /**
-     * @param familyNamePrefix the insertion to set
-     */
-    public void setInsertion(String familyNamePrefix) {
-        this.insertion = familyNamePrefix;
-    }
-
-    /**
-     * @return the usercode
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param usercode the usercode to set
-     */
-    public void setUsername(String usercode) {
-        this.username = usercode;
-    }
-
 }

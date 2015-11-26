@@ -14,7 +14,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class RestSchool4Admin extends DomSchool4Admin{
+    private RestContext restContext;
+   
     public RestSchool4Admin(PersistentSchool s) {
         super(s);
+    }
+
+    /**
+     * @return the restContext
+     */
+    public RestContext getRestContext() {
+        return restContext;
+    }
+
+    /**
+     * @param restContext the restContext to set
+     */
+    public void setRestContext(RestContext restContext) {
+        this.restContext = restContext;
     }
 }
