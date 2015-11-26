@@ -1062,8 +1062,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		if(fews != null)
 		{
-			fews.wis();
-			fews.setState(h);
+			boolean enabled = fews.setFocusEnabled(false); // Geen focus tijdens setState, dus ook niet hier bij wis()
+			try {
+				fews.wis();
+				fews.setState(h);
+			}	finally {
+				fews.setFocusEnabled(enabled);
+			}
 		}
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		boolean ingevuld = true;
