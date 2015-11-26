@@ -200,7 +200,8 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		byte[] bytes = extraScoMapper.getLaunchDataBytes( scoid );
 		if(bytes.length == 0)
 		{
-// SLOW.....	
+// SLOW.....
+			log("take slow route for " + scoid);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			GZIPOutputStream zip = new GZIPOutputStream(bos);
 			OutputStreamWriter out = new OutputStreamWriter(zip, UTF_8);
@@ -209,6 +210,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			JSONEncoder.encode(map, out);
 			out.close();
 			bytes = bos.toByteArray();
+			log("taken slow route for " + scoid + " " + bytes.length + " bytes");
 			setLaunchDataBytes(scoid);
 		}
 		return bytes;
