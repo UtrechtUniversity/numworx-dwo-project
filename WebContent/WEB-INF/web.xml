@@ -20,11 +20,11 @@
 <!-- voor ws.fisme.science - -> 
   <context-param>
   	<param-name>dbaccess.url</param-name>
-	<param-value>http://localhost/servlet/dwodsaccess</param-value>  
+	<param-value>https://app.dwo.nl/dwo/dsaccess</param-value>  
   </context-param>
   <context-param>
   	<param-name>SERVLET</param-name>
-  	<param-value>/servlet/dwodsaccess</param-value>
+  	<param-value>//app.dwo.nl/dwo/dsaccess</param-value>
   </context-param>
   <context-param>
   	<param-name>IDEAS</param-name>
@@ -61,18 +61,27 @@
       <servlet-name>ProviderServlet</servlet-name>
       <servlet-class>fi.servlet.lti.ProviderServlet</servlet-class>
     </servlet>
-
     <servlet>
       <servlet-name>ServiceServlet</servlet-name>
       <servlet-class>fi.servlet.lti.ServiceServlet</servlet-class>
     </servlet>
+    
     <servlet>
       <servlet-name>dwoparam</servlet-name>
       <jsp-file>/lti/dwo.jsp</jsp-file>
     </servlet>
+    <servlet>
+    	<servlet-name>appname</servlet-name>
+    	<jsp-file>/lti/app.jsp</jsp-file>
+    </servlet>
+    
    <servlet-mapping>
       <servlet-name>dwoparam</servlet-name>
       <url-pattern>/lti/dwo.jsp/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>appparam</servlet-name>
+      <url-pattern>/lti/app.jsp/*</url-pattern>
    </servlet-mapping>
   
   <servlet-mapping>
