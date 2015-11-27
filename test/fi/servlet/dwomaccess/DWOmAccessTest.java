@@ -174,6 +174,16 @@ public class DWOmAccessTest extends TestCase {
 				// TODO Auto-generated method stub
 				
 			}
+
+			/**
+			 * @since 2.5
+			 * @return the context path
+			 */
+			// @Override 
+			public String getContextPath() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			
 		};
 		ServletConfig config = new ServletConfig() {
