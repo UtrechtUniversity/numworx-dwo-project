@@ -4,6 +4,7 @@
 package fi.dwo.server.rest;
 
 import fi.dom.commons.dom.entities.DomSchoolClass;
+import fi.dom.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dom.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2RestException;
@@ -20,7 +21,6 @@ import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
-import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
@@ -87,7 +87,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         List<PersistentSchoolClass> expResult;
-        List<RestSchoolClass> result = instance.getSchoolClasses(sc);
+        List<DomSchoolClass> result = instance.getSchoolClasses(sc);
         //fetch classes
         expResult = SchoolClassManager.findEntities(SchoolManager.findEntity(3L));
         assertEquals(expResult.size(), result.size());
@@ -103,7 +103,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         System.out.println("getTeachersInSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
-        List<RestTeacher> result = instance.getTeachersInSchool(sc);
+        List<DomTeacher> result = instance.getTeachersInSchool(sc);
         assertEquals("Number of teachers don't match.", 2, result.size());
     }
 
@@ -118,10 +118,12 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         System.out.println("GetTeachersInSchoolClass");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
-        restSchoolClass.setSchoolClassName("SchoolClass02");
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        restSchoolClass.setDomSchoolClass(domSchoolClass);
+        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setSchoolClassName("SchoolClass02");
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
-        List<RestTeacher> result = instance.GetTeachersInSchoolClass(sc, restSchoolClass);
+        List<DomTeacher> result = instance.GetTeachersInSchoolClass(sc, restSchoolClass);
         assertEquals(2, result.size());
     }
 
@@ -220,23 +222,25 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
 
         RestSingleSchoolStudent rss = new RestSingleSchoolStudent();
-        rss.setUsername("singleschooluser");
-        rss.setGivenName("a");
-        rss.setInsertion("b");
-        rss.setFamilyName("c");
-        rss.setEmail("a@b.c");
-        rss.setPassword("pwd");
+        DomSingleSchoolStudent dss = new DomSingleSchoolStudent();
+        rss.setDomSingleSchoolStudent(dss);
+        dss.setUsername("singleschooluser");
+        dss.setGivenName("a");
+        dss.setInsertion("b");
+        dss.setFamilyName("c");
+        dss.setEmail("a@b.c");
+        dss.setPassword("pwd");
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean result = instance.SubmitSingleSchoolStudent(sc, rss);
         assertEquals("Operation failed to be true.", true, result);
 
         //fetch user and hasrole and class if given?
-        PersistentUser user = UserManager.findByUserName(rss.getUsername());
-        assertEquals("Given name not as expected.", rss.getGivenName(), user.getFirstname());
-        assertEquals("Insertion not as expected.", rss.getInsertion(), user.getMiddlename());
-        assertEquals("Familyname not as expected.", rss.getFamilyName(), user.getLastname());
-        assertEquals("Email not as expected.", rss.getEmail(), user.getEmail());
-        assertEquals("Password not as expected.", rss.getPassword(), user.getPasswd());
+        PersistentUser user = UserManager.findByUserName(dss.getUsername());
+        assertEquals("Given name not as expected.", dss.getGivenName(), user.getFirstname());
+        assertEquals("Insertion not as expected.", dss.getInsertion(), user.getMiddlename());
+        assertEquals("Familyname not as expected.", dss.getFamilyName(), user.getLastname());
+        assertEquals("Email not as expected.", dss.getEmail(), user.getEmail());
+        assertEquals("Password not as expected.", dss.getPassword(), user.getPasswd());
         assertEquals("Did not creat a single schoolstudent.", user.isSingleSchoolAccount(), true);
         try {
             //check for hasRole

@@ -50,10 +50,10 @@ public class SecuredUserAccountLoginsManager {
 //    @Context  //injected response proxy supporting multiple threads
 //    private HttpServletResponse response;
 
-    private RestSchoolRoleAndClass getCurrentSchoolRoleAndClass(String scUsername, Long userId) {
+    private DomSchoolRoleAndClass getCurrentSchoolRoleAndClass(String scUsername, Long userId) {
         EntityManager em = DwoEmfFactory.getEntityManager();
 
-        RestSchoolRoleAndClass curSac = new RestSchoolRoleAndClass();
+        DomSchoolRoleAndClass curSac = new DomSchoolRoleAndClass();
 //        // retrieve the current active <school,role, class>
         try {
             javax.persistence.Query q = em.createQuery("select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID, h.persistentHasRolePK.userID , h.schoolGroup.schoolGroupID  from PersistentHasRole h where h.persistentHasRolePK.userID = :userID and h.user.schoolGroupID = h.persistentHasRolePK.schoolGroupID");
@@ -81,7 +81,7 @@ public class SecuredUserAccountLoginsManager {
         }
         catch (Exception e) {
             LOG.log(Level.WARNING, "Username " + scUsername + ": Unexpected exception.", e);
-            return new RestSchoolRoleAndClass();
+            return new DomSchoolRoleAndClass();
         }
         finally {
             em.close();
@@ -99,10 +99,10 @@ public class SecuredUserAccountLoginsManager {
     @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public RestSchoolsRolesAndClasses getSchoolLogins(@Context SecurityContext sc) {
+    public DomSchoolsRolesAndClasses getSchoolLogins(@Context SecurityContext sc) {
         EntityManager em = DwoEmfFactory.getEntityManager();
 
-        RestSchoolsRolesAndClasses sacs = new RestSchoolsRolesAndClasses();
+        DomSchoolsRolesAndClasses sacs = new DomSchoolsRolesAndClasses();
         PersistentUser user;
         List<DomSchoolRoleAndClass> sacList = (List<DomSchoolRoleAndClass>) new ArrayList<DomSchoolRoleAndClass>();
         DomSchoolRoleAndClass curSac;
@@ -126,10 +126,10 @@ public class SecuredUserAccountLoginsManager {
             q.setParameter("userID", userId);
             List<Object[]> resultList = q.getResultList();
             LOG.log(Level.FINE, "Username {0}: Fetched {2} HasRoles for userId {1}.", new Object[]{sc.getUserPrincipal().getName(), userId, resultList.size()});
-            RestSchoolRoleAndClass sac;
+            DomSchoolRoleAndClass sac;
             for (Object[] oList : resultList) {
                 LOG.log(Level.FINE, "Fetched hasRole tuple <schoolID, schoolName, groupID, groupname, classID, userID, schoolGroupID>: {0}, {1}, {2}, {3}, {4}, {5}, {6}.", new Object[]{oList[0], oList[1], oList[2], oList[3], oList[4], oList[5], oList[6]});
-                sac = new RestSchoolRoleAndClass();
+                sac = new DomSchoolRoleAndClass();
                 Integer i = (Integer) oList[0];
                 sac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId(i.longValue(), PersistenceClassType.PersistentSchool));
                 sac.setSchoolName((String) oList[1]);
@@ -156,7 +156,7 @@ public class SecuredUserAccountLoginsManager {
         }
         catch (Exception e) {
             LOG.log(Level.WARNING, "Username " + sc.getUserPrincipal().getName() + " Unexpected exception.", e);
-            return new RestSchoolsRolesAndClasses();
+            return new DomSchoolsRolesAndClasses();
         }
         finally {
             LOG.log(Level.FINER, " closed em.");
@@ -181,11 +181,11 @@ public class SecuredUserAccountLoginsManager {
     @PUT
     @Produces({"application/json"})
     @Path("/select")
-    public RestSchoolRoleAndClass switchToSchoolLogin(@Context SecurityContext sc, RestSchoolRoleAndClass sarc) {
+    public DomSchoolRoleAndClass switchToSchoolLogin(@Context SecurityContext sc, RestSchoolRoleAndClass sarc) {
         EntityManager em = DwoEmfFactory.getEntityManager();
 
         PersistentUser user;
-        RestSchoolRoleAndClass curSac = new RestSchoolRoleAndClass();
+        DomSchoolRoleAndClass curSac = new DomSchoolRoleAndClass();
 
         // fetch the authenticated user
         try {
@@ -198,19 +198,19 @@ public class SecuredUserAccountLoginsManager {
             LOG.log(Level.INFO, "Username {0}: Fetched User with username {0}", new Object[]{sc.getUserPrincipal().getName(), name});
             LOG.log(Level.INFO, "And id is {0}", new Object[]{userId});
 
-            if (userId != MySQLPersistenceId.getId(sarc.getUserId())) {
-                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), MySQLPersistenceId.getId(sarc.getUserId())});
+            if (userId != MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getUserId())) {
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getUserId())});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getUsername() + ".");
             }
             //update user.
 
             PersistentUser u = UserManager.findEntity(user.getUserID());
             u.setSchoolGroupID(
-                    (Long) MySQLPersistenceId.getId(sarc.getSchoolGroupId()));
+                    (Long) MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getSchoolGroupId()));
             UserManager.edit(u);
 
-            PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getUserID(), MySQLPersistenceId.getId(sarc.getSchoolGroupId())));
-            hr.setClassID(MySQLPersistenceId.getId(sarc.getSchoolClassId()));
+            PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getUserID(), MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getSchoolGroupId())));
+            hr.setClassID(MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getSchoolClassId()));
             HasRoleManager.edit(hr);
 
             //update class in hasRole
@@ -218,7 +218,7 @@ public class SecuredUserAccountLoginsManager {
         }
         catch (Exception e) {
             LOG.log(Level.WARNING, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception.", e);
-            return new RestSchoolRoleAndClass();
+            return new DomSchoolRoleAndClass();
         }
         finally {
             em.close();
@@ -243,7 +243,7 @@ public class SecuredUserAccountLoginsManager {
         //Check for userid, should exist.
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
         if (user == null) {
-            LOG.log(Level.WARNING, "Username {0}: Authentication for schoollogin {1} and role {2} for usercode {3} failed.", new Object[]{sc.getUserPrincipal().getName(), existingUserReg.getSchoolLogin(), existingUserReg.getRole().name(), sc.getUserPrincipal().getName()});
+            LOG.log(Level.WARNING, "Username {0}: Authentication for schoollogin {1} and role {2} for usercode {3} failed.", new Object[]{sc.getUserPrincipal().getName(), existingUserReg.getDomNewSchoolLogin().getSchoolLogin(), existingUserReg.getDomNewSchoolLogin().getRole().name(), sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Authentication for " + sc.getUserPrincipal().getName() + " failed.");
         }
         //invariant: have user data
@@ -251,27 +251,27 @@ public class SecuredUserAccountLoginsManager {
         //fetch schoolgroup id.     
         PersistentSchoolGroup sg;
         PersistentSchool school = null;
-        if (existingUserReg.getSchoolLogin() == null && existingUserReg.getSchoolCode() == null) {
-            existingUserReg.setSchoolLogin("null"); //TODO retrieve the null school login and code from the DwoSystemParameters.
-            existingUserReg.setSchoolCode("null");
+        if (existingUserReg.getDomNewSchoolLogin().getSchoolLogin() == null && existingUserReg.getDomNewSchoolLogin().getSchoolCode() == null) {
+            existingUserReg.getDomNewSchoolLogin().setSchoolLogin("null"); //TODO retrieve the null school login and code from the DwoSystemParameters.
+            existingUserReg.getDomNewSchoolLogin().setSchoolCode("null");
         }
 
         try {
             javax.persistence.Query q = em.createQuery(" select sg from PersistentSchool s join PersistentSchoolGroup sg where sg.school = s and s.schoolLogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
-            q.setParameter("schoollogin", existingUserReg.getSchoolLogin());
-            q.setParameter("schoolcode", existingUserReg.getSchoolCode());
-            q.setParameter("role", (existingUserReg.getRole().name()));
+            q.setParameter("schoollogin", existingUserReg.getDomNewSchoolLogin().getSchoolLogin());
+            q.setParameter("schoolcode", existingUserReg.getDomNewSchoolLogin().getSchoolCode());
+            q.setParameter("role", (existingUserReg.getDomNewSchoolLogin().getRole().name()));
             sg = (PersistentSchoolGroup) q.getSingleResult();
             school = sg.getSchool(); // Sadly, another query.
             if (school == null) {
-                String msg = String.format("Username {0}: Registration authentication failed for school {1} with school login {2} and school code {3} for usercode {4}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolName(), existingUserReg.getSchoolLogin(), existingUserReg.getSchoolCode(), user.getUsername()});
+                String msg = String.format("Username {0}: Registration authentication failed for school {1} with school login {2} and school code {3} for usercode {4}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolName(), existingUserReg.getDomNewSchoolLogin().getSchoolLogin(), existingUserReg.getDomNewSchoolLogin().getSchoolCode(), user.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Invalid_school_role_credentials, msg);
             }
             //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
             LOG.log(Level.FINER, "Username {0}: School-manager retrieved school {1} from school login and school code for usercode {2}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolName(), user.getUsername()});
         }
         catch (Exception ex) {
-            String msg = String.format("Username {0}: Registration authentication failed for school login {1} and school code {2} for usercode {4}.", new Object[]{sc.getUserPrincipal().getName(), existingUserReg.getSchoolLogin(), existingUserReg.getSchoolCode(), user.getUsername()});
+            String msg = String.format("Username {0}: Registration authentication failed for school login {1} and school code {2} for usercode {4}.", new Object[]{sc.getUserPrincipal().getName(), existingUserReg.getDomNewSchoolLogin().getSchoolLogin(), existingUserReg.getDomNewSchoolLogin().getSchoolCode(), user.getUsername()});
             LOG.log(Level.WARNING, msg, ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Invalid_school_role_credentials, msg);
         }
@@ -310,7 +310,7 @@ public class SecuredUserAccountLoginsManager {
         hasRole.setRights("_");  //TODO make a rightsManager
 
         HasRoleManager.create(hasRole);
-        LOG.log(Level.INFO, "Username {0}: Created a new HasRole for user index {1}, schoolgroup index {2} and role {3} was added to the database.", new Object[]{sc.getUserPrincipal().getName(), hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), existingUserReg.getRole().name()});
+        LOG.log(Level.INFO, "Username {0}: Created a new HasRole for user index {1}, schoolgroup index {2} and role {3} was added to the database.", new Object[]{sc.getUserPrincipal().getName(), hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), existingUserReg.getDomNewSchoolLogin().getRole().name()});
         //success
         return true;
     }
@@ -329,8 +329,8 @@ public class SecuredUserAccountLoginsManager {
     public Boolean removeASchoolLogin(@Context SecurityContext sc, RestSchoolRoleAndClass sarc) {
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
 
-        Long userId = (Long) MySQLPersistenceId.getId(sarc.getUserId());
-        Long schoolGroupId = (Long) MySQLPersistenceId.getId(sarc.getSchoolGroupId());
+        Long userId = (Long) MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getUserId());
+        Long schoolGroupId = (Long) MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getSchoolGroupId());
 
         if (user.getUserID() != userId) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: tried to remove a school login of  user {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
@@ -339,7 +339,7 @@ public class SecuredUserAccountLoginsManager {
         }
         PersistentHasRole hr = (PersistentHasRole) HasRoleManager.findEntity(new PersistentHasRolePK(userId, schoolGroupId));
         if (hr == null) {
-            LOG.log(Level.FINE, "Username {0}: Tried to remove a non-existing hasRole: <userid, schoolgroupid> <{1},{2}>", new Object[]{sc.getUserPrincipal().getName(), sarc.getUserId(), sarc.getSchoolGroupId()});
+            LOG.log(Level.FINE, "Username {0}: Tried to remove a non-existing hasRole: <userid, schoolgroupid> <{1},{2}>", new Object[]{sc.getUserPrincipal().getName(), sarc.getDomSchoolRoleAndClass().getUserId(), sarc.getDomSchoolRoleAndClass().getSchoolGroupId()});
             return true;
         }
         List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());

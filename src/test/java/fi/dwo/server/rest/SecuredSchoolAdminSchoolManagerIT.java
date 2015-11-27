@@ -3,6 +3,11 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomSchoolAdmin;
+import fi.dom.commons.dom.entities.DomSchoolClass;
+import fi.dom.commons.dom.entities.DomSingleSchoolStudent;
+import fi.dom.commons.dom.entities.DomStudent;
+import fi.dom.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.RoleType;
@@ -13,9 +18,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestSchool;
 import fi.dwo.commons.rest.entities.RestSchoolAdmin;
-import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestTeacher;
@@ -85,7 +88,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         System.out.println("getTeachersInSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        List<RestTeacher> result = instance.getTeachersInSchool(sc);
+        List<DomTeacher> result = instance.getTeachersInSchool(sc);
         assertEquals(2, result.size());
     }
 
@@ -99,7 +102,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         System.out.println("getStudentsInSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        List<RestStudent> result = instance.getStudentsInSchool(sc);
+        List<DomStudent> result = instance.getStudentsInSchool(sc);
         assertEquals(3, result.size());
     }
 
@@ -113,7 +116,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         System.out.println("getSchoolAdminInSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        List<RestTeacher> result = instance.getSchoolAdminInSchool(sc);
+        List<DomTeacher> result = instance.getSchoolAdminInSchool(sc);
         assertEquals(1L, result.size());
     }
 
@@ -193,30 +196,32 @@ public class SecuredSchoolAdminSchoolManagerIT {
     public void testSubmitSingleSchoolStudent() {
         System.out.println("SubmitSingleSchoolStudent");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
-        RestSingleSchoolStudent nssStudent = new RestSingleSchoolStudent();
+        RestSingleSchoolStudent rssStudent = new RestSingleSchoolStudent();
+        DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
+        rssStudent.setDomSingleSchoolStudent(dssStudent);
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         System.out.println("submitNewUser");
-        nssStudent.setUsername("testuser01");
-        nssStudent.setGivenName("a");
-        nssStudent.setInsertion("b");
-        nssStudent.setFamilyName("c");
-        nssStudent.setEmail("a@b.c");
-        nssStudent.setPassword("pwd");
+        dssStudent.setUsername("testuser01");
+        dssStudent.setGivenName("a");
+        dssStudent.setInsertion("b");
+        dssStudent.setFamilyName("c");
+        dssStudent.setEmail("a@b.c");
+        dssStudent.setPassword("pwd");
         
         try {
-            Boolean result = instance.SubmitSingleSchoolStudent(sc, nssStudent);
+            Boolean result = instance.SubmitSingleSchoolStudent(sc, rssStudent);
             assertEquals(true, result);
         }
         catch(Dwo2RestException ex) {
             fail("Student submit failed.");
         }
         
-        PersistentUser user = UserManager.findByUserName(nssStudent.getUsername());
-        assertEquals(nssStudent.getGivenName(), user.getFirstname());
-        assertEquals(nssStudent.getInsertion(), user.getMiddlename());
-        assertEquals(nssStudent.getFamilyName(), user.getLastname());
-        assertEquals(nssStudent.getEmail(), user.getEmail());
-        assertEquals(nssStudent.getPassword(), user.getPasswd());
+        PersistentUser user = UserManager.findByUserName(dssStudent.getUsername());
+        assertEquals(dssStudent.getGivenName(), user.getFirstname());
+        assertEquals(dssStudent.getInsertion(), user.getMiddlename());
+        assertEquals(dssStudent.getFamilyName(), user.getLastname());
+        assertEquals(dssStudent.getEmail(), user.getEmail());
+        assertEquals(dssStudent.getPassword(), user.getPasswd());
         assertEquals(true, user.isSingleSchoolAccount());
         
         try {
@@ -241,7 +246,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         List<PersistentSchoolClass> expResult;
-        List<RestSchoolClass> result = instance.getSchoolClasses(sc);
+        List<DomSchoolClass> result = instance.getSchoolClasses(sc);
         //fetch classes
         expResult = SchoolClassManager.findEntities(SchoolManager.findEntity(3L));
         assertEquals(expResult.size(), result.size());
@@ -258,7 +263,9 @@ public class SecuredSchoolAdminSchoolManagerIT {
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
-        RestTeacher restTeacher = new RestTeacher(user);
+        RestTeacher restTeacher = new RestTeacher();
+        DomTeacher domTeacher = new DomTeacher(user);
+        restTeacher.setDomTeacher(domTeacher);
         try {
             Boolean expResult = null;
             Boolean result = instance.removeTeacherFromSchool(sc, restTeacher);
@@ -287,7 +294,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("Teacher did not have a hasRole in the test database. He should.");
         }
         
-        restTeacher = new RestTeacher(user);
+        domTeacher = new DomTeacher(user);
+        restTeacher.setDomTeacher(domTeacher);
         Boolean result = instance.removeTeacherFromSchool(sc, restTeacher);
         assertEquals("Teacher was not removed.", true, result);
         PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user03");
@@ -386,7 +394,9 @@ public class SecuredSchoolAdminSchoolManagerIT {
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
-        RestSchoolAdmin restSchoolAdmin = new RestSchoolAdmin(user);
+        RestSchoolAdmin restSchoolAdmin = new RestSchoolAdmin();
+        DomSchoolAdmin domSchoolAdmin = new DomSchoolAdmin(user);
+        restSchoolAdmin.setDomSchoolAdmin(domSchoolAdmin);
         try {
             Boolean result = instance.removeSchoolAdminFromSchool(sc, restSchoolAdmin);
             assertEquals(true, result);
@@ -414,7 +424,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("SchoolAdmin did not have a hasRole in the test database. He should.");
         }
         
-        restSchoolAdmin = new RestSchoolAdmin(user);
+        domSchoolAdmin = new DomSchoolAdmin(user);
+        restSchoolAdmin.setDomSchoolAdmin(domSchoolAdmin);
         Boolean result = instance.removeSchoolAdminFromSchool(sc, restSchoolAdmin);
         assertEquals("SchoolAdmin was not removed.", true, result);
         PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user06");

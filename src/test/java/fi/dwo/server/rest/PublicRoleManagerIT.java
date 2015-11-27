@@ -3,9 +3,12 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomRole;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
+import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import static fi.dwo.server.rest.PublicUserManagerIT.instance;
 import java.util.List;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
@@ -24,23 +27,28 @@ import static org.junit.Assert.*;
 public class PublicRoleManagerIT {
 
     public PublicRoleManagerIT() {
-        DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
     }
 
     @BeforeClass
     public static void setUpClass() {
+        DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
+        instance = new DatabaseManager();
     }
 
     @AfterClass
     public static void tearDownClass() {
+        DwoEmfFactory.setDefaultEntityManagerFactory();
+        instance = null;
     }
 
     @Before
     public void setUp() {
+        instance.IntializeTestDatabase();
     }
 
     @After
     public void tearDown() {
+        instance.ClearDatabase();
     }
 
     /**
@@ -52,17 +60,17 @@ public class PublicRoleManagerIT {
         System.out.println("getRoles");
         SecurityContext sc = null;
         PublicRoleManager instance = new PublicRoleManager();
-        List<PersistentRole> result = instance.getRoles(sc);
+        List<DomRole> result = instance.getRoles(sc);
         RoleType[] types = RoleType.values();
         // Database roles => RoleTypes
-        for (PersistentRole r : result) {
-            assertEquals(r.getGroupname(), RoleType.valueOf(r.getGroupname()).name());
+        for (DomRole r : result) {
+            assertEquals(r.getRoleName(), RoleType.valueOf(r.getRoleName()).name());
         }
         // RoleTypes => Database roles
-        for (PersistentRole r : result) {
+        for (DomRole r : result) {
             Boolean fail = true;
             for(RoleType t : RoleType.values()){
-                if(t.name().equals(r.getGroupname())){
+                if(t.name().equals(r.getRoleName())){
                     fail = false;
                     break;
                 }

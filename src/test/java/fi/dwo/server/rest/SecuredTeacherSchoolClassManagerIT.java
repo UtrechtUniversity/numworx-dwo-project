@@ -4,6 +4,8 @@
 package fi.dwo.server.rest;
 
 import fi.dom.commons.dom.entities.DomSchoolClass;
+import fi.dom.commons.dom.entities.DomSchoolClass4Teacher;
+import fi.dom.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dom.commons.dom.entities.DomStudent;
 import fi.dom.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2RestException;
@@ -22,10 +24,8 @@ import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
-import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestSubmitStudentToSchoolClass;
 import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
-import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -88,7 +88,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("getTeachersSchoolClasses");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        List<RestSchoolClass> result = instance.getTeachersSchoolClasses(sc);
+        List<DomSchoolClass> result = instance.getTeachersSchoolClasses(sc);
         assertEquals(1, result.size());
     }
 
@@ -102,7 +102,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("getTeachersInSchool");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        List<RestTeacher> result = instance.getTeachersInSchool(sc);
+        List<DomTeacher> result = instance.getTeachersInSchool(sc);
         assertEquals(2, result.size());
     }
 
@@ -116,10 +116,12 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("SubmitSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSchoolClass4Teacher restSchoolClass = new RestSchoolClass4Teacher();
+        DomSchoolClass4Teacher domSchoolClass = new DomSchoolClass4Teacher();
+        restSchoolClass.setDomSchoolClass4Teacher(domSchoolClass);
 //        restSchoolClass.setId(id);
-        restSchoolClass.setIconizer(0);
-        restSchoolClass.setRegistrationKey("Shaihulud");
-        restSchoolClass.setSchoolClassName("The worm wil eat you.");
+        domSchoolClass.setIconizer(0);
+        domSchoolClass.setRegistrationKey("Shaihulud");
+        domSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
         Boolean result = instance.SubmitSchoolClass(sc, restSchoolClass);
@@ -140,11 +142,13 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("GetTeachersInSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
-        restSchoolClass.setId(id);
-        restSchoolClass.setSchoolClassName("The worm wil eat you.");
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+         restSchoolClass.setDomSchoolClass(domSchoolClass);
+       PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
+        domSchoolClass.setId(id);
+        domSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        List<RestTeacher> result = instance.GetTeachersInSchoolClass(sc, restSchoolClass);
+        List<DomTeacher> result = instance.GetTeachersInSchoolClass(sc, restSchoolClass);
         assertEquals(2, result.size());
     }
 
@@ -159,10 +163,12 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
         PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
-        restSchoolClass.setId(id);
-        restSchoolClass.setSchoolClassName("The worm wil eat you.");
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        restSchoolClass.setDomSchoolClass(domSchoolClass);
+        domSchoolClass.setId(id);
+        domSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
-        List<RestStudent> result = instance.GetStudentsInSchoolClass(sc, restSchoolClass);
+        List<DomStudent> result = instance.GetStudentsInSchoolClass(sc, restSchoolClass);
         assertEquals(3L, result.size());
     }
 
@@ -193,19 +199,21 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
         PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
-        restSchoolClass.setId(id);
-        restSchoolClass.setSchoolClassName("The worm wil eat you.");
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        restSchoolClass.setDomSchoolClass(domSchoolClass);
+        domSchoolClass.setId(id);
+        domSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
         Boolean result = instance.removeSchoolClass(sc, restSchoolClass);
         assertEquals("remove returned false", expResult, result);
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         if (schoolClass != null) {
             fail("SchoolClass still exists after removal.");
         }
         id = MySQLPersistenceId.createPersistenceId(3L, PersistenceClassType.PersistentSchoolClass);
-        restSchoolClass.setId(id);
-        restSchoolClass.setSchoolClassName("The worm wil eat you.");
+        domSchoolClass.setId(id);
+        domSchoolClass.setSchoolClassName("The worm wil eat you.");
         expResult = true;
         try {
             result = instance.removeSchoolClass(sc, restSchoolClass);
@@ -214,7 +222,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         catch (Dwo2RestException e) {
             //succes
         }
-        schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(restSchoolClass.getId()));
+        schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         if (schoolClass == null) {
             fail("Managed to delete a SchoolClass from another school.");
         }
@@ -390,14 +398,16 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSchoolClass4Teacher restSchoolClass = new RestSchoolClass4Teacher();
         PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
-        restSchoolClass.setId(id);
-        restSchoolClass.setIconizer(0);
-        restSchoolClass.setRegistrationKey("Shaihulud");
-        restSchoolClass.setSchoolClassName("The worm wil eat you.");
+        DomSchoolClass4Teacher domSchoolClass = new DomSchoolClass4Teacher();
+        restSchoolClass.setDomSchoolClass4Teacher(domSchoolClass);
+        domSchoolClass.setId(id);
+        domSchoolClass.setIconizer(0);
+        domSchoolClass.setRegistrationKey("Shaihulud");
+        domSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean result = instance.UpdateSchoolClass(sc, restSchoolClass);
         assertEquals("Update action threw false", true, result);
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(domSchoolClass.getId()));
         assertEquals(false, schoolClass.getIconizer());
         assertEquals("The worm wil eat you.", schoolClass.getClass1());
         assertEquals("Shaihulud", schoolClass.getRegistrationKey());
@@ -413,31 +423,34 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("updateSingleSchoolStudent");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSingleSchoolStudent nssStudent = new RestSingleSchoolStudent();
-        nssStudent.setId(MySQLPersistenceId.createPersistenceId(11L, PersistenceClassType.PersistentUser));
-        nssStudent.setUsername("user04"); //changing is not allowed.
-        nssStudent.setGivenName("User");
-        nssStudent.setFamilyName("Lastname 04");
-        nssStudent.setPassword("bla");
-        nssStudent.setEmail("blamail");
+        DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
+        nssStudent.setDomSingleSchoolStudent(dssStudent);
+        
+        dssStudent.setId(MySQLPersistenceId.createPersistenceId(11L, PersistenceClassType.PersistentUser));
+        dssStudent.setUsername("user04"); //changing is not allowed.
+        dssStudent.setGivenName("User");
+        dssStudent.setFamilyName("Lastname 04");
+        dssStudent.setPassword("bla");
+        dssStudent.setEmail("blamail");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
         Boolean result = instance.updateSingleSchoolStudent(sc, nssStudent);
         assertEquals(expResult, result);
         PersistentUser user = UserManager.findEntity(11L);
-        assertEquals(user.getEmail(), nssStudent.getEmail());
-        assertEquals(user.getFirstname(), nssStudent.getGivenName());
-        assertEquals(user.getLastname(), nssStudent.getFamilyName());
-        assertEquals(user.getMiddlename(), nssStudent.getInsertion());
-        assertEquals(user.getPasswd(), nssStudent.getPassword());
+        assertEquals(user.getEmail(), dssStudent.getEmail());
+        assertEquals(user.getFirstname(), dssStudent.getGivenName());
+        assertEquals(user.getLastname(), dssStudent.getFamilyName());
+        assertEquals(user.getMiddlename(), dssStudent.getInsertion());
+        assertEquals(user.getPasswd(), dssStudent.getPassword());
         assertEquals(user.isSingleSchoolAccount(), true);
-        assertEquals(user.getUsername(), nssStudent.getUsername());
+        assertEquals(user.getUsername(), dssStudent.getUsername());
 
         //try if a non-single school student can be updated
-        nssStudent.setUsername("user03");
-        nssStudent.setGivenName("User");
-        nssStudent.setFamilyName("Lastname 02");
-        nssStudent.setPassword("bla");
-        nssStudent.setEmail("blamail");
+        dssStudent.setUsername("user03");
+        dssStudent.setGivenName("User");
+        dssStudent.setFamilyName("Lastname 02");
+        dssStudent.setPassword("bla");
+        dssStudent.setEmail("blamail");
         expResult = false;
         try {
             result = instance.updateSingleSchoolStudent(sc, nssStudent);

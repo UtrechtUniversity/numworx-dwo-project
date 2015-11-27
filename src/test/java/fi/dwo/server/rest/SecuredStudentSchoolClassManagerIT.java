@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
@@ -71,9 +72,11 @@ public class SecuredStudentSchoolClassManagerIT {
         System.out.println("setActiveSchoolClass");
         SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);
         RestSchoolClass restSchoolClass = new RestSchoolClass();
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        restSchoolClass.setDomSchoolClass(domSchoolClass);
         //put in schoolgroup 5 , class 3 for user 9 (user02)
-        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
-        restSchoolClass.setSchoolClassName("SchoolClass02");
+        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setSchoolClassName("SchoolClass02");
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         Boolean result = instance.setActiveSchoolClass(sc, restSchoolClass);
         assertEquals(true, result);
@@ -100,8 +103,10 @@ public class SecuredStudentSchoolClassManagerIT {
         System.out.println("removeStudentFromSchoolClass");
         SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
-        restSchoolClass.setSchoolClassName("SchoolClass02");
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        restSchoolClass.setDomSchoolClass(domSchoolClass);
+        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setSchoolClassName("SchoolClass02");
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         Boolean result = instance.removeStudentFromSchoolClass(sc, restSchoolClass);
         assertEquals("Removing the student from the schoolclass failed.", true, result);
@@ -127,8 +132,10 @@ public class SecuredStudentSchoolClassManagerIT {
         System.out.println("registerStudentForSchoolClass");
         SecurityContext sc = new TestSecurityContext("user05", RoleType.STUDENT);
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        restSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
-        restSchoolClass.setSchoolClassName("SchoolClass04");
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        restSchoolClass.setDomSchoolClass(domSchoolClass);
+        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setSchoolClassName("SchoolClass04");
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         Boolean result = instance.registerStudentForSchoolClass(sc, restSchoolClass);
         assertEquals(true, result);

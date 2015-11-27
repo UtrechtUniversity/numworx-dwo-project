@@ -3,6 +3,9 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomNewSchoolLogin;
+import fi.dom.commons.dom.entities.DomSchoolRoleAndClass;
+import fi.dom.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.server.testutil.TestSecurityContext;
 import fi.dwo.commons.persistence.PersistenceClassType;
@@ -13,7 +16,6 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestNewSchoolLogin;
 import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
-import fi.dwo.commons.rest.entities.RestSchoolsRolesAndClasses;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
@@ -71,7 +73,7 @@ public class SecuredUserAccountLoginsManagerIT {
         SecuredUserAccountLoginsManager instance = new SecuredUserAccountLoginsManager();
 
         SecurityContext sc = new TestSecurityContext("user03", RoleType.STUDENT);
-        RestSchoolsRolesAndClasses result = instance.getSchoolLogins(sc);
+        DomSchoolsRolesAndClasses result = instance.getSchoolLogins(sc);
         if (result.getSchoolsRolesAndClassesList().size() != 5) {
             fail("The number of schoollogins is wrong.");
         }
@@ -94,13 +96,15 @@ public class SecuredUserAccountLoginsManagerIT {
         Long oldSchoolGroup = user.getSchoolGroupID();
 
         RestSchoolRoleAndClass sarc = new RestSchoolRoleAndClass();
-        sarc.setUserId(MySQLPersistenceId.createPersistenceId(user.getUserID(), PersistenceClassType.PersistentUser));
-        sarc.setSchoolId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));
-        sarc.setRoleId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentRole));
-        sarc.setSchoolClassId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchoolClass));
-        sarc.setSchoolGroupId(MySQLPersistenceId.createPersistenceId(5, PersistenceClassType.PersistentSchoolGroup));
+        DomSchoolRoleAndClass darc = new DomSchoolRoleAndClass();
+        sarc.setDomSchoolRoleAndClass(darc);
+        darc.setUserId(MySQLPersistenceId.createPersistenceId(user.getUserID(), PersistenceClassType.PersistentUser));
+        darc.setSchoolId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));
+        darc.setRoleId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentRole));
+        darc.setSchoolClassId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchoolClass));
+        darc.setSchoolGroupId(MySQLPersistenceId.createPersistenceId(5, PersistenceClassType.PersistentSchoolGroup));
         SecuredUserAccountLoginsManager instance = new SecuredUserAccountLoginsManager();
-        RestSchoolRoleAndClass result = instance.switchToSchoolLogin(sc, sarc);
+        DomSchoolRoleAndClass result = instance.switchToSchoolLogin(sc, sarc);
 
         long sgId = (long) MySQLPersistenceId.getId(result.getSchoolGroupId());
         long scId = (long) MySQLPersistenceId.getId(result.getSchoolClassId());
@@ -122,10 +126,11 @@ public class SecuredUserAccountLoginsManagerIT {
         PersistentUser user = UserManager.findByUserName("user03");
         RestNewSchoolLogin existingUserReg = new RestNewSchoolLogin();
         //should fail
-        existingUserReg = new RestNewSchoolLogin();
-        existingUserReg.setRole(RoleType.STUDENT);
-        existingUserReg.setSchoolLogin("school01");
-        existingUserReg.setSchoolCode("schooladmin");
+        DomNewSchoolLogin domUserReg  = new DomNewSchoolLogin();
+        existingUserReg.setDomNewSchoolLogin(domUserReg);
+        domUserReg.setRole(RoleType.STUDENT);
+        domUserReg.setSchoolLogin("school01");
+        domUserReg.setSchoolCode("schooladmin");
         SecuredUserAccountLoginsManager instance = new SecuredUserAccountLoginsManager();
         try {
             Boolean result = instance.submitASchoolLogin(sc, existingUserReg);
@@ -138,9 +143,9 @@ public class SecuredUserAccountLoginsManagerIT {
         assertEquals(hr, null);
 
         //should succeed
-        existingUserReg.setRole(RoleType.SCHOOLADMIN);
-        existingUserReg.setSchoolLogin("school01");
-        existingUserReg.setSchoolCode("schooladmin");
+        domUserReg.setRole(RoleType.SCHOOLADMIN);
+        domUserReg.setSchoolLogin("school01");
+        domUserReg.setSchoolCode("schooladmin");
         Boolean result = instance.submitASchoolLogin(sc, existingUserReg);
         assertEquals(true, result);
         hr = HasRoleManager.findEntity(new PersistentHasRolePK(10L, 4L));
@@ -157,11 +162,13 @@ public class SecuredUserAccountLoginsManagerIT {
         SecurityContext sc = new TestSecurityContext("user03", RoleType.STUDENT);
         PersistentUser user = UserManager.findByUserName("user03");
         RestSchoolRoleAndClass sarc = new RestSchoolRoleAndClass();
-        sarc.setUserId(MySQLPersistenceId.createPersistenceId(user.getUserID(), PersistenceClassType.PersistentUser));
-        sarc.setSchoolId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));
-        sarc.setRoleId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentRole));
-        sarc.setSchoolClassId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
-        sarc.setSchoolGroupId(MySQLPersistenceId.createPersistenceId(5, PersistenceClassType.PersistentSchoolGroup));
+        DomSchoolRoleAndClass darc = new DomSchoolRoleAndClass();
+        sarc.setDomSchoolRoleAndClass(darc);
+        darc.setUserId(MySQLPersistenceId.createPersistenceId(user.getUserID(), PersistenceClassType.PersistentUser));
+        darc.setSchoolId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));
+        darc.setRoleId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentRole));
+        darc.setSchoolClassId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        darc.setSchoolGroupId(MySQLPersistenceId.createPersistenceId(5, PersistenceClassType.PersistentSchoolGroup));
         Boolean expResult = true;
         SecuredUserAccountLoginsManager instance = new SecuredUserAccountLoginsManager();
         Boolean result = instance.removeASchoolLogin(sc, sarc);

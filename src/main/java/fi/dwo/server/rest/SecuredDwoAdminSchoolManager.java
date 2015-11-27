@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomSchool4Admin;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
@@ -149,7 +150,7 @@ public class SecuredDwoAdminSchoolManager {
     @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public List<RestSchool4Admin> getSchools(@Context SecurityContext sc) {
+    public List<DomSchool4Admin> getSchools(@Context SecurityContext sc) {
         PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
@@ -160,20 +161,20 @@ public class SecuredDwoAdminSchoolManager {
         }
         if (hr != null) {
             List<PersistentSchool> schools = null;
-            List<RestSchool4Admin> restSchools;
+            List<DomSchool4Admin> domSchools;
             try {
                 schools = SchoolManager.findEntities();
                 LOG.log(Level.FINER, "Fetched all {0} schools. ", new Object[]{schools.size()});
-                restSchools = new ArrayList<RestSchool4Admin>(schools.size());
+                domSchools = new ArrayList<DomSchool4Admin>(schools.size());
                 for (PersistentSchool s : schools) {
-                    restSchools.add(new RestSchool4Admin(s));
+                    domSchools.add(new DomSchool4Admin(s));
                 }
             }
             catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schools.");
             }
-            return restSchools;
+            return domSchools;
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -235,7 +236,7 @@ public class SecuredDwoAdminSchoolManager {
     @Path("/remove")
     public Boolean removeSchool(@Context SecurityContext sc, RestSchool4Admin restSchool) {
         //unwrap persistentid
-        PersistentSchool school = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(restSchool.getId()));
+        PersistentSchool school = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(restSchool.getDomSchool4Admin().getId()));
 
         PersistentHasRole hr = null;
         try {

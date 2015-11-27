@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomNewUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -42,8 +43,8 @@ public class PublicUserManagerIT {
 
     @AfterClass
     public static void tearDownClass() {
-        instance = new DatabaseManager();
         DwoEmfFactory.setDefaultEntityManagerFactory();
+        instance = null;
     }
 
     @Before
@@ -66,31 +67,33 @@ public class PublicUserManagerIT {
     @Test
     public void testSubmitNewUser() {
         System.out.println("submitNewUser");
-        RestNewUser newUserReg = new RestNewUser();
-        newUserReg.setUsername("testuser01");
-        newUserReg.setGivenName("a");
-        newUserReg.setInsertion("b");
-        newUserReg.setFamilyName("c");
-        newUserReg.setEmail("a@b.c");
-        newUserReg.setPassword("pwd");
-        newUserReg.setRole(RoleType.TEACHER);
-        newUserReg.setSchoolLogin("school01");
-        newUserReg.setSchoolCode("teacher");
+        RestNewUser restNewUser = new RestNewUser();
+        DomNewUser domNewUser= new DomNewUser();
+        restNewUser.setDomNewUser(domNewUser);
+        domNewUser.setUsername("testuser01");
+        domNewUser.setGivenName("a");
+        domNewUser.setInsertion("b");
+        domNewUser.setFamilyName("c");
+        domNewUser.setEmail("a@b.c");
+        domNewUser.setPassword("pwd");
+        domNewUser.setRole(RoleType.TEACHER);
+        domNewUser.setSchoolLogin("school01");
+        domNewUser.setSchoolCode("teacher");
         
         PublicUserManager instance = new PublicUserManager();
-        Boolean result = instance.submitNewUser(newUserReg);
+        Boolean result = instance.submitNewUser(restNewUser);
         assertEquals("function gave false as result.", result, true);
-        PersistentUser user = UserManager.findByUserName(newUserReg.getUsername());
-        assertEquals(newUserReg.getGivenName(), user.getFirstname());
-        assertEquals(newUserReg.getInsertion(), user.getMiddlename());
-        assertEquals(newUserReg.getFamilyName(), user.getLastname());
-        assertEquals(newUserReg.getEmail(), user.getEmail());
-        assertEquals(newUserReg.getPassword(), user.getPasswd());
+        PersistentUser user = UserManager.findByUserName(domNewUser.getUsername());
+        assertEquals(domNewUser.getGivenName(), user.getFirstname());
+        assertEquals(domNewUser.getInsertion(), user.getMiddlename());
+        assertEquals(domNewUser.getFamilyName(), user.getLastname());
+        assertEquals(domNewUser.getEmail(), user.getEmail());
+        assertEquals(domNewUser.getPassword(), user.getPasswd());
         
         
         try {
             //check for hasRole
-            PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(user, SchoolManager.findBySchoolLogin(newUserReg.getSchoolLogin()), RoleType.TEACHER);
+            PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(user, SchoolManager.findBySchoolLogin(domNewUser.getSchoolLogin()), RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, null, ex);

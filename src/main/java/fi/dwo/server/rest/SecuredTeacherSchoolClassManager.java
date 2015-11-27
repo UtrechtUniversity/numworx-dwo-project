@@ -68,7 +68,7 @@ public class SecuredTeacherSchoolClassManager {
     @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public List<RestSchoolClass> getTeachersSchoolClasses(@Context SecurityContext sc) {
+    public List<DomSchoolClass> getTeachersSchoolClasses(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
 
@@ -82,21 +82,21 @@ public class SecuredTeacherSchoolClassManager {
         }
 
         if (phr != null && school != null) {
-            List<RestSchoolClass> restSchoolClasses;
+            List<DomSchoolClass> domSchoolClasses;
             try {
                 List<PersistentTeacherOfClass> tocList = TeacherOfClassManager.findEntities(phr.getPersistentHasRolePK());
-                restSchoolClasses = new ArrayList<RestSchoolClass>(tocList.size());
+                domSchoolClasses = new ArrayList<DomSchoolClass>(tocList.size());
                 for (PersistentTeacherOfClass toc : tocList) {
                     PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentTeacherOfClassPK().getClassID());
-                    restSchoolClasses.add(new RestSchoolClass(s));
+                    domSchoolClasses.add(new DomSchoolClass(s));
                 }
-                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1]. ", new Object[]{restSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
+                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1]. ", new Object[]{domSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
             }
             catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
             }
-            return restSchoolClasses;
+            return domSchoolClasses;
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -112,10 +112,10 @@ public class SecuredTeacherSchoolClassManager {
     @GET
     @Produces({"application/json"})
     @Path("/getTeachersInSchoolList")
-    public List<RestTeacher> getTeachersInSchool(@Context SecurityContext sc) {
+    public List<DomTeacher> getTeachersInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
-        List<RestTeacher> restTeachers = null;
+        List<DomTeacher> domTeachers = null;
 
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
@@ -128,9 +128,9 @@ public class SecuredTeacherSchoolClassManager {
         List<PersistentHasRole> hrList;
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
-            restTeachers = new ArrayList<RestTeacher>(hrList.size());
+            domTeachers = new ArrayList<DomTeacher>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                restTeachers.add(new RestTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                domTeachers.add(new DomTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
             }
         }
         catch (Dwo2Exception ex) {
@@ -138,7 +138,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        return restTeachers;
+        return domTeachers;
     }
 
     /**
@@ -169,9 +169,9 @@ public class SecuredTeacherSchoolClassManager {
         if (phr != null && restSchoolClass != null) {
             PersistentSchoolClass schoolClass = new PersistentSchoolClass();
             schoolClass.setSchoolID(school.getSchoolID());
-            schoolClass.setClass1(restSchoolClass.getSchoolClassName());
-            schoolClass.setIconizer(restSchoolClass.getIconizer()==1);
-            schoolClass.setRegistrationKey(restSchoolClass.getRegistrationKey());
+            schoolClass.setClass1(restSchoolClass.getDomSchoolClass4Teacher().getSchoolClassName());
+            schoolClass.setIconizer(restSchoolClass.getDomSchoolClass4Teacher().getIconizer()==1);
+            schoolClass.setRegistrationKey(restSchoolClass.getDomSchoolClass4Teacher().getRegistrationKey());
             SchoolClassManager.create(schoolClass);
             schoolClass = SchoolClassManager.findEntity(schoolClass.getClass1(), school);
             if(schoolClass==null) return false;
@@ -198,7 +198,7 @@ public class SecuredTeacherSchoolClassManager {
     @GET
     @Produces({"application/json"})
     @Path("/getTeacherList")
-    public List<RestTeacher> GetTeachersInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
+    public List<DomTeacher> GetTeachersInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
 
@@ -213,25 +213,25 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (school != null && schoolClass.getSchoolID().equals(school.getSchoolID()) && toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
             //Fetch TeacherOfClass
             List<PersistentTeacherOfClass> teachersOfClass = TeacherOfClassManager.findEntities(schoolClass);
             LOG.log(Level.FINER, "Fetched all {0} teachers. ", new Object[]{teachersOfClass.size()});
-            List<RestTeacher> restTeachers;
+            List<DomTeacher> domTeachers;
             try {
-                restTeachers = new ArrayList<RestTeacher>(teachersOfClass.size());
+                domTeachers = new ArrayList<DomTeacher>(teachersOfClass.size());
                 for (PersistentTeacherOfClass t : teachersOfClass) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentTeacherOfClassPK().getUserID());
-                    restTeachers.add(new RestTeacher(u));
+                    domTeachers.add(new DomTeacher(u));
                 }
             }
             catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the teachers.");
             }
-            return restTeachers;
+            return domTeachers;
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -248,7 +248,7 @@ public class SecuredTeacherSchoolClassManager {
     @GET
     @Produces({"application/json"})
     @Path("/getStudentList")
-    public List<RestStudent> GetStudentsInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
+    public List<DomStudent> GetStudentsInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
 
@@ -263,25 +263,25 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (school != null && schoolClass.getSchoolID().equals(school.getSchoolID()) && toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
             //Fetch TeacherOfClass
             List<PersistentStudentOfClass> studentsOfClass = StudentOfClassManager.findEntities(schoolClass);
             LOG.log(Level.FINER, "Fetched all {0} students. ", new Object[]{studentsOfClass.size()});
-            List<RestStudent> restStudents;
+            List<DomStudent> domStudents;
             try {
-                restStudents = new ArrayList<RestStudent>(studentsOfClass.size());
+                domStudents = new ArrayList<DomStudent>(studentsOfClass.size());
                 for (PersistentStudentOfClass s : studentsOfClass) {
                     PersistentUser u = UserManager.findEntity(s.getPersistentStudentOfClassPK().getUserID());
-                    restStudents.add(new RestStudent(u));
+                    domStudents.add(new DomStudent(u));
                 }
             }
             catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the students.");
             }
-            return restStudents;
+            return domStudents;
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -354,7 +354,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (schoolClass.getSchoolID().equals(school.getSchoolID()) && toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
             try {
@@ -610,13 +610,13 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass4Teacher().getId()));
 
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
-                schoolClass.setIconizer(1 == restSchoolClass.getIconizer());
-                schoolClass.setRegistrationKey(restSchoolClass.getRegistrationKey());
-                schoolClass.setClass1(restSchoolClass.getSchoolClassName());
+                schoolClass.setIconizer(1 == restSchoolClass.getDomSchoolClass4Teacher().getIconizer());
+                schoolClass.setRegistrationKey(restSchoolClass.getDomSchoolClass4Teacher().getRegistrationKey());
+                schoolClass.setClass1(restSchoolClass.getDomSchoolClass4Teacher().getSchoolClassName());
                 SchoolClassManager.edit(schoolClass);
             }
             catch (PersistenceException e) {
@@ -656,26 +656,26 @@ public class SecuredTeacherSchoolClassManager {
         }
 
         if (sg != null) {
-            PersistentUser user = UserManager.findEntity((Long) MySQLPersistenceId.getId(nssStudent.getId()));
+            PersistentUser user = UserManager.findEntity((Long) MySQLPersistenceId.getId(nssStudent.getDomSingleSchoolStudent().getId()));
             if (user == null) {
-                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: could not find user with id to update {1}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getId()});
-                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getUsername() + ".");
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: could not find user with id to update {1}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getId()});
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getDomSingleSchoolStudent().getUsername() + ".");
             }
             if (!user.isSingleSchoolAccount()) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by schooladmin {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
-            user.setUsername(nssStudent.getUsername());
-            user.setEmail(nssStudent.getEmail());
-            user.setFirstname(nssStudent.getGivenName());
-            user.setMiddlename(nssStudent.getInsertion());
-            user.setLastname(nssStudent.getFamilyName());
-            user.setPasswd(nssStudent.getPassword());
+            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUsername());
+            user.setEmail(nssStudent.getDomSingleSchoolStudent().getEmail());
+            user.setFirstname(nssStudent.getDomSingleSchoolStudent().getGivenName());
+            user.setMiddlename(nssStudent.getDomSingleSchoolStudent().getInsertion());
+            user.setLastname(nssStudent.getDomSingleSchoolStudent().getFamilyName());
+            user.setPasswd(nssStudent.getDomSingleSchoolStudent().getPassword());
             try {
                 UserManager.edit(user);
             }
             catch (PersistenceException ex) {
-                LOG.log(Level.WARNING, "User {0} could not update user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getUsername()});
+                LOG.log(Level.WARNING, "User {0} could not update user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getUsername()});
                 LOG.log(Level.SEVERE, null, ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user " + sc.getUserPrincipal().getName() + ".");
             }

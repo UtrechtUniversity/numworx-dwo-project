@@ -62,7 +62,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public List<RestSchoolClass> getSchoolClasses(@Context SecurityContext sc) {
+    public List<DomSchoolClass> getSchoolClasses(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
 
@@ -77,13 +77,13 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
 
         List<PersistentSchoolClass> schoolClasses = null;
-        List<RestSchoolClass> restSchoolClasses;
+        List<DomSchoolClass> restSchoolClasses;
         try {
             schoolClasses = SchoolClassManager.findEntities(school);
             LOG.log(Level.FINER, "Fetched all {0} schoolClasses. ", new Object[]{schoolClasses.size()});
-            restSchoolClasses = new ArrayList<RestSchoolClass>(schoolClasses.size());
+            restSchoolClasses = new ArrayList<DomSchoolClass>(schoolClasses.size());
             for (PersistentSchoolClass s : schoolClasses) {
-                restSchoolClasses.add(new RestSchoolClass(s));
+                restSchoolClasses.add(new DomSchoolClass(s));
             }
         }
         catch (Exception e) {
@@ -102,10 +102,10 @@ public class SecuredSchoolAdminSchoolClassManager {
     @GET
     @Produces({"application/json"})
     @Path("/getTeachersInSchoolList")
-    public List<RestTeacher> getTeachersInSchool(@Context SecurityContext sc) {
+    public List<DomTeacher> getTeachersInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
-        List<RestTeacher> restTeachers = null;
+        List<DomTeacher> domTeachers = null;
 
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
@@ -119,10 +119,10 @@ public class SecuredSchoolAdminSchoolClassManager {
         List<PersistentHasRole> hrList;
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
-            restTeachers = new ArrayList<RestTeacher>(hrList.size());
+            domTeachers = new ArrayList<DomTeacher>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                RestTeacher t =new RestTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID()));
-                restTeachers.add(t);
+                DomTeacher t =new DomTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID()));
+                domTeachers.add(t);
             }
         }
         catch (Dwo2Exception ex) {
@@ -130,7 +130,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        return restTeachers;
+        return domTeachers;
     }
 
     /**
@@ -143,7 +143,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     @GET
     @Produces({"application/json"})
     @Path("/getTeacherList")
-    public List<RestTeacher> GetTeachersInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
+    public List<DomTeacher> GetTeachersInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
 
@@ -157,26 +157,26 @@ public class SecuredSchoolAdminSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             //Fetch TeacherOfClass
             List<PersistentTeacherOfClass> teachersOfClass = TeacherOfClassManager.findEntities(schoolClass);
             LOG.log(Level.FINER, "Fetched all {0} teachers. ", new Object[]{teachersOfClass.size()});
-            List<RestTeacher> restTeachers;
+            List<DomTeacher> domTeachers;
             try {
-                restTeachers = new ArrayList<RestTeacher>(teachersOfClass.size());
+                domTeachers = new ArrayList<DomTeacher>(teachersOfClass.size());
                 for (PersistentTeacherOfClass t : teachersOfClass) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentTeacherOfClassPK().getUserID());
-                    restTeachers.add(new RestTeacher(u));
+                    domTeachers.add(new DomTeacher(u));
                 }
             }
             catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the teachers.");
             }
-            return restTeachers;
+            return domTeachers;
         } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access a school class from a different school or the schoolClass {1} is null.", new Object[]{sc.getUserPrincipal().getName(), restSchoolClass.getId()});
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access a school class from a different school or the schoolClass {1} is null.", new Object[]{sc.getUserPrincipal().getName(), restSchoolClass.getDomSchoolClass().getId()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
     }
@@ -302,13 +302,13 @@ public class SecuredSchoolAdminSchoolClassManager {
         if (sg != null) {
             Date now = DwoDateUtilities.getCurrentDwoDate();
             PersistentUser user = new PersistentUser();
-            user.setEmail(nssStudent.getEmail());
-            user.setFirstname(nssStudent.getGivenName());
-            user.setMiddlename(nssStudent.getInsertion());
-            user.setLastname(nssStudent.getFamilyName());
-            user.setPasswd(nssStudent.getPassword());
+            user.setEmail(nssStudent.getDomSingleSchoolStudent().getEmail());
+            user.setFirstname(nssStudent.getDomSingleSchoolStudent().getGivenName());
+            user.setMiddlename(nssStudent.getDomSingleSchoolStudent().getInsertion());
+            user.setLastname(nssStudent.getDomSingleSchoolStudent().getFamilyName());
+            user.setPasswd(nssStudent.getDomSingleSchoolStudent().getPassword());
             user.setRegisterDate(now);
-            user.setUsername(nssStudent.getUsername());
+            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUsername());
             user.setSchoolGroupID(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
             try {

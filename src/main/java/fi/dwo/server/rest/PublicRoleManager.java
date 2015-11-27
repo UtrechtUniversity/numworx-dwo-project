@@ -1,10 +1,12 @@
 
 package fi.dwo.server.rest;
 
+import fi.dom.commons.dom.entities.DomRole;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.server.PersistentDataManagers.core.RoleManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,15 +36,21 @@ private static final Logger LOG = Logger.getLogger(PublicRoleManager.class.getNa
     @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public List<PersistentRole> getRoles(@Context SecurityContext sc){
+    public List<DomRole> getRoles(@Context SecurityContext sc){
+        List<DomRole> domRoles = null;
         List<PersistentRole> roles = null;
         try {
             roles = RoleManager.findEntities();
+            domRoles = new ArrayList<DomRole>(roles.size());
             LOG.log(Level.FINER, "Fetched all {0} user roles. ", new Object[]{roles.size()});
+            for(PersistentRole r: roles){
+                domRoles.add(new DomRole(r));
+                
+            }
         } catch(Exception e){
             LOG.log(Level.WARNING,"Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the user roles.");
         }
-        return roles;
+        return domRoles;
     }    
 }
