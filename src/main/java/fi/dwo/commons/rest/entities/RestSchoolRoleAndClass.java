@@ -14,9 +14,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class RestSchoolRoleAndClass extends DomSchoolRoleAndClass{
+public class RestSchoolRoleAndClass {
     private RestContext restContext;
-
+    private DomSchoolRoleAndClass domSchoolRoleAndClass;
     /**
      * @return the restContext
      */
@@ -29,6 +29,20 @@ public class RestSchoolRoleAndClass extends DomSchoolRoleAndClass{
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domSchoolRoleAndClass
+     */
+    public DomSchoolRoleAndClass getDomSchoolRoleAndClass() {
+        return domSchoolRoleAndClass;
+    }
+
+    /**
+     * @param domSchoolRoleAndClass the domSchoolRoleAndClass to set
+     */
+    public void setDomSchoolRoleAndClass(DomSchoolRoleAndClass domSchoolRoleAndClass) {
+        this.domSchoolRoleAndClass = domSchoolRoleAndClass;
     }
 
 

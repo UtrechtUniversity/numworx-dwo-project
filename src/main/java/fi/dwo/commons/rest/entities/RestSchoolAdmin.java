@@ -13,25 +13,36 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestSchoolAdmin extends DomSchoolAdmin {
+public class RestSchoolAdmin {
     private RestContext restContext;
+    private DomSchoolAdmin domSchoolAdmin;
     
-    public RestSchoolAdmin(PersistentUser u) {
-        super(u);
-    }
-
     /**
      * @return the restContext
      */
-    public RestContext getRestContxt() {
+    public RestContext getRestContext() {
         return restContext;
     }
 
     /**
      * @param restContxt the restContext to set
      */
-    public void setRestContxt(RestContext restContxt) {
-        this.restContext = restContxt;
+    public void setRestContext(RestContext restContext) {
+        this.restContext = restContext;
+    }
+
+    /**
+     * @return the domSchoolAdmin
+     */
+    public DomSchoolAdmin getDomSchoolAdmin() {
+        return domSchoolAdmin;
+    }
+
+    /**
+     * @param domSchoolAdmin the domSchoolAdmin to set
+     */
+    public void setDomSchoolAdmin(DomSchoolAdmin domSchoolAdmin) {
+        this.domSchoolAdmin = domSchoolAdmin;
     }
 
 }

@@ -4,7 +4,6 @@
 package fi.dwo.commons.rest.entities;
 
 import fi.dom.commons.dom.entities.DomSchool4Admin;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,12 +12,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestSchool4Admin extends DomSchool4Admin{
+public class RestSchool4Admin {
     private RestContext restContext;
-   
-    public RestSchool4Admin(PersistentSchool s) {
-        super(s);
-    }
+    private DomSchool4Admin domSchool4Admin;
 
     /**
      * @return the restContext
@@ -32,5 +28,19 @@ public class RestSchool4Admin extends DomSchool4Admin{
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domSchool4Admin
+     */
+    public DomSchool4Admin getDomSchool4Admin() {
+        return domSchool4Admin;
+    }
+
+    /**
+     * @param domSchool4Admin the domSchool4Admin to set
+     */
+    public void setDomSchool4Admin(DomSchool4Admin domSchool4Admin) {
+        this.domSchool4Admin = domSchool4Admin;
     }
 }

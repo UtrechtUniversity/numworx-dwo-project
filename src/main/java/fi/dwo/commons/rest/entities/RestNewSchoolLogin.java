@@ -16,8 +16,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class RestNewSchoolLogin extends DomNewSchoolLogin{
+public class RestNewSchoolLogin {
     private RestContext restContext;
+    private DomNewSchoolLogin domNewSchoolLogin;
 
     /**
      * @return the restContext
@@ -31,6 +32,20 @@ public class RestNewSchoolLogin extends DomNewSchoolLogin{
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domNewSchoolLogin
+     */
+    public DomNewSchoolLogin getDomNewSchoolLogin() {
+        return domNewSchoolLogin;
+    }
+
+    /**
+     * @param domNewSchoolLogin the domNewSchoolLogin to set
+     */
+    public void setDomNewSchoolLogin(DomNewSchoolLogin domNewSchoolLogin) {
+        this.domNewSchoolLogin = domNewSchoolLogin;
     }
 
     

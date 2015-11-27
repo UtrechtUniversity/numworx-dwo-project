@@ -12,9 +12,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestSingleSchoolStudent extends DomSingleSchoolStudent {
+public class RestSingleSchoolStudent {
     private RestContext restContext;
-
+    private DomSingleSchoolStudent domSingleSchoolStudent; 
     /**
      * @return the restContext
      */
@@ -27,6 +27,20 @@ public class RestSingleSchoolStudent extends DomSingleSchoolStudent {
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domSingleSchoolStudent
+     */
+    public DomSingleSchoolStudent getDomSingleSchoolStudent() {
+        return domSingleSchoolStudent;
+    }
+
+    /**
+     * @param domSingleSchoolStudent the domSingleSchoolStudent to set
+     */
+    public void setDomSingleSchoolStudent(DomSingleSchoolStudent domSingleSchoolStudent) {
+        this.domSingleSchoolStudent = domSingleSchoolStudent;
     }
     
 }

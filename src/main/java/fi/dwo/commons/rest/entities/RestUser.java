@@ -13,8 +13,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestUser extends DomUser{
+public class RestUser {
     private RestContext restContext;
+    private DomUser domUser;
 
     /**
      * @return the restContext
@@ -28,5 +29,19 @@ public class RestUser extends DomUser{
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domUser
+     */
+    public DomUser getDomUser() {
+        return domUser;
+    }
+
+    /**
+     * @param domUser the domUser to set
+     */
+    public void setDomUser(DomUser domUser) {
+        this.domUser = domUser;
     }
 }

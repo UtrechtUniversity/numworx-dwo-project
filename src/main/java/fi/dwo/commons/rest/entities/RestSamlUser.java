@@ -12,9 +12,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class RestSamlUser extends DomSamlUser{
+public class RestSamlUser {
     private RestContext restContext;
-
+    private DomSamlUser domSamlUser;
     /**
      * @return the restContext
      */
@@ -27,6 +27,20 @@ public class RestSamlUser extends DomSamlUser{
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domSamlUser
+     */
+    public DomSamlUser getDomSamlUser() {
+        return domSamlUser;
+    }
+
+    /**
+     * @param domSamlUser the domSamlUser to set
+     */
+    public void setDomSamlUser(DomSamlUser domSamlUser) {
+        this.domSamlUser = domSamlUser;
     }
     
 }

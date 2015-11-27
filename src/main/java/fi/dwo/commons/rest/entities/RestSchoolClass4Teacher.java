@@ -14,9 +14,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class RestSchoolClass4Teacher extends DomSchoolClass4Teacher {
+public class RestSchoolClass4Teacher {
     private RestContext restContext;
-
+    private DomSchoolClass4Teacher domSchoolClass4Teacher;
     /**
      * @return the restContext
      */
@@ -29,6 +29,20 @@ public class RestSchoolClass4Teacher extends DomSchoolClass4Teacher {
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domSchoolClass4Teacher
+     */
+    public DomSchoolClass4Teacher getDomSchoolClass4Teacher() {
+        return domSchoolClass4Teacher;
+    }
+
+    /**
+     * @param domSchoolClass4Teacher the domSchoolClass4Teacher to set
+     */
+    public void setDomSchoolClass4Teacher(DomSchoolClass4Teacher domSchoolClass4Teacher) {
+        this.domSchoolClass4Teacher = domSchoolClass4Teacher;
     }
     
     

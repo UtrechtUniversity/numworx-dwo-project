@@ -4,7 +4,6 @@
 package fi.dwo.commons.rest.entities;
 
 import fi.dom.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,15 +12,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestSchoolClass extends DomSchoolClass{
+public class RestSchoolClass {
     private RestContext restContext;
-
+    private DomSchoolClass domSchoolClass;
+    
     public RestSchoolClass(){
         
-    }
-        
-    public RestSchoolClass(PersistentSchoolClass sc) {
-        super(sc);
     }
 
     /**
@@ -36,6 +32,20 @@ public class RestSchoolClass extends DomSchoolClass{
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domSchoolClass
+     */
+    public DomSchoolClass getDomSchoolClass() {
+        return domSchoolClass;
+    }
+
+    /**
+     * @param domSchoolClass the domSchoolClass to set
+     */
+    public void setDomSchoolClass(DomSchoolClass domSchoolClass) {
+        this.domSchoolClass = domSchoolClass;
     }
 
     

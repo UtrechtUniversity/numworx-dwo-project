@@ -4,7 +4,6 @@
 package fi.dwo.commons.rest.entities;
 
 import fi.dom.commons.dom.entities.DomTeacher;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,12 +12,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestTeacher extends DomTeacher {
+public class RestTeacher {
     private RestContext restContext;
-        
-    public RestTeacher(PersistentUser u) {
-        super(u);
-    }
+    private DomTeacher domTeacher;
 
     /**
      * @return the restContext
@@ -32,6 +28,20 @@ public class RestTeacher extends DomTeacher {
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domTeacher
+     */
+    public DomTeacher getDomTeacher() {
+        return domTeacher;
+    }
+
+    /**
+     * @param domTeacher the domTeacher to set
+     */
+    public void setDomTeacher(DomTeacher domTeacher) {
+        this.domTeacher = domTeacher;
     }
 
 }

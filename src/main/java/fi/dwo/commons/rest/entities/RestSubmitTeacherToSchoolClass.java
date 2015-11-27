@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class RestSubmitTeacherToSchoolClass extends DomSubmitTeacherToSchoolClass{
     private RestContext restContext;
+    private DomSubmitTeacherToSchoolClass domSubmitTeacherToSchoolClass;
 
     /**
      * @return the restContext
@@ -26,6 +27,20 @@ public class RestSubmitTeacherToSchoolClass extends DomSubmitTeacherToSchoolClas
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domSubmitTeacherToSchoolClass
+     */
+    public DomSubmitTeacherToSchoolClass getDomSubmitTeacherToSchoolClass() {
+        return domSubmitTeacherToSchoolClass;
+    }
+
+    /**
+     * @param domSubmitTeacherToSchoolClass the domSubmitTeacherToSchoolClass to set
+     */
+    public void setDomSubmitTeacherToSchoolClass(DomSubmitTeacherToSchoolClass domSubmitTeacherToSchoolClass) {
+        this.domSubmitTeacherToSchoolClass = domSubmitTeacherToSchoolClass;
     }
     
 }

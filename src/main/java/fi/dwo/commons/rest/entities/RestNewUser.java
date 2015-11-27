@@ -16,10 +16,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class RestNewUser extends DomNewUser {
+public class RestNewUser{
 
     private RestContext restContext;
-
+    private DomNewUser domNewUser;
     /**
      * @return the restContext
      */
@@ -32,6 +32,20 @@ public class RestNewUser extends DomNewUser {
      */
     public void setRestContext(RestContext restContext) {
         this.restContext = restContext;
+    }
+
+    /**
+     * @return the domNewUser
+     */
+    public DomNewUser getDomNewUser() {
+        return domNewUser;
+    }
+
+    /**
+     * @param domNewUser the domNewUser to set
+     */
+    public void setDomNewUser(DomNewUser domNewUser) {
+        this.domNewUser = domNewUser;
     }
 
 }
