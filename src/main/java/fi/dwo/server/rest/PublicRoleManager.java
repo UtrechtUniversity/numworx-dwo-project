@@ -1,7 +1,7 @@
 
 package fi.dwo.server.rest;
 
-import fi.dom.commons.dom.entities.DomRole;
+import fi.dwo.commons.dom.entities.DomRole;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentRole;

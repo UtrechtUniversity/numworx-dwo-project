@@ -5,12 +5,19 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dom.commons.dom.entities.DomSchoolRoleAndClass;
-import fi.dom.commons.dom.entities.DomSchoolsRolesAndClasses;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
+import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.*;
-import fi.dwo.commons.persistence.entities.*;
 import fi.dwo.commons.rest.entities.*;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;

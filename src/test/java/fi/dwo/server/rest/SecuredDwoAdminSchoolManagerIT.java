@@ -3,7 +3,7 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dom.commons.dom.entities.DomSchool4Admin;
+import fi.dwo.commons.dom.entities.DomSchool4Admin;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;

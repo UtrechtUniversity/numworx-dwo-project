@@ -1,6 +1,6 @@
 package fi.dwo.server.rest;
 
-import fi.dom.commons.dom.entities.DomSchool4Admin;
+import fi.dwo.commons.dom.entities.DomSchool4Admin;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;

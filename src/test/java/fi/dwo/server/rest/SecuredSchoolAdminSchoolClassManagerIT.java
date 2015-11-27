@@ -3,9 +3,9 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dom.commons.dom.entities.DomSchoolClass;
-import fi.dom.commons.dom.entities.DomSingleSchoolStudent;
-import fi.dom.commons.dom.entities.DomTeacher;
+import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;

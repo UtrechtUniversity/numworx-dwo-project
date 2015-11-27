@@ -5,6 +5,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -56,9 +57,10 @@ public class SecuredUserAccountManager {
     @GET
     @Produces({"application/json"})
     @Path("/get")
-    public PersistentUser getCurrentUser(@Context SecurityContext sc) {
+    public DomFullUser getCurrentUser(@Context SecurityContext sc) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser user = null;
+        
         try {
             user = UserManager.findByUserName(sc.getUserPrincipal().getName());
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(),user.getUsername()});
@@ -70,7 +72,7 @@ public class SecuredUserAccountManager {
         finally {
             em.close();
         }
-        return user;
+        return new DomFullUser(user);
     }
 
     /**

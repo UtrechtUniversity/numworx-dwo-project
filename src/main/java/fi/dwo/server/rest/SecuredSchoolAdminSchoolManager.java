@@ -1,8 +1,8 @@
 package fi.dwo.server.rest;
 
-import fi.dom.commons.dom.entities.DomSchoolClass;
-import fi.dom.commons.dom.entities.DomStudent;
-import fi.dom.commons.dom.entities.DomTeacher;
+import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomStudent;
+import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
@@ -15,7 +15,6 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestSchoolAdmin;
-import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestTeacher;

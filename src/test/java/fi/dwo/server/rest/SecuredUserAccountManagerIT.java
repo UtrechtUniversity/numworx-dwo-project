@@ -3,8 +3,10 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.server.testutil.TestSecurityContext;
 import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
@@ -67,8 +69,8 @@ public class SecuredUserAccountManagerIT {
 
         SecurityContext sc = new TestSecurityContext("user01", RoleType.STUDENT);
         PersistentUser expResult = UserManager.findByUserName("user01");
-        PersistentUser result = instance.getCurrentUser(sc);
-        assertEquals(expResult, result);
+        DomFullUser result = instance.getCurrentUser(sc);
+        assertEquals(expResult.getUserID().longValue(), MySQLPersistenceId.getId(result.getId()));
 
         // fail if non-existing user
         sc = new TestSecurityContext("userFake", RoleType.STUDENT);

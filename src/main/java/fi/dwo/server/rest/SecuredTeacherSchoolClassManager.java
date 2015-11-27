@@ -1,8 +1,8 @@
 package fi.dwo.server.rest;
 
-import fi.dom.commons.dom.entities.DomSchoolClass;
-import fi.dom.commons.dom.entities.DomStudent;
-import fi.dom.commons.dom.entities.DomTeacher;
+import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomStudent;
+import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;

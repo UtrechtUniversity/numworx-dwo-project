@@ -3,9 +3,9 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dom.commons.dom.entities.DomNewSchoolLogin;
-import fi.dom.commons.dom.entities.DomSchoolRoleAndClass;
-import fi.dom.commons.dom.entities.DomSchoolsRolesAndClasses;
+import fi.dwo.commons.dom.entities.DomNewSchoolLogin;
+import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
+import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.server.testutil.TestSecurityContext;
 import fi.dwo.commons.persistence.PersistenceClassType;

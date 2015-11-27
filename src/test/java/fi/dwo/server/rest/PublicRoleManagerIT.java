@@ -3,7 +3,7 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dom.commons.dom.entities.DomRole;
+import fi.dwo.commons.dom.entities.DomRole;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.server.mysql.DatabaseManager;
