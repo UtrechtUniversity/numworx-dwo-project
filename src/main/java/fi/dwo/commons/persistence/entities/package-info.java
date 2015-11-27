@@ -1,3 +1,5 @@
+package fi.dwo.commons.persistence.entities;
+
 /**
  * Provides the persistent entity classes of the DWO Entity model 1.3.
  * <p>

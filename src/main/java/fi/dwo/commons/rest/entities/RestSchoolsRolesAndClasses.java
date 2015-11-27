@@ -5,7 +5,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dom.commons.dom.entities.DomSchoolsRolesAndClasses;
+import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**

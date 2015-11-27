@@ -1,6 +1,24 @@
 package fi.dwo.commons.persistence;
 
-import fi.dwo.commons.persistence.entities.*;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentRole;
+import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentAppletConfig;
+import fi.dwo.commons.persistence.entities.PersistentScoData;
+import fi.dwo.commons.persistence.entities.PersistentSamlUser;
+import fi.dwo.commons.persistence.entities.PersistentApplet;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

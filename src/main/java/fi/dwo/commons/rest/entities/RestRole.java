@@ -3,7 +3,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dom.commons.dom.entities.DomRole;
+import fi.dwo.commons.dom.entities.DomRole;
 
 /**
  * Role transported over the REST interface.

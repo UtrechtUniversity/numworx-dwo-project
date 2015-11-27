@@ -3,7 +3,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dom.commons.dom.entities.DomSubmitStudentToSchoolClass;
+import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
