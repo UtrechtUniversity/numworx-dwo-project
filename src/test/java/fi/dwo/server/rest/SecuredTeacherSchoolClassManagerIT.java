@@ -276,9 +276,9 @@ public class SecuredTeacherSchoolClassManagerIT {
         domToSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
         domToSchoolClass.setSchoolClassName("SchoolClass04");
         RestSubmitStudentToSchoolClass restSubmitStudentToSchoolClass = new RestSubmitStudentToSchoolClass();
-        restSubmitStudentToSchoolClass.(domFromSchoolClass);
-        restSubmitStudentToSchoolClass.(domToSchoolClass);
-        restSubmitStudentToSchoolClass.setTeacher(domstudent);
+        restSubmitStudentToSchoolClass.setSchoolFromClass(domFromSchoolClass);
+        restSubmitStudentToSchoolClass.setSchoolToClass(domToSchoolClass);
+        restSubmitStudentToSchoolClass.setStudent(domStudent);
         
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;

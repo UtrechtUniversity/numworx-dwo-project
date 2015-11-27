@@ -24,6 +24,7 @@ import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
+import fi.dwo.commons.rest.entities.RestSubmitStudentToSchoolClass;
 import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.commons.util.DwoDateUtilities;
@@ -430,15 +431,16 @@ public class SecuredTeacherSchoolClassManager {
      * Add a teacher to the school class.
      *
      * @param sc
-     * @param restStudent
-     * @param restFromSchoolClass
-     * @param restToSchoolClass
+     * @param restSubmitStudentToSchoolClass
      * @return true, throws an exception otherwise.
      */
     @PUT
     @Produces({"application/json"})
     @Path("/submitTeacher")
-    public Boolean SubmitStudentToSchoolClass(@Context SecurityContext sc, RestStudent restStudent, RestSchoolClass restFromSchoolClass, RestSchoolClass restToSchoolClass) {
+    public Boolean SubmitStudentToSchoolClass(@Context SecurityContext sc, RestSubmitStudentToSchoolClass restSubmitStudentToSchoolClass) {
+        DomStudent domStudent = restSubmitStudentToSchoolClass.getStudent();
+        DomSchoolClass domToSchoolClass = restSubmitStudentToSchoolClass.getSchoolToClass();
+        DomSchoolClass domFromSchoolClass = restSubmitStudentToSchoolClass.getSchoolFromClass();
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentSchoolClass fromClass = null;
@@ -449,7 +451,7 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(restStudent.getId()));
+            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(domStudent.getId()));
             if (student == null) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find teacher to add.");
             }
@@ -461,8 +463,8 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        fromClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restFromSchoolClass.getId()));
-        toClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restToSchoolClass.getId()));
+        fromClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domFromSchoolClass.getId()));
+        toClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domToSchoolClass.getId()));
         if (fromClass == null || toClass == null) {
             LOG.log(Level.WARNING, "Username {0}: Submitted classes do not exist.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "One or both submitted schoolclasses do not exist.");
@@ -487,6 +489,7 @@ public class SecuredTeacherSchoolClassManager {
      * occurred.
      *
      * @param sc
+     * @param restRemoveTeacherFromSchoolClass
      * @param restSchoolClass
      * @return true if success, false if the teacher does not exists to be
      * removed
@@ -536,6 +539,7 @@ public class SecuredTeacherSchoolClassManager {
      * occurred.
      *
      * @param sc
+     * @param restRemoveStudentFromSchoolClass
      * @param restSchoolClass
      * @return true if success, false if the student does not exists to be
      * removed

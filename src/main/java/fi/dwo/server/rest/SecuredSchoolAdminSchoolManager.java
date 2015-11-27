@@ -167,7 +167,6 @@ public class SecuredSchoolAdminSchoolManager {
      *
      * @param sc
      * @param msg
-     * @param restSchool
      * @param restStudent
      * @return true if success, false if the teacher does not exists to be
      * removed

@@ -113,7 +113,6 @@ public class SecuredUserAccountManager {
 
      *
      * @param sc
-     * @param user
      * @return
      */
     @PUT

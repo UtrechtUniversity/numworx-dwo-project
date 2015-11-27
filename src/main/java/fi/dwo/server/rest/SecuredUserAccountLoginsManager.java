@@ -319,6 +319,7 @@ public class SecuredUserAccountLoginsManager {
      * Removes a school login ({@Link HasRole) for an existing user.
      *
      * @param sc
+     * @param sarc
      * @param existingUserReg
      * @return
      */
