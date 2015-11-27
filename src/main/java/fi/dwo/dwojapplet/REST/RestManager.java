@@ -1,12 +1,12 @@
 /* Copyrighted 2015. */
 package fi.dwo.dwojapplet.REST;
 
+import fi.dwo.commons.dom.entities.DomRole;
+import fi.dwo.commons.dom.entities.DomUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
-import fi.dwo.commons.rest.RestClassType;
-import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.RestListClassTypes;
 import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +106,7 @@ class RestManager {
      * @return A list of Class c.
      * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
-    public <T> List<T> getList(String path, RestClassType type) throws Dwo2RestException, Dwo2Exception {
+    public <T> List<T> getList(String path, RestListClassTypes type) throws Dwo2RestException, Dwo2Exception {
         CacheControl cache = new CacheControl();
         cache.setNoCache(true);
         cache.isNoStore();
@@ -138,15 +138,15 @@ class RestManager {
             throw e;
         } else {
             switch (type) {
-                case PersistentUser:
-                    GenericType<ArrayList<PersistentUser>> pUserType = new GenericType<ArrayList<PersistentUser>>() {
+                case DomUser:
+                    GenericType<ArrayList<DomUser>> pUserType = new GenericType<ArrayList<DomUser>>() {
                     };
                     return (List<T>) response.readEntity(pUserType);
-                case PersistentRole:
-                    GenericType<ArrayList<PersistentRole>> pRoleType = new GenericType<ArrayList<PersistentRole>>() {
+                case DomRole:
+                    GenericType<ArrayList<DomRole>> pRoleType = new GenericType<ArrayList<DomRole>>() {
                     };
                     return (List<T>) response.readEntity(pRoleType);
-                case SchoolsRolesAndClasses:
+                case DomSchoolsRolesAndClasses:
                     GenericType<ArrayList<RestSchoolRoleAndClass>> pSRCType = new GenericType<ArrayList<RestSchoolRoleAndClass>>() {
                     };
                     return (List<T>) response.readEntity(pSRCType);

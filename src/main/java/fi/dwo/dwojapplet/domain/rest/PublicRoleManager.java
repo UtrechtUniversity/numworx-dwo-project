@@ -1,8 +1,9 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.domain.rest;
 
+import fi.dwo.commons.dom.entities.DomRole;
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.rest.RestClassType;
+import fi.dwo.commons.rest.RestListClassTypes;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import java.util.List;
@@ -27,14 +28,9 @@ public class PublicRoleManager {
      * @return Returns null if there was an error.
      * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
-    public static List<PersistentRole> getRoles() throws Dwo2Exception {
-        //login to rest service
-        List<PersistentRole> roles;
-//        GenericType<ArrayList<PersistentRole>> oClass = new GenericType<ArrayList<PersistentRole>>() {};
-//        roles =  StoredRestManager.getWebTargetRest().path("/rest/public/roles/get/json").request().get(oClass);
-//        LOG.log(Level.FINER, "Fetched {0} roles.", new Object[]{roles.size()});
-//        return roles;
-        roles = StoredRestManager.getInstance().getList("/rest/public/roles/getlist", RestClassType.PersistentRole);
+    public static List<DomRole> getRoles() throws Dwo2Exception {
+        List<DomRole> roles;
+        roles = StoredRestManager.getInstance().getList("/rest/public/roles/getlist", RestListClassTypes.DomRole);
         return roles;
 
     

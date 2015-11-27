@@ -800,8 +800,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      *
      */
     @Override
+    
     public Group[] getGroups() {
-        DwoHelper.getRoles();
         try {
             return (Group[]) PersistenceFacade.instance().get(Group.class);
         }
@@ -1286,12 +1286,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             throw new RuntimeException(ex);
         }
         StoredRestManager.setWebTargetRest(target);
-        try {
-            DwoHelper.setRoles(PublicRoleManager.getRoles());
-        }
-        catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
 
         //TODO make it configurable in the servlet via a attribute in the jsp
         //initialized via the tomcat context.xml

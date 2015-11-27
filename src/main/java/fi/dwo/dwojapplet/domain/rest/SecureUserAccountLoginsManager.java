@@ -1,5 +1,8 @@
 package fi.dwo.dwojapplet.domain.rest;
 
+import fi.dwo.commons.dom.entities.DomNewSchoolLogin;
+import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
+import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.rest.entities.*;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
@@ -21,9 +24,9 @@ public class SecureUserAccountLoginsManager {
     * @return 
      * @throws fi.dwo.commons.exceptions.Dwo2Exception 
     */
-    public static RestSchoolsRolesAndClasses getSchoolLogins() throws Dwo2Exception{
-        RestSchoolsRolesAndClasses src;
-        src= StoredRestManager.getInstance().get("/rest/secure/user/account/logins/getlist", RestSchoolsRolesAndClasses.class);
+    public static DomSchoolsRolesAndClasses getSchoolLogins() throws Dwo2Exception{
+        DomSchoolsRolesAndClasses src;
+        src= StoredRestManager.getInstance().get("/rest/secure/user/account/logins/getlist", DomSchoolsRolesAndClasses.class);
         return src;
     }   
     
@@ -35,10 +38,10 @@ public class SecureUserAccountLoginsManager {
      * @throws fi.dwo.commons.exceptions.Dwo2Exception 
      */
 
-    public static RestSchoolRoleAndClass switchToSchoolLogin(RestSchoolRoleAndClass src) throws Dwo2Exception {
-            src = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/switch", RestSchoolRoleAndClass.class, src);
+    public static DomSchoolRoleAndClass switchToSchoolLogin(DomSchoolRoleAndClass src) throws Dwo2Exception {
+            DomSchoolRoleAndClass result = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/switch", DomSchoolRoleAndClass.class, src);
             //LOG.log(Level.FINE, "Updated active role  of username {0}.",new Object[]{src.getRoleId()});
-        return src;
+        return result;
     }
     
     /**
@@ -46,8 +49,9 @@ public class SecureUserAccountLoginsManager {
      * @param existingUserReg
      * @return
      */
-    public static boolean addASchoolLogin(RestNewSchoolLogin existingUserReg) throws Dwo2Exception {
+    public static boolean addASchoolLogin(DomNewSchoolLogin existingUserReg) throws Dwo2Exception {
         boolean r;
+        Convert parameter to Resttype and send it, do so for all Managers and their methods.
         r = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/submit", Boolean.class, existingUserReg);
 
         return r;
@@ -60,7 +64,7 @@ public class SecureUserAccountLoginsManager {
      * @param existingUserReg
      * @return
      */
-    public static boolean removeASchoolLogin(RestNewSchoolLogin existingUserReg) throws Dwo2Exception {
+    public static boolean removeASchoolLogin(DomNewSchoolLogin existingUserReg) throws Dwo2Exception {
         boolean r;
         r = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/delete", Boolean.class, existingUserReg);
 

@@ -1,10 +1,10 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -46,7 +46,7 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
                     // do some actions here, for example
                     // print first column value from selected row
                 if(!event.getValueIsAdjusting()){//
-                    RestSchoolRoleAndClass src = (RestSchoolRoleAndClass) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(),4);
+                    DomSchoolRoleAndClass src = (DomSchoolRoleAndClass) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(),4);
 //                    System.out.println(tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 3).toString());
                     prop.setSelectedSchoolRoleAndClass(src);
                     prop.setActiveSchoolRoleAndClass();

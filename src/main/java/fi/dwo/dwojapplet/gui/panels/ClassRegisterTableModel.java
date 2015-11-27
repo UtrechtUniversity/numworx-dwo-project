@@ -1,8 +1,9 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
+import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
-import fi.dwo.commons.rest.entities.RestSchoolsRolesAndClasses;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -17,15 +18,15 @@ class ClassRegisterTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(RestSchoolRoleAndClass noSchool, RestSchoolsRolesAndClasses srcs) {
-        List<RestSchoolRoleAndClass> srcList = srcs.getSchoolsRolesAndClassesList();
+    public void init(DomSchoolRoleAndClass noSchool, DomSchoolsRolesAndClasses srcs) {
+        List<DomSchoolRoleAndClass> srcList = srcs.getSchoolsRolesAndClassesList();
         int rows = 0;
-        for (RestSchoolRoleAndClass src : srcList) {
+        for (DomSchoolRoleAndClass src : srcList) {
             rows++; // one for each item in List
         }
         data = new Object[rows][4];
         int j = 0;
-        for (RestSchoolRoleAndClass src : srcList) {
+        for (DomSchoolRoleAndClass src : srcList) {
             data[j][0] = src.getSchoolName();
             //          data[j][3] = src.getSchoolId();
             data[j][1] = src.getRoleName();

@@ -1,6 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.panels.JPanelSchoolsandRolesProperties;
@@ -25,14 +26,14 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
     public void init(JPanelSchoolsandRolesProperties props, Image loginImage, Image removeImage) {
 
         prop = props;
-        List<RestSchoolRoleAndClass> srcList = prop.getSchoolsRolesAndClasses().getSchoolsRolesAndClassesList();
+        List<DomSchoolRoleAndClass> srcList = prop.getSchoolsRolesAndClasses().getSchoolsRolesAndClassesList();
         int rows = 0;
-        for (RestSchoolRoleAndClass src : srcList) {
+        for (DomSchoolRoleAndClass src : srcList) {
             rows++; // one for each item in List
         }
         data = new Object[rows][5];
         int j = 0;
-        for (RestSchoolRoleAndClass src : srcList) {
+        for (DomSchoolRoleAndClass src : srcList) {
             data[j][0] = src.getSchoolName();
             data[j][1] = TextMapper.getText(src.getRoleName());
             data[j][2] = loginImage;

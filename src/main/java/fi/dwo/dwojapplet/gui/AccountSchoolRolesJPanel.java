@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -46,7 +47,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 
     private static final Logger LOG = Logger.getLogger(AccountSchoolRolesJPanel.class.getName());
 
-    private JButton addRoleButton;
+    private final JButton addRoleButton;
 
     private Image removeImage, loginImage;
 
@@ -204,7 +205,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
                 int row = tableModel.getSelectedRow();
 
 //            //set prop to table setting
-                prop.setSelectedSchoolRoleAndClass((RestSchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
                 prop.setActiveSchoolRoleAndClass();
 //            //get user data
                 PersistentUser user = DwoHelper.getCurrentUser();
@@ -225,7 +226,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
                 int row = tableModel.getSelectedRow();
 
 //            //set prop to table setting
-                prop.setSelectedSchoolRoleAndClass((RestSchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
                 prop.setActiveSchoolRoleAndClass();
                 //TODO Remove role now
 //            //get user data
@@ -310,7 +311,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
             int col = tableModel.getSelectedRow();
 
 //            //set prop to table setting
-            prop.setSelectedSchoolRoleAndClass((RestSchoolRoleAndClass) tableModel.getValueAt(4, col));
+            prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(4, col));
             prop.setActiveSchoolRoleAndClass();
 //            //get user data
             PersistentUser user = DwoHelper.getCurrentUser();

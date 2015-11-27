@@ -1,15 +1,13 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomNewSchoolLogin;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.commons.rest.entities.RestNewSchoolLogin;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.rest.PublicUserRegistrationManager;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -218,7 +216,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
                 try {
-                    RestNewSchoolLogin nur = new RestNewSchoolLogin();
+                    DomNewSchoolLogin nur = new DomNewSchoolLogin();
 
                     nur.setSchoolLogin(null);
                     nur.setSchoolCode(null);
@@ -236,7 +234,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                     role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
                 }
                 try {
-                    RestNewSchoolLogin nur = new RestNewSchoolLogin();
+                    DomNewSchoolLogin nur = new DomNewSchoolLogin();
                     nur.setRole(RoleType.valueOf(role.getGroupname()));
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());

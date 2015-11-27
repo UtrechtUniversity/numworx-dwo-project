@@ -8,7 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Store manager. Reduces multiple copies of data.
+ * Store manager. Reduces multiple copies of data in memory and should known which
+ * are volatile and which are not.
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */

@@ -8,6 +8,7 @@ import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
@@ -25,7 +26,6 @@ import java.awt.Point;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,8 +70,7 @@ public final class DwoHelper {
     private static School school;
 
     private static PersistentUser currentUser; // null if none available.
-    private static PersistentRole currentRole; // null if none available.
-    private static List<PersistentRole> roles;
+    private static RoleType currentRole; // null if none available.
     //TODO fix locale to be set within DWO_main.
     private static Locale locale = new Locale.Builder().setLanguage("nl").setRegion("NL").build(); //runtime property for locale.
 
@@ -113,7 +112,7 @@ public final class DwoHelper {
     }
 
     public void init() throws Dwo2Exception {
-        roles = PublicRoleManager.getRoles();
+        //for later.
     }
 
     /**
@@ -512,30 +511,15 @@ public final class DwoHelper {
     /**
      * @return the currentRole
      */
-    public static PersistentRole getCurrentRole() {
+    public static RoleType getCurrentRole() {
         return currentRole;
     }
 
     /**
      * @param aCurrentRole the currentRole to set
      */
-    public static void setCurrentRole(PersistentRole aCurrentRole) {
+    public static void setCurrentRole(RoleType aCurrentRole) {
         currentRole = aCurrentRole;
-    }
-
-    /**
-     * @return the roles
-     */
-    public static List<PersistentRole> getRoles() {
-        return roles;
-    }
-
-    /**
-     * @param aRoles
-     * @return the roles
-     */
-    public static void setRoles(List<PersistentRole> aRoles) {
-        roles = aRoles;
     }
 
 }

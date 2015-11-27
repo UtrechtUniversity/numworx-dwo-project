@@ -1,8 +1,9 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
+import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.rest.entities.*;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,13 +11,13 @@ import java.util.logging.Logger;
 /**
  * 
  * 
- * @author Gert van der Plas <gertvdplas@gmail.com>
+ * @author Gert van der Plas
  */
 public class JPanelSchoolsandRolesProperties {
 
     private static final Logger LOG = Logger.getLogger(JPanelSchoolsandRolesProperties.class.getName());
-    private RestSchoolRoleAndClass selectedSrc;
-    private RestSchoolsRolesAndClasses srcs;
+    private DomSchoolRoleAndClass selectedSrc;
+    private DomSchoolsRolesAndClasses srcs;
 
     public void init() throws Dwo2Exception {
         try {
@@ -25,7 +26,7 @@ public class JPanelSchoolsandRolesProperties {
         } catch (Dwo2Exception ex) {
             
             LOG.log(Level.SEVERE, ex.getMessage());
-            srcs = new RestSchoolsRolesAndClasses();
+            srcs = new DomSchoolsRolesAndClasses();
             selectedSrc=null;
             throw ex;
         }
@@ -34,7 +35,7 @@ public class JPanelSchoolsandRolesProperties {
     /**
      * @return the user
      */
-    public RestSchoolsRolesAndClasses getSchoolsRolesAndClasses() {
+    public DomSchoolsRolesAndClasses getSchoolsRolesAndClasses() {
         return srcs;
     }
 
@@ -43,7 +44,7 @@ public class JPanelSchoolsandRolesProperties {
      */
     public void setActiveSchoolRoleAndClass() {
         try {
-            RestSchoolRoleAndClass src = SecureUserAccountLoginsManager.switchToSchoolLogin(getSelectedSchoolRoleAndClass());
+            DomSchoolRoleAndClass src = SecureUserAccountLoginsManager.switchToSchoolLogin(getSelectedSchoolRoleAndClass());
             srcs.setActiveSchoolRoleAndClass(src);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
@@ -53,21 +54,21 @@ public class JPanelSchoolsandRolesProperties {
         /**
      * @return 
      */
-    public RestSchoolRoleAndClass getActiveSchoolRoleAndClass() {
+    public DomSchoolRoleAndClass getActiveSchoolRoleAndClass() {
         return srcs.getActiveSchoolRoleAndClass();
     }
 
     /**
      * @return the selectedSrc
      */
-    public RestSchoolRoleAndClass getSelectedSchoolRoleAndClass() {
+    public DomSchoolRoleAndClass getSelectedSchoolRoleAndClass() {
         return selectedSrc;
     }
 
     /**
      * @param selectedSrc the selectedSrc to set
      */
-    public void setSelectedSchoolRoleAndClass(RestSchoolRoleAndClass selectedSrc) {
+    public void setSelectedSchoolRoleAndClass(DomSchoolRoleAndClass selectedSrc) {
         this.selectedSrc = selectedSrc;
     }
 

@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomNewSchoolLogin;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
@@ -16,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -231,10 +231,10 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         /* Password field */
         groupChoice = new JComboBox();
         groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
-        List<PersistentRole> rl = DwoHelper.getRoles();
+        RoleType[] rl = RoleType.values();
         for (int i = 0; i < groupList.length; i++) {
             //if(!groupList[i].getName().equals("ADMIN"))
-            groupChoice.addItem(TextMapper.getText(rl.get(i).getGroupname()));
+            groupChoice.addItem(TextMapper.getText(RoleType.));
         }
         groupChoice.setSize(groupChoice.getPreferredSize());
         groupChoice.setBounds(160, 63, Math.max(120, groupChoice.getWidth()), 20);
@@ -345,7 +345,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
                 try {
-                    RestNewSchoolLogin nur = new RestNewSchoolLogin();
+                    DomNewSchoolLogin nur = new DomNewSchoolLogin();
 
                     nur.setSchoolLogin(null);
                     nur.setSchoolCode(null);
@@ -363,7 +363,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                     role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
                 }
                 try {
-                    RestNewSchoolLogin nur = new RestNewSchoolLogin();
+                    DomNewSchoolLogin nur = new DomNewSchoolLogin();
                     nur.setRole(RoleType.valueOf(role.getGroupname()));
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
