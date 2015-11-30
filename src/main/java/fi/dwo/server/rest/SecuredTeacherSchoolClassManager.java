@@ -23,10 +23,8 @@ import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
-import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestSubmitStudentToSchoolClass;
 import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
-import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -195,7 +193,7 @@ public class SecuredTeacherSchoolClassManager {
      * @param restSchoolClass
      * @return
      */
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/getTeacherList")
     public List<DomTeacher> GetTeachersInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
@@ -245,7 +243,7 @@ public class SecuredTeacherSchoolClassManager {
      * @param restSchoolClass
      * @return
      */
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/getStudentList")
     public List<DomStudent> GetStudentsInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
@@ -490,7 +488,6 @@ public class SecuredTeacherSchoolClassManager {
      *
      * @param sc
      * @param restRemoveTeacherFromSchoolClass
-     * @param restSchoolClass
      * @return true if success, false if the teacher does not exists to be
      * removed
      */
