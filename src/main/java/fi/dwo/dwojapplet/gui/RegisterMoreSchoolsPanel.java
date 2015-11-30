@@ -24,8 +24,9 @@ import javax.swing.JTextField;
 /**
  * <p>
  * This is dialog for registering to a school.</p>
- * 
- * <p>How to test manual:</p>
+ *
+ * <p>
+ * How to test manual:</p>
  *
  * <ul>
  * <li>Register once for each existing role. Then configurePanelsForUser and
@@ -53,7 +54,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
     private JButton backButton;
 
     private JComboBox groupChoice;
-        
+
     /**
      * Creates a new RegisterPanel. At the register panel, a user can register
      * himself.
@@ -63,8 +64,8 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
 //        groupList = groups;
 
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-         this.setLayout(null);
-        this.setSize(GuiConstants.CENTER_WIDTH/2, GuiConstants.CENTER_HEIGHT/2);
+        this.setLayout(null);
+        this.setSize(GuiConstants.CENTER_WIDTH / 2, GuiConstants.CENTER_HEIGHT / 2);
         this.setMinimumSize(this.getSize());
         /* Variables used to create items */
         FontMetrics fm;
@@ -121,11 +122,17 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
         /* Password field */
         groupChoice = new JComboBox();
         groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
-        List<PersistentRole> rl = DwoHelper.getRoles();
-        for (int i = 0; i < rl.size(); i++) {
+        RoleType[] rl = DwoHelper.getRoles();
+        for (int i = 0; i < rl.length; i++) {
             //if(!groupList[i].getName().equals("ADMIN"))
-            groupChoice.addItem(TextMapper.getText(rl.get(i).getGroupname()));
+            groupChoice.addItem(TextMapper.getText(rl[i].name()));
         }
+//        RoleType[] rl = DwoHelper.getRoles();
+//        for (int i = 0; i < rl.length; i++) {
+//            //if(!groupList[i].getName().equals("ADMIN"))
+//            groupChoice.addItem(TextMapper.getText(rl[i].name()));
+//        }
+
         groupChoice.setSize(groupChoice.getPreferredSize());
         groupChoice.setBounds(160, 63, Math.max(120, groupChoice.getWidth()), 20);
         p.add(groupChoice);
@@ -156,10 +163,9 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
         registerButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
         fm = registerButton.getFontMetrics(registerButton.getFont());
         registerButton.setSize(registerButton.getPreferredSize());
-        registerButton.setLocation(p.getX()+this.getWidth()/2-registerButton.getWidth(), p.getY()+p.getHeight()/2-registerButton.getHeight());
+        registerButton.setLocation(p.getX() + this.getWidth() / 2 - registerButton.getWidth(), p.getY() + p.getHeight() / 2 - registerButton.getHeight());
         registerButton.setLocation((p.getSize().width / 4)
-                - (registerButton.getSize().width/2)
-                , 10);
+                - (registerButton.getSize().width / 2), 10);
         p.add(registerButton);
 
         /* Reset button */
@@ -167,9 +173,8 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
         fm = backButton.getFontMetrics(backButton.getFont());
         backButton.setSize(backButton.getPreferredSize());
 
-        backButton.setLocation(3*(p.getSize().width / 4)
-                - (backButton.getSize().width/2)
-                , 10);
+        backButton.setLocation(3 * (p.getSize().width / 4)
+                - (backButton.getSize().width / 2), 10);
         p.add(backButton);
 
         registerButton.addActionListener(this);
@@ -229,13 +234,14 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                     GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                PersistentRole role = null;
-                if (groupChoice.getSelectedIndex() > 0) {
-                    role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
-                }
+                RoleType role = null;
+                role = DwoHelper.getRoles()[groupChoice.getSelectedIndex()];
+//                if (groupChoice.getSelectedIndex() > 0) {
+//                    role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
+//                }
                 try {
                     DomNewSchoolLogin nur = new DomNewSchoolLogin();
-                    nur.setRole(RoleType.valueOf(role.getGroupname()));
+                    nur.setRole(role);
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
                     SecureUserAccountLoginsManager.addASchoolLogin(nur); //throws Dwo2RestException.
@@ -248,11 +254,10 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                 }
 
             }
-        }
-        else if (e.getSource() == backButton) {
+        } else if (e.getSource() == backButton) {
             //TODO fixe shameful hack.
             this.getParent().getParent().getParent().getParent().setVisible(false);
-       }
+        }
     }
 
 }

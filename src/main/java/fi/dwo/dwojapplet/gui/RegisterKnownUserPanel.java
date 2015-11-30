@@ -231,10 +231,10 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         /* Password field */
         groupChoice = new JComboBox();
         groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
-        RoleType[] rl = RoleType.values();
-        for (int i = 0; i < groupList.length; i++) {
+        RoleType[] rl = DwoHelper.getRoles();
+        for (int i = 0; i < rl.length; i++) {
             //if(!groupList[i].getName().equals("ADMIN"))
-            groupChoice.addItem(TextMapper.getText(RoleType.));
+            groupChoice.addItem(TextMapper.getText(rl[i].name()));
         }
         groupChoice.setSize(groupChoice.getPreferredSize());
         groupChoice.setBounds(160, 63, Math.max(120, groupChoice.getWidth()), 20);
@@ -344,6 +344,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
+                //groupChoice.getSelectedIndex() == 0) should point to anonymous.
                 try {
                     DomNewSchoolLogin nur = new DomNewSchoolLogin();
 
@@ -358,13 +359,11 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                     JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                PersistentRole role = null;
-                if (groupChoice.getSelectedIndex() > 0) {
-                    role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
-                }
+                RoleType role = null;
+                role = DwoHelper.getRoles()[groupChoice.getSelectedIndex()];
                 try {
                     DomNewSchoolLogin nur = new DomNewSchoolLogin();
-                    nur.setRole(RoleType.valueOf(role.getGroupname()));
+                    nur.setRole(role);
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
                     SecureUserAccountLoginsManager.addASchoolLogin(nur); //throws Dwo2RestException.

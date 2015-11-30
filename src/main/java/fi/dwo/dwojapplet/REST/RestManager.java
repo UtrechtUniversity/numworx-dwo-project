@@ -2,12 +2,12 @@
 package fi.dwo.dwojapplet.REST;
 
 import fi.dwo.commons.dom.entities.DomRole;
+import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.dom.entities.DomUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.rest.RestListClassTypes;
-import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -147,8 +147,8 @@ class RestManager {
                     };
                     return (List<T>) response.readEntity(pRoleType);
                 case DomSchoolsRolesAndClasses:
-                    GenericType<ArrayList<RestSchoolRoleAndClass>> pSRCType = new GenericType<ArrayList<RestSchoolRoleAndClass>>() {
-                    };
+                    GenericType<ArrayList<DomSchoolsRolesAndClasses>> pSRCType = new GenericType<ArrayList<DomSchoolsRolesAndClasses>>() {
+                    };                    
                     return (List<T>) response.readEntity(pSRCType);
                 default:
                     String msg = "Programming error, trying to get an unsupported dataType.";
@@ -206,5 +206,4 @@ class RestManager {
         }
     }
     //
-
 }

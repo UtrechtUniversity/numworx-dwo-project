@@ -408,7 +408,7 @@ public final class DwoHelper {
     /**
      * Sets the url path to the resource location where the resources are stored.
      * 
-     * @param aGetResourceURLPathString the resourceUrlPathString to set
+     * @param aGetResourceURLPath
      */
     public static void setResourceUrlPath(URL aGetResourceURLPath) {
         resourceUrlPath = aGetResourceURLPath;
@@ -417,7 +417,7 @@ public final class DwoHelper {
 
      /** Sets the url path to the resource location where the resources are stored.
      * 
-     * @param jarURLPathStringProperty
+     * @param aJarURLPath
      */
     public static void setJarUrlPath(URL aJarURLPath) {
         jarUrlPath = aJarURLPath;
@@ -522,4 +522,13 @@ public final class DwoHelper {
         currentRole = aCurrentRole;
     }
 
+    public static RoleType[] getRoles(){
+        RoleType[] list = new RoleType[5];
+        list[0] = RoleType.ANONYMOUS;
+        list[1] = RoleType.STUDENT;
+        list[2] = RoleType.TEACHER;
+        list[3] = RoleType.SCHOOLADMIN;
+        list[4] = RoleType.ADMIN;
+        return list;
+    }
 }

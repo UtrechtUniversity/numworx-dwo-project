@@ -341,11 +341,17 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         /* Password field */
         groupChoice = new JComboBox();
 //        groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
-        List<PersistentRole> rl = DwoHelper.getRoles();
-        for (int i = 0; i < rl.size(); i++) {
+        RoleType[] rl = DwoHelper.getRoles();
+        for (int i = 0; i < rl.length; i++) {
             //if(!groupList[i].getName().equals("ADMIN"))
-            groupChoice.addItem(TextMapper.getText(rl.get(i).getGroupname()));
+            groupChoice.addItem(TextMapper.getText(rl[i].name()));
         }
+
+//        List<PersistentRole> rl = DwoHelper.getRoles();
+//        for (int i = 0; i < rl.size(); i++) {
+//            //if(!groupList[i].getName().equals("ADMIN"))
+//            groupChoice.addItem(TextMapper.getText(rl.get(i).getGroupname()));
+//        }
         groupChoice.setSize(groupChoice.getPreferredSize());
 
         groupChoice.setBounds(160, 63, Math.max(120, groupChoice.getWidth()), 20);
@@ -470,10 +476,8 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                PersistentRole role = null;
-                if (groupChoice.getSelectedIndex() > 0) {
-                    role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
-                }
+                RoleType role = null;
+                    role = DwoHelper.getRoles()[groupChoice.getSelectedIndex()];
                 try {
                     DomNewUser nur = new DomNewUser();
                     nur.setUsername(username.getText());
@@ -482,7 +486,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     nur.setInsertion(middlename.getText());
                     nur.setFamilyName(lastname.getText());
                     nur.setEmail(email.getText());
-                    nur.setRole(RoleType.valueOf(role.getGroupname()));
+                    nur.setRole(role);
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
                     PublicUserRegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
