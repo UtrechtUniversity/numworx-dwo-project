@@ -13,6 +13,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestFullUser;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
@@ -86,26 +87,26 @@ public class SecuredUserAccountManager {
     @PUT
     @Produces({"application/json"})
     @Path("/update")
-    public PersistentUser updateCurrentUser(@Context SecurityContext sc, PersistentUser user) {
-        if (user.getUsername().equals(sc.getUserPrincipal().getName())) {
+    public DomFullUser updateCurrentUser(@Context SecurityContext sc, RestFullUser user) {
+        if (user.getDomFullUser().getUsername().equals(sc.getUserPrincipal().getName())) {
             try {
-                PersistentUser dbUser = UserManager.findByUserName(user.getUsername());
-                dbUser.setFirstname(user.getFirstname());
-                dbUser.setLastname(user.getLastname());
-                dbUser.setMiddlename(user.getMiddlename());
-                dbUser.setEmail(user.getEmail());
-                dbUser.setPasswd(user.getPasswd());
+                PersistentUser dbUser = UserManager.findByUserName(user.getDomFullUser().getUsername());
+                dbUser.setFirstname(user.getDomFullUser().getGivenName());
+                dbUser.setLastname(user.getDomFullUser().getFamilyName());
+                dbUser.setMiddlename(user.getDomFullUser().getInsertion());
+                dbUser.setEmail(user.getDomFullUser().getEmail());
+                dbUser.setPasswd(user.getDomFullUser().getPassword());
                 //User to update is logged in user.
                 UserManager.edit(dbUser);
-                return UserManager.findByUserName(user.getUsername());
+                return new DomFullUser(UserManager.findByUserName(user.getDomFullUser().getUsername()));
             }
             catch (Exception e) {
             LOG.log(Level.SEVERE, "Username "+sc.getUserPrincipal().getName()+": Unexpected exception",e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update user id " + sc.getUserPrincipal().getName() + " .");
             }
         } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getUsername() + ".");
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getDomFullUser().getUsername()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getDomFullUser().getUsername() + ".");
         }
     }
 

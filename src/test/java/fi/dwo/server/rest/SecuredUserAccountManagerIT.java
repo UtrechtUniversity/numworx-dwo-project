@@ -9,6 +9,7 @@ import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestFullUser;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
@@ -92,18 +93,19 @@ public class SecuredUserAccountManagerIT {
         System.out.println("updateCurrentUser");
         SecurityContext sc = new TestSecurityContext("user01", RoleType.STUDENT);
         SecuredUserAccountManager instance = new SecuredUserAccountManager();
-        PersistentUser user = UserManager.findByUserName("user01");
-        user.setFirstname("a");
-        user.setMiddlename("b");
-        user.setLastname("c");
-        user.setEmail("d");
-        user.setPasswd("e");
+        RestFullUser user = new RestFullUser();
+        user.setDomFullUser(new DomFullUser(UserManager.findByUserName("user01")));
+        user.getDomFullUser().setGivenName("a");
+        user.getDomFullUser().setInsertion("b");
+        user.getDomFullUser().setFamilyName("c");
+        user.getDomFullUser().setEmail("d");
+        user.getDomFullUser().setPassword("e");
 
-        PersistentUser result = instance.updateCurrentUser(sc, user);
+        DomFullUser result = instance.updateCurrentUser(sc, user);
         assertEquals(user, result);
 
-        user = UserManager.findByUserName("user01");
-        user.setUsername("bonk");
+        user.setDomFullUser(new DomFullUser(UserManager.findByUserName("user01")));
+        user.getDomFullUser().setUsername("bonk");
         try {
             result = instance.updateCurrentUser(sc, user);
             fail("Did not fail fake username with result." + result.getUsername());
@@ -112,29 +114,7 @@ public class SecuredUserAccountManagerIT {
             // succeeded
         }
 
-        user = UserManager.findByUserName("user01");
-        user.setSchoolGroupID(-1L);
-        try {
-            result = instance.updateCurrentUser(sc, user);
-            if (result.getSchoolGroupID().equals(-1)) {
-                fail("Did not fail schoolgroup change.");
-            }
-        }
-        catch (Dwo2RestException e) {
-            // succeeded
-        }
-
-        user = UserManager.findByUserName("user01");
-        user.setLastLogin(DwoDateUtilities.getCurrentDwoDate());
-        try {
-            result = instance.updateCurrentUser(sc, user);
-            if (user.getLastLogin()!=null && result.getLastLogin()!=null && (new SimpleDateFormat("MM-dd-yyyy").format(user.getLastLogin())).equals(new SimpleDateFormat("MM-dd-yyyy").format(result.getLastLogin()))) {
-                fail("Did not fail last login change.");
-            }
-        }
-        catch (Dwo2RestException e) {
-            // succeeded
-        }
+        user.setDomFullUser(new DomFullUser(UserManager.findByUserName("user01")));
 
     }
 
