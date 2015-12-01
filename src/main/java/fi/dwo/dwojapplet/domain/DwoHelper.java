@@ -6,7 +6,9 @@ package fi.dwo.dwojapplet.domain;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
@@ -69,7 +71,7 @@ public final class DwoHelper {
     private static SchoolClass schoolClass;
     private static School school;
 
-    private static PersistentUser currentUser; // null if none available.
+    private static DomFullUser currentUser; // null if none available.
     private static RoleType currentRole; // null if none available.
     //TODO fix locale to be set within DWO_main.
     private static Locale locale = new Locale.Builder().setLanguage("nl").setRegion("NL").build(); //runtime property for locale.
@@ -472,19 +474,19 @@ public final class DwoHelper {
     /**
      * @return the current User
      */
-    public static PersistentUser getCurrentUser() {
+    public static DomFullUser getCurrentUser() {
         return currentUser;
     }
 
     /**
      * @param aCurrentUser the current User to set
      */
-    public static void setCurrentUser(PersistentUser aCurrentUser) {
+    public static void setCurrentUser(DomFullUser aCurrentUser) {
         currentUser = aCurrentUser;
         if(aCurrentUser != null){
             try {
-                currentFacadeUser = (User) PersistenceFacade.instance().get((int) (long) aCurrentUser.getUserID(), User.class);
-            } catch (PersistenceException ex) {
+                currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUsername());
+            } catch (LoginException  ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
         }else{

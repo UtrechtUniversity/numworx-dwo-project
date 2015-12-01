@@ -1,10 +1,10 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -135,11 +135,11 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         prop.setActiveSchoolRoleAndClass();
         //get user data
-        PersistentUser user = DwoHelper.getCurrentUser();
+        DomFullUser user = DwoHelper.getCurrentUser();
         // clear user data
         GuiCreator.instance().clearCurrentUserData();
         try {
-            GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPasswd());
+            GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
         } catch (LoginException ex) {
             LOG.log(Level.SEVERE, null, ex);
             GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Eror", JDialog.ERROR);

@@ -6,20 +6,18 @@ import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.scorm.SCORM2004APIInterface;
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
-import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.rest.LoginManager;
-import fi.dwo.dwojapplet.domain.rest.PublicRoleManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -430,7 +428,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             throws LoginException {
         DwoHelper.setPlainPassword(password);
         String pw = MD5.getHashString(password);
-        PersistentUser user = LoginManager.login(username, pw);
+        DomFullUser user = LoginManager.login(username, pw);
         if (user == null) {
             throw new LoginException(LoginException.LE_UNKNOWN_USER);
         }
@@ -460,7 +458,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public boolean loginWithMd5(String username, String password)
             throws LoginException {
         String plainPassword = DwoHelper.getPlainPassword();
-        PersistentUser user = LoginManager.login(username, password);
+        DomFullUser user = LoginManager.login(username, password);
         if (user == null) {
             throw new LoginException(LoginException.LE_UNKNOWN_USER);
         }

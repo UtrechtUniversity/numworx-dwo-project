@@ -80,7 +80,7 @@ public class ReauthenticatePanel extends JPanel implements ActionListener {
                 null, options, options[1]);
         if (option == 0) // pressing OK button
         {
-             return DwoHelper.getCurrentUser().getPasswd().equals(MD5.getHashString(panel.passwordField.getText()));
+             return DwoHelper.getCurrentUser().getPassword().equals(MD5.getHashString(panel.passwordField.getText()));
         }
         return false;
     }

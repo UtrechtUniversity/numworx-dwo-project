@@ -1,6 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
 public class JPanelAccountDataProperties {
     private static final Logger LOG = Logger.getLogger(JPanelAccountDataProperties.class.getName());
     
-    private PersistentUser user;
+    private DomFullUser user;
 
     public JPanelAccountDataProperties() {
         
@@ -35,14 +36,14 @@ public class JPanelAccountDataProperties {
     /**
      * @return the user
      */
-    public PersistentUser getUser() {
+    public DomFullUser getUser() {
         return user;
     }
 
     /**
      * @param user the user to set
      */
-    public void setUser(PersistentUser user) {
+    public void setUser(DomFullUser user) {
         this.user = user;
     }    
 
@@ -65,9 +66,11 @@ public class JPanelAccountDataProperties {
      */
     public void Update(){
         try {
-            SecureUserAccountManager.updateAccountData(user);
+            user = SecureUserAccountManager.updateAccountData(user);
             // update local Global storage.
             DwoHelper.setCurrentUser(user);
+            //TODO above method currently updates the login date, this should not occur for this function.
+            
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }

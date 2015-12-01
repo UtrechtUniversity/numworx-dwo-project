@@ -1,8 +1,8 @@
 /* Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
 import static fi.dwo.commons.system.TextMapper.GUIP_BTN_SWITCH_PROFILE;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -92,11 +92,11 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
         //Update current active Role, knows selected role.
         prop.setActiveSchoolRoleAndClass();
         //get user data
-        PersistentUser user = DwoHelper.getCurrentUser();
+        DomFullUser user = DwoHelper.getCurrentUser();
         // clear user data
         GuiCreator.instance().clearCurrentUserData();
         try {
-            GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPasswd());
+            GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
         } catch (LoginException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }

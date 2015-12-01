@@ -199,7 +199,7 @@ public class AccountDataJPanel extends JPanel implements
 
         /* Firstname field */
         firstname = new JTextField();
-        firstname.setText(prop.getUser().getFirstname());
+        firstname.setText(prop.getUser().getGivenName());
         firstname.setBounds(160, 28, 120, 20);
         p.add(firstname);
 
@@ -220,11 +220,11 @@ public class AccountDataJPanel extends JPanel implements
 
         /* Middlename field */
         middlename = new JTextField();
-        middlename.setText(prop.getUser().getMiddlename());
+        middlename.setText(prop.getUser().getInsertion());
         middlename.setBounds(160, 53, 120, 20);
         p.add(middlename);
 // skip middlename for languages that do not support it.
-        boolean visible = prop.getUser().getMiddlename().length() > 0 || middleNameLabel.length() > 0;
+        boolean visible = prop.getUser().getInsertion().length() > 0 || middleNameLabel.length() > 0;
         middlename.setVisible(visible);
         l.setVisible(visible);
         int v = visible ? 0 : 25;
@@ -241,7 +241,7 @@ public class AccountDataJPanel extends JPanel implements
 
         /* Lastname field */
         lastname = new JTextField();
-        lastname.setText(prop.getUser().getLastname());
+        lastname.setText(prop.getUser().getFamilyName());
         lastname.setBounds(160, 78 - v, 120, 20);
         p.add(lastname);
 
@@ -358,24 +358,24 @@ public class AccountDataJPanel extends JPanel implements
             oldpassword.setText("");
             password.setText("");
             repassword.setText("");
-            firstname.setText(prop.getUser().getFirstname());
-            middlename.setText(prop.getUser().getMiddlename());
-            lastname.setText(prop.getUser().getLastname());
+            firstname.setText(prop.getUser().getGivenName());
+            middlename.setText(prop.getUser().getInsertion());
+            lastname.setText(prop.getUser().getFamilyName());
             email.setText(prop.getUser().getEmail());
 
         } else if (e.getSource() == changeButton) {
-            if (prop.getUser().getPasswd().equals(MD5.getHashString(oldpassword.getText()))) {
+            if (prop.getUser().getPassword().equals(MD5.getHashString(oldpassword.getText()))) {
                 //update the data
                 try {
-                    prop.getUser().setFirstname(firstname.getText());
-                    prop.getUser().setMiddlename(middlename.getText());
-                    prop.getUser().setLastname(lastname.getText());
+                    prop.getUser().setGivenName(firstname.getText());
+                    prop.getUser().setInsertion(middlename.getText());
+                    prop.getUser().setFamilyName(lastname.getText());
                     prop.getUser().setEmail(email.getText());
                     prop.Update();
                     if (!password.getText().equals("")
                             && repassword.getText().equals(password.getText())) {
                         //updates password following some logic.
-                        prop.getUser().setPasswd(MD5.getHashString(password.getText()));
+                        prop.getUser().setPassword(MD5.getHashString(password.getText()));
                     } else {
                         GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.EXR_WRONG_SECOND_PASSWORD), TextMapper.getText(TextMapper.GUIP_ERR_CHANGE), JOptionPane.ERROR_MESSAGE);
                     }

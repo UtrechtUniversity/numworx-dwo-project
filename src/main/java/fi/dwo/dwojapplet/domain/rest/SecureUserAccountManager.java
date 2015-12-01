@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.domain.rest;
 
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
@@ -22,9 +23,9 @@ public class SecureUserAccountManager {
     * @return 
      * @throws fi.dwo.commons.exceptions.Dwo2Exception 
     */
-    public static PersistentUser getAccountData() throws Dwo2Exception{
-        PersistentUser user;
-        user = StoredRestManager.getInstance().get("/rest/secure/user/account/get", PersistentUser.class);
+    public static DomFullUser getAccountData() throws Dwo2Exception{
+        DomFullUser user;
+        user = StoredRestManager.getInstance().get("/rest/secure/user/account/get", DomFullUser.class);
         return user;
     }   
     
@@ -39,8 +40,8 @@ public class SecureUserAccountManager {
      * @throws fi.dwo.commons.exceptions.Dwo2Exception 
      */
 
-    public static PersistentUser updateAccountData(PersistentUser user) throws Dwo2Exception {
-            user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", PersistentUser.class, user);
+    public static DomFullUser updateAccountData(DomFullUser user) throws Dwo2Exception {
+            user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", DomFullUser.class, user);
             LOG.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{user.getUsername()});
         return user;
     }

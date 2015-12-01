@@ -1,7 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
@@ -14,7 +14,8 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 /**
- * Handles login actions and updates user and role stored in the DwoHelper.
+ * Handles login actions and updates user and role stored in the DwoHelper. Should
+ * call a session password Manager in the future. Particular for students.
  *
  * @author G.A.J. van der Plas
  */
@@ -22,9 +23,9 @@ public class LoginManager {
 
     private static final Logger LOG = Logger.getLogger(LoginManager.class.getName());
 
-    public static PersistentUser login(String username, String password) {
+    public static DomFullUser login(String username, String password) {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
-        PersistentUser user;
+        DomFullUser user;
         HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(username, password).build();
         Client client = ClientBuilder.newClient().register(feature);
         CacheControl cache = new CacheControl();
@@ -32,7 +33,7 @@ public class LoginManager {
         cache.setNoStore(true);
 
         Response response = client.target(DwoHelper.getServerUrlPath().toString())
-                .path("/rest/secure/user/userprofile/get/json")
+                .path("/rest/secure/user/account/get")
                 .request().cacheControl(cache).get(Response.class);
         if (response.getStatus() != 200) {
             // failed login
@@ -40,7 +41,7 @@ public class LoginManager {
             return null;
         } else {
             //Set return value
-            user = response.readEntity(PersistentUser.class);
+            user = response.readEntity(DomFullUser.class);
             // succeeded login
             LOG.log(Level.INFO, "Logged in with username {0}.", new Object[]{user.getUsername()});
             //Set webtarget with credentials for future rest login.

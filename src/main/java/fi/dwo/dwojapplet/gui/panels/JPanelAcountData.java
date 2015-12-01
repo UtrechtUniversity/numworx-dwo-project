@@ -39,9 +39,9 @@ public class JPanelAcountData extends javax.swing.JPanel {
         jPasswordFieldConfirmPassword.setText("");
         jPasswordFieldNewPassword.setText("");
         jPasswordFieldPassword.setText("");
-        jTextFieldInsertion.setText(prop.getUser().getMiddlename());
-        jTextFieldGivenName.setText(prop.getUser().getFirstname());
-        jTextFieldFamilyName.setText(prop.getUser().getLastname());
+        jTextFieldInsertion.setText(prop.getUser().getInsertion());
+        jTextFieldGivenName.setText(prop.getUser().getGivenName());
+        jTextFieldFamilyName.setText(prop.getUser().getFamilyName());
         jTextFieldEmail.setText(prop.getUser().getEmail());
 //        jButtonEditAndCancel.setText(user.getUsername());
 //        jButtonUpdate.setText(user.getUsername());
@@ -282,7 +282,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextFieldGivenNamePropertyChange
 
     private void jButtonEditAndCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditAndCancelActionPerformed
-        if (prop.getUser().getPasswd().equals(MD5.getHashString(jPasswordFieldPassword.getText())
+        if (prop.getUser().getPassword().equals(MD5.getHashString(jPasswordFieldPassword.getText())
         )) {
             //clear the password field if red
             jPasswordFieldPassword.setBackground(originalBackground);
@@ -309,7 +309,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
 
     private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
         //try update else fail.
-        if (prop.getUser().getPasswd().equals(MD5.getHashString(jPasswordFieldPassword.getText())
+        if (prop.getUser().getPassword().equals(MD5.getHashString(jPasswordFieldPassword.getText())
         )) {
             //update data and disable mode
             prop.setUpdate(false);
@@ -323,16 +323,16 @@ public class JPanelAcountData extends javax.swing.JPanel {
             jTextFieldFamilyName.setEditable(false);
             jTextFieldEmail.setEditable(false);
 
-            prop.getUser().setFirstname(jTextFieldGivenName.getText());
-            prop.getUser().setMiddlename(jTextFieldInsertion.getText());
-            prop.getUser().setLastname(jTextFieldFamilyName.getText());
+            prop.getUser().setGivenName(jTextFieldGivenName.getText());
+            prop.getUser().setInsertion(jTextFieldInsertion.getText());
+            prop.getUser().setFamilyName(jTextFieldFamilyName.getText());
             prop.getUser().setEmail(jTextFieldEmail.getText());
             if (jPasswordFieldNewPassword.getText().equals("")) {
                 jPasswordFieldConfirmPassword.setBackground(originalBackground);
             } else if (!jPasswordFieldNewPassword.getText().equals("")
                     && jPasswordFieldNewPassword.getText().equals(jPasswordFieldConfirmPassword.getText())) {
                 //updates password following some logic.
-                prop.getUser().setPasswd(MD5.getHashString(jPasswordFieldNewPassword.getText()));
+                prop.getUser().setPassword(MD5.getHashString(jPasswordFieldNewPassword.getText()));
                 jPasswordFieldConfirmPassword.setBackground(originalBackground);
             } else {
                 jPasswordFieldConfirmPassword.setBackground(Color.RED);

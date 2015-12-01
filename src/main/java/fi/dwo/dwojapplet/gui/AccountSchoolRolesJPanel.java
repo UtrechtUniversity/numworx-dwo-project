@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
@@ -208,13 +209,13 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
                 prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
                 prop.setActiveSchoolRoleAndClass();
 //            //get user data
-                PersistentUser user = DwoHelper.getCurrentUser();
+                DomFullUser user = DwoHelper.getCurrentUser();
 //            // clear user data
                 GuiCreator.instance().clearCurrentUserData();
                 try {
 //                //switch role now
                     LOG.log(Level.INFO, "switching role now");
-                    GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPasswd());
+                    GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
                 }
                 catch (LoginException ex) {
                     LOG.log(Level.SEVERE, null, ex);
@@ -230,13 +231,13 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
                 prop.setActiveSchoolRoleAndClass();
                 //TODO Remove role now
 //            //get user data
-                PersistentUser user = DwoHelper.getCurrentUser();
+                DomFullUser user = DwoHelper.getCurrentUser();
 //            // clear user data
                 GuiCreator.instance().clearCurrentUserData();
                 try {
 //                //switch role now
                     LOG.log(Level.INFO, "Removing role now");
-                    GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPasswd());
+                    GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
                 }
                 catch (LoginException ex) {
                     LOG.log(Level.SEVERE, null, ex);
@@ -314,13 +315,13 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
             prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(4, col));
             prop.setActiveSchoolRoleAndClass();
 //            //get user data
-            PersistentUser user = DwoHelper.getCurrentUser();
+            DomFullUser user = DwoHelper.getCurrentUser();
 //            // clear user data
             GuiCreator.instance().clearCurrentUserData();
             try {
 //                //switch role now
                 LOG.log(Level.INFO, "switching role now");
-                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPasswd());
+                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
