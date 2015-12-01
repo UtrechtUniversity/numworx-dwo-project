@@ -144,7 +144,7 @@ public class PublicUserManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/submit")
+    @Path("/submitsaml")
     public PersistentUser getSamlUser(RestSamlUser samlRestUser) {
         //should return a DomFullUser. 
         PersistentUser user;

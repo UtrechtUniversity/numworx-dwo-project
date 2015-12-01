@@ -140,7 +140,7 @@ public class SecuredSchoolAdminSchoolClassManager {
      * @param restSchoolClass
      * @return
      */
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/getTeacherList")
     public List<DomTeacher> GetTeachersInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {

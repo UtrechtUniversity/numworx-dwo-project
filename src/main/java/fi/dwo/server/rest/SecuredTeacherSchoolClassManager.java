@@ -434,7 +434,7 @@ public class SecuredTeacherSchoolClassManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/submitTeacher")
+    @Path("/submitStudent")
     public Boolean SubmitStudentToSchoolClass(@Context SecurityContext sc, RestSubmitStudentToSchoolClass restSubmitStudentToSchoolClass) {
         DomStudent domStudent = restSubmitStudentToSchoolClass.getStudent();
         DomSchoolClass domToSchoolClass = restSubmitStudentToSchoolClass.getSchoolToClass();
