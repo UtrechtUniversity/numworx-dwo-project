@@ -7,12 +7,14 @@ package fi.dwo.commons.dom.entities;
 
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * DomUser
  *
  * @author G.A.J. van der Plas
  */
+@XmlRootElement
 public class DomFullUser extends DomUser implements Serializable {
     private String password;
     private String email;
