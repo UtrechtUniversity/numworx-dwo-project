@@ -4,11 +4,10 @@ JUnit tests require a local mysql 5.6.26 versioned database for running integrat
 tests. Test exist that verify the persistence framework as well the REST-datamanagers.
 The following commands should create an appropiate database:
 
-CREATE DATABASE `dwo_devel_v1_4` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */
+CREATE DATABASE `dwojunittest` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */
 
-It also requires access rights for a user test with password test.Please see the 
+It also requires access rights for a user 'test' with password 'test'. Please see the 
 mysql manual how to install and configure the database and configure user-access.
-
 
 The jdbc-resource string is set in the test-package fi.dwo.server.testutil.Parameters to:
 

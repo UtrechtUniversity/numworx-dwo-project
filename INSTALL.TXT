@@ -1,6 +1,8 @@
 This software is compatible with tomcat7.0 and requires a mysql 5.5 database
 resource. For security reasons the application should best run in it's own 
-tomcat.
+tomcat. As we only deploy production on Linux-based hosts our documentation 
+is limited to that platform, though an advanced developer may install it in
+any tomcat/mysql capable OS.
 
 Create an empty mysql database and run the createdb.sql in the tools directory 
 on the commandline of the mysql executable to fill it with tables. Next create a 
