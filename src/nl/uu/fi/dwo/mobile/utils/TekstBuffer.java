@@ -381,6 +381,10 @@ public class TekstBuffer
 		case 27:
 			return new StubView("MozarchGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(map, new fi.mozarchgwt.client.MozarchGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+		case 48:
+			return new StubView("StatSimGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//return new PopupFacade(map, new fi.statsimgwt.client.StatSimGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			
 		}
 
 		if (soortVak == 0)
