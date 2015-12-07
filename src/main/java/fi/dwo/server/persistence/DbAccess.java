@@ -710,7 +710,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             }
 
             if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("4")) {
-                LOG.log(Level.INFO, "We are compatible with the database model version: {0}.{1}.{4}",
+                LOG.log(Level.INFO, "We are compatible with the database model version: {0}.{1}.{2}",
                         new Object[]{hashMap.get("DBVersion Major"),
                             hashMap.get("DBVersion Minor"),
                             hashMap.get("DBVersion Revision")});
