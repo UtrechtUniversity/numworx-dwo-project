@@ -28,7 +28,7 @@ public class SecureUserAccountLoginsManager {
      */
     public static DomSchoolsRolesAndClasses getSchoolLogins() throws Dwo2Exception {
         DomSchoolsRolesAndClasses src;
-        src = StoredRestManager.getInstance().get("/rest/secure/user/account/logins/getlist", DomSchoolsRolesAndClasses.class);
+        src = StoredRestManager.getInstance().get("/rest/secure/user/account/logins/getList", DomSchoolsRolesAndClasses.class);
         return src;
     }
 
@@ -43,7 +43,7 @@ public class SecureUserAccountLoginsManager {
         RestSchoolRoleAndClass rsrc = new RestSchoolRoleAndClass();
         rsrc.setRestContext(new RestContext());
         rsrc.setDomSchoolRoleAndClass(src);
-        DomSchoolRoleAndClass result = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/switch", DomSchoolRoleAndClass.class, rsrc);
+        DomSchoolRoleAndClass result = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/select", DomSchoolRoleAndClass.class, rsrc);
         return result;
     }
 

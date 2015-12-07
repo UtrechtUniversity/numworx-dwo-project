@@ -125,7 +125,7 @@ class AppletMapper extends XmlRpcMapper {
 
         //Try loading class from remote server.
         try {
-            if(DwoHelper.getJarUrlPath()!=null) Loader.setPrefix(DwoHelper.getJarUrlPath().toString());
+            if(DwoHelper.getJarUrlPath()!=null) Loader.setPrefix(DwoHelper.getJarUrlPath().toString()+"/"); //trailing slash is needed!
             a = Loader.create(jarname).loadClass(className);
             return a;
         } catch (ClassNotFoundException e1) {
