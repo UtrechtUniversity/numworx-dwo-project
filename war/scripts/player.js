@@ -113,6 +113,12 @@
     	}
     	console.log("total = " + total)
     }
+    window.cmi = { "suspend_data" : [] };
+    function onGetState(topic, publisherData, subscriberData) {
+    	var xwid = publisherData.source
+    	window.cmi.suspend_data[xwid] = publisherData.parameters;
+    	bootstrap[xwid](topic, publisherData)
+    }
     
     function onBoot(topic, xwid) {
     	onBootstrap(topic,xwid );
@@ -143,6 +149,7 @@
     managedHub.subscribe('boot', onBoot)
     managedHub.subscribe('*.checked', onCheck)
     managedHub.subscribe('*.changed', onCheck)
+    managedHub.subscribe('*.getState', onGetState)
     managedHub.subscribe('bootstrap', onBootstrap)
     managedHub.subscribe('*.logOption', onLogOption)
     

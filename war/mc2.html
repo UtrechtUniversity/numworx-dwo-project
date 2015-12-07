@@ -34,6 +34,12 @@
     <script type="text/javascript" src="scripts/openajax/containers/iframe/rpc/rpc.js"></script>
  
    <script  src="scripts/player.js"></script>
+   <script>
+   		function updateHandler(obj) {
+   			console.log("updateHandler " + obj);
+   		}
+   
+   </script>
     <script src="scripts/SCORM_2004_APIWrapper.js"></script>
     <script src="DWOplayer/DWOplayer.nocache.js"></script>
   </head>
@@ -49,7 +55,7 @@
         in order for this application to display correctly.
       </div>
     </noscript>
-    <div id='messageArea'></div>
+    <div style='display: none' id='messageArea'></div>
     </div>
     
   </body>
