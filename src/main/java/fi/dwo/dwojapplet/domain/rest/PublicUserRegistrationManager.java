@@ -16,7 +16,7 @@ public class PublicUserRegistrationManager {
 
     public static boolean RegisterNewUser(DomNewUser newUserReg) throws Dwo2Exception {
         boolean r;
-        r = StoredRestManager.getInstance().put("/public/registration/submit", Boolean.class, newUserReg);
+        r = StoredRestManager.getInstance().put("/public/user/submit", Boolean.class, newUserReg);
 
         return r;
     }
