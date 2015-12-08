@@ -636,7 +636,7 @@ public class SecuredTeacherSchoolClassManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/submitSingleSchoolStudent")
+    @Path("/updateSingleSchoolStudent")
     public Boolean updateSingleSchoolStudent(@Context SecurityContext sc, RestSingleSchoolStudent nssStudent) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -659,7 +659,7 @@ public class SecuredTeacherSchoolClassManager {
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getDomSingleSchoolStudent().getUsername() + ".");
             }
             if (!user.isSingleSchoolAccount()) {
-                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by schooladmin {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by teacher {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
             user.setUsername(nssStudent.getDomSingleSchoolStudent().getUsername());

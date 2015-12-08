@@ -10,11 +10,9 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestFullUser;
-import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
@@ -102,7 +100,12 @@ public class SecuredUserAccountManagerIT {
         user.getDomFullUser().setPassword("e");
 
         DomFullUser result = instance.updateCurrentUser(sc, user);
-        assertEquals(user, result);
+        assertEquals(user.getDomFullUser().getUsername(), result.getUsername());
+        assertEquals(user.getDomFullUser().getGivenName(), result.getGivenName());
+        assertEquals(user.getDomFullUser().getInsertion(), result.getInsertion());
+        assertEquals(user.getDomFullUser().getFamilyName(), result.getFamilyName());
+        assertEquals(user.getDomFullUser().getPassword(), result.getPassword());
+        assertEquals(user.getDomFullUser().getEmail(), result.getEmail());
 
         user.setDomFullUser(new DomFullUser(UserManager.findByUserName("user01")));
         user.getDomFullUser().setUsername("bonk");

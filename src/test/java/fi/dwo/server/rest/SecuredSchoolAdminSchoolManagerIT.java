@@ -10,6 +10,8 @@ import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -233,7 +235,55 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("Could not find created user's hasRole");
         }
     }
+    
+    /**
+     * Test of updateSingleSchoolStudent method, of class
+     * SecuredTeacherSchoolClassManager. Tests if only one of its single school
+     * students can be updated.
+     */
+    @Test
+    public void testUpdateSingleSchoolStudent() {
+        System.out.println("updateSingleSchoolStudent");
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        RestSingleSchoolStudent nssStudent = new RestSingleSchoolStudent();
+        DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
+        nssStudent.setDomSingleSchoolStudent(dssStudent);
+        
+        dssStudent.setId(MySQLPersistenceId.createPersistenceId(11L, PersistenceClassType.PersistentUser));
+        dssStudent.setUsername("user04"); //changing is not allowed.
+        dssStudent.setGivenName("User");
+        dssStudent.setFamilyName("Lastname 04");
+        dssStudent.setPassword("bla");
+        dssStudent.setEmail("blamail");
+        SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
+        Boolean expResult = true;
+        Boolean result = instance.updateSingleSchoolStudent(sc, nssStudent);
+        assertEquals(expResult, result);
+        PersistentUser user = UserManager.findEntity(11L);
+        assertEquals(user.getEmail(), dssStudent.getEmail());
+        assertEquals(user.getFirstname(), dssStudent.getGivenName());
+        assertEquals(user.getLastname(), dssStudent.getFamilyName());
+        assertEquals(user.getMiddlename(), dssStudent.getInsertion());
+        assertEquals(user.getPasswd(), dssStudent.getPassword());
+        assertEquals(user.isSingleSchoolAccount(), true);
+        assertEquals(user.getUsername(), dssStudent.getUsername());
 
+        //try if a non-single school student can be updated
+        dssStudent.setUsername("user03");
+        dssStudent.setGivenName("User");
+        dssStudent.setFamilyName("Lastname 02");
+        dssStudent.setPassword("bla");
+        dssStudent.setEmail("blamail");
+        expResult = false;
+        try {
+            result = instance.updateSingleSchoolStudent(sc, nssStudent);
+            assertEquals(expResult, result);
+        }
+        catch (Dwo2RestException e) {
+            //success
+        }
+    }
+    
     /**
      * Test of getSchoolClasses method, of class
      * SecuredSchoolAdminSchoolClassManager.

@@ -273,6 +273,61 @@ public class SecuredSchoolAdminSchoolManager {
     }
 
     /**
+     * Edits a singleSchoolStudent.
+     *
+     * @param sc
+     * @param nssStudent
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/updateSingleSchoolStudent")
+    public Boolean updateSingleSchoolStudent(@Context SecurityContext sc, RestSingleSchoolStudent nssStudent) {
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+        PersistentSchoolGroup sg = null;
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
+            sg = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+
+        if (sg != null) {
+            PersistentUser user = UserManager.findEntity((Long) MySQLPersistenceId.getId(nssStudent.getDomSingleSchoolStudent().getId()));
+            if (user == null) {
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: could not find user with id to update {1}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getId()});
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getDomSingleSchoolStudent().getUsername() + ".");
+            }
+            if (!user.isSingleSchoolAccount()) {
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by schooladmin {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+            }
+            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUsername());
+            user.setEmail(nssStudent.getDomSingleSchoolStudent().getEmail());
+            user.setFirstname(nssStudent.getDomSingleSchoolStudent().getGivenName());
+            user.setMiddlename(nssStudent.getDomSingleSchoolStudent().getInsertion());
+            user.setLastname(nssStudent.getDomSingleSchoolStudent().getFamilyName());
+            user.setPasswd(nssStudent.getDomSingleSchoolStudent().getPassword());
+            try {
+                UserManager.edit(user);
+            }
+            catch (PersistenceException ex) {
+                LOG.log(Level.WARNING, "User {0} could not update user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getUsername()});
+                LOG.log(Level.SEVERE, null, ex);
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user " + sc.getUserPrincipal().getName() + ".");
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Returns the school data to be displayed.
      *
      * @param sc

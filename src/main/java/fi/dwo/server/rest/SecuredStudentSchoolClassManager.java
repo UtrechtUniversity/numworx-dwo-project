@@ -41,7 +41,7 @@ public class SecuredStudentSchoolClassManager {
 
     @PUT
     @Produces({"application/json"})
-    @Path("/submit")
+    @Path("/select")
     public Boolean setActiveSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -127,7 +127,7 @@ public class SecuredStudentSchoolClassManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/submitclass")
+    @Path("/submit")
     public Boolean registerStudentForSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
