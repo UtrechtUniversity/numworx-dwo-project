@@ -1,8 +1,10 @@
 package nl.uu.fi.dwo.interaction.client.json;
 
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -294,6 +296,51 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 		return object.keySet();
 	}
 
+	public Set<Entry<String, Object>> entrySet() {
+		return new AbstractSet<Entry<String,Object>>(){
+
+			@Override
+			public Iterator<Entry<String, Object>> iterator() {
+				final Iterator<String> keys = keySet().iterator();
+				return new Iterator<Entry<String,Object>>(){
+
+					@Override
+					public boolean hasNext() {
+						return keys.hasNext();
+					}
+					public void remove() {
+						throw new UnsupportedOperationException("remove");
+					}
+					@Override
+					public Entry<String, Object> next() {
+						final String key = keys.next();
+						final Object value = get(key);
+						return new Entry<String,Object>() {
+
+							@Override
+							public String getKey() {
+								return key;
+							}
+
+							@Override
+							public Object getValue() {
+								return value;
+							}
+
+							@Override
+							public Object setValue(Object value) {
+								throw new UnsupportedOperationException("setValue");
+							}};
+					}};
+			}
+
+			@Override
+			public int size() {
+				return JSONObjectMapImpl.this.size();
+			}};
+		
+	}
+	
 	@Override
 	public Object put(String key, Object value) {
 		JSONValue json = JSONUtilities.toJSONValue(value);

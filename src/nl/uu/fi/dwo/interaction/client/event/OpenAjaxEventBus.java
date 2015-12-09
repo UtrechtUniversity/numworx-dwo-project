@@ -93,7 +93,7 @@ public class OpenAjaxEventBus extends EventBus {
 	@Override
 	public void fireEventFromSource(Event<?> event, Object source) {
 		CBookEvent ev = (CBookEvent) event;
-		String topic = source.toString();
+		String topic = source == null ? ev.getCommand() : source.toString();
 		JavaScriptObject data = JSONUtilities.toJSONObject(ev.toObjectMap()).isObject().getJavaScriptObject();
 		hub.publish(topic, data);
 	}

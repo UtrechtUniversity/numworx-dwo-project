@@ -21,16 +21,10 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 	public String getDefaultHost() {
 		return "mc2dme.appspot.com";
 	}
-	@Override
-	public String getStubView() {
-		if(!GWT.isProdMode())
-			return "";
-		return "/dwo/apps/";
-	}
 
 	@Override
 	public Logging getLogging() {
-		return LaTransport.newInstance();
+		return LaTransport.newJSInstance();
 	}
 
 	@Override

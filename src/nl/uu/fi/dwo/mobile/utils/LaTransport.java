@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -23,17 +24,73 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 
-public class LaTransport implements RequestCallback , Logging {
+public class LaTransport implements Logging {
 
 	public static Logging newInstance() { 
-		return new LaTransport();		
+		return new LaTransport(new LaconSender());		
 	}
+
+	public static Logging newJSInstance() {
+		return new LaTransport(new JSSender());
+	}
+	
+	private Sender sender;
+	
+	abstract static class Sender {
+		protected Logger lg = Logger.getLogger(getClass().getName());
+
+		void send0(JSONObject object) {
+			lg.fine("send0 " + object.toString());
+		}
+	}
+	
+	static class LaconSender extends Sender implements RequestCallback {
+		void send0( JSONObject object) {
+			RequestBuilder requestBuilder = new RequestBuilder(
+					RequestBuilder.POST, ENDPOINT);
+			requestBuilder.setHeader("Content-Type", "application/json");
+			requestBuilder.setTimeoutMillis(TIMEOUT_MS);
+			String requestData = object.toString();
+			lg.info(requestData);
+			try {
+				requestBuilder.sendRequest(requestData, this);
+			} catch (RequestException e) {
+				lg.log(Level.SEVERE, "sendRequest", e);;
+			}
+		}
+
+		@Override
+		public void onResponseReceived(Request request, Response res) {		
+			lg.info( "Lacon returned "+
+					"response code "+res.getStatusCode()+" - "+
+					res.getStatusText());
+		}
+
+		@Override
+		public void onError(Request request, Throwable exception) {
+			lg.log(Level.SEVERE, "send0", exception);
+		}	
+	}
+	
+	static class JSSender extends Sender {
+		static native void send00(JavaScriptObject jso)/*-{
+				$wnd.updateHandler(jso)
+		}-*/;
+		
+		void send0(JSONObject jso) {
+			try {
+				send00(jso.getJavaScriptObject());
+			} catch (Exception e) {
+				lg.log(Level.SEVERE, "send0", e);
+			}
+		}
+	}
+	
+	
 	
 	private static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
 	private static final String ENDPOINT = "http://lacon.lkl.ac.uk/logactions";
-	//private static final String HOST = "lacon.lkl.ac.uk";
 	private static final int TIMEOUT_MS = 10000;
-	private Logger logger = Logger.getLogger(getClass().getName());
 	private OpdrNavIF comRoot;
 	
 	private final  JSONObject LOG = new JSONObject();
@@ -78,34 +135,10 @@ public class LaTransport implements RequestCallback , Logging {
 		}
 	}
 	
-	private LaTransport() {
+	private LaTransport(Sender laconSender) {
+		this.sender = laconSender;
 	}
 
-	public void send0( JSONObject object) {
-		RequestBuilder requestBuilder = new RequestBuilder(
-				RequestBuilder.POST, ENDPOINT);
-		//requestBuilder.setHeader("Host", HOST); // not allowed in Chrome.
-		requestBuilder.setHeader("Content-Type", "application/json");
-		requestBuilder.setTimeoutMillis(TIMEOUT_MS);
-		String requestData = object.toString();
-		logger.info(requestData);
-		try {
-			requestBuilder.sendRequest(requestData, this);
-		} catch (RequestException e) {
-			logger.log(Level.SEVERE, "sendRequest", e);;
-		}
-	}
-
-	@Override
-	public void onResponseReceived(Request request, Response res) {		
-		logger.info( "Lacon returned "+
-				"response code "+res.getStatusCode()+" - "+
-				res.getStatusText());
-	}
-
-	@Override
-	public void onError(Request request, Throwable exception) {
-	}
 	
 	public JSONObject buildMessage(Map<String, ?> parameters) {
 		JSONObject msg = new JSONObject();
@@ -197,7 +230,7 @@ public class LaTransport implements RequestCallback , Logging {
 	public void log(Map<String,?> result) {
 		if(comRoot == null) return;
 		JSONObject msg = buildMessage(result);
-		send0(msg);
+		sender.send0(msg);
 	}
 
 	@Override

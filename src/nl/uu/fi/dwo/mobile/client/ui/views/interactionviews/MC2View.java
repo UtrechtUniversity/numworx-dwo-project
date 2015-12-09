@@ -10,9 +10,11 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -45,6 +47,13 @@ public class MC2View extends Composite implements InteractionView {
 	 	$wnd.removeIframe(fr)
 	}-*/;
 	
+	private static native void setSuspendData(String id, JavaScriptObject data) 
+	/*-{
+	 	$wnd.cmi.suspend_data[id] = data
+	 }-*/
+	;
+	
+	
 	private static native void setBootstrap(String id, MC2View diz) /*-{
 		$wnd.setBootstrap(id, function(xwid, data) {
 			diz.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::doOpenAjaxEvent(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)
@@ -55,6 +64,7 @@ public class MC2View extends Composite implements InteractionView {
 	
 	
 	private Logging latransport = DWOplayer.PARAMETERS.getLogging();
+	private Map<String, Object> state = Collections.emptyMap();
 	
 	private void doOpenAjaxEvent(String topic, JavaScriptObject data) {
 		LOGGER.info("topic:" + topic + " ,data:" + data + " " + getUUID());
@@ -82,7 +92,11 @@ public class MC2View extends Composite implements InteractionView {
 			comRoot.setChanged(Boolean.FALSE.equals(correct));
 			return;
 		}
-		
+		if(topic.endsWith(".getState")) {
+			JSONObject json = new JSONObject(data);
+			ObjectMap map = JSONUtilities.wrapMap(json);
+			state = map.getMap("parameters");		
+		}
 		
 	}
 	
@@ -239,7 +253,7 @@ public class MC2View extends Composite implements InteractionView {
 	@Override
 	public HashMap<String, Object> getState() {
 		HashMap<String, Object> result = new HashMap<String,Object>();
-		// TODO fill from state[xwid]?
+		result.putAll(state); // fill from state[xwid]?
 		return wrap(result);
 	}
 
@@ -256,6 +270,11 @@ public class MC2View extends Composite implements InteractionView {
 			score = Integer.parseInt(h.remove("STUBVIEW_score").toString());
 		if(h.containsKey("STUBVIEW_correct"))
 			correct = StubView.toBoolean(h.remove("STUBVIEW_correct").toString());
+		state = h;
+		JavaScriptObject data = JSONUtilities.toJSONObject(h).isObject().getJavaScriptObject();
+		setSuspendData(getUUID(), data);
+//		CBookEvent event = new CBookEvent(this, "setState", state);
+//		comRoot.fireEvent(event);
 	}
 
 	@Override
