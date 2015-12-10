@@ -261,7 +261,14 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 			box.setWidget(FocusOnTouch.wrap(content.asWidget(),false));
 		}
 		if(!box.isShowing() && view != null && view instanceof FormuleEditorWithAnswer)
-		{	state = view.getState();
+		{	
+			if (content instanceof FormuleEditorWithSteps)
+			{
+				// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
+				((FormuleEditorWithSteps) content).setUitgeklapt(true);
+			}
+			
+			state = view.getState();
 			view.setState(state);
 		}
 		else if(!box.isShowing() && view != null && state != null)
@@ -270,8 +277,10 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 		if(!box.isShowing() )
 				box.showRelativeTo(this);
 		if(box.isShowing() && content instanceof FormuleEditorWithSteps)
-		{	if(((FormuleEditorWithSteps) content).getEditor() != null)
-			{	FormuleEditor editor = ((FormuleEditorWithSteps) content).getEditor();
+		{	
+			if(((FormuleEditorWithSteps) content).getEditor() != null)
+			{	
+				FormuleEditor editor = ((FormuleEditorWithSteps) content).getEditor();
 				editor.requestFocus();
 		
 				//om te zorgen dat cursor ook getekend wordt:
@@ -316,6 +325,12 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 			state = view.getState();
 			if(view instanceof FormuleEditorWithAnswer)
 				view.setState(state);
+			
+			if (content instanceof FormuleEditorWithSteps)
+			{
+				// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
+				((FormuleEditorWithSteps) content).setUitgeklapt(false);
+			}
 		}
 		box.hide();
 	}
