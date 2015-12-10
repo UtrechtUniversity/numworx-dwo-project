@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleClientBundle;
@@ -18,7 +17,6 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
-import nl.uu.fi.dwo.interaction.client.FacetAware.Type;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
@@ -34,7 +32,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
@@ -46,8 +43,6 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
@@ -160,6 +155,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	private boolean linOefenVersie;
 	
 	private static boolean fontOvererving;
+
+	private boolean isUitgeklapt;
 	
 	public static void zetFontOverervingForm(boolean b)
 	{	fontOvererving = b;
@@ -728,6 +725,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		// zelftoets(2) of eindtoets(3)
 		return mode == 2 || mode == 3;
 	}
+	
+	public boolean isUitgeklapt()
+	{
+		return isUitgeklapt;
+	}
 
 	public void backStep(boolean setState)
 	{
@@ -813,6 +815,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	}
 
 	private boolean focusEnabled = true;
+
 	private void requestFocus() {
 		if(focusEnabled && editor != null)
 			editor.requestFocus();
@@ -2054,7 +2057,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 					if(goedHalfFout == AntwoordVakChecker.GOED)
 					{
 						setFeedback(editor.getFeedback());
-						if(correct != Boolean.TRUE)
+						if (!Boolean.TRUE.equals(correct))
 							lastStep("$f" + editor.toString() + "@", show, setState);
 					}
 					else
@@ -2630,5 +2633,13 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			response = toMathML(antwoordString);
 		}
 		responses.add(response);		
+	}
+
+	/**
+	 * Zet het veld dat bij houdt of de FormuleEditorWithSteps is uitgeklapt.
+	 */
+	public void setUitgeklapt(boolean b)
+	{
+		this.isUitgeklapt = b;
 	}
 }
