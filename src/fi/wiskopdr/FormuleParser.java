@@ -296,9 +296,9 @@ public class FormuleParser
 
 			if (s.charAt(index$ + 1) == 'b')
 			{				
-				if(Character.isDigit(s.charAt(index$-1))||Character.isWhitespace(s.charAt(index$-1)))
+				if(Character.isDigit(s.charAt(index$-1))||Character.isSpace(s.charAt(index$-1)))
 				{ // special case getal$b .. @ -> (getal + $b ... )@
-					int digit = index$-1;while(Character.isDigit(s.charAt(digit-1))||Character.isWhitespace(s.charAt(digit-1))) digit--;
+					int digit = index$-1;while(Character.isDigit(s.charAt(digit-1))||Character.isSpace(s.charAt(digit-1))) digit--;
 					s = s.substring(0,digit) + "(" + s.substring(digit, n) + ")/(" + s.substring(n+2,indexAt) + "))" + s.substring(indexAt+1);
 				} else
 					s = s.substring(0,n) + ")/(" + s.substring(n+2,indexAt) + ")" + s.substring(indexAt+1);
