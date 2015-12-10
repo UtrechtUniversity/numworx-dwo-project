@@ -13,7 +13,6 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FacetHelper;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
-import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -28,7 +27,6 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
-import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -37,25 +35,18 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.FontStyle;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
@@ -69,7 +60,6 @@ import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.repr.ContentMathML;
-import fi.wiskopdr.text.Text;
 
 /**
  * Checks inserted formule with the correct answer
@@ -1001,7 +991,25 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			HashMap<String, Object> h2 = fews.getState();
 			if(h2.containsKey("ingevuld") && ((Boolean) h2.get("ingevuld")).booleanValue())
 			{
-				h = h2;
+				if (fews.isUitgeklapt())
+				{
+					h = h2;
+					// TODO syl: als this.toString() anders is dan formuleVakInhouden[laatste]
+					// vervang dan de laatste door this.toString(), want dan is FEWA als laatste geedit... Klopt dit?
+				}
+				else
+				{
+					// als de FormuleEditorWithSteps niet uitgeklapt, dan wordt het antwoord uit FormuleEditorWithAnswer genomen
+					String laatsteAntwoord = "$f" + toString() + "@";
+					h2.put(ANTWOORD_STRING, laatsteAntwoord);
+					String[] formuleVakInhouden = (String[]) h2.get("formuleVakInhouden");
+					int laatste = formuleVakInhouden.length - 1;
+					formuleVakInhouden[laatste] = laatsteAntwoord; // NOOP?
+					h2.put("formuleVakInhouden", formuleVakInhouden);
+					
+					// ANTWOORD_STRING en formuleVakInhouden moeten nu overschreven zijn... klopt dit?
+					h = h2;
+				}
 			}
 			else
 			{
