@@ -296,13 +296,13 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 		return object.keySet();
 	}
 
-	public Set<Entry<String, Object>> entrySet() {
-		return new AbstractSet<Entry<String,Object>>(){
+	public Set<Map.Entry<String, Object>> entrySet() {
+		return new AbstractSet<Map.Entry<String,Object>>(){
 
 			@Override
-			public Iterator<Entry<String, Object>> iterator() {
+			public Iterator<Map.Entry<String, Object>> iterator() {
 				final Iterator<String> keys = keySet().iterator();
-				return new Iterator<Entry<String,Object>>(){
+				return new Iterator<Map.Entry<String,Object>>(){
 
 					@Override
 					public boolean hasNext() {
@@ -312,10 +312,10 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 						throw new UnsupportedOperationException("remove");
 					}
 					@Override
-					public Entry<String, Object> next() {
+					public Map.Entry<String, Object> next() {
 						final String key = keys.next();
 						final Object value = get(key);
-						return new Entry<String,Object>() {
+						return new Map.Entry<String,Object>() {
 
 							@Override
 							public String getKey() {
