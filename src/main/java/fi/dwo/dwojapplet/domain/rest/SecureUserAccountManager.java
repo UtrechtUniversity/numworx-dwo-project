@@ -2,7 +2,6 @@ package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,14 +52,12 @@ public class SecureUserAccountManager {
      * Fields updated are email, password and the full name of the user. The full
      * name exists out of the first, insertion and family name.
      * 
-     * @param user
-     * @return 
      * @throws fi.dwo.commons.exceptions.Dwo2Exception 
      */
 
-    public static void removeAccountData() throws Dwo2Exception {
-        boolean b;
+    public static Boolean removeAccountData() throws Dwo2Exception {
+        Boolean b;
         b = StoredRestManager.getInstance().get("/rest/secure/user/account/remove", Boolean.class);
-        return;
+        return b;
     }
 }

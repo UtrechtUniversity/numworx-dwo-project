@@ -4,6 +4,7 @@ package fi.dwo.dwojapplet.REST;
 import fi.dwo.commons.dom.entities.DomRole;
 import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.dom.entities.DomUser;
+import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
@@ -158,6 +159,73 @@ class RestManager {
         }
     }
 
+
+    /**
+     * GET operation to the restful server.
+     *
+     * @param <T>
+     * @param path sub context path servlet.
+     * @param type
+     * @param o
+     * @return A list of Class c.
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     */
+    public <T> List<T> getPutList(String path, RestListClassTypes type, Object o) throws Dwo2RestException, Dwo2Exception {
+        CacheControl cache = new CacheControl();
+        cache.setNoCache(true);
+        cache.isNoStore();
+        Response response;
+        try{
+            response = webTargetRest.path(path).request().cacheControl(cache).put(Entity.entity(o, MediaType.APPLICATION_JSON));//fix call add objects
+        }catch(javax.ws.rs.ProcessingException e){
+            //catch time-outs
+            if(e.getMessage().contains("java.net.SocketTimeoutException: connect timed out")){
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, "Connection time-out.");
+            }else{
+                throw e;
+            }
+        }
+
+        if (response.getStatus() != 200) {
+            LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
+            Dwo2Exception e;
+            if (response.getStatus() == 400) {
+                //Assuming server side servlet generated exception has been sent.
+                String json = (String) response.readEntity(String.class);
+                e = new Dwo2Exception(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
+            } else {
+                //non-servlet generated exception has been sent. Convert to Dwo2RestException.
+                //TODO To filter these for the user and suggest a course of action.
+                e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
+            }
+            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
+            throw e;
+        } else {
+            switch (type) {
+                case DomUser:
+                    GenericType<ArrayList<DomUser>> pUserType = new GenericType<ArrayList<DomUser>>() {
+                    };
+                    return (List<T>) response.readEntity(pUserType);
+                case DomTeacher:
+                    GenericType<ArrayList<DomTeacher>> pTeacherType = new GenericType<ArrayList<DomTeacher>>() {
+                    };
+                    return (List<T>) response.readEntity(pTeacherType);
+                case DomRole:
+                    GenericType<ArrayList<DomRole>> pRoleType = new GenericType<ArrayList<DomRole>>() {
+                    };
+                    return (List<T>) response.readEntity(pRoleType);
+                case DomSchoolsRolesAndClasses:
+                    GenericType<ArrayList<DomSchoolsRolesAndClasses>> pSRCType = new GenericType<ArrayList<DomSchoolsRolesAndClasses>>() {
+                    };                    
+                    return (List<T>) response.readEntity(pSRCType);
+                default:
+                    String msg = "Programming error, trying to get an unsupported dataType.";
+                    LOG.log(Level.SEVERE, msg);
+                    throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
+            }
+        }
+    }
+    
     /**
      * GET operation to the restful server.
      *
