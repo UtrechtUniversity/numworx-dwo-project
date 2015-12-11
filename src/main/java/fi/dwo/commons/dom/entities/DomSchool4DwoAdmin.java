@@ -12,10 +12,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class DomSchool4Admin extends DomSchool{
+public class DomSchool4DwoAdmin extends DomSchool{
     private String schoolLogin;
 
-    public DomSchool4Admin(PersistentSchool s) {
+    public DomSchool4DwoAdmin(PersistentSchool s) {
         super(s);
         this.schoolLogin = s.getSchoolLogin();
     }
