@@ -3,7 +3,7 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomSchool4Admin;
+import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
@@ -118,7 +118,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
         List<PersistentSchool> expResult = SchoolManager.findEntities();
-        List<DomSchool4Admin> result = instance.getSchools(sc);
+        List<DomSchool4DwoAdmin> result = instance.getSchools(sc);
         assertEquals("The number of schools found did not match.", expResult.size(), result.size());
     }
 
@@ -176,7 +176,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         PersistentSchool expResult = null;
         expResult = SchoolManager.findEntity(3L);
         RestSchool4Admin restSchool = new RestSchool4Admin();
-        DomSchool4Admin domSchool = new DomSchool4Admin(expResult);
+        DomSchool4DwoAdmin domSchool = new DomSchool4DwoAdmin(expResult);
         restSchool.setDomSchool4Admin(domSchool);
         domSchool.setId(MySQLPersistenceId.createPersistenceId(expResult.getSchoolID(), PersistenceClassType.PersistentSchool));
         domSchool.setSchoolLogin("school01");

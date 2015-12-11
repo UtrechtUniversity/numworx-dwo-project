@@ -1,6 +1,6 @@
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomSchool4Admin;
+import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
@@ -150,7 +150,7 @@ public class SecuredDwoAdminSchoolManager {
     @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public List<DomSchool4Admin> getSchools(@Context SecurityContext sc) {
+    public List<DomSchool4DwoAdmin> getSchools(@Context SecurityContext sc) {
         PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
@@ -161,13 +161,13 @@ public class SecuredDwoAdminSchoolManager {
         }
         if (hr != null) {
             List<PersistentSchool> schools = null;
-            List<DomSchool4Admin> domSchools;
+            List<DomSchool4DwoAdmin> domSchools;
             try {
                 schools = SchoolManager.findEntities();
                 LOG.log(Level.FINER, "Fetched all {0} schools. ", new Object[]{schools.size()});
-                domSchools = new ArrayList<DomSchool4Admin>(schools.size());
+                domSchools = new ArrayList<DomSchool4DwoAdmin>(schools.size());
                 for (PersistentSchool s : schools) {
-                    domSchools.add(new DomSchool4Admin(s));
+                    domSchools.add(new DomSchool4DwoAdmin(s));
                 }
             }
             catch (Exception e) {
