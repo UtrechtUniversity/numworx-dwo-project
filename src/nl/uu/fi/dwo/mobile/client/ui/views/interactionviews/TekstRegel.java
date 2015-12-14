@@ -365,10 +365,19 @@ public class TekstRegel extends LayoutPanel
 				{	horPositie += 1;
 				}
 			}
+			if (regelObjects.get(i) instanceof AnchorView) {
+				AnchorView av = (AnchorView) regelObjects.get(i);
+				objectBreedte = av.getWidth();
+				objectHoogte = av.getHeight();
+				objectVerschuiving = ashoogte - av.getAsHoogte();
+				if(horPositie == 0 && Character.isLetter(av.toString().charAt(0))) // verschil met TextElement, XXX waarom????
+					horPositie = 2;
+			}
+			
 			else
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
-				if(regelObjects.get(i) instanceof String || regelObjects.get(i) instanceof AnchorView )
+				if(regelObjects.get(i) instanceof String /*|| regelObjects.get(i) instanceof AnchorView*/  ) // zie boven
 				{
 					String s = regelObjects.get(i).toString();
 					objectBreedte = (int) ctx.measureText(s).getWidth();

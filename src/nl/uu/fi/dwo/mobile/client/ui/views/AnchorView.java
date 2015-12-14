@@ -107,7 +107,7 @@ public class AnchorView implements IsWidget, ClickHandler /*, TekstElement*/ {
 
 
 	public int getWidth() {
-		return (int) Math.round(ctx.measureText(toString()).getWidth()+0.5);
+		return (int) Math.round(ctx.measureText(toString()).getWidth()+1.5);
 	}
 
 	public void setAsHoogte(int ashoogte) {
