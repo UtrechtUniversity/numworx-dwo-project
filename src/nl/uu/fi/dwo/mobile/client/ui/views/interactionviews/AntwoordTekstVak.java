@@ -608,7 +608,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 		ingevuld = this.ingevuld;
 		nagekeken = this.nagekeken;
 		if (formuleMode)
-			antwoord = formuleVak.toString();
+			antwoord = "$f" + formuleVak.toString() + "@"; // Wiskopdr heeft $f ... @
 		else
 			antwoord = antwoordTF.getText();
 		attempts = this.attempts;
@@ -675,7 +675,11 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 		this.errorCount = errorCount;
 
 		if (formuleMode)
+		{
+			if(antwoord.startsWith("$f") && antwoord.endsWith("@")) // vanaf nu altijd!
+				antwoord = antwoord.substring(2, antwoord.length()-1);
 			formuleVak.insert(antwoord);
+		}
 		else
 			antwoordTF.setText(antwoord);
 
