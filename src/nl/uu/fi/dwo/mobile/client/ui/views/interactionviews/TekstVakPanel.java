@@ -34,6 +34,8 @@ import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.dom.client.Style.BorderStyle;
@@ -2128,8 +2130,15 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			setCurrentSize( breedte, this.hoogte);
 			
 			fireEvent(KLAPUIT_EVENT);
-			if(tekstVakken.length >= 2)
-				tekstVakken[1][0].getElement().scrollIntoView();
+			
+			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+				@Override
+				public void execute() {
+					if (tekstVakken.length >= 2)
+						tekstVakken[1][0].getElement().scrollIntoView();
+				}
+			});
 		}
 	}
 

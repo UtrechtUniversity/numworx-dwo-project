@@ -136,9 +136,18 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 		return Double.NaN;
 	}
 
+	/** 
+	 * Get string value of key.
+	 * return null i.p.v. ClassCastException
+	 * @return string or null
+	 * @see nl.uu.fi.dwo.interaction.client.json.ObjectMap#getString(java.lang.String)
+	 */
 	@Override
 	public String getString(String key) {
-		return (String) get(key);
+		Object object = get(key);
+		if(object instanceof String)
+			return (String) object;
+		return null;
 	}
 
 	@Override

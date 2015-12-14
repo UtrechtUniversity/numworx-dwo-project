@@ -515,8 +515,11 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			else if (currentObject instanceof AnchorView)
 			{
 				AnchorView av = (AnchorView) currentObject;
-				String text = av.toString();
-				double width = ctx.measureText(text).getWidth();
+				//String text = av.toString();
+				//String save = ctx.getFont();
+				//if(!save.contains("bold")) ctx.setFont(save + " bold");
+				double width = av.getWidth(); // ctx.measureText(text).getWidth();
+				//ctx.setFont(save);
 				if(regelBreedte == 0 || regelBreedte + width <= tekstVakBreedte || pasAanB)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
 					//regelBreedte += (int)width;

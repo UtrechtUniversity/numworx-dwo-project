@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.interaction.client.event;
 
+import java.util.Collections;
 import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -69,20 +70,32 @@ public class CBookEvent extends Event<CBookEventListener> {
 	public CBookEvent(InteractionView source, String command, String message) {
 		super.setSource(source);
 		this.command = command;
-		this.parameters = null;
+		this.parameters = Collections.singletonMap("text", message);
 		this.message = message;
 	}
 
 	public CBookEvent(ObjectMap map) {
 		this.command = map.getString("command");
 		this.parameters = map.getMap("parameters");
-		this.message = map.getString("message");
+		this.message = getMessageFromMap(map);
 		setSource(map.getString("source"));
+	}
+
+	private String getMessageFromMap(ObjectMap map) {
+		String string = map.getString("message");
+		if(string == null) {
+			map = map.getObjectMap("parameters");
+			if(map != null)
+			{ 
+				return map.getString("text");
+			}
+		}
+		return string;
 	}
 	public CBookEvent(String command, ObjectMap map) {
 		this.command = command;
 		this.parameters = map.getMap("parameters");
-		this.message = map.getString("message");
+		this.message = getMessageFromMap(map);
 		setSource(map.getString("source"));
 	}
 	

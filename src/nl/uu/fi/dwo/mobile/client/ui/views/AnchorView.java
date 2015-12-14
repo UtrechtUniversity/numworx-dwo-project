@@ -1,12 +1,18 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.TekstElement;
+
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class AnchorView implements IsWidget, ClickHandler{
+public class AnchorView implements IsWidget, ClickHandler /*, TekstElement*/ {
 
 	public interface AnchorContext {
 
@@ -42,6 +48,17 @@ public class AnchorView implements IsWidget, ClickHandler{
 		} else
 			anchor = new Anchor(tekst, href);
 			anchor .setTarget("_blank");
+		ctx = Canvas.createIfSupported().getContext2d();
+		setContextFont();
+	}
+
+
+	private void setContextFont() {
+		ctx.setFont("bold " + fontSize + "px " + fontName);
+		FormuleFont fm = FormuleFont.createFromFontSize(fontSize, true);
+		fm.setFont(fontName);
+		height = fm.getHeight();
+		asHoogte = fm.getAscent();
 	}
 	
 	
@@ -50,6 +67,20 @@ public class AnchorView implements IsWidget, ClickHandler{
 		return anchor;
 	}
 
+	private String fontName = XMLView.getDefaultFontName();
+	private int    fontSize = XMLView.getDefaultFontSize();
+	private Context2d ctx;
+	
+	public void setFontName(String name) {
+		fontName = name;
+		anchor.getElement().getStyle().setProperty("font-family", name);
+		setContextFont();
+	}
+	public void setFontSize(int size) {
+		fontSize = size;
+		anchor.getElement().getStyle().setFontSize(size, Unit.PX);
+		setContextFont();
+	}
 
 	@Override
 	public void onClick(ClickEvent event) {
@@ -64,4 +95,26 @@ public class AnchorView implements IsWidget, ClickHandler{
 		return anchor.getText();
 	}
 
+	private int asHoogte;
+	public int getAsHoogte() {
+		return asHoogte;
+	}
+
+	private int height;
+	public int getHeight() {
+		return height;
+	}
+
+
+	public int getWidth() {
+		return (int) Math.round(ctx.measureText(toString()).getWidth()+0.5);
+	}
+
+	public void setAsHoogte(int ashoogte) {
+		this.asHoogte = ashoogte;	
+	}
+
+	
+	
+	
 }

@@ -226,9 +226,14 @@ public class TekstRegel extends LayoutPanel
 			}
 			else if(currentObject instanceof AnchorView)
 			{
-				objectVerschuiving = ashoogte - tekstAshoogte + 3;
-				objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
-				objectHoogte = tekstHoogte;
+				AnchorView av = (AnchorView) currentObject;
+				objectVerschuiving = ashoogte - av.getAsHoogte();
+// Anchor is altijd bold
+				//String save = ctx.getFont();
+				//if(! save.contains("bold")) ctx.setFont(save + " bold");
+				objectBreedte = av.getWidth(); //(int) ctx.measureText(currentObject.toString()).getWidth();
+				objectHoogte = av.getHeight();
+				//ctx.setFont(save);
 			}
 			else if(currentObject instanceof String)
 			{
