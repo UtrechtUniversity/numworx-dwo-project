@@ -147,8 +147,8 @@ public class SecuredUserAccountLoginsManager {
                     i = (Integer) oList[0];
 
                     sac.setSchoolClassId((PersistenceId) MySQLPersistenceId.createPersistenceId(i.longValue(), PersistenceClassType.PersistentSchoolClass));
-                    i = (Integer) oList[4];
-                    sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", i.longValue()).getSingleResult());
+                    Long j = (Long) oList[4];
+                    sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", j.longValue()).getSingleResult());
                 } else {
                     sac.setSchoolClassId(null);
                     sac.setSchoolClassName(null);

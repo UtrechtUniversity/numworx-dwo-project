@@ -8,8 +8,9 @@
         <title>Server application is running</title>
     </head>
     <body>
+        Deployed.
         <!-- <div><applet code="fi.dwo.dwojapplet.domain.DWO.class"
-            archive="<%= getServletContext().getInitParameter("fi.dwo.dwojapplet.web.appletName") %>" 
+            archive="<%= getServletContext().getInitParameter("fi.dwo.dwojapplet.web.appletName")%>" 
             width="100%" height="800" codebase="jars/">The DWO Applet</applet></div> -->
     </body>
 </html>
