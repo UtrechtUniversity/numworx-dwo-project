@@ -5,6 +5,7 @@ import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.panels.JPanelSchoolsandRolesProperties;
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -18,8 +19,8 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
     static boolean DEBUG = false;
     private JPanelSchoolsandRolesProperties prop;
 
-    private int  selectedRow, selectedColumn;
-    
+    private int selectedRow, selectedColumn;
+
     private Object[][] data;
 
     public void init(JPanelSchoolsandRolesProperties props, Image loginImage, Image removeImage) {
@@ -27,6 +28,9 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
         prop = props;
         List<DomSchoolRoleAndClass> srcList = prop.getSchoolsRolesAndClasses().getSchoolsRolesAndClassesList();
         int rows = 0;
+        if (srcList == null) {
+            srcList = new ArrayList();
+        }
         for (DomSchoolRoleAndClass src : srcList) {
             rows++; // one for each item in List
         }
@@ -40,7 +44,6 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
             data[j][4] = src;
             j++;
         }
-
     }
 
     @Override
@@ -72,21 +75,21 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
     public Class getColumnClass(int c) {
         return getValueAt(0, c).getClass();
     }
-    
+
     /*
      * Don't need to implement this method unless your table's editable.
      */
     @Override
     public boolean isCellEditable(int row, int col) {
-      //Note that the data/cell address is constant,
-      //no matter where the cell appears onscreen.
-      if (col < 2) {
-        return false;
-      } else {
-        return true;
-      }
+        //Note that the data/cell address is constant,
+        //no matter where the cell appears onscreen.
+        if (col < 2) {
+            return false;
+        } else {
+            return true;
+        }
     }
-    
+
 
     /*
      * Don't need to implement this method unless your table's data can
@@ -98,7 +101,7 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
         setSelectedRow(row);
         setSelectedColumn(col);
     }
-    
+
 //    private void printDebugData() {
 //      int numRows = getRowCount();
 //      int numCols = getColumnCount();
@@ -112,7 +115,6 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
 //      }
 //      System.out.println("--------------------------");
 //    }
-
     /**
      * @return the selectedRow
      */

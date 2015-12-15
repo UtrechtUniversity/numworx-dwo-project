@@ -4,7 +4,7 @@ package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
@@ -72,14 +72,14 @@ class UserMapper extends XmlRpcMapper {
             if (groupName != null) {
                 if (TextMapper.GUIR_OPT_TEACHER.equals(groupName)) {
                     if (DwoHelper.isContact()) {
-                        u = new ContactDocent();
+                        u = new SchoolAdmin();
                     } else {
                         u = new Teacher();
                     }
                 } else if (TextMapper.GUIR_OPT_ADMIN.equals(groupName)) {
                     u = new Admin();
                 } else if (TextMapper.GUIR_OPT_SCHOOLADMIN.equals(groupName)) {
-                    u = new ContactDocent();
+                    u = new SchoolAdmin();
                     DwoHelper.setContact(true);
                 }
             }

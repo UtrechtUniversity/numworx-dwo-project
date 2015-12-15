@@ -6,7 +6,6 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
@@ -41,7 +40,7 @@ import javax.swing.table.TableCellRenderer;
  * @author M.J.B. Kupers
  *
  */
-public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener {
+public class ClassStudentPanel extends JPanel implements CenterSubPanel, ActionListener {
 
     private CenterPanel center;
 
@@ -191,7 +190,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
             if (value == editImage) {
 				ClassRenamePanel panel = new ClassRenamePanel();
 				panel.setSchoolClass(sc);
-				int result = JOptionPane.showConfirmDialog(ClassPanel.this, panel ,TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+				int result = JOptionPane.showConfirmDialog(ClassStudentPanel.this, panel ,TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 				//case OK persist returned values
 				if(result==JOptionPane.OK_OPTION){
@@ -204,7 +203,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 
             } else if (value == removeImage) {
                 /* Delete the course */
-                if (JOptionPane.showConfirmDialog(ClassPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)
+                if (JOptionPane.showConfirmDialog(ClassStudentPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)
                         + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     if (instance.deleteClass(sc)) {
                         center.loadMenu();
@@ -214,20 +213,6 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 
             } else if (value == usersImage) {
                 center.loadCenter(instance.getClassUsersPanel(sc));
-            } else if (value == assignImage) {
-                instance.getDWO().setWait();
-                long t = System.currentTimeMillis();
-                //setData(domain.selectCourses(SelectCoursesDialog.selectCourses(this, domain.getAllCourses(), domain.getSelectedCourse()), true));
-                Course[] allCourses = instance.getCourseList();
-                System.out.println("getCourselist " + (System.currentTimeMillis() - t));
-                t = System.currentTimeMillis();
-                Course[] selectedSchoolCourses = sc.getSelectedSchoolCourses();
-                System.out.println("getSelected list " + (System.currentTimeMillis() - t));
-                instance.getDWO().setReady();
-                Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassPanel.this, allCourses, selectedSchoolCourses, sc);
-                if (selectedCourses != null) {
-                    sc.saveSelectedCourses(allCourses, selectedCourses);
-                }
             }
             fireEditingStopped();
         }
@@ -277,7 +262,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
      * Creates a new ClassPanel which shows a list of classes.
      *
      */
-    public ClassPanel() {
+    public ClassStudentPanel() {
         super(null);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(GuiConstants.MAIN_BACKGROUND);

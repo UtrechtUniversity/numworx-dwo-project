@@ -2,10 +2,9 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ClassUsersPanel.java
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
@@ -292,7 +291,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         if (user.hasRight(User.CHANGE_CLASS_RIGHT_TEACHER)) {
             Box hbox = Box.createHorizontalBox();
             hbox.add(registerClassListButton);
-            if (true || user instanceof ContactDocent) {
+            if (true || user instanceof SchoolAdmin) {
                 hbox.add(Box.createHorizontalStrut(10));
                 removeStudentsButton = new JButton(new RemoveAllUsers(TextMapper.getText(TextMapper.GUIUMP_ALL_STUDENTS), new ImageIcon(removeImage)));
                 hbox.add(removeStudentsButton);

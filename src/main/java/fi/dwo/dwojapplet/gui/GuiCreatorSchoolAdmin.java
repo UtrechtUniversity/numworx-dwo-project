@@ -1,12 +1,12 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.User;
 
-public class GuiCreatorContactDocent extends GuiCreatorTeacher {
+public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
 
-    public GuiCreatorContactDocent(DwoIF dwo) {
+    public GuiCreatorSchoolAdmin(DwoIF dwo) {
         super(dwo);
         
     }
@@ -18,7 +18,7 @@ public class GuiCreatorContactDocent extends GuiCreatorTeacher {
     public GuestMenuPanel getMenuPanel() {
         User u = dwo.getUser();
 
-        if (u instanceof ContactDocent) {
+        if (u instanceof SchoolAdmin) {
             return new ContactDocentMenuPanel(dwo);
         }
         return super.getMenuPanel();

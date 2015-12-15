@@ -4,7 +4,7 @@ import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
@@ -259,7 +259,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
     private CenterPanel center;
     private DwoIF dwo;
-    private ContactDocent docent;
+    private SchoolAdmin docent;
     private User[] userList;
     private RegisterClassListButton addDocentBtn;
     private SchoolGroup[] groups;
@@ -273,7 +273,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
         Image userImage = DwoHelper.getResourceImage("resources/student.png");
         Image teacherImage = DwoHelper.getResourceImage("resources/docent.png");
         this.dwo = dwo;
-        docent = (ContactDocent) dwo.getUser();
+        docent = (SchoolAdmin) dwo.getUser();
         School school = docent.getSchool();
         groups = school.getSchoolGroupList();
         getUserList();

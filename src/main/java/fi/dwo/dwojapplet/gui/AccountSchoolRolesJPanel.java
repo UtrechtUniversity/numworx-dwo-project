@@ -4,8 +4,6 @@ import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.User;
@@ -118,7 +116,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
         addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
         JPanel footer = new JPanel();
         footer.setLayout(new BoxLayout(footer, BoxLayout.X_AXIS));
-        footer.setBorder(new EmptyBorder(10,10,10,10));
+        footer.setBorder(new EmptyBorder(10, 10, 10, 10));
         footer.setBackground(GuiConstants.MAIN_BACKGROUND);
         footer.add(addRoleButton);
         this.add(footer);
@@ -264,7 +262,9 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 
         tableModel.init(prop, loginImage, removeImage);
         jtable.setModel(tableModel);
-        jtable.setRowSelectionInterval(0, 0);
+        if (jtable.getRowCount() > 0) {
+            jtable.setRowSelectionInterval(0, 0);
+        }
         jtable.setRowSelectionAllowed(false);
         jtable.setColumnSelectionAllowed(false);
         jtable.setCellSelectionEnabled(false);

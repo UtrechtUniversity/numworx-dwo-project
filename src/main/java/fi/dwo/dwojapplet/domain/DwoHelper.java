@@ -7,14 +7,12 @@ package fi.dwo.dwojapplet.domain;
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
 import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.RoleType;
-import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.rest.PublicRoleManager;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -35,15 +33,17 @@ import javax.swing.JOptionPane;
 import netscape.javascript.JSObject;
 
 /**
- * Static Helper class for the DWO.
- *
- * @author M.J.B. Kupers
- *
+ * Static Helper class for the DWO. The DwoHelper has two startup phases.
+ * During the boot phase some parameters can and must be set. Afterwards the
+ * init method must be called which retrieves configuration of the application 
+ * server and initializes the class. Information can only be considered correct
+ * in the DwoHelper after initialization has finished.
  */
 public final class DwoHelper {
 
     private static final Logger LOG = Logger.getLogger(DwoHelper.class.getName());
 
+    /** DWO 1.0 propertie */
     private static AppletUtil au;
 
     private static Hashtable loadedImages;
@@ -58,14 +58,16 @@ public final class DwoHelper {
 
     private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
 
-    /**
-     * ********DWO.property attributes **********
-     */
     
+    
+    /** DWO boot property attributes, set before calling init in DWO.main() */
+    
+   //TODO fix locale to be set within DWO_main.
+    private static Locale locale = new Locale.Builder().setLanguage("nl").setRegion("NL").build(); //runtime property for locale.
+
     private static URL serverUrlPath=null; 
     private static URL resourceUrlPath=null; // required null if to use the default
     private static URL jarUrlPath;
-
     
     //depending on application or applet start.
     private static SchoolClass schoolClass;
@@ -73,10 +75,12 @@ public final class DwoHelper {
 
     private static DomFullUser currentUser; // null if none available.
     private static RoleType currentRole; // null if none available.
-    //TODO fix locale to be set within DWO_main.
-    private static Locale locale = new Locale.Builder().setLanguage("nl").setRegion("NL").build(); //runtime property for locale.
-
-
+ 
+    /** Boot properties that need to be set before calling init() */
+   
+    /** Init properties set by init() **/
+    private static DomSchoolsRolesAndClasses schoolLogins;
+            
     /**
      * ********deprecated attributes **********
      */
@@ -113,8 +117,19 @@ public final class DwoHelper {
         locale = aLocale;
     }
 
+    /** Initialization function that retrieves some basic configuration data from
+     * the server. DwoHelper is to initialized after the DWO-started and any 
+     * pre-init
+     * 
+     * @throws Dwo2Exception 
+     */
     public void init() throws Dwo2Exception {
-        //for later.
+        //Fetch all the login roles from the server for the current roles
+        try {
+            DomSchoolsRolesAndClasses srcs = SecureUserAccountLoginsManager.getSchoolLogins();
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }        
     }
 
     /**
@@ -532,5 +547,19 @@ public final class DwoHelper {
         list[3] = RoleType.SCHOOLADMIN;
         list[4] = RoleType.ADMIN;
         return list;
+    }
+
+    /**
+     * @return the srcs
+     */
+    public static DomSchoolsRolesAndClasses getSchoolLogins() {
+        return schoolLogins;
+    }
+
+    /**
+     * @param aSchoolLogins
+     */
+    public static void setSchoolLogins(DomSchoolsRolesAndClasses aSchoolLogins) {
+        schoolLogins = aSchoolLogins;
     }
 }

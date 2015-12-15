@@ -1,7 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
@@ -285,7 +285,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
         this.dwo = dwo;
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         usersImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
-        ContactDocent docent = (ContactDocent) dwo.getUser();
+        SchoolAdmin docent = (SchoolAdmin) dwo.getUser();
         School school = docent.getSchool();
         SchoolGroup[] groups = school.getSchoolGroupList();
         classes = school.getClassList();

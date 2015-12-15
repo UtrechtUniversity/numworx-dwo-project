@@ -9,7 +9,7 @@ import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
@@ -178,8 +178,8 @@ public class GuiCreator {
     public void configurePanelsForUser(User u) {
         if (u instanceof Teacher) {
             GuiCreator gc;
-            if (u instanceof ContactDocent) {
-                gc = new GuiCreatorContactDocent(dwo);
+            if (u instanceof SchoolAdmin) {
+                gc = new GuiCreatorSchoolAdmin(dwo);
             } else {
                 gc = new GuiCreatorTeacher(dwo);
             }
@@ -735,7 +735,8 @@ public class GuiCreator {
      *
      */
     public CenterSubPanel getClassPanel() {
-        return null;
+        return new ClassStudentPanel();
+        
     }
 
     /**
@@ -912,7 +913,6 @@ public class GuiCreator {
     }
 
     public CenterSubPanel getClassAdminPanel() {
-
         return null;
     }
 

@@ -1,8 +1,8 @@
 package fi.dwo.dwojapplet.domain;
 
-public class ContactDocent extends Teacher {
+public class SchoolAdmin extends Teacher {
 
-    public ContactDocent() {
+    public SchoolAdmin() {
         
     }
 
