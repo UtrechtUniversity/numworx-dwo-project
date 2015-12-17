@@ -21,6 +21,7 @@ public class DomUser {
     private String givenName;
     private String familyName;
     private String insertion;
+    private Boolean singleSchool;
 
 
     public DomUser(){
@@ -33,6 +34,7 @@ public class DomUser {
         this.familyName = u.getLastname();
         this.id = MySQLPersistenceId.createPersistentId(u);
         this.username = u.getUsername();
+        this.singleSchool=u.isSingleSchoolAccount();
     }
 
     /**
@@ -108,6 +110,20 @@ public class DomUser {
      */
     public void setUsername(String usercode) {
         this.username = usercode;
+    }
+
+    /**
+     * @return the singleSchool
+     */
+    public Boolean getSingleSchool() {
+        return singleSchool;
+    }
+
+    /**
+     * @param singleSchool the singleSchool to set
+     */
+    public void setSingleSchool(Boolean singleSchool) {
+        this.singleSchool = singleSchool;
     }
 
 }

@@ -195,7 +195,7 @@ public class PersistentUser implements Serializable {
      * 
      * @return 
      */
-    public boolean isSingleSchoolAccount() {
+    public Boolean isSingleSchoolAccount() {
         return singleSchoolAccount;
     }
 
@@ -205,7 +205,7 @@ public class PersistentUser implements Serializable {
      * 
      * @return 
      */
-    public void setSingleSchoolAccount(boolean b) {
+    public void setSingleSchoolAccount(Boolean b) {
         singleSchoolAccount = b;
     }
     
