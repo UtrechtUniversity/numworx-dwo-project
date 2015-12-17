@@ -1,14 +1,12 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -66,6 +64,8 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
         /* Add schoolrole-panel */
 //        l = new RegisterMoreSchoolsPanel(groups);
         sarPanel = new AccountSchoolRolesJPanel();
+        sarPanel.setVisible(!DwoHelper.isSingleSchoolStudent());
+
 //        l.setBorder(BorderFactory.createLineBorder(getForeground()));
         sarPanel.setBackground(GuiConstants.SUB_BACKGROUND);
         //      p.setBounds(getSize().width / 2 - 155, 20, 310, 130);

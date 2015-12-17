@@ -428,11 +428,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             throws LoginException {
         DwoHelper.setPlainPassword(password);
         String pw = MD5.getHashString(password);
-        DomFullUser user = LoginManager.login(username, pw);
+        DomFullUser user = LoginManager.login(username, pw); //sets DwoHelper user
         if (user == null) {
             throw new LoginException(LoginException.LE_UNKNOWN_USER);
         }
-        DwoHelper.setCurrentUser(user);
 
         if (password == null) {
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
@@ -462,7 +461,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (user == null) {
             throw new LoginException(LoginException.LE_UNKNOWN_USER);
         }
-        DwoHelper.setCurrentUser(user);
 
         if (password == null) {
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
@@ -1247,12 +1245,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     }
 
     /**
+     * This methods preconfigures any statics in a class that needs to be set 
+     * before their static methods are accessed.
+     */
+    public void boot(){
+        
+    }
+    
+    /**
      * First phase of the applet life-cycle, {@Link start} is called immediately
      * after it.
      */
     @Override
     public void init() {
-// This order
         if (!DwoHelper.setApplet(this)) {
             return;
         }

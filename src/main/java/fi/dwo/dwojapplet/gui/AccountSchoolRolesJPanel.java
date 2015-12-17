@@ -110,10 +110,9 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
         addRoleButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
         buildJTable();
 
-        //fm = addClassButton.getFontMetrics(addClassButton.getFont());
         addRoleButton.addActionListener(this);
-        //addClassButton.setLocation(30, 10);
-        addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
+        addRoleButton.setVisible(true);
+//        addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
         JPanel footer = new JPanel();
         footer.setLayout(new BoxLayout(footer, BoxLayout.X_AXIS));
         footer.setBorder(new EmptyBorder(10, 10, 10, 10));

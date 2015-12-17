@@ -159,13 +159,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
             center.reset();
             center.loadCenter(cp);
             instance.setReady();
-        } else if (src == classManagementButton) {
-            instance.setWait();
-            CenterSubPanel cp = instance.getClassPanel();
-            center.reset();
-            center.loadCenter(cp);
-            instance.setReady();
-        } else if (src == courseManagementButton) {
+        } else  if (src == courseManagementButton) {
             instance.setWait();
             CenterSubPanel cp = instance.getCourseManagementPanel();
             center.loadCenter(cp);

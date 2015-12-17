@@ -23,6 +23,7 @@ import javax.swing.border.Border;
 public class MenuPanel extends GuestMenuPanel {
 
     private JButton myProfileButton;
+    private JButton classManagementButton;
 
     public void createRuler() {
         add(Box.createVerticalStrut(10));
@@ -46,7 +47,12 @@ public class MenuPanel extends GuestMenuPanel {
         myProfileButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_MY_PROFILE));
         myProfileButton.addActionListener(this);
         this.add(myProfileButton);
-    }
+
+        createGap();
+        /* Add ClassManagement button */
+        classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
+        classManagementButton.addActionListener(this);
+     }
 
     /**
      * Creates a new MenuPanel for the user. It contains the parent items (from
@@ -54,6 +60,7 @@ public class MenuPanel extends GuestMenuPanel {
      */
     public MenuPanel() {
 //        setDebugGraphicsOptions(DebugGraphics.FLASH_OPTION);
+
     }
 
     public MenuPanel(DwoIF dwo) {
@@ -137,9 +144,17 @@ public class MenuPanel extends GuestMenuPanel {
     @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        if (e.getSource() == myProfileButton) {
+        Object src = e.getSource();
+        GuiCreator instance = GuiCreator.instance();
+        if (src == myProfileButton) {
             center.loadCenter(GuiCreator.instance().getProfilePanel());
             center.reset();
+        } else if (src == classManagementButton) {
+            instance.setWait();
+            CenterSubPanel cp = instance.getClassPanel();
+            center.reset();
+            center.loadCenter(cp);
+            instance.setReady();
         }
 
     }

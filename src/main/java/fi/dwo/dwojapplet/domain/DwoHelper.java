@@ -117,6 +117,10 @@ public final class DwoHelper {
         locale = aLocale;
     }
 
+    public static boolean isSingleSchoolStudent() {
+        return currentUser.getSingleSchool();
+    }
+
     /** Initialization function that retrieves some basic configuration data from
      * the server. DwoHelper is to initialized after the DWO-started and any 
      * pre-init
