@@ -752,7 +752,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void unpause() {
 		--scsInUse;
-		if(scsPending) saveCurrentState();
+		if(scsPending && scsInUse == 0) saveCurrentState();
 		if(scsInUse == 0) goon = true;
 	}
 	
@@ -907,7 +907,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void close() {
 		memento.close();
-		memento = null;
+//		memento = null;
 	}
 
 	@Override

@@ -365,7 +365,7 @@ public class TekstRegel extends LayoutPanel
 				{	horPositie += 1;
 				}
 			}
-			if (regelObjects.get(i) instanceof AnchorView) {
+			else if (regelObjects.get(i) instanceof AnchorView) {
 				AnchorView av = (AnchorView) regelObjects.get(i);
 				objectBreedte = av.getWidth();
 				objectHoogte = av.getHeight();
@@ -373,7 +373,6 @@ public class TekstRegel extends LayoutPanel
 				if(horPositie == 0 && Character.isLetter(av.toString().charAt(0))) // verschil met TextElement, XXX waarom????
 					horPositie = 2;
 			}
-			
 			else
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
@@ -421,7 +420,16 @@ public class TekstRegel extends LayoutPanel
 				if(hoogte - ash > h2)
 					h2 = hoogte - ash;
 			}
-			else if(currentObject instanceof String || currentObject instanceof AnchorView)
+			else if(currentObject instanceof AnchorView)
+			{
+				int hoogte = ((AnchorView) currentObject).getHeight();
+				int ash = ((AnchorView) currentObject).getAsHoogte();
+				if(ash > h1)
+					h1 = ash;
+				if(hoogte - ash > h2)
+					h2 = hoogte - ash;
+			}
+			else if(currentObject instanceof String /*|| currentObject instanceof AnchorView*/)
 			{
 				int hoogte = tekstHoogte;
 				int ash = tekstAshoogte;

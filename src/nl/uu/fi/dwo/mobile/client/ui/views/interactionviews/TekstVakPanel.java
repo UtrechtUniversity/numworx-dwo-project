@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import sun.util.logging.resources.logging;
@@ -1021,7 +1022,11 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		boolean ingeklapt = this.ingeklapt;
 		if (map.containsKey("hoogtes") )
 		{
-			hoogtes = map.getDoubleList("hoogtes");
+			List<Double> hoogtesState = map.getDoubleList("hoogtes");
+			if(hoogtesState != null && hoogtesState.size() == hoogtes.size())
+				hoogtes = hoogtesState;
+			else
+				Logger.getLogger("TekstVakPanel").severe("hoogtes <> hoogteState");
 			if(!hoogtes.isEmpty() && Math.round(hoogtes.get(0).doubleValue()) > hoogte)
 				hoogte = (int) Math.round(hoogtes.get(0).doubleValue());
 		}
