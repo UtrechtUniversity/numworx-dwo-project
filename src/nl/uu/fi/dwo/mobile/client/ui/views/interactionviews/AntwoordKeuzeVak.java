@@ -617,7 +617,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		int errorCount = 0;
 
 		if(!checkExternal)
-			kijkNa(false);
+			kijkNa(false, false); // XXX mischien true hier?
 		
 		
 		ingevuld = this.ingevuld;
@@ -753,7 +753,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		//antwoordKV.setSelectedItem(antwoord);
 
 		if (ingevuld && (mode == 0 || mode == 1 || nagekeken))
-			kijkNa();
+			kijkNa(true, true);
 	}
 	
 	public static Vector toVector(Object object)
@@ -819,10 +819,10 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 
 	@Override
 	public void kijkNa() {
-		kijkNa(true);
+		kijkNa(true, false);
 	}
 	
-	public void kijkNa(boolean show)
+	private void kijkNa(boolean show, boolean setState)
 	{
 //		System.out.println("AntwoordKeuzeVak.kijkNa(show=" + Boolean.toString(show) + ")");
 		
@@ -900,7 +900,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		}
 
 		
-		if (show && ingevuld)
+		if (show && ingevuld && !setState)
 			comRoot.setChanged(teltMee && fout);
 	}
 	

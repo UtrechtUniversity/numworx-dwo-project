@@ -841,7 +841,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			this.randomVarWaarden = (HashMap<String, Object>) h.get(RANDOM_VAR_WAARDEN);
 		List<Object> states = JSONUtilities.toArrayList(h.get("interactiePanelStates"));
 		int stateNr = 5;
-		on.pause();
+		on.pause(true);
 		for (int i = 0; states != null && i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);

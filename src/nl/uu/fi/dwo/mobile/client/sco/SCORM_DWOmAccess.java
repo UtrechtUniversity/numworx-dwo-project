@@ -54,19 +54,32 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 
 	class Committer implements AsyncCallback<Boolean> {
 
+		private static final double initialRetryDelayInMillis = 1000;
 		boolean pending;
 		Map<String,String> dirty, copy;
 		Object[] params;
+		double retry=initialRetryDelayInMillis;//milliseconds never 0
 		
 		@Override
 		public void onFailure(Throwable caught) {
 			logger.severe("Commit: "+ caught);
-			commit();
+			retry+=retry/2;//exponential delay
+			Timer backoff = new Timer() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					commit();
+				}
+			};
+			backoff.schedule((int) (retry*Math.random()));
+			
 		}
 
 		@Override
 		public void onSuccess(Boolean result) {
 			pending = false;
+			retry=initialRetryDelayInMillis;
 			if(!Boolean.TRUE.equals(result)) onFailure(null);
 			else {
 				copy.clear();

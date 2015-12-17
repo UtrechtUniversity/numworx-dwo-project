@@ -109,9 +109,13 @@ public class PopupFacade implements InteractionView, FacetAware {
 		"images/resources/grafiekknop.gif", // grafiekComponentLabel
 		"images/resources/tekstknop.gif",   // textVakLabel
 		"images/resources/geogebra.gif",    // geogebra
+		"images/resources/cbook.png",		// general cbook widgets
+		"images/resources/cindy.png",		// cinderella
+		"images/resources/eslate.gif",		// eslate/malt
+		"images/resources/epsilonwriter.png" // aristod epsilon
 	};
-	final static int heights[] = { 20,20,20,20,20 };
-	final static int widths [] = { 20,20,20,20,20 };
+	final static int heights[] = { 20,20,20,20,20, 20, 20, 20, 20 };
+	final static int widths [] = { 20,20,20,20,20, 20, 20, 20, 20 };
 	
 	
 	private PopupButton popupBtn;

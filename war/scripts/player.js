@@ -115,7 +115,7 @@
     }
     window.cmi = { "suspend_data" : [] };
     function onGetState(topic, publisherData, subscriberData) {
-    	var xwid = publisherData.source
+    	var xwid = publisherData.source || topic.split(".")[0]
     	window.cmi.suspend_data[xwid] = publisherData.parameters;
     	bootstrap[xwid](topic, publisherData)
     }
@@ -155,8 +155,8 @@
     
     var playerHub = {
     	publish: function( topic, data) {
-    		logger("publishing topic");
-    		logger("data = " + (data) );
+    		logger("publishing topic " + topic);
+    		logger("data = " + JSON.stringify(data) );
     		managedHub.publish(topic, data);
     	},
     	subscribe: function (topic, handler, scope,  onerror, handlerdata) {

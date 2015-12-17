@@ -603,7 +603,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 //		if (this.ingevuld && (mode == 0 || mode == 1 || this.nagekeken))
 //			kijkNa();
 //		else
-		kijkNa(false);
+		kijkNa(false, false);
 
 		ingevuld = this.ingevuld;
 		nagekeken = this.nagekeken;
@@ -684,7 +684,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 			antwoordTF.setText(antwoord);
 
 		if (ingevuld && (mode == 0 || mode == 1 || nagekeken))
-			kijkNa();
+			kijkNa(true, false);
 	}
 	
 	public void setAttempt()
@@ -773,10 +773,10 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 	
 	public void kijkNa()
 	{
-		kijkNa(true);
+		kijkNa(true, true);
 	}
 
-	public void kijkNa(boolean show)
+	private void kijkNa(boolean show, boolean up)
 	{
 		checkAntwoord(show);
 		
@@ -836,7 +836,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 				verhoogErrorCount();
 			}
 		}
-		if(show && check && ingevuld)
+		if(show && check && ingevuld && up)
         {	comRoot.setChanged(teltMee && correct == Boolean.FALSE);
         }
 		

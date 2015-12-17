@@ -470,7 +470,7 @@ public class CheckValueUnit implements InteractionStub{
     	kijkNa(true);
     }
     
-    public void kijkNa(boolean show)
+    private void kijkNa(boolean show)
     {	//Er wordt zonder show nagekeken vanuit getState. Als er dan al een checkimg staat, moet dit niet worden weggehaald. 
     	if(show)
     	{

@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -33,6 +34,7 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -100,6 +102,33 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	//		 OpenAjaxEventBus.getManagedInstance();
 	//		new SimpleEventBus();
 			DWOplayer.PARAMETERS.getEventBus();
+	
+
+	static private Prepare prepare = GWT.create(Prepare.class);
+	
+	static class Prepare {
+		void prepareGetState(ScheduledCommand cmd) {
+			Scheduler.get().scheduleDeferred(cmd);
+		}
+	}
+	
+	static class MC2Prepare extends Prepare {
+		private static final CBookEvent STOP = new CBookEvent("stop");
+		void prepareGetState(final ScheduledCommand cmd) {
+			BUS.fireEvent(STOP);
+			Timer t = new Timer() {
+				@Override public void run() {
+					cmd.execute();				
+				}
+			};
+			t.schedule(100);
+		}
+	}
+
+	
+	public static void prepareGetState(ScheduledCommand cmd) {
+		prepare.prepareGetState(cmd);
+	}
 	
 	public OpdrNav() {};
 	public void init(HashMap<String, Object> launchData, ViewModuleViewImpl ev, Memento memento)
@@ -442,13 +471,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				if(buttonsEnabled[currentActiviteit][button_id])
 				{
 					entry.p();
-					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+					ScheduledCommand run = new ScheduledCommand() {
 
 						@Override
 						public void execute() {
 							gotoOpdracht(button_id, entry.scoreNav);		
 							entry.v();
-						}});
+						}};
+					prepareGetState(run);
 				}
 			}
 
@@ -695,6 +725,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	private int scsInUse;
 	private boolean scsPending;
+	private boolean goon = true;
 	
 	public void saveCurrentState()
 	{
@@ -704,7 +735,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				saveCurrentState0();
 				scsPending = false;
 			} else {
-				saveCurrentState_stap1(); // dit MOET altijd voor kijkna.
+				if(goon) saveCurrentState_stap1(); // dit MOET altijd voor kijkna, behalve in setState/getState zelf
+				else {
+					GWT.log("break recursion");
+				}
 				scsPending = true;
 			}
 		} finally {
@@ -719,6 +753,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void unpause() {
 		--scsInUse;
 		if(scsPending) saveCurrentState();
+		if(scsInUse == 0) goon = true;
 	}
 	
 	
@@ -755,7 +790,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	private void saveCurrentState_stap1() {
 		if( ! memento.isEindtoetsVerzegeld())
-			states[currentActiviteit][currentOpdracht] = entry.getState();
+		{	boolean old = goon;
+			try { 
+				goon = false;
+				states[currentActiviteit][currentOpdracht] = entry.getState();
+			} finally {
+				goon = old;
+			}
+		}
 
 		if(scoresEnabled()) 
 		{
@@ -1173,5 +1215,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	@Override
 	public Role getRole() {
 		return memento.getRole();
+	}
+
+	public void pause(boolean b) {
+		goon = !b;
+		pause();
+		
 	}
 }

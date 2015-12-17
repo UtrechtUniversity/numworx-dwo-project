@@ -1107,7 +1107,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//	kijkNa();
 			setChanged(false);
 			if (mode == 0 || mode == 1 || nagekeken)
-				kijkNa();
+				kijkNa(true); // FIXME kijkna in setstate
 		}
 
 	}

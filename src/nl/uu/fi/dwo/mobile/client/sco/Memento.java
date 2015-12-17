@@ -12,7 +12,9 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -403,23 +405,25 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	{
 		if (this != _instance)
 			return;
-		logger.info("closing memento");
-		_instance = null;
-		runner.run();
-		Date stopDate = new Date();
-		long millis = stopDate.getTime() - startDate.getTime();
-		String totalStr = getValue(TOTAL_TIME);
-		long total = parse(totalStr);
-		setValue(SESSION_TIME, format(millis));
-		setValue(TOTAL_TIME, format(total+millis));
-		try
-		{
-			api.Terminate();
-			api = null;
-		}
-		catch (Exception e)
-		{
-		}
+		OpdrNav.prepareGetState(
+		new ScheduledCommand() {
+			public void execute() {
+				logger.info("closing memento");
+				runner.run();
+				_instance = null;
+				Date stopDate = new Date();
+				long millis = stopDate.getTime() - startDate.getTime();
+				String totalStr = getValue(TOTAL_TIME);
+				long total = parse(totalStr);
+				setValue(SESSION_TIME, format(millis));
+				setValue(TOTAL_TIME, format(total + millis));
+				try {
+					api.Terminate();
+					api = null;
+				} catch (Exception e) {
+				}
+			}
+		});
 	}
 
 	private long parse(String totalStr) {

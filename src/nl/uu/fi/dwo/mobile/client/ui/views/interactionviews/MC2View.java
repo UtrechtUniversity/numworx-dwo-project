@@ -95,7 +95,7 @@ public class MC2View extends Composite implements InteractionView {
 		if(topic.endsWith(".getState")) {
 			JSONObject json = new JSONObject(data);
 			ObjectMap map = JSONUtilities.wrapMap(json);
-			state = map.getMap("parameters");		
+			state = map.getMap("parameters");
 		}
 		
 	}
@@ -233,27 +233,33 @@ public class MC2View extends Composite implements InteractionView {
 
 	@Override
 	public int getAsHoogte() {
-		return 0;
+		return facade.wrapAsHoogte(0);
 	}
 
 	@Override
 	public int getHeight() {
-		return height;
+		return facade.wrapHeight(height);
 	}
 
 	@Override
 	public int getWidth() {
-		return width;
+		return facade.wrapWidth(width);
 	}
 
 	@Override
 	public void setAsHoogte(int ashoogte) {
 	}
 
-	@Override
-	public HashMap<String, Object> getState() {
+	public HashMap<String,Object> getState() {
+		if (facade.hasState())
+			return facade.getState();
+		return getState0();
+	}
+	
+	public HashMap<String, Object> getState0() {
 		HashMap<String, Object> result = new HashMap<String,Object>();
 		result.putAll(state); // fill from state[xwid]?
+		LOGGER.info("getState called " + getUUID());
 		return wrap(result);
 	}
 
@@ -266,6 +272,7 @@ public class MC2View extends Composite implements InteractionView {
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
+		facade.setState(h);
 		if(h.containsKey("STUBVIEW_score"))
 			score = Integer.parseInt(h.remove("STUBVIEW_score").toString());
 		if(h.containsKey("STUBVIEW_correct"))

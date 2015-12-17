@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.utils.HasHide;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -41,6 +42,7 @@ import com.google.gwt.user.client.ui.DialogBox.Caption;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
@@ -317,22 +319,25 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 	}
 
 	void tearDown() {
-		if(view != null)
-		{	if(view instanceof FormuleEditorWithAnswer)
-			{
-				((FormuleEditorWithAnswer) view).haalAntwoordOp();
+		OpdrNav.prepareGetState(
+		new ScheduledCommand() {
+			public void execute() {
+				if (view != null) {
+					if (view instanceof FormuleEditorWithAnswer) {
+						((FormuleEditorWithAnswer) view).haalAntwoordOp();
+					}
+					state = view.getState();
+					if (view instanceof FormuleEditorWithAnswer)
+						view.setState(state);
+
+					if (content instanceof FormuleEditorWithSteps) {
+						// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
+						((FormuleEditorWithSteps) content).setUitgeklapt(false);
+					}
+				}
+				box.hide();
 			}
-			state = view.getState();
-			if(view instanceof FormuleEditorWithAnswer)
-				view.setState(state);
-			
-			if (content instanceof FormuleEditorWithSteps)
-			{
-				// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
-				((FormuleEditorWithSteps) content).setUitgeklapt(false);
-			}
-		}
-		box.hide();
+		});
 	}
 
 	/**
