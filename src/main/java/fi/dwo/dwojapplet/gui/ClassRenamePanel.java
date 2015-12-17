@@ -1,9 +1,9 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.commons.util.RandomPasswordGenerator;
-import fi.dwo.dwojapplet.domain.SchoolClass;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -222,14 +222,14 @@ public class ClassRenamePanel extends JPanel implements ActionListener,
 	}
 
 	/**
-	 * Sets the panel attributes according to the values of SchoolClass
+	 * Sets the panel attributes according to the values of DomSchoolClass4Teacher
 	 * 
 	 * @param sc
 	 *            the SchoolClass
 	 */
-	public void setSchoolClass(SchoolClass sc) {
-		setClassName(sc.getName());
-		setIconizer(sc.hasIconizer());
+	public void setSchoolClass(DomSchoolClass4Teacher sc) {
+		setClassName(sc.getSchoolClassName());
+		setIconizer(sc.getIconizer());
 		if (sc.getRegistrationKey() != null
 				&& sc.getRegistrationKey().length() != 0) {
 			this.classKeyCB.setSelected(true);
@@ -239,4 +239,21 @@ public class ClassRenamePanel extends JPanel implements ActionListener,
 		setRegistrationKey(sc.getRegistrationKey());
 	}
 
+	/**
+	 * Sets the fields of the parameter.
+	 * 
+	 * @param sc
+	 *            the SchoolClass
+	 */
+	public void updateSchoolClass(DomSchoolClass4Teacher sc) {
+		sc.setSchoolClassName(className);
+		sc.setIconizer(iconizer);
+                if(classKeyCB.isSelected()){
+                    sc.setRegistrationKey(registrationKey);
+                }else{
+                    sc.setRegistrationKey(null);
+                }
+	}
+
+        
 }

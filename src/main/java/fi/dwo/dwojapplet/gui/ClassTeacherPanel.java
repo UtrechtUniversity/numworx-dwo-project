@@ -4,13 +4,15 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.exceptions.ClassException;
+import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+import static fi.dwo.dwojapplet.gui.GuiCreator.instance;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -18,6 +20,8 @@ import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -36,12 +40,9 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * The panel where a SchoolClass can be managed.
- *
- * @author M.J.B. Kupers
- *
+ * The panel which shows the school classes for a teacher.
  */
-public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener {
+public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionListener {
 
     private CenterPanel center;
 
@@ -51,6 +52,8 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 
     private static final int ASSIGN_COL = 3;
     private static final int REMOVE_COL = 4;
+
+    ClassTeacherPanelProperties prop = new ClassTeacherPanelProperties();
 
     class ClassModel extends AbstractTableModel {
 
@@ -189,22 +192,23 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
             SchoolClass sc = model.classes[row];
             final GuiCreator instance = GuiCreator.instance();
             if (value == editImage) {
-				ClassRenamePanel panel = new ClassRenamePanel();
-				panel.setSchoolClass(sc);
-				int result = JOptionPane.showConfirmDialog(ClassPanel.this, panel ,TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-						JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-				//case OK persist returned values
-				if(result==JOptionPane.OK_OPTION){
-					//persist returned values					
-					if(instance.renameClass(sc, panel.getClassName(), panel.getRegistrationKey(), panel.isIconizer()));
-					//update gui when done
+                ClassRenamePanel panel = new ClassRenamePanel();
+//                sc = prop.getSc();
+                //               panel.setSchoolClass(sc);
+                int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                //case OK persist returned values
+                if (result == JOptionPane.OK_OPTION) {
+                    //persist returned values					
+                    if (instance.renameClass(sc, panel.getClassName(), panel.getRegistrationKey(), panel.isIconizer()));
+                    //update gui when done
                     center.loadMenu();
                     model.fireTableCellUpdated(row, 0);
                 }
 
             } else if (value == removeImage) {
                 /* Delete the course */
-                if (JOptionPane.showConfirmDialog(ClassPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)
+                if (JOptionPane.showConfirmDialog(ClassTeacherPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)
                         + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     if (instance.deleteClass(sc)) {
                         center.loadMenu();
@@ -224,7 +228,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
                 Course[] selectedSchoolCourses = sc.getSelectedSchoolCourses();
                 System.out.println("getSelected list " + (System.currentTimeMillis() - t));
                 instance.getDWO().setReady();
-                Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassPanel.this, allCourses, selectedSchoolCourses, sc);
+                Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassTeacherPanel.this, allCourses, selectedSchoolCourses, sc);
                 if (selectedCourses != null) {
                     sc.saveSelectedCourses(allCourses, selectedCourses);
                 }
@@ -277,7 +281,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
      * Creates a new ClassPanel which shows a list of classes.
      *
      */
-    public ClassPanel() {
+    public ClassTeacherPanel() {
         super(null);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -297,7 +301,8 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
         tr.addImage(assignImage, 3);
         try {
             tr.waitForAll();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
         }
 
         //FontMetrics fm;
@@ -355,16 +360,30 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addClassButton) {
-            try {
-                GuiCreator.instance().addClass();
+            ClassRenamePanel panel = new ClassRenamePanel();
+            DomSchoolClass4Teacher sc = new DomSchoolClass4Teacher();
+            
+            panel.setSchoolClass(sc);
+            int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            //case OK persist returned values
+            if (result == JOptionPane.OK_OPTION) {
+                //persist returned values	
+                panel.updateSchoolClass(sc);
+                prop.setSc(sc);
+                try {
+                    prop.addClass();
+                }
+                catch (Dwo2Exception ex) {
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                }
                 center.loadMenu();
                 buildJTable();
-            } catch (ClassException e1) {
-                JOptionPane.showMessageDialog(this, e1.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+
             }
 
         }
-
     }
 
     /**
@@ -380,13 +399,10 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 
     @Override
     public Object getUserObject() {
-
         return null;
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-
-
     }
 }

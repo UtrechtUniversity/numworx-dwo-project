@@ -8,12 +8,12 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-public class ContactDocentMenuPanel extends TeacherMenuPanel {
+public class SchoolAdminMenuPanel extends TeacherMenuPanel {
 
     protected MenuPanelButton userManagementButton;
     protected MenuPanelButton klasKeuzeButton;
 
-    public ContactDocentMenuPanel(DwoIF dwo) {
+    public SchoolAdminMenuPanel(DwoIF dwo) {
         super(dwo);
     }
 

@@ -1,5 +1,5 @@
 // Source file:
-// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\MenuPanel.java
+// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\StudentMenuPanel.java
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
@@ -20,7 +20,7 @@ import javax.swing.border.Border;
  * @author M.J.B. Kupers
  *
  */
-public class MenuPanel extends GuestMenuPanel {
+public class StudentMenuPanel extends GuestMenuPanel {
 
     private JButton myProfileButton;
     private JButton classManagementButton;
@@ -52,18 +52,19 @@ public class MenuPanel extends GuestMenuPanel {
         /* Add ClassManagement button */
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
         classManagementButton.addActionListener(this);
+        this.add(classManagementButton);
      }
 
     /**
      * Creates a new MenuPanel for the user. It contains the parent items (from
      * GuestMenuPanel) and a button to show the profile for editing.
      */
-    public MenuPanel() {
+    public StudentMenuPanel() {
 //        setDebugGraphicsOptions(DebugGraphics.FLASH_OPTION);
 
     }
 
-    public MenuPanel(DwoIF dwo) {
+    public StudentMenuPanel(DwoIF dwo) {
         super(dwo);
     }
 

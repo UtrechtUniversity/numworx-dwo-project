@@ -176,6 +176,7 @@ public class GuiCreator {
      * @param u
      */
     public void configurePanelsForUser(User u) {
+        //TODO rewrite nightmare code.
         if (u instanceof Teacher) {
             GuiCreator gc;
             if (u instanceof SchoolAdmin) {
@@ -242,7 +243,6 @@ public class GuiCreator {
      * @param lastname The lastname (familyname) of the user.
      * @param email The e-mail address of the user.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     *
      */
     public void register(String username, String password, String rePassword,
             String firstname, String middlename, String lastname, String email)
@@ -330,15 +330,15 @@ public class GuiCreator {
     }
 
     /**
-     * Returns a MenuPanel. The type of the menupanel depends on the type of
+     * Returns a StudentMenuPanel. The type of the menupanel depends on the type of
      * user. <BR>
      * If the user is null, a GuestMenuPanel is returned. <BR>
      * If the user is a teacher, a TeacherMenuPanel is returned. <BR>
-     * Otherwise, a normal MenuPanel is returned. <BR>
+ Otherwise, a normal StudentMenuPanel is returned. <BR>
      * <BR>
      * The menupanel shows all the menu-options for the type of user.
      *
-     * @return The MenuPanel with all the menu-options for the type user.
+     * @return The StudentMenuPanel with all the menu-options for the type user.
      */
     public GuestMenuPanel getMenuPanel() {
         User u = dwo.getUser();
@@ -346,7 +346,7 @@ public class GuiCreator {
         if (u == null || u instanceof Guest) {
             return new GuestMenuPanel();
         } else {
-            return new MenuPanel();
+            return new StudentMenuPanel();
         }
     }
 
@@ -599,25 +599,25 @@ public class GuiCreator {
                 middleName, lastName, email);
 
     }
-
-    /**
-     * Shows a dialog to add a class and adds the class.
-     *
-     * @return boolean Indicates if the class is added, or the operation is
-     * canceled.
-     * @throws fi.dwo.commons.exceptions.ClassException
-     *
-     */
-    public boolean addClass() throws ClassException {
-        String newClass = JOptionPane.showInputDialog(mainPanel,
-                TextMapper.getText(TextMapper.GUIMNU_MSG_ADD_CLASS) + ":",
-                TextMapper.getText(TextMapper.GUIMNU_MSG_ADD_CLASS_TITLE),
-                JOptionPane.OK_CANCEL_OPTION);
-        if ((newClass != null) && (!newClass.equals(""))) {
-            return dwo.addClass(newClass);
-        }
-        return false;
-    }
+//
+//    /**
+//     * Shows a dialog to add a class and adds the class.
+//     *
+//     * @return boolean Indicates if the class is added, or the operation is
+//     * canceled.
+//     * @throws fi.dwo.commons.exceptions.ClassException
+//     *
+//     */
+//    public boolean addClass() throws ClassException {
+//        String newClass = JOptionPane.showInputDialog(mainPanel,
+//                TextMapper.getText(TextMapper.GUIMNU_MSG_ADD_CLASS) + ":",
+//                TextMapper.getText(TextMapper.GUIMNU_MSG_ADD_CLASS_TITLE),
+//                JOptionPane.OK_CANCEL_OPTION);
+//        if ((newClass != null) && (!newClass.equals(""))) {
+//            return dwo.addClass(newClass); //Call rest interface now. 
+//        }
+//        return false;
+//    }
 
     /**
      * Shows a dialog to edit a school.

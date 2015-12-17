@@ -182,7 +182,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      */
     @Override
     public CenterSubPanel getClassPanel() {
-        return new ClassPanel();
+        return new ClassTeacherPanel();
     }
 
     /**

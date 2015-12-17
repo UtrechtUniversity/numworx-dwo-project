@@ -73,11 +73,12 @@ public final class DwoHelper {
     private static SchoolClass schoolClass;
     private static School school;
 
-    private static DomFullUser currentUser; // null if none available.
-    private static RoleType currentRole; // null if none available.
  
     /** Boot properties that need to be set before calling init() */
    
+    private static DomFullUser currentUser; // null if none available.
+    private static RoleType currentRole; // null if none available.
+
     /** Init properties set by init() **/
     private static DomSchoolsRolesAndClasses schoolLogins;
             

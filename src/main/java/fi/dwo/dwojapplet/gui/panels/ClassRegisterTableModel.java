@@ -3,7 +3,6 @@ package fi.dwo.dwojapplet.gui.panels;
 
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
-import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 

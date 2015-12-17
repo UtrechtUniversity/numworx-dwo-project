@@ -173,7 +173,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
             TableCellEditor, ActionListener {
 
         Object value;
-        ClassPanel.ClassModel model;
+        ClassTeacherPanel.ClassModel model;
         int row;
 
         @Override
@@ -183,7 +183,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
             JButton button = new JButton(new ImageIcon((Image) value));
             button.addActionListener(this);
             this.row = row;
-            // model = (ClassPanel.ClassModel) table.getModel();
+            // model = (ClassTeacherPanel.ClassModel) table.getModel();
             return button;
         }
 

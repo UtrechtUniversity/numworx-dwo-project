@@ -3,7 +3,6 @@ package fi.dwo.dwojapplet.gui.panels;
 
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import java.util.logging.Level;

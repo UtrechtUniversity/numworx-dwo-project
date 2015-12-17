@@ -1,7 +1,9 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.dom.entities.DomStudent;
+import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.rest.RestListClassTypes;
@@ -46,33 +48,43 @@ public class SecureTeacherSchoolClassManager {
         return src;
     }
 
-    public static Boolean SubmitSchoolClass(RestSchoolClass4Teacher schoolClass) throws Dwo2Exception {
-        Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/submit", Boolean.class, schoolClass);
-        LOG.log(Level.FINE, "Submitted schoolclass {1} for teacher with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(),schoolClass.getDomSchoolClass4Teacher().getSchoolClassName()});
+    public static Boolean SubmitSchoolClass(DomSchoolClass4Teacher schoolClass) throws Dwo2Exception {
+        RestSchoolClass4Teacher restSchoolClass = new RestSchoolClass4Teacher();
+        restSchoolClass.setDomSchoolClass4Teacher(schoolClass);
+        Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/submit", Boolean.class, restSchoolClass);
+        LOG.log(Level.FINE, "Submitted schoolclass {1} for teacher with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(),restSchoolClass.getDomSchoolClass4Teacher().getSchoolClassName()});
         return result;
     }
     
-    public static List<DomTeacher> GetTeachersInSchoolClass(RestSchoolClass schoolClass) throws Dwo2Exception {
+    public static List<DomTeacher> GetTeachersInSchoolClass(DomSchoolClass schoolClass) throws Dwo2Exception {
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        restSchoolClass.setDomSchoolClass(schoolClass);
         List<DomTeacher>  result = StoredRestManager.getInstance().getPutList("/rest/secure/teacher/schoolclass/getTeacherList", RestListClassTypes.DomTeacher, schoolClass);
-        LOG.log(Level.FINE, "Retrieved {1} teachers that are in schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), schoolClass.getDomSchoolClass().getId()});
+        LOG.log(Level.FINE, "Retrieved {1} teachers that are in schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), restSchoolClass.getDomSchoolClass().getId()});
         return result;
     }
 
-    public static List<DomStudent> GetStudentsInSchoolClass(RestSchoolClass schoolClass) throws Dwo2Exception {
-        List<DomStudent>  result = StoredRestManager.getInstance().getPutList("/rest/secure/teacher/schoolclass/getStudentList", RestListClassTypes.DomStudent, schoolClass);
-        LOG.log(Level.FINE, "Retrieved {1} students that are in schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), schoolClass.getDomSchoolClass().getId()});
+    public static List<DomStudent> GetStudentsInSchoolClass(DomSchoolClass schoolClass) throws Dwo2Exception {
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        restSchoolClass.setDomSchoolClass(schoolClass);
+        List<DomStudent>  result = StoredRestManager.getInstance().getPutList("/rest/secure/teacher/schoolclass/getStudentList", RestListClassTypes.DomStudent, restSchoolClass);
+        LOG.log(Level.FINE, "Retrieved {1} students that are in schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), restSchoolClass.getDomSchoolClass().getId()});
         return result;
     }
 
-    public static Boolean removeSchoolClass(RestSchoolClass schoolClass) throws Dwo2Exception {
-        Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/remove", Boolean.class, schoolClass);
-        LOG.log(Level.FINE, "Removed schoolclass with id {0} for user with id {1}.", new Object[]{schoolClass.getDomSchoolClass().getId(),DwoHelper.getCurrentUser().getId()});
+    public static Boolean removeSchoolClass(DomSchoolClass schoolClass) throws Dwo2Exception {
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        restSchoolClass.setDomSchoolClass(schoolClass);
+        Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/remove", Boolean.class, restSchoolClass);
+        LOG.log(Level.FINE, "Removed schoolclass with id {0} for user with id {1}.", new Object[]{restSchoolClass.getDomSchoolClass().getId(),DwoHelper.getCurrentUser().getId()});
         return result;
     }
 
-    public static Boolean SubmitTeacherToSchoolClass(RestSubmitTeacherToSchoolClass submit) throws Dwo2Exception {
-        Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/submitTeacher", Boolean.class, submit);
-        LOG.log(Level.FINE, "Submitted teacher {1} to schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(),submit.getDomSubmitTeacherToSchoolClass().getTeacher().getId(),submit.getDomSubmitTeacherToSchoolClass().getSchoolClass().getId()});
+    public static Boolean SubmitTeacherToSchoolClass(DomSubmitTeacherToSchoolClass submit) throws Dwo2Exception {
+    RestSubmitTeacherToSchoolClass sts = new RestSubmitTeacherToSchoolClass();
+    sts.setDomSubmitTeacherToSchoolClass(submit);
+        Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/submitTeacher", Boolean.class, sts);
+        LOG.log(Level.FINE, "Submitted teacher {1} to schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(),sts.getDomSubmitTeacherToSchoolClass().getTeacher().getId(),sts.getDomSubmitTeacherToSchoolClass().getSchoolClass().getId()});
         return result;
     }
 

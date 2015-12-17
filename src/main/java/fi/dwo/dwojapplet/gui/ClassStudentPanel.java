@@ -189,7 +189,7 @@ public class ClassStudentPanel extends JPanel implements CenterSubPanel, ActionL
             final GuiCreator instance = GuiCreator.instance();
             if (value == editImage) {
 				ClassRenamePanel panel = new ClassRenamePanel();
-				panel.setSchoolClass(sc);
+//				panel.setSchoolClass(sc);
 				int result = JOptionPane.showConfirmDialog(ClassStudentPanel.this, panel ,TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 				//case OK persist returned values
@@ -340,13 +340,13 @@ public class ClassStudentPanel extends JPanel implements CenterSubPanel, ActionL
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addClassButton) {
-            try {
-                GuiCreator.instance().addClass();
+//            try {
+//                GuiCreator.instance().addClass();
                 center.loadMenu();
                 buildJTable();
-            } catch (ClassException e1) {
-                JOptionPane.showMessageDialog(this, e1.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-            }
+//            } catch (ClassException e1) {
+//                JOptionPane.showMessageDialog(this, e1.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//            }
 
         }
 

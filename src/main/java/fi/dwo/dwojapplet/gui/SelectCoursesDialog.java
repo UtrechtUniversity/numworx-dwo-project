@@ -1174,7 +1174,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         return selectedCourses;
     }
 
-    public static Course[] selectCourses(ClassPanel parent,
+    public static Course[] selectCourses(ClassTeacherPanel parent,
             Course[] allCourses, Course[] selectedCourses, final SchoolClass sc) {
         String title = TextMapper.getText(TextMapper.GUISC_TITLE);
         allCourses

@@ -27,7 +27,7 @@ import javax.swing.border.Border;
  * @author M.J.B. Kupers
  *
  */
-public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
+public class TeacherMenuPanel extends StudentMenuPanel implements SelectStrategy {
 
     private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
     private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
@@ -40,22 +40,22 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
     private JScrollPane classPanel;
 
     /* (non-Javadoc)
-     * @see fi.dwo.client.gui.MenuPanel#createButtons()
+     * @see fi.dwo.client.gui.StudentMenuPanel#createButtons()
      */
     @Override
     protected void createMenuButtons() {
         super.createMenuButtons();
         createGap();
-
-        /* Add ClassManagement button */
-        classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
-        classManagementButton.addActionListener(this);
-        this.add(classManagementButton);
-        /* Als dwo in Deeplink mode, geen coursemanagement */
-        if (dwo.getCourseViewNr() > 0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer()) {
-            return;
-        }
-        createGap();
+// Moved to StudentMenuPanel
+//        /* Add ClassManagement button */
+//        classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
+//        classManagementButton.addActionListener(this);
+//        this.add(classManagementButton);
+//        /* Als dwo in Deeplink mode, geen coursemanagement */
+//        if (dwo.getCourseViewNr() > 0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer()) {
+//            return;
+//        }
+//        createGap();
         /* Add CourseManagement Button */
         courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
         courseManagementButton.addActionListener(this);
@@ -64,9 +64,9 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
     }
 
     /**
-     * Creates a new MenuPanel for the user. It contains the parent items (from
-     * MenuPanel) and buttons to show the result of students, and to add a
-     * class.
+     * Creates a new StudentMenuPanel for the user. It contains the parent items (from
+ StudentMenuPanel) and buttons to show the result of students, and to add a
+ class.
      *
      * @param dwo
      */
