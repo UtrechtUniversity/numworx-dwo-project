@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentSchoolClass.findAll", query = "SELECT p FROM PersistentSchoolClass p"),
     @NamedQuery(name = "PersistentSchoolClass.findByClassID", query = "SELECT p FROM PersistentSchoolClass p WHERE p.classID = :classID"),
     @NamedQuery(name = "PersistentSchoolClass.findBySchoolIDAndClassName", query = "SELECT p FROM PersistentSchoolClass p WHERE p.schoolID = :schoolID and p.class1 = :className"),
-    @NamedQuery(name = "PersistentSchoolClass.findByUserID", query = "SELECT p FROM PersistentSchoolClass p WHERE p.userID = :userID"),
+//    @NamedQuery(name = "PersistentSchoolClass.findByUserID", query = "SELECT p FROM PersistentSchoolClass p WHERE p.userID = :userID"),
     @NamedQuery(name = "PersistentSchoolClass.findBySchoolID", query = "SELECT p FROM PersistentSchoolClass p WHERE p.schoolID = :schoolID"),
     @NamedQuery(name = "PersistentSchoolClass.findByIconizer", query = "SELECT p FROM PersistentSchoolClass p WHERE p.iconizer = :iconizer"),
     @NamedQuery(name = "PersistentSchoolClass.findByClass1", query = "SELECT p FROM PersistentSchoolClass p WHERE p.class1 = :class1"),
@@ -40,10 +40,10 @@ public class PersistentSchoolClass implements Serializable {
     @Basic(optional = false)
     @Column(name = "classID", nullable = false)
     private Long classID;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "userID", nullable = false)
-    private Long userID;
+//    @Basic(optional = false)
+//    @NotNull
+//    @Column(name = "userID", nullable = false)
+//    private Long userID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolID", nullable = false)
@@ -66,9 +66,9 @@ public class PersistentSchoolClass implements Serializable {
         this.classID = classID;
     }
 
-    public PersistentSchoolClass(Long classID, Long userID, Long schoolID, String class1) {
+    public PersistentSchoolClass(Long classID, Long schoolID, String class1) {
         this.classID = classID;
-        this.userID = userID;
+//        this.userID = userID;
         this.schoolID = schoolID;
         this.class1 = class1;
     }
@@ -80,14 +80,14 @@ public class PersistentSchoolClass implements Serializable {
     public void setClassID(Long classID) {
         this.classID = classID;
     }
-
-    public Long getUserID() {
-        return userID;
-    }
-
-    public void setUserID(Long userID) {
-        this.userID = userID;
-    }
+//
+//    public Long getUserID() {
+//        return userID;
+//    }
+//
+//    public void setUserID(Long userID) {
+//        this.userID = userID;
+//    }
 
     public Long getSchoolID() {
         return schoolID;

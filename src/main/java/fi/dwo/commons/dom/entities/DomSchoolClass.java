@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomSchoolClass {
     private PersistenceId id;
-    private String schoolClassName;
+    private String schoolClassName = "";
 
 
     public DomSchoolClass(){
