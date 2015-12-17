@@ -168,7 +168,7 @@ public class SecuredTeacherSchoolClassManager {
             PersistentSchoolClass schoolClass = new PersistentSchoolClass();
             schoolClass.setSchoolID(school.getSchoolID());
             schoolClass.setClass1(restSchoolClass.getDomSchoolClass4Teacher().getSchoolClassName());
-            schoolClass.setIconizer(restSchoolClass.getDomSchoolClass4Teacher().getIconizer()==1);
+            schoolClass.setIconizer(restSchoolClass.getDomSchoolClass4Teacher().getIconizer());
             schoolClass.setRegistrationKey(restSchoolClass.getDomSchoolClass4Teacher().getRegistrationKey());
             SchoolClassManager.create(schoolClass);
             schoolClass = SchoolClassManager.findEntity(schoolClass.getClass1(), school);
@@ -611,7 +611,7 @@ public class SecuredTeacherSchoolClassManager {
 
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
-                schoolClass.setIconizer(1 == restSchoolClass.getDomSchoolClass4Teacher().getIconizer());
+                schoolClass.setIconizer(restSchoolClass.getDomSchoolClass4Teacher().getIconizer());
                 schoolClass.setRegistrationKey(restSchoolClass.getDomSchoolClass4Teacher().getRegistrationKey());
                 schoolClass.setClass1(restSchoolClass.getDomSchoolClass4Teacher().getSchoolClassName());
                 SchoolClassManager.edit(schoolClass);

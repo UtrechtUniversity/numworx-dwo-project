@@ -119,7 +119,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         DomSchoolClass4Teacher domSchoolClass = new DomSchoolClass4Teacher();
         restSchoolClass.setDomSchoolClass4Teacher(domSchoolClass);
 //        restSchoolClass.setId(id);
-        domSchoolClass.setIconizer(0);
+        domSchoolClass.setIconizer(false);
         domSchoolClass.setRegistrationKey("Shaihulud");
         domSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
@@ -401,7 +401,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         DomSchoolClass4Teacher domSchoolClass = new DomSchoolClass4Teacher();
         restSchoolClass.setDomSchoolClass4Teacher(domSchoolClass);
         domSchoolClass.setId(id);
-        domSchoolClass.setIconizer(0);
+        domSchoolClass.setIconizer(false);
         domSchoolClass.setRegistrationKey("Shaihulud");
         domSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
