@@ -116,7 +116,7 @@ public class DomUser {
      * @return the singleSchool
      */
     public Boolean getSingleSchool() {
-        return singleSchool;
+        return this.singleSchool;
     }
 
     /**
