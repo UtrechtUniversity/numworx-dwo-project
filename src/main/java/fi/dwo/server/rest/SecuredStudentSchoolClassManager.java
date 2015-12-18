@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
@@ -11,15 +12,20 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -160,6 +166,49 @@ public class SecuredStudentSchoolClassManager {
         }
 
         return true;
+    }
+   /**
+     * Returns the school data to be displayed.
+     *
+     * @param sc
+     * @return
+     */
+    @GET
+    @Produces({"application/json"})
+    @Path("/getList")
+    public List<DomSchoolClass> getStudentsSchoolClasses(@Context SecurityContext sc) {
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
+
+        if (phr != null && school != null) {
+            List<DomSchoolClass> domSchoolClasses;
+            try {
+                List<PersistentStudentOfClass> tocList = StudentOfClassManager.findEntities(phr.getPersistentHasRolePK());
+                domSchoolClasses = new ArrayList<DomSchoolClass>(tocList.size());
+                for (PersistentStudentOfClass toc : tocList) {
+                    PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentStudentOfClassPK().getClassID());
+                    domSchoolClasses.add(new DomSchoolClass(s));
+                }
+                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of student {1]. ", new Object[]{domSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
+            }
+            catch (Exception e) {
+                LOG.log(Level.WARNING, "Unexpected exception", e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
+            }
+            return domSchoolClasses;
+        } else {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
     }
 
 }

@@ -18,6 +18,7 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
@@ -63,6 +64,19 @@ public class SecuredStudentSchoolClassManagerIT {
         dbInstance.ClearDatabase();
     }
 
+    /**
+     * Test of getTeachersSchoolClasses method, of class
+     * SecuredTeacherSchoolClassManager.
+     */
+    @Test
+    public void testGetStudentsSchoolClasses() {
+        System.out.println("getStudentsSchoolClasses");
+        SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
+        SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
+        List<DomSchoolClass> result = instance.getStudentsSchoolClasses(sc);
+        assertEquals(2, result.size());
+    }
+    
     /**
      * Test of setActiveSchoolClass method, of class
      * SecuredStudentSchoolClassManager.
