@@ -99,8 +99,6 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private Memento memento;
 	private final static EventBus BUS = 
-	//		 OpenAjaxEventBus.getManagedInstance();
-	//		new SimpleEventBus();
 			DWOplayer.PARAMETERS.getEventBus();
 	
 
@@ -117,8 +115,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	static class MC2Prepare extends Prepare {
 		private static final CBookEvent STOP = new CBookEvent("stop");
-		void prepareGetState(final ScheduledCommand cmd) {
-			BUS.fireEvent(STOP);
+		void defer(final ScheduledCommand cmd) {
+			BUS.fireEvent(STOP); // ask CBook Widgets to send 'getState' events.
 			Timer t = new Timer() {
 				@Override public void run() {
 					cmd.execute();				
