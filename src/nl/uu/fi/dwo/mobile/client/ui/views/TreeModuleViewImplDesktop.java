@@ -599,6 +599,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			cells.getElement().getStyle().clearDisplay();
 			loadedModule.close();
 			loadedModule = null;
+			DWOplayer.clientfactory.setEntryView(null);
 		}
 		
 	}

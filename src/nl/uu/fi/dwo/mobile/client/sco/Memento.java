@@ -43,7 +43,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 {
 	private static final String BEZOCHT = "bezocht";
 	private static final String ZELFTOETS_NAGEKEKEN = "zelftoetsNagekeken";
-	static Memento _instance;
+	private static Memento _instance;
 	static private Logger logger = Logger.getLogger("Memento");
 
 	static public native void instalOnBeforeUnload() /*-{
@@ -405,12 +405,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	{
 		if (this != _instance)
 			return;
-		OpdrNav.prepareGetState(
+		_instance = null;
+		OpdrNav.immediate(
 		new ScheduledCommand() {
 			public void execute() {
 				logger.info("closing memento");
 				runner.run();
-				_instance = null;
 				Date stopDate = new Date();
 				long millis = stopDate.getTime() - startDate.getTime();
 				String totalStr = getValue(TOTAL_TIME);

@@ -319,7 +319,7 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 	}
 
 	void tearDown() {
-		OpdrNav.prepareGetState(
+		OpdrNav.immediate ( // FIXME dit moet meer richting event toe..
 		new ScheduledCommand() {
 			public void execute() {
 				if (view != null) {

@@ -42,7 +42,10 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 	
 	public void setScoID(int scoID) {
 		if(scoID!=this.scoID)
-		{
+		{			
+			if(inited) // Only in Terminated state!!!!
+				throw new IllegalArgumentException("setScoID " + scoID + " " + this.scoID);
+			
 			map.clear();
 			if(!dirty.isEmpty())
 				logger.severe("wij hebben een probleem setScoID "+ dirty);

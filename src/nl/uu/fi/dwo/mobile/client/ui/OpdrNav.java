@@ -107,8 +107,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	static private Prepare prepare = GWT.create(Prepare.class);
 	
 	static class Prepare {
-		void prepareGetState(ScheduledCommand cmd) {
+		void defer(ScheduledCommand cmd) {
 			Scheduler.get().scheduleDeferred(cmd);
+		}
+		void immediate(ScheduledCommand cmd) {
+			cmd.execute();
 		}
 	}
 	
@@ -124,10 +127,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			t.schedule(100);
 		}
 	}
-
 	
-	public static void prepareGetState(ScheduledCommand cmd) {
-		prepare.prepareGetState(cmd);
+	public static void immediate(ScheduledCommand cmd) {
+		prepare.immediate(cmd);
+	}
+	public static void defer(ScheduledCommand cmd) {
+		prepare.defer(cmd);
 	}
 	
 	public OpdrNav() {};
@@ -478,7 +483,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 							gotoOpdracht(button_id, entry.scoreNav);		
 							entry.v();
 						}};
-					prepareGetState(run);
+					defer(run);
 				}
 			}
 
@@ -907,7 +912,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void close() {
 		memento.close();
-//		memento = null;
+		memento = null;
 	}
 
 	@Override

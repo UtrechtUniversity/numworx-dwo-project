@@ -563,6 +563,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		if(loadedModule != null) {
 			loadedModule.close();
 			loadedModule = null;
+			DWOplayer.clientfactory.setEntryView(null);
 		}
 		container.clear();
 	}
