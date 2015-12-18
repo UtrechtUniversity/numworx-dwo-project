@@ -310,6 +310,7 @@ public class AccountDataJPanel extends JPanel implements
                 + changeButton.getSize().width + 5, 5);
         p.add(resetButton);
 
+        // delete mag if user is geen single school student
         deleteButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_DELETE_PROFILE));//, GuiConstants.MAIN_BACKGROUND);
         //fm = deleteButton.getFontMetrics(deleteButton.getFont());
         //deleteButton.setSize(fm.stringWidth(deleteButton.getLabel()) + 20, fm.getHeight() + 10);
@@ -317,16 +318,14 @@ public class AccountDataJPanel extends JPanel implements
         deleteButton.setLocation(getSize().width / 2
                 - deleteButton.getSize().width / 2, p.getLocation().y
                 + p.getSize().height + 10);
+        deleteButton.setEnabled(!prop.getUser().getSingleSchool());
+        deleteButton.setVisible(!prop.getUser().getSingleSchool());
         this.add(deleteButton);
 
         changeButton.addActionListener(this);
         resetButton.addActionListener(this);
-        // delete user alleen als:
-        // user is read/write
-        // user kan uitloggen
-        // user heeft geen school (nieuw (17/5/13)
-        // user mag van klas veranderen.
-        deleteButton.addActionListener(this);
+        // delete mag if user is geen single school student
+            deleteButton.addActionListener(this);
     }
 
     /**
