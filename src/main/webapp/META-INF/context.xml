@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- <Context antiJARLocking="true" crossContext="false" aliases="/jars=/opt/dwo/webapps/war-shared/jars,/resources=/opt/dwo/webapps/war-shared/resources, /apps=/opt/dwo/webapps/war-shared/apps, /tablet=/opt/dwo/webapps/war-shared/tablet"  path="/DWO/DWOServer" -->
-<Context aliases="/jars=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\jars, /resources=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\resources, /apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps, /tablet=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\tablet" antiJARLocking="true" crossContext="false" path="/DWO/DWOServer">
+<Context antiJARLocking="true" crossContext="false" aliases="/jars=/opt/dwo/webapps/war-shared/jars,/resources=/opt/dwo/webapps/war-shared/resources, /apps=/opt/dwo/webapps/war-shared/apps, /tablet=/opt/dwo/webapps/war-shared/tablet"  path="/DWO/DWOServer">
+<!--<Context aliases="/jars=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\jars, /resources=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\resources, /apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps, /tablet=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\tablet" antiJARLocking="true" crossContext="false" path="/DWO/DWOServer">-->
   <!-- maxActive: Maximum number of database connections in pool. Make sure you
     configure your mysqld max_connections large enough to handle
     all of your db connections. Set to -1 for no limit.
