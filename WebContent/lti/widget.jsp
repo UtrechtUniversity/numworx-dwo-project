@@ -241,7 +241,8 @@
   	if( s == null) s = Integer.valueOf(10);
   	String scoreMax = StringEscapeUtils.escapeHtml(JSONValue.toJSONString(s));
 
-  	String archive = widgets.getArchive(className);
+  	String version = request.getParameter("tool_consumer_info_version");
+  	String archive = widgets.getArchive(className, version, learnerId);
 %>
 <applet
 	code="org.cbook.applet.CBookInstance"
@@ -274,6 +275,7 @@
 	<param name="scoreMax" value="<%=scoreMax %>" >
 	<param name="codebase_lookup" value="false">
 	<param name="role" value="<%=roles %>" >
+	<param name="applicationVersion" value="<%=version %>" >
 </applet>
 <!-- 
 <div id='footer'>
