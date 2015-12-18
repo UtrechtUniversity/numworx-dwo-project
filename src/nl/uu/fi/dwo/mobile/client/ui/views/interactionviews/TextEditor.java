@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -54,8 +55,8 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener {
 	
 	private boolean editable = true;
-	
-	
+	private static final Logger LOGGER = Logger.getLogger("TextEditor");
+	private int lineHeight = 20;
 	class Tapper implements ClickHandler {
 		private FormuleEditorIF deze;
 		private Element target;
@@ -72,7 +73,20 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 //			if(targetElement == null || targetElement == target || targetElement.getParentElement() == target)
 			{	comRoot.getKeyboard().setEditor(deze);
 				comRoot.getKeyboard().softFocus();
-				setCursorWidget(cursorWidget);
+				int flowTop = flow.getAbsoluteTop();
+				int y = event.getClientY() - flowTop;
+				int w;
+				int i = 0;
+				int max = flow.getWidgetCount()-1;
+				if(i == max) i-=1;
+				Widget widget;
+				do {
+					widget = flow.getWidget(++i);
+					w = widget.getAbsoluteTop()-flowTop;
+				} while ( i < max && w < y);
+				LOGGER.fine("widget " + i + " at "  + w + " mouse at " + y + " c=" + cursor + " m=" + max);
+				setCursorWidget(widget);
+				if(cursor != max || w >= y) cursorToLeft(); // 1 terug
 			}
 		}
 

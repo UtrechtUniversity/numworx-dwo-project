@@ -132,14 +132,14 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 				+ "/DWOmAccess/getJSONLaunchDataBytes?s=";
 	}
 
-	protected String getDefaultHost() {
-		return "ws-dev.fisme.science.uu.nl";
-	}
+//	protected String getDefaultHost() {
+//		return "ws-dev.fisme.science.uu.nl";
+//	}
 	
 	public String getHost() {
-		if(GWT.isProdMode()) 
+		//if(GWT.isProdMode()) 
 			return Window.Location.getHost();
-		return getDefaultHost();
+		//return getDefaultHost();
 	}
 
 	@Override

@@ -31,4 +31,10 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 	public EventBus getEventBus() {
 		return OpenAjaxEventBus.getManagedInstance();
 	}	
+	public String getHost() {
+		if(!GWT.isProdMode()) 
+			return getDefaultHost();
+		return Window.Location.getHost();
+	}
+
 }
