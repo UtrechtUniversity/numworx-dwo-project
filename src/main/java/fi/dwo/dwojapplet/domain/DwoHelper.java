@@ -81,7 +81,7 @@ public final class DwoHelper {
 
     /** Init properties set by init() **/
     private static DomSchoolsRolesAndClasses schoolLogins;
-            
+    //      
     /**
      * ********deprecated attributes **********
      */
@@ -132,6 +132,9 @@ public final class DwoHelper {
         //Fetch all the login roles from the server for the current roles
         try {
             DomSchoolsRolesAndClasses srcs = SecureUserAccountLoginsManager.getSchoolLogins();
+            should set relevant properties when calling init using REST-interface: school, hasRole etc...
+      
+            
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }        

@@ -5,6 +5,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
@@ -22,7 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
 /**
- * This class is the menupanel for the teacher who logged in.
+ * This class is the menu panel for the teacher who logged in.
  *
  * @author M.J.B. Kupers
  *
@@ -70,10 +71,10 @@ public class TeacherMenuPanel extends StudentMenuPanel implements SelectStrategy
      *
      * @param dwo
      */
-    public TeacherMenuPanel(DwoIF dwo) {
-        super(dwo);
-        hasAdminRight = dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
-        schoolID = dwo.getUser().getSchool().getSchoolID();
+    public TeacherMenuPanel() {
+        super();
+        hasAdminRight = DwoHelper.getSchool().hasRight(User.PROFILE_ADMIN_RIGHT);
+        schoolID = DwoHelper.getSchool().getSchoolID();
     }
 
     /**
@@ -103,8 +104,8 @@ public class TeacherMenuPanel extends StudentMenuPanel implements SelectStrategy
         classPanel.setViewportBorder(null);
         classPanel.setBorder(null);
         /* Add class-info */
-        if (dwo.getUser() instanceof Teacher) {
-            Teacher t = (Teacher) dwo.getUser();
+        if (DwoHelper.getCurrentFacadeUser() instanceof Teacher) {
+            Teacher t = (Teacher) DwoHelper.getCurrentFacadeUser();
             if ((t.getClasses() != null) && (t.getClasses().length != 0)) {
                 l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_CLASS_RESULTS)
                         + ":");

@@ -318,7 +318,6 @@ public class AccountDataJPanel extends JPanel implements
         deleteButton.setLocation(getSize().width / 2
                 - deleteButton.getSize().width / 2, p.getLocation().y
                 + p.getSize().height + 10);
-        deleteButton.setEnabled(!prop.getUser().getSingleSchool());
         deleteButton.setVisible(!prop.getUser().getSingleSchool());
         this.add(deleteButton);
 
@@ -414,9 +413,12 @@ public class AccountDataJPanel extends JPanel implements
         //
         else if (e.getSource() == deleteButton) {
             /* Delete the user account */
-            if (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
-                    + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            while(JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
+                    + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+                if(ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))){
                 GuiCreator.instance().deleteUser();
+                break;
+                }
             }
         }
     }

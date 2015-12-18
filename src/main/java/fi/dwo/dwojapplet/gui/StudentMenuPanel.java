@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.border.Border;
 
 /**
- * This class is the menupanel for the user who logged in.
+ * This class is the menu panel for the user who logged in.
  *
  * @author M.J.B. Kupers
  *
@@ -24,6 +24,7 @@ public class StudentMenuPanel extends GuestMenuPanel {
 
     private JButton myProfileButton;
     private JButton classManagementButton;
+    private StudentMenuPanelProperties prop;
 
     public void createRuler() {
         add(Box.createVerticalStrut(10));
@@ -60,13 +61,14 @@ public class StudentMenuPanel extends GuestMenuPanel {
      * GuestMenuPanel) and a button to show the profile for editing.
      */
     public StudentMenuPanel() {
+        super();
 //        setDebugGraphicsOptions(DebugGraphics.FLASH_OPTION);
 
     }
 
-    public StudentMenuPanel(DwoIF dwo) {
-        super(dwo);
-    }
+//    public StudentMenuPanel(DwoIF dwo) {
+//        super(dwo);
+//    }
 
     /**
      * Adds the name of the class of the user to the panel. Can be overridden by
@@ -74,65 +76,8 @@ public class StudentMenuPanel extends GuestMenuPanel {
      *
      */
     protected void addClassList() {
-        JLabel l;
-        createRuler();
-        Box p = new Box(BoxLayout.PAGE_AXIS);
-        p.setOpaque(false);
-        /* Add class-info */
-        User u = GuiCreator.instance().getUser();
-        if (u.getInClass() != null) {
-            l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_IN_CLASS)
-                    + ":");
-            l.setOpaque(false);
-            l.setFont(GuiConstants.NORMAL_TEXT);
-            p.add(l);
-            l = new JLabel("-  " + u.getInClass().getName());
-            l.setOpaque(false);
-            l.setFont(GuiConstants.NORMAL_TEXT);
-            p.add(l);
-            add(p);
-        } // if user is readonly, geen rode tekst die alleen maar afleid.
-        // TODO nadenken of er niet mischien een andere tekst moet komen?
-        else if (u.getSchool() != null && !u.isReadonly()) {
-            // 10 pixels margin.
-            Border border = BorderFactory.createEmptyBorder(0, 10, 0, 0);
-            l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_0));
-            l.setOpaque(false);
-            l.setFont(GuiConstants.RED_TEXT);
-            l.setForeground(Color.red);
-            l.setBorder(border);
-            p.add(l);
-
-            l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_1));
-            l.setOpaque(false);
-            l.setFont(GuiConstants.RED_TEXT);
-            l.setForeground(Color.red);
-            l.setBorder(border);
-            p.add(l);
-
-            l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_2));
-            l.setOpaque(false);
-            l.setFont(GuiConstants.RED_TEXT);
-            l.setForeground(Color.red);
-            l.setBorder(border);
-            p.add(l);
-
-            l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_3));
-            l.setOpaque(false);
-            l.setFont(GuiConstants.RED_TEXT);
-            l.setForeground(Color.red);
-            l.setBorder(border);
-            p.add(l);
-
-            l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_4));
-            l.setOpaque(false);
-            l.setFont(GuiConstants.RED_TEXT);
-            l.setForeground(Color.red);
-            l.setBorder(border);
-            p.add(l);
-            add(p);
-        }
-
+        //Handig om een lijst van klassen te hebben waar een student de active klas 
+        //mee kan schakelen.
     }
 
     /**

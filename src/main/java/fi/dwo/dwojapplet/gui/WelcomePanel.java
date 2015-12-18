@@ -4,8 +4,11 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.beans.copyright.FIButton;
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.rest.LoginManager;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -347,6 +350,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         if ((src == loginButton) || (src == loginname) || (src == password)) {
             try {
                 //set cookies in browser.
+                DwoHelper.setCurrentUser(LoginManager.login(loginname.getText(), MD5.getHashString(String.valueOf(password.getPassword()))));
                 GuiCreator.instance().login(loginname.getText(), String.valueOf(password.getPassword()));
                 if (linkcheck != null && linkcheck.isSelected()) {
                     GuiCreator.instance().linkViaSAML();

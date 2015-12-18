@@ -90,7 +90,7 @@ public class GuiCreatorTeacher extends GuiCreator {
         User u = dwo.getUser();
 
         if (u instanceof Teacher) {
-            return new TeacherMenuPanel(dwo);
+            return new TeacherMenuPanel();
         } else if (u instanceof Admin) {
             return new AdminMenuPanel();
         } else {

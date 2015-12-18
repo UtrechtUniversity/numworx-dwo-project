@@ -13,8 +13,8 @@ public class SchoolAdminMenuPanel extends TeacherMenuPanel {
     protected MenuPanelButton userManagementButton;
     protected MenuPanelButton klasKeuzeButton;
 
-    public SchoolAdminMenuPanel(DwoIF dwo) {
-        super(dwo);
+    public SchoolAdminMenuPanel() {
+        super();
     }
 
     /* (non-Javadoc)
