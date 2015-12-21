@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
 import nl.uu.fi.dwo.mobile.client.ui.NavigationCss;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -62,4 +63,5 @@ public interface DWOplayerParameters {
 	String getHost();
 	EventBus getEventBus();
 // More to come....
+	OpdrNav.Prepare getPrepareInstance();
 }

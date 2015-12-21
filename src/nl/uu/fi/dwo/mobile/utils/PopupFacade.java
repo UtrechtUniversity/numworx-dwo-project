@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
@@ -95,6 +96,15 @@ public class PopupFacade implements InteractionView, FacetAware {
 	}
 	
 	public Widget wrap(StubView container) {
+		if(popup) {
+			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container);
+			list.add(btn);
+			return btn;
+		}
+		return container;
+	}
+	
+	public Widget wrap(MC2View container) {
 		if(popup) {
 			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container);
 			list.add(btn);

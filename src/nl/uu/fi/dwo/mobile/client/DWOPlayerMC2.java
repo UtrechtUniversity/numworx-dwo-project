@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
 import nl.uu.fi.dwo.interaction.client.event.OpenAjaxEventBus;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
@@ -35,6 +36,10 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 		if(!GWT.isProdMode()) 
 			return getDefaultHost();
 		return Window.Location.getHost();
+	}
+
+	public OpdrNav.Prepare getPrepareInstance() {
+		return new OpdrNav.MC2Prepare();
 	}
 
 }

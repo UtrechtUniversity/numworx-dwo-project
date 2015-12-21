@@ -102,18 +102,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			DWOplayer.PARAMETERS.getEventBus();
 	
 
-	static private Prepare prepare = GWT.create(Prepare.class);
+	static private Prepare prepare = DWOplayer.PARAMETERS.getPrepareInstance();
 	
-	static class Prepare {
+	public static class Prepare {
 		void defer(ScheduledCommand cmd) {
 			Scheduler.get().scheduleDeferred(cmd);
 		}
-		void immediate(ScheduledCommand cmd) {
+		@Deprecated void immediate(ScheduledCommand cmd) {
 			cmd.execute();
 		}
 	}
 	
-	static class MC2Prepare extends Prepare {
+	public static class MC2Prepare extends Prepare {
 		private static final CBookEvent STOP = new CBookEvent("stop");
 		void defer(final ScheduledCommand cmd) {
 			BUS.fireEvent(STOP); // ask CBook Widgets to send 'getState' events.
@@ -126,7 +126,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 	}
 	
-	public static void immediate(ScheduledCommand cmd) {
+	@Deprecated public static void immediate(ScheduledCommand cmd) {
 		prepare.immediate(cmd);
 	}
 	public static void defer(ScheduledCommand cmd) {

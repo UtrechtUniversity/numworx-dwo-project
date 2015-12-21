@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.mobile.client.ui.NavigationBundle;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextAndroid;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextDefault;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextIpad;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.ScoreNavFacade;
@@ -24,7 +25,6 @@ import com.googlecode.mgwt.ui.client.theme.base.MGWTClientBundleBaseThemeAndroid
 import com.googlecode.mgwt.ui.client.theme.base.MGWTClientBundleBaseThemeIPad;
 import com.googlecode.mgwt.ui.client.theme.base.MGWTClientBundleBaseThemeIPadRetina;
 import com.googlecode.mgwt.ui.client.theme.base.MGWTClientBundleBaseThemeIPhone;
-import com.googlecode.mgwt.ui.client.theme.base.MGWTClientBundleBaseThemeRetina;
 
 public class DWOplayerDefaults implements DWOplayerParameters {
 
@@ -150,5 +150,9 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	@Override
 	public EventBus getEventBus() {
 		return new SimpleEventBus();
+	}
+	
+	public OpdrNav.Prepare getPrepareInstance() {
+		return new OpdrNav.Prepare();
 	}
 }

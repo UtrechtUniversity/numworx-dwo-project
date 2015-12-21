@@ -29,9 +29,10 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MC2View extends Composite implements InteractionView {
+public class MC2View extends SimplePanel implements InteractionView {
 
 	private static final Logger LOGGER = java.util.logging.Logger.getLogger("MC2View");
 	public static final String CROSS_WIDGET_ID = "crossWidgetId";
@@ -154,7 +155,20 @@ public class MC2View extends Composite implements InteractionView {
 		relay = getAction(launchState.getString("className"));
 		InlineHTML html = new InlineHTML();
 		html.getElement().setId(id);
-		initWidget(html);
+		html.addAttachHandler(new Handler() {
+			
+			@Override
+			public void onAttachOrDetach(AttachEvent event) {
+				if( event.isAttached())
+					initFrame();
+				else 
+				{
+					LOGGER.info("detach MC2view");
+					removeIframe(container);
+				}
+			}
+		});
+		setWidget(html);
 		init(id, launchdata, randomVarWaarden);
 	}
 
@@ -213,23 +227,16 @@ public class MC2View extends Composite implements InteractionView {
 	}
 
 	public Widget asWidget() {
-		Widget wrap = facade.wrap(this);
-		this.addAttachHandler(new Handler() {
-			
-			@Override
-			public void onAttachOrDetach(AttachEvent event) {
-				if( event.isAttached())
-					initFrame();
-				else 
-				{
-					LOGGER.info("detach MC2view");
-					removeIframe(container);
-				}
-			}
-		});
-		return wrap;
+		return facade.wrap(this);
 	}
 
+	public Widget getWidget() {
+		Widget w = super.getWidget();
+		SimplePanel pl = new SimplePanel();
+		pl.setWidget(w);
+		pl.setPixelSize(width, height);
+		return pl;
+	}
 
 	@Override
 	public int getAsHoogte() {
@@ -272,7 +279,7 @@ public class MC2View extends Composite implements InteractionView {
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
-		facade.setState(h);
+		facade.setPopupState(h);
 		if(h.containsKey("STUBVIEW_score"))
 			score = Integer.parseInt(h.remove("STUBVIEW_score").toString());
 		if(h.containsKey("STUBVIEW_correct"))

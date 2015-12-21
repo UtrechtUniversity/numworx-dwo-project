@@ -73,7 +73,7 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 				public void onMouseDown(MouseDownEvent event) {
 					event.stopPropagation();
 					event.preventDefault();
-					tearDown();
+					deferTearDown();
 				}});
 			addTouchStartHandler(new TouchStartHandler() {
 
@@ -81,7 +81,7 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 				public void onTouchStart(TouchStartEvent event) {
 					event.stopPropagation();
 					event.preventDefault();
-					tearDown();
+					deferTearDown();
 				}
 				
 			});
@@ -318,10 +318,21 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 		event.stopPropagation();
 	}
 
+	void deferTearDown() {
+		OpdrNav.defer(
+		  new ScheduledCommand() {
+			  public void execute() {
+				  tearDown();
+			  }
+		  }
+		);
+	}
+	
+	/*
+	 *  deze kandidaat voor PrepareGetState.
+	 *  
+	 */
 	void tearDown() {
-		OpdrNav.immediate ( // FIXME dit moet meer richting event toe..
-		new ScheduledCommand() {
-			public void execute() {
 				if (view != null) {
 					if (view instanceof FormuleEditorWithAnswer) {
 						((FormuleEditorWithAnswer) view).haalAntwoordOp();
@@ -336,8 +347,6 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 					}
 				}
 				box.hide();
-			}
-		});
 	}
 
 	/**
