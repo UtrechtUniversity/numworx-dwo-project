@@ -51,6 +51,7 @@
   	}
   	
   	function doSetState(topic, state) {
+  		//state = state.parameters||state
   		document.API.setState(JSON.stringify(state))
   	}
   	

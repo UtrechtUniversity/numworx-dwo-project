@@ -4,6 +4,19 @@
 <html>
 <head>
   <title>Digital Mathematical Environment</title>
+  <script>
+	var API_1484_11 = {
+		Initialize: function(ignore) { return "true"; },
+		Terminate:  function(ignore) { return "true"; },
+		Commit: function(ignore) { return "true"; },
+		GetValue: function(key)  { return "";  },
+		SetValue: function(key, value) { return "true"; },
+		GetLastError: function(ignore) { return "0"; },
+		GetErrorString: function(code) { return "no error"; },
+		GetDiagnostic:  function(code) { return "no diagnostic"; }
+	}
+	window.API_1484_11 = API_1484_11
+  </script> 
 </head>
 <body style="font-family:sans-serif">
 <img src="http://www.sun.com/images/l2/l2_duke_java.gif" align="right">
@@ -14,6 +27,8 @@ For this tool, all resource level secrets are also "secret".</p>
 </p>
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
 <%@ page import="java.util.Enumeration" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.net.URL" %>
 <%@ page import="net.oauth.OAuth" %>
 <%@ page import="net.oauth.OAuthMessage" %>
 <%@ page import="net.oauth.OAuthConsumer" %>
@@ -24,6 +39,38 @@ For this tool, all resource level secrets are also "secret".</p>
 <%@ page import="net.oauth.server.HttpRequestMessage" %>
 <%@ page import="net.oauth.server.OAuthServlet" %>
 <%@ page import="net.oauth.signature.OAuthSignatureMethod" %>
+<%@ page import="fi.servlet.lti.DbAccess" %>
+<%@ page import="fi.servlet.dwomaccess.DbAccessFactory" %>
+<%!
+private DbAccess instance;
+
+private DbAccess getDbAccess() {
+	if(instance == null) {
+		instance = new DbAccess(DbAccessFactory.getDbAccess(getServletContext()));
+	}
+	return instance;
+}
+
+private void doReturn(HttpServletRequest request, HttpServletResponse response, 
+        String s, JspWriter out)
+		throws java.io.IOException
+	{
+		String return_url = request.getParameter("launch_presentation_return_url");
+		if ( return_url != null && return_url.length() > 1 ) {
+			if ( return_url.indexOf('?') > 1 ) {
+				return_url += "&lti_msg=" + URLEncoder.encode(s);
+			} else {
+				return_url += "?lti_msg=" + URLEncoder.encode(s);
+			}
+			response.sendRedirect(return_url);
+			return;
+		}
+		out.print("<p>");
+		out.print(s);
+		out.println("</p>");
+	}
+
+%>
 <pre>
 <%
 
@@ -37,7 +84,7 @@ For this tool, all resource level secrets are also "secret".</p>
   OAuthValidator oav = new SimpleOAuthValidator();
   String oauth_consumer_key = request.getParameter("oauth_consumer_key");
   if ( oauth_consumer_key == null ) {
-    out.println("<b>Missing oauth_consumer_key</b>\n");
+    doReturn(request, response, "Missing oauth_consumer_key", out);
     return;
   }
   OAuthConsumer cons = null;
@@ -46,8 +93,13 @@ For this tool, all resource level secrets are also "secret".</p>
   } else if ( "12345".equals(oauth_consumer_key) ) {
     cons = new OAuthConsumer("http://call.back.url.com/", "12345", "secret", null);
   } else {
-    out.println("<b>oauth_consumer_key="+oauth_consumer_key+" not found.</b>\n");
-    return;
+	  String secret = getDbAccess().getSecret(oauth_consumer_key);
+	  if ( secret != null ) {
+	    cons = new OAuthConsumer("about:blank", oauth_consumer_key, secret, null);
+	  } else {
+	    doReturn(request, response, "Key "+oauth_consumer_key+" not found", out);
+	    return;
+	  }
   }
 
   OAuthAccessor acc = new OAuthAccessor(cons);
@@ -59,12 +111,23 @@ For this tool, all resource level secrets are also "secret".</p>
     oav.validateMessage(oam,acc);
     out.println("Message validated");
   } catch(Exception e) {
-    out.println("<b>Error while valdating message:</b>\n");
-    out.println(e);
+	    doReturn(request, response, "Error while valdating message", out);
+	    log("Error validating message", e);
+	    return;
   }
 
+  String sconr = "";
+  String info = request.getPathInfo();
+  if(info.startsWith("/sco/")) sconr = info.substring(5);
+  
 %>
 </pre>
+<hr>
+<div id='headerpane' ></div>
+<iframe id='bodypane'
+	src="/dwo/apps/player.html#<%=sconr%>" width="800" height="600"
+>
+</iframe>
 <hr>
 <p>
 Note: Unpublished drafts of IMS Specifications are only available to IMS members and any software based on
