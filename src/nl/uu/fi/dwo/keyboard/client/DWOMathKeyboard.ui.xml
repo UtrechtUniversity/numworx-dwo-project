@@ -112,7 +112,7 @@
 				σ
 			</my:FKey>
 			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_6">
-				×
+				%
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-7">
