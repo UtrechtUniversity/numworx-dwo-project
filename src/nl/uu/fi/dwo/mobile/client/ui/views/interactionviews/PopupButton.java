@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -49,7 +50,7 @@ import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Touch;
 
-public class PopupButton extends Composite implements ClickHandler, TouchStartHandler, MouseDownHandler, HasHide {
+public class PopupButton extends Composite implements ClickHandler, /*TouchStartHandler, MouseDownHandler,*/ HasHide {
 
 	public class CaptionImpl extends Composite implements Caption {
 
@@ -166,7 +167,30 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 	InteractionView view;
 	HashMap<String,Object> state;
 
+	class NothingOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler  {
+
+		@Override
+		public void onTouchCancel(TouchCancelEvent event) {
+			event.stopPropagation();
+		}
+
+		@Override
+		public void onTouchEnd(TouchEndEvent event) {
+			event.stopPropagation();
+		}
+
+		@Override
+		public void onTouchMove(TouchMoveEvent event) {
+			event.stopPropagation();
+		}
+
+		@Override
+		public void onTouchStart(TouchStartEvent event) {
+			event.stopPropagation();		
+		}
 	
+	}
+
 	class DragOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler, com.google.gwt.animation.client.AnimationScheduler.AnimationCallback  {
 		int x,y;
 		boolean track;
@@ -240,14 +264,14 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 		btn.getElement().getStyle().setPadding(0, Style.Unit.PX);
 		btn.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		btn.addClickHandler(this);
-		btn.addTouchStartHandler(this);
-		btn.addMouseDownHandler(this);
+//		btn.addTouchStartHandler(this);
+//		btn.addMouseDownHandler(this);
 		this.content = content;
 		this.view = view;
 		initWidget(btn);
 	}
 
-	private int clientX,clientY;
+	//private int clientX,clientY;
 	private static Logger logger = Logger.getLogger("PopupButton");
 	
 	@Override
@@ -260,7 +284,15 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 			box.addDomHandler(t, TouchMoveEvent.getType());
 			box.addDomHandler(t, TouchEndEvent.getType());
 			box.addDomHandler(t, TouchCancelEvent.getType());
-			box.setWidget(FocusOnTouch.wrap(content.asWidget(),false));
+// doe niets als je in het contentvak klikt middels stopPropagation
+			NothingOnTouch nt = new NothingOnTouch();
+			FocusPanel wrap = FocusOnTouch.wrap(content.asWidget(),false);
+			wrap.addDomHandler(nt, TouchStartEvent.getType());
+			wrap.addDomHandler(nt, TouchMoveEvent.getType());
+			wrap.addDomHandler(nt, TouchEndEvent.getType());
+			wrap.addDomHandler(nt, TouchCancelEvent.getType());
+			
+			box.setWidget(wrap);
 		}
 		if(!box.isShowing() && view != null && view instanceof FormuleEditorWithAnswer)
 		{	
@@ -303,20 +335,20 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 		return false;
 	}
 	
-	@Override
-	public void onTouchStart(TouchStartEvent event) {
-		Touch touch = event.getChangedTouches().get(0);
-		clientX = touch.getClientX();
-		clientY = touch.getClientY();
-		event.stopPropagation();
-	}
+//	@Override
+//	public void onTouchStart(TouchStartEvent event) {
+//		Touch touch = event.getChangedTouches().get(0);
+//		clientX = touch.getClientX();
+//		clientY = touch.getClientY();
+//		//event.stopPropagation();
+//	}
 
-	@Override
-	public void onMouseDown(MouseDownEvent event) {
-		clientX = event.getClientX();
-		clientY = event.getClientY();
-		event.stopPropagation();
-	}
+//	@Override
+//	public void onMouseDown(MouseDownEvent event) {
+//		clientX = event.getClientX();
+//		clientY = event.getClientY();
+//		event.stopPropagation();
+//	}
 
 	void deferTearDown() {
 		OpdrNav.defer(
