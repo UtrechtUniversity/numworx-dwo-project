@@ -17,17 +17,6 @@
   </properties>
   <dependencies>
   	<dependency>
-  		<groupId>com.googlecode.json-simple</groupId>
-  		<artifactId>json-simple</artifactId>
-  		<version>1.1.1</version>
-  		<exclusions>
-  			<exclusion>
-  				<artifactId>junit</artifactId>
-  				<groupId>junit</groupId>
-  			</exclusion>
-  		</exclusions>
-  	</dependency>
-  	<dependency>
   		<groupId>javax.servlet</groupId>
   		<artifactId>servlet-api</artifactId>
   		<version>2.4</version>
@@ -45,13 +34,6 @@
   		<version>1.0</version>
   		<scope>system</scope>
   		<systemPath>${project.basedir}/WebContent/WEB-INF/lib/dwo.jar</systemPath>
-  	</dependency>
-  	<dependency>
-  		<groupId>fi.beans</groupId>
-  		<artifactId>javaclasses</artifactId>
-  		<version>1.0</version>
-  		<scope>system</scope>
-  		<systemPath>${project.basedir}/WebContent/WEB-INF/lib/javaclasses.jar</systemPath>
   	</dependency>
   	<dependency>
   		<groupId>net.oauth.core</groupId>
