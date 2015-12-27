@@ -10,6 +10,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.TextMetrics;
 
 import fi.wiskopdr.Letter;
+import fi.wiskopdr.FormuleParser;
 
 /**
  * Single character like - + = etc..
@@ -318,7 +319,7 @@ public class FormuleTeken extends FormuleElement
 		
 		boolean italic = false;
 		if(Letter.isLetter(character))
-		{	if(!functieTeken)
+		{	if(!functieTeken || FormuleParser.isWoordFormule())
 			{	italic = true;
 				//bold = true;
 			}
