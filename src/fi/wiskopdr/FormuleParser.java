@@ -610,7 +610,8 @@ public class FormuleParser
 			if (index > -1 && tel > index + 2)
 				s = s.substring(0, index) + "/(" + s.substring(index + 1, tel) + ")" + s.substring(tel);
 
-			else if (index > -1 && index + 2 < s.length() && Letter.isLetter(s.charAt(index + 2)))
+			
+			else if (index > -1 && index + 2 < s.length()) // && Letter.isLetter(s.charAt(index + 2))  bleek fout
 			{
 				tel = index + 3;
 				s = s.substring(0, index) + "(-1)/" + s.substring(index + 2);
