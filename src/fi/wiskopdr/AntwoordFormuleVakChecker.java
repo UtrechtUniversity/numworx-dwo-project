@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.logging.Logger;
 
+import com.google.gwt.user.client.Window;
+
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -26,13 +28,16 @@ import fi.wiskopdr.text.Text;
 public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 {
 	private boolean	herleiding;
+	private boolean	significant;
 	private boolean	exact;
 	
 	private boolean isGelijkwaardig = false;
 	private boolean isHerleid = false;
 	private int soortHerleiding = 0;
+	private boolean isSignificant = false;
 	private boolean isExact = false;
 	private int puntenGelijkwaardig = 10;
+	private int puntenSignificant = 10;
 	private int puntenHerleiding = 0;
 	private int puntenExact = 0;
 	
@@ -113,10 +118,12 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		//this.antwoordFormuleVak = antwoordFormuleVak;
 		String antwoordString = "$f@";
 		boolean herleiding = false;
+		boolean significant = false;
 		boolean exact = false;
 		int soortHerleiding = 0;
 		int puntenGelijkwaardig = 10;
 		int puntenHerleiding = 0;
+		int puntenSignificant = 0;
 		int puntenExact = 0;
 		List<Map<String,Object>> answerModels = null;
 		boolean hasFeedback = false;
@@ -135,10 +142,12 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
         		
 		if(afvCheckerModel.containsKey("antwoordString")) antwoordString = afvCheckerModel.getString("antwoordString");
 		if(afvCheckerModel.containsKey("herleiding")) herleiding = afvCheckerModel.getBoolean("herleiding");
+		if(afvCheckerModel.containsKey("significant")) significant = afvCheckerModel.getBoolean("significant");
 		if(afvCheckerModel.containsKey("exact")) exact = afvCheckerModel.getBoolean("exact");
 		if(afvCheckerModel.containsKey("soortHerleiding")) soortHerleiding = afvCheckerModel.getInt("soortHerleiding");
 		if(afvCheckerModel.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = afvCheckerModel.getInt("puntenGelijkwaardig");
 		if(afvCheckerModel.containsKey("puntenHerleiding")) puntenHerleiding = afvCheckerModel.getInt("puntenHerleiding");
+		if(afvCheckerModel.containsKey("puntenSignificant")) puntenSignificant = afvCheckerModel.getInt("puntenSignificant");
 		if(afvCheckerModel.containsKey("puntenExact")) puntenExact = afvCheckerModel.getInt("puntenExact");
 		if(afvCheckerModel.containsKey("answerModels")) answerModels = afvCheckerModel.getMapList("answerModels");
 		if(afvCheckerModel.containsKey("hasFeedback")) hasFeedback = afvCheckerModel.getBoolean("hasFeedback");
@@ -154,9 +163,11 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		
 		this.herleiding = herleiding;
 		this.soortHerleiding = soortHerleiding;
+		this.significant = significant;
 		this.exact = exact;
 		this.puntenGelijkwaardig = puntenGelijkwaardig;
 		this.puntenHerleiding = puntenHerleiding;
+		this.puntenSignificant = puntenSignificant;
 		this.puntenExact = puntenExact;
 		
         try         
@@ -240,6 +251,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		HashMap checkResults = new HashMap();
 		checkResults.put("isGelijkwaardig", new Boolean(isGelijkwaardig));
 		checkResults.put("isHerleid", new Boolean(isHerleid));
+		checkResults.put("isSignificant", new Boolean(isSignificant));
 		checkResults.put("isExact", new Boolean(isExact));
 		
 		if(goedHalfFout != GEEN) checkResults.put("correct", new Boolean(correct));
@@ -670,29 +682,16 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			}
 		}
 		else
-		{	if(!herleiding && !exact) 
-			{	if(isGelijkwaardig)
+		{	
+			if(significant && !exact)
+			{	if(isGelijkwaardig && isSignificant)
 				{	goedHalfFout = GOED;
-					score = puntenGelijkwaardig;
+					score = puntenGelijkwaardig + puntenSignificant;
 					correct = true;
 					fout = false;
 				}
-				else
-				{	goedHalfFout = FOUT;
-					score = 0;
-					correct = false;
-					fout = true;
-				}
-			}
-			else if(herleiding && !exact)
-			{	if(isGelijkwaardig && isHerleid)
-				{	goedHalfFout = GOED;
-					score = puntenGelijkwaardig + puntenHerleiding;
-					correct = true;
-					fout = false;
-				}
-				else if(isGelijkwaardig && !isHerleid)
-				{	goedHalfFout = DOOR;
+				else if(isGelijkwaardig && !isSignificant)
+				{	goedHalfFout = HALF;
 					score = puntenGelijkwaardig;
 					correct = false;
 					fout = false;
@@ -704,50 +703,87 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 					fout = true;
 				}
 			}
-			else if(exact && !herleiding)
-			{	if(isGelijkwaardig && isExact)
-				{	goedHalfFout = GOED;
-					score = puntenGelijkwaardig + puntenExact;
-					correct = true;
-					fout = false;
+			else
+			{
+				if(!herleiding && !exact) 
+				{	if(isGelijkwaardig)
+					{	goedHalfFout = GOED;
+						score = puntenGelijkwaardig;
+						correct = true;
+						fout = false;
+					}
+					else
+					{	goedHalfFout = FOUT;
+						score = 0;
+						correct = false;
+						fout = true;
+					}
 				}
-				else if(isGelijkwaardig && !isExact)
-				{	goedHalfFout = DOOR;
-					score = puntenGelijkwaardig;
-					correct = false;
-					fout = false;
+				else if(herleiding && !exact)
+				{	if(isGelijkwaardig && isHerleid)
+					{	goedHalfFout = GOED;
+						score = puntenGelijkwaardig + puntenHerleiding;
+						correct = true;
+						fout = false;
+					}
+					else if(isGelijkwaardig && !isHerleid)
+					{	goedHalfFout = DOOR;
+						score = puntenGelijkwaardig;
+						correct = false;
+						fout = false;
+					}
+					else 
+					{	goedHalfFout = FOUT;
+						score = 0;
+						correct = false;
+						fout = true;
+					}
 				}
-				else 
-				{	goedHalfFout = FOUT;
-					score = 0;
-					correct = false;
-					fout = true;
+				else if(exact && !herleiding)
+				{	if(isGelijkwaardig && isExact)
+					{	goedHalfFout = GOED;
+						score = puntenGelijkwaardig + puntenExact;
+						correct = true;
+						fout = false;
+					}
+					else if(isGelijkwaardig && !isExact)
+					{	goedHalfFout = DOOR;
+						score = puntenGelijkwaardig;
+						correct = false;
+						fout = false;
+					}
+					else 
+					{	goedHalfFout = FOUT;
+						score = 0;
+						correct = false;
+						fout = true;
+					}
 				}
-			}
-			else if(exact && herleiding)
-			{	if(isGelijkwaardig && isExact)
-				{	goedHalfFout = GOED;
-					score = puntenGelijkwaardig + puntenHerleiding + puntenExact;
-					correct = true;
-					fout = false;
-				}
-				else if(isGelijkwaardig && isHerleid)
-				{	goedHalfFout = DOOR;
-					score = puntenGelijkwaardig + puntenHerleiding;
-					correct = false;
-					fout = false;
-				}
-				else if(isGelijkwaardig)
-				{	goedHalfFout = DOOR;
-					score = puntenGelijkwaardig;
-					correct = false;
-					fout = false;
-				}
-				else 
-				{	goedHalfFout = FOUT;
-					score = 0;
-					correct = false;
-					fout = true;
+				else if(exact && herleiding)
+				{	if(isGelijkwaardig && isExact)
+					{	goedHalfFout = GOED;
+						score = puntenGelijkwaardig + puntenHerleiding + puntenExact;
+						correct = true;
+						fout = false;
+					}
+					else if(isGelijkwaardig && isHerleid)
+					{	goedHalfFout = DOOR;
+						score = puntenGelijkwaardig + puntenHerleiding;
+						correct = false;
+						fout = false;
+					}
+					else if(isGelijkwaardig)
+					{	goedHalfFout = DOOR;
+						score = puntenGelijkwaardig;
+						correct = false;
+						fout = false;
+					}
+					else 
+					{	goedHalfFout = FOUT;
+						score = 0;
+						correct = false;
+						fout = true;
+					}
 				}
 			}
 		}
@@ -835,6 +871,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		}
 		
 		isGelijkwaardig = false;
+		isSignificant = false;
 		
 		if(hasFeedback) 
 		{	int aantalAnswerModels = answerModels.size();
@@ -897,6 +934,8 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			{	if(casNodig) isGelijkwaardig = isGelijkwaardig || AntwoordChecker.checkGelijkwaardig(antwoordEvalCAS,juisteAntwoorden[i],absPrecisions[i]);
 				else isGelijkwaardig = isGelijkwaardig || AntwoordChecker.checkGelijkwaardig(antwoord,juisteAntwoorden[i],absPrecisions[i]);
 				if(soortHerleiding!=0)isHerleid = AntwoordChecker.checkHerleiding(antwoord,juisteAntwoorden[0], soortHerleiding);
+				
+				if(significant)isSignificant = isSignificant || AntwoordChecker.checkSignificant(antwoord,juisteAntwoorden[i]);	
 				
 				if(Algebra.isBreukPlusGetal(juisteAntwoorden[i]))isExact = AntwoordChecker.checkExactBreukPlusGetal(expAntwoordString,juisteAntwoorden[i]);
 				else if(gebruikersSubstituties!=null)isExact = AntwoordChecker.checkExact(antwoordNonSub,juisteAntwoorden[i]);
