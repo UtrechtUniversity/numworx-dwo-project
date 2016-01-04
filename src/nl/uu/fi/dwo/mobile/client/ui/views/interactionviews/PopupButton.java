@@ -264,8 +264,12 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		btn.getElement().getStyle().setPadding(0, Style.Unit.PX);
 		btn.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		btn.addClickHandler(this);
-//		btn.addTouchStartHandler(this);
-//		btn.addMouseDownHandler(this);
+// do not propagate...		
+		NothingOnTouch tt = new NothingOnTouch();
+		btn.addTouchStartHandler(tt);
+		btn.addTouchCancelHandler(tt);
+		btn.addTouchEndHandler(tt);
+		btn.addTouchMoveHandler(tt);
 		this.content = content;
 		this.view = view;
 		initWidget(btn);
