@@ -934,7 +934,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		entry.clearContentPanel();
 		if (states[currentActiviteit][currentOpdracht] == null)
-			entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+			entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
 		else
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
 	}
@@ -1103,9 +1103,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void reloadOpdracht(int opdracht, ScoreNavIF source) {
 		saveCurrentState();
 		removeButtonCursor(buttons.get(currentOpdracht));
-		
+		boolean randomize;
 		if (opdracht < 0) 
-		{
+		{	randomize = true; // Alles opnieuw, dus ook nieuwe random variabelen
 			currentOpdracht = 0;
 			for (opdracht = 0; opdracht < aantalOpdrachten[currentActiviteit]; opdracht ++)
 			{	clearState(opdracht, source);
@@ -1121,6 +1121,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		} 
 		else
 		{	
+			randomize = false; // TODO moet wel, tenzij er nu geen enkele state meer is. Peter vragen?
 			clearState(opdracht,source);
 			setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
 		}
@@ -1133,7 +1134,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		entry.clearContentPanel();
 		if (states[currentActiviteit][currentOpdracht] == null)
-			entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+		{
+			if(randomize)
+				entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+			else
+				entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+		}
 		else
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
 		

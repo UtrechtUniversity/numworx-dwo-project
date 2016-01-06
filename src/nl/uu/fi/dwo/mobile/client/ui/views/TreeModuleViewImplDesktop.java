@@ -162,7 +162,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	{
 		TreeItem item = event.getSelectedItem();
 		SelectModuleItem o = (SelectModuleItem) item.getUserObject();
-		if(o != null) selectItem(o);
+		if(o != null) selectItem(o); // send stop event
 		else {
 			SelectModuleItem root = SelectModuleItemHolder.getItemByID("0");
 			container.setWidget(new Label(root.getDescription())); // Uit het profiel halen!

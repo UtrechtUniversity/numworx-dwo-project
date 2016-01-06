@@ -95,7 +95,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
-	static Text_nl rb = new Text_nl();
+	//@Deprecated // FIXME NIET GEBRUIKEN, CONVERTEREN NAAR Text.constants.xxxx()
+	//static Text_nl rb = new Text_nl();
 
 	OpdrNav on;
 	private FocusPanel mainPanel;
@@ -446,8 +447,26 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			
 		}
 	}
+	
+// deze zouden inline moeten worden gemaakt.
+// gebruik zetVolgendeOpdracht in bijna alle gevallen
+	@Deprecated
+	public final void zetOpdracht(HashMap<String, Object> opdracht)
+	{
+		zetOpdracht(opdracht, true);
+	}
 
-	public void zetOpdracht(HashMap<String, Object> opdracht)
+	public final void zetVolgendeOpdracht(HashMap<String,Object> opdracht) {
+		zetOpdracht(opdracht, !globalParam);
+	}
+	
+	/**
+	 * voor 'globale parameters'
+	 * @param opdracht launchdata
+	 * @param randomise (initial|| !globalparameters)
+	 */
+	
+	public void zetOpdracht(HashMap<String, Object> opdracht, boolean randomise)
 	{
 		
 		
@@ -459,7 +478,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		String[] varnamen = null;
 		HashMap waarden = null;
-		//if(randomise)
+		if(randomise)
 		{
 			try
 			{
@@ -470,6 +489,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			{
 				wellSet = false;
 			}
+		} else {
+			varnamen = this.randomVarNamen; // keep from last time
+			waarden = this.randomVarWaarden;
 		}
 
 		this.randomVarNamen = varnamen;

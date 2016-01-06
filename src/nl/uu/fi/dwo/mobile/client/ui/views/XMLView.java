@@ -92,6 +92,7 @@ public abstract class XMLView {
 	private String[] categorieString;
 	private int[][][][] scoresMaxObjectives;
 	boolean objectivesAanwezig;
+	boolean globalParam;
 	
 	
 	TekstVakPanel hoofdPanel;
@@ -193,6 +194,8 @@ public abstract class XMLView {
 			
 			OpdrNav.setObjectives(objectives);
 			OpdrNav.setCategorieString(categorieString);
+			
+			globalParam = wrap.getBoolean("globalParam", false);
 		}
 		
 	}
