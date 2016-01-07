@@ -989,13 +989,37 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(fews != null)
 		{
 			HashMap<String, Object> h2 = fews.getState();
-			if(h2.containsKey("ingevuld") && ((Boolean) h2.get("ingevuld")).booleanValue())
+//			if(h2.containsKey("ingevuld") && ((Boolean) h2.get("ingevuld")).booleanValue())
+			if(true) // moet dit niet altijd gebeuren?
 			{
-				if (fews.isUitgeklapt())
+				// als hij is uitgeklapt en als laatste geedit is, moet onderstaande gebeuren
+				// als hij uitgeklapt is en FEWA is als laatste geedit, dan moet het antwoord uit FEWA overgenomen worden in FEWS...
+				if (fews.isUitgeklapt() && fews.isBoss())
 				{
+					// als uitgeklapt, dan is FEWS de baas
 					h = h2;
-					// TODO syl: als this.toString() anders is dan formuleVakInhouden[laatste]
-					// vervang dan de laatste door this.toString(), want dan is FEWA als laatste geedit... Klopt dit?
+					// FEWA moet het laatste antwoord van FEWS krijgen
+					String[] formuleVakInhouden = (String[]) h2.get("formuleVakInhouden"); // dit bevat ook de laatste lege regel
+					int laatste = formuleVakInhouden.length - 1;
+					String antwoord = formuleVakInhouden[laatste];
+					String leegAntwoord = "$f@";
+					if ((antwoord == leegAntwoord) && (laatste > 0)) // als leeg en er is een vorige
+					{
+						antwoord = formuleVakInhouden[laatste - 1];
+					}
+					
+					if (antwoord != null && !"".equals(antwoord.trim()))
+					{
+						this.clearMain();
+						// trim "$f" + toString() + "@"
+						antwoord = antwoord.substring(2); // trim "$f"
+						int lastIndex = antwoord.length() - 1;
+						antwoord = antwoord.substring(0, lastIndex); // trim "@"
+						antwoord = fews.removeIsTeken(antwoord);
+						this.insert(antwoord);
+						setCurrentElementRepaint();
+						lastanswer = "$f" + toString() + "@";
+					}
 				}
 				else
 				{
@@ -1004,7 +1028,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					h2.put(ANTWOORD_STRING, laatsteAntwoord);
 					String[] formuleVakInhouden = (String[]) h2.get("formuleVakInhouden");
 					int laatste = formuleVakInhouden.length - 1;
-					formuleVakInhouden[laatste] = laatsteAntwoord; // NOOP?
+					String leegAntwoord = "$f@";
+					if (leegAntwoord.equals(formuleVakInhouden[laatste]) && (laatste > 0))
+					{
+						if (!isVergelijkingVak)
+							formuleVakInhouden[laatste - 1] = laatsteAntwoord.substring(0, laatsteAntwoord.length() - 1) + "=@"; // voor formules moet er een = achter
+						else
+							formuleVakInhouden[laatste - 1] = laatsteAntwoord;
+					}
+					else
+					{
+						formuleVakInhouden[laatste] = laatsteAntwoord;
+					}
 					h2.put("formuleVakInhouden", formuleVakInhouden);
 					
 					// ANTWOORD_STRING en formuleVakInhouden moeten nu overschreven zijn... klopt dit?
@@ -1034,6 +1069,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				h = h2;
 				
 			}
+			
+			// Sylvia: er moet kijkNa() gedaan worden, anders gebeurt het niet
+			kijkNa(false, false, false);
 		}			
 		else	
 		{
@@ -1098,6 +1136,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (antwoord != null && !"".equals(antwoord.trim()))
 		{
 			antwoord = strip$f(antwoord);
+
+			// verwijder isteken
+			antwoord = fews.removeIsTeken(antwoord);
 
 			this.clearMain();
 			this.insert(antwoord);
