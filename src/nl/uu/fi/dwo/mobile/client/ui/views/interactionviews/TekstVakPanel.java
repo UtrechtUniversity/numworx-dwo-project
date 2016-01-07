@@ -1546,11 +1546,11 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		{
 			if (b)
 			{
-				randPanel.getElement().getStyle().setBorderColor(CssColor.make(50, 225, 50).toString());
+				randPanel.getElement().getStyle().setBorderColor(CssColor.make(50, 225, 50).toString()); // groen
 				randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
 			}
 			else
-			{	randPanel.getElement().getStyle().setBorderColor(CssColor.make(225, 50, 50).toString());
+			{	randPanel.getElement().getStyle().setBorderColor(CssColor.make(225, 50, 50).toString()); // rood
 				randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
 			}
 		}
