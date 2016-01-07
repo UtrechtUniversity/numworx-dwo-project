@@ -157,6 +157,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	private static boolean fontOvererving;
 
 	private boolean isUitgeklapt;
+	private boolean isBoss;
 	
 	public static void zetFontOverervingForm(boolean b)
 	{	fontOvererving = b;
@@ -614,6 +615,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		nagekeken = false;
 		correct = Boolean.FALSE;//moet correct hier niet null zijn?
 		contentPanel.remove(feedbackPanel);
+		
 		vervangEditorDoorViewer(useranswer, show, setState);
 		
 		terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
@@ -710,10 +712,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	
 	public void downStep()
 	{
-		if ( correct != Boolean.TRUE || isToets())
+		if (correct != Boolean.TRUE || isToets())
 		{
-			if(stapOk)
-			{	if(editor == null)
+			if (stapOk || isToets())
+			{	
+				if (editor == null)
 					voegRegelToe("$f" + latest_answer_viewer.toString() + "@", !isToets(), false);
 				else
 					voegRegelToe("$f" + editor.toString() + "@", !isToets(), false);
@@ -721,14 +724,19 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		}
 	}
 
-	private boolean isToets() {
-		// zelftoets(2) of eindtoets(3)
-		return mode == 2 || mode == 3;
+	private boolean isToets() 
+	{
+		return mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS;
 	}
 	
 	public boolean isUitgeklapt()
 	{
 		return isUitgeklapt;
+	}
+
+	public boolean isBoss()
+	{
+		return isBoss;
 	}
 
 	public void backStep(boolean setState)
@@ -740,45 +748,61 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		
 		if (stapNr > 0 || !hasStartString)
 		{
-			if(viewers.size() == stapNr + 1)
-			{	current.remove(viewers.get(viewers.size() - 1).getAsPanel());
+			if (viewers.size() == stapNr + 1)
+			{	
+				current.remove(viewers.get(viewers.size() - 1).getAsPanel());
 				viewers.remove(stapNr);
 			}
 			else
-			{	current.remove(editor.getAsPanel());
+			{	
+				current.remove(editor.getAsPanel());
 				if(hasPrefix)
 					current.remove(prefixViewer.getAsPanel());
 				checkimg.setVisible(false);
 			}
-			if(stapNr > 0)
-			{	stepPanels.remove(stapNr);
+			if (stapNr > 0)
+			{	
+				stepPanels.remove(stapNr);
 				current = stepPanels.get(stapNr - 1);
 				stepPanelY -= stapH + viewers.get(viewers.size() - 1).getHeight();
 				latest_answer_viewer = viewers.get(viewers.size() - 1);
 			}
 			else
 				latest_answer_viewer = null; 
+			
 			haalPijlVakWeg();
-			if(feedbackPanel.isAttached())
-			{	contentPanel.remove(feedbackPanel);
+			
+			if (feedbackPanel.isAttached())
+			{	
+				contentPanel.remove(feedbackPanel);
 			}
-			if(stapNr > 1 || (stapNr > 0 && !hasStartString))
-			{	String currentTekst = viewers.get(viewers.size() - 1).toString();
+			
+			if (stapNr > 1 || (stapNr > 0 && !hasStartString))
+			{	
+				String currentTekst = viewers.get(viewers.size() - 1).toString();
 				if (hasPrefix)
-				{	currentTekst = removePrefix(currentTekst);
+				{	
+					currentTekst = removePrefix(currentTekst);
 				}
-				if(!linStrategieVersie && !bordjesMethode)
-				{	current.remove(viewers.get(viewers.size() - 1).getAsPanel());
+				
+				if (!isVergelijkingVak)
+				{
+					currentTekst = removeIsTeken(currentTekst);
+				}
+				
+				if (!linStrategieVersie && !bordjesMethode)
+				{	
+					current.remove(viewers.get(viewers.size() - 1).getAsPanel());
 					editor = addNewEditor(current);
 					editor.insert(currentTekst);
 					viewers.remove(viewers.size() - 1);
-					if(viewers.size() > 0)
+					if (viewers.size() > 0)
 						latest_answer_viewer = viewers.get(viewers.size() - 1);
 				}
 			}
-			else if(!hasStartString) //stapNr is nu 0, je zit dus in eerste regel
+			else if (!hasStartString) //stapNr is nu 0, je zit dus in eerste regel
 			{
-				if(!linStrategieVersie && !bordjesMethode)
+				if (!linStrategieVersie && !bordjesMethode)
 				{
 					editor = addNewEditor(current);
 				}
@@ -958,7 +982,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 
 	public String removeIsTeken(String s)
 	{
-		if (s.charAt(s.length() - 1) == '=' || s.charAt(s.length() - 1) == '\u2248')
+		if ((s.length() > 0) && (s.charAt(s.length() - 1) == '=' || s.charAt(s.length() - 1) == '\u2248'))
 		{
 			int isIndex = s.length() - 1;
 			s = s.substring(0, isIndex);
@@ -1465,6 +1489,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			
 			string = removePrefix(string);
 		}
+		
 		return string;
 	}
 
@@ -2306,7 +2331,20 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	public void vervangEditorDoorViewer(String antwoord, boolean show, boolean setState)
 	{
 		if(editor == null)
+		{
+			// TODO voeg in de laatste viewer zonodig een =-teken toe
+//			if (!isVergelijkingVak && !hasPrefix && (antwoord.charAt(antwoord.length() - 2)) != '=')
+//				antwoord = antwoord.substring(0, antwoord.length() - 1) + "=@";
+//
+//			int lastIndex = viewers.size() - 1;
+//			viewers.set(lastIndex, new FormuleViewer(antwoord));
+			// dit geeft rare effecten van een viewer die blijft staan
+			// 1. je ziet in eerste instantie zonder =, als je de nieuwe lege regel eronder weghaalt, zie je wel de =
+			// 2. als je dan de regel met goede = (die onterecht blijft staan) weghaalt, blijft een viewer (zonder =) in beeld
+			
 			return;
+		}
+		
 		LayoutPanel current = stepPanels.get(stepPanels.size() - 1);
 		current.remove(editor.getAsPanel());
 		int selectionStartX = -1;
@@ -2641,5 +2679,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	public void setUitgeklapt(boolean b)
 	{
 		this.isUitgeklapt = b;
+	}
+
+	public void setIsBoss(boolean b)
+	{
+		this.isBoss = b;		
 	}
 }
