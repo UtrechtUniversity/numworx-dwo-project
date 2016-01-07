@@ -71,6 +71,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private static final String RESOURCE = "https://mc2-resource.appspot.com/dav/Unit/";
 	private String ggbFile;
 	private Map<String, Object> geogebraParams = new HashMap<String,Object>();
+	private int attemptsCount;
+	private int errorCount;
 	
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
@@ -250,6 +252,10 @@ public class GeogebraView implements InteractionView, LoadHandler
 	protected void onCheck() {
 		kijkNa();
 		setCheckImg();
+		attemptsCount ++;
+		if(Boolean.FALSE.equals(correct))
+			errorCount++;
+		//setAttempt();
 		comRoot.setChanged(Boolean.FALSE.equals(correct));
 		
 	}
@@ -284,10 +290,25 @@ public class GeogebraView implements InteractionView, LoadHandler
 	@Override
 	public HashMap<String, Object> getState()
 	{
+		if(facade.hasState())
+			return facade.getState();
+		kijkNa();
 		HashMap map = new HashMap();
 		if(bewaarOptie && ggbApplet != null) {
 			map.put("state", getXML(ggbApplet));
 		}
+		map.put("nagekeken", Boolean.valueOf(nagekeken));
+		map.put("ingevuld", Boolean.valueOf(ingevuld));
+		map.put("attemptsCount", Integer.valueOf(attemptsCount));
+		map.put("errorCount", Integer.valueOf(errorCount));
+		
+		return wrap(map);
+	}
+
+	private HashMap<String, Object> wrap(HashMap<String, Object> map) {
+		if(map == null) map = new HashMap<String, Object>();
+		map.put("STUBVIEW_score", String.valueOf(getScore()));
+		map.put("STUBVIEW_correct", String.valueOf(isCorrect()));
 		return map;
 	}
 
@@ -304,7 +325,13 @@ public class GeogebraView implements InteractionView, LoadHandler
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
-		if(h == null) return;
+		facade.setPopupState(h);
+		if(h == null)
+			h = new HashMap<String, Object>(); // Never NULL, komt voor!
+		if(h.containsKey("STUBVIEW_score"))
+			score = Integer.parseInt(h.get("STUBVIEW_score").toString());
+		if(h.containsKey("STUBVIEW_correct"))
+			correct = StubView.toBoolean(h.get("STUBVIEW_correct").toString());
 		String xml = (String) h.get("state");
 		if(bewaarOptie && xml != null)
 		{
@@ -317,6 +344,13 @@ public class GeogebraView implements InteractionView, LoadHandler
 		} else {
 			this.pendingState = null;
 		}
+		ObjectMap wrap = JSONUtilities.wrapMap(h);
+		ingevuld = wrap.getBoolean("ingevuld", false);
+		nagekeken = wrap.getBoolean("nagekeken", false);
+		if(wrap.containsKey("attempsCount")) attemptsCount = wrap.getInt("attemptsCount");
+		if(wrap.containsKey("errorCount")) errorCount = wrap.getInt("errorCount");
+		
+		setCheckImg(); // geen Kijkna nodig, want we hebben alle variabelen hersteld.
 	}
 
 	public void kijkNa()

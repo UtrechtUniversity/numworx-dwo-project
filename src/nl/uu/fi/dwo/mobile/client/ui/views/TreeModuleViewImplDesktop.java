@@ -284,7 +284,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		if (model != currentModel)
 		{
 			tree.removeItems();
-
+			Logger.getLogger("TreeModuleViewImplDesktop").fine("clear inverseMap");
 			inverseMap.clear();
 			model = currentModel;
 			//sort(model);
@@ -464,7 +464,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 
 	private void initTree(List<SelectModuleItem> model, TreeItem tree) {
 //		sort(model);
-		tree.removeItems(); // the tree should be empty, but it is not always.
+		tree.removeItems(); // the tree should be empty, but it is not always. NPE HERE, tree = null?
 		for (SelectModuleItem item : model)
 		{
 			TreeItem treeItem = getTreeItem(item);
@@ -519,9 +519,15 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	class GetChildrenCourses implements AsyncCallback<List<Map<String,Object>>> {
 
 		private SelectModuleItem parent;
+		private TreeItem tree;
 		
 		public GetChildrenCourses(SelectModuleItem item) {
 			parent = item;
+			tree = inverseMap.get(parent);
+			if(tree == null) {
+				Logger.getLogger("TreeModuleViewImplDesktop").severe(item + " has null tree");
+				throw new NullPointerException();
+			}
 		}
 
 		@Override
@@ -541,7 +547,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			}
 			parent.setChildren(items);
 			addChildren(items);
-			initTree(items, inverseMap.get(parent));
+			initTree(items, tree); // FIXME tree= inverseMap.get() is null
 		}
 		
 	};
