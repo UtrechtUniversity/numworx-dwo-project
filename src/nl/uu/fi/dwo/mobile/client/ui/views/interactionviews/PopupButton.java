@@ -304,10 +304,18 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 			{
 				// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
 				((FormuleEditorWithSteps) content).setUitgeklapt(true);
+				((FormuleEditorWithSteps) content).setIsBoss(false);
 			}
 			
 			state = view.getState();
 			view.setState(state);
+			
+			if (content instanceof FormuleEditorWithSteps)
+			{
+				// als de state is gezet is FEWS de baas
+				((FormuleEditorWithSteps) content).setIsBoss(true);
+			}
+			
 		}
 		else if(!box.isShowing() && view != null && state != null)
 			view.setState(state);
