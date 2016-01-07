@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
@@ -111,6 +112,15 @@ public class PopupFacade implements InteractionView, FacetAware {
 			return btn;
 		}
 		return container;
+	}
+	
+	public Widget wrap(GeogebraView container) {
+		if(popup) {
+			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container);
+			list.add(btn);
+			return btn;
+		}
+		return container.getWidget();
 	}
 
 	final static String[] interactiePanelSetNames = {

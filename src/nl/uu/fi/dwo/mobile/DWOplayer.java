@@ -79,7 +79,7 @@ public class DWOplayer implements EntryPoint
 
 	public static final String PREFIX = PARAMETERS.getLaunchData();
 	
-	private Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
+	Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
 
 	public static int count;
 	
@@ -364,7 +364,7 @@ public class DWOplayer implements EntryPoint
 		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
 			Map<String, Object> map = iterator.next();
 			SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
-			Integer parentID = (Integer) map.get("parentID");
+			Integer parentID = (Integer) map.get("parentID"); // FIXME voor MC Squared type parentID?
 			if(parentID != null && parentID.intValue()> 0 )
 			{
 				SelectModuleItem parent = SelectModuleItemHolder.getItemByID(parentID);

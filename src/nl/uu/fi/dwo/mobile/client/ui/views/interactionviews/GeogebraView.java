@@ -471,9 +471,14 @@ public class GeogebraView implements InteractionView, LoadHandler
 	@Override
 	public Widget asWidget()
 	{
-		return facade.wrap(mainPanel);
+		return facade.wrap(this);
 	}
 
+	public Widget getWidget() 
+	{
+		return mainPanel;
+	}
+	
 	@Override
 	public void onLoad(LoadEvent event)
 	{

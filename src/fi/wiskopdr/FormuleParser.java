@@ -474,11 +474,11 @@ public class FormuleParser
 			s = s.substring(0, n) + ")" + s.substring(n + 1);
 			n = s.indexOf("@");
 		}
-		n = s.indexOf("�");
+		n = s.indexOf("·");
 		while (n > -1)
 		{
 			s = s.substring(0, n) + "*" + s.substring(n + 1);
-			n = s.indexOf("�");
+			n = s.indexOf("·");
 		}
 		n = s.indexOf("\u00d7");
 		while (n > -1)
@@ -2330,7 +2330,7 @@ public class FormuleParser
 				String formString = s.substring(index, i + 1);
 				for (int j = formString.length() - 1; j > -1; j--)
 				{
-					if (formString.charAt(j) == '\u00A9')
+					if (formString.charAt(j) == '\u00A9') // ©
 					{
 						int index1 = formString.substring(0, j).lastIndexOf("\u00A9");
 						String parseString = formString.substring(index1 + 1, j);
