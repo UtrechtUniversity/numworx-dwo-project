@@ -429,6 +429,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         DwoHelper.setPlainPassword(password);
         String pw = MD5.getHashString(password);
         DomFullUser user = LoginManager.login(username, pw); //sets DwoHelper user
+        
         if (user == null) {
             throw new LoginException(LoginException.LE_UNKNOWN_USER);
         }
@@ -436,6 +437,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (password == null) {
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
         } else {
+            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username, pw));
         }
 

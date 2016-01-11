@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.domain.rest;
 
+import fi.dwo.commons.dom.entities.DomContext;
 import fi.dwo.commons.dom.entities.DomNewSchoolLogin;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
@@ -44,7 +45,7 @@ public class SecureUserAccountLoginsManager {
      */
     public static DomSchoolRoleAndClass switchToSchoolLogin(DomSchoolRoleAndClass src) throws Dwo2Exception {
         RestSchoolRoleAndClass rsrc = new RestSchoolRoleAndClass();
-        rsrc.setRestContext(new RestContext());
+        rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(src);
         DomSchoolRoleAndClass result = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/select", DomSchoolRoleAndClass.class, rsrc);
         //update local copy
@@ -60,7 +61,7 @@ public class SecureUserAccountLoginsManager {
     public static boolean addASchoolLogin(DomNewSchoolLogin newSchoolLogin) throws Dwo2Exception {
         boolean r;
         RestNewSchoolLogin rnl = new RestNewSchoolLogin();
-        rnl.setRestContext(new RestContext());
+        rnl.setRestContext(new DomContext());
         rnl.setDomNewSchoolLogin(newSchoolLogin);
         r = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/submit", Boolean.class, rnl);
         DwoHelper.setSchoolLogins(getSchoolLogins());        
@@ -74,7 +75,7 @@ public class SecureUserAccountLoginsManager {
      */
     public static boolean removeASchoolLogin(DomNewSchoolLogin toRemoveSchoolLogin) throws Dwo2Exception {
         RestNewSchoolLogin rsrc = new RestNewSchoolLogin();
-        rsrc.setRestContext(new RestContext());
+        rsrc.setRestContext(new DomContext());
         rsrc.setDomNewSchoolLogin(toRemoveSchoolLogin);
         boolean r;
         r = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/delete", Boolean.class, rsrc);
