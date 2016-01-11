@@ -3,6 +3,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
+import fi.dwo.commons.dom.entities.DomContext;
 import fi.dwo.commons.dom.entities.DomRole;
 
 /**
@@ -11,20 +12,20 @@ import fi.dwo.commons.dom.entities.DomRole;
  * @author Gert van der Plas
  */
 public class RestRole {
-    private RestContext restContext;
+    private DomContext restContext;
     private DomRole role;
 
     /**
      * @return the restContext
      */
-    public RestContext getRestContext() {
+    public DomContext getRestContext() {
         return restContext;
     }
 
     /**
      * @param restContext the restContext to set
      */
-    public void setRestContext(RestContext restContext) {
+    public void setRestContext(DomContext restContext) {
         this.restContext = restContext;
     }
 

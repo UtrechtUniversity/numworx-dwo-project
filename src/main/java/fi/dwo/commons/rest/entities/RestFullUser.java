@@ -3,6 +3,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
+import fi.dwo.commons.dom.entities.DomContext;
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomUser;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -15,20 +16,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class RestFullUser {
-    private RestContext restContext;
+    private DomContext restContext;
     private DomFullUser domFullUser;
 
     /**
      * @return the restContext
      */
-    public RestContext getRestContext() {
+    public DomContext getRestContext() {
         return restContext;
     }
 
     /**
      * @param restContext the restContext to set
      */
-    public void setRestContext(RestContext restContext) {
+    public void setRestContext(DomContext restContext) {
         this.restContext = restContext;
     }
 

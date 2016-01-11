@@ -5,6 +5,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
+import fi.dwo.commons.dom.entities.DomContext;
 import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -15,19 +16,19 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class RestSchoolClass4Teacher {
-    private RestContext restContext;
+    private DomContext restContext;
     private DomSchoolClass4Teacher domSchoolClass4Teacher;
     /**
      * @return the restContext
      */
-    public RestContext getRestContext() {
+    public DomContext getRestContext() {
         return restContext;
     }
 
     /**
      * @param restContext the restContext to set
      */
-    public void setRestContext(RestContext restContext) {
+    public void setRestContext(DomContext restContext) {
         this.restContext = restContext;
     }
 

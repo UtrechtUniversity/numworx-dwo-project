@@ -1,7 +1,7 @@
 /**
  * Copyrighted Nov 24, 2015
  */
-package fi.dwo.commons.rest.entities;
+package fi.dwo.commons.dom.entities;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class RestContext {
+public class DomContext {
     //TODO Insert hasRole property when legacy code is extinct and we can go stateless.
+    DomHasRole domHasRole; //security
 }
