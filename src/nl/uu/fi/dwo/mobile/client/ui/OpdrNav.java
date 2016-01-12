@@ -759,6 +759,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if(scsInUse == 0) goon = true;
 	}
 	
+	public void unpause(boolean old) {
+		unpause();
+		goon = old;
+	}
 	
 	private void saveCurrentState0() {	
 		saveCurrentState_stap1();		
@@ -1226,9 +1230,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return memento.getRole();
 	}
 
-	public void pause(boolean b) {
+	public boolean pause(boolean b) {
+		boolean old = goon;
 		goon = !b;
 		pause();
+		return old;
 		
 	}
 }
