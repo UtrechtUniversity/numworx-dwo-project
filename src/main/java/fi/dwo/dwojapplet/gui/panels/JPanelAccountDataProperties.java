@@ -67,7 +67,7 @@ public class JPanelAccountDataProperties {
         try {
             user = SecureUserAccountManager.updateAccountData(user);
             // update local Global storage.
-            DwoHelper.setCurrentUser(user);
+            DwoHelper.updateCurrentUser(user);
             //TODO above method currently updates the login date, this should not occur for this function.
             
         } catch (Dwo2Exception ex) {

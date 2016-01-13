@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\TeacherProfilePanel.java
 package fi.dwo.dwojapplet.graveyard.gui;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
@@ -12,6 +13,8 @@ import fi.dwo.dwojapplet.gui.ProfilePanel;
 import java.awt.Button;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -96,6 +99,9 @@ public class TeacherProfilePanel extends ProfilePanel {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
             } catch (LoginException exc) {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+            }
+            catch (Dwo2Exception ex) {
+                Logger.getLogger(TeacherProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         } else if (e.getSource() == deleteButton) {

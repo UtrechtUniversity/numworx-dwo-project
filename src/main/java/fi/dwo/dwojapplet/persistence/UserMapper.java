@@ -19,12 +19,13 @@ import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class UserMapper extends XmlRpcMapper {
-    private static final Logger LOG = Logger.getLogger(UserMapper.class.getName());
 
+    private static final Logger LOG = Logger.getLogger(UserMapper.class.getName());
+    
     private static final String TABLENAME = "tblUser left join tblSchoolGroup on tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID left join tblGroup on tblSchoolGroup.groupID = tblGroup.groupID left join tblSchool on tblSchoolGroup.schoolID = tblSchool.schoolID";
     //private static final String TABLENAME = "tbluser";
     private static final String IDCOL = "userID";
-
+    
     private static final String ORDERCOL = "lastname";
     private static final Object NUL = 0;
 
@@ -32,7 +33,7 @@ class UserMapper extends XmlRpcMapper {
      *
      */
     public UserMapper() {
-
+        
     }
 
     /**
@@ -84,7 +85,7 @@ class UserMapper extends XmlRpcMapper {
                 }
             }
         }
-
+        
         if (u == null) {
             u = new User();
         }
@@ -175,9 +176,10 @@ class UserMapper extends XmlRpcMapper {
         String lastLogin = (String) data.get("timestamp"); // lastLogin is al in gebruik, maar dan een Date
         try {
             u.setLastLogin(Long.parseLong(lastLogin));
-        } catch (Exception e) {
         }
-
+        catch (Exception e) {
+        }
+        
         Object classID = data.get("classID");
         if (!classID.equals("") && !NUL.equals(classID)) {
             try {
@@ -185,21 +187,26 @@ class UserMapper extends XmlRpcMapper {
                 if (c != null) {
                     u.setInClass(c);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 System.err.println("User: " + data);
-                LOG.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
-
+        
         if (u instanceof Teacher) {
             Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
-            ((Teacher) u).setClasses((SchoolClass[]) o);
+            SchoolClass[] slist = new SchoolClass[o.length];
+            for (int i = 0; i < o.length; i++) {
+                slist[i] = (SchoolClass) MapperCreator.instance(SchoolClass.class).getObjectFromReturn((java.util.Hashtable) o[i]);
+            };
+            ((Teacher) u).setClasses(slist);
         }
         /*if(u instanceof Admin) {
          Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
          ((Admin) u).setClasses((SchoolClass[]) o);
          }*/
-
+        
         return u;
     }
 

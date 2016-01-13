@@ -3,10 +3,8 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import java.util.Date;
 import javax.swing.JOptionPane;
 
 /**

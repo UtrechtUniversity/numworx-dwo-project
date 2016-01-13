@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
@@ -206,6 +207,9 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                 } catch (LoginException e) {
     
                     LOG.log(Level.SEVERE,null,e);
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.SEVERE, null, ex);
                 }
             } else if (value == model.editImage) {
                 try {

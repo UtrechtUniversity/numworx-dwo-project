@@ -2,9 +2,11 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\GuiCreator.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
+import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -22,6 +24,7 @@ import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.domain.rest.LoginManager;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.Component;
@@ -65,8 +68,9 @@ public class GuiCreator {
 
     }
 
-    /** Allows custom GUI messages.
-     * 
+    /**
+     * Allows custom GUI messages.
+     *
      * @param parentComponent
      * @param message
      * @param title
@@ -97,10 +101,12 @@ public class GuiCreator {
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
-    public void login(String username, String password) throws LoginException {
+    public void login(String username, String password) throws LoginException, Dwo2Exception {
         dwo.setWait();
         try {
             DwoHelper.setContact(false);
+            LoginManager.login(username, MD5.getHashString(String.valueOf(password)));
+
             if (dwo.login(username, password)) {
                 // TODO: remove, currently checks if licence is still valid
                 validLicenceCheck(dwo.getUser());
@@ -329,11 +335,11 @@ public class GuiCreator {
     }
 
     /**
-     * Returns a StudentMenuPanel. The type of the menupanel depends on the type of
-     * user. <BR>
+     * Returns a StudentMenuPanel. The type of the menupanel depends on the type
+     * of user. <BR>
      * If the user is null, a GuestMenuPanel is returned. <BR>
      * If the user is a teacher, a TeacherMenuPanel is returned. <BR>
- Otherwise, a normal StudentMenuPanel is returned. <BR>
+     * Otherwise, a normal StudentMenuPanel is returned. <BR>
      * <BR>
      * The menupanel shows all the menu-options for the type of user.
      *
@@ -735,7 +741,7 @@ public class GuiCreator {
      */
     public CenterSubPanel getClassPanel() {
         return new ClassStudentPanel();
-        
+
     }
 
     /**

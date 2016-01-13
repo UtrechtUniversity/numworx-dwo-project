@@ -2,6 +2,7 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
@@ -23,7 +24,7 @@ public class LoginManager {
 
     private static final Logger LOG = Logger.getLogger(LoginManager.class.getName());
 
-    public static DomFullUser login(String username, String password) {
+    public static DomFullUser login(String username, String password) throws Dwo2Exception {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
         DomFullUser user;
         HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(username, password).build();

@@ -9,6 +9,7 @@ import fi.beans.scorm.SCORM2004APIInterface;
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
@@ -426,19 +427,24 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     @Override
     public boolean login(String username, String password)
             throws LoginException {
-        DwoHelper.setPlainPassword(password);
-        String pw = MD5.getHashString(password);
-        DomFullUser user = LoginManager.login(username, pw); //sets DwoHelper user
-        
-        if (user == null) {
-            throw new LoginException(LoginException.LE_UNKNOWN_USER);
-        }
+//        DwoHelper.setPlainPassword(password);
+//        String pw = MD5.getHashString(password);
+//        DomFullUser user=null; 
+//        try {
+//            user = LoginManager.login(username, pw); //sets DwoHelper user and DwoHelper.currentFacadeUser
+//        }
+//        catch (Dwo2Exception ex) {
+//            Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+//        if (user == null) {
+//            throw new LoginException(LoginException.LE_UNKNOWN_USER);
+//        }
 
         if (password == null) {
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
         } else {
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
-            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username, pw));
         }
 
         return setExtraRights(DwoHelper.getCurrentFacadeUser());
@@ -459,10 +465,16 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public boolean loginWithMd5(String username, String password)
             throws LoginException {
         String plainPassword = DwoHelper.getPlainPassword();
-        DomFullUser user = LoginManager.login(username, password);
-        if (user == null) {
-            throw new LoginException(LoginException.LE_UNKNOWN_USER);
-        }
+//        DomFullUser user=null;
+//        try {
+//            user = LoginManager.login(username, password);
+//        }
+//        catch (Dwo2Exception ex) {
+//            Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        if (user == null) {
+//            throw new LoginException(LoginException.LE_UNKNOWN_USER);
+//        }
 
         if (password == null) {
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
@@ -913,9 +925,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      */
     @Override
     public void logoff() {
-        DwoHelper.setCurrentFacadeUser(null);
-        DwoHelper.setCurrentUser(null);
-        DwoHelper.setCurrentRole(null);
+        try {
+            DwoHelper.setCurrentUser(null);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         currentCourse = null;
         courseList = null;
         resultsModule = null;
@@ -1525,7 +1540,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 return;
             }
             catch (LoginException exc) {
+                LOG.log(Level.SEVERE, null, exc);
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
             }
         } else if (guestUser) {
             try {

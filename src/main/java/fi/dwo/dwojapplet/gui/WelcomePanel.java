@@ -3,12 +3,12 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.copyright.FIButton;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.LoginManager;
-import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -348,9 +348,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if ((src == loginButton) || (src == loginname) || (src == password)) {
-            try {
-                //set cookies in browser.
-                DwoHelper.setCurrentUser(LoginManager.login(loginname.getText(), MD5.getHashString(String.valueOf(password.getPassword()))));
+            try {                
                 GuiCreator.instance().login(loginname.getText(), String.valueOf(password.getPassword()));
                 if (linkcheck != null && linkcheck.isSelected()) {
                     GuiCreator.instance().linkViaSAML();
@@ -358,6 +356,11 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             }
             catch (LoginException exc) {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                LOG.log(Level.SEVERE, null, exc);
+            }
+            catch (Dwo2Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                Logger.getLogger(WelcomePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (src == guestButton) {
             try {

@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ProfilePanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
@@ -12,6 +13,8 @@ import fi.dwo.dwojapplet.gui.panels.JPanelMyProfile;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -28,6 +31,7 @@ import javax.swing.event.ChangeEvent;
  */
 public class TabbedProfilePanel extends JPanelMyProfile implements CenterSubPanel,
         ActionListener {
+    private static final Logger LOG = Logger.getLogger(TabbedProfilePanel.class.getName());
 
     protected Group groupList[];
 
@@ -206,8 +210,13 @@ public class TabbedProfilePanel extends JPanelMyProfile implements CenterSubPane
                         GuiCreator.instance().login(user.getUsername(), password.getText());
                     }
                 } catch (LoginException exc) {
+                    Logger.getLogger(TabbedProfilePanel.class.getName()).log(Level.SEVERE, null, exc);
                     JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
 
+                }
+                catch (Dwo2Exception ex) {
+                    Logger.getLogger(TabbedProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                 }
             }
 
