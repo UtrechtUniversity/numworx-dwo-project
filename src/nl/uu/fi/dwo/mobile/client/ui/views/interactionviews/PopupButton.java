@@ -300,6 +300,8 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		}
 		if(!box.isShowing() && view != null && view instanceof FormuleEditorWithAnswer)
 		{	
+			((FormuleEditorWithAnswer) view).setEnabled(false);
+			
 			if (content instanceof FormuleEditorWithSteps)
 			{
 				// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
@@ -378,12 +380,16 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	 */
 	void tearDown() {
 				if (view != null) {
-					if (view instanceof FormuleEditorWithAnswer) {
+					if (view instanceof FormuleEditorWithAnswer) 
+					{
 						((FormuleEditorWithAnswer) view).haalAntwoordOp();
 					}
 					state = view.getState();
 					if (view instanceof FormuleEditorWithAnswer)
+					{
 						view.setState(state);
+						((FormuleEditorWithAnswer) view).setEnabled(true);
+					}
 
 					if (content instanceof FormuleEditorWithSteps) {
 						// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
