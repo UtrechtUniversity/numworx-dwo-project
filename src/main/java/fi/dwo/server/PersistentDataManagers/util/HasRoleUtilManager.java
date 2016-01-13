@@ -5,8 +5,6 @@ package fi.dwo.server.PersistentDataManagers.util;
 
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
-import fi.dwo.commons.exceptions.Dwo2RestException;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;

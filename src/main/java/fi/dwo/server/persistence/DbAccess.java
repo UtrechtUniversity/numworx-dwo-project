@@ -133,7 +133,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_SELECT_CLASSES_OF_TEACHER = "SELECT c.classID, "
             + "s.userID, c.schoolID, c.class, c.registrationKey, c.iconizer "
             + "FROM tblTeacherOf s join tblClass c using (classID) "
-            + "WHERE s.userID={0} and c.schoolID = {1}";
+            + "WHERE s.userID=? and c.schoolID = ?";
 
 //    /**
 //     * Select all top level course entities a given user may access. Either
@@ -286,8 +286,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
 // TODO DONE V1_3 picks no class
     private final static String QRY_USER_LOGIN_NO_PASSWD = "SELECT * "
-            + "FROM tblUser "
-            + "WHERE (username = ?)";
+            + "FROM tblUser u "
+            + "join tblHasRole r on (u.schoolGroupID=r.schoolgroupID and u.userID = r.userID) "
+            //            + "JOIN tblClass ON r.classID = tblClass.classID " // drop and join with class
+            + "WHERE (u.username = ?) ";
 
 //    private final static String QRY_USER_LOGIN_NO_PASSWD = "SELECT * "
 //            + "FROM tblUser "
@@ -4405,7 +4407,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         PreparedStatement ps = getStatement(QRY_IS_IN_STUDENT_ROLE);
         ps.setInt(1, userID);
-        ps.setInt(1, schoolID);
+        ps.setInt(2, schoolID);
         Vector v = executeQueryWithResult(ps);
         LOG.log(Level.FINE, "Testing if user {0} is a teacher at school {1}, result is: {2}", new Object[]{userID, schoolID, v});
         return v.size() > 0;
@@ -4415,7 +4417,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         PreparedStatement ps = getStatement(QRY_IS_IN_TEACHER_ROLE);
         ps.setInt(1, userID);
-        ps.setInt(1, schoolID);
+        ps.setInt(2, schoolID);
         Vector v = executeQueryWithResult(ps);
         LOG.log(Level.FINE, "Testing if user {0} is a teacher at school {1}, result is: {2}", new Object[]{userID, schoolID, v});
         return v.size() > 0;
