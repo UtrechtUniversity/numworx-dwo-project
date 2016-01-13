@@ -69,6 +69,8 @@ import fi.wiskopdr.text.Text;
  */
 public class FormuleEditorWithSteps implements InteractionView, FacetAware
 {
+	private final static Logger logger = Logger.getLogger("FormuleEditorWithSteps");
+
 	//static int GOED = 1;
 	//static int FOUT = 0;
 	//static int HALF = 2;
@@ -257,8 +259,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				e.printStackTrace();
 			}
 		}
+		
 		if(!startString.equals("$f@"))
 			hasStartString = true;
+		
 		if (randomVarNamen != null && randomVarWaarden != null)
 		{
 			try
@@ -1496,6 +1500,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
+		logger.fine("setState " + h);
+
 		boolean enabled = setFocusEnabled(false);
 		try {
 			setState0(h);
@@ -1619,11 +1625,25 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			
 			if (i < formuleVakInhouden.length && ("".equals(formuleVakInhouden[i]) || "$f@".equals(formuleVakInhouden[i])))
 			{
+				// formuleVakInhoud[i] is leeg
+				
 				viewers.remove(fv);
 				editor = addNewEditor(stepPanel);
 				if(antwoordString.startsWith("$f") && antwoordString.endsWith("@"))
 					antwoordString = antwoordString.substring(2, antwoordString.length() - 1);
-				editor.insert(antwoordString);
+				
+				// lege formulevakinhoud alleen vervangen door het antwoord uit FEWA als die er niet al in staat
+				if ((i > 0) && (!bevatString(formuleVakInhouden[i - 1], antwoordString))) // bevat de vorige formuleVakInhoud antwoordString?
+				{
+					// als FEWS de het antwoord uit FEWA nog niet bevat, voeg het dan toe
+					editor.insert(antwoordString);
+				}
+				else
+				{
+					// FEWS bevat al het antwoord uit FEWA, dus voeg een lege editor toe
+					editor.insert("");
+				}
+				
 				//hier setChanged(false)?
 				if(viewers.size() > 0)
 					stepPanelY += viewers.get(viewers.size() - 1).getHeight() + stapH;
@@ -1649,6 +1669,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 						addFormulePanelListeners((TouchPanel) fv.getAsPanel(), fv); 
 				}
 			}
+			
 			if (viewers.size() > 0)
 				latest_answer_viewer = viewers.get(viewers.size() - 1);
 			
@@ -1779,6 +1800,30 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		scrollToBottom();
 		
 		
+	}
+
+	/**
+	 * Checkt of formuleVakInhoud de gegeven antwoordstring bevat.
+	 * 
+	 * @param formuleVakInhoud
+	 * @param antwoordString
+	 * @return
+	 */
+	private boolean bevatString(String formuleVakInhoud, String antwoordString)
+	{
+		boolean bevat = false;
+		
+		String s;
+		
+		if (isVergelijkingVak)
+			s = formuleVakInhoud;
+		else
+			// voor formulevak het =-teken weghalen
+			s = formuleVakInhoud.substring(0, formuleVakInhoud.length() - 1);
+		
+		bevat = s.equals(antwoordString);
+		
+		return bevat;
 	}
 
 	/**
