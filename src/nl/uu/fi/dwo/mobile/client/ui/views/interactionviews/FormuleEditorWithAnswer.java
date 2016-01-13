@@ -71,7 +71,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 {
 	private int extraWidth = 23 ; // of 43; breedte voor nakijkplaatje en als nodig voor knop voor uitklappen.
 	
-	
 	class FormuleEditorPopup extends FormuleEditorWithSteps implements CBookEventListener, StateLess {
 
 		public FormuleEditorPopup(HashMap<String, Object> h,
@@ -276,7 +275,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			else
 				this.avChecker = avChecker;
 			
-			if(launchState != null) {
+			if(launchState != null) 
+			{
 				if(launchState.containsKey("check") )
 				{
 					check = launchState.getBoolean("check");
@@ -518,7 +518,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//prefixPanel.getElement().getStyle().setBackgroundColor("yellow");
 			//this.getMainRegel().getCanvas().getElement().getStyle().setBackgroundColor("blue");
 			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
-			lastanswer = "$f" + toString() + "@"; // initialize lastanswer voor kijkna not sendning
+			lastanswer = "$f" + toString() + "@"; // initialize lastanswer voor kijkna not sending
 		}
 	}
 
@@ -527,7 +527,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.instellingen = instellingen2;
 		//System.out.println("fontSize uit instellingen formuleEditorWithAnswer: " + ((Number) instellingen.get("fontSize")).intValue());
 		setFont(FormuleFont.createFromFontSize(instellingen2.getInt("fontSize")));
-
 	}
 	
 	public void voegFeedbackSluitKnopToe()
@@ -594,6 +593,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		resize();
 	}
 
+	/**
+	 * Insert the given text in the formula editor 
+	 * and clear the check image.
+	 */
 	@Override
 	public void insert(String text)
 	{
@@ -791,7 +794,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			if(!stapCorrect)
 				this.goedHalfFout = AntwoordVakChecker.FOUT;
 		}
-		if((mode == 2 || mode == 3) && !show)
+		if((mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS) && !show)
 		{	if(this.fe != null)
 				fe.maakNakijkenAf(backStep, show, setState);
 			
@@ -989,88 +992,59 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(fews != null)
 		{
 			HashMap<String, Object> h2 = fews.getState();
-//			if(h2.containsKey("ingevuld") && ((Boolean) h2.get("ingevuld")).booleanValue())
-			if(true) // moet dit niet altijd gebeuren?
+
+			if (fews.isUitgeklapt() && fews.isBoss())
 			{
-				// als hij is uitgeklapt en als laatste geedit is, moet onderstaande gebeuren
-				// als hij uitgeklapt is en FEWA is als laatste geedit, dan moet het antwoord uit FEWA overgenomen worden in FEWS...
-				if (fews.isUitgeklapt() && fews.isBoss())
+				// als uitgeklapt, dan is FEWS de baas
+				h = h2;
+				// FEWA moet het laatste antwoord van FEWS krijgen
+				String[] formuleVakInhouden = (String[]) h2.get("formuleVakInhouden"); // dit bevat ook de laatste lege regel
+				int laatste = formuleVakInhouden.length - 1;
+				String antwoord = formuleVakInhouden[laatste];
+				String leegAntwoord = "$f@";
+				if ((antwoord == leegAntwoord) && (laatste > 0)) // als leeg en er is een vorige
 				{
-					// als uitgeklapt, dan is FEWS de baas
-					h = h2;
-					// FEWA moet het laatste antwoord van FEWS krijgen
-					String[] formuleVakInhouden = (String[]) h2.get("formuleVakInhouden"); // dit bevat ook de laatste lege regel
-					int laatste = formuleVakInhouden.length - 1;
-					String antwoord = formuleVakInhouden[laatste];
-					String leegAntwoord = "$f@";
-					if ((antwoord == leegAntwoord) && (laatste > 0)) // als leeg en er is een vorige
-					{
-						antwoord = formuleVakInhouden[laatste - 1];
-					}
-					
-					if (antwoord != null && !"".equals(antwoord.trim()))
-					{
-						this.clearMain();
-						// trim "$f" + toString() + "@"
-						antwoord = antwoord.substring(2); // trim "$f"
-						int lastIndex = antwoord.length() - 1;
-						antwoord = antwoord.substring(0, lastIndex); // trim "@"
-						antwoord = fews.removeIsTeken(antwoord);
-						this.insert(antwoord);
-						setCurrentElementRepaint();
-						lastanswer = "$f" + toString() + "@";
-					}
+					antwoord = formuleVakInhouden[laatste - 1];
 				}
-				else
+				
+				if (antwoord != null && !"".equals(antwoord.trim()))
 				{
-					// als de FormuleEditorWithSteps niet uitgeklapt, dan wordt het antwoord uit FormuleEditorWithAnswer genomen
-					String laatsteAntwoord = "$f" + toString() + "@";
-					h2.put(ANTWOORD_STRING, laatsteAntwoord);
-					String[] formuleVakInhouden = (String[]) h2.get("formuleVakInhouden");
-					int laatste = formuleVakInhouden.length - 1;
-					String leegAntwoord = "$f@";
-					if (leegAntwoord.equals(formuleVakInhouden[laatste]) && (laatste > 0))
-					{
-						if (!isVergelijkingVak)
-							formuleVakInhouden[laatste - 1] = laatsteAntwoord.substring(0, laatsteAntwoord.length() - 1) + "=@"; // voor formules moet er een = achter
-						else
-							formuleVakInhouden[laatste - 1] = laatsteAntwoord;
-					}
-					else
-					{
-						formuleVakInhouden[laatste] = laatsteAntwoord;
-					}
-					h2.put("formuleVakInhouden", formuleVakInhouden);
-					
-					// ANTWOORD_STRING en formuleVakInhouden moeten nu overschreven zijn... klopt dit?
-					h = h2;
+					this.clearMain();
+					// trim "$f" + toString() + "@"
+					antwoord = antwoord.substring(2); // trim "$f"
+					int lastIndex = antwoord.length() - 1;
+					antwoord = antwoord.substring(0, lastIndex); // trim "@"
+					antwoord = fews.removeIsTeken(antwoord);
+					//this.insert(antwoord);// dit haalt ook het vinkje weg...
+					setCurrentElementRepaint();
+					lastanswer = "$f" + toString() + "@";
 				}
 			}
 			else
 			{
-				h2 = new HashMap<String, Object>();
-				String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
-				if(!this.toString().equals(""))
-					this.ingevuld = true;
-				boolean ingevuld = this.ingevuld;
-				boolean nagekeken = false;
-				int errorCount = this.errorCount;
-				
-				nagekeken = this.nagekeken;
-				
+				// als de FormuleEditorWithSteps niet uitgeklapt, dan wordt het antwoord uit FormuleEditorWithAnswer genomen
+				String laatsteAntwoord = "$f" + toString() + "@";
+				h2.put(ANTWOORD_STRING, laatsteAntwoord);
+				String[] formuleVakInhouden = (String[]) h2.get("formuleVakInhouden");
+				int laatste = formuleVakInhouden.length - 1;
+				String leegAntwoord = "$f@";
+				if (leegAntwoord.equals(formuleVakInhouden[laatste]) && (laatste > 0))
+				{
+					if (!isVergelijkingVak)
+						formuleVakInhouden[laatste - 1] = laatsteAntwoord.substring(0, laatsteAntwoord.length() - 1) + "=@"; // voor formules moet er een = achter
+					else
+						formuleVakInhouden[laatste - 1] = laatsteAntwoord;
+				}
+				else
+				{
+					formuleVakInhouden[laatste] = laatsteAntwoord;
+				}
 				h2.put("formuleVakInhouden", formuleVakInhouden);
-				h2.put(ANTWOORD_STRING, "");
-				h2.put("ingevuld", new Boolean(ingevuld));
-				h2.put("nagekeken", new Boolean(nagekeken));
-				h2.put("errorCount", new Integer(errorCount));
 				
-				fews.setState(h2);
-				h2 = fews.getState();
+				// ANTWOORD_STRING en formuleVakInhouden moeten nu overschreven zijn... klopt dit?
 				h = h2;
-				
 			}
 			
-			// Sylvia: er moet kijkNa() gedaan worden, anders gebeurt het niet
 			kijkNa(false, false, false);
 		}			
 		else	
@@ -1138,7 +1112,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			antwoord = strip$f(antwoord);
 
 			// verwijder isteken
-			antwoord = fews.removeIsTeken(antwoord);
+			if (fews != null)
+			{
+				antwoord = fews.removeIsTeken(antwoord);
+			}
 
 			this.clearMain();
 			this.insert(antwoord);
@@ -1341,4 +1318,26 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 	}
 
+	/**
+	 * Zet het antwoord in de formule editor enabled.
+	 */
+	public void setEnabled(boolean b)
+	{
+		if (b)
+		{
+			sp.getElement().getStyle().clearProperty("pointerEvents");
+			this.requestFocus();
+		}
+		else
+		{
+			sp.getElement().getStyle().setProperty("pointerEvents", "none");
+
+			// zorg dat de formule editor geen focus heeft
+			if (getKeyboard() != null)
+			{
+				getKeyboard().setEditor(null);
+				getKeyboard().blur();
+			}
+		}
+	}
 }
