@@ -486,14 +486,14 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //            + "having tblClass.classID is not null "
 //            + "ORDER BY tblClass.classID";
     private final static String QRY_RESULTS_ALL
-            = "SELECT tblTeacherOf.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal"
+            = "SELECT tblTeacherOf.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
             + "FROM (tblTeacherOf, tblCourse) join  tblStudentOf on tblStudentOf.classId =  tblTeacherOf.classId "
             + "left join tblScoContext  on tblScoContext.courseId =  tblCourse.courseId "
-            + "left join  tblStudentScoContext on tblStudentScoContext.userid =   tblStudentOf.userId and tblStudentScoContext.scoId =   tblScoContext.scoId"
-            + "where (tblCourse.courseID in ({0} )"
-            + "and   (tblTeacherOf.userID = ?)"
-            + "group by tblTeacherOf.classID, tblCourse.courseID"
-            + "having tblTeacherOf.classID is not null"
+            + "left join  tblStudentScoContext on tblStudentScoContext.userid =   tblStudentOf.userId and tblStudentScoContext.scoId =   tblScoContext.scoId "
+            + "where (tblCourse.courseID in ({0} )) "
+            + "and (tblTeacherOf.userID = ?) "
+            + "group by tblTeacherOf.classID, tblCourse.courseID "
+            + "having tblTeacherOf.classID is not null "
             + "ORDER BY tblTeacherOf.classID";
 
     /**
@@ -2421,9 +2421,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             throws IOException, XmlRpcException, SQLException {
         PreparedStatement ps = getStatement(QRY_RESULTS_STUDENT_COURSE);
         ps.setInt(1, classID);
-        ps.setInt(2, classID);
-        ps.setInt(3, courseID);
-        ps.setInt(4, userID);
+        ps.setInt(2, courseID);
+        ps.setInt(3, userID);
 
         Vector v = executeQueryWithResult(ps);
         LOG.log(Level.FINE, "Got {0} results for <course, class, teacher> "
