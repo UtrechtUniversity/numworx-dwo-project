@@ -377,7 +377,7 @@ public interface DwoIF {
      * cashing problems can appear.
      *
      */
-    public void clearCurrentUserData();
+    public void clearCurrentUserData(int uid);
 
     /**
      * @return fi.dwo.client.domain.Course[]

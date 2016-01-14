@@ -1946,10 +1946,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @see fi.dwo.client.domain.DwoIF#clearCurrentUserData()
      */
     @Override
-    public void clearCurrentUserData() {
+    public void clearCurrentUserData(int uid) {
         //MapperCreator.instance(User.class).removeObject(DwoHelper.getCurrentFacadeUser().getUserID());
-        PersistenceFacade.instance().clearCurrentUserDataCache(DwoHelper.getCurrentFacadeUser().getUserID());
-        DwoHelper.setCurrentFacadeUser(null);
+        PersistenceFacade.instance().clearCurrentUserDataCache(uid);
+        //DwoHelper.setCurrentFacadeUser(null);
         currentCourse = null;
         courseList = null;
         resultsModule = null;

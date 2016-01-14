@@ -5,7 +5,9 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;
@@ -203,10 +205,10 @@ public class TabbedProfilePanel extends JPanelMyProfile implements CenterSubPane
                     /* Evil trick to refresh user info */
                     if (password.getText().equals("")) {
                         // TODO this erases the canLogout flag.
-                        GuiCreator.instance().clearCurrentUserData();
+                        GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
                         GuiCreator.instance().login(user.getUsername(), oldpassword.getText());
                     } else {
-                        GuiCreator.instance().clearCurrentUserData();
+                        GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
                         GuiCreator.instance().login(user.getUsername(), password.getText());
                     }
                 } catch (LoginException exc) {

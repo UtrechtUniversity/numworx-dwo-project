@@ -2,17 +2,23 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\TeacherMenuPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import static fi.dwo.dwojapplet.domain.DwoProfile.hasRight;
+import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -64,16 +70,23 @@ public class TeacherMenuPanel extends StudentMenuPanel implements SelectStrategy
     }
 
     /**
-     * Creates a new StudentMenuPanel for the user. It contains the parent items (from
- StudentMenuPanel) and buttons to show the result of students, and to add a
- class.
+     * Creates a new StudentMenuPanel for the user. It contains the parent items
+     * (from StudentMenuPanel) and buttons to show the result of students, and
+     * to add a class.
      *
      * @param dwo
      */
     public TeacherMenuPanel() {
         super();
-        hasAdminRight = DwoHelper.getSchool().hasRight(User.PROFILE_ADMIN_RIGHT);
-        schoolID = DwoHelper.getSchool().getSchoolID();
+
+        try {
+            School school = (School) PersistenceFacade.instance().get(DwoHelper.getActiveSchoolId(), School.class);
+            hasAdminRight = school.hasRight(User.PROFILE_ADMIN_RIGHT);
+            schoolID = DwoHelper.getActiveSchoolId();
+        }
+        catch (PersistenceException ex) {
+            Logger.getLogger(TeacherMenuPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -159,7 +172,7 @@ public class TeacherMenuPanel extends StudentMenuPanel implements SelectStrategy
             center.reset();
             center.loadCenter(cp);
             instance.setReady();
-        } else  if (src == courseManagementButton) {
+        } else if (src == courseManagementButton) {
             instance.setWait();
             CenterSubPanel cp = instance.getCourseManagementPanel();
             center.loadCenter(cp);

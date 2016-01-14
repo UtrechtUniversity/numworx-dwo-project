@@ -158,7 +158,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 
     void removeUserFromClass(User u, int row) {
         String[] arguments;
-        schoolClass.disconnectStudent(DwoHelper.getSchoolClass().getID(),u);
+        schoolClass.disconnectStudent(DwoHelper.getActiveSchoolClassId(),u);
         model.deleteRow(row);
         if (model.getRowCount() == 0) {
             // TODO dit is niet goed. createLabel(vbox) o.i.d.

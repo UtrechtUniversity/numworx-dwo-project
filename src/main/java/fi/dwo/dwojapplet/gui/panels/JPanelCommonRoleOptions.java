@@ -2,7 +2,9 @@
 package fi.dwo.dwojapplet.gui.panels;
 
 import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import static fi.dwo.commons.system.TextMapper.GUIP_BTN_SWITCH_PROFILE;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -10,6 +12,7 @@ import fi.dwo.dwojapplet.gui.CenterPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 
 /**
  *
@@ -94,11 +97,16 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
         //get user data
         DomFullUser user = DwoHelper.getCurrentUser();
         // clear user data
-        GuiCreator.instance().clearCurrentUserData();
+        GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
         try {
             GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
         } catch (LoginException ex) {
             LOG.log(Level.SEVERE, null, ex);
+            GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
         }
 
 

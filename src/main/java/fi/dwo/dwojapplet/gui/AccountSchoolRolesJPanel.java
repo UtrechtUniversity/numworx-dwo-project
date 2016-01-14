@@ -4,6 +4,7 @@ import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.User;
@@ -23,6 +24,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -207,8 +209,6 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
                 prop.setActiveSchoolRoleAndClass();
 //            //get user data
                 DomFullUser user = DwoHelper.getCurrentUser();
-//            // clear user data
-                GuiCreator.instance().clearCurrentUserData();
                 try {
 //                //switch role now
                     LOG.log(Level.INFO, "switching role now");
@@ -216,6 +216,11 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
                 }
                 catch (LoginException ex) {
                     LOG.log(Level.SEVERE, null, ex);
+                    GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                    GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
                 }
 
             } else if (value == removeImage) {
@@ -229,14 +234,15 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
                 //TODO Remove role now
 //            //get user data
                 DomFullUser user = DwoHelper.getCurrentUser();
-//            // clear user data
-                GuiCreator.instance().clearCurrentUserData();
                 try {
 //                //switch role now
                     LOG.log(Level.INFO, "Removing role now");
                     GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
                 }
                 catch (LoginException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                }
+                catch (Dwo2Exception ex) {
                     LOG.log(Level.SEVERE, null, ex);
                 }
 
@@ -315,8 +321,6 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
             prop.setActiveSchoolRoleAndClass();
 //            //get user data
             DomFullUser user = DwoHelper.getCurrentUser();
-//            // clear user data
-            GuiCreator.instance().clearCurrentUserData();
             try {
 //                //switch role now
                 LOG.log(Level.INFO, "switching role now");
@@ -324,6 +328,11 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
             }
 
         } else if (e.getSource() == removeImage) {

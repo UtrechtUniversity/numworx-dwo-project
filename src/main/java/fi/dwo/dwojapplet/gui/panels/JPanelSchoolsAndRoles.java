@@ -5,6 +5,7 @@ import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -137,12 +138,16 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
         //get user data
         DomFullUser user = DwoHelper.getCurrentUser();
         // clear user data
-        GuiCreator.instance().clearCurrentUserData();
+        GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
         try {
             GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
         } catch (LoginException ex) {
             LOG.log(Level.SEVERE, null, ex);
-            GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Eror", JDialog.ERROR);
+            GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

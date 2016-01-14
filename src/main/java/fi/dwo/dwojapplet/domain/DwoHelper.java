@@ -7,10 +7,10 @@ package fi.dwo.dwojapplet.domain;
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
 import fi.dwo.commons.dom.entities.DomFullUser;
-import fi.dwo.commons.dom.entities.DomSchool;
 import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
@@ -154,6 +154,7 @@ public final class DwoHelper {
      * @throws Dwo2Exception
      */
     public static void userInit(DomFullUser aCurrentUser) throws Dwo2Exception {
+        currentUser = aCurrentUser;
         //Fetch all the login roles from the server for the current roles
         try {
             if (aCurrentUser != null) {
@@ -504,34 +505,56 @@ public final class DwoHelper {
     public static URL getServerUrlPath() {
         return serverUrlPath;
     }
+//
+//    /**
+//     * @return the schoolClass
+//     */
+//    public static SchoolClass getSchoolClass() {
+//        return currentFacadeUser.getInClass();
+//    }
 
     /**
-     * @return the schoolClass
+     * Assisting function for hybrid code between old and new.
+     *
+     * @return
+     * @deprecated
      */
-    public static SchoolClass getSchoolClass() {
-        return schoolClass;
+    @Deprecated
+    public static int getActiveSchoolClassId() {
+        return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchoolClassId());
     }
 
     /**
-     * @param aSchoolClass the schoolClass to set
+     * Assisting function for hybrid code between old and new.
+     *
+     * @return
+     * @deprecated
      */
-    public static void setSchoolClass(SchoolClass aSchoolClass) {
-        schoolClass = aSchoolClass;
+    @Deprecated
+    public static int getActiveSchoolId() {
+        return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchoolId());
     }
-
-    /**
-     * @return the school
-     */
-    public static School getSchool() {
-        return school;
-    }
-
-    /**
-     * @param aSchool the school to set
-     */
-    public static void setSchool(School aSchool) {
-        school = aSchool;
-    }
+//    
+//    /**
+//     * @param aSchoolClass the schoolClass to set
+//     */
+//    public static void setSchoolClass(SchoolClass aSchoolClass) {
+//        currentFacadeUser.setInClass(schoolClass);
+//    }
+//
+//    /**
+//     * @return the school
+//     */
+//    public static School getSchool() {
+//        return currentFacadeUser.getSchool();
+//    }
+//
+//    /**
+//     * @param aSchool the school to set
+//     */
+//    public static void setSchool(School aSchool) {
+//        currentFacadeUser.setSchool(aSchool);
+//    }
 
     /**
      * @return the current User
@@ -566,6 +589,7 @@ public final class DwoHelper {
         userInit(aCurrentUser);
         if (aCurrentUser != null) {
             try {
+                GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(aCurrentUser.getId()));
                 currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUsername());
             }
             catch (LoginException ex) {

@@ -196,11 +196,15 @@ class UserMapper extends XmlRpcMapper {
         
         if (u instanceof Teacher) {
             Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
+            if(o!=null){
             SchoolClass[] slist = new SchoolClass[o.length];
             for (int i = 0; i < o.length; i++) {
                 slist[i] = (SchoolClass) MapperCreator.instance(SchoolClass.class).getObjectFromReturn((java.util.Hashtable) o[i]);
             };
             ((Teacher) u).setClasses(slist);
+            }else{
+                ((Teacher) u).setClasses(null);
+            }
         }
         /*if(u instanceof Admin) {
          Object[] o = MapperCreator.instance(SchoolClass.class).get(u);

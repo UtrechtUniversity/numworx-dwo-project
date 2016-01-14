@@ -89,10 +89,8 @@ public class TeacherProfilePanel extends ProfilePanel {
                 JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
                 /* Evil trick to refresh user info */
                 if (password.getText().equals("")) {
-                    GuiCreator.instance().clearCurrentUserData();
                     GuiCreator.instance().login(user.getUsername(), oldpassword.getText());
                 } else {
-                    GuiCreator.instance().clearCurrentUserData();
                     GuiCreator.instance().login(user.getUsername(), password.getText());
                 }
             } catch (RegisterException exc) {

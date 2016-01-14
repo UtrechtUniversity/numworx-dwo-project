@@ -107,17 +107,20 @@ public class GuiCreator {
             DwoHelper.setContact(false);
             LoginManager.login(username, MD5.getHashString(String.valueOf(password)));
 
-            if (dwo.login(username, password)) {
+            if (DwoHelper.getCurrentUser() != null) {
                 // TODO: remove, currently checks if licence is still valid
                 validLicenceCheck(dwo.getUser());
                 //configure GuiCreator to show correct Panels and options.
                 configurePanelsForUser(dwo.getUser());
             }
         }
-        catch (LoginException e) {
+        catch (Dwo2Exception e) {
+            LOG.log(Level.WARNING, "Login failed.", e);
+            dwo.setReady();
             throw e;
         }
         finally {
+
             dwo.setReady();
         }
     }
@@ -131,19 +134,22 @@ public class GuiCreator {
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
-    public void loginWithMd5(String username, String password) throws LoginException {
+    public void loginWithMd5(String username, String password) throws LoginException, Dwo2Exception {
         dwo.setWait();
         try {
             DwoHelper.setContact(false);
-            if (dwo.loginWithMd5(username, password)) {
+            LoginManager.login(username, password);
+
+            if (DwoHelper.getCurrentUser() != null) {
+                // TODO: remove, currently checks if licence is still valid
                 validLicenceCheck(dwo.getUser());
-
+                //configure GuiCreator to show correct Panels and options.
                 configurePanelsForUser(dwo.getUser());
-
-                //ModuleTreePanel.create(dwo );  
             }
         }
-        catch (LoginException e) {
+        catch (Dwo2Exception e) {
+            LOG.log(Level.WARNING, "Login failed.", e);
+            dwo.setReady();
             throw e;
         }
         finally {
@@ -199,17 +205,15 @@ public class GuiCreator {
             gc.welcomePanel = welcomePanel;
             gc.mainPanel = new MainPanel(dwo.getDwoProfile());
             dwo.setPanel(gc.mainPanel);
+        } else if (this instanceof GuiCreatorTeacher || this instanceof GuiCreatorAdmin) {
+            GuiCreator gc = new GuiCreator(dwo);
+            gc.mainPanel = mainPanel;
+            gc.welcomePanel = welcomePanel;
+            gc.mainPanel = new MainPanel(dwo.getDwoProfile());
+            dwo.setPanel(gc.mainPanel);
         } else {
-            if (this instanceof GuiCreatorTeacher || this instanceof GuiCreatorAdmin) {
-                GuiCreator gc = new GuiCreator(dwo);
-                gc.mainPanel = mainPanel;
-                gc.welcomePanel = welcomePanel;
-                gc.mainPanel = new MainPanel(dwo.getDwoProfile());
-                dwo.setPanel(gc.mainPanel);
-            } else {
-                mainPanel = new MainPanel(dwo.getDwoProfile());
-                dwo.setPanel(mainPanel);
-            }
+            mainPanel = new MainPanel(dwo.getDwoProfile());
+            dwo.setPanel(mainPanel);
         }
     }
 
@@ -386,8 +390,8 @@ public class GuiCreator {
      * cashing problems can appear.
      *
      */
-    public void clearCurrentUserData() {
-        dwo.clearCurrentUserData();
+    public void clearCurrentUserData(int uid) {
+        dwo.clearCurrentUserData(uid);
     }
 
     /**
