@@ -84,29 +84,29 @@ public class DataSourceAccessServlet extends Servlet {
 //                EntityManagerFactory emf2 = DwoEmfFactory.instance();
 //                em = emf2.createEntityManager();
 
-            PersistentUser user;
-            PersistentHasRole hasRole;
+//            PersistentUser user;
+//            PersistentHasRole hasRole;
 //                try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-            q.setParameter("username", username);
-            user = (PersistentUser) q.getSingleResult();
-            LOG.log(Level.FINE, "Retrieved user {0} with role {1}.", new Object[]{user});
-            q = em.createQuery("SELECT p FROM PersistentHasRole p WHERE p.persistentHasRolePK.schoolGroupID = :schoolGroupID AND p.persistentHasRolePK.userID= :userID");
-            q.setParameter("userID", user.getUserID()).setParameter("schoolGroupID", user.getSchoolGroupID());
-            hasRole = (PersistentHasRole) q.getSingleResult();
+//            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
+//            q.setParameter("username", username);
+//            user = (PersistentUser) q.getSingleResult();
+//            LOG.log(Level.FINE, "Retrieved user {0} with role {1}.", new Object[]{user});
+//            q = em.createQuery("SELECT p FROM PersistentHasRole p WHERE p.persistentHasRolePK.schoolGroupID = :schoolGroupID AND p.persistentHasRolePK.userID= :userID");
+//            q.setParameter("userID", user.getUserID()).setParameter("schoolGroupID", user.getSchoolGroupID());
+//            hasRole = (PersistentHasRole) q.getSingleResult();
 
 //                } finally {
 //                    em.close();
 //                }
-            DwoSessionData sessionData = new DwoSessionData();
+//            DwoSessionData sessionData = new DwoSessionData();
+//
+//            sessionData.setLoginUser(user);
+//            sessionData.setLoginRole(hasRole);
 
-            sessionData.setLoginUser(user);
-            sessionData.setLoginRole(hasRole);
-
-            LOG.log(Level.INFO, "Session {0} stored logged in user {1} with role {2}.", new Object[]{session.get().getId(), user.toString(), hasRole.toString()});
+ //           LOG.log(Level.INFO, "Session {0} stored logged in user {1} with role {2}.", new Object[]{session.get().getId(), user.toString(), hasRole.toString()});
 
             //Set some session fixed variables.
-            session.get().setAttribute("DwoSessionData", sessionData);
+//            session.get().setAttribute("DwoSessionData", sessionData);
             session.get().setAttribute("login", username);
             return h;
         }

@@ -1103,8 +1103,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public Hashtable login(String username, String password)
             throws SQLException, DwoXmlRpcException {
         close(); //for lazy connection
-        boolean noPw = password.equals("");
-        //This needs a fix, the whole login gui part needs changes.
+        boolean noPw = password.equals("");        
         PreparedStatement ps = getStatement(noPw ? QRY_USER_LOGIN_NO_PASSWD : QRY_USER_LOGIN);
         ps.setString(1, username);
         if (!noPw) {
