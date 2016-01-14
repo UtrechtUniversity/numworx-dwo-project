@@ -2328,9 +2328,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //            return new Vector();
 //        }
 //    }
-    private Vector get1Results(PreparedStatement ps, Object courseID, int classID) throws SQLException {
+    private Vector get1Results(PreparedStatement ps, Object courseID, int classID, int teacherID) throws SQLException {
         ps.setInt(1, classID);
-        ps.setObject(2, courseID);
+        ps.setInt(2, teacherID);
+        ps.setObject(3, courseID);
         return executeQueryWithResult(ps);
     }
 
@@ -2368,10 +2369,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
         Iterator iterator = courses.iterator();
         PreparedStatement ps = getStatement(QRY_RESULTS_CLASS_COURSE);
-        Vector all = get1Results(ps, iterator.next(), classID);
+        Vector all = get1Results(ps, iterator.next(), classID, teacherID);
         while (iterator.hasNext()) {
             Object courseID = iterator.next();
-            all.addAll(get1Results(ps, courseID, classID));
+            all.addAll(get1Results(ps, courseID, classID, teacherID));
         }
         ps.close();
         Collections.sort(all, comparator);
