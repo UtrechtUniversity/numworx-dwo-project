@@ -314,7 +314,7 @@ public class TekstBuffer
 		else
 			return ""; // 1 gegeven, 2 $V
 		if (currentVakGegevens == null) // FIXME Komt voor in kladje
-			return new TekstVakPanel(new HashMap(), randomVarNamen, randomVarWaarden); // was ""
+			return new SpookVak();
 
 		map = JSONUtilities.wrapMap(currentVakGegevens);
 		int soortVak = map.getInt("soortInteractiePanel");

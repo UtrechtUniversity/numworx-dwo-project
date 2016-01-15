@@ -69,6 +69,13 @@ public class ImageView implements IsWidget, TekstElement
 			String url = (String) map.get(naam + "/u");
 			if (url.startsWith("/"))
 				url = "https://" + DWOplayer.PARAMETERS.getHost() + url; // IS DIT ALTIJD GOED?
+			Number width = null, height = null;
+			object = map.get(naam + "/w");
+			if(object instanceof Number) width = (Number) object;
+			object = map.get(naam + "/h");
+			if(object instanceof Number) height = (Number) object;
+			if(width != null && height != null)
+				return new ScaledImage(url,width.intValue(), height.intValue());
 			return new Image(url);
 		}
 		else
