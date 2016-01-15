@@ -526,7 +526,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		this.instellingen = instellingen2;
 		//System.out.println("fontSize uit instellingen formuleEditorWithAnswer: " + ((Number) instellingen.get("fontSize")).intValue());
-		setFont(FormuleFont.createFromFontSize(instellingen2.getInt("fontSize")));
+		FormuleFont fnt = FormuleFont.createFromFontSize(instellingen2.getInt("fontSize"));
+		setFont(fnt);
+		setDefaultFont(fnt);
 	}
 	
 	public void voegFeedbackSluitKnopToe()
@@ -564,6 +566,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			if(!FormuleFont.formTimes)
 				font.setFont(parentRegel.getFont().getFont());
 			setFont(font);
+			setDefaultFont(font);
 		}
 				
 		

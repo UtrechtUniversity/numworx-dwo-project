@@ -1055,7 +1055,11 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 	public void setFontSize(int size)
 	{
 		if(formuleMode)
-			formuleVak.setFont(FormuleFont.createFromFontSize(size));
+		{
+			FormuleFont fnt = FormuleFont.createFromFontSize(size);
+			formuleVak.setFont(fnt);
+			formuleVak.setDefaultFont(fnt);
+		}
 		//else
 		//	antwoordTF.getElement().getStyle().setFontSize(size, Style.Unit.PX);
 	}

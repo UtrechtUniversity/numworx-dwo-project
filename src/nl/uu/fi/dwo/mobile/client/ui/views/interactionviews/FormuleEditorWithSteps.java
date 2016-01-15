@@ -1007,7 +1007,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		for(int i = 0; i < viewers.size(); i++)
 			viewers.get(i).setFont(font);
 		if(editor != null)
+		{
 			editor.setFont(font);
+			editor.setDefaultFont(font);
+		}
 		
 		stepPanelY = 0;
 		for(int i = 0; i < viewers.size(); i++)
@@ -1045,6 +1048,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		editor.zetMode(mode);
 		editor.setFormuleToolBijFocus(true);
 		editor.setFont(font);
+		editor.setDefaultFont(font);
 		editor.setCurrent(0, 0);
 //		int width = editor.getMainRegel().getWidth();
 //		if(hasPrefix)
