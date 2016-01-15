@@ -33,9 +33,10 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
      * Creates new form JPanelSchoolsAndClasses
      */
     public JPanelSchoolsAndRoles() {
-        try{
-        prop.init();
-        }catch(Dwo2Exception e){
+        try {
+            prop.init();
+        }
+        catch (Dwo2Exception e) {
             GuiCreator.instance().ShowMessageToUser(this, e.getLocalizedMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
         tableModel = new SchoolsAndRolesTableModel();
@@ -44,10 +45,10 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
         jTableSchoolsAndClasses.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
-                    // do some actions here, for example
-                    // print first column value from selected row
-                if(!event.getValueIsAdjusting()){//
-                    DomSchoolRoleAndClass src = (DomSchoolRoleAndClass) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(),4);
+                // print first column value from selected row
+                if (!event.getValueIsAdjusting()) {//
+                    DomSchoolRoleAndClass src = (DomSchoolRoleAndClass) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 4);
+                    make delete schoollogin work and as pw first! Check this for remove account too.
 //                    System.out.println(tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 3).toString());
                     prop.setSelectedSchoolRoleAndClass(src);
                     prop.setActiveSchoolRoleAndClass();
@@ -128,9 +129,11 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-            ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new RegisterMoreSchoolsPanel());
-            dialog.setVisible(true);
-
+        ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new RegisterMoreSchoolsPanel());
+        dialog.setVisible(true);
+        //update table model for schoolLogin
+        tableModel.init(prop.getSelectedSchoolRoleAndClass(), prop.getSchoolsRolesAndClasses());
+        tableModel.fireTableDataChanged();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -141,7 +144,8 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
         GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
         try {
             GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
-        } catch (LoginException ex) {
+        }
+        catch (LoginException ex) {
             LOG.log(Level.SEVERE, null, ex);
             GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
         }

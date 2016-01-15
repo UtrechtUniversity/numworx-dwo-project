@@ -384,7 +384,6 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      */
     @Override
     public void reset() {
-//TODO FIX NOW
 //        MapperIF m = MapperCreator.instance(UserResultList.class);
 //
 //        if (m instanceof UserResultListMapper) {

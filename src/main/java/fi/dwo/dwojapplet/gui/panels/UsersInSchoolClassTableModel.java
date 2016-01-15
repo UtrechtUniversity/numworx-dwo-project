@@ -10,9 +10,9 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
-class ClassRegisterTableModel extends AbstractTableModel {
+class UsersInSchoolClassTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {"SchoolClassName", "select", "SchoolClass" };//schoolclass is hidden
+    private String[] columnNames = {"username", "name", "select","DomUser"}; // Domuser is hidden
     static boolean DEBUG = false;
 
     private Object[][] data;
