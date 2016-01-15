@@ -294,6 +294,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 			return facade.getState();
 		kijkNa();
 		HashMap map = new HashMap();
+		if(bewaarOptie && pendingState != null)
+			map.put("state", pendingState);
 		if(bewaarOptie && ggbApplet != null) {
 			map.put("state", getXML(ggbApplet));
 		}
@@ -355,7 +357,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 
 	public void kijkNa()
 	{
-		if(nakijken)
+		if(nakijken && ggbApplet != null)
 		{
 			if(nakijkenGemaakteObjecten)
 			{
@@ -389,7 +391,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 							match = 1.0 == getValue(ggbApplet, "checkDWO");
 						}
 						if(match) {
-							setColor(ggbApplet, objectName, 0, 180, 0);
+							setColor(ggbApplet, objectName, 0, 180, 0); // FIXME feedback alleen in oefenen of (toets + nagekeken).
 							score += geogebraCheckScores[j];
 							checkObjects[j] = null; // used!
 							matches ++;
