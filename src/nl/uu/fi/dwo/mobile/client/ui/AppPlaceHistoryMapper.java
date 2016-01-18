@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.c;
 
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.WithTokenizers;
@@ -17,7 +18,7 @@ import com.google.gwt.place.shared.WithTokenizers;
  * 
  */
 @WithTokenizers(
-{ SelectModulePlace.Tokenizer.class, ViewModulePlace.Tokenizer.class, LoginPlace.Tokenizer.class, ProfilePlace.Tokenizer.class, TreeModulePlace.Tokenizer.class, FlatModulePlace.Tokenizer.class })
+{ SelectModulePlace.Tokenizer.class, ViewModulePlace.Tokenizer.class, LoginPlace.Tokenizer.class, ProfilePlace.Tokenizer.class, TreeModulePlace.Tokenizer.class, FlatModulePlace.Tokenizer.class, c.Tokenizer.class })
 public interface AppPlaceHistoryMapper extends PlaceHistoryMapper
 {
 

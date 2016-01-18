@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -29,7 +30,7 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 public class LoginActivity extends MGWTAbstractActivity
 {
-	private static final AsyncCallback<Map<String, Object>> LOGIN_CALLBACK = new AsyncCallback<Map<String, Object>>()
+	private final AsyncCallback<Map<String, Object>> LOGIN_CALLBACK = new AsyncCallback<Map<String, Object>>()
 	{
 
 		@Override
@@ -47,8 +48,10 @@ public class LoginActivity extends MGWTAbstractActivity
 		public void onSuccess(Map<String, Object> result)
 		{
 			DWOplayer.profiledata = result;
-			DWOplayer.gotoCourses();
-			
+			if(next == null)
+				DWOplayer.gotoCourses();
+			else
+				clientFactory.getPlaceController().goTo(next);
 		}
 
 	};
@@ -56,10 +59,16 @@ public class LoginActivity extends MGWTAbstractActivity
 	
 	
 	ClientFactory clientFactory;
+	private Place next;
 	LoginView view;
 
-	public LoginActivity(ClientFactory clientFactory)
+	public LoginActivity(ClientFactory clientFactory, Place next)
 	{
+		this.clientFactory = clientFactory;
+		this.next = null;
+	}
+
+	public LoginActivity(ClientFactory clientFactory2) {
 		this.clientFactory = clientFactory;
 	}
 
@@ -85,7 +94,10 @@ public class LoginActivity extends MGWTAbstractActivity
 			public void onTap(TapEvent event)
 			{
 				DWOplayer.profiledata = null;
-				DWOplayer.gotoCourses();
+				if(next == null)
+					DWOplayer.gotoCourses();
+				else
+					clientFactory.getPlaceController().goTo(next);
 			}
 		}));
 		

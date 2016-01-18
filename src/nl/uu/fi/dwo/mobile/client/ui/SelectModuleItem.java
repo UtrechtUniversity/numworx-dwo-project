@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Node;
@@ -111,6 +112,11 @@ public class SelectModuleItem
 
 		}
 		Logger.getLogger("SelectModuleItem").log(Level.INFO,this.name + " " + this.file);
+	}
+
+	public SelectModuleItem(Object id, Type module) {
+		this.type = module;
+		this.id = id;
 	}
 
 	public String getName()

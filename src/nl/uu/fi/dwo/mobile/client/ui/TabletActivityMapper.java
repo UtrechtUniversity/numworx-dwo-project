@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.FlatModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ProfileActivity;
@@ -35,6 +36,20 @@ public class TabletActivityMapper implements ActivityMapper
 	@Override
 	public Activity getActivity(Place place)
 	{
+		
+		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.c) 
+		{
+			String id = ((nl.uu.fi.dwo.mobile.client.ui.places.c) place).getToken();
+			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
+			if(item == null)
+			{
+				item = new SelectModuleItem(id, SelectModuleItem.Type.MODULE);
+				SelectModuleItemHolder.insert(item);
+			}
+			return new CourseActivity(clientFactory, item);
+		}
+		
+		
 		if (place instanceof SelectModulePlace)
 		{
 			SelectModulePlace tmp = (SelectModulePlace) place;
@@ -57,7 +72,7 @@ public class TabletActivityMapper implements ActivityMapper
 			return new ViewModuleActivity(clientFactory, item);
 		}
 		if (place instanceof LoginPlace)
-			return new LoginActivity(clientFactory);
+			return new LoginActivity(clientFactory, ((LoginPlace) place).getPlace());
 		if (place instanceof ProfilePlace)
 		{
 			if(DWOplayer.profiledata == null)

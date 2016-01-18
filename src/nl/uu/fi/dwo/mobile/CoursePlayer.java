@@ -3,6 +3,7 @@
  */
 package nl.uu.fi.dwo.mobile;
 
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -24,6 +25,7 @@ public class CoursePlayer extends DWOplayer implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		super.onModuleLoad();
+		api = new SCORM_guest();
 	}
 
 }

@@ -157,6 +157,15 @@ public class RPCHandler {
 		request.execute();
 	}
 	
+	public void getCourse(Object courseID, AsyncCallback<Map<String, Object>> getCourseCallback) {
+		String method = "getRecord";
+		Object[] params = { "tblCourse", "courseID", courseID };
+		XmlRpcClient client = getClient();
+		XmlRpcRequest<Map<String, Object>> request = new XmlRpcRequest<Map<String, Object>>(client, method, params, getCourseCallback);
+		request.execute();
+	}
+	
+	
 	public <T> void getClasses(Object userID, AsyncCallback<T> getClassesCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("userID", userID);

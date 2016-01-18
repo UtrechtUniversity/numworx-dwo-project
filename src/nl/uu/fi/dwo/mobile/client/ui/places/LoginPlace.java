@@ -5,21 +5,33 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 
 public class LoginPlace extends Place
 {
-	private String token;
+	private Hash token;
 
-	public LoginPlace(String token)
+	LoginPlace(Hash token)
 	{
 		this.token = token;
+	}
+	
+	public LoginPlace(Place place) {
+		if(place instanceof Hash)
+			this.token = (Hash) place;
 	}
 
 	public LoginPlace()
 	{
-		this("login"); // default token.
 	}
 
-	public String getToken()
+	String getToken()
 	{
-		return this.token;
+		if(token == null)
+			return "";
+		return token.getType() + "/" + token.getType().getT().getToken(token.getPlace());
+	}
+	
+	public Place getPlace() {
+		if(token == null) 
+			return null;
+		return token.getPlace();
 	}
 
 	public static class Tokenizer implements PlaceTokenizer<LoginPlace>
@@ -28,7 +40,12 @@ public class LoginPlace extends Place
 		@Override
 		public LoginPlace getPlace(String token)
 		{
-			return new LoginPlace(token);
+			if(token == null) token = "";
+			int slash = token.indexOf('/');
+			if(slash == -1) return new LoginPlace();
+			Hash.Type pfx = Hash.Type.valueOf(token.substring(0, slash));
+			Hash hash = pfx.getHash(token.substring(slash+1));			
+			return new LoginPlace(hash);
 		}
 
 		@Override
