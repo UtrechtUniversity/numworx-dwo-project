@@ -217,7 +217,7 @@ public class SecuredUserAccountLoginsManager {
             UserManager.edit(u);
 
             PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getUserID(), MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getSchoolGroupId())));
-            if(sarc.getDomSchoolRoleAndClass().getSchoolClassId()!=null){
+            if (sarc.getDomSchoolRoleAndClass().getSchoolClassId() != null) {
                 hr.setClassID(MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getSchoolClassId()));
             }
             HasRoleManager.edit(hr);
@@ -329,7 +329,6 @@ public class SecuredUserAccountLoginsManager {
      *
      * @param sc
      * @param sarc
-     * @param existingUserReg
      * @return
      */
     @PUT
@@ -341,7 +340,7 @@ public class SecuredUserAccountLoginsManager {
         Long userId = (Long) MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getUserId());
         Long schoolGroupId = (Long) MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getSchoolGroupId());
 
-        if (user.getUserID() != userId) {
+        if (!user.getUserID().equals(userId)) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: tried to remove a school login of  user {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove school login of user " + user.getUsername() + ".");
 
@@ -373,7 +372,9 @@ public class SecuredUserAccountLoginsManager {
         {
             RoleType type = RoleType.STUDENT;
             PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(SchoolManager.findBySchoolLogin("null"), type);
-            user.setSchoolGroupID(sg.getSchoolGroupID());
+            PersistentUser u = UserManager.findEntity(user.getUserID());
+            u.setSchoolGroupID(sg.getSchoolGroupID());
+            UserManager.edit(u);
         }
 
         return true;
