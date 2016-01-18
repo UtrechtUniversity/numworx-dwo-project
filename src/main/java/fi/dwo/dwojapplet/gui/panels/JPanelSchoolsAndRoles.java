@@ -35,26 +35,33 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
     public JPanelSchoolsAndRoles() {
         try {
             prop.init();
+            tableModel = new SchoolsAndRolesTableModel();
+            tableModel.init(prop.getSelectedSchoolRoleAndClass(), prop.getSchoolsRolesAndClasses());
+            initComponents();
+            jTableSchoolsAndClasses.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent event) {
+                    // print first column value from selected row
+                    if (!event.getValueIsAdjusting()) {//
+                        DomSchoolRoleAndClass src = (DomSchoolRoleAndClass) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 4);
+//TODO Gert                    make delete schoollogin work and as pw first! Check this for remove account too.
+                        System.out.println(tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 3).toString());
+                        prop.setSelectedSchoolRoleAndClass(src);
+                        try {
+                            prop.setActiveSchoolRoleAndClass();
+                        }
+                        catch (Dwo2Exception ex) {
+                            LOG.log(Level.SEVERE, null, ex);
+                            GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            });
         }
         catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, null, e);
             GuiCreator.instance().ShowMessageToUser(this, e.getLocalizedMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
-        tableModel = new SchoolsAndRolesTableModel();
-        tableModel.init(prop.getSelectedSchoolRoleAndClass(), prop.getSchoolsRolesAndClasses());
-        initComponents();
-        jTableSchoolsAndClasses.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent event) {
-                // print first column value from selected row
-                if (!event.getValueIsAdjusting()) {//
-                    DomSchoolRoleAndClass src = (DomSchoolRoleAndClass) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 4);
-                    make delete schoollogin work and as pw first! Check this for remove account too.
-//                    System.out.println(tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 3).toString());
-                    prop.setSelectedSchoolRoleAndClass(src);
-                    prop.setActiveSchoolRoleAndClass();
-                }
-            }
-        });
 
     }
 
@@ -137,12 +144,13 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        prop.setActiveSchoolRoleAndClass();
-        //get user data
-        DomFullUser user = DwoHelper.getCurrentUser();
-        // clear user data
-        GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
         try {
+            prop.setActiveSchoolRoleAndClass();
+            //get user data
+            DomFullUser user = DwoHelper.getCurrentUser();
+            // clear user data
+            GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
+            //switch role
             GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
         }
         catch (LoginException ex) {

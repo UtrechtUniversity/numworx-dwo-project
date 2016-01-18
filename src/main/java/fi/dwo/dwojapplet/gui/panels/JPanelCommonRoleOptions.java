@@ -92,22 +92,23 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSwitchToProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSwitchToProfileActionPerformed
-        //Update current active Role, knows selected role.
-        prop.setActiveSchoolRoleAndClass();
-        //get user data
-        DomFullUser user = DwoHelper.getCurrentUser();
-        // clear user data
-        GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
-        try {
-            GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
-        } catch (LoginException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-            GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
-        }
-        catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
-            GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
-        }
+        try {                                                       
+            //Update current active Role, knows selected role.
+            prop.setActiveSchoolRoleAndClass();
+            //get user data
+            DomFullUser user = DwoHelper.getCurrentUser();
+            // clear user data
+            GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
+                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
+            } catch (LoginException ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+            }
+            
 
 
     }//GEN-LAST:event_jButtonSwitchToProfileActionPerformed

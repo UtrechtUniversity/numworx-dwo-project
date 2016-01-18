@@ -57,6 +57,7 @@ public class SecureUserAccountLoginsManager {
      *
      * @param newSchoolLogin
      * @return
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
     public static boolean addASchoolLogin(DomNewSchoolLogin newSchoolLogin) throws Dwo2Exception {
         boolean r;
@@ -72,13 +73,14 @@ public class SecureUserAccountLoginsManager {
      *
      * @param toRemoveSchoolLogin
      * @return
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
-    public static boolean removeASchoolLogin(DomNewSchoolLogin toRemoveSchoolLogin) throws Dwo2Exception {
-        RestNewSchoolLogin rsrc = new RestNewSchoolLogin();
+    public static boolean removeASchoolLogin(DomSchoolRoleAndClass toRemoveSchoolLogin) throws Dwo2Exception {
+        RestSchoolRoleAndClass rsrc = new RestSchoolRoleAndClass();
         rsrc.setRestContext(new DomContext());
-        rsrc.setDomNewSchoolLogin(toRemoveSchoolLogin);
+        rsrc.setDomSchoolRoleAndClass(toRemoveSchoolLogin);
         boolean r;
-        r = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/delete", Boolean.class, rsrc);
+        r = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/remove", Boolean.class, rsrc);
         DwoHelper.setSchoolLogins(getSchoolLogins());        
         return r;
 

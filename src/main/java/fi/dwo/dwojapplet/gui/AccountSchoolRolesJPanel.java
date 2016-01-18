@@ -4,10 +4,8 @@ import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.panels.JPanelSchoolsandRolesProperties;
 import java.awt.Component;
 import java.awt.FontMetrics;
@@ -178,6 +176,28 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
         ClassTeacherPanel.ClassModel model;
         int row;
 
+        /**
+         * Switches/relogins to the active role set in the persistent store.
+         *
+         */
+        private void switchToActiveSchoolLogin() {
+            DomFullUser user = DwoHelper.getCurrentUser();
+            try {
+//                //switch role now
+                LOG.log(Level.INFO, "switching role now");
+                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
+            }
+            catch (LoginException ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+            }
+
+        }
+
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value,
                 boolean arg2, int row, int col) {
@@ -199,53 +219,39 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
             // note that we want to update the tableModel first!
             fireEditingStopped();
             //Let's check the selected col by the image and from the selected row value.
-            if (value == loginImage) {
+            try {
+                if (value == loginImage) {
 //            //get Table setting
 //                int col = tableModel.getSelectedColumn();
-                int row = tableModel.getSelectedRow();
+                    int row = tableModel.getSelectedRow();
 
 //            //set prop to table setting
-                prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
-                prop.setActiveSchoolRoleAndClass();
-//            //get user data
-                DomFullUser user = DwoHelper.getCurrentUser();
-                try {
-//                //switch role now
-                    LOG.log(Level.INFO, "switching role now");
-                    GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
-                }
-                catch (LoginException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
-                    GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
-                }
-                catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE, null, ex);
-                    GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
-                }
+                    prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                    prop.setActiveSchoolRoleAndClass();
+                    switchToActiveSchoolLogin();
 
-            } else if (value == removeImage) {
-//            //get Table setting
-//                int col = tableModel.getSelectedColumn();
-                int row = tableModel.getSelectedRow();
+                } else if (value == removeImage) {
+                    int row = tableModel.getSelectedRow();
 
-//            //set prop to table setting
-                prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
-                prop.setActiveSchoolRoleAndClass();
-                //TODO Remove role now
-//            //get user data
-                DomFullUser user = DwoHelper.getCurrentUser();
-                try {
-//                //switch role now
-                    LOG.log(Level.INFO, "Removing role now");
-                    GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
+                    //set prop to table setting
+                    DomSchoolRoleAndClass currSrac = prop.getActiveSchoolRoleAndClass();
+                    DomSchoolRoleAndClass selectedSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
+                    prop.RemoveSchoolRoleAndClass(selectedSrac);
+                    tableModel.init(prop, loginImage, removeImage);
+                    tableModel.fireTableDataChanged();
+                    
+                    if (currSrac != selectedSrac) {
+                        //update tableview
+                        model.fireTableDataChanged();
+                    } else {
+                        switchToActiveSchoolLogin();
+                    }
+                    switchToActiveSchoolLogin();
                 }
-                catch (LoginException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
-                }
-                catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE, null, ex);
-                }
-
+            }
+            catch (Dwo2Exception e) {
+                LOG.log(Level.SEVERE, null, e);
+                GuiCreator.instance().ShowMessageToUser(null, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -318,12 +324,14 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 
 //            //set prop to table setting
             prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(4, col));
-            prop.setActiveSchoolRoleAndClass();
-//            //get user data
-            DomFullUser user = DwoHelper.getCurrentUser();
             try {
-//                //switch role now
-                LOG.log(Level.INFO, "switching role now");
+                prop.setActiveSchoolRoleAndClass();
+                tableModel.init(prop, loginImage, removeImage);
+                tableModel.fireTableDataChanged();
+                //get user data
+                DomFullUser user = DwoHelper.getCurrentUser();
+                //switch role now
+                LOG.log(Level.FINE, "switching role now");
                 GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
             }
             catch (LoginException ex) {

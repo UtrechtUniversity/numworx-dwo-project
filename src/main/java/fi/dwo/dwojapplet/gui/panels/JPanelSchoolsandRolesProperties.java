@@ -9,8 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 
- * 
+ *
+ *
  * @author Gert van der Plas
  */
 public class JPanelSchoolsandRolesProperties {
@@ -23,11 +23,12 @@ public class JPanelSchoolsandRolesProperties {
         try {
             srcs = SecureUserAccountLoginsManager.getSchoolLogins();
             selectedSrc = srcs.getActiveSchoolRoleAndClass();
-        } catch (Dwo2Exception ex) {
-            
+        }
+        catch (Dwo2Exception ex) {
+
             LOG.log(Level.SEVERE, ex.getMessage());
             srcs = new DomSchoolsRolesAndClasses();
-            selectedSrc=null;
+            selectedSrc = null;
             throw ex;
         }
     }
@@ -41,18 +42,15 @@ public class JPanelSchoolsandRolesProperties {
 
     /**
      * Sets the selected SchoolRoleAndClassCombination in the PeristentStore.
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
-    public void setActiveSchoolRoleAndClass() {
-        try {
+    public void setActiveSchoolRoleAndClass() throws Dwo2Exception {
             DomSchoolRoleAndClass src = SecureUserAccountLoginsManager.switchToSchoolLogin(getSelectedSchoolRoleAndClass());
             srcs.setActiveSchoolRoleAndClass(src);
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
     }
 
-        /**
-     * @return 
+    /**
+     * @return
      */
     public DomSchoolRoleAndClass getActiveSchoolRoleAndClass() {
         return srcs.getActiveSchoolRoleAndClass();
@@ -72,5 +70,10 @@ public class JPanelSchoolsandRolesProperties {
         this.selectedSrc = selectedSrc;
     }
 
-    
+    public void RemoveSchoolRoleAndClass(DomSchoolRoleAndClass selectedSrac) throws Dwo2Exception {
+        boolean result;
+        result = SecureUserAccountLoginsManager.removeASchoolLogin(selectedSrac);
+        init();
+    }
+
 }
