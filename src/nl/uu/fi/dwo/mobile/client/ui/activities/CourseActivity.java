@@ -2,6 +2,10 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.Map;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_MC2mAccess;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -32,7 +36,26 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
+		final Map<String, Object> profiledata = DWOplayer.profiledata;
+		if(profiledata == null) {
+			DWOplayer.api = new SCORM_guest();
+		} else {
+// FIXME use strategy pattern!
+			Object userIDo = profiledata.get("userID");
+			if(userIDo instanceof String) {			
+				String userID = (String) userIDo;
+				String username = (String) profiledata.get("username");
+				String fullname = profiledata.get("middlename") + " " + profiledata.get("lastname") + ", " + profiledata.get("firstname");
+				fullname = fullname.trim();
+				DWOplayer.api = new SCORM_MC2mAccess(userID, username, fullname);
+			} else {
+				Integer userID = (Integer) userIDo;
+				DWOplayer.api = new SCORM_DWOmAccess(userID.intValue());
+			}
+		}
+		
 		final SelectModuleView view = clientFactory.getHomeView();
+		view.setLogout(true); // terug of logout
 		final Place next = 
 				new LoginPlace(
 						clientFactory.getPlaceController().getWhere());

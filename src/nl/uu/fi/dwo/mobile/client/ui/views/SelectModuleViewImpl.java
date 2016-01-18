@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl.LoginViewImplUiBinder;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -142,6 +142,15 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView
 			this.description.setWidget(new Label(""));
 
 
+	}
+
+	@Override
+	public void setLogout(boolean b) {
+		if(b) {
+			backbutton.setText(Text.constants.login());
+		}
+
+		
 	}
 	
 }

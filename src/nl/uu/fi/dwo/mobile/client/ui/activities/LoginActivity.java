@@ -65,10 +65,10 @@ public class LoginActivity extends MGWTAbstractActivity
 	public LoginActivity(ClientFactory clientFactory, Place next)
 	{
 		this.clientFactory = clientFactory;
-		this.next = null;
+		this.next = next;
 	}
 
-	public LoginActivity(ClientFactory clientFactory2) {
+	public LoginActivity(ClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
 	}
 

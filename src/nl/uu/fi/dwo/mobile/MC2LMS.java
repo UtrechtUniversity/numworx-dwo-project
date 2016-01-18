@@ -65,7 +65,12 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 		String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
 
-		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwoapp"));
+		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwoapp") {
+
+			@Override
+			protected Object objectToKey(Object courseID) {
+				return courseID.toString();
+			} } );
 		return factory;
 	}
 

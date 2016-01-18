@@ -159,10 +159,15 @@ public class RPCHandler {
 	
 	public void getCourse(Object courseID, AsyncCallback<Map<String, Object>> getCourseCallback) {
 		String method = "getRecord";
-		Object[] params = { "tblCourse", "courseID", courseID };
+		Object[] params = { "tblCourse", "courseID", objectToKey(courseID) };
 		XmlRpcClient client = getClient();
 		XmlRpcRequest<Map<String, Object>> request = new XmlRpcRequest<Map<String, Object>>(client, method, params, getCourseCallback);
 		request.execute();
+	}
+
+// In Mc2 new String()
+	protected Object objectToKey(Object courseID) {
+		return new Integer(courseID.toString());
 	}
 	
 	

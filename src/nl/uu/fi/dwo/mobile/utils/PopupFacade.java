@@ -99,6 +99,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	public Widget wrap(StubView container) {
 		if(popup) {
 			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container);
+			popupBtn = btn;
 			list.add(btn);
 			return btn;
 		}
@@ -108,6 +109,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	public Widget wrap(MC2View container) {
 		if(popup) {
 			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container);
+			popupBtn = btn; // ???
 			list.add(btn);
 			return btn;
 		}
@@ -117,6 +119,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	public Widget wrap(GeogebraView container) {
 		if(popup) {
 			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container);
+			popupBtn = btn;
 			list.add(btn);
 			return btn;
 		}
