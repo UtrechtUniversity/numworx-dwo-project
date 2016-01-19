@@ -1395,6 +1395,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 
 	public void setTitle(String string) {
+		if(string == null) string = "";
 		if(standalone) hp.setCenter(string);
 		
 	}

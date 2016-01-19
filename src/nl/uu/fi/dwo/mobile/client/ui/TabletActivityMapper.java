@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.FlatModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ProfileActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SelectModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
@@ -47,6 +48,18 @@ public class TabletActivityMapper implements ActivityMapper
 				SelectModuleItemHolder.insert(item);
 			}
 			return new CourseActivity(clientFactory, item);
+		}
+
+		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.s) 
+		{
+			String id = ((nl.uu.fi.dwo.mobile.client.ui.places.s) place).getToken();
+			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
+			if(item == null)
+			{
+				item = new SelectModuleItem(id, SelectModuleItem.Type.SCO);
+				SelectModuleItemHolder.insert(item);
+			}
+			return new ScoActivity(clientFactory, item);
 		}
 		
 		

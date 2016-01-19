@@ -165,6 +165,16 @@ public class RPCHandler {
 		request.execute();
 	}
 
+	public void getSco(Object scoID, AsyncCallback<Map<String,Object>> callback) 
+	{
+		String method = "getRecord";
+		Object[] params = { "tblScoContext", "scoID", objectToKey(scoID) };
+		XmlRpcClient client = getClient();
+		XmlRpcRequest<Map<String,Object>> request = new XmlRpcRequest<Map<String,Object>>(client, method, params, callback);
+		request.execute();
+	}
+	
+	
 // In Mc2 new String()
 	protected Object objectToKey(Object courseID) {
 		return new Integer(courseID.toString());

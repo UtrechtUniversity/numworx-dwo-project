@@ -4,7 +4,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;
 
 interface Hash {
-	enum Type { c(new c.Tokenizer()), s(null);
+	enum Type { c(new c.Tokenizer()), s(new s.Tokenizer());
 		
 		final private PlaceTokenizer<Place> t;
 		Type(PlaceTokenizer t) {this.t = t; }

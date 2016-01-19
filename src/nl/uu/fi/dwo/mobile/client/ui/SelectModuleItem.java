@@ -117,6 +117,10 @@ public class SelectModuleItem
 	public SelectModuleItem(Object id, Type module) {
 		this.type = module;
 		this.id = id;
+		if(module == Type.SCO)
+		{
+			this.file = PREFIX + id;
+		}
 	}
 
 	public String getName()
