@@ -31,13 +31,13 @@ class RestManager {
 //TODO Handle  non exception 400 errors gracefully using Dwo2Exception.
     protected static final Logger LOG = Logger.getLogger(RestManager.class.getName());
 
-    protected static final StoredRestManager instance = new StoredRestManager();
+    protected static final RestManager instance = new RestManager();
     protected static WebTarget webTargetRest;
 
     /**
      * @return the instance
      */
-    public static StoredRestManager getInstance() {
+    public static RestManager getInstance() {
         return instance;
     }
 
@@ -51,7 +51,7 @@ class RestManager {
     /**
      * @param aWebTargetRest the webTargetRest to set
      */
-    public static void setWebTargetRest(WebTarget aWebTargetRest) {
+    public synchronized static void  setWebTargetRest(WebTarget aWebTargetRest) {
         webTargetRest = aWebTargetRest;
     }
 

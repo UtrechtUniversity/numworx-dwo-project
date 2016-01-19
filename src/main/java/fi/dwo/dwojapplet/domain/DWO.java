@@ -1295,8 +1295,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         
         //intialize the proper connection but without any credentials.
         Client client = ClientBuilder.newClient();
-        client.property(ClientProperties.CONNECT_TIMEOUT, 50000);
-        client.property(ClientProperties.READ_TIMEOUT, 50000);
+        client.property(ClientProperties.CONNECT_TIMEOUT, 5000); //connect within 5 seconds
+        client.property(ClientProperties.READ_TIMEOUT, 10000); // read stuff within 10 seconds.
         WebTarget target;
         try {
             target = client.target(DwoHelper.getServerUrlPath().toURI());

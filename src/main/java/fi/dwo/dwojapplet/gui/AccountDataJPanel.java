@@ -1,10 +1,12 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.dwojapplet.gui.panels.JPanelAccountDataProperties;
 import java.awt.Color;
 import java.awt.Container;
@@ -324,7 +326,7 @@ public class AccountDataJPanel extends JPanel implements
         changeButton.addActionListener(this);
         resetButton.addActionListener(this);
         // delete mag if user is geen single school student
-            deleteButton.addActionListener(this);
+        deleteButton.addActionListener(this);
     }
 
     /**
@@ -374,10 +376,9 @@ public class AccountDataJPanel extends JPanel implements
                             && repassword.getText().equals(password.getText())) {
                         //updates password following some logic.
                         prop.getUser().setPassword(MD5.getHashString(password.getText()));
-                    } else {
-                        GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.EXR_WRONG_SECOND_PASSWORD), TextMapper.getText(TextMapper.GUIP_ERR_CHANGE), JOptionPane.ERROR_MESSAGE);
-                    }
+                    } 
                     prop.Update();
+                    oldpassword.setText("");
                     GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.DLG_CONFIRM), TextMapper.getText(TextMapper.DLG_CONFIRM), JOptionPane.INFORMATION_MESSAGE);
                 }
                 catch (Dwo2RestException ex) {
@@ -413,11 +414,22 @@ public class AccountDataJPanel extends JPanel implements
         //
         else if (e.getSource() == deleteButton) {
             /* Delete the user account */
-            while(JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
-                    + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-                if(ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))){
-                GuiCreator.instance().deleteUser();
-                break;
+            while (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
+                    + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
+                    try {
+                        if (SecureUserAccountManager.removeAccountData()) {
+                            GuiCreator.instance().logoff();
+                        }
+                        JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR), TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR), JOptionPane.ERROR_MESSAGE);
+                    }
+                    catch (Dwo2Exception ex) {
+                        Logger.getLogger(AccountDataJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                } else {
+                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }

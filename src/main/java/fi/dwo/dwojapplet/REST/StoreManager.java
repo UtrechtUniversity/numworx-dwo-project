@@ -17,7 +17,7 @@ public class StoreManager {
 
     protected static final Logger LOG = Logger.getLogger(StoreManager.class.getName());
 
-    protected static final StoreManager instance = new StoreManager();
+//    protected static final StoreManager instance = new StoreManager();
 
     //TODO Replace by SoftReferencesHashMap.
     private final static WeakHashMap<PersistenceId, Object> store = new WeakHashMap<PersistenceId, Object>();

@@ -1,10 +1,17 @@
 package fi.dwo.dwojapplet.domain.rest;
 
+import fi.dwo.commons.dom.entities.DomContext;
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.rest.entities.RestFullUser;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 /**
  * Manages the user profile.
@@ -40,8 +47,18 @@ public class SecureUserAccountManager {
      */
 
     public static DomFullUser updateAccountData(DomFullUser user) throws Dwo2Exception {
-            user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", DomFullUser.class, user);
-            LOG.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{user.getUsername()});
+            RestFullUser restUser = new RestFullUser();
+            restUser.setRestContext(new DomContext());
+            restUser.setDomFullUser(user);
+            
+            user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", DomFullUser.class, restUser);
+            HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(user.getUsername(), user.getPassword()).build();
+            Client client = ClientBuilder.newClient().register(feature);
+            WebTarget target = client.target(DwoHelper.getServerUrlPath().toString());
+            StoredRestManager.setWebTargetRest(target);
+            
+            DwoHelper.setCurrentUser(user);
+            LOG.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{restUser.getDomFullUser().getUsername()});
         return user;
     }
     

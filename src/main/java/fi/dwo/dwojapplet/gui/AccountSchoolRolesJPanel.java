@@ -4,9 +4,11 @@ import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.panels.JPanelSchoolsandRolesProperties;
+
 import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.Image;
@@ -225,28 +227,40 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 //                int col = tableModel.getSelectedColumn();
                     int row = tableModel.getSelectedRow();
 
-//            //set prop to table setting
+                    //set prop to table setting
+                    DomSchoolRoleAndClass currSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
+                    if (currSrac.getRoleName().equals(RoleType.SCHOOLADMIN.name())) {
+                        if (!ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
+                            // show warning
+                            JOptionPane.showMessageDialog(null, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
                     prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
                     prop.setActiveSchoolRoleAndClass();
                     switchToActiveSchoolLogin();
-
                 } else if (value == removeImage) {
                     int row = tableModel.getSelectedRow();
+                    //Check user password   
+                    if (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
+                        //set prop to table setting
+                        DomSchoolRoleAndClass currSrac = prop.getActiveSchoolRoleAndClass();
+                        DomSchoolRoleAndClass selectedSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
+                        prop.RemoveSchoolRoleAndClass(selectedSrac);
 
-                    //set prop to table setting
-                    DomSchoolRoleAndClass currSrac = prop.getActiveSchoolRoleAndClass();
-                    DomSchoolRoleAndClass selectedSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
-                    prop.RemoveSchoolRoleAndClass(selectedSrac);
-                    tableModel.init(prop, loginImage, removeImage);
-                    tableModel.fireTableDataChanged();
-                    
-                    if (currSrac != selectedSrac) {
-                        //update tableview
-                        model.fireTableDataChanged();
-                    } else {
+                        if (currSrac != selectedSrac) {//always keeps current or switches to the null-school
+                            //update tableview
+                            tableModel.init(prop, loginImage, removeImage);
+                            model.fireTableDataChanged();
+                        } else {
+                            switchToActiveSchoolLogin();
+                        }
                         switchToActiveSchoolLogin();
+                    } else {
+                        // show warning
+                        JOptionPane.showMessageDialog(null, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
-                    switchToActiveSchoolLogin();
                 }
             }
             catch (Dwo2Exception e) {
