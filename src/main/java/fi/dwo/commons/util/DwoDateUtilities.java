@@ -10,7 +10,7 @@ import java.util.TimeZone;
 /**
  * Produces times, dates and timestamps in UTC. This is a uniform interface for 
  * time and date values. All values returned are in UTC. Conversion methods are 
- * ensure proper conversion of of localized times to the timezone of the DWO.
+ * to ensure proper conversion of localized times to UTC time for the DWO.
  * 
  * @author G.A.J. van der Plas
  */
