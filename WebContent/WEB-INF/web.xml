@@ -53,11 +53,11 @@
     
     <servlet>
       <servlet-name>dwoparam</servlet-name>
-      <jsp-file>/lti/dwo.jsp</jsp-file>
+      <jsp-file>/lti/_dwo.jsp</jsp-file>
     </servlet>
     <servlet>
-    	<servlet-name>appname</servlet-name>
-    	<jsp-file>/lti/app.jsp</jsp-file>
+    	<servlet-name>appparam</servlet-name>
+    	<jsp-file>/lti/_app.jsp</jsp-file>
     </servlet>
     
    <servlet-mapping>
@@ -65,8 +65,16 @@
       <url-pattern>/lti/dwo.jsp/*</url-pattern>
    </servlet-mapping>
    <servlet-mapping>
+      <servlet-name>dwoparam</servlet-name>
+      <url-pattern>/lti/dwo.jsp</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
       <servlet-name>appparam</servlet-name>
       <url-pattern>/lti/app.jsp/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>appparam</servlet-name>
+      <url-pattern>/lti/app.jsp</url-pattern>
    </servlet-mapping>
   
   <servlet-mapping>

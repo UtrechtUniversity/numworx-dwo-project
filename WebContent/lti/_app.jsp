@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@page import="fi.dwo.server.persistence.DbAccessLocal"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <html>
 <head>
@@ -18,13 +18,7 @@
 	window.API_1484_11 = API_1484_11
   </script> 
 </head>
-<body style="font-family:sans-serif">
-<img src="http://www.sun.com/images/l2/l2_duke_java.gif" align="right">
-<p><b>IMS BasicLTI Java Provider</b></p>
-<p>This is a very simple reference implementaton of the tool side (i.e. provider) for IMS BasicLTI.</p>
-<p>This tool is configured with an LMS-wide guid of "lmsng.school.edu" protected by a secret of "secret".
-For this tool, all resource level secrets are also "secret".</p>
-</p>
+<body style="font-family:sans-serif; margin:0px">
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="java.net.URLEncoder" %>
@@ -118,26 +112,32 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
 
   String sconr = "";
   String info = request.getPathInfo();
-  if(info.startsWith("/sco/")) sconr = info.substring(5);
-  
+  if(info != null) {
+  	if(info.startsWith("/sco/")) sconr = "#s:" + info.substring(5);
+  	else if(info.startsWith("/course")) sconr = "#c:" + info.substring(8);
+  }
+	String language = request.getParameter("launch_presentation_locale");
+	if(language != null) {
+		int index = language.indexOf('-'); // remove region
+		if(index >= 0) language = language.substring(0,index);
+	}
+	if(language == null || language.isEmpty()) 
+	language = "nl";
+
+	String width = request.getParameter("launch_presentation_width");
+  	if(width == null || width.isEmpty()) width="100%";
+ 	String height = request.getParameter("launch_presentation_height");
+  	if(height == null || height.isEmpty()) height="100%";
+
+  	getDbAccess().setCookie(request, response);  
 %>
 </pre>
 <hr>
-<div id='headerpane' ></div>
+<div id='headerpane' >
+<a  id='return_url'
+	href='<%=request.getParameter("launch_presentation_return_url") %>'>Logout</a>
+</div>
 <iframe id='bodypane'
-	src="/dwo/apps/player.html#<%=sconr%>" width="800" height="600"
+	src="/dwo/tablet/index.html?locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
 >
 </iframe>
-<hr>
-<p>
-Note: Unpublished drafts of IMS Specifications are only available to IMS members and any software based on
-an unpublished draft is subject to change.
-Sample code is provided to help developers understand the specification more quickly.
-Simply interoperating with this sample implementation code does not
-allow one to claim compliance with a specification.
-<p>
-<a href=http://www.imsglobal.org/toolsinteroperability2.cfm>IMS Learning Tools Interoperability Working Group</a> <br/>
-<a href="http://www.imsglobal.org/ProductDirectory/directory.cfm">IMS Compliance Detail</a> <br/>
-<a href="http://www.imsglobal.org/community/forum/index.cfm?forumid=11">IMS Developer Community</a> <br/>
-<a href="http:///www.imsglobal.org/" class="footerlink">&copy; 2009 IMS Global Learning Consortium, Inc.</a> under the Apache 2 License.</p>
-

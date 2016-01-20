@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.servlet</groupId>
   <artifactId>DWOmAccess</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>DWOmAccess</name>
   <description>HTML5 access to dwo-server</description>
@@ -56,6 +56,13 @@
   		<version>3.8.1</version>
   		<scope>test</scope>
   	</dependency>
+  	<dependency>
+  		<groupId>com.jamonapi</groupId>
+  		<artifactId>jamon</artifactId>
+  		<version>2.75</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	
   </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -76,6 +83,30 @@
         	<artifactId>maven-compiler-plugin</artifactId>
         	<version>3.1</version>
       	</plugin>
+      	  	<plugin>
+        	<!-- Jetty < 9 is in org.mortbay.jetty groupId -->
+            <groupId>org.mortbay.jetty</groupId>
+            <version>8.1.9.v20130131</version>
+            <!-- Starting from Jetty 9 groupId is org.eclipse.jetty already -->
+            <!-- <groupId>org.eclipse.jetty</groupId> -->
+            <!-- Change to latest version available from http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.eclipse.jetty%22%20AND%20a%3A%22jetty-maven-plugin%22 -->
+            <!-- <version>9.x.y.z</version> -->
+            <artifactId>jetty-maven-plugin</artifactId>
+            <configuration>
+            	<webAppSourceDirectory>WebContent</webAppSourceDirectory>
+ 				<webApp>
+ 				  <contextPath>/DWOmAccess</contextPath>
+ 				  <descriptor>target/${project.build.finalName}/WEB-INF/web.xml</descriptor>
+ 				</webApp>           
+            </configuration>
+            <dependencies>
+  				<dependency>
+  					<groupId>com.jamonapi</groupId>
+  					<artifactId>jamon</artifactId>
+  					<version>2.75</version>
+  				</dependency>            
+            </dependencies>
+        </plugin>
   	</plugins>
   </build>
     <distributionManagement>
@@ -97,10 +128,22 @@
   			<finalName>${project.artifactId}</finalName>
   		</build>
   		<properties>
-  			<comment>speciaal for ws.fisme.sciene.uu.nl</comment>
+  			<comment>speciaal for ws.fisme.science.uu.nl</comment>
   			<dsaccess>//app.dwo.nl/dwo/dsaccess</dsaccess>
   			<dsaccess.url>https://app.dwo.nl/dwo/dsaccess</dsaccess.url>
   			<ideas>/servlet/IdeasServlet</ideas>
+  		</properties>
+  	</profile>
+  	<profile>
+  		<id>local</id>
+  		<build>
+  			<finalName>${project.artifactId}_local</finalName>
+  		</build>
+  		<properties>
+  			<comment>speciaal for local.dwo.nl</comment>
+  			<dsaccess>//local.dwo.nl/dwo/dsaccess</dsaccess>
+  			<dsaccess.url>http://local.dwo.nl/dwo/dsaccess</dsaccess.url>
+  			<ideas>http://local.dwo.nl/servlet/IdeasServlet</ideas>
   		</properties>
   	</profile>
   </profiles>

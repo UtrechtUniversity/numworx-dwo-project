@@ -323,6 +323,11 @@ public class DbAccessWrapper implements DbAccessIF {
 		return delegate.getRecord(arg0, arg1, arg2);
 	}
 
+	public Hashtable getRecord(String arg0, String arg1, String arg2)
+			throws IOException, XmlRpcException, SQLException {
+		return delegate.getRecord(arg0, arg1, Integer.parseInt(arg2));
+	}
+	
 	public Vector getResultCount(int arg0, int arg1) throws SQLException,
 			IOException, XmlRpcException {
 		return delegate.getResultCount(arg0, arg1);
