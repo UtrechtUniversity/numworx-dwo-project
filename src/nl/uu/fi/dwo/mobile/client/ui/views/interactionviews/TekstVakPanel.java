@@ -1821,7 +1821,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	
 	public void corrigeerRestHoogte()
 	{
-		if(vulHoogte)
+		if(vulHoogte && parent != null)
 		{	
 			int restHoogte = parent.geefRestHoogte();
 			setCurrentSize(breedte, Math.max(0, hoogte + restHoogte));

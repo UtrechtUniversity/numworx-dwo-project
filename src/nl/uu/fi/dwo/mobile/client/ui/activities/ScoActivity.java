@@ -32,12 +32,14 @@ public class ScoActivity extends MGWTAbstractActivity {
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
+		DWOplayer.api = clientFactory.setupAPI(DWOplayer.profiledata);
 		view = clientFactory.getEntryView();
+		view.setApi(DWOplayer.api);
+
 		view.getBackButton().setText(nl.uu.fi.dwo.mobile.client.text.Text.constants.login());
 		
 		String scoID = item.getID().toString();
 		view.setUnitId(scoID);
-		view.setApi(DWOplayer.api);
 		final Place next = 
 				new LoginPlace(
 						clientFactory.getPlaceController().getWhere());

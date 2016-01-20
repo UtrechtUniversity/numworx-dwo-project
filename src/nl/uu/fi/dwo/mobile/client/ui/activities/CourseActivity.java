@@ -35,24 +35,7 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
-		final Map<String, Object> profiledata = DWOplayer.profiledata;
-		if(profiledata == null) {
-			DWOplayer.api = new SCORM_guest();
-		} else {
-// FIXME use strategy pattern!
-			Object userIDo = profiledata.get("userID");
-			if(userIDo instanceof String) {			
-				String userID = (String) userIDo;
-				String username = (String) profiledata.get("username");
-				String fullname = profiledata.get("middlename") + " " + profiledata.get("lastname") + ", " + profiledata.get("firstname");
-				fullname = fullname.trim();
-				DWOplayer.api = new SCORM_MC2mAccess(userID, username, fullname);
-			} else {
-				Integer userID = (Integer) userIDo;
-				DWOplayer.api = new SCORM_DWOmAccess(userID.intValue());
-			}
-		}
-		
+		DWOplayer.api = clientFactory.setupAPI(DWOplayer.profiledata);
 		final SelectModuleView view = clientFactory.getHomeView();
 		view.setLogout(true); // terug of logout
 		final Place next = 

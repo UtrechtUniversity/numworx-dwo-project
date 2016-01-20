@@ -3,14 +3,36 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 	xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
 	<ui:style>
-	.fullwidth {
+	.outer {
+		right: 0px;
+		position: absolute !important;
+		left: 0px;
+		bottom: 0px;
+		top: 41px;
+		overflow: auto !important;
+	}
+	.body {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		margin: 0px;
+		overflow: hidden;
+	}
+	.header {
+		right: 0px;
+		top: 0px;
+		left: 0px;
+	}
+	.content {
+		position: relative;
 		width: 100%;
 	}
+	
 	</ui:style>
-	<mgwt:LayoutPanel height="100%" width="100%" >
+	<mgwt:LayoutPanel addStyleNames="{style.body}" >
 	 
 		<!-- Topbar Navigation Area -->
-		<mgwt:HeaderPanel ui:field="header">
+		<mgwt:HeaderPanel ui:field="header" addStyleNames="{style.header}">
 		     <mgwt:left>
 		    	<mgwt:HeaderButton ui:field="backbutton" backButton="true" >Terug</mgwt:HeaderButton>
 		    </mgwt:left>
@@ -19,12 +41,12 @@
 			</mgwt:center>
 		</mgwt:HeaderPanel>
 		<!-- Main interaction Area -->
-		<mgwt:ScrollPanel>
-			<g:VerticalPanel addStyleNames="{style.fullwidth}" >
+		<g:ScrollPanel addStyleNames="{style.outer}">
+			<g:VerticalPanel addStyleNames="{style.content}" >
 	  			<g:SimplePanel ui:field="description"></g:SimplePanel>    
 				<mgwt:CellList ui:field="list" round="true"></mgwt:CellList>
 			</g:VerticalPanel>
-		</mgwt:ScrollPanel>
+		</g:ScrollPanel>
 	</mgwt:LayoutPanel>
 
 </ui:UiBinder> 

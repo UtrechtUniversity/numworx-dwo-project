@@ -61,7 +61,23 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 	
 	@Override
 	protected ClientFactory createClientFactory() {
-		ClientFactoryImpl factory = new ClientFactoryImpl();
+		ClientFactoryImpl factory = new ClientFactoryImpl() { 
+			
+			public SCORM_guest setupAPI(final Map<String, Object> profiledata) {
+				SCORM_guest api;
+				if(profiledata == null) {
+					api = new SCORM_guest();
+				} else {
+					String userID = (String) profiledata.get("userID");
+					String username = (String) profiledata.get("username");
+					String fullname = profiledata.get("middlename") + " " + profiledata.get("lastname") + ", " + profiledata.get("firstname");
+					fullname = fullname.trim();
+					api = new SCORM_MC2mAccess(userID, username, fullname);
+				}
+				return api;
+			}
+
+		};
 		String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
 

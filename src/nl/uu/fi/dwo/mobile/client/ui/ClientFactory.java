@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.Map;
+
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
@@ -40,4 +43,6 @@ public interface ClientFactory
 	 */
 	@Deprecated
 	void setEntryView(ViewModuleView view);
+	
+	public SCORM_guest setupAPI(final Map<String, Object> profiledata);
 }

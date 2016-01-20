@@ -1,6 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.Map;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_MC2mAccess;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
@@ -126,4 +131,14 @@ public class ClientFactoryImpl implements ClientFactory
 		entryView = view;
 	}
 	
+	public SCORM_guest setupAPI(final Map<String, Object> profiledata) {
+		SCORM_guest api;
+		if(profiledata == null) {
+			api = new SCORM_guest();
+		} else {
+			Integer userID = (Integer) profiledata.get("userID");
+			api = new SCORM_DWOmAccess(userID.intValue());
+		}
+		return api;
+	}
 }
