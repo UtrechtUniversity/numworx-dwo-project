@@ -61,7 +61,7 @@ public class SelectModuleCell implements Cell<SelectModuleItem>
 	@Override
 	public boolean canBeSelected(SelectModuleItem model)
 	{
-		return true;
+		return model.getType() != Type.SEPARATOR;
 	}
 
 }

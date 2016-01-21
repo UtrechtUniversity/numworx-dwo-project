@@ -112,7 +112,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	}
 	
 	
-	ViewModuleView loadedModule = null;
+	ViewModuleViewImpl loadedModule = null;
 	
 	@UiField SimplePanel container;
 	ModuleViewImpl module = new ModuleViewImpl();
@@ -203,7 +203,6 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	}
 	
 	private void selectItem(SelectModuleItem o) {
-		selected = o;
 		Place place;
 		switch(o.getType()) {
 		default:
@@ -213,6 +212,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		case SCO:
 			WaitScreen.instance().w();
 			close(); // since we set "loadedModule" to a new value.
+			selected = o;
 			container.clear();
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			DWOplayer.clientfactory.setEntryView(viewModuleViewImpl);
@@ -221,7 +221,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			viewModuleViewImpl.setApi(DWOplayer.api);
 			viewModuleViewImpl.setWindowTop(41);
 			viewModuleViewImpl.zetMaat();
-			container.add(loadedModule.asWidget());
+			container.setWidget(loadedModule.asWidget());
 			
 			
 			place = new ViewModulePlace(o.getID());
@@ -591,6 +591,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	public void close() {
 		if(loadedModule != null) {
 			loadedModule.close();
+			selected.setScore(loadedModule.getScoreRaw());
 			loadedModule = null;
 			DWOplayer.clientfactory.setEntryView(null);
 		}

@@ -1516,6 +1516,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentScrollPanel.setPixelSize(-1, px);
 		setWebkitScrolling(true);
 	}
+
+	@Override
+	public Number getScoreRaw() {
+		if(on == null)
+			return null;
+		return Double.valueOf(on.getScore());
+	}
 	
 	
 }

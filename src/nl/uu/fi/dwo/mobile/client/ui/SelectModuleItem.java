@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -200,7 +201,15 @@ public class SelectModuleItem
 		Map<Object,? extends Number> scoreMap = parent.scoreMap;
 		if(scoreMap == null) return null;
 		Number score = scoreMap.get(id);
-		return (Number)score;
+		return score;
+	}
+
+	public void setScore(Number number) {
+		if(parent == null) return;
+		Map<Object, Number> scoreMap = parent.scoreMap;
+		if(scoreMap == null)
+			parent.scoreMap = scoreMap = new HashMap<Object, Number>();
+		scoreMap.put(id, number);
 	}
 
 	public Map<Object, Number> getScoreMap() {

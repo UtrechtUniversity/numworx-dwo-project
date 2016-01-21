@@ -59,7 +59,7 @@ public class SelectModuleActivity extends MGWTAbstractActivity
 		{
 			if(item.getType() == Type.MODULE && DWOplayer.profiledata != null) {
 				Object userID = DWOplayer.profiledata.get("userID");
-			if(userID != null) {	
+			if(userID != null && item.getScoreMap() == null) {	
 				Object courseID = item.getID();
 				AsyncCallback<List<Map<String,Object>>> getUserResultsCallback = new AsyncCallback<List<Map<String,Object>>>() {
 

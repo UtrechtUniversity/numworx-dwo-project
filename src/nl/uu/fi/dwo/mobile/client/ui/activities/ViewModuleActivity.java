@@ -79,6 +79,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	public void onStop() {
 		view.setAnchorContext(defaultContext); // unwrap
 		view.close();
+		sco.setScore(view.getScoreRaw());
 		super.onStop();
 	}
 

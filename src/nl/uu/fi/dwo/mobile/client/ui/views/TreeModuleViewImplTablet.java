@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -203,7 +204,6 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	
 	private void selectItem(SelectModuleItem o) {
 		Place place = null;
-		selected = o;
 		switch(o.getType()) {
 		default:
 		case ROOT:
@@ -213,6 +213,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			//
 			//load sum in the edit area
 			close();
+			selected = o;
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			DWOplayer.clientfactory.setEntryView(viewModuleViewImpl);
 			viewModuleViewImpl.setAnchorContext(new TreeAnchorContext(viewModuleViewImpl.getAnchorContext()));
@@ -534,7 +535,13 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 					last  = list.get(len-1);
 				}
 				SelectModuleItem separator = new SelectModuleItem(null, SelectModuleItem.Type.SEPARATOR);
-				separator.setName("School modules");
+
+				Object schoolName = "school";
+				if(DWOplayer.profiledata != null )
+					schoolName = DWOplayer.profiledata.get("schoolName");
+				String SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
+
+				separator.setName(SCHOOL_MODULES);
 				list.add(len, separator);
 				this.cellItems = list;
 			}
@@ -562,10 +569,17 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	public void close() {
 		if(loadedModule != null) {
 			loadedModule.close();
+			selected.setScore(loadedModule.getScoreRaw());
 			loadedModule = null;
 			DWOplayer.clientfactory.setEntryView(null);
+			rerender();
+			moduleHeaderPanel.setCenter(Text.constants.schoolModules());
 		}
 		container.clear();
+	}
+
+	private void rerender() {
+		cells.render(cellItems); // repaint the cells, after update of score. TODO optimize (selected.isVisible?)
 	}
 
 //	@Override

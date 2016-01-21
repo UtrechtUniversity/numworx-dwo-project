@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -65,12 +67,16 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 		if(item.getType() == Type.MODULE && DWOplayer.profiledata != null) {
 			Object userID = DWOplayer.profiledata.get("userID");
 		if(userID != null) {	
-			Object courseID = item.getID();
-			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback = new AsyncCallback<List<Map<String,Object>>>() {
+			Map<Object, Number> scoreMap;
+			scoreMap = item.getScoreMap();
+			if(scoreMap == null)
+			{	
+				Object courseID = item.getID();
+				AsyncCallback<List<Map<String,Object>>> getUserResultsCallback = new AsyncCallback<List<Map<String,Object>>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					GWT.log("failure", caught);
+					Logger.getLogger("TreeModuleActivity").log(Level.SEVERE, "failure", caught);
 					view.selectModule(item);
 				}
 
@@ -90,13 +96,13 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 							scoreMap.remove(id);
 						}
 					}
-					GWT.log("succes " + result);
+					//Logger.getLogger("TreeModuleActivity").fine("succes " + result);
 					view.selectModule(item);
 				}
 			};
 			clientFactory.getRPCHandler().getUserResults(courseID, userID, getUserResultsCallback);
 			select = false;
-		}}
+		}}}
 
 		panel.setWidget(view);
 		currentModel = SelectModuleItemHolder.getItems();
@@ -104,7 +110,6 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 		view.render(currentModel);
 		if(select)
 			view.selectModule(item);
-		
 	}
 	@Override
 	public void onStop() {
@@ -112,75 +117,9 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 		super.onStop();
 	}
 
-	private void getItems()
-	{
-		RequestBuilder.Method method = RequestBuilder.GET;
-		String url = "activiteiten.xml";
-		RequestBuilder rb = new RequestBuilder(method, url);
-		try
-		{
-			rb.sendRequest(null, new RequestCallback()
-			{
-
-				@Override
-				public void onResponseReceived(Request request, Response response)
-				{
-					String responseText = response.getText();
-					if (!responseText.isEmpty())
-					{
-						Document dom = XMLParser.parse(responseText);
-						Node main = dom.getElementsByTagName("activiteiten").item(0);
-						NodeList children = main.getChildNodes();
-						int j = 0;
-						for (int i = 0; i < children.getLength(); i++)
-						{
-							if (children.item(i).hasChildNodes() == true)
-								SelectModuleItemHolder.insert(j++, children.item(i));
-						}
-					}
-					//list = new CellList<SelectModuleItem>(new SelectModuleCell());
-					clientFactory.getTreeModuleView().render(SelectModuleItemHolder.getItems());
-				}
-
-				@Override
-				public void onError(Request request, Throwable exception)
-				{
-					Window.alert("error loading activiteiten.xml");
-				}
-			});
-
-		}
-		catch (RequestException e)
-		{
-			Window.alert("error loading activiteiten.xml");
-		}
-
-	}
-
-
-
 	@Override
 	public void goTo(Place place) {
 		clientFactory.getPlaceController().goTo(place);
 	}
-
-//	@Override
-//	public int compare(SelectModuleItem o1, SelectModuleItem o2) {
-//		Object c1 = o1.getID(); Integer n1 = ranking.get(c1);
-//		Object c2 = o2.getID(); Integer n2 = ranking.get(c2);
-//		if(n2 == null && n1 == null) {
-//			if (o1.getType()== Type.SCO & o2.getType() == Type.SCO)
-//				return Integer.signum(o1.getSequencenr()-o2.getSequencenr());
-//			// unsorted
-//			return o1.getName().compareTo(o2.getName());
-//		}
-//		if( n2 != null && n1 != null) {
-//			return n1.compareTo(n2);
-//		}
-//		if( n1 == null) return +1;		
-//		return -1;
-//	}
-
-	
 
 }

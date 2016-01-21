@@ -35,5 +35,6 @@ public interface ViewModuleView extends IsWidget
 	void setUnitId(String id);
 
 	OpdrNavIF getOpdrNav();
+	Number getScoreRaw();
 
 }
