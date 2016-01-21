@@ -180,7 +180,7 @@ public class Text_nl extends ListResourceBundle {
  
          { TextMapper.GUIP_CONFIRM_REMOVE_USER, "Weet u zeker dat u uw account wilt verwijderen"},
          { TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE, "Account verwijderen"},
-         
+         { TextMapper.GUIP_MSG_USER_REMOVED, "Het account is verwijderd"},         
          { TextMapper.GUIP_MSG_PROFILE_CHANGED, "Uw account is succesvol gewijzigd"}, 
          
          { TextMapper.GUIP_ROLE_OPTIONS, "Loginmogelijkheden"},

@@ -179,7 +179,7 @@ public class Text_en extends ListResourceBundle {
 
             { TextMapper.GUIP_CONFIRM_REMOVE_USER, "Are you sure that you want to delete your account" },
             { TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE, "Delete Account" },
-
+            { TextMapper.GUIP_MSG_USER_REMOVED, "The account has been removed"},            
             { TextMapper.GUIP_MSG_PROFILE_CHANGED, "Your account is successfully changed"},
 
             { TextMapper.GUIPT_SCHOOL, "School" },
