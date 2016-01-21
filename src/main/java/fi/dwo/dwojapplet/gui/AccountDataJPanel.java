@@ -419,9 +419,9 @@ public class AccountDataJPanel extends JPanel implements
                 if (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
                     try {
                         if (SecureUserAccountManager.removeAccountData()) {
-                            GuiCreator.instance().logoff();
+                            GuiCreator.instance().logoff();//TODO Gert something goes pear shaped.
                         }
-                        JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR), TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR), JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), JOptionPane.PLAIN_MESSAGE);
                     }
                     catch (Dwo2Exception ex) {
                         Logger.getLogger(AccountDataJPanel.class.getName()).log(Level.SEVERE, null, ex);

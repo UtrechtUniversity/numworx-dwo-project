@@ -158,7 +158,7 @@ public final class DwoHelper {
         //Fetch all the login roles from the server for the current roles
         try {
             if (aCurrentUser != null) {
-                schoolLogins = SecureUserAccountLoginsManager.getSchoolLogins();
+                SecureUserAccountLoginsManager.getSchoolLogins();//updates DwoHelper
             } else {
                 schoolLogins = null;
             }
