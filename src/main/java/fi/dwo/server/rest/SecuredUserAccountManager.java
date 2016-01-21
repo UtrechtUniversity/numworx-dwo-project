@@ -118,7 +118,7 @@ public class SecuredUserAccountManager {
      * @param sc
      * @return
      */
-    @PUT
+    @GET
     @Produces({"application/json"})
     @Path("/remove")
     public Boolean removeCurrentUser(@Context SecurityContext sc) {

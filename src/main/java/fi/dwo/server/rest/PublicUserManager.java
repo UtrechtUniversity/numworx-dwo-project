@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
@@ -11,8 +12,11 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestNewUser;
 import fi.dwo.commons.rest.entities.RestSamlUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
@@ -103,6 +107,7 @@ public class PublicUserManager {
         user.setRegisterDate(now);
         user.setUsername(newUserReg.getDomNewUser().getUsername());
         user.setSchoolGroupID(sg.getSchoolGroupID());
+        user.setSingleSchoolAccount(false);
         //add user
         try {
             UserManager.create(user);
@@ -133,6 +138,20 @@ public class PublicUserManager {
         HasRoleManager.create(hasRole);
         LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), newUserReg.getDomNewUser().getRole().name()});
         //success
+        
+        //building hasRole for null school
+        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+        Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
+        pk.setSchoolGroupID(schoolGroupId);
+        pk.setUserID(user.getUserID());
+        hasRole.setPersistentHasRolePK(pk);
+
+        hasRole.setClassID(null);
+        hasRole.setLastLogin(now); //considering an account creation a first login as there is a password
+        hasRole.setRegisterDate(now);
+        hasRole.setRights("_"); //TODO make a rights manager
+        HasRoleManager.create(hasRole);
+        LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), newUserReg.getDomNewUser().getRole().name()});
         return true;
     }
 

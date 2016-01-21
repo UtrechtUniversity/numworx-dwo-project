@@ -149,7 +149,7 @@ public class DwoSystemParametersManager implements Serializable {
         PersistentDwoSystemParameters param = null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentDwoSystemParameters.findByName");
-            q.setParameter(":name", paramName);
+            q.setParameter("name", paramName);
             param = (PersistentDwoSystemParameters) q.getSingleResult();
         }catch(NoResultException e){
             return null;
