@@ -7,7 +7,6 @@ import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.gui.panels.JPanelSchoolsandRolesProperties;
 
 import java.awt.Component;
 import java.awt.FontMetrics;
@@ -35,18 +34,16 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * This class represents a panel for the current user to change his account.
- *
- * @author M.J.B. Kupers
+ * This panel allows one to manage and switch between SchoolLogins.
  *
  */
-public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
+public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener {
 
 //    protected User user;
-    private JPanelSchoolsandRolesProperties prop = new JPanelSchoolsandRolesProperties();
+    private AccountSchoolsRolesProperties prop = new AccountSchoolsRolesProperties();
     private AccountSchoolsRolesTableModel tableModel;
 
-    private static final Logger LOG = Logger.getLogger(AccountSchoolRolesJPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(AccountSchoolsRolesJPanel.class.getName());
 
     private final JButton addRoleButton;
 
@@ -62,7 +59,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
      * current user can be changed.
      *
      */
-    public AccountSchoolRolesJPanel() {
+    public AccountSchoolsRolesJPanel() {
         super(null);
         this.setSize(480, 500);
 
@@ -230,7 +227,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
                     //set prop to table setting
                     DomSchoolRoleAndClass currSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
                     if (currSrac.getRoleName().equals(RoleType.SCHOOLADMIN.name())) {
-                        if (!ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
+                        if (!ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD))) {
                             // show warning
                             JOptionPane.showMessageDialog(null, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                             return;

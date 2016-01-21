@@ -9,4 +9,4 @@
  * 
  * @author G.A.J. van der Plas
  */
-package fi.dwo.dwojapplet.gui.panels;
+package fi.dwo.dwojapplet.gui.underconstruction;

@@ -7,7 +7,6 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
-import fi.dwo.dwojapplet.gui.panels.JPanelAccountDataProperties;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FontMetrics;
@@ -63,7 +62,7 @@ public class AccountDataJPanel extends JPanel implements
     private JComboBox groupChoice;
 
 //    protected User user;
-    private JPanelAccountDataProperties prop = new JPanelAccountDataProperties();
+    private AccountDataProperties prop = new AccountDataProperties();
     private static final Logger LOG = Logger.getLogger(AccountDataJPanel.class.getName());
 
     /**

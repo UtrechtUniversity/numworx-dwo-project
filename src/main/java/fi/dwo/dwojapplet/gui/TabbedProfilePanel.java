@@ -11,7 +11,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.gui.panels.JPanelMyProfile;
+import fi.dwo.dwojapplet.gui.underconstruction.JPanelMyProfile;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

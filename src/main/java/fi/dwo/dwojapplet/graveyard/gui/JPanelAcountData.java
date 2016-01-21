@@ -1,9 +1,10 @@
 /*Copyrighted 2015. */
-package fi.dwo.dwojapplet.gui.panels;
+package fi.dwo.dwojapplet.graveyard.gui;
 
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.AccountDataProperties;
 import java.awt.Color;
 import java.util.logging.Logger;
 
@@ -16,7 +17,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
 
     private static final Logger LOG = Logger.getLogger(JPanelAcountData.class.getName());
 
-    private JPanelAccountDataProperties prop = new JPanelAccountDataProperties();
+    private AccountDataProperties prop = new AccountDataProperties();
     private Color originalBackground;
 
     /**
@@ -262,7 +263,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
+                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(

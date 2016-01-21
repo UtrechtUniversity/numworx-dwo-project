@@ -1,4 +1,4 @@
-package fi.dwo.dwojapplet.gui.panels;
+package fi.dwo.dwojapplet.gui.underconstruction;
 
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -27,8 +27,8 @@ public class JPanelMyProfile extends javax.swing.JPanel  {
     private void initComponents() {
 
         jTabbedPaneProfile = new javax.swing.JTabbedPane();
-        jPanelAcountData1 = new fi.dwo.dwojapplet.gui.panels.JPanelAcountData();
-        jPanelSchoolsAndClasses = new fi.dwo.dwojapplet.gui.panels.JPanelSchoolsAndRoles();
+        jPanelAcountData1 = new fi.dwo.dwojapplet.graveyard.gui.JPanelAcountData();
+        jPanelSchoolsAndClasses = new fi.dwo.dwojapplet.graveyard.gui.JPanelSchoolsAndRoles();
 
         setBackground(GuiConstants.MAIN_BACKGROUND);
         setPreferredSize(new Dimension(GuiConstants.CENTER_WIDTH,GuiConstants.CENTER_HEIGHT));
@@ -63,8 +63,8 @@ public class JPanelMyProfile extends javax.swing.JPanel  {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private fi.dwo.dwojapplet.gui.panels.JPanelAcountData jPanelAcountData1;
-    private fi.dwo.dwojapplet.gui.panels.JPanelSchoolsAndRoles jPanelSchoolsAndClasses;
+    private fi.dwo.dwojapplet.graveyard.gui.JPanelAcountData jPanelAcountData1;
+    private fi.dwo.dwojapplet.graveyard.gui.JPanelSchoolsAndRoles jPanelSchoolsAndClasses;
     private javax.swing.JTabbedPane jTabbedPaneProfile;
     // End of variables declaration//GEN-END:variables
 

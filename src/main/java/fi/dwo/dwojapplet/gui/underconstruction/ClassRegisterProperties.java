@@ -1,10 +1,9 @@
 /*Copyrighted 2015. */
-package fi.dwo.dwojapplet.gui.panels;
+package fi.dwo.dwojapplet.gui.underconstruction;
 
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.rest.entities.*;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,9 +13,9 @@ import java.util.logging.Logger;
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
-public class JPanelClassRegisterProperties {
+public class ClassRegisterProperties {
 
-    private static final Logger LOG = Logger.getLogger(JPanelClassRegisterProperties.class.getName());
+    private static final Logger LOG = Logger.getLogger(ClassRegisterProperties.class.getName());
     private DomSchoolRoleAndClass selectedSrc;
     private DomSchoolsRolesAndClasses srcs;
 

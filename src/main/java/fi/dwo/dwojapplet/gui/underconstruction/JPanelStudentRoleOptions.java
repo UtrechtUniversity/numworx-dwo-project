@@ -1,16 +1,16 @@
-/* Copyrighted 2015. */
-package fi.dwo.dwojapplet.gui.panels;
+/*Copyrighted 2015. */
+package fi.dwo.dwojapplet.gui.underconstruction;
 
 /**
  *
  * @author G.A.J. van der Plas
  */
-public class JPanelNoRoleOptions extends javax.swing.JPanel {
+public class JPanelStudentRoleOptions extends javax.swing.JPanel {
 
     /**
-     * Creates new form JPanelRoleOptions
+     * Creates new form JPanelStudentRoleOptions
      */
-    public JPanelNoRoleOptions() {
+    public JPanelStudentRoleOptions() {
         initComponents();
     }
 

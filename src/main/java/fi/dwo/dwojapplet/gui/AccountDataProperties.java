@@ -1,5 +1,5 @@
 /*Copyrighted 2015. */
-package fi.dwo.dwojapplet.gui.panels;
+package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
@@ -13,12 +13,12 @@ import java.util.logging.Logger;
  * 
  * @author G.A.J. van der Plas
  */
-public class JPanelAccountDataProperties {
-    private static final Logger LOG = Logger.getLogger(JPanelAccountDataProperties.class.getName());
+public class AccountDataProperties {
+    private static final Logger LOG = Logger.getLogger(AccountDataProperties.class.getName());
     
     private DomFullUser user;
 
-    public JPanelAccountDataProperties() {
+    public AccountDataProperties() {
         
     }
     

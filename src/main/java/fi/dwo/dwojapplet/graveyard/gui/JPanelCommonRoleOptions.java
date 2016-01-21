@@ -1,6 +1,7 @@
 /* Copyrighted 2015. */
-package fi.dwo.dwojapplet.gui.panels;
+package fi.dwo.dwojapplet.graveyard.gui;
 
+import fi.dwo.dwojapplet.gui.AccountSchoolsRolesProperties;
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
@@ -21,7 +22,7 @@ import javax.swing.JDialog;
 public class JPanelCommonRoleOptions extends javax.swing.JPanel {
 
     private static final Logger LOG = Logger.getLogger(JPanelCommonRoleOptions.class.getName());
-    private JPanelSchoolsandRolesProperties prop = new JPanelSchoolsandRolesProperties();
+    private AccountSchoolsRolesProperties prop = new AccountSchoolsRolesProperties();
 
     private CenterPanel center;
     public void setCenterPanel(CenterPanel centerPanel) {
@@ -128,14 +129,14 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
     /**
      * @return the prop
      */
-    public JPanelSchoolsandRolesProperties getProp() {
+    public AccountSchoolsRolesProperties getProp() {
         return prop;
     }
 
     /**
      * @param prop the prop to set
      */
-    public void setProp(JPanelSchoolsandRolesProperties prop) {
+    public void setProp(AccountSchoolsRolesProperties prop) {
         this.prop = prop;
     }
 }

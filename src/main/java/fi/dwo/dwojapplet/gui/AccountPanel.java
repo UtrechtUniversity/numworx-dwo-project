@@ -23,7 +23,7 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
 
     private CenterPanel center;
     private AccountDataJPanel accountDataPanel;
-    private AccountSchoolRolesJPanel sarPanel;
+    private AccountSchoolsRolesJPanel sarPanel;
     private RegisterMoreSchoolsPanel rmsPanel = new RegisterMoreSchoolsPanel();
 
     /**
@@ -63,7 +63,7 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
 
         /* Add schoolrole-panel */
 //        l = new RegisterMoreSchoolsPanel(groups);
-        sarPanel = new AccountSchoolRolesJPanel();
+        sarPanel = new AccountSchoolsRolesJPanel();
         sarPanel.setVisible(!DwoHelper.isSingleSchoolStudent());
 
 //        l.setBorder(BorderFactory.createLineBorder(getForeground()));

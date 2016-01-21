@@ -3,7 +3,6 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.gui.panels.JPanelSchoolsandRolesProperties;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +16,13 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
 
     private String[] columnNames = {"School", "Role", "Login", "Delete"};
     static boolean DEBUG = false;
-    private JPanelSchoolsandRolesProperties prop;
+    private AccountSchoolsRolesProperties prop;
 
     private int selectedRow, selectedColumn;
 
     private Object[][] data;
 
-    public void init(JPanelSchoolsandRolesProperties props, Image loginImage, Image removeImage) {
+    public void init(AccountSchoolsRolesProperties props, Image loginImage, Image removeImage) {
 
         prop = props;
         List<DomSchoolRoleAndClass> srcList = prop.getSchoolsRolesAndClasses().getSchoolsRolesAndClassesList();

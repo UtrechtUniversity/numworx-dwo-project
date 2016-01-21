@@ -1,5 +1,5 @@
 /*Copyrighted 2015. */
-package fi.dwo.dwojapplet.gui.panels;
+package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
@@ -13,9 +13,9 @@ import java.util.logging.Logger;
  *
  * @author Gert van der Plas
  */
-public class JPanelSchoolsandRolesProperties {
+public class AccountSchoolsRolesProperties {
 
-    private static final Logger LOG = Logger.getLogger(JPanelSchoolsandRolesProperties.class.getName());
+    private static final Logger LOG = Logger.getLogger(AccountSchoolsRolesProperties.class.getName());
     private DomSchoolRoleAndClass selectedSrc;
     private DomSchoolsRolesAndClasses srcs;
 

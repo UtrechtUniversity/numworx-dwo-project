@@ -1,5 +1,5 @@
 /*Copyrighted 2015. */
-package fi.dwo.dwojapplet.gui.panels;
+package fi.dwo.dwojapplet.graveyard.gui;
 
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
@@ -11,6 +11,7 @@ import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.RegisterMoreSchoolsPanel;
 import fi.dwo.dwojapplet.gui.ShowJPanelAsDialog;
+import fi.dwo.dwojapplet.gui.AccountSchoolsRolesProperties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
@@ -26,7 +27,7 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
 
     private static final Logger LOG = Logger.getLogger(JPanelSchoolsAndRoles.class.getName());
 
-    private JPanelSchoolsandRolesProperties prop = new JPanelSchoolsandRolesProperties();
+    private AccountSchoolsRolesProperties prop = new AccountSchoolsRolesProperties();
     private SchoolsAndRolesTableModel tableModel;
 
     /**
@@ -173,14 +174,14 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
     /**
      * @return the prop
      */
-    public JPanelSchoolsandRolesProperties getProp() {
+    public AccountSchoolsRolesProperties getProp() {
         return prop;
     }
 
     /**
      * @param prop the prop to set
      */
-    public void setProp(JPanelSchoolsandRolesProperties prop) {
+    public void setProp(AccountSchoolsRolesProperties prop) {
         this.prop = prop;
     }
 }

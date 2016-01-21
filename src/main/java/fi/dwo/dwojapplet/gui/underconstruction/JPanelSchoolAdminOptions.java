@@ -1,5 +1,5 @@
 /* Copyrighted 2015. */
-package fi.dwo.dwojapplet.gui.panels;
+package fi.dwo.dwojapplet.gui.underconstruction;
 
 /**
  *
