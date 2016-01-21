@@ -1,0 +1,28 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+	xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
+	<ui:style>
+	.outer {
+		right: 0px;
+		position: absolute !important;
+		left: 0px;
+		bottom: 0px;
+		height:100%;
+		width: 100%;
+		top: 0px;
+		overflow: auto !important;
+	}
+	.content {
+		position: relative;
+		width: 100%;
+	}
+	
+	</ui:style>
+		<g:SimplePanel addStyleNames="{style.outer}">
+			<g:VerticalPanel addStyleNames="{style.content}" >
+	  			<g:SimplePanel ui:field="description"></g:SimplePanel>    
+				<mgwt:CellList ui:field="list" round="true"></mgwt:CellList>
+			</g:VerticalPanel>
+		</g:SimplePanel>
+</ui:UiBinder> 

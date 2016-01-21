@@ -115,12 +115,12 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	ViewModuleView loadedModule = null;
 	
 	@UiField SimplePanel container;
-	@UiField (provided=true) CellList<SelectModuleItem> cells;
+	ModuleViewImpl module = new ModuleViewImpl();
+	
 	@UiField Tree tree;
 	TreeItem standardMap, schoolMap;
 	
 	private HashMap<SelectModuleItem, TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
-	private List<SelectModuleItem> cellItems;
 	private List<SelectModuleItem> model, standardModel, schoolModel;
 	private SelectModuleItem selected;
 	private Presenter presenter;
@@ -139,7 +139,6 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	
 	public TreeModuleViewImplDesktop()
 	{
-		cells = new CellList<SelectModuleItem>(new SelectModuleCell());
 		initWidget(uiBinder.createAndBindUi(this));
 		
 		// Don't use basic button layout, but set FA-style backbutton,
@@ -147,8 +146,8 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		this.moduleBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-chevron-left' ></span>");
 		this.navigationBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-power-off' ></span>");
 		
-		cells.addStyleName("tree-cells");
-		cells.addCellSelectedHandler(this);
+		module.list.addStyleName("tree-cells");
+		module.list.addCellSelectedHandler(this);
 		standardMap = new TreeItem(TEMPLATE.content(Text.constants.standaardModules(), "fa-folder"));
 		standardMap.setState(true);
 	}
@@ -164,8 +163,10 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		SelectModuleItem o = (SelectModuleItem) item.getUserObject();
 		if(o != null) selectItem(o); // send stop event
 		else {
+			close();
+			container.setWidget(module);
 			SelectModuleItem root = SelectModuleItemHolder.getItemByID("0");
-			container.setWidget(new Label(root.getDescription())); // Uit het profiel halen!
+			module.setDescription(root); // Uit het profiel halen!
 			if(item == schoolMap) {
 				addChildren(schoolModel);
 				navigationLabel.setText(SCHOOL_MODULES);
@@ -183,7 +184,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	// werkt niet? @UiHandler("cells")
 	public void onCellSelected(CellSelectedEvent event) {
 		int index = event.getIndex();
-		SelectModuleItem o = this.cellItems.get(index);
+		SelectModuleItem o = module.items.get(index);
 		setTreeSelectedItem(o);
 		selectItem(o);
 	}
@@ -213,7 +214,6 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			WaitScreen.instance().w();
 			close(); // since we set "loadedModule" to a new value.
 			container.clear();
-			cells.getElement().getStyle().setDisplay(Display.NONE);
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			DWOplayer.clientfactory.setEntryView(viewModuleViewImpl);
 			viewModuleViewImpl.setAnchorContext(new TreeAnchorContext(viewModuleViewImpl.getAnchorContext()));
@@ -301,6 +301,8 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	@Override
 	public void selectModule(SelectModuleItem item)
 	{
+		container.setWidget(module);
+		
 		// TODO iets met tree.ensureSelectedItemVisible() na setselectedItem(item)
 		if (item != null)
 		{
@@ -310,21 +312,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			else
 				moduleHeaderPanel.setCenter(Text.constants.standaardModules());
 			
-			String description = item.getDescription();
-			if(description != null)
-			{
-				if(description.startsWith(DescriptionView.GZIPPREFIX))
-				{
-					container.setWidget(new DescriptionViewImpl(item.getID()));
-				} else
-				if(description.startsWith("<html>"))
-					container.setWidget(new HTML(description));
-				else
-				{
-					container.setWidget(new Label(description));
-				}
-			} else
-				container.setWidget(new Label(""));
+			module.setDescription(item);
 			if(item.getType() == SelectModuleItem.Type.FOLDER)
 			{
 				if(item.getChildren() == null)
@@ -344,7 +332,8 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		}
 		else
 		{
-			container.setWidget(new Label("DWO standaard modules")); // Uit het profiel halen!
+			module.setDescription(SelectModuleItem.ROOT);
+			//container.setWidget(new Label("DWO standaard modules")); // Uit het profiel halen!
 			addChildren(standardModel);
 		}
 	}
@@ -586,8 +575,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		if(list == null)
 			list = Collections.emptyList();
 //		sort(list);
-		this.cellItems = list;
-		cells.render(list);
+		module.render(list);
 	}
 
 	@Override
@@ -602,7 +590,6 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	@Override
 	public void close() {
 		if(loadedModule != null) {
-			cells.getElement().getStyle().clearDisplay();
 			loadedModule.close();
 			loadedModule = null;
 			DWOplayer.clientfactory.setEntryView(null);

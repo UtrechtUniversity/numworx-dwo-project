@@ -57,11 +57,13 @@
 			left:   0px;
 			width: 350px;
 		}
-		
-	.cells_area {
-<!-- why?		z-index: -1; -->
-	}
-		
+		.container_area {
+			position: absolute !important; 
+			top:    41px;
+			bottom: 0px;
+			left:   0px;
+			right:  0px;
+		}	
 	</ui:style>
 	   <mgwt:LayoutPanel height="100%" width="100%" >
 		
@@ -95,12 +97,7 @@
 					<g:Label>Modules</g:Label>
 				</mgwt:center>
 			</mgwt:HeaderPanel>
-		
-			
-				<g:SimplePanel ui:field="container"></g:SimplePanel>
-				<mgwt:CellList ui:field="cells" round="true" addStyleNames="{style.cells_area}"></mgwt:CellList>
-			
-   
+			<g:SimplePanel ui:field="container" addStyleNames="{style.container_area}"></g:SimplePanel>
 	    </mgwt:LayoutPanel>
 	 </mgwt:LayoutPanel>
 
