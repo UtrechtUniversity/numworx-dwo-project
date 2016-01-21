@@ -145,7 +145,7 @@ public class SecuredUserAccountManager {
             }
             //Ready to remove User
             UserManager.destroy(u.getUserID());
-        return true;
+        return new Boolean(true);
     }    
     
 }
