@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -11,6 +12,7 @@ import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
+import fi.dwo.commons.rest.entities.RestNewSchoolClass4Student;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
@@ -145,9 +147,9 @@ public class SecuredStudentSchoolClassManagerIT {
     public void testRegisterStudentForSchoolClass() {
         System.out.println("registerStudentForSchoolClass");
         SecurityContext sc = new TestSecurityContext("user05", RoleType.STUDENT);
-        RestSchoolClass restSchoolClass = new RestSchoolClass();
-        DomSchoolClass domSchoolClass = new DomSchoolClass();
-        restSchoolClass.setDomSchoolClass(domSchoolClass);
+        RestNewSchoolClass4Student restSchoolClass = new RestNewSchoolClass4Student();
+        DomNewSchoolClass4Student domSchoolClass = new DomNewSchoolClass4Student();
+        restSchoolClass.setDomNewSchoolClass4Student(domSchoolClass);
         domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
         domSchoolClass.setSchoolClassName("SchoolClass04");
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
@@ -163,5 +165,18 @@ public class SecuredStudentSchoolClassManagerIT {
         }catch(Exception ex){
             fail("StudentOfClass not registered!, exception:"+ex.getMessage());
         }
+    }
+    
+    /**
+     * Test of getSchoolsClasses method, of class SecuredStudentSchoolClassManager.
+     */
+    @Test
+    public void testGetSchoolsClasses() {
+        System.out.println("getSchoolsClasses");
+        System.out.println("getStudentsSchoolClasses");
+        SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
+        SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
+        List<DomSchoolClass> result = instance.getSchoolsClasses(sc);
+        assertEquals(2, result.size());
     }
 }

@@ -12,6 +12,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.rest.entities.RestNewSchoolClass4Student;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -132,7 +133,7 @@ public class SecuredStudentSchoolClassManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Boolean registerStudentForSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
+    public Boolean registerStudentForSchoolClass(@Context SecurityContext sc, RestNewSchoolClass4Student restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         try {
@@ -145,9 +146,10 @@ public class SecuredStudentSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomNewSchoolClass4Student().getId()));
 
-        if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
+        if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())
+                && (schoolClass.getRegistrationKey() == null || restSchoolClass.getDomNewSchoolClass4Student().getRegistrationKey().equals(schoolClass.getRegistrationKey()))) {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
                 PersistentStudentOfClass soc = new PersistentStudentOfClass();
@@ -165,7 +167,8 @@ public class SecuredStudentSchoolClassManager {
 
         return true;
     }
-   /**
+
+    /**
      * Returns the school data to be displayed.
      *
      * @param sc
@@ -209,4 +212,47 @@ public class SecuredStudentSchoolClassManager {
         }
     }
 
+    /**
+     * Returns the school data to be displayed.
+     *
+     * @param sc
+     * @return
+     */
+    @GET
+    @Produces({"application/json"})
+    @Path("/getSchoolsList")
+    public List<DomSchoolClass> getSchoolsClasses(@Context SecurityContext sc) {
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
+
+        if (phr != null && school != null) {
+            List<PersistentSchoolClass> scList;
+            List<DomSchoolClass> domList;
+            try {
+                scList = SchoolClassManager.findEntities(school);
+                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of school {1]. ", new Object[]{scList.size(), school.getSchoolID()});
+                domList = new ArrayList<DomSchoolClass>(scList.size());
+                for (PersistentSchoolClass schoolClass : scList) {
+                    domList.add(new DomSchoolClass(schoolClass));
+                }
+            }
+            catch (Exception e) {
+                LOG.log(Level.WARNING, "Unexpected exception", e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
+            }
+            return domList;
+        } else {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+    }
 }
