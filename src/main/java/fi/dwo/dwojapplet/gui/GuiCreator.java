@@ -132,6 +132,7 @@ public class GuiCreator {
      * @param username The username of the user.
      * @param password The password of the user.
      * @throws fi.dwo.commons.exceptions.LoginException
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception
      *
      */
     public void loginWithMd5(String username, String password) throws LoginException, Dwo2Exception {

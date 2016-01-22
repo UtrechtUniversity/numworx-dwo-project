@@ -1,9 +1,11 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.dom.entities.DomContext;
+import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.rest.RestListClassTypes;
+import fi.dwo.commons.rest.entities.RestNewSchoolClass4Student;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -47,14 +49,20 @@ public class SecureStudentSchoolClassManager {
         return src;
     }
     
-    public static Boolean registerStudentForSchoolClass(DomSchoolClass submit) throws Dwo2Exception {
-        RestSchoolClass restSchoolClass = new RestSchoolClass();
+    public static Boolean registerStudentForSchoolClass(DomNewSchoolClass4Student submit) throws Dwo2Exception {
+        RestNewSchoolClass4Student restSchoolClass = new RestNewSchoolClass4Student();
         restSchoolClass.setRestContext(new DomContext());
-        restSchoolClass.setDomSchoolClass(submit);
+        restSchoolClass.setDomNewSchoolClass4Student(submit);
 
         Boolean result = StoredRestManager.getInstance().put("/rest/secure/student/schoolclass/submit", Boolean.class, restSchoolClass);
-        LOG.log(Level.FINE, "Submitted schoolclass {1} for registration by student with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(),restSchoolClass.getDomSchoolClass().getId()});
+        LOG.log(Level.FINE, "Submitted schoolclass {1} for registration by student with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(),restSchoolClass.getDomNewSchoolClass4Student().getId()});
         return result;
     }
 
+    public static List<DomSchoolClass> getSchoolsClasses() throws Dwo2Exception {
+        List<DomSchoolClass> src;
+        src = StoredRestManager.getInstance().getList("/rest/secure/student/schoolclass/getSchoolsList", RestListClassTypes.DomSchoolClass);
+        LOG.log(Level.FINE, "Retrieved list of schoolclasses of the school with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId()});
+        return src;
+    }
 }

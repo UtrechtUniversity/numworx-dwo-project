@@ -7,7 +7,6 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import static fi.dwo.dwojapplet.domain.DwoProfile.hasRight;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
@@ -28,9 +27,9 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
 /**
- * This class is the menu panel for the teacher who logged in.
+ * Teacher menu panel, adds course-management and overloads class-management functionality
  *
- * @author M.J.B. Kupers
+ * original version by M.J.B. Kupers
  *
  */
 public class TeacherMenuPanel extends StudentMenuPanel implements SelectStrategy {

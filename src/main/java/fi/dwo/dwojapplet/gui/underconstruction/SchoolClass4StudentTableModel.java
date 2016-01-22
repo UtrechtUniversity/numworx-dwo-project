@@ -1,43 +1,35 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.underconstruction;
 
-import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
-import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
+import fi.dwo.commons.dom.entities.DomSchoolClass;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
- *
+ * TableModel for ClassStudentPanel
+ * 
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
-class ClassRegisterTableModel extends AbstractTableModel {
+class SchoolClass4StudentTableModel extends AbstractTableModel {
 
     private String[] columnNames = {"SchoolClassName", "select", "SchoolClass" };//schoolclass is hidden
     static boolean DEBUG = false;
 
     private Object[][] data;
 
-    public void init(DomSchoolRoleAndClass noSchool, DomSchoolsRolesAndClasses srcs) {
-        List<DomSchoolRoleAndClass> srcList = srcs.getSchoolsRolesAndClassesList();
+    public void init(List<DomSchoolClass> scList) {
         int rows = 0;
-        for (DomSchoolRoleAndClass src : srcList) {
+        for (DomSchoolClass sc : scList) {
             rows++; // one for each item in List
         }
-        data = new Object[rows][4];
+        data = new Object[rows][3];
         int j = 0;
-        for (DomSchoolRoleAndClass src : srcList) {
-            data[j][0] = src.getSchoolName();
+        for (DomSchoolClass src : scList) {
+            data[j][0] = src.getSchoolClassName();
             //          data[j][3] = src.getSchoolId();
-            data[j][1] = src.getRoleName();
+            data[j][1] = "x";
             //           data[j][4] = src.getRoleId();
-            if (src.getSchoolClassId() == null) {
-                data[j][2] = "";
-                //               data[j][5] = null;
-            } else {
-                data[j][2] = src.getSchoolClassName();
-                //               data[j][5] = src.getSchoolClassId();
-            }
-            data[j][3] = src;
+            data[j][2] = src;
             j++;
         }
     }
