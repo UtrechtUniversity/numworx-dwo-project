@@ -2,11 +2,11 @@
 package fi.dwo.dwojapplet.gui.underconstruction;
 
 import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
+ * Tablemodel for SchoolClassRegistrationStudentPanel
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
