@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.keyboard.client;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -108,6 +109,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	public void blur() {
 		super.blur();
 		resizeScrollPanel(0);
+		setEnterType(EnterType.APPLY);
 	}
 
 
@@ -173,12 +175,16 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	}
 
 	@Override
-	void switchGreek() {
-		switchTo(math);
-//		if(upper)
-//			switchGrUpper();
-//		else
-//			switchGrLower();
+	void switchGreek() {		
+		if(current != math)
+		{	
+			switchTo(math);
+		} else {
+			if(upper)
+				switchGrUpper();
+			else
+				switchGrLower();
+		}
 	}
 
 	private void switchTo(AbstractKeyboard kto) {
@@ -254,4 +260,36 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		pen.setWriteMathSet(nr);
 	}
 
+	@Override
+	public void setEnterType(EnterType type) {
+		ImageResource resource;
+		switch(type) {
+		case ENTER:
+			resource = DWOTabletKeyboardFactory.resources.enter();
+			break;
+		default:	
+		case APPLY:
+			resource = DWOTabletKeyboardFactory.resources.apply();
+		}
+		setEnterImage(resource);
+	}
+	
+	private ImageResource enterImage = DWOTabletKeyboardFactory.resources.apply();
+	
+	@Override
+	void setEnterImage(ImageResource resource) {
+		if(resource != enterImage) {
+			enterImage = resource;
+			current.setEnterImage(resource);
+			k123.setEnterImage(resource);
+			kabc.setEnterImage(resource);
+			kABC.setEnterImage(resource);
+			pen.setEnterImage(resource);
+			kGrUpper.setEnterImage(resource);
+			kGrLower.setEnterImage(resource);
+			math.setEnterImage(resource);
+
+		}
+	}
+	
 }

@@ -137,6 +137,7 @@ public class DWOKeyboardGWT implements EntryPoint {
 		
 		AbstractKeyboard tablet = new DWOTabbedTouchKeyboard(1);
 		tablet.setEditor(editor);
+		tablet.setEnterType(EnterType.ENTER);
 		root.add(new Label("touch"));root.add(tablet);
 
 		root.add(tekst);

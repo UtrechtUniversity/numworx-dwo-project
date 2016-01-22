@@ -93,6 +93,11 @@ public class DWOMathKeyboard extends AbstractKeyboard {
 		getDelegate().switchHand();
 	}
 	
+	@Override
+	void switchGreek() {
+		getDelegate().switchGreek();
+	}
+	
 	DWOMathKeyboard init() {
 		pad.t1_16.addStyleName("is-active");
 		return this;

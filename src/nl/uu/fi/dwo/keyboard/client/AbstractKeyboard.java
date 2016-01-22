@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.interaction.client.keyboard.AbstractEditor;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -150,4 +151,9 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	
 	void close() {}
 	
+	void setEnterImage(ImageResource resource) {
+	}
+
+	public void setEnterType(EnterType type) {
+	}
 }

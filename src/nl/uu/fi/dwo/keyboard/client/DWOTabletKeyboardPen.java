@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.keyboard.client;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -85,6 +86,10 @@ public class DWOTabletKeyboardPen extends AbstractKeyboard implements WritePanel
 	@Override
 	public void setWriteMathSet(int nr) {
 		panel.setTekenSet(nr);
+	}
+
+	void setEnterImage(ImageResource resource) {
+		pad.setEnterImage(resource);
 	}
 
 }
