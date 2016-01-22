@@ -247,6 +247,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>6.11.2</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>
