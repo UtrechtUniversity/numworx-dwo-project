@@ -61,6 +61,8 @@ public class SecuredStudentSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
+        if(phr.getClassID()==null) return null;
+        
         schoolClass = SchoolClassManager.findEntity(phr.getClassID());
 
         if (schoolClass == null || !schoolClass.getSchoolID().equals(school.getSchoolID())) {
