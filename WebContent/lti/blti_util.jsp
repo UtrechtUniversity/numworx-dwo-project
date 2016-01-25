@@ -10,7 +10,7 @@
     postProp.setProperty("resource_link_description", "A weekly blog");
 
     postProp.setProperty("user_id","292832126");
-    postProp.setProperty("roles","Instructor");
+    postProp.setProperty("roles","Learner");
     postProp.setProperty("lis_person_name_full","Jane Q. Public");
     postProp.setProperty("lis_person_name_given", "Jane");
     postProp.setProperty("lis_person_name_family", "Public");    
@@ -24,7 +24,7 @@
     
     postProp.setProperty("context_id","456434513");
     postProp.setProperty("context_title","Design of Personal Environments");
-    postProp.setProperty("context_label","SI182");
+    postProp.setProperty("context_label","plat");
     
     postProp.setProperty("tool_consumer_info_product_family_code","ims");
     postProp.setProperty("tool_consumer_info_version","1.1");

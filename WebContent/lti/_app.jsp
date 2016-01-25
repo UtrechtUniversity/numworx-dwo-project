@@ -16,7 +16,13 @@
 		GetDiagnostic:  function(code) { return "no diagnostic"; }
 	}
 	window.API_1484_11 = API_1484_11
-  </script> 
+  </script>
+  <style>
+  	iframe {
+  		border: 0px;
+  	}
+  
+  </style> 
 </head>
 <body style="font-family:sans-serif; margin:0px">
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
@@ -65,14 +71,13 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
 	}
 
 %>
-<pre>
 <%
 
-  Enumeration en = request.getParameterNames();
-  while (en.hasMoreElements()) {
-    String paramName = (String) en.nextElement();
-    out.println(paramName + " = " + request.getParameter(paramName) );
-  }
+//   Enumeration en = request.getParameterNames();
+//   while (en.hasMoreElements()) {
+//     String paramName = (String) en.nextElement();
+//     out.println(paramName + " = " + request.getParameter(paramName) );
+//   }
 
   OAuthMessage oam = OAuthServlet.getMessage(request, null);
   OAuthValidator oav = new SimpleOAuthValidator();
@@ -82,11 +87,7 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
     return;
   }
   OAuthConsumer cons = null;
-  if ( "lmsng.school.edu".equals(oauth_consumer_key) ) {
-    cons = new OAuthConsumer("http://call.back.url.com/", "lmsng.school.edu", "secret", null);
-  } else if ( "12345".equals(oauth_consumer_key) ) {
-    cons = new OAuthConsumer("http://call.back.url.com/", "12345", "secret", null);
-  } else {
+  {
 	  String secret = getDbAccess().getSecret(oauth_consumer_key);
 	  if ( secret != null ) {
 	    cons = new OAuthConsumer("about:blank", oauth_consumer_key, secret, null);
@@ -99,22 +100,22 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
   OAuthAccessor acc = new OAuthAccessor(cons);
 
   try {
-    out.println("\n<b>Base Message</b>\n</pre><p>\n");
-    out.println(OAuthSignatureMethod.getBaseString(oam));
-    out.println("<pre>\n");
+//     out.println("\n<b>Base Message</b>\n</pre><p>\n");
+//     out.println(OAuthSignatureMethod.getBaseString(oam));
+//     out.println("<pre>\n");
     oav.validateMessage(oam,acc);
-    out.println("Message validated");
+//     out.println("Message validated");
   } catch(Exception e) {
 	    doReturn(request, response, "Error while valdating message", out);
 	    log("Error validating message", e);
 	    return;
   }
 
-  String sconr = "";
+  String sconr = "#LoginPlace:";
   String info = request.getPathInfo();
   if(info != null) {
-  	if(info.startsWith("/sco/")) sconr = "#s:" + info.substring(5);
-  	else if(info.startsWith("/course")) sconr = "#c:" + info.substring(8);
+  	if(info.startsWith("/sco/")) sconr = "#LoginPlace:s/" + info.substring(5);
+  	else if(info.startsWith("/course")) sconr = "#LoginPlace:c/" + info.substring(8);
   }
 	String language = request.getParameter("launch_presentation_locale");
 	if(language != null) {
@@ -131,13 +132,11 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
 
   	getDbAccess().setCookie(request, response);  
 %>
-</pre>
-<hr>
 <div id='headerpane' >
 <a  id='return_url'
 	href='<%=request.getParameter("launch_presentation_return_url") %>'>Logout</a>
 </div>
 <iframe id='bodypane'
-	src="/dwo/tablet/index.html?locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
+	src="player.html?locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
 >
 </iframe>
