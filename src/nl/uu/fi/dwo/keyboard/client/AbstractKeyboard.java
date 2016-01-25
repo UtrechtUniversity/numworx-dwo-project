@@ -3,12 +3,11 @@ package nl.uu.fi.dwo.keyboard.client;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.AbstractEditor;
+import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
 
 public abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
 
