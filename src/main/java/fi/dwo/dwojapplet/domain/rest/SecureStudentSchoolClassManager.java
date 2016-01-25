@@ -65,4 +65,11 @@ public class SecureStudentSchoolClassManager {
         LOG.log(Level.FINE, "Retrieved list of schoolclasses of the school with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId()});
         return src;
     }
+
+    public static DomSchoolClass getActiveSchoolClass() throws Dwo2Exception {
+        DomSchoolClass sc;
+        sc = StoredRestManager.getInstance().get("/rest/secure/student/schoolclass/getActive",DomSchoolClass.class);
+        LOG.log(Level.FINE, "Retrieved the active schoolclass with id {1} of the student with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sc.getId()});
+        return sc;
+}
 }

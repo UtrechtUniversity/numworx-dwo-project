@@ -3,9 +3,17 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Teacher;
+import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.border.Border;
 
 /**
  * This class is the menu panel for the user who logged in.
@@ -18,6 +26,11 @@ public class StudentMenuPanel extends GuestMenuPanel {
     private JButton myProfileButton;
     private JButton classManagementButton;
     private StudentMenuPanelProperties prop;
+    private JScrollPane classPanel;
+
+    private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
+    private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
+    private ClassLinkedLabel[] classLinkedList;
 
     public void createRuler() {
         add(Box.createVerticalStrut(10));
@@ -69,8 +82,54 @@ public class StudentMenuPanel extends GuestMenuPanel {
      *
      */
     protected void addClassList() {
-        //Handig om een lijst van klassen te hebben waar een student de active klas 
-        //mee kan schakelen.
+
+        /* Variables used to create items */
+        FontMetrics fm;
+        JLabel l;
+
+        createRuler();
+        Box classBox = Box.createVerticalBox();
+        classPanel = new JScrollPane(classBox) {
+            @Override
+            public void setVisible(boolean b) {
+
+                super.setVisible(b);
+
+            }
+        };
+        classPanel.setDoubleBuffered(false);
+        classPanel.setOpaque(false);
+        classPanel.getViewport().setOpaque(false);
+        classPanel.setViewportBorder(null);
+        classPanel.setBorder(null);
+        /* Add class-info */
+        if (DwoHelper.getCurrentFacadeUser() instanceof Teacher) {
+            Teacher t = (Teacher) DwoHelper.getCurrentFacadeUser();
+            if ((t.getClasses() != null) && (t.getClasses().length != 0)) {
+                l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_CLASS_RESULTS)
+                        + ":");
+                l.setOpaque(false);
+                l.setFont(GuiConstants.NORMAL_TEXT);
+                l.setBorder(TITLE_BORDER);
+                classBox.add(l);
+
+                SchoolClass[] classes = t.getClasses();
+                classLinkedList = new ClassLinkedLabel[classes.length];
+                ClassLinkedLabel cll;
+
+                for (int i = 0; i < classes.length; i++) {
+                    cll = new ClassLinkedLabel(classes[i]);
+                    cll.setBorder(CLASS_BORDER);
+                    cll.addActionListener(this);
+                    classLinkedList[i] = cll;
+                    cll.setFont(GuiConstants.NORMAL_TEXT);
+                    classBox.add(cll);
+                }
+            }
+            classPanel.setVisible(false);
+            this.add(classPanel);
+            classPanel.setVisible(true);
+        }
     }
 
     /**

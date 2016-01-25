@@ -12,7 +12,6 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
-import static fi.dwo.dwojapplet.gui.GuiCreator.instance;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
