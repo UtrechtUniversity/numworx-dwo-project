@@ -50,6 +50,17 @@ public class RPCHandler {
 		request.execute();
 	}
 
+	public void samlLogin(String name, String org, AsyncCallback<? super Map<String,Object>> callback)
+	{
+		XmlRpcClient client = getClient();
+		String method = "login_saml";
+		Object[] params = { name, org };
+
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		XmlRpcRequest request = new XmlRpcRequest(client, method, params, callback);
+		request.execute();
+	}
+
 	private XmlRpcClient xmlRpcClient;
 	
 	private XmlRpcClient getClient() {

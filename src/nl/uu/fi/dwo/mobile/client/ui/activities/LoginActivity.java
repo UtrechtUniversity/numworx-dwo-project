@@ -21,9 +21,11 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Label;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
@@ -56,6 +58,8 @@ public class LoginActivity extends MGWTAbstractActivity
 
 	};
 
+    private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
+	private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 	
 	
 	ClientFactory clientFactory;
@@ -76,6 +80,19 @@ public class LoginActivity extends MGWTAbstractActivity
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		SelectModuleItemHolder.destroy();
+		
+		String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
+		String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
+		
+//		user_id = "292832126";
+//		org_id = "\"lti:385\"";
+		
+		if(user_id != null && org_id != null) {
+			panel.setWidget(new Label("SAML LOGIN " + user_id + " , " + org_id));
+			clientFactory.getRPCHandler().samlLogin(user_id, org_id, LOGIN_CALLBACK);
+			return;		
+		}
+		
 		view = clientFactory.getLoginView();
 		
 		addHandlerRegistration(view.getLoginBtn().addTapHandler(new TapHandler()

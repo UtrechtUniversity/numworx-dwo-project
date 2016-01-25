@@ -43,12 +43,14 @@ import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -71,8 +73,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		public void onClick(ClickEvent event) {
 //			Element targetElement = event.getTargetElement();
 //			if(targetElement == null || targetElement == target || targetElement.getParentElement() == target)
-			{	comRoot.getKeyboard().setEditor(deze);
-				comRoot.getKeyboard().softFocus();
+			{	FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+				keyboard.setEditor(deze);
+				keyboard.setEnterType(EnterType.ENTER);
+				keyboard.softFocus();
 				int flowTop = flow.getAbsoluteTop();
 				int y = event.getClientY() - flowTop;
 				int w;
@@ -118,18 +122,23 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		
 		@Override
 		public void onTouchStart(TouchStartEvent event) {
-			comRoot.getKeyboard().setEditor(TextEditor.this);
+			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+			keyboard.setEditor(TextEditor.this);
+			keyboard.setEnterType(EnterType.ENTER);
 			setCursorWidget(cursorWidget);
-			comRoot.getKeyboard().softFocus();
+			keyboard.softFocus();
 			event.stopPropagation();
 			event.preventDefault();
 		}
 
 		@Override
 		public void onClick(ClickEvent event) {
-			comRoot.getKeyboard().setEditor(TextEditor.this);
+			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+			keyboard.setEditor(TextEditor.this);
 			setCursorWidget(cursorWidget);
-			comRoot.getKeyboard().softFocus();
+			keyboard.setEnterType(EnterType.ENTER);
+			keyboard.softFocus();
+			
 			event.stopPropagation();
 			event.preventDefault();
 			
@@ -312,11 +321,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		else if(tekst.endsWith("\n"))
 			tekst = tekst.substring(0, tekst.length()-1);
 		//sb.setLength(0);
-		cursor = 0;
-		flow.clear();
-		flow.add(setCursorWidget(new InlineHTML(" \u00A0")));
+		clearAll();
 		insert(tekst);
-		setCurrentElementRepaint();
+		removeCursor();
 		editable = h.getBoolean("editable", true);
 		widget.setStyleDependentName("readonly", !editable);
 	}
@@ -334,7 +341,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	private Widget setCursorWidget(Widget widget) {
 		if(widget == null) return cursorWidget;
-		setCurrentElementRepaint();
+		removeCursor();
 		widget.setStyleDependentName("cursor", true);
 		cursorWidget = widget;
 		int c = flow.getWidgetIndex(widget);
@@ -492,7 +499,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public void clearAll() {
+		cursor = 0;
 		flow.clear();
+		flow.add(setCursorWidget(new InlineHTML(" \u00A0")));
 	}
 
 	@Override
@@ -551,8 +560,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		this.font = font;
 	}
 
-	@Override
+	@Override // loose focus
 	public void setCurrentElementRepaint() {
+		removeCursor();
+		if(comRoot != null)
+			comRoot.getKeyboard().setEnterType(EnterType.APPLY);
+	}
+
+	private void removeCursor() {
 		if(cursorWidget != null)
 			cursorWidget.setStyleDependentName("cursor", false);
 	}

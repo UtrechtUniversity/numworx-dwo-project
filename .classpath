@@ -6,6 +6,8 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/DWOmAccess-0.0.3-classes.jar"/>
 	<classpathentry kind="lib" path="lib/interaction.jar"/>
 	<classpathentry kind="lib" path="lib/xmlrpc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/oauth-20100601.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/oauth-provider-20100601.jar"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>

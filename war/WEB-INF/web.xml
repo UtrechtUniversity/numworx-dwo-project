@@ -29,8 +29,13 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   <servlet>
   	<servlet-name>scormaccess</servlet-name>
   	<servlet-class>fi.servlet.dwomaccess.ScormAccess</servlet-class>
-  </servlet>	
-	<!-- TODO: Add <servlet-mapping> tags for each <servlet> here. -->
+  </servlet>
+  <servlet>
+    <servlet-name>appparam</servlet-name>
+    <jsp-file>/lti/_app.jsp</jsp-file>
+  </servlet>
+  
+<!-- TODO: Add <servlet-mapping> tags for each <servlet> here. -->
   <servlet-mapping>
 	<servlet-name>image.png</servlet-name>
 	<url-pattern>/image.png</url-pattern>
@@ -63,7 +68,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     <servlet-name>scormaccess</servlet-name>
     <url-pattern>/DWOmAccess/scormaccess</url-pattern>
   </servlet-mapping>
-	<!-- TODO: Optionally add a <welcome-file-list> tag to display a welcome file. -->
+   <servlet-mapping>
+      <servlet-name>appparam</servlet-name>
+      <url-pattern>/lti/app.jsp/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>appparam</servlet-name>
+      <url-pattern>/lti/app.jsp</url-pattern>
+   </servlet-mapping>
+
+<!-- TODO: Optionally add a <welcome-file-list> tag to display a welcome file. -->
   <welcome-file-list>
     <welcome-file>DWOplayer.html</welcome-file>
   </welcome-file-list>

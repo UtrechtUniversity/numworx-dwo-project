@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
@@ -563,6 +564,12 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	@Override
 	public void addLabel(Label label)
 	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setEnterType(EnterType type) {
 		// TODO Auto-generated method stub
 		
 	}
