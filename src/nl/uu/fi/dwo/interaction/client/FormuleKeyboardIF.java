@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.interaction.client;
 
+import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
+
 import com.google.gwt.user.client.ui.IsWidget;
 
 public interface FormuleKeyboardIF {
@@ -22,4 +24,5 @@ public interface FormuleKeyboardIF {
 
 	void functionKey(int minF);
 
+	void setEnterType(EnterType type);
 }

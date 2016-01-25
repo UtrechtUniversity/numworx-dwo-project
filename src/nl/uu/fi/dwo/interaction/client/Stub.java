@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
@@ -337,6 +338,12 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 
 	@Override
 	public void unpause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setEnterType(EnterType type) {
 		// TODO Auto-generated method stub
 		
 	}
