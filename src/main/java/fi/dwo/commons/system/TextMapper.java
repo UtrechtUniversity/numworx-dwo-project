@@ -258,8 +258,13 @@ public abstract class TextMapper {
     /* Class Panel */
     public final static String GUIC_STUDENTS = "GUIC_STUDENTS";
     public final static String GUIC_CLASS_MANAGEMENT = "GUIC_CLASS_MANAGEMENT";
+    public final static String GUIC_REGISTER_FOR_CLASS = "GUIC_REGISTER_FOR_CLASS";
+    public final static String GUIC_DEREGISTER_FOR_CLASS = "GUIC_DEREGISTER_FOR_CLASS";
     public final static String GUIC_ADD_CLASS = "GUIC_ADD_CLASS";
+    public final static String GUIC_BTN_SWITCH_CLASS = "GUIC_BTN_SWITCH_CLASS";
 
+    public final static String GUIC_TBL_CLASSNAME = "GUIC_TBL_CLASSNAME";
+    
     public final static String GUIC_TLTP_DELETE_CLASS = "GUIC_TLTP_DELETE_CLASS";
     public final static String GUIC_TLTP_EDIT_CLASS = "GUIC_TLTP_EDIT_CLASS";
     public final static String GUIC_TLTP_USERS_CLASS = "GUIC_TLTP_USERS_CLASS";
