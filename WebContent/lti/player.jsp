@@ -1,6 +1,11 @@
 <!DOCTYPE html>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
+<%
+	String profile = request.getParameter("profile");
+	if(profile == null) profile = "77";
+%>
 	<meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link type="text/css" rel="stylesheet" href="/dwo/apps/DWOplayer.css">
@@ -9,6 +14,7 @@
     	function logout() {
     		window.parent.logout()
     	}
+    	DWO_PROFILE_ID = <%=profile%>
     </script>
     <script type="text/javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
 </head>

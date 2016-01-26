@@ -130,6 +130,10 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
 	if(language == null || language.isEmpty()) 
 	language = "nl";
 
+	String profile  = request.getParameter("custom_profile");
+	if(profile == null)
+		profile = "77";
+
 	String width = request.getParameter("launch_presentation_width");
   	if(width == null || width.isEmpty()) width="100%";
  	String height = request.getParameter("launch_presentation_height");
@@ -142,7 +146,7 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
 	href='<%=request.getParameter("launch_presentation_return_url") %>'>Logout</a>
 </div>
 <iframe id='bodypane'
-	src="player.html?locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
+	src="player.jsp?profile=<%=profile %>&locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
 >
 </iframe>
 </body>
