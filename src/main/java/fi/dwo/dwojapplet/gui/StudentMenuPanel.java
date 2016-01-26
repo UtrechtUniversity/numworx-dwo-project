@@ -112,7 +112,7 @@ public class StudentMenuPanel extends GuestMenuPanel {
         /* Add class-info */
             DomFullUser t = (DomFullUser) DwoHelper.getCurrentUser();
         if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.STUDENT)) {
-            List<DomSchoolClass> scList;
+            List<DomSchoolClass> scList=null;
             try {
                 scList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();
             }
@@ -120,7 +120,7 @@ public class StudentMenuPanel extends GuestMenuPanel {
                 Logger.getLogger(StudentMenuPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            if ((scList != null) && (scList.length != 0)) {
+            if ((scList != null) && (scList.size() > 0)) {
                 l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_CLASS_RESULTS)
                         + ":");
                 l.setOpaque(false);
