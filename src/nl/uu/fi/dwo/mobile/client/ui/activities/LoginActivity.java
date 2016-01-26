@@ -88,6 +88,12 @@ public class LoginActivity extends MGWTAbstractActivity
 //		org_id = "\"lti:385\"";
 		
 		if(user_id != null && org_id != null) {
+			if( DWOplayer.profiledata != null) {
+				panel.setWidget(new Label());
+				logout();
+				return;
+			}
+			org_id = '"' + org_id + '"';
 			panel.setWidget(new Label("SAML LOGIN " + user_id + " , " + org_id));
 			clientFactory.getRPCHandler().samlLogin(user_id, org_id, LOGIN_CALLBACK);
 			return;		
@@ -136,5 +142,9 @@ public class LoginActivity extends MGWTAbstractActivity
 		Logger.getLogger("DWOplayer").log(Level.INFO,"Done with panel");
 	
 	}
+
+	private native static void logout()/*-{
+		$wnd.logout()
+	}-*/;
 
 }
