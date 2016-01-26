@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class PersistenceId implements Comparable<PersistenceId> {
+public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
     
     private String stringId;
     private PersistenceClassType type = PersistenceClassType.none;
@@ -97,6 +97,14 @@ public class PersistenceId implements Comparable<PersistenceId> {
         }
         final PersistenceId other = (PersistenceId) obj;
         return !((this.stringId == null) ? (other.stringId != null) : !this.stringId.equals(other.stringId));
+    }
+
+    @Override
+    public Object clone() {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(this.stringId);
+        id.setType(this.type);
+        return id;
     }
     
     @Override

@@ -49,5 +49,4 @@ public class RestNewSchoolClass4Student {
         this.domSchoolClass = domSchoolClass;
     }
 
-    
 }

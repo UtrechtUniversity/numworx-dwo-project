@@ -18,10 +18,20 @@ public class DomNewSchoolClass4Student extends DomSchoolClass {
 
     private String registrationKey = null;
 
+    
     public DomNewSchoolClass4Student(){
         
     }
 
+    /** Initializes the object with a clone of the parameter and set the 
+     * registrationKey to null;
+     */
+    public DomNewSchoolClass4Student(DomSchoolClass sc){
+        super(sc);
+        registrationKey = null;
+    }
+
+    
     
     public DomNewSchoolClass4Student(PersistentSchoolClass sc) {
         super(sc);
