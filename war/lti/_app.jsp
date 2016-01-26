@@ -16,6 +16,10 @@
 		GetDiagnostic:  function(code) { return "no diagnostic"; }
 	}
 	window.API_1484_11 = API_1484_11
+
+	function logout() {
+		window.location = document.getElementById("return_url").href
+	}
   </script> 
 </head>
 <body style="font-family:sans-serif; margin:0px">
@@ -129,7 +133,7 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
 %>
 </pre>
 <hr>
-<div id='headerpane' >
+<div id='headerpane' style='display:none' >
 <a  id='return_url'
 	href='<%=request.getParameter("launch_presentation_return_url") %>'>Logout</a>
 </div>
