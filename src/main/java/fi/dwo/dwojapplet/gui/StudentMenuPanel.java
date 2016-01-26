@@ -2,12 +2,19 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\StudentMenuPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.rest.SecureStudentSchoolClassManager;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -103,9 +110,17 @@ public class StudentMenuPanel extends GuestMenuPanel {
         classPanel.setViewportBorder(null);
         classPanel.setBorder(null);
         /* Add class-info */
-        if (DwoHelper.getCurrentFacadeUser() instanceof Teacher) {
-            Teacher t = (Teacher) DwoHelper.getCurrentFacadeUser();
-            if ((t.getClasses() != null) && (t.getClasses().length != 0)) {
+            DomFullUser t = (DomFullUser) DwoHelper.getCurrentUser();
+        if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.STUDENT)) {
+            List<DomSchoolClass> scList;
+            try {
+                scList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();
+            }
+            catch (Dwo2Exception ex) {
+                Logger.getLogger(StudentMenuPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            if ((scList != null) && (scList.length != 0)) {
                 l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_CLASS_RESULTS)
                         + ":");
                 l.setOpaque(false);
