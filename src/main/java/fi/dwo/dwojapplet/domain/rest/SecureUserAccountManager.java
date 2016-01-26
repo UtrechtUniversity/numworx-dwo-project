@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.dom.entities.DomContext;
 import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomSchool;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.rest.entities.RestFullUser;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
@@ -76,5 +77,9 @@ public class SecureUserAccountManager {
         Boolean b;
         b = StoredRestManager.getInstance().get("/rest/secure/user/account/remove", Boolean.class);
         return b;
+    }
+
+    public static DomSchool getNullSchool() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

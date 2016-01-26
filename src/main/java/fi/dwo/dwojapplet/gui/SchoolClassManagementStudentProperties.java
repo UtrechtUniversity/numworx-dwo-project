@@ -1,6 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureStudentSchoolClassManager;
@@ -28,7 +29,9 @@ public class SchoolClassManagementStudentProperties {
         catch (Dwo2Exception ex) {
 
             LOG.log(Level.SEVERE, ex.getMessage());
-            scList = new ArrayList<DomSchoolClass>();
+            if (scList == null) {
+                scList = new ArrayList<DomSchoolClass>();
+            }
             activeSchoolClass = null;
             throw ex;
         }
@@ -47,13 +50,18 @@ public class SchoolClassManagementStudentProperties {
     public List<DomSchoolClass> getSchoolsClasses() throws Dwo2Exception {
         return SecureStudentSchoolClassManager.getSchoolsClasses();
     }
-    
-    
+
     /**
      * @return the user
      */
     public DomSchoolClass getActiveSchoolClass() {
         return activeSchoolClass;
+    }
+
+    public void removeSchoolClass(DomSchoolClass sc) throws Dwo2Exception {
+        if (activeSchoolClass != sc) {
+            SecureStudentSchoolClassManager.removeSchoolClass(sc);
+        }
     }
 
     /**
@@ -64,4 +72,8 @@ public class SchoolClassManagementStudentProperties {
         SecureStudentSchoolClassManager.setActiveSchoolClass(activeSchoolClass);
     }
 
+    public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit) throws Dwo2Exception {
+        SecureStudentSchoolClassManager.registerStudentForSchoolClass(submit);
+        init();
+    }
 }

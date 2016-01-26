@@ -190,7 +190,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             try {
                 prop.setActiveSchoolClass(sc);
 //                //switch role now
-                LOG.log(Level.INFO, "switching role now");
+                LOG.log(Level.INFO, "switching schoolclass now");
                 GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
             }
             catch (LoginException ex) {
@@ -238,11 +238,11 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                     //switch role now
                     GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
                 } else if (value == removeImage) {
-//                    int row = tableModel.getSelectedRow();
-//                    DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
-//                    prop.deregisterSchoolClass(schoolClass);
-//                tableModel.init(prop, loginImage, removeImage);
-//                tableModel.fireTableDataChanged();
+                    int row = tableModel.getSelectedRow();
+                    DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
+                    prop.removeSchoolClass(schoolClass);
+                    tableModel.init(prop, loginImage, removeImage);
+                    tableModel.fireTableDataChanged();
                 } else {
                     // show warning
                     JOptionPane.showMessageDialog(null, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
@@ -317,41 +317,39 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         if (e.getSource() == this.registerSchoolClass) {
             ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new SchoolClassRegistrationStudentJPanel());
             dialog.setVisible(true);
-            //reload centerpanel
 
-        } else {
-            if (e.getSource() == this.switchSchoolClass) {
-                
-                int row = tableModel.getSelectedRow();
-                DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, 3);
-                try {
+            //reload centerpanel
+        } else if (e.getSource() == this.switchSchoolClass) {
+
+            int row = tableModel.getSelectedRow();
+            DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, 3);
+            try {
                 prop.setActiveSchoolClass(sc);
 //                tableModel.init(prop, loginImage, removeImage);
 //                tableModel.fireTableDataChanged();
-                    //get user data
-                    DomFullUser user = DwoHelper.getCurrentUser();
-                    //switch role now
-                    LOG.log(Level.FINE, "switching class now");
-                    GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
-                }
-                catch (LoginException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
-                    GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
-                }
-                catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE, null, ex);
-                    GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
-                }
+                //get user data
+                DomFullUser user = DwoHelper.getCurrentUser();
+                //switch role now
+                LOG.log(Level.FINE, "switching class now");
+                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
+            }
+            catch (LoginException ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+            }
 
-            } else if (e.getSource() == removeImage) {
-                LOG.log(Level.INFO, "remove role");
+        } else if (e.getSource() == removeImage) {
+            LOG.log(Level.INFO, "remove role");
 
 ////                if (JOptionPane.showConfirmDialog(TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)))
 //      //                  + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 //                    if (instance.deleteClass(sc)) {
 //                        model.removeRow(row);
 //                    }
-            }
         }
     }
 }

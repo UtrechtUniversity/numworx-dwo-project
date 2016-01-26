@@ -7,6 +7,7 @@ package fi.dwo.dwojapplet.domain;
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
 import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomSchool;
 import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
@@ -14,6 +15,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -79,6 +81,7 @@ public final class DwoHelper {
      * Boot properties that need to be set before calling init()
      */
     private static DomFullUser currentUser; // null if none available.
+    private static DomSchool nullSchool;
 //    private static RoleType currentRole; // null if none available.
 
     /**
@@ -136,7 +139,8 @@ public final class DwoHelper {
     public static void init() throws Dwo2Exception {
         //Fetch all the login roles from the server for the current roles
         try {
-            DomSchoolsRolesAndClasses srcs = SecureUserAccountLoginsManager.getSchoolLogins();
+            schoolLogins = SecureUserAccountLoginsManager.getSchoolLogins();
+            nullSchool = SecureUserAccountManager.getNullSchool();
             //TODO should set relevant properties when calling init using REST-interface: school, hasRole etc...
 
         }
@@ -159,6 +163,7 @@ public final class DwoHelper {
         try {
             if (aCurrentUser != null) {
                 SecureUserAccountLoginsManager.getSchoolLogins();//updates DwoHelper
+//                nullSchool = SecureUserAccountManager.getNullSchool();
             } else {
                 schoolLogins = null;
             }

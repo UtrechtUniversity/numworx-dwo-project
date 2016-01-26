@@ -1,7 +1,9 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
@@ -46,7 +48,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
 
     private static final Logger LOG = Logger.getLogger(SchoolClassRegistrationStudentJPanel.class.getName());
 
-    private JButton addButton=null;
+    private JButton addButton = null;
     private JPanel jtbl;
     private JTable jt;
 
@@ -288,8 +290,24 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        //TODO Register SchoolClass
-        int i = jt.getSelectedRow();
-        System.out.println(i);
+        try {
+            //TODO Register SchoolClass
+            int i = jt.getSelectedRow();
+            DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(i, 1);
+            DomNewSchoolClass4Student newSchoolClass = new DomNewSchoolClass4Student(sc);
+            if (sc.getHasRegKey()) {
+                SchoolClassRegistrationAskKeyJPanel panel = new SchoolClassRegistrationAskKeyJPanel();
+                panel.setSchoolClass(newSchoolClass);
+                int result = JOptionPane.showConfirmDialog(this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            }
+            prop.registerStudentForSchoolClass(newSchoolClass);
+            prop.init();
+            tableModel.init(prop);
+            tableModel.fireTableDataChanged();
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(SchoolClassRegistrationStudentJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
