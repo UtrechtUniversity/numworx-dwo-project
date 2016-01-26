@@ -291,7 +291,6 @@ public class ResultLogger extends JPanel implements ActionListener, ClipboardOwn
         add(split, BorderLayout.CENTER);
         add(btn, BorderLayout.SOUTH);
 
-        //TODO Gert geen data wordt gevuld
         requestLog();
         requestCMIData();
         requestPartialScore();

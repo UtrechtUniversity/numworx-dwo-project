@@ -6,6 +6,7 @@ import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import java.awt.Color;
 
 import java.awt.Component;
 import java.awt.FontMetrics;
@@ -27,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellEditor;
@@ -46,6 +48,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
 
     private JButton addButton=null;
     private JPanel jtbl;
+    private JTable jt;
 
     /**
      * Creates a new ProfilePanel for the current user. The account of the
@@ -109,9 +112,9 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
 //        addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
         JPanel footer = new JPanel();
         footer.setLayout(new BoxLayout(footer, BoxLayout.X_AXIS));
+        footer.add(addButton);
         footer.setBorder(new EmptyBorder(10, 10, 10, 10));
         footer.setBackground(GuiConstants.MAIN_BACKGROUND);
-        footer.add(addButton);
         this.add(footer);
     }
 
@@ -238,6 +241,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
         }
 
         JTable jtable = new JTable();
+        jt = jtable;
         jtbl = new JPanel();
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
@@ -245,13 +249,11 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
         jtbl.add(jtable);
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new SchoolClassRegistrationStudentTableModel();
-
         tableModel.init(prop);
         jtable.setModel(tableModel);
-        if (jtable.getRowCount() > 0) {
-            jtable.setRowSelectionInterval(0, 0);
-        }
-        jtable.setRowSelectionAllowed(false);
+        jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        jtable.setSelectionBackground(Color.BLUE);
+        jtable.setRowSelectionAllowed(true);
         jtable.setColumnSelectionAllowed(false);
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new ImageRenderer(), new ImageButtonEditor());
@@ -286,8 +288,8 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-//        if (e.getSource() == this.cancelButton) {
-        int i = tableModel.getSelectedRow();
+        //TODO Register SchoolClass
+        int i = jt.getSelectedRow();
         System.out.println(i);
     }
 }

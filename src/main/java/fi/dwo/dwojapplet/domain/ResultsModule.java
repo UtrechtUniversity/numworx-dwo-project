@@ -6,7 +6,10 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.ScoDialog;
 import fi.dwo.dwojapplet.gui.ScoPanel;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.dwo.dwojapplet.persistence.UserResultListMapper;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
@@ -384,11 +387,11 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      */
     @Override
     public void reset() {
-//        MapperIF m = MapperCreator.instance(UserResultList.class);
-//
-//        if (m instanceof UserResultListMapper) {
-//            ((UserResultListMapper) m).setResultsModule(this);
-//        }
+        MapperIF m = MapperCreator.instance(UserResultList.class);
+
+        if (m instanceof UserResultListMapper) {
+            ((UserResultListMapper) m).setResultsModule(this);
+        }
         currentlyZoomedLesson = null;
         currentlyZoomedUser = null;
         currentlyOrderedUser = null;

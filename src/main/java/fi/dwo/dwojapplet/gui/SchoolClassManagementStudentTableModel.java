@@ -14,7 +14,7 @@ import javax.swing.table.AbstractTableModel;
  */
 class SchoolClassManagementStudentTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {TextMapper.getText(TextMapper.GUIC_TBL_CLASSNAME), "L", "D"};
+    private String[] columnNames = {TextMapper.getText(TextMapper.GUIC_TBL_CLASSNAME), "Login", "Delete"};
     static boolean DEBUG = false;
     private SchoolClassManagementStudentProperties prop;
 
