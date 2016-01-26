@@ -16,12 +16,17 @@
 		GetDiagnostic:  function(code) { return "no diagnostic"; }
 	}
 	window.API_1484_11 = API_1484_11
+	function logout() {
+		window.location = document.getElementById("return_url").href
+	}
   </script>
   <style>
   	iframe {
   		border: 0px;
   	}
-  
+    #headerpane {
+    	display: none;
+    } 
   </style> 
 </head>
 <body style="font-family:sans-serif; margin:0px">
@@ -140,3 +145,5 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
 	src="player.html?locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
 >
 </iframe>
+</body>
+</html>
