@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
@@ -67,7 +68,7 @@ import fi.wiskopdr.expressies.repr.ContentMathML;
  * @author Danny Hendrix, Evertson Croes
  * 
  */
-public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView, CBookEventListener, FacetAware
+public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView, CBookEventListener, FacetAware, TekstElementWithFont
 {
 	private int extraWidth = 23 ; // of 43; breedte voor nakijkplaatje en als nodig voor knop voor uitklappen.
 	
@@ -568,7 +569,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			setFont(font);
 			setDefaultFont(font);
 		}
-				
+		paint();
 		
 	}
 	
@@ -1342,5 +1343,23 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				getKeyboard().blur();
 			}
 		}
+	}
+
+	@Override
+	public void setFontSize(int font_size) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFontName(String font_name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFontStyle(int font_style) {
+		// TODO Auto-generated method stub
+		
 	}
 }

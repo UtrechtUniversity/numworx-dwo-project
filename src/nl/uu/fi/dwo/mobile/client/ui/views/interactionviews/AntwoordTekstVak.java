@@ -37,6 +37,8 @@ import java.util.Vector;
 
 
 
+
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -52,6 +54,7 @@ import nl.uu.fi.dwo.interaction.client.FacetAware.Type;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
@@ -91,7 +94,7 @@ import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.repr.ContentMathML;
 
 
-public class AntwoordTekstVak implements InteractionView, FacetAware{
+public class AntwoordTekstVak implements InteractionView, FacetAware, TekstElementWithFont {
 
 	private Map<String, Object> launchState; 
 	OpdrNavIF comRoot;
@@ -1088,6 +1091,20 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 	public int[][] getScoreObjectives() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public void setFontName(String font_name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setFontStyle(int font_style) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

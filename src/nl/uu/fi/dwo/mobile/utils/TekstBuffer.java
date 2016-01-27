@@ -421,7 +421,8 @@ public class TekstBuffer
 		}
 		else if (soortVak == 9)
 		{
-			result = x(map, x(new TekstVakPanel(currentVakGegevens, randomVarNamen, randomVarWaarden)));
+			AnchorContext anchorContext = DWOplayer.clientfactory.getEntryView().getAnchorContext();
+			result = x(map, x(new TekstVakPanel(currentVakGegevens, randomVarNamen, randomVarWaarden, anchorContext)));
 		}
 		else if(soortVak == 11) 
 		{

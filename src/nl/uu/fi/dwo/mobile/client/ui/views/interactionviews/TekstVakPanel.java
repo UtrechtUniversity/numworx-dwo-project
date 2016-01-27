@@ -26,6 +26,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Connector;
@@ -219,6 +220,8 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	
 	private boolean isLink = false;
 	private ObjectList linkUrls;
+	private AnchorView.AnchorContext anchorContext;
+	
 	
 	private FlowPanel klikPanel;
 	
@@ -289,7 +292,12 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		breedtes = Arrays.asList((double) breedte);
 		hoogtes = Arrays.asList((double) hoogte);
 	}
-	
+
+	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap randomVarWaarden, AnchorView.AnchorContext context)
+	{
+		this(hh, randomVarNamen, randomVarWaarden);
+		this.anchorContext = context;
+	}
 	
 	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -1908,7 +1916,10 @@ public class TekstVakPanel implements InteractionView, FacetAware
 // Werk dit? FIXME naar de link api.		
 		if(isLink && linkUrls != null) {
 			String link = linkUrls.getString(0);
-			Window.open(link, "_blank", "");
+			if(anchorContext == null || !link.startsWith("goto:"))
+				Window.open(link, "_blank", "");
+			else
+				anchorContext.gotoUrl(link);
 		}}
 	}
 	

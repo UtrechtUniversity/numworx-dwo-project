@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -67,7 +68,7 @@ import fi.wiskopdr.text.Text;
  * @author Evertson Croes
  * 
  */
-public class FormuleEditorWithSteps implements InteractionView, FacetAware
+public class FormuleEditorWithSteps implements InteractionView, FacetAware, TekstElementWithFont
 {
 	private final static Logger logger = Logger.getLogger("FormuleEditorWithSteps");
 
@@ -992,6 +993,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			s = s.substring(0, isIndex);
 		}
 		return s;
+	}
+	
+	public void setParentRegel(TekstRegel parentRegel) {
+		setFont(parentRegel);
 	}
 	
 	public void setFont(TekstRegel parentRegel)
@@ -2733,5 +2738,24 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	public void setIsBoss(boolean b)
 	{
 		this.isBoss = b;		
+	}
+
+// Word gezet in setParentRegel()
+	@Override
+	public void setFontSize(int font_size) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFontName(String font_name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFontStyle(int font_style) {
+		// TODO Auto-generated method stub
+		
 	}
 }

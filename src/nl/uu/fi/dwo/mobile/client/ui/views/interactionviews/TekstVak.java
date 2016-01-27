@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
+import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -406,74 +407,89 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 			else if(currentObject instanceof InteractionView)
 				((InteractionView) currentObject).zetVolledigeBreedte((int) tekstVakBreedte);
-			if(currentObject instanceof AntwoordTekstVak)
-			{
-				((AntwoordTekstVak) currentObject).setFontSize(font_size);
-				if(regelBreedte == 0 || regelBreedte + ((AntwoordTekstVak) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
-				{	regelVakken[aantalRegels - 1].addObject(currentObject);
-					((AntwoordTekstVak) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
-					regelBreedte += ((AntwoordTekstVak) currentObject).getWidth();
-				}
-				else
-				{
-					voegRegelToe();
-					regelVakken[aantalRegels - 1].addObject(currentObject);
-					((AntwoordTekstVak) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
-					regelBreedte = ((AntwoordTekstVak) currentObject).getWidth();
-				}
-			}
-			else if (currentObject instanceof FormuleEditorWithAnswer)
-			{
-				//((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
-				//((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
-				if(regelBreedte == 0 || regelBreedte + ((FormuleEditorWithAnswer) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
-				{	regelVakken[aantalRegels - 1].addObject(currentObject);
-					((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
-					((FormuleEditorWithAnswer) currentObject).paint();
-					regelBreedte += ((FormuleEditorWithAnswer) currentObject).getWidth();
-				}
-				else
-				{
-					voegRegelToe();
-					regelVakken[aantalRegels - 1].addObject(currentObject);
-					((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
-					regelBreedte = ((FormuleEditorWithAnswer) currentObject).getWidth();
-				}
-			}
-			else if(currentObject instanceof FormuleEditorWithSteps)
-			{
-				if(regelBreedte == 0 || regelBreedte + ((FormuleEditorWithSteps) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
-				{	regelVakken[aantalRegels - 1].addObject(currentObject);
-					((FormuleEditorWithSteps) currentObject).setFont(regelVakken[aantalRegels - 1]);
-					regelBreedte += ((FormuleEditorWithSteps) currentObject).getWidth();
-				}
-				else
-				{
-					voegRegelToe();
-					regelVakken[aantalRegels - 1].addObject(currentObject);
-					((FormuleEditorWithSteps) currentObject).setFont(regelVakken[aantalRegels - 1]);
-					regelBreedte = ((FormuleEditorWithSteps) currentObject).getWidth();
-				}
-			}
-			else if (currentObject instanceof FormuleViewer)
+
+			if(currentObject instanceof TekstElementWithFont) {
+				TekstElementWithFont tmf = (TekstElementWithFont) currentObject;
+				tmf.setFontSize(font_size);
+				tmf.setFontName(font_name);
+				tmf.setFontStyle(font_style);
+				regelBreedte = setupTekstElement(regelBreedte, tmf, false);
+				tmf.setParentRegel(regelVakken[aantalRegels-1]);
+				
+			} else
+// TekstElementWithFont	(no ashoogte)					
+//			if(currentObject instanceof AntwoordTekstVak)
+//			{
+//				((AntwoordTekstVak) currentObject).setFontSize(font_size);
+//				if(regelBreedte == 0 || regelBreedte + ((AntwoordTekstVak) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
+//				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+//					((AntwoordTekstVak) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
+//					regelBreedte += ((AntwoordTekstVak) currentObject).getWidth();
+//				}
+//				else
+//				{
+//					voegRegelToe();
+//					regelVakken[aantalRegels - 1].addObject(currentObject);
+//					((AntwoordTekstVak) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
+//					regelBreedte = ((AntwoordTekstVak) currentObject).getWidth();
+//				}
+//			}
+//			else
+// InterActionView (no ashoogte)
+//			if (currentObject instanceof FormuleEditorWithAnswer)
+//			{
+//				//((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
+//				//((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
+//				if(regelBreedte == 0 || regelBreedte + ((FormuleEditorWithAnswer) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
+//				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+//					((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
+//					((FormuleEditorWithAnswer) currentObject).paint();
+//					regelBreedte += ((FormuleEditorWithAnswer) currentObject).getWidth();
+//				}
+//				else
+//				{
+//					voegRegelToe();
+//					regelVakken[aantalRegels - 1].addObject(currentObject);
+//					((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
+//					regelBreedte = ((FormuleEditorWithAnswer) currentObject).getWidth();
+//				}
+//			}
+//			else if(currentObject instanceof FormuleEditorWithSteps)
+//			{
+//				if(regelBreedte == 0 || regelBreedte + ((FormuleEditorWithSteps) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
+//				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+//					((FormuleEditorWithSteps) currentObject).setFont(regelVakken[aantalRegels - 1]);
+//					regelBreedte += ((FormuleEditorWithSteps) currentObject).getWidth();
+//				}
+//				else
+//				{
+//					voegRegelToe();
+//					regelVakken[aantalRegels - 1].addObject(currentObject);
+//					((FormuleEditorWithSteps) currentObject).setFont(regelVakken[aantalRegels - 1]);
+//					regelBreedte = ((FormuleEditorWithSteps) currentObject).getWidth();
+//				}
+//			}
+//			else 
+			if (currentObject instanceof FormuleViewer)
 			{	FormuleFont f = FormuleFont.createFromFontSize(font_size);
 				f.setBold(font_style == 1 || font_style == 3);
 				if(!FormuleFont.formTimes)
 					f.setFont(font_name);
-				((FormuleViewer) currentObject).setFont(f);
-				((FormuleViewer) currentObject).setDefaultFont(f);
-				((FormuleViewer) currentObject).setColor(fgColor);
-				
-				if(regelBreedte == 0 || regelBreedte + ((FormuleViewer) currentObject).getWidth() + 4 <= tekstVakBreedte || pasAanB)
-				{	regelVakken[aantalRegels - 1].addObject(currentObject);
-					regelBreedte += ((FormuleViewer) currentObject).getWidth() + 4;
-				}
-				else
-				{
-					voegRegelToe();
-					regelVakken[aantalRegels - 1].addObject(currentObject);
-					regelBreedte = ((FormuleViewer) currentObject).getWidth() + 4;
-				}
+				FormuleViewer formuleViewer = (FormuleViewer) currentObject;
+				formuleViewer.setFont(f);
+				formuleViewer.setDefaultFont(f);
+				formuleViewer.setColor(fgColor);
+				regelBreedte = setupTekstElement(regelBreedte, formuleViewer, false) + 4;
+//				if(regelBreedte == 0 || regelBreedte + formuleViewer.getWidth() + 4 <= tekstVakBreedte || pasAanB)
+//				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+//					regelBreedte += formuleViewer.getWidth() + 4;
+//				}
+//				else
+//				{
+//					voegRegelToe();
+//					regelVakken[aantalRegels - 1].addObject(currentObject);
+//					regelBreedte = formuleViewer.getWidth() + 4;
+//				}
 			}
 			else if (currentObject instanceof InteractionView)
 			{	
@@ -481,16 +497,17 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				{	zwevendeTekstVakken.add((TekstVakPanel) currentObject);
 				}
 				else
-				{	if(regelBreedte == 0 || regelBreedte + ((InteractionView) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
-					{	regelVakken[aantalRegels - 1].addObject(currentObject);
-						regelBreedte += ((InteractionView) currentObject).getWidth();
-					}
-					else
-					{
-						voegRegelToe();
-						regelVakken[aantalRegels - 1].addObject(currentObject);
-						regelBreedte = ((InteractionView) currentObject).getWidth();
-					}
+				{	regelBreedte = setupTekstElement(regelBreedte, (InteractionView) currentObject, false);
+//					if(regelBreedte == 0 || regelBreedte + ((InteractionView) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
+//					{	regelVakken[aantalRegels - 1].addObject(currentObject);
+//						regelBreedte += ((InteractionView) currentObject).getWidth();
+//					}
+//					else
+//					{
+//						voegRegelToe();
+//						regelVakken[aantalRegels - 1].addObject(currentObject);
+//						regelBreedte = ((InteractionView) currentObject).getWidth();
+//					}
 				}
 				
 				
@@ -499,40 +516,42 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			else if (currentObject instanceof ImageView || currentObject instanceof IFrameView)
 			{
 				TekstElement iv = (TekstElement) currentObject;
-				//Widget w = iv.getImage();
-				if(regelBreedte == 0 || regelBreedte + iv.getWidth() <= tekstVakBreedte || pasAanB)
-				{	regelVakken[aantalRegels - 1].addObject(currentObject);
-					regelBreedte += iv.getWidth();
-				}
-				else
-				{
-					voegRegelToe();
-					regelVakken[aantalRegels - 1].addObject(currentObject);
-					regelBreedte = iv.getWidth();
-				}
-				iv.setAsHoogte(regelVakken[aantalRegels - 1].getTekstAsHoogte());
+				regelBreedte = setupTekstElement(regelBreedte, iv, true);
+//				//Widget w = iv.getImage();
+//				if(regelBreedte == 0 || regelBreedte + iv.getWidth() <= tekstVakBreedte || pasAanB)
+//				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+//					regelBreedte += iv.getWidth();
+//				}
+//				else
+//				{
+//					voegRegelToe();
+//					regelVakken[aantalRegels - 1].addObject(currentObject);
+//					regelBreedte = iv.getWidth();
+//				}
+//				iv.setAsHoogte(regelVakken[aantalRegels - 1].getTekstAsHoogte());
 			}
-			else if (currentObject instanceof AnchorView)
-			{
-				AnchorView av = (AnchorView) currentObject;
-				//String text = av.toString();
-				//String save = ctx.getFont();
-				//if(!save.contains("bold")) ctx.setFont(save + " bold");
-				double width = av.getWidth(); // ctx.measureText(text).getWidth();
-				//ctx.setFont(save);
-				if(regelBreedte == 0 || regelBreedte + width <= tekstVakBreedte || pasAanB)
-				{	regelVakken[aantalRegels - 1].addObject(currentObject);
-					//regelBreedte += (int)width;
-					regelBreedte += width;
-				}
-				else
-				{
-					voegRegelToe();
-					regelVakken[aantalRegels - 1].addObject(currentObject);
-					//regelBreedte = (int)width;
-					regelBreedte += width;
-				}
-			}
+//	TekstElementWithFont	(no ashoogte)	
+//			else if (currentObject instanceof AnchorView)
+//			{
+//				AnchorView av = (AnchorView) currentObject;
+//				//String text = av.toString();
+//				//String save = ctx.getFont();
+//				//if(!save.contains("bold")) ctx.setFont(save + " bold");
+//				double width = av.getWidth(); // ctx.measureText(text).getWidth();
+//				//ctx.setFont(save);
+//				if(regelBreedte == 0 || regelBreedte + width <= tekstVakBreedte || pasAanB)
+//				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+//					//regelBreedte += (int)width;
+//					regelBreedte += width;
+//				}
+//				else
+//				{
+//					voegRegelToe();
+//					regelVakken[aantalRegels - 1].addObject(currentObject);
+//					//regelBreedte = (int)width;
+//					regelBreedte += width;
+//				}
+//			}
 		}
 		
 		//regelvakken vullen. Zo krijgen ze ook de juiste maten.
@@ -543,6 +562,20 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		}
 		this.ashoogte = regelVakken[0].getAsHoogte();
 		plaatsRegels(false);
+	}
+
+	private double setupTekstElement(double regelBreedte, TekstElement tmf, boolean as) {
+		double width = tmf.getWidth();
+		if( !(pasAanB || regelBreedte == 0 || regelBreedte + width <= tekstVakBreedte))
+		{
+			voegRegelToe();
+			regelBreedte = 0;
+		}
+		TekstRegel tekstRegel = regelVakken[aantalRegels-1];
+		tekstRegel.addObject(tmf);
+		if(as)tmf.setAsHoogte(tekstRegel.getAsHoogte());
+		regelBreedte += width;
+		return regelBreedte;
 	}
 	
 	public void voegRegelToe()

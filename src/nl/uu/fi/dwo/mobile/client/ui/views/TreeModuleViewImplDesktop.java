@@ -88,12 +88,14 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 				try { 
 					int sconr = Integer.parseInt(href)-1;
 					SelectModuleItem is = children.get(sconr);
+					setTreeSelectedItem(is);
 					selectItem(is);
 				} catch (Exception ex) {
 					for (Iterator<SelectModuleItem> iterator = children.iterator(); iterator.hasNext();) {
 						SelectModuleItem is = iterator.next();
 						if(is.getName().startsWith(href))
 						{
+							setTreeSelectedItem(is);
 							selectItem(is);
 							break;
 						}

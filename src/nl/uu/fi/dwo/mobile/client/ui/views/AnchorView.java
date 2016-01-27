@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
+import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -12,7 +14,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class AnchorView implements IsWidget, ClickHandler /*, TekstElement*/ {
+public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont /*, TekstElement*/ {
 
 	public interface AnchorContext {
 
@@ -71,11 +73,13 @@ public class AnchorView implements IsWidget, ClickHandler /*, TekstElement*/ {
 	private int    fontSize = XMLView.getDefaultFontSize();
 	private Context2d ctx;
 	
+	@Override
 	public void setFontName(String name) {
 		fontName = name;
-		anchor.getElement().getStyle().setProperty("font-family", name);
+		anchor.getElement().getStyle().setProperty("fontFamily", name);
 		setContextFont();
 	}
+	@Override
 	public void setFontSize(int size) {
 		fontSize = size;
 		anchor.getElement().getStyle().setFontSize(size, Unit.PX);
@@ -112,6 +116,20 @@ public class AnchorView implements IsWidget, ClickHandler /*, TekstElement*/ {
 
 	public void setAsHoogte(int ashoogte) {
 		this.asHoogte = ashoogte;	
+	}
+
+
+	@Override
+	public void setFontStyle(int font_style) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setParentRegel(TekstRegel regel) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

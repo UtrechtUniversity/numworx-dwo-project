@@ -224,17 +224,17 @@ public class TekstRegel extends LayoutPanel
 				objectBreedte = ((TekstElement) currentObject).getWidth();
 				objectHoogte = ((TekstElement) currentObject).getHeight();
 			}
-			else if(currentObject instanceof AnchorView)
-			{
-				AnchorView av = (AnchorView) currentObject;
-				objectVerschuiving = ashoogte - av.getAsHoogte();
-// Anchor is altijd bold
-				//String save = ctx.getFont();
-				//if(! save.contains("bold")) ctx.setFont(save + " bold");
-				objectBreedte = av.getWidth(); //(int) ctx.measureText(currentObject.toString()).getWidth();
-				objectHoogte = av.getHeight();
-				//ctx.setFont(save);
-			}
+//			else if(currentObject instanceof AnchorView)
+//			{
+//				AnchorView av = (AnchorView) currentObject;
+//				objectVerschuiving = ashoogte - av.getAsHoogte();
+//// Anchor is altijd bold
+//				//String save = ctx.getFont();
+//				//if(! save.contains("bold")) ctx.setFont(save + " bold");
+//				objectBreedte = av.getWidth(); //(int) ctx.measureText(currentObject.toString()).getWidth();
+//				objectHoogte = av.getHeight();
+//				//ctx.setFont(save);
+//			}
 			else if(currentObject instanceof String)
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
@@ -280,13 +280,13 @@ public class TekstRegel extends LayoutPanel
 				this.setWidgetLeftWidth(a, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 				this.setWidgetTopHeight(a, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
 			}
-			else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
-			{
-				Panel a = (Panel) (((InteractionView) currentObject).asWidget());
-				this.add(a);
-				this.setWidgetLeftWidth(a, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
-				this.setWidgetTopHeight(a, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
-			}
+//			else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
+//			{
+//				Panel a = (Panel) (((InteractionView) currentObject).asWidget());
+//				this.add(a);
+//				this.setWidgetLeftWidth(a, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
+//				this.setWidgetTopHeight(a, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
+//			}
 			else if (currentObject instanceof InteractionView)
 			{		
 				Widget a = (((InteractionView) currentObject).asWidget());
@@ -355,6 +355,15 @@ public class TekstRegel extends LayoutPanel
 			int objectHoogte = 0;
 			int objectVerschuiving = 0;
 			Widget w = this.getWidget(i);
+			if (regelObjects.get(i) instanceof AnchorView) {
+				AnchorView av = (AnchorView) regelObjects.get(i);
+				objectBreedte = av.getWidth();
+				objectHoogte = av.getHeight();
+				objectVerschuiving = ashoogte - av.getAsHoogte();
+				if(horPositie == 0 && Character.isLetter(av.toString().charAt(0))) // verschil met TextElement, XXX waarom????
+					horPositie = 2;
+			}
+			else
 			if(regelObjects.get(i) instanceof TekstElement)
 			{
 				TekstElement object = (TekstElement) regelObjects.get(i);
@@ -365,15 +374,7 @@ public class TekstRegel extends LayoutPanel
 				{	horPositie += 1;
 				}
 			}
-			else if (regelObjects.get(i) instanceof AnchorView) {
-				AnchorView av = (AnchorView) regelObjects.get(i);
-				objectBreedte = av.getWidth();
-				objectHoogte = av.getHeight();
-				objectVerschuiving = ashoogte - av.getAsHoogte();
-				if(horPositie == 0 && Character.isLetter(av.toString().charAt(0))) // verschil met TextElement, XXX waarom????
-					horPositie = 2;
-			}
-			else
+			else 
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
 				if(regelObjects.get(i) instanceof String /*|| regelObjects.get(i) instanceof AnchorView*/  ) // zie boven
@@ -420,15 +421,16 @@ public class TekstRegel extends LayoutPanel
 				if(hoogte - ash > h2)
 					h2 = hoogte - ash;
 			}
-			else if(currentObject instanceof AnchorView)
-			{
-				int hoogte = ((AnchorView) currentObject).getHeight();
-				int ash = ((AnchorView) currentObject).getAsHoogte();
-				if(ash > h1)
-					h1 = ash;
-				if(hoogte - ash > h2)
-					h2 = hoogte - ash;
-			}
+// TekstElement:
+//			else if(currentObject instanceof AnchorView)
+//			{
+//				int hoogte = ((AnchorView) currentObject).getHeight();
+//				int ash = ((AnchorView) currentObject).getAsHoogte();
+//				if(ash > h1)
+//					h1 = ash;
+//				if(hoogte - ash > h2)
+//					h2 = hoogte - ash;
+//			}
 			else if(currentObject instanceof String /*|| currentObject instanceof AnchorView*/)
 			{
 				int hoogte = tekstHoogte;
