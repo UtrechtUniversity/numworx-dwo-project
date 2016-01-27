@@ -392,6 +392,10 @@ public class TekstBuffer
 			//return new PopupFacade(map, new fi.grafiek3dgwt.client.Grafiek3DGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 32:
 			return new StubView("TegelsGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		case 50:
+			return x(map, 
+					new StubView("SliderWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
+			);
 		}
 
 		if (soortVak == 0)
