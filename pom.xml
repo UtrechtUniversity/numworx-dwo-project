@@ -147,4 +147,7 @@
   		</properties>
   	</profile>
   </profiles>
+  <scm>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOmAccess/trunk</developerConnection>
+  </scm>
 </project>
