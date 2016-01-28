@@ -1,6 +1,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
@@ -101,6 +102,48 @@ public class SecuredTeacherSchoolClassManager {
         }
     }
 
+
+    /**
+     * Returns the school data to be displayed.
+     *
+     * @param sc
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getFull")
+    public DomSchoolClass4Teacher getFullSchoolClass(@Context SecurityContext sc,RestSchoolClass schoolClass) {
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
+
+        if (phr != null && school != null) {
+            PersistentSchoolClass persistentSchoolClass;
+            Long key = (Long) MySQLPersistenceId.getId(schoolClass.getDomSchoolClass().getId());
+            try {
+                persistentSchoolClass = SchoolClassManager.findEntity(key);
+                LOG.log(Level.FINER, "Fetched full schoolClass {0} for teacher {1]. ", new Object[]{key, phr.getPersistentHasRolePK().getUserID()});
+                
+            }
+            catch (Exception e) {
+                LOG.log(Level.WARNING, "Unexpected exception", e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
+            }
+            return new DomSchoolClass4Teacher(persistentSchoolClass);
+        } else {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+    }
+    
     /**
      * Returns the school data to be displayed.
      *

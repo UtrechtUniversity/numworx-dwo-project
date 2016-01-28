@@ -79,6 +79,28 @@ public class SecuredTeacherSchoolClassManagerIT {
         dbInstance.ClearDatabase();
     }
 
+    
+        /**
+     * Test of getTeachersSchoolClasses method, of class
+     * SecuredTeacherSchoolClassManager.
+     */
+    @Test
+    public void testGetFullSchoolClass() {
+        System.out.println("getFullSchoolClass");
+        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        restSchoolClass.setDomSchoolClass(domSchoolClass);
+        domSchoolClass.setId(id);
+        DomSchoolClass4Teacher result = instance.getFullSchoolClass(sc, restSchoolClass);
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(domSchoolClass.getId()));
+        assertEquals(schoolClass.getIconizer(), result.getIconizer());
+        assertEquals(schoolClass.getClass1(), result.getSchoolClassName());
+        assertEquals(schoolClass.getRegistrationKey(), result.getRegistrationKey());
+    }
+
     /**
      * Test of getTeachersSchoolClasses method, of class
      * SecuredTeacherSchoolClassManager.
