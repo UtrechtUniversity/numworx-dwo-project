@@ -15,14 +15,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomSchoolClass4Teacher extends DomSchoolClass {
-
+    
     private String registrationKey = null;
     private Boolean iconizer = Boolean.FALSE;
-
-    public DomSchoolClass4Teacher(){
+    
+    public DomSchoolClass4Teacher() {
         
     }
-
     
     public DomSchoolClass4Teacher(PersistentSchoolClass sc) {
         super(sc);
@@ -52,10 +51,17 @@ public class DomSchoolClass4Teacher extends DomSchoolClass {
     }
 
     /**
+     * Updates the hasRegKey property.
+     * 
      * @param registrationKey the registrationKey to set
      */
     public void setRegistrationKey(String registrationKey) {
         this.registrationKey = registrationKey;
+        if (registrationKey != null) {
+            super.setHasRegKey(true);
+        } else {
+            super.setHasRegKey(false);
+        }        
     }
-
+    
 }
