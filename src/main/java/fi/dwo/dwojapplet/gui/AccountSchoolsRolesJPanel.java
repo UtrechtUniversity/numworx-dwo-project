@@ -77,7 +77,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.setAlignmentY(TOP_ALIGNMENT);
-        setBorder(BorderFactory.createEmptyBorder(25, 25, 0, 0));
+        setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
@@ -172,7 +172,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
             TableCellEditor, ActionListener {
 
         Object value;
-        ClassTeacherPanel.ClassModel model;
+//        ClassTeacherPanel.ClassModel model;
         int row;
 
         /**
@@ -248,7 +248,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                         if (currSrac != selectedSrac) {//always keeps current or switches to the null-school
                             //update tableview
                             tableModel.init(prop, loginImage, removeImage);
-                            model.fireTableDataChanged();
+                            tableModel.fireTableDataChanged();
                         } else {
                             switchToActiveSchoolLogin();
                         }
@@ -324,44 +324,43 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         if (e.getSource() == this.addRoleButton) {
             ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new RegisterMoreSchoolsPanel());
             dialog.setVisible(true);
-            //reload centerpanel
-
-            LOG.log(Level.INFO, "add role");
-        }
-        if (e.getSource() == loginImage) {
-//            //get Table setting
-            int row = tableModel.getSelectedColumn();
-            int col = tableModel.getSelectedRow();
-
-//            //set prop to table setting
-            prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(4, col));
-            try {
-                prop.setActiveSchoolRoleAndClass();
                 tableModel.init(prop, loginImage, removeImage);
                 tableModel.fireTableDataChanged();
-                //get user data
-                DomFullUser user = DwoHelper.getCurrentUser();
-                //switch role now
-                LOG.log(Level.FINE, "switching role now");
-                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
-            }
-            catch (LoginException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
-            }
-            catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
-            }
-
-        } else if (e.getSource() == removeImage) {
-            LOG.log(Level.INFO, "remove role");
-
-////                if (JOptionPane.showConfirmDialog(TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)))
-//      //                  + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//                    if (instance.deleteClass(sc)) {
-//                        model.removeRow(row);
-//                    }
         }
+//        if (e.getSource() == loginImage) {
+////            //get Table setting
+//            int row = tableModel.getSelectedColumn();
+//            int col = tableModel.getSelectedRow();
+//
+////            //set prop to table setting
+//            prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
+//            try {
+//                prop.setActiveSchoolRoleAndClass();
+//                tableModel.init(prop, loginImage, removeImage);
+//                tableModel.fireTableDataChanged();
+//                //get user data
+//                DomFullUser user = DwoHelper.getCurrentUser();
+//                //switch role now
+//                LOG.log(Level.FINE, "switching role now");
+//                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
+//            }
+//            catch (LoginException ex) {
+//                LOG.log(Level.SEVERE, null, ex);
+//                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+//            }
+//            catch (Dwo2Exception ex) {
+//                LOG.log(Level.SEVERE, null, ex);
+//                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+//            }
+//
+//        } else if (e.getSource() == removeImage) {
+//            LOG.log(Level.INFO, "remove role");
+//
+//////                if (JOptionPane.showConfirmDialog(TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)))
+////      //                  + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+////                    if (instance.deleteClass(sc)) {
+////                        model.removeRow(row);
+////                    }
+//        }
     }
 }

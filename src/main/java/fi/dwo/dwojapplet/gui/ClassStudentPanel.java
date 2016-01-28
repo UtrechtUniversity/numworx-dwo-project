@@ -5,7 +5,6 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;

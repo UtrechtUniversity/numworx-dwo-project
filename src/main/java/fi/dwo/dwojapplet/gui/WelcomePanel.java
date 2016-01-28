@@ -355,11 +355,11 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
                 }
             }
             catch (LoginException exc) {
-                JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                 LOG.log(Level.SEVERE, null, exc);
             }
             catch (Dwo2Exception ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                 Logger.getLogger(WelcomePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (src == guestButton) {

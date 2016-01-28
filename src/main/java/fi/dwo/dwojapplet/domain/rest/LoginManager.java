@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
@@ -38,8 +39,7 @@ public class LoginManager {
                 .request().cacheControl(cache).get(Response.class);
         if (response.getStatus() != 200) {
             // failed login
-            System.out.println("Code: " + response.getStatus() + ". Reason: " + response.getStatusInfo().getReasonPhrase());
-            return null;
+            throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, response.getStatusInfo().getReasonPhrase());
         } else {
             //Set return value
             user = response.readEntity(DomFullUser.class);

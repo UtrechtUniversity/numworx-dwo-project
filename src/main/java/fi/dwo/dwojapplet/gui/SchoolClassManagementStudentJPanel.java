@@ -45,7 +45,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
     private static final Logger LOG = Logger.getLogger(SchoolClassManagementStudentJPanel.class.getName());
 
     private final JButton registerSchoolClass;
-    private final JButton switchSchoolClass;
+//    private final JButton switchSchoolClass;
 
     private JPanel jtbl;
 
@@ -108,22 +108,22 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         registerSchoolClass = new JButton(TextMapper.getText(TextMapper.GUIC_REGISTER_FOR_CLASS));
         registerSchoolClass.setSize(registerSchoolClass.getPreferredSize());
         registerSchoolClass.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        switchSchoolClass = new JButton(TextMapper.getText(TextMapper.GUIC_BTN_SWITCH_CLASS));
-        switchSchoolClass.setSize(switchSchoolClass.getPreferredSize());
-        switchSchoolClass.setAlignmentX(Component.RIGHT_ALIGNMENT);
+//        switchSchoolClass = new JButton(TextMapper.getText(TextMapper.GUIC_BTN_SWITCH_CLASS));
+//        switchSchoolClass.setSize(switchSchoolClass.getPreferredSize());
+//        switchSchoolClass.setAlignmentX(Component.RIGHT_ALIGNMENT);
         buildJTable();
 
         registerSchoolClass.addActionListener(this);
         registerSchoolClass.setVisible(true);
-        switchSchoolClass.addActionListener(this);
-        switchSchoolClass.setVisible(true);
+//        switchSchoolClass.addActionListener(this);
+//        switchSchoolClass.setVisible(true);
 //        addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
         JPanel footer = new JPanel();
         footer.setLayout(new BoxLayout(footer, BoxLayout.X_AXIS));
         footer.setBorder(new EmptyBorder(10, 10, 10, 10));
         footer.setBackground(GuiConstants.MAIN_BACKGROUND);
         footer.add(registerSchoolClass);
-        footer.add(switchSchoolClass);
+//        footer.add(switchSchoolClass);
         this.add(footer);
     }
 
@@ -178,7 +178,6 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             TableCellEditor, ActionListener {
 
         Object value;
-        ClassTeacherPanel.ClassModel model;
         int row;
 
         /**
@@ -316,31 +315,9 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.registerSchoolClass) {
             ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new SchoolClassRegistrationStudentJPanel());
+            dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
 
-            //reload centerpanel
-        } else if (e.getSource() == this.switchSchoolClass) {
-
-            int row = tableModel.getSelectedRow();
-            DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, 3);
-            try {
-                prop.setActiveSchoolClass(sc);
-//                tableModel.init(prop, loginImage, removeImage);
-//                tableModel.fireTableDataChanged();
-                //get user data
-                DomFullUser user = DwoHelper.getCurrentUser();
-                //switch role now
-                LOG.log(Level.FINE, "switching class now");
-                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
-            }
-            catch (LoginException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
-            }
-            catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
-            }
 
         } else if (e.getSource() == removeImage) {
             LOG.log(Level.INFO, "remove role");

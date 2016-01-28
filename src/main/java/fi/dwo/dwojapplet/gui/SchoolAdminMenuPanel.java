@@ -1,7 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.gui.action.SchoolConfigAction;
 import java.awt.event.ActionEvent;
 import javax.swing.Box;

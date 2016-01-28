@@ -18,13 +18,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 /**
- * ClassRenamePanel
- * 
- * Queries user for a new configuration of the SchoolClass attributes.
+ * ClassConfigurePanel
+ 
+ Queries user for a new configuration of the SchoolClass attributes.
  * 
  * @author G.A.J. van der Plas
  */
-public class ClassRenamePanel extends JPanel implements ActionListener,
+public class ClassConfigurePanel extends JPanel implements ActionListener,
 		FocusListener {
 
 	private Color STYLE_COLOUR;
@@ -44,10 +44,10 @@ public class ClassRenamePanel extends JPanel implements ActionListener,
 	private String registrationKey; // not null means it is set
 	private boolean iconizer;
 
-	public ClassRenamePanel() {
+	public ClassConfigurePanel() {
 
 		// Constructing Pane
-		classLabel = new JLabel(TextMapper.getText("klasnaam"));
+		classLabel = new JLabel(TextMapper.getText("klasnaam "));
 		classTextField = new JTextField(25);
 		classTextField.addFocusListener(this);
 		classTextField.requestFocusInWindow();// request focus for typing
@@ -177,6 +177,7 @@ public class ClassRenamePanel extends JPanel implements ActionListener,
 	 * @return the className
 	 */
 	public String getClassName() {
+            className=this.classTextField.getText();
 		return className;
 	}
 

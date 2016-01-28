@@ -3,9 +3,13 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureTeacherSchoolClassManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -15,28 +19,51 @@ import java.util.logging.Logger;
 public class ClassTeacherPanelProperties {
 
     private static final Logger LOG = Logger.getLogger(ClassTeacherPanelProperties.class.getName());
-    private DomSchoolClass4Teacher sc = new DomSchoolClass4Teacher();
+//    private DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
+    private List<DomSchoolClass> scList;
 
     public ClassTeacherPanelProperties(){
         
     }
 
-    /**
-     * @return the sc
-     */
-    public DomSchoolClass4Teacher getSc() {
-        return sc;
-    }
+    public void init() throws Dwo2Exception {
+        try {
+            scList = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
+        }
+        catch (Dwo2Exception ex) {
 
-    /**
-     * @param sc the sc to set
-     */
-    public void setSc(DomSchoolClass4Teacher sc) {
-        this.sc = sc;
+            LOG.log(Level.SEVERE, ex.getMessage());
+            scList = new ArrayList<DomSchoolClass>();
+//            selectedSrc = null;
+            throw ex;
+        }
     }
     
-    public Boolean addClass() throws Dwo2Exception{
+//    
+//    public DomSchoolClass4Teacher getSchoolClass() {
+//        return schoolClass;
+//    }
+//
+//    public void setSchoolClass(DomSchoolClass4Teacher sc) {
+//        this.schoolClass = sc;
+//    }
+    
+    public Boolean addClass(DomSchoolClass4Teacher sc) throws Dwo2Exception{
         return SecureTeacherSchoolClassManager.SubmitSchoolClass(sc);
+    }
+
+    public Boolean updateSchoolClass(DomSchoolClass4Teacher sc) throws Dwo2Exception{
+        return SecureTeacherSchoolClassManager.UpdateSchoolClass(sc);
+    }
+
+    public Boolean removeSchoolClass(DomSchoolClass sc) throws Dwo2Exception{
+        return SecureTeacherSchoolClassManager.removeSchoolClass(sc);
+    }
+
+    public List<DomSchoolClass> getSchoolClassList() throws Dwo2Exception {
+        // can changed to caching. However low frequent operation.
+        init();
+        return scList;
     }
     
 }

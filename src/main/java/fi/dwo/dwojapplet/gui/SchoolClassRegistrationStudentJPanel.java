@@ -171,7 +171,6 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
             TableCellEditor, ActionListener {
 
         Object value;
-        ClassTeacherPanel.ClassModel model;
         int row;
 
         /**

@@ -88,4 +88,11 @@ public class SecureTeacherSchoolClassManager {
         return result;
     }
 
+    public static Boolean UpdateSchoolClass(DomSchoolClass4Teacher schoolClass) throws Dwo2Exception {
+        RestSchoolClass4Teacher restSchoolClass = new RestSchoolClass4Teacher();
+        restSchoolClass.setDomSchoolClass4Teacher(schoolClass);
+        Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/update", Boolean.class, restSchoolClass);
+        LOG.log(Level.FINE, "Updated schoolclass {1} for teacher with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(),restSchoolClass.getDomSchoolClass4Teacher().getSchoolClassName()});
+        return result;
+    }
 }

@@ -32,7 +32,7 @@ import javax.swing.border.Border;
  * original version by M.J.B. Kupers
  *
  */
-public class TeacherMenuPanel extends StudentMenuPanel implements SelectStrategy {
+public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
 
     private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
     private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
@@ -51,16 +51,15 @@ public class TeacherMenuPanel extends StudentMenuPanel implements SelectStrategy
     protected void createMenuButtons() {
         super.createMenuButtons();
         createGap();
-// Moved to StudentMenuPanel
-//        /* Add ClassManagement button */
-//        classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
-//        classManagementButton.addActionListener(this);
-//        this.add(classManagementButton);
-//        /* Als dwo in Deeplink mode, geen coursemanagement */
-//        if (dwo.getCourseViewNr() > 0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer()) {
-//            return;
-//        }
-//        createGap();
+        /* Add ClassManagement button */
+        classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
+        classManagementButton.addActionListener(this);
+        this.add(classManagementButton);
+        /* Als dwo in Deeplink mode, geen coursemanagement */
+        if (GuiCreator.instance().getDWO().getCourseViewNr() > 0 || !GuiCreator.instance().getDWO().getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer()) {
+            return;
+        }
+        createGap();
         /* Add CourseManagement Button */
         courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
         courseManagementButton.addActionListener(this);
@@ -163,7 +162,13 @@ public class TeacherMenuPanel extends StudentMenuPanel implements SelectStrategy
             instance.getMainPanel().getCenter().select(ModuleTreePanel.ALLE_MODULES);
             return;
         }
-        super.actionPerformed(e);
+        if (src == classManagementButton) {
+            instance.setWait();
+            CenterSubPanel cp = instance.getClassPanel();
+            center.reset();
+            center.loadCenter(cp);
+            instance.setReady();
+        }
 
         if (src instanceof ClassLinkedLabel) {
             instance.setWait();
@@ -171,13 +176,16 @@ public class TeacherMenuPanel extends StudentMenuPanel implements SelectStrategy
             center.reset();
             center.loadCenter(cp);
             instance.setReady();
+            return;
         } else if (src == courseManagementButton) {
             instance.setWait();
             CenterSubPanel cp = instance.getCourseManagementPanel();
             center.loadCenter(cp);
             center.setStrategy(this);
             instance.setReady();
+            return;
         }
+        super.actionPerformed(e);
     }
 
     @Override

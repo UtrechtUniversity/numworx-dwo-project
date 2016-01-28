@@ -4,14 +4,11 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.Teacher;
-import fi.dwo.dwojapplet.domain.User;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -33,8 +30,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -43,84 +40,86 @@ import javax.swing.table.TableCellRenderer;
  */
 public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionListener {
 
+    private static final Logger LOG = Logger.getLogger(ClassTeacherPanel.class.getName());
+
+    private ClassTeacherPanelProperties prop = new ClassTeacherPanelProperties();
+    private ClassTeacherPanelTableModel tableModel;
+
     private CenterPanel center;
 
     private JButton addClassButton;
 
-    private Image removeImage, editImage, usersImage, assignImage;
+    private Image editImage, modulesImage, studentsImage, teachersImage, removeImage;
 
-    private static final int ASSIGN_COL = 3;
-    private static final int REMOVE_COL = 4;
+    private JPanel jtbl;
 
-    ClassTeacherPanelProperties prop = new ClassTeacherPanelProperties();
-
-    class ClassModel extends AbstractTableModel {
-
-        int cols = 5;
-
-        SchoolClass[] classes;
-
-        public ClassModel(SchoolClass[] classes) {
-            super();
-            this.classes = classes;
-            if (!GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER)) {
-                cols = 4;
-            }
-        }
-
-        @Override
-        public int getColumnCount() {
-            return cols;
-        }
-
-        @Override
-        public int getRowCount() {
-            return classes.length;
-        }
-
-        @Override
-        public Object getValueAt(int row, int col) {
-            switch (col) {
-                case 0:
-                    return classes[row].getName();
-                case 1:
-                    return usersImage;
-                case 2:
-                    return editImage;
-                case REMOVE_COL:
-                    return removeImage;
-                case ASSIGN_COL:
-                    return assignImage;
-            }
-            return null;
-        }
-
-        @Override
-        public Class getColumnClass(int col) {
-            if (col > 0) {
-                return Image.class;
-            }
-            return super.getColumnClass(col);
-        }
-
-        @Override
-        public boolean isCellEditable(int row, int col) {
-            if (col == REMOVE_COL) {
-                return GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER);
-            }
-            return col > 0;
-        }
-
-        public void removeRow(int row) {
-            SchoolClass[] sc = new SchoolClass[classes.length - 1];
-            System.arraycopy(classes, 0, sc, 0, row);
-            System.arraycopy(classes, row + 1, sc, row, sc.length - row);
-            classes = sc;
-            fireTableRowsDeleted(row, row);
-        }
-
-    }
-
+//
+//    class ClassModel extends AbstractTableModel {
+//
+//        int cols = 5;
+//
+//        SchoolClass[] classes;
+//
+//        public ClassModel(SchoolClass[] classes) {
+//            super();
+//            this.classes = classes;
+//            if (!GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER)) {
+//                cols = 4;
+//            }
+//        }
+//
+//        @Override
+//        public int getColumnCount() {
+//            return cols;
+//        }
+//
+//        @Override
+//        public int getRowCount() {
+//            return classes.length;
+//        }
+//
+//        @Override
+//        public Object getValueAt(int row, int col) {
+//            switch (col) {
+//                case 0:
+//                    return classes[row].getName();
+//                case 1:
+//                    return usersImage;
+//                case 2:
+//                    return editImage;
+//                case REMOVE_COL:
+//                    return removeImage;
+//                case ASSIGN_COL:
+//                    return assignImage;
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        public Class getColumnClass(int col) {
+//            if (col > 0) {
+//                return Image.class;
+//            }
+//            return super.getColumnClass(col);
+//        }
+//
+//        @Override
+//        public boolean isCellEditable(int row, int col) {
+//            if (col == REMOVE_COL) {
+//                return GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER);
+//            }
+//            return col > 0;
+//        }
+//
+//        public void removeRow(int row) {
+//            SchoolClass[] sc = new SchoolClass[classes.length - 1];
+//            System.arraycopy(classes, 0, sc, 0, row);
+//            System.arraycopy(classes, row + 1, sc, row, sc.length - row);
+//            classes = sc;
+//            fireTableRowsDeleted(row, row);
+//        }
+//
+//    }
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
         private ImageIcon icon = new ImageIcon();
@@ -142,14 +141,14 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 case 2:
                     setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_CLASS));
                     break;
-                case REMOVE_COL:
-                    String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_CLASS);
-                    setToolTipText(MessageFormat.format(format, arguments));
-                    break;
-                case ASSIGN_COL:
-                    format = TextMapper.getText(TextMapper.GUIC_TLTP_ASSIGN_CLASS);
-                    setToolTipText(MessageFormat.format(format, arguments));
-                    break;
+//                case REMOVE_COL:
+//                    String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_CLASS);
+//                    setToolTipText(MessageFormat.format(format, arguments));
+//                    break;
+//                case ASSIGN_COL:
+//                    format = TextMapper.getText(TextMapper.GUIC_TLTP_ASSIGN_CLASS);
+//                    setToolTipText(MessageFormat.format(format, arguments));
+//                    break;
                 default:
                     setToolTipText("Message " + col); // TODO ....
             }
@@ -167,7 +166,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
             TableCellEditor, ActionListener {
 
         Object value;
-        ClassModel model;
+//        ClassTeacherPanelTableModel model;
         int row;
 
         @Override
@@ -177,7 +176,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
             JButton button = new JButton(new ImageIcon((Image) value));
             button.addActionListener(this);
             this.row = row;
-            model = (ClassModel) table.getModel();
+            //model = (ClassTeacherPanelTableModel) table.getModel();
             return button;
         }
 
@@ -188,87 +187,149 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 
         @Override
         public void actionPerformed(ActionEvent event) {
-            SchoolClass sc = model.classes[row];
-            final GuiCreator instance = GuiCreator.instance();
-            if (value == editImage) {
-                ClassRenamePanel panel = new ClassRenamePanel();
-//                sc = prop.getSc();
-                //               panel.setSchoolClass(sc);
-                int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                //case OK persist returned values
-                if (result == JOptionPane.OK_OPTION) {
-                    //persist returned values					
-                    if (instance.renameClass(sc, panel.getClassName(), panel.getRegistrationKey(), panel.isIconizer()));
-                    //update gui when done
-                    center.loadMenu();
-                    model.fireTableCellUpdated(row, 0);
-                }
-
-            } else if (value == removeImage) {
-                /* Delete the course */
-                if (JOptionPane.showConfirmDialog(ClassTeacherPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)
-                        + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    if (instance.deleteClass(sc)) {
-                        center.loadMenu();
-                        model.removeRow(row);
-                    }
-                }
-
-            } else if (value == usersImage) {
-                center.loadCenter(instance.getClassUsersPanel(sc));
-            } else if (value == assignImage) {
-                instance.getDWO().setWait();
-                long t = System.currentTimeMillis();
-                //setData(domain.selectCourses(SelectCoursesDialog.selectCourses(this, domain.getAllCourses(), domain.getSelectedCourse()), true));
-                Course[] allCourses = instance.getCourseList();
-                System.out.println("getCourselist " + (System.currentTimeMillis() - t));
-                t = System.currentTimeMillis();
-                Course[] selectedSchoolCourses = sc.getSelectedSchoolCourses();
-                System.out.println("getSelected list " + (System.currentTimeMillis() - t));
-                instance.getDWO().setReady();
-                Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassTeacherPanel.this, allCourses, selectedSchoolCourses, sc);
-                if (selectedCourses != null) {
-                    sc.saveSelectedCourses(allCourses, selectedCourses);
-                }
-            }
+            DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount() - 1);
+//            final GuiCreator instance = GuiCreator.instance();
+            fireEditingStopped();
+//            if (value == editImage) {
+//                ClassConfigurePanel panel = new ClassConfigurePanel();
+//                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
+//
+//                panel.setSchoolClass(schoolClass);
+//                int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//                //case OK persist returned values
+//                if (result == JOptionPane.OK_OPTION) {
+//                    //persist returned values	
+//                    try {
+//                        prop.updateSchoolClass(schoolClass);
+//                    }
+//                    catch (Dwo2Exception ex) {
+//                        Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+//                        JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                    }
+//                    center.loadMenu();
+//                    buildJTable();
+//
+//                }
+//            if (value == modulesImage) {
+//                ClassConfigurePanel panel = new ClassConfigurePanel();
+//                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
+//
+//                panel.setSchoolClass(schoolClass);
+//                int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//                //case OK persist returned values
+//                if (result == JOptionPane.OK_OPTION) {
+//                    //persist returned values	
+//                    try {
+//                        prop.updateSchoolClass(schoolClass);
+//                    }
+//                    catch (Dwo2Exception ex) {
+//                        Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+//                        JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                    }
+//                    center.loadMenu();
+//                    buildJTable();
+//
+//                }
+//            if (value == studentsImage) {
+//                ClassConfigurePanel panel = new ClassConfigurePanel();
+//                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
+//
+//                panel.setSchoolClass(schoolClass);
+//                int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//                //case OK persist returned values
+//                if (result == JOptionPane.OK_OPTION) {
+//                    //persist returned values	
+//                    try {
+//                        prop.updateSchoolClass(schoolClass);
+//                    }
+//                    catch (Dwo2Exception ex) {
+//                        Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+//                        JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                    }
+//                    center.loadMenu();
+//                    buildJTable();
+//
+//                }
+//            if (value == teachersImage) {
+//                ClassConfigurePanel panel = new ClassConfigurePanel();
+//                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
+//
+//                panel.setSchoolClass(schoolClass);
+//                int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//                //case OK persist returned values
+//                if (result == JOptionPane.OK_OPTION) {
+//                    //persist returned values	
+//                    try {
+//                        prop.updateSchoolClass(schoolClass);
+//                    }
+//                    catch (Dwo2Exception ex) {
+//                        Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+//                        JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                    }
+//                    center.loadMenu();
+//                    buildJTable();
+//
+//                }
+//
+//            } else if (value == removeImage) {
+//                /* Delete the course */
+//                try {
+//                   int row = tableModel.getSelectedRow();
+//                    prop.removeSchoolClass((DomSchoolClass) tableModel.getValueAt(4, row));
+//                }
+//                catch (Dwo2Exception ex) {
+//                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+//                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                }
+//                center.loadMenu();
+//                buildJTable();
+//
             fireEditingStopped();
         }
 
     }
 
-    private Box jtbl;
-
-    private void buildJTable() {
+    private void buildJTable() throws Dwo2Exception {
         if (jtbl != null) {
             remove(jtbl);
             jtbl = null;
         }
+        jtbl = new JPanel();
 
-        JTable table = new JTable();
-        jtbl = Box.createHorizontalBox();
-        jtbl.add(table);
+        JTable jtable = new JTable();
+        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
+        jtbl.add(jtable.getTableHeader());
+        jtbl.add(jtable);
         jtbl.add(Box.createHorizontalGlue());
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
-        if (GuiCreator.instance().getUser() instanceof Teacher) {
-            Teacher t = (Teacher) GuiCreator.instance().getUser();
-            SchoolClass[] classes = t.getClasses();
-            table.setModel(new ClassModel(classes));
-        } else {
-            return;
-        }
+        tableModel = new ClassTeacherPanelTableModel();
 
-        TableUtil.setDefaults(table, false, new ImageRenderer(), new ImageButtonEditor());
-        TableUtil.setJTableSizes(table);
-// TODO shrink to fit heeft 520 als breedte
-        Dimension size = table.getPreferredSize();
-        if (size.width < 520) {
-            size.width = 520;
+        tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
+        jtable.setModel(tableModel);
+        if (jtable.getRowCount() > 0) {
+            jtable.setRowSelectionInterval(0, 0);
         }
-        table.setMaximumSize(size);
+        jtable.setRowSelectionAllowed(false);
+        jtable.setColumnSelectionAllowed(false);
+        jtable.setCellSelectionEnabled(false);
+        TableUtil.setDefaults(jtable, true, new ClassTeacherPanel.ImageRenderer(), new ClassTeacherPanel.ImageButtonEditor());
+        TableUtil.setJTableSizes(jtable);
+
+        TableUtil.setDefaults(jtable, false, new ImageRenderer(), new ImageButtonEditor());
+        TableUtil.setJTableSizes(jtable);
+// TODO shrink to fit heeft 520 als breedte
+//        Dimension size = jtable.getPreferredSize();
+//        if (size.width < 520) {
+//            size.width = 520;
+//        }
+//        jtable.setMaximumSize(size);
         jtbl.setLocation(30, addClassButton.getSize().height
                 + addClassButton.getLocation().y + 15);
-        TableUtil.setBorder(table);
+        TableUtil.setBorder(jtable);
         //TableUtil.shrinkToFit(table, jtbl, 520, 405);
         jtbl.setVisible(false);
         this.add(jtbl);
@@ -280,24 +341,34 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
      * Creates a new ClassPanel which shows a list of classes.
      *
      */
-    public ClassTeacherPanel() {
+    public ClassTeacherPanel() throws Dwo2Exception {
         super(null);
+        this.setSize(480, 500);
+
+        //fetch user details.
+        try {
+            prop.init();
+        }
+        catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
+            GuiCreator.instance().ShowMessageToUser(this, e.getLocalizedCodeExplanation(DwoHelper.getLocale()), "", JOptionPane.ERROR_MESSAGE);
+        }
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        //this.setSize(620, 485);
-        //this.setSize(600, 470);
-        //this.setPreferredSize(getSize());
-        setBorder(BorderFactory.createEmptyBorder(10, 30, 0, 0));
+        setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
-        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
-        usersImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
-        assignImage = DwoHelper.getResourceImage(GuiConstants.ASSIGN_CLASS_IMAGE);
-        tr.addImage(removeImage, 0);
-        tr.addImage(editImage, 1);
-        tr.addImage(usersImage, 2);
-        tr.addImage(assignImage, 3);
+        modulesImage = DwoHelper.getResourceImage(GuiConstants.ASSIGN_CLASS_IMAGE);
+        studentsImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
+        teachersImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
+        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
+        tr.addImage(editImage, 0);
+        tr.addImage(modulesImage, 1);
+        tr.addImage(studentsImage, 2);
+        tr.addImage(teachersImage, 3);
+        tr.addImage(removeImage, 4);
         try {
             tr.waitForAll();
         }
@@ -310,7 +381,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         addClassButton.setSize(addClassButton.getPreferredSize());
         addClassButton.addActionListener(this);
         //addClassButton.setLocation(30, 10);
-        addClassButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
+//        addClassButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
         Box header = Box.createHorizontalBox();
         header.add(addClassButton);
         header.add(Box.createHorizontalGlue());
@@ -318,7 +389,6 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         //addClassButton.setVisible(true);
         this.add(Box.createVerticalStrut(15));
         buildJTable();
-
     }
 
     /**
@@ -359,29 +429,28 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addClassButton) {
-            ClassRenamePanel panel = new ClassRenamePanel();
+            ClassConfigurePanel panel = new ClassConfigurePanel();
             DomSchoolClass4Teacher sc = new DomSchoolClass4Teacher();
-            
+
             panel.setSchoolClass(sc);
             int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
                     JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            sc.setSchoolClassName(panel.getClassName());
+            sc.setRegistrationKey(panel.getRegistrationKey());
+            sc.setIconizer(panel.isIconizer());
             //case OK persist returned values
             if (result == JOptionPane.OK_OPTION) {
                 //persist returned values	
-                panel.updateSchoolClass(sc);
-                prop.setSc(sc);
                 try {
-                    prop.addClass();
+                    prop.addClass(sc);
+                    tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
+                    tableModel.fireTableDataChanged();
                 }
                 catch (Dwo2Exception ex) {
                     Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
                     JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
-                center.loadMenu();
-                buildJTable();
-
             }
-
         }
     }
 
