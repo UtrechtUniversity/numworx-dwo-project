@@ -213,10 +213,8 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 finally {
                     fireEditingStopped();
                 }
-            }
-        }
 
-//            if (value == modulesImage) {
+            } else if (value == modulesImage) {
 //                ClassConfigurePanel panel = new ClassConfigurePanel();
 //                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
 //
@@ -236,8 +234,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 //                    center.loadMenu();
 //                    buildJTable();
 //
-//                }
-//            if (value == studentsImage) {
+            } else if (value == studentsImage) {
 //                ClassConfigurePanel panel = new ClassConfigurePanel();
 //                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
 //
@@ -280,19 +277,28 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 //
 //                }
 //
-//            } else if (value == removeImage) {
-//                /* Delete the course */
-//                try {
-//                   int row = tableModel.getSelectedRow();
-//                    prop.removeSchoolClass((DomSchoolClass) tableModel.getValueAt(4, row));
-//                }
-//                catch (Dwo2Exception ex) {
-//                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
-//                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//                }
-//                center.loadMenu();
-//                buildJTable();
-//
+            } else if (value == removeImage) {
+                try {
+                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+
+                    Ask confirmation
+
+                    if (result == true) {
+                        //persist returned values	
+                        prop.removeSchoolClass(sc);
+                        tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
+                        tableModel.fireTableDataChanged();
+                    }
+                }
+                catch (Dwo2Exception ex) {
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                }
+                finally {
+                    fireEditingStopped();
+                }
+            }
+        }
     }
 
     private void buildJTable() throws Dwo2Exception {
