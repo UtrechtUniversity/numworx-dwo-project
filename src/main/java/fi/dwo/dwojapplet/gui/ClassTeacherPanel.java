@@ -7,10 +7,10 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
@@ -30,7 +30,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -187,30 +186,36 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 
         @Override
         public void actionPerformed(ActionEvent event) {
-            DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount() - 1);
 //            final GuiCreator instance = GuiCreator.instance();
-            fireEditingStopped();
-//            if (value == editImage) {
-//                ClassConfigurePanel panel = new ClassConfigurePanel();
-//                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
-//
-//                panel.setSchoolClass(schoolClass);
-//                int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//                //case OK persist returned values
-//                if (result == JOptionPane.OK_OPTION) {
-//                    //persist returned values	
-//                    try {
-//                        prop.updateSchoolClass(schoolClass);
-//                    }
-//                    catch (Dwo2Exception ex) {
-//                        Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
-//                        JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//                    }
-//                    center.loadMenu();
-//                    buildJTable();
-//
-//                }
+            if (value == editImage) {
+                try {
+                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    ClassConfigurePanel panel = new ClassConfigurePanel();
+                    DomSchoolClass4Teacher fullSchoolClass = prop.getFullSchoolClass(sc);
+                    panel.setSchoolClass(fullSchoolClass);
+                    int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    fullSchoolClass.setSchoolClassName(panel.getClassName());
+                    fullSchoolClass.setRegistrationKey(panel.getRegistrationKey());
+                    fullSchoolClass.setIconizer(panel.isIconizer());
+                    //case OK persist returned values
+                    if (result == JOptionPane.OK_OPTION) {
+                        //persist returned values	
+                        prop.updateSchoolClass(fullSchoolClass);
+                        tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
+                        tableModel.fireTableDataChanged();
+                    }
+                }
+                catch (Dwo2Exception ex) {
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                }
+                finally {
+                    fireEditingStopped();
+                }
+            }
+        }
+
 //            if (value == modulesImage) {
 //                ClassConfigurePanel panel = new ClassConfigurePanel();
 //                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
@@ -288,9 +293,6 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 //                center.loadMenu();
 //                buildJTable();
 //
-            fireEditingStopped();
-        }
-
     }
 
     private void buildJTable() throws Dwo2Exception {
@@ -319,8 +321,8 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         TableUtil.setDefaults(jtable, true, new ClassTeacherPanel.ImageRenderer(), new ClassTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
 
-        TableUtil.setDefaults(jtable, false, new ImageRenderer(), new ImageButtonEditor());
-        TableUtil.setJTableSizes(jtable);
+//        TableUtil.setDefaults(jtable, false, new ImageRenderer(), new ImageButtonEditor());
+//        TableUtil.setJTableSizes(jtable);
 // TODO shrink to fit heeft 520 als breedte
 //        Dimension size = jtable.getPreferredSize();
 //        if (size.width < 520) {
@@ -445,9 +447,11 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     prop.addClass(sc);
                     tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
                     tableModel.fireTableDataChanged();
+
                 }
                 catch (Dwo2Exception ex) {
-                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+                    Logger.getLogger(ClassTeacherPanel.class
+                            .getName()).log(Level.FINE, null, ex);
                     JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             }

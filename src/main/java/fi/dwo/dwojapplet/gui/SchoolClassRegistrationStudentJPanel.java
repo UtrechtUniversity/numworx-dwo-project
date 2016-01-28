@@ -292,7 +292,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
         try {
             //TODO Register SchoolClass
             int i = jt.getSelectedRow();
-            DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(i, 1);
+            DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(tableModel.getColumnCount(), i);
             DomNewSchoolClass4Student newSchoolClass = new DomNewSchoolClass4Student(sc);
             if (sc.getHasRegKey()) {
                 SchoolClassRegistrationAskKeyJPanel panel = new SchoolClassRegistrationAskKeyJPanel();

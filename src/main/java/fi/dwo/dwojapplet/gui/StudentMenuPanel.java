@@ -44,24 +44,9 @@ public class StudentMenuPanel extends UserMenuPanel {
         add(Box.createVerticalStrut(15));
     }
 
-    /* (non-Javadoc)
-     * @see fi.dwo.client.gui.GuestMenuPanel#createButtons()
-     */
-    @Override
-    protected void createButtons() {
-        super.createButtons();
-        createMenuButtons();
-        addClassList();
-    }
-
     protected void createMenuButtons() {
+        super.createMenuButtons();
         createGap();
-        /* Add MainMenu button */
-//        myProfileButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_MY_PROFILE));
-//        myProfileButton.addActionListener(this);
-//        this.add(myProfileButton);
-//
-//        createGap();
         /* Add ClassManagement button */
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
         classManagementButton.addActionListener(this);

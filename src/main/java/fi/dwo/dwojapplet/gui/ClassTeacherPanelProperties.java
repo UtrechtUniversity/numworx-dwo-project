@@ -65,5 +65,9 @@ public class ClassTeacherPanelProperties {
         init();
         return scList;
     }
+
+    public DomSchoolClass4Teacher getFullSchoolClass(DomSchoolClass sc) throws Dwo2Exception {
+        return SecureTeacherSchoolClassManager.GetFullSchoolClass(sc);
+    }
     
 }

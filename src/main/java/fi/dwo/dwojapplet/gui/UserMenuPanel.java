@@ -30,7 +30,7 @@ public class UserMenuPanel extends GuestMenuPanel {
      * @see fi.dwo.client.gui.GuestMenuPanel#createButtons()
      */
     @Override
-    protected void createButtons() {
+    final protected void createButtons() {
         super.createButtons();
         createMenuButtons();
         addClassList();
@@ -42,12 +42,6 @@ public class UserMenuPanel extends GuestMenuPanel {
         myProfileButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_MY_PROFILE));
         myProfileButton.addActionListener(this);
         this.add(myProfileButton);
-// Simpel User has no classes
-//        createGap();
-//        /* Add ClassManagement button */
-//        classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
-//        classManagementButton.addActionListener(this);
-//        this.add(classManagementButton);
      }
 
     /**

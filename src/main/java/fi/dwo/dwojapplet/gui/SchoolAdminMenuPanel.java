@@ -7,7 +7,7 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-public class SchoolAdminMenuPanel extends TeacherMenuPanel {
+public class SchoolAdminMenuPanel extends UserMenuPanel {
 
     protected MenuPanelButton userManagementButton;
     protected MenuPanelButton klasKeuzeButton;
