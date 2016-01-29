@@ -35,9 +35,9 @@ public abstract class TextMapper {
     public static final String DLG_CONFIRM = "DLG_CONFIRM";
 
     public static final String DLG_MESSAGE = "DLG_MESSAGE";
+    public static final String DLG_ERROR = "DLG_ERROR";
 
     public static final String DLG_ENTER_INPUT = "DLG_ENTER_INPUT";
-
     /* Exception Messages */
     public final static String EX_UNKNOWN_ERROR = "EX_UNKNOWN_ERROR";
 
@@ -96,6 +96,7 @@ public abstract class TextMapper {
     public final static String GUIW_BTN_REGISTER = "GUIW_BTN_REGISTER";
 
     public final static String GUIW_ERR_LOGIN = "GUIW_ERR_LOGIN";
+    public final static String GUIW_ERR_NOROLE = "GUIW_ERR_NOROLE";
 
     /* Register Panel */
     public final static String GUIR_REGISTER = "GUIR_REGISTER";
