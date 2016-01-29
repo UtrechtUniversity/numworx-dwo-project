@@ -33,7 +33,7 @@
   <!-- to create a completely dynamic UI.        -->
   <!--                                           -->
   <body style="margin: 0; overflow: hidden" >
-<script type='text/javascript' language='javascript' src='http://www.geogebra.org/web/4.4/web/web.nocache.js' ></script>	  
+<script type='text/javascript' language='javascript' src='https://app.dwo.nl/apps/geogebra/4.4/web/web.nocache.js' ></script>	  
 <script type="text/javascript">
 
 	function ggbOnInit() {
@@ -48,14 +48,19 @@
 	}
 	
 	function writeGGB() {
-		article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: 0px;' "
-		article_post = "></article>"	
-		result = window.install(null, window.viewer)
-		document.getElementById('hiero').innerHTML =  ( article_pre + result + article_post );
-		web.succeeded = web()
+		if( window.install ) 
+		{
+			article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: 0px;' "
+			article_post = "></article>"	
+			result = window.install(null, window.viewer)
+			document.getElementById('hiero').innerHTML =  ( article_pre + result + article_post );
+			web.succeeded = web()
+		} else {
+			console.log("window.install not defined")
+			window.setTimeout("writeGGB()",50);
+		}
 	}
-	
-	window.setTimeout("writeGGB()",1000);
+	window.setTimeout("writeGGB()",50);
 </script>
 <div id='hiero'>
 <article class='geogebraweb' style='border: 1px solid black; display:inline-block;' data-param-language='nl' data-param-ggbbase64=''></article>
