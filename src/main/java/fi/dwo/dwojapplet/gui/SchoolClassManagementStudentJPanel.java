@@ -22,9 +22,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -79,7 +77,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         this.setAlignmentY(TOP_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
- /* Add Remove-class image */
+        /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         loginImage = DwoHelper.getResourceImage(GuiConstants.STUDENT_IMAGE); //"resources/student.png");
@@ -250,7 +248,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             }
             catch (Dwo2Exception e) {
                 LOG.log(Level.SEVERE, null, e);
-                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(),e);
+                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), e);
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
@@ -317,7 +315,8 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new SchoolClassRegistrationStudentJPanel());
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
-
+            tableModel.init(prop, loginImage, removeImage);
+            tableModel.fireTableDataChanged();
 
         } else if (e.getSource() == removeImage) {
             LOG.log(Level.INFO, "remove role");

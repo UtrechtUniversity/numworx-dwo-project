@@ -7,14 +7,19 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +38,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * The panel which shows the school classes for a teacher.
@@ -207,7 +213,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     }
                 }
                 catch (Dwo2Exception ex) {
-                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+                    LOG.log(Level.FINE, null, ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
                 finally {
@@ -215,73 +221,49 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 }
 
             } else if (value == modulesImage) {
-//                ClassConfigurePanel panel = new ClassConfigurePanel();
-//                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
-//
-//                panel.setSchoolClass(schoolClass);
-//                int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//                //case OK persist returned values
-//                if (result == JOptionPane.OK_OPTION) {
-//                    //persist returned values	
-//                    try {
-//                        prop.updateSchoolClass(schoolClass);
-//                    }
-//                    catch (Dwo2Exception ex) {
-//                        Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
-//                        JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//                    }
-//                    center.loadMenu();
-//                    buildJTable();
+                Course[] allCourses=null;
+                Course[] selectedSchoolCourses=null;
+                SchoolClass sc=null;
+                try {
+                    DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    sc = (SchoolClass) MapperCreator.instance(SchoolClass.class).get((int) MySQLPersistenceId.getId(schoolClass.getId()));
+                    GuiCreator.instance().getDWO().setWait();
+                    allCourses = GuiCreator.instance().getDWO().getCourses();
+                    selectedSchoolCourses = sc.getSelectedSchoolCourses();
+                }
+                catch (IOException ex) {
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                catch (XmlRpcException ex) {
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                catch (SQLException ex) {
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                finally {
+                    GuiCreator.instance().getDWO().setReady();
+                }
+                Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassTeacherPanel.this, allCourses, selectedSchoolCourses, sc);
+                if (selectedCourses != null) {
+                    GuiCreator.instance().getDWO().setWait();
+                    try {
+                        sc.saveSelectedCourses(allCourses, selectedCourses);
+                    }
+                    finally {
+                        GuiCreator.instance().getDWO().setReady();
+                    }
+                }
+                fireEditingStopped();
 //
             } else if (value == studentsImage) {
-//                ClassConfigurePanel panel = new ClassConfigurePanel();
-//                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
-//
-//                panel.setSchoolClass(schoolClass);
-//                int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//                //case OK persist returned values
-//                if (result == JOptionPane.OK_OPTION) {
-//                    //persist returned values	
-//                    try {
-//                        prop.updateSchoolClass(schoolClass);
-//                    }
-//                    catch (Dwo2Exception ex) {
-//                        Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
-//                        JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//                    }
-//                    center.loadMenu();
-//                    buildJTable();
-//
-//                }
-//            if (value == teachersImage) {
-//                ClassConfigurePanel panel = new ClassConfigurePanel();
-//                DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
-//
-//                panel.setSchoolClass(schoolClass);
-//                int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//                //case OK persist returned values
-//                if (result == JOptionPane.OK_OPTION) {
-//                    //persist returned values	
-//                    try {
-//                        prop.updateSchoolClass(schoolClass);
-//                    }
-//                    catch (Dwo2Exception ex) {
-//                        Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
-//                        JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//                    }
-//                    center.loadMenu();
-//                    buildJTable();
-//
-//                }
-//
+                LOG.log(Level.INFO, "students called");
+                fireEditingStopped();
+
             } else if (value == removeImage) {
                 try {
                     DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
 
-                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM))==JOptionPane.OK_OPTION) {
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
                         //persist returned values	
                         prop.removeSchoolClass(sc);
                         tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
@@ -290,7 +272,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 }
                 catch (Dwo2Exception ex) {
                     Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
-                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
                 finally {
                     fireEditingStopped();
@@ -357,7 +339,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         }
         catch (Dwo2Exception e) {
             LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
-            GuiCreator.instance().ShowErrorDialog(this,e);
+            GuiCreator.instance().ShowErrorDialog(this, e);
         }
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

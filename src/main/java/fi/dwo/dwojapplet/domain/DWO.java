@@ -152,7 +152,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         }
         catch (final Exception e) {
             Logger.getAnonymousLogger().log(Level.INFO, "No logging.properties file found in current directory. Using default.");
-            try {                
+            try {
                 final InputStream inputStream2 = DWO.class.getResourceAsStream("/logging.properties");
                 LogManager.getLogManager().readConfiguration(inputStream2);
                 Logger.getAnonymousLogger().log(Level.INFO, "logging.properties file read from property folder.");
@@ -173,8 +173,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      */
     private static void ReadConfigProperties() throws MalformedURLException {
         //TODO set config properties when run as an applet.
-        
-            LOG.log(Level.INFO, "Checking for DWO.properties");
+
+        LOG.log(Level.INFO, "Checking for DWO.properties");
         Properties properties = new Properties();
         try {
 
@@ -229,22 +229,21 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             DwoHelper.getServerUrlPath()});
 
         //if not set pick default path
-        String resourceURLPathStringProperty = properties.getProperty("resourceUrlPath", (new URL(DwoHelper.getServerUrlPath(),"resources")).toString());
+        String resourceURLPathStringProperty = properties.getProperty("resourceUrlPath", (new URL(DwoHelper.getServerUrlPath(), "resources")).toString());
         DwoHelper.setResourceUrlPath(new URL(resourceURLPathStringProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
             DwoHelper.getResourceUrlPath()});
 
         //if not set pick default path
-        String jarURLPathStringProperty = properties.getProperty("jarUrlPath",(new URL(DwoHelper.getServerUrlPath(),"jars")).toString());
+        String jarURLPathStringProperty = properties.getProperty("jarUrlPath", (new URL(DwoHelper.getServerUrlPath(), "jars")).toString());
         DwoHelper.setJarUrlPath(new URL(jarURLPathStringProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"jarURLPathStringProperty",
             DwoHelper.getJarUrlPath()});
-        
-        
+
         String xmlrpc_debug = properties.getProperty("xmlrpc.debug", "false");
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug", xmlrpc_debug});
         MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
-        
+
     }
 
     /**
@@ -410,7 +409,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 //            }
 //
 //        }
-
     }
 
     /**
@@ -810,7 +808,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      *
      */
     @Override
-    
+
     public Group[] getGroups() {
         try {
             return (Group[]) PersistenceFacade.instance().get(Group.class);
@@ -1262,13 +1260,13 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     }
 
     /**
-     * This methods preconfigures any statics in a class that needs to be set 
+     * This methods preconfigures any statics in a class that needs to be set
      * before their static methods are accessed.
      */
-    public void boot(){
-        
+    public void boot() {
+
     }
-    
+
     /**
      * First phase of the applet life-cycle, {@Link start} is called immediately
      * after it.
@@ -1281,7 +1279,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         Clipboard.initialize();
         //It we started from the command line then the DwoHelper.getServletConnectString()
         //has been intialized. Otherwise we set it to the server where we downloaded from
-        if (DwoHelper.getServerUrlPath()== null) {
+        if (DwoHelper.getServerUrlPath() == null) {
             URL url = DwoHelper.getApplet().getCodeBase();
             try {
                 Loader.setPrefix(url.toString());
@@ -1291,8 +1289,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             catch (MalformedURLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
-        } 
-        
+        }
+
         //intialize the proper connection but without any credentials.
         Client client = ClientBuilder.newClient();
         client.property(ClientProperties.CONNECT_TIMEOUT, 5000); //connect within 5 seconds
@@ -1501,7 +1499,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             dwoProfile = (DwoProfile) PersistenceFacade.instance().get(dwoProfileID, DwoProfile.class);
         }
-        catch (PersistenceException e) {
+        catch (Exception e) {
         }
         GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
         ModuleTreePanel.initialize(dwoProfile);
@@ -1806,7 +1804,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         //lookAndFeel = UIManager.getSystemLookAndFeelClassName();
         //UIManager.setLookAndFeel(lookAndFeel);
 //        UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        LOG.log(Level.INFO,"Starting the DWO as an application.");
+        LOG.log(Level.INFO, "Starting the DWO as an application.");
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
 

@@ -39,7 +39,10 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
 	private boolean iconizer;
 
 	public SchoolClassRegistrationAskKeyJPanel() {
-
+            init();
+        }
+        
+        public void init(){    
 		// Constructing Pane
 		classLabel = new JLabel(TextMapper.getText("klasnaam"));
 		classTextField = new JTextField(25);

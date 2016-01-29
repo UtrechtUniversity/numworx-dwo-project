@@ -3,7 +3,6 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
@@ -25,9 +24,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -222,7 +219,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
             //set prop to table setting
             DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
             //popup dialog for password and or confirmation.
- //           GuiCreator.instance().(null, schoolClass.getSchoolClassName(), "Error", JOptionPane.ERROR_MESSAGE);
+            //           GuiCreator.instance().(null, schoolClass.getSchoolClassName(), "Error", JOptionPane.ERROR_MESSAGE);
             //          }
 //            catch (Dwo2Exception e) {
 //                LOG.log(Level.SEVERE, null, e);
@@ -292,13 +289,17 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
         try {
             //TODO Register SchoolClass
             int i = jt.getSelectedRow();
-            DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(tableModel.getColumnCount(), i);
+            DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(i, tableModel.getColumnCount());
             DomNewSchoolClass4Student newSchoolClass = new DomNewSchoolClass4Student(sc);
             if (sc.getHasRegKey()) {
                 SchoolClassRegistrationAskKeyJPanel panel = new SchoolClassRegistrationAskKeyJPanel();
                 panel.setSchoolClass(newSchoolClass);
-                int result = JOptionPane.showConfirmDialog(this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                panel.setRegistrationKey("");
+                ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(panel);
+                dialog.setAlwaysOnTop(true);
+                dialog.setVisible(true);
+                //(this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+                //      JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             }
             prop.registerStudentForSchoolClass(newSchoolClass);
             prop.init();

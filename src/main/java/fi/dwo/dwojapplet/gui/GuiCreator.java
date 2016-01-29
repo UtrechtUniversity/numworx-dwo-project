@@ -77,6 +77,7 @@ public class GuiCreator {
      */
     public void ShowMessageDialog(Component parentComponent,
             Object message) {
+     //   if(parentComponent==null) parentComponent = GuiCreator.instance().getMainPanel();
         JOptionPane.showMessageDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_MESSAGE), JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -88,6 +89,7 @@ public class GuiCreator {
      */
     public void ShowWarningDialog(Component parentComponent,
             Object message) {
+     //   if(parentComponent==null) parentComponent = GuiCreator.instance().getMainPanel();
         JOptionPane.showMessageDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_MESSAGE), JOptionPane.WARNING_MESSAGE);
     }
 
@@ -99,6 +101,7 @@ public class GuiCreator {
      */
     public void ShowErrorDialog(Component parentComponent,
             Dwo2Exception ex) {
+        if(parentComponent==null) parentComponent = GuiCreator.instance().getMainPanel();
         JOptionPane.showMessageDialog(parentComponent, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.DLG_ERROR), JOptionPane.ERROR_MESSAGE);
     }
 
@@ -110,6 +113,7 @@ public class GuiCreator {
      */
     public int ShowConfirmDialog(Component parentComponent,
             Object message) {
+        if(parentComponent==null) parentComponent = GuiCreator.instance().getMainPanel();
         return JOptionPane.showConfirmDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_CONFIRM), JOptionPane.OK_CANCEL_OPTION);
     }
     
