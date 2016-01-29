@@ -355,7 +355,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
                 }
             }
             catch (LoginException exc) {
-                LOG.log(Level.SEVERE, null, exc);
+                LOG.log(Level.WARNING, "Login exception.", exc);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
             catch (Dwo2Exception ex) {
