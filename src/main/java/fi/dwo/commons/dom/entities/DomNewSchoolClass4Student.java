@@ -25,9 +25,14 @@ public class DomNewSchoolClass4Student extends DomSchoolClass {
 
     /** Initializes the object with a clone of the parameter and set the 
      * registrationKey to null;
+     * 
+     * @param sc
      */
     public DomNewSchoolClass4Student(DomSchoolClass sc){
-        super(sc);
+        DomSchoolClass clone = (DomSchoolClass) sc.clone();
+        this.setId(clone.getId());
+        this.setHasRegKey(clone.getHasRegKey());
+        this.setSchoolClassName(clone.getSchoolClassName());
         registrationKey = null;
     }
 

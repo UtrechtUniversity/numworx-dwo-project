@@ -49,7 +49,7 @@ public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
     };
 
     /**
-     * Sets the persistence class type.
+     * Sets the persistence class type. Only meant for serialization.
      * 
      * @param aType 
      */
