@@ -245,7 +245,7 @@ CREATE TABLE `tbldwosystemparameters` (
 
 LOCK TABLES `tbldwosystemparameters` WRITE;
 /*!40000 ALTER TABLE `tbldwosystemparameters` DISABLE KEYS */;
-INSERT INTO `tbldwosystemparameters` VALUES ('DBVersion Build','0'),('DBVersion Major','1'),('DBVersion Minor','4'),('DBVersion Revision','1'),('DwoSchoolIndex','1'),('NullSchoolIndex','2');
+INSERT INTO `tbldwosystemparameters` VALUES ('DBPlatform','MySQL'),('DBVersion Build','0'),('DBVersion Major','1'),('DBVersion Minor','4'),('DBVersion Revision','0'),('DwoSchoolIndex','0'),('NullSchoolIndex','1'),('NullSchoolLogin','null');
 /*!40000 ALTER TABLE `tbldwosystemparameters` ENABLE KEYS */;
 UNLOCK TABLES;
 

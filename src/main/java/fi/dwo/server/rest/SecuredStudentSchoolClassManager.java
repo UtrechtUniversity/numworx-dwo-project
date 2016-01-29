@@ -1,11 +1,13 @@
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -174,11 +176,12 @@ public class SecuredStudentSchoolClassManager {
             LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomNewSchoolClass4Student().getId()));
+        DomNewSchoolClass4Student q = restSchoolClass.getDomNewSchoolClass4Student();
+        PersistenceId id = q.getId();
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(id));
 
         if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())
-                && (schoolClass.getRegistrationKey() == null || restSchoolClass.getDomNewSchoolClass4Student().getRegistrationKey().equals(schoolClass.getRegistrationKey()))) {
+                && (schoolClass.getRegistrationKey() == null || schoolClass.getRegistrationKey().equals(restSchoolClass.getDomNewSchoolClass4Student().getRegistrationKey()))) {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
                 PersistentStudentOfClass soc = new PersistentStudentOfClass();

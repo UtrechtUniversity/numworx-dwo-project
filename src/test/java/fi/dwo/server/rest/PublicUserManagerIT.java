@@ -5,6 +5,8 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.dom.entities.DomNewUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -81,8 +83,14 @@ public class PublicUserManagerIT {
         domNewUser.setSchoolCode("teacher");
         
         PublicUserManager instance = new PublicUserManager();
-        Boolean result = instance.submitNewUser(restNewUser);
-        assertEquals("function gave false as result.", result, true);
+
+        try{
+            Boolean result = instance.submitNewUser(restNewUser);
+            assertEquals("function gave false as result.", result, true);
+        }catch(Dwo2RestException e){
+            assertEquals(e.getDwo2Code(),Dwo2ExceptionCode.Rest_Registration_School_authentication_failed);
+        }
+        
         PersistentUser user = UserManager.findByUserName(domNewUser.getUsername());
         assertEquals(domNewUser.getGivenName(), user.getFirstname());
         assertEquals(domNewUser.getInsertion(), user.getMiddlename());

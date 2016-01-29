@@ -6,8 +6,10 @@ package fi.dwo.server.rest;
 import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
+import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
@@ -78,7 +80,7 @@ public class SecuredStudentSchoolClassManagerIT {
         List<DomSchoolClass> result = instance.getStudentsSchoolClasses(sc);
         assertEquals(2, result.size());
     }
-    
+
     /**
      * Test of setActiveSchoolClass method, of class
      * SecuredStudentSchoolClassManager.
@@ -126,14 +128,17 @@ public class SecuredStudentSchoolClassManagerIT {
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         Boolean result = instance.removeStudentFromSchoolClass(sc, restSchoolClass);
         assertEquals("Removing the student from the schoolclass failed.", true, result);
-        PersistentStudentOfClassPK socKey =  new PersistentStudentOfClassPK();
+        PersistentStudentOfClassPK socKey = new PersistentStudentOfClassPK();
         socKey.setClassID(1L);
         socKey.setSchoolGroupID(2L);
         socKey.setUserID(9L);
-        try{
+        try {
             PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socKey);
-            if(soc==null) return;
-        }catch(Exception ex){
+            if (soc == null) {
+                return;
+            }
+        }
+        catch (Exception ex) {
             return;
         }
         fail("StudentOfClass was not removed!");
@@ -149,26 +154,36 @@ public class SecuredStudentSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user05", RoleType.STUDENT);
         RestNewSchoolClass4Student restSchoolClass = new RestNewSchoolClass4Student();
         DomNewSchoolClass4Student domSchoolClass = new DomNewSchoolClass4Student();
-        restSchoolClass.setDomNewSchoolClass4Student(domSchoolClass);
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId((PersistenceId) MySQLPersistenceId.createPersistenceId(4L, PersistenceClassType.PersistentSchoolClass));
         domSchoolClass.setSchoolClassName("SchoolClass04");
+        domSchoolClass.setRegistrationKey("key");
+        restSchoolClass.setDomNewSchoolClass4Student(domSchoolClass);
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
-        Boolean result = instance.registerStudentForSchoolClass(sc, restSchoolClass);
-        assertEquals(true, result);
-        PersistentStudentOfClassPK socKey =  new PersistentStudentOfClassPK();
+        try {
+            Boolean result = instance.registerStudentForSchoolClass(sc, restSchoolClass);
+            assertEquals(true, result);
+        }
+        catch (Dwo2RestException e) {
+            fail("StudentOfClass not registered!, exception:" + e.getMessage());
+        }
+        PersistentStudentOfClassPK socKey = new PersistentStudentOfClassPK();
         socKey.setClassID(4L);
         socKey.setSchoolGroupID(5L);
         socKey.setUserID(12L);
-        try{
+        try {
             PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socKey);
-            if(soc==null) fail("StudentOfClass not registered!");
-        }catch(Exception ex){
-            fail("StudentOfClass not registered!, exception:"+ex.getMessage());
+            if (soc == null) {
+                fail("StudentOfClass not registered!");
+            }
+        }
+        catch (Exception ex) {
+            fail("StudentOfClass not registered!, exception:" + ex.getMessage());
         }
     }
-    
+
     /**
-     * Test of getSchoolsClasses method, of class SecuredStudentSchoolClassManager.
+     * Test of getSchoolsClasses method, of class
+     * SecuredStudentSchoolClassManager.
      */
     @Test
     public void testGetSchoolsClasses() {
