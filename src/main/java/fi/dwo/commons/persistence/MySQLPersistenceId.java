@@ -72,9 +72,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
 
     @Override
     public String getIdString() {
-        String s = String.format("MYSQL;%s;%020d", super.getType().name(),id);
-        LOG.log(Level.FINE, "String id : ", new Object[]{s});
-        return s;
+        return super.getIdString();
     }
 
     @Override
