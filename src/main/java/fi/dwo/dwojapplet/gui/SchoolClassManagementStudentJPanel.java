@@ -69,7 +69,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         catch (Dwo2Exception e) {
             //Also trigggered in no active school exists.
 //            LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
-//            GuiCreator.instance().ShowMessageToUser(this, e.getLocalizedCodeExplanation(DwoHelper.getLocale()), "", JOptionPane.ERROR_MESSAGE);
+//            GuiCreator.instance().ShowMessageDialog(this, e.getLocalizedCodeExplanation(DwoHelper.getLocale()), "", JOptionPane.ERROR_MESSAGE);
         }
 
         //init gui (old code)
@@ -194,11 +194,11 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+                GuiCreator.instance().ShowErrorDialog(null, ex);
             }
 
         }
@@ -244,17 +244,17 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                     tableModel.fireTableDataChanged();
                 } else {
                     // show warning
-                    JOptionPane.showMessageDialog(null, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
                     return;
                 }
             }
             catch (Dwo2Exception e) {
                 LOG.log(Level.SEVERE, null, e);
-                GuiCreator.instance().ShowMessageToUser(null, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(),e);
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
         }
     }

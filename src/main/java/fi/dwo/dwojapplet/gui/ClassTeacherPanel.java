@@ -281,9 +281,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 try {
                     DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
 
-                    Ask confirmation
-
-                    if (result == true) {
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM))==JOptionPane.OK_OPTION) {
                         //persist returned values	
                         prop.removeSchoolClass(sc);
                         tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
@@ -359,7 +357,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         }
         catch (Dwo2Exception e) {
             LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
-            GuiCreator.instance().ShowMessageToUser(this, e.getLocalizedCodeExplanation(DwoHelper.getLocale()), "", JOptionPane.ERROR_MESSAGE);
+            GuiCreator.instance().ShowErrorDialog(this,e);
         }
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

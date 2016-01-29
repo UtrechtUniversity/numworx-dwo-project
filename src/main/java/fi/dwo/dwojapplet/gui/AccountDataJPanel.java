@@ -370,7 +370,6 @@ public class AccountDataJPanel extends JPanel implements
                     prop.getUser().setInsertion(middlename.getText());
                     prop.getUser().setFamilyName(lastname.getText());
                     prop.getUser().setEmail(email.getText());
-                    prop.Update();
                     if (!password.getText().equals("")
                             && repassword.getText().equals(password.getText())) {
                         //updates password following some logic.
@@ -378,13 +377,13 @@ public class AccountDataJPanel extends JPanel implements
                     } 
                     prop.Update();
                     oldpassword.setText("");
-                    GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.DLG_CONFIRM), TextMapper.getText(TextMapper.DLG_CONFIRM), JOptionPane.INFORMATION_MESSAGE);
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
                 }
-                catch (Dwo2RestException ex) {
-                    GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIP_ERR_CHANGE), JOptionPane.ERROR_MESSAGE);
+                catch (Dwo2Exception ex) {
+                    GuiCreator.instance().ShowErrorDialog(this, ex);
                 }
             } else {
-                GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD), TextMapper.getText(TextMapper.GUIP_ERR_CHANGE), JOptionPane.ERROR_MESSAGE);
+                GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
             }
         } //
         //

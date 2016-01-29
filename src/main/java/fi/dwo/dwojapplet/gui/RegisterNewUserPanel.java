@@ -467,11 +467,11 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     nur.setSchoolCode(null);
                     nur.setRole(RoleType.STUDENT);
                     PublicUserRegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
-                    GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().ShowConfirmDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED));
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
                 catch (Dwo2Exception ex) {
-                    GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().ShowErrorDialog(this, ex);
                 }
             } else {
                 RoleType role = null;
@@ -488,11 +488,11 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
                     PublicUserRegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
-                    GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED));
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
                 catch (Dwo2Exception ex) {
-                    GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().ShowErrorDialog(this, ex);
                 }
             }
         } else if (e.getSource() == resetButton) {

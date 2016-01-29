@@ -74,15 +74,45 @@ public class GuiCreator {
      * @param parentComponent
      * @param message
      * @param title
-     * @param messageType A JOptionPane message type.
      */
-    public void ShowMessageToUser(Component parentComponent,
-            Object message,
-            String title,
-            int messageType) {
-        JOptionPane.showMessageDialog(parentComponent, message, title, messageType);
+    public void ShowMessageDialog(Component parentComponent,
+            Object message) {
+        JOptionPane.showMessageDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_MESSAGE), JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Show DwoWarning message
+     *
+     * @param parentComponent
+     * @param message
+     */
+    public void ShowWarningDialog(Component parentComponent,
+            Object message) {
+        JOptionPane.showMessageDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_MESSAGE), JOptionPane.WARNING_MESSAGE);
+    }
+
+        /**
+     * Show DwoWarning message
+     *
+     * @param parentComponent
+     * @param ex
+     */
+    public void ShowErrorDialog(Component parentComponent,
+            Dwo2Exception ex) {
+        JOptionPane.showMessageDialog(parentComponent, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.DLG_ERROR), JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * As confirmation
+     *
+     * @param parentComponent
+     * @param message
+     */
+    public int ShowConfirmDialog(Component parentComponent,
+            Object message) {
+        return JOptionPane.showConfirmDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_CONFIRM), JOptionPane.OK_CANCEL_OPTION);
+    }
+    
     /**
      * Returns the main panel
      *

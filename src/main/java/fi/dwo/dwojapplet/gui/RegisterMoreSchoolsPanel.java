@@ -11,6 +11,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -40,6 +42,7 @@ import javax.swing.JTextField;
  * </ul>
  */
 public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
+    private static final Logger LOG = Logger.getLogger(RegisterMoreSchoolsPanel.class.getName());
 
     private JTextField schoollogin;
 
@@ -229,7 +232,8 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
                 catch (Dwo2Exception ex) {
-                    GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    LOG.log(Level.WARNING, "Error adding schoollogin.",ex);
+                    GuiCreator.instance().ShowErrorDialog(this,ex);
                 }
             } else {
                 RoleType role = null;
@@ -237,8 +241,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                 if (groupChoice.getSelectedIndex() > 0) {
                     role = DwoHelper.getRoles()[groupChoice.getSelectedIndex()-1];
                 }else{
-                    //TODO Gert
-                    GuiCreator.instance().ShowMessageToUser(this, "Select a role", TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIR_ERR_REGISTER));
                 }
                 try {
                     DomNewSchoolLogin nur = new DomNewSchoolLogin();
@@ -246,12 +249,12 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
                     SecureUserAccountLoginsManager.addASchoolLogin(nur); //throws Dwo2RestException.
-                    GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_NOROLE));
 //                    center.loadCenter(new RegisterMoreSchoolsPanel());
                     this.getParent().getParent().getParent().getParent().setVisible(false);
                 }
                 catch (Dwo2Exception ex) {
-                    JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().ShowErrorDialog(this, ex);
                 }
 
             }

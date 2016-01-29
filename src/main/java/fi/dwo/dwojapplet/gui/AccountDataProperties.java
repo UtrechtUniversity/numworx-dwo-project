@@ -5,7 +5,6 @@ import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -22,16 +21,10 @@ public class AccountDataProperties {
         
     }
     
-    public void init(){
-        try {
+    public void init() throws Dwo2Exception{
             user = SecureUserAccountManager.getAccountData();
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
     }
     
-    private boolean update = false;
-
     /**
      * @return the user
      */
@@ -45,33 +38,17 @@ public class AccountDataProperties {
     public void setUser(DomFullUser user) {
         this.user = user;
     }    
-
-    /**
-     * @return the update
-     */
-    public boolean isUpdate() {
-        return update;
-    }
-
-    /**
-     * @param update the update to set
-     */
-    public void setUpdate(boolean update) {
-        this.update = update;
-    }
     
     /**
      * Update the user.
+     * 
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
-    public void Update(){
-        try {
+    public void Update() throws Dwo2Exception{
             user = SecureUserAccountManager.updateAccountData(user);
             // update local Global storage.
             DwoHelper.updateCurrentUser(user);
             //TODO above method currently updates the login date, this should not occur for this function.
             
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
     }
 }

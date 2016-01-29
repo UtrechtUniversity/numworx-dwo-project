@@ -8,6 +8,7 @@ import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureStudentSchoolClassManager;
 import java.awt.event.MouseEvent;
@@ -72,11 +73,11 @@ public class DomSchoolClassLinkedLabel extends LinkedLabel {
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+                GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+                GuiCreator.instance().ShowErrorDialog(this,ex);
             }
         }
     }

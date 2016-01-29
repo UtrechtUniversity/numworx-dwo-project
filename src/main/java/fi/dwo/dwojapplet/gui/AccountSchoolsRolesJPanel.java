@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.system.TextMapper;
@@ -69,7 +70,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         }
         catch (Dwo2Exception e) {
             LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
-            GuiCreator.instance().ShowMessageToUser(this, e.getLocalizedCodeExplanation(DwoHelper.getLocale()), "", JOptionPane.ERROR_MESSAGE);
+            GuiCreator.instance().ShowErrorDialog(this, e);
         }
 
         //init gui (old code)
@@ -188,11 +189,11 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().mainPanel, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().mainPanel,ex);
             }
 
         }
@@ -229,7 +230,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                     if (currSrac.getRoleName().equals(RoleType.SCHOOLADMIN.name())) {
                         if (!ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD))) {
                             // show warning
-                            JOptionPane.showMessageDialog(null, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                            GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
                             return;
                         }
                     }
@@ -255,14 +256,14 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                         switchToActiveSchoolLogin();
                     } else {
                         // show warning
-                        JOptionPane.showMessageDialog(null, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                        GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
                         return;
                     }
                 }
             }
             catch (Dwo2Exception e) {
                 LOG.log(Level.SEVERE, null, e);
-                GuiCreator.instance().ShowMessageToUser(null, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                GuiCreator.instance().ShowErrorDialog(null, e);
             }
         }
     }
@@ -346,11 +347,11 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 //            }
 //            catch (LoginException ex) {
 //                LOG.log(Level.SEVERE, null, ex);
-//                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+//                GuiCreator.instance().ShowMessageDialog(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
 //            }
 //            catch (Dwo2Exception ex) {
 //                LOG.log(Level.SEVERE, null, ex);
-//                GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+//                GuiCreator.instance().ShowMessageDialog(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
 //            }
 //
 //        } else if (e.getSource() == removeImage) {

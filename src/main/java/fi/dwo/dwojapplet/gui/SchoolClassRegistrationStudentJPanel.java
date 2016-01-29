@@ -67,7 +67,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
         }
         catch (Dwo2Exception e) {
             //           LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
-            //           GuiCreator.instance().ShowMessageToUser(this, e.getLocalizedCodeExplanation(DwoHelper.getLocale()), "", JOptionPane.ERROR_MESSAGE);
+            //           GuiCreator.instance().ShowMessageDialog(this, e.getLocalizedCodeExplanation(DwoHelper.getLocale()), "", JOptionPane.ERROR_MESSAGE);
         }
 
         //init gui (old code)
@@ -106,7 +106,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
-            GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+            GuiCreator.instance().ShowErrorDialog(this, ex);
         }
 
         addButton.addActionListener(this);
@@ -187,11 +187,11 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
+                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
             }
 
         }
@@ -222,15 +222,15 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
             //set prop to table setting
             DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
             //popup dialog for password and or confirmation.
-            GuiCreator.instance().ShowMessageToUser(null, schoolClass.getSchoolClassName(), "Error", JOptionPane.ERROR_MESSAGE);
+ //           GuiCreator.instance().(null, schoolClass.getSchoolClassName(), "Error", JOptionPane.ERROR_MESSAGE);
             //          }
 //            catch (Dwo2Exception e) {
 //                LOG.log(Level.SEVERE, null, e);
-//                GuiCreator.instance().ShowMessageToUser(null, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//                GuiCreator.instance().ShowMessageDialog(null, e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 //            }
 //            catch (LoginException ex) {
 //                LOG.log(Level.SEVERE, null, ex);
-//                GuiCreator.instance().ShowMessageToUser(null, ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//                GuiCreator.instance().ShowMessageDialog(null, ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 //            }
         }
     }

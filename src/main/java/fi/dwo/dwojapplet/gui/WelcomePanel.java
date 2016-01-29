@@ -355,8 +355,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
                 }
             }
             catch (LoginException exc) {
-                JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                 LOG.log(Level.SEVERE, null, exc);
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
             catch (Dwo2Exception ex) {
                 JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
@@ -367,7 +367,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
                 GuiCreator.instance().login();
             }
             catch (LoginException exc) {
-                JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
         } else if (src == registerNewUserButton) {
             GuiCreator.instance().toRegisterNewUser();
