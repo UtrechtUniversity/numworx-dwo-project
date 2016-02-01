@@ -21,6 +21,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -38,7 +39,7 @@ import fi.wiskopdr.text.Text;
 public class GeogebraView implements InteractionView, LoadHandler
 {
 
-	private static final String KIJK_NA = "<span>" + Text.constants.nakijkKnopLabel() + "</span>";
+	private static final String KIJK_NA = "<span>" + Text.constants.nakijkKnopLabel() + "\u00A0</span>";
 	private static final int KIJK_NA_HEIGHT = 20;
 	private SimplePanel mainPanel;
 	private Object ggbApplet;
@@ -233,16 +234,16 @@ public class GeogebraView implements InteractionView, LoadHandler
 				}} );
 			checkBtn.getElement().getStyle().setPaddingBottom(0, Unit.PX);
 			checkBtn.getElement().getStyle().setPaddingTop(0,Unit.PX);
-			HeaderPanel hp = new HeaderPanel();
+			AbsolutePanel hp = new AbsolutePanel();
 			hp.setPixelSize(this.width, this.height);
-			hp.setContentWidget(frame);
+			hp.add(frame, 0, 0);
 			VerticalPanel vp = new VerticalPanel();
 			vp.setPixelSize(this.width, KIJK_NA_HEIGHT);
 			vp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 			vp.add(checkBtn);
 			if(nakijken && comRoot != null && comRoot.getMode() > 1) 
 				checkBtn.setVisible(false);
-			hp.setFooterWidget(vp);
+			hp.add(vp, 0, this.height-KIJK_NA_HEIGHT);
 			mainPanel.setWidget(hp);
 		}
 		else 
@@ -268,20 +269,27 @@ public class GeogebraView implements InteractionView, LoadHandler
 		
 		if(Boolean.TRUE.equals(correct))
 			checkBtn.setHTML(KIJK_NA +
-					"<img src='" +
-				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri().asString() +
-				"' >");
+//					"<img src='" +
+//				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri().asString() +
+//				"' >"
+					"<i class='fa fa-check' style='color: green' ></i>"
+					
+					);
 		else if(Boolean.FALSE.equals(correct))
 			checkBtn.setHTML(KIJK_NA +
-					"<img src='" +
-				FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri().asString() +
-				"' >");
+//					"<img src='" +
+//				FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri().asString() +
+//				"' >"
+			"<i class='fa fa-times' style='color: red' ></i>"
+					);
 		else if(nagekeken)
 		{
 			checkBtn.setHTML(KIJK_NA +
-					"<img src='" +
-				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri().asString() +
-				"' >");
+//					"<img src='" +
+//				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri().asString() +
+//				"' >"
+					"<i class='fa fa-check' style='color: yellow' ></i>"
+					);
 		
 		} else
 			checkBtn.setHTML(KIJK_NA);
