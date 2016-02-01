@@ -257,7 +257,17 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 //
             } else if (value == studentsImage) {
                 LOG.log(Level.INFO, "students called");
+//                center.loadCenter(loadPanel(new CenterPanel());
                 fireEditingStopped();
+            } else if (value == teachersImage) {
+                try {
+                    center.loadCenter(new TeachersInSchoolClassTeacherPanel());
+                }
+                catch (Dwo2Exception ex) {
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                fireEditingStopped();
+
 
             } else if (value == removeImage) {
                 try {
@@ -350,7 +360,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
         modulesImage = DwoHelper.getResourceImage(GuiConstants.ASSIGN_CLASS_IMAGE);
         studentsImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
-        teachersImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
+        teachersImage = DwoHelper.getResourceImage(GuiConstants.TEACHER_CLASS_IMAGE);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         tr.addImage(editImage, 0);
         tr.addImage(modulesImage, 1);

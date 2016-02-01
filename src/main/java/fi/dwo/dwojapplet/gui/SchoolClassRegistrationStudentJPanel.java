@@ -10,6 +10,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Color;
 
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -26,6 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -249,6 +251,9 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
         tableModel = new SchoolClassRegistrationStudentTableModel();
         tableModel.init(prop);
         jtable.setModel(tableModel);
+        JScrollPane js=new JScrollPane(jtable);
+        js.setVisible(true);
+        this.add(js);
         jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtable.setSelectionBackground(Color.BLUE);
         jtable.setRowSelectionAllowed(true);
@@ -296,8 +301,10 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
                 panel.setSchoolClass(newSchoolClass);
                 panel.setRegistrationKey("");
                 ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(panel);
+                dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
                 dialog.setAlwaysOnTop(true);
                 dialog.setVisible(true);
+                
                 //(this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
                 //      JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             }
