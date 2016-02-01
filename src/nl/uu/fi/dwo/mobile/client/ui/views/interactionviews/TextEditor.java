@@ -312,10 +312,12 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		hbox.setPixelSize(width-boxsize, height-boxsize);
 		if(boxMetRand)
 			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
+		shown = true;
 	}
 
 	private void setState(ObjectMap h) {
 		editable = true;
+		shown = false;
 		String tekst = h.getString("tekst");
 		if(tekst == null) tekst = "";
 		else if(tekst.endsWith("\n"))
@@ -326,6 +328,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		removeCursor();
 		editable = h.getBoolean("editable", true);
 		widget.setStyleDependentName("readonly", !editable);
+		shown = true;
 	}
 
 	private Widget cursorWidget;
@@ -665,8 +668,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		showCursor();
 	}
 
+	private boolean shown;
 	private void showCursor() {
-		cursorWidget.getElement().scrollIntoView();
+		if(shown)
+			cursorWidget.getElement().scrollIntoView();
 	}
 
 	@Override
