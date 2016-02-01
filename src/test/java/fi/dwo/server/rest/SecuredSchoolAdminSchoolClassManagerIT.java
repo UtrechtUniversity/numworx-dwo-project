@@ -180,8 +180,8 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         RestRemoveTeacherFromSchoolClass msg = new RestRemoveTeacherFromSchoolClass();
-        msg.setSchoolClass(domSchoolClass);
-        msg.setTeacher(domTeacher);
+        msg.getDomRemoveTeacherFromSchoolClass().setSchoolClass(domSchoolClass);
+        msg.getDomRemoveTeacherFromSchoolClass().setTeacher(domTeacher);
         
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean expResult = true;

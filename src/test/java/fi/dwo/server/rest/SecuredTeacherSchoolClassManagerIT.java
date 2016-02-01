@@ -343,8 +343,8 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
         RestRemoveTeacherFromSchoolClass restRemoveTeacherFromSchoolClass = new RestRemoveTeacherFromSchoolClass();
-        restRemoveTeacherFromSchoolClass.setSchoolClass(domSchoolClass);
-        restRemoveTeacherFromSchoolClass.setTeacher(domTeacher);
+        restRemoveTeacherFromSchoolClass.getDomRemoveTeacherFromSchoolClass().setSchoolClass(domSchoolClass);
+        restRemoveTeacherFromSchoolClass.getDomRemoveTeacherFromSchoolClass().setTeacher(domTeacher);
 
         Boolean result = instance.removeTeacherFromSchoolClass(sc, restRemoveTeacherFromSchoolClass);
         assertEquals(expResult, result);
@@ -363,8 +363,8 @@ public class SecuredTeacherSchoolClassManagerIT {
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         restRemoveTeacherFromSchoolClass = new RestRemoveTeacherFromSchoolClass();
-        restRemoveTeacherFromSchoolClass.setSchoolClass(domSchoolClass);
-        restRemoveTeacherFromSchoolClass.setTeacher(domTeacher);
+        restRemoveTeacherFromSchoolClass.getDomRemoveTeacherFromSchoolClass().setSchoolClass(domSchoolClass);
+        restRemoveTeacherFromSchoolClass.getDomRemoveTeacherFromSchoolClass().setTeacher(domTeacher);
         try {
             result = instance.removeTeacherFromSchoolClass(sc, restRemoveTeacherFromSchoolClass);
             assertEquals("Teacher removed while this should not occur.", false, result);

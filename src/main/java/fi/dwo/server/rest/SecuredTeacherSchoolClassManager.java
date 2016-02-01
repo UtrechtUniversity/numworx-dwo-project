@@ -538,8 +538,8 @@ public class SecuredTeacherSchoolClassManager {
     @Produces({"application/json"})
     @Path("/removeTeacher")
     public Boolean removeTeacherFromSchoolClass(@Context SecurityContext sc, RestRemoveTeacherFromSchoolClass  restRemoveTeacherFromSchoolClass){
-        DomSchoolClass domSchoolClass = restRemoveTeacherFromSchoolClass.getSchoolClass();
-        DomTeacher domTeacher = restRemoveTeacherFromSchoolClass.getTeacher();
+        DomSchoolClass domSchoolClass = restRemoveTeacherFromSchoolClass.getDomRemoveTeacherFromSchoolClass().getSchoolClass();
+        DomTeacher domTeacher = restRemoveTeacherFromSchoolClass.getDomRemoveTeacherFromSchoolClass().getTeacher();
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser teacher = null;
