@@ -112,9 +112,9 @@
 						</mgwt:right>
 					</mgwt:HeaderPanel>
 					 <mgwt:LayoutPanel ui:field="infoArea" addStyleNames="{style.info_area}"> </mgwt:LayoutPanel>
-				   	<mgwt:ScrollPanel>
+				   	<g:ScrollPanel>
 						 <mgwt:CellList ui:field="cells" round="true"></mgwt:CellList>
-				   </mgwt:ScrollPanel>
+				   </g:ScrollPanel>
 				</mgwt:LayoutPanel>
 
 							
