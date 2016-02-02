@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
+
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.core.shared.GWT;
@@ -31,10 +33,8 @@ public class SCORM_MC2mAccess extends SCORM_guest implements Scorm2004IF {
 		
 		this.learner_id = learner_id;
 		this.learner_name = learner_name;
-		String host = Window.Location.getHost();
+		String host = DWOplayer.PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
-		if(!GWT.isProdMode())
-			host = "9-dot-mc2dme.appspot.com";
 
 		client = new XmlRpcClient(http + "//" + host + "/dwoapp");
 		

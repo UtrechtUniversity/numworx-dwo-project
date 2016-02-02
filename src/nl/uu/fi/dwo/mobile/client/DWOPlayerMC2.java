@@ -20,7 +20,7 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 	}
 
 	public String getDefaultHost() {
-		return "mc2dme.appspot.com";
+		return "7-dot-mc2dme.appspot.com";
 	}
 
 	@Override
