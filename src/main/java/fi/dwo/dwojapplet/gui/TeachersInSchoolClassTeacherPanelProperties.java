@@ -5,9 +5,11 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureTeacherSchoolClassManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -24,13 +26,39 @@ public class TeachersInSchoolClassTeacherPanelProperties {
 
     }
 
+    public List<DomTeacher> getTeachersInSchoolNotInClass(DomSchoolClass sc) throws Dwo2Exception {
+        List<DomTeacher> classTeachers = SecureTeacherSchoolClassManager.GetTeachersInSchoolClass(sc);
+        List<DomTeacher> schoolTeachers = SecureTeacherSchoolClassManager.getTeachersInSchool();
+        List<DomTeacher> result = new ArrayList<DomTeacher>(schoolTeachers.size() - classTeachers.size());
+        for (DomTeacher t : schoolTeachers) {
+            Boolean flag = true; //add teacher to result list
+            for (DomTeacher c : classTeachers) {
+                if (t.equals(c)) {
+                    flag = false;
+                }
+            }
+            result.add(t);
+        }
+        return result;
+    }
+    
     public List<DomTeacher> getTeachersInSchoolClass(DomSchoolClass sc) throws Dwo2Exception {
         return SecureTeacherSchoolClassManager.GetTeachersInSchoolClass(sc);
     }
+
     public void removeTeacherFromSchoolClass(DomSchoolClass sc, DomTeacher t) throws Dwo2Exception {
         DomRemoveTeacherFromSchoolClass submit = new DomRemoveTeacherFromSchoolClass();
         submit.setSchoolClass(sc);
         submit.setTeacher(t);
         SecureTeacherSchoolClassManager.removeTeacherFromSchoolClass(submit);
     }
+    
+
+    public void submitTeacherToSchoolClass(DomSchoolClass sc, DomTeacher t) throws Dwo2Exception {
+        DomSubmitTeacherToSchoolClass submit = new DomSubmitTeacherToSchoolClass();
+        submit.setSchoolClass(sc);
+        submit.setTeacher(t);
+        SecureTeacherSchoolClassManager.SubmitTeacherToSchoolClass(submit);
+    }    
+        
 }

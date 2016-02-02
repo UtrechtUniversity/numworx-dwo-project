@@ -261,7 +261,9 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 fireEditingStopped();
             } else if (value == teachersImage) {
                 try {
-                    center.loadCenter(new TeachersInSchoolClassTeacherPanel());
+                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    TeachersInSchoolClassTeacherPanel panel = new TeachersInSchoolClassTeacherPanel(sc);
+                    center.loadCenter(panel);
                 }
                 catch (Dwo2Exception ex) {
                     Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
