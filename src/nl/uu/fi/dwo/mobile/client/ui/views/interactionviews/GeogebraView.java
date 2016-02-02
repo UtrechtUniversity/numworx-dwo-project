@@ -25,8 +25,6 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
-import com.google.gwt.user.client.ui.HeaderPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,7 +38,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 {
 
 	private static final String KIJK_NA = "<span>" + Text.constants.nakijkKnopLabel() + "\u00A0</span>";
-	private static final int KIJK_NA_HEIGHT = 20;
+	private static final int KIJK_NA_HEIGHT = 30;
 	private SimplePanel mainPanel;
 	private Object ggbApplet;
 	private Frame frame;
@@ -269,26 +267,26 @@ public class GeogebraView implements InteractionView, LoadHandler
 		
 		if(Boolean.TRUE.equals(correct))
 			checkBtn.setHTML(KIJK_NA +
-//					"<img src='" +
-//				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri().asString() +
-//				"' >"
-					"<i class='fa fa-check' style='color: green' ></i>"
+					"<img style='vertical-align: top' src='" +
+				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri().asString() +
+				"' >"
+//					"<i class='fa fa-check' style='color: green' ></i>"
 					
 					);
 		else if(Boolean.FALSE.equals(correct))
 			checkBtn.setHTML(KIJK_NA +
-//					"<img src='" +
-//				FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri().asString() +
-//				"' >"
-			"<i class='fa fa-times' style='color: red' ></i>"
+					"<img style='vertical-align: top' src='" +
+				FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri().asString() +
+				"' >"
+//			"<i class='fa fa-times' style='color: red' ></i>"
 					);
 		else if(nagekeken)
 		{
 			checkBtn.setHTML(KIJK_NA +
-//					"<img src='" +
-//				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri().asString() +
-//				"' >"
-					"<i class='fa fa-check' style='color: yellow' ></i>"
+					"<img style='vertical-align: top' src='" +
+				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri().asString() +
+				"' >"
+//					"<i class='fa fa-check' style='color: yellow' ></i>"
 					);
 		
 		} else
