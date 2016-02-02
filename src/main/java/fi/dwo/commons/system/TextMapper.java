@@ -34,6 +34,9 @@ public abstract class TextMapper {
     public static final String BTN_ADD = "BTN_ADD";
     
     public static final String BTN_BACK = "BTN_BACK";
+    
+    public static final String BTN_COPYTOSCHOOLCLASS = "BTN_COPYTOSCHOOLCLASS";
+    public static final String BTN_DELETE = "BTN_DELETE";
 
     /* Message dialog messages */
     public static final String DLG_CONFIRM = "DLG_CONFIRM";
