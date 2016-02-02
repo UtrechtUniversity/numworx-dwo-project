@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Gert van der Plas
  */
 @XmlRootElement
-public class RestSubmitTeacherToSchoolClass extends DomSubmitTeacherToSchoolClass{
+public class RestSubmitTeacherToSchoolClass{
     private DomContext restContext;
     private DomSubmitTeacherToSchoolClass domSubmitTeacherToSchoolClass;
 
