@@ -221,9 +221,9 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 }
 
             } else if (value == modulesImage) {
-                Course[] allCourses=null;
-                Course[] selectedSchoolCourses=null;
-                SchoolClass sc=null;
+                Course[] allCourses = null;
+                Course[] selectedSchoolCourses = null;
+                SchoolClass sc = null;
                 try {
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
                     sc = (SchoolClass) MapperCreator.instance(SchoolClass.class).get((int) MySQLPersistenceId.getId(schoolClass.getId()));
@@ -256,8 +256,14 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 fireEditingStopped();
 //
             } else if (value == studentsImage) {
-                LOG.log(Level.INFO, "students called");
-//                center.loadCenter(loadPanel(new CenterPanel());
+                try {
+                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    StudentsInSchoolClassTeacherPanel panel = new StudentsInSchoolClassTeacherPanel(sc);
+                    center.loadCenter(panel);
+                }
+                catch (Dwo2Exception ex) {
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 fireEditingStopped();
             } else if (value == teachersImage) {
                 try {
@@ -269,8 +275,6 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 fireEditingStopped();
-
-
             } else if (value == removeImage) {
                 try {
                     DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());

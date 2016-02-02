@@ -5,19 +5,14 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.gui.domutils.DomUserListCellRenderer;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -29,7 +24,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -44,16 +38,19 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 
     private static final Logger LOG = Logger.getLogger(StudentsInSchoolClassTeacherPanel.class.getName());
 
-    private TeachersInSchoolClassTeacherPanelProperties prop = new TeachersInSchoolClassTeacherPanelProperties();
-    private TeachersInSchoolClassTeacherPanelTableModel tableModel;
+    private StudentsInSchoolClassTeacherPanelProperties prop = new StudentsInSchoolClassTeacherPanelProperties();
+    private StudentsInSchoolClassTeacherPanelTableModel tableModel;
     private DomSchoolClass schoolClass;
     private CenterPanel center;
 
     private JButton backButton;
-    private JButton addTeacherButton;
-    private JComboBox addTeacherBox;
+    private JComboBox targetSchoolClassBox;
+    private JButton deleteButton;
+    private JButton moveToSchoolClassButton;
+    private JButton copyToSchoolClassButton;
+//    private JButton addTeacherButton;
 
-    private Image removeImage;
+    private Image select;
 
     private JPanel jtbl;
 
@@ -130,24 +127,24 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         @Override
         public void actionPerformed(ActionEvent event) {
 //            final GuiCreator instance = GuiCreator.instance();
-            if (value == removeImage) {
-                try {
-                    DomTeacher teacher = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
-
-                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
-                        //persist returned values	
-                        prop.removeTeacherFromSchoolClass(getSchoolClass(), teacher);
-                        tableModel.init(prop, getSchoolClass(), removeImage);
-                        tableModel.fireTableDataChanged();
-                    }
-                }
-                catch (Dwo2Exception ex) {
-                    Logger.getLogger(StudentsInSchoolClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
-                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
-                }
-                finally {
-                    fireEditingStopped();
-                }
+            if (value == select) {
+//                try {
+//                    DomTeacher teacher = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
+//
+//                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
+//                        //persist returned values	
+//                        prop.(getSchoolClass(), teacher);
+//                        tableModel.init(prop, getSchoolClass(), select);
+//                        tableModel.fireTableDataChanged();
+//                    }
+//                }
+//                catch (Dwo2Exception ex) {
+//                    Logger.getLogger(StudentsInSchoolClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+//                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+//                }
+//                finally {
+//                    fireEditingStopped();
+//                }
             }
         }
     }
@@ -166,9 +163,9 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         jtbl.add(jtable);
         jtbl.add(Box.createHorizontalGlue());
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
-        tableModel = new TeachersInSchoolClassTeacherPanelTableModel();
+        tableModel = new StudentsInSchoolClassTeacherPanelTableModel();
 
-        tableModel.init(prop, schoolClass, removeImage);
+        tableModel.init(prop, schoolClass, select);
         jtable.setModel(tableModel);
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
@@ -211,35 +208,33 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
-        MediaTracker tr = new MediaTracker(this);
-        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
-        tr.addImage(removeImage, 0);
-        try {
-            tr.waitForAll();
-        }
-        catch (Exception e) {
-        }
 
         //FontMetrics fm;
         backButton = new JButton(TextMapper.getText(TextMapper.BTN_BACK));
         backButton.setSize(backButton.getPreferredSize());
         backButton.addActionListener(this);
-        addTeacherButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
-        addTeacherButton.setSize(addTeacherButton.getPreferredSize());
-        addTeacherButton.addActionListener(this);
-        addTeacherBox = new JComboBox(new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(sc)));
-        DomUserListCellRenderer renderer = new DomUserListCellRenderer();
-        addTeacherBox.setRenderer(renderer);
-        addTeacherBox.setMaximumRowCount(10);
-        addTeacherBox.addActionListener(this);
+        deleteButton = new JButton(TextMapper.getText(TextMapper.BTN_DELETE));
+        deleteButton.setSize(deleteButton.getPreferredSize());
+        deleteButton.addActionListener(this);
+        copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_COPYTOSCHOOLCLASS));
+        copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
+        copyToSchoolClassButton.addActionListener(this);
+//        addTeacherButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
+//        addTeacherButton.setSize(addTeacherButton.getPreferredSize());
+//        addTeacherButton.addActionListener(this);
+//        addTeacherBox = new JComboBox(new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(sc)));
+//        DomUserListCellRenderer renderer = new DomUserListCellRenderer();
+//        addTeacherBox.setRenderer(renderer);
+//        addTeacherBox.setMaximumRowCount(10);
+//        addTeacherBox.addActionListener(this);
         Box header = Box.createHorizontalBox();
-        header.setMaximumSize(new Dimension(420, 100));
+        header.setMaximumSize(new Dimension(520, 100));
         header.add(backButton);
-        header.add(Box.createHorizontalGlue());
-        header.add(addTeacherBox);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
-        header.add(addTeacherButton);
-        //header.add(Box.createHorizontalGlue());
+        header.add(deleteButton);
+        header.add(Box.createRigidArea(new Dimension(30, 0)));
+        header.add(copyToSchoolClassButton);
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
         this.add(header);
         //addClassButton.setVisible(true);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -285,20 +280,20 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == addTeacherButton) {
-            DomTeacher teacher = (DomTeacher) addTeacherBox.getSelectedItem();
-            try {
-                prop.submitTeacherToSchoolClass(schoolClass, teacher);
-                tableModel.init(prop, schoolClass, removeImage);
-                tableModel.fireTableDataChanged();
-                
-            }
-            catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowErrorDialog(this, ex);
-            }
-            
-
+        if (e.getSource() == copyToSchoolClassButton) {
+//            DomTeacher teacher = (DomTeacher) addTeacherBox.getSelectedItem();
+//            try {
+//                prop.submitTeacherToSchoolClass(schoolClass, teacher);
+//                tableModel.init(prop, schoolClass, select);
+//                tableModel.fireTableDataChanged();
+//                
+//            }
+//            catch (Dwo2Exception ex) {
+//                LOG.log(Level.SEVERE, null, ex);
+//                GuiCreator.instance().ShowErrorDialog(this, ex);
+//            }
+        } else if (e.getSource() == deleteButton) {
+            //addTeacherBox.get
         } else if (e.getSource() == backButton) {
             try {
                 ClassTeacherPanel panel = new ClassTeacherPanel();
@@ -309,8 +304,6 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
-        } else if (e.getSource() == addTeacherBox) {
-            //addTeacherBox.get
         }
     }
 

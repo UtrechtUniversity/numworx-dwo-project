@@ -3,6 +3,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomRemoveStudentFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
@@ -25,9 +26,16 @@ public class StudentsInSchoolClassTeacherPanelProperties {
 
     }
 
+    /** 
+     * Returns only single school students that are in the school but not in the school class.
+     * 
+     * @param sc
+     * @return
+     * @throws Dwo2Exception 
+     */
     public List<DomStudent> getStudentsInSchoolNotInClass(DomSchoolClass sc) throws Dwo2Exception {
         List<DomStudent> classStudents = SecureTeacherSchoolClassManager.GetStudentsInSchoolClass(sc);
-        List<DomStudent> schoolStudents = SecureTeacherSchoolClassManager.GetStudentsInSchool();
+        List<DomStudent> schoolStudents = SecureTeacherSchoolClassManager.GetSingleSchoolStudentsInSchool();
         List<DomStudent> result = new ArrayList<DomStudent>(schoolStudents.size() - classStudents.size());
         for (DomStudent t : schoolStudents) {
             Boolean flag = true; //add teacher to result list
@@ -53,9 +61,10 @@ public class StudentsInSchoolClassTeacherPanelProperties {
     }
     
 
-    public void submitStudentToSchoolClass(DomSchoolClass sc, DomStudent t) throws Dwo2Exception {
+    public void submitStudentToSchoolClass(DomSchoolClass from, DomSchoolClass to, DomStudent t) throws Dwo2Exception {
         DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
-        submit.setSchoolToClass(sc);
+        submit.setSchoolToClass(to);
+        submit.setSchoolFromClass(from);
         submit.setStudent(t);
         SecureTeacherSchoolClassManager.SubmitStudentToSchoolClass(submit);
     }    

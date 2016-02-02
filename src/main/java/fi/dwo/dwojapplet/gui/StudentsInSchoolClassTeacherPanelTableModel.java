@@ -3,7 +3,6 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomStudent;
-import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import javax.swing.table.AbstractTableModel;
  */
 class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {"usernaam", "given name", "insertion", "familyname", "delete"};
+    private String[] columnNames = {"usernaam", "given name", "insertion", "familyname", "select"};
     static boolean DEBUG = false;
     private StudentsInSchoolClassTeacherPanelProperties prop;
 
@@ -44,7 +43,7 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
             data[j][1] = u.getGivenName();
             data[j][2] = u.getInsertion();
             data[j][3] = u.getFamilyName();
-            data[j][4] = removeImage;
+            data[j][4] = new Boolean(true);
             data[j][5] = u;
             j++;
         }
@@ -87,7 +86,7 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
     public boolean isCellEditable(int row, int col) {
         //Note that the data/cell address is constant,
         //no matter where the cell appears onscreen.
-        if (col < 1) {
+        if (col < 4) {
             return false;
         } else {
             return true;

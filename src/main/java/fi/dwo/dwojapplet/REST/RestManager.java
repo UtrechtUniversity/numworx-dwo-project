@@ -4,12 +4,14 @@ package fi.dwo.dwojapplet.REST;
 import fi.dwo.commons.dom.entities.DomRole;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
+import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomUser;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.rest.RestListClassTypes;
+import static fi.dwo.commons.rest.RestListClassTypes.DomStudent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -219,6 +221,10 @@ class RestManager {
                     GenericType<ArrayList<DomTeacher>> pTeacherType = new GenericType<ArrayList<DomTeacher>>() {
                     };
                     return (List<T>) response.readEntity(pTeacherType);
+                case DomStudent:
+                    GenericType<ArrayList<DomStudent>> sStudentType = new GenericType<ArrayList<DomStudent>>() {
+                    };
+                    return (List<T>) response.readEntity(sStudentType);
                 case DomRole:
                     GenericType<ArrayList<DomRole>> pRoleType = new GenericType<ArrayList<DomRole>>() {
                     };

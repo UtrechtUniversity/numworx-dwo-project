@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import static javax.swing.SwingConstants.LEADING;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -233,13 +234,14 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         addTeacherBox.setMaximumRowCount(10);
         addTeacherBox.addActionListener(this);
         Box header = Box.createHorizontalBox();
+        header.setAlignmentX(LEADING);
         header.setMaximumSize(new Dimension(420, 100));
         header.add(backButton);
         header.add(Box.createHorizontalGlue());
+//        header.add(Box.createRigidArea(new Dimension(10, 0)));
         header.add(addTeacherBox);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
         header.add(addTeacherButton);
-        //header.add(Box.createHorizontalGlue());
         this.add(header);
         //addClassButton.setVisible(true);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -297,8 +299,6 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                 LOG.log(Level.SEVERE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
-            
-
         } else if (e.getSource() == backButton) {
             try {
                 ClassTeacherPanel panel = new ClassTeacherPanel();
