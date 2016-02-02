@@ -435,8 +435,8 @@ public class SecuredTeacherSchoolClassManager {
     @Produces({"application/json"})
     @Path("/submitTeacher")
     public Boolean SubmitTeacherToSchoolClass(@Context SecurityContext sc, RestSubmitTeacherToSchoolClass restSubmitTeacherToSchoolClass){
-        DomTeacher restTeacher =restSubmitTeacherToSchoolClass.getTeacher();
-        DomSchoolClass restSchoolClass = restSubmitTeacherToSchoolClass.getSchoolClass();
+        DomTeacher restTeacher =restSubmitTeacherToSchoolClass.getDomSubmitTeacherToSchoolClass().getTeacher();
+        DomSchoolClass restSchoolClass = restSubmitTeacherToSchoolClass.getDomSubmitTeacherToSchoolClass().getSchoolClass();
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser teacher = null;
