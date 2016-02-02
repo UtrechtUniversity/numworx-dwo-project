@@ -5,6 +5,7 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2RestException;
@@ -148,8 +149,9 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean expResult = true;
         RestSubmitTeacherToSchoolClass msg = new RestSubmitTeacherToSchoolClass();
-        msg.setSchoolClass(domSchoolClass);
-        msg.setTeacher(domTeacher);
+        msg.setDomSubmitTeacherToSchoolClass(new DomSubmitTeacherToSchoolClass());
+        msg.getDomSubmitTeacherToSchoolClass().setSchoolClass(domSchoolClass);
+        msg.getDomSubmitTeacherToSchoolClass().setTeacher(domTeacher);
         Boolean result = instance.SubmitTeacherToSchoolClass(sc, msg);
         assertEquals(expResult, result);
         PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();

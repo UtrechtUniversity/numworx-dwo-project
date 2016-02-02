@@ -3,10 +3,13 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomRemoveStudentFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
+import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
+import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -268,8 +271,9 @@ public class SecuredTeacherSchoolClassManagerIT {
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         RestSubmitTeacherToSchoolClass restSubmitTeacherToSchoolClass = new RestSubmitTeacherToSchoolClass();
-        restSubmitTeacherToSchoolClass.setSchoolClass(domSchoolClass);
-        restSubmitTeacherToSchoolClass.setTeacher(domTeacher);
+        restSubmitTeacherToSchoolClass.setDomSubmitTeacherToSchoolClass(new DomSubmitTeacherToSchoolClass());
+        restSubmitTeacherToSchoolClass.getDomSubmitTeacherToSchoolClass().setSchoolClass(domSchoolClass);
+        restSubmitTeacherToSchoolClass.getDomSubmitTeacherToSchoolClass().setTeacher(domTeacher);
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
         Boolean result = instance.SubmitTeacherToSchoolClass(sc, restSubmitTeacherToSchoolClass);
@@ -306,9 +310,10 @@ public class SecuredTeacherSchoolClassManagerIT {
         domToSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
         domToSchoolClass.setSchoolClassName("SchoolClass04");
         RestSubmitStudentToSchoolClass restSubmitStudentToSchoolClass = new RestSubmitStudentToSchoolClass();
-        restSubmitStudentToSchoolClass.setSchoolFromClass(domFromSchoolClass);
-        restSubmitStudentToSchoolClass.setSchoolToClass(domToSchoolClass);
-        restSubmitStudentToSchoolClass.setStudent(domStudent);
+        restSubmitStudentToSchoolClass.setDomSubmitStudentToSchoolClass(new DomSubmitStudentToSchoolClass());
+        restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setSchoolFromClass(domFromSchoolClass);
+        restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setSchoolToClass(domToSchoolClass);
+        restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setStudent(domStudent);
         
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
@@ -393,8 +398,9 @@ public class SecuredTeacherSchoolClassManagerIT {
         domStudent.setGivenName("User");
         domStudent.setFamilyName("Lastname 02");
         RestRemoveStudentFromSchoolClass restRemoveStudentFromSchoolClass = new RestRemoveStudentFromSchoolClass();
-        restRemoveStudentFromSchoolClass.setSchoolClass(domSchoolClass);
-        restRemoveStudentFromSchoolClass.setStudent(domStudent);
+        restRemoveStudentFromSchoolClass.setDomRemoveStudentFromSchoolClass(new DomRemoveStudentFromSchoolClass());
+        restRemoveStudentFromSchoolClass.getDomRemoveStudentFromSchoolClass().setSchoolClass(domSchoolClass);
+        restRemoveStudentFromSchoolClass.getDomRemoveStudentFromSchoolClass().setStudent(domStudent);
 
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
