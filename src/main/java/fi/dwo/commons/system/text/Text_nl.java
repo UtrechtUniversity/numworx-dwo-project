@@ -20,6 +20,9 @@ public class Text_nl extends ListResourceBundle {
         {TextMapper.BTN_OK, "OK"},
         {TextMapper.BTN_YES, "Ja"},
         {TextMapper.BTN_CLOSE, "Sluiten"},
+        {TextMapper.BTN_ADD, "Voeg toe"},
+       {TextMapper.BTN_BACK, "Terug"},
+
         {TextMapper.DLG_CONFIRM, "Bevestiging"},
         {TextMapper.DLG_ENTER_INPUT, "Voer in"},
         {TextMapper.DLG_MESSAGE, "Bericht"},

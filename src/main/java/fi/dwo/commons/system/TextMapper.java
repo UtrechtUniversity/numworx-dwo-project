@@ -30,6 +30,10 @@ public abstract class TextMapper {
     public static final String BTN_NO = "BTN_NO";
 
     public static final String BTN_CLOSE = "BTN_CLOSE";
+    
+    public static final String BTN_ADD = "BTN_ADD";
+    
+    public static final String BTN_BACK = "BTN_BACK";
 
     /* Message dialog messages */
     public static final String DLG_CONFIRM = "DLG_CONFIRM";
@@ -262,6 +266,7 @@ public abstract class TextMapper {
     public final static String GUIC_REGISTER_FOR_CLASS = "GUIC_REGISTER_FOR_CLASS";
     public final static String GUIC_DEREGISTER_FOR_CLASS = "GUIC_DEREGISTER_FOR_CLASS";
     public final static String GUIC_ADD_CLASS = "GUIC_ADD_CLASS";
+    public final static String GUIC_ADD_CLASSTEACHER = "GUIC_ADD_CLASSTEACHER";
     public final static String GUIC_BTN_SWITCH_CLASS = "GUIC_BTN_SWITCH_CLASS";
 
     public final static String GUIC_TBL_CLASSNAME = "GUIC_TBL_CLASSNAME";
