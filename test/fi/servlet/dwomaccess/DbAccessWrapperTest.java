@@ -21,7 +21,7 @@ public class DbAccessWrapperTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 
-		DbAccessIF delegate = new DbAccessClient(new URL("http://ws-dev.fisme.science.uu.nl/servlet/dwodsaccess"));
+		DbAccessIF delegate = new DbAccessClient(new URL("https://app.dwl.nl/dwo/dsaccess"));
 		wrapper = new DbAccessWrapper(delegate);
 	}
 
@@ -67,12 +67,12 @@ public class DbAccessWrapperTest extends TestCase {
 
 	
 	public void testRemote() throws Exception { 
-		DbAccessIF extern = new DbAccessClient(new URL("http://ws-dev.fisme.science.uu.nl/DWOmAccess/dbaccess"));
+		DbAccessIF extern = new DbAccessClient(new URL("https://dummyone.dwo.nl/DWOmAccess/dbaccess"));
 		accesstest(extern);
 	}
 	
-	public void testRemote2() throws Exception { 
-		DbAccessIF extern = new DbAccessClient(new URL("http://ws-dev.fisme.science.uu.nl/DWOmAccess/dbaccess"));
+	public void xtestRemote2() throws Exception { 
+		DbAccessIF extern = new DbAccessClient(new URL("http://ws.fisme.science.uu.nl/DWOmAccess/dbaccess"));
 		access2test(extern);
 	}
 	

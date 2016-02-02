@@ -45,7 +45,7 @@ public class ScormAccessTest extends TestCase {
 	}
 
 	public void testRemote() throws Exception {
-		access = new ScormAccessClient(new URL("http://ws.fisme.science.uu.nl/DWOmAccess/scormaccess"));
+		access = new ScormAccessClient(new URL("http://dummyone.dwo.nl/DWOmAccess/scormaccess"));
 		//testCommit();
 		testInitialize();
 	}

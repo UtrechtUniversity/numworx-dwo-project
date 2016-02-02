@@ -38,26 +38,26 @@
   	function doReset() {
   		api = document.API;
   		try {
-  			api.reset()			
+  			api.reset.call(window)			
   		} catch(e) {
   			logger(e)
   		}
   	}
   	function doCheck() {
-  		document.API.check()
+  		document.API.check.call(window)
   	}
   	function doStop() {
-  		document.API.stop()
+  		document.API.stop.call(window)
   	}
   	
   	function doSetState(topic, state) {
   		//state = state.parameters||state
-  		document.API.setState(JSON.stringify(state))
+  		document.API.setState.call(window, JSON.stringify(state))
   	}
   	
   	var hubClient
   	
-  	function fire(topic, message, parameters) {
+  	window.fire = function(topic, message, parameters) {
   		parameters = JSON.parse(parameters)
   		hubClient.publish(xwid + "." + topic, {
   				message: message,
@@ -86,7 +86,7 @@
  				        	 		console.log("received " + topic  + "=" + command + " data=" + JSON.stringify(publisherData));
  				        	 		var message = publisherData.message;
  				        	 		var parameters = publisherData.parameters;
- 				        	 		document.API.listen(command, message, JSON.stringify(parameters))
+ 				        	 		document.API.listen.call(window,command, message, JSON.stringify(parameters))
  				        		 }		        		 
  				        	)
  				     }
@@ -250,7 +250,8 @@
 	width="<%=width %>"
 	height="<%=height %>"
 	archive="cbookinstance.jar"
-	mayscript
+	mayscript='true'
+	scriptable='true'
 	id="API"
 	name="CBookInstance"
 	codebase="."
