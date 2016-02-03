@@ -85,6 +85,7 @@
                   <groupId>org.c-book</groupId>
   				  <artifactId>CBookInstance</artifactId>
   				  <version>0.0.1-SNAPSHOT</version>
+  				  <classifier>jar-with-dependencies</classifier>
                   <outputDirectory>${project.build.directory}/${project.build.finalName}/lti</outputDirectory>
                   <destFileName>cbookinstance.jar</destFileName>
                 </artifactItem>

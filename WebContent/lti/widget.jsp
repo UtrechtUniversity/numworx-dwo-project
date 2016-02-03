@@ -38,21 +38,21 @@
   	function doReset() {
   		api = document.API;
   		try {
-  			api.reset.call(window)			
+  			api.reset()			
   		} catch(e) {
   			logger(e)
   		}
   	}
   	function doCheck() {
-  		document.API.check.call(window)
+  		document.API.check()
   	}
   	function doStop() {
-  		document.API.stop.call(window)
+  		document.API.doStop()
   	}
   	
   	function doSetState(topic, state) {
   		//state = state.parameters||state
-  		document.API.setState.call(window, JSON.stringify(state))
+  		document.API.setState(JSON.stringify(state))
   	}
   	
   	var hubClient
@@ -86,7 +86,7 @@
  				        	 		console.log("received " + topic  + "=" + command + " data=" + JSON.stringify(publisherData));
  				        	 		var message = publisherData.message;
  				        	 		var parameters = publisherData.parameters;
- 				        	 		document.API.listen.call(window,command, message, JSON.stringify(parameters))
+ 				        	 		document.API.listen(command, message, JSON.stringify(parameters))
  				        		 }		        		 
  				        	)
  				     }
