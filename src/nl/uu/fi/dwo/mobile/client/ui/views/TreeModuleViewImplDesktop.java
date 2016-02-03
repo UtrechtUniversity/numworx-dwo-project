@@ -194,7 +194,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	@UiHandler("navigationBackButton")
 	public void onTap(TapEvent event) {
 		// logout
-		DWOplayer.profiledata = null;
+		//DWOplayer.profiledata = null;
 		this.presenter.goTo(new LoginPlace());
 	}
 	

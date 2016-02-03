@@ -573,7 +573,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		}
 		TekstRegel tekstRegel = regelVakken[aantalRegels-1];
 		tekstRegel.addObject(tmf);
-		if(as)tmf.setAsHoogte(tekstRegel.getAsHoogte());
+		if(as)tmf.setAsHoogte(tekstRegel.getTekstAsHoogte());
 		regelBreedte += width;
 		return regelBreedte;
 	}

@@ -80,26 +80,27 @@ public class LoginActivity extends MGWTAbstractActivity
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		SelectModuleItemHolder.destroy();
-		
+		boolean logout = DWOplayer.profiledata != null;
 		String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
 		String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
-		
+		DWOplayer.profiledata = null;
+		view = clientFactory.getLoginView();
+
+// TESTING		
 //		user_id = "292832126";
 //		org_id = "\"lti:385\"";
 		
 		if(user_id != null && org_id != null) {
-			if( DWOplayer.profiledata != null) {
+			
+			if( logout) {
 				panel.setWidget(new Label());
 				logout();
 				return;
 			}
-			org_id = '"' + org_id + '"';
-			panel.setWidget(new Label("SAML LOGIN " + user_id + " , " + org_id));
+			panel.setWidget(new Label());
 			clientFactory.getRPCHandler().samlLogin(user_id, org_id, LOGIN_CALLBACK);
 			return;		
 		}
-		
-		view = clientFactory.getLoginView();
 		
 		addHandlerRegistration(view.getLoginBtn().addTapHandler(new TapHandler()
 		{
@@ -139,7 +140,7 @@ public class LoginActivity extends MGWTAbstractActivity
 			}} ));
 
 		panel.setWidget(view);
-		Logger.getLogger("DWOplayer").log(Level.INFO,"Done with panel");
+		Logger.getLogger("DWOplayer").log(Level.FINE,"Done with panel");
 	
 	}
 
