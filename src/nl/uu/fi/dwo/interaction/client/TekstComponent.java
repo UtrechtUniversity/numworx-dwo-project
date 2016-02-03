@@ -3,12 +3,15 @@ package nl.uu.fi.dwo.interaction.client;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 public class TekstComponent {
 
 	protected Canvas canvas;
+	protected InlineHTML span;
 	protected Context2d ctx;
 	//public int height;
 	//public int width;
@@ -30,6 +33,9 @@ public class TekstComponent {
 	{
 		//font = fm;
 		canvas = Canvas.createIfSupported();
+		span = new InlineHTML();
+		span.setText(tekst);
+		span.setPixelSize(width, height);
 		//canvas.setSize(width + "px", height + "px");
 		canvas.setCoordinateSpaceHeight(height);
 		canvas.setCoordinateSpaceWidth(width);
@@ -43,6 +49,8 @@ public class TekstComponent {
 		ashoogte = fm.getAscent();
 		this.tekst = tekst;
 		canvas.getElement().setInnerText(tekst);
+		//span.getElement().getStyle().setFontSize(fm.getFontSize(), Style.Unit.PX);
+		span.getElement().getStyle().setProperty("font", fontString);
 	}
 	
 //	public int getHeight()
@@ -133,6 +141,7 @@ public class TekstComponent {
 	{
 		color = c;
 		ctx.setFillStyle(color.toString());
+		span.getElement().getStyle().setColor(color.toString());
 	}
 	
 	public CssColor getColor()
@@ -155,13 +164,14 @@ public class TekstComponent {
 		//FocusPanel sp = new FocusPanel();
 		TouchPanel sp = new TouchPanel();
 		sp.add(this.canvas);
+		//sp.add(span);
 		return sp;
 	}
 
-	public Canvas getCanvas()
-	{
-		return this.canvas;
-	}
+//	public Canvas getCanvas()
+//	{
+//		return this.canvas;
+//	}
 	
 	/*
 	//nodig?
