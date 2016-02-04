@@ -103,6 +103,7 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
         //don't change any setting, but update selected values.
         setSelectedRow(row);
         setSelectedColumn(col);
+        data[row][col]= value;
     }
 
 //    private void printDebugData() {

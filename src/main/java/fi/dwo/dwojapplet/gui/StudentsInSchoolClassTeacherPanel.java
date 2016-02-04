@@ -5,14 +5,17 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -205,6 +208,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 
         //fetch user details.
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setAlignmentX(LEFT_ALIGNMENT);
+        this.setAlignmentY(TOP_ALIGNMENT);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
@@ -219,22 +224,23 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_COPYTOSCHOOLCLASS));
         copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
         copyToSchoolClassButton.addActionListener(this);
-//        addTeacherButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
-//        addTeacherButton.setSize(addTeacherButton.getPreferredSize());
-//        addTeacherButton.addActionListener(this);
-//        addTeacherBox = new JComboBox(new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(sc)));
-//        DomUserListCellRenderer renderer = new DomUserListCellRenderer();
-//        addTeacherBox.setRenderer(renderer);
-//        addTeacherBox.setMaximumRowCount(10);
-//        addTeacherBox.addActionListener(this);
+        targetSchoolClassBox = new JComboBox(new Vector<DomSchoolClass>(prop.getTeachersOtherSchoolClasses(sc)));
+        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
+        targetSchoolClassBox.setRenderer(renderer);
+        targetSchoolClassBox.setMaximumRowCount(10);
+        targetSchoolClassBox.addActionListener(this);
         Box header = Box.createHorizontalBox();
-        header.setMaximumSize(new Dimension(520, 100));
+        header.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        header.setMaximumSize(new Dimension(3000, 100));
+        header.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
         header.add(backButton);
-        header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.add(Box.createRigidArea(new Dimension(30, 0)));
         header.add(deleteButton);
         header.add(Box.createRigidArea(new Dimension(30, 0)));
         header.add(copyToSchoolClassButton);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.add(targetSchoolClassBox);
+        header.add(Box.createGlue());
         this.add(header);
         //addClassButton.setVisible(true);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -281,19 +287,38 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == copyToSchoolClassButton) {
-//            DomTeacher teacher = (DomTeacher) addTeacherBox.getSelectedItem();
-//            try {
-//                prop.submitTeacherToSchoolClass(schoolClass, teacher);
-//                tableModel.init(prop, schoolClass, select);
-//                tableModel.fireTableDataChanged();
-//                
-//            }
-//            catch (Dwo2Exception ex) {
-//                LOG.log(Level.SEVERE, null, ex);
-//                GuiCreator.instance().ShowErrorDialog(this, ex);
-//            }
+            try {
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    if (((Boolean) tableModel.getValueAt(i, 4)).equals(true)) {
+                        DomStudent student = (DomStudent) tableModel.getValueAt(i, 5);
+                        DomSchoolClass toSchoolClass = (DomSchoolClass) targetSchoolClassBox.getSelectedItem();
+                        prop.submitStudentToSchoolClass(schoolClass, toSchoolClass, student);
+                    }
+                    tableModel.init(prop, getSchoolClass(), select);
+                    tableModel.fireTableDataChanged();
+                    GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                }
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.FINE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+            }
         } else if (e.getSource() == deleteButton) {
-            //addTeacherBox.get
+            try {
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    if (((Boolean) tableModel.getValueAt(i, 4)).equals(true)) {
+                        DomStudent student = (DomStudent) tableModel.getValueAt(i, 5);
+                        prop.removeStudentFromSchoolClass(schoolClass, student);
+                    }
+                }
+                tableModel.init(prop, getSchoolClass(), select);
+                tableModel.fireTableDataChanged();
+                GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.FINE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+            }
         } else if (e.getSource() == backButton) {
             try {
                 ClassTeacherPanel panel = new ClassTeacherPanel();
@@ -324,6 +349,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     }
 
     @Override
-    public void stateChanged(ChangeEvent e) {
+    public void stateChanged(ChangeEvent e
+    ) {
     }
 }

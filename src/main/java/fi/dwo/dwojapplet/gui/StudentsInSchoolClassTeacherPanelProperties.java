@@ -68,5 +68,20 @@ public class StudentsInSchoolClassTeacherPanelProperties {
         submit.setStudent(t);
         SecureTeacherSchoolClassManager.SubmitStudentToSchoolClass(submit);
     }    
-        
+
+    public List<DomSchoolClass> getTeachersSchoolClasses() throws Dwo2Exception{
+        return SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
+    }
+            
+    public List<DomSchoolClass> getTeachersOtherSchoolClasses(DomSchoolClass sc) throws Dwo2Exception{
+        List<DomSchoolClass> scList = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
+        for(DomSchoolClass c : scList){
+            if(sc.getId().equals(c.getId())){
+                scList.remove(c);
+                break;
+            }
+        }
+        return scList;
+    }
+            
 }

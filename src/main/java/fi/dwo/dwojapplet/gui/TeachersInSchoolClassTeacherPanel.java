@@ -33,7 +33,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import static javax.swing.SwingConstants.LEADING;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -210,6 +209,8 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         //fetch user details.
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setAlignmentX(LEFT_ALIGNMENT);
+        this.setAlignmentY(TOP_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
@@ -233,9 +234,11 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         addTeacherBox.setRenderer(renderer);
         addTeacherBox.setMaximumRowCount(10);
         addTeacherBox.addActionListener(this);
+
         Box header = Box.createHorizontalBox();
-        header.setAlignmentX(LEADING);
-        header.setMaximumSize(new Dimension(420, 100));
+        header.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        header.setMaximumSize(new Dimension(3000, 100));
+        header.setBorder(BorderFactory.createEmptyBorder());
         header.add(backButton);
         header.add(Box.createHorizontalGlue());
 //        header.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -293,7 +296,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                 prop.submitTeacherToSchoolClass(schoolClass, teacher);
                 tableModel.init(prop, schoolClass, removeImage);
                 tableModel.fireTableDataChanged();
-                
+
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
