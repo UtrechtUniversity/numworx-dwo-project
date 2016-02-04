@@ -50,7 +50,12 @@ public class TekstComponent {
 		this.tekst = tekst;
 		canvas.getElement().setInnerText(tekst);
 		//span.getElement().getStyle().setFontSize(fm.getFontSize(), Style.Unit.PX);
-		span.getElement().getStyle().setProperty("font", fontString);
+		Style style = span.getElement().getStyle();
+		style.setProperty("font", fontString);
+		style.setProperty("position", "absolute");
+		double corr = 2; // 2 px correctie tussen span en canvas. TODO wat is de correcte formule
+		style.setTop(corr, Style.Unit.PX);
+		
 	}
 	
 //	public int getHeight()
@@ -163,8 +168,8 @@ public class TekstComponent {
 	{
 		//FocusPanel sp = new FocusPanel();
 		TouchPanel sp = new TouchPanel();
-		sp.add(this.canvas);
-		//sp.add(span);
+		//sp.add(this.canvas);
+		sp.add(span);
 		return sp;
 	}
 
