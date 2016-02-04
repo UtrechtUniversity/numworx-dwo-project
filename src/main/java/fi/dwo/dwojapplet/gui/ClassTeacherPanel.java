@@ -14,6 +14,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
@@ -53,6 +54,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
     private CenterPanel center;
 
     private JButton addClassButton;
+    private JButton addStudentsButton;
 
     private Image editImage, modulesImage, studentsImage, teachersImage, removeImage;
 
@@ -381,14 +383,18 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 
         //FontMetrics fm;
         addClassButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_CLASS));
-        //fm = addClassButton.getFontMetrics(addClassButton.getFont());
         addClassButton.setSize(addClassButton.getPreferredSize());
         addClassButton.addActionListener(this);
+        addStudentsButton = new JButton("Create students");
+        addStudentsButton.setSize(addStudentsButton.getPreferredSize());
+        addStudentsButton.addActionListener(this);
         //addClassButton.setLocation(30, 10);
 //        addClassButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
         Box header = Box.createHorizontalBox();
         header.add(addClassButton);
         header.add(Box.createHorizontalGlue());
+        header.add(addStudentsButton);
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
         this.add(header);
         //addClassButton.setVisible(true);
         this.add(Box.createVerticalStrut(15));
@@ -452,10 +458,18 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 
                 }
                 catch (Dwo2Exception ex) {
-                    Logger.getLogger(ClassTeacherPanel.class
-                            .getName()).log(Level.FINE, null, ex);
-                    JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                LOG.log(Level.FINE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(center, ex);
                 }
+            }
+        } else if (e.getSource() == addStudentsButton) {
+            try {
+                NewSingleSchoolStudentsTeacherPanel panel = new NewSingleSchoolStudentsTeacherPanel();
+                center.loadCenter(panel);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.FINE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(center, ex);
             }
         }
     }
