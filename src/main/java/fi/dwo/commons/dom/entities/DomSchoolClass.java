@@ -87,6 +87,5 @@ public class DomSchoolClass implements Cloneable {
     public void setHasRegKey(Boolean hasRegKey) {
         this.hasRegKey = hasRegKey;
     }
-
     
 }
