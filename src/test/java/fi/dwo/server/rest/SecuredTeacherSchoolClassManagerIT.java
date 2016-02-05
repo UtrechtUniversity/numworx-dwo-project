@@ -4,6 +4,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.dom.entities.DomRemoveStudentFromSchoolClass;
+import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
@@ -11,11 +12,14 @@ import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
 import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
 import fi.dwo.commons.dom.entities.DomTeacher;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.persistence.RoleType;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
@@ -34,10 +38,12 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
@@ -337,6 +343,7 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testRemoveTeacherFromSchoolClass() {
         System.out.println("removeTeacherFromSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+        DomRemoveTeacherFromSchoolClass domRemoveTeacherFromSchoolClass = new DomRemoveTeacherFromSchoolClass();
         DomSchoolClass domSchoolClass = new DomSchoolClass();
         domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
         domSchoolClass.setSchoolClassName("SchoolClass02");
@@ -348,6 +355,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
         RestRemoveTeacherFromSchoolClass restRemoveTeacherFromSchoolClass = new RestRemoveTeacherFromSchoolClass();
+        restRemoveTeacherFromSchoolClass.setDomRemoveTeacherFromSchoolClass(domRemoveTeacherFromSchoolClass);
         restRemoveTeacherFromSchoolClass.getDomRemoveTeacherFromSchoolClass().setSchoolClass(domSchoolClass);
         restRemoveTeacherFromSchoolClass.getDomRemoveTeacherFromSchoolClass().setTeacher(domTeacher);
 
@@ -368,6 +376,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         restRemoveTeacherFromSchoolClass = new RestRemoveTeacherFromSchoolClass();
+        restRemoveTeacherFromSchoolClass.setDomRemoveTeacherFromSchoolClass(domRemoveTeacherFromSchoolClass);
         restRemoveTeacherFromSchoolClass.getDomRemoveTeacherFromSchoolClass().setSchoolClass(domSchoolClass);
         restRemoveTeacherFromSchoolClass.getDomRemoveTeacherFromSchoolClass().setTeacher(domTeacher);
         try {
@@ -489,4 +498,45 @@ public class SecuredTeacherSchoolClassManagerIT {
         }
     }
 
+
+    /**
+     * Test of SubmitSingleSchoolStudent method, of class
+     * SecuredSchoolAdminSchoolClassManager. Tests if a single student student
+     * can be added. Tests only for a proper request. 
+     */
+    @Test
+    public void testSubmitSingleSchoolStudent() {
+        System.out.println("SubmitSingleSchoolStudent");
+        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+
+        RestSingleSchoolStudent rss = new RestSingleSchoolStudent();
+        DomSingleSchoolStudent dss = new DomSingleSchoolStudent();
+        rss.setDomSingleSchoolStudent(dss);
+        dss.setUsername("singleschooluser");
+        dss.setGivenName("a");
+        dss.setInsertion("b");
+        dss.setFamilyName("c");
+        dss.setEmail("a@b.c");
+        dss.setPassword("pwd");
+        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+        Boolean result = instance.SubmitSingleSchoolStudent(sc, rss);
+        assertEquals("Operation failed to be true.", true, result);
+
+        //fetch user and hasrole and class if given?
+        PersistentUser user = UserManager.findByUserName(dss.getUsername());
+        assertEquals("Given name not as expected.", dss.getGivenName(), user.getFirstname());
+        assertEquals("Insertion not as expected.", dss.getInsertion(), user.getMiddlename());
+        assertEquals("Familyname not as expected.", dss.getFamilyName(), user.getLastname());
+        assertEquals("Email not as expected.", dss.getEmail(), user.getEmail());
+        assertEquals("Password not as expected.", dss.getPassword(), user.getPasswd());
+        assertEquals("Did not creat a single schoolstudent.", user.isSingleSchoolAccount(), true);
+        try {
+            //check for hasRole
+            PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findEntity(3L), RoleType.STUDENT);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Could not find created user's hasRole");
+        }
+    }    
 }

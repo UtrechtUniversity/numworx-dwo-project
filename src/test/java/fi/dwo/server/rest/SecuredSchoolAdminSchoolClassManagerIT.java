@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
@@ -182,6 +183,8 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         RestRemoveTeacherFromSchoolClass msg = new RestRemoveTeacherFromSchoolClass();
+        DomRemoveTeacherFromSchoolClass dmRmTeach = new DomRemoveTeacherFromSchoolClass();
+        msg.setDomRemoveTeacherFromSchoolClass(dmRmTeach);
         msg.getDomRemoveTeacherFromSchoolClass().setSchoolClass(domSchoolClass);
         msg.getDomRemoveTeacherFromSchoolClass().setTeacher(domTeacher);
         
