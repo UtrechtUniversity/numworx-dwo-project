@@ -64,6 +64,8 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	DWOTabletKeyboardPad pad;
 	@UiField(provided=true)
 	DWOkeyboardBundle resources = DWOTabletKeyboardFactory.resources;
+	@UiField(provided=true)
+	fi.wiskopdr.text.TextConstants rb = fi.wiskopdr.text.Text.constants;
 	
 	
 	@UiField
@@ -136,7 +138,7 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t4_11") void onT4_11(ClickEvent e) {getEditor().conjug();}
 	@UiHandler("t4_12") void onT4_12(ClickEvent e) {getEditor().insert('←');}
 	@UiHandler("t4_13") void onT4_13(ClickEvent e) {getEditor().insert('→');}
-	@UiHandler("t4_14") void onT4_14(ClickEvent e) {getEditor().insert(" of ");}
+	@UiHandler("t4_14") void onT4_14(ClickEvent e) {getEditor().insert(" "+rb.ofLabel()+" ");}
 	@UiHandler("t4_15") void onT4_15(ClickEvent e) {getEditor().insert('∞');}
 
 	@Override

@@ -5,6 +5,7 @@
 	>
 	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
 	<ui:with type="com.google.gwt.i18n.client.constants.NumberConstants" field="nc" />
+	<ui:with type="fi.wiskopdr.text.TextConstants" field="rb"></ui:with>
 	<ui:style>
 	.pad {
 		float:right;
@@ -198,7 +199,7 @@
 				≤
 			</my:FKey>
 			<my:FKey addStyleNames="key icon" ui:field="t4_14">
-				of
+				<ui:text from="{rb.ofLabel}" />
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-15">

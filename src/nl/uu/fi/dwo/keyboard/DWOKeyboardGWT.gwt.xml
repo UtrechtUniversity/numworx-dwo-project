@@ -5,6 +5,7 @@
 	<inherits name="com.google.gwt.i18n.I18N"/>
 	<inherits name="nl.uu.fi.dwo.interaction.Interaction" />
 	<inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
+	<inherits name="fi.wiskopdr"/>
 
 	<source path="client" />
 	<entry-point class="nl.uu.fi.dwo.keyboard.client.DWOKeyboardGWT" />
