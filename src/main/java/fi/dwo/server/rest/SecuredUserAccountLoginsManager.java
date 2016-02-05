@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -148,7 +149,12 @@ public class SecuredUserAccountLoginsManager {
                     i = (Integer) oList[0];
                     sac.setSchoolClassId((PersistenceId) MySQLPersistenceId.createPersistenceId(i.longValue(), PersistenceClassType.PersistentSchoolClass));
                     Long j = (Long) oList[4];
-                    sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", j.longValue()).getSingleResult());
+                    try {
+                        sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", j.longValue()).getSingleResult());
+                    }
+                    catch (NoResultException e) {
+                        //occurs when hasrole refers to out of sync data
+                    }
                 } else {
                     sac.setSchoolClassId(null);
                     sac.setSchoolClassName(null);
@@ -342,7 +348,7 @@ public class SecuredUserAccountLoginsManager {
 
         PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
         Long sgId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
-        if(sarc.getDomSchoolRoleAndClass().getSchoolGroupId().equals(sgId)){
+        if (sarc.getDomSchoolRoleAndClass().getSchoolGroupId().equals(sgId)) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: tried to remove the null school login of  user {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Only system has the right to remove a null school login of user " + user.getUsername() + ".");
         }
