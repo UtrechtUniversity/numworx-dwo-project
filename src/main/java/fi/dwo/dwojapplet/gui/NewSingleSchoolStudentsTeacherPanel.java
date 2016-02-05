@@ -54,15 +54,16 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     private JButton importButton;
     private JComboBox schoolClassComboBox;
     private Clipboard systemClipboard;
-    Object[] columnNames = {
+    String[] columnNames = {
         TextMapper.getText(TextMapper.GUIR_FIRSTNAME),
         TextMapper.getText(TextMapper.GUIR_MIDDLENAME),
         TextMapper.getText(TextMapper.GUIR_LASTNAME),
         TextMapper.getText(TextMapper.GUIR_USERNAME),
         TextMapper.getText(TextMapper.GUIR_PASSWORD),
-        TextMapper.getText(TextMapper.GUIR_EMAIL)};
-
-    private Image editImage;
+        TextMapper.getText(TextMapper.GUIR_EMAIL),
+        TextMapper.getText(TextMapper.BTN_DELETE)};
+    
+    private Image delImage;
 
     private JPanel jtbl;
 
@@ -125,7 +126,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         @Override
         public void actionPerformed(ActionEvent event) {
 //            final GuiCreator instance = GuiCreator.instance();
-            if (value == editImage) {
+            if (value == delImage) {
 //                try {
 //                    DomTeacher teacher = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
 //
@@ -163,7 +164,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new NewSingleSchoolStudentsTeacherPanelTableModel();
 
-        tableModel.init(prop);
+        tableModel.init(prop,columnNames,delImage);
         jtable.setModel(tableModel);
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
@@ -208,8 +209,8 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
-        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
-        tr.addImage(editImage, 0);
+        delImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
+        tr.addImage(delImage, 0);
         try {
             tr.waitForAll();
         }

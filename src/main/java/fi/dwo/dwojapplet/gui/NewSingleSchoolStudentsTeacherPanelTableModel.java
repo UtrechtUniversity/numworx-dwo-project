@@ -1,8 +1,11 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -17,30 +20,19 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
 
     private int selectedRow, selectedColumn;
 
-    private Object[][] data= {{"","","","","",""}};
+    private List<DomSingleSchoolStudent> data =new ArrayList<DomSingleSchoolStudent>();
+    private Image rmImage;
 
     public void init(NewSingleSchoolStudentsTeacherPanelProperties props, String[] colNames, Image delImage) throws Dwo2Exception {
-
+        rmImage = delImage;
         columnNames = colNames;
-        
+        if(data.size()==0){
+            DomSingleSchoolStudent student = new DomSingleSchoolStudent();
+            data.add(student);
+        }
         prop = props;
 
-        
-        for (DomStudent u : userList) {
-//            rows++; // one for each item in List
-//        }
-//        
-//        data = new Object[rows][6];
-//        int j = 0;
-//        for (DomStudent u : userList) {
-//            data[j][0] = u.getUsername();
-//            data[j][1] = u.getGivenName();
-//            data[j][2] = u.getInsertion();
-//            data[j][3] = u.getFamilyName();
-//            data[j][4] = new Boolean(true);
-//            data[j][5] = u;
-//            j++;
-//        }
+
     }
 
     @Override
@@ -50,7 +42,7 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return data.length;
+        return data.size();
     }
 
     @Override
@@ -60,7 +52,30 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int col) {
-        return data[row][col];
+//        TextMapper.getText(TextMapper.GUIR_FIRSTNAME),
+//        TextMapper.getText(TextMapper.GUIR_MIDDLENAME),
+//        TextMapper.getText(TextMapper.GUIR_LASTNAME),
+//        TextMapper.getText(TextMapper.GUIR_USERNAME),
+//        TextMapper.getText(TextMapper.GUIR_PASSWORD),
+//        TextMapper.getText(TextMapper.GUIR_EMAIL)};
+        switch(col){
+            case 0: 
+                return data.get(row).getGivenName();
+            case 1:
+                return data.get(row).getInsertion();
+            case 2:
+                return data.get(row).getFamilyName();
+            case 3:
+                return data.get(row).getUsername();
+            case 4:
+                return data.get(row).getPassword();
+            case 5:
+                return data.get(row).getEmail();
+            case 6:
+                return rmImage;
+            default: 
+                return data.get(row); 
+        }        
     }
 
     /*
@@ -70,7 +85,10 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
      */
     @Override
     public Class getColumnClass(int c) {
-        return getValueAt(0, c).getClass();
+         switch(c){
+            default: 
+                return String.class;
+        }  
     }
 
     /*
@@ -78,13 +96,7 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
      */
     @Override
     public boolean isCellEditable(int row, int col) {
-        //Note that the data/cell address is constant,
-        //no matter where the cell appears onscreen.
-        if (col < 4) {
-            return false;
-        } else {
             return true;
-        }
     }
 
 
@@ -97,7 +109,36 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
         //don't change any setting, but update selected values.
         setSelectedRow(row);
         setSelectedColumn(col);
-        data[row][col]= value;
+//        TextMapper.getText(TextMapper.GUIR_FIRSTNAME),
+//        TextMapper.getText(TextMapper.GUIR_MIDDLENAME),
+//        TextMapper.getText(TextMapper.GUIR_LASTNAME),
+//        TextMapper.getText(TextMapper.GUIR_USERNAME),
+//        TextMapper.getText(TextMapper.GUIR_PASSWORD),
+//        TextMapper.getText(TextMapper.GUIR_EMAIL)};
+        switch(col){
+            case 0: 
+                data.get(row).setGivenName((String)value);
+                break;
+            case 1:
+                data.get(row).setInsertion((String)value);
+                break;
+            case 2:
+                data.get(row).setFamilyName((String)value);
+                break;
+            case 3:
+                data.get(row).setUsername((String)value);
+                break;
+            case 4:
+                data.get(row).setPassword((String)value);
+                break;
+            case 5:
+                data.get(row).setEmail((String)value);
+                break;
+            case 6:
+                break;
+//            default: 
+//                data.set(row, (DomSingleSchoolStudent) value); 
+        }        
     }
 
 //    private void printDebugData() {
