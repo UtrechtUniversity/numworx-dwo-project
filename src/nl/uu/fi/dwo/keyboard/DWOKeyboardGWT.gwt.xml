@@ -2,9 +2,21 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
 <module rename-to='keyboardgwt'>
 	<inherits name="com.google.gwt.user.User" />
+	<inherits name="com.google.gwt.i18n.I18N"/>
 	<inherits name="nl.uu.fi.dwo.interaction.Interaction" />
 	<inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
-	
+
 	<source path="client" />
 	<entry-point class="nl.uu.fi.dwo.keyboard.client.DWOKeyboardGWT" />
+	
+	<!-- English language, independent of country -->
+  	<extend-property name="locale" values="en"/>
+    <extend-property name="locale" values="nl"/> 	
+    <extend-property name="locale" values="de"/> 	
+    <extend-property name="locale" values="es"/> 	
+    <extend-property name="locale" values="fr"/> 	
+    <extend-property name="locale" values="gr"/> 	
+
+  	<set-property-fallback name="locale" value="en"/> <!-- English is the default -->
+	
 </module>

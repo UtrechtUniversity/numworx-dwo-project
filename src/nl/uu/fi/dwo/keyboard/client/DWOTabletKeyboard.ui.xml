@@ -4,6 +4,7 @@
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
 	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
+	<ui:with type="com.google.gwt.i18n.client.constants.NumberConstants" field="nc" />
 	<ui:style>
 	.pad {
 		float:right;
@@ -66,7 +67,7 @@
 				2
 			</my:FKey>
 			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t4_2">
-				.
+				<ui:text from='{nc.decimalSeparator}'/>
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-3">

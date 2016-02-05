@@ -7,6 +7,8 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.i18n.client.constants.NumberConstants;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -25,6 +27,7 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 		return HEIGHT;
 	}
 	
+	@UiField(provided=true) NumberConstants nc;
 	
 	private static TabletKeyboardUiBinder uiBinder = GWT
 			.create(TabletKeyboardUiBinder.class);
@@ -46,6 +49,8 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	public DWOTabletKeyboard() {
 		pad = new DWOTabletKeyboardPad();
 		pad.setDelegate(this);
+		LocaleInfo currentLocale = LocaleInfo.getCurrentLocale();
+		nc = currentLocale.getNumberConstants();
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 	
@@ -119,7 +124,7 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t3_15") void onT3_15(ClickEvent e) {getEditor().insert('\u2265');}
 
 	@UiHandler("t4_1") void onT4_1(ClickEvent e) {getEditor().insert('0');}
-	@UiHandler("t4_2") void onT4_2(ClickEvent e) {getEditor().insert(',');}
+	@UiHandler("t4_2") void onT4_2(ClickEvent e) {getEditor().insert(nc.decimalSeparator().charAt(0));}
 	@UiHandler("t4_3") void onT4_3(ClickEvent e) {getEditor().insert('=');}
 	@UiHandler("t4_4") void onT4_4(ClickEvent e) {getEditor().insert('-');}
 	@UiHandler("t4_5") void onT4_5(ClickEvent e) {getEditor().breuk();}
