@@ -651,7 +651,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			return;
 		}
 		// System.out.println(s);
-		//if (Text.language.getLanguage().equals("en"))
+		// if (Text.language.getLanguage().equals("en"))
 		//	s = s.replaceAll("of", "or");
 		FormuleParser p = new FormuleParser();
 		int index = s.indexOf(";");

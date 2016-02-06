@@ -38,7 +38,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 		getChild(0).setPosition(getChild(1).width + fStr + fm.getAscent()/3, fm.getAscent() / 4);// getChild(1).height/2);
         getChild(1).setPosition(fm.getAscent()/3, getAsHoogte()-(this.getChild(1).height/2 + fm.getAscent()/2));
         
-        /*
+        /* FIXME
         if(WiskOpdr.language.toString().equals("en"))
         {
         	kind1.setLocation(k2w + fStr + 3*asc/4, 0);
@@ -98,7 +98,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 		//this.drawline(ctx, fm.getAscent() / 3 + 5, height, 2 * fm.getAscent() / 3 + 4, fm.getAscent() / 8);
 		//this.drawline(ctx, 2 * fm.getAscent() / 3 + 5, fm.getAscent() / 8, width + 5, fm.getAscent() / 8);
 		
-		//if(language.toString().equals("en"))g.drawString("log", 3 ,ashoogte + asc/2 + asc/12);
+		// FIXME if(language.toString().equals("en"))g.drawString("log", 3 ,ashoogte + asc/2 + asc/12);
 		//else g.drawString("log", 5+k2w ,ashoogte + asc/2 + asc/12);
 		//ctx.setTextAlign(TextAlign.CENTER);
 		//ctx.setTextBaseline(TextBaseline.BOTTOM);
@@ -120,7 +120,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 		
 		int locx =	fm.getAscent()/3+getChild(1).width + fStr;
 		int locy = getChild(1).height/2;
-		//if(WiskOpdr.language.toString().equals("en"))locy = 0;
+		//FIXME if(WiskOpdr.language.toString().equals("en"))locy = 0;
 		
 		ctx.beginPath();
 		ctx.moveTo(locx+c+b, locy+d);

@@ -697,6 +697,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				if(correct != null) {
 					map.put("success", correct);
 				}
+				map.put("formula", getMainRegel().toString());
+				
+				
 				logging.log(map);
 			}
 		}

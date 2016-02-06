@@ -46,6 +46,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private static Memento _instance;
 	static private Logger logger = Logger.getLogger("Memento");
 
+	public static Memento instance() {
+		return _instance;
+	}
+	
 	static public native void instalOnBeforeUnload() /*-{
 		$wnd.onbeforeunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
 		$wnd.onunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
@@ -63,6 +67,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private static final String GOED_FOUT = "orGoedFout";
 	private static final String SCORES = "orScores"; // TODO correct name? getPagina score gebruikt deze naam
 	private static final String ONS_STATE = "onsState";
+	private static final String LOG_STATE = "log";
 	private static final String AANTAL_NAKIJKEN = "aantalNakijken";
 
 	static final String SUSPEND_DATA = "cmi.suspend_data";
@@ -85,6 +90,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	private JSONObject suspendData;
 	private JSONObject onsState;
+	private JSONObject logState;
 	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout, opdrScores, opdrBezocht;
 	private JSONBoolean zelftoetsNagekeken, zelftoetsGeenCorr;
 
@@ -116,6 +122,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			opdrBezocht   = (JSONArray) onsState.get(BEZOCHT);
 			zelftoetsNagekeken = (JSONBoolean) onsState.get(ZELFTOETS_NAGEKEKEN);
 			aantalNakijken = (JSONArray) onsState.get(AANTAL_NAKIJKEN);
+			logState = (JSONObject) suspendData.get(LOG_STATE);
 		}
 		catch (Exception e)
 		{
@@ -252,6 +259,30 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			
 		}
 	}
+
+	public JSONObject getLogState(String logID) {
+		if(logState == null) 
+		{
+			logState = new JSONObject();
+			suspendData.put(LOG_STATE, logState);
+		}
+		JSONObject obj = (JSONObject) logState.get(logID);
+		if(obj == null) {
+			obj = new JSONObject();
+			logState.put(logID, obj);
+		}
+		return obj;
+	}
+	
+	public void setLogState(String logID, JSONObject value) {
+		if(logState == null) 
+		{
+			logState = new JSONObject();
+			suspendData.put(LOG_STATE, logState);
+		}
+		logState.put(logID, value);
+	}
+	
 
 	private boolean isNull(JSONValue jsonValue) {
 		return jsonValue == null | jsonValue.isNull() == JSONNull.getInstance();

@@ -23,10 +23,22 @@ public class FormuleTeken extends FormuleElement
 
 	private String teken;
 	private char character;
+	private boolean combined;
 	private boolean selected = false;
 	private boolean functieTeken = false;
 	private static boolean maalteken = false;
 
+	public FormuleTeken(FormuleElement holder, String tktk)
+	{
+		super(holder);
+		character = tktk.charAt(0);
+		teken = tktk;
+		combined = true;
+		calculateSize();
+	}
+	
+	
+	
 	public FormuleTeken(FormuleElement holder, char tk)
 	{
 		super(holder);
@@ -69,6 +81,13 @@ public class FormuleTeken extends FormuleElement
 
 		selected = false;
 		// setOpaque(false);
+		calculateSize();
+	}
+
+
+
+	private void calculateSize() {
+		
 		ctx.setFont(fm.getFontStyle());
 		TextMetrics m;
 		if (this.teken != null)
@@ -81,7 +100,7 @@ public class FormuleTeken extends FormuleElement
 		this.setSize((int) m.getWidth(), fm.getAscent() + fm.getDescent());
 		//this.setAsHoogte(fm.getAscent() / 2);
 		this.setAsHoogte(fm.getAscent());//maakt geen verschil..?
-		
+
 	}
 
 
@@ -524,6 +543,7 @@ public class FormuleTeken extends FormuleElement
 
 	public String toString()
 	{
+		if(combined) return teken;
 		return String.valueOf(this.character);
 	}
 }

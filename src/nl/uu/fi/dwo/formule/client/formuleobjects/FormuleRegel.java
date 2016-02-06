@@ -24,6 +24,8 @@ import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 
+import fi.wiskopdr.Letter;
+
 
 /**
  * Formula line
@@ -982,6 +984,17 @@ public class FormuleRegel extends FormuleElement
 			addElement(ft);
 			return ft;
 		}
+		if(		// ft2?
+				Letter.isCombined(ft3.geefChar()))
+		{
+			removePrevious();
+			removePrevious();
+			FormuleTeken ft = new FormuleTeken(this, ft2.toString()+ft3.toString());
+			addElement(ft);
+			return ft;
+		}
+		
+		
 		if (ft2.geefChar() == '<' && ft3.geefChar() == '=')
 		{
 			removePrevious();
@@ -1061,13 +1074,22 @@ public class FormuleRegel extends FormuleElement
 			else
 			{
 				//hier iets aanpassen om ook woorden te kunnen gaan maken.
+				if(s.length() > 1 && Letter.isCombined(s.charAt(1)))
+				{
+					FormuleTeken t = new FormuleTeken(this, s.substring(0, 2));
+					if (holder instanceof FormuleEditor)
+						((FormuleHolder) holder).setCurrentElement(t);
+					this.insert(t);
+					s = s.substring(2);
+					
+				} else {
 				
 				FormuleTeken t = new FormuleTeken(this, s.charAt(0));
 				if (holder instanceof FormuleEditor)
 					((FormuleHolder) holder).setCurrentElement(t);
 				this.insert(t);
 				s = s.substring(1);
-			}
+			}}
 		}
 		//resizeEditorWithAnswer();
 		
