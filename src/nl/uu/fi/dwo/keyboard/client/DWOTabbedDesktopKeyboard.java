@@ -39,6 +39,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 //		main.add(grlower);
 		math = new DWOMathKeyboard().init();
 		math.setVisible(false);
+		math.setKeyboard(nr);
 		math.setDelegate(this);
 		disableKey(math.pad.t3_16);
 		disableKey(math.pad.t4_16);
@@ -66,6 +67,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 			k123.setDelegate(this);
 			main.add(k123);
 			k123.setVisible(isShown);
+			math.setKeyboard(nr);
 			if(isCurrent) current = k123;
 			resizeScrollPanel(getKeyboardHeight());
 		}

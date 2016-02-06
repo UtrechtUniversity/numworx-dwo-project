@@ -242,6 +242,22 @@
 				⊃
 			</my:FKey>
 		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-15" ui:field="c16">
+			<my:FKey addStyleNames="key disabled"  >
+				
+			</my:FKey>
+			<my:FKey addStyleNames="key disabled" >
+				
+			</my:FKey>
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t3_16">
+				p&#x302;
+			</my:FKey>
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_16">
+				x&#x304;
+			</my:FKey>
+		</g:FlowPanel>
+		
+		
 	    </g:FlowPanel>
 		<my:DWOTabletKeyboardPad ui:field="pad" addStyleNames="{style.pad}" />
 	</g:HorizontalPanel>
