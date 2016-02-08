@@ -4,6 +4,9 @@ import java.util.Vector;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 
+import fi.wiskopdr.Letter;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 /**
@@ -175,9 +178,17 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 			}
 			else
 			{
-				regel.insert(new FormuleTeken(regel, s.charAt(0)));
+				//hier iets aanpassen om ook woorden te kunnen gaan maken.
+				if(s.length() > 1 && Letter.isCombined(s.charAt(1)))
+				{
+					FormuleTeken t = new FormuleTeken(this, s.substring(0, 2));
+					regel.insert(t);
+					s = s.substring(2);
+				} else {
+
+				regel.insert(new FormuleTeken(regel, s.charAt(0))); // FIXME combine here again!!
 				s = s.substring(1);
-			}
+			}}
 		}
 	}
 	
