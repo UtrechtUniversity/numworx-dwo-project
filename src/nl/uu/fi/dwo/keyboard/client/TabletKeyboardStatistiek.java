@@ -6,7 +6,7 @@ public class TabletKeyboardStatistiek extends TabletKeyboard {
 
 	public TabletKeyboardStatistiek() {
 		t1_9.setHTML("<span class='statistiek statistiek-T1-9'></span>");
-		t1_10.setHTML("<span class='statistiek statistiek-T1-9'></span>");
+		t1_10.setHTML("<span class='statistiek statistiek-T1-10'></span>");
 
 //		t2_8.setHTML("<span class='statistiek statistiek-T2-8'></span>");
 		t2_9.setHTML("<span class='statistiek statistiek-T2-9'></span>");
