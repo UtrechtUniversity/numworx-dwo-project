@@ -7,11 +7,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
  <!-- speciaal for ws.fisme.science.uu.nl -->
   <context-param>
   	<param-name>dbaccess.url</param-name>
-	<param-value>https://app.dwo.nl/dwo/dsaccess</param-value>  
+	<param-value>http://local.dwo.nl/dwo/dsaccess</param-value>  
   </context-param>
   <context-param>
   	<param-name>SERVLET</param-name>
-  	<param-value>//app.dwo.nl/dwo/dsaccess</param-value>
+  	<param-value>//local.dwo.nl/dwo/dsaccess</param-value>
   </context-param>
   <context-param>
   	<param-name>IDEAS</param-name>

@@ -4,7 +4,6 @@ import java.util.*;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 //import fi.beans.ideas.IdeasIF;
 //import fi.beans.ideas.RuleIF;
 //import fi.beans.stringutils.StringUtils;
@@ -651,7 +650,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			return;
 		}
 		// System.out.println(s);
-		//if (Text.language.getLanguage().equals("en"))
+		// if (Text.language.getLanguage().equals("en"))
 		//	s = s.replaceAll("of", "or");
 		FormuleParser p = new FormuleParser();
 		int index = s.indexOf(";");

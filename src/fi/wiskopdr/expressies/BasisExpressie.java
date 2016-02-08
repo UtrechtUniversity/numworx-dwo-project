@@ -2,6 +2,7 @@ package fi.wiskopdr.expressies;
 
 import java.util.Vector;
 
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.NumberFormat;
 
 import fi.wiskopdr.Letter;
@@ -9,6 +10,7 @@ import fi.wiskopdr.expressies.repr.AbstractConverter;
 
 public class BasisExpressie extends Expressie
 {
+	private static final char DECIMAL = LocaleInfo.getCurrentLocale().getNumberConstants().decimalSeparator().charAt(0);
 	String basisString;
 	double waarde;
 
@@ -259,7 +261,8 @@ public class BasisExpressie extends Expressie
 		//if(!Double.isNaN(waarde) && (Math.abs(1.0/waarde)>10000000000.0))basisStringUit = StringUtils.replaceStr(basisString,"E","*$p10$n") + "@@";
 
 		//if (WiskOpdr.language.toString().equals("nl"))
-		basisStringUit = basisStringUit.replace('.', ',');
+// FIXME: Komt dit wel voor?
+		basisStringUit = basisStringUit.replace('.', DECIMAL);
 
 		/*
 		if(isWaarde())
@@ -301,7 +304,7 @@ public class BasisExpressie extends Expressie
 		}
 
 		//if (WiskOpdr.language.toString().equals("nl"))
-		basisStringUit = basisStringUit.replace('.', ',');
+		basisStringUit = basisStringUit.replace('.', DECIMAL);
 		return basisStringUit;
 		//basisString = basisString.replace('.',',');
 		//if(isWaarde())
