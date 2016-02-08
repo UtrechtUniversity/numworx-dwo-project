@@ -249,10 +249,10 @@
 			<my:FKey addStyleNames="key disabled" >
 				
 			</my:FKey>
-			<my:FKey addStyleNames="key {style.symbol}" ui:field="t3_16">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_16">
 				p&#x302;
 			</my:FKey>
-			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_16">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t4_16">
 				x&#x304;
 			</my:FKey>
 		</g:FlowPanel>
