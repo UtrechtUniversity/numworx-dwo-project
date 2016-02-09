@@ -35,6 +35,13 @@
   		<scope>system</scope>
   		<systemPath>${project.basedir}/WebContent/WEB-INF/lib/dwo.jar</systemPath>
   	</dependency>
+   	<dependency>
+  		<groupId>fi.beans</groupId>
+  		<artifactId>javaclasses</artifactId>
+  		<version>1.0</version>
+  		<scope>system</scope>
+  		<systemPath>${project.basedir}/WebContent/WEB-INF/lib/javaclasses.jar</systemPath>
+  	</dependency>
   	<dependency>
   		<groupId>net.oauth.core</groupId>
   		<artifactId>oauth</artifactId>
