@@ -1,4 +1,3 @@
-/*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
@@ -14,24 +13,33 @@ import javax.swing.table.AbstractTableModel;
  */
 class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
 
-    private String[] columnNames ;
+    private String[] columnNames;
     static boolean DEBUG = false;
     private NewSingleSchoolStudentsTeacherPanelProperties prop;
 
     private int selectedRow, selectedColumn;
+    
+    //define an empty field to add things.
+    private int emptyRow = 0;
 
-    private List<DomSingleSchoolStudent> data =new ArrayList<DomSingleSchoolStudent>();
-    private Image rmImage;
+    private List<DomSingleSchoolStudent> data = new ArrayList<DomSingleSchoolStudent>();
+    private Image delImage;
 
-    public void init(NewSingleSchoolStudentsTeacherPanelProperties props, String[] colNames, Image delImage) throws Dwo2Exception {
-        rmImage = delImage;
+    /**
+     *
+     * @param props
+     * @param colNames
+     * @param rmImage
+     * @throws Dwo2Exception
+     */
+    public void init(NewSingleSchoolStudentsTeacherPanelProperties props, String[] colNames, List<DomSingleSchoolStudent> students, Image rmImage) throws Dwo2Exception {
+        delImage = rmImage;
         columnNames = colNames;
-        if(data.size()==0){
-            DomSingleSchoolStudent student = new DomSingleSchoolStudent();
-            data.add(student);
-        }
+        data = students;
+        DomSingleSchoolStudent student = new DomSingleSchoolStudent();
+        student.clearSettings();
+        data.add(student);
         prop = props;
-
 
     }
 
@@ -58,8 +66,8 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
 //        TextMapper.getText(TextMapper.GUIR_USERNAME),
 //        TextMapper.getText(TextMapper.GUIR_PASSWORD),
 //        TextMapper.getText(TextMapper.GUIR_EMAIL)};
-        switch(col){
-            case 0: 
+        switch (col) {
+            case 0:
                 return data.get(row).getGivenName();
             case 1:
                 return data.get(row).getInsertion();
@@ -72,10 +80,10 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
             case 5:
                 return data.get(row).getEmail();
             case 6:
-                return rmImage;
-            default: 
-                return data.get(row); 
-        }        
+                return delImage;
+            default:
+                return data.get(row);
+        }
     }
 
     /*
@@ -85,10 +93,24 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
      */
     @Override
     public Class getColumnClass(int c) {
-         switch(c){
-            default: 
+        switch (c) {
+            case 0:
                 return String.class;
-        }  
+            case 1:
+                return String.class;
+            case 2:
+                return String.class;
+            case 3:
+                return String.class;
+            case 4:
+                return String.class;
+            case 5:
+                return String.class;
+            case 6:
+                return Image.class;
+            default:
+                return DomSingleSchoolStudent.class;
+        }
     }
 
     /*
@@ -96,9 +118,8 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
      */
     @Override
     public boolean isCellEditable(int row, int col) {
-            return true;
+        return true;
     }
-
 
     /*
      * Don't need to implement this method unless your table's data can
@@ -107,6 +128,11 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object value, int row, int col) {
         //don't change any setting, but update selected values.
+        if (emptyRow == row) {
+            emptyRow = data.size();
+            data.add(new DomSingleSchoolStudent());
+            this.fireTableStructureChanged();
+        }
         setSelectedRow(row);
         setSelectedColumn(col);
 //        TextMapper.getText(TextMapper.GUIR_FIRSTNAME),
@@ -115,45 +141,32 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
 //        TextMapper.getText(TextMapper.GUIR_USERNAME),
 //        TextMapper.getText(TextMapper.GUIR_PASSWORD),
 //        TextMapper.getText(TextMapper.GUIR_EMAIL)};
-        switch(col){
-            case 0: 
-                data.get(row).setGivenName((String)value);
+        switch (col) {
+            case 0:
+                data.get(row).setGivenName((String) value);
                 break;
             case 1:
-                data.get(row).setInsertion((String)value);
+                data.get(row).setInsertion((String) value);
                 break;
             case 2:
-                data.get(row).setFamilyName((String)value);
+                data.get(row).setFamilyName((String) value);
                 break;
             case 3:
-                data.get(row).setUsername((String)value);
+                data.get(row).setUsername((String) value);
                 break;
             case 4:
-                data.get(row).setPassword((String)value);
+                data.get(row).setPassword((String) value);
                 break;
             case 5:
-                data.get(row).setEmail((String)value);
+                data.get(row).setEmail((String) value);
                 break;
             case 6:
                 break;
 //            default: 
 //                data.set(row, (DomSingleSchoolStudent) value); 
-        }        
+        }
     }
 
-//    private void printDebugData() {
-//      int numRows = getRowCount();
-//      int numCols = getColumnCount();
-//
-//      for (int i = 0; i < numRows; i++) {
-//        System.out.print("    row " + i + ":");
-//        for (int j = 0; j < numCols; j++) {
-//          System.out.print("  " + data[i][j]);
-//        }
-//        System.out.println();
-//      }
-//      System.out.println("--------------------------");
-//    }
     /**
      * @return the selectedRow
      */
@@ -180,5 +193,31 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
      */
     public void setSelectedColumn(int selectedColumn) {
         this.selectedColumn = selectedColumn;
+    }
+
+    public void deleteSelectedRow(int row) {
+        if (row != data.size() - 1) {
+            emptyRow--;
+            data.remove(row);
+//            this.fireTableDataChanged();
+            this.fireTableStructureChanged();
+        }
+    }
+
+    public void addRows(List<DomSingleSchoolStudent> students) {
+        DomSingleSchoolStudent temp = data.get(data.size() - 1);
+        data.remove(data.size() - 1);
+        for (DomSingleSchoolStudent s : students) {
+            data.add(s);
+        }
+        data.add(temp);
+        emptyRow = data.size()-1;
+//        this.fireTableDataChanged();
+            this.fireTableStructureChanged();
+        
+    }
+
+    List<DomSingleSchoolStudent> getSubmitList() {
+        return data;
     }
 }

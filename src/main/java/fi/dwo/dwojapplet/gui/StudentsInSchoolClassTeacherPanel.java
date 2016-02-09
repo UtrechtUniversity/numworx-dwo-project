@@ -130,6 +130,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 
         @Override
         public void actionPerformed(ActionEvent event) {
+            this.fireEditingStopped();
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == editImage) {
 //                try {
@@ -296,6 +297,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+
         if (e.getSource() == copyToSchoolClassButton) {
             try {
                 for (int i = 0; i < tableModel.getRowCount(); i++) {
@@ -304,10 +306,10 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         DomSchoolClass toSchoolClass = (DomSchoolClass) targetSchoolClassBox.getSelectedItem();
                         prop.submitStudentToSchoolClass(schoolClass, toSchoolClass, student);
                     }
-                    tableModel.init(prop, getSchoolClass(), editImage, noEditImage);
-                    tableModel.fireTableDataChanged();
-                    GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 }
+                tableModel.init(prop, getSchoolClass(), editImage, noEditImage);
+                tableModel.fireTableDataChanged();
+                GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
@@ -321,7 +323,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         prop.removeStudentFromSchoolClass(schoolClass, student);
                     }
                 }
-                tableModel.init(prop, getSchoolClass(), editImage,noEditImage);
+                tableModel.init(prop, getSchoolClass(), editImage, noEditImage);
                 tableModel.fireTableDataChanged();
                 GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
             }
@@ -340,6 +342,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         }
+        tableModel.fireTableDataChanged();
     }
 
     /**

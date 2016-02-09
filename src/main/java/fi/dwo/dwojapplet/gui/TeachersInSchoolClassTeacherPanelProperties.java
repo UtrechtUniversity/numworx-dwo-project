@@ -27,7 +27,7 @@ public class TeachersInSchoolClassTeacherPanelProperties {
     }
 
     public List<DomTeacher> getTeachersInSchoolNotInClass(DomSchoolClass sc) throws Dwo2Exception {
-        List<DomTeacher> classTeachers = SecureTeacherSchoolClassManager.GetTeachersInSchoolClass(sc);
+        List<DomTeacher> classTeachers = SecureTeacherSchoolClassManager.getTeachersInSchoolClass(sc);
         List<DomTeacher> schoolTeachers = SecureTeacherSchoolClassManager.getTeachersInSchool();
         List<DomTeacher> result = new ArrayList<DomTeacher>(schoolTeachers.size() - classTeachers.size());
         for (DomTeacher t : schoolTeachers) {
@@ -43,7 +43,7 @@ public class TeachersInSchoolClassTeacherPanelProperties {
     }
     
     public List<DomTeacher> getTeachersInSchoolClass(DomSchoolClass sc) throws Dwo2Exception {
-        return SecureTeacherSchoolClassManager.GetTeachersInSchoolClass(sc);
+        return SecureTeacherSchoolClassManager.getTeachersInSchoolClass(sc);
     }
 
     public void removeTeacherFromSchoolClass(DomSchoolClass sc, DomTeacher t) throws Dwo2Exception {
@@ -58,7 +58,7 @@ public class TeachersInSchoolClassTeacherPanelProperties {
         DomSubmitTeacherToSchoolClass submit = new DomSubmitTeacherToSchoolClass();
         submit.setSchoolClass(sc);
         submit.setTeacher(t);
-        SecureTeacherSchoolClassManager.SubmitTeacherToSchoolClass(submit);
+        SecureTeacherSchoolClassManager.submitTeacherToSchoolClass(submit);
     }    
         
 }

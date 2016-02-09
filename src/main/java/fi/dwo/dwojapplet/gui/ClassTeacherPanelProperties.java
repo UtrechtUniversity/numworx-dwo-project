@@ -49,11 +49,11 @@ public class ClassTeacherPanelProperties {
 //    }
     
     public Boolean addClass(DomSchoolClass4Teacher sc) throws Dwo2Exception{
-        return SecureTeacherSchoolClassManager.SubmitSchoolClass(sc);
+        return SecureTeacherSchoolClassManager.submitSchoolClass(sc);
     }
 
     public Boolean updateSchoolClass(DomSchoolClass4Teacher sc) throws Dwo2Exception{
-        return SecureTeacherSchoolClassManager.UpdateSchoolClass(sc);
+        return SecureTeacherSchoolClassManager.updateSchoolClass(sc);
     }
 
     public Boolean removeSchoolClass(DomSchoolClass sc) throws Dwo2Exception{
@@ -67,7 +67,7 @@ public class ClassTeacherPanelProperties {
     }
 
     public DomSchoolClass4Teacher getFullSchoolClass(DomSchoolClass sc) throws Dwo2Exception {
-        return SecureTeacherSchoolClassManager.GetFullSchoolClass(sc);
+        return SecureTeacherSchoolClassManager.getFullSchoolClass(sc);
     }
     
 }

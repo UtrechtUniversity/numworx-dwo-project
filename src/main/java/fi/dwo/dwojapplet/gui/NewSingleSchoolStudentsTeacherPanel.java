@@ -4,8 +4,11 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomNewSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
@@ -19,6 +22,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +38,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
@@ -61,8 +67,9 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         TextMapper.getText(TextMapper.GUIR_USERNAME),
         TextMapper.getText(TextMapper.GUIR_PASSWORD),
         TextMapper.getText(TextMapper.GUIR_EMAIL),
-        TextMapper.getText(TextMapper.BTN_DELETE)};
-    
+        TextMapper.getText(TextMapper.BTN_DELETE)
+    };
+
     private Image delImage;
 
     private JPanel jtbl;
@@ -125,25 +132,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 
         @Override
         public void actionPerformed(ActionEvent event) {
+            this.fireEditingStopped();
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == delImage) {
-//                try {
-//                    DomTeacher teacher = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
-//
-//                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
-//                        //persist returned values	
-//                        prop.removeTeacherFromSchoolClass(getSchoolClass(), teacher);
-//                        tableModel.init(prop, getSchoolClass(), removeImage);
-//                        tableModel.fireTableDataChanged();
-//                    }
-//                }
-//                catch (Dwo2Exception ex) {
-//                    Logger.getLogger(NewSingleSchoolStudentsTeacherPanel.class.getName()).log(Level.FINE, null, ex);
-//                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
-//                }
-//                finally {
-//                    fireEditingStopped();
-//                }
+                tableModel.deleteSelectedRow(tableModel.getSelectedRow());
+
             }
         }
     }
@@ -163,13 +156,15 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         jtbl.add(Box.createHorizontalGlue());
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new NewSingleSchoolStudentsTeacherPanelTableModel();
+        List<DomSingleSchoolStudent> students = new ArrayList<DomSingleSchoolStudent>(1);
+        tableModel.init(prop, columnNames, students, delImage);
 
-        tableModel.init(prop,columnNames,delImage);
         jtable.setModel(tableModel);
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }
-        jtable.setRowSelectionAllowed(false);
+        jtable.setRowSelectionAllowed(true);
+        jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtable.setColumnSelectionAllowed(false);
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new NewSingleSchoolStudentsTeacherPanel.ImageRenderer(), new NewSingleSchoolStudentsTeacherPanel.ImageButtonEditor());
@@ -230,7 +225,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         addButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
         addButton.setSize(addButton.getPreferredSize());
         addButton.addActionListener(this);
-        schoolClassComboBox = new JComboBox(new Vector<DomSchoolClass>(prop.getTeachersSchoolClasses()));
+        Vector<DomSchoolClass> classList = new Vector<DomSchoolClass>(prop.getTeachersSchoolClasses());
+        schoolClassComboBox = new JComboBox(classList);
+        if (classList.size() > 0) {
+            schoolClassComboBox.setSelectedIndex(0);
+        }
         DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
         schoolClassComboBox.setRenderer(renderer);
         schoolClassComboBox.setMaximumRowCount(10);
@@ -296,17 +295,48 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addButton) {
-//            DomTeacher teacher = (DomTeacher) addTeacherBox.getSelectedItem();
-//            try {
-//                prop.submitTeacherToSchoolClass(schoolClass, teacher);
-//                tableModel.init(prop, schoolClass, removeImage);
-//                tableModel.fireTableDataChanged();
-//
-//            }
-//            catch (Dwo2Exception ex) {
-//                LOG.log(Level.SEVERE, null, ex);
-//                GuiCreator.instance().ShowErrorDialog(this, ex);
-//            }
+            if (schoolClassComboBox.getSelectedItem() == null) {
+                return;
+            }
+            try {
+                List<DomSingleSchoolStudent> submitList = tableModel.getSubmitList();
+                List<DomSingleSchoolStudent> resultList = new ArrayList<DomSingleSchoolStudent>();
+                boolean failFlag = false;
+                boolean fatalFlag = false;
+                for (DomSingleSchoolStudent submit : submitList) {
+                    if (!submit.getUsername().equals("")) {
+                        try {
+                            DomNewSingleSchoolStudent student = new DomNewSingleSchoolStudent();
+                            student.setDomSingleSchoolStudent(submit);
+                            student.setDomSchoolClass((DomSchoolClass) schoolClassComboBox.getSelectedItem());
+                            prop.submitSingleSchoolStudent(student);
+                        }
+                        catch (Dwo2Exception ex) {
+                            resultList.add(submit);
+                            if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
+                                LOG.log(Level.FINE, null, ex);
+                                failFlag = true;
+                            } else {
+                                fatalFlag = true;
+                                LOG.log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                }
+                tableModel.init(prop, columnNames, resultList, delImage);
+                tableModel.fireTableDataChanged();
+                if (failFlag == true) {
+                    GuiCreator.instance().ShowMessageDialog(this, "De overgebleven studenten kunnen niet worden toegevoegd, vermoedelijk is de username niet uniek.");
+                }
+                if (fatalFlag == true) {
+                    GuiCreator.instance().ShowMessageDialog(this, "Er was een systeem error, zie de log.");
+                }
+
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(this, ex);
+            }
         } else if (e.getSource() == importButton) {
             pasteFromSystemClipboard();
         } else if (e.getSource() == backButton) {
@@ -320,7 +350,8 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == schoolClassComboBox) {
-            //addTeacherBox.get
+                    tableModel.fireTableDataChanged();
+
         }
     }
 
@@ -356,12 +387,20 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 tempString = (String) clipboardContent.getTransferData(DataFlavor.stringFlavor);
                 String[] rowStrings = tempString.split("\n"); // was: StringUtils.split(tempString, "\n");
                 String[][] celStrings = new String[rowStrings.length][];
+                List<DomSingleSchoolStudent> newUserList = new ArrayList<DomSingleSchoolStudent>();
                 for (int i = 0; i < rowStrings.length; i++) {
+                    newUserList.add(new DomSingleSchoolStudent());
+                    //userList.get(userList.size()).clearSettings();
                     celStrings[i] = rowStrings[i].split("\t", columnNames.length);
-                    System.out.println(celStrings[i]);
+                    newUserList.get(newUserList.size() - 1).setGivenName(celStrings[i][0]);
+                    newUserList.get(newUserList.size() - 1).setInsertion(celStrings[i][1]);
+                    newUserList.get(newUserList.size() - 1).setFamilyName(celStrings[i][2]);
+                    newUserList.get(newUserList.size() - 1).setUsername(celStrings[i][3]);
+                    newUserList.get(newUserList.size() - 1).setPassword(celStrings[i][4]);
+                    newUserList.get(newUserList.size() - 1).setEmail(celStrings[i][5]);
+//                    System.out.println(celStrings[i]);
                 }
-                //addTableModel.setDataVector(celStrings, columnNames);
-                
+                tableModel.addRows(newUserList);
                 return true;
             }
             catch (Exception e) {

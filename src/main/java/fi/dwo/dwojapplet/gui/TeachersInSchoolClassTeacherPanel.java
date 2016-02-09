@@ -315,6 +315,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         } else if (e.getSource() == addTeacherBox) {
             //addTeacherBox.get
         }
+        tableModel.fireTableDataChanged();
     }
 
     /**
