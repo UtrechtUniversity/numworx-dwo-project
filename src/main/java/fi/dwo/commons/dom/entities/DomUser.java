@@ -37,6 +37,15 @@ public class DomUser {
         this.singleSchool=u.isSingleSchoolAccount();
     }
 
+    public void clearSettings(){
+        id = null;
+        username = "";
+        givenName = "";
+        familyName = "";
+        insertion = "";
+        singleSchool = new Boolean(true);
+    }
+    
     /**
      * The persistence id of the {@Link PersistentUser}.
      * 

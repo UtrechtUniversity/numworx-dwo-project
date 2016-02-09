@@ -3,7 +3,6 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.rest.entities.*;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -14,9 +13,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class DomSingleSchoolStudent extends DomUser {
-    private String password;
-    private String username;
-    private String email;
+    private String password = "";
+    private String username = "";
+    private String email = "";
     
 
     public DomSingleSchoolStudent(){
@@ -30,6 +29,12 @@ public class DomSingleSchoolStudent extends DomUser {
         email = u.getEmail();
     }
 
+    public void clearSettings(){
+        super.clearSettings();
+        password = "";
+        username = "";
+        email = "";
+    }
     /**
      * @return the password
      */

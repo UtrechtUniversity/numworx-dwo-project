@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomSchoolClass implements Cloneable {
     private PersistenceId id;
-    private String schoolClassName = "";
+    private String schoolClassName;
     private Boolean hasRegKey;
 
 
@@ -86,6 +86,12 @@ public class DomSchoolClass implements Cloneable {
      */
     public void setHasRegKey(Boolean hasRegKey) {
         this.hasRegKey = hasRegKey;
+    }
+
+    void clearSettings() {
+        id = null;
+        schoolClassName = "";
+        hasRegKey= new Boolean (false);
     }
     
 }
