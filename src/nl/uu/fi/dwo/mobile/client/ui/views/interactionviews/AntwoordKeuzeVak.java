@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -51,8 +52,10 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
@@ -133,6 +136,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	private boolean check;
 	private boolean teltMee;
 	private int hoogtePopup;
+	private Logging logging;
 	
 	
 	
@@ -179,10 +183,18 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			}
 			if(map.containsKey("hasFeedback") )
 				hasFeedback = map.getBoolean("hasFeedback");
-		    if(map.containsKey("logOption")) 
-		    	logOption = map.getBoolean("logOption");
 			if(map.containsKey("logID")) 
 				logID = map.getString("logID");
+		    if(map.containsKey("logOption")) 
+		    	logOption = map.getBoolean("logOption");
+		    if (logOption)
+		    {	logging = DWOplayer.PARAMETERS.getLogging();
+		    	DWOLogger dwologger = new DWOLogger(logging);
+		    	dwologger.setMaxScore(scoreMax);
+		    	dwologger.setClassName("fi.wiskopdr.AntwoordKeuzeVak");
+		    	dwologger.setLogID(logID);
+		    	logging = dwologger;
+		    }
 			if(map.containsKey("check")) 
 				check = map.getBoolean("check");
 			if(map.containsKey("teltMee")) 
@@ -631,24 +643,24 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		errorCount = this.errorCount;
 
 		//if (!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant)))
-		if (logOption)
-		{
-			HashMap<String, Object> logMap = new HashMap<String, Object>();
-
-			String logString = antwoord;
-			if (selectedIndex == 0)
-				logString = "";
-
-			logMap.put("logAnswer", logString);
-			logMap.put("logScore", new Integer(score));
-			logMap.put("logMaxScore", new Integer(scoreMax));
-			logMap.put("logErrorCount", new Integer(errorCount));
-			logMap.put("logAttemptsCount", new Integer(attemptsCount));
-			logMap.put("logAttempts", attempts);
-
-			//WiskOpdr.setLog(logID, logMap);
-
-		}
+//		if (logOption)
+//		{
+//			HashMap<String, Object> logMap = new HashMap<String, Object>();
+//
+//			String logString = antwoord;
+//			if (selectedIndex == 0)
+//				logString = "";
+//
+//			logMap.put("logAnswer", logString);
+//			logMap.put("logScore", new Integer(score));
+//			logMap.put("logMaxScore", new Integer(scoreMax));
+//			logMap.put("logErrorCount", new Integer(errorCount));
+//			logMap.put("logAttemptsCount", new Integer(attemptsCount));
+//			logMap.put("logAttempts", attempts);
+//
+//			//WiskOpdr.setLog(logID, logMap);
+//
+//		}
 
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("ingevuld", new Boolean(ingevuld));
@@ -663,43 +675,59 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	public void setAttempt()
 	{
-		String goedFout = "";
-		
-		if (goedKrulImage.isVisible())
-			goedFout = "goed";
-		//if (goedKrulHalfImage.isVisible())
-		//	goedFout = "half";
-		if (foutKruisImage.isVisible())
-			goedFout = "fout";
-		String formule = "";
-		//String string = huidigeKeuzeVak.getOpdrachtObjects().toString();
-		String string = "";
-		if(selectedIndex > 0)
-			string = keuzeMogelijkheden[selectedIndex - 1];
-		
-		
-		//String string = (String) antwoordKV.getItemText(antwoordKV.getSelectedIndex());
-
-		/*
-		String fbTekst = "";
-		if (feedbackTekst.isVisible() && feedbackTekst.getParent() != null)
-			fbTekst = feedbackTekst.getText();
-			*/
-
-		String s = string;
-		s = s + "   ;   ";
-		s = s + "Regelnummer = ";
-		s = s + "   ;   ";
-		s = s + goedFout;
-		s = s + "   ;   ";
-		s = s + "score = " + score;
-		s = s + "   ;   ";
-		s = s + new Date().toString();
-		s = s + "   ;   ";
-		//s = s + fbTekst;
-
-		attempts.addElement(s);
-		//System.out.println(s);
+		if(logOption) {
+			Map log  = new HashMap();
+			if(goedKrulImage.isVisible())
+				log.put("success", Boolean.TRUE);
+			if(foutKruisImage.isVisible())
+				log.put("success", Boolean.FALSE);
+			String formule = "";
+			if(selectedIndex > 0) {
+				formule = keuzeMogelijkheden[selectedIndex - 1];
+			}
+			log.put("response", formule.trim());
+			log.put("score", Collections.singletonMap("raw", score));
+			log.put("step", "");
+// TODO feedback
+			logging.log(log);
+		}
+//		String goedFout = "";
+//		
+//		if (goedKrulImage.isVisible())
+//			goedFout = "goed";
+//		//if (goedKrulHalfImage.isVisible())
+//		//	goedFout = "half";
+//		if (foutKruisImage.isVisible())
+//			goedFout = "fout";
+//		String formule = "";
+//		//String string = huidigeKeuzeVak.getOpdrachtObjects().toString();
+//		String string = "";
+//		if(selectedIndex > 0)
+//			string = keuzeMogelijkheden[selectedIndex - 1];
+//		
+//		
+//		//String string = (String) antwoordKV.getItemText(antwoordKV.getSelectedIndex());
+//
+//		/*
+//		String fbTekst = "";
+//		if (feedbackTekst.isVisible() && feedbackTekst.getParent() != null)
+//			fbTekst = feedbackTekst.getText();
+//			*/
+//
+//		String s = string;
+//		s = s + "   ;   ";
+//		s = s + "Regelnummer = ";
+//		s = s + "   ;   ";
+//		s = s + goedFout;
+//		s = s + "   ;   ";
+//		s = s + "score = " + score;
+//		s = s + "   ;   ";
+//		s = s + new Date().toString();
+//		s = s + "   ;   ";
+//		//s = s + fbTekst;
+//
+//		attempts.addElement(s);
+//		//System.out.println(s);
 	}
 
 	public void setState(HashMap<String, Object> h)
@@ -1051,7 +1079,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
-		zetMode(comRoot.getMode());		
+		zetMode(comRoot.getMode());
+		if(logging != null) logging.setCommunicationRoot(comRoot);
 	}
 
 	

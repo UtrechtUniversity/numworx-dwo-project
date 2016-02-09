@@ -46,7 +46,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private static Memento _instance;
 	static private Logger logger = Logger.getLogger("Memento");
 
-	public static Memento instance() {
+	static Memento instance() {
 		return _instance;
 	}
 	

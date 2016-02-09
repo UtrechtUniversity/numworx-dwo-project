@@ -44,7 +44,7 @@
 		</mgwt:HeaderPanel>
 		<!-- Main interaction Area -->
 	  	<g:HTMLPanel>
-			<div style="width: 600px; height: 450px; display: block; margin: 20px auto;">
+			<div style="width: 600px; height: 470px; display: block; margin: 20px auto;">
 	    	    <img src="images/resources/filogo.png" style="float: left;" />
 	    	        <div style="float: left; margin:20px;">
 	    	      		<h1><ui:text from='{rb.dwo}'/></h1>

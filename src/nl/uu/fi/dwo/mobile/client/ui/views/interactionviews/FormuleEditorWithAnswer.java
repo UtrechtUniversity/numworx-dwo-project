@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
@@ -288,6 +289,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				}
 				if(launchState.getBoolean("logOption", false)) {
 					logging = DWOplayer.PARAMETERS.getLogging();
+					DWOLogger dwoLogger = new DWOLogger(logging);
+					if(launchState.containsKey("scoreMax"))
+					{
+						int max = launchState.getInt("scoreMax");
+						dwoLogger.setMaxScore(max);
+					}
+					if(launchState.containsKey("logIDLabel"))
+						dwoLogger.setLogIDLabel(launchState.getString("logIDLabel"));
+					logging = dwoLogger;
 					logging.setLogID( launchState.getString("logID"));
 					logging.setClassName("fi.wiskOpdr.SimpelAntwoordFormuleVak");
 				}

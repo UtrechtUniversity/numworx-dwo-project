@@ -1,11 +1,16 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+
+
+
 
 
 
@@ -54,8 +59,11 @@ import nl.uu.fi.dwo.interaction.client.FacetAware.Type;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOPlayerMC2;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -159,6 +167,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	
 	private boolean logOption;
 	private String logID;
+	private Logging logging;
 	
 	private boolean[][] logObjectives;
 	
@@ -232,6 +241,13 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				logOption = map.getBoolean("logOption");
 			if (map.containsKey("logID"))
 				logID = map.getString("logID");
+			if(logOption) {
+				DWOLogger dwologger = new DWOLogger(DWOplayer.PARAMETERS.getLogging());
+				dwologger.setMaxScore(scoreMax);
+				dwologger.setClassName("fi.wiskopdr.AntwoordTekstVak");
+				dwologger.setLogID(logID);
+				logging = dwologger;
+			}
 			if (map.containsKey("boxMetRand"))
 				boxMetRand = map.getBoolean("boxMetRand");
 			if (map.containsKey("logObjectives"))
@@ -292,7 +308,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			{	changed = true;
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) 
 		    	{	kijkNa();
-		    	
+		    		setAttempt();
 		    	}
 			}
 		});
@@ -697,47 +713,64 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 
 	public void setAttempt(boolean start)
 	{
-		String goedFout = "";
-		if(goedKrulImage.isVisible())
-			goedFout = "goed";
-		else if(goedKrulHalfImage.isVisible())
-			goedFout = "half";
-		else if(foutKruisImage.isVisible())
-			goedFout = "fout";
-
-		String antwoord = "";
-		if (formuleMode)
-			antwoord = formuleVak.toString();
-		else
-			antwoord = antwoordTF.getText();
-		if (antwoord.equals(""))
-			return;
-
-		if (formuleMode)
-		{
-			String attemptFormuleString = FormuleParser.schoon(FormuleParser.formuleString(antwoord));
-			attemptFormuleString = StringUtils.replaceStr(attemptFormuleString, "(0-", "(-");
-			antwoord = FormuleParser.pel(attemptFormuleString);
+		if(logOption) {
+			Map log = new HashMap();
+			if(goedKrulImage.isVisible())
+				log.put("success", Boolean.TRUE);
+			else if(foutKruisImage.isVisible())
+				log.put("sucesss", Boolean.FALSE);
+			String response = "";
+			log.put("step", "0");
+			if(formuleMode) {
+				response = formuleVak.getMainRegel().toMathML();
+			} else
+				response = antwoordTF.getText();
+			log.put("response", response);
+			log.put("score", Collections.singletonMap("raw", score));
+// TODO feedback		
+			logging.log(log);
 		}
-		String fbTekst = "";
-		
-		//if (feedbackTekst.isVisible() && feedbackTekst.getParent() != null)
-		//	fbTekst = feedbackTekst.getText();
-
-		String s = antwoord;
-		s = s + "   ;   ";
-		s = s + new Date().toString();
-		s = s + "   ;   ";
-		s = s + "Regelnummer = " + 0;
-		s = s + "   ;   ";
-		s = s + goedFout;
-		s = s + "   ;   ";
-		s = s + "score = " + score;
-		s = s + "   ;   ";
-		s = s + fbTekst;
-
-		attempts.addElement(s);
-		System.out.println(s);
+//		String goedFout = "";
+//		if(goedKrulImage.isVisible())
+//			goedFout = "goed";
+//		else if(goedKrulHalfImage.isVisible())
+//			goedFout = "half";
+//		else if(foutKruisImage.isVisible())
+//			goedFout = "fout";
+//
+//		String antwoord = "";
+//		if (formuleMode)
+//			antwoord = formuleVak.toString();
+//		else
+//			antwoord = antwoordTF.getText();
+//		if (antwoord.equals(""))
+//			return;
+//
+//		if (formuleMode)
+//		{
+//			String attemptFormuleString = FormuleParser.schoon(FormuleParser.formuleString(antwoord));
+//			attemptFormuleString = StringUtils.replaceStr(attemptFormuleString, "(0-", "(-");
+//			antwoord = FormuleParser.pel(attemptFormuleString);
+//		}
+//		String fbTekst = "";
+//		
+//		//if (feedbackTekst.isVisible() && feedbackTekst.getParent() != null)
+//		//	fbTekst = feedbackTekst.getText();
+//
+//		String s = antwoord;
+//		s = s + "   ;   ";
+//		s = s + new Date().toString();
+//		s = s + "   ;   ";
+//		s = s + "Regelnummer = " + 0;
+//		s = s + "   ;   ";
+//		s = s + goedFout;
+//		s = s + "   ;   ";
+//		s = s + "score = " + score;
+//		s = s + "   ;   ";
+//		s = s + fbTekst;
+//
+//		attempts.addElement(s);
+//		System.out.println(s);
 	}
 	
 	public void wis()
@@ -997,6 +1030,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 		mode = comRoot.getMode();
+		if(logging != null) logging.setCommunicationRoot(comRoot);
 	}
 
 

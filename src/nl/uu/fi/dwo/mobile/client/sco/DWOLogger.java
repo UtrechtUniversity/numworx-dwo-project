@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.mobile.utils;
+package nl.uu.fi.dwo.mobile.client.sco;
 
 import java.util.Collections;
 import java.util.Date;
@@ -12,21 +12,26 @@ import com.google.gwt.json.client.JSONValue;
 
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class DWOLogger implements Logging {
 	
 	
+	private static final String LOGKEY_ANSWER = "logAnswer";
+	private static final String LOGKEY_MAXSCORE = "logMaxScore";
 	private static final String START = "0";
 	private static final String SEPARATOR = "  ;  ";
 	private static final String LOG_ERROR_COUNT = "logErrorCount";
 	private static final String LOG_ATTEMPTS = "logAttempts";
+	private static final String LOG_ATTEMPTS_COUNT = "logAttemptsCount";
+	private static final String LOGKEY_SCORE = "logScore";
 	private String logID;
 	private Logging delegate;
 	private Memento memento;
 	private JSONObject map;
 	private JSONArray  attempts;
 	private JSONNumber maxScore;
+	private JSONString logIDLabel;
 	private int errorCount, attemptsCount;
 
 	public DWOLogger(Logging delegate) {		
@@ -47,18 +52,24 @@ public class DWOLogger implements Logging {
 		String formula = (String)parameters.get("response");
 		String attempt = buildAttempt(parameters);
 		JSONNumber score = getScore(parameters);
-		boolean error = Boolean.TRUE.equals(parameters.get("success"));
+		boolean error = Boolean.FALSE.equals(parameters.get("success"));
 		
-		map.put("logAnswer", new JSONString(formula));
+		map.put(LOGKEY_ANSWER, new JSONString(formula));
 		if (score != null)
-			map.put("logScore", score);
+			map.put(LOGKEY_SCORE, score);
 		if(maxScore != null)
-			map.put("logMaxScore", maxScore);
+			map.put(LOGKEY_MAXSCORE, maxScore);
+		if(logIDLabel != null)
+			map.put("logIDLabel", logIDLabel);
 		if (error) errorCount++;
 		map.put(LOG_ERROR_COUNT, new JSONNumber(errorCount));
 		attempts.set(attemptsCount, new JSONString(attempt));
 		attemptsCount ++;
-		map.put("logAttemptsCount", new JSONNumber(attemptsCount));
+		map.put(LOG_ATTEMPTS_COUNT, new JSONNumber(attemptsCount));
+		
+		if(delegate != null) {
+			delegate.log(parameters);
+		}
 		
 	}
 
@@ -72,6 +83,7 @@ public class DWOLogger implements Logging {
 	
 	private String buildAttempt(Map<String, ?> parameters) {
 		String s = (String) parameters.get("formula");
+		if(s == null) s = (String) parameters.get("response");
 		String fbTekst = (String) parameters.get("feedback");
 		Object stapNr = parameters.get("step");
 		if(stapNr == null) stapNr = START;
@@ -136,4 +148,11 @@ public class DWOLogger implements Logging {
 			delegate.setClassName(string);
 	}
 
+	public void setMaxScore(int max) {
+		maxScore = new JSONNumber(max);
+	}
+	public void setLogIDLabel(String label) {
+		logIDLabel = new JSONString(label);
+	}
+	
 }
