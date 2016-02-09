@@ -26,6 +26,7 @@
   	</dependency>
   </dependencies>
   <build>
+	<finalName>wiskopdrexpressies</finalName>
   	<resources>
   		<resource>
   			<directory>src</directory>
