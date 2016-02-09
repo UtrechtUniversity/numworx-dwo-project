@@ -19,6 +19,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestNewSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestRemoveStudentFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
@@ -602,7 +603,7 @@ public class SecuredTeacherSchoolClassManager {
         PersistentTeacherOfClass ptoc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(thr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
 
-        if (toc!=null && ptoc!=null && teacher != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
+        if (toc != null && ptoc != null && teacher != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
                 TeacherOfClassManager.destroy(toc.getPersistentTeacherOfClassPK());
             }
@@ -653,7 +654,7 @@ public class SecuredTeacherSchoolClassManager {
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         PersistentStudentOfClass soc = StudentOfClassManager.findEntity(new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
 
-        if (toc!=null && student != null && soc!=null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
+        if (toc != null && student != null && soc != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
                 StudentOfClassManager.destroy(soc.getPersistentStudentOfClassPK());
             }
@@ -779,14 +780,17 @@ public class SecuredTeacherSchoolClassManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submitSingleSchoolStudent")
-    public Boolean SubmitSingleSchoolStudent(@Context SecurityContext sc, RestSingleSchoolStudent nssStudent) {
+    public Boolean SubmitSingleSchoolStudent(@Context SecurityContext sc, RestNewSingleSchoolStudent nssStudent) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentSchoolGroup sg = null;
+        PersistentTeacherOfClass toc = null;
+
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             sg = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
+            toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), MySQLPersistenceId.getId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()), phr.getPersistentHasRolePK().getSchoolGroupID()));
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -794,25 +798,33 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        if (sg != null) {
+        //teacher should be a member of the school class
+        if (toc != null && sg != null) {
             Date now = DwoDateUtilities.getCurrentDwoDate();
             PersistentUser user = new PersistentUser();
-            user.setEmail(nssStudent.getDomSingleSchoolStudent().getEmail());
-            user.setFirstname(nssStudent.getDomSingleSchoolStudent().getGivenName());
-            user.setMiddlename(nssStudent.getDomSingleSchoolStudent().getInsertion());
-            user.setLastname(nssStudent.getDomSingleSchoolStudent().getFamilyName());
-            user.setPasswd(nssStudent.getDomSingleSchoolStudent().getPassword());
+            user.setEmail(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getEmail());
+            user.setFirstname(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getGivenName());
+            user.setMiddlename(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getInsertion());
+            user.setLastname(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getFamilyName());
+            user.setPasswd(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getPassword());
             user.setRegisterDate(now);
-            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUsername());
+            user.setUsername(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUsername());
             user.setSchoolGroupID(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
             try {
                 SchoolUtilManager.addSingleSchoolStudentAccount(user, school);
+                //add to schoolClass
+                PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()));
+                PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
+                toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(user.getUserID(), schoolClass.getClassID(), user.getSchoolGroupID()));
+                java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
+                toSoc.setRegisterDate(d);
+                StudentOfClassManager.create(toSoc);
             }
             catch (Dwo2Exception ex) {
-                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
                 LOG.log(Level.SEVERE, null, ex);
-                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+                throw new Dwo2RestException(ex);
             }
         } else {
             return false;

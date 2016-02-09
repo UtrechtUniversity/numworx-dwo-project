@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomNewSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomRemoveStudentFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
@@ -26,6 +27,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestNewSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestRemoveStudentFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
@@ -509,9 +511,11 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("SubmitSingleSchoolStudent");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
 
-        RestSingleSchoolStudent rss = new RestSingleSchoolStudent();
+        RestNewSingleSchoolStudent rss = new RestNewSingleSchoolStudent();
+        DomNewSingleSchoolStudent nss = new DomNewSingleSchoolStudent();
         DomSingleSchoolStudent dss = new DomSingleSchoolStudent();
-        rss.setDomSingleSchoolStudent(dss);
+        rss.setDomNewSingleSchoolStudent(nss);
+        nss.setDomSingleSchoolStudent(dss);
         dss.setUsername("singleschooluser");
         dss.setGivenName("a");
         dss.setInsertion("b");

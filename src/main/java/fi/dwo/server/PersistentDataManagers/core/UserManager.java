@@ -11,6 +11,7 @@ import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
@@ -46,6 +47,9 @@ public class UserManager {
             em.getTransaction().begin();
             em.persist(persistentUser);
             em.getTransaction().commit();
+        }catch (EntityExistsException ex){
+            LOG.log(Level.SEVERE, "Can't create the PersistentUser.", ex);
+            throw ex;
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentUser.", e);
             throw new PersistenceException(e);
