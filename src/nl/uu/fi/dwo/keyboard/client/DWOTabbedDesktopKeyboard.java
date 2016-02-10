@@ -112,7 +112,9 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 	}
 
 	int getKeyboardHeight() {
-		return current.getKeyboardHeight();
+		if(isVisible())
+			return current.getKeyboardHeight();
+		return 0;
 	}
 
 	@Override
