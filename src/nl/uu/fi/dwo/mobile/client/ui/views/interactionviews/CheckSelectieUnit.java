@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 //import java.util.ArrayList;
 import java.awt.Component;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -52,6 +53,7 @@ import nl.uu.fi.dwo.interaction.client.Stub;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 
 public class CheckSelectieUnit implements InteractionStub
@@ -116,6 +118,7 @@ public class CheckSelectieUnit implements InteractionStub
 	
 	private boolean check = true;
 	private boolean teltMee = true;
+	private DWOLogger dwologger;
 	
 	
 	
@@ -360,6 +363,26 @@ public class CheckSelectieUnit implements InteractionStub
 	
 	public void setAttempt()
 	{
+		String logString = "";
+		String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
+		for(int i=0 ; i<ipList.length ; i++)
+        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
+            if(ipList[i] != null && ipList[i].isIpSelected() && i<options.length) 
+            	logString = logString + options[i];
+        }
+		if(dwologger != null) {
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("response", logString);
+			map.put("score", Collections.singletonMap("raw", score));
+			if(goedKrulImage.isVisible())
+				map.put("success", Boolean.TRUE);
+			if(foutKruisImage.isVisible())
+				map.put("success", Boolean.FALSE);
+			dwologger.log(map);
+		}
+
+		
+		
 		String goedFout = "";
 		if(goedKrulImage.isVisible())
 			goedFout = "goed";
@@ -368,13 +391,6 @@ public class CheckSelectieUnit implements InteractionStub
 		else if(foutKruisImage.isVisible())
 			goedFout = "fout";
 		
-		String logString = "";
-		String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
-		for(int i=0 ; i<ipList.length ; i++)
-        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
-            if(ipList[i] != null && ipList[i].isIpSelected() && i<options.length) 
-            	logString = logString + options[i];
-        }
 		
 		String s = logString;
 		s = s + "   ;   ";
@@ -487,11 +503,11 @@ public class CheckSelectieUnit implements InteractionStub
 		correct = false;
 	}
 
-		@Override
+	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 		zetMode(comRoot.getMode());
-		
+		if(dwologger != null) dwologger.setCommunicationRoot(comRoot);
 	}
 	
 	public CheckSelectieUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipList)
@@ -562,7 +578,13 @@ public class CheckSelectieUnit implements InteractionStub
 			if(map.containsKey("knopImageString")) 
 				knopImageString = map.getString("knopImageString");
 		}
-		
+		if(logOption) {
+			dwologger = new DWOLogger();
+			dwologger.setClassName("fi.wiskopdr.CheckUnitPanel");
+			dwologger.setLogID(logID);
+			dwologger.setMaxScore(scoreMax);
+		}
+
 		
 	}
 	

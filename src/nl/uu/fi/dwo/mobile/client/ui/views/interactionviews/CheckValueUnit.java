@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 //import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
@@ -87,6 +89,7 @@ public class CheckValueUnit implements InteractionStub{
 	
 	private boolean logOption;
 	private String logID;
+	private DWOLogger dwologger;
 	
 	private boolean[][] logObjectives;
 	
@@ -157,6 +160,13 @@ public class CheckValueUnit implements InteractionStub{
 			}
 			if(launchData.get("knopImageString") != null) 
 				knopImageString = (String)launchData.get("knopImageString");
+			if(logOption) {
+				dwologger = new DWOLogger();
+				dwologger.setClassName("fi.wiskopdr.CheckValueUnitPanel");
+				dwologger.setLogID(logID);
+				dwologger.setMaxScore(scoreMax);
+			}
+
 		}
 	}
 	
@@ -353,6 +363,17 @@ public class CheckValueUnit implements InteractionStub{
 	
 	public void setAttempt()
 	{
+		if(dwologger != null) {
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("response", answer);
+			map.put("score", Collections.singletonMap("raw", score));
+			if(goedKrulImage.isVisible())
+				map.put("success", Boolean.TRUE);
+			if(foutKruisImage.isVisible())
+				map.put("success", Boolean.FALSE);
+			dwologger.log(map);
+		}
+		
 		String goedFout = "";
 		if(goedKrulImage.isVisible())
 			goedFout = "goed";
@@ -458,6 +479,8 @@ public class CheckValueUnit implements InteractionStub{
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 		zetMode(comRoot.getMode());
+		if(dwologger != null)
+			dwologger.setCommunicationRoot(comRoot);
 	}
 	
 	@Override

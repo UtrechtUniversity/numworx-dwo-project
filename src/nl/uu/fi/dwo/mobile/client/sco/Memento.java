@@ -261,6 +261,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	}
 
 	public JSONObject getLogState(String logID) {
+		if(logID == null)
+			return new JSONObject(); // No logging for MC2: Null Pattern
 		if(logState == null) 
 		{
 			logState = new JSONObject();

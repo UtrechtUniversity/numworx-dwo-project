@@ -34,7 +34,11 @@ public class DWOLogger implements Logging {
 	private JSONString logIDLabel;
 	private int errorCount, attemptsCount;
 
-	public DWOLogger(Logging delegate) {		
+	public DWOLogger() {
+		this(DWOplayer.PARAMETERS.getLogging());
+	}
+	
+	DWOLogger(Logging delegate) {		
 		memento = Memento.instance();
 		this.delegate = delegate;
 	}
@@ -81,13 +85,22 @@ public class DWOLogger implements Logging {
 			return new JSONNumber(n.doubleValue());
 	}
 	
+	private String getGoedFout(Object success) {
+		if(success == null) 
+			return "half";
+		if(Boolean.TRUE.equals(success)) 
+			return "goed";
+		if(Boolean.FALSE.equals(success))
+			return "fout";
+		return success.toString();
+	}
+	
 	private String buildAttempt(Map<String, ?> parameters) {
 		String s = (String) parameters.get("formula");
 		if(s == null) s = (String) parameters.get("response");
-		String fbTekst = (String) parameters.get("feedback");
-		Object stapNr = parameters.get("step");
-		if(stapNr == null) stapNr = START;
-		Object goedFout = parameters.get("success"); // goed/fout/half/""
+		Object fbTekst = parameters.get("feedback");
+		Object stapNr = parameters.get("step");		
+		Object goedFout = getGoedFout(parameters.get("success")); // goed/fout/half/""
 		if(s == null)
 			s = "";
 		if(fbTekst == null) 
@@ -97,9 +110,9 @@ public class DWOLogger implements Logging {
 		s += new Date();
 		s += SEPARATOR;
 		
-		s +=  "Regelnummer = " + stapNr;
+		if(stapNr != null) s +=  "Regelnummer = " + stapNr;
 		s += SEPARATOR;
-		if (stapNr == START)
+		if (START.equals(stapNr))
 			s = s + "start";
 		else
 			s = s + goedFout;
@@ -151,8 +164,18 @@ public class DWOLogger implements Logging {
 	public void setMaxScore(int max) {
 		maxScore = new JSONNumber(max);
 	}
+	
 	public void setLogIDLabel(String label) {
-		logIDLabel = new JSONString(label);
+		if(label != null)
+			logIDLabel = new JSONString(label);
+		else
+			logIDLabel = null;
 	}
 	
+	public void getStateHook(Map<String,Object> state) {
+		if(attempts != null)
+			state.put("log", attempts);
+	} // put objects into state
+
+	public void setStateHook(Map<String,Object> state) {} // get objects from state (if global logging on)
 }

@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.awt.Component;
+import java.util.Collections;
 //import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
@@ -114,6 +116,7 @@ public class CheckSleepUnit implements InteractionStub{
 	private boolean relocate;
 	private boolean view = false;
 	private boolean verzamelDoel;
+	private DWOLogger dwologger;
 	
 	public void randomizePositions()
 	{
@@ -257,6 +260,17 @@ public class CheckSleepUnit implements InteractionStub{
 	
 	public void setAttempt()
 	{
+		if(dwologger != null) {
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("response", answer);
+			map.put("score", Collections.singletonMap("raw", score));
+			if(goedKrulImage.isVisible())
+				map.put("success", Boolean.TRUE);
+			if(foutKruisImage.isVisible())
+				map.put("success", Boolean.FALSE);
+			dwologger.log(map);
+		}
+// Wim: wordt niet gebruikt, en in een andere volgorde als het VergelijkingVak.		
 		String goedFout = "";
 		if(goedKrulImage.isVisible())
 			goedFout = "goed";
@@ -565,6 +579,8 @@ public class CheckSleepUnit implements InteractionStub{
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 		zetMode(comRoot.getMode());
+		if(dwologger!=null)
+			dwologger.setCommunicationRoot(comRoot);
 	}
 	
 	
@@ -639,6 +655,13 @@ public class CheckSleepUnit implements InteractionStub{
 			}
 			if(launchData.get("knopImageString") != null) 
 				knopImageString = (String)launchData.get("knopImageString");
+			
+			if(logOption) {
+				dwologger = new DWOLogger();
+				dwologger.setClassName("fi.wiskopdr.CheckSleepUnitPanel");
+				dwologger.setLogID(logID);
+				dwologger.setMaxScore(scoreMax);
+			}
 		}
 	}
 	

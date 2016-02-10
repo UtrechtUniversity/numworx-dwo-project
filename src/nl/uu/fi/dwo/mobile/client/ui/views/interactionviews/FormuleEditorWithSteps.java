@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -131,6 +132,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	private Image checkimg;
 	
 	private boolean[][] logObjectives;
+	DWOLogger dwologger;
 	
 	private boolean check;
 	private boolean teltMee;
@@ -229,7 +231,15 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
 				}
 			}
-			
+			if (launchStateMap.getBoolean("logOption", false)) {
+				dwologger = new DWOLogger();
+				String type = isVergelijkingVak? "Vergelijking":"Formule";
+				dwologger.setClassName("fi.wiskopdr.Antwoord" + type + "Vak");
+				dwologger.setLogID(launchStateMap.getString("logID"));
+				if(launchStateMap.containsKey("logIDLabel"))
+					dwologger.setLogIDLabel(launchStateMap.getString("logIDLabel"));
+				dwologger.setMaxScore(scoreMax);
+			}
 			if (launchState.containsKey("pijl"))
 				pijl = ((Boolean) launchState.get("pijl")).booleanValue();
 			
@@ -1492,6 +1502,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		h.put("substitutieString", substitutieString);
 		h.put("gebruikersSubStrings", gebruikersSubStrings);
 		
+		if(dwologger!= null) dwologger.getStateHook(h);
 		return h;
 	}
 
@@ -2617,6 +2628,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	{
 		this.comRoot = comRoot;
 		mode = comRoot.getMode();
+		if(dwologger != null)
+			dwologger.setCommunicationRoot(comRoot);
 		if(editor != null) {
 			editor.setCommunicationRoot(comRoot);
 			//editor.zetMode(mode); // FIXME why null? after init?
@@ -2757,5 +2770,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	public void setFontStyle(int font_style) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public Object getStep() {
+		if(stapNr == 0)
+			return "start";
+		return Integer.valueOf(stapNr);
 	}
 }

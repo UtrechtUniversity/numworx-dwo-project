@@ -188,8 +188,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		    if(map.containsKey("logOption")) 
 		    	logOption = map.getBoolean("logOption");
 		    if (logOption)
-		    {	logging = DWOplayer.PARAMETERS.getLogging();
-		    	DWOLogger dwologger = new DWOLogger(logging);
+		    {	
+		    	DWOLogger dwologger = new DWOLogger();
 		    	dwologger.setMaxScore(scoreMax);
 		    	dwologger.setClassName("fi.wiskopdr.AntwoordKeuzeVak");
 		    	dwologger.setLogID(logID);

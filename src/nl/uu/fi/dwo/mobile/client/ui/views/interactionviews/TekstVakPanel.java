@@ -25,6 +25,8 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -223,6 +225,10 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	
 	
 	private FlowPanel klikPanel;
+	private boolean aftrekPopup;
+	private boolean popupUsed;
+	private int puntenAftrekPopup;
+	private boolean logOption;
 	
 	
 	
@@ -353,6 +359,20 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			hoogtes = (Arrays.asList(250.0));
 		
 		minHoogtes = new ArrayList<Double>(hoogtes);
+		
+		aftrekPopup = launchState.getBoolean("aftrekPopup", false);
+		if (launchState.containsKey("puntenAftrekPopup"))
+			puntenAftrekPopup = launchState.getInt("puntenAftrekPopup");
+		logOption = launchState.getBoolean("logOption", false);
+		if(logOption) {
+			dwologger = new DWOLogger();
+			dwologger.setLogID(launchState.getString("logID"));
+			dwologger.setMaxScore(0);
+			dwologger.setLogIDLabel(launchState.getString("logIDLabel"));
+			dwologger.setClassName("fi.wiskopdr.TekstVakPanel");			
+		}
+		
+		
 		if (launchState.containsKey("cellSpaceColumn") )
 			cellSpaceColumn = launchState.getInt("cellSpaceColumn");
 		if (launchState.containsKey("cellSpaceRow") )
@@ -985,6 +1005,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		this.comRoot = comRoot;
 		if(comRoot != null)
 			mode = comRoot.getMode();
+		if (dwologger != null) dwologger.setCommunicationRoot(comRoot);
 		
 	}
 
@@ -1004,10 +1025,12 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		h.put("interactiePanelStates", states);
 		h.put("selected", new Boolean(selected));
 		h.put("ingeklapt", new Boolean(ingeklapt));
+		h.put("popupUsed", Boolean.valueOf(popupUsed));
 		if(zwevend)
 		{	h.put("locationX", new Integer(locationX));
 			h.put("locationY", new Integer(locationY));
 		}
+		
 		return h;
 	}
 	
@@ -1054,6 +1077,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		}
 		if(map.containsKey("selected"))
 			selected = map.getBoolean("selected");
+		popupUsed = map.getBoolean("popupUsed", false);
 		if(map.containsKey("ingeklapt"))
 			ingeklapt = map.getBoolean("ingeklapt");
 		if(map.containsKey("locationX"))
@@ -1089,6 +1113,8 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			Object currentObject = interactionViewObjects.get(i);
 			score += ((InteractionView) currentObject).getScore();
 		}
+		if (aftrekPopup && popupUsed)
+			score = score - puntenAftrekPopup;
 		return score;
 	}
 	
@@ -1106,8 +1132,8 @@ public class TekstVakPanel implements InteractionView, FacetAware
 				{
 					scoreObjectives[j][k] += scoreObj[j][k];
 					//terug als aftrek voor popup geimplementeerd:
-					//if (aftrekPopup && popupUsed)
-					//	scoreObjectives[j][k] -= puntenAftrekPopup;
+					if (aftrekPopup && popupUsed)
+						scoreObjectives[j][k] -= puntenAftrekPopup;
 				}
 		}
 		return scoreObjectives;
@@ -2145,7 +2171,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			setCurrentSize( breedte, this.hoogte);
 			
 			fireEvent(KLAPUIT_EVENT);
-			
+			setPopupUsed();
 			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
 				@Override
@@ -2154,6 +2180,15 @@ public class TekstVakPanel implements InteractionView, FacetAware
 						tekstVakken[1][0].getElement().scrollIntoView();
 				}
 			});
+		}
+	}
+
+	void setPopupUsed() {
+		if(aftrekPopup && !popupUsed)
+		{
+			popupUsed = true;
+			setAttempt();
+			comRoot.setChanged(false);
 		}
 	}
 
@@ -2442,4 +2477,16 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		String dependentName = DWOplayer.PARAMETERS.keyboardStyle();
 		return "noordhoff".equals(dependentName);
 	}
+	
+	DWOLogger dwologger;
+	
+	private void setAttempt() {
+		if(dwologger != null) {
+			Map<String,Object> parameters = new HashMap<String,Object>();
+			parameters.put("response", fi.wiskopdr.text.Text.constants.jaTekst());
+			parameters.put("score", Collections.singletonMap("raw", -this.puntenAftrekPopup));
+			dwologger.log(parameters);
+		}
+	}
+	
 }

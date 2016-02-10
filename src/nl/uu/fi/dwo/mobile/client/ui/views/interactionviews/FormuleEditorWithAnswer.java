@@ -288,18 +288,23 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					teltMee = launchState.getBoolean("teltMee");
 				}
 				if(launchState.getBoolean("logOption", false)) {
-					logging = DWOplayer.PARAMETERS.getLogging();
-					DWOLogger dwoLogger = new DWOLogger(logging);
-					if(launchState.containsKey("scoreMax"))
+					if(fe != null) 
 					{
-						int max = launchState.getInt("scoreMax");
-						dwoLogger.setMaxScore(max);
+						logging = fe.dwologger;
+					} else {
+						DWOLogger dwoLogger = new DWOLogger();
+						if(launchState.containsKey("scoreMax"))
+						{
+							int max = launchState.getInt("scoreMax");
+							dwoLogger.setMaxScore(max);
+						}
+						if(launchState.containsKey("logIDLabel"))
+							dwoLogger.setLogIDLabel(launchState.getString("logIDLabel"));
+						logging = dwoLogger;
+						logging.setLogID( launchState.getString("logID"));
+						String Formule = isVergelijkingVak ? "Vergelijking" : "Formule";
+						logging.setClassName("fi.wiskOpdr.SimpelAntwoord"+Formule+"Vak");
 					}
-					if(launchState.containsKey("logIDLabel"))
-						dwoLogger.setLogIDLabel(launchState.getString("logIDLabel"));
-					logging = dwoLogger;
-					logging.setLogID( launchState.getString("logID"));
-					logging.setClassName("fi.wiskOpdr.SimpelAntwoordFormuleVak");
 				}
 				
 				if(launchState.containsKey("formuleToolBijFocus"))
@@ -700,7 +705,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(comRoot != null) // alleen niet null als fewa een toplevel is.
 		{
 			comRoot.fireEvent(new CBookEvent(this, "input", toString()));
-			if(logging != null) {
+		}
+		else if( fe != null) {
+			fe.fire("input", toString());
+		}
+
+		if(logging != null) {
 				Map<String, Object> map = new HashMap<String,Object>();
 				map.put("response", "<math xmlns='http://www.w3.org/1998/Math/MathML'>" + getMainRegel().toMathML() + "</math>");
 				map.put("score", Collections.singletonMap("raw", getScore()));
@@ -708,16 +718,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					map.put("success", correct);
 				}
 				map.put("formula", getMainRegel().toString());
-				
-				
+				map.put("step", getStep());
+				String feedback = getFeedback();
+				if(feedback != null && !feedback.isEmpty()) map.put("feedback", feedback);
 				logging.log(map);
 			}
-		}
-		else if( fe != null) {
-			fe.fire("input", toString());
-		}
 	}
 	
+	private Object getStep() {
+		if(fe != null) return fe.getStep();
+		return "";
+	}
+
 	public void haalAntwoordOp() 
 	{
 		if(fews != null && fews.getEditor() != null && !fews.getEditor().toString().equals(""))
@@ -787,6 +799,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(goedHalfFout == AntwoordVakChecker.FOUT && !syntaxFout)
 			verhoogErrorCount();
 		this.correct = (Boolean) checkResults.get("correct");
+		if(goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR) correct = null;
 		this.score = (Integer) checkResults.get("score");
 //		if(fe != null) { // waarom werkt dit überhaupt? normaal gebeurt dit in 'maakNakijkenAf'
 //			fe.correct = this.correct; // update correct van parent fe

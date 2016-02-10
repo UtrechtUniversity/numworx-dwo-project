@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ImageTextButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -176,6 +178,15 @@ public class GeogebraView implements InteractionView, LoadHandler
 		
 		//if(!volledigeBreedte) //als volledigeBreedte dan wordt initFrame gedaan in zetVolledigeBreedte.
 		//initFrame();
+		if(ggbMap.getBoolean("logOption", false))
+		{
+			dwologger = new DWOLogger();
+			dwologger.setClassName("fi.wiskopdr.Geogebra4Panel");
+			dwologger.setMaxScore(scoreMax);
+			dwologger.setLogID(ggbMap.getString("logID"));
+		}
+		
+		
 		return this;
 
 	}
@@ -254,9 +265,22 @@ public class GeogebraView implements InteractionView, LoadHandler
 		attemptsCount ++;
 		if(Boolean.FALSE.equals(correct))
 			errorCount++;
-		//setAttempt();
+		setAttempt();
 		comRoot.setChanged(Boolean.FALSE.equals(correct));
 		
+	}
+
+	private DWOLogger dwologger;
+	private void setAttempt() {
+		if(dwologger != null) {
+			Map<String,Object> parameters = new HashMap<String,Object>();
+			parameters.put("response", "");
+			parameters.put("score", Collections.singletonMap("raw", score));
+			Boolean correct = isCorrect();
+			if(correct != null)
+				parameters.put("success", correct);
+			dwologger.log(parameters);
+		}
 	}
 
 	/**
@@ -424,7 +448,9 @@ public class GeogebraView implements InteractionView, LoadHandler
 
 	private void setCorrect(Boolean b) {
 		if(b == null)
+		{	score = 0;
 			correct = null;
+		}
 		else if( b)
 		{
 			score = scoreMax;
@@ -474,6 +500,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if(bigdata) {
 			createGgbParams();
 		}
+		if(dwologger != null)
+			dwologger.setCommunicationRoot(comRoot);
 	}
 
 	@Override

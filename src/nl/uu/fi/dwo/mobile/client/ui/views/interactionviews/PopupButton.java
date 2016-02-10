@@ -298,7 +298,8 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 			
 			box.setWidget(wrap);
 		}
-		if(!box.isShowing() && view != null && view instanceof FormuleEditorWithAnswer)
+// FIXME fire popupevent here.
+		if(!box.isShowing() && view instanceof FormuleEditorWithAnswer)
 		{	
 			((FormuleEditorWithAnswer) view).setEnabled(false);
 			
@@ -311,12 +312,13 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 			
 			state = view.getState();
 			view.setState(state);
-			
+// Fire popup event ......			
 			if (content instanceof FormuleEditorWithSteps)
 			{
 				// als de state is gezet is FEWS de baas
 				((FormuleEditorWithSteps) content).setIsBoss(true);
 			}
+			
 			
 		}
 		else if(!box.isShowing() && view != null && state != null)
@@ -324,6 +326,11 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		
 		if(!box.isShowing() )
 				box.showRelativeTo(this);
+
+		if (view instanceof TekstVakPanel) {
+			((TekstVakPanel)view).setPopupUsed();
+		}
+
 		if(box.isShowing() && content instanceof FormuleEditorWithSteps)
 		{	
 			if(((FormuleEditorWithSteps) content).getEditor() != null)
