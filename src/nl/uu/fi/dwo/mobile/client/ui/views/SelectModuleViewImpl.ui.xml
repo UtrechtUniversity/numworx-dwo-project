@@ -2,6 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 	xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
+	<ui:with type="fi.wiskopdr.text.TextConstants" field="rb" />
 	<ui:style>
 	.outer {
 		right: 0px;
@@ -34,10 +35,10 @@
 		<!-- Topbar Navigation Area -->
 		<mgwt:HeaderPanel ui:field="header" addStyleNames="{style.header}">
 		     <mgwt:left>
-		    	<mgwt:HeaderButton ui:field="backbutton" backButton="true" >Terug</mgwt:HeaderButton>
+		    	<mgwt:HeaderButton ui:field="backbutton" backButton="true" ><ui:text from='{rb.terugKnopLabel}'/></mgwt:HeaderButton>
 		    </mgwt:left>
 			<mgwt:center>
-				<g:Label>Selecteer activiteit</g:Label>
+				<g:Label></g:Label>
 			</mgwt:center>
 		</mgwt:HeaderPanel>
 		<!-- Main interaction Area -->

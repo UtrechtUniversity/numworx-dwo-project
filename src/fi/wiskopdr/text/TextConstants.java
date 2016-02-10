@@ -10,6 +10,8 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	@DefaultStringValue("en")
 	String enLabel();
 	
+	@DefaultStringValue("Terug")
+	String terugKnopLabel();
 	
 	@DefaultStringValue("klaar")
 	String klaarKnopLabel();

@@ -28,6 +28,8 @@ import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
+import fi.wiskopdr.text.TextConstants;
+
 /**
  * 
  * @author Danny Hendrix
@@ -67,6 +69,7 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView
 
 
 	@UiField (provided=true) CellList<SelectModuleItem> list;
+	@UiField (provided=true) TextConstants rb;
 	@UiField HeaderButton backbutton;
 	private List<SelectModuleItem> items;
 	@UiField HeaderPanel header;
