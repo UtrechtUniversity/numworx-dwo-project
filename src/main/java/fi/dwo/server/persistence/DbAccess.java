@@ -548,9 +548,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //            + "group by tblUser.userID, tblCourse.courseID "
 //            + "ORDER BY tblUser.userID";
     //TODO DONE V1_3 fix sco table
-    private final static String QRY_RESULTS_COURSE_PROFILE = "SELECT c.courseID, count(sco.scoid) FROM tblStudentScoContext ssco "
+    private final static String QRY_RESULTS_COURSE_PROFILE = "SELECT c.courseID, count(sco.scoid) FROM tblStudentScoContext sco "
             + "join tblStudentOf stu using (userID)  "
-            + "join tblScoContext course on (ssco.scoID = course.scoid) "
+            + "join tblScoContext course on (sco.scoID = course.scoid) "
             + "join tblCourse c on (c.courseID = course.courseID) "
             + "WHERE stu.classID=? and  c.dwoProfileID = ? group by courseid";
 
