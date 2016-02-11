@@ -33,6 +33,12 @@
   		</resource>
   	</resources>
   	<sourceDirectory>src</sourceDirectory>
+    <plugins>
+    	<plugin>
+    		<artifactId>maven-compiler-plugin</artifactId>
+    		<version>3.1</version>   	
+    	</plugin>
+    </plugins>
   </build>
   <description></description>
 </project>
