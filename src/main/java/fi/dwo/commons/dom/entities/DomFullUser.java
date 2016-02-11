@@ -16,16 +16,22 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomFullUser extends DomUser implements Serializable {
-    private String password;
-    private String email;
+    private String password = "";
+    private String email = "";
 
     public DomFullUser() {
     }
 
+    public DomFullUser(DomFullUser user) {
+        super(user);
+        setPassword(user.getPassword());
+        setEmail(user.getEmail());
+    }
+    
     public DomFullUser(PersistentUser user){
         super(user);
-        this.password = user.getPasswd();
-        this.email = user.getEmail();
+        setPassword(user.getPassword());
+        setEmail(user.getEmail());
     }
 
     /**

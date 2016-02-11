@@ -70,7 +70,7 @@ public class PersistentUser implements Serializable {
     private String username;
     @Basic(optional = false)
     @Column(name = "passwd", nullable = false, length = 128)
-    private String passwd;
+    private String password;
     @Basic(optional = false)
     @Column(name = "email", nullable = false, length = 128)
     private String email;
@@ -104,49 +104,49 @@ public class PersistentUser implements Serializable {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
-        this.passwd = passwd;
+        this.password = passwd;
         this.email = email;
         this.registerDate = registerDate;
     }
 
-    public Long getUserID() {
+    public Long getId() {
         return userID;
     }
 
-    public void setUserID(Long userID) {
+    public void setId(Long userID) {
         this.userID = userID;
     }
 
-    public Long getSchoolGroupID() {
+    public Long getSchoolGroupId() {
         return schoolGroupID;
     }
 
-    public void setSchoolGroupID(Long schoolGroupID) {
+    public void setSchoolGroupId(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
 
-    public String getFirstname() {
+    public String getGivenName() {
         return firstname;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setGivenName(String givenName) {
+        this.firstname = givenName;
     }
 
-    public String getMiddlename() {
+    public String getInsertion() {
         return middlename;
     }
 
-    public void setMiddlename(String middlename) {
-        this.middlename = middlename;
+    public void setInsertion(String insertion) {
+        this.middlename = insertion;
     }
 
     public String getLastname() {
         return lastname;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastname(String familyName) {
+        this.lastname = familyName;
     }
 
     public String getUsername() {
@@ -157,12 +157,12 @@ public class PersistentUser implements Serializable {
         this.username = username;
     }
 
-    public String getPasswd() {
-        return passwd;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswd(String passwd) {
-        this.passwd = passwd;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -249,7 +249,7 @@ public class PersistentUser implements Serializable {
                 && ((this.middlename == null && other.middlename == null) || (this.middlename != null && this.middlename.equals(other.middlename)))
                 && (this.lastname != null && this.lastname.equals(other.lastname))
                 && (this.email != null && this.email.equals(other.email))
-                && (this.passwd != null && this.passwd.equals(other.passwd))
+                && (this.password != null && this.password.equals(other.password))
                 && ((this.schoolGroupID == null && other.schoolGroupID == null) || (this.schoolGroupID != null && this.schoolGroupID.equals(other.schoolGroupID)))
                 && (this.email != null && this.email.equals(other.email))
                 && ((this.schoolGroupID == null && other.schoolGroupID == null) || (this.schoolGroupID != null && this.schoolGroupID.equals(other.schoolGroupID)))

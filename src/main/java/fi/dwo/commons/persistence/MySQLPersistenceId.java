@@ -216,7 +216,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
 
 // Don't need this cached.    
 //    public static MySQLPersistenceId createPersistenceId(PersistentDwoSystemParameters o) {
-//                return new MySQLPersistenceId(o.getUserID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+//                return new MySQLPersistenceId(o.getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
 //    }
     public static MySQLPersistenceId createPersistentId(PersistentHasRole o) {
         return new MySQLPersistenceId(o.getPersistentHasRolePK().getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
@@ -273,6 +273,6 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentUser o) {
-        return new MySQLPersistenceId(o.getUserID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 }

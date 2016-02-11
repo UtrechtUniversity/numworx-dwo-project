@@ -4,6 +4,7 @@
 package fi.dwo.commons.dom.entities;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,29 +18,41 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomUser {
     private PersistenceId id;
-    private String username;
+    private String userName = "";
     private String givenName;
     private String familyName;
     private String insertion;
     private Boolean singleSchool;
 
-
     public DomUser(){
         
     }
+
+    public DomUser(DomFullUser user){
+        setId(user.getId());
+        setUserName(user.getUserName());
+        setGivenName(user.getGivenName());
+        setFamilyName(user.getFamilyName());
+        setInsertion(user.getInsertion());
+        setSingleSchool(user.getSingleSchool());
+    }
         
-    public DomUser(PersistentUser u) {
-        this.givenName = u.getFirstname();
-        this.insertion = u.getMiddlename();
-        this.familyName = u.getLastname();
-        this.id = MySQLPersistenceId.createPersistentId(u);
-        this.username = u.getUsername();
-        this.singleSchool=u.isSingleSchoolAccount();
+    public DomUser(PersistentUser user) {
+        if(user.getId()!=null){
+            setId(MySQLPersistenceId.createPersistenceId(user.getId().intValue(), PersistenceClassType.PersistentUser));
+        }else{
+            setId(null);
+        }
+        setUserName(user.getUsername());
+        setGivenName(user.getGivenName());
+        setFamilyName(user.getLastname());
+        setInsertion(user.getInsertion());
+        setSingleSchool(user.isSingleSchoolAccount());
     }
 
     public void clearSettings(){
         id = null;
-        username = "";
+        userName = "";
         givenName = "";
         familyName = "";
         insertion = "";
@@ -110,15 +123,15 @@ public class DomUser {
     /**
      * @return the usercode
      */
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
     /**
      * @param usercode the usercode to set
      */
-    public void setUsername(String usercode) {
-        this.username = usercode;
+    public void setUserName(String usercode) {
+        this.userName = usercode;
     }
 
     /**
@@ -137,7 +150,7 @@ public class DomUser {
 
     public String getUniqueDisplayName() {
         StringBuilder result = new StringBuilder();
-        result.append(this.username);
+        result.append(this.userName);
         result.append(" - ");
         result.append(this.givenName);
         result.append(" ");

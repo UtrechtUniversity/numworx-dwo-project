@@ -7,75 +7,21 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 
+ *
  * @author G.A.J. van der Plas
  */
-
 @XmlRootElement
-public class DomSingleSchoolStudent extends DomUser {
-    private String password = "";
-    private String username = "";
-    private String email = "";
-    
+public class DomSingleSchoolStudent extends DomFullUser {
 
-    public DomSingleSchoolStudent(){
+    public DomSingleSchoolStudent() {
         super();
     }
-        
-    public DomSingleSchoolStudent(PersistentUser u) {
-        super(u);
-        password = u.getPasswd();
-        username = u.getUsername();
-        email = u.getEmail();
+
+    public DomSingleSchoolStudent(DomFullUser user) {
+        super(user);
     }
 
-    public void clearSettings(){
-        super.clearSettings();
-        password = "";
-        username = "";
-        email = "";
-    }
-    /**
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * @param password the password to set
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param Username the username to set
-     */
-    public void setUsername(String Username) {
-        this.username = Username;
-    }
-
-    /**
-     * @return the email
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * @param email the email to set
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-
+    public DomSingleSchoolStudent(PersistentUser user){
+        super(user);
+    }    
 }
