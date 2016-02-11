@@ -4,7 +4,9 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomGetSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
@@ -136,16 +138,21 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
             if (value == editImage) {
                 try {
                     DomStudent student = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
-                    DomSingleSchoolStudent user = prop.getSingleSchoolStudent();
+                    DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
+                    getStudent.setDomSchoolClass(schoolClass);
+                    getStudent.setDomStudent(student);
+                    DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
                     AccountDataFullUserJPanel panel = new AccountDataFullUserJPanel();
                     panel.setUser(user);
+                    panel.setVisible(true);
                     int result = JOptionPane.showConfirmDialog(GuiCreator.instance().mainPanel, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
                             JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                    prop.updateSingleSchoolStudent(DomSingleSchoolStudent(user));
                     //case OK persist returned values
+                    //user = new DomSingleSchoolStudent(panel.getUser()); superfluous.
                     if (result == JOptionPane.OK_OPTION) {
-                        //persist returned values	
-                        prop.updateSingleSchoolStudent(student);
+                        //persist returned values
+                        user = new DomSingleSchoolStudent(panel.getUser());
+                        prop.updateSingleSchoolStudent(user);
                         tableModel.init(prop, schoolClass, editImage, noEditImage);
                         tableModel.fireTableDataChanged();
                     }

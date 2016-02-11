@@ -1,7 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomFullUser;
-import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.Color;
@@ -45,13 +44,12 @@ public class AccountDataFullUserJPanel extends JPanel implements
     private JTextField email;
 
 //    protected JTextField schoollogin;
-    private JButton changeButton;
+//    private JButton changeButton;
 
     private JButton resetButton;
 
 //    protected JButton deleteButton;
 //    protected User user;
-    private AccountDataProperties prop = new AccountDataProperties();
     private static final Logger LOG = Logger.getLogger(AccountDataFullUserJPanel.class.getName());
 
     /**
@@ -61,13 +59,6 @@ public class AccountDataFullUserJPanel extends JPanel implements
      */
     public AccountDataFullUserJPanel() {
         //fetch user details.
-        try {
-            prop.init();
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
-        }
-
 //        groupList = groups;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(320, 500);
@@ -106,7 +97,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
         p.add(l);
 
         /* Username Label */
-        l = new JLabel(prop.getUser().getUserName());
+        l = new JLabel("");
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
@@ -189,7 +180,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Firstname field */
         firstname = new JTextField();
-        firstname.setText(prop.getUser().getGivenName());
+        firstname.setText("");
         firstname.setBounds(160, 28, 120, 20);
         p.add(firstname);
 
@@ -210,14 +201,14 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Middlename field */
         middlename = new JTextField();
-        middlename.setText(prop.getUser().getInsertion());
+        middlename.setText("");
         middlename.setBounds(160, 53, 120, 20);
         p.add(middlename);
 // skip middlename for languages that do not support it.
-        boolean visible = prop.getUser().getInsertion().length() > 0 || middleNameLabel.length() > 0;
-        middlename.setVisible(visible);
-        l.setVisible(visible);
-        int v = visible ? 0 : 25;
+//        boolean visible = prop.getUser().getInsertion().length() > 0 || middleNameLabel.length() > 0;
+        middlename.setVisible(true);
+        l.setVisible(true);
+        int v = true ? 0 : 25;
 
 
         /* Lastname label */
@@ -231,7 +222,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Lastname field */
         familyname = new JTextField();
-        familyname.setText(prop.getUser().getFamilyName());
+        familyname.setText("");
         familyname.setBounds(160, 78 - v, 120, 20);
         p.add(familyname);
 
@@ -251,7 +242,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Email field */
         email = new JTextField();
-        email.setText(prop.getUser().getEmail());
+        email.setText("");
         email.setBounds(160, 103 - v, 120, 20);
         p.add(email);
 
@@ -282,22 +273,22 @@ public class AccountDataFullUserJPanel extends JPanel implements
         this.add(p);
 
         /* Change button */
-        changeButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));//, GuiConstants.SUB_BACKGROUND);
+//        changeButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));//, GuiConstants.SUB_BACKGROUND);
         //fm = changeButton.getFontMetrics(changeButton.getFont());
         //changeButton.setSize(fm.stringWidth(changeButton.getLabel()) + 20, fm.getHeight() + 10);
-        changeButton.setSize(changeButton.getPreferredSize());
+//        changeButton.setSize(changeButton.getPreferredSize());
         /* Reset button */
         resetButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_RESET));//, GuiConstants.SUB_BACKGROUND);
         //fm = resetButton.getFontMetrics(resetButton.getFont());
         //resetButton.setSize(fm.stringWidth(resetButton.getLabel()) + 20, fm.getHeight() + 10);
         resetButton.setSize(resetButton.getPreferredSize());
-        changeButton.setLocation((p.getSize().width / 2)
-                - ((changeButton.getSize().width + resetButton.getSize().width + 5) / 2), 5);
-        p.add(changeButton);
+//        changeButton.setLocation((p.getSize().width / 2)
+//                - ((changeButton.getSize().width + resetButton.getSize().width + 5) / 2), 5);
+//        p.add(changeButton);
 
-        resetButton.setLocation((p.getSize().width / 2)
-                - ((changeButton.getSize().width + resetButton.getSize().width + 5) / 2)
-                + changeButton.getSize().width + 5, 5);
+        resetButton.setLocation((p.getSize().width / 2),5);
+//                - ((changeButton.getSize().width + resetButton.getSize().width + 5) / 2)
+//                + changeButton.getSize().width + 5, 5);
         p.add(resetButton);
 
 //        // delete mag if user is geen single school student
@@ -310,7 +301,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 //                + p.getSize().height + 10);
 //        deleteButton.setVisible(!prop.getUser().getSingleSchool());
 //        this.add(deleteButton);
-        changeButton.addActionListener(this);
+//        changeButton.addActionListener(this);
         resetButton.addActionListener(this);
         // delete mag if user is geen single school student
 //        deleteButton.addActionListener(this);
@@ -345,34 +336,36 @@ public class AccountDataFullUserJPanel extends JPanel implements
             oldpassword.setText("");
             password.setText("");
             repassword.setText("");
-            firstname.setText(prop.getUser().getGivenName());
-            middlename.setText(prop.getUser().getInsertion());
-            familyname.setText(prop.getUser().getFamilyName());
-            email.setText(prop.getUser().getEmail());
-        } else if (e.getSource() == changeButton) {
-            if (prop.getUser().getPassword().equals(MD5.getHashString(oldpassword.getText()))) {
-                //update the data
-                try {
-                    prop.getUser().setGivenName(firstname.getText());
-                    prop.getUser().setInsertion(middlename.getText());
-                    prop.getUser().setFamilyName(familyname.getText());
-                    prop.getUser().setEmail(email.getText());
-                    if (!password.getText().equals("")
-                            && repassword.getText().equals(password.getText())) {
-                        //updates password following some logic.
-                        prop.getUser().setPassword(MD5.getHashString(password.getText()));
-                    }
-                    prop.Update();
-                    oldpassword.setText("");
-                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
-                }
-                catch (Dwo2Exception ex) {
-                    GuiCreator.instance().ShowErrorDialog(this, ex);
-                }
-            } else {
-                GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
-            }
-        }
+            firstname.setText(user.getGivenName());
+            middlename.setText(user.getInsertion());
+            familyname.setText(user.getFamilyName());
+            email.setText(user.getEmail());
+        } 
+//        else if (e.getSource() == changeButton) {
+            
+//            if (prop.getUser().getPassword().equals(MD5.getHashString(oldpassword.getText()))) {
+//                //update the data
+//                try {
+//                    prop.getUser().setGivenName(firstname.getText());
+//                    prop.getUser().setInsertion(middlename.getText());
+//                    prop.getUser().setFamilyName(familyname.getText());
+//                    prop.getUser().setEmail(email.getText());
+//                    if (!password.getText().equals("")
+//                            && repassword.getText().equals(password.getText())) {
+//                        //updates password following some logic.
+//                        prop.getUser().setPassword(MD5.getHashString(password.getText()));
+//                    }
+//                    prop.Update();
+//                    oldpassword.setText("");
+//                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
+//                }
+//                catch (Dwo2Exception ex) {
+//                    GuiCreator.instance().ShowErrorDialog(this, ex);
+//                }
+//            } else {
+//                GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
+//            }
+//        }
 //        else if (e.getSource() == deleteButton) {
 //            /* Delete the user account */
 //            while (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
@@ -407,7 +400,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
         email.setText(aUser.getEmail());
     }
 
-    public DomFullUser getSingleSchoolStudent() {
+    public DomFullUser getUser() {
         if (!password.getText().equals("")
                 && repassword.getText().equals(password.getText())) {
             //updates password following some logic.

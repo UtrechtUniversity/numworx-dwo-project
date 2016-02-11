@@ -1,22 +1,26 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.dom.entities.DomContext;
+import fi.dwo.commons.dom.entities.DomGetSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomNewSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomRemoveStudentFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
+import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
 import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.rest.RestListClassTypes;
+import fi.dwo.commons.rest.entities.RestGetSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestNewSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestRemoveStudentFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
+import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestSubmitStudentToSchoolClass;
 import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
@@ -156,7 +160,7 @@ public class SecureTeacherSchoolClassManager {
 
     public static List<DomStudent> getSingleSchoolStudentsInSchool() throws Dwo2Exception {
         List<DomStudent> src;
-        src = StoredRestManager.getInstance().getList("/rest/secure/teacher/schoolclass/getSingleSchoolStudentsInSchoolList", RestListClassTypes.DomStudent);
+        src = StoredRestManager.getInstance().getList("/rest/secure/teacher/schoolclass/getSingleSchoolStudents", RestListClassTypes.DomStudent);
         LOG.log(Level.FINE, "Retrieved list of single school students in the school for the teacher with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId()});
         return src;
     }
@@ -167,6 +171,24 @@ public class SecureTeacherSchoolClassManager {
         sts.setDomNewSingleSchoolStudent(submit);
         Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/submitSingleSchoolStudent", Boolean.class, sts);
         LOG.log(Level.FINE, "Submitted teacher {1} to schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getId(), sts.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()});
+        return result;
+    }
+
+    public static DomSingleSchoolStudent getSingleSchoolStudent(DomGetSingleSchoolStudent submit) throws Dwo2Exception {
+        RestGetSingleSchoolStudent sts = new RestGetSingleSchoolStudent();
+        sts.setRestContext(new DomContext());
+        sts.setDomGetSingleSchoolStudent(submit);
+        DomSingleSchoolStudent result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/getSingleSchoolStudent", DomSingleSchoolStudent.class, sts);
+        LOG.log(Level.FINE, "Retrieved full single school student {1} for  teacher with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomGetSingleSchoolStudent().getDomStudent().getId()});
+        return result;
+    }
+
+    public static Boolean updateSingleSchoolStudent(DomSingleSchoolStudent submit) throws Dwo2Exception {
+        RestSingleSchoolStudent sts = new RestSingleSchoolStudent();
+        sts.setRestContext(new DomContext());
+        sts.setDomSingleSchoolStudent(submit);
+        Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/updateSingleSchoolStudent", Boolean.class, sts);
+        LOG.log(Level.FINE, "Updated acount data for singlschoolstudent {1} by user {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomSingleSchoolStudent().getId()});
         return result;
     }
 }
