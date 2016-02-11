@@ -17,7 +17,7 @@ public class DomSingleSchoolStudent extends DomFullUser {
         super();
     }
 
-    public DomSingleSchoolStudent(DomSingleSchoolStudent user) {
+    public DomSingleSchoolStudent(DomFullUser user) {
         super(user);
     }
 
