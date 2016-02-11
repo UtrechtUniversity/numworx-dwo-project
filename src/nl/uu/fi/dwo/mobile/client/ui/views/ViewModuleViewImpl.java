@@ -1276,7 +1276,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void zetMaat() {
 
 		// FIXME HACK voor DWOplayer zelf		
-		hb = new HeaderButton(DWOplayer.PARAMETERS.headercss()); hb.setBackButton(true);hb.setText("Terug");
+		hb = new HeaderButton(DWOplayer.PARAMETERS.headercss()); hb.setBackButton(true);
+		hb.setText(fi.wiskopdr.text.Text.constants.terugKnopLabel());
 		hp.setLeftWidget(hb);
 		hp.setRightWidget(null);
 		
