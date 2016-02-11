@@ -41,8 +41,8 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "PersistentUser.findByMiddlename", query = "SELECT p FROM PersistentUser p WHERE p.middlename = :middlename"),
     @NamedQuery(name = "PersistentUser.findByLastname", query = "SELECT p FROM PersistentUser p WHERE p.lastname = :lastname"),
     @NamedQuery(name = "PersistentUser.findByUsername", query = "SELECT p FROM PersistentUser p WHERE p.username = :username"),
-    @NamedQuery(name = "PersistentUser.findByUsernameAndPassword", query = "SELECT p FROM PersistentUser p WHERE p.username = :username AND p.passwd = :password"),
-    @NamedQuery(name = "PersistentUser.findByPasswd", query = "SELECT p FROM PersistentUser p WHERE p.passwd = :passwd"),
+    @NamedQuery(name = "PersistentUser.findByUsernameAndPassword", query = "SELECT p FROM PersistentUser p WHERE p.username = :username AND p.password = :password"),
+    @NamedQuery(name = "PersistentUser.findByPasswd", query = "SELECT p FROM PersistentUser p WHERE p.password = :passwd"),
     @NamedQuery(name = "PersistentUser.findByEmail", query = "SELECT p FROM PersistentUser p WHERE p.email = :email"),
     @NamedQuery(name = "PersistentUser.findByRegisterDate", query = "SELECT p FROM PersistentUser p WHERE p.registerDate = :registerDate"),
     @NamedQuery(name = "PersistentUser.findByLastLogin", query = "SELECT p FROM PersistentUser p WHERE p.lastLogin = :lastLogin")})

@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomUser {
     private PersistenceId id;
-    private String userName = "";
+    private String userName;
     private String givenName;
     private String familyName;
     private String insertion;
@@ -28,7 +28,7 @@ public class DomUser {
         
     }
 
-    public DomUser(DomFullUser user){
+    public DomUser(DomUser user){
         setId(user.getId());
         setUserName(user.getUserName());
         setGivenName(user.getGivenName());
