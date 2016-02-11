@@ -734,7 +734,6 @@ public class SecuredTeacherSchoolClassManager {
         PersistentStudentOfClass studentInSchoolClass = null;
         PersistentTeacherOfClass teacherInSchoolClass = null;
         PersistentUser student = null;
-        PersistentUser teacher = null;
         PersistentSchool school = null;
         PersistentSchoolClass schoolClass = null;
         try {
@@ -747,7 +746,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        student = UserManager.findEntity(MySQLPersistenceId.getId(submit.getDomGetSingleSchoolStudent().getDomSingleSchoolStudent().getId()));
+        student = UserManager.findEntity(MySQLPersistenceId.getId(submit.getDomGetSingleSchoolStudent().getDomStudent().getId()));
         schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(submit.getDomGetSingleSchoolStudent().getDomSchoolClass().getId()));
         
         try {
@@ -775,6 +774,7 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
     }
+    
     /**
      * Edits a singleSchoolStudent.
      *
