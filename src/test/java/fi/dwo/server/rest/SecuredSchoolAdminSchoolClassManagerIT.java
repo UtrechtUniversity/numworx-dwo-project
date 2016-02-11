@@ -144,7 +144,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         domSchoolClass.setSchoolClassName("SchoolClass01");
         DomTeacher domTeacher = new DomTeacher();
         domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
-        domTeacher.setUsername("user03");
+        domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
@@ -179,7 +179,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         domSchoolClass.setSchoolClassName("SchoolClass02");
         DomTeacher domTeacher = new DomTeacher();
         domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
-        domTeacher.setUsername("user03");
+        domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         RestRemoveTeacherFromSchoolClass msg = new RestRemoveTeacherFromSchoolClass();
@@ -203,7 +203,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
         domSchoolClass.setSchoolClassName("SchoolClass03");
         domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
-        domTeacher.setUsername("user03");
+        domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         
@@ -229,7 +229,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         RestSingleSchoolStudent rss = new RestSingleSchoolStudent();
         DomSingleSchoolStudent dss = new DomSingleSchoolStudent();
         rss.setDomSingleSchoolStudent(dss);
-        dss.setUsername("singleschooluser");
+        dss.setUserName("singleschooluser");
         dss.setGivenName("a");
         dss.setInsertion("b");
         dss.setFamilyName("c");
@@ -240,12 +240,12 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         assertEquals("Operation failed to be true.", true, result);
 
         //fetch user and hasrole and class if given?
-        PersistentUser user = UserManager.findByUserName(dss.getUsername());
-        assertEquals("Given name not as expected.", dss.getGivenName(), user.getFirstname());
-        assertEquals("Insertion not as expected.", dss.getInsertion(), user.getMiddlename());
+        PersistentUser user = UserManager.findByUserName(dss.getUserName());
+        assertEquals("Given name not as expected.", dss.getGivenName(), user.getGivenName());
+        assertEquals("Insertion not as expected.", dss.getInsertion(), user.getInsertion());
         assertEquals("Familyname not as expected.", dss.getFamilyName(), user.getLastname());
         assertEquals("Email not as expected.", dss.getEmail(), user.getEmail());
-        assertEquals("Password not as expected.", dss.getPassword(), user.getPasswd());
+        assertEquals("Password not as expected.", dss.getPassword(), user.getPassword());
         assertEquals("Did not creat a single schoolstudent.", user.isSingleSchoolAccount(), true);
         try {
             //check for hasRole

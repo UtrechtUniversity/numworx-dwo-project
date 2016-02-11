@@ -293,7 +293,7 @@ public class SecuredDwoAdminSchoolManager {
                         }
                         //Remove hasRole
                         HasRoleManager.destroy(phr.getPersistentHasRolePK());
-                        PersistentUser u = UserManager.findEntity(phr.getUser().getUserID());
+                        PersistentUser u = UserManager.findEntity(phr.getUser().getId());
 
                         if (u != null && u.isSingleSchoolAccount()) {
                             //Loop samlusers in user
@@ -303,7 +303,7 @@ public class SecuredDwoAdminSchoolManager {
                                 SamlUserManager.destroy(su.getId());
                             }
                             //remove user
-                            UserManager.destroy(u.getUserID());
+                            UserManager.destroy(u.getId());
                         }
                     }
                     //Clear tblUser schoolgroup values
@@ -311,7 +311,7 @@ public class SecuredDwoAdminSchoolManager {
                     List<PersistentUser> userList = UserManager.findEntities(sg);
                     if (userList != null) {
                         for (PersistentUser u : userList) {
-                            u.setSchoolGroupID(nulSg.getSchoolGroupID());
+                            u.setSchoolGroupId(nulSg.getSchoolGroupID());
                             UserManager.edit(u);
                         }
                     }

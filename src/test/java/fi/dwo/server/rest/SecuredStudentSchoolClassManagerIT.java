@@ -106,7 +106,7 @@ public class SecuredStudentSchoolClassManagerIT {
             Logger.getLogger(SecuredStudentSchoolClassManagerIT.class.getName()).log(Level.SEVERE, null, ex);
             fail("Setting the active school threw an error.");
         }
-        if (hr == null || (long) hr.getPersistentHasRolePK().getUserID() != (long) UserManager.findByUserName("user02").getUserID()
+        if (hr == null || (long) hr.getPersistentHasRolePK().getUserID() != (long) UserManager.findByUserName("user02").getId()
                 || hr.getSchoolGroup().getSchoolGroupID() != 2L || hr.getClassID() != 2L) {
             fail("Failed setting active login.");
         }

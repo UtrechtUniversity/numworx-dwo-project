@@ -88,25 +88,25 @@ public class SecuredUserAccountManager {
     @Produces({"application/json"})
     @Path("/update")
     public DomFullUser updateCurrentUser(@Context SecurityContext sc, RestFullUser user) {
-        if (user.getDomFullUser().getUsername().equals(sc.getUserPrincipal().getName())) {
+        if (user.getDomFullUser().getUserName().equals(sc.getUserPrincipal().getName())) {
             try {
-                PersistentUser dbUser = UserManager.findByUserName(user.getDomFullUser().getUsername());
-                dbUser.setFirstname(user.getDomFullUser().getGivenName());
+                PersistentUser dbUser = UserManager.findByUserName(user.getDomFullUser().getUserName());
+                dbUser.setGivenName(user.getDomFullUser().getGivenName());
                 dbUser.setLastname(user.getDomFullUser().getFamilyName());
-                dbUser.setMiddlename(user.getDomFullUser().getInsertion());
+                dbUser.setInsertion(user.getDomFullUser().getInsertion());
                 dbUser.setEmail(user.getDomFullUser().getEmail());
-                dbUser.setPasswd(user.getDomFullUser().getPassword());
+                dbUser.setPassword(user.getDomFullUser().getPassword());
                 //User to update is logged in user.
                 UserManager.edit(dbUser);
-                return new DomFullUser(UserManager.findByUserName(user.getDomFullUser().getUsername()));
+                return new DomFullUser(UserManager.findByUserName(user.getDomFullUser().getUserName()));
             }
             catch (Exception e) {
             LOG.log(Level.SEVERE, "Username "+sc.getUserPrincipal().getName()+": Unexpected exception",e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update user id " + sc.getUserPrincipal().getName() + " .");
             }
         } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getDomFullUser().getUsername()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getDomFullUser().getUsername() + ".");
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getDomFullUser().getUserName()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getDomFullUser().getUserName() + ".");
         }
     }
 
@@ -144,7 +144,7 @@ public class SecuredUserAccountManager {
                 HasRoleManager.destroy(hr.getPersistentHasRolePK());
             }
             //Ready to remove User
-            UserManager.destroy(u.getUserID());
+            UserManager.destroy(u.getId());
         return new Boolean(true);
     }    
     

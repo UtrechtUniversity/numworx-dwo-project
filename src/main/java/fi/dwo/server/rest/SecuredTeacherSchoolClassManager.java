@@ -262,7 +262,7 @@ public class SecuredTeacherSchoolClassManager {
                 return false;
             }
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
-            PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK(phr.getUser().getUserID(), schoolClass.getClassID(), phr.getSchoolGroup().getSchoolGroupID());
+            PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK(phr.getUser().getId(), schoolClass.getClassID(), phr.getSchoolGroup().getSchoolGroupID());
             toc.setPersistentTeacherOfClassPK(key);
             java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
             toc.setRegisterDate(d);
@@ -503,7 +503,7 @@ public class SecuredTeacherSchoolClassManager {
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         if (schoolClass.getSchoolID().equals(school.getSchoolID())) {
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
-            toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
+            toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getId(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
             java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
             toc.setRegisterDate(d);
             TeacherOfClassManager.create(toc);
@@ -558,7 +558,7 @@ public class SecuredTeacherSchoolClassManager {
 
         if (toc != null && fromClass.getSchoolID().equals(school.getSchoolID()) && toClass.getSchoolID().equals(school.getSchoolID())) {
             PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
-            toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getUserID(), toClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
+            toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getId(), toClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
             java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
             toSoc.setRegisterDate(d);
             StudentOfClassManager.create(toSoc);
@@ -744,23 +744,23 @@ public class SecuredTeacherSchoolClassManager {
             PersistentUser user = UserManager.findEntity((Long) MySQLPersistenceId.getId(nssStudent.getDomSingleSchoolStudent().getId()));
             if (user == null) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: could not find user with id to update {1}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getId()});
-                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getDomSingleSchoolStudent().getUsername() + ".");
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getDomSingleSchoolStudent().getUserName() + ".");
             }
             if (!user.isSingleSchoolAccount()) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by teacher {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
-            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUsername());
+            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUserName());
             user.setEmail(nssStudent.getDomSingleSchoolStudent().getEmail());
-            user.setFirstname(nssStudent.getDomSingleSchoolStudent().getGivenName());
-            user.setMiddlename(nssStudent.getDomSingleSchoolStudent().getInsertion());
+            user.setGivenName(nssStudent.getDomSingleSchoolStudent().getGivenName());
+            user.setInsertion(nssStudent.getDomSingleSchoolStudent().getInsertion());
             user.setLastname(nssStudent.getDomSingleSchoolStudent().getFamilyName());
-            user.setPasswd(nssStudent.getDomSingleSchoolStudent().getPassword());
+            user.setPassword(nssStudent.getDomSingleSchoolStudent().getPassword());
             try {
                 UserManager.edit(user);
             }
             catch (PersistenceException ex) {
-                LOG.log(Level.WARNING, "User {0} could not update user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getUsername()});
+                LOG.log(Level.WARNING, "User {0} could not update user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getUserName()});
                 LOG.log(Level.SEVERE, null, ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user " + sc.getUserPrincipal().getName() + ".");
             }
@@ -803,20 +803,20 @@ public class SecuredTeacherSchoolClassManager {
             Date now = DwoDateUtilities.getCurrentDwoDate();
             PersistentUser user = new PersistentUser();
             user.setEmail(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getEmail());
-            user.setFirstname(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getGivenName());
-            user.setMiddlename(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getInsertion());
+            user.setGivenName(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getGivenName());
+            user.setInsertion(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getInsertion());
             user.setLastname(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getFamilyName());
-            user.setPasswd(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getPassword());
+            user.setPassword(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getPassword());
             user.setRegisterDate(now);
-            user.setUsername(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUsername());
-            user.setSchoolGroupID(sg.getSchoolGroupID());
+            user.setUsername(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName());
+            user.setSchoolGroupId(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
             try {
                 SchoolUtilManager.addSingleSchoolStudentAccount(user, school);
                 //add to schoolClass
                 PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()));
                 PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
-                toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(user.getUserID(), schoolClass.getClassID(), user.getSchoolGroupID()));
+                toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(user.getId(), schoolClass.getClassID(), user.getSchoolGroupId()));
                 java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
                 toSoc.setRegisterDate(d);
                 StudentOfClassManager.create(toSoc);

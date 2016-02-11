@@ -213,7 +213,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domSchoolClass.getId()));
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
-            toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
+            toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getId(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
             toc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
             TeacherOfClassManager.create(toc);
         } else {
@@ -302,13 +302,13 @@ public class SecuredSchoolAdminSchoolClassManager {
             Date now = DwoDateUtilities.getCurrentDwoDate();
             PersistentUser user = new PersistentUser();
             user.setEmail(nssStudent.getDomSingleSchoolStudent().getEmail());
-            user.setFirstname(nssStudent.getDomSingleSchoolStudent().getGivenName());
-            user.setMiddlename(nssStudent.getDomSingleSchoolStudent().getInsertion());
+            user.setGivenName(nssStudent.getDomSingleSchoolStudent().getGivenName());
+            user.setInsertion(nssStudent.getDomSingleSchoolStudent().getInsertion());
             user.setLastname(nssStudent.getDomSingleSchoolStudent().getFamilyName());
-            user.setPasswd(nssStudent.getDomSingleSchoolStudent().getPassword());
+            user.setPassword(nssStudent.getDomSingleSchoolStudent().getPassword());
             user.setRegisterDate(now);
-            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUsername());
-            user.setSchoolGroupID(sg.getSchoolGroupID());
+            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUserName());
+            user.setSchoolGroupId(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
             try {
                 SchoolUtilManager.addSingleSchoolStudentAccount(user, school);

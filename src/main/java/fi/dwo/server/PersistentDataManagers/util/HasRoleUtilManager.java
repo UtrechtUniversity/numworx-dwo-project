@@ -47,12 +47,12 @@ public class HasRoleUtilManager {
      */
     public static PersistentHasRole getCurrentHasRole(String usercode, RoleType r) throws Dwo2Exception {
         PersistentUser u = (PersistentUser) UserManager.findByUserName(usercode);
-        if (u == null || u.getSchoolGroupID() == null) {
+        if (u == null || u.getSchoolGroupId() == null) {
             LOG.log(Level.SEVERE, "Given user or schoolGroup for userlogin {0} could not be found.", new Object[]{usercode});
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "User or SchoolGroup for userlogin could not be found.");
         }
 
-        PersistentHasRolePK hrKey = new PersistentHasRolePK(u.getUserID(), u.getSchoolGroupID());
+        PersistentHasRolePK hrKey = new PersistentHasRolePK(u.getId(), u.getSchoolGroupId());
         PersistentHasRole hr = (PersistentHasRole) HasRoleManager.findEntity(hrKey);
         if (hr == null) {
             LOG.log(Level.SEVERE, "Current HasRole of user for userlogin {0} could not be found.", new Object[]{usercode});
@@ -112,9 +112,9 @@ public class HasRoleUtilManager {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "SchoolGroup could not be found.");
         }
 
-        PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getUserID(), sg.getSchoolGroupID()));
+        PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), sg.getSchoolGroupID()));
         if (hr == null) {
-            LOG.log(Level.SEVERE, "hasRole of userId {0} and schoolGroupId {1} could not be found.", new Object[]{user.getUserID(), sg.getSchoolGroupID()});
+            LOG.log(Level.SEVERE, "hasRole of userId {0} and schoolGroupId {1} could not be found.", new Object[]{user.getId(), sg.getSchoolGroupID()});
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "HasRole could not be found.");
         }
         return hr;
@@ -166,11 +166,11 @@ public class HasRoleUtilManager {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "User could not be found.");
         }
         //Update the default hasRole to the null school if user is in the current role.
-        if(user.getSchoolGroupID().equals(hr.getPersistentHasRolePK().getSchoolGroupID())) //userid's already match...
+        if(user.getSchoolGroupId().equals(hr.getPersistentHasRolePK().getSchoolGroupID())) //userid's already match...
         {
             RoleType type = RoleType.STUDENT;
             PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(SchoolManager.findBySchoolLogin("null"), type);
-            user.setSchoolGroupID(sg.getSchoolGroupID());
+            user.setSchoolGroupId(sg.getSchoolGroupID());
         }
 
         UserManager.edit(user);

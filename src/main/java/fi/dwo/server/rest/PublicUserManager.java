@@ -100,13 +100,13 @@ public class PublicUserManager {
         //adding user to school in role.         
         PersistentUser user = new PersistentUser();
         user.setEmail(newUserReg.getDomNewUser().getEmail());
-        user.setFirstname(newUserReg.getDomNewUser().getGivenName());
-        user.setMiddlename(newUserReg.getDomNewUser().getInsertion());
+        user.setGivenName(newUserReg.getDomNewUser().getGivenName());
+        user.setInsertion(newUserReg.getDomNewUser().getInsertion());
         user.setLastname(newUserReg.getDomNewUser().getFamilyName());
-        user.setPasswd(newUserReg.getDomNewUser().getPassword());
+        user.setPassword(newUserReg.getDomNewUser().getPassword());
         user.setRegisterDate(now);
         user.setUsername(newUserReg.getDomNewUser().getUsername());
-        user.setSchoolGroupID(sg.getSchoolGroupID());
+        user.setSchoolGroupId(sg.getSchoolGroupID());
         user.setSingleSchoolAccount(false);
         //add user
         try {
@@ -121,14 +121,14 @@ public class PublicUserManager {
 
         //user add success
         user = UserManager.findByUserName(user.getUsername());
-        LOG.log(Level.INFO, "User {0} {1} {2} with usercode {3} and index {4} was added to the database.", new Object[]{user.getFirstname(), user.getMiddlename(), user.getLastname(), user.getUsername(), user.getUserID()});
+        LOG.log(Level.INFO, "User {0} {1} {2} with usercode {3} and index {4} was added to the database.", new Object[]{user.getGivenName(), user.getInsertion(), user.getLastname(), user.getUsername(), user.getId()});
 
         // building hasRole
         PersistentHasRole hasRole = new PersistentHasRole();
         // buiding compound key hasRole
         PersistentHasRolePK pk = new PersistentHasRolePK();
         pk.setSchoolGroupID(sg.getSchoolGroupID());
-        pk.setUserID(user.getUserID());
+        pk.setUserID(user.getId());
         hasRole.setPersistentHasRolePK(pk);
 
         hasRole.setClassID(null);
@@ -143,7 +143,7 @@ public class PublicUserManager {
         PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
         Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
         pk.setSchoolGroupID(schoolGroupId);
-        pk.setUserID(user.getUserID());
+        pk.setUserID(user.getId());
         hasRole.setPersistentHasRolePK(pk);
 
         hasRole.setClassID(null);

@@ -76,7 +76,7 @@ public class UserManager {
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Long id = persistentUser.getUserID();
+                Long id = persistentUser.getId();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentUser with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -103,7 +103,7 @@ public class UserManager {
             PersistentUser persistentUser = null;
             try {
                 persistentUser = em.getReference(PersistentUser.class, id);
-                persistentUser.getUserID();
+                persistentUser.getId();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentUser with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
@@ -222,7 +222,7 @@ public class UserManager {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
-            if (user.getPasswd().compareTo(passwd) != 0) {
+            if (user.getPassword().compareTo(passwd) != 0) {
                 return null;
             }
             LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});

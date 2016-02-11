@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
 
 /**
@@ -79,7 +78,7 @@ public class SchoolUtilManager {
         Date now = DwoDateUtilities.getCurrentDwoDate();
         //rewrite some user data
         user.setRegisterDate(now);
-        user.setSchoolGroupID(sg.getSchoolGroupID());
+        user.setSchoolGroupId(sg.getSchoolGroupID());
         user.setSingleSchoolAccount(true);
 
         try {
@@ -104,7 +103,7 @@ public class SchoolUtilManager {
         //make key
         PersistentHasRolePK pk = new PersistentHasRolePK();
         pk.setSchoolGroupID(sg.getSchoolGroupID());
-        pk.setUserID(user.getUserID());
+        pk.setUserID(user.getId());
 
         PersistentHasRole hr = new PersistentHasRole();
         hr.setPersistentHasRolePK(pk);

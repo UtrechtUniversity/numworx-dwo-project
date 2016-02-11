@@ -203,7 +203,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         rssStudent.setDomSingleSchoolStudent(dssStudent);
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         System.out.println("submitNewUser");
-        dssStudent.setUsername("testuser01");
+        dssStudent.setUserName("testuser01");
         dssStudent.setGivenName("a");
         dssStudent.setInsertion("b");
         dssStudent.setFamilyName("c");
@@ -218,12 +218,12 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("Student submit failed.");
         }
         
-        PersistentUser user = UserManager.findByUserName(dssStudent.getUsername());
-        assertEquals(dssStudent.getGivenName(), user.getFirstname());
-        assertEquals(dssStudent.getInsertion(), user.getMiddlename());
+        PersistentUser user = UserManager.findByUserName(dssStudent.getUserName());
+        assertEquals(dssStudent.getGivenName(), user.getGivenName());
+        assertEquals(dssStudent.getInsertion(), user.getInsertion());
         assertEquals(dssStudent.getFamilyName(), user.getLastname());
         assertEquals(dssStudent.getEmail(), user.getEmail());
-        assertEquals(dssStudent.getPassword(), user.getPasswd());
+        assertEquals(dssStudent.getPassword(), user.getPassword());
         assertEquals(true, user.isSingleSchoolAccount());
         
         try {
@@ -250,7 +250,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         nssStudent.setDomSingleSchoolStudent(dssStudent);
         
         dssStudent.setId(MySQLPersistenceId.createPersistenceId(11L, PersistenceClassType.PersistentUser));
-        dssStudent.setUsername("user04"); //changing is not allowed.
+        dssStudent.setUserName("user04"); //changing is not allowed.
         dssStudent.setGivenName("User");
         dssStudent.setFamilyName("Lastname 04");
         dssStudent.setPassword("bla");
@@ -261,15 +261,15 @@ public class SecuredSchoolAdminSchoolManagerIT {
         assertEquals(expResult, result);
         PersistentUser user = UserManager.findEntity(11L);
         assertEquals(user.getEmail(), dssStudent.getEmail());
-        assertEquals(user.getFirstname(), dssStudent.getGivenName());
+        assertEquals(user.getGivenName(), dssStudent.getGivenName());
         assertEquals(user.getLastname(), dssStudent.getFamilyName());
-        assertEquals(user.getMiddlename(), dssStudent.getInsertion());
-        assertEquals(user.getPasswd(), dssStudent.getPassword());
+        assertEquals(user.getInsertion(), dssStudent.getInsertion());
+        assertEquals(user.getPassword(), dssStudent.getPassword());
         assertEquals(user.isSingleSchoolAccount(), true);
-        assertEquals(user.getUsername(), dssStudent.getUsername());
+        assertEquals(user.getUsername(), dssStudent.getUserName());
 
         //try if a non-single school student can be updated
-        dssStudent.setUsername("user03");
+        dssStudent.setUserName("user03");
         dssStudent.setGivenName("User");
         dssStudent.setFamilyName("Lastname 02");
         dssStudent.setPassword("bla");

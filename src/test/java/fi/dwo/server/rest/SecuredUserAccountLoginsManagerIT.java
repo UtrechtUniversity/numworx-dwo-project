@@ -93,12 +93,12 @@ public class SecuredUserAccountLoginsManagerIT {
         System.out.println("switchToSchoolLogin");
         SecurityContext sc = new TestSecurityContext("user03", RoleType.STUDENT);
         PersistentUser user = UserManager.findByUserName("user03");
-        Long oldSchoolGroup = user.getSchoolGroupID();
+        Long oldSchoolGroup = user.getSchoolGroupId();
 
         RestSchoolRoleAndClass sarc = new RestSchoolRoleAndClass();
         DomSchoolRoleAndClass darc = new DomSchoolRoleAndClass();
         sarc.setDomSchoolRoleAndClass(darc);
-        darc.setUserId(MySQLPersistenceId.createPersistenceId(user.getUserID(), PersistenceClassType.PersistentUser));
+        darc.setUserId(MySQLPersistenceId.createPersistenceId(user.getId(), PersistenceClassType.PersistentUser));
         darc.setSchoolId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));
         darc.setRoleId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentRole));
         darc.setSchoolClassId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchoolClass));
@@ -164,7 +164,7 @@ public class SecuredUserAccountLoginsManagerIT {
         RestSchoolRoleAndClass sarc = new RestSchoolRoleAndClass();
         DomSchoolRoleAndClass darc = new DomSchoolRoleAndClass();
         sarc.setDomSchoolRoleAndClass(darc);
-        darc.setUserId(MySQLPersistenceId.createPersistenceId(user.getUserID(), PersistenceClassType.PersistentUser));
+        darc.setUserId(MySQLPersistenceId.createPersistenceId(user.getId(), PersistenceClassType.PersistentUser));
         darc.setSchoolId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));
         darc.setRoleId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentRole));
         darc.setSchoolClassId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));

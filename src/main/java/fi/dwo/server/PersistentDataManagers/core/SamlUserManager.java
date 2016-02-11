@@ -136,9 +136,9 @@ public class SamlUserManager {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentSamlUser.findByUserID");
-            q.setParameter("userID", user.getUserID());
+            q.setParameter("userID", user.getId());
             List<PersistentSamlUser> list = q.getResultList();
-            LOG.log(Level.FINE, "SamlUser-manager retrieved {0} PersistentSamlUser with userid {1}", new Object[]{list.size(), user.getUserID()});
+            LOG.log(Level.FINE, "SamlUser-manager retrieved {0} PersistentSamlUser with userid {1}", new Object[]{list.size(), user.getId()});
             return list;
         }
         finally {
@@ -198,7 +198,7 @@ public class SamlUserManager {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
-            if (user.getPasswd().compareTo(passwd) != 0) {
+            if (user.getPassword().compareTo(passwd) != 0) {
                 return null;
             }
             LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});

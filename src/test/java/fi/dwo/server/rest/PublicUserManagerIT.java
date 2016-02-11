@@ -92,11 +92,11 @@ public class PublicUserManagerIT {
         }
         
         PersistentUser user = UserManager.findByUserName(domNewUser.getUsername());
-        assertEquals(domNewUser.getGivenName(), user.getFirstname());
-        assertEquals(domNewUser.getInsertion(), user.getMiddlename());
+        assertEquals(domNewUser.getGivenName(), user.getGivenName());
+        assertEquals(domNewUser.getInsertion(), user.getInsertion());
         assertEquals(domNewUser.getFamilyName(), user.getLastname());
         assertEquals(domNewUser.getEmail(), user.getEmail());
-        assertEquals(domNewUser.getPassword(), user.getPasswd());
+        assertEquals(domNewUser.getPassword(), user.getPassword());
         
         
         try {

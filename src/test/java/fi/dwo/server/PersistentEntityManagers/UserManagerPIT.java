@@ -38,23 +38,23 @@ public class UserManagerPIT {
     
     @Before
     public void setUp() {
-        userA.setFirstname("Hamlet");
-        userA.setMiddlename("of");
+        userA.setGivenName("Hamlet");
+        userA.setInsertion("of");
         userA.setLastname("Denmark");
         Date d = DwoDateUtilities.getCurrentDwoDate();
         userA.setRegisterDate(d);
         userA.setLastLogin(null);
-        userA.setPasswd("bladiebla");
+        userA.setPassword("bladiebla");
         userA.setUsername("JunitTestUserA");
         userA.setEmail("hamlet@denmark.dk");
 
-        userB.setFirstname("Yorick");
-        userB.setMiddlename("of");
+        userB.setGivenName("Yorick");
+        userB.setInsertion("of");
         userB.setLastname("Denmark");
         d = DwoDateUtilities.getCurrentDwoDate();
         userB.setRegisterDate(d);
         userB.setLastLogin(null);
-        userB.setPasswd("bladiebla");
+        userB.setPassword("bladiebla");
         userB.setUsername("JunitTestUserB");
         userB.setEmail("yorick@denmark.dk");
     }
@@ -94,8 +94,8 @@ public class UserManagerPIT {
 
         //cleanup
         try {
-            UserManager.destroy(UserManager.findByUserName(userA.getUsername()).getUserID());
-            UserManager.destroy(UserManager.findByUserName(userB.getUsername()).getUserID());
+            UserManager.destroy(UserManager.findByUserName(userA.getUsername()).getId());
+            UserManager.destroy(UserManager.findByUserName(userB.getUsername()).getId());
         }
         catch (Exception e) {
             fail("Exception during destroy.");
@@ -113,13 +113,13 @@ public class UserManagerPIT {
         try {
             System.out.println("update user");
             PersistentUser user = UserManager.findByUserName(userA.getUsername());
-            user.setFirstname(userB.getFirstname());
+            user.setGivenName(userB.getGivenName());
             UserManager.edit(user);
             user = UserManager.findByUserName(userA.getUsername());
-            if (user.getFirstname().compareTo(userB.getFirstname()) != 0) {
+            if (user.getGivenName().compareTo(userB.getGivenName()) != 0) {
                 fail("UserManager.edit() failed.");
             }
-            user.setFirstname(userA.getFirstname());
+            user.setGivenName(userA.getGivenName());
             if (!user.similar(userA)) {
                 fail("UserManager.edit() failed.");
             }
@@ -145,8 +145,8 @@ public class UserManagerPIT {
 
         //cleanup
         try {
-            UserManager.destroy(UserManager.findByUserName(userA.getUsername()).getUserID());
-            UserManager.destroy(UserManager.findByUserName(userB.getUsername()).getUserID());
+            UserManager.destroy(UserManager.findByUserName(userA.getUsername()).getId());
+            UserManager.destroy(UserManager.findByUserName(userB.getUsername()).getId());
         }
         catch (Exception e) {
             fail("Exception during destroy.");
@@ -163,7 +163,7 @@ public class UserManagerPIT {
         Integer id = null;
         try {
             PersistentUser user = UserManager.findByUserName(userA.getUsername());
-            UserManager.destroy(user.getUserID());
+            UserManager.destroy(user.getId());
             try {
                 user = UserManager.findByUserName(user.getUsername());
                 if (user != null) {
@@ -245,7 +245,7 @@ public class UserManagerPIT {
             if (!result.similar(userA)) {
                 fail("Found different user as created.");
             }
-            UserManager.destroy(result.getUserID());
+            UserManager.destroy(result.getId());
         }
         catch (Exception e) {
             fail("Exception during find.");
@@ -263,7 +263,7 @@ public class UserManagerPIT {
 //            if (!result.similar(userA)) {
 //                fail("Found different user as created.");
 //            }
-//            UserManager.destroy(result.getUserID());
+//            UserManager.destroy(result.getId());
 //        }
 //        catch (Exception e) {
 //            fail("Exception during find.");

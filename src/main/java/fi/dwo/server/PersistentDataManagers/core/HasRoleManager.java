@@ -145,9 +145,9 @@ public class HasRoleManager {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentHasRole.findByUserID");
-            q.setParameter("userID", user.getUserID());
+            q.setParameter("userID", user.getId());
             List<PersistentHasRole> rl = q.getResultList();
-            LOG.log(Level.FINE, "PersistentHasRole-manager retrieved {0} hasRoles with userid {1}", new Object[]{rl.size(), user.getUserID()});
+            LOG.log(Level.FINE, "PersistentHasRole-manager retrieved {0} hasRoles with userid {1}", new Object[]{rl.size(), user.getId()});
             return rl;
         }
         catch (Exception e) {

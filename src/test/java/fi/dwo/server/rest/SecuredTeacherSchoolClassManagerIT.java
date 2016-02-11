@@ -275,7 +275,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         domSchoolClass.setSchoolClassName("SchoolClass01");
         DomTeacher domTeacher = new DomTeacher();
         domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
-        domTeacher.setUsername("user03");
+        domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         RestSubmitTeacherToSchoolClass restSubmitTeacherToSchoolClass = new RestSubmitTeacherToSchoolClass();
@@ -304,11 +304,11 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("SubmitStudentToSchoolClass");
         SecurityContext sc = new TestSecurityContext("user02", RoleType.TEACHER);//school01
         PersistentUser user = UserManager.findByUserName("user02");
-        user.setSchoolGroupID(6L);
+        user.setSchoolGroupId(6L);
         UserManager.edit(user);
         DomStudent domStudent = new DomStudent();
         domStudent.setId(MySQLPersistenceId.createPersistenceId(12L, PersistenceClassType.PersistentUser));
-        domStudent.setUsername("user05");
+        domStudent.setUserName("user05");
         domStudent.setGivenName("User");
         domStudent.setFamilyName("Lastname 05");
         DomSchoolClass domFromSchoolClass = new DomSchoolClass();
@@ -351,7 +351,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         domSchoolClass.setSchoolClassName("SchoolClass02");
         DomTeacher domTeacher = new DomTeacher();
         domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
-        domTeacher.setUsername("user03");
+        domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
@@ -374,7 +374,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
         domSchoolClass.setSchoolClassName("SchoolClass03");
         domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
-        domTeacher.setUsername("user03");
+        domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
         restRemoveTeacherFromSchoolClass = new RestRemoveTeacherFromSchoolClass();
@@ -405,7 +405,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         domSchoolClass.setSchoolClassName("SchoolClass02");
         DomStudent domStudent = new DomStudent();
         domStudent.setId(MySQLPersistenceId.createPersistenceId(9L, PersistenceClassType.PersistentUser));
-        domStudent.setUsername("user02");
+        domStudent.setUserName("user02");
         domStudent.setGivenName("User");
         domStudent.setFamilyName("Lastname 02");
         RestRemoveStudentFromSchoolClass restRemoveStudentFromSchoolClass = new RestRemoveStudentFromSchoolClass();
@@ -466,7 +466,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         nssStudent.setDomSingleSchoolStudent(dssStudent);
         
         dssStudent.setId(MySQLPersistenceId.createPersistenceId(11L, PersistenceClassType.PersistentUser));
-        dssStudent.setUsername("user04"); //changing is not allowed.
+        dssStudent.setUserName("user04"); //changing is not allowed.
         dssStudent.setGivenName("User");
         dssStudent.setFamilyName("Lastname 04");
         dssStudent.setPassword("bla");
@@ -477,15 +477,15 @@ public class SecuredTeacherSchoolClassManagerIT {
         assertEquals(expResult, result);
         PersistentUser user = UserManager.findEntity(11L);
         assertEquals(user.getEmail(), dssStudent.getEmail());
-        assertEquals(user.getFirstname(), dssStudent.getGivenName());
+        assertEquals(user.getGivenName(), dssStudent.getGivenName());
         assertEquals(user.getLastname(), dssStudent.getFamilyName());
-        assertEquals(user.getMiddlename(), dssStudent.getInsertion());
-        assertEquals(user.getPasswd(), dssStudent.getPassword());
+        assertEquals(user.getInsertion(), dssStudent.getInsertion());
+        assertEquals(user.getPassword(), dssStudent.getPassword());
         assertEquals(user.isSingleSchoolAccount(), true);
-        assertEquals(user.getUsername(), dssStudent.getUsername());
+        assertEquals(user.getUsername(), dssStudent.getUserName());
 
         //try if a non-single school student can be updated
-        dssStudent.setUsername("user03");
+        dssStudent.setUserName("user03");
         dssStudent.setGivenName("User");
         dssStudent.setFamilyName("Lastname 02");
         dssStudent.setPassword("bla");
@@ -516,7 +516,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         DomSingleSchoolStudent dss = new DomSingleSchoolStudent();
         rss.setDomNewSingleSchoolStudent(nss);
         nss.setDomSingleSchoolStudent(dss);
-        dss.setUsername("singleschooluser");
+        dss.setUserName("singleschooluser");
         dss.setGivenName("a");
         dss.setInsertion("b");
         dss.setFamilyName("c");
@@ -527,12 +527,12 @@ public class SecuredTeacherSchoolClassManagerIT {
         assertEquals("Operation failed to be true.", true, result);
 
         //fetch user and hasrole and class if given?
-        PersistentUser user = UserManager.findByUserName(dss.getUsername());
-        assertEquals("Given name not as expected.", dss.getGivenName(), user.getFirstname());
-        assertEquals("Insertion not as expected.", dss.getInsertion(), user.getMiddlename());
+        PersistentUser user = UserManager.findByUserName(dss.getUserName());
+        assertEquals("Given name not as expected.", dss.getGivenName(), user.getGivenName());
+        assertEquals("Insertion not as expected.", dss.getInsertion(), user.getInsertion());
         assertEquals("Familyname not as expected.", dss.getFamilyName(), user.getLastname());
         assertEquals("Email not as expected.", dss.getEmail(), user.getEmail());
-        assertEquals("Password not as expected.", dss.getPassword(), user.getPasswd());
+        assertEquals("Password not as expected.", dss.getPassword(), user.getPassword());
         assertEquals("Did not creat a single schoolstudent.", user.isSingleSchoolAccount(), true);
         try {
             //check for hasRole

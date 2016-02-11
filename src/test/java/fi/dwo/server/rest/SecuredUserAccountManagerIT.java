@@ -69,13 +69,13 @@ public class SecuredUserAccountManagerIT {
         SecurityContext sc = new TestSecurityContext("user01", RoleType.STUDENT);
         PersistentUser expResult = UserManager.findByUserName("user01");
         DomFullUser result = instance.getCurrentUser(sc);
-        assertEquals(expResult.getUserID().longValue(), MySQLPersistenceId.getId(result.getId()));
+        assertEquals(expResult.getId().longValue(), MySQLPersistenceId.getId(result.getId()));
 
         // fail if non-existing user
         sc = new TestSecurityContext("userFake", RoleType.STUDENT);
         try {
             result = instance.getCurrentUser(sc);
-            fail("Did not fail fake username with result." + result.getUsername());
+            fail("Did not fail fake username with result." + result.getUserName());
         }
         catch (Dwo2RestException e) {
             // succeeded
@@ -100,7 +100,7 @@ public class SecuredUserAccountManagerIT {
         user.getDomFullUser().setPassword("e");
 
         DomFullUser result = instance.updateCurrentUser(sc, user);
-        assertEquals(user.getDomFullUser().getUsername(), result.getUsername());
+        assertEquals(user.getDomFullUser().getUserName(), result.getUserName());
         assertEquals(user.getDomFullUser().getGivenName(), result.getGivenName());
         assertEquals(user.getDomFullUser().getInsertion(), result.getInsertion());
         assertEquals(user.getDomFullUser().getFamilyName(), result.getFamilyName());
@@ -108,10 +108,10 @@ public class SecuredUserAccountManagerIT {
         assertEquals(user.getDomFullUser().getEmail(), result.getEmail());
 
         user.setDomFullUser(new DomFullUser(UserManager.findByUserName("user01")));
-        user.getDomFullUser().setUsername("bonk");
+        user.getDomFullUser().setUserName("bonk");
         try {
             result = instance.updateCurrentUser(sc, user);
-            fail("Did not fail fake username with result." + result.getUsername());
+            fail("Did not fail fake username with result." + result.getUserName());
         }
         catch (Dwo2RestException e) {
             // succeeded
