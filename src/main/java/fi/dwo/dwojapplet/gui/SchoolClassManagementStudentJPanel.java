@@ -43,7 +43,6 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
     private static final Logger LOG = Logger.getLogger(SchoolClassManagementStudentJPanel.class.getName());
 
     private final JButton registerSchoolClass;
-//    private final JButton switchSchoolClass;
 
     private JPanel jtbl;
 

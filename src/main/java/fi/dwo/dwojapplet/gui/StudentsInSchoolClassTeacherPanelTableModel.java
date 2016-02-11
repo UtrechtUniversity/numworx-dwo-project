@@ -15,7 +15,7 @@ import javax.swing.table.AbstractTableModel;
  */
 class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {"usernaam", "given name", "insertion", "familyname", "edit", "select"};
+    private String[] columnNames = {"usernaam", "given name", "insertion", "familyname", "login", "edit", "select"};
     static boolean DEBUG = false;
     private StudentsInSchoolClassTeacherPanelProperties prop;
 
@@ -23,7 +23,7 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(StudentsInSchoolClassTeacherPanelProperties props, DomSchoolClass sc, Image editImage, Image noEditImage) throws Dwo2Exception {
+    public void init(StudentsInSchoolClassTeacherPanelProperties props, DomSchoolClass sc, Image loginImage, Image editImage, Image noImage) throws Dwo2Exception {
 
         prop = props;
         List<DomStudent> userList = prop.getStudentsInSchoolClass(sc);
@@ -36,7 +36,7 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
             rows++; // one for each item in List
         }
 
-        data = new Object[rows][7];
+        data = new Object[rows][8];
         int j = 0;
         for (DomStudent u : userList) {
             data[j][0] = u.getUserName();
@@ -44,12 +44,14 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
             data[j][2] = u.getInsertion();
             data[j][3] = u.getFamilyName();
             if (u.getSingleSchool()) {
-                data[j][4] = editImage;
+                data[j][4] = loginImage;
+                data[j][5] = editImage;
             } else {
-                data[j][4] = noEditImage;
+                data[j][4] = noImage;
+                data[j][5] = noImage;
             }
-            data[j][5] = new Boolean(false);
-            data[j][6] = u;
+            data[j][6] = new Boolean(false);
+            data[j][7] = u;
             j++;
         }
     }
@@ -93,9 +95,9 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
         //no matter where the cell appears onscreen.
         if (col < 4) {
             return false;
-        } else if (col == 4 && ((DomStudent) data[row][6]).getSingleSchool()) {
+        } else if ((col == 4 || col==5) && ((DomStudent) data[row][7]).getSingleSchool()) {
             return true;
-        } else if (col == 5) {
+        } else if (col == 6) {
             return true;
         } else {
             return false;

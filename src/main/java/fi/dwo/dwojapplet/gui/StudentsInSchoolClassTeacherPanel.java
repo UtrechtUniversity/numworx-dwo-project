@@ -9,6 +9,8 @@ import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
@@ -57,7 +59,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     private JButton copyToSchoolClassButton;
 
     private Image editImage;
-    private Image noEditImage;
+    private Image noImage;
+    private Image loginImage;
 
     private JPanel jtbl;
 
@@ -153,7 +156,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         //persist returned values
                         user = new DomSingleSchoolStudent(panel.getUser());
                         prop.updateSingleSchoolStudent(user);
-                        tableModel.init(prop, schoolClass, editImage, noEditImage);
+                        tableModel.init(prop, schoolClass, loginImage, editImage, noImage);
                         tableModel.fireTableDataChanged();
                     }
                 }
@@ -163,7 +166,31 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 }
                 finally {
                     fireEditingStopped();
-                }            }
+                }
+            } else if (value == loginImage) {
+                fireEditingStopped();
+//            //get Table setting
+//                int col = tableModel.getSelectedColumn();
+                int row = tableModel.getSelectedRow();
+                try {
+                    //set prop to table setting
+                    DomStudent student = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
+                    getStudent.setDomSchoolClass(schoolClass);
+                    getStudent.setDomStudent(student);
+                    DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
+                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
+                }
+                catch (LoginException ex) {
+                    Dwo2Exception err=  new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
+                    LOG.log(Level.SEVERE, null, ex);
+                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), err);
+                }
+                catch (Dwo2Exception e) {
+                    LOG.log(Level.SEVERE, null, e);
+                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), e);
+                }
+            }
         }
     }
 
@@ -183,7 +210,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new StudentsInSchoolClassTeacherPanelTableModel();
 
-        tableModel.init(prop, schoolClass, editImage, noEditImage);
+        tableModel.init(prop, schoolClass, loginImage, editImage, noImage);
         jtable.setModel(tableModel);
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
@@ -230,8 +257,11 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
-        noEditImage = DwoHelper.getResourceImage(GuiConstants.NOEDIT_CLASS_IMAGE);
+        noImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE);
+        loginImage = DwoHelper.getResourceImage(GuiConstants.STUDENT_IMAGE);
         tr.addImage(editImage, 0);
+        tr.addImage(noImage, 1);
+        tr.addImage(loginImage, 2);
         try {
             tr.waitForAll();
         }
@@ -320,7 +350,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         prop.submitStudentToSchoolClass(schoolClass, toSchoolClass, student);
                     }
                 }
-                tableModel.init(prop, getSchoolClass(), editImage, noEditImage);
+                tableModel.init(prop, getSchoolClass(), loginImage, editImage, noImage);
                 tableModel.fireTableDataChanged();
                 GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
             }
@@ -336,7 +366,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         prop.removeStudentFromSchoolClass(schoolClass, student);
                     }
                 }
-                tableModel.init(prop, getSchoolClass(), editImage, noEditImage);
+                tableModel.init(prop, getSchoolClass(), loginImage, editImage, noImage);
                 tableModel.fireTableDataChanged();
                 GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
             }
