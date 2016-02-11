@@ -21,7 +21,7 @@ public class DbAccessWrapperTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 
-		DbAccessIF delegate = new DbAccessClient(new URL("https://app.dwl.nl/dwo/dsaccess"));
+		DbAccessIF delegate = new DbAccessClient(new URL("https://dummyone.dwo.nl/dwo/dsaccess"));
 		wrapper = new DbAccessWrapper(delegate);
 	}
 
@@ -66,7 +66,7 @@ public class DbAccessWrapperTest extends TestCase {
 }
 
 	
-	public void testRemote() throws Exception { 
+	public void xtestRemote() throws Exception { 
 		DbAccessIF extern = new DbAccessClient(new URL("https://dummyone.dwo.nl/DWOmAccess/dbaccess"));
 		accesstest(extern);
 	}

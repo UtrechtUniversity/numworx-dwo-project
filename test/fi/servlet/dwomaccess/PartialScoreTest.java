@@ -42,7 +42,7 @@ public class PartialScoreTest extends TestCase {
 	}
 
 	public void testLocalhost() throws Exception {
-		URL url = new URL("http://localhost:8080/DWOmAccess/partialScore");
+		URL url = new URL("http://dummyone.dwo.nl/DWOmAccess/partialScore");
 		getter = new PartialScoreClient(url );
 		doGetScoreMapList();
 		doGetLaunchData();
@@ -56,7 +56,7 @@ public class PartialScoreTest extends TestCase {
 	}
 	
 	public void testDoLaunchData() throws Exception {
-		doLaunchData("http://localhost:8080/DWOmAccess/getLaunchData");
+		doLaunchData("http://dummyone.dwo.nl/DWOmAccess/getLaunchData");
 	}
 	
 	public void testGetScoreMapList2() throws Exception {
