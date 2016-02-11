@@ -5,6 +5,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomRemoveStudentFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
@@ -82,6 +83,10 @@ public class StudentsInSchoolClassTeacherPanelProperties {
             }
         }
         return scList;
+    }
+
+    DomSingleSchoolStudent getSingleSchoolStudent() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
             
 }

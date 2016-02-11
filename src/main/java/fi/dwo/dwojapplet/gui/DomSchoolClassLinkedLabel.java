@@ -69,7 +69,7 @@ public class DomSchoolClassLinkedLabel extends LinkedLabel {
                 DomFullUser user = DwoHelper.getCurrentUser();
                 //switch role now
                 LOG.log(Level.FINE, "switching class now");
-                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
+                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);

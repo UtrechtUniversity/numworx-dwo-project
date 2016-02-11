@@ -188,7 +188,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                 prop.setActiveSchoolClass(sc);
 //                //switch role now
                 LOG.log(Level.INFO, "switching schoolclass now");
-                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
+                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
@@ -233,7 +233,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                     prop.setActiveSchoolClass(schoolClass);
                     DomFullUser user = DwoHelper.getCurrentUser();
                     //switch role now
-                    GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
+                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else if (value == removeImage) {
                     int row = tableModel.getSelectedRow();
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);

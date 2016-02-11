@@ -44,7 +44,7 @@ public class LoginManager {
             //Set return value
             user = response.readEntity(DomFullUser.class);
             // succeeded login
-            LOG.log(Level.INFO, "Logged in with username {0}.", new Object[]{user.getUsername()});
+            LOG.log(Level.INFO, "Logged in with username {0}.", new Object[]{user.getUserName()});
             //Set webtarget with credentials for future rest login.
             WebTarget target = client.target(DwoHelper.getServerUrlPath().toString());
             StoredRestManager.setWebTargetRest(target);

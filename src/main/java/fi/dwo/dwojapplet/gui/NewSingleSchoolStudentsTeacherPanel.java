@@ -304,7 +304,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 boolean failFlag = false;
                 boolean fatalFlag = false;
                 for (DomSingleSchoolStudent submit : submitList) {
-                    if (!submit.getUsername().equals("")) {
+                    if (!submit.getUserName().equals("")) {
                         try {
                             DomNewSingleSchoolStudent student = new DomNewSingleSchoolStudent();
                             student.setDomSingleSchoolStudent(submit);
@@ -395,7 +395,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                     newUserList.get(newUserList.size() - 1).setGivenName(celStrings[i][0]);
                     newUserList.get(newUserList.size() - 1).setInsertion(celStrings[i][1]);
                     newUserList.get(newUserList.size() - 1).setFamilyName(celStrings[i][2]);
-                    newUserList.get(newUserList.size() - 1).setUsername(celStrings[i][3]);
+                    newUserList.get(newUserList.size() - 1).setUserName(celStrings[i][3]);
                     newUserList.get(newUserList.size() - 1).setPassword(celStrings[i][4]);
                     newUserList.get(newUserList.size() - 1).setEmail(celStrings[i][5]);
 //                    System.out.println(celStrings[i]);

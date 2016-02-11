@@ -1,12 +1,9 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FontMetrics;
@@ -16,9 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -29,48 +24,42 @@ import javax.swing.JTextField;
  * @author M.J.B. Kupers
  *
  */
-public class AccountDataJPanel extends JPanel implements
+public class AccountDataFullUserJPanel extends JPanel implements
         ActionListener {
 
+    private DomFullUser user;
 //    protected Group groupList[];
-    protected SchoolClass classList[];
+//    protected SchoolClass classList[];
+    private JPasswordField oldpassword;
 
-    protected JPasswordField oldpassword;
+    private JPasswordField password;
 
-    protected JPasswordField password;
+    private JPasswordField repassword;
 
-    protected JPasswordField repassword;
+    private JTextField firstname;
 
-    protected JTextField firstname;
+    private JTextField middlename;
 
-    protected JTextField middlename;
+    private JTextField familyname;
 
-    protected JTextField lastname;
+    private JTextField email;
 
-    protected JTextField email;
+//    protected JTextField schoollogin;
+    private JButton changeButton;
 
-    protected JTextField schoollogin;
+    private JButton resetButton;
 
-    private JPasswordField schoolpassword;
-
-    protected JButton changeButton;
-
-    protected JButton resetButton;
-
-    protected JButton deleteButton;
-
-    private JComboBox groupChoice;
-
+//    protected JButton deleteButton;
 //    protected User user;
     private AccountDataProperties prop = new AccountDataProperties();
-    private static final Logger LOG = Logger.getLogger(AccountDataJPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(AccountDataFullUserJPanel.class.getName());
 
     /**
      * Creates a new ProfilePanel for the current user. The account of the
      * current user can be changed.
      *
      */
-    public AccountDataJPanel() {
+    public AccountDataFullUserJPanel() {
         //fetch user details.
         try {
             prop.init();
@@ -241,10 +230,10 @@ public class AccountDataJPanel extends JPanel implements
         p.add(l);
 
         /* Lastname field */
-        lastname = new JTextField();
-        lastname.setText(prop.getUser().getFamilyName());
-        lastname.setBounds(160, 78 - v, 120, 20);
-        p.add(lastname);
+        familyname = new JTextField();
+        familyname.setText(prop.getUser().getFamilyName());
+        familyname.setBounds(160, 78 - v, 120, 20);
+        p.add(familyname);
 
         /* Lastname mandatory label */
         l = createMandatoryLabel();
@@ -311,21 +300,20 @@ public class AccountDataJPanel extends JPanel implements
                 + changeButton.getSize().width + 5, 5);
         p.add(resetButton);
 
-        // delete mag if user is geen single school student
-        deleteButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_DELETE_PROFILE));//, GuiConstants.MAIN_BACKGROUND);
-        //fm = deleteButton.getFontMetrics(deleteButton.getFont());
-        //deleteButton.setSize(fm.stringWidth(deleteButton.getLabel()) + 20, fm.getHeight() + 10);
-        deleteButton.setSize(deleteButton.getPreferredSize());
-        deleteButton.setLocation(getSize().width / 2
-                - deleteButton.getSize().width / 2, p.getLocation().y
-                + p.getSize().height + 10);
-        deleteButton.setVisible(!prop.getUser().getSingleSchool());
-        this.add(deleteButton);
-
+//        // delete mag if user is geen single school student
+//        deleteButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_DELETE_PROFILE));//, GuiConstants.MAIN_BACKGROUND);
+//        //fm = deleteButton.getFontMetrics(deleteButton.getFont());
+//        //deleteButton.setSize(fm.stringWidth(deleteButton.getLabel()) + 20, fm.getHeight() + 10);
+//        deleteButton.setSize(deleteButton.getPreferredSize());
+//        deleteButton.setLocation(getSize().width / 2
+//                - deleteButton.getSize().width / 2, p.getLocation().y
+//                + p.getSize().height + 10);
+//        deleteButton.setVisible(!prop.getUser().getSingleSchool());
+//        this.add(deleteButton);
         changeButton.addActionListener(this);
         resetButton.addActionListener(this);
         // delete mag if user is geen single school student
-        deleteButton.addActionListener(this);
+//        deleteButton.addActionListener(this);
     }
 
     /**
@@ -359,22 +347,21 @@ public class AccountDataJPanel extends JPanel implements
             repassword.setText("");
             firstname.setText(prop.getUser().getGivenName());
             middlename.setText(prop.getUser().getInsertion());
-            lastname.setText(prop.getUser().getFamilyName());
+            familyname.setText(prop.getUser().getFamilyName());
             email.setText(prop.getUser().getEmail());
-
         } else if (e.getSource() == changeButton) {
             if (prop.getUser().getPassword().equals(MD5.getHashString(oldpassword.getText()))) {
                 //update the data
                 try {
                     prop.getUser().setGivenName(firstname.getText());
                     prop.getUser().setInsertion(middlename.getText());
-                    prop.getUser().setFamilyName(lastname.getText());
+                    prop.getUser().setFamilyName(familyname.getText());
                     prop.getUser().setEmail(email.getText());
                     if (!password.getText().equals("")
                             && repassword.getText().equals(password.getText())) {
                         //updates password following some logic.
                         prop.getUser().setPassword(MD5.getHashString(password.getText()));
-                    } 
+                    }
                     prop.Update();
                     oldpassword.setText("");
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
@@ -385,51 +372,51 @@ public class AccountDataJPanel extends JPanel implements
             } else {
                 GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
             }
-        } //
-        //
-        //            if (correct) {
-        //                /*
-        //                 * The data is changed correctly, show a message for
-        //                 * successfully changed data in a dialog
-        //                 */
-        //                try {
-        //                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
-        //                    /* Evil trick to refresh user info */
-        //                    if (password.getText().equals("")) {
-        //                        // TODO this erases the canLogout flag.
-        //                        GuiCreator.instance().clearCurrentUserData();
-        //                        GuiCreator.instance().login(user.getUsername(), oldpassword.getText());
-        //                    } else {
-        //                        GuiCreator.instance().clearCurrentUserData();
-        //                        GuiCreator.instance().login(user.getUsername(), password.getText());
-        //                    }
-        //                }
-        //                catch (LoginException exc) {
-        //                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
-        //
-        //                }
-        //            }
-        //
-        else if (e.getSource() == deleteButton) {
-            /* Delete the user account */
-            while (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
-                    + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                if (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
-                    try {
-                        if (SecureUserAccountManager.removeAccountData()) {
-                            GuiCreator.instance().logoff();//TODO Gert something goes pear shaped.
-                        }
-                        JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), JOptionPane.PLAIN_MESSAGE);
-                    }
-                    catch (Dwo2Exception ex) {
-                        Logger.getLogger(AccountDataJPanel.class.getName()).log(Level.SEVERE, null, ex);
-                        JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
-                    }
-                    break;
-                } else {
-                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
-                }
-            }
         }
+//        else if (e.getSource() == deleteButton) {
+//            /* Delete the user account */
+//            while (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
+//                    + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+//                if (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
+//                    try {
+//                        if (SecureUserAccountManager.removeAccountData()) {
+//                            GuiCreator.instance().logoff();//TODO Gert something goes pear shaped.
+//                        }
+//                        JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), JOptionPane.PLAIN_MESSAGE);
+//                    }
+//                    catch (Dwo2Exception ex) {
+//                        Logger.getLogger(AccountDataFullUserJPanel.class.getName()).log(Level.SEVERE, null, ex);
+//                        JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+//                    }
+//                    break;
+//                } else {
+//                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+//                }
+//            }
+//        }
+    }
+
+    public void setUser(DomFullUser aUser) {
+        user = aUser;
+        oldpassword.setText(aUser.getPassword());
+        password.setText("");
+        repassword.setText("");
+        firstname.setText(aUser.getGivenName());
+        middlename.setText(aUser.getInsertion());
+        familyname.setText(aUser.getFamilyName());
+        email.setText(aUser.getEmail());
+    }
+
+    public DomFullUser getSingleSchoolStudent() {
+        if (!password.getText().equals("")
+                && repassword.getText().equals(password.getText())) {
+            //updates password following some logic.
+            user.setPassword(MD5.getHashString(password.getText()));
+        }
+        user.setGivenName(firstname.getText());
+        user.setInsertion(middlename.getText());
+        user.setFamilyName(familyname.getText());
+        user.setEmail(email.getText());
+        return user;
     }
 }

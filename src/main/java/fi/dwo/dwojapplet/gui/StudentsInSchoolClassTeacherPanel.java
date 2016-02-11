@@ -29,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -133,24 +134,29 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
             this.fireEditingStopped();
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == editImage) {
-//                try {
-//                    DomTeacher teacher = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
-//
-//                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
-//                        //persist returned values	
-//                        prop.(getSchoolClass(), teacher);
-//                        tableModel.init(prop, getSchoolClass(), select);
-//                        tableModel.fireTableDataChanged();
-//                    }
-//                }
-//                catch (Dwo2Exception ex) {
-//                    Logger.getLogger(StudentsInSchoolClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
-//                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
-//                }
-//                finally {
-//                    fireEditingStopped();
-//                }
-            }
+                try {
+                    DomStudent student = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomSingleSchoolStudent user = prop.getSingleSchoolStudent();
+                    AccountDataFullUserJPanel panel = new AccountDataFullUserJPanel();
+                    panel.setUser(user);
+                    int result = JOptionPane.showConfirmDialog(GuiCreator.instance().mainPanel, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    prop.updateSingleSchoolStudent(DomSingleSchoolStudent(user));
+                    //case OK persist returned values
+                    if (result == JOptionPane.OK_OPTION) {
+                        //persist returned values	
+                        prop.updateSingleSchoolStudent(student);
+                        tableModel.init(prop, schoolClass, editImage, noEditImage);
+                        tableModel.fireTableDataChanged();
+                    }
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.FINE, null, ex);
+                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                }
+                finally {
+                    fireEditingStopped();
+                }            }
         }
     }
 

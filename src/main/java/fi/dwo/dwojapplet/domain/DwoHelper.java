@@ -577,7 +577,7 @@ public final class DwoHelper {
         if (aCurrentUser.getId() == currentUser.getId()) {
             currentUser = aCurrentUser;
             try {
-                currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUsername());
+                currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUserName());
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
@@ -595,7 +595,7 @@ public final class DwoHelper {
         if (aCurrentUser != null) {
             try {
                 GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(aCurrentUser.getId()));
-                currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUsername());
+                currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUserName());
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);

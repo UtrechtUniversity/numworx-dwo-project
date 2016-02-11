@@ -53,13 +53,13 @@ public class SecureUserAccountManager {
             restUser.setDomFullUser(user);
             
             user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", DomFullUser.class, restUser);
-            HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(user.getUsername(), user.getPassword()).build();
+            HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(user.getUserName(), user.getPassword()).build();
             Client client = ClientBuilder.newClient().register(feature);
             WebTarget target = client.target(DwoHelper.getServerUrlPath().toString());
             StoredRestManager.setWebTargetRest(target);
             
             DwoHelper.setCurrentUser(user);
-            LOG.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{restUser.getDomFullUser().getUsername()});
+            LOG.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{restUser.getDomFullUser().getUserName()});
         return user;
     }
     

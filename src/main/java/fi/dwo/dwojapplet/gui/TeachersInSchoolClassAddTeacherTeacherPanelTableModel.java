@@ -40,7 +40,7 @@ class TeachersInSchoolClassAddTeacherTeacherPanelTableModel extends AbstractTabl
         data = new Object[rows][6];
         int j = 0;
         for (DomUser u : userList) {
-            data[j][0] = u.getUsername();
+            data[j][0] = u.getUserName();
             data[j][1] = u.getGivenName();
             data[j][2] = u.getInsertion();
             data[j][3] = u.getFamilyName();

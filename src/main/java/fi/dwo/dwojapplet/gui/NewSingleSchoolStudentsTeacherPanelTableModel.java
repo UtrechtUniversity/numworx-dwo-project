@@ -74,7 +74,7 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
             case 2:
                 return data.get(row).getFamilyName();
             case 3:
-                return data.get(row).getUsername();
+                return data.get(row).getUserName();
             case 4:
                 return data.get(row).getPassword();
             case 5:
@@ -152,7 +152,7 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
                 data.get(row).setFamilyName((String) value);
                 break;
             case 3:
-                data.get(row).setUsername((String) value);
+                data.get(row).setUserName((String) value);
                 break;
             case 4:
                 data.get(row).setPassword((String) value);

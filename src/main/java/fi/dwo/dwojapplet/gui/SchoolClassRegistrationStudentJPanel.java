@@ -182,7 +182,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
                 prop.setActiveSchoolClass(sc);
 //                //switch role now
                 LOG.log(Level.INFO, "switching role now");
-                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
+                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
             }
             catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
