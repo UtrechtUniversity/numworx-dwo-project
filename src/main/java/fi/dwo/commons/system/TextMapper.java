@@ -34,9 +34,36 @@ public abstract class TextMapper {
     public static final String BTN_ADD = "BTN_ADD";
     
     public static final String BTN_BACK = "BTN_BACK";
-    
-    public static final String BTN_COPYTOSCHOOLCLASS = "BTN_COPYTOSCHOOLCLASS";
+    public static final String BTN_NEW_STUDENTS = "BTN_ADD_STUDENTS";
+    public static final String BTN_NEW_CLASS = "BTN_ADD_CLASS";
     public static final String BTN_DELETE = "BTN_DELETE";
+    public static final String BTN_COPYSELECTEDTOCLASS = "BTN_COPYTOSCHOOLCLASS";
+    public static final String BTN_DELSELECTED = "BTN_DELETE";
+
+    /* header panel headers */
+    public static final String HDR_NEW_STUDENTS = "HDR_NEW_STUDENTS";
+    public static final String HDR_EDITSTUDENTS = "HDR_EDITSTUDENTS";
+    public static final String HDR_EDITTEACHERS = "HDR_EDITTEACHERS";
+    
+    /* Table headers */
+    public static final String TBL_SCHOOL = "TBL_SCHOOL";
+    public static final String TBL_LOGIN = "TBL_LOGIN";
+    public static final String TBL_ROLE = "TBL_ROLE";
+    public static final String TBL_DELETE = "TBL_DELETE";
+    public static final String TBL_EDIT = "TBL_EDIT";
+    public static final String TBL_SELECT = "TBL_SELECT";
+    
+    public static final String TBL_GIVENNAME = "TBL_GIVENNAME";
+    public static final String TBL_INSERTION = "TBL_INSERTION";
+    public static final String TBL_FAMILYNAME = "TBL_FAMILYNAME";
+    public static final String TBL_USERNAME = "TBL_USERNAME";
+    public static final String TBL_PASSWORD = "TBL_PASSWORD";
+    public static final String TBL_EMAIL = "TBL_EMAIL";
+    public static final String TBL_EDITCLASS = "TBL_EDITCLASS";
+    public static final String TBL_EDITMODULES = "TBL_EDITMODULES";
+    public static final String TBL_EDITSTUDENTS = "TBL_EDITSTUDENTS";
+    public static final String TBL_EDITTEACHERS = "TBL_EDITTEACHERS";
+    public static final String TBL_CLASSNAME = "TBL_CLASSNAME";
 
     /* Message dialog messages */
     public static final String DLG_CONFIRM = "DLG_CONFIRM";
