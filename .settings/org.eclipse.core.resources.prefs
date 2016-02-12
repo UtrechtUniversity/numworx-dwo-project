@@ -1,6 +1,4 @@
 eclipse.preferences.version=1
-encoding//src/fi/wiskopdr/text/TextConstants_de.properties=UTF-8
-encoding//src/fi/wiskopdr/text/TextConstants_es.properties=UTF-8
-encoding//src/fi/wiskopdr/text/TextConstants_fr.properties=UTF-8
-encoding//src/fi/wiskopdr/text/TextConstants_gr.properties=UTF-8
 encoding/<project>=UTF-8
+encoding/src=UTF-8
+encoding/test=UTF-8
