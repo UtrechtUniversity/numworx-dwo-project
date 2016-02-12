@@ -5,6 +5,7 @@
   <name>FormuleGWT</name>
   <description>Formule vakken</description>
   <build>
+    <finalName>formule</finalName>
     <sourceDirectory>src</sourceDirectory>
     <testSourceDirectory>test</testSourceDirectory>
     <resources>
