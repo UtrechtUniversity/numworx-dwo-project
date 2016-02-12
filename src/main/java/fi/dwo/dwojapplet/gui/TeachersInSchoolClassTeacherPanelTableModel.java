@@ -5,6 +5,7 @@ import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.dom.entities.DomUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.system.TextMapper;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,12 @@ import javax.swing.table.AbstractTableModel;
  */
 class TeachersInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {"usernaam", "given name", "insertion", "familyname", "delete"};
+    private String[] columnNames = {TextMapper.getText(TextMapper.TBL_USERNAME),
+        TextMapper.getText(TextMapper.TBL_GIVENNAME),
+        TextMapper.getText(TextMapper.TBL_INSERTION),
+        TextMapper.getText(TextMapper.TBL_FAMILYNAME),
+        TextMapper.getText(TextMapper.TBL_DELETE)};
+
     static boolean DEBUG = false;
     private TeachersInSchoolClassTeacherPanelProperties prop;
 
@@ -32,11 +38,11 @@ class TeachersInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
         if (userList == null) {
             userList = new ArrayList<DomTeacher>();
         }
-        
+
         for (DomTeacher u : userList) {
             rows++; // one for each item in List
         }
-        
+
         data = new Object[rows][6];
         int j = 0;
         for (DomUser u : userList) {

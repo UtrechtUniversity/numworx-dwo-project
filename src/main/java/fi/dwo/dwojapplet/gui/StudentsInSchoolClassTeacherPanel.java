@@ -59,7 +59,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     private JButton copyToSchoolClassButton;
 
     private Image editImage;
-    private Image noImage;
+    private Image emptyImage;
     private Image loginImage;
 
     private JPanel jtbl;
@@ -156,7 +156,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         //persist returned values
                         user = new DomSingleSchoolStudent(panel.getUser());
                         prop.updateSingleSchoolStudent(user);
-                        tableModel.init(prop, schoolClass, loginImage, editImage, noImage);
+                        tableModel.init(prop, schoolClass, loginImage, editImage, emptyImage);
                         tableModel.fireTableDataChanged();
                     }
                 }
@@ -210,7 +210,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new StudentsInSchoolClassTeacherPanelTableModel();
 
-        tableModel.init(prop, schoolClass, loginImage, editImage, noImage);
+        tableModel.init(prop, schoolClass, loginImage, editImage, emptyImage);
         jtable.setModel(tableModel);
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
@@ -257,10 +257,10 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
-        noImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE);
+        emptyImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE);
         loginImage = DwoHelper.getResourceImage(GuiConstants.STUDENT_IMAGE);
         tr.addImage(editImage, 0);
-        tr.addImage(noImage, 1);
+        tr.addImage(emptyImage, 1);
         tr.addImage(loginImage, 2);
         try {
             tr.waitForAll();
@@ -272,10 +272,10 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         backButton = new JButton(TextMapper.getText(TextMapper.BTN_BACK));
         backButton.setSize(backButton.getPreferredSize());
         backButton.addActionListener(this);
-        deleteButton = new JButton(TextMapper.getText(TextMapper.BTN_DELETE));
+        deleteButton = new JButton(TextMapper.getText(TextMapper.BTN_DELSELECTED));
         deleteButton.setSize(deleteButton.getPreferredSize());
         deleteButton.addActionListener(this);
-        copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_COPYTOSCHOOLCLASS));
+        copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_COPYSELECTEDTOCLASS));
         copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
         copyToSchoolClassButton.addActionListener(this);
         targetSchoolClassBox = new JComboBox(new Vector<DomSchoolClass>(prop.getTeachersOtherSchoolClasses(sc)));
@@ -330,7 +330,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT));
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)+"-"+TextMapper.getText(TextMapper.HDR_EDITSTUDENTS));
     }
 
     /**
@@ -350,7 +350,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         prop.submitStudentToSchoolClass(schoolClass, toSchoolClass, student);
                     }
                 }
-                tableModel.init(prop, getSchoolClass(), loginImage, editImage, noImage);
+                tableModel.init(prop, getSchoolClass(), loginImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
                 GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
             }
@@ -366,7 +366,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         prop.removeStudentFromSchoolClass(schoolClass, student);
                     }
                 }
-                tableModel.init(prop, getSchoolClass(), loginImage, editImage, noImage);
+                tableModel.init(prop, getSchoolClass(), loginImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
                 GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
             }

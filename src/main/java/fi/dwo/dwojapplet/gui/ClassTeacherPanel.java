@@ -382,10 +382,10 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         }
 
         //FontMetrics fm;
-        addClassButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_CLASS));
+        addClassButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_CLASS));
         addClassButton.setSize(addClassButton.getPreferredSize());
         addClassButton.addActionListener(this);
-        addStudentsButton = new JButton("Create students");
+        addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
         //addClassButton.setLocation(30, 10);

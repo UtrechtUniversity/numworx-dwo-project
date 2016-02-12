@@ -3,7 +3,6 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.system.TextMapper;
@@ -24,9 +23,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -48,7 +45,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 
     private final JButton addRoleButton;
 
-    private Image removeImage, loginImage;
+    private Image removeImage, loginImage, emptyImage;
 
     private JPanel jtbl;
 
@@ -83,8 +80,10 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         loginImage = DwoHelper.getResourceImage(GuiConstants.STUDENT_IMAGE); //"resources/student.png");
+        emptyImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE); //"resources/student.png");
         tr.addImage(removeImage, 0);
         tr.addImage(loginImage, 1);
+        tr.addImage(emptyImage,2);
         try {
             tr.waitForAll();
         }
@@ -248,7 +247,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 
                         if (currSrac != selectedSrac) {//always keeps current or switches to the null-school
                             //update tableview
-                            tableModel.init(prop, loginImage, removeImage);
+                            tableModel.init(prop, loginImage, removeImage, emptyImage);
                             tableModel.fireTableDataChanged();
                         } else {
                             switchToActiveSchoolLogin();
@@ -283,7 +282,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new AccountSchoolsRolesTableModel();
 
-        tableModel.init(prop, loginImage, removeImage);
+        tableModel.init(prop, loginImage, removeImage, emptyImage);
         jtable.setModel(tableModel);
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
@@ -325,7 +324,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         if (e.getSource() == this.addRoleButton) {
             ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new RegisterMoreSchoolsPanel());
             dialog.setVisible(true);
-                tableModel.init(prop, loginImage, removeImage);
+                tableModel.init(prop, loginImage, removeImage, emptyImage);
                 tableModel.fireTableDataChanged();
         }
 //        if (e.getSource() == loginImage) {

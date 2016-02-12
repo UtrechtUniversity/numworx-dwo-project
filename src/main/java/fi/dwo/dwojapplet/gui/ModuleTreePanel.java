@@ -66,8 +66,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
     public static String STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
 
     public static void initialize(DwoProfile profile) {
-        //DwoProfile profile = GuiCreator.instance().getDWO().getDwoProfile();
-        if (profile.getID() != 1) // TODO overleg met Peter nodig.
+        if(profile ==null){
+            GuiCreator.instance().getDWO().getDwoProfile();
+        }
+        if (profile!=null && profile.getID() != 1) // TODO overleg met Peter nodig.
         {
             STANDAARD_DWO_MODULES = profile.getHeader();
         } else {

@@ -14,7 +14,11 @@ import javax.swing.table.AbstractTableModel;
  */
 class AccountSchoolsRolesTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {"School", "Role", "Login", "Delete"};
+    private String[] columnNames = {TextMapper.getText(TextMapper.TBL_SCHOOL),
+        TextMapper.getText(TextMapper.TBL_ROLE),
+        TextMapper.getText(TextMapper.TBL_LOGIN),
+        TextMapper.getText(TextMapper.TBL_DELETE)};
+
     static boolean DEBUG = false;
     private AccountSchoolsRolesProperties prop;
 
@@ -22,7 +26,7 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(AccountSchoolsRolesProperties props, Image loginImage, Image removeImage) {
+    public void init(AccountSchoolsRolesProperties props, Image loginImage, Image removeImage, Image emptyImage) {
 
         prop = props;
         List<DomSchoolRoleAndClass> srcList = prop.getSchoolsRolesAndClasses().getSchoolsRolesAndClassesList();
@@ -38,7 +42,17 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
         for (DomSchoolRoleAndClass src : srcList) {
             data[j][0] = src.getSchoolName();
             data[j][1] = TextMapper.getText(src.getRoleName());
-            data[j][2] = loginImage;
+                if (prop.getActiveSchoolRoleAndClass()!=null 
+                    && prop.getActiveSchoolRoleAndClass().getSchoolId().equals(src.getSchoolId())     
+                    && prop.getActiveSchoolRoleAndClass().getRoleId().equals(src.getRoleId())     
+                    && prop.getActiveSchoolRoleAndClass().getUserId().equals(src.getUserId())
+                    && ( (src.getSchoolClassId()==null && prop.getActiveSchoolRoleAndClass().getSchoolClassId()==null)|| 
+                    prop.getActiveSchoolRoleAndClass().getSchoolClassId().equals(src.getSchoolClassId())
+                    )) {
+                data[j][2] = emptyImage;
+            } else {
+                data[j][2] = loginImage;
+            }
             data[j][3] = removeImage; // delete 
             data[j][4] = src;
             j++;

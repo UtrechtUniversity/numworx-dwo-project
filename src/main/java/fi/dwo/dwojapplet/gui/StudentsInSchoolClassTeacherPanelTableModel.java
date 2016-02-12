@@ -4,6 +4,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.system.TextMapper;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,14 @@ import javax.swing.table.AbstractTableModel;
  */
 class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {"usernaam", "given name", "insertion", "familyname", "login", "edit", "select"};
+    private String[] columnNames = {TextMapper.getText(TextMapper.TBL_USERNAME),
+            TextMapper.getText(TextMapper.TBL_GIVENNAME),
+            TextMapper.getText(TextMapper.TBL_INSERTION),
+            TextMapper.getText(TextMapper.TBL_FAMILYNAME),
+            TextMapper.getText(TextMapper.TBL_LOGIN),
+            TextMapper.getText(TextMapper.TBL_EDIT),
+            TextMapper.getText(TextMapper.TBL_SELECT)};
+    
     static boolean DEBUG = false;
     private StudentsInSchoolClassTeacherPanelProperties prop;
 

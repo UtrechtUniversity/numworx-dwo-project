@@ -280,7 +280,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT));
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)+"-"+TextMapper.getText(TextMapper.HDR_EDITTEACHERS));
     }
 
     /**

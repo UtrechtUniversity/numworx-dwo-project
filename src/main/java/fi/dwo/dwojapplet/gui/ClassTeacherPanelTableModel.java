@@ -15,7 +15,13 @@ import javax.swing.table.AbstractTableModel;
  */
 class ClassTeacherPanelTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {TextMapper.getText(TextMapper.GUIC_TBL_CLASSNAME),"edit klass", "modules", "edit students", "edit teachers", "delete"};
+    private String[] columnNames = {TextMapper.getText(TextMapper.GUIC_TBL_CLASSNAME),
+        TextMapper.getText(TextMapper.TBL_EDITCLASS),
+        TextMapper.getText(TextMapper.TBL_EDITMODULES),
+        TextMapper.getText(TextMapper.TBL_EDITSTUDENTS),
+        TextMapper.getText(TextMapper.TBL_EDITTEACHERS),
+        TextMapper.getText(TextMapper.TBL_DELETE),};
+
     static boolean DEBUG = false;
     private ClassTeacherPanelProperties prop;
 
@@ -31,11 +37,11 @@ class ClassTeacherPanelTableModel extends AbstractTableModel {
         if (scList == null) {
             scList = new ArrayList<DomSchoolClass>();
         }
-        
+
         for (DomSchoolClass sc : scList) {
             rows++; // one for each item in List
         }
-        
+
         data = new Object[rows][7];
         int j = 0;
         for (DomSchoolClass sc : scList) {

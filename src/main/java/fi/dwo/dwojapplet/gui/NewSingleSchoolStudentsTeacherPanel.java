@@ -67,7 +67,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         TextMapper.getText(TextMapper.GUIR_USERNAME),
         TextMapper.getText(TextMapper.GUIR_PASSWORD),
         TextMapper.getText(TextMapper.GUIR_EMAIL),
-        TextMapper.getText(TextMapper.BTN_DELETE)
+        TextMapper.getText(TextMapper.BTN_DELSELECTED)
     };
 
     private Image delImage;
@@ -284,7 +284,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT));
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)+"-"+TextMapper.getText(TextMapper.HDR_NEW_STUDENTS));
     }
 
     /**
