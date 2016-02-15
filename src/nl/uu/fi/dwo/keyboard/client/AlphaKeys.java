@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class AlphaKeys extends Composite {
 
-
 	private static AlphaKeysUiBinder uiBinder = GWT
 			.create(AlphaKeysUiBinder.class);
 
@@ -56,6 +55,11 @@ public class AlphaKeys extends Composite {
 		popup.hide();
 	}
 	
+	void hideOnClick() {
+		// if ( ... ) 
+		hideAlpha();
+	}
+	
 	boolean isAlphaShown() {
 		return popup.isShowing();
 	}
@@ -68,30 +72,35 @@ public class AlphaKeys extends Composite {
 	}
 	@UiHandler("c1")
 	void onC1(ClickEvent e) {
+		hideOnClick();
 		getEditor().insert('α');
 	}
 
 	@UiHandler("c2")
 	void onC2(ClickEvent e) {
+		hideOnClick();
 		getEditor().insert('β');
 	}
 	@UiHandler("c3")
 	void onC3(ClickEvent e) {
+		hideOnClick();
 		getEditor().insert('γ');
 	}
 	@UiHandler("c4")
 	void onC4(ClickEvent e) {
+		hideOnClick();
 		getEditor().insert('λ');
 	}
 
 	@UiHandler("c5")
 	void onC5(ClickEvent e) {
+		hideOnClick();
 		getEditor().insert('μ');
 	}
 	@UiHandler("c6")
 	void onC6(ClickEvent e) {
+		hideOnClick();
 		getEditor().insert('σ');
 	}
-
 
 }
