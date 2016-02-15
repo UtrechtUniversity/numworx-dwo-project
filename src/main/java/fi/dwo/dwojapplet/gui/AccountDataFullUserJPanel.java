@@ -8,7 +8,6 @@ import java.awt.Container;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -18,13 +17,13 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- * This class represents a panel for the current user to change his account.
- *
- * @author M.J.B. Kupers
+ * Utility panel to fetch changing user-data.
  *
  */
 public class AccountDataFullUserJPanel extends JPanel implements
         ActionListener {
+
+    private static final Logger LOG = Logger.getLogger(AccountDataFullUserJPanel.class.getName());
 
     private DomFullUser user;
 //    protected Group groupList[];
@@ -43,20 +42,8 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
     private JTextField email;
 
-//    protected JTextField schoollogin;
-//    private JButton changeButton;
-
     private JButton resetButton;
 
-//    protected JButton deleteButton;
-//    protected User user;
-    private static final Logger LOG = Logger.getLogger(AccountDataFullUserJPanel.class.getName());
-
-    /**
-     * Creates a new ProfilePanel for the current user. The account of the
-     * current user can be changed.
-     *
-     */
     public AccountDataFullUserJPanel() {
         //fetch user details.
 //        groupList = groups;
@@ -272,39 +259,11 @@ public class AccountDataFullUserJPanel extends JPanel implements
         p.setBounds(getSize().width / 2 - 155, locationY, 310, 35);
         this.add(p);
 
-        /* Change button */
-//        changeButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));//, GuiConstants.SUB_BACKGROUND);
-        //fm = changeButton.getFontMetrics(changeButton.getFont());
-        //changeButton.setSize(fm.stringWidth(changeButton.getLabel()) + 20, fm.getHeight() + 10);
-//        changeButton.setSize(changeButton.getPreferredSize());
-        /* Reset button */
         resetButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_RESET));//, GuiConstants.SUB_BACKGROUND);
-        //fm = resetButton.getFontMetrics(resetButton.getFont());
-        //resetButton.setSize(fm.stringWidth(resetButton.getLabel()) + 20, fm.getHeight() + 10);
         resetButton.setSize(resetButton.getPreferredSize());
-//        changeButton.setLocation((p.getSize().width / 2)
-//                - ((changeButton.getSize().width + resetButton.getSize().width + 5) / 2), 5);
-//        p.add(changeButton);
-
-        resetButton.setLocation((p.getSize().width / 2),5);
-//                - ((changeButton.getSize().width + resetButton.getSize().width + 5) / 2)
-//                + changeButton.getSize().width + 5, 5);
+        resetButton.setLocation((p.getSize().width / 2), 5);
         p.add(resetButton);
-
-//        // delete mag if user is geen single school student
-//        deleteButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_DELETE_PROFILE));//, GuiConstants.MAIN_BACKGROUND);
-//        //fm = deleteButton.getFontMetrics(deleteButton.getFont());
-//        //deleteButton.setSize(fm.stringWidth(deleteButton.getLabel()) + 20, fm.getHeight() + 10);
-//        deleteButton.setSize(deleteButton.getPreferredSize());
-//        deleteButton.setLocation(getSize().width / 2
-//                - deleteButton.getSize().width / 2, p.getLocation().y
-//                + p.getSize().height + 10);
-//        deleteButton.setVisible(!prop.getUser().getSingleSchool());
-//        this.add(deleteButton);
-//        changeButton.addActionListener(this);
         resetButton.addActionListener(this);
-        // delete mag if user is geen single school student
-//        deleteButton.addActionListener(this);
     }
 
     /**
@@ -340,53 +299,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
             middlename.setText(user.getInsertion());
             familyname.setText(user.getFamilyName());
             email.setText(user.getEmail());
-        } 
-//        else if (e.getSource() == changeButton) {
-            
-//            if (prop.getUser().getPassword().equals(MD5.getHashString(oldpassword.getText()))) {
-//                //update the data
-//                try {
-//                    prop.getUser().setGivenName(firstname.getText());
-//                    prop.getUser().setInsertion(middlename.getText());
-//                    prop.getUser().setFamilyName(familyname.getText());
-//                    prop.getUser().setEmail(email.getText());
-//                    if (!password.getText().equals("")
-//                            && repassword.getText().equals(password.getText())) {
-//                        //updates password following some logic.
-//                        prop.getUser().setPassword(MD5.getHashString(password.getText()));
-//                    }
-//                    prop.Update();
-//                    oldpassword.setText("");
-//                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
-//                }
-//                catch (Dwo2Exception ex) {
-//                    GuiCreator.instance().ShowErrorDialog(this, ex);
-//                }
-//            } else {
-//                GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
-//            }
-//        }
-//        else if (e.getSource() == deleteButton) {
-//            /* Delete the user account */
-//            while (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
-//                    + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//                if (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
-//                    try {
-//                        if (SecureUserAccountManager.removeAccountData()) {
-//                            GuiCreator.instance().logoff();//TODO Gert something goes pear shaped.
-//                        }
-//                        JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), JOptionPane.PLAIN_MESSAGE);
-//                    }
-//                    catch (Dwo2Exception ex) {
-//                        Logger.getLogger(AccountDataFullUserJPanel.class.getName()).log(Level.SEVERE, null, ex);
-//                        JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
-//                    }
-//                    break;
-//                } else {
-//                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
-//                }
-//            }
-//        }
+        }
     }
 
     public void setUser(DomFullUser aUser) {

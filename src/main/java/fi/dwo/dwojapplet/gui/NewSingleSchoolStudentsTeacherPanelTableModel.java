@@ -171,8 +171,6 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
                 break;
             case 6:
                 break;
-//            default: 
-//                data.set(row, (DomSingleSchoolStudent) value); 
         }
     }
 

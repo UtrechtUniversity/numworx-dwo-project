@@ -178,19 +178,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new TeachersInSchoolClassTeacherPanel.ImageRenderer(), new TeachersInSchoolClassTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
-
-//        TableUtil.setDefaults(jtable, false, new ImageRenderer(), new ImageButtonEditor());
-//        TableUtil.setJTableSizes(jtable);
-// TODO shrink to fit heeft 520 als breedte
-//        Dimension size = jtable.getPreferredSize();
-//        if (size.width < 520) {
-//            size.width = 520;
-//        }
-//        jtable.setMaximumSize(size);
-//        jtbl.setLocation(30, addTeacherButton.getSize().height
-//                + addTeacherButton.getLocation().y + 15);
         TableUtil.setBorder(jtable);
-        //TableUtil.shrinkToFit(table, jtbl, 520, 405);
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);

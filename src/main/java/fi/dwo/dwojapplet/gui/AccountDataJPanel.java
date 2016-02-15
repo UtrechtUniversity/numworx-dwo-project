@@ -24,10 +24,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- * This class represents a panel for the current user to change his account.
- *
- * @author M.J.B. Kupers
- *
+ * The account data panel, allows users to change their account data and password.
+ * It also allows non-single school users to delete their account. It should be 
+ * merged at some point with AccountDataFullUser.java.
  */
 public class AccountDataJPanel extends JPanel implements
         ActionListener {
@@ -361,7 +360,6 @@ public class AccountDataJPanel extends JPanel implements
             middlename.setText(prop.getUser().getInsertion());
             lastname.setText(prop.getUser().getFamilyName());
             email.setText(prop.getUser().getEmail());
-
         } else if (e.getSource() == changeButton) {
             if (prop.getUser().getPassword().equals(MD5.getHashString(oldpassword.getText()))) {
                 //update the data
@@ -385,31 +383,7 @@ public class AccountDataJPanel extends JPanel implements
             } else {
                 GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
             }
-        } //
-        //
-        //            if (correct) {
-        //                /*
-        //                 * The data is changed correctly, show a message for
-        //                 * successfully changed data in a dialog
-        //                 */
-        //                try {
-        //                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
-        //                    /* Evil trick to refresh user info */
-        //                    if (password.getText().equals("")) {
-        //                        // TODO this erases the canLogout flag.
-        //                        GuiCreator.instance().clearCurrentUserData();
-        //                        GuiCreator.instance().login(user.getUsername(), oldpassword.getText());
-        //                    } else {
-        //                        GuiCreator.instance().clearCurrentUserData();
-        //                        GuiCreator.instance().login(user.getUsername(), password.getText());
-        //                    }
-        //                }
-        //                catch (LoginException exc) {
-        //                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
-        //
-        //                }
-        //            }
-        //
+        } 
         else if (e.getSource() == deleteButton) {
             /* Delete the user account */
             while (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)

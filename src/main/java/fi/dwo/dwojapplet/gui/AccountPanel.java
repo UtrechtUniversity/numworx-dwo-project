@@ -4,9 +4,12 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -22,9 +25,10 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
         ActionListener {
 
     private CenterPanel center;
-    private AccountDataJPanel accountDataPanel;
+    private AccountDataFullUserJPanel accountDataPanel;
     private AccountSchoolsRolesJPanel sarPanel;
     private RegisterMoreSchoolsPanel rmsPanel = new RegisterMoreSchoolsPanel();
+    private JButton okButton, cancelButton;
 
     /**
      * Creates a new ProfilePanel for the current user. The account of the
@@ -56,7 +60,8 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
         /* Variables used to create items */
         FontMetrics fm;
         /* Add accountdata-panel */
-        accountDataPanel = new AccountDataJPanel();
+        accountDataPanel = new AccountDataFullUserJPanel();
+        accountDataPanel.setUser(DwoHelper.getCurrentUser());
 //        p.setBorder(BorderFactory.createLineBorder(getForeground()));
         accountDataPanel.setBackground(GuiConstants.SUB_BACKGROUND);
         //      p.setBounds(getSize().width / 2 - 155, 20, 310, 130);
@@ -72,11 +77,15 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
         this.setLayout(null);
         accountDataPanel.setLocation(10, 10);
         //this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+        Box panel = Box.createHorizontalBox();
+        panel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         this.add(accountDataPanel);
+        panel.add(okButton);
+        panel.add(Box.createRigidArea(new Dimension(30, 0)));
+        panel.add(cancelButton);        
         sarPanel.setLocation(330, 10);
         this.add(sarPanel);
     }
-
 
     /**
      * Returns a Panel that can functionate as a header panel.
