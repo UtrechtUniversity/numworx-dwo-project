@@ -140,8 +140,10 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                   <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <executable>${jdk}/bin/javac</executable>
+                    <fork>false</fork>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
@@ -288,12 +290,6 @@
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
-    </properties>
     
     <!--    <repositories>
             <repository>

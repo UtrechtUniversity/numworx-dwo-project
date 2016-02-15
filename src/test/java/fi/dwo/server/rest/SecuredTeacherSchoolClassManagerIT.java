@@ -522,6 +522,12 @@ public class SecuredTeacherSchoolClassManagerIT {
         dss.setFamilyName("c");
         dss.setEmail("a@b.c");
         dss.setPassword("pwd");
+        dss.setSingleSchool(true);
+        
+//        PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);
+        nss.setDomSchoolClass(new DomSchoolClass(schoolClass));
+
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean result = instance.SubmitSingleSchoolStudent(sc, rss);
         assertEquals("Operation failed to be true.", true, result);
