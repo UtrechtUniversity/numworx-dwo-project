@@ -42,12 +42,6 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
         </developer>
     </developers>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
-    </properties>
-
     <!-- update the https path for a different branch or tag! -->
     <scm>
         <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWO-commons-lib/branches/working</developerConnection>
@@ -67,8 +61,10 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <executable>${jdk}/bin/javac</executable>
+                    <fork>false</fork>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
