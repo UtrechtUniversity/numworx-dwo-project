@@ -28,6 +28,8 @@ public class Text_nl extends ListResourceBundle {
         {TextMapper.BTN_NEW_CLASS, "Nieuwe klas"},
         {TextMapper.BTN_DELETE, "Delete"},
         {TextMapper.BTN_DELSELECTED, "Verwijder geselecteerden"},
+        {TextMapper.BTN_UPDATE, "Update"},
+        
         {TextMapper.HDR_NEW_STUDENTS, "Nieuwe studenten"},
         {TextMapper.HDR_EDITSTUDENTS, "Edit studenten"},
         {TextMapper.HDR_EDITTEACHERS, "Edit docenten"},

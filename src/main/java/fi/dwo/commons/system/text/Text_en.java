@@ -26,6 +26,7 @@ public class Text_en extends ListResourceBundle {
         {TextMapper.BTN_NEW_STUDENTS, "New students"},
         {TextMapper.BTN_NEW_CLASS, "New clas"},
         {TextMapper.BTN_DELETE, "Delete"},
+        {TextMapper.BTN_UPDATE, "Update"},
 
         {TextMapper.BTN_DELSELECTED, "Delete selected"},
         {TextMapper.BTN_OK, "OK"},
