@@ -41,4 +41,7 @@ public interface Text extends Constants {
 
 	@DefaultStringValue("Toets verzegeld")
 	String lockToetsLabel();
+	
+	@DefaultStringValue("en")
+	String language();
 }

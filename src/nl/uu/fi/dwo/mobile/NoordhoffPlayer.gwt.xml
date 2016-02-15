@@ -25,5 +25,11 @@
  
     <set-property name="gwt.logging.enabled" value="TRUE"/>
 	<set-property name="gwt.logging.logLevel" value="FINEST"/>
+<!-- deze -->
+    <extend-property name="locale" values="nl"/>
+  	<set-property-fallback name="locale" value="nl"/>
+<!-- of deze -->
+    <set-property name="locale" value="nl"/>
+
 	 
 </module>

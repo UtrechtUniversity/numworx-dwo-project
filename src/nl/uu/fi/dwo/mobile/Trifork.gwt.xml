@@ -24,4 +24,12 @@
 <set-property name="mgwt.os" value="desktop" />
 <set-property name="mobile.user.agent" value="not_mobile" />
  	
+<!-- nl only -->
+<!-- deze -->
+    <extend-property name="locale" values="nl"/>
+  	<set-property-fallback name="locale" value="nl"/>
+<!-- of deze -->
+    <set-property name="locale" value="nl"/>
+ 	
+ 	
 </module>
