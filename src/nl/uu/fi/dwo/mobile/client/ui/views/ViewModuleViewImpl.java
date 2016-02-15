@@ -572,12 +572,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
 		int[] breedtes = new int[] { 800 };
 		tb.zetVolleBreedtes(breedtes);
-		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
+		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );
 		//New editor version
 		
 		if (opdrachtGegevens != null || newVersion)
 		{
-			if ((Boolean) opdracht.get("hasTitle"))
+			if (Boolean.TRUE.equals( opdracht.get("hasTitle")))
 			{
 				SimplePanel title = new SimplePanel();
 				title.getElement().setInnerHTML((String) opdracht.get("titel") + "<br />");
