@@ -294,7 +294,7 @@ public class ScoreNavFacade implements ScoreNavIF {
 		{
 			final int opdr = opdracht;
 			final DialogBox box = new DialogBox();
-			
+			box.getElement().getStyle().setZIndex(10);
 			FlowPanel contents = new FlowPanel();
 			Label titel = new Label(Text.constants.opnieuwPanelTitel());
 			titel.getElement().getStyle().setFontSize(16, Style.Unit.PX);
