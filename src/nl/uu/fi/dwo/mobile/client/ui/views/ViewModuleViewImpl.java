@@ -1261,7 +1261,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	}
 	
-	protected int extraHeight = 41 + 44 /*KeyBoardTabPanel.KEYB_STATIC_HEIGHT*/;
+	protected int extraHeight = (MGWT.getOsDetection().isAndroid() ? 52:41) // header height in android 50+2 			
+			+ 44 /*KeyBoardTabPanel.KEYB_STATIC_HEIGHT*/;
 	private String unitId = "scoViewNr";
 	
 	public void setUnitId(String unitId) {

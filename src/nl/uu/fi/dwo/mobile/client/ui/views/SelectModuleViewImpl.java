@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -19,10 +20,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
+import com.googlecode.mgwt.ui.client.MGWT;
+import com.googlecode.mgwt.ui.client.OsDetection;
 import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
@@ -74,6 +78,7 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView
 	private List<SelectModuleItem> items;
 	@UiField HeaderPanel header;
 	@UiField SimplePanel description;
+	@UiField ScrollPanel outer;
 
 	public HasTapHandlers getBackBtn() {
 		return backbutton;
@@ -91,6 +96,9 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView
 		list = new CellList<SelectModuleItem>(new SelectModuleCell());
 		list.addStyleName(DWOplayer.PARAMETERS.navigationcss().bodyText());
 		initWidget(uiBinder.createAndBindUi(this));
+// fix height for android, header is 50 pixels + 2 px bottom margin FIXME compile time?
+		if(MGWT.getOsDetection().isAndroid())
+			outer.getElement().getStyle().setTop(52, Unit.PX);
 	}
 
 	HandlerRegistration back,sel;

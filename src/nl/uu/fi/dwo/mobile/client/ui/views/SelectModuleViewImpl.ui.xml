@@ -42,7 +42,7 @@
 			</mgwt:center>
 		</mgwt:HeaderPanel>
 		<!-- Main interaction Area -->
-		<g:ScrollPanel addStyleNames="{style.outer}">
+		<g:ScrollPanel ui:field="outer" addStyleNames="{style.outer}">
 			<g:VerticalPanel addStyleNames="{style.content}" >
 	  			<g:SimplePanel ui:field="description"></g:SimplePanel>    
 				<mgwt:CellList ui:field="list" round="true"></mgwt:CellList>
