@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
@@ -38,6 +39,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
@@ -59,6 +61,31 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private boolean editable = true;
 	private static final Logger LOGGER = Logger.getLogger("TextEditor");
 	private int lineHeight = 20;
+	
+	class FormuleTapper implements ClickHandler {
+
+		private FormuleEditor deze;
+		private Widget widget;
+		@Override
+		public void onClick(ClickEvent event) {
+//			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+//			keyboard.setEditor(deze);
+//			keyboard.setEnterType(EnterType.APPLY);
+//			keyboard.focus();
+//			deze.requestFocus();
+//			setCursorWidget(widget);
+			event.stopPropagation();
+		}
+		public FormuleTapper(FormuleEditor deze, Widget widget) {
+			super();
+			this.deze = deze;
+			this.widget = widget;
+		}
+		
+	}
+	
+	
+	
 	class Tapper implements ClickHandler {
 		private FormuleEditorIF deze;
 		private Element target;
@@ -171,16 +198,35 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		
 		private FormulaVak() {
 			editor = new FormuleEditor();
-			editor.insert("?");
+			//editor.insert();
 			Panel panel = editor.getAsPanel();
 			//comRoot.getKeyboard().setEditor(editor);
-			//TouchDelegate wrap = new TouchDelegate(panel);
-			panel.addDomHandler(new Tapper(editor, panel.getElement()), ClickEvent.getType());
-			panel.setWidth("30px");
-			panel.setHeight("30px");
-			panel.getElement().getStyle().setBackgroundColor("#808080");
-			panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
+			TouchDelegate wrap = new TouchDelegate(panel);
+			panel.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
+			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor) {
+
+				@Override
+				public void onTouchEnd(TouchEndEvent event) {
+					super.onTouchEnd(event);
+					setCursorWidget(FormulaVak.this);
+				} 
+				
+				
+			} ;
+			wrap.addTouchHandler(h);
+			//start();
+
+//			panel.setWidth("30px");
+//			panel.setHeight("30px");
+//			panel.getElement().getStyle().setBackgroundColor("#808080");
+//			panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
 			initWidget(panel);
+		}
+
+		private void start() {
+			editor.clearSelection();
+			editor.startSelection(0, 0);
+			editor.endSelection(0, 0);
 		}
 	}
 	
@@ -242,6 +288,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		public void onClick(ClickEvent event) {
 			if(!editable) return;
 			FormulaVak panel = new FormulaVak();
+			panel.start();
 			//sb.insert(cursor, '@');
 			flow.insert(panel, cursor++);
 			comRoot.getKeyboard().setEditor(panel.editor);
@@ -327,7 +374,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		insert(tekst);
 		removeCursor();
 		editable = h.getBoolean("editable", true);
-		widget.setStyleDependentName("readonly", !editable);
+		if(!editable) setReadonly();
 		shown = true;
 	}
 
@@ -455,6 +502,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void setState(HashMap<String, Object> h) {
 		setState( JSONUtilities.wrapMap(h));
+		
+		setReadonly();
 	}
 
 	@Override
@@ -794,8 +843,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public void acceptCBookEvent(CBookEvent event) {
 		String command = event.getCommand();
 		if(ACTION_NOT_EDITIABLE.equals(command)) {
-			editable = false;
-			widget.setStyleDependentName("readonly", !editable);
+			setReadonly();
 		} else 
 		if(TEXT.equals(command))
 		{
@@ -805,6 +853,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			insert(text);
 		}
 		
+	}
+
+	private void setReadonly() {
+		editable = false;
+		widget.setStyleDependentName("readonly", !editable);
 	}
 
 
