@@ -56,7 +56,7 @@ public class AlphaKeys extends Composite {
 	}
 	
 	void hideOnClick() {
-		// if ( ... ) 
+	 if ( false ) 			// Op verzoek van Nathalie de Weerd van Noordhoff
 		hideAlpha();
 	}
 	
