@@ -115,7 +115,18 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 			
 		};
 		$wnd.inner.stub = o;
-		$wnd.publish($wnd.inner, $wnd.outer);
+		
+		$wnd.doPublish = function () {
+			if($wnd.publish)
+				$wnd.publish($wnd.inner, $wnd.outer)
+			else 
+			{	console.log("window.publish not defined, waiting...");
+				setTimeout("doPublish()",50)
+			}
+		}		
+		//$wnd.publish($wnd.inner, $wnd.outer);
+		$wnd.doPublish()
+		
 		return $wnd.inner
 		
 	}-*/;
