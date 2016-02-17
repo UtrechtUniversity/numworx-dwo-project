@@ -74,7 +74,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			keyboard.setEnterType(EnterType.APPLY);
 //			keyboard.focus();
 //			deze.requestFocus();
-//			setCursorWidget(widget);
+			setCursorWidget(widget);
 			event.stopPropagation();
 		}
 		public FormuleTapper(FormuleEditor deze, Widget widget) {
@@ -196,7 +196,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 		
 		private FormuleEditor editor;
-		
+		final Panel panel;
+
 		private void setFont(FormuleFont font) {
 			editor.setFont(font);
 			editor.setDefaultFont(font);
@@ -204,11 +205,20 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		
 		
 		private FormulaVak() {
-			editor = new FormuleEditor();
+			editor = new FormuleEditor() {
+
+				@Override
+				public void resize() {
+					int h = editor.getHeight();
+					int a = editor.getMainRegel().getAsHoogte();
+					panel.getElement().getStyle().setVerticalAlign(a-h, Unit.PX);
+				}
+				
+			};
 			editor.setFormuleToolBijFocus(true);
 			setFont(font);
 			//editor.insert();
-			Panel panel = editor.getAsPanel();
+			panel = editor.getAsPanel();
 			//comRoot.getKeyboard().setEditor(editor);
 			TouchDelegate wrap = new TouchDelegate(panel);
 			panel.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
@@ -221,6 +231,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				} 
 			};
 			wrap.addTouchHandler(h);
+			editor.resize();
 			initWidget(panel);
 		}
 
@@ -249,13 +260,27 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		private Button btn;
 
 		public CalculatorVak() {
-			editor = new FormuleEditor();
+			editor = new FormuleEditor() {
+
+				@Override
+				public void enter() {
+					calculate();
+				} };
 			editor.insert('0');
 			HorizontalPanel hbox = new HorizontalPanel();
+			hbox.setStylePrimaryName("insert_calculator");
 			Panel panel = editor.getAsPanel();
-			//TouchDelegate wrap = new TouchDelegate(panel);
-			//wrap.addTapHandler(new Tapper(editor, panel.getElement()));
-			panel.addDomHandler(new Tapper(editor, panel.getElement()), ClickEvent.getType());
+			TouchDelegate wrap = new TouchDelegate(panel);
+			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor) {
+
+				@Override
+				public void onTouchEnd(TouchEndEvent event) {
+					super.onTouchEnd(event);
+					setCursorWidget(CalculatorVak.this);
+				} 
+			};
+			wrap.addTouchHandler(h);
+			hbox.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
 			hbox.add(panel);
 			btn = new Button("=");
 			btn.addClickHandler(this);
@@ -267,6 +292,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 		@Override
 		public void onClick(ClickEvent event) {
+			calculate();
+		}
+
+		private void calculate() {
 			String x = editor.toString();
 			Expressie antwoord = FormuleParser.geefExpressie("$f" + x + "@");
 			viewer.getAsPanel().removeFromParent();
@@ -503,8 +532,6 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void setState(HashMap<String, Object> h) {
 		setState( JSONUtilities.wrapMap(h));
-		
-		setReadonly();
 	}
 
 	@Override
