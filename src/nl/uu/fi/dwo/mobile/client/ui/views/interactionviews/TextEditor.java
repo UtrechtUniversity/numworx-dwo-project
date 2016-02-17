@@ -54,9 +54,10 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
-public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener {
+public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont {
 	
 	private boolean editable = true;
 	private static final Logger LOGGER = Logger.getLogger("TextEditor");
@@ -68,9 +69,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		private Widget widget;
 		@Override
 		public void onClick(ClickEvent event) {
-//			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
 //			keyboard.setEditor(deze);
-//			keyboard.setEnterType(EnterType.APPLY);
+			keyboard.setEnterType(EnterType.APPLY);
 //			keyboard.focus();
 //			deze.requestFocus();
 //			setCursorWidget(widget);
@@ -196,8 +197,16 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		
 		private FormuleEditor editor;
 		
+		private void setFont(FormuleFont font) {
+			editor.setFont(font);
+			editor.setDefaultFont(font);
+		}
+		
+		
 		private FormulaVak() {
 			editor = new FormuleEditor();
+			editor.setFormuleToolBijFocus(true);
+			setFont(font);
 			//editor.insert();
 			Panel panel = editor.getAsPanel();
 			//comRoot.getKeyboard().setEditor(editor);
@@ -210,16 +219,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 					super.onTouchEnd(event);
 					setCursorWidget(FormulaVak.this);
 				} 
-				
-				
-			} ;
+			};
 			wrap.addTouchHandler(h);
-			//start();
-
-//			panel.setWidth("30px");
-//			panel.setHeight("30px");
-//			panel.getElement().getStyle().setBackgroundColor("#808080");
-//			panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
 			initWidget(panel);
 		}
 
@@ -315,7 +316,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private int asHoogte = 17;
 	private OpdrNavIF comRoot;
 	private FormuleFont defaultfont = FormuleFont.createFromFontSize(14);
-	private FormuleFont font;
+	private FormuleFont font = defaultfont;
 	
 	private FlowPanel  flow;
 	private int cursor;
@@ -858,6 +859,25 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private void setReadonly() {
 		editable = false;
 		widget.setStyleDependentName("readonly", !editable);
+	}
+
+	@Override
+	public void setFontSize(int font_size) {
+		widget.getElement().getStyle().setFontSize(font_size, Unit.PX);
+	}
+
+	@Override
+	public void setFontName(String name) {
+		widget.getElement().getStyle().setProperty("fontFamily", name);	
+	}
+
+	@Override
+	public void setFontStyle(int font_style) {
+	}
+
+	@Override
+	public void setParentRegel(TekstRegel regel) {
+		font = regel.getFont();
 	}
 
 
