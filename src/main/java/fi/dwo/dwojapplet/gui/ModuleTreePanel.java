@@ -67,7 +67,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
     public static void initialize(DwoProfile profile) {
         if(profile ==null){
-            GuiCreator.instance().getDWO().getDwoProfile();
+//            GuiCreator.instance().getDWO().getDwoProfile();
         }
         if (profile!=null && profile.getID() != 1) // TODO overleg met Peter nodig.
         {
