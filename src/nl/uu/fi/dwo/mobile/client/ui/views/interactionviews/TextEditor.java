@@ -63,6 +63,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private static final Logger LOGGER = Logger.getLogger("TextEditor");
 	private int lineHeight = 20;
 	
+	private final static String CIRCA = "\u2248";
+	private final static String EXACT = "=";
+	
 	class FormuleTapper implements ClickHandler {
 
 		private FormuleEditor deze;
@@ -258,6 +261,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		private FormuleEditor editor;
 		private FormuleViewer viewer;
 		private Button btn;
+		private boolean op3;
 
 		public CalculatorVak() {
 			editor = new FormuleEditor() {
@@ -296,12 +300,30 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 
 		private void calculate() {
+			op3 = !op3;
 			String x = editor.toString();
 			Expressie antwoord = FormuleParser.geefExpressie("$f" + x + "@");
 			viewer.getAsPanel().removeFromParent();
 			if(antwoord != null) 
 			{
-				x = String.valueOf(antwoord.geefWaarde());
+				double waarde = antwoord.geefWaarde();
+				if(Double.isNaN(waarde))
+					x = "?";
+				else
+				{
+					if(op3)
+					{
+						x = Expressie.df3.format(waarde);
+						btn.setText(CIRCA);
+					}
+					else 
+					{
+						x = Expressie.dfe.format(waarde);						
+						x = x.replace("E", "*10$m") + "@";
+						btn.setText(EXACT);
+					}
+				}
+				//x = String.valueOf(antwoord.geefWaarde());
 			} 
 			viewer = new FormuleViewer(x);
 			((Panel) getWidget()).add(viewer.getAsPanel());
