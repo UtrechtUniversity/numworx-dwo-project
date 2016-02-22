@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
 
+import fi.wiskopdr.Letter;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -18,7 +19,7 @@ public class DiffPartialVak extends FormuleElementWithChildren
 	{
 		super(editor, 2);
 	
-		diffBreuk = getChild(0).toString().length()==1 && Character.isLetter(getChild(0).toString().charAt(0));
+		diffBreuk = getChild(0).toString().length()==1 && Letter.isLetter(getChild(0).toString().charAt(0));
         
 		width = fm.getAscent()/8+fm.getAscent()+fm.getAscent()/3+getChild(0).width+fm.getAscent()/3+fm.getAscent()/4;
         height = Math.max(getChild(0).height, 2*(fm.getAscent()+fm.getDescent())+fm.getAscent()/4);
@@ -58,7 +59,7 @@ public class DiffPartialVak extends FormuleElementWithChildren
 		this.getChild(0).paint();
 		this.getChild(1).paint();
 	
-		diffBreuk = getChild(0).toString().length()==1 && Character.isLetter(getChild(0).toString().charAt(0));
+		diffBreuk = getChild(0).toString().length()==1 && Letter.isLetter(getChild(0).toString().charAt(0));
         double asc = fm.getAscent();
 		double desc = fm.getDescent();
 		width = (int) (asc/8+asc+asc/3+getChild(0).width+asc/3+asc/4);

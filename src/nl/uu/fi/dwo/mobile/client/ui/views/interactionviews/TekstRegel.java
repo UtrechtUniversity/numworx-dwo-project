@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.graphtoolgwt.client.GraphToolGWT;
+import fi.wiskopdr.Letter;
 
 
 public class TekstRegel extends LayoutPanel
@@ -254,7 +255,7 @@ public class TekstRegel extends LayoutPanel
 				tekst.setColor(fgColor);
 				tekst.paint();
 				
-				if(horPositie == 0 && Character.isLetter(currentObject.toString().charAt(0)))
+				if(horPositie == 0 && Letter.isLetter(currentObject.toString().charAt(0)))
 					horPositie = 2;
 				Widget w = tekst.getAsPanel();
 				
@@ -360,7 +361,7 @@ public class TekstRegel extends LayoutPanel
 				objectBreedte = av.getWidth();
 				objectHoogte = av.getHeight();
 				objectVerschuiving = ashoogte - av.getAsHoogte();
-				if(horPositie == 0 && Character.isLetter(av.toString().charAt(0))) // verschil met TextElement, XXX waarom????
+				if(horPositie == 0 && Letter.isLetter(av.toString().charAt(0))) // verschil met TextElement, XXX waarom????
 					horPositie = 2;
 			}
 			else
@@ -383,7 +384,7 @@ public class TekstRegel extends LayoutPanel
 					objectBreedte = (int) ctx.measureText(s).getWidth();
 					objectHoogte = tekstHoogte;
 					
-					if(horPositie == 0 && Character.isLetter(s.charAt(0)))
+					if(horPositie == 0 && Letter.isLetter(s.charAt(0)))
 						horPositie = 2;
 				}
 				

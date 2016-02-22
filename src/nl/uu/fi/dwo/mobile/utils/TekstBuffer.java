@@ -327,7 +327,7 @@ public class TekstBuffer
 			
 			return x(map, new MC2View(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 4: 
-			return x(map, new PopupFacade(map, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden )));
+			return x(map, new PopupFacadeWithFont(map, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden )));
 		
 		
 		case 39: case 10: // geogebra3

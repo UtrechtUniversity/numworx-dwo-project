@@ -17,24 +17,18 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
@@ -53,9 +47,9 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
-import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont {
 	
@@ -216,7 +210,12 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 					int a = editor.getMainRegel().getAsHoogte();
 					panel.getElement().getStyle().setVerticalAlign(a-h, Unit.PX);
 				}
-				
+				@Override
+				public void enter() {
+					setCurrentElementRepaint();
+					TextEditor.this.cursorToRight();
+					TextEditor.this.requestFocus();
+				}
 			};
 			editor.setFormuleToolBijFocus(true);
 			setFont(font);
@@ -270,6 +269,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				public void enter() {
 					calculate();
 				} };
+			editor.setFormuleToolBijFocus(true);
 			editor.insert('0');
 			HorizontalPanel hbox = new HorizontalPanel();
 			hbox.setStylePrimaryName("insert_calculator");
@@ -297,6 +297,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		@Override
 		public void onClick(ClickEvent event) {
 			calculate();
+			editor.requestFocus();
 		}
 
 		private void calculate() {
@@ -304,6 +305,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			String x = editor.toString();
 			Expressie antwoord = FormuleParser.geefExpressie("$f" + x + "@");
 			viewer.getAsPanel().removeFromParent();
+			x="";
 			if(antwoord != null) 
 			{
 				double waarde = antwoord.geefWaarde();
@@ -343,7 +345,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			panel.start();
 			//sb.insert(cursor, '@');
 			flow.insert(panel, cursor++);
-			comRoot.getKeyboard().setEditor(panel.editor);
+			//comRoot.getKeyboard().setEditor(panel.editor);
+			panel.editor.requestFocus();
+			//FocusOnTouch.focus();
 		}
 	}
 	
@@ -354,7 +358,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			CalculatorVak panel = new CalculatorVak();
 			//sb.insert(cursor, '@');
 			flow.insert(panel, cursor++);
-			comRoot.getKeyboard().setEditor(panel.editor);
+			panel.editor.requestFocus();;
 		}
 		
 	}
@@ -414,6 +418,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		shown = true;
 	}
 
+	protected void requestFocus() {
+		comRoot.getKeyboard().setEditor(this);
+		FocusOnTouch.focus();
+	}
+
 	private void setState(ObjectMap h) {
 		editable = true;
 		shown = false;
@@ -467,6 +476,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		rekentool = launchdata.getBoolean("rekenTool", rekentool);
 		
 		FlowPanel menubar = new FlowPanel();
+		menubar.setStylePrimaryName("balk");
 		//Button fx = new Button("f(x)"); 
 		PushButton fx = new PushButton(new Image(DWOplayer.PARAMETERS.getResource("images/resources/formuleknop.gif")));
 		fx.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);

@@ -299,8 +299,8 @@ public class FormuleRegel extends FormuleElement
 			if(i + 1 < this.children.size())
 			{
 				FormuleElement e2 = this.children.get(i + 1);
-				if(e instanceof FormuleTeken && Character.isLetter(((FormuleTeken) e).geefChar()) && !((FormuleTeken) e).getFunctieTeken() &&
-						e2 instanceof FormuleTeken && Character.isLetter(((FormuleTeken) e2).geefChar()) && !((FormuleTeken) e2).getFunctieTeken())
+				if(e instanceof FormuleTeken && Letter.isLetter(((FormuleTeken) e).geefChar()) && !((FormuleTeken) e).getFunctieTeken() &&
+						e2 instanceof FormuleTeken && Letter.isLetter(((FormuleTeken) e2).geefChar()) && !((FormuleTeken) e2).getFunctieTeken())
 				{
 					width-= 2;
 					nextx-= 2;

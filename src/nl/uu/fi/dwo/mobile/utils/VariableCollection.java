@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.utils;
 import java.util.HashMap;
 import java.util.Vector;
 
+import fi.wiskopdr.Letter;
+
 /**
  * 
  * copied from DWO
@@ -25,7 +27,7 @@ public class VariableCollection
 		{
 			char char1 = s.charAt(i);
 			char char2 = s.charAt(i + 1);
-			if (Character.isLetter(char1) && Character.isDigit(char2))
+			if (Letter.isLetter(char1) && Character.isDigit(char2))
 			{
 				sNieuw = sNieuw + char1 + "?(" + char2 + ")";
 				i++;
@@ -48,7 +50,7 @@ public class VariableCollection
 				if (index > 0)
 				{
 					String name = s.substring(0, index);
-					if (Character.isLetter(name.charAt(0)))
+					if (Letter.isLetter(name.charAt(0)))
 					{
 						setVariable(tok);
 					}
