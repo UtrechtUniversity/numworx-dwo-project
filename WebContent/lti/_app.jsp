@@ -29,7 +29,6 @@
     } 
   </style> 
 </head>
-<body style="font-family:sans-serif; margin:0px">
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="java.net.URLEncoder" %>
@@ -46,6 +45,13 @@
 <%@ page import="net.oauth.signature.OAuthSignatureMethod" %>
 <%@ page import="fi.servlet.lti.DbAccess" %>
 <%@ page import="fi.servlet.dwomaccess.DbAccessFactory" %>
+<%
+        String width = request.getParameter("launch_presentation_width");
+        if(width == null || width.isEmpty()) width="100%";
+        String height = request.getParameter("launch_presentation_height");
+        if(height == null || height.isEmpty()) height="100%";
+%>
+<body style="font-family:sans-serif; margin:0px; position: absolute; width: <%=width%>;height:<%=height%>;">
 <%!
 private DbAccess instance;
 
@@ -133,11 +139,6 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
 	String profile  = request.getParameter("custom_profile");
 	if(profile == null)
 		profile = "77";
-
-	String width = request.getParameter("launch_presentation_width");
-  	if(width == null || width.isEmpty()) width="100%";
- 	String height = request.getParameter("launch_presentation_height");
-  	if(height == null || height.isEmpty()) height="100%";
 
   	getDbAccess().setCookie(request, response);  
 %>
