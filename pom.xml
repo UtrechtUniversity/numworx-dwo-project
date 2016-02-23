@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.servlet</groupId>
   <artifactId>DWOmAccess</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>DWOmAccess</name>
   <description>HTML5 access to dwo-server</description>
@@ -69,7 +69,12 @@
   		<version>2.75</version>
   		<scope>provided</scope>
   	</dependency>
-  	
+  	<dependency>
+		<groupId>aelfred</groupId>
+		<artifactId>aelfred</artifactId>
+		<version>1.2</version>
+		<scope>runtime</scope>
+	</dependency>	
   </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>

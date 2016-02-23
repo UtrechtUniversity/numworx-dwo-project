@@ -16,6 +16,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.xmlrpc.XmlRpc;
+
 import fi.beans.scorm.ScormAdapter;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.client.persistence.DbAccessClient;
@@ -59,6 +61,16 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 	}
 	
 	public void init(ServletConfig config) throws ServletException {
+// A better parser that can do UTF-8
+		try {
+			String clzz;
+			clzz = null;
+			if(clzz == null)
+				clzz = "aelfred"; // configurable....
+			XmlRpc.setDriver(clzz);
+		} catch (Exception e) {
+			log("setup sax parser",e);
+			}
 		super.init(config);
 		access = DbAccessFactory.getDbAccess(getServletContext());
 		unLock();
