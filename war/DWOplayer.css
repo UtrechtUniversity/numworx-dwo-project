@@ -233,18 +233,33 @@ div.listItem-dwo-separator {
 	background-color: rgb(248,248,248);
 	display: inline-block;
 	width: auto;
-	vertical-align: sub;
 	height: auto;
 }
 
+.textEditor table.insert_calculator {
+	background-color: rgb(248,248,248);
+	display: inline-table;
+	width: auto;
+	height: auto;
+	vertical-align: text-bottom;
+}
+
+
 .textEditor-readonly > div {
 	color: gray;
+}
+
+.textEditor .balk {
+	font-size: small;
 }
 
 .textEditor-readonly div.insert_formule {
 	background-color: white;
 	color: gray;
 }
+
+
+
 .cursor_gum {
 	cursor: url(images/resources/gumcursor.gif) 10 10, auto; 
 }
