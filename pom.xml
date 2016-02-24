@@ -184,7 +184,6 @@
   			<comment>speciaal for local.dwo.nl</comment>
   			<dsaccess>//local.dwo.nl/dwo/dsaccess</dsaccess>
   			<dsaccess.url>http://local.dwo.nl/dwo/dsaccess</dsaccess.url>
-  			<ideas>http://local.dwo.nl/servlet/IdeasServlet</ideas>
   		</properties>
   	</profile>
   </profiles>
