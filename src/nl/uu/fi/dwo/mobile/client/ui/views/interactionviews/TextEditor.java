@@ -30,8 +30,13 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
+
+
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.expressies.Algebra;
+import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.DecRound;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -300,6 +305,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			editor.requestFocus();
 		}
 
+		static final double E_MAX = 1.0E7;
+		static final double E_MIN = 1.0E-3;
+		static final double MARGE = 0.00000000000000001;
+		
 		private void calculate() {
 			op3 = !op3;
 			String x = editor.toString();
@@ -309,20 +318,28 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			if(antwoord != null) 
 			{
 				double waarde = antwoord.geefWaarde();
+				double afgerond = new DecRound(new BasisExpressie(waarde), new BasisExpressie(3)).geefWaarde();
+				boolean afgerondOp3 = 
+						! Algebra.isGelijkDouble(waarde, afgerond, MARGE);
 				if(Double.isNaN(waarde))
-					x = "?";
-				else
-				{
+				{	x = "?";
+					btn.setText(EXACT);
+				} else
+				{ 
+					btn.setText(afgerondOp3 ? CIRCA : EXACT);
 					if(op3)
 					{
 						x = Expressie.df3.format(waarde);
-						btn.setText(CIRCA);
 					}
 					else 
-					{
-						x = Expressie.dfe.format(waarde);						
-						x = x.replace("E", "*10$m") + "@";
-						btn.setText(EXACT);
+					{	double abs = Math.abs(waarde);
+						if( abs < E_MIN || abs >= E_MAX) 
+						{
+							x = Expressie.dfe.format(waarde);						
+							x = x.replace("E", "*10$m") + "@";
+						} else {
+							x = Expressie.df.format(waarde);
+						}
 					}
 				}
 				//x = String.valueOf(antwoord.geefWaarde());
