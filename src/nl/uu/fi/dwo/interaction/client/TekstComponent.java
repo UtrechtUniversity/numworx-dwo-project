@@ -53,7 +53,7 @@ public class TekstComponent {
 		Style style = span.getElement().getStyle();
 		style.setProperty("font", fontString);
 		style.setProperty("position", "absolute");
-		double corr = 2; // 2 px correctie tussen span en canvas. TODO wat is de correcte formule
+		double corr = 0; // 2 px correctie tussen span en canvas. TODO wat is de correcte formule
 		style.setTop(corr, Style.Unit.PX);
 		
 	}
