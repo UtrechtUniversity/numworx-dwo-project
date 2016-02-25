@@ -5,12 +5,13 @@
   <packaging>war</packaging>
   <name>DWO player</name>
   <build>
-  	<finalName>${project.artifactId}</finalName>
+  	<finalName>${finalName}</finalName>
 	<sourceDirectory>src</sourceDirectory>
   	<testSourceDirectory>test</testSourceDirectory>
     <resources>
     	<resource>
     	   <directory>src</directory>
+    	   <excludes><exclude>**/*.java</exclude></excludes>  
     	</resource>
     </resources>
   	<plugins>
@@ -18,6 +19,7 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
         	<warSourceDirectory>war</warSourceDirectory>
+        	<warSourceIncludes>DWOplayer.css,DWOplayer.html,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
         </configuration>
       </plugin>
       <plugin>
@@ -25,9 +27,10 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <version>${gwtVersion}</version>
          <configuration>
-              <module>${project.groupId}.${project.artifactId}</module>
+              <module>${gwtModule}</module>
               <runTarget>${project.artifactId}.html</runTarget>
-        	  <warSourceDirectory>war</warSourceDirectory>        
+        	  <warSourceDirectory>war</warSourceDirectory>
+        	  <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>        
              </configuration>
         <executions>
           <execution>
@@ -86,7 +89,19 @@
   		<version>0.0.1</version>
   		<classifier>classes</classifier>
   	</dependency>
-  	
+
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.11</version>
+  		<scope>test</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.google.gwt</groupId>
+  		<artifactId>gwt-dev</artifactId>
+  		<version>${gwtVersion}</version>
+  		<scope>test</scope>
+  	</dependency>
   </dependencies>
   <parent>
   	<groupId>fi.parentgwt</groupId>
@@ -94,4 +109,36 @@
   	<version>0.0.1</version>
   	<relativePath>../ParentGWT</relativePath>
   </parent>
+  <properties>
+  	<maven.test.skip>true</maven.test.skip>
+  	<gwtModule>${project.groupId}.${project.artifactId}</gwtModule>
+  	<finalName>${project.artifactId}</finalName>
+  </properties>
+  <profiles>
+  	<profile>
+  		<id>WiskOpdrPlayer</id>
+  		<properties>
+  			<finalName>WiskOpdrPlayer</finalName>
+  			<gwtModule>${project.groupId}.WiskOpdrPlayer</gwtModule>
+  		</properties>
+  	</profile>
+  	<profile>
+  		<id>NoordhoffPlayer</id>
+  		<properties>
+  			<gwtModule>${project.groupId}.NoordhoffPlayer</gwtModule>
+  			<finalName>NoordhoffPlayer</finalName>
+  		</properties>
+  	</profile>
+  	<profile>
+  		<id>CDPLogicaPlayer</id>
+  		<properties>
+  			<gwtModule>${project.groupId}.CDPLogicaPlayer</gwtModule>
+  			<finalName>CDPLogicaPlayer</finalName>
+  		</properties>
+  	</profile>
+  
+  
+  
+  
+  </profiles>
 </project>
