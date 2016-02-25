@@ -28,6 +28,7 @@
   	<groupId>fi.parentgwt</groupId>
   	<artifactId>ParentGWT</artifactId>
   	<version>0.0.1</version>
+	<relativePath>../ParentGWT</relativePath>
   </parent>
   <dependencies>
   	<dependency>
