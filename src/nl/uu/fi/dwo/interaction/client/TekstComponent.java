@@ -168,8 +168,8 @@ public class TekstComponent {
 	{
 		//FocusPanel sp = new FocusPanel();
 		TouchPanel sp = new TouchPanel();
-		//sp.add(this.canvas);
-		sp.add(span);
+		sp.add(this.canvas);
+		//sp.add(span);
 		return sp;
 	}
 
