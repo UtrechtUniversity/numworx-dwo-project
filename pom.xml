@@ -58,38 +58,44 @@
   	<dependency>
   		<groupId>nl.uu.fi.dwo.mobile</groupId>
   		<artifactId>interaction</artifactId>
+  		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>fi.wiskopdrgwt</groupId>
   		<artifactId>WiskOpdrGWT</artifactId>
   		<version>0.0.1</version>
+  		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>com.googlecode.mgwt</groupId>
   		<artifactId>MGWT</artifactId>
+   		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>nl.uu.fi.dwo.mobile</groupId>
   		<artifactId>formule</artifactId>
   		<version>0.0.1</version>
+  		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>nl.uu.fi.dwo.keyboard</groupId>
   		<artifactId>KeyboardGWT</artifactId>
   		<version>0.0.1</version>
+  		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>com.fredhat.gwt.xmlrpc</groupId>
   		<artifactId>XmlRpcGWT</artifactId>
   		<version>1.1.1</version>
+   		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>fi.graphtoolgwt</groupId>
   		<artifactId>GraphToolGWT</artifactId>
   		<version>0.0.1</version>
   		<classifier>classes</classifier>
+  		<scope>provided</scope>
   	</dependency>
-
   	<dependency>
   		<groupId>junit</groupId>
   		<artifactId>junit</artifactId>
@@ -136,9 +142,20 @@
   			<finalName>CDPLogicaPlayer</finalName>
   		</properties>
   	</profile>
-  
-  
-  
-  
+  <!-- MC Squared profiles -->
+   	<profile>
+  		<id>MC2Player</id>
+  		<properties>
+  			<finalName>MC2Player</finalName>
+  			<gwtModule>${project.groupId}.MC2Player</gwtModule>
+  		</properties>
+  	</profile>
+   	<profile>
+  		<id>MC2LMS</id>
+  		<properties>
+  			<finalName>MC2LMS</finalName>
+  			<gwtModule>${project.groupId}.MC2LMS</gwtModule>
+  		</properties>
+  	</profile> 
   </profiles>
 </project>
