@@ -26,6 +26,8 @@ public class ReauthenticatePanel extends JPanel implements ActionListener {
     private JPasswordField passwordField = new JPasswordField(25);
     private JLabel messageLabel = new JLabel("");
 
+    
+
     public ReauthenticatePanel() {
         usernameField.setEditable(false);
         GroupLayout layout = new GroupLayout(this);
@@ -34,7 +36,7 @@ public class ReauthenticatePanel extends JPanel implements ActionListener {
         layout.setAutoCreateContainerGaps(true);
         // local layout creates space for invisible objects
         layout.setHonorsVisibility(false);
-		// link horizontal size of class and classKey textfields for prettier
+        // link horizontal size of class and classKey textfields for prettier
         // layout
 //        layout.linkSize(SwingConstants.HORIZONTAL, usernameLabel,
 //                usernameField);
@@ -46,7 +48,7 @@ public class ReauthenticatePanel extends JPanel implements ActionListener {
                         .addComponent(usernameLabel)
                         .addComponent(passwordLabel)
                 )
-                .addContainerGap(10,50)
+                .addContainerGap(10, 50)
                 .addGroup(
                         layout.createParallelGroup(
                                 GroupLayout.Alignment.LEADING)
@@ -69,25 +71,28 @@ public class ReauthenticatePanel extends JPanel implements ActionListener {
                         .addComponent(passwordField))));
     }
 
-    static public boolean Reauthenticate(String msg) {
+    static public ReauthenticateResult Reauthenticate(String msg) {
         ReauthenticatePanel panel = new ReauthenticatePanel();
         panel.messageLabel.setText(msg);
 
         panel.usernameField.setText(DwoHelper.getCurrentUser().getUserName());
-        String[] options = new String[]{TextMapper.getText(BTN_OK), TextMapper.getText(BTN_CANCEL)};
+        String[] options = new String[]{TextMapper.getText(BTN_CANCEL), TextMapper.getText(BTN_OK)};
         int option = JOptionPane.showOptionDialog(null, panel, "",
                 JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
                 null, options, options[1]);
-        if (option == 0) // pressing OK button
+        if (option != 0) // pressing OK button
         {
-             return DwoHelper.getCurrentUser().getPassword().equals(MD5.getHashString(panel.passwordField.getText()));
+            if(DwoHelper.getCurrentUser().getPassword().equals(MD5.getHashString(panel.passwordField.getText()))){
+                return ReauthenticateResult.SUCCEEDED;
+            }else{
+                return ReauthenticateResult.FAILED;
+            }
         }
-        return false;
+        return ReauthenticateResult.CANCELLED;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

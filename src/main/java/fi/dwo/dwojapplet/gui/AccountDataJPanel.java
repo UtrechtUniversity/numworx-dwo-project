@@ -388,7 +388,7 @@ public class AccountDataJPanel extends JPanel implements
             /* Delete the user account */
             while (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
                     + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                if (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
+                if (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE)).equals(ReauthenticateResult.SUCCEEDED)) {
                     try {
                         if (SecureUserAccountManager.removeAccountData()) {
                             GuiCreator.instance().logoff();//TODO Gert something goes pear shaped.

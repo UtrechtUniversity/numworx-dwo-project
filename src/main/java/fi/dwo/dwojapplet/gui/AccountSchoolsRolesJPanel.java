@@ -227,37 +227,51 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 
                     //set prop to table setting
                     DomSchoolRoleAndClass currSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
-                    if (currSrac.getRoleName().equals(RoleType.SCHOOLADMIN.name())) {
-                        if (!ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD))) {
-                            // show warning
-                            GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
-                            return;
+                    if (!prop.getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.SCHOOLADMIN.name())
+                            && !prop.getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.ADMIN.name())
+                            && (currSrac.getRoleName().equals(RoleType.SCHOOLADMIN.name()) || currSrac.getRoleName().equals(RoleType.ADMIN.name()))) {
+                        switch (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD))) {
+                            case FAILED:
+                                // show warning
+                                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
+                                break;
+                            case SUCCEEDED:
+                                prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                                prop.setActiveSchoolRoleAndClass();
+                                switchToActiveSchoolLogin();
+                                break;
+                            default:
                         }
+                    } else {
+                        prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                        prop.setActiveSchoolRoleAndClass();
+                        switchToActiveSchoolLogin();
                     }
-                    prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
-                    prop.setActiveSchoolRoleAndClass();
-                    switchToActiveSchoolLogin();
+
                 } else if (value == removeImage) {
                     int row = tableModel.getSelectedRow();
                     //Check user password   
-                    if (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
-                        //set prop to table setting
-                        DomSchoolRoleAndClass currSrac = prop.getActiveSchoolRoleAndClass();
-                        DomSchoolRoleAndClass selectedSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
-                        prop.RemoveSchoolRoleAndClass(selectedSrac);
+                    switch (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
 
-                        if (currSrac != selectedSrac) {//always keeps current or switches to the null-school
-                            //update tableview
-                            tableModel.init(prop, loginImage, removeImage, emptyImage);
-                            tableModel.fireTableDataChanged();
-                        } else {
+                        case CANCELLED:
+                            break;
+                        case SUCCEEDED:
+                            //set prop to table setting
+                            DomSchoolRoleAndClass currSrac = prop.getActiveSchoolRoleAndClass();
+                            DomSchoolRoleAndClass selectedSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
+                            prop.RemoveSchoolRoleAndClass(selectedSrac);
+
+                            if (currSrac != selectedSrac) {//always keeps current or switches to the null-school
+                                GuiCreator.instance().getMainPanel().center.loadCenter(GuiCreator.instance().getProfilePanel());
+                            } else {
+                                switchToActiveSchoolLogin();
+                            }
                             switchToActiveSchoolLogin();
-                        }
-                        switchToActiveSchoolLogin();
-                    } else {
-                        // show warning
-                        GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
-                        return;
+                            break;
+                        case FAILED:
+                            // show warning
+                            GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
+                            break;
                     }
                 }
             }
@@ -327,6 +341,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
             dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
             dialog.setVisible(true);
             GuiCreator.instance().getMainPanel().center.loadCenter(GuiCreator.instance().getProfilePanel());
+
 //                fireEditingStopped();
         }
 //        if (e.getSource() == loginImage) {
