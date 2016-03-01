@@ -34,6 +34,7 @@ import javax.swing.event.ChangeEvent;
  * @author M.J.B. Kupers
  *
  */
+@Deprecated
 public class ProfilePanel extends JPanel implements CenterSubPanel,
         ActionListener {
     private static final Logger LOG = Logger.getLogger(ProfilePanel.class.getName());

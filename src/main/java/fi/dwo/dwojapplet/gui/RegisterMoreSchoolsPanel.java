@@ -249,7 +249,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
                     SecureUserAccountLoginsManager.addASchoolLogin(nur); //throws Dwo2RestException.
-                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_NOROLE));
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
 //                    center.loadCenter(new RegisterMoreSchoolsPanel());
                     this.getParent().getParent().getParent().getParent().setVisible(false);
                 }

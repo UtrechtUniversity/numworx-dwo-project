@@ -9,6 +9,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -83,7 +84,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         emptyImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE); //"resources/student.png");
         tr.addImage(removeImage, 0);
         tr.addImage(loginImage, 1);
-        tr.addImage(emptyImage,2);
+        tr.addImage(emptyImage, 2);
         try {
             tr.waitForAll();
         }
@@ -192,7 +193,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().mainPanel,ex);
+                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().mainPanel, ex);
             }
 
         }
@@ -323,9 +324,10 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.addRoleButton) {
             ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new RegisterMoreSchoolsPanel());
+            dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
             dialog.setVisible(true);
-                tableModel.init(prop, loginImage, removeImage, emptyImage);
-                tableModel.fireTableDataChanged();
+            GuiCreator.instance().getMainPanel().center.loadCenter(GuiCreator.instance().getProfilePanel());
+//                fireEditingStopped();
         }
 //        if (e.getSource() == loginImage) {
 ////            //get Table setting
