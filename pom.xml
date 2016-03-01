@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.servlet</groupId>
   <artifactId>DWOmAccess</artifactId>
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.0.4</version>
   <packaging>war</packaging>
   <name>DWOmAccess</name>
   <description>HTML5 access to dwo-server</description>
@@ -181,7 +181,7 @@
   			<finalName>${project.artifactId}_local</finalName>
   		</build>
   		<properties>
-  			<comment>speciaal for local.dwo.nl</comment>
+  			<comment>speciaal for localhost met local.dwo.nl als database</comment>
   			<dsaccess>//local.dwo.nl/dwo/dsaccess</dsaccess>
   			<dsaccess.url>http://local.dwo.nl/dwo/dsaccess</dsaccess.url>
   		</properties>

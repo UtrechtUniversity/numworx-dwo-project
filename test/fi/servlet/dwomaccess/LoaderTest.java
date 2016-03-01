@@ -11,6 +11,7 @@ import junit.framework.TestCase;
 public class LoaderTest extends TestCase {
 
 	protected void setUp() throws Exception {
+		Loader.URL_PREFIX = "http://local.dwo.nl/dwo/jars/";
 		super.setUp();
 	}
 
