@@ -289,7 +289,7 @@
                             <libs>
                                 <lib>${java.home}/lib/rt.jar</lib>
                                 <lib>${java.home}/lib/jsse.jar</lib>
-                                <lib>${java.home}/lib/jfxrt.jar</lib>                       
+ <!--                               <lib>${java.home}/lib/jfxrt.jar</lib>                       -->
                             </libs>
                             <addMavenDescriptor>false</addMavenDescriptor>
                         </configuration>

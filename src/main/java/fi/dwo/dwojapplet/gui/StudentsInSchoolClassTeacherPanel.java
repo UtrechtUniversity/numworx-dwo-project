@@ -145,7 +145,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     getStudent.setDomSchoolClass(schoolClass);
                     getStudent.setDomStudent(student);
                     DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
-                    AccountDataFullUserJPanel panel = new AccountDataFullUserJPanel();
+                    AccountDataFullStudentJPanel panel = new AccountDataFullStudentJPanel();
                     panel.setUser(user);
                     panel.setVisible(true);
                     int result = JOptionPane.showConfirmDialog(GuiCreator.instance().mainPanel, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
