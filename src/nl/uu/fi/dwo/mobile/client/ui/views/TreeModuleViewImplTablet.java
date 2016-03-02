@@ -53,6 +53,7 @@ import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
+import com.googlecode.mgwt.ui.client.widget.ScrollPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
@@ -68,7 +69,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	@UiField HeaderPanel moduleHeaderPanel;
 	@UiField HeaderButton moduleBackButton;
 	@UiField LayoutPanel modulePanel;
-
+	@UiField ScrollPanel cellPanel;
 		
 	
 	ViewModuleView loadedModule = null;
@@ -372,7 +373,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		if(model== null)
 			model = Collections.emptyList();
 		this.cellItems = model;
-		cells.render(model);
+		renderCell(model);
 		addChildren(model);
 	}
 
@@ -380,7 +381,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		if(model== null)
 			model = Collections.emptyList();
 		this.cellItems = model;
-		cells.render(model);
+		renderCell(model);
 		addChildren(model);
 		
 	}
@@ -547,7 +548,13 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			}
 			
 		}
+		renderCell(list);
+		cellPanel.scrollTo(0, 0);
+	}
+
+	private void renderCell(List<SelectModuleItem> list) {
 		cells.render(list);
+		cellPanel.refresh();
 	}
 
 	
@@ -579,7 +586,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	}
 
 	private void rerender() {
-		cells.render(cellItems); // repaint the cells, after update of score. TODO optimize (selected.isVisible?)
+		renderCell(cellItems); // repaint the cells, after update of score. TODO optimize (selected.isVisible?)
 	}
 
 //	@Override
