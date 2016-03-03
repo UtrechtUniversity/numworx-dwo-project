@@ -348,7 +348,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         } else if (e.getSource() == deleteButton) {
             try {
                 for (int i = 0; i < tableModel.getRowCount(); i++) {
-                    if (((Boolean) tableModel.getValueAt(i, 5)).equals(true)) {
+                    if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
                         DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
                         prop.removeStudentFromSchoolClass(schoolClass, student);
                     }
