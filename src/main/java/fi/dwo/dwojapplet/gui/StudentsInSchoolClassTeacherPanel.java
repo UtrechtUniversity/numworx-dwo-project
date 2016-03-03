@@ -331,7 +331,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         if (e.getSource() == copyToSchoolClassButton) {
             try {
                 for (int i = 0; i < tableModel.getRowCount(); i++) {
-                    if (((Boolean) tableModel.getValueAt(i, 5)).equals(true)) {
+                    if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
                         DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
                         DomSchoolClass toSchoolClass = (DomSchoolClass) targetSchoolClassBox.getSelectedItem();
                         prop.submitStudentToSchoolClass(schoolClass, toSchoolClass, student);
