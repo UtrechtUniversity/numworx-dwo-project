@@ -219,6 +219,8 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         addTeacherButton.addActionListener(this);
         addTeacherBox = new JComboBox(new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(sc)));
         DomUserListCellRenderer renderer = new DomUserListCellRenderer();
+        addTeacherBox.setSelectedIndex(0);
+
         addTeacherBox.setRenderer(renderer);
         addTeacherBox.setMaximumRowCount(10);
         addTeacherBox.addActionListener(this);

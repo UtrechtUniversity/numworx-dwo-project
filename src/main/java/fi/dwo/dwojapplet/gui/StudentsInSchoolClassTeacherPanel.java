@@ -182,7 +182,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 }
                 catch (LoginException ex) {
-                    Dwo2Exception err=  new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
+                    Dwo2Exception err = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
                     LOG.log(Level.SEVERE, null, ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), err);
                 }
@@ -269,6 +269,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         copyToSchoolClassButton.addActionListener(this);
         targetSchoolClassBox = new JComboBox(new Vector<DomSchoolClass>(prop.getTeachersOtherSchoolClasses(sc)));
         DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
+        targetSchoolClassBox.setSelectedIndex(0);
         targetSchoolClassBox.setRenderer(renderer);
         targetSchoolClassBox.setMaximumRowCount(10);
         targetSchoolClassBox.addActionListener(this);
@@ -317,7 +318,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)+"-"+TextMapper.getText(TextMapper.HDR_EDITSTUDENTS));
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + "-" + TextMapper.getText(TextMapper.HDR_EDITSTUDENTS));
     }
 
     /**
