@@ -91,17 +91,17 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
             Object[] arguments = new Object[]{table.getValueAt(row, 0)};
-            switch (col) {
-                case 1:
-                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
-                    setToolTipText(MessageFormat.format(s, arguments));
-                    break;
-                case 2:
-                    setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_CLASS));
-                    break;
-                default:
-                    setToolTipText("Message " + col); // TODO ....
-            }
+//            switch (col) {
+//                case 1:
+//                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
+//                    setToolTipText(MessageFormat.format(s, arguments));
+//                    break;
+//                case 2:
+//                    setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_CLASS));
+//                    break;
+//                default:
+//                    setToolTipText("Message " + col); // TODO ....
+//            }
             if (selected) {
                 setBackground(table.getSelectionBackground());
             } else {

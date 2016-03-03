@@ -142,11 +142,11 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
             Object[] arguments = new Object[]{table.getValueAt(row, 0)};
-            switch (col) {
-                case 1:
-                    String s = TextMapper.getText(TextMapper.GUIC_TBL_CLASSNAME);
-                    setToolTipText(MessageFormat.format(s, arguments));
-                    break;
+//            switch (col) {
+//                case 1:
+//                    String s = TextMapper.getText(TextMapper.GUIC_TBL_CLASSNAME);
+//                    setToolTipText(MessageFormat.format(s, arguments));
+//                    break;
 //                case 2:
 //                    setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_CLASS));
 //                    break;
@@ -158,9 +158,9 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
 //                    format = TextMapper.getText(TextMapper.GUIC_TLTP_ASSIGN_CLASS);
 //                    setToolTipText(MessageFormat.format(format, arguments));
 //                    break;
-                default:
-                    setToolTipText("Message " + col); // TODO ....
-            }
+//                default:
+//                    setToolTipText("Message " + col); // TODO ....
+//            }
             if (selected) {
                 setBackground(table.getSelectionBackground());
             } else {

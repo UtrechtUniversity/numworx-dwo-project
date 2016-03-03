@@ -141,23 +141,23 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
             setOpaque(true);
             Object[] arguments = new Object[]{table.getValueAt(row, 0)};
             switch (col) {
-                case 1:
-                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
-                    setToolTipText(MessageFormat.format(s, arguments));
-                    break;
-                case 2:
-                    setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_CLASS));
-                    break;
-                case REMOVE_COL:
-                    String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_CLASS);
-                    setToolTipText(MessageFormat.format(format, arguments));
-                    break;
-                case ASSIGN_COL:
-                    format = TextMapper.getText(TextMapper.GUIC_TLTP_ASSIGN_CLASS);
-                    setToolTipText(MessageFormat.format(format, arguments));
-                    break;
-                default:
-                    setToolTipText("Message " + col); // TODO ....
+//                case 1:
+//                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
+//                    setToolTipText(MessageFormat.format(s, arguments));
+//                    break;
+//                case 2:
+//                    setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_CLASS));
+//                    break;
+//                case REMOVE_COL:
+//                    String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_CLASS);
+//                    setToolTipText(MessageFormat.format(format, arguments));
+//                    break;
+//                case ASSIGN_COL:
+//                    format = TextMapper.getText(TextMapper.GUIC_TLTP_ASSIGN_CLASS);
+//                    setToolTipText(MessageFormat.format(format, arguments));
+//                    break;
+//                default:
+//                    setToolTipText("Message " + col); // TODO ....
             }
             if (selected) {
                 setBackground(table.getSelectionBackground());
