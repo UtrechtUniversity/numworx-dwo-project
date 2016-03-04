@@ -54,13 +54,31 @@
 		background-color: #d2d2d2;	
 		font-size: 14px;
 	}
-	
-
+	.xkey {	
+		float: right;
+		display: inline-block;
+		margin-top: -6px;
+		width: 9px;
+		height: 9px;
+		background-repeat: no-repeat;
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH4AMEFSkxHSei7wAAALNJREFUGNN9jbtOxEAUQ88d34mGrVKkIFUqJChRhMT2/Cy/wZeQNlBspEUij52hWVEFXNrHNvyjvu8dwPfCtm0PTdM8TNN0At59p31Y1/XZzO7M7A0o4Q/gCYghhAzksAeYWQLc3QMQfu9KKUd3fwG+r9aNpAXI3nVdquv6uG3bo5l9mZlKKZec8zTPcwTwlNKtpHvg47pgAJLmGOMZwCV9juP4WlXVBWBZFknKAMMwnAF+AIYuPJeaH3MrAAAAAElFTkSuQmCC');
+	}
+	.xkey-purple {
+		float: right;
+		display: inline-block;
+		margin-top: -6px;
+		width: 9px;
+		height: 9px;
+		background-repeat: no-repeat;
+		background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH4AMEFggQ35cZCwAAAJtJREFUGNN1zDFOAzEUANH5jsEWQiRKlYI7UAASXHsPwDmoOcBukWYt2Ts0KbNTPw3spGa1AKQd8AS8Aa/qId0DvfevMcYH8AiY7oGI+AQeWmtbRGxpB1Qgl1KSmvIOAKC1FtM0RagV+B5jvN/AARjA3Hv/qbX+5nVdL7XWF+DvNkjApl5LKVc1UJ/V8zzPR/WontXTsiwnNQP8A4mXaR6Hr6yIAAAAAElFTkSuQmCC);
+	}
 	</ui:style>
 	<g:HTMLPanel addStyleNames="keyboard keyboard-abc is-active {style.keyboard}">
 		<table class="{style.table} {style.table1}">
 			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>(</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>)</p></my:FKey></td></tr>
-			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>&lt;</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>&gt;</p></my:FKey></td></tr>
+			<tr><td><my:FKey ui:field='t1_2' addStyleNames="{style.okey} key bg-purple"><p>&lt;</p>
+			<div class="{style.xkey-purple}"></div>
+			</my:FKey></td><td><my:FKey ui:field='t2_2' addStyleNames="{style.okey} key bg-purple"><p>&gt;</p><div class="{style.xkey-purple}"></div></my:FKey></td></tr>
 			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>≠</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>≈</p></my:FKey></td></tr>
 		</table>
 
@@ -75,7 +93,7 @@
 			</tr>
 			<tr><td><my:FKey addStyleNames="{style.okey} key icon"><span class="basis basis-T2-5"></span></my:FKey></td>
 			    <td><my:FKey addStyleNames="{style.okey} key icon"><p><span class="basis basis-T3-7"><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></p></my:FKey></td>
-			    <td><my:FKey addStyleNames="{style.okey} key icon"><p>°</p></my:FKey></td>
+			    <td><my:FKey ui:field='t3_5' addStyleNames="{style.okey} key icon"><p>°</p><div class="{style.xkey}"></div></my:FKey></td>
 			</tr>
 		</table>
 		<table class="{style.table} {style.table2}">
