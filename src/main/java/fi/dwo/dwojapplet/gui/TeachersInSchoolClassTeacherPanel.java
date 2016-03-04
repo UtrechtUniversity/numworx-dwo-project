@@ -16,7 +16,6 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.MessageFormat;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -217,9 +216,12 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         addTeacherButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
         addTeacherButton.setSize(addTeacherButton.getPreferredSize());
         addTeacherButton.addActionListener(this);
-        addTeacherBox = new JComboBox(new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(sc)));
+        Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(sc));
+        addTeacherBox = new JComboBox(teacherVector);
         DomUserListCellRenderer renderer = new DomUserListCellRenderer();
-        addTeacherBox.setSelectedIndex(0);
+        if (teacherVector.size() > 0) {
+            addTeacherBox.setSelectedIndex(0);
+        }
 
         addTeacherBox.setRenderer(renderer);
         addTeacherBox.setMaximumRowCount(10);

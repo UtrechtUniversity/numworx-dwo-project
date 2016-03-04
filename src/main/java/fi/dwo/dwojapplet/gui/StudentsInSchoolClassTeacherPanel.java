@@ -20,7 +20,6 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.MessageFormat;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -267,9 +266,12 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_COPYSELECTEDTOCLASS));
         copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
         copyToSchoolClassButton.addActionListener(this);
-        targetSchoolClassBox = new JComboBox(new Vector<DomSchoolClass>(prop.getTeachersOtherSchoolClasses(sc)));
+        Vector<DomSchoolClass> schoolClassVector = new Vector<DomSchoolClass>(prop.getTeachersOtherSchoolClasses(sc));
+        targetSchoolClassBox = new JComboBox(schoolClassVector);
         DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
-        targetSchoolClassBox.setSelectedIndex(0);
+        if (schoolClassVector.size() > 0) {
+            targetSchoolClassBox.setSelectedIndex(0);
+        }
         targetSchoolClassBox.setRenderer(renderer);
         targetSchoolClassBox.setMaximumRowCount(10);
         targetSchoolClassBox.addActionListener(this);
