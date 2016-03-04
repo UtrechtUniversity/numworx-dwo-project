@@ -33,6 +33,7 @@ public class Text_nl extends ListResourceBundle {
         {TextMapper.HDR_NEW_STUDENTS, "Nieuwe studenten"},
         {TextMapper.HDR_EDITSTUDENTS, "Edit studenten"},
         {TextMapper.HDR_EDITTEACHERS, "Edit docenten"},
+        {TextMapper.HDR_SCHOOLCLASS, "Klas"},
         
 
         {TextMapper.TBL_SCHOOL, "school"},

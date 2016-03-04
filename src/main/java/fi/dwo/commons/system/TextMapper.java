@@ -45,6 +45,7 @@ public abstract class TextMapper {
     public static final String HDR_NEW_STUDENTS = "HDR_NEW_STUDENTS";
     public static final String HDR_EDITSTUDENTS = "HDR_EDITSTUDENTS";
     public static final String HDR_EDITTEACHERS = "HDR_EDITTEACHERS";
+    public static final String HDR_SCHOOLCLASS = "HDR_SCHOOLCLASS";
     
     /* Table headers */
     public static final String TBL_SCHOOL = "TBL_SCHOOL";

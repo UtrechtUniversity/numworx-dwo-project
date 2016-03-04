@@ -37,6 +37,7 @@ public class Text_en extends ListResourceBundle {
         {TextMapper.HDR_NEW_STUDENTS, "New students"},
         {TextMapper.HDR_EDITSTUDENTS, "Edit students"},
         {TextMapper.HDR_EDITTEACHERS, "Edit teachers"},
+        {TextMapper.HDR_SCHOOLCLASS, "Class"},
         
         {TextMapper.TBL_SCHOOL, "school"},
         {TextMapper.TBL_LOGIN, "login"},
