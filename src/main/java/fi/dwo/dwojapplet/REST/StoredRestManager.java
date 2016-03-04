@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  */
 public class StoredRestManager extends RestManager {
     private static final Logger LOG = Logger.getLogger(StoredRestManager.class.getName());
-
+ 
     protected static final StoredRestManager storedInstance = new StoredRestManager();
 
     /**
