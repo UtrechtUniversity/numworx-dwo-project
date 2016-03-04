@@ -23,13 +23,21 @@ public class NewSingleSchoolStudentsTeacherPanelProperties {
 
     }
 
-    public List<DomSchoolClass> getTeachersSchoolClasses() throws Dwo2Exception{
+    public List<DomSchoolClass> getTeachersSchoolClasses() throws Dwo2Exception {
         return SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
     }
 
-    
-    public Boolean submitSingleSchoolStudent(DomNewSingleSchoolStudent submit) throws Dwo2Exception{
+    public Boolean submitSingleSchoolStudent(DomNewSingleSchoolStudent submit) throws Dwo2Exception {
         return SecureTeacherSchoolClassManager.submitSingleSchoolStudent(submit);
     }
-    
+
+    public Boolean CheckValidInput(DomNewSingleSchoolStudent submit) throws Dwo2Exception {
+        if (submit.getDomSingleSchoolStudent() != null
+                && submit.getDomSingleSchoolStudent().getUserName() != null
+                && submit.getDomSingleSchoolStudent().getPassword() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -21,7 +21,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -292,7 +291,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 boolean failFlag = false;
                 boolean fatalFlag = false;
                 for (DomSingleSchoolStudent submit : submitList) {
-                    if (!submit.getUserName().equals("")) {
+                    if (submit.getUserName()!=null && !submit.getUserName().equals("")) {
                         try {
                             DomNewSingleSchoolStudent student = new DomNewSingleSchoolStudent();
                             student.setDomSingleSchoolStudent(submit);
@@ -319,7 +318,9 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 if (fatalFlag == true) {
                     GuiCreator.instance().ShowMessageDialog(this, "Er was een systeem error, zie de log.");
                 }
-
+                if(fatalFlag == false && failFlag == false){
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                }
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);

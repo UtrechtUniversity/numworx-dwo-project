@@ -106,7 +106,7 @@ public class GuiCreator {
     }
 
     /**
-     * As confirmation
+     * Ask confirmation
      *
      * @param parentComponent
      * @param message

@@ -343,7 +343,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 }
                 tableModel.init(prop, getSchoolClass(), loginImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
-                GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
@@ -359,7 +359,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 }
                 tableModel.init(prop, getSchoolClass(), loginImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
-                GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);

@@ -467,7 +467,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     nur.setSchoolCode(null);
                     nur.setRole(RoleType.STUDENT);
                     PublicUserRegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
-                    GuiCreator.instance().ShowConfirmDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED));
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED));
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
                 catch (Dwo2Exception ex) {
