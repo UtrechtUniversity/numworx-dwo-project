@@ -12,7 +12,6 @@
  * One feature for which one might use multiple persistence units is to store large
  * data blobs,jars and media on separate storage servers.
  * 
- * 
  * </p>
  */
 package fi.dwo.server.PersistentDataManagers.core;
