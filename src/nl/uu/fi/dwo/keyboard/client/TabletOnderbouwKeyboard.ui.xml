@@ -1,0 +1,107 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:style>
+	.table {
+		display: inline-table;
+		border-collapse: collapse;
+		margin-top: 16px;
+	}
+	.table td {
+		padding: 4px;
+	}
+	.table1 {
+		margin-left: 16px;
+	}
+	.table2 {
+		margin-left: 10px;
+	}
+	.table3 {
+	}
+	.table4 {
+	}
+
+	.smallfont {
+		font-size: 12px !important;
+		line-height: normal !important;
+	}
+	.width-w {
+		width: 118px !important;
+		height: 50px !important;
+	}
+	
+	.okey {
+		width: 55px !important;
+		height: 50px !important;
+	}
+	.okey p.big {
+		font-size: 28px;
+		font-weight: normal;
+		font-style: normal;
+		font-family: 'Arial Regular', 'Arial';
+		margin-top: 10px;
+		-webkit-font-smoothing: antialiased;
+	}
+	.okey span:before {
+		left: 15%;
+		top: 15%;
+		font-size: 250%;
+	}
+	
+	.keyboard {
+		background-color: #d2d2d2;	
+		font-size: 14px;
+	}
+	
+
+	</ui:style>
+	<g:HTMLPanel addStyleNames="keyboard keyboard-abc is-active {style.keyboard}">
+		<table class="{style.table} {style.table1}">
+			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>(</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>)</p></my:FKey></td></tr>
+			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>&lt;</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>&gt;</p></my:FKey></td></tr>
+			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>≠</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>≈</p></my:FKey></td></tr>
+		</table>
+
+		<table class="{style.table} {style.table2} ">
+			<tr><td><my:FKey addStyleNames="{style.okey} key icon"><span class="basis basis-T1-6"><span class="path1"></span><span class="path2"></span></span></my:FKey></td>
+			    <td><my:FKey addStyleNames="{style.okey} key icon"><p><span class="basis basis-T1-7"></span></p></my:FKey></td>
+			    <td><my:FKey addStyleNames="{style.okey} key icon"><p><span class="basis basis-T4-5"><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></p></my:FKey></td>
+			    </tr>
+			<tr><td><my:FKey addStyleNames="{style.okey} key icon"><span class="basis basis-T1-5"></span></my:FKey></td>
+			    <td><my:FKey addStyleNames="{style.okey} key icon"><p><span class="basis basis-T2-7"><span class='path1'></span><span class='path2'></span></span></p></my:FKey></td>
+			    <td><my:FKey addStyleNames="{style.okey} key icon"><p>π</p></my:FKey></td>
+			</tr>
+			<tr><td><my:FKey addStyleNames="{style.okey} key icon"><span class="basis basis-T2-5"></span></my:FKey></td>
+			    <td><my:FKey addStyleNames="{style.okey} key icon"><p><span class="basis basis-T3-7"><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></p></my:FKey></td>
+			    <td><my:FKey addStyleNames="{style.okey} key icon"><p>°</p></my:FKey></td>
+			</tr>
+		</table>
+		<table class="{style.table} {style.table2}">
+			<tr><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>7</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>8</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>9</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>( - )</p></my:FKey></td></tr>
+			<tr><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>4</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>5</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>6</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>0</p></my:FKey></td></tr>
+			<tr><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>1</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>2</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>3</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>,</p></my:FKey></td></tr>
+		</table>
+		<table class="{style.table} {style.table4}">
+			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">÷</p></my:FKey></td> 
+			    <td><my:FKey addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">−</p></my:FKey></td>
+			    <td><my:FKey addStyleNames="{style.okey} key bg-grey"><p class="{style.big}"><span class="basis">&#xe60c;</span></p></my:FKey></td>
+			    <td><my:FKey addStyleNames="{style.okey} key bg-grey {style.smallfont}"><p style="margin-top: 0px; font-weight: normal;"><b>123</b><br/>abc<br/>hand</p></my:FKey></td>
+			</tr>
+			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">×</p></my:FKey></td>
+			    <td><my:FKey addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">+</p></my:FKey></td>
+			    <td colspan="2">
+			    	<my:FKey addStyleNames="key bg-orange {style.width-w} icon"><span style="font-size: 70px; font-weight: normal; line-height: 45px;" class="basis">&#xe61b;</span></my:FKey>
+			    </td>
+			</tr>
+			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple icon"><p class="{style.big}">=</p></my:FKey></td>
+				<td><my:FKey addStyleNames="{style.okey} key bg-grey icon"><p class="{style.big}" >←</p></my:FKey></td>
+				<td><my:FKey addStyleNames="{style.okey} key bg-grey icon"><p class="{style.big}">→</p></my:FKey></td>
+				<td><my:FKey addStyleNames="{style.okey} key bg-grey"><p class="{style.big}"><span class="basis">&#xe634;</span></p></my:FKey></td>
+			</tr>
+		
+		</table>
+		
+	</g:HTMLPanel>
+</ui:UiBinder> 
