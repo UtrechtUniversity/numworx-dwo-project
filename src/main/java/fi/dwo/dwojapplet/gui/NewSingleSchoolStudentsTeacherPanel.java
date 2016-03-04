@@ -291,7 +291,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 boolean failFlag = false;
                 boolean fatalFlag = false;
                 for (DomSingleSchoolStudent submit : submitList) {
-                    if (submit.getUserName()!=null && !submit.getUserName().equals("")) {
+                    if (prop.IsValidUserDataInput(submit)) {
                         try {
                             DomNewSingleSchoolStudent student = new DomNewSingleSchoolStudent();
                             student.setDomSingleSchoolStudent(submit);
