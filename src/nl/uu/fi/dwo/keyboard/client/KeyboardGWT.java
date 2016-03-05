@@ -138,7 +138,7 @@ public class KeyboardGWT implements EntryPoint {
 		w.setEditor(editor);
 		root.add(w);
 		
-if ( false ) 	{	
+if ( true ) 	{	
 		root.add(new Label("algebra"));
 		AbstractKeyboard panel = new TabbedDesktopKeyboard(1);
 		panel.setEditor(editor);

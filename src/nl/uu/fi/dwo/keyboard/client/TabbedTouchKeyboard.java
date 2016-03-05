@@ -8,19 +8,20 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TabbedTouchKeyboard extends AbstractKeyboard {
 
-	private static int HEIGHT = TabletKeyboard.HEIGHT;
 	private AbstractKeyboard current;
-	private TabletKeyboard k123;
+	private AbstractKeyboard k123;
 	private TabletKeyboardABC kabc;
 	private TabletKeyboardUpper kABC;
 	private TabletKeyboardPen pen;
-	private TabletKeyboard[] stock = new TabletKeyboard[5];
+	private AbstractKeyboard[] stock = new AbstractKeyboard[5];
 	
 	
 	
-	private TabletKeyboard createKeyboard(int i) {
+	private AbstractKeyboard createKeyboard(int i) {
 		switch(i) {
-		case 0: return new TabletKeyboardOnderbouw();
+		case 0: 
+				return new TabletOnderbouwKeyboard().init();
+				//return new TabletKeyboardOnderbouw();
 		case 1: return new TabletKeyboard().init();
 		case 2: return new TabletKeyboardGonio();
 		case 3: return new TabletKeyboardStatistiek();
@@ -35,7 +36,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	}
 	
 	TabbedTouchKeyboard(int nr) {
-		TabletKeyboard tk = createKeyboard(nr);
+		AbstractKeyboard tk = createKeyboard(nr);
 		stock [nr] = tk;
 		this.nr = nr;
 		this.k123 = tk;
@@ -58,6 +59,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 		pen.setVisible(false);
 		main.add(pen);
 		initWidget(main);
+		resize();
 	}
 
 	@Override
@@ -80,10 +82,17 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	public void focus() {
 		if(current==pen) pen.focus(); // does read formula
 		super.focus();
-		resizeScrollPanel(HEIGHT);
+		resize();
 		FocusOnTouch.focus();
 	}
 
+	private void resize() {
+		if( isVisible())
+		{
+			resizeScrollPanel(getKeyboardHeight());
+		}
+		setHeight(getKeyboardHeight() + "px");
+	}
 
 	@Override
 	public void blur() {
@@ -97,6 +106,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	void switchABC() {
 		if(upper) switchUpper(); 
 		else switchLower();
+		resize();
 	}
 
 	@Override
@@ -105,6 +115,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 			current.setVisible(false);
 			current = k123;
 			current.setVisible(true);
+			resize();
 		}
 	}
 
@@ -114,6 +125,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 			current.setVisible(false);
 			current = pen;
 			current.focus(); // does read formula
+			resize();
 		}
 	}
 
@@ -157,7 +169,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	}
 
 	int getKeyboardHeight() {
-		return HEIGHT;
+		return current.getKeyboardHeight();
 	}
 
 	@Override

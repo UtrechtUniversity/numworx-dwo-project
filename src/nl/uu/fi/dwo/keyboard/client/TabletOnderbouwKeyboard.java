@@ -4,6 +4,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -147,4 +148,24 @@ public class TabletOnderbouwKeyboard extends AbstractKeyboard {
 	@UiHandler("t3_11") void onT3_11(ClickEvent e) { getEditor().cursorToLeft(); }
 	@UiHandler("t3_12") void onT3_12(ClickEvent e) { getEditor().cursorToRight(); }
 	@UiHandler("t3_13") void onT3_13(ClickEvent e) { blur(); }
+
+	public TabletOnderbouwKeyboard init() {
+		getElement().getStyle().setPaddingLeft(0, Unit.PX);
+		getElement().getStyle().setPaddingRight(0, Unit.PX);
+		getElement().getStyle().setMarginTop(-10, Unit.PX);
+		return this;
+	}
+	
+	@Override
+	public void blur() {
+		AbstractKeyboard d = getDelegate();
+		if(d != null) d.blur();else super.blur();
+	}
+
+	@Override
+	void switchABC() {
+		AbstractKeyboard d = getDelegate();
+		if(d != null) d.switchABC(); else super.switchABC();
+	}
+
 }
