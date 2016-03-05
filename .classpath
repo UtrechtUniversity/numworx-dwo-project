@@ -5,6 +5,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/interaction.jar"/>
 	<classpathentry kind="lib" path="lib/WiskOpdrGWT-0.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/mgwt.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/WriteMathGWT"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

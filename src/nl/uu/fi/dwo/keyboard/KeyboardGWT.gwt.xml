@@ -4,6 +4,7 @@
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="nl.uu.fi.dwo.interaction.Interaction" />
 	<inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
+	<inherits name="com.googlecode.mgwt.MGWTMin"/>
 	
 	<source path="client" />
 	<entry-point class="nl.uu.fi.dwo.keyboard.client.KeyboardGWT" />

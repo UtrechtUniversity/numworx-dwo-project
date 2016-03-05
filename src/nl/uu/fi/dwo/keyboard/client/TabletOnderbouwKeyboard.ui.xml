@@ -75,48 +75,51 @@
 	</ui:style>
 	<g:HTMLPanel addStyleNames="keyboard keyboard-abc is-active {style.keyboard}">
 		<table class="{style.table} {style.table1}">
-			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>(</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>)</p></my:FKey></td></tr>
-			<tr><td><my:FKey ui:field='t1_2' addStyleNames="{style.okey} key bg-purple"><p>&lt;</p>
+			<tr><td><my:FKey ui:field='t1_1' addStyleNames="{style.okey} key bg-purple"><p>(</p></my:FKey></td>
+			<td><my:FKey ui:field='t1_2' addStyleNames="{style.okey} key bg-purple"><p>)</p></my:FKey></td></tr>
+			<tr><td><my:TKey ui:field='t2_1' addStyleNames="{style.okey} key bg-purple"><p>&lt;</p>
 			<div class="{style.xkey-purple}"></div>
-			</my:FKey></td><td><my:FKey ui:field='t2_2' addStyleNames="{style.okey} key bg-purple"><p>&gt;</p><div class="{style.xkey-purple}"></div></my:FKey></td></tr>
-			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>≠</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p>≈</p></my:FKey></td></tr>
+			</my:TKey></td>
+			<td><my:TKey ui:field='t2_2' addStyleNames="{style.okey} key bg-purple"><p>&gt;</p><div class="{style.xkey-purple}"></div></my:TKey></td></tr>
+			<tr><td><my:FKey ui:field='t3_1' addStyleNames="{style.okey} key bg-purple"><p>≠</p></my:FKey></td>
+			    <td><my:FKey ui:field='t3_2' addStyleNames="{style.okey} key bg-purple"><p>≈</p></my:FKey></td></tr>
 		</table>
 
 		<table class="{style.table} {style.table2} ">
-			<tr><td><my:FKey addStyleNames="{style.okey} key icon"><span class="basis basis-T1-6"><span class="path1"></span><span class="path2"></span></span></my:FKey></td>
-			    <td><my:FKey addStyleNames="{style.okey} key icon"><p><span class="basis basis-T1-7"></span></p></my:FKey></td>
-			    <td><my:FKey addStyleNames="{style.okey} key icon"><p><span class="basis basis-T4-5"><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></p></my:FKey></td>
+			<tr><td><my:FKey ui:field='t1_3' addStyleNames="{style.okey} key icon"><span class="basis basis-T1-6"><span class="path1"></span><span class="path2"></span></span></my:FKey></td>
+			    <td><my:FKey ui:field='t1_4' addStyleNames="{style.okey} key icon"><p><span class="basis basis-T1-7"></span></p></my:FKey></td>
+			    <td><my:FKey ui:field='t1_5' addStyleNames="{style.okey} key icon"><p><span class="basis basis-T4-5"><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></p></my:FKey></td>
 			    </tr>
-			<tr><td><my:FKey addStyleNames="{style.okey} key icon"><span class="basis basis-T1-5"></span></my:FKey></td>
-			    <td><my:FKey addStyleNames="{style.okey} key icon"><p><span class="basis basis-T2-7"><span class='path1'></span><span class='path2'></span></span></p></my:FKey></td>
-			    <td><my:FKey addStyleNames="{style.okey} key icon"><p>π</p></my:FKey></td>
+			<tr><td><my:FKey ui:field='t2_3' addStyleNames="{style.okey} key icon"><span class="basis basis-T1-5"></span></my:FKey></td>
+			    <td><my:FKey ui:field='t2_4' addStyleNames="{style.okey} key icon"><p><span class="basis basis-T2-7"><span class='path1'></span><span class='path2'></span></span></p></my:FKey></td>
+			    <td><my:FKey ui:field='t2_5' addStyleNames="{style.okey} key icon"><p>π</p></my:FKey></td>
 			</tr>
-			<tr><td><my:FKey addStyleNames="{style.okey} key icon"><span class="basis basis-T2-5"></span></my:FKey></td>
-			    <td><my:FKey addStyleNames="{style.okey} key icon"><p><span class="basis basis-T3-7"><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></p></my:FKey></td>
-			    <td><my:FKey ui:field='t3_5' addStyleNames="{style.okey} key icon"><p>°</p><div class="{style.xkey}"></div></my:FKey></td>
+			<tr><td><my:FKey ui:field='t3_3' addStyleNames="{style.okey} key icon"><span class="basis basis-T2-5"></span></my:FKey></td>
+			    <td><my:FKey ui:field='t3_4' addStyleNames="{style.okey} key icon"><p><span class="basis basis-T3-7"><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></p></my:FKey></td>
+			    <td><my:TKey ui:field='t3_5' addStyleNames="{style.okey} key icon"><p>°</p><div class="{style.xkey}"></div></my:TKey></td>
 			</tr>
 		</table>
 		<table class="{style.table} {style.table2}">
-			<tr><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>7</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>8</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>9</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>( - )</p></my:FKey></td></tr>
-			<tr><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>4</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>5</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>6</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>0</p></my:FKey></td></tr>
-			<tr><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>1</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>2</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>3</p></my:FKey></td><td><my:FKey addStyleNames="{style.okey} key bg-blue"><p>,</p></my:FKey></td></tr>
+			<tr><td><my:FKey ui:field='t1_6' addStyleNames="{style.okey} key bg-blue"><p>7</p></my:FKey></td><td><my:FKey ui:field='t1_7' addStyleNames="{style.okey} key bg-blue"><p>8</p></my:FKey></td><td><my:FKey ui:field='t1_8' addStyleNames="{style.okey} key bg-blue"><p>9</p></my:FKey></td><td><my:FKey ui:field='t1_9' addStyleNames="{style.okey} key bg-blue"><p>( - )</p></my:FKey></td></tr>
+			<tr><td><my:FKey ui:field='t2_6' addStyleNames="{style.okey} key bg-blue"><p>4</p></my:FKey></td><td><my:FKey ui:field='t2_7' addStyleNames="{style.okey} key bg-blue"><p>5</p></my:FKey></td><td><my:FKey ui:field='t2_8' addStyleNames="{style.okey} key bg-blue"><p>6</p></my:FKey></td><td><my:FKey ui:field='t2_9' addStyleNames="{style.okey} key bg-blue"><p>0</p></my:FKey></td></tr>
+			<tr><td><my:FKey ui:field='t3_6' addStyleNames="{style.okey} key bg-blue"><p>1</p></my:FKey></td><td><my:FKey ui:field='t3_7' addStyleNames="{style.okey} key bg-blue"><p>2</p></my:FKey></td><td><my:FKey ui:field='t3_8' addStyleNames="{style.okey} key bg-blue"><p>3</p></my:FKey></td><td><my:FKey ui:field='t3_9' addStyleNames="{style.okey} key bg-blue"><p>,</p></my:FKey></td></tr>
 		</table>
 		<table class="{style.table} {style.table4}">
-			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">÷</p></my:FKey></td> 
-			    <td><my:FKey addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">−</p></my:FKey></td>
-			    <td><my:FKey addStyleNames="{style.okey} key bg-grey"><p class="{style.big}"><span class="basis">&#xe60c;</span></p></my:FKey></td>
-			    <td><my:FKey addStyleNames="{style.okey} key bg-grey {style.smallfont}"><p style="margin-top: 0px; font-weight: normal;"><b>123</b><br/>abc<br/>hand</p></my:FKey></td>
+			<tr><td><my:FKey ui:field='t1_10' addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">÷</p></my:FKey></td> 
+			    <td><my:FKey ui:field='t1_11' addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">−</p></my:FKey></td>
+			    <td><my:FKey ui:field='t1_12' addStyleNames="{style.okey} key bg-grey"><p class="{style.big}"><span class="basis">&#xe60c;</span></p></my:FKey></td>
+			    <td><my:FKey ui:field='t1_13' addStyleNames="{style.okey} key bg-grey {style.smallfont}"><p style="margin-top: 0px; font-weight: normal;"><b>123</b><br/>abc<br/>hand</p></my:FKey></td>
 			</tr>
-			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">×</p></my:FKey></td>
-			    <td><my:FKey addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">+</p></my:FKey></td>
+			<tr><td><my:FKey ui:field='t2_10' addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">×</p></my:FKey></td>
+			    <td><my:FKey ui:field='t2_11' addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">+</p></my:FKey></td>
 			    <td colspan="2">
-			    	<my:FKey addStyleNames="key bg-orange {style.width-w} icon"><span style="font-size: 70px; font-weight: normal; line-height: 45px;" class="basis">&#xe61b;</span></my:FKey>
+			    	<my:FKey ui:field='t2_12' addStyleNames="key bg-orange {style.width-w} icon"><span style="font-size: 70px; font-weight: normal; line-height: 45px;" class="basis">&#xe61b;</span></my:FKey>
 			    </td>
 			</tr>
-			<tr><td><my:FKey addStyleNames="{style.okey} key bg-purple icon"><p class="{style.big}">=</p></my:FKey></td>
-				<td><my:FKey addStyleNames="{style.okey} key bg-grey icon"><p class="{style.big}" >←</p></my:FKey></td>
-				<td><my:FKey addStyleNames="{style.okey} key bg-grey icon"><p class="{style.big}">→</p></my:FKey></td>
-				<td><my:FKey addStyleNames="{style.okey} key bg-grey"><p class="{style.big}"><span class="basis">&#xe634;</span></p></my:FKey></td>
+			<tr><td><my:FKey ui:field='t3_10' addStyleNames="{style.okey} key bg-purple icon"><p class="{style.big}">=</p></my:FKey></td>
+				<td><my:FKey ui:field='t3_11' addStyleNames="{style.okey} key bg-grey icon"><p class="{style.big}" >←</p></my:FKey></td>
+				<td><my:FKey ui:field='t3_12' addStyleNames="{style.okey} key bg-grey icon"><p class="{style.big}">→</p></my:FKey></td>
+				<td><my:FKey ui:field='t3_13' addStyleNames="{style.okey} key bg-grey"><p class="{style.big}"><span class="basis">&#xe634;</span></p></my:FKey></td>
 			</tr>
 		
 		</table>

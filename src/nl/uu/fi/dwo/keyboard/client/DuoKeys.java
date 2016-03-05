@@ -57,7 +57,7 @@ public class DuoKeys extends Composite {
 	 */
 	public DuoKeys() {
 		initWidget(uiBinder.createAndBindUi(this));
-		popup = new PopupPanel();
+		popup = new PopupPanel(true);
 		popup.setStyleName("duokeys");
 		popup.setGlassEnabled(false);
 		popup.setWidget(this);
@@ -101,6 +101,8 @@ public class DuoKeys extends Composite {
 	}
 
 	void showDuo(final int x, final int y) {
+		org.onMouseOver(null);
+		alt.onMouseOut(null);
 		popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 			
 			@Override

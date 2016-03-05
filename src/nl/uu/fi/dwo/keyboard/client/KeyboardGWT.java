@@ -131,10 +131,17 @@ public class KeyboardGWT implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		
+		RootPanel root = RootPanel.get();
+		
+		root.add(new Label("Nieuw onderbouw toetsenbord"));
+		TabletOnderbouwKeyboard w = new TabletOnderbouwKeyboard();
+		w.setEditor(editor);
+		root.add(w);
+		
+if ( false ) 	{	
+		root.add(new Label("algebra"));
 		AbstractKeyboard panel = new TabbedDesktopKeyboard(1);
 		panel.setEditor(editor);
-		RootPanel root = RootPanel.get();
-		root.add(new Label("algebra"));
 		root.add(panel);
 		TabletKeyboard tk;
 		
@@ -166,11 +173,11 @@ public class KeyboardGWT implements EntryPoint {
 		panel = new TabbedDesktopKeyboard(0);
 		panel.setEditor(editor);
 		root.add(panel);
-		root.add(new Label("touch")); tablet = new TabletOnderbouwKeyboard();
+		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(0);
 		tablet.setEditor(editor);
 		//tablet.switchABC();
 		root.add(tablet);
-
+	}
 //		TabletKeyboardABC abc = new TabletKeyboardABC();
 //		abc.setEditor(editor);
 //		root.add(new Label("abc"));

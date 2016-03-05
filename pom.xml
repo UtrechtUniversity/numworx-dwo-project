@@ -29,6 +29,11 @@
   		<artifactId>WiskOpdrGWT</artifactId>
   		<version>0.0.1</version>
   	</dependency>
+  	<dependency>
+  		<groupId>com.googlecode.mgwt</groupId>
+  		<artifactId>MGWT</artifactId>
+   		<scope>provided</scope>
+  	</dependency>
   </dependencies>
   <build>
   	<finalName>writemath</finalName>

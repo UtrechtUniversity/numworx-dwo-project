@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.Image;
 
 public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseOverHandler, MouseOutHandler, ClickHandler, HasTouchStartHandlers, HasTouchEndHandlers, TouchEndHandler {
 
-	private static class MyClickEvent extends ClickEvent {
+	static class MyClickEvent extends ClickEvent {
 
 		public MyClickEvent(Object source) {
 			super();
@@ -35,9 +35,9 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 
 	}
 
-	private static final String HOVER = "hover";
+	static final String HOVER = "hover";
 	
-	private static ClickHandler KEEP_FOCUS = new ClickHandler() {
+	static ClickHandler KEEP_FOCUS = new ClickHandler() {
 		
 		@Override
 		public void onClick(ClickEvent event) {
