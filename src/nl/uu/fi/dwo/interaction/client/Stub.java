@@ -359,4 +359,9 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		
 	}
 
+	@Override
+	public boolean hasListeners(String command) {
+		return true;
+	}
+
 }

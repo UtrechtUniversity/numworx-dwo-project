@@ -31,6 +31,7 @@ public interface OpdrNavIF
 	
 	HandlerRegistration addCBookEventListener(String command, CBookEventListener listener);
 	void fireEvent(CBookEvent event);
+	boolean hasListeners(String command);
 	
 	void pause();
 	void unpause();
