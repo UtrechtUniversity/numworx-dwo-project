@@ -14,6 +14,7 @@ import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -56,8 +57,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     private JComboBox targetSchoolClassBox;
     private JButton deleteButton;
     private JButton copyToSchoolClassButton;
-    private JLabel schoolClassLabel;
-
+    private JButton addStudentsButton;
+    
     private Image editImage;
     private Image emptyImage;
     private Image loginImage;
@@ -291,6 +292,15 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         this.add(header);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         buildJTable();
+        addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
+        addStudentsButton.setSize(addStudentsButton.getPreferredSize());
+        addStudentsButton.addActionListener(this);
+        Box footer = Box.createHorizontalBox();
+        footer.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        footer.setMaximumSize(new Dimension(3000, 100));
+        footer.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
+        footer.add(addStudentsButton);
+        this.add(footer);
         this.add(Box.createVerticalGlue());
     }
 
@@ -374,6 +384,15 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
             catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
+            }
+        } else if (e.getSource() == addStudentsButton) {
+            try {
+                NewSingleSchoolStudentsTeacherPanel panel = new NewSingleSchoolStudentsTeacherPanel(schoolClass);
+                center.loadCenter(panel);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.FINE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(center, ex);
             }
         }
         tableModel.fireTableDataChanged();

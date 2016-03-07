@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -54,7 +53,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
     private CenterPanel center;
 
     private JButton addClassButton;
-    private JButton addStudentsButton;
+//    private JButton addStudentsButton;
 
     private Image editImage, modulesImage, studentsImage, teachersImage, removeImage;
 
@@ -385,15 +384,15 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         addClassButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_CLASS));
         addClassButton.setSize(addClassButton.getPreferredSize());
         addClassButton.addActionListener(this);
-        addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
-        addStudentsButton.setSize(addStudentsButton.getPreferredSize());
-        addStudentsButton.addActionListener(this);
+//        addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
+//        addStudentsButton.setSize(addStudentsButton.getPreferredSize());
+//        addStudentsButton.addActionListener(this);
         //addClassButton.setLocation(30, 10);
 //        addClassButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
         Box header = Box.createHorizontalBox();
         header.add(addClassButton);
         header.add(Box.createHorizontalGlue());
-        header.add(addStudentsButton);
+//        header.add(addStudentsButton);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
         this.add(header);
         //addClassButton.setVisible(true);
@@ -462,16 +461,17 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 GuiCreator.instance().ShowErrorDialog(center, ex);
                 }
             }
-        } else if (e.getSource() == addStudentsButton) {
-            try {
-                NewSingleSchoolStudentsTeacherPanel panel = new NewSingleSchoolStudentsTeacherPanel();
-                center.loadCenter(panel);
-            }
-            catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
-                GuiCreator.instance().ShowErrorDialog(center, ex);
-            }
         }
+//        else if (e.getSource() == addStudentsButton) {
+//            try {
+//                NewSingleSchoolStudentsTeacherPanel panel = new NewSingleSchoolStudentsTeacherPanel();
+//                center.loadCenter(panel);
+//            }
+//            catch (Dwo2Exception ex) {
+//                LOG.log(Level.FINE, null, ex);
+//                GuiCreator.instance().ShowErrorDialog(center, ex);
+//            }
+//        }
     }
 
     /**

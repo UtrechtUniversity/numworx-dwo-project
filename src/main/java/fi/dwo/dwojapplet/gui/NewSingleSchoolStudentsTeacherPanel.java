@@ -11,7 +11,7 @@ import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -23,7 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -32,7 +31,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -50,6 +48,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 
     private static final Logger LOG = Logger.getLogger(NewSingleSchoolStudentsTeacherPanel.class.getName());
 
+    private DomSchoolClass schoolClass;    
     private NewSingleSchoolStudentsTeacherPanelProperties prop = new NewSingleSchoolStudentsTeacherPanelProperties();
     private NewSingleSchoolStudentsTeacherPanelTableModel tableModel;
     private CenterPanel center;
@@ -57,7 +56,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     private JButton backButton;
     private JButton addButton;
     private JButton importButton;
-    private JComboBox schoolClassComboBox;
+//    private JComboBox schoolClassComboBox;
     private Clipboard systemClipboard;
     String[] columnNames = {
         TextMapper.getText(TextMapper.GUIR_FIRSTNAME),
@@ -149,11 +148,12 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 
         JTable jtable = new JTable();
         jtable.setMinimumSize(new Dimension(400, 300));
+        jtable.setBackground(Color.LIGHT_GRAY);
+        
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         jtbl.add(jtable);
-        jtbl.add(Box.createHorizontalGlue());
-        //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
+        jtbl.add(Box.createHorizontalGlue());        
         tableModel = new NewSingleSchoolStudentsTeacherPanelTableModel();
         List<DomSingleSchoolStudent> students = new ArrayList<DomSingleSchoolStudent>(1);
         tableModel.init(prop, columnNames, students, delImage);
@@ -169,18 +169,23 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         TableUtil.setDefaults(jtable, true, new NewSingleSchoolStudentsTeacherPanel.ImageRenderer(), new NewSingleSchoolStudentsTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
         TableUtil.setBorder(jtable);
+        TableCellRenderer colorRenderer = new NewSingleSchoolStudentsTeacherTableColorRenderer();
+        for (int i = 0; i < 6; i++)
+        {
+            jtable.getColumnModel().getColumn(i).setCellRenderer(colorRenderer);
+        }        
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);
-
     }
 
     /**
      * Creates a new ClassPanel which shows a list of classes.
      *
      */
-    public NewSingleSchoolStudentsTeacherPanel() throws Dwo2Exception {
+    public NewSingleSchoolStudentsTeacherPanel(DomSchoolClass sc) throws Dwo2Exception {
         super(null);
+        schoolClass = sc;
         this.setSize(480, 500);
 
         //fetch user details.
@@ -209,18 +214,18 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         backButton = new JButton(TextMapper.getText(TextMapper.BTN_BACK));
         backButton.setSize(backButton.getPreferredSize());
         backButton.addActionListener(this);
-        addButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
+        addButton = new JButton(TextMapper.getText(TextMapper.BTN_CREATE_STUDENTACCOUNTS));
         addButton.setSize(addButton.getPreferredSize());
         addButton.addActionListener(this);
-        Vector<DomSchoolClass> classList = new Vector<DomSchoolClass>(prop.getTeachersSchoolClasses());
-        schoolClassComboBox = new JComboBox(classList);
-        if (classList.size() > 0) {
-            schoolClassComboBox.setSelectedIndex(0);
-        }
-        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
-        schoolClassComboBox.setRenderer(renderer);
-        schoolClassComboBox.setMaximumRowCount(10);
-        schoolClassComboBox.addActionListener(this);
+//        Vector<DomSchoolClass> classList = new Vector<DomSchoolClass>(prop.getTeachersSchoolClasses());
+//        schoolClassComboBox = new JComboBox(classList);
+//        if (classList.size() > 0) {
+//            schoolClassComboBox.setSelectedIndex(0);
+//        }
+//        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
+//        schoolClassComboBox.setRenderer(renderer);
+//        schoolClassComboBox.setMaximumRowCount(10);
+//        schoolClassComboBox.addActionListener(this);
         importButton = new JButton(TextMapper.getText("Import from clipboard"));
         importButton.setSize(importButton.getPreferredSize());
         importButton.addActionListener(this);
@@ -235,7 +240,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         header.add(Box.createHorizontalGlue());
         header.add(addButton);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
-        header.add(schoolClassComboBox);
+//        header.add(schoolClassComboBox);
         this.add(header);
         //addClassButton.setVisible(true);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -282,9 +287,9 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addButton) {
-            if (schoolClassComboBox.getSelectedItem() == null) {
-                return;
-            }
+//            if (schoolClassComboBox.getSelectedItem() == null) {
+//                return;
+//            }
             try {
                 List<DomSingleSchoolStudent> submitList = tableModel.getSubmitList();
                 List<DomSingleSchoolStudent> resultList = new ArrayList<DomSingleSchoolStudent>();
@@ -295,7 +300,8 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                         try {
                             DomNewSingleSchoolStudent student = new DomNewSingleSchoolStudent();
                             student.setDomSingleSchoolStudent(submit);
-                            student.setDomSchoolClass((DomSchoolClass) schoolClassComboBox.getSelectedItem());
+//                            student.setDomSchoolClass((DomSchoolClass) schoolClassComboBox.getSelectedItem());
+                            student.setDomSchoolClass((DomSchoolClass) schoolClass);
                             prop.submitSingleSchoolStudent(student);
                         }
                         catch (Dwo2Exception ex) {
@@ -338,10 +344,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
-        } else if (e.getSource() == schoolClassComboBox) {
-                    tableModel.fireTableDataChanged();
-
-        }
+        } 
+//          else if (e.getSource() == schoolClassComboBox) {
+//                    tableModel.fireTableDataChanged();
+//
+//        }
     }
 
     /**
