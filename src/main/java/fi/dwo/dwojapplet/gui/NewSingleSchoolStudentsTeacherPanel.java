@@ -168,12 +168,14 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new NewSingleSchoolStudentsTeacherPanel.ImageRenderer(), new NewSingleSchoolStudentsTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
-        TableUtil.setBorder(jtable);
-        TableCellRenderer colorRenderer = new NewSingleSchoolStudentsTeacherTableColorRenderer();
-        for (int i = 0; i < 6; i++)
-        {
-            jtable.getColumnModel().getColumn(i).setCellRenderer(colorRenderer);
-        }        
+//        TableUtil.setBorder(jtable);
+        jtable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+        jtable.setShowGrid(true);
+//        TableCellRenderer colorRenderer = new NewSingleSchoolStudentsTeacherTableColorRenderer();
+//        for (int i = 0; i < 6; i++)
+//        {
+//            jtable.getColumnModel().getColumn(i).setCellRenderer(colorRenderer);
+//        }        
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);
