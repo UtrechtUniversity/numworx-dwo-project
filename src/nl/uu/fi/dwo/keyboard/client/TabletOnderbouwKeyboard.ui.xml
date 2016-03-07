@@ -43,12 +43,18 @@
 		font-style: normal;
 		font-family: 'Arial Regular', 'Arial';
 		margin-top: 10px;
+		margin-left: 0px;
+		margin-right: 0px;
 		-webkit-font-smoothing: antialiased;
 	}
 	.okey span:before {
 		left: 15% !important;
 		top: 15% !important;
 		font-size: 250% !important;
+	}
+	
+	.okey p {
+		margin: 17px 0px;
 	}
 	
 	.keyboard {
@@ -58,7 +64,7 @@
 	.xkey {	
 		float: right;
 		display: inline-block;
-		margin-top: -6px;
+		margin-top: -9px;
 		width: 9px;
 		height: 9px;
 		background-repeat: no-repeat;
@@ -109,7 +115,7 @@
 			<tr><td><my:FKey ui:field='t1_10' addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">÷</p></my:FKey></td> 
 			    <td><my:FKey ui:field='t1_11' addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">−</p></my:FKey></td>
 			    <td><my:FKey ui:field='t1_12' addStyleNames="{style.okey} key bg-grey"><p class="{style.big}"><span class="basis">&#xe60c;</span></p></my:FKey></td>
-			    <td><my:FKey ui:field='t1_13' addStyleNames="{style.okey} key bg-grey {style.smallfont}"><p style="margin-top: 0px; font-weight: normal;"><b>123</b><br/>abc<br/>hand</p></my:FKey></td>
+			    <td><my:FKey ui:field='t1_13' addStyleNames="{style.okey} key bg-grey {style.smallfont}"><p style="margin-top: 4px; font-weight: normal;"><b>123</b><br/>abc<br/>hand</p></my:FKey></td>
 			</tr>
 			<tr><td><my:FKey ui:field='t2_10' addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">×</p></my:FKey></td>
 			    <td><my:FKey ui:field='t2_11' addStyleNames="{style.okey} key bg-purple"><p class="{style.big}">+</p></my:FKey></td>

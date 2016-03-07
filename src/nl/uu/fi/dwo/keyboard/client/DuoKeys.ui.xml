@@ -20,6 +20,9 @@
 			display: inline-block;
 			float: left;
 		}
+		.key p {
+			margin: 17px;
+		}
 	</ui:style>
 	<g:FlowPanel addStyleNames="{style.panel} keyboard" ui:field='top'>
 	  <my:FKey addStyleNames="{style.key} key bg-purple" ui:field="org" >
