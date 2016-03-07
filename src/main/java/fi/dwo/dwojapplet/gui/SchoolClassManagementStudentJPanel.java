@@ -238,6 +238,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                     prop.removeSchoolClass(schoolClass);
                     tableModel.init(prop, loginImage, removeImage);
                     tableModel.fireTableDataChanged();
+//                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else {
                     // show warning
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
@@ -316,14 +317,14 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             tableModel.init(prop, loginImage, removeImage);
             tableModel.fireTableDataChanged();
 
-        } else if (e.getSource() == removeImage) {
-            LOG.log(Level.INFO, "remove role");
-
+        }
+//        else if (e.getSource() == removeImage) {
+//            LOG.log(Level.INFO, "remove role");
 ////                if (JOptionPane.showConfirmDialog(TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)))
 //      //                  + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 //                    if (instance.deleteClass(sc)) {
 //                        model.removeRow(row);
 //                    }
-        }
+//        }
     }
 }

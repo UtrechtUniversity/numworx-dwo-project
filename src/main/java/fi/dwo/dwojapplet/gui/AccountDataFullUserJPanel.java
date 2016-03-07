@@ -383,7 +383,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
                 if (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE)).equals(ReauthenticateResult.SUCCEEDED)) {
                     try {
                         if (SecureUserAccountManager.removeAccountData()) {
-                            GuiCreator.instance().logoff();//TODO Gert something goes pear shaped.
+                            GuiCreator.instance().logoff();
                         }
                         JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), JOptionPane.PLAIN_MESSAGE);
                     }

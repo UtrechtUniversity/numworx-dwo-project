@@ -103,7 +103,6 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
             }
             return this;
         }
-
     }
 
     public class ImageButtonEditor extends AbstractCellEditor implements

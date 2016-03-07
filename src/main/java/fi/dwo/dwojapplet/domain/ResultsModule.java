@@ -104,7 +104,6 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
                     @Override
                     public void run() {
 
-                        //TODO Gert
                         ScoPanel sp = sco.getScoPanel(dwo, user);
                         dwo.setReady();
                         if (sp != null) {
