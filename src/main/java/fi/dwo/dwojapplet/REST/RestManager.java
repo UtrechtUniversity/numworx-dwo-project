@@ -141,6 +141,8 @@ class RestManager {
             LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
             throw e;
         } else {
+            //Note concerning the switch statement:JAX-RS does not seem to cope 
+            //well with advanced generics. 
             switch (type) {
                 case DomUser:
                     GenericType<ArrayList<DomUser>> pUserType = new GenericType<ArrayList<DomUser>>() {
