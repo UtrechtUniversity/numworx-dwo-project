@@ -271,7 +271,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)+"-"+TextMapper.getText(TextMapper.HDR_NEW_STUDENTS));
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)+" - "+TextMapper.getText(TextMapper.HDR_NEW_STUDENTS));
     }
 
     /**
