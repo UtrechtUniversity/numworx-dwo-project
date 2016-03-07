@@ -13,7 +13,6 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -293,7 +292,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         TableUtil.setBorder(jtable);
         //TableUtil.shrinkToFit(table, jtbl, 520, 405);
         jtbl.setVisible(false);
-        this.add(jtbl);
+        this.add(jtbl);        
         jtbl.setVisible(true);
 
     }
