@@ -23,8 +23,8 @@
 	<set-property name="gwt.logging.logLevel" value="FINEST"/>
 <!-- English language, independent of country -->
   	<extend-property name="locale" values="en"/>
-<!--   	<extend-property name="locale" values="nl"/>  	
-  	<set-property-fallback name="locale" value="nl"/> <!- - Dutch is the default -->
+   	<extend-property name="locale" values="nl"/>  	
+  	<set-property-fallback name="locale" value="en"/>
 	
 	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOIdeasClient">
     	<when-type-is class="fi.wiskopdr.FailingIdeas" />
