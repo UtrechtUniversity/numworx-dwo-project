@@ -101,7 +101,7 @@ public class DuoKeys extends Composite {
 	}
 
 	void showDuo(final int x, final int y) {
-		org.onMouseOver(null);
+		org.onMouseOut(null);
 		alt.onMouseOut(null);
 		popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 			

@@ -36,7 +36,6 @@
   	</dependency>
   </dependencies>
   <build>
-  	<finalName>writemath</finalName>
   	<resources>
   		<resource>
   			<directory>src</directory>
