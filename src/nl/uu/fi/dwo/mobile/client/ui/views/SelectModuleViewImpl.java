@@ -158,7 +158,8 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView
 	@Override
 	public void setLogout(boolean b) {
 		if(b) {
-			backbutton.setText(Text.constants.login());
+			//backbutton.setText(Text.constants.login());
+			backbutton.getElement().setInnerHTML("<span class='fa fa-2x fa-power-off' ></span>");
 		}
 
 		
