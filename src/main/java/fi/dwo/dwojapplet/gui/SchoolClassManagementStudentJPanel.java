@@ -311,12 +311,19 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.registerSchoolClass) {
-            ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new SchoolClassRegistrationStudentJPanel());
+            SchoolClassRegistrationStudentJPanel panel = new SchoolClassRegistrationStudentJPanel();
+            ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(panel);
+            panel.setParent(dialog);
+            dialog.pack();
+//            dialog.setLocationRelativeTo(null);
+            dialog.setLocationRelativeTo(GuiCreator.instance().mainPanel);
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
-            tableModel.init(prop, loginImage, removeImage);
-            tableModel.fireTableDataChanged();
-
+//            tableModel.init(prop, loginImage, removeImage);
+//            tableModel.fireTableDataChanged();
+                SchoolClassManagementStudentJPanel newPanel = new SchoolClassManagementStudentJPanel();
+                center.loadCenter(newPanel);
+            
         }
 //        else if (e.getSource() == removeImage) {
 //            LOG.log(Level.INFO, "remove role");

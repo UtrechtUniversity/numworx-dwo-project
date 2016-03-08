@@ -16,7 +16,6 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -25,6 +24,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,7 +47,9 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
 
     private static final Logger LOG = Logger.getLogger(SchoolClassRegistrationStudentJPanel.class.getName());
 
+    private JDialog parentDialog;
     private JButton addButton = null;
+    private JButton backButton = null;
     private JPanel jtbl;
     private JTable jt;
 
@@ -101,6 +103,10 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
             addButton = new JButton(TextMapper.getText(TextMapper.GUIC_REGISTER_FOR_CLASS));
             addButton.setSize(addButton.getPreferredSize());
             addButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            backButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
+            backButton.setSize(addButton.getPreferredSize());
+            backButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            
             buildJTable();
         }
         catch (Dwo2Exception ex) {
@@ -110,10 +116,13 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
 
         addButton.addActionListener(this);
         addButton.setVisible(true);
-//        addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
+        backButton.addActionListener(this);
+        backButton.setVisible(true);
         JPanel footer = new JPanel();
         footer.setLayout(new BoxLayout(footer, BoxLayout.X_AXIS));
         footer.add(addButton);
+        footer.add(Box.createHorizontalStrut(15));
+        footer.add(backButton);
         footer.setBorder(new EmptyBorder(10, 10, 10, 10));
         footer.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.add(footer);
@@ -251,7 +260,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
         tableModel = new SchoolClassRegistrationStudentTableModel();
         tableModel.init(prop);
         jtable.setModel(tableModel);
-        JScrollPane js=new JScrollPane(jtable);
+        JScrollPane js = new JScrollPane(jtable);
         js.setVisible(true);
         this.add(js);
         jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -291,30 +300,38 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        try {
-            //TODO Register SchoolClass
-            int i = jt.getSelectedRow();
-            DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(i, tableModel.getColumnCount());
-            DomNewSchoolClass4Student newSchoolClass = new DomNewSchoolClass4Student(sc);
-            if (sc.getHasRegKey()) {
-                SchoolClassRegistrationAskKeyJPanel panel = new SchoolClassRegistrationAskKeyJPanel();
-                panel.setSchoolClass(newSchoolClass);
-                panel.setRegistrationKey("");
-                ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(panel);
-                dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                dialog.setAlwaysOnTop(true);
-                dialog.setVisible(true);
-                
-                //(this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-                //      JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (e.getSource() == addButton) {
+            try {
+                //TODO Register SchoolClass
+                int i = jt.getSelectedRow();
+                DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(i, tableModel.getColumnCount());
+                DomNewSchoolClass4Student newSchoolClass = new DomNewSchoolClass4Student(sc);
+                if (sc.getHasRegKey()) {
+                    SchoolClassRegistrationAskKeyJPanel panel = new SchoolClassRegistrationAskKeyJPanel();
+                    panel.setSchoolClass(newSchoolClass);
+                    panel.setRegistrationKey("");
+                    ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(panel);
+                    dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+                    dialog.setAlwaysOnTop(true);
+                    dialog.setVisible(true);
+
+                    //(this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+                    //      JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                }
+                prop.registerStudentForSchoolClass(newSchoolClass);
+                prop.init();
+                tableModel.init(prop);
+                tableModel.fireTableDataChanged();
             }
-            prop.registerStudentForSchoolClass(newSchoolClass);
-            prop.init();
-            tableModel.init(prop);
-            tableModel.fireTableDataChanged();
+            catch (Dwo2Exception ex) {
+                Logger.getLogger(SchoolClassRegistrationStudentJPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (e.getSource() == backButton) {
+            parentDialog.dispose();
         }
-        catch (Dwo2Exception ex) {
-            Logger.getLogger(SchoolClassRegistrationStudentJPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    }
+    
+    public void setParent(JDialog parent){
+        parentDialog = parent;
     }
 }
