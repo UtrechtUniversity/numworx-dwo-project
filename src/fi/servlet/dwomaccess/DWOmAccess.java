@@ -4,51 +4,42 @@ import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.applet.AudioClip;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.beans.XMLEncoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.Map.Entry;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.Inflater;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.JFrame;
@@ -56,25 +47,17 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
-import org.json.simple.JSONAware;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONStreamAware;
 
+import fi.beans.base64code.Base64InputStream;
 import fi.beans.base64code.StringCodeObject;
-import fi.beans.dwomaccess.ByteArray;
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.persistence.CourseMapper;
-import fi.dwo.client.persistence.DbAccessClient;
-import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.persistence.ScoMapper;
-import fi.dwo.server.persistence.DbAccess;
-import fi.dwo.server.persistence.DbAccessLdap;
-import fi.dwo.server.persistence.DbAccessLocal;
 /**
  * Servlet voor het achterhalen van de deelscores en screenshots. 
  * Methoden:
@@ -97,12 +80,12 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 
 	public class Stub implements AppletStub {
 
+		@SuppressWarnings("rawtypes")
 		private Hashtable parameters;
+		@SuppressWarnings("rawtypes")
 		public Stub(Hashtable parameters) {
 			this.parameters = parameters;
 		}
-		
-		
 		
 		public String getParameter(String name) {
 			return (String)parameters.get(name);
@@ -117,17 +100,16 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			return DWOmAccess.this;
 		}
 		public URL getCodeBase() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		public URL getDocumentBase() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 	}
 	
 	public class ExtraScoMapper extends ScoMapper {
 		
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public byte[] getLaunchDataBytes(int scoid) throws IOException, XmlRpcException, SQLException {
 			Vector v = new Vector();
 			v.add("launchdatabytes");
@@ -143,11 +125,98 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			}
 			return NULL;
 		}
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		public Map getLaunchData(int scoid) throws IOException, XmlRpcException, SQLException, ClassNotFoundException {
+			Vector v = new Vector();
+			v.add("launchdata");
+			
+			Hashtable wheredef = new Hashtable();
+			wheredef.put(getIDCol(), scoid);
+			v = access.getTable(getTableName(), v, wheredef, getOrderbyCol());
+			if(! v.isEmpty())
+			{
+				Map h = (Map) v.firstElement();
+				Object object = h.get("launchdata");
+				if (object instanceof String) {
+					object = decode(object.toString());			}
+				if(object instanceof Map)
+					return transformMap( (Map) object );
+			}
+			return Collections.EMPTY_MAP;			
+		}
 		
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		public Map transformMap(Map map) {
+			Map result = map;
+			Iterator iter = map.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry entry = (Map.Entry) iter.next();
+				Object value = entry.getValue();
+				if(value instanceof String && value.toString().startsWith("H4sIA")) {
+					value = decode(value.toString());
+					if(value != null)
+					{	
+						result.put(entry.getKey(),value);
+					}
+				}
+				if(value instanceof Map) {
+					Map transformed = transformMap((Map) value);
+					if(transformed != value)
+					{
+						result.put(entry.getKey(),transformed);
+					}
+				} else if (value instanceof Collection) {
+					value = ((Collection) value).toArray();
+				}
+				if (value instanceof Object[]) {
+					Object[] array = (Object[])value;
+					Object transformed = transformArray(array);
+					result.put(entry.getKey(),transformed);
+				}
+			}
+			return result;
+		}
+		
+		private Object decode(String s) {
+			ObjectInputStream invoer = null;
+			try {
+				ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes("ASCII"));
+				Base64InputStream b64is = new Base64InputStream(bais);
+				GZIPInputStream zis = new GZIPInputStream(b64is);
+				invoer = new DWOInputStream(zis,getClassLoader());
+				return invoer.readObject();
+			} catch (Exception e) {
+				java.util.logging.Logger.getLogger(getClass().getName()).log(Level.FINE, "decode", e);
+				return s;
+			} finally {
+				try {
+					if(invoer != null) invoer.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+		
+		@SuppressWarnings("rawtypes")
+		private Object[] transformArray(Object[] array) {
+			Object[] result = array;
+			for (int i = 0; i < array.length; i++) {
+				Object value = array[i];
+				if(value instanceof Map) 
+					value = transformMap( (Map) value);
+				if (value instanceof Collection)
+					value = ((Collection) value).toArray();
+				if(value instanceof Object[]) 
+					value = transformArray((Object[])value);
+				result[i] = value;
+			}
+			return result;
+		}
+	
 	}
 	
 	static byte[] NULL = new byte[0];
-
+	
 	private static final String PNG = "png";
 
 	DbAccessIF access;
@@ -159,6 +228,18 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		unLock();
 	}
 	
+	
+	private Loader dwo_jar;
+	/**
+	 * Lazy loader.
+	 * @return classloader for DWO/WiskOpdr classes
+	 */
+	ClassLoader getClassLoader() {
+		if(dwo_jar == null)
+			dwo_jar = Loader.create("dwo.jar"); // Helaas, wiskopdr.jar geen goede index.
+		return dwo_jar;
+	}
+
 	public void sendImage(BufferedImage image, OutputStream out)
 	{
 		try {
@@ -186,10 +267,10 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		return bufferedImage;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private Hashtable getLaunchData_int( int scoid ) throws IOException, XmlRpcException, SQLException
 	{
-		ScoMapper mapper = new ScoMapper();
-		Sco sco = (Sco) mapper.get(scoid);
+		Sco sco = (Sco) extraScoMapper.get(scoid);
 		if(sco == null)
 			return new Hashtable(); // empty if null not NPE
 		return sco.getLaunchdata();
@@ -205,10 +286,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			GZIPOutputStream zip = new GZIPOutputStream(bos);
 			OutputStreamWriter out = new OutputStreamWriter(zip, UTF_8);
-			@SuppressWarnings("rawtypes")
-			Map map = getLaunchData_int(scoid);
-			JSONEncoder.encode(map, out);
-			out.close();
+			getJSONLaunchData(scoid, out);
 			bytes = bos.toByteArray();
 			log("taken slow route for " + scoid + " " + bytes.length + " bytes");
 			setLaunchDataBytes(scoid);
@@ -217,8 +295,6 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	}
 	
 	private ExecutorService executor = null;
-	
-	
 	
 	private void setLaunchDataBytes(final int scoid) {
 		Runnable run = new Runnable() {
@@ -233,13 +309,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 					ByteArrayOutputStream bos = new ByteArrayOutputStream();
 					GZIPOutputStream zip = new GZIPOutputStream(bos);
 					OutputStreamWriter out = new OutputStreamWriter(zip, UTF_8);
-					@SuppressWarnings("rawtypes")
-					Map map = sco.getLaunchdata();
-					if(map == null) 
-						out.write("{}"); // Empty map
-					else 
-						JSONEncoder.encode(map, out);
-					out.close();
+					getJSONLaunchData(scoid, out);
 					byte[] bytes = bos.toByteArray();
 					access.changeSco(scoid, scoName, description, false, bytes,
 							showScore);
@@ -253,7 +323,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		executor.execute(run);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	private Hashtable getCourseDescription_int( int courseid) throws IOException, XmlRpcException, SQLException
 	{
 		CourseMapper mapper = new CourseMapper();
@@ -288,6 +358,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 
     
     
+	@SuppressWarnings("serial")
 	class ScormDecorator extends JPanel implements SCORM12APIInterface 
 	{
 
@@ -350,8 +421,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 
 		public String getLauchDataString() throws IOException, XmlRpcException, SQLException
 		{
-			ScoMapper mapper = new ScoMapper();
-			Sco sco = (Sco) mapper.get(scoid);
+			Sco sco = (Sco) extraScoMapper.get(scoid);
 			return sco.getLaunchdataString();
 		}
 
@@ -427,6 +497,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	 * @throws ServletException
 	 * @throws IOException
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void doImage(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
@@ -505,7 +576,6 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		wiskopdr.stop();
 		wiskopdr.destroy();
 		frame.dispose(); // on close ....
-		
 	}
 
 	private Class<Applet> lastClass;
@@ -528,7 +598,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 				log("newInstance of " + name, e1);
 				e1.printStackTrace();
 			}		
-		Loader loader = Loader.create("dwo.jar"); // Helaas, wiskopdr.jar geen goede index.
+		ClassLoader loader = getClassLoader(); // Helaas, wiskopdr.jar geen goede index.
 		try {
 			Class<?> clazz =  loader.loadClass(name);
 			lastClass = (Class<Applet>) clazz;
@@ -691,17 +761,21 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 //		out.close();
 //	}
 	
+	@SuppressWarnings("rawtypes")
 	void getJSONLaunchData(int sco, Writer out) throws IOException {
-		Hashtable<?,?> map;
+		Map map;
 		try {
-			map = getLaunchData_int(sco);
+			map = extraScoMapper.getLaunchData(sco);
 			JSONEncoder.encode(map, out);
 		} catch (XmlRpcException e) {
 			throw new IOException(e.getMessage());
 		} catch (SQLException e) {
 			throw new IOException(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			throw new IOException(e.getMessage());
+		} finally {
+			out.close();
 		}
-		out.close();
 	}
 	
 
@@ -788,14 +862,13 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	}
 
 	public String getLaunchData(int scoID) throws Exception {
-		Hashtable map = getLaunchData_int(scoID);
 		StringWriter out = new StringWriter();
-		JSONEncoder.encode(map, out);
-		out.close();
+		getJSONLaunchData(scoID, out);
 		return out.toString();
 	}
 
 
+	@SuppressWarnings("rawtypes")
 	public String getCourseDescription(int courseID) throws Exception {
 		Hashtable map = getCourseDescription_int(courseID);
 		StringWriter out = new StringWriter();

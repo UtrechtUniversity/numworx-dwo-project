@@ -50,6 +50,8 @@
         if(width == null || width.isEmpty()) width="100%";
         String height = request.getParameter("launch_presentation_height");
         if(height == null || height.isEmpty()) height="100%";
+    	String contextPath = request.getContextPath();
+
 %>
 <body style="font-family:sans-serif; margin:0px; position: absolute; width: <%=width%>;height:<%=height%>;">
 <%!
@@ -147,7 +149,7 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
 	href='<%=request.getParameter("launch_presentation_return_url") %>'>Logout</a>
 </div>
 <iframe id='bodypane'
-	src="player.jsp?profile=<%=profile %>&locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
+	src="<%=contextPath %>/lti/player.jsp?profile=<%=profile %>&locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
 >
 </iframe>
 </body>

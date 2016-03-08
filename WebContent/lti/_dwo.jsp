@@ -144,6 +144,8 @@
 	<param name='logoutURL' value="<%=logoutURL %>" >
 	<param name="SERVLET" value="<%=servlet %>" >
 	<param name="IDEAS" value="<%=ideas %>">
+	<param name="jnlp_href" value="/dwo/<%=profile%>/<%=language%>/dwo.jnlp" />
+	<param name="codebase_lookup" value="false">	
 	<%= getDbAccess().getDeepLink(request.getPathInfo()) %>
 </applet>
 </body>
