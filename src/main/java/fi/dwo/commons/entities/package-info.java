@@ -1,3 +1,5 @@
+package fi.dwo.commons.entities;
+
 /**
  * Provides common Java classes between DwoJApplet and DwoServer.
  * <p>

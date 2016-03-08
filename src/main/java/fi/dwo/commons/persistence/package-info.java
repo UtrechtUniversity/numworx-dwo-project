@@ -1,3 +1,5 @@
+package fi.dwo.commons.persistence;
+
 /**
  * Common persistence classes
  * 
