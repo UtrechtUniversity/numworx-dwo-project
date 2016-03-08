@@ -3,13 +3,34 @@ package nl.uu.fi.dwo.interaction.client;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
-public class TekstComponent {
+public class TekstComponent implements IsWidget {
 
+	private static native double getDeviceRatio(JavaScriptObject csctx) /*-{
+		var devicePixelRatio = 1;
+	    if (typeof $wnd !== "undefined" && $wnd.devicePixelRatio)
+	        devicePixelRatio = $wnd.devicePixelRatio;
+	    var backingStoreRatio =
+	        csctx.webkitBackingStorePixelRatio ||
+	        csctx.mozBackingStorePixelRatio ||
+	        csctx.msBackingStorePixelRatio ||
+	        csctx.oBackingStorePixelRatio ||
+	        csctx.backingStorePixelRatio ||
+	        1.0;
+	    if (devicePixelRatio !== backingStoreRatio) {
+	        var ratio = devicePixelRatio / backingStoreRatio;
+			return ratio;
+	    }
+		return 1.0;
+	}-*/;
+	
 	protected Canvas canvas;
 	protected InlineHTML span;
 	protected Context2d ctx;
@@ -36,10 +57,19 @@ public class TekstComponent {
 		span = new InlineHTML();
 		span.setText(tekst);
 		span.setPixelSize(width, height);
-		//canvas.setSize(width + "px", height + "px");
-		canvas.setCoordinateSpaceHeight(height);
-		canvas.setCoordinateSpaceWidth(width);
 		ctx = canvas.getContext2d();
+		double ratio = getDeviceRatio(ctx);
+		canvas.setPixelSize(width, height);
+		if(ratio > 1.0) {
+			canvas.setCoordinateSpaceHeight((int) (height*ratio));
+			canvas.setCoordinateSpaceWidth((int) (width*ratio));
+			ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+		} else {
+		//change the canvas dimensions
+			this.canvas.setCoordinateSpaceHeight(height);
+			this.canvas.setCoordinateSpaceWidth(width);
+		}
+		
 		String fontString = fm.toString();
 		if(fontString.contains("SansSerif"))
 			fontString.replace("SansSerif", "sans-serif");
@@ -171,6 +201,11 @@ public class TekstComponent {
 		sp.add(this.canvas);
 		//sp.add(span);
 		return sp;
+	}
+
+	@Override
+	public Widget asWidget() {
+		return canvas;
 	}
 
 //	public Canvas getCanvas()
