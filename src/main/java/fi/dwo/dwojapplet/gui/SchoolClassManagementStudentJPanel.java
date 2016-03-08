@@ -321,8 +321,9 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             dialog.setVisible(true);
 //            tableModel.init(prop, loginImage, removeImage);
 //            tableModel.fireTableDataChanged();
-                SchoolClassManagementStudentJPanel newPanel = new SchoolClassManagementStudentJPanel();
-                center.loadCenter(newPanel);
+                CenterSubPanel cp = GuiCreator.instance().getClassPanel();
+                GuiCreator.instance().getMainPanel().center.reset();
+                GuiCreator.instance().getMainPanel().center.loadCenter(cp);
             
         }
 //        else if (e.getSource() == removeImage) {
