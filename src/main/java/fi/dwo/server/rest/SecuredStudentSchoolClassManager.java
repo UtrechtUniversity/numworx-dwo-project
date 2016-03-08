@@ -194,7 +194,7 @@ public class SecuredStudentSchoolClassManager {
             }
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove self from a schoolclass id {1} while one or both do not exists or are not in the same school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove yourself from the school class.");
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to submit yourself to this school class.");
         }
 
         return true;

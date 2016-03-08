@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: dwojunittest
 -- ------------------------------------------------------
--- Server version	5.6.26-log
+-- Server version	5.6.27
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -245,7 +245,7 @@ CREATE TABLE `tbldwosystemparameters` (
 
 LOCK TABLES `tbldwosystemparameters` WRITE;
 /*!40000 ALTER TABLE `tbldwosystemparameters` DISABLE KEYS */;
-INSERT INTO `tbldwosystemparameters` VALUES ('DBPlatform','MySQL'),('DBVersion Build','0'),('DBVersion Major','1'),('DBVersion Minor','4'),('DBVersion Revision','0'),('DwoSchoolIndex','0'),('NullSchoolIndex','1'),('NullSchoolLogin','null');
+INSERT INTO `tbldwosystemparameters` VALUES ('DBPlatform','MySQL'),('DBVersion Build','0'),('DBVersion Major','1'),('DBVersion Minor','4'),('DBVersion Revision','1'),('DwoSchoolIndex','0'),('NullSchoolIndex','1'),('NullSchoolLogin','null');
 /*!40000 ALTER TABLE `tbldwosystemparameters` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -593,6 +593,9 @@ CREATE TABLE `tblstudentscocontext` (
   `userID` int(11) NOT NULL DEFAULT '0',
   `createDate` date NOT NULL DEFAULT '1970-01-01',
   `score` float NOT NULL DEFAULT '0',
+  `createTime` time DEFAULT NULL,
+  `completionStatus` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `location` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `schoolGroupID` int(11) DEFAULT NULL,
   PRIMARY KEY (`studentSco`),
   KEY `test` (`scoID`,`userID`),
@@ -687,6 +690,7 @@ CREATE TABLE `tbluser` (
   `registerDate` date NOT NULL DEFAULT '0000-00-00',
   `rights` varchar(100) DEFAULT '_',
   `lastLogin` date DEFAULT NULL,
+  `lastLoginTime` time DEFAULT NULL,
   `singleschool` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`userID`),
   UNIQUE KEY `AK_ID_STUDENT` (`username`),
@@ -702,7 +706,7 @@ CREATE TABLE `tbluser` (
 
 LOCK TABLES `tbluser` WRITE;
 /*!40000 ALTER TABLE `tbluser` DISABLE KEYS */;
-INSERT INTO `tbluser` VALUES (1,NULL,1,'John',NULL,'Doe','dwoadmin','d55b2dbcb757e1dc1725798bccda75cd','dwoadmin@dwo.nl','2015-10-13','_',NULL,0),(8,NULL,8,'FirstName01',NULL,'FamiliyName01','user01','user01','user01@dwo.nl','2015-10-13','_',NULL,0),(9,NULL,2,'FirstName02',NULL,'FamiliyName02','user02','user02','user02@dwo.nl','2015-10-13','_',NULL,0),(10,NULL,5,'FirstName03',NULL,'FamiliyName03','user03','user03','user03@dwo.nl','2015-10-13','_',NULL,0),(11,NULL,2,'FirstName04',NULL,'FamiliyName04','user04','user04','user04@dwo.nl','2015-10-13','_',NULL,1),(12,NULL,5,'FirstName05',NULL,'FamiliyName05','user05','user05','user05@dwo.nl','2015-10-13','_',NULL,1),(13,NULL,4,'FirstName06',NULL,'FamiliyName06','user06','user06','user06@dwo.nl','2015-10-13','_',NULL,1),(14,NULL,3,'FirstName07',NULL,'FamiliyName07','user07','user07','user07@dwo.nl','2015-10-13','_',NULL,0);
+INSERT INTO `tbluser` VALUES (1,NULL,1,'John',NULL,'Doe','dwoadmin','d55b2dbcb757e1dc1725798bccda75cd','dwoadmin@dwo.nl','2015-10-13','_',NULL,NULL,0),(8,NULL,8,'FirstName01',NULL,'FamiliyName01','user01','user01','user01@dwo.nl','2015-10-13','_',NULL,NULL,0),(9,NULL,2,'FirstName02',NULL,'FamiliyName02','user02','user02','user02@dwo.nl','2015-10-13','_',NULL,NULL,0),(10,NULL,5,'FirstName03',NULL,'FamiliyName03','user03','user03','user03@dwo.nl','2015-10-13','_',NULL,NULL,0),(11,NULL,2,'FirstName04',NULL,'FamiliyName04','user04','user04','user04@dwo.nl','2015-10-13','_',NULL,NULL,1),(12,NULL,5,'FirstName05',NULL,'FamiliyName05','user05','user05','user05@dwo.nl','2015-10-13','_',NULL,NULL,1),(13,NULL,4,'FirstName06',NULL,'FamiliyName06','user06','user06','user06@dwo.nl','2015-10-13','_',NULL,NULL,1),(14,NULL,3,'FirstName07',NULL,'FamiliyName07','user07','user07','user07@dwo.nl','2015-10-13','_',NULL,NULL,0);
 /*!40000 ALTER TABLE `tbluser` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -715,4 +719,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-19 10:48:51
+-- Dump completed on 2016-03-08 15:33:32
