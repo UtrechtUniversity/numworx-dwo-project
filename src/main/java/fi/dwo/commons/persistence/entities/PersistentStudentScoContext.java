@@ -6,6 +6,7 @@
 package fi.dwo.commons.persistence.entities;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -75,7 +76,13 @@ public class PersistentStudentScoContext implements Serializable {
     @NotNull
     @Column(name = "score", nullable = false)
     private float score;
-
+    @Column(name = "createTime")
+    private java.sql.Time createTime;
+    @Column(name = "completionStatus")
+    private String completionStatus;
+    @Column(name = "location")
+    private String location;
+    
     public PersistentStudentScoContext() {
     }
 
@@ -147,6 +154,31 @@ public class PersistentStudentScoContext implements Serializable {
         this.score = score;
     }
 
+    public Time getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Time createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getCompletionStatus() {
+        return completionStatus;
+    }
+
+    public void setCompletionStatus(String completionStatus) {
+        this.completionStatus = completionStatus;
+    }
+
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

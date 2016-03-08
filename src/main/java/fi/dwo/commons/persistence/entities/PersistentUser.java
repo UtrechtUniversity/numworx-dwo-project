@@ -90,7 +90,8 @@ public class PersistentUser implements Serializable {
     @NotNull
     @Column(name = "singleschool", nullable = false)
     private Boolean singleSchoolAccount;
-    
+    @Column(name = "lastLoginTime")
+    private java.sql.Time lastLoginTime;
 
     public PersistentUser() {
     }
@@ -208,6 +209,21 @@ public class PersistentUser implements Serializable {
     public void setSingleSchoolAccount(Boolean b) {
         singleSchoolAccount = b;
     }
+
+
+    /**
+     * @return the lastLoginTime
+     */
+    public java.sql.Time getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    /**
+     * @param lastLoginTime the lastLoginTime to set
+     */
+    public void setLastLoginTime(java.sql.Time lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
     
     @Override
     public int hashCode() {
@@ -264,4 +280,5 @@ public class PersistentUser implements Serializable {
 //TODO    public static String hashStringToMd5(String plain){
 //        
 //    }
+
 }
