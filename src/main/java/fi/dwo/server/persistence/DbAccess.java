@@ -711,18 +711,18 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 hashMap.put(rs.getString("name"), rs.getString("value"));
             }
 
-            if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("4")) {
+            if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("4")&& hashMap.get("DBVersion Revision").matches("1")) {
                 LOG.log(Level.INFO, "We are compatible with the database model version: {0}.{1}.{2}",
                         new Object[]{hashMap.get("DBVersion Major"),
                             hashMap.get("DBVersion Minor"),
                             hashMap.get("DBVersion Revision")});
 
             } else {
-                LOG.log(Level.SEVERE, "Database version of server not compatible with v1.4.x. Exiting.");
+                LOG.log(Level.SEVERE, "Database version of server not compatible with v1.4.1. Exiting.");
                 return true;
             }
         } catch (SQLException ex) {
-            LOG.log(Level.SEVERE, "Database model version of server not compatible with v1.4.x. Missing version numbers. Exiting.", ex);
+            LOG.log(Level.SEVERE, "Database model version of server not compatible with v1.4.1. Missing version numbers. Exiting.", ex);
             return true;
         }
         return false; // all ok...
