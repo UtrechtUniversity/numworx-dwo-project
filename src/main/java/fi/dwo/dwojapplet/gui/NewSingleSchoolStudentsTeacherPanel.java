@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -168,13 +169,10 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         TableUtil.setDefaults(jtable, true, new NewSingleSchoolStudentsTeacherPanel.ImageRenderer(), new NewSingleSchoolStudentsTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
 //        TableUtil.setBorder(jtable);
+        //Override default settings for spreadsheet like border.
         jtable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+        jtable.setGridColor(Color.LIGHT_GRAY);
         jtable.setShowGrid(true);
-//        TableCellRenderer colorRenderer = new NewSingleSchoolStudentsTeacherTableColorRenderer();
-//        for (int i = 0; i < 6; i++)
-//        {
-//            jtable.getColumnModel().getColumn(i).setCellRenderer(colorRenderer);
-//        }        
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);
