@@ -886,11 +886,8 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	
 	public void verhoogErrorCount()
 	{
-		System.out.println("verhoogErrorCount antwoordtekstvak");
 		if(changed)
-		{	errorCount++;
-			System.out.println("errorCount antwoordtekstvak verhoogd naar " + errorCount);
-		}
+			errorCount++;
 		changed = false;
 	}
 	
