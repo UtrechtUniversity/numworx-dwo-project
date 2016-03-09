@@ -34,12 +34,7 @@ public class FormuleFont
 	//private boolean italic = true;
 	private boolean italic = false;
 	private boolean smalltext = false;
-
-	public static FormuleFont getDefault()
-	{
-		return createFromFontSize(12, false);
-	}
-
+	
 	public static FormuleFont createFromFontSize(int size)
 	{
 		return createFromFontSize(size, false);
@@ -82,7 +77,7 @@ public class FormuleFont
 
 	public FormuleFont createCopy()
 	{
-		FormuleFont fm = FormuleFont.getDefault();
+		FormuleFont fm = FormuleFont.createFromFontSize(fontSize, false);
 
 		fm.ascent = this.ascent;
 		fm.descent = this.descent;
