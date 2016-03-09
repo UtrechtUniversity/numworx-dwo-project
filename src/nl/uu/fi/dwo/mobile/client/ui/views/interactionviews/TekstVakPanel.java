@@ -2347,11 +2347,12 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		
 		boolean vakinhoudCorrect = true;
 		//Vector v = parent.getOpdrachtObjects();
-		ArrayList<Object> opdrObjects = parent.getOpdrachtObjects();
+		//ArrayList<Object> opdrObjects = parent.getOpdrachtObjects();
+		//ArrayList<Object> opdrObjects = parent.getOpdrachtObjects();
 		comRoot.pause();
-		for(int i = 0; i < opdrObjects.size(); i++)
+		for(int i = 0; i < interactionViewObjects.size(); i++)
 		{
-			Object object = opdrObjects.get(i);
+			Object object = interactionViewObjects.get(i);
 			if(object instanceof InteractionView)
 			{
 				if(mode == 0 || mode == 1)
