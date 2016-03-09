@@ -952,12 +952,14 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		
 		if (uitslag == GEEN)
 			return;
-		if (uitslag == GOED)
+		else if (uitslag == GOED)
 			goedKrulImage.setVisible(true);
 		else if (uitslag == FOUT)
 			foutKruisImage.setVisible(true);
 		else if (uitslag == HALF)
 			goedKrulHalfImage.setVisible(true);
+		if(hasFeedback && !feedback.trim().equals(""))
+			feedbackLabel.setVisible(true);
 	}
 	
 	public void checkAntwoord(boolean show)
@@ -977,7 +979,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 					if (!feedback.trim().equals(""))
 					{
 						zetFeedback();
-						feedbackLabel.setVisible(show);
+						//feedbackLabel.setVisible(show);
 					}
 					else
 					{
@@ -1067,7 +1069,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		feedbackTekst.setObjects(feedbackList);
 		voegFeedbackSluitKnopToe();
 		feedbackTekst.resize();
-		feedbackLabel.setVisible(true);
+		//feedbackLabel.setVisible(true);
 	}
 
 	@Override
