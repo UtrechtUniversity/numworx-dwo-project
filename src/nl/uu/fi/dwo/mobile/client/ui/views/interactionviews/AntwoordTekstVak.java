@@ -343,6 +343,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			public void addElement(FormuleElement e)
 			{
 				super.addElement(e);
+				changed = true;
 				resize();
 				resetimg();
 			}
@@ -351,6 +352,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			public void removeCurrentElement()
 			{
 				super.removeCurrentElement();
+				changed = true;
 				resize();
 				resetimg();
 			}
@@ -359,6 +361,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			public void removeNextElement()
 			{
 				super.removeNextElement();
+				changed = true;
 				resize();
 				resetimg();
 			}
@@ -367,6 +370,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			public void insert(String text)
 			{
 				super.insert(text);
+				changed = true;
 				resize();
 				resetimg();
 			}
