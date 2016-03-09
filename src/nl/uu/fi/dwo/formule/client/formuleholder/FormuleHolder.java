@@ -130,6 +130,10 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 		defaultActiviteitFont = fm;
 	}
 	
+	public static FormuleFont getDefaultActiviteitFont() {
+		return defaultActiviteitFont;
+	}
+
 	public void setDefaultFont(FormuleFont fm)
 	{
 		defaultFont = fm;

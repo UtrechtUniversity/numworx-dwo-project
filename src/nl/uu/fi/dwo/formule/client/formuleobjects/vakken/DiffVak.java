@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
 
+import fi.wiskopdr.Letter;
 import fi.wiskopdr.expressies.BasisExpressie;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -22,7 +23,7 @@ public class DiffVak extends FormuleElementWithChildren
 		//Maar wel zo dat die x ook weer verdwijnt als er iets anders (bijvoorbeeld het opgeslagen kind, dat ook x kan zijn) in wordt gezet.
 		getChild(1).insert("x");
 	
-		diffBreuk = getChild(0).toString().length()==1 && Character.isLetter(getChild(0).toString().charAt(0));
+		diffBreuk = getChild(0).toString().length()==1 && Letter.isLetter(getChild(0).toString().charAt(0));
         
 		width = fm.getAscent()/8+fm.getAscent()+fm.getAscent()/3+getChild(0).width+fm.getAscent()/3+fm.getAscent()/4;
         height = Math.max(getChild(0).height, 2*(fm.getAscent()+fm.getDescent())+fm.getAscent()/4);

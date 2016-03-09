@@ -21,6 +21,7 @@ public class FormuleTeken extends FormuleElement
 {
 	//private FontMetrics fm;
 
+	private static final int INFINITY_BONUS = 4;
 	private String teken;
 	private char character;
 	private boolean combined;
@@ -88,19 +89,37 @@ public class FormuleTeken extends FormuleElement
 
 	private void calculateSize() {
 		
-		ctx.setFont(fm.getFontStyle());
-		TextMetrics m;
-		if (this.teken != null)
-		{	m = ctx.measureText(this.teken);
-			
-		}
-		else
-		{	m = ctx.measureText(" ");
-		}
-		this.setSize((int) m.getWidth(), fm.getAscent() + fm.getDescent());
+		double width = calculateWidth();
+		this.setSize((int) width, fm.getAscent() + fm.getDescent());
 		//this.setAsHoogte(fm.getAscent() / 2);
 		this.setAsHoogte(fm.getAscent());//maakt geen verschil..?
 
+	}
+
+
+
+	private double calculateWidth() {
+		ctx.setFont(fm.getFontStyle());
+		TextMetrics m;
+		double width;
+		if(this.character == '\u221e')
+		{
+			FormuleFont fm2 = fm.createCopy();
+			fm2.setFontSize(fm.getFontSize() + INFINITY_BONUS); // other font!!!! for infinity
+			ctx.setFont(fm2.getFontStyle());
+			m = ctx.measureText(this.teken);
+			width = m.getWidth();
+			ctx.setFont(fm.getFontStyle());
+		} else
+		if (this.teken != null)
+		{	m = ctx.measureText(this.teken);
+			width = m.getWidth();
+		}
+		else
+		{	m = ctx.measureText(" ");
+			width = m.getWidth();
+		}
+		return width;
 	}
 
 
@@ -199,9 +218,9 @@ public class FormuleTeken extends FormuleElement
 			else if(teken.equals("\u221e"))
 			{
 				FormuleFont fm2 = fm.createCopy();
-				fm2.setFontSize(fm.getFontSize() + 4);
+				fm2.setFontSize(fm.getFontSize() + INFINITY_BONUS);
 				ctx.setFont(fm2.getFontStyle());
-				ctx.fillText(teken, -1, this.getAsHoogte()  + 3);
+				ctx.fillText(teken+"|", 0, this.getAsHoogte()  + 3);
 				ctx.setFont(fm.getFontStyle());
 			}
 			else
@@ -350,39 +369,34 @@ public class FormuleTeken extends FormuleElement
 		
 		//fm.setBold(bold);
 		
-		ctx.setFont(fm.getFontStyle());
-		TextMetrics m;
-		if (this.teken != null)
-			m = ctx.measureText(this.teken);
-		else
-			m = ctx.measureText(" ");
+		double width = calculateWidth();
 
 		int fontheight = fm.getAscent() + fm.getDescent();
 		if(fm.isItalic())
 		{	if(FormuleFont.formTimes)
 			{
 				if("f".equals(teken))
-					this.setSize((int) m.getWidth() + 8, fontheight);
+					this.setSize((int) width + 8, fontheight);
 				else if("j".equals(teken))
-					this.setSize((int) m.getWidth() + 5, fontheight);
+					this.setSize((int) width + 5, fontheight);
 				else if("p".equals(teken) || "y".equals(teken))
-					this.setSize((int) m.getWidth() + 4, fontheight);
+					this.setSize((int) width + 4, fontheight);
 				else
-					this.setSize((int) m.getWidth() + 2, fontheight);
+					this.setSize((int) width + 2, fontheight);
 			}
 			else
 			{
 				if(teken.equals("j"))
-					this.setSize((int) m.getWidth() + 4, fontheight);
+					this.setSize((int) width + 4, fontheight);
 				else
-					this.setSize((int) m.getWidth() + 2, fontheight);
+					this.setSize((int) width + 2, fontheight);
 			}
 			
 			
 		
 		}
 		else
-		{	this.setSize((int) m.getWidth() + 1, fontheight);
+		{	this.setSize((int) width + 1, fontheight);
 		}
 		//this.setAsHoogte(fm.getAscent()/2);
 		this.setAsHoogte(fm.getAscent());

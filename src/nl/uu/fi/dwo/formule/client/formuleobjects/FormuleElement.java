@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.interaction.client.TekstElement;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
@@ -78,6 +79,28 @@ public abstract class FormuleElement implements TekstElement
 		initWithParent(parent);
 	}
 
+	private native double getDeviceRatio(JavaScriptObject csctx) /*-{
+		var devicePixelRatio = 1;
+        if (typeof $wnd !== "undefined" && $wnd.devicePixelRatio)
+            devicePixelRatio = $wnd.devicePixelRatio;
+        var backingStoreRatio =
+            csctx.webkitBackingStorePixelRatio ||
+            csctx.mozBackingStorePixelRatio ||
+            csctx.msBackingStorePixelRatio ||
+            csctx.oBackingStorePixelRatio ||
+            csctx.backingStorePixelRatio ||
+            1.0;
+        if (devicePixelRatio !== backingStoreRatio) {
+            var ratio = devicePixelRatio / backingStoreRatio;
+			return ratio;
+        }
+		return 1.0;
+	}-*/;
+	
+	
+	
+	
+	
 	private void initWithParent(FormuleElement parent)
 	{
 		this.holder = parent.holder;
@@ -125,7 +148,7 @@ public abstract class FormuleElement implements TekstElement
 
 	public int getWidth()
 	{
-		return canvas.getCoordinateSpaceWidth();
+		return width;
 	}
 
 	public void setWidth(int width)
@@ -200,11 +223,17 @@ public abstract class FormuleElement implements TekstElement
 		width = w;
 		height = h;
 		
+		double ratio = getDeviceRatio(ctx);
+		canvas.setPixelSize(w, h);
+		if(ratio > 1.0) {
+			canvas.setCoordinateSpaceHeight((int) (h*ratio));
+			canvas.setCoordinateSpaceWidth((int) (w*ratio));
+			ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+		} else {
 		//change the canvas dimensions
-		//this.canvas.setSize(w + "px", h + "px");
-		this.canvas.setCoordinateSpaceHeight(h);
-		this.canvas.setCoordinateSpaceWidth(w);
-		
+			this.canvas.setCoordinateSpaceHeight(h);
+			this.canvas.setCoordinateSpaceWidth(w);
+		}
 		this.setChanged(true);
 	}
 		
@@ -347,12 +376,12 @@ public abstract class FormuleElement implements TekstElement
 	
 	public void draw(Context2d ctx, int x, int y)
 	{
-		ctx.drawImage(this.canvas.getCanvasElement(), x, y);
+		ctx.drawImage(this.canvas.getCanvasElement(), x, y, width, height);
 	}
 
 	public void draw(Context2d ctx)
 	{
-		ctx.drawImage(this.canvas.getCanvasElement(), this.x, this.y);
+		ctx.drawImage(this.canvas.getCanvasElement(), this.x, this.y, width, height);
 	}
 	
 
