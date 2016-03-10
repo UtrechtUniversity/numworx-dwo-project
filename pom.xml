@@ -51,6 +51,12 @@
             <groupId>org.apache.ws.xmlrpc</groupId>
             <artifactId>xmlrpc</artifactId>
             <version>2.0.1</version>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>servlet-api</artifactId>
+            		<groupId>javax.servlet</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.jamonapi</groupId>
@@ -250,6 +256,13 @@
                     <path>/DWO/DWOServer</path>
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                 </configuration>
+                <dependencies>
+                	<dependency>
+                		<groupId>mysql</groupId>
+                		<artifactId>mysql-connector-java</artifactId>
+                		<version>5.1.15</version>
+                	</dependency>
+                </dependencies>
             </plugin> 
             
                 <!--
@@ -289,6 +302,43 @@
         
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
+        <pluginManagement>
+        	<plugins>
+        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        		<plugin>
+        			<groupId>org.eclipse.m2e</groupId>
+        			<artifactId>lifecycle-mapping</artifactId>
+        			<version>1.0.0</version>
+        			<configuration>
+        				<lifecycleMappingMetadata>
+        					<pluginExecutions>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>
+        									org.codehaus.mojo
+        								</groupId>
+        								<artifactId>
+        									buildnumber-maven-plugin
+        								</artifactId>
+        								<versionRange>
+        									[1.3,)
+        								</versionRange>
+        								<goals>
+        									<goal>
+        										create-timestamp
+        									</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        					</pluginExecutions>
+        				</lifecycleMappingMetadata>
+        			</configuration>
+        		</plugin>
+        	</plugins>
+        </pluginManagement>
     </build>
     
     <!--    <repositories>

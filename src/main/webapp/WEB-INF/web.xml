@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_3_0.xsd">
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/web-app_3_0.xsd">
     <display-name>DWOServer</display-name>
     <session-config>
         <session-timeout>
@@ -18,11 +18,19 @@
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
     </resource-ref>
+    <filter>
+    	<filter-name>xss</filter-name>
+    	<filter-class>fi.dwo.server.xss.XSSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>xss</filter-name>
+    	<url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
     <!-- Servlets -->
     <servlet>
         <description>Servlet voor het genereren van de dwo.html paginaServlet voor het genereren van de dwo.html pagina</description>
         <servlet-name>DwoWebPage</servlet-name>
-        <load-on-startup>0</load-on-startup>
         <servlet-class>fi.dwo.server.persistence.DwoWebPageServlet</servlet-class>
         <!-- note that these parameters can be overridden in the server context.xml and hence should have reverse domain/package naming prefix -->
         <init-param>
@@ -37,11 +45,11 @@
             <param-name>servlet</param-name>
             <param-value>/xmlrpc</param-value>
         </init-param>
+        <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet>
         <description>Datasource servlet</description>
         <servlet-name>xmlrpc</servlet-name>
-        <load-on-startup>0</load-on-startup>
         <servlet-class>fi.dwo.server.persistence.DataSourceAccessServlet</servlet-class>
         <init-param>
             <param-name>datasource</param-name>
@@ -63,10 +71,10 @@
             <param-name>buildnumber</param-name>
             <param-value>9537</param-value>
         </init-param>
+        <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>jersey-servlet</servlet-name>
-        <load-on-startup>0</load-on-startup>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>    
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
@@ -114,7 +122,7 @@
 
     <!-- Required to be directly below the security constraint -->
     <login-config>
-        <auth-method>DIGEST</auth-method>
+        <auth-method>BASIC</auth-method>
         <realm-name>DWO account credentials required.</realm-name>
     </login-config>
 
