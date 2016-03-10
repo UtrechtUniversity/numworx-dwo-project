@@ -255,6 +255,7 @@
                     <url>${tomcat.deploy.url}</url>
                     <path>/DWO/DWOServer</path>
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>
+                    <contextFile>src/test/tomcat/context.xml</contextFile>
                 </configuration>
                 <dependencies>
                 	<dependency>

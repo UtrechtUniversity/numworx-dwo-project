@@ -1,6 +1,7 @@
 package fi.dwo.server.xss;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
@@ -18,11 +19,12 @@ public class XSSFilter implements Filter {
 	public void destroy() {
 	}
 
+	Logger logger = java.util.logging.Logger.getLogger(getClass().getName());
+
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		String method;
-		Logger logger = java.util.logging.Logger.getLogger(getClass().getName());
 		logger.info("doFilter called");
 		if(request instanceof HttpServletRequest)
 		{
@@ -54,10 +56,17 @@ public class XSSFilter implements Filter {
 
 	private void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
-		response.setHeader("Access-Control-Allow-Origin", "*");
+		Principal u = request.getUserPrincipal();
+		String a  = request.getAuthType();
+		String up = request.getHeader("Authorization");
+		logger.info(u + " " + a + " " + up);
+		
+		String origin = request.getHeader("Origin");
+		if(origin == null) origin = "*";
+		response.setHeader("Access-Control-Allow-Origin", origin);
 		response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
 		response.setHeader("Access-Control-Expose-Headers", "content-type");
-		response.setHeader("Access-Control-Allow-Headers", "origin, content-type");
+		response.setHeader("Access-Control-Allow-Headers", "origin, content-type, authorization");
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 
 		response.setContentType("text/plain");
