@@ -93,7 +93,8 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 			style.setFloat(Style.Float.LEFT);
 		style.setDisplay(Display.INLINE_BLOCK);
 		style.setMarginTop(10, Style.Unit.PX);
-		style.setWidth(80 ,Style.Unit.PX);
+		//style.setWidth(80 ,Style.Unit.PX); // XXX past niet altijd
+		style.setProperty("minWidth", 80, Unit.PX);
 		style.setProperty("horizontalAlign", "center"); //TODO: helpt dit?
 		staticPanel.add(knop);
 	}
