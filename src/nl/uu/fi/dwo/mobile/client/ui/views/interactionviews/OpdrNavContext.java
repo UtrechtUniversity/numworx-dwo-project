@@ -185,4 +185,11 @@ public class OpdrNavContext implements OpdrNavIF {
 		return comRoot.getRole();
 	}
 
+	@Override
+	public boolean hasListeners(String command) {
+		if(connector == null)
+			return false;
+		return connector.commands.contains(command);
+	}
+
 }

@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public final class Connector {
 	public Connector(InteractionView view, String widgetId, ObjectList connections, ObjectMap subscriptions) {
@@ -27,6 +28,7 @@ public final class Connector {
 	public ObjectMap  subscriptions;
 	public String widgetId;
 	public Map<String, Set<Map<String,String>>> backing;
+	public Set<String> commands = new TreeSet<String>();
 
 	public List<String> getDest(String command) {
 		ArrayList<String> result = new ArrayList<String>();
@@ -51,6 +53,14 @@ public final class Connector {
 				c.subscribe(command, Collections.singletonMap(widgetId, command));
 			}
 		}
+		if(subscriptions != null)
+		for(String key: subscriptions.keySet()) {
+			String value = subscriptions.getString(key);
+			Connector connector = xMap.get(key);
+			if(connector != null)
+				connector.commands.add(value);
+		}
+
 	}
 
 	private synchronized void subscribe(String command, Map<String, String> item) {

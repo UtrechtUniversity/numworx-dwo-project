@@ -774,5 +774,11 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(comRoot==this) return ROLE_LEARNER;
 		return comRoot.getRole();
 	}
+
+	@Override
+	public boolean hasListeners(String command) {
+		if(comRoot == this) return false;
+		return comRoot.hasListeners(command);
+	}
 	
 }

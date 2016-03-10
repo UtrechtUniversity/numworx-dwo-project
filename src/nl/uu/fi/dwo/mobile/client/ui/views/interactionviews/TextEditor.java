@@ -616,6 +616,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		this.comRoot = comRoot;
 		comRoot.addCBookEventListener(ACTION_NOT_EDITIABLE, this);
 		comRoot.addCBookEventListener(TEXT, this);
+		if(comRoot.hasListeners(TEXT)) {
+			Button btn = new Button(/*fi.wiskopdr.text.Text.constants.uitvoeren()*/ "Uitvoeren");
+			hbox.add(btn);
+		}
 	}
 
 	@Override

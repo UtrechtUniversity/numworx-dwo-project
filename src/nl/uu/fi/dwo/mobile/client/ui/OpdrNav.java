@@ -1237,4 +1237,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return old;
 		
 	}
+	@Override
+	public boolean hasListeners(String command) {
+		return false;
+	}
 }

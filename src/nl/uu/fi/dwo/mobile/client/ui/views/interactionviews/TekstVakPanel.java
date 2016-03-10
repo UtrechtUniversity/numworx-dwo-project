@@ -954,7 +954,8 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			}
 			
 		}
-		
+		Connector.calculateSubscriptions(xWidgetMap.values());
+	
 		if (selectable || (sleepbaar && !sleepHandle))
 			zetKlikPanel();
 
