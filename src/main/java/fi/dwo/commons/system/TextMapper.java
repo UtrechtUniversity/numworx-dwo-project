@@ -41,6 +41,11 @@ public abstract class TextMapper {
     public static final String BTN_COPYSELECTEDTOCLASS = "BTN_COPYTOSCHOOLCLASS";
     public static final String BTN_DELSELECTED = "BTN_DELETE";
     public static final String BTN_UPDATE = "BTN_UPDATE";
+    
+    /* labels for radio buttons and others */
+    public static final String LBL_STUDENTS = "LBL_STUDENTS";
+    public static final String LBL_TEACHERS = "LBL_TEACHERS";
+    public static final String LBL_SCHOOLADMINS = "LBL_SCHOOLADMINS";
 
     /* header panel headers */
     public static final String HDR_NEW_STUDENTS = "HDR_NEW_STUDENTS";

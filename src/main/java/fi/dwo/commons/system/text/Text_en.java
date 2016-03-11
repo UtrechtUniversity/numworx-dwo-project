@@ -40,6 +40,10 @@ public class Text_en extends ListResourceBundle {
         {TextMapper.HDR_EDITTEACHERS, "Edit teachers"},
         {TextMapper.HDR_SCHOOLCLASS, "Class"},
         
+        {TextMapper.LBL_STUDENTS, "Students"},
+        {TextMapper.LBL_TEACHERS, "Teachers"},
+        {TextMapper.LBL_SCHOOLADMINS, "Schooladmins"},        
+        
         {TextMapper.TBL_SCHOOL, "school"},
         {TextMapper.TBL_LOGIN, "login"},
         {TextMapper.TBL_ROLE, "role"},
