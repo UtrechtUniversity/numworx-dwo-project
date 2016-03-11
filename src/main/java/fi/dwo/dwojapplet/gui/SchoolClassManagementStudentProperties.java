@@ -61,6 +61,7 @@ public class SchoolClassManagementStudentProperties {
     public void removeSchoolClass(DomSchoolClass sc) throws Dwo2Exception {
         if (activeSchoolClass != sc) {
             SecureStudentSchoolClassManager.removeSchoolClass(sc);
+            init();
         }
     }
 
@@ -76,5 +77,5 @@ public class SchoolClassManagementStudentProperties {
         SecureStudentSchoolClassManager.registerStudentForSchoolClass(submit);
         init();
     }
-    
+
 }

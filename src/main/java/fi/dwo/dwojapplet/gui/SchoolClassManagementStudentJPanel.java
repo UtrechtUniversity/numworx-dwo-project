@@ -8,6 +8,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -293,7 +294,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         TableUtil.setBorder(jtable);
         //TableUtil.shrinkToFit(table, jtbl, 520, 405);
         jtbl.setVisible(false);
-        this.add(jtbl);        
+        this.add(jtbl);
         jtbl.setVisible(true);
 
     }
@@ -317,14 +318,15 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             dialog.pack();
 //            dialog.setLocationRelativeTo(null);
             dialog.setLocationRelativeTo(GuiCreator.instance().mainPanel);
+            dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
 //            tableModel.init(prop, loginImage, removeImage);
 //            tableModel.fireTableDataChanged();
-                CenterSubPanel cp = GuiCreator.instance().getClassPanel();
-                GuiCreator.instance().getMainPanel().center.reset();
-                GuiCreator.instance().getMainPanel().center.loadCenter(cp);
-            
+            CenterSubPanel cp = GuiCreator.instance().getClassPanel();
+            GuiCreator.instance().getMainPanel().center.reset();
+            GuiCreator.instance().getMainPanel().center.loadCenter(cp);
+
         }
 //        else if (e.getSource() == removeImage) {
 //            LOG.log(Level.INFO, "remove role");

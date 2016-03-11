@@ -314,14 +314,15 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
                     dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
                     dialog.setAlwaysOnTop(true);
                     dialog.setVisible(true);
-
                     //(this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
                     //      JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 }
                 prop.registerStudentForSchoolClass(newSchoolClass);
                 prop.init();
+//                tableModel = new SchoolClassRegistrationStudentTableModel();
                 tableModel.init(prop);
                 tableModel.fireTableDataChanged();
+                
             }
             catch (Dwo2Exception ex) {
                 Logger.getLogger(SchoolClassRegistrationStudentJPanel.class.getName()).log(Level.SEVERE, null, ex);
