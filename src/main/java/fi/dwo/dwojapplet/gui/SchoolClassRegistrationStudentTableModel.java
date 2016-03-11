@@ -25,7 +25,7 @@ class SchoolClassRegistrationStudentTableModel extends AbstractTableModel {
     public void init(SchoolClassManagementStudentProperties props) throws Dwo2Exception {
 
         prop = props;
-        List<DomSchoolClass> scList = prop.getSchoolsClasses();
+        List<DomSchoolClass> scList = prop.getUnregisteredSchoolClasses();
         int rows = 0;
         if (scList == null) {
             scList = new ArrayList();

@@ -76,6 +76,7 @@ public class StudentsInSchoolClassTeacherPanelProperties {
     }
             
     public List<DomSchoolClass> getTeachersOtherSchoolClasses(DomSchoolClass sc) throws Dwo2Exception{
+        //get new list instance
         List<DomSchoolClass> scList = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
         for(DomSchoolClass c : scList){
             if(sc.getId().equals(c.getId())){

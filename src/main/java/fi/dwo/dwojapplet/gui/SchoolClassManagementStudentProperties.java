@@ -5,6 +5,7 @@ import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureStudentSchoolClassManager;
+import fi.dwo.dwojapplet.domain.rest.SecureTeacherSchoolClassManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -78,4 +79,22 @@ public class SchoolClassManagementStudentProperties {
         init();
     }
 
+    public List<DomSchoolClass> getUnregisteredSchoolClasses() throws Dwo2Exception {
+        List<DomSchoolClass> schoolsClasses = getSchoolsClasses();
+        List<DomSchoolClass> studentsClasses = getStudentsSchoolClasses();
+        List<DomSchoolClass> result = new ArrayList<>(schoolsClasses.size() - studentsClasses.size());
+        for (DomSchoolClass c : schoolsClasses) {
+            Boolean flag = true; //add teacher to result list
+            for (DomSchoolClass sc : studentsClasses) {
+                if (sc.getId().equals(c.getId())) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                result.add(c);
+            }
+        }
+        return result;
+    }
 }

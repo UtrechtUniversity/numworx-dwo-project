@@ -35,6 +35,7 @@ public class TeachersInSchoolClassTeacherPanelProperties {
             for (DomTeacher c : classTeachers) {
                 if (t.equals(c)) {
                     flag = false;
+                    break;
                 }
             }
             result.add(t);
