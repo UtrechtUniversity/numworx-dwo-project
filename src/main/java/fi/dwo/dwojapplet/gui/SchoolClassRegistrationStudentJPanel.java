@@ -73,7 +73,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
 
         //init gui (old code)
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        //this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.setAlignmentY(TOP_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
@@ -106,7 +106,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
             backButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
             backButton.setSize(addButton.getPreferredSize());
             backButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-            
+
             buildJTable();
         }
         catch (Dwo2Exception ex) {
@@ -124,7 +124,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
         footer.add(Box.createHorizontalStrut(15));
         footer.add(backButton);
         footer.setBorder(new EmptyBorder(10, 10, 10, 10));
-        footer.setBackground(GuiConstants.MAIN_BACKGROUND);
+        //footer.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.add(footer);
     }
 
@@ -301,6 +301,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addButton) {
+            Boolean doIt = true;
             try {
                 //TODO Register SchoolClass
                 int i = jt.getSelectedRow();
@@ -311,18 +312,21 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
                     panel.setSchoolClass(newSchoolClass);
                     panel.setRegistrationKey("");
                     ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(panel);
+                    panel.setParent(dialog);
                     dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
                     dialog.setAlwaysOnTop(true);
                     dialog.setVisible(true);
-                    //(this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-                    //      JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    doIt = panel.getOkSelected();
+                    if (doIt) {
+                        newSchoolClass.setRegistrationKey(panel.getRegistrationKey());
+                    }
                 }
-                prop.registerStudentForSchoolClass(newSchoolClass);
-                prop.init();
-//                tableModel = new SchoolClassRegistrationStudentTableModel();
-                tableModel.init(prop);
-                tableModel.fireTableDataChanged();
-                
+                if (doIt) {
+                    prop.registerStudentForSchoolClass(newSchoolClass);
+                    prop.init();
+                    tableModel.init(prop);
+                    tableModel.fireTableDataChanged();
+                }
             }
             catch (Dwo2Exception ex) {
                 Logger.getLogger(SchoolClassRegistrationStudentJPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -331,8 +335,8 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
             parentDialog.dispose();
         }
     }
-    
-    public void setParent(JDialog parent){
+
+    public void setParent(JDialog parent) {
         parentDialog = parent;
     }
 }

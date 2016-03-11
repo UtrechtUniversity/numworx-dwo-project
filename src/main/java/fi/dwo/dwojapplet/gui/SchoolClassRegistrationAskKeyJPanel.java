@@ -2,15 +2,19 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.commons.util.RandomPasswordGenerator;
 import java.awt.Color;
+import static java.awt.Component.LEFT_ALIGNMENT;
+import static java.awt.Component.TOP_ALIGNMENT;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -28,6 +32,8 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
     // componentList
     JButton okBtn = new JButton(TextMapper.getText(TextMapper.BTN_OK));
     JButton cancelBtn = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+    private Boolean okSelected = false;
+    
     private JLabel classLabel;
     private JTextField classTextField;
 //	private JCheckBox treeCB;
@@ -40,12 +46,19 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
     // private String classKeyTextName;
     private String registrationKey; // not null means it is set
     private boolean iconizer;
+    private JDialog parentDialog;
 
     public SchoolClassRegistrationAskKeyJPanel() {
         init();
     }
 
     public void init() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        //this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setAlignmentX(LEFT_ALIGNMENT);
+        this.setAlignmentY(TOP_ALIGNMENT);
+        setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        
         // Constructing Pane
         classLabel = new JLabel(TextMapper.getText("klasnaam"));
 
@@ -66,6 +79,8 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
                         .getText("Geef de registratiesleutel op om te registreen."));
         registrationKeyTextField.addFocusListener(this);
         registrationKeyTextField.setVisible(true);
+        okBtn.addActionListener(this);
+        cancelBtn.addActionListener(this);
         // intialize a random password when the registration key is enabled and
         // the length is less than 5.
 
@@ -120,10 +135,12 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == okBtn) {
-            this.getParent().getParent().getParent().getParent().setVisible(false);
+    if (e.getSource() == okBtn) {
+            okSelected = true;
+            parentDialog.dispose();
         } else if (e.getSource() == cancelBtn) {
-            this.getParent().getParent().getParent().getParent().setVisible(false);
+            okSelected = false;
+            parentDialog.dispose();
         }
     }
 
@@ -137,20 +154,16 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
             setClassName(classTextField.getText());
         } else if (e.getSource() == registrationKeyTextField) {
             setRegistrationKey(registrationKeyTextField.getText());
-            if (getRegistrationKey() == null
-                    || getRegistrationKey().length() == 0) {
-                RandomPasswordGenerator generator = RandomPasswordGenerator
-                        .instance();
-                String key = generator.Generate(5);
-                setRegistrationKey(key);
-            } else {
-                setRegistrationKey(registrationKeyTextField.getText());
-            }
-            if (getRegistrationKey().length() < 5) {
-                registrationKeyTextField.setForeground(WARN_COLOR);
-            } else {
-                registrationKeyTextField.setForeground(STYLE_COLOUR);
-            }
+//            if (getRegistrationKey() == null){                
+//                setRegistrationKey("");
+//            } else {
+//                setRegistrationKey(registrationKeyTextField.getText());
+//            }
+//            if (getRegistrationKey().length() < 5) {
+//                registrationKeyTextField.setForeground(WARN_COLOR);
+//            } else {
+//                registrationKeyTextField.setForeground(STYLE_COLOUR);
+//            }
         }
     }
 
@@ -203,6 +216,17 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
     public void updateSchoolClass(DomNewSchoolClass4Student sc) {
         sc.setSchoolClassName(className);
         sc.setRegistrationKey(registrationKey);
+    }
+
+    public void setParent(JDialog parent){
+        parentDialog = parent;
+    }
+
+    /**
+     * @return the okSelected
+     */
+    public Boolean getOkSelected() {
+        return okSelected;
     }
 
 }
