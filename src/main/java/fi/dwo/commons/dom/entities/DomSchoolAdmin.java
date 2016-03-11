@@ -13,7 +13,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class DomSchoolAdmin extends DomUser {
-        
+
+    public DomSchoolAdmin(){
+        super();
+    }
+    
     public DomSchoolAdmin(PersistentUser u) {
         super(u);
     }
