@@ -53,7 +53,7 @@ public class SecureUserAccountManager {
             restUser.setDomFullUser(user);
             
             user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", DomFullUser.class, restUser);
-            HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(user.getUserName(), user.getPassword()).build();
+            HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForBasic(user.getUserName(), user.getPassword()).build();
             Client client = ClientBuilder.newClient().register(feature);
             WebTarget target = client.target(DwoHelper.getServerUrlPath().toString());
             StoredRestManager.setWebTargetRest(target);

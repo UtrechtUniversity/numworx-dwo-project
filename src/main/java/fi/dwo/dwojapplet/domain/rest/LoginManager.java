@@ -28,7 +28,7 @@ public class LoginManager {
     public static DomFullUser login(String username, String password) throws Dwo2Exception {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
         DomFullUser user;
-        HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(username, password).build();
+        HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForBasic(username, password).build();
         Client client = ClientBuilder.newClient().register(feature);
         CacheControl cache = new CacheControl();
         cache.setNoCache(true);

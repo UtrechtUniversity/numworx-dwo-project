@@ -34,7 +34,7 @@ public class RestExample {
     public static void main(String[] args) {
 
         //ensures authentication for REST request.
-        HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest("gert_project", "3f4bfc028f72ef8502f49fa86f0e2823").build();
+        HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForBasic("gert_project", "3f4bfc028f72ef8502f49fa86f0e2823").build();
         Client client = ClientBuilder.newClient().register(feature);
 
 //        //getjson
