@@ -109,8 +109,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
     }
 
     /**
-     * Test of getSchoolAdminInSchool method, of class
-     * SecuredSchoolAdminSchoolManager. Tests if the proper number of school admins
+     * Test of getSchoolAdminsInSchool method, of class
+ SecuredSchoolAdminSchoolManager. Tests if the proper number of school admins
      * is returned for a known school.
      */
     @Test
@@ -118,7 +118,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         System.out.println("getSchoolAdminInSchool");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        List<DomTeacher> result = instance.getSchoolAdminInSchool(sc);
+        List<DomSchoolAdmin> result = instance.getSchoolAdminsInSchool(sc);
         assertEquals(1L, result.size());
     }
 
