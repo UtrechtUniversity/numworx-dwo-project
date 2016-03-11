@@ -27,6 +27,7 @@ public enum RestListClassTypes {
         DomRole,
         DomSamlUser,
         DomSchool,
+        DomSchoolAdmin,
         DomSchoolClass,
         DomSchoolGroup,
         DomScoContext, 
