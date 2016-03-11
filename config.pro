@@ -53,20 +53,20 @@
 #    <methods>;
 #}
 
--keep class fi.shaded.wiskopdr2.tekstobjects.LinkIF{
-    <fields>;
-    <methods>;
-}
+#-keep class fi.shaded.wiskopdr2.tekstobjects.LinkIF{
+#    <fields>;
+#    <methods>;
+#}
 
--keep class fi.shaded.wiskopdr2.tekstobjects.TekstArea{
-    <fields>;
-    <methods>;
-}
+#-keep class fi.shaded.wiskopdr2.tekstobjects.TekstArea{
+#    <fields>;
+#    <methods>;
+#}
 
--keep class fi.shaded.wiskopdr2.RealPoint{
-    <fields>;
-    <methods>;
-}
+#-keep class fi.shaded.wiskopdr2.RealPoint{
+#    <fields>;
+#    <methods>;
+#}
 
 -keep class fi.beans.*.* {
     <fields>;
@@ -151,10 +151,10 @@
 
 
 
--keep class fi.shaded.wiskopdr2.WiskOpdr{
-    <fields>;
-    <methods>;
-}
+#-keep class fi.shaded.wiskopdr2.WiskOpdr{
+#    <fields>;
+#    <methods>;
+#}
 
 
 
