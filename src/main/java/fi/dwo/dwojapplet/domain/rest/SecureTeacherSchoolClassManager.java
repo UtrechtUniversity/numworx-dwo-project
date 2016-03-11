@@ -61,8 +61,8 @@ public class SecureTeacherSchoolClassManager {
         return src;
     }
 
-    public static List<DomTeacher> getStudentsInSchool() throws Dwo2Exception {
-        List<DomTeacher> src;
+    public static List<DomStudent> getStudentsInSchool() throws Dwo2Exception {
+        List<DomStudent> src;
         src = StoredRestManager.getInstance().getList("/rest/secure/teacher/schoolclass/getStudentsInSchoolList", RestListClassTypes.DomStudent);
         LOG.log(Level.FINE, "Retrieved list of single school students in the school for the teacher with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId()});
         return src;

@@ -39,6 +39,8 @@ public class AccountDataFullStudentJPanel extends JPanel implements
 
     private JPasswordField repassword;
 
+    private JTextField username;
+
     private JTextField firstname;
 
     private JTextField middlename;
@@ -114,6 +116,13 @@ public class AccountDataFullStudentJPanel extends JPanel implements
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         l.setLocation(160, 30);
         p.add(l);
+        
+        /* Username field */
+        username = new JTextField();
+        username.setText("");
+        username.setBounds(160, 28, 120, 20);
+        username.setEditable(false);
+        p.add(username);
 
         /* Old-Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD) + ":");
@@ -402,6 +411,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
     public void setUser(DomFullUser aUser) {
         user = aUser;
 //        oldpassword.setText(aUser.getPassword());
+        username.setText(aUser.getUserName());
         oldpassword.setText("");
         password.setText("");
         repassword.setText("");
