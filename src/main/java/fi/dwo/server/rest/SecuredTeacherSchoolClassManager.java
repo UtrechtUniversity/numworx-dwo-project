@@ -718,7 +718,7 @@ public class SecuredTeacherSchoolClassManager {
     }
 
     /**
-     * Edits a singleSchoolStudent.
+     * Returns a singleSchoolStudent.
      *
      * @param sc
      * @param submit

@@ -1,6 +1,8 @@
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomSchoolAdmin;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
@@ -13,7 +15,12 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestGetSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestSchoolAdmin;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestStudent;
@@ -21,6 +28,8 @@ import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import java.util.ArrayList;
@@ -134,10 +143,10 @@ public class SecuredSchoolAdminSchoolManager {
     @GET
     @Produces({"application/json"})
     @Path("/getSchoolAdminList")
-    public static List<DomTeacher> getSchoolAdminInSchool(@Context SecurityContext sc) {
+    public static List<DomSchoolAdmin> getSchoolAdminsInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
-        List<DomTeacher> domTeachers = null;
+        List<DomSchoolAdmin> domSchoolAdmin = null;
 
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
@@ -150,9 +159,9 @@ public class SecuredSchoolAdminSchoolManager {
         List<PersistentHasRole> hrList;
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.SCHOOLADMIN);
-            domTeachers = new ArrayList<DomTeacher>(hrList.size());
+            domSchoolAdmin = new ArrayList<DomSchoolAdmin>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                domTeachers.add(new DomTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                domSchoolAdmin.add(new DomSchoolAdmin((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
             }
         }
         catch (Dwo2Exception ex) {
@@ -160,7 +169,7 @@ public class SecuredSchoolAdminSchoolManager {
             throw new Dwo2RestException(ex);
         }
 
-        return domTeachers;
+        return domSchoolAdmin;
     }
     
     
@@ -502,4 +511,51 @@ public class SecuredSchoolAdminSchoolManager {
 
         return true;
     }
+    
+   /**
+     * Returns a singleSchoolStudent.
+     *
+     * @param sc
+     * @param submit
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getSingleSchoolStudent")
+    public DomSingleSchoolStudent getSingleSchoolStudent(@Context SecurityContext sc, RestGetSingleSchoolStudent submit) {
+
+        PersistentHasRole phr = null;
+        PersistentHasRole shr = null;
+        PersistentUser student = null;
+        PersistentSchool school = null;
+        PersistentSchoolClass schoolClass = null;
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+
+        student = UserManager.findEntity(MySQLPersistenceId.getId(submit.getDomGetSingleSchoolStudent().getDomStudent().getId()));
+        
+        try {
+            shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+        
+        if(student.isSingleSchoolAccount()){
+            return new DomSingleSchoolStudent(student);
+        }else{
+            LOG.log(Level.SEVERE,"User {0} tried to access full userdata of user {1}.", new Object[]{phr.getPersistentHasRolePK().getId(), shr.getUser().getId()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+    }
+        
 }
