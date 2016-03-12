@@ -171,20 +171,20 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
     }
 
     private void buildJTable() throws Dwo2Exception {
-        if (jtbl != null) {
-            remove(jtbl);
-            jtbl = null;
-        }
-        jtbl = new JPanel();
-        jtbl.setLayout(new BoxLayout( jtbl, BoxLayout.PAGE_AXIS ));
+//        if (jtbl != null) {
+//            remove(jtbl);
+//            jtbl = null;
+//        }
+//        jtbl = new JPanel();
+//        jtbl.setLayout(new BoxLayout( jtbl, BoxLayout.PAGE_AXIS ));
 
         JTable jtable = new JTable();
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.setFillsViewportHeight(true);
 //        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
-        jtbl.add(jtable.getTableHeader());
-        jtbl.add(Box.createHorizontalGlue());
-        jtbl.setBackground(GuiConstants.MAIN_BACKGROUND);
+//        jtbl.add(jtable.getTableHeader());
+//        jtbl.add(Box.createHorizontalGlue());
+//        jtbl.setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new UsersInSchoolSchoolAdminPanelTableModel();
 
         tableModel.init(prop.getStudentsInSchool(), removeImage, editImage, emptyImage);
@@ -204,17 +204,20 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         jtable.setBorder(null);
 
         TableUtil.setJTableSizes(jtable);
-        TableUtil.setBorder(jtable);
-        jtbl.add(jtable);
+ //       TableUtil.setBorder(jtable);
+//        jtbl.add(jtable);
 //        jtbl.setVisible(false);
-        JScrollPane scrollPane = new JScrollPane(jtbl);
+        JScrollPane scrollPane = new JScrollPane();
+        jtable.setSize(100, 100);
+//        scrollPane.getViewport().add(jtable);
         scrollPane.setVisible(true);
-//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.add(scrollPane,BorderLayout.NORTH);
-        jtbl.add(Box.createVerticalGlue());
+//        jtbl.add(Box.createVerticalGlue());
 
 //        this.add(jtbl);
-        jtbl.setVisible(true);
+ //       jtbl.setVisible(true);
 
     }
 
