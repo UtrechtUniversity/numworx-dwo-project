@@ -4,9 +4,12 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomGetSingleSchoolStudent;
+import fi.dwo.commons.dom.entities.DomSchoolAdmin;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
+import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import static fi.dwo.commons.rest.RestListClassTypes.DomSchoolAdmin;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Color;
@@ -60,7 +63,6 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
 
 //    private JButton deleteButton;
 //    private JButton addStudentsButton;
-
     JRadioButton studentRadio;
     JRadioButton teacherRadio;
     JRadioButton schoolAdminRadio;
@@ -162,8 +164,35 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 finally {
                     fireEditingStopped();
                 }
-            }
+            } else if (value == removeImage) {
+                try {
 
+                    if (studentRadio.isSelected()) {
+                        DomStudent user = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                        if (user.getSingleSchool()) {
+                            prop.removeSingleSchoolStudentFromSchool(user);
+                        } else {
+                            prop.removeStudentFromSchool(user);
+                        }
+                        tableModel.init(prop.getTeachersInSchool(), removeImage, editImage, emptyImage);
+                    } else if (teacherRadio.isSelected()) {
+                        DomTeacher user = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
+                        prop.removeTeacherFromSchool(user);
+                        tableModel.init(prop.getTeachersInSchool(), removeImage, editImage, emptyImage);
+                    } else if (schoolAdminRadio.isSelected()) {
+                        DomSchoolAdmin user = (DomSchoolAdmin) tableModel.getValueAt(row, tableModel.getColumnCount());
+                        prop.removeSchoolAdminFromSchool(user);
+                        tableModel.init(prop.getSchoolAdminsInSchool(), removeImage, editImage, emptyImage);
+                    }
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.FINE, null, ex);
+                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                }
+                finally {
+                    fireEditingStopped();
+                }
+            }
         }
     }
 
@@ -173,7 +202,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
             jtbl = null;
         }
         jtbl = new JPanel();
-        jtbl.setLayout(new BoxLayout( jtbl, BoxLayout.PAGE_AXIS ));
+        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.PAGE_AXIS));
 
         JTable jtable = new JTable();
         jtable.setMinimumSize(new Dimension(400, 300));
@@ -214,7 +243,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
 //        jtbl.add(Box.createVerticalGlue());
 
         this.add(jtbl);
-       jtbl.setVisible(true);
+        jtbl.setVisible(true);
 
     }
 
@@ -375,7 +404,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         } else if (e.getSource() == teacherRadio) {
             //redo table
             try {
-  //              addStudentsButton.setVisible(false);
+                //              addStudentsButton.setVisible(false);
                 List userList = prop.getTeachersInSchool();
                 tableModel.init(userList, removeImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
@@ -386,7 +415,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         } else if (e.getSource() == schoolAdminRadio) {
             //redo table
             try {
-    //            addStudentsButton.setVisible(false);
+                //            addStudentsButton.setVisible(false);
                 List userList = prop.getSchoolAdminsInSchool();
                 tableModel.init(userList, removeImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();

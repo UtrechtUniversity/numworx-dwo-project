@@ -9,7 +9,10 @@ import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.rest.RestListClassTypes;
 import fi.dwo.commons.rest.entities.RestGetSingleSchoolStudent;
+import fi.dwo.commons.rest.entities.RestSchoolAdmin;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
+import fi.dwo.commons.rest.entities.RestStudent;
+import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.List;
@@ -63,4 +66,46 @@ public class SecureSchoolAdminSchoolManager {
         LOG.log(Level.FINE, "Updated acount data for singlschoolstudent {1} by user {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomSingleSchoolStudent().getId()});
         return result;
     }    
+
+
+    public static Boolean removeStudentFromSchool(DomStudent submit) throws Dwo2Exception {
+        RestStudent restStudent = new RestStudent();
+        restStudent.setRestContext(new DomContext());
+        restStudent.setDomStudent(submit);
+
+        Boolean result = StoredRestManager.getInstance().put("/rest/secure/schooladmin/school/removeStudent", Boolean.class, restStudent);
+        LOG.log(Level.FINE, "Submitted student {1} for removal from school by user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), restStudent.getDomStudent().getId()});
+        return result;
+    }
+
+    public static Boolean removeSingleSchoolStudentFromSchool(DomStudent submit) throws Dwo2Exception {
+        RestStudent restStudent = new RestStudent();
+        restStudent.setRestContext(new DomContext());
+        restStudent.setDomStudent(submit);
+
+        Boolean result = StoredRestManager.getInstance().put("/rest/secure/schooladmin/school/removeSingleSchoolStudentFromSchool", Boolean.class, restStudent);
+        LOG.log(Level.FINE, "Submitted student {1} for removal from school by user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), restStudent.getDomStudent().getId()});
+        return result;
+    }
+
+    public static Boolean removeTeacherFromSchool(DomTeacher submit) throws Dwo2Exception {
+        RestTeacher restTeacher = new RestTeacher();
+        restTeacher.setRestContext(new DomContext());
+        restTeacher.setDomTeacher(submit);
+
+        Boolean result = StoredRestManager.getInstance().put("/rest/secure/schooladmin/school/removeTeacher", Boolean.class, restTeacher);
+        LOG.log(Level.FINE, "Submitted student {1} for removal from school by user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), restTeacher.getDomTeacher().getId()});
+        return result;
+    }
+
+    public static Boolean removeSchoolAdminFromSchool(DomSchoolAdmin submit) throws Dwo2Exception {
+        RestSchoolAdmin restSchoolAdmin = new RestSchoolAdmin();
+        restSchoolAdmin.setRestContext(new DomContext());
+        restSchoolAdmin.setDomSchoolAdmin(submit);
+
+        Boolean result = StoredRestManager.getInstance().put("/rest/secure/schooladmin/school/removeSchoolAdmin", Boolean.class, restSchoolAdmin);
+        LOG.log(Level.FINE, "Submitted student {1} for removal from school by user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), restSchoolAdmin.getDomSchoolAdmin().getId()});
+        return result;
+    }
+   
 }

@@ -75,5 +75,5 @@ public class SecureSchoolAdminSchoolClassManager {
         LOG.log(Level.FINE, "Submitted teacher {1} to schoolclass {2} for schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(),submit.getDomSubmitTeacherToSchoolClass().getTeacher().getId(),submit.getDomSubmitTeacherToSchoolClass().getSchoolClass().getId()});
         return result;
     }
-
+        
 }

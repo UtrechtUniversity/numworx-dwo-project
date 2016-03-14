@@ -9,6 +9,7 @@ import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolClassManager;
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolManager;
 import fi.dwo.dwojapplet.domain.rest.SecureTeacherSchoolClassManager;
 import java.util.List;
@@ -54,12 +55,30 @@ class UsersInSchoolSchoolAdminPanelProperties {
         return SecureSchoolAdminSchoolManager.getSchoolAdminsInSchool();
     }
 
-    DomSingleSchoolStudent getSingleSchoolStudent(DomGetSingleSchoolStudent submit) throws Dwo2Exception {
+    public DomSingleSchoolStudent getSingleSchoolStudent(DomGetSingleSchoolStudent submit) throws Dwo2Exception {
         return SecureSchoolAdminSchoolManager.getSingleSchoolStudent(submit);
     }
 
-    void updateSingleSchoolStudent(DomSingleSchoolStudent student) throws Dwo2Exception {
+    public void updateSingleSchoolStudent(DomSingleSchoolStudent student) throws Dwo2Exception {
         SecureSchoolAdminSchoolManager.updateSingleSchoolStudent(student);
     }
 
+
+    public Boolean removeSingleSchoolStudentFromSchool(DomStudent submit) throws Dwo2Exception {
+        return SecureSchoolAdminSchoolManager.removeSingleSchoolStudentFromSchool(submit);
+    }
+    
+    
+    public Boolean removeStudentFromSchool(DomStudent submit) throws Dwo2Exception {
+        return SecureSchoolAdminSchoolManager.removeStudentFromSchool(submit);
+    }
+
+    public Boolean removeTeacherFromSchool(DomTeacher submit) throws Dwo2Exception {
+        return SecureSchoolAdminSchoolManager.removeTeacherFromSchool(submit);
+    }
+
+    public Boolean removeSchoolAdminFromSchool(DomSchoolAdmin submit) throws Dwo2Exception {
+        return SecureSchoolAdminSchoolManager.removeSchoolAdminFromSchool(submit);
+    }
+    
 }

@@ -3,8 +3,10 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomSchoolAdmin;
 import fi.dwo.commons.dom.entities.DomUser;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +56,11 @@ class UsersInSchoolSchoolAdminPanelTableModel extends AbstractTableModel {
             } else {
                 data[j][4] = emptyImage;
             }
-            data[j][5] = removeImage;
+            if (u instanceof DomSchoolAdmin &&  u.getId().equals(DwoHelper.getCurrentUser().getId())) {
+                data[j][5] = emptyImage;
+            } else {
+                data[j][5] = removeImage;
+            }
             data[j][6] = u;
             j++;
         }
