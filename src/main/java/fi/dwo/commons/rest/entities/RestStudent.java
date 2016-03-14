@@ -5,7 +5,6 @@ package fi.dwo.commons.rest.entities;
 
 import fi.dwo.commons.dom.entities.DomContext;
 import fi.dwo.commons.dom.entities.DomStudent;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestStudent extends DomStudent {
+public class RestStudent {
     private DomContext restContext;
     private DomStudent domStudent;
 
@@ -22,10 +21,10 @@ public class RestStudent extends DomStudent {
         super();
     }
 
-    
-    public RestStudent(PersistentUser u) {
-        super(u);
-    }
+//    
+//    public RestStudent(PersistentUser u) {
+//        super(u);
+//    }
 
     /**
      * @return the restContext
