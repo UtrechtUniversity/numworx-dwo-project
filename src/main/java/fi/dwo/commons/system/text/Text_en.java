@@ -63,6 +63,7 @@ public class Text_en extends ListResourceBundle {
         {TextMapper.TBL_CLASSNAME, "classname"},
    
         {TextMapper.DLG_CONFIRM, "Confirm"},
+        {TextMapper.DLG_Q_REMOVE, "Remove?"},
         {TextMapper.DLG_ENTER_INPUT, "Enter input"},
         {TextMapper.DLG_MESSAGE, "Message"},
         {TextMapper.DLG_ERROR, "Error"},

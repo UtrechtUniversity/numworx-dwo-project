@@ -62,6 +62,7 @@ public class Text_nl extends ListResourceBundle {
 
         
         {TextMapper.DLG_CONFIRM, "Bevestiging"},
+        {TextMapper.DLG_Q_REMOVE, "Verwijderen?"},
         {TextMapper.DLG_ENTER_INPUT, "Voer in"},
         {TextMapper.DLG_MESSAGE, "Bericht"},
         {TextMapper.DLG_ERROR, "Error"},
