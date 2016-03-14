@@ -122,7 +122,7 @@
 
     <!-- Required to be directly below the security constraint -->
     <login-config>
-        <auth-method>BASIC</auth-method>
+        <auth-method>DIGEST</auth-method>
         <realm-name>DWO account credentials required.</realm-name>
     </login-config>
 

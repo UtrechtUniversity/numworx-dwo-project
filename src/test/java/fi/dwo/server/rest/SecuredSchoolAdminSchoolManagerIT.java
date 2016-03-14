@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomContext;
 import fi.dwo.commons.dom.entities.DomSchoolAdmin;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
@@ -136,7 +137,9 @@ public class SecuredSchoolAdminSchoolManagerIT {
 //        restSchool.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchool));
 //        restSchool.setSchoolName("SchoolClass02");
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user02");
-        RestStudent restStudent = new RestStudent(user);
+        RestStudent restStudent = new RestStudent();
+        restStudent.setRestContext(new DomContext());
+        restStudent.setDomStudent(new DomStudent(user));
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         try {
             Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restStudent);
@@ -165,7 +168,9 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("Student did not have a hasRole in the test database. He should.");
         }
         
-        restStudent = new RestStudent(user);
+        restStudent =  new RestStudent();
+        restStudent.setRestContext(new DomContext());
+        restStudent.setDomStudent(new DomStudent(user));
         Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restStudent);
         assertEquals("Student was not removed.", true, result);
         PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user04");
@@ -379,7 +384,9 @@ public class SecuredSchoolAdminSchoolManagerIT {
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
-        RestStudent restStudent = new RestStudent(user);
+        RestStudent restStudent  = new RestStudent();
+        restStudent.setRestContext(new DomContext());
+        restStudent.setDomStudent(new DomStudent(user));
         try {
             Boolean result = instance.removeStudentFromSchool(sc, restStudent);
             assertEquals("SingleSchoolStudent was removed but should fail.", false, result);
@@ -407,7 +414,9 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("Student did not have a hasRole in the test database. He should.");
         }
         
-        restStudent = new RestStudent(user);
+        restStudent = new RestStudent();
+        restStudent.setRestContext(new DomContext());
+        restStudent.setDomStudent(new DomStudent(user));
         Boolean result = instance.removeStudentFromSchool(sc, restStudent);
         assertEquals("Student was not removed.", true, result);
         PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user02");

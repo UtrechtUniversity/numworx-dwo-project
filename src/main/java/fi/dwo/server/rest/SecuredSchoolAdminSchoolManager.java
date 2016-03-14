@@ -15,10 +15,6 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
-import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
-import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
-import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
-import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestGetSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestSchoolAdmin;
@@ -28,8 +24,6 @@ import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
-import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
-import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import java.util.ArrayList;
@@ -194,7 +188,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(restStudent.getId()));
+            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(restStudent.getDomStudent().getId()));
             if (student == null) {
                 return false;
             }
@@ -438,7 +432,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(restStudent.getId()));
+            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(restStudent.getDomStudent().getId()));
             if (student == null) {
                 return false;
             }
