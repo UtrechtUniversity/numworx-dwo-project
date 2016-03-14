@@ -237,6 +237,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"jarURLPathStringProperty",
             DwoHelper.getJarUrlPath()});
 
+        HttpAuthenticationType httpAuthentication = HttpAuthenticationType.valueOf(properties.getProperty("httpAuthentication"));        
+        DwoHelper.setHttpAuthentication(httpAuthentication);
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"httpAuthentication",
+            DwoHelper.getHttpAuthentication()});
+
         String xmlrpc_debug = properties.getProperty("xmlrpc.debug", "false");
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug", xmlrpc_debug});
         MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));

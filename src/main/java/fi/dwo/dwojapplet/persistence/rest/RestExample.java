@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.persistence.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
@@ -34,7 +35,14 @@ public class RestExample {
     public static void main(String[] args) {
 
         //ensures authentication for REST request.
-        HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForBasic("gert_project", "3f4bfc028f72ef8502f49fa86f0e2823").build();
+        HttpAuthenticationFeature feature=null;
+        switch(DwoHelper.getHttpAuthentication()){
+            case BASIC:
+                feature = HttpAuthenticationFeature.universalBuilder().credentialsForBasic("gert_project", "3f4bfc028f72ef8502f49fa86f0e2823").build();
+                break;
+            case DIGEST:
+                feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest("gert_project", "3f4bfc028f72ef8502f49fa86f0e2823").build();
+        }
         Client client = ClientBuilder.newClient().register(feature);
 
 //        //getjson

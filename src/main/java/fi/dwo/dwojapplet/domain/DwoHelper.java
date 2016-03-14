@@ -72,6 +72,7 @@ public final class DwoHelper {
     private static URL serverUrlPath = null;
     private static URL resourceUrlPath = null; // required null if to use the default
     private static URL jarUrlPath;
+    private static HttpAuthenticationType httpAuthentication;
 
     //depending on application or applet start.
     private static SchoolClass schoolClass;
@@ -656,5 +657,19 @@ public final class DwoHelper {
      */
     public static void setSchoolLogins(DomSchoolsRolesAndClasses aSchoolLogins) {
         schoolLogins = aSchoolLogins;
+    }
+
+    /**
+     * @return the httpAuthentication
+     */
+    public static HttpAuthenticationType getHttpAuthentication() {
+        return httpAuthentication;
+    }
+
+    /**
+     * @param aHttpAuthentication the httpAuthentication to set
+     */
+    public static void setHttpAuthentication(HttpAuthenticationType aHttpAuthentication) {
+        httpAuthentication = aHttpAuthentication;
     }
 }

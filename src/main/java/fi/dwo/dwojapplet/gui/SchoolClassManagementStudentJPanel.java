@@ -321,8 +321,8 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
-//            tableModel.init(prop, loginImage, removeImage);
-//            tableModel.fireTableDataChanged();
+            tableModel.init(prop, loginImage, removeImage);
+            tableModel.fireTableDataChanged();
             CenterSubPanel cp = GuiCreator.instance().getClassPanel();
             GuiCreator.instance().getMainPanel().center.reset();
             GuiCreator.instance().getMainPanel().center.loadCenter(cp);

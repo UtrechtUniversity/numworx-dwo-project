@@ -6,6 +6,7 @@ import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.HttpAuthenticationType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
@@ -28,7 +29,14 @@ public class LoginManager {
     public static DomFullUser login(String username, String password) throws Dwo2Exception {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
         DomFullUser user;
-        HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForBasic(username, password).build();
+        HttpAuthenticationFeature feature=null;
+        switch(DwoHelper.getHttpAuthentication()){
+            case BASIC:
+                feature = HttpAuthenticationFeature.universalBuilder().credentialsForBasic(username, password).build();
+                break;
+            case DIGEST:
+                feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(username, password).build();
+        }
         Client client = ClientBuilder.newClient().register(feature);
         CacheControl cache = new CacheControl();
         cache.setNoCache(true);
