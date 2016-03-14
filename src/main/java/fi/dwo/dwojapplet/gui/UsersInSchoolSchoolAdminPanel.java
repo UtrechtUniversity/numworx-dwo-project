@@ -9,7 +9,6 @@ import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import static java.awt.Component.LEFT_ALIGNMENT;
@@ -35,9 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
@@ -62,7 +59,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
     private CenterPanel center;
 
 //    private JButton deleteButton;
-    private JButton addStudentsButton;
+//    private JButton addStudentsButton;
 
     JRadioButton studentRadio;
     JRadioButton teacherRadio;
@@ -171,20 +168,20 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
     }
 
     private void buildJTable() throws Dwo2Exception {
-//        if (jtbl != null) {
-//            remove(jtbl);
-//            jtbl = null;
-//        }
-//        jtbl = new JPanel();
-//        jtbl.setLayout(new BoxLayout( jtbl, BoxLayout.PAGE_AXIS ));
+        if (jtbl != null) {
+            remove(jtbl);
+            jtbl = null;
+        }
+        jtbl = new JPanel();
+        jtbl.setLayout(new BoxLayout( jtbl, BoxLayout.PAGE_AXIS ));
 
         JTable jtable = new JTable();
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.setFillsViewportHeight(true);
-//        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
-//        jtbl.add(jtable.getTableHeader());
-//        jtbl.add(Box.createHorizontalGlue());
-//        jtbl.setBackground(GuiConstants.MAIN_BACKGROUND);
+        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
+        jtbl.add(jtable.getTableHeader());
+        jtbl.add(Box.createHorizontalGlue());
+        jtbl.setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new UsersInSchoolSchoolAdminPanelTableModel();
 
         tableModel.init(prop.getStudentsInSchool(), removeImage, editImage, emptyImage);
@@ -204,20 +201,20 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         jtable.setBorder(null);
 
         TableUtil.setJTableSizes(jtable);
- //       TableUtil.setBorder(jtable);
-//        jtbl.add(jtable);
-//        jtbl.setVisible(false);
-        JScrollPane scrollPane = new JScrollPane();
-        jtable.setSize(100, 100);
-//        scrollPane.getViewport().add(jtable);
-        scrollPane.setVisible(true);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        this.add(scrollPane,BorderLayout.NORTH);
+        TableUtil.setBorder(jtable);
+        jtbl.add(jtable);
+        jtbl.setVisible(false);
+//        JScrollPane scrollPane = new JScrollPane();
+//        jtable.setSize(100, 100);
+////        scrollPane.getViewport().add(jtable);
+//        scrollPane.setVisible(true);
+//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+//        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//        this.add(scrollPane,BorderLayout.NORTH);
 //        jtbl.add(Box.createVerticalGlue());
 
-//        this.add(jtbl);
- //       jtbl.setVisible(true);
+        this.add(jtbl);
+       jtbl.setVisible(true);
 
     }
 
@@ -288,11 +285,11 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         header.add(studentRadio);
         header.add(teacherRadio);
         header.add(schoolAdminRadio);
-        addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
-        addStudentsButton.setSize(addStudentsButton.getPreferredSize());
-        addStudentsButton.addActionListener(this);
-        header.add(Box.createGlue());
-        header.add(addStudentsButton);
+//        addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
+//        addStudentsButton.setSize(addStudentsButton.getPreferredSize());
+//        addStudentsButton.addActionListener(this);
+//        header.add(Box.createGlue());
+//        header.add(addStudentsButton);
 //        header.add(deleteButton);
         this.add(header);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -370,7 +367,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 List userList = prop.getStudentsInSchool();
                 tableModel.init(userList, removeImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
-                addStudentsButton.setVisible(true);
+//                addStudentsButton.setVisible(true);
             }
             catch (Dwo2Exception ex) {
                 Logger.getLogger(UsersInSchoolSchoolAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -378,7 +375,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         } else if (e.getSource() == teacherRadio) {
             //redo table
             try {
-                addStudentsButton.setVisible(false);
+  //              addStudentsButton.setVisible(false);
                 List userList = prop.getTeachersInSchool();
                 tableModel.init(userList, removeImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
@@ -389,7 +386,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         } else if (e.getSource() == schoolAdminRadio) {
             //redo table
             try {
-                addStudentsButton.setVisible(false);
+    //            addStudentsButton.setVisible(false);
                 List userList = prop.getSchoolAdminsInSchool();
                 tableModel.init(userList, removeImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();

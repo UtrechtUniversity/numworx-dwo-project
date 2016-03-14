@@ -23,6 +23,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -234,11 +235,12 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                     //switch role now
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else if (value == removeImage) {
+                    if(GuiCreator.instance().ShowConfirmDialog(null, TextMapper.getText(TextMapper.DLG_Q_REMOVE))==JOptionPane.OK_OPTION){
                     int row = tableModel.getSelectedRow();
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
                     prop.removeSchoolClass(schoolClass);
                     tableModel.init(prop, loginImage, removeImage);
-                    tableModel.fireTableDataChanged();
+                }
 //                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else {
                     // show warning

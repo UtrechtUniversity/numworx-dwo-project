@@ -58,6 +58,7 @@ class UsersInSchoolSchoolAdminPanelTableModel extends AbstractTableModel {
             data[j][6] = u;
             j++;
         }
+        fireTableDataChanged();
     }
 
     @Override

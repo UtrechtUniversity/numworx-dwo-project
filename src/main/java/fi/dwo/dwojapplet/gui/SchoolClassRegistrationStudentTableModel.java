@@ -40,6 +40,7 @@ class SchoolClassRegistrationStudentTableModel extends AbstractTableModel {
             data[j][1] = sc;
             j++;
         }
+        fireTableDataChanged();
     }
 
     @Override

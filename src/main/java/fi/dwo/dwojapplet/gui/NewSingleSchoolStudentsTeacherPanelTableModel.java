@@ -49,7 +49,7 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
         student.clearSettings();
         data.add(student);
         prop = props;
-
+        fireTableDataChanged();
     }
 
     @Override

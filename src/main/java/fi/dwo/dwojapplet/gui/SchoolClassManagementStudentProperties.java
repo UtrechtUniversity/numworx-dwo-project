@@ -5,7 +5,6 @@ import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureStudentSchoolClassManager;
-import fi.dwo.dwojapplet.domain.rest.SecureTeacherSchoolClassManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

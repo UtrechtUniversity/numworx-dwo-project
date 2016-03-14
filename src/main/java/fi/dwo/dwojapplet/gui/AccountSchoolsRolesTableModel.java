@@ -57,6 +57,7 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
             data[j][4] = src;
             j++;
         }
+        fireTableDataChanged();
     }
 
     @Override

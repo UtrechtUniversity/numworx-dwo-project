@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.dom.entities.DomFullUser;
 import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
@@ -26,6 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -311,12 +313,14 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
                     SchoolClassRegistrationAskKeyJPanel panel = new SchoolClassRegistrationAskKeyJPanel();
                     panel.setSchoolClass(newSchoolClass);
                     panel.setRegistrationKey("");
-                    ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(panel);
-                    panel.setParent(dialog);
-                    dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                    dialog.setAlwaysOnTop(true);
-                    dialog.setVisible(true);
-                    doIt = panel.getOkSelected();
+                    int result = JOptionPane.showConfirmDialog(this, panel, TextMapper.getText(""),
+                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//                    ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(panel);
+//                    panel.setParent(dialog);
+//                    dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+//                    dialog.setAlwaysOnTop(true);
+//                    dialog.setVisible(true);
+                    doIt = result == JOptionPane.OK_OPTION;
                     if (doIt) {
                         newSchoolClass.setRegistrationKey(panel.getRegistrationKey());
                     }

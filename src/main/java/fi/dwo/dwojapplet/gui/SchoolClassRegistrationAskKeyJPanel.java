@@ -30,8 +30,8 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
     private final Color WARN_COLOR = Color.RED;
 
     // componentList
-    JButton okBtn = new JButton(TextMapper.getText(TextMapper.BTN_OK));
-    JButton cancelBtn = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+//    JButton okBtn = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+//    JButton cancelBtn = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
     private Boolean okSelected = false;
     
     private JLabel classLabel;
@@ -46,17 +46,17 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
     // private String classKeyTextName;
     private String registrationKey; // not null means it is set
     private boolean iconizer;
-    private JDialog parentDialog;
+//    private JDialog parentDialog;
 
     public SchoolClassRegistrationAskKeyJPanel() {
         init();
     }
 
     public void init() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+//        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         //this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        this.setAlignmentX(LEFT_ALIGNMENT);
-        this.setAlignmentY(TOP_ALIGNMENT);
+//        this.setAlignmentX(LEFT_ALIGNMENT);
+//        this.setAlignmentY(TOP_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         
         // Constructing Pane
@@ -79,8 +79,8 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
                         .getText("Geef de registratiesleutel op om te registreen."));
         registrationKeyTextField.addFocusListener(this);
         registrationKeyTextField.setVisible(true);
-        okBtn.addActionListener(this);
-        cancelBtn.addActionListener(this);
+//        okBtn.addActionListener(this);
+//        cancelBtn.addActionListener(this);
         // intialize a random password when the registration key is enabled and
         // the length is less than 5.
 
@@ -102,7 +102,7 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
                                 GroupLayout.Alignment.TRAILING)
                         .addComponent(classLabel)
                         .addComponent(registrationKeyLabel)
-                        .addComponent(okBtn)
+//                        .addComponent(okBtn)
                 )
                 .addContainerGap()
                 .addGroup(
@@ -110,7 +110,7 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
                                 GroupLayout.Alignment.LEADING)
                         .addComponent(classTextField)
                         .addComponent(registrationKeyTextField))
-                .addComponent(cancelBtn)
+//                .addComponent(cancelBtn)
         );
 
         layout.setVerticalGroup(layout
@@ -128,20 +128,21 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
                 .addGroup(
                         layout.createParallelGroup(
                                 GroupLayout.Alignment.BASELINE)
-                        .addComponent(okBtn)
-                        .addComponent(cancelBtn))
+//                        .addComponent(okBtn)
+//                        .addComponent(cancelBtn)
+                )
         );
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == okBtn) {
-            okSelected = true;
-            parentDialog.dispose();
-        } else if (e.getSource() == cancelBtn) {
-            okSelected = false;
-            parentDialog.dispose();
-        }
+//    if (e.getSource() == okBtn) {
+//            okSelected = true;
+//            parentDialog.dispose();
+//        } else if (e.getSource() == cancelBtn) {
+//            okSelected = false;
+//            parentDialog.dispose();
+//        }
     }
 
     @Override
@@ -218,15 +219,15 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
         sc.setRegistrationKey(registrationKey);
     }
 
-    public void setParent(JDialog parent){
-        parentDialog = parent;
-    }
-
-    /**
-     * @return the okSelected
-     */
-    public Boolean getOkSelected() {
-        return okSelected;
-    }
-
+//    public void setParent(JDialog parent){
+//        parentDialog = parent;
+//    }
+//
+//    /**
+//     * @return the okSelected
+//     */
+//    public Boolean getOkSelected() {
+//        return okSelected;
+//    }
+//
 }

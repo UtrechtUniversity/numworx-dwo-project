@@ -46,6 +46,7 @@ class SchoolClassManagementStudentTableModel extends AbstractTableModel {
             data[j][3] = sc;
             j++;
         }
+        fireTableDataChanged();
     }
 
     @Override
