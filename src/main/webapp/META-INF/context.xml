@@ -21,6 +21,10 @@
   <!-- this context resource can be overloaded by placing a copy in the context.xml 
     of the tomcat -->
   <ResourceLink global="jdbc/dwodb" name="jdbc/dwodb" type="javax.sql.DataSource"/>
+  <!-- LockOut Realm configured 5 minute time-out after 5 password failures in DWOServer.war. cacheSize-limited for a low DOS sensitivity-->
+  <Realm className="org.apache.catalina.realm.LockOutRealm" failureCount="5" lockOutTime="300" cacheSize="100" 
+  cacheRemovalWarningTime="360"> 
   <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
+  </Realm>
   <Parameter name="fi.dwo.dwojapplet.web.appletName" override="true" value="DWOJApplet-2.0-SNAPSHOT.jar"/>
 </Context>
