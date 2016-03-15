@@ -554,7 +554,7 @@ public class SecuredSchoolAdminSchoolManager {
         }
     }
 
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/getTeachersSchoolClassList")
     public List<DomSchoolClass> getTeachersSchoolClasses(@Context SecurityContext sc, RestTeacher restTeacher) {
@@ -576,7 +576,7 @@ public class SecuredSchoolAdminSchoolManager {
         if (thr != null && school != null) {
             List<DomSchoolClass> domSchoolClasses;
             try {
-                List<PersistentTeacherOfClass> tocList = TeacherOfClassManager.findEntities(phr.getPersistentHasRolePK());
+                List<PersistentTeacherOfClass> tocList = TeacherOfClassManager.findEntities(thr.getPersistentHasRolePK());
                 domSchoolClasses = new ArrayList<>(tocList.size());
                 for (PersistentTeacherOfClass toc : tocList) {
                     PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentTeacherOfClassPK().getClassID());
@@ -595,7 +595,7 @@ public class SecuredSchoolAdminSchoolManager {
         }
     }
 
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/getStudentsSchoolClassList")
     public List<DomSchoolClass> getStudentsSchoolClasses(@Context SecurityContext sc, RestStudent restStudent) {
@@ -617,7 +617,7 @@ public class SecuredSchoolAdminSchoolManager {
         if (thr != null && school != null) {
             List<DomSchoolClass> domSchoolClasses;
             try {
-                List<PersistentStudentOfClass> tocList = StudentOfClassManager.findEntities(phr.getPersistentHasRolePK());
+                List<PersistentStudentOfClass> tocList = StudentOfClassManager.findEntities(thr.getPersistentHasRolePK());
                 domSchoolClasses = new ArrayList<>(tocList.size());
                 for (PersistentStudentOfClass toc : tocList) {
                     PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentStudentOfClassPK().getClassID());
