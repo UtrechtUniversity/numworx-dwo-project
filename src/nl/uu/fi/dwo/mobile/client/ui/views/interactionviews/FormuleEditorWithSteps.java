@@ -1611,10 +1611,14 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			FormuleViewer fv = new FormuleViewer(setViewerString(formuleVakInhouden, i));
 			fv.setFont(font);
 			
-			if(i < viewers.size())
-			{	if(viewers.get(i).getAsPanel().getParent() != null)
-					stepPanels.get(i).remove(viewers.get(i).getAsPanel());
-				viewers.remove(i);
+			while(i < viewers.size())
+			{	int last = viewers.size()-1;
+				
+				Panel asPanel = viewers.get(last).getAsPanel();
+				if(asPanel.getParent() != null)
+					stepPanels.get(last).remove(asPanel);
+				viewers.remove(last);
+				asPanel.removeFromParent();
 			}
 			viewers.add(fv);
 			
@@ -1624,6 +1628,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				stepPanel = stepPanels.get(i);
 				if(editor != null)
 				{	stepPanel.remove(editor.getAsPanel());
+					editor.getAsPanel().removeFromParent();
 					editor = null;
 					checkimg.setVisible(false);
 				}
