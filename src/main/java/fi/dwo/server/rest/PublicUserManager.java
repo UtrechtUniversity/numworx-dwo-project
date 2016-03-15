@@ -169,8 +169,6 @@ public class PublicUserManager {
     @Path("/submitSaml")
     public PersistentUser getSamlUser(RestSamlUser samlRestUser) {
         //should return a DomFullUser. 
-        PersistentUser user;
-
         PersistentSamlUser samlUser = SamlUserManager.findEntity(samlRestUser.getDomSamlUser().getSamlUserId(), samlRestUser.getDomSamlUser().getSamlUserId());
         if (samlUser.tokenIsValid(1000)) {//milisseconden
             return UserManager.findEntity(samlUser.getUserID());
@@ -193,12 +191,9 @@ public class PublicUserManager {
     public Boolean getLoginCheck(RestLoginCheck loginCheck){
         DomLoginCheck domCheck = loginCheck.getDomLoginCheck();
         PersistentUser user = UserManager.login(domCheck.getUsername(),domCheck.crypt(domCheck.getPassword()));
-        try {
-            sleep(5000L);
-        }
-        catch (InterruptedException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
+        //not using sleep in synchronized semaphore resource, using 
+        //<Realm className="org.apache.catalina.realm.LockOutRealm" failureCount="5">
+        //in server.xml of tomcat.
         return (user != null);
     }
     

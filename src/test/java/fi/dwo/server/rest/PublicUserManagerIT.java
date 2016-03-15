@@ -156,6 +156,6 @@ public class PublicUserManagerIT {
         restLoginCheck.getDomLoginCheck().setPassword("bla");
         result = instance.getLoginCheck(restLoginCheck);
         assertEquals(false, result);
-    }
+    }        
         
 }
