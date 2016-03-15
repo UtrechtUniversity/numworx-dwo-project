@@ -9,9 +9,7 @@ import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolClassManager;
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolManager;
-import fi.dwo.dwojapplet.domain.rest.SecureTeacherSchoolClassManager;
 import java.util.List;
 import java.util.logging.Logger;
 

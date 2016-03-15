@@ -9,7 +9,6 @@ import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import static fi.dwo.commons.rest.RestListClassTypes.DomSchoolAdmin;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Color;
@@ -70,8 +69,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
 
     private Image editImage;
     private Image emptyImage;
-    private Image studentsImage;
-    private Image teachersImage;
+    private Image klassenImage;
     private Image removeImage;
 
     private JPanel jtbl;
@@ -153,7 +151,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                         //persist returned values
                         user = new DomSingleSchoolStudent(panel.getUser());
                         prop.updateSingleSchoolStudent(user);
-                        tableModel.init(prop.getStudentsInSchool(), removeImage, editImage, emptyImage);
+                        tableModel.init(prop.getStudentsInSchool(), removeImage, klassenImage, editImage, emptyImage);
                         tableModel.fireTableDataChanged();
                     }
                 }
@@ -164,33 +162,54 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 finally {
                     fireEditingStopped();
                 }
-            } else if (value == removeImage) {
-                try {
+            } else if (value == klassenImage) {
+//                        if (studentRadio.isSelected()) {
+//                            DomStudent user = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+//                            if (user.getSingleSchool()) {
+//                                prop.removeSingleSchoolStudentFromSchool(user);
+//                            } else {
+//                                prop.removeStudentFromSchool(user);
+//                            }
+//                            tableModel.init(prop.getStudentsInSchool(), removeImage, klassenImage, editImage, emptyImage);
+//                        } else if (teacherRadio.isSelected()) {
+//                            DomTeacher user = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
+//                            prop.removeTeacherFromSchool(user);
+//                            tableModel.init(prop.getTeachersInSchool(), removeImage, klassenImage, editImage, emptyImage);
+//                        } else if (schoolAdminRadio.isSelected()) {
+//                            DomSchoolAdmin user = (DomSchoolAdmin) tableModel.getValueAt(row, tableModel.getColumnCount());
+//                            prop.removeSchoolAdminFromSchool(user);
+//                            tableModel.init(prop.getSchoolAdminsInSchool(), removeImage, klassenImage, editImage, emptyImage);
+//                        }
+//                    }
 
-                    if (studentRadio.isSelected()) {
-                        DomStudent user = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
-                        if (user.getSingleSchool()) {
-                            prop.removeSingleSchoolStudentFromSchool(user);
-                        } else {
-                            prop.removeStudentFromSchool(user);
+            } else if (value == removeImage) {
+                if (JOptionPane.OK_OPTION == GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_CONFIRM))) {
+                    try {
+                        if (studentRadio.isSelected()) {
+                            DomStudent user = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                            if (user.getSingleSchool()) {
+                                prop.removeSingleSchoolStudentFromSchool(user);
+                            } else {
+                                prop.removeStudentFromSchool(user);
+                            }
+                            tableModel.init(prop.getStudentsInSchool(), removeImage, klassenImage, editImage, emptyImage);
+                        } else if (teacherRadio.isSelected()) {
+                            DomTeacher user = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
+                            prop.removeTeacherFromSchool(user);
+                            tableModel.init(prop.getTeachersInSchool(), removeImage, klassenImage, editImage, emptyImage);
+                        } else if (schoolAdminRadio.isSelected()) {
+                            DomSchoolAdmin user = (DomSchoolAdmin) tableModel.getValueAt(row, tableModel.getColumnCount());
+                            prop.removeSchoolAdminFromSchool(user);
+                            tableModel.init(prop.getSchoolAdminsInSchool(), removeImage, klassenImage, editImage, emptyImage);
                         }
-                        tableModel.init(prop.getTeachersInSchool(), removeImage, editImage, emptyImage);
-                    } else if (teacherRadio.isSelected()) {
-                        DomTeacher user = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
-                        prop.removeTeacherFromSchool(user);
-                        tableModel.init(prop.getTeachersInSchool(), removeImage, editImage, emptyImage);
-                    } else if (schoolAdminRadio.isSelected()) {
-                        DomSchoolAdmin user = (DomSchoolAdmin) tableModel.getValueAt(row, tableModel.getColumnCount());
-                        prop.removeSchoolAdminFromSchool(user);
-                        tableModel.init(prop.getSchoolAdminsInSchool(), removeImage, editImage, emptyImage);
                     }
-                }
-                catch (Dwo2Exception ex) {
-                    LOG.log(Level.FINE, null, ex);
-                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                }
-                finally {
-                    fireEditingStopped();
+                    catch (Dwo2Exception ex) {
+                        LOG.log(Level.FINE, null, ex);
+                        JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    }
+                    finally {
+                        fireEditingStopped();
+                    }
                 }
             }
         }
@@ -213,7 +232,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         jtbl.setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new UsersInSchoolSchoolAdminPanelTableModel();
 
-        tableModel.init(prop.getStudentsInSchool(), removeImage, editImage, emptyImage);
+        tableModel.init(prop.getStudentsInSchool(), removeImage, klassenImage, editImage, emptyImage);
         jtable.setModel(tableModel);
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
@@ -288,13 +307,12 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         MediaTracker tr = new MediaTracker(this);
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
         emptyImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE);
-        studentsImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
-        teachersImage = DwoHelper.getResourceImage(GuiConstants.TEACHER_CLASS_IMAGE);
+        klassenImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         tr.addImage(editImage, 0);
         tr.addImage(emptyImage, 1);
-        tr.addImage(studentsImage, 2);
-        tr.addImage(teachersImage, 3);
+        tr.addImage(klassenImage, 2);
+        tr.addImage(removeImage, 3);
 
         try {
             tr.waitForAll();
@@ -314,6 +332,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         header.add(studentRadio);
         header.add(teacherRadio);
         header.add(schoolAdminRadio);
+        header.setBackground(GuiConstants.MAIN_BACKGROUND);
 //        addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
 //        addStudentsButton.setSize(addStudentsButton.getPreferredSize());
 //        addStudentsButton.addActionListener(this);
@@ -394,7 +413,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
             //redo table
             try {
                 List userList = prop.getStudentsInSchool();
-                tableModel.init(userList, removeImage, editImage, emptyImage);
+                tableModel.init(userList, removeImage, klassenImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
 //                addStudentsButton.setVisible(true);
             }
@@ -406,7 +425,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
             try {
                 //              addStudentsButton.setVisible(false);
                 List userList = prop.getTeachersInSchool();
-                tableModel.init(userList, removeImage, editImage, emptyImage);
+                tableModel.init(userList, removeImage, klassenImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
             }
             catch (Dwo2Exception ex) {
@@ -417,7 +436,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
             try {
                 //            addStudentsButton.setVisible(false);
                 List userList = prop.getSchoolAdminsInSchool();
-                tableModel.init(userList, removeImage, editImage, emptyImage);
+                tableModel.init(userList, removeImage, klassenImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
             }
             catch (Dwo2Exception ex) {
@@ -443,7 +462,6 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
     }
 
     @Override
-    public void stateChanged(ChangeEvent e
-    ) {
+    public void stateChanged(ChangeEvent e) {
     }
 }

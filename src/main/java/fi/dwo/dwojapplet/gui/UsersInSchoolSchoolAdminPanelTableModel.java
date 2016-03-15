@@ -4,6 +4,8 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomSchoolAdmin;
+import fi.dwo.commons.dom.entities.DomStudent;
+import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.dom.entities.DomUser;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -22,6 +24,7 @@ class UsersInSchoolSchoolAdminPanelTableModel extends AbstractTableModel {
             TextMapper.getText(TextMapper.TBL_GIVENNAME),
             TextMapper.getText(TextMapper.TBL_INSERTION),
             TextMapper.getText(TextMapper.TBL_FAMILYNAME),
+            TextMapper.getText(TextMapper.TBL_CLASSLIST),
             TextMapper.getText(TextMapper.TBL_EDIT),
             TextMapper.getText(TextMapper.TBL_DELETE)
 //            TextMapper.getText(TextMapper.TBL_SELECT)
@@ -33,7 +36,7 @@ class UsersInSchoolSchoolAdminPanelTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public <T extends DomUser> void init(List<T> userList, Image removeImage, Image editImage, Image emptyImage) {
+    public <T extends DomUser> void init(List<T> userList, Image removeImage, Image klassenImage, Image editImage, Image emptyImage) {
 
         int rows = 0;
         if (userList == null) {
@@ -44,24 +47,29 @@ class UsersInSchoolSchoolAdminPanelTableModel extends AbstractTableModel {
             rows++; // one for each item in List
         }
 
-        data = new Object[rows][7];
+        data = new Object[rows][8];
         int j = 0;
         for (DomUser u : userList) {
             data[j][0] = u.getUserName();
             data[j][1] = u.getGivenName();
             data[j][2] = u.getInsertion();
             data[j][3] = u.getFamilyName();
-            if (u.getSingleSchool()) {
-                data[j][4] = editImage;
+            if (u instanceof DomStudent || u instanceof DomTeacher) {
+                data[j][4] = klassenImage;
             } else {
                 data[j][4] = emptyImage;
             }
-            if (u instanceof DomSchoolAdmin &&  u.getId().equals(DwoHelper.getCurrentUser().getId())) {
-                data[j][5] = emptyImage;
+            if (u.getSingleSchool()) {
+                data[j][5] = editImage;
             } else {
-                data[j][5] = removeImage;
+                data[j][5] = emptyImage;
             }
-            data[j][6] = u;
+            if (u instanceof DomSchoolAdmin &&  u.getId().equals(DwoHelper.getCurrentUser().getId())) {
+                data[j][6] = emptyImage;
+            } else {
+                data[j][6] = removeImage;
+            }
+            data[j][7] = u;
             j++;
         }
         fireTableDataChanged();
