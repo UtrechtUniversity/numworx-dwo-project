@@ -4,5 +4,8 @@ var mc2 = {
 		"maltsample.maltWidget": "https://www.talent.gr/malt/",
 		"widgetsample.SampleWidget": "https://mc2-jssample.appspot.com/Jssample.jsp",
 		"ewcbook.EpsiTetrisWidget": "http://www.epsilonwriter.com/GWT/EpsiTetris.php",
-		"fi.ltiwidget.LTIWidget": "http://ws.fisme.science.uu.nl/ltitrampoline/ltiwidget.jsp",		
+		"fi.ltiwidget.LTIWidget": "http://ws.fisme.science.uu.nl/ltitrampoline/ltiwidget.jsp",	
+		"ewcbook.EpsiAplusixWidget": "http://www.epsilonwriter.com/GWT/EpsiAplusix.php",
+		"ewcbook.EpsiDrawWidget": "http://www.epsilonwriter.com/GWT/EpsiDraw.php",
+		"flwidget.FLWidget": "http://hansen.dcs.bbk.ac.uk/fl_DME/public_html/host.php",
 }
