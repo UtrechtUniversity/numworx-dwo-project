@@ -231,6 +231,10 @@ class RestManager {
                     GenericType<ArrayList<DomTeacher>> pTeacherType = new GenericType<ArrayList<DomTeacher>>() {
                     };
                     return (List<T>) response.readEntity(pTeacherType);
+                case DomSchoolClass:
+                    GenericType<ArrayList<DomSchoolClass>> scType = new GenericType<ArrayList<DomSchoolClass>>() {
+                    };
+                    return (List<T>) response.readEntity(scType);
                 case DomStudent:
                     GenericType<ArrayList<DomStudent>> sStudentType = new GenericType<ArrayList<DomStudent>>() {
                     };

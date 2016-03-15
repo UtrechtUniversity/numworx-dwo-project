@@ -145,7 +145,7 @@ public class SecureTeacherSchoolClassManager {
         sts.setRestContext(new DomContext());
         sts.setDomRemoveTeacherFromSchoolClass(submit);
         Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/removeTeacher", Boolean.class, sts);
-        LOG.log(Level.FINE, "Submitted teacher {1} to schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomRemoveTeacherFromSchoolClass().getTeacher().getId(), sts.getDomRemoveTeacherFromSchoolClass().getSchoolClass().getId()});
+        LOG.log(Level.FINE, "Submitted teacher {1} to remove from schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomRemoveTeacherFromSchoolClass().getTeacher().getId(), sts.getDomRemoveTeacherFromSchoolClass().getSchoolClass().getId()});
         return result;
     }
 
@@ -154,7 +154,7 @@ public class SecureTeacherSchoolClassManager {
         sts.setRestContext(new DomContext());
         sts.setDomRemoveStudentFromSchoolClass(submit);
         Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/removeStudent", Boolean.class, sts);
-        LOG.log(Level.FINE, "Submitted teacher {1} to schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomRemoveStudentFromSchoolClass().getStudent().getId(), sts.getDomRemoveStudentFromSchoolClass().getSchoolClass().getId()});
+        LOG.log(Level.FINE, "Submitted student {1} to remove from schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomRemoveStudentFromSchoolClass().getStudent().getId(), sts.getDomRemoveStudentFromSchoolClass().getSchoolClass().getId()});
         return result;
     }
 

@@ -1,14 +1,11 @@
-/**
- * Copyrighted Mar 11, 2016
- */
+/*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomSchoolAdmin;
-import fi.dwo.commons.dom.entities.DomStudent;
+import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.dom.entities.DomUser;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,60 +13,36 @@ import javax.swing.table.AbstractTableModel;
 
 /**
  *
- * @author Gert van der Plas
+ * @author Gert van der Plas <gertvdplas@gmail.com>
  */
-class UsersInSchoolSchoolAdminPanelTableModel extends AbstractTableModel {
+class UsersSchoolClassesSchoolAdminPanelTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {TextMapper.getText(TextMapper.TBL_USERNAME),
-            TextMapper.getText(TextMapper.TBL_GIVENNAME),
-            TextMapper.getText(TextMapper.TBL_INSERTION),
-            TextMapper.getText(TextMapper.TBL_FAMILYNAME),
-            TextMapper.getText(TextMapper.TBL_CLASSLIST),
-            TextMapper.getText(TextMapper.TBL_EDIT),
-            TextMapper.getText(TextMapper.TBL_DELETE)
-//            TextMapper.getText(TextMapper.TBL_SELECT)
-    };
-    
-    static boolean DEBUG = false;
+    private String[] columnNames = {TextMapper.getText(TextMapper.TBL_CLASSNAME),
+        TextMapper.getText(TextMapper.TBL_EDITCLASS),
+        TextMapper.getText(TextMapper.TBL_DELETE)};
 
     private int selectedRow, selectedColumn;
 
     private Object[][] data;
 
-    public <T extends DomUser> void init(List<T> userList, Image removeImage, Image klassenImage, Image editImage, Image emptyImage) {
+    public void init(List<DomSchoolClass> classList, Image editImage, Image removeImage) throws Dwo2Exception {
 
         int rows = 0;
-        if (userList == null) {
-            userList = new ArrayList<T>();
+        if (classList == null) {
+            classList = new ArrayList<>();
         }
 
-        for (T u : userList) {
+        for (DomSchoolClass u : classList) {
             rows++; // one for each item in List
         }
 
-        data = new Object[rows][8];
+        data = new Object[rows][6];
         int j = 0;
-        for (T u : userList) {
-            data[j][0] = u.getUserName();
-            data[j][1] = u.getGivenName();
-            data[j][2] = u.getInsertion();
-            data[j][3] = u.getFamilyName();
-            if (u instanceof DomStudent || u instanceof DomTeacher) {
-                data[j][4] = klassenImage;
-            } else {
-                data[j][4] = emptyImage;
-            }
-            if (u.getSingleSchool()) {
-                data[j][5] = editImage;
-            } else {
-                data[j][5] = emptyImage;
-            }
-            if (u instanceof DomSchoolAdmin &&  u.getId().equals(DwoHelper.getCurrentUser().getId())) {
-                data[j][6] = emptyImage;
-            } else {
-                data[j][6] = removeImage;
-            }
-            data[j][7] = u;
+        for (DomSchoolClass c : classList) {
+            data[j][0] = c.getSchoolClassName();
+            data[j][1] = editImage;
+            data[j][2] = removeImage;
+            data[j][3] = c;
             j++;
         }
         fireTableDataChanged();
@@ -131,6 +104,19 @@ class UsersInSchoolSchoolAdminPanelTableModel extends AbstractTableModel {
         setSelectedColumn(col);
     }
 
+//    private void printDebugData() {
+//      int numRows = getRowCount();
+//      int numCols = getColumnCount();
+//
+//      for (int i = 0; i < numRows; i++) {
+//        System.out.print("    row " + i + ":");
+//        for (int j = 0; j < numCols; j++) {
+//          System.out.print("  " + data[i][j]);
+//        }
+//        System.out.println();
+//      }
+//      System.out.println("--------------------------");
+//    }
     /**
      * @return the selectedRow
      */
@@ -157,5 +143,5 @@ class UsersInSchoolSchoolAdminPanelTableModel extends AbstractTableModel {
      */
     public void setSelectedColumn(int selectedColumn) {
         this.selectedColumn = selectedColumn;
-    }    
+    }
 }

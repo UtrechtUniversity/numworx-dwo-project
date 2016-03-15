@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.domain.rest;
 import fi.dwo.commons.dom.entities.DomContext;
 import fi.dwo.commons.dom.entities.DomGetSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomSchoolAdmin;
+import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomTeacher;
@@ -18,6 +19,8 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
 /**
  * Manages the school roles and classes registered in HasRole.
@@ -107,5 +110,25 @@ public class SecureSchoolAdminSchoolManager {
         LOG.log(Level.FINE, "Submitted student {1} for removal from school by user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), restSchoolAdmin.getDomSchoolAdmin().getId()});
         return result;
     }
-   
+
+    public static List<DomSchoolClass> GetTeachersSchoolClasses(DomTeacher domTeacher) throws Dwo2Exception {
+        RestTeacher restTeacher = new RestTeacher();
+        restTeacher.setRestContext(new DomContext());
+        restTeacher.setDomTeacher(domTeacher);
+        List<DomSchoolClass>  result = StoredRestManager.getInstance().getPutList("/rest/secure/schooladmin/school/getTeachersSchoolClassList", RestListClassTypes.DomSchoolClass, restTeacher);
+        LOG.log(Level.FINE, "Retrieved {1} schoolclasses of teacher {2} for schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), restTeacher.getDomTeacher().getId()});
+        return result;
+    }
+
+    public static List<DomSchoolClass> GetStudentsSchoolClasses(DomStudent domStudent) throws Dwo2Exception {
+        RestStudent restStudent = new RestStudent();
+        restStudent.setRestContext(new DomContext());
+        restStudent.setDomStudent(domStudent);
+        List<DomSchoolClass>  result = StoredRestManager.getInstance().getPutList("/rest/secure/schooladmin/school/getStudentsSchoolClassList", RestListClassTypes.DomSchoolClass, restStudent);
+        LOG.log(Level.FINE, "Retrieved {1} schoolclasses of student {2} for schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), restStudent.getDomStudent().getId()});
+        return result;
+    }
+
+    
+            
 }
