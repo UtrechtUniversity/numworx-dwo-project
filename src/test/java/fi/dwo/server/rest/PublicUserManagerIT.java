@@ -3,21 +3,28 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomContext;
+import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomLoginCheck;
 import fi.dwo.commons.dom.entities.DomNewUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestLoginCheck;
 import fi.dwo.commons.rest.entities.RestNewUser;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import fi.dwo.server.testutil.TestSecurityContext;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -127,4 +134,28 @@ public class PublicUserManagerIT {
 //        fail("The test case is a prototype.");
 //    }
 //    
+    
+
+    /**
+     * Test of getSamlUser method, of class PublicUserManager.
+     */
+    @Test
+    public void testGetLoginCheck() {
+        System.out.println("getLoginCheck");
+        PublicUserManager instance = new PublicUserManager();
+
+        SecurityContext sc = new TestSecurityContext("user01", RoleType.STUDENT);
+        PersistentUser user = UserManager.findByUserName("user01");
+        RestLoginCheck restLoginCheck = new RestLoginCheck();
+        restLoginCheck.setRestContext(new DomContext());
+        restLoginCheck.setDomLoginCheck(new DomLoginCheck());
+        restLoginCheck.getDomLoginCheck().setUsername("user01");
+        restLoginCheck.getDomLoginCheck().setPassword(DomLoginCheck.crypt("user01"));
+        Boolean result = instance.getLoginCheck(restLoginCheck);
+        assertEquals(true, result);
+        restLoginCheck.getDomLoginCheck().setPassword("bla");
+        result = instance.getLoginCheck(restLoginCheck);
+        assertEquals(false, result);
+    }
+        
 }

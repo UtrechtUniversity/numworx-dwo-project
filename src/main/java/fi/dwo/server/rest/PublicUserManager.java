@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomLoginCheck;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.RoleType;
@@ -9,6 +10,7 @@ import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestLoginCheck;
 import fi.dwo.commons.rest.entities.RestNewUser;
 import fi.dwo.commons.rest.entities.RestSamlUser;
 import fi.dwo.commons.util.DwoDateUtilities;
@@ -19,6 +21,7 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import static java.lang.Thread.sleep;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -176,4 +179,27 @@ public class PublicUserManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The authentication is invalid, this event is logged.");
         }
     }
+    
+    /**
+     * Verifies that a user, password combination. Waits a configured amount of 
+     * time before giving a response.
+     * 
+     * @param loginCheck
+     * @return 
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/loginCheck")
+    public Boolean getLoginCheck(RestLoginCheck loginCheck){
+        DomLoginCheck domCheck = loginCheck.getDomLoginCheck();
+        PersistentUser user = UserManager.login(domCheck.getUsername(),domCheck.crypt(domCheck.getPassword()));
+        try {
+            sleep(5000L);
+        }
+        catch (InterruptedException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+        return (user != null);
+    }
+    
 }
