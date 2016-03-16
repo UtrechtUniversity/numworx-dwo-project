@@ -64,10 +64,12 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 // A better parser that can do UTF-8
 		try {
 			String clzz;
-			clzz = null;
+			clzz = config.getInitParameter("sax.driver");
 			if(clzz == null)
-				clzz = "aelfred"; // configurable....
+			//	clzz = "aelfred"; // configurable.... dit is de oer aelfred
+			clzz = "com.icl.saxon.aelfred.SAXDriver"; // deze zit in aelfred-1.2.jar
 			XmlRpc.setDriver(clzz);
+			log("XmlRpc driver set to " + clzz);
 		} catch (Exception e) {
 			log("setup sax parser",e);
 			}
