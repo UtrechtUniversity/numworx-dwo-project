@@ -3,7 +3,7 @@
 <module>
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.google.gwt.logging.Logging"/>
-	<inherits name="fi.wiskopdr" />
+	<inherits name="fi.wiskopdr.WiskOpdr" />
 	<set-property name="gwt.logging.popupHandler" value="DISABLED"/>
 	<source path="client"/>
 </module>
