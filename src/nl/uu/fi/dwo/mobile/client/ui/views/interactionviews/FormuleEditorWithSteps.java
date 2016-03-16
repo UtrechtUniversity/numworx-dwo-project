@@ -347,7 +347,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		rmKnop = new TouchButton();
 		Image rmImage = new Image(DWOplayer.DWO_BUNDLE.rmknop().getSafeUri());
 		rmKnop.add(rmImage);
-		rmKnop.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		Style style = rmKnop.getElement().getStyle();
+		style.setFloat(Style.Float.RIGHT);
+		style.setPadding(5, Style.Unit.PX);
 		addRmKnopHandler(rmKnop);
 		rmKnop.setVisible(rmknop);
 		
