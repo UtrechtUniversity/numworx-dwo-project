@@ -109,5 +109,7 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	@DefaultStringValue("Nee")
 	String neeTekst();
 	
+	@DefaultStringValue("Uitvoeren")
+	String executeLabel();
 // enzovoort
 }

@@ -2,6 +2,8 @@ package fi.wiskopdr;
 
 import java.util.*;
 
+import com.google.gwt.i18n.client.LocaleInfo;
+
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 //import fi.beans.ideas.IdeasIF;
@@ -650,8 +652,10 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			return;
 		}
 		// System.out.println(s);
-		// if (Text.language.getLanguage().equals("en"))
-		//	s = s.replaceAll("of", "or");
+		// if (Text.language.getLanguage().equals("en")) XXX Bad code!
+		if("en".equals(LocaleInfo.getCurrentLocale().getLocaleName()))
+			s = s.replaceAll("of", "or");
+			
 		FormuleParser p = new FormuleParser();
 		int index = s.indexOf(";");
 		if (index > -1) {
