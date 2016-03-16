@@ -79,7 +79,7 @@ public abstract class FormuleElement implements TekstElement
 		initWithParent(parent);
 	}
 
-	private native double getDeviceRatio(JavaScriptObject csctx) /*-{
+	private static native double getDeviceRatio(JavaScriptObject csctx) /*-{
 		var devicePixelRatio = 1;
         if (typeof $wnd !== "undefined" && $wnd.devicePixelRatio)
             devicePixelRatio = $wnd.devicePixelRatio;
@@ -96,11 +96,7 @@ public abstract class FormuleElement implements TekstElement
         }
 		return 1.0;
 	}-*/;
-	
-	
-	
-	
-	
+
 	private void initWithParent(FormuleElement parent)
 	{
 		this.holder = parent.holder;
