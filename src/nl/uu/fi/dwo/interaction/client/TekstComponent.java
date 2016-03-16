@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.interaction.client;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -13,7 +12,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 public class TekstComponent implements IsWidget {
 
-	private static native double getDeviceRatio(JavaScriptObject csctx) /*-{
+	public static native double getDeviceRatio(Context2d csctx) /*-{
 		var devicePixelRatio = 1;
 	    if (typeof $wnd !== "undefined" && $wnd.devicePixelRatio)
 	        devicePixelRatio = $wnd.devicePixelRatio;
