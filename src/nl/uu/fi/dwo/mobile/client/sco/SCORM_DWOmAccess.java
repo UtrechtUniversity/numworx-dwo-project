@@ -65,13 +65,12 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 		
 		@Override
 		public void onFailure(Throwable caught) {
-			logger.severe("Commit: "+ caught);
+			logger.log(Level.SEVERE, "Commit: "+ caught, caught);
 			retry+=retry/2;//exponential delay
 			Timer backoff = new Timer() {
 
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
 					commit();
 				}
 			};

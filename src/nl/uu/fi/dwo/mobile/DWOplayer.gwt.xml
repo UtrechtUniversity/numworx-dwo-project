@@ -31,8 +31,8 @@
 <!--   <inherits name="fi.geomalggwt.GeomAlgGWT-DWO" /> -->
 <!-- --> <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
 <!--  <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> -->
-<!-- - -> <inherits name="fi.draaibankgwt.DraaibankGWT-DWO" /> -->
-
+<!-- <inherits name="fi.draaibankgwt.DraaibankGWT-DWO" /> -->
+<!-- <inherits name="fi.statsimgwt.StatSimGWT"/> -->
 <!--  <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" /> -->
      
 

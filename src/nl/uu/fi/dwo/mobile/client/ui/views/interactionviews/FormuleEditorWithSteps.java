@@ -50,6 +50,7 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.AntwoordFormuleVakChecker;
@@ -114,10 +115,12 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	private Expressie substitutie;
 	private Vergelijking[] gebruikersSubstituties;
 	
-	private TouchButton terugButton = null;
-	private TouchButton downButton = null;
-	private TouchButton copyButton = null;
+	private TouchButton terugButton;
+	private TouchButton downButton;
+	private TouchButton copyButton;
 	private FormuleButton plusKnop, minKnop, maalKnop, deelKnop, haakjesKnop, herleidKnop, abcKnop, subKnop;
+	private TouchButton rmKnop;
+	
 	private FormuleButton ontbindKnop, splitsKnop, wortelBewerkKnop;
 	private boolean abcVisible, subVisible;
 	private boolean bewerkingKnoppen, bewerkingKnoppenExtra;
@@ -175,9 +178,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		this.isVergelijkingVak = isVergelijkingVak;
-
-		if (h != null)
-			this.h = h;
+		this.h = h;
+		
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		if(map.containsKey("breedte"))
 			breedte = map.getInt("breedte");
@@ -187,7 +189,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			volledigeBreedte = map.getBoolean("volledigeBreedte");
 		
 		facade = new PopupFacade(map);
-		
+		boolean rmknop = false;
 		if (h.get("interactiePanelLaunchState") != null)
 		{
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
@@ -202,8 +204,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			else
 				this.avChecker = avChecker;
 			
-			if (launchState.get("startString") != null)
-				startString = (String) launchState.get("startString");
+			if (launchStateMap.containsKey("startString"))
+				startString = launchStateMap.getString("startString");
 			if (launchState.get("exact") != null)
 				exact = (Boolean) launchState.get("exact");
 			if (launchState.get("boxMetRand") != null)
@@ -240,6 +242,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 					dwologger.setLogIDLabel(launchStateMap.getString("logIDLabel"));
 				dwologger.setMaxScore(scoreMax);
 			}
+			
+			rmknop = !isVergelijkingVak && launchStateMap.getBoolean("rmKnop");
 			if (launchState.containsKey("pijl"))
 				pijl = ((Boolean) launchState.get("pijl")).booleanValue();
 			
@@ -339,6 +343,13 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		copyButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		addCopyButtonHandler(copyButton);
 		copyButton.setVisible(!linStrategieVersie && !bordjesMethode);
+
+		rmKnop = new TouchButton();
+		Image rmImage = new Image(DWOplayer.DWO_BUNDLE.rmknop().getSafeUri());
+		rmKnop.add(rmImage);
+		rmKnop.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		addRmKnopHandler(rmKnop);
+		rmKnop.setVisible(rmknop);
 		
 		//FIXME: hoe onderscheid maken tussen Noordhoff en gewone DWO?
 		abcKnop = new FormuleButton("abc", 1);
@@ -392,7 +403,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			mainPanel.add(downButton);
 		}
 		mainPanel.add(terugButton);
-		
+		mainPanel.add(rmKnop);
 		mainPanel.add(subKnop);
 		mainPanel.add(abcKnop);
 		mainPanel.add(plusKnop);
@@ -1123,279 +1134,163 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 	private void addButtonHandler(final TouchButton tb)
 	{
-		tb.addTouchHandler(new TouchHandler()
+		tb.addTouchStartHandler(new TouchStartHandler()
 		{
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
 				backStep(false);
 			}
-
-			@Override
-			public void onTouchMove(TouchMoveEvent event)
-			{
-			}
-
-			@Override
-			public void onTouchEnd(TouchEndEvent event)
-			{
-			}
-
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event)
-			{
-			}
 		});
 	}
 	
 	private void addAbcButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("abc");
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addSubButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	if(substitutie == null)
 				maakStap("sub");
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addPlusButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("+");
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addMinButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("-");
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addMaalButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("*");
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addDeelButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap(":");
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addHaakjesButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("haakjes");
 				maakBewerkingStap();
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addHerleidButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("herleid");
 				maakBewerkingStap();
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addOntbindButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("ontbind");
 				maakBewerkingStap();
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addSplitsButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("splits");
 				maakBewerkingStap();
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addWortelButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
+	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("wortel");
 				maakBewerkingStap();
 			}
-			@Override
-			public void onTouchMove(TouchMoveEvent event){}
-			
-			@Override
-			public void onTouchEnd(TouchEndEvent event){}
-			
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
 	
 	private void addDownButtonHandler(final TouchButton tb)
 	{
-		tb.addTouchHandler(new TouchHandler()
+		tb.addTouchStartHandler(new TouchStartHandler()
 		{
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
 				downStep();
 			}
-
-			@Override
-			public void onTouchMove(TouchMoveEvent event)
-			{
-			}
-
-			@Override
-			public void onTouchEnd(TouchEndEvent event)
-			{
-			}
-
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event)
-			{
-			}
 		});
 	}
 	
 	private void addCopyButtonHandler(final TouchButton tb)
 	{
-		tb.addTouchHandler(new TouchHandler()
+		tb.addTouchStartHandler(new TouchStartHandler()
 		{
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
 				copyStep();
 			}
-
-			@Override
-			public void onTouchMove(TouchMoveEvent event)
-			{
-			}
-
-			@Override
-			public void onTouchEnd(TouchEndEvent event)
-			{
-			}
-
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event)
-			{
-			}
 		});
 	}
 
+	private void addRmKnopHandler(final TouchButton rmKnop) {
+		rmKnop.addTouchStartHandler(new TouchStartHandler() {
+
+			@Override
+			public void onTouchStart(TouchStartEvent event) {
+				berekenStap();
+			}
+			
+		});
+	}
 	
+	
+	protected void berekenStap() {
+		// TODO Auto-generated method stub
+		logger.severe("Implement me!");
+	}
+
+
 	class BordjesTouchHandler extends FormuleEditorTouchHandler {
 
 		BordjesTouchHandler(FormuleHolder editor) {

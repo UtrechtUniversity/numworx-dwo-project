@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -67,7 +68,7 @@ public class SCORM_MC2mAccess extends SCORM_guest implements Scorm2004IF {
 		
 		@Override
 		public void onFailure(Throwable caught) {
-			logger.severe("Commit: "+ caught);
+			logger.log(Level.SEVERE, "Commit: "+ caught, caught);
 			commit();
 		}
 

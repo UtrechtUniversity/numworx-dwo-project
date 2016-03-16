@@ -32,6 +32,13 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
 
 
+
+
+
+
+
+
+
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
@@ -54,7 +61,9 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont {
 	
@@ -400,6 +409,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	int menuheight = 0;
 	int padding = 4; // TODO bepaal padding;
 	
+	Logging logging;
+	private String lastAttempt;
 	
 	public TextEditor(HashMap<String, Object> currentVakGegevens,
 			String[] randomVarNamen, HashMap<String, Object> randomVarWaarden) {
@@ -432,6 +443,15 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		hbox.setPixelSize(width-boxsize, height-boxsize);
 		if(boxMetRand)
 			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
+
+		boolean logOption = launchdata.getBoolean("logOption", false);
+		if(logOption) {
+			String logID = launchdata.getString("logID");
+			DWOLogger dwologger = new DWOLogger();
+			dwologger.setClassName("fi.wiskopdr.tekstobjects.TekstEditor");
+			dwologger.setLogID(logID);
+			logging = dwologger;
+		}
 		shown = true;
 	}
 
@@ -450,6 +470,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		//sb.setLength(0);
 		clearAll();
 		insert(tekst);
+		lastAttempt = tekst;
 		removeCursor();
 		editable = h.getBoolean("editable", true);
 		if(!editable) setReadonly();
@@ -555,11 +576,28 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public HashMap<String, Object> getState() {
-		String sb = getAllText().append('\n').toString();
+		StringBuilder allText = getAllText();
+		setAttempt(allText);
+		String sb = allText.append('\n').toString();
 		HashMap<String,Object> state = new HashMap<String,Object>();
 		state.put("tekst", sb);
 		state.put("editable", editable);
 		return state;
+	}
+
+	private void setAttempt(StringBuilder s) {
+		if(logging != null ) {
+			String string = s.toString();
+			if(! string.equals(lastAttempt)) {
+				lastAttempt = string;
+				HashMap<String, String> map = new HashMap<String, String>();
+				string = string.replace('\n', ' ');
+				string = string.replace(";", ".,");
+				map.put("response", string);
+				map.put("action", "modify");
+				logging.log(map);
+		}}
+		
 	}
 
 	private StringBuilder getAllText() {
@@ -616,8 +654,13 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		this.comRoot = comRoot;
 		comRoot.addCBookEventListener(ACTION_NOT_EDITIABLE, this);
 		comRoot.addCBookEventListener(TEXT, this);
+		if(logging != null)
+			logging.setCommunicationRoot(comRoot);
+	}
+
+	private void addExecuteBtn(OpdrNavIF comRoot) {
 		if(comRoot.hasListeners(TEXT)) {
-			Button btn = new Button(/*fi.wiskopdr.text.Text.constants.uitvoeren()*/ "Uitvoeren");
+			Button btn = new Button(fi.wiskopdr.text.Text.constants.executeLabel());
 			hbox.add(btn);
 		}
 	}
@@ -696,6 +739,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override // loose focus
 	public void setCurrentElementRepaint() {
 		removeCursor();
+		setAttempt();
 		if(comRoot != null)
 			comRoot.getKeyboard().setEnterType(EnterType.APPLY);
 	}
@@ -718,6 +762,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 //		sb.insert( cursor, '\n');
 		flow.insert(new Enter(), cursor); cursor++;
 		showCursor();
+		setAttempt();
+	}
+
+	private void setAttempt() {
+		if(shown && logging != null) setAttempt(getAllText());
 	}
 
 	@Override

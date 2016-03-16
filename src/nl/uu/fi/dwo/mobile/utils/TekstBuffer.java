@@ -382,8 +382,8 @@ public class TekstBuffer
 			return new StubView("MozarchGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(map, new fi.mozarchgwt.client.MozarchGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 48:
-			return new StubView("StatSimGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-			//return new PopupFacade(map, new fi.statsimgwt.client.StatSimGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map,new StubView("StatSimGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			//return x(map,new PopupFacade(map, new fi.statsimgwt.client.StatSimGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
 		case 54:
 			return new StubView("WebLogoGWT.html",currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(map, new fi.weblogogwt.client.WebLogoGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
