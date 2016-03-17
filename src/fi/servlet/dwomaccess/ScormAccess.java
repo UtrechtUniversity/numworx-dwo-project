@@ -62,9 +62,10 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 	
 	public void init(ServletConfig config) throws ServletException {
 // A better parser that can do UTF-8
+		super.init(config);
 		try {
 			String clzz;
-			clzz = config.getInitParameter("sax.driver");
+			clzz = getInitParameter("sax.driver");
 			if(clzz == null)
 			//	clzz = "aelfred"; // configurable.... dit is de oer aelfred
 			clzz = "com.icl.saxon.aelfred.SAXDriver"; // deze zit in aelfred-1.2.jar
@@ -73,7 +74,6 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 		} catch (Exception e) {
 			log("setup sax parser",e);
 			}
-		super.init(config);
 		access = DbAccessFactory.getDbAccess(getServletContext());
 		unLock();
 	}
