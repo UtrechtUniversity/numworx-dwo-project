@@ -8,11 +8,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
+
     private static final Logger LOG = Logger.getLogger(GuiCreatorSchoolAdmin.class.getName());
 
     public GuiCreatorSchoolAdmin(DwoIF dwo) {
         super(dwo);
-        
+
     }
 
     /* (non-Javadoc)
@@ -34,7 +35,7 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
     @Override
     public CenterSubPanel getUserManagementPanel() {
         //return new UserManagementPanel(dwo);
-        CenterSubPanel csp=null;
+        CenterSubPanel csp = null;
         try {
             csp = new UsersInSchoolSchoolAdminPanel();
         }
@@ -47,7 +48,15 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
 
     @Override
     public CenterSubPanel getClassAdminPanel() {
-        return new ClassAdminPanel(dwo);
+//        return new ClassAdminPanel(dwo);
+        CenterSubPanel csp = null;
+        try {
+            csp = new SchoolClassesSchoolAdminPanel();
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            GuiCreator.instance().ShowErrorDialog(mainPanel, ex);
+        }
+        return csp;
     }
-
 }
