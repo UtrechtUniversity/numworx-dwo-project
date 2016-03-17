@@ -5,6 +5,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSchoolClassFull;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.dom.entities.DomUser;
@@ -12,7 +13,7 @@ import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.gui.domutils.DomUserListCellRenderer;
+import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -54,6 +55,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
     public enum UserType {
         STUDENT, TEACHER
     };
+    
     private UserType userType;
     private CenterPanel center;
 
@@ -68,6 +70,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
     private JPanel jtbl;
 
     /**
+     * @param user
      * @return the schoolClass
      */
     public DomUser getDomUser(DomUser user) {
@@ -86,8 +89,9 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
      * @param type
      */
     public void setDomUserAndType(DomUser user, UserType type) throws Dwo2Exception {
-        if((user instanceof DomTeacher && type==UserType.TEACHER) || user instanceof DomStudent && type == UserType.STUDENT){
+        if((user instanceof DomTeacher && type==UserType.TEACHER) || (user instanceof DomStudent && type == UserType.STUDENT)){
         this.domUser = user;
+        this.userType=type;
         }
         else{
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Programmers error");
@@ -155,12 +159,37 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
 //            final GuiCreator instance = GuiCreator.instance();
             fireEditingStopped();
             if (value == editImage) {
+                try{
+                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    ClassConfigurePanel panel = new ClassConfigurePanel();
+                    DomSchoolClassFull fullSchoolClass = prop.getFullSchoolClass(sc);
+                    panel.setSchoolClass(fullSchoolClass);
+                    int result = JOptionPane.showConfirmDialog(GuiCreator.instance().getMainPanel(), panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    fullSchoolClass.setSchoolClassName(panel.getClassName());
+                    fullSchoolClass.setRegistrationKey(panel.getRegistrationKey());
+                    fullSchoolClass.setIconizer(panel.isIconizer());
+                    //case OK persist returned values
+                    if (result == JOptionPane.OK_OPTION) {
+                        //persist returned values	
+                        prop.updateSchoolClass(fullSchoolClass);
+                        tableModel.init(getCurSchoolClassList(), editImage, removeImage);
+                    }
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.FINE, null, ex);
+                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                }
+                finally {
+                    fireEditingStopped();
+                }
 
             } else if (value == removeImage) {
                 try {
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
+                        DomSchoolClass domSchoolClass = (DomSchoolClass) tableModel.getValueAt(tableModel.getSelectedRow(),tableModel.getColumnCount());
+                        prop.removeUserFromSchoolClass(userType, domUser, domSchoolClass);
                         tableModel.init(getCurSchoolClassList(), editImage, removeImage);
-                        tableModel.fireTableDataChanged();
                     }
                 }
                 catch (Dwo2Exception ex) {
@@ -209,6 +238,9 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
     /**
      * Creates a new ClassPanel which shows a list of classes.
      *
+     * @param user
+     * @param type
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
     public UsersSchoolClassesSchoolAdminPanel(DomUser user, UserType type) throws Dwo2Exception {
         super(null);
@@ -242,10 +274,10 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         addSchoolClassBtn = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
         addSchoolClassBtn.setSize(addSchoolClassBtn.getPreferredSize());
         addSchoolClassBtn.addActionListener(this);
-        Vector<DomSchoolClass> teacherVector = new Vector<DomSchoolClass>(prop.getOtherSchoolClasses(domUser, userType));
-        addSchoolClassBox = new JComboBox(teacherVector);
-        DomUserListCellRenderer renderer = new DomUserListCellRenderer();
-        if (teacherVector.size() > 0) {
+        Vector<DomSchoolClass> userVector = new Vector<DomSchoolClass>(prop.getOtherSchoolClasses(domUser, userType));
+        addSchoolClassBox = new JComboBox(userVector);
+        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
+        if (userVector.size() > 0) {
             addSchoolClassBox.setSelectedIndex(0);
         }
 

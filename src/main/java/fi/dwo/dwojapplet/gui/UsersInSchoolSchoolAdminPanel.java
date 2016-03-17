@@ -11,6 +11,7 @@ import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.UsersSchoolClassesSchoolAdminPanel.UserType;
 import java.awt.Color;
 import java.awt.Component;
 import static java.awt.Component.LEFT_ALIGNMENT;
@@ -167,11 +168,11 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 try {
                     if (studentRadio.isSelected()) {
                         DomStudent user = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
-                        UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UsersSchoolClassesSchoolAdminPanel.UserType.STUDENT);
+                        UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UserType.STUDENT);
                         center.loadCenter(panel);
                     } else if (teacherRadio.isSelected()) {
                         DomTeacher user = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
-                        UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UsersSchoolClassesSchoolAdminPanel.UserType.TEACHER);
+                        UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UserType.TEACHER);
                         center.loadCenter(panel);
                     }
                 }

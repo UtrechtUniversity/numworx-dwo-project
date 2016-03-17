@@ -5,7 +5,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
+import fi.dwo.commons.dom.entities.DomSchoolClassFull;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
@@ -198,7 +198,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 try {
                     DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
                     ClassConfigurePanel panel = new ClassConfigurePanel();
-                    DomSchoolClass4Teacher fullSchoolClass = prop.getFullSchoolClass(sc);
+                    DomSchoolClassFull fullSchoolClass = prop.getFullSchoolClass(sc);
                     panel.setSchoolClass(fullSchoolClass);
                     int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
                             JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -439,7 +439,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addClassButton) {
             ClassConfigurePanel panel = new ClassConfigurePanel();
-            DomSchoolClass4Teacher sc = new DomSchoolClass4Teacher();
+            DomSchoolClassFull sc = new DomSchoolClassFull();
 
             panel.setSchoolClass(sc);
             int result = JOptionPane.showConfirmDialog(ClassTeacherPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),

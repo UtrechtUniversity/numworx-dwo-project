@@ -1,7 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
+import fi.dwo.commons.dom.entities.DomSchoolClassFull;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.commons.util.RandomPasswordGenerator;
 import java.awt.Color;
@@ -223,12 +223,12 @@ public class ClassConfigurePanel extends JPanel implements ActionListener,
 	}
 
 	/**
-	 * Sets the panel attributes according to the values of DomSchoolClass4Teacher
+	 * Sets the panel attributes according to the values of DomSchoolClassFull
 	 * 
 	 * @param sc
 	 *            the SchoolClass
 	 */
-	public void setSchoolClass(DomSchoolClass4Teacher sc) {
+	public void setSchoolClass(DomSchoolClassFull sc) {
 		setClassName(sc.getSchoolClassName());
 		setIconizer(sc.getIconizer());
 		if (sc.getRegistrationKey() != null
@@ -246,7 +246,7 @@ public class ClassConfigurePanel extends JPanel implements ActionListener,
 	 * @param sc
 	 *            the SchoolClass
 	 */
-	public void updateSchoolClass(DomSchoolClass4Teacher sc) {
+	public void updateSchoolClass(DomSchoolClassFull sc) {
 		sc.setSchoolClassName(className);
 		sc.setIconizer(iconizer);
                 if(classKeyCB.isSelected()){

@@ -141,7 +141,7 @@ class UsersSchoolClassesSchoolAdminPanelTableModel extends AbstractTableModel {
     /**
      * @param selectedColumn the selectedColumn to set
      */
-    public void setSelectedColumn(int selectedColumn) {
+    void setSelectedColumn(int selectedColumn) {
         this.selectedColumn = selectedColumn;
     }
 }

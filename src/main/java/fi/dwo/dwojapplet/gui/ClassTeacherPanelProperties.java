@@ -4,7 +4,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
+import fi.dwo.commons.dom.entities.DomSchoolClassFull;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureTeacherSchoolClassManager;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class ClassTeacherPanelProperties {
 
     private static final Logger LOG = Logger.getLogger(ClassTeacherPanelProperties.class.getName());
-//    private DomSchoolClass4Teacher schoolClass = new DomSchoolClass4Teacher();
+//    private DomSchoolClassFull schoolClass = new DomSchoolClassFull();
     private List<DomSchoolClass> scList;
 
     public ClassTeacherPanelProperties(){
@@ -40,19 +40,19 @@ public class ClassTeacherPanelProperties {
     }
     
 //    
-//    public DomSchoolClass4Teacher getSchoolClass() {
+//    public DomSchoolClassFull getSchoolClass() {
 //        return schoolClass;
 //    }
 //
-//    public void setSchoolClass(DomSchoolClass4Teacher sc) {
+//    public void setSchoolClass(DomSchoolClassFull sc) {
 //        this.schoolClass = sc;
 //    }
     
-    public Boolean addClass(DomSchoolClass4Teacher sc) throws Dwo2Exception{
+    public Boolean addClass(DomSchoolClassFull sc) throws Dwo2Exception{
         return SecureTeacherSchoolClassManager.submitSchoolClass(sc);
     }
 
-    public Boolean updateSchoolClass(DomSchoolClass4Teacher sc) throws Dwo2Exception{
+    public Boolean updateSchoolClass(DomSchoolClassFull sc) throws Dwo2Exception{
         return SecureTeacherSchoolClassManager.updateSchoolClass(sc);
     }
 
@@ -66,7 +66,7 @@ public class ClassTeacherPanelProperties {
         return scList;
     }
 
-    public DomSchoolClass4Teacher getFullSchoolClass(DomSchoolClass sc) throws Dwo2Exception {
+    public DomSchoolClassFull getFullSchoolClass(DomSchoolClass sc) throws Dwo2Exception {
         return SecureTeacherSchoolClassManager.getFullSchoolClass(sc);
     }
     
