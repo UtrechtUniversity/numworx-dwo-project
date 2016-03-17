@@ -412,7 +412,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 3)
 		{
-			result = new FormuleEditorWithAnswer(currentVakGegevens, true, null, randomVarNamen, randomVarWaarden, null);
+			result = x(map,new FormuleEditorWithAnswer(currentVakGegevens, true, null, randomVarNamen, randomVarWaarden, null));
 		}
 		else if (soortVak == 6)
 		{

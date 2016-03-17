@@ -293,6 +293,7 @@ public class CheckValueUnit implements InteractionStub{
 	
 	public void setState(HashMap<String, Object> h)
 	{
+		if(h == null) return; // setStateNull();
 	    boolean ingevuld = false;
 	    boolean nagekeken = false;
 	    Vector attempts = new Vector();

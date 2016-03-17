@@ -618,8 +618,13 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
-		setState( JSONUtilities.wrapMap(h));
+		if(h == null) setStateNull();
+		else setState( JSONUtilities.wrapMap(h));
 	}
+
+	private void setStateNull() {
+		// uitvoeren label hier!
+}
 
 	@Override
 	public int getScore() {

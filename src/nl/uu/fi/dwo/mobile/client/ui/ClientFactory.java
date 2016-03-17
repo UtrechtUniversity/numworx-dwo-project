@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -36,6 +37,8 @@ public interface ClientFactory
 	TreeModuleView getTreeModuleView();
 	
 	RPCHandler getRPCHandler();
+	
+	IsWidget getMenuWidget();
 	
 	/**
 	 * FIXME deze moet weer weg als TreeModuleView één view gebruikt in plaats van steeds een nieuwe.

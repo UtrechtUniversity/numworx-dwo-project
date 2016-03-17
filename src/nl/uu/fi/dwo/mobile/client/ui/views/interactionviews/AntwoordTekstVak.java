@@ -671,6 +671,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	
 	public void setState(HashMap<String, Object> h)
 	{
+		if(h == null) return; // setStateNull();
 		boolean ingevuld = false;
 		boolean nagekeken = false;
 		String antwoord = "";

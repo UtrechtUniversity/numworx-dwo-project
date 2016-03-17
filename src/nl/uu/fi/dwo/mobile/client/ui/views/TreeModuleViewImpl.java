@@ -30,6 +30,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Tree;
@@ -336,6 +337,12 @@ public class TreeModuleViewImpl  extends Composite implements TreeModuleView
 
 	@Override
 	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMenuWidget(IsWidget w) {
 		// TODO Auto-generated method stub
 		
 	}

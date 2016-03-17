@@ -1107,6 +1107,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
+		if(h == null) return; // setStateNull();
 		logger.fine("setState " + h);
 		//antwoord eruit halen en dan uit h halen, zodat de antwoordstring niet wordt meegenomen in setState. 
 		

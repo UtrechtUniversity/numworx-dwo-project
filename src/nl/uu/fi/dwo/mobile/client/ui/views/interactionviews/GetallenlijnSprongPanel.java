@@ -562,14 +562,11 @@ public class GetallenlijnSprongPanel implements InteractionStub, FacetAware
 
 	@Override
 	public HashMap<String, Object> getState() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -580,31 +577,24 @@ public class GetallenlijnSprongPanel implements InteractionStub, FacetAware
 
 	@Override
 	public int[][] getScoreObjectives() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Boolean isCorrect() {
-		return true;
+		return Boolean.TRUE;
 	}
 
 	@Override
 	public void kijkNa() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void zetNagekeken(boolean b) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

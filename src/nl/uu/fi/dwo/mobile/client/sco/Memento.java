@@ -86,10 +86,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public static final String LOCATION = "cmi.location";
 	
 	public static final String LESSON_MODE = "cmi.mode";
+	public static final String SHARE_MAP = "shareMap";
+	
 	private Scorm2004IF api;
 
 	private JSONObject suspendData;
-	private JSONObject onsState;
+	private JSONObject onsState, shareMap;
 	private JSONObject logState;
 	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout, opdrScores, opdrBezocht;
 	private JSONBoolean zelftoetsNagekeken, zelftoetsGeenCorr;
@@ -123,6 +125,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			zelftoetsNagekeken = (JSONBoolean) onsState.get(ZELFTOETS_NAGEKEKEN);
 			aantalNakijken = (JSONArray) onsState.get(AANTAL_NAKIJKEN);
 			logState = (JSONObject) suspendData.get(LOG_STATE);
+			shareMap = (JSONObject) onsState.get(SHARE_MAP);
 		}
 		catch (Exception e)
 		{
@@ -131,12 +134,15 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			onsState.put(OPDR_CONT_STATES, opdrContStates);
 			suspendData = new JSONObject();
 			suspendData.put(ONS_STATE, onsState);
+			shareMap = null;
 		}
 
 		value = getValue(COMPLETION_STATUS);
 		eindtoetsVerzegeld = COMPLETED.equals(value);
 		
 		instalOnBeforeUnload();
+		
+		ShareFacade.setSharedState(shareMap);
 	}
 
 	String getValue(String key)
@@ -731,5 +737,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public boolean isEindtoetsVerzegeld()
 	{
 		return this.eindtoetsVerzegeld;
+	}
+	
+	void setShareMap(JSONObject obj) {
+		shareMap = obj;
+		onsState.put(SHARE_MAP, obj);
 	}
 }

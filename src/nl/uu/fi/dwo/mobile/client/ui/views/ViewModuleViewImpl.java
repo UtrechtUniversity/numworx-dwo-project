@@ -519,6 +519,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 			
 			setObjects(opdracht, contentPanel, on);
+			setStateNull();
 			stelNavigatieIn();
 		}
 		else if (!newVersion)
@@ -532,6 +533,27 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			setupOldVersion(opdracht, tb);
 		}
+	}
+
+/**
+ *  Always set state to something. Pick up shared state.
+ */
+	private void setStateNull() {
+		boolean old = on.pause(true);
+		for (int i = 0; i < opdrachtObjects.size(); i++)
+		{
+			Object currentObject = opdrachtObjects.get(i);
+			if (currentObject instanceof InteractionView)
+			{
+				HashMap<String, Object> state = null;
+				try {
+					((InteractionView) currentObject).setState(state);
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, "setStateNull", e);
+				}
+			}
+		}
+		on.unpause(old);
 	}
 
 	public void zetOpdrachtPlusState(HashMap<String, Object> opdracht, HashMap<String, Object> state)

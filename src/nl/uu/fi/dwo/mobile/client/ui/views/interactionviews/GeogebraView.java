@@ -359,7 +359,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	{
 		facade.setPopupState(h);
 		if(h == null)
-			h = new HashMap<String, Object>(); // Never NULL, komt voor!
+			h = new HashMap<String, Object>(); // Never NULL, komt voor! setStateNull()
 		if(h.containsKey("STUBVIEW_score"))
 			score = Integer.parseInt(h.get("STUBVIEW_score").toString());
 		if(h.containsKey("STUBVIEW_correct"))

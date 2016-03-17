@@ -44,4 +44,9 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("en")
 	String language();
+	
+	@DefaultStringValue("Mijn\u00a0Profiel")
+    String GUIMNU_MY_PROFILE();    
+
+	
 }

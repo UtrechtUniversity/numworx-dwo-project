@@ -834,6 +834,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 						if(! (currentObject instanceof StateLess))
 						{	interactionViewObjects.add(currentObject);
 						}
+						if(connector != null) currentObject = connector.v;
 						
 						
 						if(currentObject instanceof CheckValueUnit)
@@ -936,14 +937,14 @@ public class TekstVakPanel implements InteractionView, FacetAware
 						aantalVakken++;
 						((SymboolPanel) currentObject).zetVolledigeHoogte(tekstVakken[i][j].hoogte);
 					}
-					else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
-					{
-						aantalVakken++;
-					}
-					else if (currentObject.getClass().getName().equals("fi.kladjegwt.client.KladjeGWT"))
-					{
-						aantalVakken++;
-					}
+//					else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
+//					{
+//						aantalVakken++;
+//					}
+//					else if (currentObject.getClass().getName().equals("fi.kladjegwt.client.KladjeGWT"))
+//					{
+//						aantalVakken++;
+//					}
 					else if (currentObject instanceof InteractionView)
 					{
 						aantalVakken++;
@@ -1048,7 +1049,11 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	public void setState(HashMap<String, Object> h)
 	{
 		facade.setPopupState(h);
-		if(h == null || h.isEmpty()) return;
+		if(h == null || h.isEmpty()) 
+		{
+			setStateNull();
+			return;
+		}
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		boolean ingeklapt = this.ingeklapt;
 		if (map.containsKey("hoogtes") )
@@ -1104,6 +1109,20 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		}
 		resize();
 		
+	}
+/**
+ *  Always set state to something. Pick up shared state.
+ */
+	private void setStateNull() {
+		int size = interactionViewObjects.size();
+		for (int i = 0; i < size; i++)
+		{
+			Object currentObject = interactionViewObjects.get(i);
+			if(currentObject instanceof InteractionView) {
+				HashMap<String, Object> state = null;
+				((InteractionView) currentObject).setState(state);
+			}
+		}
 	}
 
 	public int getScore()

@@ -373,49 +373,38 @@ public class SymboolPanel implements InteractionStub, FacetAware
 	
 	@Override
 	public HashMap<String, Object> getState() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public int getScore() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int[][] getScoreObjectives() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Boolean isCorrect() {
-		return true;
+		return Boolean.TRUE;
 	}
 
 	@Override
-	public void kijkNa() {
-		// TODO Auto-generated method stub
-		
+	public void kijkNa() {		
 	}
 
 	@Override
 	public void zetNagekeken(boolean b) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

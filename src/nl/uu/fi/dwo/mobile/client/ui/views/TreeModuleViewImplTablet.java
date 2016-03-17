@@ -41,6 +41,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Tree;
@@ -619,6 +620,11 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 //			return sortModel.compare(o1, o2);
 //		else
 //			return o1.getName().compareTo(o2.getName()); // FIXME NIET GOED
+	}
+
+	@Override
+	public void setMenuWidget(IsWidget w) {
+		moduleHeaderPanel.setRightWidget(Widget.asWidgetOrNull(w));
 	}
 
 }

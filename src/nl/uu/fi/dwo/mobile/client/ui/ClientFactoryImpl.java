@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_MC2mAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.user.UserBar;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
@@ -22,6 +23,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
@@ -135,10 +137,25 @@ public class ClientFactoryImpl implements ClientFactory
 		SCORM_guest api;
 		if(profiledata == null) {
 			api = new SCORM_guest();
+			menuWidget = null;
 		} else {
 			Integer userID = (Integer) profiledata.get("userID");
+			getUserBar().setProfile(profiledata);
 			api = new SCORM_DWOmAccess(userID.intValue());
 		}
 		return api;
+	}
+
+	protected UserBar menuWidget;
+	
+	@Override
+	public IsWidget getMenuWidget() {
+		return getUserBar();
+	}
+
+	protected UserBar getUserBar() {
+		if (menuWidget == null) 
+			menuWidget = new UserBar();
+		return menuWidget;
 	}
 }

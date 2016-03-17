@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -24,6 +25,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet.slideNavigationToLeftAnimation;
 
 import com.google.gwt.animation.client.Animation;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
@@ -41,6 +43,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Tree;
@@ -159,28 +162,35 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
     //================================================================================
 
 	@UiHandler("tree")
-	public void onSelection(SelectionEvent<TreeItem> event)
+	public void onSelection(final SelectionEvent<TreeItem> event)
 	{
-		TreeItem item = event.getSelectedItem();
-		SelectModuleItem o = (SelectModuleItem) item.getUserObject();
-		if(o != null) selectItem(o); // send stop event
-		else {
-			close();
-			container.setWidget(module);
-			SelectModuleItem root = SelectModuleItemHolder.getItemByID("0");
-			module.setDescription(root); // Uit het profiel halen!
-			if(item == schoolMap) {
-				addChildren(schoolModel);
-				navigationLabel.setText(SCHOOL_MODULES);
-				tree.setSelectedItem(schoolMap, false);
-				schoolMap.setState(true, false);
-			} else if(item == standardMap) {
-				addChildren(standardModel);
-				navigationLabel.setText(root.getName());
-				tree.setSelectedItem(standardMap, false);
-				standardMap.setState(true, false);
+		final TreeItem item = event.getSelectedItem();
+		final SelectModuleItem o = (SelectModuleItem) item.getUserObject();
+		OpdrNav.defer(
+		new ScheduledCommand() {
+			public void execute() {
+				if (o != null)
+					selectItem(o); // send stop event
+				else {
+					close();
+					container.setWidget(module);
+					SelectModuleItem root = SelectModuleItemHolder
+							.getItemByID("0");
+					module.setDescription(root); // Uit het profiel halen!
+					if (item == schoolMap) {
+						addChildren(schoolModel);
+						navigationLabel.setText(SCHOOL_MODULES);
+						tree.setSelectedItem(schoolMap, false);
+						schoolMap.setState(true, false);
+					} else if (item == standardMap) {
+						addChildren(standardModel);
+						navigationLabel.setText(root.getName());
+						tree.setSelectedItem(standardMap, false);
+						standardMap.setState(true, false);
+					}
+				}
 			}
-		}
+		});
 	}
 
 	// werkt niet? @UiHandler("cells")
@@ -598,6 +608,11 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			DWOplayer.clientfactory.setEntryView(null);
 		}
 		
+	}
+
+	@Override
+	public void setMenuWidget(IsWidget w) {
+		moduleHeaderPanel.setRightWidget(Widget.asWidgetOrNull(w));
 	}
 
 //	@Override

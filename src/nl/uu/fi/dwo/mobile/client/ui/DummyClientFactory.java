@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
@@ -70,6 +71,12 @@ public class DummyClientFactory implements ClientFactory {
 	@Override
 	public SCORM_guest setupAPI(Map<String, Object> profiledata) {
 		return DWOplayer.api;
+	}
+
+	@Override
+	public IsWidget getMenuWidget() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

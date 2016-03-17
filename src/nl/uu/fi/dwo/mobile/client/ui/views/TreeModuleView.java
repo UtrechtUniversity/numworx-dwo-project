@@ -27,4 +27,6 @@ public interface TreeModuleView extends IsWidget
 	        void goTo(Place place);
 	    }
 
+	void setMenuWidget(IsWidget w);    
+	    
 }

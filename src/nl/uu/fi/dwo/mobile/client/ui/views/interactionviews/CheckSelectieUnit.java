@@ -307,6 +307,7 @@ public class CheckSelectieUnit implements InteractionStub
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
+		if(h == null) return; // setStateNull();
 		Point[] randomizedPositions = null;
 	    boolean ingevuld = false;
 	    boolean nagekeken = false;

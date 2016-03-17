@@ -120,7 +120,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	private TouchButton copyButton;
 	private FormuleButton plusKnop, minKnop, maalKnop, deelKnop, haakjesKnop, herleidKnop, abcKnop, subKnop;
 	private TouchButton rmKnop;
-	
+	private int aantalDecRm = 10;
 	private FormuleButton ontbindKnop, splitsKnop, wortelBewerkKnop;
 	private boolean abcVisible, subVisible;
 	private boolean bewerkingKnoppen, bewerkingKnoppenExtra;
@@ -244,6 +244,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			}
 			
 			rmknop = !isVergelijkingVak && launchStateMap.getBoolean("rmKnop");
+			if(launchStateMap.containsKey("aantalDecRm"))
+				aantalDecRm = launchStateMap.getInt("aantalDecRm");
 			if (launchState.containsKey("pijl"))
 				pijl = ((Boolean) launchState.get("pijl")).booleanValue();
 			
@@ -1417,6 +1419,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
+		if(h == null) return; // setStateNull()
 		logger.fine("setState " + h);
 
 		boolean enabled = setFocusEnabled(false);

@@ -173,14 +173,11 @@ public class CheckButton implements InteractionStub
 	
 	@Override
 	public HashMap<String, Object> getState() {
-		// TODO Auto-generated method stub
-		
 		return null;
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
