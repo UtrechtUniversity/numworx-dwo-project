@@ -20,7 +20,7 @@ class ClassTeacherPanelTableModel extends AbstractTableModel {
         TextMapper.getText(TextMapper.TBL_EDITMODULES),
         TextMapper.getText(TextMapper.TBL_EDITSTUDENTS),
         TextMapper.getText(TextMapper.TBL_EDITTEACHERS),
-        TextMapper.getText(TextMapper.TBL_DELETE),};
+        TextMapper.getText(TextMapper.TBL_DELETE)};
 
     static boolean DEBUG = false;
     private ClassTeacherPanelProperties prop;
