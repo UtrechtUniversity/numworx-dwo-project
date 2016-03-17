@@ -55,10 +55,16 @@ public final class Connector {
 		}
 		if(subscriptions != null)
 		for(String key: subscriptions.keySet()) {
-			String value = subscriptions.getString(key);
-			Connector connector = xMap.get(key);
-			if(connector != null)
-				connector.commands.add(value);
+			ObjectList list = subscriptions.getObjectList(key);
+			int size = list.size();
+			for(int i = 0; i < size; i++) {
+				ObjectMap map = list.getObjectMap(i);
+				for(String command: map.keySet()) {
+					Connector connector = xMap.get(command);
+					if(connector != null)
+						connector.commands.add(map.getString(command));					
+				}
+			}
 		}
 
 	}

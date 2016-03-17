@@ -187,7 +187,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	Context2d gIm;
 	TouchPanel checkPanel;
 	private ObjectMap launchState;
-	private FormuleEditorWithSteps fe = null;
+	protected FormuleEditorWithSteps fe = null;
 	private boolean strict = true;
 	private ObjectMap instellingen = null;
 	private int score = 0;

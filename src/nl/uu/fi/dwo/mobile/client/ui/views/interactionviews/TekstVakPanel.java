@@ -896,13 +896,13 @@ public class TekstVakPanel implements InteractionView, FacetAware
 						
 						HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
 						TekstVakPanel tekstVakChild = (TekstVakPanel) currentObject;
-						xWidgetMap.putAll(tekstVakChild.xWidgetMap);
-						Connector.calculateSubscriptions(xWidgetMap.values());
 						tekstVakChild.setParent(tekstVakken[i][j]);
 						tekstVakChild.zetInstellingen(instellingen);
 						tekstVakChild.setKeyboard(kb);
 						tekstVakChild.zetOpdracht(launchState);
 						tekstVakChild.setContainer(new TekstVakContext(i,j));
+						xWidgetMap.putAll(tekstVakChild.xWidgetMap);
+						Connector.calculateSubscriptions(xWidgetMap.values());
 					}
 					else if (currentObject instanceof FormuleEditorWithAnswer)
 					{

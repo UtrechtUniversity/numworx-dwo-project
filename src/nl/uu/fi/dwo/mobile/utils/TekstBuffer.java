@@ -416,8 +416,8 @@ public class TekstBuffer
 		}
 		else if (soortVak == 6)
 		{
-			result = //new fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
-					new StubView("NabouwenAanzichtenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = //x(map, new fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+					x(map, new StubView("NabouwenAanzichtenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 9)
 		{

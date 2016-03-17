@@ -17,7 +17,7 @@ public class ProfileCommand implements Command {
 	}
 
 	public void setProfile(Map<String, Object> map) {
-		displayName = "" + map.get("firstname") + map.get("middlename") + map.get("lastname");
+		displayName = map.get("firstname") + " " + map.get("middlename") + " " + map.get("lastname");
 	}
 
 }

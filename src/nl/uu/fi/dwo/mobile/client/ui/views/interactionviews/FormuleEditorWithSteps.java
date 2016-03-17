@@ -58,6 +58,8 @@ import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Algebra;
+import fi.wiskopdr.expressies.BasisExpressie;
+import fi.wiskopdr.expressies.DecRound;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
@@ -189,7 +191,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			volledigeBreedte = map.getBoolean("volledigeBreedte");
 		
 		facade = new PopupFacade(map);
-		boolean rmknop = false;
+		rmknop = false;
 		if (h.get("interactiePanelLaunchState") != null)
 		{
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
@@ -210,8 +212,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				exact = (Boolean) launchState.get("exact");
 			if (launchState.get("boxMetRand") != null)
 				boxMetRand = (Boolean) launchState.get("boxMetRand");
-			if (launchState.get("antwoordString") != null)
-				antwoordString = (String) launchState.get("antwoordString");
+			if (launchStateMap.containsKey("antwoordString"))
+				antwoordString = launchStateMap.getString("antwoordString");
 			if (launchState.get("scoreMax") != null)
 				scoreMax = ((Number) launchState.get("scoreMax")).intValue();
 			if (launchState.containsKey("abcKnop"))
@@ -407,7 +409,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			mainPanel.add(downButton);
 		}
 		mainPanel.add(terugButton);
-		mainPanel.add(rmKnop);
+		if(rmknop)mainPanel.add(rmKnop);
 		mainPanel.add(subKnop);
 		mainPanel.add(abcKnop);
 		mainPanel.add(plusKnop);
@@ -870,6 +872,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 	private boolean focusEnabled = true;
 
+	private boolean rmknop;
+
 	private void requestFocus() {
 		if(focusEnabled && editor != null)
 			editor.requestFocus();
@@ -1130,8 +1134,28 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		return panel;
 	}
 
+	static class FormuleEditorWithCalculator extends FormuleEditorWithAnswer {
+
+		public FormuleEditorWithCalculator(HashMap<String, Object> h,
+				boolean isVergelijkingVak, FormuleEditorWithSteps fe,
+				String[] randomVarNamen,
+				HashMap<String, Object> randomVarWaarden,
+				AntwoordVakChecker avChecker) {
+			super(h, isVergelijkingVak, fe, randomVarNamen, randomVarWaarden, avChecker);
+		}
+
+		@Override
+		public void enter() {
+			fe.berekenStap();
+		}
+		
+	}
+	
 	
 	FormuleEditorWithAnswer editorInstance() {
+		if(rmknop && !teltMee && !check)  // en een andere conditie?
+			return new FormuleEditorWithCalculator(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker);
+		
 		return new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker);
 		
 	}
@@ -1287,11 +1311,78 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			
 		});
 	}
+/*
+			Expressie antwoord = FormuleParser.geefExpressie("$f" + x + "@");
+			viewer.getAsPanel().removeFromParent();
+			x="";
+			if(antwoord != null) 
+			{
+				double waarde = antwoord.geefWaarde();
+				double afgerond = new DecRound(new BasisExpressie(waarde), new BasisExpressie(3)).geefWaarde();
+				boolean afgerondOp3 = 
+						! Algebra.isGelijkDouble(waarde, afgerond, MARGE);
+				if(Double.isNaN(waarde))
+				{	x = "?";
+					btn.setText(EXACT);
+				} else
+				{ 
+					btn.setText(afgerondOp3 ? CIRCA : EXACT);
+					if(op3)
+					{
+						x = Expressie.df3.format(waarde);
+					}
+					else 
+					{	
+						double abs = Math.abs(waarde);
+						if( abs < E_MIN || abs >= E_MAX) 
+						{
+							x = Expressie.dfe.format(waarde);						
+							x = x.replace("E", "*10$m") + "@";
+						} else {
+							x = Expressie.df.format(waarde);
+						}
+					}
+				}
 	
+ */
+	static final double E_MAX = 1.0E7;
+	static final double E_MIN = 1.0E-3;
+	static final double MARGE = 0.00000000000000001;
 	
-	protected void berekenStap() {
-		// TODO Auto-generated method stub
-		logger.severe("Implement me!");
+	void berekenStap() {
+		
+		// checks vooraf....
+		if(editor != null) {
+			String formule0 = editor.toString();
+// Strip = at end
+			if(formule0.endsWith("=")||formule0.endsWith("\u2248"))
+				formule0 = formule0.substring(0, formule0.length()-1);
+			String formule1;
+			Expressie antwoord = FormuleParser.geefExpressie("$f" + formule0 + "@");
+			if(antwoord != null && ! (antwoord instanceof BasisExpressie)) {
+				double waarde = antwoord.geefWaarde();
+				double afgerond = new DecRound(new BasisExpressie(waarde), new BasisExpressie(aantalDecRm)).geefWaarde();
+				boolean isAfgerond = 
+						! Algebra.isGelijkDouble(waarde, afgerond, MARGE);
+				if(!Double.isNaN(waarde))
+				{	double abs = Math.abs(afgerond);
+					if( abs < E_MIN || abs >= E_MAX) 
+					{
+						formule1 = Expressie.dfe.format(afgerond);						
+						formule1  = formule1.replace("E", "*10$m") + "@";
+					} else {
+						formule1 = Expressie.df.format(afgerond);
+					}
+					if(isAfgerond) {
+						formule0 += '\u2248';
+					}
+					voegRegelToe("$f" + formule0 +"@", check && !isToets(), false);
+					editor.insert(formule1);
+				}
+				
+			}
+		}
+		
 	}
 
 
@@ -2297,7 +2388,12 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			scrollToBottom();
 		}
 	}
-	
+	/**
+	 * 
+	 * @param antwoord
+	 * @param show toon feedback
+	 * @param setState
+	 */
 	public void vervangEditorDoorViewer(String antwoord, boolean show, boolean setState)
 	{
 		if(editor == null)
@@ -2333,7 +2429,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		checkimg.setVisible(false);
 		if(hasPrefix)
 			current.remove(prefixViewer.getAsPanel());
-		if (!isVergelijkingVak && !hasPrefix && (antwoord.charAt(antwoord.length() - 2)) != '=')
+// formule eindigt op = of ≈ 
+		if (!isVergelijkingVak && !hasPrefix && 
+				((antwoord.charAt(antwoord.length() - 2)) != '=')&&(antwoord.charAt(antwoord.length() - 2) != '≈'))
 			antwoord = antwoord.substring(0, antwoord.length() - 1) + "=@";
 		if(bordjesMethode) {
 			// convert to stringStrikt.
@@ -2346,7 +2444,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		FormuleViewer fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + antwoord.substring(2, antwoord.length() - 1));
 		fv.setFont(font);
 		fv.setSelection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
-		fv.showResult(FormuleViewer.ALMOSTCORRECT);
+		if(show) fv.showResult(FormuleViewer.ALMOSTCORRECT); else fv.showResult(FormuleViewer.NONE);
 		VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
 		if(bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar()))
 		{	fv.showResult(FormuleViewer.CORRECT);

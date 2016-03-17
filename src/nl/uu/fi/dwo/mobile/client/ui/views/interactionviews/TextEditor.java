@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
@@ -29,6 +30,7 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
+
 
 
 
@@ -67,6 +69,7 @@ import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont {
 	
+	private static final int EXECUTE_HEIGHT = 30;
 	private boolean editable = true;
 	private static final Logger LOGGER = Logger.getLogger("TextEditor");
 	private int lineHeight = 20;
@@ -612,19 +615,15 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		return sb;
 	}
 
-//	private String getText() {
-//		return sb.toString();
-//	}
-
 	@Override
 	public void setState(HashMap<String, Object> h) {
+		addExecuteBtn(comRoot); // last change, all listeners are there.
 		if(h == null) setStateNull();
 		else setState( JSONUtilities.wrapMap(h));
 	}
 
 	private void setStateNull() {
-		// uitvoeren label hier!
-}
+	}
 
 	@Override
 	public int getScore() {
@@ -663,9 +662,22 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			logging.setCommunicationRoot(comRoot);
 	}
 
-	private void addExecuteBtn(OpdrNavIF comRoot) {
+	private void addExecuteBtn(final OpdrNavIF comRoot) {
 		if(comRoot.hasListeners(TEXT)) {
 			Button btn = new Button(fi.wiskopdr.text.Text.constants.executeLabel());
+			Style style = btn.getElement().getStyle();
+			style.setWidth(100, Style.Unit.PCT);
+			style.setHeight(EXECUTE_HEIGHT, Style.Unit.PX);
+			content.setPixelSize(-1, height-menuheight-boxsize-padding-EXECUTE_HEIGHT);
+			btn.addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					Map<String, String> map = new HashMap<String,String>();
+					map.put("content", getAllText().toString());
+					comRoot.fireEvent(new CBookEvent(TextEditor.this, TEXT, map));
+					
+				}});
 			hbox.add(btn);
 		}
 	}
