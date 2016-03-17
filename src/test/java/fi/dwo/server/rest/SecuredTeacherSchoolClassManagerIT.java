@@ -319,8 +319,8 @@ public class SecuredTeacherSchoolClassManagerIT {
         domToSchoolClass.setSchoolClassName("SchoolClass04");
         RestSubmitStudentToSchoolClass restSubmitStudentToSchoolClass = new RestSubmitStudentToSchoolClass();
         restSubmitStudentToSchoolClass.setDomSubmitStudentToSchoolClass(new DomSubmitStudentToSchoolClass());
-        restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setSchoolFromClass(domFromSchoolClass);
-        restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setSchoolToClass(domToSchoolClass);
+        restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setSchoolClassFrom(domFromSchoolClass);
+        restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setSchoolClassTo(domToSchoolClass);
         restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setStudent(domStudent);
         
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
