@@ -5,6 +5,7 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSchoolClassFull;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
 import fi.dwo.commons.dom.entities.DomTeacher;
@@ -12,6 +13,7 @@ import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
+import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -21,6 +23,7 @@ import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
+import fi.dwo.commons.rest.entities.RestSchoolClassFull;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
@@ -256,4 +259,53 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
             fail("Could not find created user's hasRole");
         }
     }
+
+
+        /**
+     * Test of getTeachersSchoolClasses method, of class
+     * SecuredTeacherSchoolClassManager.
+     */
+    @Test
+    public void testGetFullSchoolClass() {
+        System.out.println("getFullSchoolClass");
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
+        RestSchoolClass restSchoolClass = new RestSchoolClass();
+        PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        restSchoolClass.setDomSchoolClass(domSchoolClass);
+        domSchoolClass.setId(id);
+        DomSchoolClassFull result = instance.getFullSchoolClass(sc, restSchoolClass);
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(domSchoolClass.getId()));
+        assertEquals(schoolClass.getIconizer(), result.getIconizer());
+        assertEquals(schoolClass.getClass1(), result.getSchoolClassName());
+        assertEquals(schoolClass.getRegistrationKey(), result.getRegistrationKey());
+    }
+
+    
+ /**
+     * Test of UpdateSchoolClass method, of class
+     * SecuredTeacherSchoolClassManager. Tests if the properties of a school
+     * class can be updated by one of its schooladmins.
+     */
+    @Test
+    public void testUpdateSchoolClass() {
+        System.out.println("UpdateSchoolClass");
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        RestSchoolClassFull restSchoolClass = new RestSchoolClassFull();
+        PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
+        DomSchoolClassFull domSchoolClass = new DomSchoolClassFull();
+        restSchoolClass.setDomSchoolClassFull(domSchoolClass);
+        domSchoolClass.setId(id);
+        domSchoolClass.setIconizer(false);
+        domSchoolClass.setRegistrationKey("Shaihulud");
+        domSchoolClass.setSchoolClassName("The worm wil eat you.");
+        SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
+        Boolean result = instance.UpdateSchoolClass(sc, restSchoolClass);
+        assertEquals("Update action threw false", true, result);
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(domSchoolClass.getId()));
+        assertEquals(false, schoolClass.getIconizer());
+        assertEquals("The worm wil eat you.", schoolClass.getClass1());
+        assertEquals("Shaihulud", schoolClass.getRegistrationKey());
+    }    
 }

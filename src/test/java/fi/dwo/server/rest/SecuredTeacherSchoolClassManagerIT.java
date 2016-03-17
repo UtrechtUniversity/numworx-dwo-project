@@ -7,7 +7,7 @@ import fi.dwo.commons.dom.entities.DomNewSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomRemoveStudentFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClass4Teacher;
+import fi.dwo.commons.dom.entities.DomSchoolClassFull;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
@@ -31,7 +31,7 @@ import fi.dwo.commons.rest.entities.RestNewSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestRemoveStudentFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
-import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
+import fi.dwo.commons.rest.entities.RestSchoolClassFull;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestSubmitStudentToSchoolClass;
 import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
@@ -105,7 +105,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         DomSchoolClass domSchoolClass = new DomSchoolClass();
         restSchoolClass.setDomSchoolClass(domSchoolClass);
         domSchoolClass.setId(id);
-        DomSchoolClass4Teacher result = instance.getFullSchoolClass(sc, restSchoolClass);
+        DomSchoolClassFull result = instance.getFullSchoolClass(sc, restSchoolClass);
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(domSchoolClass.getId()));
         assertEquals(schoolClass.getIconizer(), result.getIconizer());
         assertEquals(schoolClass.getClass1(), result.getSchoolClassName());
@@ -148,9 +148,9 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testSubmitSchoolClass() {
         System.out.println("SubmitSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass4Teacher restSchoolClass = new RestSchoolClass4Teacher();
-        DomSchoolClass4Teacher domSchoolClass = new DomSchoolClass4Teacher();
-        restSchoolClass.setDomSchoolClass4Teacher(domSchoolClass);
+        RestSchoolClassFull restSchoolClass = new RestSchoolClassFull();
+        DomSchoolClassFull domSchoolClass = new DomSchoolClassFull();
+        restSchoolClass.setDomSchoolClassFull(domSchoolClass);
 //        restSchoolClass.setId(id);
         domSchoolClass.setIconizer(false);
         domSchoolClass.setRegistrationKey("Shaihulud");
@@ -435,10 +435,10 @@ public class SecuredTeacherSchoolClassManagerIT {
     public void testUpdateSchoolClass() {
         System.out.println("UpdateSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-        RestSchoolClass4Teacher restSchoolClass = new RestSchoolClass4Teacher();
+        RestSchoolClassFull restSchoolClass = new RestSchoolClassFull();
         PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
-        DomSchoolClass4Teacher domSchoolClass = new DomSchoolClass4Teacher();
-        restSchoolClass.setDomSchoolClass4Teacher(domSchoolClass);
+        DomSchoolClassFull domSchoolClass = new DomSchoolClassFull();
+        restSchoolClass.setDomSchoolClassFull(domSchoolClass);
         domSchoolClass.setId(id);
         domSchoolClass.setIconizer(false);
         domSchoolClass.setRegistrationKey("Shaihulud");
