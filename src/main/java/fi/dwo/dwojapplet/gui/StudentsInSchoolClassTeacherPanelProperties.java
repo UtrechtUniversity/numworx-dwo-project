@@ -65,8 +65,8 @@ public class StudentsInSchoolClassTeacherPanelProperties {
 
     public void submitStudentToSchoolClass(DomSchoolClass from, DomSchoolClass to, DomStudent t) throws Dwo2Exception {
         DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
-        submit.setSchoolToClass(to);
-        submit.setSchoolFromClass(from);
+        submit.setSchoolClassTo(to);
+        submit.setSchoolClassFrom(from);
         submit.setStudent(t);
         SecureTeacherSchoolClassManager.submitStudentToSchoolClass(submit);
     }    

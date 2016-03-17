@@ -118,7 +118,7 @@ public class SecureTeacherSchoolClassManager {
         sts.setRestContext(new DomContext());
         sts.setDomSubmitStudentToSchoolClass(submit);
         Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/submitStudent", Boolean.class, sts);
-        LOG.log(Level.FINE, "Submitted student {1} to schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomSubmitStudentToSchoolClass().getStudent().getId(), sts.getDomSubmitStudentToSchoolClass().getSchoolToClass().getId()});
+        LOG.log(Level.FINE, "Submitted student {1} to schoolclass {2} for user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomSubmitStudentToSchoolClass().getStudent().getId(), sts.getDomSubmitStudentToSchoolClass().getSchoolClassTo().getId()});
         return result;
     }
 

@@ -188,7 +188,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 try {
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
                         DomSchoolClass domSchoolClass = (DomSchoolClass) tableModel.getValueAt(tableModel.getSelectedRow(),tableModel.getColumnCount());
-                        prop.removeUserFromSchoolClass(userType, domUser, domSchoolClass);
+                        prop.removeUserFromSchoolClass(domUser, userType, domSchoolClass);
                         tableModel.init(getCurSchoolClassList(), editImage, removeImage);
                     }
                 }
@@ -330,7 +330,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + domUser.getUniqueDisplayName());
+        return new HeaderPanel(TextMapper.getText(TextMapper.TBL_CLASSLIST) + ": " + domUser.getUniqueDisplayName());
     }
 
     /**
@@ -341,17 +341,16 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addSchoolClassBtn) {
-//            DomTeacher teacher = (DomTeacher) addSchoolClassBox.getSelectedItem();
-//            try {
-//                prop.submitTeacherToSchoolClass(domUser, teacher);
-//                tableModel.init(prop, domUser, removeImage);
-//                tableModel.fireTableDataChanged();
-//
-//            }
-//            catch (Dwo2Exception ex) {
-//                LOG.log(Level.SEVERE, null, ex);
-//                GuiCreator.instance().ShowErrorDialog(this, ex);
-//            }
+            DomSchoolClass schoolClass = (DomSchoolClass) addSchoolClassBox.getSelectedItem();
+            try {
+                prop.submitUserToSchoolClass(domUser, userType, schoolClass);
+                tableModel.init(getCurSchoolClassList(), editImage, removeImage);
+
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(this, ex);
+            }
         } else if (e.getSource() == backButton) {
             try {
                 UsersInSchoolSchoolAdminPanel panel = new UsersInSchoolSchoolAdminPanel();
