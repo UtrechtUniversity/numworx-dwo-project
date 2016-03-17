@@ -12,8 +12,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomSubmitStudentToSchoolClass {
     private DomStudent student;
-    private DomSchoolClass schoolFromClass;
-    private DomSchoolClass schoolToClass;
+    private DomSchoolClass schoolClassFrom;
+    private DomSchoolClass schoolClassTo;
 
     /**
      * @return the student
@@ -32,29 +32,29 @@ public class DomSubmitStudentToSchoolClass {
     /**
      * @return the schoolFromClass
      */
-    public DomSchoolClass getSchoolFromClass() {
-        return schoolFromClass;
+    public DomSchoolClass getSchoolClassFrom() {
+        return schoolClassFrom;
     }
 
     /**
      * @param schoolFromClass the schoolFromClass to set
      */
-    public void setSchoolFromClass(DomSchoolClass schoolFromClass) {
-        this.schoolFromClass = schoolFromClass;
+    public void setSchoolClassFrom(DomSchoolClass schoolFromClass) {
+        this.schoolClassFrom = schoolFromClass;
     }
 
     /**
-     * @return the schoolToClass
+     * @return the schoolClassTo
      */
-    public DomSchoolClass getSchoolToClass() {
-        return schoolToClass;
+    public DomSchoolClass getSchoolClassTo() {
+        return schoolClassTo;
     }
 
     /**
-     * @param schoolToClass the schoolToClass to set
+     * @param schoolClassTo the schoolClassTo to set
      */
-    public void setSchoolToClass(DomSchoolClass schoolToClass) {
-        this.schoolToClass = schoolToClass;
+    public void setSchoolClassTo(DomSchoolClass schoolClassTo) {
+        this.schoolClassTo = schoolClassTo;
     }
 
 }
