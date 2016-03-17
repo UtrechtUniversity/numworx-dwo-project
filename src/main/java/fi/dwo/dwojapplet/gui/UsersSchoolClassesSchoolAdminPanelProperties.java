@@ -105,13 +105,13 @@ public class UsersSchoolClassesSchoolAdminPanelProperties {
                 DomStudent student = (DomStudent) domUser;
                 submitStudent.setStudent(student);
                 submitStudent.setSchoolClassTo(schoolClass);
-                return SecureSchoolAdminSchoolClassManager.SubmitStudentToSchoolClass(submitStudent);
+                return SecureSchoolAdminSchoolClassManager.submitStudentToSchoolClass(submitStudent);
             case TEACHER:
                 DomSubmitTeacherToSchoolClass submitTeacher = new DomSubmitTeacherToSchoolClass();
                 DomTeacher teacher = (DomTeacher) domUser;
                 submitTeacher.setTeacher(teacher);
                 submitTeacher.setSchoolClass(schoolClass);
-                return SecureSchoolAdminSchoolClassManager.SubmitTeacherToSchoolClass(submitTeacher);
+                return SecureSchoolAdminSchoolClassManager.submitTeacherToSchoolClass(submitTeacher);
             default:
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Switch statement failed to cover UserTypes.");
         }

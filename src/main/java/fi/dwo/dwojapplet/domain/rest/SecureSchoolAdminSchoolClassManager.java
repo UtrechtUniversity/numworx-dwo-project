@@ -61,15 +61,21 @@ public class SecureSchoolAdminSchoolClassManager {
 //        LOG.log(Level.FINE, "Submitted schoolclass {1} for schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(),schoolClass.getDomSchoolClassFull().getSchoolClassName()});
 //        return result;
 //    }
-    public static List<DomTeacher> GetTeachersInSchoolClass(RestSchoolClass schoolClass) throws Dwo2Exception {
-        List<DomTeacher> result = StoredRestManager.getInstance().getPutList("/rest/secure/schooladmin/schoolclass/getTeacherList", RestListClassTypes.DomTeacher, schoolClass);
-        LOG.log(Level.FINE, "Retrieved {1} teachers that are in schoolclass {2} for schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), schoolClass.getDomSchoolClass().getId()});
+    public static List<DomTeacher> getTeachersInSchoolClass(DomSchoolClass schoolClass) throws Dwo2Exception {
+        RestSchoolClass sts = new RestSchoolClass();
+        sts.setRestContext(new DomContext());
+        sts.setDomSchoolClass(schoolClass);
+        List<DomTeacher> result = StoredRestManager.getInstance().getPutList("/rest/secure/schooladmin/schoolclass/getTeacherList", RestListClassTypes.DomTeacher, sts);
+        LOG.log(Level.FINE, "Retrieved {1} teachers that are in schoolclass {2} for schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), schoolClass.getId()});
         return result;
     }
 
-    public static List<DomStudent> GetStudentsInSchoolClass(RestSchoolClass schoolClass) throws Dwo2Exception {
-        List<DomStudent> result = StoredRestManager.getInstance().getPutList("/rest/secure/teacher/schoolclass/getStudentList", RestListClassTypes.DomStudent, schoolClass);
-        LOG.log(Level.FINE, "Retrieved {1} students that are in schoolclass {2} for schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), schoolClass.getDomSchoolClass().getId()});
+    public static List<DomStudent> getStudentsInSchoolClass(DomSchoolClass schoolClass) throws Dwo2Exception {
+        RestSchoolClass sts = new RestSchoolClass();
+        sts.setRestContext(new DomContext());
+        sts.setDomSchoolClass(schoolClass);
+        List<DomStudent> result = StoredRestManager.getInstance().getPutList("/rest/secure/teacher/schoolclass/getStudentList", RestListClassTypes.DomStudent, sts);
+        LOG.log(Level.FINE, "Retrieved {1} students that are in schoolclass {2} for schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), schoolClass.getId()});
         return result;
     }
 
@@ -78,7 +84,7 @@ public class SecureSchoolAdminSchoolClassManager {
 //        LOG.log(Level.FINE, "Removed schoolclass with id {0} for user with id {1}.", new Object[]{schoolClass.getDomSchoolClass().getId(),DwoHelper.getCurrentUser().getId()});
 //        return result;
 //    }
-    public static Boolean SubmitTeacherToSchoolClass(DomSubmitTeacherToSchoolClass submit) throws Dwo2Exception {
+    public static Boolean submitTeacherToSchoolClass(DomSubmitTeacherToSchoolClass submit) throws Dwo2Exception {
         RestSubmitTeacherToSchoolClass sts = new RestSubmitTeacherToSchoolClass();
         sts.setRestContext(new DomContext());
         sts.setDomSubmitTeacherToSchoolClass(submit);
@@ -87,7 +93,7 @@ public class SecureSchoolAdminSchoolClassManager {
         return result;
     }
 
-    public static Boolean SubmitStudentToSchoolClass(DomSubmitStudentToSchoolClass submit) throws Dwo2Exception {
+    public static Boolean submitStudentToSchoolClass(DomSubmitStudentToSchoolClass submit) throws Dwo2Exception {
         RestSubmitStudentToSchoolClass sts = new RestSubmitStudentToSchoolClass();
         sts.setRestContext(new DomContext());
         sts.setDomSubmitStudentToSchoolClass(submit);

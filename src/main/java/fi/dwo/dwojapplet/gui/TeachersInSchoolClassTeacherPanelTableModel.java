@@ -24,16 +24,13 @@ class TeachersInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
         TextMapper.getText(TextMapper.TBL_DELETE)};
 
     static boolean DEBUG = false;
-    private TeachersInSchoolClassTeacherPanelProperties prop;
 
     private int selectedRow, selectedColumn;
 
     private Object[][] data;
 
-    public void init(TeachersInSchoolClassTeacherPanelProperties props, DomSchoolClass sc, Image removeImage) throws Dwo2Exception {
+    public void init(List<DomTeacher> userList, Image removeImage) throws Dwo2Exception {
 
-        prop = props;
-        List<DomTeacher> userList = prop.getTeachersInSchoolClass(sc);
         int rows = 0;
         if (userList == null) {
             userList = new ArrayList<DomTeacher>();

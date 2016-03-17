@@ -39,11 +39,11 @@ import javax.swing.table.TableCellRenderer;
 /**
  * The panel which shows the school classes for a teacher.
  */
-public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterSubPanel, ActionListener {
+public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements CenterSubPanel, ActionListener {
 
-    private static final Logger LOG = Logger.getLogger(TeachersInSchoolClassTeacherPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(TeachersInSchoolClassSchoolAdminPanel.class.getName());
 
-    private TeachersInSchoolClassTeacherPanelProperties prop = new TeachersInSchoolClassTeacherPanelProperties();
+    private TeachersInSchoolClassSchoolAdminPanelProperties prop = new TeachersInSchoolClassSchoolAdminPanelProperties();
     private TeachersInSchoolClassTeacherPanelTableModel tableModel;
     private DomSchoolClass schoolClass;
     private CenterPanel center;
@@ -141,7 +141,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                     }
                 }
                 catch (Dwo2Exception ex) {
-                    Logger.getLogger(TeachersInSchoolClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+                    Logger.getLogger(TeachersInSchoolClassSchoolAdminPanel.class.getName()).log(Level.FINE, null, ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
                 finally {
@@ -175,7 +175,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         jtable.setRowSelectionAllowed(false);
         jtable.setColumnSelectionAllowed(false);
         jtable.setCellSelectionEnabled(false);
-        TableUtil.setDefaults(jtable, true, new TeachersInSchoolClassTeacherPanel.ImageRenderer(), new TeachersInSchoolClassTeacherPanel.ImageButtonEditor());
+        TableUtil.setDefaults(jtable, true, new TeachersInSchoolClassSchoolAdminPanel.ImageRenderer(), new TeachersInSchoolClassSchoolAdminPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
@@ -188,7 +188,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
      * Creates a new ClassPanel which shows a list of classes.
      *
      */
-    public TeachersInSchoolClassTeacherPanel(DomSchoolClass sc) throws Dwo2Exception {
+    public TeachersInSchoolClassSchoolAdminPanel(DomSchoolClass sc) throws Dwo2Exception {
         super(null);
         this.schoolClass = sc;
         this.setSize(480, 500);

@@ -1,7 +1,6 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
@@ -25,16 +24,13 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
             TextMapper.getText(TextMapper.TBL_SELECT)};
     
     static boolean DEBUG = false;
-    private StudentsInSchoolClassTeacherPanelProperties prop;
 
     private int selectedRow, selectedColumn;
 
     private Object[][] data;
 
-    public void init(StudentsInSchoolClassTeacherPanelProperties props, DomSchoolClass sc, Image loginImage, Image editImage, Image noImage) throws Dwo2Exception {
+    public void init(List<DomStudent> userList, Image loginImage, Image editImage, Image noImage) throws Dwo2Exception {
 
-        prop = props;
-        List<DomStudent> userList = prop.getStudentsInSchoolClass(sc);
         int rows = 0;
         if (userList == null) {
             userList = new ArrayList<DomStudent>();

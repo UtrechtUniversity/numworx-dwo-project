@@ -13,7 +13,7 @@ import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
+import fi.dwo.dwojapplet.gui.domutils.DomUserListCellRenderer;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -43,11 +43,11 @@ import javax.swing.table.TableCellRenderer;
 /**
  * The panel which shows the school classes for a teacher.
  */
-public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterSubPanel, ActionListener {
+public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements CenterSubPanel, ActionListener {
 
-    private static final Logger LOG = Logger.getLogger(StudentsInSchoolClassTeacherPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(StudentsInSchoolClassSchoolAdminPanel.class.getName());
 
-    private StudentsInSchoolClassTeacherPanelProperties prop = new StudentsInSchoolClassTeacherPanelProperties();
+    private StudentsInSchoolClassSchoolAdminPanelProperties prop = new StudentsInSchoolClassSchoolAdminPanelProperties();
     private StudentsInSchoolClassTeacherPanelTableModel tableModel;
     private DomSchoolClass schoolClass;
     private CenterPanel center;
@@ -218,7 +218,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         jtable.setRowSelectionAllowed(false);
         jtable.setColumnSelectionAllowed(false);
         jtable.setCellSelectionEnabled(false);
-        TableUtil.setDefaults(jtable, true, new StudentsInSchoolClassTeacherPanel.ImageRenderer(), new StudentsInSchoolClassTeacherPanel.ImageButtonEditor());
+        TableUtil.setDefaults(jtable, true, new StudentsInSchoolClassSchoolAdminPanel.ImageRenderer(), new StudentsInSchoolClassSchoolAdminPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
 
         TableUtil.setBorder(jtable);
@@ -232,7 +232,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
      * Creates a new ClassPanel which shows a list of classes.
      *
      */
-    public StudentsInSchoolClassTeacherPanel(DomSchoolClass sc) throws Dwo2Exception {
+    public StudentsInSchoolClassSchoolAdminPanel(DomSchoolClass sc) throws Dwo2Exception {
         super(null);
         this.schoolClass = sc;
         this.setSize(480, 500);
@@ -267,9 +267,9 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_COPYSELECTEDTOCLASS));
         copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
         copyToSchoolClassButton.addActionListener(this);
-        Vector<DomSchoolClass> schoolClassVector = new Vector<DomSchoolClass>(prop.getTeachersOtherSchoolClasses(sc));
+        Vector<DomStudent> schoolClassVector = new Vector<DomStudent>(prop.getStudentsInSchoolClass(sc));
         targetSchoolClassBox = new JComboBox(schoolClassVector);
-        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
+        DomUserListCellRenderer renderer = new DomUserListCellRenderer();
         if (schoolClassVector.size() > 0) {
             targetSchoolClassBox.setSelectedIndex(0);
         }
