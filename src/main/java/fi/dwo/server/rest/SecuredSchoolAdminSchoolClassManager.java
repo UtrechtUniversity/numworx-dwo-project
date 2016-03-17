@@ -344,7 +344,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     @Path("/submitStudent")
     public Boolean SubmitStudentToSchoolClass(@Context SecurityContext sc, RestSubmitStudentToSchoolClass restData){
         DomStudent domStudent = restData.getDomSubmitStudentToSchoolClass().getStudent();
-        DomSchoolClass domSchoolClass = restData.getDomSubmitStudentToSchoolClass().getSchoolToClass();
+        DomSchoolClass domSchoolClass = restData.getDomSubmitStudentToSchoolClass().getSchoolClassTo();
            
         PersistentHasRole phr = null;
         PersistentSchool school = null;
