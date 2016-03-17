@@ -351,8 +351,10 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     }
                 }
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
-                tableModel.fireTableDataChanged();
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+//                StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
+//                center.loadCenter(panel);
+
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
@@ -367,8 +369,9 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     }
                 }
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
-                tableModel.fireTableDataChanged();
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
+                center.loadCenter(panel);
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
@@ -376,7 +379,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             }
         } else if (e.getSource() == backButton) {
             try {
-                ClassTeacherPanel panel = new ClassTeacherPanel();
+                SchoolClassesSchoolAdminPanel panel = new SchoolClassesSchoolAdminPanel();
                 center.loadCenter(panel);
 
             }

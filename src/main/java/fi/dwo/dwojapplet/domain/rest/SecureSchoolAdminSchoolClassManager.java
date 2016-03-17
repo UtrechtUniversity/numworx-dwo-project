@@ -74,7 +74,7 @@ public class SecureSchoolAdminSchoolClassManager {
         RestSchoolClass sts = new RestSchoolClass();
         sts.setRestContext(new DomContext());
         sts.setDomSchoolClass(schoolClass);
-        List<DomStudent> result = StoredRestManager.getInstance().getPutList("/rest/secure/teacher/schoolclass/getStudentList", RestListClassTypes.DomStudent, sts);
+        List<DomStudent> result = StoredRestManager.getInstance().getPutList("/rest/secure/schooladmin/schoolclass/getStudentList", RestListClassTypes.DomStudent, sts);
         LOG.log(Level.FINE, "Retrieved {1} students that are in schoolclass {2} for schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), schoolClass.getId()});
         return result;
     }

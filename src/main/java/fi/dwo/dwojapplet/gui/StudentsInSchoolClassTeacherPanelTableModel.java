@@ -58,6 +58,7 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
             data[j][7] = u;
             j++;
         }
+        fireTableDataChanged();
     }
 
     @Override

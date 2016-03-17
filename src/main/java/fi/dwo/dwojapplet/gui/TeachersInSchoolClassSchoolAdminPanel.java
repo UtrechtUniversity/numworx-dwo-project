@@ -286,9 +286,8 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             DomTeacher teacher = (DomTeacher) addTeacherBox.getSelectedItem();
             try {
                 prop.submitTeacherToSchoolClass(schoolClass, teacher);
-                tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage);
-                tableModel.fireTableDataChanged();
-
+                TeachersInSchoolClassSchoolAdminPanel panel = new TeachersInSchoolClassSchoolAdminPanel(schoolClass);
+                center.loadCenter(panel);
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
@@ -296,7 +295,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             }
         } else if (e.getSource() == backButton) {
             try {
-                ClassTeacherPanel panel = new ClassTeacherPanel();
+                SchoolClassesSchoolAdminPanel panel = new SchoolClassesSchoolAdminPanel();
                 center.loadCenter(panel);
 
             }
