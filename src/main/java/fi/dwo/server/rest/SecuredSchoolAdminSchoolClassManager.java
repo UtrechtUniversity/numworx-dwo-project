@@ -168,6 +168,9 @@ public class SecuredSchoolAdminSchoolClassManager {
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             //Fetch TeacherOfClass
             List<PersistentTeacherOfClass> teachersOfClass = TeacherOfClassManager.findEntities(schoolClass);
+            if(teachersOfClass == null){
+                teachersOfClass = new ArrayList<PersistentTeacherOfClass>();
+            }
             LOG.log(Level.FINER, "Fetched all {0} teachers. ", new Object[]{teachersOfClass.size()});
             List<DomTeacher> domTeachers;
             try {
