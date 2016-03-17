@@ -14,16 +14,16 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class DomSchoolClass4Teacher extends DomSchoolClass {
+public class DomSchoolClassFull extends DomSchoolClass {
     
     private String registrationKey = null;
     private Boolean iconizer = Boolean.FALSE;
     
-    public DomSchoolClass4Teacher() {
+    public DomSchoolClassFull() {
         
     }
     
-    public DomSchoolClass4Teacher(PersistentSchoolClass sc) {
+    public DomSchoolClassFull(PersistentSchoolClass sc) {
         super(sc);
         iconizer = sc.getIconizer();
         registrationKey = sc.getRegistrationKey();
