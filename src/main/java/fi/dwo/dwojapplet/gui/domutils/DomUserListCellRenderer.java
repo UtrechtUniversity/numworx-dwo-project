@@ -49,7 +49,9 @@ public class DomUserListCellRenderer extends JLabel
             DomUser u = (DomUser) value;
             setText(u.getUniqueDisplayName());
             setFont(list.getFont());
-        } else {
+        } else if(value == null){
+            setText("");
+        }else {
             setText("Object of unsupported type");
         }
 

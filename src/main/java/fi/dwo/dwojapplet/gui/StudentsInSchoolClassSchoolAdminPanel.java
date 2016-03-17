@@ -267,7 +267,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_COPYSELECTEDTOCLASS));
         copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
         copyToSchoolClassButton.addActionListener(this);
-        Vector<DomStudent> schoolClassVector = new Vector<DomStudent>(prop.getStudentsInSchoolClass(sc));
+        Vector<DomStudent> schoolClassVector = new Vector<DomStudent>(prop.getStudentsInSchoolNotInClass(sc));
         targetSchoolClassBox = new JComboBox(schoolClassVector);
         DomUserListCellRenderer renderer = new DomUserListCellRenderer();
         if (schoolClassVector.size() > 0) {

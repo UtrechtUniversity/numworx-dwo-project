@@ -23,6 +23,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -133,11 +134,13 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                 try {
                     DomTeacher teacher = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
 
-                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
+                    if (teacher != null && GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
                         //persist returned values	
                         prop.removeTeacherFromSchoolClass(getSchoolClass(), teacher);
+                        Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
+                        DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+                        addTeacherBox.setModel(model);
                         tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage);
-                        tableModel.fireTableDataChanged();
                     }
                 }
                 catch (Dwo2Exception ex) {
@@ -272,7 +275,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)+" - "+TextMapper.getText(TextMapper.HDR_EDITTEACHERS) + " - "+TextMapper.getText(TextMapper.HDR_SCHOOLCLASS)+": " +schoolClass.getSchoolClassName());
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITTEACHERS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
     }
 
     /**
@@ -284,14 +287,19 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addTeacherButton) {
             DomTeacher teacher = (DomTeacher) addTeacherBox.getSelectedItem();
-            try {
-                prop.submitTeacherToSchoolClass(schoolClass, teacher);
-                TeachersInSchoolClassSchoolAdminPanel panel = new TeachersInSchoolClassSchoolAdminPanel(schoolClass);
-                center.loadCenter(panel);
-            }
-            catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowErrorDialog(this, ex);
+            if (teacher != null) {
+                try {
+                    prop.submitTeacherToSchoolClass(schoolClass, teacher);
+                    TeachersInSchoolClassSchoolAdminPanel panel = new TeachersInSchoolClassSchoolAdminPanel(schoolClass);
+                    Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
+                    DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+                    addTeacherBox.setModel(model);
+                    tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage);
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                    GuiCreator.instance().ShowErrorDialog(this, ex);
+                }
             }
         } else if (e.getSource() == backButton) {
             try {
@@ -306,7 +314,6 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         } else if (e.getSource() == addTeacherBox) {
             //addTeacherBox.get
         }
-        tableModel.fireTableDataChanged();
     }
 
     /**

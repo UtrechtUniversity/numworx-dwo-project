@@ -31,16 +31,16 @@ public class TeachersInSchoolClassSchoolAdminPanelProperties {
     public List<DomTeacher> getTeachersInSchoolNotInClass(DomSchoolClass sc) throws Dwo2Exception {
         List<DomTeacher> classTeachers = SecureSchoolAdminSchoolClassManager.getTeachersInSchoolClass(sc);
         List<DomTeacher> schoolTeachers = SecureSchoolAdminSchoolClassManager.getTeachersInSchool();
-        List<DomTeacher> result = new ArrayList<>(schoolTeachers.size() - classTeachers.size());
+        List<DomTeacher> result = new ArrayList<>(Math.max(0,schoolTeachers.size() - classTeachers.size()));
         for (DomTeacher t : schoolTeachers) {
             Boolean flag = true; //add teacher to result list
             for (DomTeacher c : classTeachers) {
-                if (t.equals(c)) {
+                if (t.getId().equals(c.getId())) {
                     flag = false;
                     break;
                 }
             }
-            result.add(t);
+            if(flag == true) result.add(t);
         }
         return result;
     }

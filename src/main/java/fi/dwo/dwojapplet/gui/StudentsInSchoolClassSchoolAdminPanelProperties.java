@@ -9,9 +9,11 @@ import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
+import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolClassManager;
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -55,5 +57,21 @@ public class StudentsInSchoolClassSchoolAdminPanelProperties {
     void updateSingleSchoolStudent(DomSingleSchoolStudent student) throws Dwo2Exception{
         SecureSchoolAdminSchoolManager.updateSingleSchoolStudent(student);
     }
-            
+
+public List<DomStudent> getStudentsInSchoolNotInClass(DomSchoolClass sc) throws Dwo2Exception {
+        List<DomStudent> classStudents = SecureSchoolAdminSchoolClassManager.getStudentsInSchoolClass(sc);
+        List<DomStudent> schoolStudents = SecureSchoolAdminSchoolClassManager.getStudentsInSchool();
+        List<DomStudent> result = new ArrayList<>(Math.max(0,schoolStudents.size() - classStudents.size()));
+        for (DomStudent t : schoolStudents) {
+            Boolean flag = true; //add student to result list
+            for (DomStudent c : classStudents) {
+                if (t.getId().equals(c.getId())) {
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag == true) result.add(t);
+        }
+        return result;
+    }    
 }

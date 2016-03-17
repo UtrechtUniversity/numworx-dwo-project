@@ -55,6 +55,14 @@ public class SecureSchoolAdminSchoolClassManager {
         return src;
     }
 
+    public static List<DomStudent> getStudentsInSchool() throws Dwo2Exception {
+        List<DomStudent> src;
+        src = StoredRestManager.getInstance().getList("/rest/secure/schooladmin/schoolclass/getTeachersInSchoolList", RestListClassTypes.DomStudent);
+        LOG.log(Level.FINE, "Retrieved list of students in the school for the schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId()});
+        return src;
+    }
+    
+    
 //Not supported
 //    public static Boolean SubmitSchoolClass(RestSchoolClassFull schoolClass) throws Dwo2Exception {
 //        Boolean result = StoredRestManager.getInstance().put("/rest/secure/teacher/schoolclass/submit", Boolean.class, schoolClass);
