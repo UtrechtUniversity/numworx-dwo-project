@@ -21,6 +21,11 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
 
 public class PopupFacade implements InteractionView, FacetAware {
+	
+	public interface PopupListener {
+		void onShow();
+		void onHide();
+	}
 
 	private static List<HasHide> list = new LinkedList<HasHide>();
 	
@@ -45,6 +50,8 @@ public class PopupFacade implements InteractionView, FacetAware {
 	private String popupImageString;
 	private Image  popupImage;
 	private InteractionView delegate;
+	private PopupListener   popupListener;
+	
 	
 	@Deprecated
 	public PopupFacade(HashMap<String, Object> h)
@@ -88,7 +95,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	public Widget wrap(Widget container, InteractionView view) {
 		if(popup) {
 			if(popupBtn==null)
-			{	popupBtn = new PopupButton(container, getImage(), view);
+			{	popupBtn = new PopupButton(container, getImage(), view, popupListener);
 				list.add(popupBtn);
 			}
 			return popupBtn;
@@ -98,7 +105,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	
 	public Widget wrap(StubView container) {
 		if(popup) {
-			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container);
+			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
 			popupBtn = btn;
 			list.add(btn);
 			return btn;
@@ -108,7 +115,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	
 	public Widget wrap(MC2View container) {
 		if(popup) {
-			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container);
+			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
 			popupBtn = btn; // ???
 			list.add(btn);
 			return btn;
@@ -118,7 +125,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	
 	public Widget wrap(GeogebraView container) {
 		if(popup) {
-			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container);
+			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
 			popupBtn = btn;
 			list.add(btn);
 			return btn;
@@ -185,6 +192,11 @@ public class PopupFacade implements InteractionView, FacetAware {
 		if( popupBtn != null)
 			popupBtn.setState(h);
 	}
+	
+	public HashMap<String,Object> getPopupState() {
+		return popupBtn == null ? null : popupBtn.getState();
+	}
+	
 
 	public int getScore() {
 		return delegate.getScore();
@@ -286,6 +298,18 @@ public class PopupFacade implements InteractionView, FacetAware {
 
 	public boolean hasState() {
 		return popupBtn != null && !popupBtn.popupShowing();
+	}
+
+	public PopupListener getPopupListener() {
+		if(popup)
+			return popupListener;
+		else
+			return null;
+	}
+
+	public void setPopupListener(PopupListener popupListener) {
+		if(popup)
+			this.popupListener = popupListener;
 	}
 	
 }

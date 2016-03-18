@@ -90,9 +90,12 @@ public class ShareFacade implements InteractionView, TekstElementWithFont {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setState(HashMap<String, Object> h) {
 		if ( ! stateMap.containsKey(shareKey))
-			delegate.setState(h);			
+		{
+			delegate.setState(h);
+			return;
+		}
 		JSONObject other = stateMap.get(shareKey).isObject();
-		Map otherMap = JSONUtilities.fromJSONObject(other);
+		HashMap otherMap = JSONUtilities.fromJSONObject(other);
 		HashMap hh = h != null ? new HashMap(h): new HashMap();
 		hh.putAll(otherMap);
 		delegate.setState(hh);

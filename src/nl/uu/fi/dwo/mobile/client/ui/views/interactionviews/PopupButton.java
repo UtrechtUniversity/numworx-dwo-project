@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.utils.HasHide;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -157,15 +158,98 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 			super(element);
 			// TODO Auto-generated constructor stub
 		}
-
-
 	}
 
+	/**
+	 * These are the default onShow/onHide methods.
+	 * assert view != null
+	 * @deprecated make your own interface.
+	 * @author wim
+	 * @see nl.uu.fi.dwo.mobile.utils.PopupFacade
+	 *
+	 */	
+	class DefaultListener implements PopupListener {
+
+		@Override
+		public void onShow() {
+			if( view instanceof FormuleEditorWithAnswer)
+			{	
+				((FormuleEditorWithAnswer) view).setEnabled(false);
+				
+				if (content instanceof FormuleEditorWithSteps)
+				{
+					// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
+					((FormuleEditorWithSteps) content).setUitgeklapt(true);
+					((FormuleEditorWithSteps) content).setIsBoss(false);
+				}
+				
+				state = view.getState();
+				view.setState(state);
+	// Fire popup event ......			
+				if (content instanceof FormuleEditorWithSteps)
+				{
+					// als de state is gezet is FEWS de baas
+					((FormuleEditorWithSteps) content).setIsBoss(true);
+				}
+				
+				
+			}
+			else if(state != null)
+				view.setState(state);
+
+			if (view instanceof TekstVakPanel) {
+				((TekstVakPanel)view).setPopupUsed();
+			}
+
+			if(content instanceof FormuleEditorWithSteps)
+			{	
+				if(((FormuleEditorWithSteps) content).getEditor() != null)
+				{	
+					FormuleEditor editor = ((FormuleEditorWithSteps) content).getEditor();
+					editor.requestFocus();
+			
+					//om te zorgen dat cursor ook getekend wordt:
+					if(editor.getCurrentElement() == null)
+					{	editor.setCurrentElementRepaint(editor.getMainRegel());
+					}
+				}
+			}
+
+		}
+
+		@Override
+		public void onHide() {
+				if (view instanceof FormuleEditorWithAnswer) 
+				{
+					((FormuleEditorWithAnswer) view).haalAntwoordOp();
+				}
+				state = view.getState();
+				if (view instanceof FormuleEditorWithAnswer)
+				{
+					view.setState(state);
+					((FormuleEditorWithAnswer) view).setEnabled(true);
+				}
+
+				if (content instanceof FormuleEditorWithSteps) {
+					// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
+					((FormuleEditorWithSteps) content).setUitgeklapt(false);
+				}
+		}
+		
+	}
+	
+
+	static final PopupListener NOVIEW_LISTENER =  new PopupListener() {
+		public void onShow() {}
+		public void onHide() {}		
+	};
+	
 	ButtonBase btn;
 	IsWidget content;
 	DialogBox box;
 	InteractionView view;
 	HashMap<String,Object> state;
+	PopupListener listener;
 
 	class NothingOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler  {
 
@@ -249,15 +333,18 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	
 	
 	public PopupButton(IsWidget content) {
-		this(content, new Image(DWOplayer.DWO_BUNDLE.appletknop().getSafeUri()), null);
+		this(content, new Image(DWOplayer.DWO_BUNDLE.appletknop().getSafeUri()), null, null);
 	}
 	
 	public PopupButton(StubView view) {
-		this(view.getWidget(),new Image(DWOplayer.DWO_BUNDLE.appletknop().getSafeUri()), view);
+		this(view.getWidget(),new Image(DWOplayer.DWO_BUNDLE.appletknop().getSafeUri()), view, null);
 	}
 
-	public PopupButton(IsWidget content, Image image, InteractionView view) {
+	public PopupButton(IsWidget content, Image image, InteractionView view, PopupListener popupListener) {
 		Image img = image;
+		this.listener = popupListener == null ? 
+				(view == null ? NOVIEW_LISTENER : new DefaultListener()) 
+			  : popupListener;
 		if(img == null)
 			img = new Image(DWOplayer.PARAMETERS.getResource("images/resources/tekstknop.gif"));
 		btn = new PushButton(img);
@@ -298,56 +385,19 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 			
 			box.setWidget(wrap);
 		}
-// FIXME fire popupevent here.
-		if(!box.isShowing() && view instanceof FormuleEditorWithAnswer)
-		{	
-			((FormuleEditorWithAnswer) view).setEnabled(false);
-			
-			if (content instanceof FormuleEditorWithSteps)
-			{
-				// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
-				((FormuleEditorWithSteps) content).setUitgeklapt(true);
-				((FormuleEditorWithSteps) content).setIsBoss(false);
-			}
-			
-			state = view.getState();
-			view.setState(state);
-// Fire popup event ......			
-			if (content instanceof FormuleEditorWithSteps)
-			{
-				// als de state is gezet is FEWS de baas
-				((FormuleEditorWithSteps) content).setIsBoss(true);
-			}
-			
-			
-		}
-		else if(!box.isShowing() && view != null && state != null)
-			view.setState(state);
-		
-		if(!box.isShowing() )
-				box.showRelativeTo(this);
-
-		if (view instanceof TekstVakPanel) {
-			((TekstVakPanel)view).setPopupUsed();
-		}
-
-		if(box.isShowing() && content instanceof FormuleEditorWithSteps)
-		{	
-			if(((FormuleEditorWithSteps) content).getEditor() != null)
-			{	
-				FormuleEditor editor = ((FormuleEditorWithSteps) content).getEditor();
-				editor.requestFocus();
-		
-				//om te zorgen dat cursor ook getekend wordt:
-				if(editor.getCurrentElement() == null)
-				{	editor.setCurrentElementRepaint(editor.getMainRegel());
-				}
-			}
+// fire popupevent here.
+		if(!box.isShowing())
+		{
+			box.showRelativeTo(this);
+			listener.onShow();
 		}
 	}
 
 	public void hide() {
-		if(box != null) box.hide();
+		if(box != null) 
+		{	
+			box.hide();
+		}
 	}
 
 	public boolean popupShowing() {
@@ -386,24 +436,11 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	 *  
 	 */
 	void tearDown() {
-				if (view != null) {
-					if (view instanceof FormuleEditorWithAnswer) 
-					{
-						((FormuleEditorWithAnswer) view).haalAntwoordOp();
-					}
-					state = view.getState();
-					if (view instanceof FormuleEditorWithAnswer)
-					{
-						view.setState(state);
-						((FormuleEditorWithAnswer) view).setEnabled(true);
-					}
-
-					if (content instanceof FormuleEditorWithSteps) {
-						// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
-						((FormuleEditorWithSteps) content).setUitgeklapt(false);
-					}
-				}
-				box.hide();
+		if(box != null  && box.isShowing()) 
+		{	
+			listener.onHide();
+			box.hide();
+		}
 	}
 
 	/**

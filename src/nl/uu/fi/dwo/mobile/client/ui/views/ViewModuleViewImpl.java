@@ -32,7 +32,6 @@ import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
-import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
@@ -47,13 +46,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -64,8 +57,6 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.XMLParser;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.recognizer.swipe.SwipeEndEvent;
@@ -92,7 +83,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
 	private static final String KEYBOARD = "keyboardNr";
 	private static final String WRITE_MATH_SET = "writeMathSetNr";
-	private static Logger logger = Logger.getLogger("ViewModuleViewImpl");
+	static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
 	//@Deprecated // FIXME NIET GEBRUIKEN, CONVERTEREN NAAR Text.constants.xxxx()
@@ -100,7 +91,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	OpdrNav on;
 	private FocusPanel mainPanel;
-	FlowPanel contentPanel = null;
 	LayoutPanel contentScrollPanel = null;
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
@@ -141,52 +131,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentPanel.clear();
 		if(DWOplayer.JSON) loadJSON(file); else loadXML(file);
 		if(!DWOplayer.PARAMETERS.isNavTitle()) setTitle(name);
-	}
-
-	private void loadJSON(String file) {
-		 {
-			RequestBuilder.Method method = RequestBuilder.GET;
-			String url = file;
-			logger.info("request " + method + " " + url);
-			logger.fine("requesting url = " + Window.Location.getHref());
-			RequestBuilder rb = new RequestBuilder(method, url);
-			rb.setTimeoutMillis(1000000);
-			try
-			{
-				rb.sendRequest(null, new RequestCallback()
-				{
-		
-					@Override
-					public void onResponseReceived(Request request, Response response)
-					{
-						String responseText = response.getText();
-						logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
-						logger.info(response.getHeadersAsString());
-						logger.info("Data: " + responseText.substring(0, Math.min(30, responseText.length()) ));
-						if (responseText.length() > 4 && response.getStatusCode() == 200)
-						{
-							setupView(responseText);
-						} else {
-							Window.alert(Text.constants.noJSONreceived());
-							logger.severe("response empty");
-						}
-					}
-		
-					@Override
-					public void onError(Request request, Throwable exception)
-					{
-						Window.alert(Text.constants.noJSONreceived() + 
-								"\nerror " + exception);
-						logger.log(Level.SEVERE, exception.toString(), exception);
-					}
-				});
-		
-			}
-			catch (RequestException e)
-			{
-				RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
-			}
-		}
 	}
 
 	public void preSetupModule(final String link, final String url)
@@ -1431,24 +1375,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void setAnchorContext(AnchorContext context) {
 		if (context == null) context = new MyAnchorContext();
 		anchorContext = context;
-	}
-
-	public void setupView(String launchDataString) {
-		contentPanel.clear();
-		// voor huub: allow old XML data 
-		if(launchDataString.startsWith("<"))
-		{		
-			Document dom = XMLParser.parse(launchDataString);
-			StringCodeToHashMap sc = new StringCodeToHashMap();
-			launchData = sc.decodeStringToHashMap(dom);
-
-		} else
-		{
-			JSONValue dom = JSONParser.parseStrict(launchDataString);
-			//launchData = JSONUtilities.fromJSONObject(dom.isObject());
-			launchData = JSONUtilities.wrapMap(dom.isObject());
-		}
-		setupView(launchData);
 	}
 
 	public String getUnitId() {

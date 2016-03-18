@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
@@ -17,6 +18,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
@@ -36,6 +38,8 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -96,6 +100,7 @@ public abstract class XMLView {
 	
 	
 	TekstVakPanel hoofdPanel;
+	protected FlowPanel contentPanel = null;
 
 	protected void setupView(HashMap<String, Object> launchData)
 	{
@@ -338,5 +343,69 @@ public abstract class XMLView {
 	public boolean bolletjesZichtbaar()
 	{
 		return bolletjesZichtbaar;
+	}
+
+	void loadJSON(String file) {
+		 {
+			RequestBuilder.Method method = RequestBuilder.GET;
+			String url = file;
+			logger.info("request " + method + " " + url);
+			logger.fine("requesting url = " + Window.Location.getHref());
+			RequestBuilder rb = new RequestBuilder(method, url);
+			rb.setTimeoutMillis(1000000);
+			try
+			{
+				rb.sendRequest(null, new RequestCallback()
+				{
+		
+					@Override
+					public void onResponseReceived(Request request, Response response)
+					{
+						String responseText = response.getText();
+						logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
+						logger.info(response.getHeadersAsString());
+						logger.info("Data: " + responseText.substring(0, Math.min(30, responseText.length()) ));
+						if (responseText.length() > 4 && response.getStatusCode() == 200)
+						{
+							setupView(responseText);
+						} else {
+							Window.alert(Text.constants.noJSONreceived());
+							logger.severe("response empty");
+						}
+					}
+		
+					@Override
+					public void onError(Request request, Throwable exception)
+					{
+						Window.alert(Text.constants.noJSONreceived() + 
+								"\nerror " + exception);
+						logger.log(Level.SEVERE, exception.toString(), exception);
+					}
+				});
+		
+			}
+			catch (RequestException e)
+			{
+				RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
+			}
+		}
+	}
+
+	public void setupView(String launchDataString) {
+		contentPanel.clear();
+		// voor huub: allow old XML data 
+		if(launchDataString.startsWith("<"))
+		{		
+			Document dom = XMLParser.parse(launchDataString);
+			StringCodeToHashMap sc = new StringCodeToHashMap();
+			launchData = sc.decodeStringToHashMap(dom);
+	
+		} else
+		{
+			JSONValue dom = JSONParser.parseStrict(launchDataString);
+			//launchData = JSONUtilities.fromJSONObject(dom.isObject());
+			launchData = JSONUtilities.wrapMap(dom.isObject());
+		}
+		setupView(launchData);
 	}
 }

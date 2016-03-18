@@ -26,12 +26,14 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Connector;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 import com.google.gwt.canvas.client.Canvas;
@@ -81,7 +83,7 @@ import fi.wiskopdr.expressies.Optelling;
 
 
 
-public class TekstVakPanel implements InteractionView, FacetAware
+public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 {
 	public static final String TVP_KLAPUIT = "action.unfold";
 	public static final String TVP_KLAPIN = "action.fold";
@@ -253,7 +255,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		
 		//niet nodig waarschijnlijk
 		facade = new PopupFacade((ObjectMap)null);
-		
+		facade.setPopupListener(this);
 		mainPanel2 = new LayoutPanel(); 
 		mainPanel2.setStylePrimaryName("tekstvakpanel");
 		
@@ -310,6 +312,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		this.randomVarWaarden = randomVarWaarden;
 		ObjectMap h = JSONUtilities.wrapMap(hh);
 		facade = new PopupFacade(h);
+		facade.setPopupListener(this);
 		ObjectMap launchState = null;
 		if (h != null && h.containsKey("breedte") )
 			breedte = h.getInt("breedte");
@@ -825,17 +828,23 @@ public class TekstVakPanel implements InteractionView, FacetAware
 				for (int k = 0; k < opdrachtObjects.size(); k++)
 				{
 					Object currentObject = opdrachtObjects.get(k);
+					final Object orgObject = currentObject;
+// FIXME general unwrap decorator pattern.
+					if(currentObject instanceof ShareFacade)
+					{
+						currentObject = ((ShareFacade) currentObject).unwrap();
+					}
+					
+					
 					if (currentObject instanceof InteractionView)
 					{
 						OpdrNavIF comRoot2 = comRoot;
 						Connector connector = find(currentObject);
 						comRoot2 = new OpdrNavContext(comRoot,connector, bgColor);
-						((InteractionView) currentObject).setCommunicationRoot(comRoot2);
+						((InteractionView) orgObject).setCommunicationRoot(comRoot2);
 						if(! (currentObject instanceof StateLess))
-						{	interactionViewObjects.add(currentObject);
+						{	interactionViewObjects.add(orgObject);
 						}
-						if(connector != null) currentObject = connector.v;
-						
 						
 						if(currentObject instanceof CheckValueUnit)
 						{
@@ -937,14 +946,6 @@ public class TekstVakPanel implements InteractionView, FacetAware
 						aantalVakken++;
 						((SymboolPanel) currentObject).zetVolledigeHoogte(tekstVakken[i][j].hoogte);
 					}
-//					else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
-//					{
-//						aantalVakken++;
-//					}
-//					else if (currentObject.getClass().getName().equals("fi.kladjegwt.client.KladjeGWT"))
-//					{
-//						aantalVakken++;
-//					}
 					else if (currentObject instanceof InteractionView)
 					{
 						aantalVakken++;
@@ -2508,6 +2509,18 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			parameters.put("score", Collections.singletonMap("raw", -this.puntenAftrekPopup));
 			dwologger.log(parameters);
 		}
+	}
+
+	@Override
+	public void onShow() {
+		HashMap<String, Object> state = facade.getPopupState();
+		if(state != null) setState(state);
+		setPopupUsed();
+	}
+
+	@Override
+	public void onHide() {
+		facade.setPopupState(getState());
 	}
 	
 }

@@ -2,31 +2,42 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.Role;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class DescriptionViewImpl extends XMLView implements DescriptionView, EntryPoint {
+public class DescriptionViewImpl extends XMLView implements DescriptionView, EntryPoint, OpdrNavIF {
 
 	private static final String GET_COURSE_DESCRIPTION = 
-			"https://"+DWOplayer.PARAMETERS.getHost()+"/DWOmAccess/getCourseDescription?c=";
+			Window.Location.getProtocol() +"//"+ DWOplayer.PARAMETERS.getHost()+"/DWOmAccess/getCourseDescription?c=";
 	
 	
 	private SimplePanel main;
-	private FlowPanel   contentPanel;
 	private Label loading = new Label("Loading...");
 
 
@@ -47,6 +58,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 	public DescriptionViewImpl() {
 		super();
 		main = new SimplePanel();
+		contentPanel = new FlowPanel();
 	}
 
 	public DescriptionViewImpl(Object id) {
@@ -59,14 +71,14 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		loading.setText("loading course description " + id);
 		main.setWidget(loading);
 		String xml = GET_COURSE_DESCRIPTION + id;
-		loadXML(xml);
+		loadJSON(xml);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void setupView(HashMap<String, Object> launchData) {
 		super.setupView(launchData);
-		contentPanel = new FlowPanel();
+		contentPanel.clear();
 		HashMap<String,Object> opdracht = (HashMap<String, Object>) launchData.get("opdracht_1_1");
 		
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
@@ -102,7 +114,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		this.randomVarWaarden = waarden;
 
 		opdrachtObjects = new ArrayList<Object>();
-		ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) opdracht.get("interactiePanelLaunchData");
+		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
 		TekstBuffer tb = new TekstBuffer(varnamen, waarden);
 		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
 		//New editor version
@@ -125,7 +137,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 			{
 				Object currentObject = opdrachtObjects.get(i);
 				if (currentObject instanceof InteractionView)
-					((InteractionView) currentObject).setCommunicationRoot(null);
+					((InteractionView) currentObject).setCommunicationRoot(this);
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
@@ -137,7 +149,8 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 				}
 			}
 			//setObjects(opdrachtObjects, contentPanel);
-			setObjects(opdracht, contentPanel, null);
+			setObjects(opdracht, contentPanel, this);
+			hoofdPanel.getAsPanel().getElement().getStyle().clearWidth();
 		}
 		else if (!newVersion)
 		{ //Old editor version 
@@ -176,6 +189,78 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		//fews.setKeyboard(kb);
 
 		contentPanel.add(fews.getAsPanel());
+	}
+
+	@Override
+	public void setChanged(boolean fout) {
+	}
+
+	@Override
+	public FormuleKeyboardIF getKeyboard() {
+		return kb;
+	}
+
+	@Override
+	public FormuleClipboardIF getFormuleClipboard() {
+		return cb;
+	}
+
+	@Override
+	public int getMode() {
+		return 0;
+	}
+
+	@Override
+	public String getLearnerId() {
+		return "guest";
+	}
+
+	@Override
+	public String getLearnerName() {
+		return "Guest, Anonymous";
+	}
+
+	@Override
+	public CssColor getBackground() {
+		return CssColor.make("white");
+	}
+
+	@Override
+	public String getUUID() {
+		return "0-0-0";
+	}
+
+	@Override
+	public LessonMode getLessonMode() {
+		return LessonMode.browse;
+	}
+
+	@Override
+	public Role getRole() {
+		return Role.Learner;
+	}
+
+	@Override
+	public HandlerRegistration addCBookEventListener(String command,
+			CBookEventListener listener) {
+		return null;
+	}
+
+	@Override
+	public void fireEvent(CBookEvent event) {
+	}
+
+	@Override
+	public boolean hasListeners(String command) {
+		return false;
+	}
+
+	@Override
+	public void pause() {
+	}
+
+	@Override
+	public void unpause() {
 	}
 
 

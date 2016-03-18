@@ -11,12 +11,14 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
+import fi.beans.wiskopdrbeans.InteractiePanel;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
@@ -244,7 +246,7 @@ public class TekstBuffer
 			String height = data.substring(u+2,b);
 			return new IFrameView(href, width, height);
 		}
-		
+// FIXME OOK ALS DESCRIPTIONVIEW IN GEBRUIK IS!		
 		AnchorContext anchorContext = DWOplayer.clientfactory.getEntryView().getAnchorContext();
 		return new AnchorView(tekst, href, anchorContext);
 	}
@@ -316,6 +318,15 @@ public class TekstBuffer
 		if (currentVakGegevens == null) // FIXME Komt voor in kladje
 			return new SpookVak();
 
+		result = getVak0(currentVakGegevens);
+		if(result instanceof InteractionView)
+			result = ShareFacade.wrap(JSONUtilities.wrapMap(currentVakGegevens), (InteractionView)result);
+		return result;
+	}
+
+	private Object getVak0(HashMap<String, Object> currentVakGegevens) {
+		Object result;
+		ObjectMap map;
 		map = JSONUtilities.wrapMap(currentVakGegevens);
 		int soortVak = map.getInt("soortInteractiePanel");
 

@@ -23,7 +23,6 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -31,6 +30,7 @@ import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 import com.google.gwt.canvas.client.Canvas;
@@ -69,7 +69,7 @@ import fi.wiskopdr.expressies.repr.ContentMathML;
  * @author Danny Hendrix, Evertson Croes
  * 
  */
-public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView, CBookEventListener, FacetAware, TekstElementWithFont
+public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView, CBookEventListener, FacetAware, TekstElementWithFont, PopupListener
 {
 	private int extraWidth = 23 ; // of 43; breedte voor nakijkplaatje en als nodig voor knop voor uitklappen.
 	
@@ -1262,8 +1262,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 // van constructor naar hier....
 		if( vakUitwerking )
 		{
-			PopupButton popup = new PopupButton(fews, ImageUtils.newImage("images/resources/popup_voor_uitw_icoon.png"), this);
+			PopupButton popup = new PopupButton(fews, ImageUtils.newImage("images/resources/popup_voor_uitw_icoon.png"), this, this);
 			PopupFacade.addPopup(popup);
+			popupBtn = popup;
 			Style popupstyle = popup.getElement().getStyle();
 			popupstyle.setDisplay(Display.INLINE_BLOCK);
 			popupstyle.setVerticalAlign(VerticalAlign.TOP);
@@ -1274,8 +1275,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			{	parentRegel.resize();
 			}
 			sp.add(popup);
-			
-				  
 			//extraWidth += 20; // width of popup button
 		}
 
@@ -1374,19 +1373,57 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	@Override
 	public void setFontSize(int font_size) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setFontName(String font_name) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setFontStyle(int font_style) {
-		// TODO Auto-generated method stub
-		
+	}
+
+	private PopupButton popupBtn;
+	/**
+	 * just after popup is shown.
+	 */
+	@Override
+	public void onShow() {
+		HashMap<String, Object> state;
+		this.setEnabled(false);
+// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
+		fews.setUitgeklapt(true);
+		fews.setIsBoss(false);
+		state = this.getState();
+		this.setState(state);
+// Fire popup event ......			
+// als de state is gezet is FEWS de baas
+		fews.setIsBoss(true);
+
+		FormuleEditor editor = fews.getEditor();
+		if (editor != null)
+		{	
+			editor.requestFocus();
+			//om te zorgen dat cursor ook getekend wordt:
+			if(editor.getCurrentElement() == null)
+			{	editor.setCurrentElementRepaint(editor.getMainRegel());
+			}
+		}
+		popupBtn.state = state; // XXX ???
+	}
+	
+	/**
+	 * popup goes down.
+	 */
+	@Override
+	public void onHide() {
+		HashMap<String, Object> state;
+		this.haalAntwoordOp();
+		state = this.getState();
+		this.setState(state);
+		this.setEnabled(true);
+// zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
+		fews.setUitgeklapt(false);
+		popupBtn.state = state; // XXX ???
 	}
 }
