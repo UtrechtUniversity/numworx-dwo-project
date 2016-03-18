@@ -14,5 +14,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomContext {
     //TODO Insert hasRole property when legacy code is extinct and we can go stateless.
-    DomHasRole domHasRole; //security
+//    DomHasRole domHasRole; //security
 }
