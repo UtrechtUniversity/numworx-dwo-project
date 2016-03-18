@@ -49,8 +49,7 @@ public class SchoolClassesSchoolAdminPanelProperties {
 //    }
     
     public Boolean addClass(DomSchoolClassFull sc) throws Dwo2Exception{
-//        return SecureSchoolAdminSchoolClassManager.submitSchoolClass(sc);
-return false;
+        return SecureSchoolAdminSchoolClassManager.submitSchoolClass(sc);
     }
 
     public Boolean updateSchoolClass(DomSchoolClassFull sc) throws Dwo2Exception{
@@ -58,8 +57,7 @@ return false;
     }
 
     public Boolean removeSchoolClass(DomSchoolClass sc) throws Dwo2Exception{
-//        return SecureSchoolAdminSchoolClassManager.removeSchoolClass(sc);
-return false;
+        return SecureSchoolAdminSchoolClassManager.removeSchoolClass(sc);
     }
 
     public List<DomSchoolClass> getSchoolClassList() throws Dwo2Exception {

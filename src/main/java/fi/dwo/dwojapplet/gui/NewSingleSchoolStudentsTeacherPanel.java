@@ -48,8 +48,8 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 
     private static final Logger LOG = Logger.getLogger(NewSingleSchoolStudentsTeacherPanel.class.getName());
 
-    private DomSchoolClass schoolClass;    
-    private NewSingleSchoolStudentsTeacherPanelProperties prop = new NewSingleSchoolStudentsTeacherPanelProperties();
+    private DomSchoolClass schoolClass;
+    private NewSingleSchoolStudentsTeacherPanelProperties prop = null;
     private NewSingleSchoolStudentsTeacherPanelTableModel tableModel;
     private CenterPanel center;
 
@@ -71,6 +71,13 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     private Image delImage;
 
     private JPanel jtbl;
+
+    public enum UserType {
+
+        TEACHER, SCHOOLADMIN
+    };
+
+    private UserType userType = UserType.TEACHER;
 
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
@@ -148,11 +155,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         JTable jtable = new JTable();
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.setBackground(Color.LIGHT_GRAY);
-        
+
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         jtbl.add(jtable);
-        jtbl.add(Box.createHorizontalGlue());        
+        jtbl.add(Box.createHorizontalGlue());
         tableModel = new NewSingleSchoolStudentsTeacherPanelTableModel();
         List<DomSingleSchoolStudent> students = new ArrayList<DomSingleSchoolStudent>(1);
         tableModel.init(prop, columnNames, students, delImage);
@@ -177,13 +184,28 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         jtbl.setVisible(true);
     }
 
+    public NewSingleSchoolStudentsTeacherPanel(DomSchoolClass sc) throws Dwo2Exception {
+        super(null);
+        init(sc, userType);
+
+    }
+
+    public NewSingleSchoolStudentsTeacherPanel(DomSchoolClass sc, NewSingleSchoolStudentsTeacherPanel.UserType type) throws Dwo2Exception {
+        super(null);
+        init(sc, type);
+
+    }
+    
     /**
      * Creates a new ClassPanel which shows a list of classes.
      *
+     * @param sc
+     * @param userType
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
-    public NewSingleSchoolStudentsTeacherPanel(DomSchoolClass sc) throws Dwo2Exception {
-        super(null);
+    private void init(DomSchoolClass sc, UserType userType) throws Dwo2Exception {
         schoolClass = sc;
+        this.userType = userType;
         this.setSize(480, 500);
 
         //fetch user details.
@@ -274,7 +296,10 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)+" - "+TextMapper.getText(TextMapper.HDR_NEW_STUDENTS));
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) 
+                + " - " + TextMapper.getText(TextMapper.TBL_CLASSNAME) 
+                + ": " + schoolClass.getSchoolClassName()
+                + " - " + TextMapper.getText(TextMapper.HDR_NEW_STUDENTS));
     }
 
     /**
@@ -294,13 +319,19 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 boolean failFlag = false;
                 boolean fatalFlag = false;
                 for (DomSingleSchoolStudent submit : submitList) {
-                    if (prop.IsValidUserDataInput(submit)) {
+                    if (NewSingleSchoolStudentsTeacherPanelProperties.IsValidUserDataInput(submit)) {
                         try {
                             DomNewSingleSchoolStudent student = new DomNewSingleSchoolStudent();
                             student.setDomSingleSchoolStudent(submit);
-//                            student.setDomSchoolClass((DomSchoolClass) schoolClassComboBox.getSelectedItem());
                             student.setDomSchoolClass((DomSchoolClass) schoolClass);
-                            prop.submitSingleSchoolStudent(student);
+                            switch (userType) {
+                                case TEACHER:
+                                    NewSingleSchoolStudentsTeacherPanelProperties.submitSingleSchoolStudent(student);
+                                    break;
+                                case SCHOOLADMIN:
+                                    NewSingleSchoolStudentsSchoolAdminPanelProperties.submitSingleSchoolStudent(student);
+                                    break;
+                            }
                         }
                         catch (Dwo2Exception ex) {
                             resultList.add(submit);
@@ -322,7 +353,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 if (fatalFlag == true) {
                     GuiCreator.instance().ShowMessageDialog(this, "Er was een systeem error, zie de log.");
                 }
-                if(fatalFlag == false && failFlag == false){
+                if (fatalFlag == false && failFlag == false) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 }
             }
@@ -342,11 +373,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
-        } 
-//          else if (e.getSource() == schoolClassComboBox) {
-//                    tableModel.fireTableDataChanged();
-//
-//        }
+        }
     }
 
     /**

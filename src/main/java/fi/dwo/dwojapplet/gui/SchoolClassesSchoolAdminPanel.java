@@ -410,8 +410,6 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                 try {
                     prop.addClass(sc);
                     tableModel.init(prop, editImage, studentsImage, teachersImage, removeImage);
-                    tableModel.fireTableDataChanged();
-
                 }
                 catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);

@@ -42,10 +42,10 @@ public class StudentsInSchoolClassSchoolAdminPanelProperties {
     }
     
 
-    public void submitStudentToSchoolClass(DomSchoolClass from, DomSchoolClass to, DomStudent t) throws Dwo2Exception {
+    public void submitStudentToSchoolClass(DomSchoolClass to, DomStudent t) throws Dwo2Exception {
         DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
         submit.setSchoolClassTo(to);
-        submit.setSchoolClassFrom(from);
+        submit.setSchoolClassFrom(null);
         submit.setStudent(t);
         SecureSchoolAdminSchoolClassManager.submitStudentToSchoolClass(submit);
     }    

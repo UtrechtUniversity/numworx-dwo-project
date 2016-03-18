@@ -27,6 +27,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -53,11 +54,11 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
     private CenterPanel center;
 
     private JButton backButton;
-    private JComboBox targetSchoolClassBox;
+    private JComboBox studentBox;
     private JButton deleteButton;
     private JButton copyToSchoolClassButton;
     private JButton addStudentsButton;
-    
+
     private Image editImage;
     private Image emptyImage;
     private Image loginImage;
@@ -264,18 +265,18 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         deleteButton = new JButton(TextMapper.getText(TextMapper.BTN_DELSELECTED));
         deleteButton.setSize(deleteButton.getPreferredSize());
         deleteButton.addActionListener(this);
-        copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_COPYSELECTEDTOCLASS));
+        copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
         copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
         copyToSchoolClassButton.addActionListener(this);
         Vector<DomStudent> schoolClassVector = new Vector<DomStudent>(prop.getStudentsInSchoolNotInClass(sc));
-        targetSchoolClassBox = new JComboBox(schoolClassVector);
+        studentBox = new JComboBox(schoolClassVector);
         DomUserListCellRenderer renderer = new DomUserListCellRenderer();
         if (schoolClassVector.size() > 0) {
-            targetSchoolClassBox.setSelectedIndex(0);
+            studentBox.setSelectedIndex(0);
         }
-        targetSchoolClassBox.setRenderer(renderer);
-        targetSchoolClassBox.setMaximumRowCount(10);
-        targetSchoolClassBox.addActionListener(this);
+        studentBox.setRenderer(renderer);
+        studentBox.setMaximumRowCount(10);
+        studentBox.addActionListener(this);
         Box header = Box.createHorizontalBox();
         header.setAlignmentX(Component.RIGHT_ALIGNMENT);
         header.setMaximumSize(new Dimension(3000, 100));
@@ -284,9 +285,9 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         header.add(Box.createRigidArea(new Dimension(30, 0)));
         header.add(deleteButton);
         header.add(Box.createRigidArea(new Dimension(30, 0)));
-        header.add(copyToSchoolClassButton);
+        header.add(studentBox);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
-        header.add(targetSchoolClassBox);
+        header.add(copyToSchoolClassButton);
         header.add(Box.createGlue());
         this.add(header);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -330,7 +331,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITSTUDENTS) + " - "+TextMapper.getText(TextMapper.HDR_SCHOOLCLASS)+": " +schoolClass.getSchoolClassName());
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITSTUDENTS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
     }
 
     /**
@@ -342,23 +343,22 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == copyToSchoolClassButton) {
-            try {
-                for (int i = 0; i < tableModel.getRowCount(); i++) {
-                    if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
-                        DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
-                        DomSchoolClass toSchoolClass = (DomSchoolClass) targetSchoolClassBox.getSelectedItem();
-                        prop.submitStudentToSchoolClass(schoolClass, toSchoolClass, student);
-                    }
-                }
-                tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
-                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
-//                StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
-//                center.loadCenter(panel);
+            DomStudent student = (DomStudent) studentBox.getSelectedItem();
+            if (student != null) {
+                try {
+                    prop.submitStudentToSchoolClass(schoolClass, student);
+                    Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
+                    DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+                    studentBox.setModel(model);
 
-            }
-            catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
-                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+                    tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
+                //confirm is overkill
+                    //GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.FINE, null, ex);
+                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+                }
             }
         } else if (e.getSource() == deleteButton) {
             try {
@@ -389,7 +389,9 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             }
         } else if (e.getSource() == addStudentsButton) {
             try {
-                NewSingleSchoolStudentsTeacherPanel panel = new NewSingleSchoolStudentsTeacherPanel(schoolClass);
+                NewSingleSchoolStudentsTeacherPanel panel
+                        = new NewSingleSchoolStudentsTeacherPanel(schoolClass,
+                                NewSingleSchoolStudentsTeacherPanel.UserType.SCHOOLADMIN);
                 center.loadCenter(panel);
             }
             catch (Dwo2Exception ex) {

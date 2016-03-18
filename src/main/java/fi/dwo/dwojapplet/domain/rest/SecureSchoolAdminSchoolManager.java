@@ -19,8 +19,6 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * Manages the school roles and classes registered in HasRole.
