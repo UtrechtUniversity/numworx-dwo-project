@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 
+import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.Text_nl;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
@@ -119,9 +120,9 @@ public class FormuleButton extends TouchButton{
 		ctx.setFillStyle("black");
 		ctx.setStrokeStyle("black");
 		if(code.equals("abc") || code.equals("sub"))
-		{
+		{	String i18n = Text.rb.getString(code);
 			ctx.setFont("10px Arial");
-			ctx.fillText(code, 1, 15);
+			ctx.fillText(i18n, 1, 15);
 		}
 		else if(code.equals("wortelbewerk"))
 		{   ctx.beginPath();

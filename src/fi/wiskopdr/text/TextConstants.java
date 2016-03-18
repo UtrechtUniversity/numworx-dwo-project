@@ -111,5 +111,8 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	
 	@DefaultStringValue("Uitvoeren")
 	String executeLabel();
+	
+	@DefaultStringValue("sub")
+	String sub();
 // enzovoort
 }

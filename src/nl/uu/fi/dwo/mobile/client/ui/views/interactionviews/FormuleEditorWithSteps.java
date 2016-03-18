@@ -359,12 +359,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		
 		//FIXME: hoe onderscheid maken tussen Noordhoff en gewone DWO?
 		abcKnop = new FormuleButton("abc", 1);
-		//Image abcKnopImg = new Image(DWOplayer.DWO_BUNDLE.abcknop().getSafeUri());
-		//abcKnop = new TouchButton();
-		//abcKnop.add(abcKnopImg);
-		//abcKnop.setText("abc");
 		abcKnop.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		//abcKnop.getElement().getStyle().setBackgroundColor("red");
 		addAbcButtonHandler(abcKnop);
 		
 		//Image subKnopImg = new Image(DWOplayer.DWO_BUNDLE.subknop().getSafeUri());
