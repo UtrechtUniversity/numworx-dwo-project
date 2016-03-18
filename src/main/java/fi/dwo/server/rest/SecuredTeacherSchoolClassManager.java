@@ -247,8 +247,8 @@ public class SecuredTeacherSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            
+                    LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -296,8 +296,8 @@ public class SecuredTeacherSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            
+                    LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -346,8 +346,8 @@ public class SecuredTeacherSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            
+                    LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -435,8 +435,7 @@ public class SecuredTeacherSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -497,8 +496,7 @@ public class SecuredTeacherSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -544,8 +542,7 @@ public class SecuredTeacherSchoolClassManager {
             shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 

@@ -3,6 +3,8 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomContext;
+import fi.dwo.commons.dom.entities.DomNewSingleSchoolStudent;
 import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClassFull;
@@ -21,10 +23,10 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestNewSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClassFull;
-import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -229,15 +231,22 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         System.out.println("SubmitSingleSchoolStudent");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
 
-        RestSingleSchoolStudent rss = new RestSingleSchoolStudent();
+        RestNewSingleSchoolStudent rss = new RestNewSingleSchoolStudent();
+        rss.setRestContext(new DomContext());
+        
+        DomNewSingleSchoolStudent nss = new DomNewSingleSchoolStudent();
         DomSingleSchoolStudent dss = new DomSingleSchoolStudent();
-        rss.setDomSingleSchoolStudent(dss);
+        nss.setDomSingleSchoolStudent(dss);
         dss.setUserName("singleschooluser");
         dss.setGivenName("a");
         dss.setInsertion("b");
         dss.setFamilyName("c");
         dss.setEmail("a@b.c");
         dss.setPassword("pwd");
+
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);
+        nss.setDomSchoolClass(new DomSchoolClass(schoolClass));
+        
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean result = instance.SubmitSingleSchoolStudent(sc, rss);
         assertEquals("Operation failed to be true.", true, result);
