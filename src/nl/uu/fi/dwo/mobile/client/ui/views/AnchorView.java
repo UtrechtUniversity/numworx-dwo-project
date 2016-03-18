@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
-import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
@@ -48,8 +47,9 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 			this.context = context==null?NULL:context;
 			this.href = href;
 		} else
-			anchor = new Anchor(tekst, href);
+		{	anchor = new Anchor(tekst, href);
 			anchor .setTarget("_blank");
+		}
 		ctx = Canvas.createIfSupported().getContext2d();
 		setContextFont();
 	}
@@ -101,7 +101,7 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 
 	private int asHoogte;
 	public int getAsHoogte() {
-		return asHoogte;
+		return asHoogte * 106/120; // 1 pixel te hoog bij 12px font
 	}
 
 	private int height;
