@@ -15,6 +15,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomSchool4DwoAdmin extends DomSchool{
     private String schoolLogin;
 
+    public DomSchool4DwoAdmin() {
+        
+    }
+
+        
     public DomSchool4DwoAdmin(PersistentSchool s) {
         super(s);
         this.schoolLogin = s.getSchoolLogin();
