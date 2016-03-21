@@ -73,6 +73,9 @@ public abstract class TextMapper {
     public static final String TBL_EDITTEACHERS = "TBL_EDITTEACHERS";
     public static final String TBL_CLASSNAME = "TBL_CLASSNAME";
     public static final String TBL_CLASSLIST = "TBL_CLASSLIST";
+    public static final String TBL_SCHOOLNAME = "TBL_SCHOOLNAME";
+    public static final String TBL_SCHOOLLOGIN = "TBL_SCHOOLLOGIN";
+    public static final String TBL_SCHOOLRIGHTS = "TBL_SCHOOLRIGHTS";
 
     /* Message dialog messages */
     public static final String DLG_CONFIRM = "DLG_CONFIRM";

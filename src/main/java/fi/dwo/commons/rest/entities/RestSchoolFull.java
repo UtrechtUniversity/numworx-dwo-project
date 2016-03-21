@@ -4,8 +4,7 @@
 package fi.dwo.commons.rest.entities;
 
 import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomUserFull;
-import fi.dwo.commons.dom.entities.DomUser;
+import fi.dwo.commons.dom.entities.DomSchoolFull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -15,9 +14,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestFullUser {
+public class RestSchoolFull {
     private DomContext restContext;
-    private DomUserFull domFullUser;
+    private DomSchoolFull domSchoolFull;
 
     /**
      * @return the restContext
@@ -36,14 +35,14 @@ public class RestFullUser {
     /**
      * @return the domUser
      */
-    public DomUserFull getDomFullUser() {
-        return domFullUser;
+    public DomSchoolFull getDomSchoolFull() {
+        return domSchoolFull;
     }
 
     /**
-     * @param domUser the domUser to set
+     * @param domSchoolFull the domUser to set
      */
-    public void setDomFullUser(DomUserFull domUser) {
-        this.domFullUser = domUser;
+    public void setDomSchoolFull(DomSchoolFull domSchoolFull) {
+        this.domSchoolFull = domSchoolFull;
     }
 }

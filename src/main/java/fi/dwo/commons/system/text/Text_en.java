@@ -62,6 +62,9 @@ public class Text_en extends ListResourceBundle {
         {TextMapper.TBL_EDITTEACHERS, "edit teachers"},        
         {TextMapper.TBL_CLASSNAME, "classname"},
         {TextMapper.TBL_CLASSLIST, "classlist"},
+        {TextMapper.TBL_SCHOOLNAME, "schoolname"},
+        {TextMapper.TBL_SCHOOLLOGIN, "schoollogin"},
+        {TextMapper.TBL_SCHOOLRIGHTS, "schoolrights"},
         
    
         {TextMapper.DLG_CONFIRM, "Confirm"},

@@ -11,13 +11,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class DomSingleSchoolStudent extends DomFullUser {
+public class DomSingleSchoolStudent extends DomUserFull {
 
     public DomSingleSchoolStudent() {
         super();
     }
 
-    public DomSingleSchoolStudent(DomFullUser user) {
+    public DomSingleSchoolStudent(DomUserFull user) {
         super(user);
     }
 

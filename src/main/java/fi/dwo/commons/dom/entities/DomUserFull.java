@@ -15,20 +15,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class DomFullUser extends DomUser implements Serializable {
+public class DomUserFull extends DomUser implements Serializable {
     private String password = "";
     private String email = "";
 
-    public DomFullUser() {
+    public DomUserFull() {
     }
 
-    public DomFullUser(DomFullUser user) {
+    public DomUserFull(DomUserFull user) {
         super(user);
         setPassword(user.getPassword());
         setEmail(user.getEmail());
     }
     
-    public DomFullUser(PersistentUser user){
+    public DomUserFull(PersistentUser user){
         super(user);
         setPassword(user.getPassword());
         setEmail(user.getEmail());

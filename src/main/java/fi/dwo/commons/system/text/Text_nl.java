@@ -59,8 +59,9 @@ public class Text_nl extends ListResourceBundle {
         {TextMapper.TBL_EDITSTUDENTS, "edit studenten"},        
         {TextMapper.TBL_EDITTEACHERS, "edit docenten"},
         {TextMapper.TBL_CLASSNAME, "klasnaam"},
-        {TextMapper.TBL_CLASSLIST, "klassenlijst"},
-
+        {TextMapper.TBL_SCHOOLNAME, "schoolnaam"},
+        {TextMapper.TBL_SCHOOLLOGIN, "schoollogin"},
+        {TextMapper.TBL_SCHOOLRIGHTS, "schoolrechten"},
         
         {TextMapper.DLG_CONFIRM, "Bevestiging"},
         {TextMapper.DLG_Q_REMOVE, "Verwijderen?"},

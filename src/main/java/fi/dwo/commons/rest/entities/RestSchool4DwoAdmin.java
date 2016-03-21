@@ -13,9 +13,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestSchool4Admin {
+public class RestSchool4DwoAdmin {
     private DomContext restContext;
-    private DomSchool4DwoAdmin domSchool4Admin;
+    private DomSchool4DwoAdmin domSchool4DwoAdmin;
 
     /**
      * @return the restContext
@@ -32,16 +32,16 @@ public class RestSchool4Admin {
     }
 
     /**
-     * @return the domSchool4Admin
+     * @return the domSchool4DwoAdmin
      */
-    public DomSchool4DwoAdmin getDomSchool4Admin() {
-        return domSchool4Admin;
+    public DomSchool4DwoAdmin getDomSchool4DwoAdmin() {
+        return domSchool4DwoAdmin;
     }
 
     /**
-     * @param domSchool4Admin the domSchool4Admin to set
+     * @param domSchool4DwoAdmin the domSchool4DwoAdmin to set
      */
-    public void setDomSchool4Admin(DomSchool4DwoAdmin domSchool4Admin) {
-        this.domSchool4Admin = domSchool4Admin;
+    public void setDomSchool4DwoAdmin(DomSchool4DwoAdmin domSchool4DwoAdmin) {
+        this.domSchool4DwoAdmin = domSchool4DwoAdmin;
     }
 }
