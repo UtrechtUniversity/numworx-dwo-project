@@ -1,0 +1,74 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+             xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
+    <ui:with type="nl.uu.fi.dwo.mobile.client.text.Text" field="rb" />
+    <ui:style>
+	
+        .login_text_field {
+
+        width: 300px; 
+		
+        background-color: #eee;
+	
+        border: 1px solid #999;
+        border-radius: 5px; 
+		
+        margin:auto !important; 
+        display:block !important;
+        }
+		
+        .login_text_field input {
+        width: 274px;
+        padding: 12px 12px !important;
+        background: none;
+        color: #000 !important;
+        border: none;
+        outline: none;			
+        }
+		
+        .login_button {
+        margin: 30px auto !important;
+        width: 276px;
+	
+        }
+
+    </ui:style>
+    <g:FocusPanel ui:field="focusPanel" focus="true">
+        <mgwt:LayoutPanel height="100%" width="100%" >
+            <!-- Topbar Navigation Area -->
+            <mgwt:HeaderPanel >
+                <mgwt:center>
+                    <g:Label ui:field="nav_title" >
+                        <ui:text from='{rb.login}'/>
+                    </g:Label>
+                </mgwt:center>
+            </mgwt:HeaderPanel>
+            <!-- Main interaction Area -->
+            <g:HTMLPanel>
+                <div style="width: 600px; height: 470px; display: block; margin: 20px auto;">
+                    <g:Grid>
+                        <g:row styleName="optionalHeaderStyle">
+                            <g:customCell styleName="optionalFooCellStyle">
+                                <g:Label>foo</g:Label>
+                            </g:customCell>
+                            <g:customCell styleName="optionalBarCellStyle">
+                                <g:Label>bar</g:Label>
+                            </g:customCell>
+                        </g:row>
+                        <g:row>
+                            <g:cell>
+                                <div>foo</div>
+                            </g:cell>
+                            <g:cell>
+                                <div>bar</div>
+                            </g:cell>
+                        </g:row>
+                    </g:Grid>
+	    	   	
+                </div>	 
+            </g:HTMLPanel>    
+        </mgwt:LayoutPanel>
+    </g:FocusPanel>
+
+</ui:UiBinder> 

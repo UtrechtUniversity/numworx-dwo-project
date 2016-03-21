@@ -27,8 +27,6 @@ public class Account implements EntryPoint {
 		profile.put("lastname", "plas");
 		profile.put("userID", 12345);
 		profile.put("username", "project_plas");
-		
-		
 		user.setProfile(profile);
 		header.setRightWidget(user);
 	}
