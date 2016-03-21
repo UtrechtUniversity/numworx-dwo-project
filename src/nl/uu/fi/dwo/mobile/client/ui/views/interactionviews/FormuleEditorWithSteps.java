@@ -57,6 +57,7 @@ import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.DecRound;
@@ -751,6 +752,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		}
 	}
 
+	/**
+	 * Retourneert true als zelftoets of eindtoets.
+	 * 
+	 * @return
+	 */
 	private boolean isToets() 
 	{
 		return mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS;
@@ -1435,9 +1441,14 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		if(editor != null && !isToets())
 			//Sietske: Hier wellicht ook beter editor.kijkNa(false, false, false); zie getState FormuleEditorWithAnswer.
 			editor.kijkNa();
-// zet score/correct als editor nog open staat en gevuld is.
-		if(editor != null && isToets() && !editor.toString().isEmpty())
-			bepaalScore();
+		
+		// zet score/correct als editor nog open staat en gevuld is.
+		if ((editor != null && isToets() && !editor.toString().isEmpty())
+			|| editor == null) // als editor null dan wordt in getState() geen kijkNa() gedaan en wordt correct ten onrechte false
+		{
+			// bepaal score en correct
+			bepaalScoreEnCorrect();
+		}
 		
 		stapNr = this.stapNr;
 		errorCount = this.errorCount;
@@ -1781,18 +1792,17 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 					score = 0;
 			}	
 		}
-		if(isToets())
-		{	if(nagekeken)
+		if (isToets())
+		{	
+			if (nagekeken)
 			{	
-				
 				kijkToetsNa(true, true);
-
 			}
 			else
 			{	
 				// FIXME bepaal score voor 'getScore()' en haal daarna alle vinkjes weer weg....	kijkna(false,false,false)?		
 				
-				bepaalScore();
+				bepaalScoreEnCorrect();
 				
 				for(int i = 0; i < viewers.size(); i++)
 				{
@@ -1806,11 +1816,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 		
 		if(editor != null)
-		{	editor.setCurrentElementRepaint();
+		{	
+			editor.setCurrentElementRepaint();
 		}
+		
 		scrollToBottom();
-		
-		
 	}
 
 	/**
@@ -1838,93 +1848,79 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	}
 
 	/**
-	 * Bepaal de score zonder iets aan het beeld te doen.
-	 * <ol>
-	 * <li> Als we een niet lege editor hebben, bepaal dan zijn score.
-	 * <li> Als de editor leeg is, maak een editor van de laatste stap en dan 1
-	 * </ol>
-	 * @see #kijkToetsNa(boolean,boolean)
+	 * Bepaal score en correct zonder iets aan het beeld te doen.
 	 */
-	private void bepaalScore() {
+	private void bepaalScoreEnCorrect() {
 		
-		if(editor != null && ! editor.toString().isEmpty())
+		final String formule;
+		final String formuleMin1;
+		
+		if (editor != null && !editor.toString().isEmpty())
 		{
-			// er is een editor, XXX pas op voor *linversie*.
-			//editor.kijkNa(false, false, false); // roept maakNakijkenAf aan en zet zo score		DEZE WERKT NIET	
-			// hopelijk deze wel
-			bepaalScore(editor.toString(), getLatestAnswer());
-		} else {
-			if( stapNr > 0) {
-				String formule = latest_answer_viewer.toString();
+			formule = editor.toString();
+			formuleMin1 = getLatestAnswer();
+		} 
+		else 
+		{
+			if (stapNr > 0) 
+			{
+				formule = getLatestAnswer();
 				int size = viewers.size();
-				String formuleMin1;
-				if(size >= 2)
-					formuleMin1 = viewers.get(size-2).toString();
+				
+				if (size >= 2)
+					formuleMin1 = viewers.get(size - 2).toString();
 				else
 					formuleMin1 = null;
-				bepaalScore(formule, formuleMin1);
 			}
-			
+			else
+			{
+				formule = null;
+				formuleMin1 = null;
+			}
 		}
 		
+		try
+		{
+			bepaalScoreEnCorrect(formule, formuleMin1);
+		}
+		catch (RestartException r)
+		{
+			r.restart(new Runnable()
+			{
+				public void run()
+				{
+					try
+					{
+						bepaalScoreEnCorrect(formule, formuleMin1);
+					}
+					catch (RestartException e)
+					{
+						e.restart(this);
+					}
+				}
+			});
+		}
 	}
-/**
- * Hulpje van bepaalScore().
- * Bepaal score van twee opeenvolgende regels.
- * @param formule laatste formule
- * @param formuleMin1 voorlaatste formule/null
- */
-	private void bepaalScore(String formule, final String formuleMin1) {
-		FormuleEditorWithAnswer editor = this.editor;
-		final FormuleEditorWithSteps deze = this;
-		FormuleEditorWithSteps not_this = new FormuleEditorWithSteps() {
+	
+	/**
+	 * Bepaal de score en correct gegeven de twee stappen.
+	 * 
+	 * @param formule
+	 * @param formuleMin1
+	 * 		De formule uit de vorige stap.
+	 */
+	private void bepaalScoreEnCorrect(String formule, final String formuleMin1) throws RestartException
+	{
+		HashMap<String, Object> checkResults = new HashMap<String, Object>();
+		// checkAnswer() verwacht gecodeerde formules
+		String formuleCoded = "$f" + formule + "@";
+		String formuleMin1Coded = "$f" + formuleMin1 + "@";
+		checkResults = avChecker.checkAnswer(formuleCoded, formuleMin1Coded, getSubstitutie(), getGebruikersSubstituties());
 
-			@Override
-			public void maakNakijkenAf(boolean backStep, boolean show,
-					boolean setState) {
-				deze.score = ((FormuleEditorWithAnswer) this.getEditor()).getScore();
-				deze.correct = ((FormuleEditorWithAnswer) this.getEditor()).isCorrect();
-			}
-// alle upcalls in ed.kijkna hier overnemen
-// onder geen beding!
-			public void backStep(boolean setState) {}
-			public void resize() {}
-			public boolean controleerStap() {
-				return true; // MOET DIE OOK?
-			}
-			// getlatestanswer, getsubstitutie, getgebruikersubstitutie, verhoog error count
-			/* (non-Javadoc)
-			 * @see nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps#getLatestAnswer()
-			 */
-			@Override
-			public String getLatestAnswer() {
-				return formuleMin1;
-				//return super.getLatestAnswer();
-			}
-			/* (non-Javadoc)
-			 * @see nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps#getSubstitutie()
-			 */
-			@Override
-			public Expressie getSubstitutie() {
-				return deze.getSubstitutie();
-			}
-			/* (non-Javadoc)
-			 * @see nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps#getGebruikersSubstituties()
-			 */
-			@Override
-			public Vergelijking[] getGebruikersSubstituties() {
-				return deze.getGebruikersSubstituties();
-			}
-			
-		};
-		FormuleEditorWithAnswer ed =new FormuleEditorWithAnswer(h, isVergelijkingVak, not_this, randomVarNamen, randomVarWaarden, avChecker);; // ed heeft this als fe, maar this niet ed als editor!
-		ed.zetMode(mode);
-		ed.insert(formule);
-		not_this.editor = ed; // voor de upcall maakNakijkenAf
-		ed.kijkNa(false,false,false);
-		this.editor = editor;
+		this.correct = (Boolean) checkResults.get("correct");
+		this.score = (Integer) checkResults.get("score");
 	}
-
+	
 	private String setViewerString(String[] formuleVakInhouden, int i) {
 		String string = formuleVakInhouden.length > i?formuleVakInhouden[i]:"";
 		if(hasPrefix && !isVergelijkingVak) {
