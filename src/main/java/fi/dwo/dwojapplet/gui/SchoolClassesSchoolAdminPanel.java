@@ -351,6 +351,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
         header.add(Box.createHorizontalGlue());
 //        header.add(addStudentsButton);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.setPreferredSize(header.getMinimumSize());
         this.add(header);
         //addClassButton.setVisible(true);
         this.add(Box.createVerticalStrut(15));

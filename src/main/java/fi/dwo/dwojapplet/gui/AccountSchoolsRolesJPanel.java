@@ -1,6 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
@@ -180,7 +180,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
          *
          */
         private void switchToActiveSchoolLogin() {
-            DomFullUser user = DwoHelper.getCurrentUser();
+            DomUserFull user = DwoHelper.getCurrentUser();
             try {
 //                //switch role now
                 LOG.log(Level.INFO, "switching role now");
@@ -355,7 +355,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 //                tableModel.init(prop, loginImage, removeImage);
 //                tableModel.fireTableDataChanged();
 //                //get user data
-//                DomFullUser user = DwoHelper.getCurrentUser();
+//                DomUserFull user = DwoHelper.getCurrentUser();
 //                //switch role now
 //                LOG.log(Level.FINE, "switching role now");
 //                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());

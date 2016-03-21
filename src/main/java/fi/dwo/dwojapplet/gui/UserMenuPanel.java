@@ -33,7 +33,6 @@ public class UserMenuPanel extends GuestMenuPanel {
     final protected void createButtons() {
         super.createButtons();
         createMenuButtons();
-        addClassList();
     }
 
     protected void createMenuButtons() {
@@ -57,16 +56,6 @@ public class UserMenuPanel extends GuestMenuPanel {
 //    public StudentMenuPanel(DwoIF dwo) {
 //        super(dwo);
 //    }
-
-    /**
-     * Adds the name of the class of the user to the panel. Can be overridden by
-     * subclasses.
-     *
-     */
-    protected void addClassList() {
-        //Handig om een lijst van klassen te hebben waar een student de active klas 
-        //mee kan schakelen.
-    }
 
     /**
      * Invoked when an action occurs.

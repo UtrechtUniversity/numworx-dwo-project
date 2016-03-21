@@ -4,7 +4,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
@@ -66,7 +66,7 @@ public class DomSchoolClassLinkedLabel extends LinkedLabel {
 //                tableModel.init(prop, loginImage, removeImage);
 //                tableModel.fireTableDataChanged();
                 //get user data
-                DomFullUser user = DwoHelper.getCurrentUser();
+                DomUserFull user = DwoHelper.getCurrentUser();
                 //switch role now
                 LOG.log(Level.FINE, "switching class now");
                 GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());

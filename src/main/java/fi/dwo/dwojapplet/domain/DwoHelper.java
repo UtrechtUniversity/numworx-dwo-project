@@ -6,7 +6,7 @@ package fi.dwo.dwojapplet.domain;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.dom.entities.DomSchool;
 import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.exceptions.Dwo2Exception;
@@ -81,7 +81,7 @@ public final class DwoHelper {
     /**
      * Boot properties that need to be set before calling init()
      */
-    private static DomFullUser currentUser; // null if none available.
+    private static DomUserFull currentUser; // null if none available.
     private static DomSchool nullSchool;
 //    private static RoleType currentRole; // null if none available.
 
@@ -158,7 +158,7 @@ public final class DwoHelper {
      * @param aCurrentUser
      * @throws Dwo2Exception
      */
-    public static void userInit(DomFullUser aCurrentUser) throws Dwo2Exception {
+    public static void userInit(DomUserFull aCurrentUser) throws Dwo2Exception {
         currentUser = aCurrentUser;
         //Fetch all the login roles from the server for the current roles
         try {
@@ -565,7 +565,7 @@ public final class DwoHelper {
     /**
      * @return the current User
      */
-    public static DomFullUser getCurrentUser() {
+    public static DomUserFull getCurrentUser() {
         return currentUser;
     }
 
@@ -574,7 +574,7 @@ public final class DwoHelper {
      *
      * @param aCurrentUser the current User to set
      */
-    public static void updateCurrentUser(DomFullUser aCurrentUser) {
+    public static void updateCurrentUser(DomUserFull aCurrentUser) {
         if (aCurrentUser.getId() == currentUser.getId()) {
             currentUser = aCurrentUser;
             try {
@@ -591,7 +591,7 @@ public final class DwoHelper {
     /**
      * @param aCurrentUser the current User to set
      */
-    public static void setCurrentUser(DomFullUser aCurrentUser) throws Dwo2Exception {
+    public static void setCurrentUser(DomUserFull aCurrentUser) throws Dwo2Exception {
         userInit(aCurrentUser);
         if (aCurrentUser != null) {
             try {

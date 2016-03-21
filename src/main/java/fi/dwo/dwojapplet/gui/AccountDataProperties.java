@@ -1,7 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class AccountDataProperties {
     private static final Logger LOG = Logger.getLogger(AccountDataProperties.class.getName());
     
-    private DomFullUser user;
+    private DomUserFull user;
 
     public AccountDataProperties() {
         
@@ -28,14 +28,14 @@ public class AccountDataProperties {
     /**
      * @return the user
      */
-    public DomFullUser getUser() {
+    public DomUserFull getUser() {
         return user;
     }
 
     /**
      * @param user the user to set
      */
-    public void setUser(DomFullUser user) {
+    public void setUser(DomUserFull user) {
         this.user = user;
     }    
     

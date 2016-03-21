@@ -92,7 +92,6 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
      * overridden by subclasses.
      *
      */
-    @Override
     protected void addClassList() {
         /* Variables used to create items */
         FontMetrics fm;

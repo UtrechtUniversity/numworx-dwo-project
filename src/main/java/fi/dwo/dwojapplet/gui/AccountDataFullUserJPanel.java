@@ -1,6 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
@@ -30,7 +30,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
     private static final Logger LOG = Logger.getLogger(AccountDataFullUserJPanel.class.getName());
 
-    private DomFullUser user;
+    private DomUserFull user;
 //    protected Group groupList[];
 //    protected SchoolClass classList[];
     private JPasswordField oldpassword;
@@ -399,7 +399,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
         }
     }
 
-    public void setUser(DomFullUser aUser) {
+    public void setUser(DomUserFull aUser) {
         user = aUser;
 //        oldpassword.setText(aUser.getPassword());
         oldpassword.setText("");
@@ -411,7 +411,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
         email.setText(aUser.getEmail());
     }
 
-    public DomFullUser getUser() {
+    public DomUserFull getUser() {
         if (!password.getText().equals("")
                 && repassword.getText().equals(password.getText())) {
             //updates password following some logic.

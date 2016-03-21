@@ -1,6 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.dom.entities.DomSchoolClassFull;
@@ -188,7 +188,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
          *
          */
         private void switchToActiveSchoolClass(DomSchoolClass sc) {
-            DomFullUser user = DwoHelper.getCurrentUser();
+            DomUserFull user = DwoHelper.getCurrentUser();
             try {
                 prop.setActiveSchoolClass(sc);
 //                //switch role now

@@ -2,7 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\StudentMenuPanel.java
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.RoleType;
@@ -38,12 +38,14 @@ public class StudentMenuPanel extends UserMenuPanel {
     private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
     private DomSchoolClassLinkedLabel[] classLinkedList;
 
+    @Override
     public void createRuler() {
         add(Box.createVerticalStrut(10));
         add(new HRuler());
         add(Box.createVerticalStrut(15));
     }
 
+    @Override
     protected void createMenuButtons() {
         super.createMenuButtons();
         createGap();
@@ -51,6 +53,7 @@ public class StudentMenuPanel extends UserMenuPanel {
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
         classManagementButton.addActionListener(this);
         this.add(classManagementButton);
+        addClassList();
     }
 
     /**
@@ -93,8 +96,8 @@ public class StudentMenuPanel extends UserMenuPanel {
         classPanel.setViewportBorder(null);
         classPanel.setBorder(null);
         /* Add class-info */
-        DomFullUser t = (DomFullUser) DwoHelper.getCurrentUser();
-        if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass()!=null && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.STUDENT)) {
+        DomUserFull t = (DomUserFull) DwoHelper.getCurrentUser();
+        if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass()!=null && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.STUDENT.name())) {
             List<DomSchoolClass> scList = null;
             try {
                 scList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();

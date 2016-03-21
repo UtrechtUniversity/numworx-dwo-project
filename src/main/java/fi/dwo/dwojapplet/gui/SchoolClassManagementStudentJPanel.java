@@ -1,6 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.dom.entities.DomSchoolClass;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
@@ -183,7 +183,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
          *
          */
         private void switchToActiveSchoolClass(DomSchoolClass sc) {
-            DomFullUser user = DwoHelper.getCurrentUser();
+            DomUserFull user = DwoHelper.getCurrentUser();
             try {
                 prop.setActiveSchoolClass(sc);
 //                //switch role now
@@ -231,7 +231,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                     //set prop to table setting
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
                     prop.setActiveSchoolClass(schoolClass);
-                    DomFullUser user = DwoHelper.getCurrentUser();
+                    DomUserFull user = DwoHelper.getCurrentUser();
                     //switch role now
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else if (value == removeImage) {

@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
  * @author M.J.B. Kupers
  *
  */
-public class AdminMenuPanel extends StudentMenuPanel {
+public class AdminMenuPanel extends UserMenuPanel {
 
     private MenuPanelButton courseManagementButton;
 
@@ -57,16 +57,6 @@ public class AdminMenuPanel extends StudentMenuPanel {
      */
     public AdminMenuPanel() {
         super();
-    }
-
-    /**
-     * Adds the name of the classes wherefrom the user is teacher. Can be
-     * overridden by subclasses.
-     *
-     */
-    @Override
-    protected void addClassList() {
-        createRuler();
     }
 
     /**

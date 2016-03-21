@@ -107,7 +107,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public CenterSubPanel getSchoolPanel() {
-        return new SchoolPanel();
+        return new SchoolDwoAdminPanel();
     }
 
     /**

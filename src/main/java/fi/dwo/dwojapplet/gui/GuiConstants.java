@@ -85,6 +85,8 @@ public abstract class GuiConstants {
     public static String GUI_BGIMAGE_ICON = "resources/iconized-bgimage.png";
     public static String GUI_BGIMAGE_MENU = "resources/menu-bgimage.png";
     public static String GUI_BGIMAGE_SCO = "resources/sco-bgimage.png";
+    public static String GUI_RIGHTS_IMAGE = "resources/rights.gif";
+
     public static int[] GUI_9PATCH_ICON;
     public static int[] GUI_9PATCH_MENU;
     public static int[] GUI_9PATCH_SCO;

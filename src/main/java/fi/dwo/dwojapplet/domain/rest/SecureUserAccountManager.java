@@ -1,7 +1,7 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.dom.entities.DomSchool;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.rest.entities.RestFullUser;
@@ -32,9 +32,9 @@ public class SecureUserAccountManager {
      * @return
      * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
-    public static DomFullUser getAccountData() throws Dwo2Exception {
-        DomFullUser user;
-        user = StoredRestManager.getInstance().get("/rest/secure/user/account/get", DomFullUser.class);
+    public static DomUserFull getAccountData() throws Dwo2Exception {
+        DomUserFull user;
+        user = StoredRestManager.getInstance().get("/rest/secure/user/account/get", DomUserFull.class);
         return user;
     }
 
@@ -48,12 +48,12 @@ public class SecureUserAccountManager {
      * @return
      * @throws fi.dwo.commons.exceptions.Dwo2Exception
      */
-    public static DomFullUser updateAccountData(DomFullUser user) throws Dwo2Exception {
+    public static DomUserFull updateAccountData(DomUserFull user) throws Dwo2Exception {
         RestFullUser restUser = new RestFullUser();
         restUser.setRestContext(new DomContext());
         restUser.setDomFullUser(user);
 
-        user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", DomFullUser.class, restUser);
+        user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", DomUserFull.class, restUser);
         HttpAuthenticationFeature feature = null;
         switch (DwoHelper.getHttpAuthentication()) {
             case BASIC:

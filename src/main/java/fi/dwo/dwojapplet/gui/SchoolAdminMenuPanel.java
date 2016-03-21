@@ -51,7 +51,8 @@ public class SchoolAdminMenuPanel extends UserMenuPanel {
             CenterSubPanel cp = GuiCreator.instance().getUserManagementPanel();
             center.loadCenter(cp);
             GuiCreator.instance().setReady();
-        } else if (e.getSource() == klasKeuzeButton) {
+        }
+        else if (e.getSource() == klasKeuzeButton) {
             GuiCreator.instance().setWait();
             CenterSubPanel cp = GuiCreator.instance().getClassAdminPanel();
             center.loadCenter(cp);

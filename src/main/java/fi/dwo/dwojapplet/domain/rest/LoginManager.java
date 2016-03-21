@@ -1,7 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
@@ -25,9 +25,9 @@ public class LoginManager {
 
     private static final Logger LOG = Logger.getLogger(LoginManager.class.getName());
 
-    public static DomFullUser login(String username, String password) throws Dwo2Exception {
+    public static DomUserFull login(String username, String password) throws Dwo2Exception {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
-        DomFullUser user;
+        DomUserFull user;
         HttpAuthenticationFeature feature=null;
         switch(DwoHelper.getHttpAuthentication()){
             case BASIC:
@@ -49,7 +49,7 @@ public class LoginManager {
             throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, response.getStatusInfo().getReasonPhrase());
         } else {
             //Set return value
-            user = response.readEntity(DomFullUser.class);
+            user = response.readEntity(DomUserFull.class);
             // succeeded login
             LOG.log(Level.INFO, "Logged in with username {0}.", new Object[]{user.getUserName()});
             //Set webtarget with credentials for future rest login.
