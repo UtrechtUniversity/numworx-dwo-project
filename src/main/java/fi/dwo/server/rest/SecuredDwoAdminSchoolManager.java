@@ -1,12 +1,12 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
+import fi.dwo.commons.dom.entities.DomSchoolFull;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
@@ -22,7 +22,8 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestSchool4Admin;
+import fi.dwo.commons.rest.entities.RestSchool4DwoAdmin;
+import fi.dwo.commons.rest.entities.RestSchoolFull;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseSequenceManager;
@@ -74,8 +75,9 @@ public class SecuredDwoAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public PersistentSchool submitSchool(@Context SecurityContext sc, PersistentSchool school) {
+    public Boolean submitSchool(@Context SecurityContext sc, RestSchoolFull restSchool) {
         PersistentHasRole hr = null;
+        DomSchoolFull school = restSchool.getDomSchoolFull();
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
@@ -86,12 +88,20 @@ public class SecuredDwoAdminSchoolManager {
 
         if (hr != null) {
             // allowed user role
-            PersistentSchool s = null;
+            PersistentSchool s = new PersistentSchool();
+            s.setExpire(school.getExpire());
+            s.setExport(school.getExport());
+            s.setImage(school.getImage());
+            s.setSchoolLogin(school.getSchoolLogin());
+            s.setSchoolName(school.getSchoolName());
+            s.setSchoolRights(school.getSchoolRights());
             try {
-                SchoolManager.create(school);
+                SchoolManager.create(s);
                 s = SchoolManager.findBySchoolLogin(school.getSchoolLogin());
                 LOG.log(Level.INFO, "Username {0}: created school with schoollogin {1} and id {2}.", new Object[]{sc.getUserPrincipal().getName(), s.getSchoolLogin(), s.getSchoolID()});
-                return s;
+                //add user roles
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Method incomplete.");                
+//                return true;
             }
             catch (Exception e) {
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while creating school " + school.getSchoolName() + ".");
@@ -112,7 +122,7 @@ public class SecuredDwoAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/get")
-    public PersistentSchool getSchool(@Context SecurityContext sc, PersistenceId pid) {
+    public DomSchoolFull getSchool(@Context SecurityContext sc, RestSchool4DwoAdmin school) {
         PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
@@ -124,12 +134,12 @@ public class SecuredDwoAdminSchoolManager {
         if (hr != null) {
             PersistentSchool s = null;
             try {
-                s = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(pid));
+                s = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(school.getDomSchool4DwoAdmin().getId()));
                 LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
-                return s;
+                return new DomSchoolFull(s);
             }
             catch (Exception e) {
-                LOG.log(Level.WARNING, "School " + pid + "Could not be found.", e);
+                LOG.log(Level.WARNING, "School " + school.getDomSchool4DwoAdmin().getId() + "Could not be found.", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the school.");
 
             }
@@ -192,8 +202,9 @@ public class SecuredDwoAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/update")
-    public PersistentSchool updateSchool(@Context SecurityContext sc, PersistentSchool school) {
+    public Boolean updateSchool(@Context SecurityContext sc, RestSchoolFull restSchool) {
         PersistentHasRole hr = null;
+        DomSchoolFull school = restSchool.getDomSchoolFull();
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
@@ -212,14 +223,14 @@ public class SecuredDwoAdminSchoolManager {
                 editSchool.setSchoolName(school.getSchoolName());
                 editSchool.setSchoolRights(school.getSchoolRights());
                 SchoolManager.edit(editSchool);
-                return SchoolManager.findBySchoolLogin(school.getSchoolLogin());
+                return true;
             }
             catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update school with id " + school.getSchoolID() + " .");
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update school with login " + school.getSchoolLogin() + " .");
             }
         } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the school with id {1}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID()});
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the school with login {1}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolLogin()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update the school data.");
         }
     }
@@ -234,9 +245,9 @@ public class SecuredDwoAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/remove")
-    public Boolean removeSchool(@Context SecurityContext sc, RestSchool4Admin restSchool) {
+    public Boolean removeSchool(@Context SecurityContext sc, RestSchool4DwoAdmin restSchool) {
         //unwrap persistentid
-        PersistentSchool school = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(restSchool.getDomSchool4Admin().getId()));
+        PersistentSchool school = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(restSchool.getDomSchool4DwoAdmin().getId()));
 
         PersistentHasRole hr = null;
         try {
@@ -334,21 +345,21 @@ public class SecuredDwoAdminSchoolManager {
                     SchoolClassManager.destroy(cl.getClassID());
                 }
 
-                    //Loop Courses in School
-                    List<PersistentCourse> cList = CourseManager.findEntities(school);
-                    for (PersistentCourse c : cList) {
-                        //Loop ScoContext in Course
-                        List<PersistentScoContext> pscList = ScoContextManager.findEntities(c);
-                        for (PersistentScoContext psc : pscList) {
-                            //Remove ScoData
-                            ScoDataManager.destroy(psc.getScoID());
-                            //Remove ScoContext
-                            ScoContextManager.destroy(psc.getScoID());
-                        }
-                        ///Remove Course
-                        CourseManager.destroy(c.getCourseID());
+                //Loop Courses in School
+                List<PersistentCourse> cList = CourseManager.findEntities(school);
+                for (PersistentCourse c : cList) {
+                    //Loop ScoContext in Course
+                    List<PersistentScoContext> pscList = ScoContextManager.findEntities(c);
+                    for (PersistentScoContext psc : pscList) {
+                        //Remove ScoData
+                        ScoDataManager.destroy(psc.getScoID());
+                        //Remove ScoContext
+                        ScoContextManager.destroy(psc.getScoID());
                     }
-                    SchoolManager.destroy(school.getSchoolID());
+                    ///Remove Course
+                    CourseManager.destroy(c.getCourseID());
+                }
+                SchoolManager.destroy(school.getSchoolID());
             }
             catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);

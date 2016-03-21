@@ -37,21 +37,7 @@ public class DwoEmfFactory {
         if (_instance == null) {
             synchronized (DwoEmfFactory.class) {
                 if (_instance == null) {
-//                    try {
                     _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB");
-//                        Properties properties = new Properties();
-//                        DataSource dataSource = getDataSource();
-//                       properties.setProperty("datanucleus.ConnectionFactoryName","java:comp/env/jdbc/dwodb");
-//                        properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE, dataSource);
-//                        properties.put(PersistenceUnitProperties.LOGGING_LEVEL, "FINE");
-//                        properties.put(PersistenceUnitProperties.LOGGING_TIMESTAMP, "false");
-//                        properties.put(PersistenceUnitProperties.LOGGING_THREAD, "false");
-//                        properties.put(PersistenceUnitProperties.LOGGING_SESSION, "false");
-//                        _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB", properties);
-//                    } catch (NamingException ex) {
-//                        LOG.log(Level.SEVERE, null, ex);
-//                        return null;
-//                    }
                 }
             }
 

@@ -4,7 +4,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.dom.entities.DomLoginCheck;
 import fi.dwo.commons.dom.entities.DomNewUser;
 import fi.dwo.commons.exceptions.Dwo2Exception;

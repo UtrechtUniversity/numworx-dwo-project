@@ -5,7 +5,7 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomFullUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -58,7 +58,7 @@ public class SecuredUserAccountManager {
     @GET
     @Produces({"application/json"})
     @Path("/get")
-    public DomFullUser getCurrentUser(@Context SecurityContext sc) {
+    public DomUserFull getCurrentUser(@Context SecurityContext sc) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser user = null;
         
@@ -73,7 +73,7 @@ public class SecuredUserAccountManager {
         finally {
             em.close();
         }
-        return new DomFullUser(user);
+        return new DomUserFull(user);
     }
 
     /**
@@ -87,7 +87,7 @@ public class SecuredUserAccountManager {
     @PUT
     @Produces({"application/json"})
     @Path("/update")
-    public DomFullUser updateCurrentUser(@Context SecurityContext sc, RestFullUser user) {
+    public DomUserFull updateCurrentUser(@Context SecurityContext sc, RestFullUser user) {
         if (user.getDomFullUser().getUserName().equals(sc.getUserPrincipal().getName())) {
             try {
                 PersistentUser dbUser = UserManager.findByUserName(user.getDomFullUser().getUserName());
@@ -98,7 +98,7 @@ public class SecuredUserAccountManager {
                 dbUser.setPassword(user.getDomFullUser().getPassword());
                 //User to update is logged in user.
                 UserManager.edit(dbUser);
-                return new DomFullUser(UserManager.findByUserName(user.getDomFullUser().getUserName()));
+                return new DomUserFull(UserManager.findByUserName(user.getDomFullUser().getUserName()));
             }
             catch (Exception e) {
             LOG.log(Level.SEVERE, "Username "+sc.getUserPrincipal().getName()+": Unexpected exception",e);

@@ -3,13 +3,16 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomContext;
 import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
+import fi.dwo.commons.dom.entities.DomSchoolFull;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.commons.rest.entities.RestSchool4Admin;
+import fi.dwo.commons.rest.entities.RestSchool4DwoAdmin;
+import fi.dwo.commons.rest.entities.RestSchoolFull;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -75,15 +78,19 @@ public class SecuredDwoAdminSchoolManagerIT {
         school.setExpire(null);
         school.setSchoolRights("_");
         school.setImage(null);
+        RestSchoolFull restSchool = new RestSchoolFull();
+        restSchool.setRestContext(new DomContext());
+        restSchool.setDomSchoolFull(new DomSchoolFull(school));
 
-        SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
-        PersistentSchool result = instance.submitSchool(sc, school);
-        if (!school.similar(result)) {
+        SecuredDwoAdminSchoolManager lclInstance = new SecuredDwoAdminSchoolManager();
+        lclInstance.submitSchool(sc, restSchool);
+        PersistentSchool pSchool = SchoolManager.findBySchoolLogin("dummyLogin");
+        if (!pSchool.similar(school)) {
             fail("Method returned an unsimilar school result.");
         }
 
-        result = SchoolManager.findBySchoolLogin("dummyLogin");
-        if (!school.similar(result)) {
+        pSchool = SchoolManager.findBySchoolLogin("dummyLogin");
+        if (!school.similar(pSchool)) {
             fail("School not found in persistent store.");
         }
 
@@ -100,11 +107,21 @@ public class SecuredDwoAdminSchoolManagerIT {
 
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
         PersistentSchool expResult = null;
-        PersistentSchool result = instance.getSchool(sc, MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));
         expResult = SchoolManager.findEntity(3L);
-        assertEquals(expResult, result);
-        if (!result.similar(expResult)) {
-            fail("School fetched not similar with data directly from persistent store.");
+        RestSchool4DwoAdmin restSchool = new RestSchool4DwoAdmin();
+        restSchool.setRestContext(new DomContext());
+        DomSchool4DwoAdmin dSchoolIn = new DomSchool4DwoAdmin(expResult);
+        DomSchoolFull dSchoolResult = new DomSchoolFull(expResult);
+        restSchool.setDomSchool4DwoAdmin(dSchoolIn);
+        DomSchoolFull dSchoolOut = instance.getSchool(sc, restSchool);
+        assertEquals(dSchoolOut.getExpire(), dSchoolResult.getExpire());
+        assertEquals(dSchoolOut.getExport(), dSchoolResult.getExport());
+        assertEquals(dSchoolOut.getImage(), dSchoolResult.getImage());
+        assertEquals(dSchoolOut.getSchoolLogin(), dSchoolResult.getSchoolLogin());
+        assertEquals(dSchoolOut.getSchoolName(), dSchoolResult.getSchoolName());
+        assertEquals(dSchoolOut.getSchoolRights(), dSchoolResult.getSchoolRights());
+        if (!dSchoolOut.getId().equals(dSchoolResult.getId())) {
+            fail("School fetched data with different persistent id from persistent store.");
         }
     }
 
@@ -137,25 +154,30 @@ public class SecuredDwoAdminSchoolManagerIT {
         school.setExpire(null);
         school.setSchoolRights("_");
         school.setImage(null);
+        RestSchoolFull restSchool = new RestSchoolFull();
+        restSchool.setRestContext(new DomContext());
+        restSchool.setDomSchoolFull(new DomSchoolFull(school));
 
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
-        PersistentSchool result = instance.updateSchool(sc, school);
+        Boolean result = instance.updateSchool(sc, restSchool);
         if (!school.similar(result)) {
             fail("Method returned an unsimilar school result.");
         }
 
-        result = SchoolManager.findBySchoolLogin("school01");
-        if (!school.similar(result)) {
+        PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");
+        if (!school.similar(pSchool)) {
             fail("School not updated in persistent store.");
         }
 
         //try illegal action updating index and/or schoollogin
         school = SchoolManager.findBySchoolLogin("school01");
         school.setSchoolID(1L);
+        restSchool.setDomSchoolFull(new DomSchoolFull(school));
         try {
-            result = instance.updateSchool(sc, school);
-            if (result.getSchoolID().equals(school.getSchoolID())) {
-                fail("School id updated in persistent store to value:" + result.getSchoolID() + ".");
+            result = instance.updateSchool(sc,restSchool);
+            pSchool = SchoolManager.findBySchoolLogin("school01");
+            if (school.getSchoolID().equals(pSchool.getSchoolID())) {
+                fail("School id updated in persistent store to value:" + pSchool.getSchoolID() + ".");
             }
         }
         catch (Dwo2RestException e) {
@@ -175,9 +197,9 @@ public class SecuredDwoAdminSchoolManagerIT {
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
         PersistentSchool expResult = null;
         expResult = SchoolManager.findEntity(3L);
-        RestSchool4Admin restSchool = new RestSchool4Admin();
+        RestSchool4DwoAdmin restSchool = new RestSchool4DwoAdmin();
         DomSchool4DwoAdmin domSchool = new DomSchool4DwoAdmin(expResult);
-        restSchool.setDomSchool4Admin(domSchool);
+        restSchool.setDomSchool4DwoAdmin(domSchool);
         domSchool.setId(MySQLPersistenceId.createPersistenceId(expResult.getSchoolID(), PersistenceClassType.PersistentSchool));
         domSchool.setSchoolLogin("school01");
         domSchool.setSchoolName("Trivial");
