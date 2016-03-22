@@ -4,12 +4,16 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONAware;
@@ -20,20 +24,37 @@ import fi.beans.base64code.StringCodeObject;
 
 public class JSONEncoder {
 	
+	@SuppressWarnings("rawtypes")
 	public static void encode(Map map, Writer out) throws IOException {
 		map = transformMap(map);
 		JSONObject.writeJSONString(map, out);
 	}
 
+	/**
+	 * @param value
+	 * @return
+	 */
+	private static List<Object> toArrayList(Object value) {
+		int length = Array.getLength(value);
+		List<Object> list = new ArrayList<Object>(length);
+		for(int i = 0; i < length; i++)
+			list.add(Array.get(value, i));
+		return list;
+	}
+
+	
 	private static Object transformTypes(Object value) {
+		if( value instanceof byte[]) {
+			value = ByteArray.newInstance((byte[]) value);			
+		}
 
 		if (value instanceof Collection ) {
-			Collection c = (Collection) value;
+			Collection<?> c = (Collection<?>) value;
 			value = c.toArray();
 		}
 		
 		if(value instanceof Map) {
-			return transformMap((Map) value);
+			return transformMap((Map<?,?>) value);
 		} 
 
 		if(value instanceof Object[]) {
@@ -41,17 +62,16 @@ public class JSONEncoder {
 			return transformArray(array);
 		} 
 
-		if( value instanceof byte[]) {
-			value = ByteArray.newInstance((byte[]) value);
-		}
-		
-		if(value == null || value instanceof Number || value instanceof Boolean || value instanceof String || value.getClass().isArray()
+		if(value == null || value instanceof Number || value instanceof Boolean || value instanceof String
 // equivalent of the above.
 				|| value instanceof JSONAware || value instanceof JSONStreamAware
 		)
 		{
 			return value;
 		}
+// Primitive Array
+		if(value.getClass().isArray())
+			return toArrayList(value);
 // De moeilijke gevallen:		
 		if(value instanceof Color) {
 			Color c = (Color) value;
@@ -74,21 +94,21 @@ public class JSONEncoder {
 		}
 		if(value instanceof ByteArray ) {
 			ByteArray b = (ByteArray) value;
-			Map r = new HashMap();
+			Map<String,String> r = new HashMap<String,String>();
 			r.put("@type", "dwomaccess:ByteArray");
 			r.put("string", b.getString());
 			return r;
 		}
 		if(value instanceof URL) {
 			URL u = (URL)value;
-			Map r = new HashMap();
+			Map<String,String> r = new HashMap<String,String>();
 			r.put("@type", "java:URL");
 			r.put("@value", u.toExternalForm());
 			return r;
 		} 
 		if(value instanceof URI) {
 			URI u = (URI)value;
-			Map r = new HashMap();
+			Map<String,String> r = new HashMap<String,String>();
 			r.put("@type", "java:URI");
 			r.put("@value", u.toString());
 			return r;
@@ -99,7 +119,9 @@ public class JSONEncoder {
 	}
 	
 	
-	public static Map transformMap(Map map) {
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static Map transformMap(Map map) {
 		Map result = map;
 		Iterator iter = map.entrySet().iterator();
 		while (iter.hasNext()) {
@@ -116,61 +138,23 @@ public class JSONEncoder {
 				}
 			}
 
-			if(value instanceof Map) {
-				Map transformed = transformMap((Map) value);
-				if(transformed != value)
-				{
-					if(result == map)
-					{ result = new JSONObject(map);
-					}
-					result.put(entry.getKey(),transformed);
-				}
-			}
-			else if(value instanceof byte[]) {
-				ByteArray transformed = ByteArray.newInstance((byte[]) value);
+			Object transformed = transformTypes(value);
+			if(transformed != value)
+			{
 				if(result == map)
 				{ result = new JSONObject(map);
 				}
-				result.put(entry.getKey(),transformTypes(transformed));
-			}
-			
-
-// arraytypes TODO List.
-			else if (value instanceof Object[]) {
-				Object[] array = (Object[])value;
-				Object transformed = transformArray(array);
-				if(transformed != value)
-				{
-					if(result == map)
-					{ result = new JSONObject(map);
-					}
-					result.put(entry.getKey(),transformed);
-				};
-			} else {
-				Object transformed = transformTypes(value);
-				if(transformed != value)
-				{
-					if(result == map)
-					{ result = new JSONObject(map);
-					}
-					result.put(entry.getKey(),transformed);
-				}
-			
+				result.put(entry.getKey(),transformed);
 			}
 		}
 		return result;
 	}
 
-	private static Object[] transformArray(Object[] array) {
+	private static List<Object> transformArray(Object[] array) {
 		Object[] result = array;
 		for (int i = 0; i < array.length; i++) {
 			Object value = array[i];
-			if(value instanceof Map) 
-				value = transformMap( (Map) value);
-			else if(value instanceof Object[]) 
-				value = transformArray((Object[])value);
-			else 
-				value = transformTypes(value);
+			value = transformTypes(value);
 
 			if(value != array[i])
 			{
@@ -181,7 +165,7 @@ public class JSONEncoder {
 			}
 			result[i] = value;
 		}
-		return result;
+		return Arrays.asList(result);
 	}
 
 
