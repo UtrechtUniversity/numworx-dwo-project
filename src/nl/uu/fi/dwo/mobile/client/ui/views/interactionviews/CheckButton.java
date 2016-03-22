@@ -20,6 +20,8 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.text.Text;
+import fi.wiskopdr.text.TextConstants;
 import fi.wiskopdr.text.Text_nl;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
@@ -32,7 +34,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 
 public class CheckButton implements InteractionStub
 {
-	public static Text_nl rb = new Text_nl();
+	public static TextConstants rb = Text.constants;
 	static final String holderId = "dockholder";
 	private static Logger logger = Logger.getLogger("CheckButton");
 	
@@ -117,7 +119,7 @@ public class CheckButton implements InteractionStub
 			checkButton.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		}
 		else
-		{	checkButton = new PushButton(rb.getString("klaarKnopLabel"));
+		{	checkButton = new PushButton(rb.klaarKnopLabel());
 			checkButton.getElement().getStyle().setFontSize(12, Style.Unit.PX);
 			checkButton.getElement().getStyle().setTextAlign(TextAlign.CENTER);
 		}
