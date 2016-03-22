@@ -64,11 +64,16 @@ public class DbAccess {
 	    if(organization == null)organization = request.getParameter("resource_link_title");
 	    if(organization == null)organization = oauth_consumer_key;
 	    
+	    String path = request.getContextPath();
+	    
 		Cookie user  = new Cookie(DWO_SAML_USER_ID, lti_id);
+		user.setPath(path);
 		String orgidStr = "lti:" + oauth_consumer_key;
 		Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, orgidStr);
+		orgid.setPath(path);
 		orgidStr = "\"" + orgidStr + "\"";
 		Cookie org   = new Cookie(DWO_SAML_ORGANIZATION, organization);
+		org.setPath(path);
 		response.addCookie(user);
 		response.addCookie(orgid);
 		response.addCookie(org);
