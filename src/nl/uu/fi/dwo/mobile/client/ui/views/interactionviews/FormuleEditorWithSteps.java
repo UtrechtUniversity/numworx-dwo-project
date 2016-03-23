@@ -695,8 +695,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	}
 	
 	public void resize()
-	{
-		LayoutPanel current = stepPanels.get(stepPanels.size() - 1);
+	{	LayoutPanel current = stepPanels.get(stepPanels.size() - 1);
 		if(editor != null && editor.getAsPanel().getParent() == current)
 		{	if(current.getParent() == contentPanel) // FIXME why? 
 				contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
@@ -2611,7 +2610,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	{
 		int hoogte = editor.getMainRegel().getHeight();
 		if(prefixViewer != null)
-			hoogte = Math.max(hoogte, prefixViewer.getHeight());
+		{	hoogte = Math.max(hoogte, prefixViewer.getHeight());
+			//en om te zorgen dat subscripts van de prefix niet kunnen verdwijnen:
+			hoogte += Math.max(prefixViewer.getHeight() - prefixViewer.getAsHoogte() - editor.getMainRegel().getHeight() + editor.getMainRegel().getAsHoogte(), 0);
+		}
+		
 		return hoogte;
 	}
 	
