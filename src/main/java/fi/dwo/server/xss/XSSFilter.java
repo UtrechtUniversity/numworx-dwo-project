@@ -66,7 +66,7 @@ public class XSSFilter implements Filter {
 		response.setHeader("Access-Control-Allow-Origin", origin);
 		response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
 		response.setHeader("Access-Control-Expose-Headers", "content-type");
-		response.setHeader("Access-Control-Allow-Headers", "origin, content-type, authorization");
+		response.setHeader("Access-Control-Allow-Headers", "origin, content-type, authorization, x-http-method-override");
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 
 		response.setContentType("text/plain");
