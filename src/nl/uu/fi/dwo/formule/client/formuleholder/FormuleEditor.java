@@ -257,32 +257,39 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	@Override
 	public void cursorToLeft() {
 		getCurrentRegel().cursorToLeft();	
+		hasSelection = getCurrentRegel().hasSelection();
 	}
 
 	@Override
 	public void cursorToRight() {
 		getCurrentRegel().cursorToRight();
+		hasSelection = getCurrentRegel().hasSelection();
 	}
 	
 	@Override
 	public void cursorToLeftShift() {
+		
 		getCurrentRegel().cursorToLeftShift();	
+		hasSelection = getCurrentRegel().hasSelection();
 	}
 
 
 	@Override
 	public void cursorToRightShift() {
 		getCurrentRegel().cursorToRightShift();
+		hasSelection = getCurrentRegel().hasSelection();
 	}
 	
 	@Override
 	public void cursorUp() {
 		getCurrentRegel().cursorUp();
+		hasSelection = getCurrentRegel().hasSelection();
 	}
 	
 	@Override
 	public void cursorDown() {
 		getCurrentRegel().cursorDown();
+		hasSelection = getCurrentRegel().hasSelection();
 	}
 	
 	public void knip(FormuleClipboardIF clip)
