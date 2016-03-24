@@ -3,45 +3,29 @@
 <html>
 <head>
 <%@ page import="fi.dwoapp.Version" %>
+<%@ page import="java.util.Random" %>
+<%!
+	private Random rnd = new Random();
+
+	private long timestamp() {
+		return System.currentTimeMillis()/1000L;
+	}
+
+	private String nonce() {
+		long l = rnd.nextLong() >>> 1; // 63 bits = 21 digits
+		return Long.toOctalString(l);
+	}
+%>
+<%
+	String locale = request.getParameter("locale");
+	if(locale == null) locale = "en";
+%>
 <meta charset="UTF-8">
-<title>MC Squared</title>
-<script type="text/javascript" language="javascript" src="scripts/sha1.js" ></script>
+<title>MC Squared Widget</title>
+<script type="text/javascript" src="scripts/sha1.js" ></script>
 <script type="text/javascript">
 
-
-function getID() {
-	var id = ""; 
-	var  query = window.location.search;
-	var k = query.indexOf("w=");
-	if(k >= 0)
-	{
-		query = query.substring(k+2);
-		k = query.indexOf('&');
-		if(k > 0) query = query.substring(0, k);
-		id = query;
-	}
-	return id;
-}
-
-</script>
-
-<script type="text/javascript" language="javascript" >
 var $wnd = window;
-
-function getLocale() {
-	var locale = "nl"; // FIXME get Locale from Window?
-	var  query = $wnd.location.search;
-	var k = query.indexOf("locale=");
-	if(k >= 0)
-	{
-		query = query.substring(k+7);
-		k = query.indexOf('&');
-		if(k > 0) query = query.substring(0, k);
-		locale = query;
-	}
-	return locale;
-}
-
 
 function $(id) {
 	return document.getElementById(id)
@@ -58,7 +42,6 @@ function signature() {
 	var k = url.indexOf('#');
 	if(k >= 0) url = url.substring(0,k);
 
-	console.log("signature for " + url);
 	url = encodeURIComponent(url);
 	var pfx="POST&" + url + "&";
 	var text = ""
@@ -78,13 +61,9 @@ function signature() {
 		text += name + "=" + value 
 	}
 	text = pfx + encodeURIComponent(text)
-	//$("stub").innerHTML = text;
-	
 	n = b64_hmac_sha1(secret, text);
 	$('oauth_signature').value = n;
 }
-
-
 
 window.inner = {
 		getScore: function() {
@@ -93,8 +72,7 @@ window.inner = {
 		getState: function() {
 			return "{}";
 		},
-		setState: function(jso) {
-			
+		setState: function(jso) {			
 		},
 		isCorrect: function() {
 			return "null";
@@ -102,13 +80,9 @@ window.inner = {
 		init: function(width, height, launchdata, randomvalues, action) {
 			launch = JSON.parse(launchdata);
 			className = launch.className;
-			//var action = getAction(className)
-			//action = "testing.html"
 			var ref = window.location.hash
 			$('lti').action = action + ref;
 
-// calculate locale from ?locale=XX 
-			locale = getLocale()
 			background = $wnd.getBackground($wnd.outer)
 			document.body.style.backgroundColor = background
 			uuid = $wnd.getUUID($wnd.outer)
@@ -127,7 +101,6 @@ window.inner = {
 			subscriptions = launch.subscriptions || "{}"
 			$("launch_presentation_height").value = height;
 			$("launch_presentation_width").value = width;
-			$("launch_presentation_locale").value = locale;
 			$("oauth_consumer_key").value = className;
 			$('resource_link_id').value = uuid;
 			$('user_id').value = $wnd.getLearnerId($wnd.outer);
@@ -161,20 +134,8 @@ window.inner = {
 		},
 		
 }
-
 </script>
-<style>
-	body { 
-		background-color: #888;
-		color: black;
-		overflow: initial;
-	}
-</style>
-
 </head>
-<!-- http://localhost:8080/DWOmAccess/lti/widget.jsp -->
-<!-- http://www.staff.science.uu.nl/~velth101/lti/tool.php -->
-<!-- de.cinderella.CindyWidget: http://cinderella.de/services/widget -->
 <body>
 <%
 	String version = Version.VERSION;
@@ -182,40 +143,31 @@ window.inner = {
 	version = version.substring(0,dot);
 %>
 <form id='lti' method="POST" action='http://ws.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp' >
-<input type='submit' > <br>
-custom_context<input name='custom_context' id='custom_context' value='{}'><br>
-custom_launch_data<input name='custom_launch_data' id='custom_launch_data' value='{}'><br>
-custom_randomvalues<input name='custom_randomvalues' id='custom_randomvalues' value='{}'><br>
-custom_subscriptions<input name='custom_subscriptions' id='custom_subscriptions' value='{}'><br>
+<input type='hidden' name='custom_context' id='custom_context' value='{}'>
+<input type='hidden' name='custom_launch_data' id='custom_launch_data' value='{}'>
+<input type='hidden' name='custom_randomvalues' id='custom_randomvalues' value='{}'>
+<input type='hidden' name='custom_subscriptions' id='custom_subscriptions' value='{}'>
+<input type='hidden' name='launch_presentation_height' id='launch_presentation_height' value='200'>
+<input type='hidden' name='launch_presentation_locale' value='<%=locale%>'>
+<input type='hidden' name='launch_presentation_width' id='launch_presentation_width' value='200'>
 
-launch_presentation_height<input name='launch_presentation_height' id='launch_presentation_height' value='200'><br>
-launch_presentation_locale<input name='launch_presentation_locale' id='launch_presentation_locale' value='en'><br>
-launch_presentation_width<input name='launch_presentation_width' id='launch_presentation_width' value='200'><br>
-
-<!--  lis_person_name_family<input name='lis_person_name_family' value='Guest' ><br> -->
-lis_person_name_full<input name='lis_person_name_full' id='lis_person_name_full' value='Anonymous Guest' ><br>
-<!--  lis_person_name_given<input name='lis_person_name_given' value='Anonymous' ><br> -->
+<input type='hidden' name='lis_person_name_full' id='lis_person_name_full' value='Anonymous Guest' >
 <input name='lti_message_type' value='basic-lti-launch-request' type='hidden'>
 <input name='lti_version' value='LTI-1p0' type='hidden'>
 
-oauth_consumer_key<input name='oauth_consumer_key' id='oauth_consumer_key' value='12345' ><br>
-<input name='oauth_nonce' value='1244834250435893000' type='hidden'>
+<input type='hidden' name='oauth_consumer_key' id='oauth_consumer_key' value='12345' >
+<input name='oauth_nonce' value='<%=nonce() %>' type='hidden'>
 <input name='oauth_signature_method' value='HMAC-SHA1' type='hidden'>
-<input name='oauth_timestamp' id='oauth_timestamp' value='1413494648' type='hidden'>
+<input name='oauth_timestamp' value='<%=timestamp() %>' type='hidden'>
 <input name='oauth_version' value='1.0'  type='hidden'>
 
-resource_link_id<input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
-roles<input name='roles' value='Learner' id='roles' > <br>
-tool_consumer_info_version<input name='tool_consumer_info_version' value='<%=version %>' > <br>
-user_id<input name='user_id' id='user_id' value='guest' > <br>
-oauth_signature<input name='oauth_signature' id='oauth_signature' value='?' ><br>
+<input type='hidden' name='resource_link_id' id='resource_link_id' value='000000-0-000000' >
+<input type='hidden' name='roles' value='Learner' id='roles' >
+<input type='hidden' name='tool_consumer_info_version' value='<%=version %>' >
+<input type='hidden' name='user_id' id='user_id' value='guest' >
+<input type='hidden' name='oauth_signature' id='oauth_signature' value='?' >
 </form>
 
-<script>
-	d = new Date();
-	n = Math.floor( d.getTime()/1000 );
-	$('oauth_timestamp').value = n;	
-</script>
 
 <div id='stub'></div>
 </body>

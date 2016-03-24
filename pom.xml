@@ -19,7 +19,7 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
         	<warSourceDirectory>war</warSourceDirectory>
-        	<warSourceIncludes>DWOplayer.css,DWOplayer.html,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
+        	<warSourceIncludes>KeyboardGWT.css,DWOplayer.css,DWOplayer.html,GeoGebra.html,MCSquared.jsp,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
         </configuration>
       </plugin>
       <plugin>
