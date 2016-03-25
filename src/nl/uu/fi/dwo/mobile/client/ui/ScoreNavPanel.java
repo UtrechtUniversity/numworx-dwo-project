@@ -368,75 +368,62 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 
 	@Override
 	public void setVolgendeVisible(boolean visible) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setVorigeVisible(boolean visible) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setButtonEnabled(int opdrNr, boolean b) {
 		vragen.getWidget(opdrNr, 3).setVisible(b);
-		
 	}
 
 	@Override
 	public void setStatusBar(StatusBarIF bar) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void showScore() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setScoresObjectivesKnop(boolean b) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setObjectivesHandler(ObjectivesHandler objectivesHandler) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public Label getTotaalScoreLabel()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Label getKeerNagekekenLabel()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setTotaalScoreLabel(int score)
 	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setKeerNagekekenLabel(int aantal)
 	{
-		// TODO Auto-generated method stub
-		
 	}
 
+	@Override
+	public void setAuthELOcheck(boolean b) {
+	}
 
+	@Override
+	public void setAuthELOhelp(boolean b) {
+	}
 
 }
 

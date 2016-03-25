@@ -5,6 +5,7 @@ import java.util.Map;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
@@ -20,6 +21,7 @@ public class DummyClientFactory implements ClientFactory {
 
 	private static EventBus eventBus = new SimpleEventBus();
 	private ViewModuleView entryView;
+	private IsWidget logoutWidget;
 	
 	public DummyClientFactory() {
 	}
@@ -77,6 +79,16 @@ public class DummyClientFactory implements ClientFactory {
 	public IsWidget getMenuWidget() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public IsWidget getLogoutWidget() {
+		return logoutWidget;
+	}
+
+	@Override
+	public void setLogoutWidget(IsWidget widget) {
+		logoutWidget = widget;
 	}
 
 }

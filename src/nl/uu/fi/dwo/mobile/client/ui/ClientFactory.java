@@ -4,6 +4,7 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
@@ -39,6 +40,8 @@ public interface ClientFactory
 	RPCHandler getRPCHandler();
 	
 	IsWidget getMenuWidget();
+	IsWidget getLogoutWidget();
+	void setLogoutWidget(IsWidget widget);
 	
 	/**
 	 * FIXME deze moet weer weg als TreeModuleView één view gebruikt in plaats van steeds een nieuwe.
@@ -48,4 +51,5 @@ public interface ClientFactory
 	void setEntryView(ViewModuleView view);
 	
 	public SCORM_guest setupAPI(final Map<String, Object> profiledata);
+	
 }

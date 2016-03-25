@@ -216,6 +216,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			scoreNav.setItemScores(on.getItemScores());
 			scoreNav.setTotaalScore((int) on.getScore());
 			scoreNav.setGotoOpdracht(on);
+// authELO
+			scoreNav.setAuthELOcheck(wrap.getBoolean("authELOcheck", false));
+			scoreNav.setAuthELOhelp(wrap.getBoolean("authELOhelp", false));
 		}
 		catch (Exception e)
 		{

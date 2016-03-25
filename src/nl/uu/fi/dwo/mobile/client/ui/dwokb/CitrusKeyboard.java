@@ -59,7 +59,7 @@ public class CitrusKeyboard extends FlowPanel implements StatusBarIF, FormuleCli
 	}
 
 	@Override
-	public void addKnop(PushButton knop, boolean right) {
+	public void addKnop(Widget knop, boolean right) {
 	}
 
 	@Override

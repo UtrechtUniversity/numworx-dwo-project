@@ -75,4 +75,7 @@ public interface ScoreNavIF {
 
 	void showScore();
 
+	void setAuthELOcheck(boolean b);
+	void setAuthELOhelp(boolean b);
+	
 }

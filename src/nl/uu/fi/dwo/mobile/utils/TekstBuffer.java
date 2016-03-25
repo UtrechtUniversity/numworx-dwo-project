@@ -245,7 +245,7 @@ public class TekstBuffer
 			return new IFrameView(href, width, height);
 		}
 // FIXME OOK ALS DESCRIPTIONVIEW IN GEBRUIK IS!		
-		AnchorContext anchorContext = DWOplayer.clientfactory.getEntryView().getAnchorContext();
+		AnchorContext anchorContext = getAnchorContext();
 		return new AnchorView(tekst, href, anchorContext);
 	}
 	
@@ -331,7 +331,7 @@ public class TekstBuffer
 		switch (soortVak)
 		{
 		case -2:
-// copy classname to inner, so that MCSquared.html can read it.
+// copy classname to inner, so that MCSquared.jsp can read it.
 			mc2FixInner(currentVakGegevens);
 			
 			return x(map, new MC2View(currentVakGegevens, randomVarNamen, randomVarWaarden));
@@ -409,7 +409,7 @@ public class TekstBuffer
 
 		if (soortVak == 0)
 		{
-			result = new FormuleEditorWithSteps(currentVakGegevens, false, randomVarNamen, randomVarWaarden, null);
+			result = x(map,new FormuleEditorWithSteps(currentVakGegevens, false, randomVarNamen, randomVarWaarden, null));
 		}
 		else if (soortVak == 1)
 		{
@@ -430,7 +430,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 9)
 		{
-			AnchorContext anchorContext = DWOplayer.clientfactory.getEntryView().getAnchorContext();
+			AnchorContext anchorContext = getAnchorContext();
 			result = x(map, x(new TekstVakPanel(currentVakGegevens, randomVarNamen, randomVarWaarden, anchorContext)));
 		}
 		else if(soortVak == 11) 
@@ -485,6 +485,10 @@ public class TekstBuffer
 		}
 
 		return result;
+	}
+
+	protected AnchorContext getAnchorContext() {
+		return DWOplayer.clientfactory.getEntryView().getAnchorContext();
 	}
 
 	private Map<InteractionView, Connector> xWidgetMap = new HashMap<InteractionView,Connector>();

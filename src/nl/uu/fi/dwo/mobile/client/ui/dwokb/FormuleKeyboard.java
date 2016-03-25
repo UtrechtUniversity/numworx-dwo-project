@@ -290,7 +290,8 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		tp.getStaticPanel().add(opdrnav);
 	}
 	
-	public void addKnop(PushButton knop, boolean right)
+	@Override
+	public void addKnop(Widget knop, boolean right)
 	{
 		if(knop == null) return;
 		if(right)

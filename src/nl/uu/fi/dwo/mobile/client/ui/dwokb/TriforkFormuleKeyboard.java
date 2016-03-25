@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
@@ -20,7 +21,7 @@ public class TriforkFormuleKeyboard extends FormuleKeyboard implements
 	}
 
 	@Override
-	public void addKnop(PushButton knop, boolean right) {
+	public void addKnop(Widget knop, boolean right) {
 	}
 
 	@Override

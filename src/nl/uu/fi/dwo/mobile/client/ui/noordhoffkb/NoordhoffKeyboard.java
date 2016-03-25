@@ -51,7 +51,7 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 	}
 
 	@Override
-	public void addKnop(PushButton kijkNaButton, boolean b) {
+	public void addKnop(Widget kijkNaButton, boolean b) {
 	}
 
 	@Override

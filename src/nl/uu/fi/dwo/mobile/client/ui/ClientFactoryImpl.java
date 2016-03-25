@@ -45,6 +45,7 @@ public class ClientFactoryImpl implements ClientFactory
 	private ProfileView profileView;
 	private TreeModuleView treeModuleView;
 	private RPCHandler handler;
+	private IsWidget logoutWidget;
 
 	public ClientFactoryImpl()
 	{
@@ -157,5 +158,14 @@ public class ClientFactoryImpl implements ClientFactory
 		if (menuWidget == null) 
 			menuWidget = new UserBar();
 		return menuWidget;
+	}
+
+
+	public IsWidget getLogoutWidget() {
+		return logoutWidget;
+	}
+
+	public void setLogoutWidget(IsWidget logoutWidget) {
+		this.logoutWidget = logoutWidget;
 	}
 }

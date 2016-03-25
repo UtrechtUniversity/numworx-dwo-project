@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
@@ -84,7 +85,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	}
 
 	@Override
-	public void addKnop(PushButton knop, boolean right) {
+	public void addKnop(Widget knop, boolean right) {
 		if(knop == null) return;
 		Style style = knop.getElement().getStyle();
 		if(right)

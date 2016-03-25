@@ -48,5 +48,10 @@ public interface Text extends Constants {
 	@DefaultStringValue("Mijn\u00a0Profiel")
     String GUIMNU_MY_PROFILE();    
 
+	@DefaultStringValue("Check")
+	String authELOcheck();
+	
+	@DefaultStringValue("Help")
+	String authELOhelp();
 	
 }

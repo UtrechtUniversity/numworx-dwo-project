@@ -24,7 +24,7 @@ import fi.wiskopdr.text.Text;
 
 public class ScoreNavFacade implements ScoreNavIF {
 
-	private StatusBarIF sb;
+	StatusBarIF sb;
 	public void setStatusBar(StatusBarIF bar) {
 		sb = bar;
 	}
@@ -370,6 +370,18 @@ public class ScoreNavFacade implements ScoreNavIF {
 	public void setKeerNagekekenLabel(int aantal)
 	{
 		keerNagekekenLabel.setText(aantal + Text.constants.nakijkLabel());
+	}
+
+	@Override
+	public void setAuthELOcheck(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setAuthELOhelp(boolean b) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

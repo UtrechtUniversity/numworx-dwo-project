@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile.client;
 
 import nl.uu.fi.dwo.interaction.client.event.OpenAjaxEventBus;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
+import nl.uu.fi.dwo.mobile.client.ui.views.ScoreNavMC2;
 import nl.uu.fi.dwo.mobile.utils.LaTransport;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
@@ -40,6 +42,11 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 
 	public OpdrNav.Prepare getPrepareInstance() {
 		return new OpdrNav.MC2Prepare();
+	}
+
+	@Override
+	public ScoreNavIF getScoreNav() {
+		return new ScoreNavMC2();
 	}
 
 }

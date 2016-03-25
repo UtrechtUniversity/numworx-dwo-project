@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public interface StatusBarIF extends IsWidget {
 
-	void addKnop(PushButton kijkNaButton, boolean b);
+	void addKnop(Widget kijkNaButton, boolean right);
 	void addNavPanel(Panel onp);
 	void setScrollPanel(AbstractKeyboard.HasHeight w, int h);
 	void setKeyboard(int nr);
