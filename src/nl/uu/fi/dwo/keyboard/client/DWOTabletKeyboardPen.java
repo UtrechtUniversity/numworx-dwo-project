@@ -83,9 +83,12 @@ public class DWOTabletKeyboardPen extends AbstractKeyboard implements WritePanel
 		recurse = false;
 	}
 
+	/**
+	 * @param nr 0 basis 1 uitgebreid
+	 */
 	@Override
 	public void setWriteMathSet(int nr) {
-		panel.setTekenSet(nr);
+		panel.setTekenSet(nr+1); // bias 1
 	}
 
 	void setEnterImage(ImageResource resource) {

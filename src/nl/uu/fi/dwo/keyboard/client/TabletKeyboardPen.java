@@ -80,7 +80,7 @@ public class TabletKeyboardPen extends AbstractKeyboard implements WritePanelHol
 
 	@Override
 	public void setWriteMathSet(int nr) {
-		panel.setTekenSet(nr);
+		panel.setTekenSet(nr+1);
 	}
 	
 }
