@@ -28,7 +28,7 @@ class SchoolDwoAdminPanelTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(SchoolDwoAdminPanelProperties props, Image editImage, Image rightsImage, Image removeImage) throws Dwo2Exception {
+    public void init(SchoolDwoAdminPanelProperties props, Image editImage, Image rightsImage, Image emptyImage, Image removeImage) throws Dwo2Exception {
 
         prop = props;
         List<DomSchool4DwoAdmin> sList = prop.getSchoolList();
@@ -46,12 +46,19 @@ class SchoolDwoAdminPanelTableModel extends AbstractTableModel {
         for (DomSchool4DwoAdmin s : sList) {
             data[j][0] = s.getSchoolName();
             data[j][1] = s.getSchoolLogin();
-            data[j][2] = editImage;
-            data[j][3] = rightsImage;
-            data[j][4] = removeImage;
+            if (s.getSchoolLogin().equals("null")) {
+                data[j][2] = emptyImage;
+                data[j][3] = emptyImage;
+                data[j][4] = emptyImage;
+            } else {
+                data[j][2] = editImage;
+                data[j][3] = rightsImage;
+                data[j][4] = removeImage;
+            }
             data[j][5] = s;
             j++;
         }
+        fireTableDataChanged();
     }
 
     @Override

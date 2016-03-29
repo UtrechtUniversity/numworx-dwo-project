@@ -112,6 +112,12 @@ public class RightsDialog extends JDialog implements ActionListener {
         setSchool(sc);
     }
 
+        public RightsDialog(School sc) {
+        this(DwoHelper.getFrameForComponent(GuiCreator.instance().getMainPanel()), "Rechten voor " + sc.getName(), true);
+        setProfileID(GuiCreator.instance().dwo.getDwoProfile().getID());
+        setSchool(sc);
+    }
+
     /**
      * @param args
      * @throws PersistenceException

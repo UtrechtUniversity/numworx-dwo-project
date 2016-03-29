@@ -4,11 +4,15 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.SchoolException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -25,7 +29,9 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -47,6 +53,7 @@ import javax.swing.table.TableRowSorter;
  *
  */
 public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, ActionListener {
+
     private static final Logger LOG = Logger.getLogger(SchoolDwoAdminPanel.class.getName());
 
     private SchoolDwoAdminPanelProperties prop = new SchoolDwoAdminPanelProperties();
@@ -54,7 +61,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
     private JTable table;
     private TableRowSorter rowSorter;
     private RowFilter<SchoolDwoAdminPanelTableModel, Object> tableFilter;
-    
+
     public class ImageButtonEditor extends AbstractCellEditor implements
             TableCellEditor, ActionListener {
 
@@ -80,31 +87,52 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
 
         @Override
         public void actionPerformed(ActionEvent event) {
-//            if (value == editImage) {
-//                try {
-//                    School s = AddSchoolDialog.editSchool(SchoolDwoAdminPanel.this.center, model.school[row]);
-//                    if (s != null) {
-//                        model.fireTableRowsUpdated(row, row);
-//                    }
-//                } catch (SchoolException e) {
-//                    LOG.log(Level.SEVERE,null,e);
-//                }
-//            } else if (value == removeImage) {
-//                /* Delete the school */
-//                School sc = model.school[row];
-//                if (JOptionPane.showConfirmDialog(SchoolDwoAdminPanel.this, TextMapper.getText(TextMapper.GUIS_MSG_DELETE_SCHOOL)
-//                        + "?", TextMapper.getText(TextMapper.GUIS_DELETE_SCHOOL), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//                    if (GuiCreator.instance().deleteSchool(sc)) {
-//                        center.loadMenu();
-//                        model.deleteRow(row);
-//                    }
-//                }
-//            } else if (value == usersImage) {
-//                School sc = model.school[row];
-// //               JDialog rightsDialog = new RightsDialog(GuiCreator.instance().getSchoolPanel(), sc);
-////                rightsDialog.show();
-//            }
             fireEditingStopped();
+            School oldSchool = null;
+            if (value == editImage || value == removeImage || value == rightsImage) {
+                int row = tableModel.getSelectedRow();
+                DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(row, 5);
+                long schoolid = MySQLPersistenceId.getId(school.getId());
+                try {
+                    oldSchool = (School) PersistenceFacade.instance().get((int) schoolid, School.class);
+                }
+                catch (PersistenceException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                }
+
+            }
+            if (value == editImage) {
+                try {
+                    School s = AddSchoolDialog.editSchool(SchoolDwoAdminPanel.this, oldSchool);
+                    if (s != null) {
+                        model.fireTableRowsUpdated(row, row);
+                    }
+                }
+                catch (SchoolException e) {
+                    LOG.log(Level.SEVERE, null, e);
+                }
+            } else if (value == removeImage) {
+                /* Delete the school */
+                if (JOptionPane.showConfirmDialog(SchoolDwoAdminPanel.this, TextMapper.getText(TextMapper.GUIS_MSG_DELETE_SCHOOL)
+                        + "?", TextMapper.getText(TextMapper.GUIS_DELETE_SCHOOL), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    if (GuiCreator.instance().deleteSchool(oldSchool)) {
+                        center.loadMenu();
+                        try {
+                            tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage);
+                            //model.deleteRow(row);
+                        }
+                        catch (Dwo2Exception ex) {
+                            LOG.log(Level.SEVERE, null, ex);
+                            GuiCreator.instance().ShowErrorDialog(center, ex);
+                        }
+                    }
+                }
+            }
+            else if (value == rightsImage) {
+                JDialog rightsDialog = new RightsDialog(oldSchool);
+                rightsDialog.show();
+            }
+
         }
 
     }
@@ -236,7 +264,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
 
     private JButton addSchoolButton, copyButton, clrBtn;
 
-    private Image removeImage, editImage, rightsImage, assignImage;
+    private Image removeImage, editImage, rightsImage, emptyImage, assignImage;
 
     private JTextField zoekField;
 
@@ -259,6 +287,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
+        emptyImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE);
         rightsImage = DwoHelper.getResourceImage(GuiConstants.GUI_RIGHTS_IMAGE);
         assignImage = DwoHelper.getResourceImage(GuiConstants.ASSIGN_CLASS_IMAGE);
         Image clearImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
@@ -268,7 +297,8 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         tr.addImage(rightsImage, 2);
         tr.addImage(assignImage, 3);
         tr.addImage(searchImage, 4);
-        tr.addImage(clearImage,5);
+        tr.addImage(clearImage, 5);
+        tr.addImage(emptyImage, 6);
         try {
             tr.waitForAll();
         }
@@ -278,7 +308,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         addSchoolButton = new JButton(TextMapper.getText(TextMapper.GUIS_ADD_SCHOOL));
         addSchoolButton.addActionListener(this);
         addSchoolButton.setSize(addSchoolButton.getPreferredSize());
-        
+
         //addSchoolButton.setLocation(30, 10);
         Box header = Box.createHorizontalBox();
 //        header.add(Box.createHorizontalStrut(25));
@@ -316,7 +346,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
 //        header.setPreferredSize(header.getMinimumSize());
         header.setMaximumSize(header.getMinimumSize());
         this.add(header);
-        
+
         this.add(Box.createVerticalStrut(15));
         try {
             buildJTable();
@@ -348,11 +378,11 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         jtbl.setBackground(GuiConstants.MAIN_BACKGROUND);
         table = new JTable();
         zoekPos = -1;
-        SchoolDwoAdminPanelTableModel tableModel = new SchoolDwoAdminPanelTableModel();
-        tableModel.init(prop, editImage, rightsImage, removeImage);
+        tableModel = new SchoolDwoAdminPanelTableModel();
+        tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage);
         table.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);
-        tableFilter = RowFilter.regexFilter(".*",0);
+        tableFilter = RowFilter.regexFilter(".*", 0);
         rowSorter.setRowFilter(tableFilter);
         table.setRowSorter(rowSorter);
         TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
@@ -365,7 +395,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
 //        table.setSize(table.getPreferredSize());
 
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
-        
+
         jtbl.add(table.getTableHeader());
         jtbl.add(table);
         jtbl.add(Box.createVerticalGlue());
@@ -409,14 +439,14 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             tableFilter = RowFilter.regexFilter(zoekField.getText().trim().toLowerCase(), 0);
             rowSorter.setRowFilter(tableFilter);
             //table.setRowSorter(rowSorter);
-            
+
             return;
-        }else if (clrBtn == source) {
+        } else if (clrBtn == source) {
             zoekField.setText("");
             tableFilter = RowFilter.regexFilter(".*", 0);
             rowSorter.setRowFilter(tableFilter);
             //table.setRowSorter(rowSorter);
-            
+
             return;
         } else if (source == copyButton) {
             ClipboardExport.instance().export(GuiCreator.instance().getSchool());
@@ -428,7 +458,8 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                 if (s != null) {
                     buildJTable();
                 }
-            } catch (Dwo2Exception ex) {
+            }
+            catch (Dwo2Exception ex) {
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
             catch (SchoolException ex) {
@@ -438,7 +469,6 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
     }
 
     private int zoekPos = -1;
-
 
 //    private boolean zoek(String text, int i) {
 //        String data = table.getValueAt(i, 0) + " " + table.getValueAt(i, 1);
@@ -465,7 +495,6 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
 //        }
 //
 //    }
-
     private void select(int row) {
         table.setRowSelectionInterval(row, row);
         Rectangle rect = table.getCellRect(row, 0, true);
