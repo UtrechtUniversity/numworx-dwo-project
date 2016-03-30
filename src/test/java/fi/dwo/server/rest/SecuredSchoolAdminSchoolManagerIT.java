@@ -11,6 +11,7 @@ import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomTeacher;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2RestException;
+import static fi.dwo.commons.persistence.DomFactory.*;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.RoleType;
@@ -319,7 +320,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
         RestTeacher restTeacher = new RestTeacher();
-        DomTeacher domTeacher = new DomTeacher(user);
+        DomTeacher domTeacher = newDomTeacher(user);
         restTeacher.setDomTeacher(domTeacher);
         try {
             Boolean expResult = null;

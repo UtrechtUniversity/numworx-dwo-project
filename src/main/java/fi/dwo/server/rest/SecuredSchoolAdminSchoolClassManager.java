@@ -8,6 +8,7 @@ import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
+import static fi.dwo.commons.persistence.DomFactory.*;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -128,7 +129,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
             domTeachers = new ArrayList<DomTeacher>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                DomTeacher t = new DomTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID()));
+                DomTeacher t = newDomTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID()));
                 domTeachers.add(t);
             }
         }
@@ -217,7 +218,7 @@ public class SecuredSchoolAdminSchoolClassManager {
                 domTeachers = new ArrayList<DomTeacher>(teachersOfClass.size());
                 for (PersistentTeacherOfClass t : teachersOfClass) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentTeacherOfClassPK().getUserID());
-                    domTeachers.add(new DomTeacher(u));
+                    domTeachers.add(newDomTeacher(u));
                 }
             }
             catch (Exception e) {
