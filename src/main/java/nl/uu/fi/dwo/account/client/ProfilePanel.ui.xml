@@ -8,6 +8,7 @@
         .login_text_field {
 
         width: 300px; 
+        height: 500;
 		
         background-color: #eee;
 	
@@ -34,7 +35,7 @@
         }
 
     </ui:style>
-    <g:FocusPanel ui:field="focusPanel" focus="true">
+    <g:ProfilePanel ui:field="focusPanel" focus="true">
         <mgwt:LayoutPanel height="100%" width="100%" >
             <!-- Topbar Navigation Area -->
             <mgwt:HeaderPanel >
@@ -69,6 +70,6 @@
                 </div>	 
             </g:HTMLPanel>    
         </mgwt:LayoutPanel>
-    </g:FocusPanel>
+    </g:ProfilePanel>
 
 </ui:UiBinder> 

@@ -3,8 +3,6 @@ package nl.uu.fi.dwo.account.client;
 import java.util.Map;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 public class ProfileCommand implements Command {
 
@@ -13,12 +11,12 @@ public class ProfileCommand implements Command {
     @Override
     public void execute() {
         // Create the new popup.
-        final ProfilePanel popup = new ProfilePanel();
+        ProfilePopupPanel popup = new ProfilePopupPanel();
         popup.setSize("300", "200");
-        //popup.show();
-        RootLayoutPanel root = RootLayoutPanel.get();
-        root.add(popup);
-        // Position the popup 1/3rd of the way down and across the screen, and
+        popup.show();
+//        RootLayoutPanel root = RootLayoutPanel.get();
+//        root.add(popup);
+//        // Position the popup 1/3rd of the way down and across the screen, and
         // show the popup. Since the position calculation is based on the
         // offsetWidth and offsetHeight of the popup, you have to use the
         // setPopupPositionAndShow(callback) method. The alternative would

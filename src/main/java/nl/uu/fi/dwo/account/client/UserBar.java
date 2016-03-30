@@ -14,6 +14,7 @@ public class UserBar extends Composite {
 	private final MenuBar items;
 	private final Text rb = Text.constants;
 	private final ProfileCommand profileCmd;
+	private final ProfileCommand schoolLoginCmd;
 	
 	public UserBar() {
 		top = new MenuBar();
@@ -21,6 +22,7 @@ public class UserBar extends Composite {
 		items = new MenuBar(true);
 		
 		MenuItem item;
+		MenuItem item2;
 		final int correctie = 10; // width popup 
 		item = new MenuItem("<i class='fa fa-navicon fa-2x'></i>", true, items) {
 			@Override
@@ -35,8 +37,11 @@ public class UserBar extends Composite {
 		top.addItem(item);
 		
 		profileCmd = new ProfileCommand();
+		schoolLoginCmd = new ProfileCommand();
 		item = new MenuItem(rb.GUIMNU_MY_PROFILE(), profileCmd);
 		items.addItem(item);
+		item2 = new MenuItem("Mijn logins", schoolLoginCmd);
+		items.addItem(item2);
 	}
 
 	public void setProfile(Map<String,Object> map) {
