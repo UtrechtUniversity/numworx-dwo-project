@@ -36,7 +36,8 @@ public class DomUser {
         setInsertion(user.getInsertion());
         setSingleSchool(user.getSingleSchool());
     }
-        
+     
+    @Deprecated
     public DomUser(PersistentUser user) {
         if(user.getId()!=null){
             setId(MySQLPersistenceId.createPersistenceId(user.getId().intValue(), PersistenceClassType.PersistentUser));

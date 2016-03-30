@@ -18,8 +18,12 @@ public class DomSchoolAdmin extends DomUser {
         super();
     }
     
+    @Deprecated
     public DomSchoolAdmin(PersistentUser u) {
         super(u);
     }
 
+    public DomSchoolAdmin(DomUser u) {
+    	super(u);
+    }
 }

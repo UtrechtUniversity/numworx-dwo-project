@@ -21,6 +21,7 @@ public class DomSingleSchoolStudent extends DomUserFull {
         super(user);
     }
 
+    @Deprecated
     public DomSingleSchoolStudent(PersistentUser user){
         super(user);
     }    

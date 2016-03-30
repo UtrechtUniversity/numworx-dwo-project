@@ -17,8 +17,13 @@ public class DomStudent extends DomUser {
     public DomStudent(){
         super();
     }
-        
+       
+    @Deprecated
     public DomStudent(PersistentUser u) {
         super(u);
+    }
+    
+    public DomStudent(DomUser u) {
+    	super(u);
     }
 }

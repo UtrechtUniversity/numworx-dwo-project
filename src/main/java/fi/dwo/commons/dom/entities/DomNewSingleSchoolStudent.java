@@ -20,8 +20,13 @@ public class DomNewSingleSchoolStudent {
       
     }
 
+    @Deprecated
     public DomNewSingleSchoolStudent(PersistentUser u) {
         domSingleSchoolStudent = new DomSingleSchoolStudent(u);
+    }
+    
+    public DomNewSingleSchoolStudent(DomSingleSchoolStudent u) {
+    	domSingleSchoolStudent = new DomSingleSchoolStudent(u);
     }
     
     public void clearSettings(){

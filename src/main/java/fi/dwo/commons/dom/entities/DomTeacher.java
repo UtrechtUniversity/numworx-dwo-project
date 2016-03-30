@@ -17,9 +17,14 @@ public class DomTeacher extends DomUser {
     public DomTeacher(){
         super();
     }
-        
+      
+    @Deprecated
     public DomTeacher(PersistentUser u) {
         super(u);
     }
 
+    public DomTeacher(DomUser u) {
+    	super(u);
+    }
+    
 }

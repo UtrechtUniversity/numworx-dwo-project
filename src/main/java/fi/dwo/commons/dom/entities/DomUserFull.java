@@ -28,6 +28,7 @@ public class DomUserFull extends DomUser implements Serializable {
         setEmail(user.getEmail());
     }
     
+    @Deprecated
     public DomUserFull(PersistentUser user){
         super(user);
         setPassword(user.getPassword());
