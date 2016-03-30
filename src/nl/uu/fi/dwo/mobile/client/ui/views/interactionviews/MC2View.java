@@ -132,7 +132,7 @@ public class MC2View extends SimplePanel implements InteractionView {
 	private String id;
 	private String relay;
 	private ObjectMap innerMap;
-	private Map randomVars;
+	private Map<String, Number> randomVars;
 	private PopupFacade facade;
 	private IFrame frame;
 	private OpdrNavIF comRoot;
@@ -145,7 +145,7 @@ public class MC2View extends SimplePanel implements InteractionView {
 	private boolean[][] logObjectives;
 	
 	
-	public MC2View(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	public MC2View(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
 		ObjectMap launchdata = JSONUtilities.wrapMap(h);
 		String id = launchdata.getString(CROSS_WIDGET_ID);
@@ -197,7 +197,7 @@ public class MC2View extends SimplePanel implements InteractionView {
 	
 	
 	private void init(String id, ObjectMap outermap,
-			HashMap randomVarWaarden) {
+			HashMap<String, Number> randomVarWaarden) {
 		this.id = id;
 		innerMap = outermap.getObjectMap("interactiePanelLaunchState");
 		if(randomVarWaarden != null)

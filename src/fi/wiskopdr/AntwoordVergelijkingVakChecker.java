@@ -68,7 +68,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 
 	private List<Map<String,Object>> answerModels;
 	private String[] randomVarNamen;
-	private HashMap<String,Object> randomVarWaarden;
+	private HashMap<String,Number> randomVarWaarden;
 	
 	private String feedback;
 	private boolean exactP;
@@ -128,7 +128,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	private boolean syntaxFout = false;
 	
 	
-	public AntwoordVergelijkingVakChecker(HashMap<String,Object> avvCheckerModel, String[] randomVars, HashMap<String,Object> randomValues)
+	public AntwoordVergelijkingVakChecker(HashMap<String,Object> avvCheckerModel, String[] randomVars, HashMap<String,Number> randomValues)
 	{	
 		ObjectMap map = JSONUtilities.wrapMap(avvCheckerModel);
 		

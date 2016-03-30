@@ -236,7 +236,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 //		this(h, isVergelijkingVak, fe, null, null, avChecker);
 //	}
 	
-	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden, AntwoordVakChecker avChecker)
+	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
 	{
 		super();
 		//getMainRegel().setEditorParent(this);

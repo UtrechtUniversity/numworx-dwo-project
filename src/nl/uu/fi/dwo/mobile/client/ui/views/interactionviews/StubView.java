@@ -55,7 +55,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private Object innerView;
 	private ObjectMap innerMap;
 	private OpdrNavIF comRoot = this;
-	private HashMap randomVars;
+	private HashMap<String, Number> randomVars;
 	private String pendingState;
 	private int width;
 	private int height;
@@ -79,7 +79,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 	private HandlerRegistration detachhandler; 
 
-	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
+	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
 		html = DWOplayer.PARAMETERS.getStubView() + html;
 		String locale = getLocale();		
@@ -105,7 +105,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 	
 	private void init(String html, HashMap<String, Object> launchData,
-			String[] randomVarNamen, HashMap randomVarWaarden) {
+			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden) {
 		ObjectMap outermap = JSONUtilities.wrapMap(launchData);
 		innerMap = outermap.getObjectMap("interactiePanelLaunchState");
 		randomVars = randomVarWaarden;

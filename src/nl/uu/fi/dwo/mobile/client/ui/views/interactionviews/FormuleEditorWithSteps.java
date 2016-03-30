@@ -1139,7 +1139,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		public FormuleEditorWithCalculator(HashMap<String, Object> h,
 				boolean isVergelijkingVak, FormuleEditorWithSteps fe,
 				String[] randomVarNamen,
-				HashMap<String, Object> randomVarWaarden,
+				HashMap<String, Number> randomVarWaarden,
 				AntwoordVakChecker avChecker) {
 			super(h, isVergelijkingVak, fe, randomVarNamen, randomVarWaarden, avChecker);
 		}

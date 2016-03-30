@@ -416,7 +416,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private String lastAttempt;
 	
 	public TextEditor(HashMap<String, Object> currentVakGegevens,
-			String[] randomVarNamen, HashMap<String, Object> randomVarWaarden) {
+			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden) {
 		ObjectMap h = JSONUtilities.wrapMap(currentVakGegevens);
 		ObjectMap launchdata = h.getObjectMap("interactiePanelLaunchState");
 		width = h.getInt("breedte");

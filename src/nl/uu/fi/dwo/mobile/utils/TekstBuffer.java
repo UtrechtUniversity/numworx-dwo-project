@@ -48,7 +48,7 @@ public class TekstBuffer
 {
 	private static final String CROSS_WIDGET_ID = "crossWidgetId";
 	String[] randomVarNamen;
-	HashMap<String, Object> randomVarWaarden;
+	HashMap<String, Number> randomVarWaarden;
 	int aantalVakken = 0;
 	int[] volleBreedtes;
 	int huidigeKolom = 0;

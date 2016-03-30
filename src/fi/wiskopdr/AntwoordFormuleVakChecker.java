@@ -60,7 +60,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
     
     private List<Map<String,Object>> answerModels;
     private String[] randomVarNamen = null;
-	private HashMap<String,Object> randomVarWaarden = null;
+	private HashMap<String, Number> randomVarWaarden = null;
 	
 	private String feedback;
 	private boolean exactP;
@@ -110,7 +110,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	private final static Logger logger = Logger.getLogger("AntwoordFormuleVakChecker");
     
 	
-	public AntwoordFormuleVakChecker(HashMap<String,Object> map, String[] randomVars, HashMap<String,Object> randomValues )
+	public AntwoordFormuleVakChecker(HashMap<String,Object> map, String[] randomVars, HashMap<String,Number> randomValues )
 	{	
 		randomVarNamen = randomVars;
 		randomVarWaarden = randomValues;
