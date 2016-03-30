@@ -11,7 +11,7 @@ public class ProfileCommand implements Command {
     @Override
     public void execute() {
         // Create the new popup.
-        ProfilePopupPanel popup = new ProfilePopupPanel();
+        ProfilePopUpPanel popup = new ProfilePopUpPanel();
         popup.setSize("300", "200");
         popup.show();
 //        RootLayoutPanel root = RootLayoutPanel.get();
