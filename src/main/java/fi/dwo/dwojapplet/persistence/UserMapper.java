@@ -181,7 +181,7 @@ class UserMapper extends XmlRpcMapper {
         }
         
         Object classID = data.get("classID");
-        if (!classID.equals("") && !NUL.equals(classID)) {
+        if (classID!=null && !classID.equals("") && !NUL.equals(classID)) {
             try {
                 SchoolClass c = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(((Integer) data.get("classID")).intValue());
                 if (c != null) {
