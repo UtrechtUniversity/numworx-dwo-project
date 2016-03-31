@@ -23,6 +23,7 @@ public class DomSchoolRoleAndClass {
     private String schoolClassName;
     private PersistenceId userId;
     private PersistenceId schoolGroupId;
+    private Boolean iconizer;
     
     /**
      * @return the schoolId
@@ -135,5 +136,13 @@ public class DomSchoolRoleAndClass {
     public void setSchoolGroupId(PersistenceId schoolGroupId) {
         this.schoolGroupId = schoolGroupId;
     }
+
+	public Boolean getIconizer() {
+		return iconizer;
+	}
+
+	public void setIconizer(Boolean iconizer) {
+		this.iconizer = iconizer;
+	}
     
 }
