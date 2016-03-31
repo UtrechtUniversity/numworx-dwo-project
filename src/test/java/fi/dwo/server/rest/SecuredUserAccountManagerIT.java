@@ -92,7 +92,7 @@ public class SecuredUserAccountManagerIT {
         SecurityContext sc = new TestSecurityContext("user01", RoleType.STUDENT);
         SecuredUserAccountManager instance = new SecuredUserAccountManager();
         RestFullUser user = new RestFullUser();
-        user.setDomFullUser(new DomUserFull(UserManager.findByUserName("user01")));
+        user.setDomFullUser(UserManager.findByUserName("user01").buildDomUserFull());
         user.getDomFullUser().setGivenName("a");
         user.getDomFullUser().setInsertion("b");
         user.getDomFullUser().setFamilyName("c");
@@ -107,7 +107,7 @@ public class SecuredUserAccountManagerIT {
         assertEquals(user.getDomFullUser().getPassword(), result.getPassword());
         assertEquals(user.getDomFullUser().getEmail(), result.getEmail());
 
-        user.setDomFullUser(new DomUserFull(UserManager.findByUserName("user01")));
+        user.setDomFullUser(UserManager.findByUserName("user01").buildDomUserFull());
         user.getDomFullUser().setUserName("bonk");
         try {
             result = instance.updateCurrentUser(sc, user);
@@ -117,7 +117,7 @@ public class SecuredUserAccountManagerIT {
             // succeeded
         }
 
-        user.setDomFullUser(new DomUserFull(UserManager.findByUserName("user01")));
+        user.setDomFullUser(UserManager.findByUserName("user01").buildDomUserFull());
 
     }
 

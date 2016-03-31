@@ -129,8 +129,8 @@ public class SecuredSchoolAdminSchoolClassManager {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
             domTeachers = new ArrayList<DomTeacher>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                DomTeacher t = newDomTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID()));
-                domTeachers.add(t);
+                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
+                domTeachers.add(user.buildDomTeacher());
             }
         }
         catch (Dwo2Exception ex) {
@@ -169,8 +169,8 @@ public class SecuredSchoolAdminSchoolClassManager {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.STUDENT);
             domStudents = new ArrayList<>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                DomStudent t = new DomStudent((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID()));
-                domStudents.add(t);
+                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
+                domStudents.add(user.buildDomStudent());
             }
         }
         catch (Dwo2Exception ex) {
@@ -218,7 +218,7 @@ public class SecuredSchoolAdminSchoolClassManager {
                 domTeachers = new ArrayList<DomTeacher>(teachersOfClass.size());
                 for (PersistentTeacherOfClass t : teachersOfClass) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentTeacherOfClassPK().getUserID());
-                    domTeachers.add(newDomTeacher(u));
+                    domTeachers.add(u.buildDomTeacher());
                 }
             }
             catch (Exception e) {
@@ -269,7 +269,7 @@ public class SecuredSchoolAdminSchoolClassManager {
                 domStudents = new ArrayList<DomStudent>(studentsList.size());
                 for (PersistentStudentOfClass t : studentsList) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentStudentOfClassPK().getUserID());
-                    domStudents.add(new DomStudent(u));
+                    domStudents.add(u.buildDomStudent());
                 }
             }
             catch (Exception e) {

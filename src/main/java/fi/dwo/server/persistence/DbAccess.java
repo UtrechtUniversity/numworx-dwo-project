@@ -3485,12 +3485,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.executeUpdate();
         LOG.log(Level.FINE, "Deleted {0} students from class.", new Object[]{ps.getUpdateCount()});
 
-// 2) delete teachers from class which is in the school.
-        ps = getStatement(QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} teachers from class.", new Object[]{ps.getUpdateCount()});
-        ps.close();
 
 // 2) delete teachers from class which is in the school.
         ps = getStatement(QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL);

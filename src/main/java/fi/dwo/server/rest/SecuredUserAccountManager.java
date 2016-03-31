@@ -73,7 +73,7 @@ public class SecuredUserAccountManager {
         finally {
             em.close();
         }
-        return new DomUserFull(user);
+        return user.buildDomUserFull();
     }
 
     /**
@@ -98,7 +98,8 @@ public class SecuredUserAccountManager {
                 dbUser.setPassword(user.getDomFullUser().getPassword());
                 //User to update is logged in user.
                 UserManager.edit(dbUser);
-                return new DomUserFull(UserManager.findByUserName(user.getDomFullUser().getUserName()));
+                PersistentUser pUser = UserManager.findByUserName(user.getDomFullUser().getUserName());
+                return pUser.buildDomUserFull();
             }
             catch (Exception e) {
             LOG.log(Level.SEVERE, "Username "+sc.getUserPrincipal().getName()+": Unexpected exception",e);

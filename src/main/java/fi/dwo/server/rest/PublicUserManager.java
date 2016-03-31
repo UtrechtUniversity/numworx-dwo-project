@@ -21,7 +21,6 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import static java.lang.Thread.sleep;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;

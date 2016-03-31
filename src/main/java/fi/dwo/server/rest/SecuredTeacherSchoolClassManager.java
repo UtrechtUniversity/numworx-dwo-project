@@ -176,7 +176,8 @@ public class SecuredTeacherSchoolClassManager {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
             domTeachers = new ArrayList<DomTeacher>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                domTeachers.add(newDomTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
+                domTeachers.add(user.buildDomTeacher());
             }
         }
         catch (Dwo2Exception ex) {
@@ -313,7 +314,7 @@ public class SecuredTeacherSchoolClassManager {
                 domTeachers = new ArrayList<DomTeacher>(teachersOfClass.size());
                 for (PersistentTeacherOfClass t : teachersOfClass) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentTeacherOfClassPK().getUserID());
-                    domTeachers.add(newDomTeacher(u));
+                    domTeachers.add(u.buildDomTeacher());
                 }
             }
             catch (Exception e) {
@@ -363,7 +364,7 @@ public class SecuredTeacherSchoolClassManager {
                 domStudents = new ArrayList<DomStudent>(studentsOfClass.size());
                 for (PersistentStudentOfClass s : studentsOfClass) {
                     PersistentUser u = UserManager.findEntity(s.getPersistentStudentOfClassPK().getUserID());
-                    domStudents.add(new DomStudent(u));
+                    domStudents.add(u.buildDomStudent());
                 }
             }
             catch (Exception e) {
@@ -766,7 +767,7 @@ public class SecuredTeacherSchoolClassManager {
                             shr.getPersistentHasRolePK().getSchoolGroupID()));
         
         if(student.isSingleSchoolAccount() && teacherInSchoolClass.getPersistentTeacherOfClassPK().getClassID().equals(studentInSchoolClass.getPersistentStudentOfClassPK().getClassID())){
-            return new DomSingleSchoolStudent(student);
+            return student.buildDomSingleSchoolStudent();
         }else{
             LOG.log(Level.SEVERE,"User {0} tried to access full userdata of user {1}.", new Object[]{phr.getPersistentHasRolePK().getId(), shr.getUser().getId()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");

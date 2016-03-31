@@ -85,7 +85,8 @@ public class SecuredSchoolAdminSchoolManager {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
             domTeachers = new ArrayList<DomTeacher>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                domTeachers.add(newDomTeacher((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
+                domTeachers.add(user.buildDomTeacher());
             }
         }
         catch (Dwo2Exception ex) {
@@ -122,7 +123,8 @@ public class SecuredSchoolAdminSchoolManager {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.STUDENT);
             domStudents = new ArrayList<DomStudent>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                domStudents.add(new DomStudent((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
+                domStudents.add(user.buildDomStudent());
             }
         }
         catch (Dwo2Exception ex) {
@@ -145,7 +147,7 @@ public class SecuredSchoolAdminSchoolManager {
     public static List<DomSchoolAdmin> getSchoolAdminsInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
-        List<DomSchoolAdmin> domSchoolAdmin = null;
+        List<DomSchoolAdmin> domSchoolAdminList = null;
 
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
@@ -158,9 +160,10 @@ public class SecuredSchoolAdminSchoolManager {
         List<PersistentHasRole> hrList;
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.SCHOOLADMIN);
-            domSchoolAdmin = new ArrayList<DomSchoolAdmin>(hrList.size());
+            domSchoolAdminList = new ArrayList<DomSchoolAdmin>(hrList.size());
             for (PersistentHasRole hr : hrList) {
-                domSchoolAdmin.add(new DomSchoolAdmin((PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
+                        PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
+                domSchoolAdminList.add(user.buildDomSchoolAdmin());
             }
         }
         catch (Dwo2Exception ex) {
@@ -168,7 +171,7 @@ public class SecuredSchoolAdminSchoolManager {
             throw new Dwo2RestException(ex);
         }
 
-        return domSchoolAdmin;
+        return domSchoolAdminList;
     }
 
     /**
@@ -548,7 +551,7 @@ public class SecuredSchoolAdminSchoolManager {
         }
 
         if (student.isSingleSchoolAccount()) {
-            return new DomSingleSchoolStudent(student);
+            return student.buildDomSingleSchoolStudent();
         } else {
             LOG.log(Level.SEVERE, "User {0} tried to access full userdata of user {1}.", new Object[]{phr.getPersistentHasRolePK().getId(), shr.getUser().getId()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
