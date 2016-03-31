@@ -19,11 +19,6 @@ public class DomGetSingleSchoolStudent {
       
     }
 
-//    @Deprecated
-//    public DomGetSingleSchoolStudent(PersistentUser u) {
-//        domStudent = new DomStudent(u);
-//    }
-    
     public DomGetSingleSchoolStudent(DomStudent u) {
     	domStudent = new DomStudent(u);
     }

@@ -34,19 +34,6 @@ public class DomUser {
         setSingleSchool(user.getSingleSchool());
     }
      
-//    @Deprecated
-//    public DomUser(PersistentUser user) {
-//        if(user.getId()!=null){
-//            setId(MySQLPersistenceId.createPersistenceId(user.getId().intValue(), PersistenceClassType.PersistentUser));
-//        }else{
-//            setId(null);
-//        }
-//        setUserName(user.getUsername());
-//        setGivenName(user.getGivenName());
-//        setFamilyName(user.getLastname());
-//        setInsertion(user.getInsertion());
-//        setSingleSchool(user.isSingleSchoolAccount());
-//    }
 
     public void clearSettings(){
         id = null;
