@@ -3,7 +3,6 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -20,10 +19,10 @@ public class DomGetSingleSchoolStudent {
       
     }
 
-    @Deprecated
-    public DomGetSingleSchoolStudent(PersistentUser u) {
-        domStudent = new DomStudent(u);
-    }
+//    @Deprecated
+//    public DomGetSingleSchoolStudent(PersistentUser u) {
+//        domStudent = new DomStudent(u);
+//    }
     
     public DomGetSingleSchoolStudent(DomStudent u) {
     	domStudent = new DomStudent(u);

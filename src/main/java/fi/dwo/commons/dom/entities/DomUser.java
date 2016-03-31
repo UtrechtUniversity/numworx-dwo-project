@@ -3,10 +3,7 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.PersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -37,19 +34,19 @@ public class DomUser {
         setSingleSchool(user.getSingleSchool());
     }
      
-    @Deprecated
-    public DomUser(PersistentUser user) {
-        if(user.getId()!=null){
-            setId(MySQLPersistenceId.createPersistenceId(user.getId().intValue(), PersistenceClassType.PersistentUser));
-        }else{
-            setId(null);
-        }
-        setUserName(user.getUsername());
-        setGivenName(user.getGivenName());
-        setFamilyName(user.getLastname());
-        setInsertion(user.getInsertion());
-        setSingleSchool(user.isSingleSchoolAccount());
-    }
+//    @Deprecated
+//    public DomUser(PersistentUser user) {
+//        if(user.getId()!=null){
+//            setId(MySQLPersistenceId.createPersistenceId(user.getId().intValue(), PersistenceClassType.PersistentUser));
+//        }else{
+//            setId(null);
+//        }
+//        setUserName(user.getUsername());
+//        setGivenName(user.getGivenName());
+//        setFamilyName(user.getLastname());
+//        setInsertion(user.getInsertion());
+//        setSingleSchool(user.isSingleSchoolAccount());
+//    }
 
     public void clearSettings(){
         id = null;

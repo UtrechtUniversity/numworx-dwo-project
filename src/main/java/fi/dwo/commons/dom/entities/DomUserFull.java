@@ -5,7 +5,6 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -28,12 +27,12 @@ public class DomUserFull extends DomUser implements Serializable {
         setEmail(user.getEmail());
     }
     
-    @Deprecated
-    public DomUserFull(PersistentUser user){
-        super(user);
-        setPassword(user.getPassword());
-        setEmail(user.getEmail());
-    }
+//    @Deprecated
+//    public DomUserFull(PersistentUser user){
+//        super(user);
+//        setPassword(user.getPassword());
+//        setEmail(user.getEmail());
+//    }
 
     /**
      * @return the password

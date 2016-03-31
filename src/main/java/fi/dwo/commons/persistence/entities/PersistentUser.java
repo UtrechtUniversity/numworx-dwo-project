@@ -5,6 +5,14 @@
  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.dom.entities.DomSchoolAdmin;
+import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.commons.dom.entities.DomStudent;
+import fi.dwo.commons.dom.entities.DomTeacher;
+import fi.dwo.commons.dom.entities.DomUser;
+import fi.dwo.commons.dom.entities.DomUserFull;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.PersistenceClassType;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -275,10 +283,65 @@ public class PersistentUser implements Serializable {
         }
         return false;
     }
-    
-    
-//TODO    public static String hashStringToMd5(String plain){
-//        
-//    }
 
+    public DomUser buildDomUser(){
+        DomUser user = new DomUser();
+        fillDomUser(user);
+        return user;
+    }
+
+    public DomUserFull buildDomUserFull(){
+        DomUserFull user = new DomUserFull();
+        fillDomUserFull(user);
+        return user;
+    }
+    
+    public DomStudent buildDomStudent(){
+        DomStudent user = new DomStudent();
+        fillDomUser(user);
+        return user;
+    }
+    public DomTeacher buildDomTeacher(){
+        DomTeacher user = new DomTeacher();
+        fillDomUser(user);
+        return user;
+    }
+    public DomSchoolAdmin buildDomSchoolAdmin(){
+        DomSchoolAdmin user = new DomSchoolAdmin();
+        fillDomUser(user);
+        return user;
+    }
+
+    public DomSingleSchoolStudent buildDomSingleSchoolStudent(){
+        DomSingleSchoolStudent user = new DomSingleSchoolStudent();
+        fillDomUser(user);
+        return user;
+    }
+    
+    /**
+     * Fills the user with data from the current object.
+     * @param user 
+     */
+    private void fillDomUser(DomUser user){
+        if(getId()!=null){
+            user.setId(MySQLPersistenceId.createPersistenceId(getId().intValue(), PersistenceClassType.PersistentUser));
+        }else{
+            user.setId(null);
+        }
+        user.setUserName(getUsername());
+        user.setGivenName(getGivenName());
+        user.setFamilyName(getLastname());
+        user.setInsertion(getInsertion());
+        user.setSingleSchool(isSingleSchoolAccount());
+    }
+
+    private void fillDomUserFull(DomUserFull user){
+        fillDomUser(user);
+        user.setPassword(getPassword());
+        user.setEmail(getEmail());
+
+    }
+    
+    
+    
 }

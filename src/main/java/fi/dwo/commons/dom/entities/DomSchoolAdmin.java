@@ -3,7 +3,6 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,10 +17,6 @@ public class DomSchoolAdmin extends DomUser {
         super();
     }
     
-    @Deprecated
-    public DomSchoolAdmin(PersistentUser u) {
-        super(u);
-    }
 
     public DomSchoolAdmin(DomUser u) {
     	super(u);

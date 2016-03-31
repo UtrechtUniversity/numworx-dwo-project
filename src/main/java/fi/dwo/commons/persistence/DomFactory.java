@@ -15,13 +15,13 @@ public class DomFactory {
 	private DomFactory() {
 	}
 
-	/**
-	 * create a DomTeacher out of a persistent user
-	 * @param u PersistenUser
-	 * @return DomTeacher
-	 */
-	public static DomTeacher newDomTeacher(PersistentUser u) {
-		return new DomTeacher(u);
-	}
-	
+//	/**
+//	 * create a DomTeacher out of a persistent user
+//	 * @param u PersistenUser
+//	 * @return DomTeacher
+//	 */
+//	public static DomTeacher newDomTeacher(PersistentUser u) {
+//		return new DomTeacher(u);
+//	}
+//	
 }
