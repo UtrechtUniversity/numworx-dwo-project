@@ -202,6 +202,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         jtbl = new JPanel();
 
         JTable jtable = new JTable();
+        jtable.getTableHeader().setReorderingAllowed(false);
         jtable.setMinimumSize(new Dimension(400, 300));
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());

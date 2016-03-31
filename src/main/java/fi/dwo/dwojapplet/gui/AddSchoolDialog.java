@@ -285,7 +285,6 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         JLabel label = new JLabel(id);
         label.addMouseListener(new CopyLabel(id));
         asd.addNorth(label);
-
         asd.show();
         if (asd.isConfirmed()) {
             School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate());

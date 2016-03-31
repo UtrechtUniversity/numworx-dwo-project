@@ -266,6 +266,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         }
 
         JTable jtable = new JTable();
+        jtable.getTableHeader().setReorderingAllowed(false);
         jtbl = new JPanel();
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());

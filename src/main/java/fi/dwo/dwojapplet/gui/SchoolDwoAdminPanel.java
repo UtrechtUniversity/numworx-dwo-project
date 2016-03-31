@@ -103,7 +103,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             }
             if (value == editImage) {
                 try {
-                    School s = AddSchoolDialog.editSchool(SchoolDwoAdminPanel.this, oldSchool);
+                    School s = AddSchoolDialog.editSchool(SchoolDwoAdminPanel.this.center, oldSchool);
                     if (s != null) {
                         model.fireTableRowsUpdated(row, row);
                     }
@@ -377,6 +377,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         jtbl = new JPanel();
         jtbl.setBackground(GuiConstants.MAIN_BACKGROUND);
         table = new JTable();
+        table.getTableHeader().setReorderingAllowed(false);
         zoekPos = -1;
         tableModel = new SchoolDwoAdminPanelTableModel();
         tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage);
@@ -456,7 +457,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             try {
                 School s = AddSchoolDialog.addSchool(center);
                 if (s != null) {
-                    buildJTable();
+                    tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage);
                 }
             }
             catch (Dwo2Exception ex) {

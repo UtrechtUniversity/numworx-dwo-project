@@ -212,6 +212,8 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
 
         JTable jtable = new JTable();
         jtable.setMinimumSize(new Dimension(400, 300));
+        jtable.getTableHeader().setReorderingAllowed(false);
+        
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         jtbl.add(jtable);

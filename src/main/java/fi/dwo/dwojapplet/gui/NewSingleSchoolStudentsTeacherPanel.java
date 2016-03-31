@@ -155,6 +155,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         JTable jtable = new JTable();
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.setBackground(Color.LIGHT_GRAY);
+        jtable.getTableHeader().setReorderingAllowed(false);
 
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());

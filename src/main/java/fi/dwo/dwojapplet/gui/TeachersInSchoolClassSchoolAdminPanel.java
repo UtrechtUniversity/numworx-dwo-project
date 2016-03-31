@@ -162,6 +162,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         jtbl = new JPanel();
 
         JTable jtable = new JTable();
+        jtable.getTableHeader().setReorderingAllowed(false);
         jtable.setMinimumSize(new Dimension(400, 300));
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());

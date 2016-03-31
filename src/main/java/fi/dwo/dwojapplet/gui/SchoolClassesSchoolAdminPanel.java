@@ -263,6 +263,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
         jtbl = new JPanel();
 
         JTable jtable = new JTable();
+        jtable.getTableHeader().setReorderingAllowed(false);
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         jtbl.add(jtable);

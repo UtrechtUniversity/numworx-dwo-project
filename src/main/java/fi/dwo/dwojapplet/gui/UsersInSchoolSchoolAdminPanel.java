@@ -222,6 +222,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.PAGE_AXIS));
 
         JTable jtable = new JTable();
+        jtable.getTableHeader().setReorderingAllowed(false);
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.setFillsViewportHeight(true);
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
