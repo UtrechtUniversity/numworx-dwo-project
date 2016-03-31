@@ -5,6 +5,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
@@ -30,11 +31,13 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.ws.rs.GET;
@@ -78,11 +81,16 @@ public class SecuredUserAccountLoginsManager {
                 curSac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Integer) resultList.get(0)[2]).longValue(), PersistenceClassType.PersistentRole));
                 curSac.setRoleName((String) resultList.get(0)[3]);
                 if (resultList.get(0)[4] != null) {
-                    curSac.setSchoolClassId((PersistenceId) MySQLPersistenceId.createPersistenceId((Long) resultList.get(0)[4], PersistenceClassType.PersistentSchoolClass));
-                    curSac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", (Long) resultList.get(0)[4]).getSingleResult());
+                    Long id = (Long) resultList.get(0)[4];
+                    curSac.setSchoolClassId( MySQLPersistenceId.createPersistenceId(id, PersistenceClassType.PersistentSchoolClass));
+// export some class parameters: name, iconizer etc
+                    PersistentSchoolClass schoolClass = em.find(PersistentSchoolClass.class, id);
+                    curSac.setSchoolClassName(schoolClass.getClass1());
+                    curSac.setIconizer(schoolClass.getIconizer());
                 } else {
                     curSac.setSchoolClassId(null);
                     curSac.setSchoolClassName(null);
+                    curSac.setIconizer(null);
                 }
                 curSac.setUserId((PersistenceId) MySQLPersistenceId.createPersistenceId((Long) resultList.get(0)[5], PersistenceClassType.PersistentUser));
                 curSac.setSchoolGroupId((PersistenceId) MySQLPersistenceId.createPersistenceId((Long) resultList.get(0)[6], PersistenceClassType.PersistentSchoolGroup));
