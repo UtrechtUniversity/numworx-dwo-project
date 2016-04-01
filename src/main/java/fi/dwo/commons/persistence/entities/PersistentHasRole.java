@@ -1,6 +1,9 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.dom.entities.DomHasRole;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.PersistenceClassType;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -168,5 +171,16 @@ public class PersistentHasRole implements Serializable {
     public void setUser(PersistentUser user) {
         this.user = user;
     }
+    
+    
+    public DomHasRole buildDomHasRole(){
+        DomHasRole hr = new DomHasRole();
+        hr.setId(MySQLPersistenceId.createPersistentId((PersistentHasRole)this));
+        hr.setRights(this.getRights());
+        hr.setSchoolGroupId(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getSchoolGroupID().longValue(),PersistenceClassType.PersistentSchoolGroup));
+        hr.setUserId(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getUserID().longValue(),PersistenceClassType.PersistentUser));
+        return hr;
+    }
+    
     
 }

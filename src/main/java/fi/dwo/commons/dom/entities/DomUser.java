@@ -145,5 +145,16 @@ public class DomUser {
         
         return result.toString();
     }
+    
+    public String getDisplayName() {
+        StringBuilder result = new StringBuilder();
+        result.append(this.givenName);
+        result.append(" ");
+        result.append(this.insertion);
+        result.append(" ");
+        result.append(this.familyName);
+        
+        return result.toString();
+    }
 
 }

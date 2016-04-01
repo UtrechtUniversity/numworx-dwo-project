@@ -3,9 +3,7 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -16,19 +14,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomHasRole {
     private PersistenceId id;
-    private DomSchoolClass schoolClass;
+//    private DomSchoolClass schoolClass;
     private PersistenceId schoolGroupId;
     private PersistenceId userId;
+    private String rights = "_";
 
-    DomHasRole(){
+    public DomHasRole(){
         
     }
-    
-    public DomHasRole(PersistentHasRole s){
-        this.id = MySQLPersistenceId.createPersistentId(s);
-        this.schoolClass=new DomSchoolClass(s.getSchoolClass());
-    }
-    
     /**
      * @return the id
      */
@@ -43,19 +36,19 @@ public class DomHasRole {
         this.id = schoolId;
     }
 
-    /**
-     * @return the schoolClass
-     */
-    public DomSchoolClass getSchoolClass() {
-        return schoolClass;
-    }
-
-    /**
-     * @param schoolClass the schoolClass to set
-     */
-    public void setSchoolClass(DomSchoolClass schoolClass) {
-        this.schoolClass = schoolClass;
-    }
+//    /**
+//     * @return the schoolClass
+//     */
+//    public DomSchoolClass getSchoolClass() {
+//        return schoolClass;
+//    }
+//
+//    /**
+//     * @param schoolClass the schoolClass to set
+//     */
+//    public void setSchoolClass(DomSchoolClass schoolClass) {
+//        this.schoolClass = schoolClass;
+//    }
 
     /**
      * @return the schoolGroupId
@@ -84,4 +77,19 @@ public class DomHasRole {
     public void setUserId(PersistenceId userId) {
         this.userId = userId;
     }
+    
+
+    /**
+     * @return the rights
+     */
+    public String getRights() {
+        return rights;
+    }
+
+    /**
+     * @param rights the rights to set
+     */
+    public void setRights(String rights) {
+        this.rights = rights;
+    }    
 }
