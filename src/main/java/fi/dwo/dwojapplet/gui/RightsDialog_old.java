@@ -1,21 +1,17 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomHasRole;
-import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
-import fi.dwo.commons.dom.entities.DomTeacherAndHasRole;
-import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminSchoolManager;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
@@ -26,9 +22,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class RightsDialog extends JDialog implements ActionListener {
+public class RightsDialog_old extends JDialog implements ActionListener {
 
-    private static final Logger LOG = Logger.getLogger(RightsDialog.class.getName());
+    private static final Logger LOG = Logger.getLogger(RightsDialog_old.class.getName());
 
     private static final int RIGHTSCOUNT = 3; // a s p
     private static final Object[] HEADERS = new String[]{"naam", "applet", "scorm", "profiel"};
@@ -39,11 +35,11 @@ public class RightsDialog extends JDialog implements ActionListener {
 
     JTable table;
     DefaultTableModel model;
-    List<DomTeacherAndHasRole> theList;
+    User[] userList;
     int profileID = 1;
 
-    private Boolean hasRight(DomHasRole hr, char right) {
-        String rights = hr.getRights();
+    private Boolean hasRight(User u, char right) {
+        String rights = u.getRights();
         String id = "[" + profileID + "]";
         int index = rights.indexOf(id);
         if (index < 0) {
@@ -61,9 +57,9 @@ public class RightsDialog extends JDialog implements ActionListener {
         return rights.substring(index, end).indexOf(right) >= 0;
     }
 
-    private DomSchool4DwoAdmin school;
+    private School school;
 
-    public RightsDialog(Frame owner, String title, boolean modal)
+    public RightsDialog_old(Frame owner, String title, boolean modal)
             throws HeadlessException {
         super(owner, title, modal);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -110,83 +106,101 @@ public class RightsDialog extends JDialog implements ActionListener {
         pack();
     }
 
-    public RightsDialog(SchoolPanel schoolPanel, DomSchool4DwoAdmin sc) throws Dwo2Exception {
-        this(DwoHelper.getFrameForComponent(schoolPanel), "Rechten voor " + sc.getSchoolName(), true);
+    public RightsDialog_old(SchoolPanel schoolPanel, School sc) {
+        this(DwoHelper.getFrameForComponent(schoolPanel), "Rechten voor " + sc.getName(), true);
         setProfileID(GuiCreator.instance().dwo.getDwoProfile().getID());
         setSchool(sc);
     }
 
-    public RightsDialog(DomSchool4DwoAdmin sc) throws Dwo2Exception {
-        this(DwoHelper.getFrameForComponent(GuiCreator.instance().getMainPanel()), "Rechten voor " + sc.getSchoolName(), true);
+        public RightsDialog_old(School sc) {
+        this(DwoHelper.getFrameForComponent(GuiCreator.instance().getMainPanel()), "Rechten voor " + sc.getName(), true);
         setProfileID(GuiCreator.instance().dwo.getDwoProfile().getID());
         setSchool(sc);
     }
-//
-//    /**
-//     * @param args
-//     * @throws PersistenceException
-//     */
-//    public static void main(String[] args) throws PersistenceException {
-//        RightsDialog d = new RightsDialog(null, "Test", false);
-//        School sc = (School) PersistenceFacade.instance().get(22, School.class);
-//        d.setSchool(sc);
-//        d.setVisible(true);
-//    }
 
-    DomSchool4DwoAdmin getSchool() {
+    /**
+     * @param args
+     * @throws PersistenceException
+     */
+    public static void main(String[] args) throws PersistenceException {
+        RightsDialog_old d = new RightsDialog_old(null, "Test", false);
+        School sc = (School) PersistenceFacade.instance().get(22, School.class);
+        d.setSchool(sc);
+        d.setVisible(true);
+    }
+
+    School getSchool() {
         return school;
     }
 
-    void setSchool(DomSchool4DwoAdmin school) throws Dwo2Exception {
+    void setSchool(School school) {
         this.school = school;
-        theList = SecureDwoAdminSchoolManager.getTeachersAndHasRoleInSchool(school);
-        model.setRowCount(theList.size());
-        for (int i = 0; i < theList.size(); i++) {
-            model.setValueAt(theList.get(i).getTeacher().getDisplayName()
-                    + " (" + theList.get(i).getTeacher().getUserName() + ")", i, 0);
+        SchoolGroup[] groups = school.getSchoolGroupList();
+        userList = new User[0];
+        for (int i = 0; i < groups.length; i++) {
+            SchoolGroup schoolGroup = groups[i];
+            try {
+                if (schoolGroup.getGroupID() == SchoolGroup.TEACHER) {
+                    User[] ul = (User[]) PersistenceFacade.instance().get(User.class, schoolGroup);
+                    for(User u: ul){
+                        //dirty hack 
+                        u.setSchoolGroupID(schoolGroup.getSchoolGroupID());
+                        //another dirty hack
+                        //u.setRights(PersistenceFacade.instance().getRights(u.getID(),schoolGroup.getSchoolGroupID()));
+                    }
+                    merge(ul);
+                }
+            } catch (PersistenceException e) {
+                LOG.log(Level.SEVERE, null, e);
+            }
+        }
+        Arrays.sort(userList);
+        model.setRowCount(userList.length);
+        for (int i = 0; i < userList.length; i++) {
+            User user = userList[i];
+            model.setValueAt(user.getName() + " (" + user.getUsername() + ")", i, 0);
             for (int j = 0; j < RIGHTS.length; j++) {
-                model.setValueAt(hasRight(theList.get(i).getHasRole(), RIGHTS[j]), i, j + 1);
+                model.setValueAt(hasRight(user, RIGHTS[j]), i, j + 1);
             }
         }
 
         TableUtil.setJTableSizes(table);
     }
 
+    private void merge(User[] u) {
+        if (u == null || u.length == 0) {
+            return;
+        }
+        if (userList.length == 0) {
+            userList = u;
+        } else {
+            User[] nu = new User[userList.length + u.length];
+            System.arraycopy(u, 0, nu, 0, u.length);
+            System.arraycopy(userList, 0, nu, u.length, userList.length);
+            userList = nu;
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if (cmd == APPLY || cmd == OK) {
-            try {
-                for (int i = 0; i < theList.size(); i++) {
-                    String newrights = "";
-                    for (int j = 0; j < RIGHTS.length; j++) {
-                        if (Boolean.TRUE.equals(table.getValueAt(i, j + 1))) {
-                            newrights += RIGHTS[j];
-                        }
+            for (int i = 0; i < userList.length; i++) {
+                User user = userList[i];
+                String newrights = "";
+                for (int j = 0; j < RIGHTS.length; j++) {
+                    if (Boolean.TRUE.equals(table.getValueAt(i, j + 1))) {
+                        newrights += RIGHTS[j];
+                    }
 
-                    }
-                    String oldrights = theList.get(i).getHasRole().getRights();
-                    String pstr = "[" + profileID + "]";
-                    int start = oldrights.indexOf(pstr);
-                    if (start < 0) {
-                        oldrights = oldrights + pstr;
-                        start = oldrights.length();
-                    } else {
-                        start += pstr.length();
-                    }
-                    int end = oldrights.indexOf("[", start);
-                    if (end < 0) {
-                        end = oldrights.length();
-                    }
-                    String rights = oldrights.substring(0, start) + newrights + oldrights.substring(end);
-
-                    theList.get(i).getHasRole().setRights(rights);
-                    SecureDwoAdminSchoolManager.updateHasRoleRights(theList.get(i).getHasRole());
                 }
-            }
-            catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
-                GuiCreator.instance().ShowErrorDialog(rootPane, ex);
+                try {
+//                    throw new RuntimeException("Needs to implement set right stuff for a schoolgroupid.");
+//                    get proper schoolgroup id here! not the one from tbluser!
+                    PersistenceFacade.instance().setRights(user.getID(), user.getSchoolGroupID(),profileID, newrights);
+                } catch (Exception e1) {
+                    LOG.log(Level.SEVERE, null, e1);
+                }
             }
         }
         if (cmd == OK || cmd == CANCEL) {

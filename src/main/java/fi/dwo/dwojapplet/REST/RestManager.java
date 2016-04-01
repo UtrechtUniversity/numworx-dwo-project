@@ -9,6 +9,7 @@ import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.commons.dom.entities.DomStudent;
 import fi.dwo.commons.dom.entities.DomUser;
 import fi.dwo.commons.dom.entities.DomTeacher;
+import fi.dwo.commons.dom.entities.DomTeacherAndHasRole;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
@@ -223,7 +224,7 @@ class RestManager {
             } else {
                 //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                 //TODO To filter these for the user and suggest a course of action.
-                e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
+                 e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
             }
             LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
             throw e;
@@ -249,6 +250,10 @@ class RestManager {
                     GenericType<ArrayList<DomRole>> pRoleType = new GenericType<ArrayList<DomRole>>() {
                     };
                     return (List<T>) response.readEntity(pRoleType);
+                case DomTeacherAndHasRole:
+                    GenericType<ArrayList<DomTeacherAndHasRole>> tType = new GenericType<ArrayList<DomTeacherAndHasRole>>() {
+                    };                    
+                    return (List<T>) response.readEntity(tType);
                 case DomSchoolsRolesAndClasses:
                     GenericType<ArrayList<DomSchoolsRolesAndClasses>> pSRCType = new GenericType<ArrayList<DomSchoolsRolesAndClasses>>() {
                     };                    

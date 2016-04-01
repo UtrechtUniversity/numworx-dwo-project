@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author Gert van der Plas
  */
-class UsersInSchoolSchoolAdminPanelProperties {
+public class UsersInSchoolSchoolAdminPanelProperties {
 
     private static final Logger LOG = Logger.getLogger(UsersInSchoolSchoolAdminPanelProperties.class.getName());
 

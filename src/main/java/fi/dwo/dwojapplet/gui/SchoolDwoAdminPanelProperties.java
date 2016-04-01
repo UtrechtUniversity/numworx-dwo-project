@@ -6,7 +6,6 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminSchoolManager;
-import fi.dwo.dwojapplet.domain.rest.SecureTeacherSchoolClassManager;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -23,8 +22,12 @@ public class SchoolDwoAdminPanelProperties {
         
     }
     
-    List<DomSchool4DwoAdmin> getSchoolList() throws Dwo2Exception {
+    public List<DomSchool4DwoAdmin> getSchoolList() throws Dwo2Exception {
         return SecureDwoAdminSchoolManager.getSchoolList();
+    }
+
+    public Boolean deleteSchool(DomSchool4DwoAdmin school)  throws Dwo2Exception  {
+        return SecureDwoAdminSchoolManager.removeSchool(school);
     }
 
 }

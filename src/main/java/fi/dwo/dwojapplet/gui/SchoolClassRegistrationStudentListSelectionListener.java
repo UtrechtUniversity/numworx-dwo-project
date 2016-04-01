@@ -10,7 +10,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author G.A.J. van der Plas
  */
-public class SchoolClassRegistrationStudentListSelectionListener implements ListSelectionListener {
+class SchoolClassRegistrationStudentListSelectionListener implements ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {
                         System.out.println(e);

@@ -115,22 +115,28 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                 /* Delete the school */
                 if (JOptionPane.showConfirmDialog(SchoolDwoAdminPanel.this, TextMapper.getText(TextMapper.GUIS_MSG_DELETE_SCHOOL)
                         + "?", TextMapper.getText(TextMapper.GUIS_DELETE_SCHOOL), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    if (GuiCreator.instance().deleteSchool(oldSchool)) {
-                        center.loadMenu();
-                        try {
-                            tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage);
-                            //model.deleteRow(row);
-                        }
-                        catch (Dwo2Exception ex) {
-                            LOG.log(Level.SEVERE, null, ex);
-                            GuiCreator.instance().ShowErrorDialog(center, ex);
-                        }
+                    int row = tableModel.getSelectedRow();
+                    DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(row, 5);
+                    try {
+                        prop.deleteSchool(school);
+                        tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage);
+                        GuiCreator.instance().ShowMessageDialog(center, TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                    }
+                    catch (Dwo2Exception ex) {
+                        LOG.log(Level.SEVERE, null, ex);
+                        GuiCreator.instance().ShowErrorDialog(center, ex);
                     }
                 }
-            }
-            else if (value == rightsImage) {
-                JDialog rightsDialog = new RightsDialog(oldSchool);
-                rightsDialog.show();
+            } else if (value == rightsImage) {
+                JDialog rightsDialog;
+                try {
+                    rightsDialog = new RightsDialog((DomSchool4DwoAdmin) tableModel.getValueAt(row, 5));
+                    rightsDialog.show();
+                }
+                catch (Dwo2Exception ex) {
+                        LOG.log(Level.SEVERE, null, ex);
+                        GuiCreator.instance().ShowErrorDialog(center, ex);
+                }
             }
 
         }

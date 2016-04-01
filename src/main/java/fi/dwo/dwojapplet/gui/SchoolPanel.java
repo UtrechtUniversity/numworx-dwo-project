@@ -23,7 +23,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -44,6 +43,7 @@ import javax.swing.table.TableModel;
  * @author Wim van Velthoven
  *
  */
+@Deprecated
 public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListener {
     private static final Logger LOG = Logger.getLogger(SchoolPanel.class.getName());
 
@@ -92,9 +92,10 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
                     }
                 }
             } else if (value == usersImage) {
-                School sc = model.school[row];
-                JDialog rightsDialog = new RightsDialog(SchoolPanel.this, sc);
-                rightsDialog.show();
+                //TODO delete this class, it has been replaced.
+//                School sc = model.school[row];
+//                JDialog rightsDialog = new RightsDialog(SchoolPanel.this, sc);
+//                rightsDialog.show();
             }
             fireEditingStopped();
         }
