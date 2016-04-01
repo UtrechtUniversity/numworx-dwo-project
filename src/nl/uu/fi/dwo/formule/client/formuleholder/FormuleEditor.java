@@ -208,10 +208,11 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 
 		FormuleRegel l = this.getMainRegel().selection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
 		hasSelection = l.hasSelection();
-		this.selectionStartX = selectionStartX;
-		this.selectionEndX = selectionEndX;
-		this.selectionStartY = selectionStartY;
-		this.selectionEndY = selectionEndY;
+//		this.selectionStartX = selectionStartX;
+//		this.selectionEndX = selectionEndX;
+//		this.selectionStartY = selectionStartY;
+//		this.selectionEndY = selectionEndY;
+		setCurrentRegel(l);
 		this.paint();
 	}
 
