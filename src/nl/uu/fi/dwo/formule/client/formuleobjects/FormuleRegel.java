@@ -248,9 +248,7 @@ public class FormuleRegel extends FormuleElement
 		//int paintbelow = height - fm.getAscent() / 2;
 		int paintabove = fm.getAscent();
 		int paintbelow = height - fm.getAscent();
-		
-
-		
+				
 		int paintabove_e = 0;
 		int paintbelow_e = 0;
 
@@ -363,7 +361,10 @@ public class FormuleRegel extends FormuleElement
 		int x = this.width;
 		if (this.currentPosition == -1 || this.children.size() == 0)
 			x = 0;
-		this.drawCursor(x);
+		if(this.selectionStart == -1) //in dit geval geen selectie?
+		{	
+			this.drawCursor(x);
+		}
 
 		//draw selection line
 		ctx.setStrokeStyle("#f00");
@@ -643,6 +644,7 @@ public class FormuleRegel extends FormuleElement
 	{	if(this.currentPosition < this.children.size() - 1 && holder instanceof FormuleEditor)
 		{	FormuleHolder holder = (FormuleHolder) this.holder;
 			FormuleElement fe = getElementAt(currentPosition+1);
+			clearSelection();
 			if(fe instanceof FormuleElementWithChildren)
 			{	FormuleElementWithChildren fewc = (FormuleElementWithChildren)fe;
 				int pos = -1 ;
@@ -655,7 +657,6 @@ public class FormuleRegel extends FormuleElement
 			else
 			{	this.currentPosition++;
 				holder.setCurrentElement(this.children.get(this.currentPosition));
-				clearSelection();
 				drawCursor();
 			}
 			holder.paint();
@@ -682,6 +683,13 @@ public class FormuleRegel extends FormuleElement
 //			}
 			parentRegel.drawCursor();
 			holder.paint();
+		}
+		else if(holder instanceof FormuleEditor && this.hasSelection())
+		{
+			holder.setCurrentElement(this.children.get(this.currentPosition));
+			clearSelection();
+			holder.paint();
+			
 		}
 	}
 	
@@ -744,6 +752,15 @@ public class FormuleRegel extends FormuleElement
 			parentRegel.drawCursor();
 			holder.paint();
 		}
+		else if(holder instanceof FormuleEditor && this.hasSelection())
+		{
+			holder.setCurrentElement(this);
+			clearSelection();
+			//drawCursor();
+			holder.paint();
+			
+			
+		}
 	}
 	
 	public void cursorToRightShift()
@@ -759,7 +776,12 @@ public class FormuleRegel extends FormuleElement
     		}
     		if(b)
     		{
-    			clearSelection();
+    			if(this.currentPosition < this.children.size() - 1 && getElementAt(currentPosition + 1).isSelected())
+    			{
+    				this.selectionStart++;
+    			}
+    			else
+    				clearSelection();
     		}
     	}
 		else if(!(this.parent==null) && !this.parent.equals(holder) && this.currentPosition == this.children.size() - 1 && holder instanceof FormuleEditor)
@@ -800,7 +822,12 @@ public class FormuleRegel extends FormuleElement
 			}
 			if(b)
 			{
-				clearSelection();
+				if(this.currentPosition > 0 && getElementAt(currentPosition - 1).isSelected())
+    			{
+    				this.selectionStart--;
+    			}
+    			else
+    				clearSelection();
 			}
 			currentPosition--;
         }
@@ -1231,7 +1258,13 @@ public class FormuleRegel extends FormuleElement
 //			return;
 		for (int i = 0; i < this.children.size(); i++)
 			//for (int i = this.selectionStart; i <= this.selectionEnd; i++)
-			this.children.get(i).setSelected(false);
+		{	FormuleElement child = this.children.get(i);
+			child.setSelected(false);
+			if(child instanceof FormuleElementWithChildren)
+			{	for(int j = 0; j < ((FormuleElementWithChildren) child).getChildrenSize(); j++)
+					((FormuleElementWithChildren) child).children.get(j).clearSelection();
+			}
+		}
 		this.selectionStart = -1;
 	}
 
@@ -1305,7 +1338,7 @@ public class FormuleRegel extends FormuleElement
 		if (this.selectionStart == -1)
 			return;
 
-		if(this.currentPosition + 1 < this.selectionStart)
+		if(this.currentPosition + 1 <= this.selectionStart)
 		{//swap
 			int temp = this.currentPosition + 1;
 			this.currentPosition = this.selectionStart;

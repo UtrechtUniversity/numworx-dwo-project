@@ -427,9 +427,10 @@ public abstract class FormuleElement implements TekstElement
 
 	protected void drawCursor(int x)
 	{
-		if (this.isCurrent() == false)
+		//geen cursor tekenen als dit niet het huidige element is, of als er een deel van de expressie geselecteerd is
+		if (this.isCurrent() == false || this.isSelected() || this.holder.hasSelection())
 			return;
-
+		
 		ctx.setLineWidth(2);
 		ctx.setStrokeStyle("#00f");
 
