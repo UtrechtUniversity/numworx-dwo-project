@@ -1,7 +1,9 @@
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.dom.entities.DomHasRole;
 import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
 import fi.dwo.commons.dom.entities.DomSchoolFull;
+import fi.dwo.commons.dom.entities.DomTeacherAndHasRole;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
@@ -13,6 +15,7 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -22,6 +25,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestHasRole;
 import fi.dwo.commons.rest.entities.RestSchool4DwoAdmin;
 import fi.dwo.commons.rest.entities.RestSchoolFull;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
@@ -100,7 +104,7 @@ public class SecuredDwoAdminSchoolManager {
                 s = SchoolManager.findBySchoolLogin(school.getSchoolLogin());
                 LOG.log(Level.INFO, "Username {0}: created school with schoollogin {1} and id {2}.", new Object[]{sc.getUserPrincipal().getName(), s.getSchoolLogin(), s.getSchoolID()});
                 //add user roles
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Method incomplete.");                
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Method incomplete.");
 //                return true;
             }
             catch (Exception e) {
@@ -371,5 +375,93 @@ public class SecuredDwoAdminSchoolManager {
         }
 
         return true;
+    }
+
+    /**
+     * Returns the school data to be displayed.
+     *
+     * @param sc
+     * @param restSchool
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getTeachersAndHasRoleInSchool")
+    public List<DomTeacherAndHasRole> getTeachersAndHasRoleInSchool(@Context SecurityContext sc, RestSchool4DwoAdmin restSchool) {
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+        List<DomTeacherAndHasRole> resultList = null;
+
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
+        school = SchoolManager.findBySchoolLogin(restSchool.getDomSchool4DwoAdmin().getSchoolLogin());
+        if (school == null) {
+            LOG.log(Level.SEVERE, "School with login {0} was not found.", restSchool.getDomSchool4DwoAdmin().getSchoolLogin());
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "School not found.");
+        }
+
+        List<PersistentHasRole> hrList;
+        try {
+            hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
+            resultList = new ArrayList<>(hrList.size());
+            for (PersistentHasRole hr : hrList) {
+                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
+                DomTeacherAndHasRole domTAHR = new DomTeacherAndHasRole();
+                domTAHR.setTeacher(user.buildDomTeacher());
+                domTAHR.setHasRole(hr.buildDomHasRole());
+                resultList.add(domTAHR);
+            }
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
+        return resultList;
+    }
+
+    /**
+     * Updates the User data of the current user and returns a copy of the
+     * updated data. Ignores any schoolID values.
+     *
+     * @param sc
+     * @param school
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/updateHasRoleRights")
+    public Boolean updateHasRoleRights(@Context SecurityContext sc, RestHasRole restHasRole) {
+        PersistentHasRole hr = null;
+        DomHasRole domHasRole = restHasRole.getDomHasRole();
+        try {
+            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
+        if (hr != null) {
+            try {
+                PersistentHasRole pHasRole = HasRoleManager.findEntity(
+                        new PersistentHasRolePK(MySQLPersistenceId.getId(domHasRole.getUserId()),
+                                MySQLPersistenceId.getId(domHasRole.getSchoolGroupId()))
+                );
+                pHasRole.setRights(domHasRole.getRights());
+                HasRoleManager.editRights(pHasRole);
+                return true;
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "User with hasRole " + hr.getPersistentHasRolePK() + " failed to update rights of hasrole " + domHasRole.getId() + " to rightsString " + domHasRole.getRights() + " .");
+            }
+        } else {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the hasRole {0} with user login {1}.", new Object[]{domHasRole.getId(),sc.getUserPrincipal().getName()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update the school data.");
+        }
     }
 }

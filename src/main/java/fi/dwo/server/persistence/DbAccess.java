@@ -3927,7 +3927,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setString(1, rights);
         ps.setInt(2, uid);
         ps.setInt(3, schoolGroupID);
-        ps.executeUpdate();
+        int r = ps.executeUpdate();
         return rights;
     }
 

@@ -87,6 +87,39 @@ public class HasRoleManager {
         }
     }
 
+    public static void editRights(PersistentHasRole hasRole) throws PersistenceException {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            PersistentHasRolePK id = hasRole.getPersistentHasRolePK();
+            PersistentHasRole hr = findEntity(id);
+            if (hr == null) {
+                LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.");
+                throw new PersistenceException("The PersistentHasRole with " + id + " no longer exists.");
+            }
+            hr.setRights(hasRole.getRights());
+            hr = em.merge(hr);
+            em.getTransaction().commit();
+        }
+        catch (Exception e) {
+            String msg = e.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                PersistentHasRolePK id = hasRole.getPersistentHasRolePK();
+                if (findEntity(id) == null) {
+                    LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.", e);
+                    throw new PersistenceException(e);
+                }
+            }
+            throw new PersistenceException(e);
+        }
+        finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
     /**
      * Removes a user from the persistent store.
      *
@@ -174,8 +207,7 @@ public class HasRoleManager {
             em.close();
         }
     }
-    
-    
+
     public static PersistentHasRole findEntity(PersistentHasRolePK id) {
         EntityManager em = getEntityManager();
         try {
