@@ -1,8 +1,9 @@
 package nl.uu.fi.dwo.account.client;
 
-import java.util.Map;
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.PopupPanel;
+import java.util.Map;
 
 public class ProfileCommand implements Command {
 
@@ -11,27 +12,13 @@ public class ProfileCommand implements Command {
     @Override
     public void execute() {
         // Create the new popup.
-        ProfilePopUpPanel popup = new ProfilePopUpPanel();
-        popup.setSize("300", "200");
-        popup.show();
-//        RootLayoutPanel root = RootLayoutPanel.get();
-//        root.add(popup);
-//        // Position the popup 1/3rd of the way down and across the screen, and
-        // show the popup. Since the position calculation is based on the
-        // offsetWidth and offsetHeight of the popup, you have to use the
-        // setPopupPositionAndShow(callback) method. The alternative would
-        // be to call show(), calculate the left and top positions, and
-        // call setPopupPosition(left, top). This would have the ugly side
-        // effect of the popup jumping from its original position to its
-        // new position.
-//        popup.setPopupPositionAndShow(new ProfilePopUpPanel.PositionCallback() {
-//            public void setPosition(int offsetWidth, int offsetHeight) {
-//                int left = (Window.getClientWidth() - offsetWidth) / 3;
-//                int top = (Window.getClientHeight() - offsetHeight) / 3;
-//                popup.setPopupPosition(left, top);
-//            }
-//        });
-
+        PopupPanel popup = new PopupPanel();
+        //popup.setSize("500", "400");
+        ProfilePanel panel = new ProfilePanel();
+        panel.setPopup(popup);
+        panel.setSize("300", "200");
+        popup.add(panel);
+        popup.center();
     }
 
     public void setProfile(Map<String, Object> map) {
