@@ -74,7 +74,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         //logger.log(Level.INFO, "object {0}", new Object[]{event.getSource()});
         Window.alert(event.getSource().toString());
         if(event.getSource() == cnlBtn){
-        Window.alert(event.getSource().toString());
+        Window.alert("CANCEL!");
             popup.hide();
         }else if(event.getSource()==okBtn){
         Window.alert("OK!");
