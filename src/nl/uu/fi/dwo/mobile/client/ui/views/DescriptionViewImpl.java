@@ -39,7 +39,15 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 	
 	private SimplePanel main;
 	private Label loading = new Label("Loading...");
+	private AnchorView.AnchorContext anchorContext;
 
+	public AnchorView.AnchorContext getAnchorContext() {
+		return anchorContext;
+	}
+
+	public void setAnchorContext(AnchorView.AnchorContext anchorContext) {
+		this.anchorContext = anchorContext;
+	}
 
 	private FlowPanel tekst;
 	
@@ -58,6 +66,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 	public DescriptionViewImpl() {
 		super();
 		main = new SimplePanel();
+		main.setStylePrimaryName("descriptionView");
 		contentPanel = new FlowPanel();
 	}
 
@@ -65,6 +74,12 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		this();
 		setupModule(id);
 	}
+	public DescriptionViewImpl(Object id, AnchorView.AnchorContext context) {
+		this();
+		setAnchorContext(context);
+		setupModule(id);
+	}
+	
 
 	@Override
 	public void setupModule(Object id) {
@@ -82,7 +97,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		HashMap<String,Object> opdracht = (HashMap<String, Object>) launchData.get("opdracht_1_1");
 		
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
-		contentPanel.getElement().getStyle().setPadding(15, Unit.PX);
+		//contentPanel.getElement().getStyle().setPadding(15, Unit.PX);
 
 		zetOpdracht(opdracht);
 		main.setWidget(contentPanel);
@@ -115,7 +130,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
-		TekstBuffer tb = new TekstBuffer(varnamen, waarden);
+		TekstBuffer tb = new TekstBuffer(varnamen, waarden, getAnchorContext());
 		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
 		//New editor version
 		if (opdrachtGegevens != null || newVersion)

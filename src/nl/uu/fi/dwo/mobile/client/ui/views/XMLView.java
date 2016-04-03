@@ -249,7 +249,7 @@ public abstract class XMLView {
 			RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
 		}
 	}
-
+	abstract AnchorView.AnchorContext getAnchorContext();
 	//public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination) 
 	public void setObjects(HashMap<String, Object> opdracht, final Panel destination, OpdrNavIF comRoot)
 	{	
@@ -288,7 +288,7 @@ public abstract class XMLView {
 			Window.addResizeHandler(resize);
 		}
 // FIXME ....	
-		hoofdPanel = new TekstVakPanel(breedte, hoogte, randomVarNamen, randomVarWaarden);
+		hoofdPanel = new TekstVakPanel(breedte, hoogte, randomVarNamen, randomVarWaarden, getAnchorContext());
 		hoofdPanel.setCommunicationRoot(comRoot);
 		hoofdPanel.setHoofdPanel(true);
 		hoofdPanel.zetInstellingen(instellingen);

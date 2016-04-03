@@ -2,64 +2,50 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet.slideNavigationToLeftAnimation;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
-import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
-public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleView, ViewModuleView.Loader, CellSelectedHandler 
+public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewModuleView.Loader, CellSelectedHandler 
 {
 
 	@UiField HeaderPanel  navigationHeaderPanel;
@@ -71,6 +57,16 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	@UiField HeaderButton moduleBackButton;
 	@UiField LayoutPanel modulePanel;
 	
+	class ModuleAnchorContext implements AnchorView.AnchorContext {
+
+		@Override
+		public void gotoUrl(String href) {
+			if(href.startsWith("goto:")) {
+				gotoSelected(href,selected);
+			}
+		}	
+	}
+	
 	class TreeAnchorContext implements AnchorView.AnchorContext {
 		AnchorView.AnchorContext delegate;
 
@@ -79,32 +75,8 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 				delegate.gotoUrl(href);
 			else
 			if(href.startsWith("goto:")) 
-			{	String page = "";
-				href = href.substring(5);
-				int dot = href.lastIndexOf('.');
-				if(dot > 0) {
-					page = href.substring(dot+1);
-					href = href.substring(0,dot);
-				}
-				// try numeric first
-				List<SelectModuleItem> children = selected.getParent().getChildren();
-				try { 
-					int sconr = Integer.parseInt(href)-1;
-					SelectModuleItem is = children.get(sconr);
-					setTreeSelectedItem(is);
-					selectItem(is);
-				} catch (Exception ex) {
-					for (Iterator<SelectModuleItem> iterator = children.iterator(); iterator.hasNext();) {
-						SelectModuleItem is = iterator.next();
-						if(is.getName().startsWith(href))
-						{
-							setTreeSelectedItem(is);
-							selectItem(is);
-							break;
-						}
-					}
-					
-				}
+			{
+				gotoSelected(href, selected.getParent());
 				
 			}
 		}
@@ -153,6 +125,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		
 		module.list.addStyleName("tree-cells");
 		module.list.addCellSelectedHandler(this);
+		module.setAnchorContext(new ModuleAnchorContext());
 		standardMap = new TreeItem(TEMPLATE.content(Text.constants.standaardModules(), "fa-folder"));
 		standardMap.setState(true);
 	}
@@ -324,6 +297,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			else
 				moduleHeaderPanel.setCenter(Text.constants.standaardModules());
 			
+			selected = item;
 			module.setDescription(item);
 			if(item.getType() == SelectModuleItem.Type.FOLDER)
 			{
@@ -344,6 +318,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		}
 		else
 		{
+			selected = SelectModuleItem.ROOT;
 			module.setDescription(SelectModuleItem.ROOT);
 			//container.setWidget(new Label("DWO standaard modules")); // Uit het profiel halen!
 			addChildren(standardModel);
@@ -613,6 +588,35 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	@Override
 	public void setMenuWidget(IsWidget w) {
 		moduleHeaderPanel.setRightWidget(Widget.asWidgetOrNull(w));
+	}
+
+	void gotoSelected(String href, SelectModuleItem parent) {
+		String page = "";
+		href = href.substring(5);
+		int dot = href.lastIndexOf('.');
+		if(dot > 0) {
+			page = href.substring(dot+1);
+			href = href.substring(0,dot);
+		}
+		// try numeric first
+		List<SelectModuleItem> children = parent.getChildren();
+		try { 
+			int sconr = Integer.parseInt(href)-1;
+			SelectModuleItem is = children.get(sconr);
+			setTreeSelectedItem(is);
+			selectItem(is);
+		} catch (Exception ex) {
+			for (Iterator<SelectModuleItem> iterator = children.iterator(); iterator.hasNext();) {
+				SelectModuleItem is = iterator.next();
+				if(is.getName().startsWith(href))
+				{
+					setTreeSelectedItem(is);
+					selectItem(is);
+					break;
+				}
+			}
+			
+		}
 	}
 
 //	@Override

@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,33 +16,22 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.FontWeight;
-import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.VerticalAlign;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.text.Text;
-import fi.wiskopdr.text.Text_nl;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
@@ -53,7 +41,6 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
-import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -65,7 +52,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	static final String holderId = "dockholder";
 	private HashMap<String, Object> launchState; 
 	String[] randomVarNamen = null;
-	HashMap randomVarWaarden = null;
+	HashMap<String,Number> randomVarWaarden = null;
 	OpdrNavIF comRoot;
 	
 	private LayoutPanel basisPanel;
@@ -141,7 +128,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	
 	
-	public AntwoordKeuzeVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	public AntwoordKeuzeVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
 		
 		if (h != null && h.containsKey("breedte"))
@@ -213,7 +200,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		
 	}
 	
-	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
 		attempts = new Vector();
 		
@@ -397,7 +384,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 				
 		int aantalKeuzes = 0;
 		int hoogtePanels = 0;
-		TekstBuffer tb = new TekstBuffer();
+		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, null);
 		if (keuzeMogelijkheden != null)
 			aantalKeuzes = keuzeMogelijkheden.length;
 		keuzeOptieVakken = new TekstVak[aantalKeuzes + 1];
@@ -676,7 +663,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	public void setAttempt()
 	{
 		if(logOption) {
-			Map log  = new HashMap();
+			Map<String, Object> log  = new HashMap<String, Object>();
 			if(goedKrulImage.isVisible())
 				log.put("success", Boolean.TRUE);
 			if(foutKruisImage.isVisible())
@@ -773,7 +760,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		ArrayList<Object> huidigeKeuze = new ArrayList<Object> ();
 		huidigeKeuze.add(Text.constants.keuzeVakKiesLabel());
 		
-		TekstBuffer tb = new TekstBuffer();
+		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, null);
 		if(selectedIndex > 0)
 			huidigeKeuze = tb.convertTekst(keuzeMogelijkheden[selectedIndex - 1], null, false);
 		
@@ -785,6 +772,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			kijkNa(true, true);
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Vector toVector(Object object)
 	{
 		if (object == null || object instanceof Vector)

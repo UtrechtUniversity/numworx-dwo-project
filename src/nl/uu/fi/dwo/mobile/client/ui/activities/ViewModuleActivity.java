@@ -85,7 +85,8 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 
 	@Override
 	public void gotoUrl(String href) {
-		if(href.startsWith("goto:.")) defaultContext.gotoUrl(href);
+		if("goto:0".equals(href)) History.back();
+		else if(href.startsWith("goto:.")) defaultContext.gotoUrl(href);
 		else if(href.startsWith("goto:")){
 			href = href.substring(5);
 			SelectModuleItem parent = sco.getParent();

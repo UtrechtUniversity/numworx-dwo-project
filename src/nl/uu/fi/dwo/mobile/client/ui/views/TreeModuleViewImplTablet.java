@@ -58,7 +58,7 @@ import com.googlecode.mgwt.ui.client.widget.ScrollPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
-public class TreeModuleViewImplTablet  extends Composite implements TreeModuleView, ViewModuleView.Loader, Comparator<SelectModuleItem>
+public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewModuleView.Loader, Comparator<SelectModuleItem>, AnchorContext
 {
 
 	@UiField HeaderPanel  navigationHeaderPanel;
@@ -96,32 +96,9 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 				delegate.gotoUrl(href);
 			else
 			if(href.startsWith("goto:")) 
-			{	String page = "";
-			href = href.substring(5);
-			int dot = href.lastIndexOf('.');
-			if(dot > 0) {
-				page = href.substring(dot+1);
-				href = href.substring(0,dot);
+			{	
+				gotoSelected(href, selected.getParent());
 			}
-			// try numeric first
-			List<SelectModuleItem> children = selected.getParent().getChildren();
-			try { 
-				int sconr = Integer.parseInt(href)-1;
-				SelectModuleItem is = children.get(sconr);
-				selectItem(is);
-			} catch (Exception ex) {
-				for (Iterator<SelectModuleItem> iterator = children.iterator(); iterator.hasNext();) {
-					SelectModuleItem is = iterator.next();
-					if(is.getName().startsWith(href))
-					{
-						selectItem(is);
-						break;
-					}
-				}
-				
-			}
-			
-		}
 			
 		}
 
@@ -279,6 +256,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	private int animation_duration = 200; // XXX is there a gwt standard value ?
 	private SelectModuleItem parent;
 	private Comparator<SelectModuleItem> sortModel;
+	private SelectModuleItem infoItem;
 	
 	private void toggleNavigationPanel(){
 		if (navigationPanel.getAbsoluteLeft() == 0) {
@@ -399,24 +377,25 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			navigationBackButton.setVisible(true);
 			navigationUpButton.setVisible(item.getType() != SelectModuleItem.Type.ROOT);
 			String description = item.getDescription();
+			infoArea.clear();
 			if(description != null)
 			{
+				Widget w;
 				if(description.startsWith(DescriptionView.GZIPPREFIX))
 				{
-					infoArea.clear();
-					infoArea.add(new DescriptionViewImpl(item.getID()).asWidget());
+					infoItem = item;
+					w = new DescriptionViewImpl(item.getID(), this).asWidget();
 				} else
 				if(description.startsWith("<html>")) {
-					infoArea.clear();
-					infoArea.add(new HTML(description).asWidget());
+					w = new HTML(description);
 				}else
 				{
-					infoArea.clear();
-					infoArea.add(new Label(description).asWidget());
+					w = new Label(description);
 				}
+				w.addStyleDependentName("infoArea");
+				infoArea.add(w);
 			} else {
-				infoArea.clear();
-				infoArea.add(new Label(""));
+//				infoArea.add(new Label(""));
 			}
 			if(item.getType() == SelectModuleItem.Type.FOLDER)
 			{
@@ -625,6 +604,37 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	@Override
 	public void setMenuWidget(IsWidget w) {
 		moduleHeaderPanel.setRightWidget(Widget.asWidgetOrNull(w));
+	}
+
+	@Override
+	public void gotoUrl(String href) {
+		gotoSelected(href, infoItem);
+	}
+
+	void gotoSelected(String href, SelectModuleItem parent) {
+		String page = "";
+		href = href.substring(5);
+		int dot = href.lastIndexOf('.');
+		if(dot > 0) {
+			page = href.substring(dot+1);
+			href = href.substring(0,dot);
+		}
+// try numeric first
+		List<SelectModuleItem> children = parent.getChildren();
+		try { 
+			int sconr = Integer.parseInt(href)-1;
+			SelectModuleItem is = children.get(sconr);
+			selectItem(is);
+		} catch (Exception ex) {
+			for (Iterator<SelectModuleItem> iterator = children.iterator(); iterator.hasNext();) {
+				SelectModuleItem is = iterator.next();
+				if(is.getName().startsWith(href))
+				{
+					selectItem(is);
+					break;
+				}
+		}
+}
 	}
 
 }

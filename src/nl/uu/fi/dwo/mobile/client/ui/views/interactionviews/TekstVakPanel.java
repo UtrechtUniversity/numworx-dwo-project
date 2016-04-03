@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Connector;
@@ -139,7 +140,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	private TekstVak[][] tekstVakken = null;
 	//private FlowPanel[][] tekstVakken = null;
 	String[] randomVarNamen = null;
-	HashMap<String, Object> randomVarWaarden = null;
+	HashMap<String, Number> randomVarWaarden = null;
 	
 	private TekstVak parent = null;
 	private int mode = 0;
@@ -248,7 +249,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	}
 	
 	//Hiermee maak je het basispanel dat alle componenten van een pagina bevat.
-	public TekstVakPanel(int breedte, int hoogte, String[] randomVarNamen, HashMap randomVarWaarden)
+	public TekstVakPanel(int breedte, int hoogte, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
@@ -263,8 +264,8 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		pasAanH = true;
 		
 		mainPanel = new Grid(1, 1);
-		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
-		mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow) + "px " + (-cellSpaceColumn) + "px");
+		mainPanel.getElement().getStyle().setProperty("borderSpacing", cellSpaceColumn + "px " + cellSpaceRow + "px");
+		mainPanel.getElement().getStyle().setProperty("margin", (-cellSpaceRow) + "px " + (-cellSpaceColumn) + "px");
 		
 		tekstVakken = new TekstVak[1][1];	
 		tekstVakken[0][0] = new TekstVak(this, 0, 0);
@@ -300,13 +301,13 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		hoogtes = Arrays.asList((double) hoogte);
 	}
 
-	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap randomVarWaarden, AnchorView.AnchorContext context)
+	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, AnchorView.AnchorContext context)
 	{
 		this(hh, randomVarNamen, randomVarWaarden);
 		this.anchorContext = context;
 	}
 	
-	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap randomVarWaarden)
+	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
@@ -652,6 +653,12 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 //		}
 //	}
 	
+	public TekstVakPanel(int breedte, int hoogte, String[] randomVarNamen,
+			HashMap randomVarWaarden, AnchorContext anchorContext) {
+		this(breedte, hoogte, randomVarNamen, randomVarWaarden);
+		this.anchorContext = anchorContext;
+	}
+
 	public void plaatsTabelRanden()
 	{
 		double hoogteCum = -0.5 - cellSpaceRow / 2;
@@ -799,7 +806,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			}
 		}
 		
-		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
+		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, anchorContext);
 		int[] volleBreedtes = new int[breedtes.size()];
 		for (int j = 0; j < breedtes.size(); j++)
 		{	volleBreedtes[j] =  (int) (breedtes.get(j).doubleValue() - 2 * cellMarge);

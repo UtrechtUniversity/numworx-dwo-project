@@ -54,11 +54,30 @@ public class TekstBuffer
 	int huidigeKolom = 0;
 	//TekstVakPanel parent = null;
 
+	/**
+	 * Zo min mogelijk gebruiken.
+	 * @deprecated use {@link #TekstBuffer(String[], HashMap, AnchorContext)}
+	 * @param randomVarNamen
+	 * @param randomVarWaarden
+	 */
 	public TekstBuffer(String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		aantalVakken = 0;
+	}
+	
+	private AnchorContext context;
+	/**
+	 * Tekst parser met context voor goto links.
+	 * @param names
+	 * @param values
+	 * @param anchorContext
+	 */
+	public TekstBuffer(String[] names, HashMap<String,Number> values, AnchorContext anchorContext) {
+		randomVarNamen = names;
+		randomVarWaarden = values;
+		context = anchorContext;
 	}
 	
 	/*
@@ -488,6 +507,7 @@ public class TekstBuffer
 	}
 
 	protected AnchorContext getAnchorContext() {
+		if(context != null) return context;
 		return DWOplayer.clientfactory.getEntryView().getAnchorContext();
 	}
 

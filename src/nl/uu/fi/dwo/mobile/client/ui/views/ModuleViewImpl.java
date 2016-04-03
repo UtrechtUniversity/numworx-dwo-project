@@ -5,6 +5,7 @@ import java.util.List;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -23,6 +24,7 @@ class ModuleViewImpl extends Composite implements ModuleView {
 	@UiField (provided=true) CellList<SelectModuleItem> list;
 	@UiField SimplePanel description;
 	List<SelectModuleItem> items;
+	AnchorContext context;
 
 	public ModuleViewImpl() {
 		list = new CellList<SelectModuleItem>(new SelectModuleCell());
@@ -30,6 +32,10 @@ class ModuleViewImpl extends Composite implements ModuleView {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
+	public void setAnchorContext(AnchorContext c) {
+		context = c;
+	}
+	
 	private static ModuleViewImplUiBinder uiBinder = GWT
 			.create(ModuleViewImplUiBinder.class);
 
@@ -38,6 +44,7 @@ class ModuleViewImpl extends Composite implements ModuleView {
 	}
 
 	public void setDescription(IsWidget widget) {
+		widget.asWidget().addStyleDependentName("moduleArea");
 		description.setWidget(widget);
 	}
 	
@@ -47,7 +54,7 @@ class ModuleViewImpl extends Composite implements ModuleView {
 		{
 			if(description.startsWith(DescriptionView.GZIPPREFIX))
 			{
-				setDescription(new DescriptionViewImpl(item.getID()));
+				setDescription(new DescriptionViewImpl(item.getID(), context));
 			} else
 			if(description.startsWith("<html>"))
 				setDescription(new HTML(description));

@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -30,6 +31,8 @@ import com.googlecode.mgwt.ui.client.OsDetection;
 import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
+import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
+import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
 import fi.wiskopdr.text.TextConstants;
@@ -39,7 +42,7 @@ import fi.wiskopdr.text.TextConstants;
  * @author Danny Hendrix
  * 
  */
-public class SelectModuleViewImpl extends Composite implements SelectModuleView
+public class SelectModuleViewImpl extends Composite implements SelectModuleView, AnchorContext, HasCellSelectedHandler
 {
 	
 	class GetScosCallback implements AsyncCallback<List<Map<String,Object>>> {
@@ -113,7 +116,7 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView
 
 	public HasCellSelectedHandler getList()
 	{
-		return list;
+		return this;
 	}
 
 	@Override
@@ -141,7 +144,7 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView
 		{
 			if(description.startsWith(DescriptionView.GZIPPREFIX))
 			{
-				this.description.setWidget(new DescriptionViewImpl(item.getID()));
+				this.description.setWidget(new DescriptionViewImpl(item.getID(), this));
 			} else
 			if(description.startsWith("<html>"))
 				this.description.setWidget(new HTML(description));
@@ -163,6 +166,21 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView
 		}
 
 		
+	}
+
+	private CellSelectedHandler gotoHandler;
+	@Override
+	public void gotoUrl(String href) {
+		int index = 0;
+		CellSelectedEvent event = new CellSelectedEvent(index, getElement());
+		gotoHandler.onCellSelected(event);
+	}
+
+	@Override
+	public com.google.gwt.event.shared.HandlerRegistration addCellSelectedHandler(
+			CellSelectedHandler cellSelectedHandler) {
+		this.gotoHandler = cellSelectedHandler;
+		return list.addCellSelectedHandler(cellSelectedHandler);
 	}
 	
 }

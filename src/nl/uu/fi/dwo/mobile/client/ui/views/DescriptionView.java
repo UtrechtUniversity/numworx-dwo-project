@@ -7,4 +7,8 @@ public interface DescriptionView extends IsWidget {
 	static final String GZIPPREFIX = "H4s"; // FIXME
 
 	void setupModule(Object id);
+	
+	AnchorView.AnchorContext getAnchorContext();
+	void setAnchorContext(AnchorView.AnchorContext context);
+
 }
