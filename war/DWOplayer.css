@@ -278,3 +278,7 @@ div.listItem-dwo-separator {
 	font-family: sans-serif;
 	font-size: 12px;
 }
+
+.gwt-Label-infoArea, .gwt-HTML-infoArea {
+	margin: 15px;
+}
