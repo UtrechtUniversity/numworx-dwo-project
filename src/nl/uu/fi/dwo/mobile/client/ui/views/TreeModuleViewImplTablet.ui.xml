@@ -31,12 +31,12 @@
 		}
 
 		.info_area {
- 				padding: 20px;
+ 				padding: 0px;
     			height: auto;
     			width: auto;
-   			 
+   			 	max-height: 50%;
     			border: 1px solid #abadb0;
-
+    			overflow: scroll;
 		}
 		
 		.navigation_center_header {
