@@ -20,11 +20,6 @@ import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTStyle;
 import com.googlecode.mgwt.ui.client.OsDetection;
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
-import com.googlecode.mgwt.ui.client.theme.base.MGWTClientBundleBaseThemeAndroid;
-import com.googlecode.mgwt.ui.client.theme.base.MGWTClientBundleBaseThemeAndroidTablet;
-import com.googlecode.mgwt.ui.client.theme.base.MGWTClientBundleBaseThemeIPad;
-import com.googlecode.mgwt.ui.client.theme.base.MGWTClientBundleBaseThemeIPadRetina;
-import com.googlecode.mgwt.ui.client.theme.base.MGWTClientBundleBaseThemeIPhone;
 
 public class DWOplayerDefaults implements DWOplayerParameters {
 
