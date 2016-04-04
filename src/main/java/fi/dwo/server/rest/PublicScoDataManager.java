@@ -33,7 +33,8 @@ public class PublicScoDataManager {
      * @return
      */
     @GET
-    @Produces({"text/plain"})
+//    @Produces({"text/plain"})
+    @Produces({"application/json"})    
     @Path("/getJSONLaunchDataBytes")
     @Deprecated
     public String getJSONLaunchDataBytes(@QueryParam("scoId") int scoId) {
