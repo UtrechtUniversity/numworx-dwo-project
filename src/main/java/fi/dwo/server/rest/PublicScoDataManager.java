@@ -26,10 +26,10 @@ public class PublicScoDataManager {
     private static final Logger LOG = Logger.getLogger(PublicScoDataManager.class.getName());
 
     /**
-     * Verifies that a user, password combination. Waits a configured amount of
-     * time before giving a response.
+     * Returns the JSON launch data bytes of scoData. This method uses MySQL-based
+     * indices and should be phased out.
      *
-     * @param loginCheck
+     * @param scoId
      * @return
      */
     @GET

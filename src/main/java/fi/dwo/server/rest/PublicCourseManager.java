@@ -28,10 +28,10 @@ public class PublicCourseManager {
     private static final Logger LOG = Logger.getLogger(PublicCourseManager.class.getName());
 
     /**
-     * Verifies that a user, password combination. Waits a configured amount of
-     * time before giving a response.
-     *
-     * @param loginCheck
+     * Returns the Course description of a course. This method uses MySQL-based
+     * indices and should be phased out.
+     * 
+     * @param courseId
      * @return
      */
     @GET
