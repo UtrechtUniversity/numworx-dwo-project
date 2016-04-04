@@ -55,8 +55,8 @@ public class PublicScoDataManager {
 
                 gzIn.close();
                 outStream.close();
-
-                return outStream.toString();
+                
+                return outStream.toString("UTF-8");
             }
             catch (IOException ex) {
                 LOG.log(Level.SEVERE, "Error while unzipping launchdata with scoid " + scoId + ".", ex);
