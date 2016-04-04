@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
