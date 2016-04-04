@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -91,11 +92,13 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
             SchoolPasswdMap spm, Date expire) {
         super(DwoHelper.getFrameForComponent(owner),
                 windowTitle, true);
+        this.setMinimumSize(new Dimension(400,300));
         Container contentPane = getContentPane();
         SpringLayout layout = new SpringLayout();
         contentPane.setLayout(new BorderLayout());
         JPanel form = new JPanel(layout); // form
         contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
+//        form.setMinimumSize(new Dimension(500,500));
         form.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.schoolName = schoolName;
         this.schoolName = schoolLogin;
@@ -190,10 +193,13 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         JSpinnerDateEditor dateEditor = new JSpinnerDateEditor(); // zie ook selectcoursesdialog
         dateField = new JDateChooser(null, expire, null, dateEditor);
         dateField.setEnabled(fidentitySchools == null);
+//        dateField.setMinimumSize(dateField.getPreferredSize());
+//        dateField.setMinimumSize(new Dimension());
         form.add(dateField);
 
         //this.setSize(460, 280);
         Box okbox = Box.createHorizontalBox();
+        okbox.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         okbox.add(Box.createHorizontalGlue());
         /* Register button */
         okButton = new JButton(TextMapper.getText(TextMapper.BTN_OK));//,GuiConstants.MAIN_BACKGROUND);
@@ -218,8 +224,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
                 - ((okButton.getSize().width
                 + cancelButton.getSize().width + 5) / 2)
                 + okButton.getSize().width + 5, 163);
+
         okbox.add(cancelButton);
         okbox.add(Box.createHorizontalGlue());
+        okbox.add(Box.createVerticalStrut(10));
         makeCompactGrid(form, //parent
                 form.getComponentCount() / 2, 2,
                 10, 10, //initX, initY
