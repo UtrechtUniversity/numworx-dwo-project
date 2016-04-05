@@ -62,7 +62,7 @@ import java.util.logging.Logger;
 
 public class OSXAdapter implements InvocationHandler {
 
-    private static final Logger log = Logger.getLogger(OSXAdapter.class.getName());
+    private static final Logger LOG = Logger.getLogger(OSXAdapter.class.getName());
 
     protected Object targetObject;
     protected Method targetMethod;
@@ -89,7 +89,7 @@ public class OSXAdapter implements InvocationHandler {
             Method enableAboutMethod = macOSXApplication.getClass().getDeclaredMethod("setEnabledAboutMenu", new Class[]{boolean.class});
             enableAboutMethod.invoke(macOSXApplication, new Object[]{enableAboutMenu});
         } catch (Exception ex) {
-            log.log(Level.SEVERE, "OSXAdapter could not access the About Menu. Exception {0}", ex.getMessage());
+            LOG.log(Level.SEVERE, "OSXAdapter could not access the About Menu. Exception {0}", ex.getMessage());
         }
     }
 
@@ -149,7 +149,7 @@ public class OSXAdapter implements InvocationHandler {
         } catch (ClassNotFoundException cnfe) {
             System.err.println("This version of Mac OS X does not support the Apple EAWT.  ApplicationEvent handling has been disabled (" + cnfe + ")");
         } catch (Exception e) {  // Likely a NoSuchMethodException or an IllegalAccessException loading/invoking eawt.Application methods
-            log.log(Level.SEVERE, "Mac OS X Adapter could not talk to EAWT. Exception message: {0}", new Object[]{e.getMessage()});
+            LOG.log(Level.SEVERE, "Mac OS X Adapter could not talk to EAWT. Exception message: {0}", new Object[]{e.getMessage()});
         }
     }
 
@@ -199,7 +199,7 @@ public class OSXAdapter implements InvocationHandler {
                 // If the target method returns a boolean, use that as a hint
                 setHandledMethod.invoke(event, new Object[]{handled});
             } catch (Exception e) {
-                log.log(Level.SEVERE, "OSXAdapter was unable to handle an ApplicationEvent: ", new Object[]{e.getMessage()});
+                LOG.log(Level.SEVERE, "OSXAdapter was unable to handle an ApplicationEvent: ", new Object[]{e.getMessage()});
             }
         }
     }

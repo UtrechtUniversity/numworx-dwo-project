@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.logging.Level;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
@@ -62,10 +63,11 @@ public interface DbAccessIF extends DbAccessLogin {
     /**
      * Returns all the available courses for the specified user.
      *
-     * @param userID The users wherefor the courses must selected.
-     * @return A Vector containing hashtables with the coursedata.
+     * @param userID The user where for the courses must selected.
+     * @return A Vector containing hash tables with the course data.
+     * @throws java.sql.SQLException
      */
-    public Vector getCourses(int userID) throws IOException, XmlRpcException, SQLException;
+    public Vector getCourses(int profileValue) throws IOException, XmlRpcException, SQLException;
 
 //    /**
 //     * Returns all the available course for the specified user.
@@ -110,6 +112,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param oid The ID value.
      * @return A Hashtable where the column-values are mapped on the
      * columnnames.
+     * @throws java.sql.SQLException
      *
      */
     public Hashtable getRecord(String tableName, String idCol, int oid)
@@ -121,6 +124,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param tableName The name of the table to select the data.
      * @return A vector contains hashtables where the column-values are mapped
      * on the columnnames.
+     * @throws java.sql.SQLException
      */
     public Vector getTable(String tableName) throws IOException,
             XmlRpcException, SQLException;
@@ -133,6 +137,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param orderCol The column name to order the data by.
      * @return A Vector contains hashtables where the column-values are mapped
      * on the columnnames.
+     * @throws java.sql.SQLException
      */
     public Vector getTable(String tableName, String orderCol) throws IOException,
             XmlRpcException, SQLException;
@@ -146,6 +151,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * mapped on the columnname.
      * @return A Vector contains hashtables where the column-values are mapped
      * on the columnames.
+     * @throws java.sql.SQLException
      *
      */
     public Vector getTable(String tableName, Hashtable wheredef) throws IOException,
@@ -161,6 +167,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param orderBy The column name to order the data by.
      * @return java.util.Vector A Vector containing hashtables where the
      * column-values are mapped on the columnames.
+     * @throws java.sql.SQLException
      */
     public Vector getTable(String tableName, Hashtable wheredef, String orderBy) throws IOException,
             XmlRpcException, SQLException;
@@ -201,8 +208,30 @@ public interface DbAccessIF extends DbAccessLogin {
     public boolean renameClass(int classID, String newName /*, boolean iconizer*/) throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException;
 
+    public Vector<Object> getStudentsOfClass(int schoolClassID)throws DwoXmlRpcException, IOException, XmlRpcException,
+            SQLException;
+
+        public Vector<Object> getTeachersOfClass(int schoolClassID)throws DwoXmlRpcException, IOException, XmlRpcException,
+            SQLException;
+
     /**
      * Give a class a new teacher
+     *
+     * @param classID
+     * @param newName
+     * @param newRegistrationKey
+     * @param iconizer
+     * @return
+     * @throws DwoXmlRpcException
+     * @throws IOException
+     * @throws XmlRpcException
+     * @throws SQLException
+     */
+    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException,
+            SQLException;
+
+    /**
+     * Add a teacher to a class
      *
      * @param classID
      * @param newTeacher
@@ -212,7 +241,46 @@ public interface DbAccessIF extends DbAccessLogin {
      * @throws XmlRpcException
      * @throws DwoXmlRpcException
      */
-    public boolean reassignClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+    public boolean addTeacherToClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+
+    /**
+     * Remove a teacher from a class
+     *
+     * @param classID
+     * @param newTeacher
+     * @return
+     * @throws IOException
+     * @throws SQLException
+     * @throws XmlRpcException
+     * @throws DwoXmlRpcException
+     */
+    public boolean removeTeacherFromClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+
+    /**
+     * Add a student to a class
+     *
+     * @param classID
+     * @param studentID
+     * @return
+     * @throws IOException
+     * @throws SQLException
+     * @throws XmlRpcException
+     * @throws DwoXmlRpcException
+     */
+    public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+
+    /**
+     * Remove a student from class
+     *
+     * @param classID
+     * @param studentID
+     * @return
+     * @throws IOException
+     * @throws SQLException
+     * @throws XmlRpcException
+     * @throws DwoXmlRpcException
+     */
+    public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
     /**
      * @param username
@@ -223,6 +291,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param email
      * @return boolean
      * @throws fi.dwo.client.system.RegisterException
+     * @throws java.sql.SQLException
      *
      */
     public boolean register(String username, String password, String firstname,
@@ -230,13 +299,13 @@ public interface DbAccessIF extends DbAccessLogin {
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException;
 
-    public String LMSGetValue(int scoID, int userID, String iDataModelElement) throws IOException, XmlRpcException,
+    public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement) throws IOException, XmlRpcException,
             SQLException;
 
-    public String LMSSetValue(int scoID, int userID, String iDataModelElement, String iValue) throws IOException, XmlRpcException,
+    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue) throws IOException, XmlRpcException,
             SQLException;
 
-    public String LMSSetValue(int scoID, int userID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
+    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
             SQLException;
 
     /**
@@ -251,6 +320,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param groupPassword
      * @return boolean
      * @throws fi.dwo.client.system.RegisterException
+     * @throws java.sql.SQLException
      *
      */
     public boolean register(String username, String password, String firstname,
@@ -263,6 +333,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param username
      * @param password
      * @return java.util.Hashtable
+     * @throws java.sql.SQLException
      *
      */
     public Hashtable login(String username, String password)
@@ -275,29 +346,31 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param groupPassword
      * @return java.util.Hashtable
      * @throws fi.dwo.client.system.RegisterException
+     * @throws java.sql.SQLException
      *
      */
     public Hashtable addToSchool(int userID, String schoolLogin, int groupID,
             String groupPassword) throws DwoXmlRpcException, IOException,
             XmlRpcException, SQLException;
 
-    /**
-     * @param userID
-     * @param password
-     * @param firstname
-     * @param middlename
-     * @param lastname
-     * @param email
-     * @param classID
-     * @return boolean
-     * @throws fi.dwo.client.system.RegisterException
-     *
-     */
-    public boolean changeAccount(int userID, String password,
-            String newPassword, String firstname, String middlename,
-            String lastname, String email, int classID)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException;
+//TODO V1_2 obsolete
+//    /**
+//     * @param userID
+//     * @param password
+//     * @param firstname
+//     * @param middlename
+//     * @param lastname
+//     * @param email
+//     * @param classID
+//     * @return boolean
+//     * @throws fi.dwo.client.system.RegisterException
+//     *
+//     */
+//    public boolean changeAccount(int userID, String password,
+//            String newPassword, String firstname, String middlename,
+//            String lastname, String email, int classID)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException;
 
     /**
      * @param userID
@@ -308,6 +381,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param email
      * @return boolean
      * @throws fi.dwo.client.system.RegisterException
+     * @throws java.sql.SQLException
      *
      */
     public boolean changeAccount(int userID, String password,
@@ -320,6 +394,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param className
      * @return java.util.Hashtable
      * @throws fi.dwo.client.system.ClassException
+     * @throws java.sql.SQLException
      *
      */
     public Hashtable addClass(int teacher, String className)
@@ -332,6 +407,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param teacherPassw
      * @return java.util.Hashtable
      * @throws fi.dwo.client.system.ClassException
+     * @throws java.sql.SQLException
      *
      */
     public Hashtable addSchool(String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
@@ -345,6 +421,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param teacherPassw
      * @return java.util.Hashtable
      * @throws fi.dwo.client.system.ClassException
+     * @throws java.sql.SQLException
      *
      */
     public Hashtable addSchool(int schoolId, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
@@ -358,6 +435,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param teacherPassw
      * @return java.util.Hashtable
      * @throws fi.dwo.client.system.ClassException
+     * @throws java.sql.SQLException
      *
      */
     public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
@@ -365,6 +443,7 @@ public interface DbAccessIF extends DbAccessLogin {
 
     /**
      * @param userID
+     * @return 
      *
      */
     public boolean deleteUser(int userID) throws IOException, XmlRpcException,
@@ -377,6 +456,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param classID
      * @param mustEmpty
      * @return boolean
+     * @throws java.sql.SQLException
      *
      */
     public boolean deleteClass(int classID, boolean mustEmpty)
@@ -390,35 +470,8 @@ public interface DbAccessIF extends DbAccessLogin {
 
     public Vector getResults(int courseID, int userID) throws IOException, XmlRpcException, SQLException;
 
-    /**
-     * @param uid
-     *
-     */
-    public boolean disconnectFromClass(int uid) throws IOException,
+    public boolean disconnectFromClass(int userID, int classID) throws IOException,
             XmlRpcException, SQLException;
-
-    /**
-     * Select a jar on the serverside. For the problem to dynamically load JAR's
-     * we must pre-set the JAR to select. After the JAR is selected, the class
-     * can be loaded out of the jar and the default classloader (in the browser)
-     * will do a get request ot the servler for a jar. Then, the correct jar is
-     * returned.
-     *
-     * @param key A key-value which can used to read the jar out of the
-     * database.
-     * @param jar The name of the jar to select.
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     * @see <a href="doc-files/DbAccessIF-1.pdf">Dynamisch inladen van JAR's
-     * (dutch)</a>
-     * @deprecated niet meer gebruiken
-     */
-    public boolean selectJar(String key, String jar) throws IOException,
-            XmlRpcException, SQLException;
-
-    public boolean reconnect() throws IOException, XmlRpcException, SQLException;
 
     /**
      * Logs a string to the error-log at the server (just for debugging
@@ -430,7 +483,8 @@ public interface DbAccessIF extends DbAccessLogin {
      * @throws XmlRpcException
      */
     public boolean log(String s) throws IOException, XmlRpcException;
-
+    public boolean log(Level level, String s) throws IOException, XmlRpcException;
+    
     public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     public int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
@@ -485,6 +539,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @return
      * @throws IOException
      * @throws XmlRpcException
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      */
     public boolean changeCourse(int id, String name, String description,
             boolean export) throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
@@ -501,7 +556,7 @@ public interface DbAccessIF extends DbAccessLogin {
     public Hashtable addSchool(int schoolId, String schoolName, String schoolLogin, Hashtable passwd)
             throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
-    public boolean deleteUserFromSchool(int id, int schoolID)
+    public boolean deleteUserWithRoleFromSchool(int id, int schoolGroupID)
             throws IOException, XmlRpcException, SQLException;
 
     public boolean updateSchoolTo(int schoolID, Vector schoolTo)
@@ -514,6 +569,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param classID
      * @return true
      * @throws SQLException
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
     public boolean deleteCourseDataFromClass(int courseID, int classID)
             throws SQLException, IOException, XmlRpcException;
@@ -535,6 +591,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * Zet de rechten van een gebruiker voor één profiel.
      *
      * @param uid user
+     * @param schoolGroup
      * @param profileid profiel
      * @param rights "aps" etc.
      * @return "asp"
@@ -542,7 +599,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @throws IOException
      * @throws XmlRpcException
      */
-    public String setRights(int uid, int profileid, String rights)
+    public String setRights(int uid, int schoolGroup, int profileid, String rights)
             throws SQLException, IOException, XmlRpcException;
 
     public boolean changeCourse(int id, String name, String description,
@@ -578,6 +635,13 @@ public interface DbAccessIF extends DbAccessLogin {
             boolean delete, byte[] launchdata, boolean showScore)
             throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
+    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+
     public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException;
 
+        public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+
+    public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+
+    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 }

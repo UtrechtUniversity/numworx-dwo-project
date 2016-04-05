@@ -77,6 +77,7 @@ public class BASE64Decoder extends CharacterDecoder {
   /**
    * Read single char from the InputStream but ignores anything which
    * isn't in the BASE64 alphabet.
+     * @return 
    */
   private static final int read(InputStream in) throws IOException {
     int ch;
@@ -85,7 +86,8 @@ public class BASE64Decoder extends CharacterDecoder {
     return ch;
   }
 
-  /** Returns true if specified character is in the BASE64 alphabet. */
+  /** Returns true if specified character is in the BASE64 alphabet.
+     * @return  */
   public static final boolean inBASE64Alphabet(int ch) {
     switch (ch) {
       // 'A' - 'Z'
@@ -119,6 +121,7 @@ public class BASE64Decoder extends CharacterDecoder {
   /**
    * For testing. Base64 decodes first argument or stdin if no
    * argument is given. Writes result on stdout.
+     * @throws java.io.IOException
    */
    
   public static void main(String[] args) throws IOException {

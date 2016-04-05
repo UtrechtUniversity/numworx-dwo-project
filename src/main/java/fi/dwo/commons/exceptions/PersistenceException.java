@@ -11,6 +11,7 @@ import fi.dwo.commons.system.TextMapper;
  *  
  */
 public class PersistenceException extends Exception {
+    public final static int EX_SQL = -4;
 
     public final static int EX_XML_RPC = -3;
 

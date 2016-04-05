@@ -19,6 +19,7 @@ import java.io.*;
 public abstract class CharacterEncoder {
   /**
    * Encode the InputStream and write the encoded form to the OutputStream.
+     * @param out
    * @throws IOException        if an I/O error has occurred.
    */
   public abstract void encodeBuffer(InputStream in,
@@ -27,6 +28,7 @@ public abstract class CharacterEncoder {
   /**
    * Encode the contents of the buffer and write the encoded form
    * to the OutputStream.
+     * @param out
    * @throws IOException        if an I/O error has occurred.
    */
   public void encodeBuffer(byte[] buf, OutputStream out)
@@ -38,6 +40,7 @@ public abstract class CharacterEncoder {
 
   /**
    * Encode the contents of the buffer and return it as a String.
+     * @return 
    */
   public final String encodeBuffer(byte[] buf) {
     // The encoded form is approximately 33 % bigger than the unencoded form

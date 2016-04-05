@@ -13,7 +13,7 @@ import netscape.javascript.JSObject;
  *
  */
 public class WNScormAPI implements SCORM12APIInterface {
-    private static final Logger log = Logger.getLogger(WNScormAPI.class.getName());
+    private static final Logger LOG = Logger.getLogger(WNScormAPI.class.getName());
 
     public static final String GUID = "GUID";
     public static final String SCORE = "cmi.core.score.raw";
@@ -86,7 +86,7 @@ public class WNScormAPI implements SCORM12APIInterface {
                 args[1] = Boolean.TRUE;
                 result = (String) window.call("SetInitialized", args);
             } catch (Exception e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
         return result;
@@ -106,7 +106,7 @@ public class WNScormAPI implements SCORM12APIInterface {
                 }
                 result = (String) window.call("SetCompleted", args);
             } catch (Exception e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
         return result;
@@ -125,7 +125,7 @@ public class WNScormAPI implements SCORM12APIInterface {
                 args[1] = value;
                 result = (String) window.call("SetAssetData", args);
             } catch (Exception e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
         return result;
@@ -139,7 +139,7 @@ public class WNScormAPI implements SCORM12APIInterface {
                 args[0] = GUIDString;
                 result = (String) window.call("GetAssetData", args);
             } catch (Exception e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
         if (result != null && !result.equals("")) {
@@ -157,7 +157,7 @@ public class WNScormAPI implements SCORM12APIInterface {
                 args[1] = score;
                 result = (String) window.call("SetScore", args);
             } catch (Exception e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
         return result;

@@ -19,7 +19,7 @@ public class SchoolException extends Exception {
     public final static int SE_SCHOOL_UNSUPPORTED = 2;
 
     /**
-
+     * @param exception
      */
     public SchoolException(int exception) {
         super(getMesgFromInt(exception));

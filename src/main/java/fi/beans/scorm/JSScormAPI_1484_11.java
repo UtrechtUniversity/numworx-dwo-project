@@ -8,7 +8,7 @@ import netscape.javascript.JSObject;
 
 public class JSScormAPI_1484_11 extends ScormAdapter implements SCORM12APIInterface {
 
-    private static final Logger log = Logger.getLogger(JSScormAPI_1484_11.class.getName());
+    private static final Logger LOG = Logger.getLogger(JSScormAPI_1484_11.class.getName());
 
     private JSObject window;
     private String launchData;
@@ -39,7 +39,7 @@ public class JSScormAPI_1484_11 extends ScormAdapter implements SCORM12APIInterf
                 args[0] = iParam;
                 result = (String) window.call("LMSCommit", args);
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         return result;
@@ -79,7 +79,7 @@ public class JSScormAPI_1484_11 extends ScormAdapter implements SCORM12APIInterf
                 args[0] = cmiElement;
                 result = (String) window.call("GetValue", args);
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
 
@@ -100,7 +100,7 @@ public class JSScormAPI_1484_11 extends ScormAdapter implements SCORM12APIInterf
                 args[1] = value;
                 result = (String) window.call("SetValue", args);
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         return result;

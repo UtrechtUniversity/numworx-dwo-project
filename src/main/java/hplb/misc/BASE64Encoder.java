@@ -37,6 +37,7 @@ public BASE64Encoder(boolean b) {
 /**
    * BASE64 encode the InputStream and write the encoded form to the
    * OutputStream.
+     * @param out
    * @throws IOException        if an I/O error has occurred.
    */
   public final void encodeBuffer(InputStream in,
@@ -91,6 +92,7 @@ public BASE64Encoder(boolean b) {
   /**
    * For testing. Base64 encodes the first argument or stdin if no
    * argument is given. The result is written stdout.
+     * @throws java.io.IOException
    */
 
   public static void main(String[] args) throws IOException {
