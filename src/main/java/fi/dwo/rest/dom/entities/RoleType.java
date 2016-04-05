@@ -14,6 +14,6 @@ public enum RoleType
         STUDENT,
         TEACHER,
         ADMIN,
-        ANONYMOUS,
+        NULLSCHOOL,
         SCHOOLADMIN//order is fixed, cardinality is fixed.
 }

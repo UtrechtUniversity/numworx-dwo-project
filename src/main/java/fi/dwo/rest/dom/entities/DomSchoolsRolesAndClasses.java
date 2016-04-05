@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomSchoolsRolesAndClasses {
     private DomSchoolRoleAndClass currentSchoolRoleAndClass;
+    private DomSchool nullSchool;
     private List<DomSchoolRoleAndClass> schoolsRolesAndClassesList;
 
     public void init(){
@@ -49,6 +50,20 @@ public class DomSchoolsRolesAndClasses {
      */
     public void setSchoolsRolesAndClassesList(List<DomSchoolRoleAndClass> srcList) {
         this.schoolsRolesAndClassesList = srcList;
+    }
+
+    /**
+     * @return the nullSchool
+     */
+    public DomSchool getNullSchool() {
+        return nullSchool;
+    }
+
+    /**
+     * @param nullSchool the nullSchool to set
+     */
+    public void setNullSchool(DomSchool nullSchool) {
+        this.nullSchool = nullSchool;
     }
     
 }
