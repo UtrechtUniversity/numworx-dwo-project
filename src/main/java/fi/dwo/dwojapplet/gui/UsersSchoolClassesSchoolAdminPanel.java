@@ -345,7 +345,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         if (e.getSource() == addSchoolClassBtn) {
             DomSchoolClass schoolClass = (DomSchoolClass) addSchoolClassBox.getSelectedItem();
             try {
-                prop.submitUserToSchoolClass(domUser, userType, schoolClass);
+                prop.submitUserToSchoolClass(domUser, userType, schoolClass);                
                 tableModel.init(getCurSchoolClassList(), editImage, removeImage);
 
             }

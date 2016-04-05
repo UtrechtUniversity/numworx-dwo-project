@@ -16,6 +16,7 @@ import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolClassManager;
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -27,7 +28,7 @@ import java.util.logging.Logger;
 public class UsersSchoolClassesSchoolAdminPanelProperties {
 
     private static final Logger LOG = Logger.getLogger(UsersSchoolClassesSchoolAdminPanelProperties.class.getName());
-    List<DomSchoolClass> schoolClassList;
+//    List<DomSchoolClass> schoolClassList;
 
     UsersSchoolClassesSchoolAdminPanelProperties() {
 
@@ -47,19 +48,31 @@ public class UsersSchoolClassesSchoolAdminPanelProperties {
                 || (domUser instanceof DomStudent && userType == UsersSchoolClassesSchoolAdminPanel.UserType.STUDENT))) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "DomUser is of an illegal DomUser type.");
         }
+        List<DomSchoolClass> classesList = null;
         switch (userType) {
             case STUDENT:
-                List<DomSchoolClass> studentClassesList = SecureSchoolAdminSchoolManager.GetStudentsSchoolClasses((DomStudent) domUser);
-                scList.removeAll(studentClassesList);
+                classesList = SecureSchoolAdminSchoolManager.GetStudentsSchoolClasses((DomStudent) domUser);
                 break;
             case TEACHER:
-                List<DomSchoolClass> teacherClassesList = SecureSchoolAdminSchoolManager.GetTeachersSchoolClasses((DomTeacher) domUser);
-                scList.removeAll(teacherClassesList);
+                classesList = SecureSchoolAdminSchoolManager.GetTeachersSchoolClasses((DomTeacher) domUser);
                 break;
             default:
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Switch statement failed to cover UserTypes.");
         }
-        return scList;
+        List<DomSchoolClass> result = new ArrayList<>();
+        for (DomSchoolClass t : scList) {
+            boolean flag = true;
+            for (DomSchoolClass c : classesList) {
+                if (t.getId().equals(c.getId())) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                result.add(t);
+            }
+        }
+        return result;
     }
 
     Boolean removeUserFromSchoolClass(DomUser domUser, UsersSchoolClassesSchoolAdminPanel.UserType userType, DomSchoolClass schoolClass) throws Dwo2Exception {
