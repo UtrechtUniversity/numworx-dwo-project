@@ -1,6 +1,8 @@
 /* Copyrighted 2015. */
 package fi.dwo.commons.persistence;
 
+import fi.dwo.rest.persistence.PersistenceClassType;
+import fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentAppletConfig;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;

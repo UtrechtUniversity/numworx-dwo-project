@@ -3,7 +3,7 @@ package fi.dwo.commons.persistence.entities;
 
 import fi.dwo.rest.dom.entities.DomRole;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.RoleType;
+import fi.dwo.rest.dom.entities.RoleType;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;

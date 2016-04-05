@@ -12,7 +12,7 @@ import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.PersistenceClassType;
+import fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
