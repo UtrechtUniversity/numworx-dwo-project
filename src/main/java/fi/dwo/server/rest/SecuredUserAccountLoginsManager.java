@@ -190,9 +190,10 @@ public class SecuredUserAccountLoginsManager {
         curSac = this.getCurrentSchoolRoleAndClass(sc.getUserPrincipal().getName(), user.getId());
         sacs.setActiveSchoolRoleAndClass(curSac);
         sacs.setSchoolsRolesAndClassesList(sacList);
+        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+        sacs.setNullSchool(nullSchool.createDomSchool());
         return sacs;
-
-    }        // Create all the tuples.
+    }
 
     /**
      * Updates the User data of the current user and returns a copy of the
