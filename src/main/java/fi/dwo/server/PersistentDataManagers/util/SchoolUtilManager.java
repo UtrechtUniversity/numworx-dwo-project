@@ -3,9 +3,9 @@
  */
 package fi.dwo.server.PersistentDataManagers.util;
 
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
@@ -36,7 +36,7 @@ public class SchoolUtilManager {
      * @param school
      * @param role
      * @return
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static List<PersistentUser> getUsersInRoleInSchool(PersistentSchool school, RoleType role) throws Dwo2Exception {
         List<PersistentUser> users = null;
@@ -56,7 +56,7 @@ public class SchoolUtilManager {
      * @param user
      * @param school
      * @return
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static Boolean addSingleSchoolStudentAccount(PersistentUser user, PersistentSchool school) throws Dwo2Exception {
         if (user == null || school == null) {

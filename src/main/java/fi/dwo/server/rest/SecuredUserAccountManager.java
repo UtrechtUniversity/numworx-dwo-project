@@ -5,15 +5,15 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomUserFull;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestFullUser;
+import fi.dwo.rest.entities.RestFullUser;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;

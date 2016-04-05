@@ -3,8 +3,8 @@
  */
 package fi.dwo.server.PersistentDataManagers.util;
 
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
@@ -43,7 +43,7 @@ public class HasRoleUtilManager {
      * @param usercode Mostly the principal username from the REST-interface.
      * @param r
      * @return
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static PersistentHasRole getCurrentHasRole(String usercode, RoleType r) throws Dwo2Exception {
         PersistentUser u = (PersistentUser) UserManager.findByUserName(usercode);
@@ -78,7 +78,7 @@ public class HasRoleUtilManager {
      *
      * @param hr
      * @return
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static PersistentSchool getSchoolforHasRole(PersistentHasRole hr) throws Dwo2Exception {
         if (hr == null || hr.getPersistentHasRolePK() == null) {

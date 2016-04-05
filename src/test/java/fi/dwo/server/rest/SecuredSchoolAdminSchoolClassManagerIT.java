@@ -3,16 +3,16 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomNewSingleSchoolStudent;
-import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClassFull;
-import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
-import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
-import fi.dwo.commons.dom.entities.DomTeacher;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.rest.dom.entities.DomContext;
+import fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
+import fi.dwo.rest.dom.entities.DomTeacher;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.PersistenceId;
@@ -23,11 +23,11 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestNewSingleSchoolStudent;
-import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
-import fi.dwo.commons.rest.entities.RestSchoolClass;
-import fi.dwo.commons.rest.entities.RestSchoolClassFull;
-import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
+import fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
+import fi.dwo.rest.entities.RestSchoolClass;
+import fi.dwo.rest.entities.RestSchoolClassFull;
+import fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
@@ -246,6 +246,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);
         nss.setDomSchoolClass(schoolClass.createDomSchoolClass());
+        rss.setDomNewSingleSchoolStudent(nss);
         
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean result = instance.SubmitSingleSchoolStudent(sc, rss);

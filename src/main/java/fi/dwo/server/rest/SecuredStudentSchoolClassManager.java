@@ -1,11 +1,11 @@
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.persistence.RoleType;
@@ -14,8 +14,8 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
-import fi.dwo.commons.rest.entities.RestNewSchoolClass4Student;
-import fi.dwo.commons.rest.entities.RestSchoolClass;
+import fi.dwo.rest.entities.RestNewSchoolClass4Student;
+import fi.dwo.rest.entities.RestSchoolClass;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;

@@ -3,16 +3,16 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
-import fi.dwo.commons.dom.entities.DomSchoolFull;
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.rest.dom.entities.DomContext;
+import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import fi.dwo.rest.dom.entities.DomSchoolFull;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.commons.rest.entities.RestSchool4DwoAdmin;
-import fi.dwo.commons.rest.entities.RestSchoolFull;
+import fi.dwo.rest.entities.RestSchool4DwoAdmin;
+import fi.dwo.rest.entities.RestSchoolFull;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -160,8 +160,8 @@ public class SecuredDwoAdminSchoolManagerIT {
 
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
         Boolean result = instance.updateSchool(sc, restSchool);
-        if (!school.similar(result)) {
-            fail("Method returned an unsimilar school result.");
+        if (!result) {
+            fail("Method return false on update of school.");
         }
 
         PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");

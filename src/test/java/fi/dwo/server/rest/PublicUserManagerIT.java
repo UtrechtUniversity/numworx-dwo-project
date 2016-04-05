@@ -3,19 +3,19 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomUserFull;
-import fi.dwo.commons.dom.entities.DomLoginCheck;
-import fi.dwo.commons.dom.entities.DomNewUser;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.rest.dom.entities.DomContext;
+import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomLoginCheck;
+import fi.dwo.rest.dom.entities.DomNewUser;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestLoginCheck;
-import fi.dwo.commons.rest.entities.RestNewUser;
+import fi.dwo.rest.entities.RestLoginCheck;
+import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;

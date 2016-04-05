@@ -3,13 +3,13 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.server.testutil.TestSecurityContext;
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestFullUser;
+import fi.dwo.rest.entities.RestFullUser;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;

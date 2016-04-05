@@ -1,7 +1,7 @@
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 import java.io.ByteArrayInputStream;

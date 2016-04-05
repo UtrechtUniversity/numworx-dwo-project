@@ -3,15 +3,14 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomSchoolAdmin;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
-import fi.dwo.commons.dom.entities.DomStudent;
-import fi.dwo.commons.dom.entities.DomTeacher;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2RestException;
-import static fi.dwo.commons.persistence.DomFactory.*;
+import fi.dwo.rest.dom.entities.DomContext;
+import fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomStudent;
+import fi.dwo.rest.dom.entities.DomTeacher;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.RoleType;
@@ -22,10 +21,10 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestSchoolAdmin;
-import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
-import fi.dwo.commons.rest.entities.RestStudent;
-import fi.dwo.commons.rest.entities.RestTeacher;
+import fi.dwo.rest.entities.RestSchoolAdmin;
+import fi.dwo.rest.entities.RestSingleSchoolStudent;
+import fi.dwo.rest.entities.RestStudent;
+import fi.dwo.rest.entities.RestTeacher;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;

@@ -3,10 +3,10 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.dom.entities.DomNewSchoolLogin;
-import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
-import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.rest.dom.entities.DomNewSchoolLogin;
+import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
+import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.server.testutil.TestSecurityContext;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -14,8 +14,8 @@ import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestNewSchoolLogin;
-import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
+import fi.dwo.rest.entities.RestNewSchoolLogin;
+import fi.dwo.rest.entities.RestSchoolRoleAndClass;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
