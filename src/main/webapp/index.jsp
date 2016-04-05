@@ -5,11 +5,12 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Server application is running</title>
     </head>
     <body>
-        <div><applet code="fi.dwo.dwojapplet.domain.DWO.class"
-            archive="<%= getServletContext().getInitParameter("fi.dwo.dwojapplet.web.appletName") %>" 
-            width="100%" height="800" codebase="jars/">The DWO Applet</applet></div>
+        Deployed.
+        <!-- <div><applet code="fi.dwo.dwojapplet.domain.DWO.class"
+            archive="<%= getServletContext().getInitParameter("fi.dwo.dwojapplet.web.appletName")%>" 
+            width="100%" height="800" codebase="jars/">The DWO Applet</applet></div> -->
     </body>
 </html>

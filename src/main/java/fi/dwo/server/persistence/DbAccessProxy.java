@@ -12,9 +12,11 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.beans.jdbc.DbConnectIF;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.exceptions.LoginException;
+import java.util.logging.Level;
 
 public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
-
+//TODO this class should use reflection to delegate stuff going to be purely serverside.
+//
     protected abstract DbAccessIF createDelegate();
 
     ThreadLocal delegate = new ThreadLocal() {
@@ -56,9 +58,9 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     }
 
     @Override
-    public Vector getCourses(int userID) throws IOException, XmlRpcException,
+    public Vector getCourses(int profileValue) throws IOException, XmlRpcException,
             SQLException {
-        return getDelegate().getCourses(userID);
+        return getDelegate().getCourses(profileValue);
     }
 
 //	public Vector getCourses(int userID, boolean showAll) throws IOException,
@@ -127,13 +129,13 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
             SQLException {
         return getDelegate().renameClass(classID, newName, iconizer);
     }
-
-    @Override
-    public boolean reassignClass(int classID, int newTeacher)
-            throws IOException, SQLException, XmlRpcException,
-            DwoXmlRpcException {
-        return getDelegate().reassignClass(classID, newTeacher);
-    }
+//TODO V1_2 obsolete
+//    @Override
+//    public boolean reassignClass(int classID, int newTeacher)
+//            throws IOException, SQLException, XmlRpcException,
+//            DwoXmlRpcException {
+//        return getDelegate().reassignClass(classID, newTeacher);
+//    }
 
     @Override
     public boolean register(String username, String password, String firstname,
@@ -145,22 +147,22 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     }
 
     @Override
-    public String LMSGetValue(int scoID, int userID, String iDataModelElement)
+    public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement)
             throws IOException, XmlRpcException, SQLException {
-        return getDelegate().LMSGetValue(scoID, userID, iDataModelElement);
+        return getDelegate().LMSGetValue(scoID, userID, schoolGroupID, iDataModelElement);
     }
 
     @Override
-    public String LMSSetValue(int scoID, int userID, String iDataModelElement,
+    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
             String iValue) throws IOException, XmlRpcException, SQLException {
-        return getDelegate().LMSSetValue(scoID, userID, iDataModelElement, iValue);
+        return getDelegate().LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
     }
 
     @Override
-    public String LMSSetValue(int scoID, int userID, String iDataModelElement,
+    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
             String iValue, String random) throws IOException, XmlRpcException,
             SQLException {
-        return getDelegate().LMSSetValue(scoID, userID, iDataModelElement, iValue,
+        return getDelegate().LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue,
                 random);
     }
 
@@ -211,16 +213,16 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
                 .addToSchool(userID, schoolLogin, groupID, groupPassword);
     }
 
-    @Override
-    public boolean changeAccount(int userID, String password,
-            String newPassword, String firstname, String middlename,
-            String lastname, String email, int classID)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().changeAccount(userID, password, newPassword, firstname,
-                middlename, lastname, email, classID);
-    }
-
+    //TODO V1_2 obsolete
+//    @Override
+//    public boolean changeAccount(int userID, String password,
+//            String newPassword, String firstname, String middlename,
+//            String lastname, String email, int classID)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegate().changeAccount(userID, password, newPassword, firstname,
+//                middlename, lastname, email, classID);
+//    }
     @Override
     public boolean changeAccount(int userID, String password,
             String newPassword, String firstname, String middlename,
@@ -299,30 +301,29 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
             XmlRpcException, SQLException {
         return getDelegate().getResults(courseID, userID);
     }
+//TODO V1_2 obsolete
+//    @Override
+//    public boolean disconnectFromClass(int uid) throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegate().disconnectFromClass(uid);
+//    }
 
-    @Override
-    public boolean disconnectFromClass(int uid) throws IOException,
-            XmlRpcException, SQLException {
-        return getDelegate().disconnectFromClass(uid);
-    }
-
-    @Override
-    public boolean selectJar(String key, String jar) throws IOException,
-            XmlRpcException, SQLException {
-        return getDelegate().selectJar(key, jar);
-    }
-
-    @Override
-    public boolean reconnect() throws IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().reconnect();
-    }
+//    @Override
+//    public boolean selectJar(String key, String jar) throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegate().selectJar(key, jar);
+//    }
 
     @Override
     public boolean log(String s) throws IOException, XmlRpcException {
         return getDelegate().log(s);
     }
 
+    @Override
+    public boolean log(Level level, String s) throws IOException, XmlRpcException {
+        return getDelegate().log(level,s);
+    }
+    
     @Override
     public int addCourse(int schoolID, String name, String description,
             int dwoProfile) throws DwoXmlRpcException, IOException,
@@ -497,9 +498,9 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     }
 
     @Override
-    public boolean deleteUserFromSchool(int id, int schoolID)
+    public boolean deleteUserWithRoleFromSchool(int id, int schoolID)
             throws IOException, XmlRpcException, SQLException {
-        return getDelegate().deleteUserFromSchool(id, schoolID);
+        return getDelegate().deleteUserWithRoleFromSchool(id, schoolID);
     }
 
     @Override
@@ -521,9 +522,9 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     }
 
     @Override
-    public String setRights(int uid, int profileid, String rights)
+    public String setRights(int uid, int schoolGroup, int profileid, String rights)
             throws SQLException, IOException, XmlRpcException {
-        return getDelegate().setRights(uid, profileid, rights);
+        return getDelegate().setRights(uid, schoolGroup, profileid, rights);
     }
 
     @Override
@@ -600,4 +601,63 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
         return getDelegate().getToSchoolsFrom(schoolID);
     }
 
+    @Override
+    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().isInTeacherRole(userID, schoolID);
+    }
+
+    @Override
+    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+        return getDelegate().getStudentsOfClass(schoolClassID);
+    }
+
+    @Override
+    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+        return getDelegate().getTeachersOfClass(schoolClassID);
+    }
+
+    @Override
+    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+        return getDelegate().renameClass(classID, newName, newRegistrationKey, iconizer);
+    }
+
+    @Override
+    public boolean disconnectFromClass(int userID, int classID) throws IOException, XmlRpcException, SQLException {
+        return getDelegate().disconnectFromClass(userID, classID);
+    }
+
+    @Override
+    public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().getClassesOfTeacher(userID, schoolID);
+    }
+
+    @Override
+    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().isInStudentRole(userID, schoolID);
+    }
+    
+    @Override
+    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().getClassesOfStudent(userID,schoolID);
+    }
+
+    @Override
+    public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+    return getDelegate().removeStudentFromClass(classID, studentID);
+    }
+    
+    @Override
+    public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().removeStudentFromClass(classID, studentID);
+    }
+    
+    @Override
+    public boolean removeTeacherFromClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().removeTeacherFromClass(classID, teacherID);
+    }
+
+    @Override
+    public boolean addTeacherToClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().addTeacherToClass(classID, teacherID);
+    }
 }
