@@ -366,7 +366,7 @@ public class SecuredSchoolAdminSchoolManager {
             LOG.log(Level.FINER, "Fetched all {0} schoolClasses. ", new Object[]{schoolClasses.size()});
             domSchoolClasses = new ArrayList<DomSchoolClass>(schoolClasses.size());
             for (PersistentSchoolClass s : schoolClasses) {
-                domSchoolClasses.add(new DomSchoolClass(s));
+                domSchoolClasses.add(s.createDomSchoolClass());
             }
         }
         catch (Exception e) {
@@ -583,7 +583,7 @@ public class SecuredSchoolAdminSchoolManager {
                 domSchoolClasses = new ArrayList<>(tocList.size());
                 for (PersistentTeacherOfClass toc : tocList) {
                     PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentTeacherOfClassPK().getClassID());
-                    domSchoolClasses.add(new DomSchoolClass(s));
+                    domSchoolClasses.add(s.createDomSchoolClass());
                 }
                 LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1} for user {2}. ", new Object[]{domSchoolClasses.size(), thr.getPersistentHasRolePK().getUserID(), phr.getPersistentHasRolePK().getUserID()});
             }
@@ -624,7 +624,7 @@ public class SecuredSchoolAdminSchoolManager {
                 domSchoolClasses = new ArrayList<>(tocList.size());
                 for (PersistentStudentOfClass toc : tocList) {
                     PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentStudentOfClassPK().getClassID());
-                    domSchoolClasses.add(new DomSchoolClass(s));
+                    domSchoolClasses.add(s.createDomSchoolClass());
                 }
                 LOG.log(Level.FINER, "Fetched all {0} schoolClasses of student {1} for user {2}. ", new Object[]{domSchoolClasses.size(), thr.getPersistentHasRolePK().getUserID(), phr.getPersistentHasRolePK().getUserID()});
             }

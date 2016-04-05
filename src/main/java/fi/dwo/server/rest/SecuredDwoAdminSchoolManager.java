@@ -140,7 +140,7 @@ public class SecuredDwoAdminSchoolManager {
             try {
                 s = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(school.getDomSchool4DwoAdmin().getId()));
                 LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
-                return new DomSchoolFull(s);
+                return s.createDomSchoolFull();
             }
             catch (Exception e) {
                 LOG.log(Level.WARNING, "School " + school.getDomSchool4DwoAdmin().getId() + "Could not be found.", e);
@@ -179,9 +179,9 @@ public class SecuredDwoAdminSchoolManager {
             try {
                 schools = SchoolManager.findEntities();
                 LOG.log(Level.FINER, "Fetched all {0} schools. ", new Object[]{schools.size()});
-                domSchools = new ArrayList<DomSchool4DwoAdmin>(schools.size());
+                domSchools = new ArrayList<>(schools.size());
                 for (PersistentSchool s : schools) {
-                    domSchools.add(new DomSchool4DwoAdmin(s));
+                    domSchools.add(s.createDomSchool4DwoAdmin());
                 }
             }
             catch (Exception e) {

@@ -245,7 +245,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         dss.setPassword("pwd");
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);
-        nss.setDomSchoolClass(new DomSchoolClass(schoolClass));
+        nss.setDomSchoolClass(schoolClass.createDomSchoolClass());
         
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean result = instance.SubmitSingleSchoolStudent(sc, rss);

@@ -9,7 +9,6 @@ import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
-import static fi.dwo.commons.persistence.DomFactory.*;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -93,7 +92,7 @@ public class SecuredTeacherSchoolClassManager {
                 domSchoolClasses = new ArrayList<DomSchoolClass>(tocList.size());
                 for (PersistentTeacherOfClass toc : tocList) {
                     PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentTeacherOfClassPK().getClassID());
-                    domSchoolClasses.add(new DomSchoolClass(s));
+                    domSchoolClasses.add(s.createDomSchoolClass());
                 }
                 LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1]. ", new Object[]{domSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
             }
@@ -142,7 +141,7 @@ public class SecuredTeacherSchoolClassManager {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
             }
-            return new DomSchoolClassFull(persistentSchoolClass);
+            return persistentSchoolClass.createDomSchoolClassFull();
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");

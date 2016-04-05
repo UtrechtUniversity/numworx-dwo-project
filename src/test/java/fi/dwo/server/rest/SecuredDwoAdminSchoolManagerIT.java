@@ -80,7 +80,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         school.setImage(null);
         RestSchoolFull restSchool = new RestSchoolFull();
         restSchool.setRestContext(new DomContext());
-        restSchool.setDomSchoolFull(new DomSchoolFull(school));
+        restSchool.setDomSchoolFull(school.createDomSchoolFull());
 
         SecuredDwoAdminSchoolManager lclInstance = new SecuredDwoAdminSchoolManager();
         lclInstance.submitSchool(sc, restSchool);
@@ -110,8 +110,8 @@ public class SecuredDwoAdminSchoolManagerIT {
         expResult = SchoolManager.findEntity(3L);
         RestSchool4DwoAdmin restSchool = new RestSchool4DwoAdmin();
         restSchool.setRestContext(new DomContext());
-        DomSchool4DwoAdmin dSchoolIn = new DomSchool4DwoAdmin(expResult);
-        DomSchoolFull dSchoolResult = new DomSchoolFull(expResult);
+        DomSchool4DwoAdmin dSchoolIn = expResult.createDomSchool4DwoAdmin();
+        DomSchoolFull dSchoolResult = expResult.createDomSchoolFull();
         restSchool.setDomSchool4DwoAdmin(dSchoolIn);
         DomSchoolFull dSchoolOut = instance.getSchool(sc, restSchool);
         assertEquals(dSchoolOut.getExpire(), dSchoolResult.getExpire());
@@ -156,7 +156,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         school.setImage(null);
         RestSchoolFull restSchool = new RestSchoolFull();
         restSchool.setRestContext(new DomContext());
-        restSchool.setDomSchoolFull(new DomSchoolFull(school));
+        restSchool.setDomSchoolFull(school.createDomSchoolFull());
 
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
         Boolean result = instance.updateSchool(sc, restSchool);
@@ -172,7 +172,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         //try illegal action updating index and/or schoollogin
         school = SchoolManager.findBySchoolLogin("school01");
         school.setSchoolID(1L);
-        restSchool.setDomSchoolFull(new DomSchoolFull(school));
+        restSchool.setDomSchoolFull(school.createDomSchoolFull());
         try {
             result = instance.updateSchool(sc,restSchool);
             pSchool = SchoolManager.findBySchoolLogin("school01");
@@ -198,7 +198,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         PersistentSchool expResult = null;
         expResult = SchoolManager.findEntity(3L);
         RestSchool4DwoAdmin restSchool = new RestSchool4DwoAdmin();
-        DomSchool4DwoAdmin domSchool = new DomSchool4DwoAdmin(expResult);
+        DomSchool4DwoAdmin domSchool = expResult.createDomSchool4DwoAdmin();
         restSchool.setDomSchool4DwoAdmin(domSchool);
         domSchool.setId(MySQLPersistenceId.createPersistenceId(expResult.getSchoolID(), PersistenceClassType.PersistentSchool));
         domSchool.setSchoolLogin("school01");
