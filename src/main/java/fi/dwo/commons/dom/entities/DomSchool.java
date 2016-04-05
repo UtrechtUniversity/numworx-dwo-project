@@ -3,9 +3,7 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,13 +16,8 @@ public class DomSchool {
     private PersistenceId id;
     private String schoolName;
 
-    DomSchool(){
+    public DomSchool(){
         
-    }
-    
-    public DomSchool(PersistentSchool s){
-        this.id = MySQLPersistenceId.createPersistentId(s);
-        this.schoolName=s.getSchoolName();
     }
     
     /**

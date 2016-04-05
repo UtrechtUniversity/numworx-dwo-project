@@ -1,6 +1,8 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.dom.entities.DomRole;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -115,6 +117,17 @@ public class PersistentRole implements Serializable {
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentRole[ groupID=" + groupID + " ]";
+    }
+
+    public DomRole createDomRole() {
+        DomRole role = new DomRole();
+        buildDomRole(role);
+        return role;
+    }
+
+    private void buildDomRole(DomRole role) {
+        role.setId(MySQLPersistenceId.createPersistentId(this));
+        role.setRoleName(groupname);
     }
 
 }

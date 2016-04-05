@@ -3,7 +3,6 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.entities.PersistentSchool;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,15 +18,6 @@ public class DomSchoolFull extends DomSchool{
     private String schoolRights;
     private String image;
     private Date expire;
-
-    public DomSchoolFull(PersistentSchool s) {
-        super(s);
-        this.schoolLogin = s.getSchoolLogin();
-        this.export = s.getExport();
-        this.schoolRights = s.getSchoolRights();
-        this.image = s.getImage();
-        this.expire = s.getExpire();
-    }
 
     /**
      * @return the schoolLogin

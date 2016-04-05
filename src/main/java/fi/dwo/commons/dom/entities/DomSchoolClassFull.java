@@ -5,7 +5,6 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -23,12 +22,6 @@ public class DomSchoolClassFull extends DomSchoolClass {
         
     }
     
-    public DomSchoolClassFull(PersistentSchoolClass sc) {
-        super(sc);
-        iconizer = sc.getIconizer();
-        registrationKey = sc.getRegistrationKey();
-    }
-
     /**
      * @return the iconizer
      */

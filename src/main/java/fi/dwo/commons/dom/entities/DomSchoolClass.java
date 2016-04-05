@@ -3,9 +3,7 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -40,12 +38,6 @@ public class DomSchoolClass implements Cloneable {
         return sc;
     }
     
-    public DomSchoolClass(PersistentSchoolClass sc) {
-        this.schoolClassName = sc.getClass1();
-        this.id = MySQLPersistenceId.createPersistentId(sc);
-        this.hasRegKey=(sc.getRegistrationKey()!=null);
-    }
-
     /**
      * @return the id
      */

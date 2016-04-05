@@ -3,7 +3,6 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.entities.PersistentSchool;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,13 +17,7 @@ public class DomSchool4DwoAdmin extends DomSchool{
     public DomSchool4DwoAdmin() {
         
     }
-
-        
-    public DomSchool4DwoAdmin(PersistentSchool s) {
-        super(s);
-        this.schoolLogin = s.getSchoolLogin();
-    }
-
+       
     /**
      * @return the schoolLogin
      */

@@ -5,7 +5,6 @@
  */
 package fi.dwo.commons.dom.entities;
 
-import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -35,14 +34,6 @@ public class DomNewSchoolClass4Student extends DomSchoolClass {
         this.setSchoolClassName(clone.getSchoolClassName());
         registrationKey = null;
     }
-
-    
-    
-    public DomNewSchoolClass4Student(PersistentSchoolClass sc) {
-        super(sc);
-        registrationKey = sc.getRegistrationKey();
-    }
-
 
     /**
      * @return the registrationKey

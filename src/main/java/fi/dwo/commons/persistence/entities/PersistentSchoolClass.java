@@ -1,6 +1,10 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
+import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.commons.dom.entities.DomSchoolClassFull;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -144,6 +148,41 @@ public class PersistentSchoolClass implements Serializable {
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentSchoolClass[ classID=" + classID + " ]";
+    }
+
+    public DomSchoolClass createDomSchoolClass(){
+        DomSchoolClass schoolClass = new DomSchoolClass();
+        buildDomSchoolClass(schoolClass);
+        return schoolClass;
+    }
+    
+    private void buildDomSchoolClass(DomSchoolClass schoolClass){
+        schoolClass.setSchoolClassName(class1);
+        schoolClass.setId(MySQLPersistenceId.createPersistentId(this));
+        schoolClass.setHasRegKey(iconizer);
+    }
+
+    public DomSchoolClassFull createDomSchoolClassFull(){
+        DomSchoolClassFull schoolClass = new DomSchoolClassFull();
+        buildDomSchoolClassFull(schoolClass);
+        return schoolClass;
+    }
+    
+    private void buildDomSchoolClassFull(DomSchoolClassFull schoolClass){
+        buildDomSchoolClass(schoolClass);
+        schoolClass.setIconizer(iconizer);
+        schoolClass.setRegistrationKey(registrationKey);
+    }
+
+    public DomNewSchoolClass4Student createDomNewSchoolClass4Student(){
+        DomNewSchoolClass4Student schoolClass = new DomNewSchoolClass4Student();
+        buildDomNewSchoolClass4Student(schoolClass);
+        return schoolClass;
+    }
+    
+    private void buildDomNewSchoolClass4Student(DomNewSchoolClass4Student schoolClass) {
+        buildDomSchoolClass(schoolClass);
+//        schoolClass.setRegistrationKey(registrationKey); // clearly this info should neve be passed to a student
     }
     
 }
