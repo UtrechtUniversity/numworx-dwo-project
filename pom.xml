@@ -21,6 +21,9 @@
         	<warSourceDirectory>war</warSourceDirectory>
         	<warSourceIncludes>KeyboardGWT.css,DWOplayer.css,${runTarget},GeoGebra.html,MCSquared.jsp,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
  			<classifier>${warClassifier}</classifier>
+	<failOnMissingWebXml>false</failOnMissingWebXml>
+	<packagingIncludes>**</packagingIncludes>
+	<packagingExcludes>WEB-INF/**</packagingExcludes>
         </configuration>
       </plugin>
       <plugin>
