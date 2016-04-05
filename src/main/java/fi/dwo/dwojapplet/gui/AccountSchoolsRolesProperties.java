@@ -5,6 +5,7 @@ import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
+import fi.dwo.rest.dom.entities.DomSchool;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,11 +18,13 @@ public class AccountSchoolsRolesProperties {
 
     private static final Logger LOG = Logger.getLogger(AccountSchoolsRolesProperties.class.getName());
     private DomSchoolRoleAndClass selectedSrc;
+    private DomSchool nullSchool;
     private DomSchoolsRolesAndClasses srcs;
 
     public void init() throws Dwo2Exception {
         try {
             srcs = SecureUserAccountLoginsManager.getSchoolLogins();
+            setNullSchool(srcs.getNullSchool());
             selectedSrc = srcs.getActiveSchoolRoleAndClass();
         }
         catch (Dwo2Exception ex) {
@@ -70,10 +73,25 @@ public class AccountSchoolsRolesProperties {
         this.selectedSrc = selectedSrc;
     }
 
-    public void RemoveSchoolRoleAndClass(DomSchoolRoleAndClass selectedSrac) throws Dwo2Exception {
-        boolean result;
+    public Boolean RemoveSchoolRoleAndClass(DomSchoolRoleAndClass selectedSrac) throws Dwo2Exception {
+        Boolean result;
         result = SecureUserAccountLoginsManager.removeASchoolLogin(selectedSrac);
         init();
+        return result;
+    }
+
+    /**
+     * @return the nullSchool
+     */
+    public DomSchool getNullSchool() {
+        return nullSchool;
+    }
+
+    /**
+     * @param nullSchool the nullSchool to set
+     */
+    public void setNullSchool(DomSchool nullSchool) {
+        this.nullSchool = nullSchool;
     }
 
 }
