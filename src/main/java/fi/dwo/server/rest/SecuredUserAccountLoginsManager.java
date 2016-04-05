@@ -5,6 +5,9 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.rest.persistence.PersistenceClassType;
+import fi.dwo.rest.dom.entities.RoleType;
+import fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.rest.entities.RestNewSchoolLogin;
 import fi.dwo.rest.entities.RestSchoolRoleAndClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
