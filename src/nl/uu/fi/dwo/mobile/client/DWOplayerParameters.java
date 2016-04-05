@@ -64,4 +64,5 @@ public interface DWOplayerParameters {
 	EventBus getEventBus();
 // More to come....
 	OpdrNav.Prepare getPrepareInstance();
+	String getCourseDescription();
 }

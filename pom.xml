@@ -19,7 +19,8 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
         	<warSourceDirectory>war</warSourceDirectory>
-        	<warSourceIncludes>KeyboardGWT.css,DWOplayer.css,DWOplayer.html,GeoGebra.html,MCSquared.jsp,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
+        	<warSourceIncludes>KeyboardGWT.css,DWOplayer.css,${runTarget},GeoGebra.html,MCSquared.jsp,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
+ 			<classifier>${warClassifier}</classifier>
         </configuration>
       </plugin>
       <plugin>
@@ -28,7 +29,7 @@
         <version>${gwtVersion}</version>
          <configuration>
               <module>${gwtModule}</module>
-              <runTarget>${project.artifactId}.html</runTarget>
+              <runTarget>${runTarget}</runTarget>
         	  <warSourceDirectory>war</warSourceDirectory>
         	  <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>        
              </configuration>
@@ -119,6 +120,8 @@
   	<maven.test.skip>true</maven.test.skip>
   	<gwtModule>${project.groupId}.${project.artifactId}</gwtModule>
   	<finalName>${project.artifactId}</finalName>
+  	<runTarget>${project.artifactId}.html</runTarget>
+  	<warClassifier />
   </properties>
   <profiles>
   	<profile>
@@ -155,6 +158,15 @@
   		<properties>
   			<finalName>MC2LMS</finalName>
   			<gwtModule>${project.groupId}.MC2LMS</gwtModule>
+  		</properties>
+  	</profile>
+  	<profile>
+  		<id>DWO2player</id>
+  		<properties>
+  			<finalName>DWO2player</finalName>
+  			<gwtModule>${project.groupId}.DWO2player</gwtModule>
+  			<runTarget>${finalName}.html</runTarget>
+  			<warClassifier>dwo2</warClassifier>
   		</properties>
   	</profile> 
   </profiles>

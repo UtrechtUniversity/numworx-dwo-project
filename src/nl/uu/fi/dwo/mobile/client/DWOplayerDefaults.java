@@ -51,7 +51,7 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	}
 
 	private NavigationBundle navigationBundle;
-	protected String launchData;
+	protected String launchData, courseDescription;
 	
 	@Override
 	public NavigationCss navigationcss() {		
@@ -125,6 +125,9 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		launchData = http +"//"
 				+ host
 				+ "/DWOmAccess/getJSONLaunchDataBytes?s=";
+		courseDescription = http + "//"
+				+ host
+				+ "/DWOmAccess/getCourseDescription?c=";
 	}
 
 //	protected String getDefaultHost() {
@@ -141,7 +144,13 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	public String getLaunchData() {
 		return launchData;
 	}
-
+	
+	@Override
+	public String getCourseDescription() {
+		return courseDescription;
+	}
+	
+	
 	@Override
 	public EventBus getEventBus() {
 		return new SimpleEventBus();

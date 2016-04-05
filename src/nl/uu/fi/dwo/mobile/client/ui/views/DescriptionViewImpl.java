@@ -34,7 +34,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 public class DescriptionViewImpl extends XMLView implements DescriptionView, EntryPoint, OpdrNavIF {
 
 	private static final String GET_COURSE_DESCRIPTION = 
-			Window.Location.getProtocol() +"//"+ DWOplayer.PARAMETERS.getHost()+"/DWOmAccess/getCourseDescription?c=";
+			DWOplayer.PARAMETERS.getCourseDescription();
 	
 	
 	private SimplePanel main;
