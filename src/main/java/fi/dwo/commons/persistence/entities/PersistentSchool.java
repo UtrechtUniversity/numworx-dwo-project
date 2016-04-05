@@ -212,7 +212,7 @@ public class PersistentSchool implements Serializable {
     }
 
     private void buildDomSchool(DomSchool school) {
-        if (school.getId() != null) {
+        if (this.schoolID != null) {
             school.setId(MySQLPersistenceId.createPersistentId(this));
         }
         school.setSchoolName(this.schoolName);

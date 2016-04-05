@@ -124,7 +124,7 @@ public class Text_nl extends ListResourceBundle {
         {TextMapper.GUIR_OPT_STUDENT, "Leerling"},
         {TextMapper.GUIR_OPT_TEACHER, "Docent"},
         {TextMapper.GUIR_OPT_ADMIN, "Administrator"},
-        {TextMapper.GUIR_OPT_NOSCHOOL, "Zonder school"},
+        {TextMapper.GUIR_OPT_NULLSCHOOL, "Zonder school"},
         {TextMapper.GUIR_OPT_SCHOOLCODE, "Sleutelcode"},
         {TextMapper.GUIR_OPT_SCHOOLADMIN, "Schooladmin"},
         {TextMapper.GUIR_ERR_REGISTER, "Fout bij het Aanmelden"},
