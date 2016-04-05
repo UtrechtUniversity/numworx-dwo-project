@@ -1,0 +1,19 @@
+package fi.restrpcgwt.client;
+
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
+
+import com.google.gwt.http.client.RequestBuilder;
+
+class Authenticator implements DispatcherFilter {
+	String username;
+	String password;
+	@Override
+	public boolean filter(Method method, RequestBuilder builder) {
+		boolean haspassword = username != null && password != null;
+		if(haspassword)builder.setPassword(password);
+		if(haspassword)builder.setUser(username);
+		builder.setIncludeCredentials(haspassword);
+		return true;
+	}
+}

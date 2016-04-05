@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee">
+	<servlet>
+		<servlet-name>DWO2Access</servlet-name>
+		<servlet-class>fi.restrpcgwt.server.DWO2Access</servlet-class>
+		<init-param>
+			<param-name>dwo2server</param-name>
+			<param-value>http://localhost:8080/DWO/DWOServer</param-value>
+		</init-param>
+	</servlet>
+  
+  	<servlet-mapping>
+  		<servlet-name>DWO2Access</servlet-name>
+  		<url-pattern>/DWO/DWOServer/*</url-pattern>
+  	</servlet-mapping>
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>RestRpcGWT.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>
