@@ -1,8 +1,8 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomUserFull;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import java.util.logging.Logger;
@@ -42,7 +42,7 @@ public class AccountDataProperties {
     /**
      * Update the user.
      * 
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public void Update() throws Dwo2Exception{
             user = SecureUserAccountManager.updateAccountData(user);

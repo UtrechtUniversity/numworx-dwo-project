@@ -8,7 +8,7 @@ import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.scorm.SCORM2004APIInterface;
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;

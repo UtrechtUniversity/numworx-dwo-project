@@ -1,12 +1,12 @@
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.rest.RestListClassTypes;
-import fi.dwo.commons.rest.entities.RestNewSchoolClass4Student;
-import fi.dwo.commons.rest.entities.RestSchoolClass;
+import fi.dwo.rest.dom.entities.DomContext;
+import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.RestListClassTypes;
+import fi.dwo.rest.entities.RestNewSchoolClass4Student;
+import fi.dwo.rest.entities.RestSchoolClass;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.List;

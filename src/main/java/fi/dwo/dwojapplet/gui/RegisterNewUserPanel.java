@@ -1,7 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomNewUser;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.dom.entities.DomNewUser;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;

@@ -3,13 +3,13 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomGetSingleSchoolStudent;
-import fi.dwo.commons.dom.entities.DomRemoveStudentFromSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
-import fi.dwo.commons.dom.entities.DomStudent;
-import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomStudent;
+import fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolClassManager;
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolManager;
 import java.util.ArrayList;

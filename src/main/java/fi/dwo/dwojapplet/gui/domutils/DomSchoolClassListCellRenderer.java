@@ -3,7 +3,7 @@
  */
 package fi.dwo.dwojapplet.gui.domutils;
 
-import fi.dwo.commons.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;

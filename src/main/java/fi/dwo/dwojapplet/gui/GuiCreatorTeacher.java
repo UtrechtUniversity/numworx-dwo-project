@@ -5,7 +5,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.base64code.StringCodeObject;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;

@@ -6,10 +6,10 @@ package fi.dwo.dwojapplet.domain;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
-import fi.dwo.commons.dom.entities.DomUserFull;
-import fi.dwo.commons.dom.entities.DomSchool;
-import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomSchool;
+import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;

@@ -1,10 +1,10 @@
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomUserFull;
-import fi.dwo.commons.dom.entities.DomSchool;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.rest.entities.RestFullUser;
+import fi.dwo.rest.dom.entities.DomContext;
+import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomSchool;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.entities.RestFullUser;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
@@ -30,7 +30,7 @@ public class SecureUserAccountManager {
      * DwoHelper.
      *
      * @return
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static DomUserFull getAccountData() throws Dwo2Exception {
         DomUserFull user;
@@ -46,7 +46,7 @@ public class SecureUserAccountManager {
      *
      * @param user
      * @return
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static DomUserFull updateAccountData(DomUserFull user) throws Dwo2Exception {
         RestFullUser restUser = new RestFullUser();
@@ -77,7 +77,7 @@ public class SecureUserAccountManager {
      * Fields updated are email, password and the full name of the user. The
      * full name exists out of the first, insertion and family name.
      *
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static Boolean removeAccountData() throws Dwo2Exception {
         Boolean b;

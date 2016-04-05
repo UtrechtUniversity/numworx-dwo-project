@@ -1,10 +1,10 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomUserFull;
-import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClassFull;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;

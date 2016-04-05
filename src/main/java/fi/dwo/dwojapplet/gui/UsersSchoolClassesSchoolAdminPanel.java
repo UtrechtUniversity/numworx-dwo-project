@@ -4,13 +4,13 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClassFull;
-import fi.dwo.commons.dom.entities.DomStudent;
-import fi.dwo.commons.dom.entities.DomTeacher;
-import fi.dwo.commons.dom.entities.DomUser;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import fi.dwo.rest.dom.entities.DomStudent;
+import fi.dwo.rest.dom.entities.DomTeacher;
+import fi.dwo.rest.dom.entities.DomUser;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
@@ -242,7 +242,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
      *
      * @param user
      * @param type
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public UsersSchoolClassesSchoolAdminPanel(DomUser user, UserType type) throws Dwo2Exception {
         super(null);

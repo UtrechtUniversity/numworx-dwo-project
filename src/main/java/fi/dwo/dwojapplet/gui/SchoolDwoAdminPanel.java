@@ -4,8 +4,8 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;

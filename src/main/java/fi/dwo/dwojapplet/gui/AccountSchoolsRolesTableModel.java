@@ -1,7 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomSchoolRoleAndClass;
+import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.Image;
 import java.util.ArrayList;

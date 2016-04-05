@@ -1,6 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
+import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.Color;
 import static java.awt.Component.LEFT_ALIGNMENT;

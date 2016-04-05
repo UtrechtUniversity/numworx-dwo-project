@@ -1,20 +1,20 @@
 /* Copyrighted 2015. */
 package fi.dwo.dwojapplet.REST;
 
-import fi.dwo.commons.dom.entities.DomRole;
-import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolAdmin;
-import fi.dwo.commons.dom.entities.DomSchoolsRolesAndClasses;
-import fi.dwo.commons.dom.entities.DomStudent;
-import fi.dwo.commons.dom.entities.DomUser;
-import fi.dwo.commons.dom.entities.DomTeacher;
-import fi.dwo.commons.dom.entities.DomTeacherAndHasRole;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
-import fi.dwo.commons.exceptions.Dwo2RestException;
-import fi.dwo.commons.rest.RestListClassTypes;
-import static fi.dwo.commons.rest.RestListClassTypes.DomSchool4DwoAdmin;
+import fi.dwo.rest.dom.entities.DomRole;
+import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import fi.dwo.rest.dom.entities.DomStudent;
+import fi.dwo.rest.dom.entities.DomUser;
+import fi.dwo.rest.dom.entities.DomTeacher;
+import fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.exceptions.Dwo2RestException;
+import fi.dwo.rest.RestListClassTypes;
+import static fi.dwo.rest.RestListClassTypes.DomSchool4DwoAdmin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -68,7 +68,7 @@ class RestManager {
      * @param path sub context path servlet.
      * @param c Class type to return.
      * @return A list of class c objects.
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public <T> T get(String path, Class<T> c) throws Dwo2Exception {
         CacheControl cache = new CacheControl();
@@ -111,7 +111,7 @@ class RestManager {
      * @param path sub context path servlet.
      * @param type
      * @return A list of Class c.
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public <T> List<T> getList(String path, RestListClassTypes type) throws Dwo2RestException, Dwo2Exception {
         CacheControl cache = new CacheControl();
@@ -196,7 +196,7 @@ class RestManager {
      * @param type
      * @param o
      * @return A list of Class c.
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public <T> List<T> getPutList(String path, RestListClassTypes type, Object o) throws Dwo2RestException, Dwo2Exception {
         CacheControl cache = new CacheControl();
@@ -274,7 +274,7 @@ class RestManager {
      * @param c Class type to return.
      * @param o object of Class type c being send.
      * @return A list of class c objects.
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public <T> T put(String path, Class<T> c, Object o) throws Dwo2Exception {
         CacheControl cache = new CacheControl();

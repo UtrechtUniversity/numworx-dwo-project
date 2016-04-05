@@ -1,7 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomSchoolClassFull;
+import fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.commons.util.RandomPasswordGenerator;
 import java.awt.Color;

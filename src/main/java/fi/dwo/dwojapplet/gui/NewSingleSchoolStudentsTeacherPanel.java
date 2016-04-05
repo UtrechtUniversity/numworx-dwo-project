@@ -4,11 +4,11 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomNewSingleSchoolStudent;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Color;
@@ -202,7 +202,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
      *
      * @param sc
      * @param userType
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     private void init(DomSchoolClass sc, UserType userType) throws Dwo2Exception {
         schoolClass = sc;

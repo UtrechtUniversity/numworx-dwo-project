@@ -1,9 +1,9 @@
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomNewUser;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.rest.entities.RestNewUser;
+import fi.dwo.rest.dom.entities.DomContext;
+import fi.dwo.rest.dom.entities.DomNewUser;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import java.util.logging.Logger;
 

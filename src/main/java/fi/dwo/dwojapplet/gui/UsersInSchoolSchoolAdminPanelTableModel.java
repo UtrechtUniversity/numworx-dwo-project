@@ -3,10 +3,10 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomSchoolAdmin;
-import fi.dwo.commons.dom.entities.DomStudent;
-import fi.dwo.commons.dom.entities.DomTeacher;
-import fi.dwo.commons.dom.entities.DomUser;
+import fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import fi.dwo.rest.dom.entities.DomStudent;
+import fi.dwo.rest.dom.entities.DomTeacher;
+import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Image;

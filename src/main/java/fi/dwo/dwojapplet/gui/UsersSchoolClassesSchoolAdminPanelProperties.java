@@ -3,17 +3,17 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomRemoveStudentFromSchoolClass;
-import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClassFull;
-import fi.dwo.commons.dom.entities.DomStudent;
-import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
-import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
-import fi.dwo.commons.dom.entities.DomTeacher;
-import fi.dwo.commons.dom.entities.DomUser;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
+import fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import fi.dwo.rest.dom.entities.DomStudent;
+import fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
+import fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
+import fi.dwo.rest.dom.entities.DomTeacher;
+import fi.dwo.rest.dom.entities.DomUser;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolClassManager;
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolManager;
 import java.util.List;

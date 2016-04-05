@@ -2,7 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\GuiCreator.java
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
@@ -166,7 +166,7 @@ public class GuiCreator {
      * @param username The username of the user.
      * @param password The password of the user.
      * @throws fi.dwo.commons.exceptions.LoginException
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      *
      */
     public void loginWithMd5(String username, String password) throws LoginException, Dwo2Exception {

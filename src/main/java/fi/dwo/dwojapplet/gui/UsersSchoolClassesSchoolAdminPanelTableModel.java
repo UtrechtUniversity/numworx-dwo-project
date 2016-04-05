@@ -1,10 +1,10 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomTeacher;
-import fi.dwo.commons.dom.entities.DomUser;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomTeacher;
+import fi.dwo.rest.dom.entities.DomUser;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.Image;
 import java.util.ArrayList;

@@ -3,7 +3,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.copyright.FIButton;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;

@@ -1,9 +1,9 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureStudentSchoolClassManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class SchoolClassManagementStudentProperties {
 
     /**
      * @param activeSchoolClass
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public void setActiveSchoolClass(DomSchoolClass activeSchoolClass) throws Dwo2Exception {
         SecureStudentSchoolClassManager.setActiveSchoolClass(activeSchoolClass);

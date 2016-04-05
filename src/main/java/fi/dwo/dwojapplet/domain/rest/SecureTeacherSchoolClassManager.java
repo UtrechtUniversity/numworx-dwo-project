@@ -1,28 +1,28 @@
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.commons.dom.entities.DomContext;
-import fi.dwo.commons.dom.entities.DomGetSingleSchoolStudent;
-import fi.dwo.commons.dom.entities.DomNewSingleSchoolStudent;
-import fi.dwo.commons.dom.entities.DomRemoveStudentFromSchoolClass;
-import fi.dwo.commons.dom.entities.DomRemoveTeacherFromSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClassFull;
-import fi.dwo.commons.dom.entities.DomSingleSchoolStudent;
-import fi.dwo.commons.dom.entities.DomStudent;
-import fi.dwo.commons.dom.entities.DomSubmitStudentToSchoolClass;
-import fi.dwo.commons.dom.entities.DomSubmitTeacherToSchoolClass;
-import fi.dwo.commons.dom.entities.DomTeacher;
-import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.commons.rest.RestListClassTypes;
-import fi.dwo.commons.rest.entities.RestGetSingleSchoolStudent;
-import fi.dwo.commons.rest.entities.RestNewSingleSchoolStudent;
-import fi.dwo.commons.rest.entities.RestRemoveStudentFromSchoolClass;
-import fi.dwo.commons.rest.entities.RestRemoveTeacherFromSchoolClass;
-import fi.dwo.commons.rest.entities.RestSchoolClass;
-import fi.dwo.commons.rest.entities.RestSchoolClassFull;
-import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
-import fi.dwo.commons.rest.entities.RestSubmitStudentToSchoolClass;
-import fi.dwo.commons.rest.entities.RestSubmitTeacherToSchoolClass;
+import fi.dwo.rest.dom.entities.DomContext;
+import fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
+import fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomStudent;
+import fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
+import fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
+import fi.dwo.rest.dom.entities.DomTeacher;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.RestListClassTypes;
+import fi.dwo.rest.entities.RestGetSingleSchoolStudent;
+import fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
+import fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
+import fi.dwo.rest.entities.RestSchoolClass;
+import fi.dwo.rest.entities.RestSchoolClassFull;
+import fi.dwo.rest.entities.RestSingleSchoolStudent;
+import fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
+import fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.List;
@@ -45,7 +45,7 @@ public class SecureTeacherSchoolClassManager {
      * DwoHelper.
      *
      * @return
-     * @throws fi.dwo.commons.exceptions.Dwo2Exception
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static List<DomSchoolClass> getTeachersSchoolClasses() throws Dwo2Exception {
         List<DomSchoolClass> src;
