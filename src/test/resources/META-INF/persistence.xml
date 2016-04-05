@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="DWO_TestDB" transaction-type="RESOURCE_LOCAL">
+    <!-- include all and any required persistent entity in here exclude-unlisted-classes is being ignored!-->
+    <!--        <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider> -->
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>fi.dwo.commons.persistence.entities.PersistentHasRole</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentUser</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentScoContext</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentScoData</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentAppletConfig</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSchoolClass</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentApplet</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentRole</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentDwoProfile</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentTeacherOfClass</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSchoolGroup</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentImage</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentScoData</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentScoContext</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSamlUser</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentStudentOfClass</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentCourseSequence</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentJars</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentCourse</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentSchool</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentClassCourse</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentFromTo</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/dwojunittest"/>
+      <property name="javax.persistence.jdbc.user" value="test"/>
+      <property name="javax.persistence.jdbc.password" value="test"/>
+      <property name="eclipselink.weaving" value="static"/>
+      <property name="eclipselink.weaving.lazy" value="true"/>
+      <property name="eclipselink.allow-zero-id" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>

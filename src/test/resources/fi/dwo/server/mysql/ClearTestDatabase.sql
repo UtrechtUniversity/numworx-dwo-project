@@ -1,0 +1,41 @@
+DROP TABLE IF EXISTS `tblapplet`;
+DROP TABLE IF EXISTS `tblappletconfig`;
+DROP TABLE IF EXISTS `tblclass`;
+DROP TABLE IF EXISTS `tblclasscourse`;
+DROP TABLE IF EXISTS `tblcourse`;
+DROP TABLE IF EXISTS `tblcoursesequence`;
+DROP TABLE IF EXISTS `tbldwoprofile`;
+DROP TABLE IF EXISTS `tbldwosystemparameters`;
+DROP TABLE IF EXISTS `tblfromto`;
+DROP TABLE IF EXISTS `tblgroup`;
+DROP TABLE IF EXISTS `tblhasrole`;
+DROP TABLE IF EXISTS `tblimage`;
+DROP TABLE IF EXISTS `tbljars`;
+DROP TABLE IF EXISTS `tblsamluser`;
+DROP TABLE IF EXISTS `tblschool`;
+DROP TABLE IF EXISTS `tblschoolgroup`;
+DROP TABLE IF EXISTS `tblsco`;
+DROP TABLE IF EXISTS `tblscocontext`;
+DROP TABLE IF EXISTS `tblscodata`;
+DROP TABLE IF EXISTS `tblscoview`;
+DROP TABLE IF EXISTS `tblstudentof`;
+DROP TABLE IF EXISTS `tblstudentscocontext`;
+DROP TABLE IF EXISTS `tblstudentscodata`;
+DROP TABLE IF EXISTS `tblteacherof`;
+DROP TABLE IF EXISTS `tbluser`;
+DROP TABLE IF EXISTS `tomcat_roles_view`;
+DROP TABLE IF EXISTS `tomcat_user_view`;
+
+SET FOREIGN_KEY_CHECKS = 0;
+SET GROUP_CONCAT_MAX_LEN=32768;
+SET @views = NULL;
+SELECT GROUP_CONCAT('`', TABLE_NAME, '`') INTO @views
+  FROM information_schema.views
+  WHERE table_schema = (SELECT DATABASE());
+SELECT IFNULL(@views,'dummy') INTO @views;
+
+SET @views = CONCAT('DROP VIEW IF EXISTS ', @views);
+PREPARE stmt FROM @views;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+SET FOREIGN_KEY_CHECKS = 1;
