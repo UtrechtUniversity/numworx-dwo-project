@@ -3,6 +3,7 @@
 package fi.dwo.server.persistence;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,16 +19,32 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnect;
+import fi.beans.scorm.ScormAdapter;
 import fi.beans.scorm2xml.Scorm2Xml;
 //import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.SchoolGroupIndices;
+import fi.dwo.commons.persistence.ScormAccessIF;
+
+
+
+
+
+
+
+
+
+
+
+
+
 //import fi.dwo.client.persistence.PersistenceFacade;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -38,7 +55,7 @@ import java.util.logging.Logger;
  *
  *
  */
-public class DbAccess extends DbConnect implements DbAccessIF {
+public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF {
 
     private static final Logger LOG = Logger.getLogger(DbAccess.class.getName());
 
@@ -4425,5 +4442,147 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
         return (Integer) ((Hashtable) v.get(0)).get("schoolGroupID");
     }
+
+// This part is GWT only, bulk set/get value    
+	static private String[] KEYS = { 
+		"cmi.suspend_data",
+		"cmi.score.raw",
+		"cmi.total_time",
+		"cmi.location",
+		"cmi.completion_status"
+	};
+
+	static private final Properties CONVERT = new Properties();
+	static private final CmiConvert CMI = new CmiConvert(); // utility class
+
+	private static final String SESSION_TIME = "session_time";
+	private static final String CMI_SESSION_TIME = "cmi." + SESSION_TIME;
+	private static final String TOTAL_TIME = "total_time";
+	private static final String CMI_TOTAL_TIME = "cmi." + TOTAL_TIME;
+	private static final String SUSPEND_DATA = "suspendData";
+
+	static {
+		CONVERT.put("cmi.suspend_data", SUSPEND_DATA);
+		CONVERT.put("cmi.score.raw", "score");
+		CONVERT.put(CMI_SESSION_TIME, SESSION_TIME);
+		CONVERT.put(CMI_TOTAL_TIME, TOTAL_TIME);
+	}
+
+	static private String c(String key) {
+		return CONVERT.getProperty(key, key);
+	}
+
+	// replace chars > 100 with \ u escapes
+	
+	static private String convertUEsc(String s) {
+		char[] charArray = s.toCharArray();
+		int length = charArray.length;
+		int start = 0;
+		for ( ; start < length; start ++) {
+			if (needEscape(charArray[start])) break;
+		}
+		if( start == length ) return s;
+		StringBuilder b = new StringBuilder();
+		if( start > 0)
+			b.append(charArray, 0, start);	
+		for( ; start < length; start ++ ){
+			char c = charArray[start];
+		    if( needEscape(c)  ){
+		        b.append( "\\u" ).append( toHexString(c) );
+		    }else{
+		        b.append( c );
+		    }
+		}
+		return b.toString();
+	}
+
+	private static String toHexString(char c) {
+		String r = Integer.toHexString(c);
+		while( r.length() < 4) r = '0' + r;
+		return r;
+	}
+
+	private static boolean needEscape(char c) {
+		return c > '\u00FF' // || c < ' '
+		;
+	}
+
+	
+	@Override
+	public boolean Commit(int userID, int schoolGroupID, int scoID,
+			Hashtable map) throws Exception {
+		Set<Map.Entry<String,String>> entries = map.entrySet();
+		for (Map.Entry<String, String> entry : entries) {
+			String iDataModelElement = c(entry.getKey());
+			String iValue = entry.getValue();
+			if(SESSION_TIME.equals(iDataModelElement) || TOTAL_TIME.equals(iDataModelElement))
+			{
+				iValue = CMI.to1_2Timex(CMI.from2004Time(iValue)); // sessiontime in 1.2 format.
+			}
+			if(iDataModelElement.equals(SUSPEND_DATA))
+			{
+				iValue = convertUEsc(iValue);
+			}		
+			LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
+		}
+		return true;
+	}
+
+	@Override
+	public Hashtable Initialize(int userID, int schoolGroupID, int scoID)
+			throws Exception {
+		return Initialize(userID, schoolGroupID, scoID, KEYS);
+	}
+
+	@Override
+	public Hashtable Initialize(int userID, int schoolGroupID, int scoID,
+			Vector keys) throws Exception {
+		String[] strings = (String[]) keys.toArray(new String[keys.size()]);
+		return Initialize(userID, schoolGroupID, scoID, strings);
+	}
+
+	private Hashtable Initialize(int userID, int schoolGroupID, int scoID,
+			String[] strings) throws IOException, XmlRpcException, SQLException {
+		Hashtable result = new Hashtable();
+		for (int i = 0; i < strings.length; i++) {
+			String key = strings[i];
+			String value = LMSGetValue(scoID, userID, schoolGroupID, c(key));
+			if(CMI_TOTAL_TIME.equals(key))
+				value = CMI.to2004Timex(CMI.from1_2Timex(value));
+			if(value.length()>0)
+				result.put(key, value);
+		}
+		return result;
+	}
+
+}
+
+class CmiConvert extends ScormAdapter {
+
+	protected CmiConvert() {
+		super(true);
+	}
+
+	@Override
+	public String GetValue(String cmiElement) {
+		return null;
+	}
+
+	@Override
+	public String SetValue(String key, String value) {
+		return null;
+	}
+
+	protected long from1_2Timex(String str) {
+		return super.from1_2Time(str);
+	}
+
+	protected String to1_2Timex(long time) {
+		return super.to1_2Time(time);
+	}
+
+	protected String to2004Timex(long time) {
+		return super.to2004Time(time);
+	}
 
 }

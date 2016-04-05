@@ -3,6 +3,7 @@ package fi.dwo.server.persistence;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -30,8 +31,11 @@ import com.jamonapi.proxy.MonProxyFactory;
 import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.ScormAccessIF;
+
 import java.sql.PreparedStatement;
 import java.util.HashMap;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -56,7 +60,7 @@ public class DataSourceAccessServlet extends Servlet {
         return emf.createEntityManager();
     }
 
-    static class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF {
+    static class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF, ScormAccessIF {
 
         static private int count;
 
