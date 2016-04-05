@@ -3,7 +3,7 @@
  */
 package fi.dwo.rest.dom.entities;
 
-import fi.dwo.commons.persistence.PersistenceId;
+import fi.dwo.rest.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
