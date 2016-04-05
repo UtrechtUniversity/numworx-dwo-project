@@ -646,6 +646,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			HttpServletResponse resp) throws IOException {
 		String c = req.getParameter("c");
 		OutputStream out = getOutputStream(req, resp);
+		resp.setContentType("application/json");
 		try {
 			int course = Integer.parseInt(c);
 			getCourseDescription(course, out);
@@ -731,7 +732,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	private OutputStream getOutputStream(HttpServletRequest req,
 			HttpServletResponse resp) throws IOException {
 		String encoding = req.getHeader("Accept-Encoding");		
-		resp.setContentType("text/xml");
+		resp.setContentType("text/plain");
 		resp.setHeader("Access-Control-Allow-Origin" ,"*");
 		resp.setCharacterEncoding(UTF_8);
 		OutputStream out;
