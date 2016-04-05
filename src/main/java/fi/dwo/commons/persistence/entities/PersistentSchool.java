@@ -1,9 +1,9 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.dom.entities.DomSchool;
-import fi.dwo.commons.dom.entities.DomSchool4DwoAdmin;
-import fi.dwo.commons.dom.entities.DomSchoolFull;
+import fi.dwo.rest.dom.entities.DomSchool;
+import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import fi.dwo.rest.dom.entities.DomSchoolFull;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.util.DwoDateUtilities;
 import java.io.Serializable;
@@ -163,8 +163,8 @@ public class PersistentSchool implements Serializable {
     }
 
     /**
-     * License expires if the expiration day is past. The 
-     * java.util.Date in the persistent store is to be in UTC.
+     * License expires if the expiration day is past. The java.util.Date in the
+     * persistent store is to be in UTC.
      *
      * @return
      */
@@ -205,39 +205,42 @@ public class PersistentSchool implements Serializable {
         return false;
     }
 
-    public DomSchool createDomSchool(){
+    public DomSchool createDomSchool() {
         DomSchool school = new DomSchool();
         buildDomSchool(school);
         return school;
     }
-    
-    private void buildDomSchool(DomSchool school){
-        school.setId(MySQLPersistenceId.createPersistentId(this));
+
+    private void buildDomSchool(DomSchool school) {
+        if (school.getId() != null) {
+            school.setId(MySQLPersistenceId.createPersistentId(this));
+        }
         school.setSchoolName(this.schoolName);
     }
 
-    public DomSchool4DwoAdmin createDomSchool4DwoAdmin(){
+    public DomSchool4DwoAdmin createDomSchool4DwoAdmin() {
         DomSchool4DwoAdmin school = new DomSchool4DwoAdmin();
         buildDomSchool4DwoAdmin(school);
         return school;
     }
-    private void buildDomSchool4DwoAdmin(DomSchool4DwoAdmin school){
+
+    private void buildDomSchool4DwoAdmin(DomSchool4DwoAdmin school) {
         buildDomSchool(school);
         school.setSchoolLogin(this.schoolLogin);
     }
-    
 
-    public DomSchoolFull createDomSchoolFull(){
+    public DomSchoolFull createDomSchoolFull() {
         DomSchoolFull school = new DomSchoolFull();
         buildDomSchoolFull(school);
         return school;
     }
-    private void buildDomSchoolFull(DomSchoolFull school){
+
+    private void buildDomSchoolFull(DomSchoolFull school) {
         buildDomSchool(school);
         school.setSchoolLogin(schoolLogin);
         school.setExport(export);
         school.setImage(image);
         school.setSchoolRights(schoolRights);
         school.setExpire(expire);
-    }    
+    }
 }

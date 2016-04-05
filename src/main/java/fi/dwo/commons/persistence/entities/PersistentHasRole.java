@@ -1,7 +1,7 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.dom.entities.DomHasRole;
+import fi.dwo.rest.dom.entities.DomHasRole;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceClassType;
 import java.io.Serializable;
@@ -36,13 +36,14 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = "PersistentHasRole.findByRights", query = "SELECT p FROM PersistentHasRole p WHERE p.rights = :rights"),
     @NamedQuery(name = "PersistentHasRole.findByLastLogin", query = "SELECT p FROM PersistentHasRole p WHERE p.lastLogin = :lastLogin")})
 public class PersistentHasRole implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected PersistentHasRolePK persistentHasRolePK;
     @Column(name = "classID")
     private Long classID;
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="classID", insertable=false, updatable=false )
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "classID", insertable = false, updatable = false)
     private PersistentSchoolClass schoolClass;
     @Basic(optional = false)
     @Column(name = "registerDate", nullable = false)
@@ -53,13 +54,12 @@ public class PersistentHasRole implements Serializable {
     @Column(name = "lastLogin")
     @Temporal(TemporalType.DATE)
     private Date lastLogin;
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="schoolGroupID", insertable=false, updatable=false )
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schoolGroupID", insertable = false, updatable = false)
     private PersistentSchoolGroup schoolGroup;
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="userID", insertable=false, updatable=false )
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userID", insertable = false, updatable = false)
     private PersistentUser user;
-    
 
     public PersistentHasRole() {
     }
@@ -131,12 +131,9 @@ public class PersistentHasRole implements Serializable {
             return false;
         }
         PersistentHasRole other = (PersistentHasRole) object;
-        return !(
-                    (this.persistentHasRolePK == null && other.persistentHasRolePK != null)
-                || 
-                    (this.persistentHasRolePK != null 
-                        && !this.persistentHasRolePK.equals(other.persistentHasRolePK))
-                );
+        return !((this.persistentHasRolePK == null && other.persistentHasRolePK != null)
+                || (this.persistentHasRolePK != null
+                && !this.persistentHasRolePK.equals(other.persistentHasRolePK)));
     }
 
     @Override
@@ -171,16 +168,16 @@ public class PersistentHasRole implements Serializable {
     public void setUser(PersistentUser user) {
         this.user = user;
     }
-    
-    
-    public DomHasRole buildDomHasRole(){
+
+    public DomHasRole buildDomHasRole() {
         DomHasRole hr = new DomHasRole();
-        hr.setId(MySQLPersistenceId.createPersistentId((PersistentHasRole)this));
+        if (this.persistentHasRolePK != null) {
+            hr.setId(MySQLPersistenceId.createPersistentId((PersistentHasRole) this));
+            hr.setSchoolGroupId(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getSchoolGroupID().longValue(), PersistenceClassType.PersistentSchoolGroup));
+            hr.setUserId(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getUserID().longValue(), PersistenceClassType.PersistentUser));
+        }
         hr.setRights(this.getRights());
-        hr.setSchoolGroupId(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getSchoolGroupID().longValue(),PersistenceClassType.PersistentSchoolGroup));
-        hr.setUserId(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getUserID().longValue(),PersistenceClassType.PersistentUser));
         return hr;
     }
-    
-    
+
 }

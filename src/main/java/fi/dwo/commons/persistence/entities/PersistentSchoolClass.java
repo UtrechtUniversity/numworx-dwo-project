@@ -1,9 +1,9 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.dom.entities.DomNewSchoolClass4Student;
-import fi.dwo.commons.dom.entities.DomSchoolClass;
-import fi.dwo.commons.dom.entities.DomSchoolClassFull;
+import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -158,7 +158,9 @@ public class PersistentSchoolClass implements Serializable {
     
     private void buildDomSchoolClass(DomSchoolClass schoolClass){
         schoolClass.setSchoolClassName(class1);
+        if (this.classID != null) {
         schoolClass.setId(MySQLPersistenceId.createPersistentId(this));
+        }
         schoolClass.setHasRegKey(iconizer);
     }
 
