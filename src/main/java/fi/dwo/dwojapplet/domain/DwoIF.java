@@ -12,7 +12,7 @@ import java.awt.Container;
 import java.util.Date;
 
 /**
- * The interface for the Gui to communicate with the DWO.<br>
+ * The interface for the GUI to communicate with the DWO.<br>
  * The most requests from the GUI are send to the GuiCreator, who communicates
  * with the DwoIF.
  *
@@ -31,6 +31,7 @@ public interface DwoIF {
 
     public void setWelcomePanel();
 
+     public void setWelcomePanel(String username);
     /**
      * Logs a user in into the system. The user will be remembered while the
      * user is logged in.
@@ -42,8 +43,13 @@ public interface DwoIF {
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
+    
+    
     public boolean login(String username, String password)
             throws LoginException;
+
+    public boolean loginWithMd5(String username, String password) throws LoginException;
+
 
     /**
      * Login as guest
@@ -162,27 +168,28 @@ public interface DwoIF {
      */
     public CenterSubPanel loadSco(Sco sco);
 
-    /**
-     * Change the current user his account.
-     *
-     * @param password The current password of the user. It will be used to
-     * validate the current user.
-     * @param newPassword The new password of the user.
-     * @param reNewPassword The re-password for the user. It is used to check
-     * for a typing error.
-     * @param firstName The firstname of the user.
-     * @param middleName The middlename of the user. <br>
-     * e.g: <code>Van</code>
-     * @param lastName The lastname (familyname) of the user.
-     * @param email The e-mail address of the user.
-     * @param c The new SchoolClass of the user.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public void changeAccount(String password, String newPassword,
-            String reNewPassword, String firstName, String middleName,
-            String lastName, String email, SchoolClass c)
-            throws RegisterException;
+//TODO DONE MANY TO MANY: obsolete
+//    /**
+//     * Change the current user his account.
+//     *
+//     * @param password The current password of the user. It will be used to
+//     * validate the current user.
+//     * @param newPassword The new password of the user.
+//     * @param reNewPassword The re-password for the user. It is used to check
+//     * for a typing error.
+//     * @param firstName The firstname of the user.
+//     * @param middleName The middlename of the user. <br>
+//     * e.g: <code>Van</code>
+//     * @param lastName The lastname (familyname) of the user.
+//     * @param email The e-mail address of the user.
+//     * @param c The new SchoolClass of the user.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public void changeAccount(String password, String newPassword,
+//            String reNewPassword, String firstName, String middleName,
+//            String lastName, String email, SchoolClass c)
+//            throws RegisterException;
 
     /**
      * Change the current user his account who not is linked to a school.
@@ -331,11 +338,12 @@ public interface DwoIF {
      *
      * @param schoolClass The class to rename.
      * @param newName The new name for the class.
+     * @param newRegistrationKey
      * @param iconizer
      * @return If the class is successfully renamed it returns true. Otherwise
      * it returns false.
      */
-    public boolean renameClass(SchoolClass schoolClass, String newName, boolean iconizer);
+    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer);
 
     /**
      * Shows the user that he must wait for a while with the dafault wait
@@ -369,7 +377,7 @@ public interface DwoIF {
      * cashing problems can appear.
      *
      */
-    public void clearCurrentUserData();
+    public void clearCurrentUserData(int uid);
 
     /**
      * @return fi.dwo.client.domain.Course[]

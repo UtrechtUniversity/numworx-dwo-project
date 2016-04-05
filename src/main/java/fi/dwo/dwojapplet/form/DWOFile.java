@@ -2,7 +2,6 @@ package fi.dwo.dwojapplet.form;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.dwojapplet.persistence.DbAccessIF;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,6 +33,7 @@ public class DWOFile {
      * @throws SQLException
      * @throws IOException
      * @throws XmlRpcException
+     * @throws fi.dwo.commons.exceptions.PersistenceException
      * @see fi.dwo.server.form.ManifestFile#createIMSManifest(int, int,
      * java.io.OutputStream)
      */

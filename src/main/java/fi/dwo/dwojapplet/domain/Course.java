@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
  * @author M.J.B. Kupers
  */
 public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
-    private static final Logger log = Logger.getLogger(Course.class.getName());
+    private static final Logger LOG = Logger.getLogger(Course.class.getName());
 
     private int courseID;
 
@@ -219,7 +219,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
                 return courseLogo = l.getImage();
             }
         } catch (Exception e) {
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,null,e);
         }
         if ((getImageUrl() != null)
                 && (!getImageUrl().equals(""))) {

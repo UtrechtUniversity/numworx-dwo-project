@@ -1,5 +1,3 @@
-// Source file:
-// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\GuiConstants.java
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.dwojapplet.domain.DWO;
@@ -24,9 +22,8 @@ import java.util.logging.Logger;
  */
 public abstract class GuiConstants {
 
-    private static final Logger log = Logger.getLogger(GuiConstants.class.getName());
+    private static final Logger LOG = Logger.getLogger(GuiConstants.class.getName());
 
-//    public static Color MAIN_BACKGROUND = new Color(230, 240, 255);
     public static Color MAIN_BACKGROUND = new Color(221, 238, 255);
     public static Color CELL_BACKGROUND = new Color(221, 238, 255);//new Color(210, 230, 255);
     public static Color SUB_BACKGROUND = new Color(255, 255, 255);
@@ -45,7 +42,12 @@ public abstract class GuiConstants {
 
     public final static String REMOVE_CLASS_IMAGE = "resources/delete.gif";
     public final static String EDIT_CLASS_IMAGE = "resources/edit.gif";
+    public final static String NOEDIT_CLASS_IMAGE = "resources/noedit.gif";
+    public final static String EMPTY_IMAGE = "resources/empty.gif";
     public final static String USERS_CLASS_IMAGE = "resources/userlist.gif";
+    public final static String TEACHER_CLASS_IMAGE = "resources/teacherlist.gif";
+    public final static String STUDENT_IMAGE = "resources/student.png";
+
 
     ////peter
     public final static String ASSIGN_CLASS_IMAGE = "resources/assign.gif";
@@ -83,6 +85,8 @@ public abstract class GuiConstants {
     public static String GUI_BGIMAGE_ICON = "resources/iconized-bgimage.png";
     public static String GUI_BGIMAGE_MENU = "resources/menu-bgimage.png";
     public static String GUI_BGIMAGE_SCO = "resources/sco-bgimage.png";
+    public static String GUI_RIGHTS_IMAGE = "resources/rights.gif";
+
     public static int[] GUI_9PATCH_ICON;
     public static int[] GUI_9PATCH_MENU;
     public static int[] GUI_9PATCH_SCO;
@@ -318,7 +322,7 @@ public abstract class GuiConstants {
             //u = GuiConstants.class.getResource("/" + resource);
             result = getProperties(u, result);
         } catch (IOException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         }
         return result;
     }

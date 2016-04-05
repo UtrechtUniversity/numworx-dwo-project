@@ -403,7 +403,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
              }
              } catch (Exception e) {
              try {
-             log.log(Level.FINE,e.toString());
+             LOG.log(Level.FINE,e.toString());
              } catch (Exception _) {
              } 
              }

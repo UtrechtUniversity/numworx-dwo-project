@@ -14,7 +14,7 @@ import java.util.Hashtable;
  * @author M.J.B. Kupers
  *
  */
-class MapperCreator {
+public class MapperCreator {
 
     private final static String DOMAIN_PACKAGE = "fi.dwo.dwojapplet.domain";
 
@@ -37,7 +37,7 @@ class MapperCreator {
         {"DwoProfile", "DwoProfileMapper"},
         {"AppletData", "AppletDataMapper"},
         {"CourseSequence", "CourseSequenceMapper"},
-        {"ClassCourse", "ClassCourseMapper"},};
+        {"ClassCourse", "ClassCourseMapper"}};
 
     /**
      * The mappers for external classes. e.g. The Applet-class is not in the
@@ -88,7 +88,7 @@ class MapperCreator {
     /**
      * Creates an instance of the corresponding mapper.
      *
-     * @param c The class wherefor the mapper must be created.
+     * @param c The class where for the mapper must be created.
      */
     private static void addMapper(Class c) {
         String className = (String) classList.get(c);

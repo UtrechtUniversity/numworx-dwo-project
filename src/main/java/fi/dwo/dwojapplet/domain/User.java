@@ -29,6 +29,8 @@ public class User implements UserGroup, Comparable {
     private SchoolClass inClass;
 
     private School school;
+    
+    private int schoolGroupID;
 
     private long lastLogin = System.currentTimeMillis();
     private long timeZone = 0L;
@@ -360,7 +362,8 @@ public class User implements UserGroup, Comparable {
     private boolean _logout = true;
     private boolean _readonly = false;
 
-    private static User currentUser;
+//TODO MANY TO MANY OBSOLETE    
+//    private static User currentUser;
 
     /**
      * Kan deze gebruiker wel uitloggen?
@@ -480,13 +483,14 @@ public class User implements UserGroup, Comparable {
         setRights(rights);
     }
 
-    public static void setCurrentUser(User currentUser) {
-        User.currentUser = currentUser;
-    }
-
-    public static User getCurrentUser() {
-        return currentUser;
-    }
+    //TODO DONE MANY TO MANY  OBSOLETE
+//    public static void setCurrentFacadeUser(User currentUser) {
+//        User.currentUser = currentUser;
+//    }
+//
+//    public static User getCurrentFacadeUser() {
+//        return currentUser;
+//    }
 
     /**
      * @return the lastLogin
@@ -513,5 +517,19 @@ public class User implements UserGroup, Comparable {
     @Override
     public String toString() {
         return getName();
+    }
+
+    /**
+     * @return the schoolGroupID
+     */
+    public int getSchoolGroupID() {
+        return schoolGroupID;
+    }
+
+    /**
+     * @param schoolGroupID the schoolGroupID to set
+     */
+    public void setSchoolGroupID(int schoolGroupID) {
+        this.schoolGroupID = schoolGroupID;
     }
 }

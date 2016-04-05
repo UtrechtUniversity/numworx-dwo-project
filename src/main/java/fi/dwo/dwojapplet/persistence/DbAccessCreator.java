@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\DbAccessCreator.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class DbAccessCreator {
-    private static final Logger log = Logger.getLogger(DbAccessCreator.class.getName());
+    private static final Logger LOG = Logger.getLogger(DbAccessCreator.class.getName());
 
     private static DbAccessIF dbAccess;
     /**
@@ -43,12 +44,12 @@ class DbAccessCreator {
     public static DbAccessIF instance() {
         if (dbAccess == null) {
         URL server;
-            if(DwoHelper.getServletConnectString()!=null){
-            try {
-                        server = new URL(DwoHelper.getServletConnectString());
+            if(DwoHelper.getServerUrlPath()!=null){
+            try {                
+                        server = new URL(DwoHelper.getServerUrlPath(),"xmlrpc");
                         dbAccess = new DbAccessClient(server);
                     } catch (MalformedURLException ex) {
-                        log.log(Level.SEVERE, null, ex);
+                        LOG.log(Level.SEVERE, null, ex);
                     }
                 } else {
                     try {
@@ -57,7 +58,7 @@ class DbAccessCreator {
                         server = new URL(new URL("http://ws.fisme.science.uu.nl/"), SERVLET);
                         dbAccess = new DbAccessClient(server);
                     } catch (MalformedURLException e) {
-                        log.log(Level.SEVERE,null,e);
+                        LOG.log(Level.SEVERE,null,e);
                     }
                 }
             } 

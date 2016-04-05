@@ -3,9 +3,12 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.copyright.FIButton;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.rest.LoginManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -47,7 +50,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
     private JButton guestButton;
 
-    private JButton registerButton;
+    private JButton registerNewUserButton;
+    private JButton registerExistingUserButton;
 
     FIButton fiButton;
     JPanel dialog;
@@ -77,8 +81,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     }
 
     /**
-     * Creates a new WelcomePanel with the posibilities to login (as guest) or
-     * to register.
+     * Creates a new WelcomePanel with the posibilities to
+     * configurePanelsForUser (as guest) or to register.
      *
      */
     public WelcomePanel() {
@@ -99,7 +103,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         dialog = new JPanel(null);
         dialog.setOpaque(false);
-        dialog.setBounds(getWidth() / 2 - 200, 0, 400, getHeight());
+        dialog.setBounds(getWidth() / 2 - 350, 0, 700, getHeight());
         this.add(dialog);
 
         String version = "unknown";
@@ -109,12 +113,14 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             Manifest manifest = new Manifest(url.openStream());
             // do stuff with it
             version = manifest.getMainAttributes().getValue("Implementation-Version");
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOG.log(Level.SEVERE, "Can't read Implementation-Version from manifest.mf.");
         }
         fiButton = new FIButton("DWO", new String[]{"versie-info: " + version,
             "auteur: Peter Boon",
             "programmeur: M.J.B. Kupers,",
+            "Gert van der Plas",
             "Wim van Velthoven",
             "Freudenthal Instituut",
             "www.fisme.science.uu.nl",
@@ -186,7 +192,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         //p.setBorderColor(new Color(52,90,126));
-        p.setBounds(dialog.getWidth() / 2 - 130, 110, 260, 115);
+        p.setBounds(dialog.getWidth() / 2 - 175, 110, 350, 115);
         dialog.add(p);
 
         /* Inlogdata label */
@@ -258,7 +264,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 130, 235 + h, 260, 85);
+        p.setBounds(dialog.getWidth() / 2 - 175, 235 + h, 350, 85);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
@@ -290,7 +296,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 130, 330 + h, 260, 85);
+        p.setBounds(dialog.getWidth() / 2 - 175, 330 + h, 350, 65);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
@@ -303,23 +309,30 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.add(l);
 
         /* Register button */
-        registerButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
-        fm = registerButton.getFontMetrics(registerButton.getFont());
-        registerButton.setSize(registerButton.getPreferredSize());
-        registerButton.setLocation((p.getSize().width / 2)
-                - (registerButton.getSize().width / 2), 27);
-        p.add(registerButton);
+        registerNewUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));// GuiConstants.SUB_BACKGROUND);
+        fm = registerNewUserButton.getFontMetrics(registerNewUserButton.getFont());
+        registerNewUserButton.setSize(registerNewUserButton.getPreferredSize());
+        registerNewUserButton.setLocation((p.getSize().width / 2)
+               - (registerNewUserButton.getPreferredSize().width / 2), 27);
+        p.setBounds(dialog.getWidth() / 2 - 175, 330 + h, 350, 65);
+        p.add(registerNewUserButton);
 
-        /* Register message */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
-        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
-        p.add(l);
-
+//        /* Register button */
+//        registerExistingUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_EXISTING));//, GuiConstants.SUB_BACKGROUND);
+//        fm = registerNewUserButton.getFontMetrics(registerExistingUserButton.getFont());
+//        registerExistingUserButton.setSize(registerExistingUserButton.getPreferredSize());
+//        registerExistingUserButton.setLocation((p.getSize().width / 2)
+//                - 2*(registerExistingUserButton.getSize().width / 2), 27);
+//        p.add(registerExistingUserButton);
+//        /* Register message */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIW_REGISTER));
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
+//        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
+//        p.add(l);
         guestButton.addActionListener(this);
-        registerButton.addActionListener(this);
+        registerNewUserButton.addActionListener(this);
 
     }
     private static final Logger LOG = Logger.getLogger(WelcomePanel.class.getName());
@@ -335,26 +348,34 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if ((src == loginButton) || (src == loginname) || (src == password)) {
-            try {
-                GuiCreator.instance().login(loginname.getText(), password.getText());
-                DwoHelper.setCookie("dwoUserName", loginname.getText());
-                DwoHelper.setCookie("dwoPassWord", password.getText());
+            try {                
+                GuiCreator.instance().login(loginname.getText(), String.valueOf(password.getPassword()));
                 if (linkcheck != null && linkcheck.isSelected()) {
                     GuiCreator.instance().linkViaSAML();
                 }
-            } catch (LoginException exc) {
-                JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+            }
+            catch (LoginException exc) {
+                if(LOG.getLevel()==Level.INFO){
+                    LOG.log(Level.INFO, "Login failed.");
+                }else{
+                LOG.log(Level.FINE, "Login exception.", exc);
+                }
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
+            }
+            catch (Dwo2Exception ex) {
+                JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                Logger.getLogger(WelcomePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (src == guestButton) {
             try {
                 GuiCreator.instance().login();
-            } catch (LoginException exc) {
-                JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
             }
-        } else if (src == registerButton) {
-            GuiCreator.instance().toRegister();
+            catch (LoginException exc) {
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
+            }
+        } else if (src == registerNewUserButton) {
+            GuiCreator.instance().toRegisterNewUser();
         }
-
     }
 
     public void setUsername(String username) {

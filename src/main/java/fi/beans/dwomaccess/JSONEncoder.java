@@ -126,7 +126,7 @@ public class JSONEncoder {
                     result = new JSONObject(map);
                 }
                 result.put(entry.getKey(), transformTypes(transformed));
-            } // arraytypes TODO List.
+            } 
             else if (value instanceof Object[]) {
                 Object[] array = (Object[]) value;
                 Object transformed = transformArray(array);

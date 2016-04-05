@@ -1,10 +1,11 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
@@ -41,7 +42,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 public class UserManagementPanel extends JPanel implements CenterSubPanel {
-    private static final Logger log = Logger.getLogger(UserManagementPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(UserManagementPanel.class.getName());
 
     static class TeacherDelegate extends Teacher {
 
@@ -205,7 +206,10 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                     GuiCreator.instance().login(user.getUsername(), null);
                 } catch (LoginException e) {
     
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.SEVERE, null, ex);
                 }
             } else if (value == model.editImage) {
                 try {
@@ -216,7 +220,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                         JOptionPane.showMessageDialog(UserManagementPanel.this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
                     }
                 } catch (Exception e) {
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 }
             } else if (value == model.removeImage) {
                 /* Delete the school */
@@ -259,7 +263,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
     private CenterPanel center;
     private DwoIF dwo;
-    private ContactDocent docent;
+    private SchoolAdmin docent;
     private User[] userList;
     private RegisterClassListButton addDocentBtn;
     private SchoolGroup[] groups;
@@ -273,7 +277,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
         Image userImage = DwoHelper.getResourceImage("resources/student.png");
         Image teacherImage = DwoHelper.getResourceImage("resources/docent.png");
         this.dwo = dwo;
-        docent = (ContactDocent) dwo.getUser();
+        docent = (SchoolAdmin) dwo.getUser();
         School school = docent.getSchool();
         groups = school.getSchoolGroupList();
         getUserList();
@@ -318,7 +322,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                 merge(u);
             } catch (PersistenceException e) {
 
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
         Arrays.sort(userList);

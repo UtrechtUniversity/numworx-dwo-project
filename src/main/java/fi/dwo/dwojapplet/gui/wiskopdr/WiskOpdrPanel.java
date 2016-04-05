@@ -17,7 +17,7 @@ import fi.dwo.dwojapplet.system.Loader;
 public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 
 	private static final long serialVersionUID = 1L;
-	private final Logger log = Logger.getLogger(getClass().getName());
+	private final Logger LOG = Logger.getLogger(getClass().getName());
 
 	Component component;
 	String text;
@@ -28,7 +28,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 		this.text = s;
 		
 		try {
-            if(DwoHelper.getGetResourceURLPathString()!=null) Loader.setPrefix(DwoHelper.getGetResourceURLPathString());
+            if(DwoHelper.getResourceUrlPath()!=null) Loader.setPrefix(DwoHelper.getResourceUrlPath().toString());
 			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
 			Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class);
 			component = (Component) m.invoke(null, s);
@@ -36,7 +36,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 			setSize(component.getSize());
 			return;
 		} catch (Exception e) {
-			log.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 			add(new JLabel("not implemented: " + e));
 		}
 		setSize(getPreferredSize());
@@ -51,7 +51,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 			Object proxy = Proxy.newProxyInstance(loader, new Class[] { linkif } , this);
 			m.invoke(component, proxy);
 		} catch(Exception e) {
-			log.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 		}
 		
 	}
@@ -59,7 +59,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
-		log.log(Level.SEVERE, "." +  method, args);
+		LOG.log(Level.SEVERE, "." +  method, args);
 		String name = method.getName();
 		if("getJSObject".equals(name))
 			return link.getJSObject();

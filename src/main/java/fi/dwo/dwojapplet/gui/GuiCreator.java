@@ -2,14 +2,15 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\GuiCreator.java
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.exceptions.ClassException;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
+import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
@@ -23,8 +24,10 @@ import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.domain.rest.LoginManager;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.awt.Component;
 import java.awt.Container;
 import java.util.Date;
 import java.util.Map;
@@ -42,7 +45,7 @@ import javax.swing.JOptionPane;
  */
 public class GuiCreator {
 
-    private static final Logger log = Logger.getLogger(GuiCreator.class.getName());
+    private static final Logger LOG = Logger.getLogger(GuiCreator.class.getName());
 
     protected DwoIF dwo;
 
@@ -58,13 +61,62 @@ public class GuiCreator {
      *
      * @param dwo The dwo to communicate with.
      */
-    //TODO fix memory leak, instantiation should occur different.
+    //TODO WIM fix memory leak, instantiation should occur different.
     public GuiCreator(DwoIF dwo) {
         this.dwo = dwo;
         GuiCreator._instance = this;
 
     }
 
+    /**
+     * Allows custom GUI messages.
+     *
+     * @param parentComponent
+     * @param message
+     * @param title
+     */
+    public void ShowMessageDialog(Component parentComponent,
+            Object message) {
+     //   if(parentComponent==null) parentComponent = GuiCreator.instance().getMainPanel();
+        JOptionPane.showMessageDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_MESSAGE), JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Show DwoWarning message
+     *
+     * @param parentComponent
+     * @param message
+     */
+    public void ShowWarningDialog(Component parentComponent,
+            Object message) {
+     //   if(parentComponent==null) parentComponent = GuiCreator.instance().getMainPanel();
+        JOptionPane.showMessageDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_MESSAGE), JOptionPane.WARNING_MESSAGE);
+    }
+
+        /**
+     * Show DwoWarning message
+     *
+     * @param parentComponent
+     * @param ex
+     */
+    public void ShowErrorDialog(Component parentComponent,
+            Dwo2Exception ex) {
+        if(parentComponent==null) parentComponent = GuiCreator.instance().getMainPanel();
+        JOptionPane.showMessageDialog(parentComponent, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.DLG_ERROR), JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Ask confirmation
+     *
+     * @param parentComponent
+     * @param message
+     */
+    public int ShowConfirmDialog(Component parentComponent,
+            Object message) {
+        if(parentComponent==null) parentComponent = GuiCreator.instance().getMainPanel();
+        return JOptionPane.showConfirmDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_CONFIRM), JOptionPane.OK_OPTION);
+    }
+    
     /**
      * Returns the main panel
      *
@@ -83,22 +135,59 @@ public class GuiCreator {
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
-    public void login(String username, String password) throws LoginException {
+    public void login(String username, String password) throws LoginException, Dwo2Exception {
         dwo.setWait();
         try {
             DwoHelper.setContact(false);
-            if (dwo.login(username, password)) {
-// HOOK: check if username is valide volgens de nieuwe regels.
-                //validUsernameCheck(username);
+            LoginManager.login(username, MD5.getHashString(String.valueOf(password)));
+
+            if (DwoHelper.getCurrentUser() != null) {
+                // TODO: remove, currently checks if licence is still valid
                 validLicenceCheck(dwo.getUser());
-
-                login(dwo.getUser());
-
-                //ModuleTreePanel.create(dwo );  
+                //configure GuiCreator to show correct Panels and options.
+                configurePanelsForUser(dwo.getUser());
             }
-        } catch (LoginException e) {
+        }
+        catch (Dwo2Exception e) {
+            LOG.log(Level.WARNING, "Login failed.", e);
+            dwo.setReady();
             throw e;
-        } finally {
+        }
+        finally {
+
+            dwo.setReady();
+        }
+    }
+
+    /**
+     * Logs a user in into the system. The user will be remembered while the
+     * user is logged in. Then it shows the MainPanel.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @throws fi.dwo.commons.exceptions.LoginException
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     *
+     */
+    public void loginWithMd5(String username, String password) throws LoginException, Dwo2Exception {
+        dwo.setWait();
+        try {
+            DwoHelper.setContact(false);
+            LoginManager.login(username, password);
+
+            if (DwoHelper.getCurrentUser() != null) {
+                // TODO: remove, currently checks if licence is still valid
+                validLicenceCheck(dwo.getUser());
+                //configure GuiCreator to show correct Panels and options.
+                configurePanelsForUser(dwo.getUser());
+            }
+        }
+        catch (Dwo2Exception e) {
+            LOG.log(Level.WARNING, "Login failed.", e);
+            dwo.setReady();
+            throw e;
+        }
+        finally {
             dwo.setReady();
         }
     }
@@ -132,11 +221,12 @@ public class GuiCreator {
     /**
      * @param u
      */
-    public void login(User u) {
+    public void configurePanelsForUser(User u) {
+        //TODO rewrite nightmare code.
         if (u instanceof Teacher) {
             GuiCreator gc;
-            if (u instanceof ContactDocent) {
-                gc = new GuiCreatorContactDocent(dwo);
+            if (u instanceof SchoolAdmin) {
+                gc = new GuiCreatorSchoolAdmin(dwo);
             } else {
                 gc = new GuiCreatorTeacher(dwo);
             }
@@ -150,17 +240,15 @@ public class GuiCreator {
             gc.welcomePanel = welcomePanel;
             gc.mainPanel = new MainPanel(dwo.getDwoProfile());
             dwo.setPanel(gc.mainPanel);
+        } else if (this instanceof GuiCreatorTeacher || this instanceof GuiCreatorAdmin) {
+            GuiCreator gc = new GuiCreator(dwo);
+            gc.mainPanel = mainPanel;
+            gc.welcomePanel = welcomePanel;
+            gc.mainPanel = new MainPanel(dwo.getDwoProfile());
+            dwo.setPanel(gc.mainPanel);
         } else {
-            if (this instanceof GuiCreatorTeacher || this instanceof GuiCreatorAdmin) {
-                GuiCreator gc = new GuiCreator(dwo);
-                gc.mainPanel = mainPanel;
-                gc.welcomePanel = welcomePanel;
-                gc.mainPanel = new MainPanel(dwo.getDwoProfile());
-                dwo.setPanel(gc.mainPanel);
-            } else {
-                mainPanel = new MainPanel(dwo.getDwoProfile());
-                dwo.setPanel(mainPanel);
-            }
+            mainPanel = new MainPanel(dwo.getDwoProfile());
+            dwo.setPanel(mainPanel);
         }
     }
 
@@ -177,9 +265,11 @@ public class GuiCreator {
                 mainPanel = new MainPanel(dwo.getDwoProfile());
                 dwo.setPanel(mainPanel);
             }
-        } catch (LoginException e) {
+        }
+        catch (LoginException e) {
             throw e;
-        } finally {
+        }
+        finally {
             dwo.setReady();
         }
     }
@@ -197,7 +287,6 @@ public class GuiCreator {
      * @param lastname The lastname (familyname) of the user.
      * @param email The e-mail address of the user.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     *
      */
     public void register(String username, String password, String rePassword,
             String firstname, String middlename, String lastname, String email)
@@ -251,9 +340,19 @@ public class GuiCreator {
     /**
      * Shows the register panel to the user.
      */
-    public void toRegister() {
+    public void toRegisterNewUser() {
         dwo.setWait();
-        RegisterPanel rp = new RegisterPanel(dwo.getGroups());
+        RegisterNewUserPanel rp = new RegisterNewUserPanel(dwo.getGroups());
+        dwo.setPanel(rp);
+        dwo.setReady();
+    }
+
+    /**
+     * Shows the register panel to the user.
+     */
+    public void toRegisterExistingUser() {
+        dwo.setWait();
+        RegisterKnownUserPanel rp = new RegisterKnownUserPanel(dwo.getGroups());
         dwo.setPanel(rp);
         dwo.setReady();
     }
@@ -275,15 +374,15 @@ public class GuiCreator {
     }
 
     /**
-     * Returns a MenuPanel. The type of the menupanel depends on the type of
-     * user. <BR>
+     * Returns a StudentMenuPanel. The type of the menupanel depends on the type
+     * of user. <BR>
      * If the user is null, a GuestMenuPanel is returned. <BR>
      * If the user is a teacher, a TeacherMenuPanel is returned. <BR>
-     * Otherwise, a normal MenuPanel is returned. <BR>
+     * Otherwise, a normal StudentMenuPanel is returned. <BR>
      * <BR>
      * The menupanel shows all the menu-options for the type of user.
      *
-     * @return The MenuPanel with all the menu-options for the type user.
+     * @return The StudentMenuPanel with all the menu-options for the type user.
      */
     public GuestMenuPanel getMenuPanel() {
         User u = dwo.getUser();
@@ -291,7 +390,7 @@ public class GuiCreator {
         if (u == null || u instanceof Guest) {
             return new GuestMenuPanel();
         } else {
-            return new MenuPanel();
+            return new StudentMenuPanel();
         }
     }
 
@@ -326,8 +425,8 @@ public class GuiCreator {
      * cashing problems can appear.
      *
      */
-    public void clearCurrentUserData() {
-        dwo.clearCurrentUserData();
+    public void clearCurrentUserData(int uid) {
+        dwo.clearCurrentUserData(uid);
     }
 
     /**
@@ -339,6 +438,19 @@ public class GuiCreator {
         mainPanel = null;
         dwo.logoff();
         dwo.setWelcomePanel();
+
+    }
+
+    /**
+     * Log the user off of the system. Shows the Welcome screen.
+     *
+     * @param username
+     */
+    public void logoff(String username) {
+        mainPanel.end();
+        mainPanel = null;
+        dwo.logoff();
+        dwo.setWelcomePanel(username);
 
     }
 
@@ -374,8 +486,9 @@ public class GuiCreator {
             Sco viewSco = null;
             try {
                 viewSco = (Sco) PersistenceFacade.instance().get(dwo.getScoViewNr(), Sco.class);
-            } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, null, e);
             }
             if (viewSco != null) {
                 dwo.setCurrentSco(viewSco);
@@ -389,7 +502,8 @@ public class GuiCreator {
             Course viewCourse = null;
             try {
                 viewCourse = (Course) PersistenceFacade.instance().get(dwo.getCourseViewNr(), Course.class);
-            } catch (Exception exc) {
+            }
+            catch (Exception exc) {
             }
 
             csp = getCoursePanel(viewCourse);
@@ -417,7 +531,8 @@ public class GuiCreator {
                 return new FramedScoPanel(csp, sco);
             }
             return csp;
-        } finally {
+        }
+        finally {
             dwo.setReady();
         }
     }
@@ -444,35 +559,37 @@ public class GuiCreator {
     public CenterSubPanel getProfilePanel() {
         dwo.setWait();
         CenterSubPanel csb;
-        csb = new ProfilePanel(dwo.getGroups());
+//        csb = new ProfilePanel(dwo.getGroups());
+        csb = new AccountPanel(dwo.getGroups());
+//        csb = new TabbedProfilePanel(dwo.getGroups());
         dwo.setReady();
         return csb;
     }
-
-    /**
-     * Change the current user his account.
-     *
-     * @param password The current password of the user. It will be used to
-     * validate the current user.
-     * @param newPassword The new password of the user.
-     * @param reNewPassword The re-password for the user. It is used to check
-     * for a typing error.
-     * @param firstName The firstname of the user.
-     * @param middleName The middlename of the user. <br>
-     * e.g: <code>Van</code>
-     * @param lastName The lastname (familyname) of the user.
-     * @param email The e-mail address of the user.
-     * @param c The new SchoolClass of the user.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public void changeAccount(String password, String newPassword,
-            String reNewPassword, String firstName, String middleName,
-            String lastName, String email, SchoolClass c)
-            throws RegisterException {
-        dwo.changeAccount(password, newPassword, reNewPassword, firstName,
-                middleName, lastName, email, c);
-    }
+//TODO MANY TO MANY DONE: obsolete
+//    /**
+//     * Change the current user his account.
+//     *
+//     * @param password The current password of the user. It will be used to
+//     * validate the current user.
+//     * @param newPassword The new password of the user.
+//     * @param reNewPassword The re-password for the user. It is used to check
+//     * for a typing error.
+//     * @param firstName The firstname of the user.
+//     * @param middleName The middlename of the user. <br>
+//     * e.g: <code>Van</code>
+//     * @param lastName The lastname (familyname) of the user.
+//     * @param email The e-mail address of the user.
+//     * @param c The new SchoolClass of the user.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public void changeAccount(String password, String newPassword,
+//            String reNewPassword, String firstName, String middleName,
+//            String lastName, String email, SchoolClass c)
+//            throws RegisterException {
+//        dwo.changeAccount(password, newPassword, reNewPassword, firstName,
+//                middleName, lastName, email);
+//    }
 
     /**
      * Change the current user his account who not is linked to a school.
@@ -526,25 +643,25 @@ public class GuiCreator {
                 middleName, lastName, email);
 
     }
-
-    /**
-     * Shows a dialog to add a class and adds the class.
-     *
-     * @return boolean Indicates if the class is added, or the operation is
-     * canceled.
-     * @throws fi.dwo.commons.exceptions.ClassException
-     *
-     */
-    public boolean addClass() throws ClassException {
-        String newClass = JOptionPane.showInputDialog(mainPanel,
-                TextMapper.getText(TextMapper.GUIMNU_MSG_ADD_CLASS) + ":",
-                TextMapper.getText(TextMapper.GUIMNU_MSG_ADD_CLASS_TITLE),
-                JOptionPane.OK_CANCEL_OPTION);
-        if ((newClass != null) && (!newClass.equals(""))) {
-            return dwo.addClass(newClass);
-        }
-        return false;
-    }
+//
+//    /**
+//     * Shows a dialog to add a class and adds the class.
+//     *
+//     * @return boolean Indicates if the class is added, or the operation is
+//     * canceled.
+//     * @throws fi.dwo.commons.exceptions.ClassException
+//     *
+//     */
+//    public boolean addClass() throws ClassException {
+//        String newClass = JOptionPane.showInputDialog(mainPanel,
+//                TextMapper.getText(TextMapper.GUIMNU_MSG_ADD_CLASS) + ":",
+//                TextMapper.getText(TextMapper.GUIMNU_MSG_ADD_CLASS_TITLE),
+//                JOptionPane.OK_CANCEL_OPTION);
+//        if ((newClass != null) && (!newClass.equals(""))) {
+//            return dwo.addClass(newClass); //Call rest interface now. 
+//        }
+//        return false;
+//    }
 
     /**
      * Shows a dialog to edit a school.
@@ -662,7 +779,8 @@ public class GuiCreator {
      *
      */
     public CenterSubPanel getClassPanel() {
-        return null;
+        return new ClassStudentPanel();
+
     }
 
     /**
@@ -679,12 +797,13 @@ public class GuiCreator {
      *
      * @param schoolClass The class to rename.
      * @param newName The new name for the class.
+     * @param newRegistrationKey
      * @param iconizer
      * @return If the class is successfully renamed it returns true. Otherwise
      * it returns false.
      */
-    public boolean renameClass(SchoolClass schoolClass, String newName, boolean iconizer) {
-        return dwo.renameClass(schoolClass, newName, iconizer);
+    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer) {
+        return dwo.renameClass(schoolClass, newName, newRegistrationKey, iconizer);
     }
 
     /**
@@ -838,7 +957,6 @@ public class GuiCreator {
     }
 
     public CenterSubPanel getClassAdminPanel() {
-
         return null;
     }
 
@@ -872,11 +990,9 @@ public class GuiCreator {
 
     public void unsafeSaveSco(Sco sco) {
 
-
     }
 
     public void updateLogo(Course c) {
-
 
     }
 

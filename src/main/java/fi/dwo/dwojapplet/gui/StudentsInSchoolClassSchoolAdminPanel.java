@@ -1,0 +1,426 @@
+/*
+ * Created on Mar 24, 2005
+ *
+ */
+package fi.dwo.dwojapplet.gui;
+
+import fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomStudent;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.domutils.DomUserListCellRenderer;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+
+/**
+ * The panel which shows the school classes for a teacher.
+ */
+public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements CenterSubPanel, ActionListener {
+
+    private static final Logger LOG = Logger.getLogger(StudentsInSchoolClassSchoolAdminPanel.class.getName());
+
+    private StudentsInSchoolClassSchoolAdminPanelProperties prop = new StudentsInSchoolClassSchoolAdminPanelProperties();
+    private StudentsInSchoolClassTeacherPanelTableModel tableModel;
+    private DomSchoolClass schoolClass;
+    private CenterPanel center;
+
+    private JButton backButton;
+    private JComboBox studentBox;
+    private JButton deleteButton;
+    private JButton copyToSchoolClassButton;
+    private JButton addStudentsButton;
+
+    private Image editImage;
+    private Image emptyImage;
+    private Image loginImage;
+
+    private JPanel jtbl;
+
+    /**
+     * @return the schoolClass
+     */
+    public DomSchoolClass getSchoolClass() {
+        return schoolClass;
+    }
+
+    /**
+     * @param schoolClass the schoolClass to set
+     */
+    public void setSchoolClass(DomSchoolClass schoolClass) {
+        this.schoolClass = schoolClass;
+    }
+
+    public class ImageRenderer extends JLabel implements TableCellRenderer {
+
+        private ImageIcon icon = new ImageIcon();
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+                Object value, boolean selected, boolean hasFocus, int row, int col) {
+            Image image = (Image) value;
+            icon.setImage(image);
+            setIcon(icon);
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setOpaque(true);
+            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
+//            switch (col) {
+//                case 1:
+//                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
+//                    setToolTipText(MessageFormat.format(s, arguments));
+//                    break;
+//                case 2:
+//                    setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_CLASS));
+//                    break;
+//                default:
+//                    setToolTipText("Message " + col); // TODO ....
+//            }
+            if (selected) {
+                setBackground(table.getSelectionBackground());
+            } else {
+                setBackground(table.getBackground());
+            }
+            return this;
+        }
+
+    }
+
+    public class ImageButtonEditor extends AbstractCellEditor implements
+            TableCellEditor, ActionListener {
+
+        Object value;
+        int row;
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean arg2, int row, int col) {
+            this.value = value;
+            JButton button = new JButton(new ImageIcon((Image) value));
+            button.addActionListener(this);
+            this.row = row;
+            //model = (ClassTeacherPanelTableModel) table.getModel();
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return value;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            this.fireEditingStopped();
+//            final GuiCreator instance = GuiCreator.instance();
+            if (value == editImage) {
+                try {
+                    DomStudent student = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
+                    getStudent.setDomSchoolClass(schoolClass);
+                    getStudent.setDomStudent(student);
+                    DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
+                    AccountDataFullStudentJPanel panel = new AccountDataFullStudentJPanel();
+                    panel.setUser(user);
+                    panel.setVisible(true);
+                    int result = JOptionPane.showConfirmDialog(GuiCreator.instance().mainPanel, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    //case OK persist returned values
+                    //user = new DomSingleSchoolStudent(panel.getUser()); superfluous.
+                    if (result == JOptionPane.OK_OPTION) {
+                        //persist returned values
+                        user = new DomSingleSchoolStudent(panel.getUser());
+                        prop.updateSingleSchoolStudent(user);
+                        tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
+                        tableModel.fireTableDataChanged();
+                    }
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.FINE, null, ex);
+                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                }
+                finally {
+                    fireEditingStopped();
+                }
+            } else if (value == loginImage) {
+                fireEditingStopped();
+//            //get Table setting
+//                int col = tableModel.getSelectedColumn();
+                int row = tableModel.getSelectedRow();
+                try {
+                    //set prop to table setting
+                    DomStudent student = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
+                    getStudent.setDomSchoolClass(schoolClass);
+                    getStudent.setDomStudent(student);
+                    DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
+                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
+                }
+                catch (LoginException ex) {
+                    Dwo2Exception err = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
+                    LOG.log(Level.SEVERE, null, ex);
+                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), err);
+                }
+                catch (Dwo2Exception e) {
+                    LOG.log(Level.SEVERE, null, e);
+                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), e);
+                }
+            }
+        }
+    }
+
+    private void buildJTable() throws Dwo2Exception {
+        if (jtbl != null) {
+            remove(jtbl);
+            jtbl = null;
+        }
+        jtbl = new JPanel();
+
+        JTable jtable = new JTable();
+        jtable.setMinimumSize(new Dimension(400, 300));
+        jtable.getTableHeader().setReorderingAllowed(false);
+        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
+        jtbl.add(jtable.getTableHeader());
+        jtbl.add(jtable);
+        jtbl.add(Box.createHorizontalGlue());
+        //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
+        tableModel = new StudentsInSchoolClassTeacherPanelTableModel();
+
+        tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
+        jtable.setModel(tableModel);
+        if (jtable.getRowCount() > 0) {
+            jtable.setRowSelectionInterval(0, 0);
+        }
+        jtable.setRowSelectionAllowed(false);
+        jtable.setColumnSelectionAllowed(false);
+        jtable.setCellSelectionEnabled(false);
+        TableUtil.setDefaults(jtable, true, new StudentsInSchoolClassSchoolAdminPanel.ImageRenderer(), new StudentsInSchoolClassSchoolAdminPanel.ImageButtonEditor());
+        TableUtil.setJTableSizes(jtable);
+
+        TableUtil.setBorder(jtable);
+        jtbl.setVisible(false);
+        this.add(jtbl);
+        jtbl.setVisible(true);
+
+    }
+
+    /**
+     * Creates a new ClassPanel which shows a list of classes.
+     *
+     */
+    public StudentsInSchoolClassSchoolAdminPanel(DomSchoolClass sc) throws Dwo2Exception {
+        super(null);
+        this.schoolClass = sc;
+        this.setSize(480, 500);
+
+        //fetch user details.
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setAlignmentX(LEFT_ALIGNMENT);
+        this.setAlignmentY(TOP_ALIGNMENT);
+        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        /* Add Remove-class image */
+        MediaTracker tr = new MediaTracker(this);
+        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
+        emptyImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE);
+        loginImage = DwoHelper.getResourceImage(GuiConstants.STUDENT_IMAGE);
+        tr.addImage(editImage, 0);
+        tr.addImage(emptyImage, 1);
+        tr.addImage(loginImage, 2);
+        try {
+            tr.waitForAll();
+        }
+        catch (Exception e) {
+        }
+
+        //FontMetrics fm;
+        backButton = new JButton(TextMapper.getText(TextMapper.BTN_BACK));
+        backButton.setSize(backButton.getPreferredSize());
+        backButton.addActionListener(this);
+        deleteButton = new JButton(TextMapper.getText(TextMapper.BTN_DELSELECTED));
+        deleteButton.setSize(deleteButton.getPreferredSize());
+        deleteButton.addActionListener(this);
+        copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
+        copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
+        copyToSchoolClassButton.addActionListener(this);
+        Vector<DomStudent> schoolClassVector = new Vector<DomStudent>(prop.getStudentsInSchoolNotInClass(sc));
+        studentBox = new JComboBox(schoolClassVector);
+        DomUserListCellRenderer renderer = new DomUserListCellRenderer();
+        if (schoolClassVector.size() > 0) {
+            studentBox.setSelectedIndex(0);
+        }
+        studentBox.setRenderer(renderer);
+        studentBox.setMaximumRowCount(10);
+        studentBox.addActionListener(this);
+        Box header = Box.createHorizontalBox();
+        header.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        header.setMaximumSize(new Dimension(3000, 100));
+        header.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
+        header.add(backButton);
+        header.add(Box.createRigidArea(new Dimension(30, 0)));
+        header.add(deleteButton);
+        header.add(Box.createRigidArea(new Dimension(30, 0)));
+        header.add(studentBox);
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.add(copyToSchoolClassButton);
+        header.add(Box.createGlue());
+        this.add(header);
+        this.add(Box.createRigidArea(new Dimension(0, 10)));
+        buildJTable();
+        addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
+        addStudentsButton.setSize(addStudentsButton.getPreferredSize());
+        addStudentsButton.addActionListener(this);
+        Box footer = Box.createHorizontalBox();
+        footer.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        footer.setMaximumSize(new Dimension(3000, 100));
+        footer.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
+        footer.add(addStudentsButton);
+        this.add(footer);
+        this.add(Box.createVerticalGlue());
+    }
+
+    /**
+     * Indicate that another panel is loaded and the connections of this panel
+     * must be closed.
+     */
+    @Override
+    public void end() {
+
+    }
+
+    /**
+     * Sets the centerpanel to communicate with.
+     *
+     * @param centerPanel The centerPanel to communicate with.
+     */
+    @Override
+    public void setCenterPanel(CenterPanel centerPanel) {
+        center = centerPanel;
+    }
+
+    /**
+     * Returns a Panel that can function as a header panel.
+     *
+     * @return A panel that can function as a header panel.
+     * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
+     */
+    @Override
+    public Component getHeaderPanel() {
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITSTUDENTS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
+    }
+
+    /**
+     * Invoked when an action occurs.
+     *
+     * @param e The ActionEvent.
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource() == copyToSchoolClassButton) {
+            DomStudent student = (DomStudent) studentBox.getSelectedItem();
+            if (student != null) {
+                try {
+                    prop.submitStudentToSchoolClass(schoolClass, student);
+                    Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
+                    DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+                    studentBox.setModel(model);
+
+                    tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
+                //confirm is overkill
+                    //GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.FINE, null, ex);
+                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+                }
+            }
+        } else if (e.getSource() == deleteButton) {
+            try {
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
+                        DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
+                        prop.removeStudentFromSchoolClass(schoolClass, student);
+                    }
+                }
+                tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
+                center.loadCenter(panel);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.FINE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+            }
+        } else if (e.getSource() == backButton) {
+            try {
+                SchoolClassesSchoolAdminPanel panel = new SchoolClassesSchoolAdminPanel();
+                center.loadCenter(panel);
+
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.FINE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(this, ex);
+            }
+        } else if (e.getSource() == addStudentsButton) {
+            try {
+                NewSingleSchoolStudentsTeacherPanel panel
+                        = new NewSingleSchoolStudentsTeacherPanel(schoolClass,
+                                NewSingleSchoolStudentsTeacherPanel.UserType.SCHOOLADMIN);
+                center.loadCenter(panel);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.FINE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(center, ex);
+            }
+        }
+        tableModel.fireTableDataChanged();
+    }
+
+    /**
+     * Returns the current object, as the object to add to a gui.
+     *
+     * @return the current object.
+     * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
+     */
+    @Override
+    public JComponent getComponent() {
+        return this;
+    }
+
+    @Override
+    public Object getUserObject() {
+        return null;
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e
+    ) {
+    }
+}

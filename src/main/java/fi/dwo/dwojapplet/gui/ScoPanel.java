@@ -47,7 +47,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     private static final Color HOME_COLOR = new Color(3, 65, 123);
 
     private Applet applet;
-    private static final Logger log = Logger.getLogger(ScoPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(ScoPanel.class.getName());
 
     private Sco sco;
 
@@ -147,12 +147,12 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         } catch (RuntimeException e) {
             // TODO Applet is niet gestart!
             // Dialog: interne fout, sco niet goed geïnitialiseerd.
-            log.log(Level.SEVERE,null,e);
-            log.log(Level.FINE, "{0} Sco {1},{2} exception in ScoPanel.init: {3}", new Object[]{GuiCreator.instance().getUser().getID(), sco.getID(), applet, e.toString()});
+            LOG.log(Level.SEVERE,null,e);
+            LOG.log(Level.FINE, "{0} Sco {1},{2} exception in ScoPanel.init: {3}", new Object[]{GuiCreator.instance().getUser().getID(), sco.getID(), applet, e.toString()});
             StringWriter w = new StringWriter();
             PrintWriter pw = new PrintWriter(w);
-            log.log(Level.FINE,w.toString());
-            log.log(Level.FINE,pw.toString());
+            LOG.log(Level.FINE,w.toString());
+            LOG.log(Level.FINE,pw.toString());
         }
     }
 
@@ -519,7 +519,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     @Override
     public String LMSSetValue(String iDataModelElement, String iValue) {
 //        try {
-//            log.log("ScoPanel.LMSSetValue(Level.FINE," + iDataModelElement + ", " + iValue + ")");
+//            LOG.log("ScoPanel.LMSSetValue(Level.FINE," + iDataModelElement + ", " + iValue + ")");
 //        } catch(Exception e2) {
 ////            DwoMessageDialog.showMessageDialog(null, e2.getMessage());
 //            

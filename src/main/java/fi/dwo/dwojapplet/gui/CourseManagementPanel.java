@@ -378,6 +378,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	
 	/**
      * @param courses
+     * @param userObject
      */
     public CourseManagementPanel(CourseMap[] courses, Object userObject) {
         super(new BorderLayout(10,10));
@@ -705,7 +706,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         	updown = false;
         	try {
         		
-				School school = User.getCurrentUser().getSchool();
+				School school = DwoHelper.getCurrentFacadeUser().getSchool();
 // een profile admin mag de standaard modules sorteren, maar de school is dan wel null				
 				if(userObject== ModuleTreePanel.STANDAARD_DWO_MAP)
 					school = null;

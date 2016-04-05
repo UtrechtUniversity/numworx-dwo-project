@@ -39,7 +39,7 @@ import javax.swing.JLabel;
  */
 public class GuiCreatorAdmin extends GuiCreator {
 
-    private static final Logger log = Logger.getLogger(GuiCreatorAdmin.class.getName());
+    private static final Logger LOG = Logger.getLogger(GuiCreatorAdmin.class.getName());
 
     /**
      * @param dwo
@@ -82,7 +82,8 @@ public class GuiCreatorAdmin extends GuiCreator {
     public CenterSubPanel getProfilePanel() {
         dwo.setWait();
         CenterSubPanel csb;
-        csb = new TeacherProfilePanel();
+        csb = //new TeacherProfilePanel();
+                new AccountPanel(dwo.getGroups());
         dwo.setReady();
         return csb;
     }
@@ -106,7 +107,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public CenterSubPanel getSchoolPanel() {
-        return new SchoolPanel();
+        return new SchoolDwoAdminPanel();
     }
 
     /**
@@ -309,7 +310,7 @@ public class GuiCreatorAdmin extends GuiCreator {
         try {
             PersistenceFacade.instance().unsafeSaveSco(sco);
         } catch (ScoException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         }
     }
 

@@ -19,7 +19,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  */
 class AppletMapper extends XmlRpcMapper {
 
-    private static final Logger log = Logger.getLogger(AppletMapper.class.getName());
+    private static final Logger LOG = Logger.getLogger(AppletMapper.class.getName());
 
     private static final char CLASSLOADER = 'c';
 
@@ -125,12 +125,12 @@ class AppletMapper extends XmlRpcMapper {
 
         //Try loading class from remote server.
         try {
-            if(DwoHelper.getGetResourceURLPathString()!=null) Loader.setPrefix(DwoHelper.getGetResourceURLPathString());
+            if(DwoHelper.getJarUrlPath()!=null) Loader.setPrefix(DwoHelper.getJarUrlPath().toString()+"/"); //trailing slash is needed!
             a = Loader.create(jarname).loadClass(className);
             return a;
         } catch (ClassNotFoundException e1) {
             //try loading the jar locally (might be updated).
-            log.log(Level.FINE, "Can't load class {0} in jar {1} from remote server. ", new Object[]{className, jarname});
+            LOG.log(Level.FINE, "Can't load class {0} in jar {1} from remote server. ", new Object[]{className, jarname});
             if (DwoHelper.isSecure()) {
                 try {
                     a = Class.forName(className);
@@ -139,7 +139,7 @@ class AppletMapper extends XmlRpcMapper {
                     e1 = e2;
                 }
             }
-            log.log(Level.SEVERE, null, e1);
+            LOG.log(Level.SEVERE, null, e1);
             throw new XmlRpcException(-1, "Class not found.");
         }
     }

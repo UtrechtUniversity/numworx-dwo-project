@@ -1,7 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
@@ -37,7 +37,7 @@ import javax.swing.table.TableColumn;
 
 public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparator, ActionListener {
 
-    private static final Logger log = Logger.getLogger(ClassModel.class.getName());
+    private static final Logger LOG = Logger.getLogger(ClassModel.class.getName());
 
     SchoolClass[] classes;
     boolean[] dirty;
@@ -72,23 +72,24 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
                 Teacher t = (Teacher) nameMap.get(value);
                 Teacher o = (Teacher) oldTeacher.get(c);
                 try {
-                    
-                    if (PersistenceFacade.instance().reassignClass(c, t)) {
-                        teacherMap.put(classes[rowIndex], value);
-                        o.deleteClass(c);
-                        t.addClass(c);
-                        oldTeacher.put(c, t);
-                        center.loadMenu();
-                        fireTableCellUpdated(rowIndex, columnIndex);
-                    }
+
+                    //TODO MANY TO MANY: fix reassignment with many to many panel
+//                    if (PersistenceFacade.instance().reassignClass(c, t)) {
+//                        teacherMap.put(classes[rowIndex], value);
+//                        o.deleteClass(c);
+//                        t.addClass(c);
+//                        oldTeacher.put(c, t);
+//                        center.loadMenu();
+//                        fireTableCellUpdated(rowIndex, columnIndex);
+//                    }
                 } catch (Exception e) {
     
-                    log.log(Level.SEVERE, null, e);
+                    LOG.log(Level.SEVERE, null, e);
                 }
 
             } else if (columnIndex == CLASS_NAME) {
                 SchoolClass schoolClass = classes[rowIndex];
-                if (dwo.renameClass(schoolClass, value.toString(), schoolClass.hasIconizer())) {
+                if(dwo.renameClass(schoolClass, value.toString(),schoolClass.getRegistrationKey(),schoolClass.hasIconizer())) {
                     dirty[rowIndex] = true;
                     center.loadMenu();
                     fireTableCellUpdated(rowIndex, columnIndex);
@@ -284,7 +285,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
         this.dwo = dwo;
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         usersImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
-        ContactDocent docent = (ContactDocent) dwo.getUser();
+        SchoolAdmin docent = (SchoolAdmin) dwo.getUser();
         School school = docent.getSchool();
         SchoolGroup[] groups = school.getSchoolGroupList();
         classes = school.getClassList();
@@ -313,7 +314,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
                 }
 
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         Arrays.sort(teachers, this);

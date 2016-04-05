@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class SchoolMapper extends XmlRpcMapper {
-    private static final Logger log = Logger.getLogger(SchoolMapper.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolMapper.class.getName());
 
 	// lazy evaluation.
     // DIT STAAT NU AAN!
@@ -40,15 +40,15 @@ class SchoolMapper extends XmlRpcMapper {
                 setClassList((SchoolClass[]) MapperCreator.instance(SchoolClass.class).get(this));
             } catch (IOException e) {
 
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
                 return new SchoolClass[0];  // FIXME fatal, non fatal, retryable?
             } catch (SQLException e) {
 
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
                 return new SchoolClass[0]; // FIXME
             } catch (XmlRpcException e) {
 
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
                 return new SchoolClass[0]; // FIXME
             }
 
@@ -64,13 +64,13 @@ class SchoolMapper extends XmlRpcMapper {
                     setSchoolGroupList((SchoolGroup[]) MapperCreator.instance(SchoolGroup.class).get(this));
                 } catch (IOException e) {
     
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 } catch (SQLException e) {
     
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 } catch (XmlRpcException e) {
     
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 }
             }
             return super.getSchoolGroupList();

@@ -3,10 +3,8 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import java.util.Date;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,6 +19,7 @@ public class SchoolClass implements UserGroup, Comparable {
 
     private String className;
 
+    private String registrationKey;
     private boolean iconizer = false; // database entry
 
     /**
@@ -74,24 +73,24 @@ public class SchoolClass implements UserGroup, Comparable {
             saveSelectedCourses(selectedCourses);
             return;
         }
-        deselectAllCourses(allCourses);
-        for (int i = 0; i < selectedCourses.length; i++) {
-            try {
-                Date tot = null;
-                Date van = null;
-                int type = 0;
-                ClassCourse link = selectedCourses[i].link;
-                if (link != null) {
-                    van = link.getNotBefore();
-                    tot = link.getNotAfter();
-                    type = link.getType();
-                }
-                PersistenceFacade.instance().selectCoursesForClass(getID(),
-                        selectedCourses[i].getID(), type, van, tot);
-            } catch (PersistenceException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-            }
-        }
+//        deselectAllCourses(allCourses);
+//        for (int i = 0; i < selectedCourses.length; i++) {
+//            try {
+//                Date tot = null;
+//                Date van = null;
+//                int type = 0;
+//                ClassCourse link = selectedCourses[i].link;
+//                if (link != null) {
+//                    van = link.getNotBefore();
+//                    tot = link.getNotAfter();
+//                    type = link.getType();
+//                }
+//                PersistenceFacade.instance().selectCoursesForClass(getID(),
+//                        selectedCourses[i].getID(), type, van, tot);
+//            } catch (PersistenceException e) {
+//                JOptionPane.showMessageDialog(null, e.getMessage());
+//            }
+//        }
     }
 
     private void deselectAllCourses(CourseMap[] allCourses) {
@@ -125,20 +124,35 @@ public class SchoolClass implements UserGroup, Comparable {
         }
         return users;
     }
+    /**
+     * Disconnect an user from the class.
+     *
+     * @param classID
+     * @param user The user to disconnect.
+     *
+     */
+    public void disconnectStudent(int classID, User user) {
+        try {
+            PersistenceFacade.instance().removeStudentFromClass(classID, user.getID());
+        } catch (PersistenceException e) {
+        }
+    }
+
 
     /**
      * Disconnect an user from the class.
      *
+     * @param sc
      * @param user The user to disconnect.
      *
      */
-    public void disconnect(User user) {
+    public void disconnectTeacher(SchoolClass sc, User user) {
         try {
-            PersistenceFacade.instance().disconnectFromClass(user);
-        } catch (RegisterException e) {
+            PersistenceFacade.instance().removeTeacherFromClass(classID, user.getID());
+        } catch (PersistenceException e) {
         }
     }
-
+    
     /**
      * Returns the name of the class.
      *
@@ -310,4 +324,12 @@ public class SchoolClass implements UserGroup, Comparable {
         return "";
     }
 
+	public String getRegistrationKey() {
+		return registrationKey;
+}
+
+	public void setRegistrationKey(String registrationKey) {
+		this.registrationKey = registrationKey;
+	}
+	
 }

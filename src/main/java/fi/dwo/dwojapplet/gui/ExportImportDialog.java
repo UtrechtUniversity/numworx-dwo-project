@@ -83,7 +83,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  */
 public class ExportImportDialog extends JDialog implements ActionListener, CourseContainer {
 
-    private static final Logger log = Logger.getLogger(ImportTask.class.getName());
+    private static final Logger LOG = Logger.getLogger(ImportTask.class.getName());
 
     public DwoProfile profile;
 
@@ -165,7 +165,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                     set.add(course.getName());
                 }
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
 
             int n = 0;
@@ -185,7 +185,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                         }
                         newc.setScoList(new Sco[0]);
                     } catch (CourseException e) {
-                        log.log(Level.SEVERE, null, e);
+                        LOG.log(Level.SEVERE, null, e);
                     }
                     status.setText(TextMapper.format(TextMapper.GUIEID_MSG4, new Object[]{name}));
                     status.invalidate();
@@ -227,7 +227,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 newsa[oldsa.length] = news;
                 course.setScoList(newsa);
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
 
@@ -837,7 +837,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                     courses = (Course[]) PersistenceFacade.instance().getImportCourses(s, user.getSchool(), profileID);
                 } catch (PersistenceException e1) {
                     courses = null;
-                    log.log(Level.SEVERE, null, e);
+                    LOG.log(Level.SEVERE, null, e);
                 }
 // TODO pas op, als COPY aan de gang is, dan geen veranderingen aan importModuleModel
                 //importModuleModel = new ImportModuleModel();
@@ -897,13 +897,13 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 }
             }
         } catch (PersistenceException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         } catch (IOException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         } catch (XmlRpcException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         } catch (SQLException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         }
     }
 
@@ -951,7 +951,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                         PersistenceFacade.instance().updateCourse(course);
                     } catch (CourseException e) {
                         JOptionPane.showMessageDialog(this, e.getMessage(), e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
-                        log.log(Level.SEVERE, null, e);
+                        LOG.log(Level.SEVERE, null, e);
                         inerror = true;
                     }
                 }

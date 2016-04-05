@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\CourseMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
 import static fi.dwo.dwojapplet.domain.Course.NO_CHILDREN;
@@ -25,7 +26,7 @@ import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class CourseMapper extends XmlRpcMapper {
-    private static final Logger log = Logger.getLogger(CourseMapper.class.getName());
+    private static final Logger LOG = Logger.getLogger(CourseMapper.class.getName());
 
     private static final String TABLENAME = "tblCourse";
 
@@ -79,7 +80,7 @@ class CourseMapper extends XmlRpcMapper {
                     setChildren(PersistenceFacade.instance().sequence((Course[]) get(this)));
                 } catch (Exception e) {
     
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 }
             }
             return super.getChildren();
@@ -308,7 +309,7 @@ class CourseMapper extends XmlRpcMapper {
         c.setImageUrl((String) data.get("image"));
         c.setDwoProfile(((Integer) data.get("dwoProfileID")).intValue());
         c.setNotVisible(EEN.equals(data.get("notVisible")));
-        c.setNotVisible(c.isNotVisible() && !(User.getCurrentUser() instanceof Teacher));
+        c.setNotVisible(c.isNotVisible() && !(DwoHelper.getCurrentFacadeUser() instanceof Teacher));
         try {
             c.setSchoolID(((Integer) data.get("schoolID")).intValue());
         } catch (Exception e) {
@@ -344,7 +345,7 @@ class CourseMapper extends XmlRpcMapper {
                 c.link = (ClassCourse) MapperCreator.instance(ClassCourse.class).getObjectFromReturn(data);
             } catch (Exception e) {
 
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         } else {
             if (c.link != null) {

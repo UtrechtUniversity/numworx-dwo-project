@@ -35,7 +35,8 @@ import java.util.zip.ZipOutputStream;
 import javax.swing.JFileChooser;
 
 public class Save2004Action extends GuiAction {
-    private static final Logger log = Logger.getLogger(Save2004Action.class.getName());
+
+    private static final Logger LOG = Logger.getLogger(Save2004Action.class.getName());
 
     private static final String WWWURL = "http://www.fisme.science.uu.nl";
 
@@ -162,15 +163,14 @@ public class Save2004Action extends GuiAction {
                 "KladjeGWT.html",
                 "NabouwenAanzichtenGWT.html",
                 "StatistiekGWT.html",
-        		"KansbomenGWT.html",
-            // TODO more html files
+                "KansbomenGWT.html", // TODO more html files
             };
             copyList(out, runner, scormURL, viewFileNames);
 
             out.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE, null, e);
         }
 
     }
@@ -282,7 +282,7 @@ public class Save2004Action extends GuiAction {
         // description ok
         pw.println("<description><langstring xml:lang='" + lang + "' >" + description + "</langstring></description>");
         pw.println("</general>");
-		// TODO auteur/creator
+        // TODO auteur/creator
         // TODO datum/version
         // TODO copyright
         pw.println("</lom>");
@@ -336,7 +336,7 @@ public class Save2004Action extends GuiAction {
 //		} catch (LicenseException e)
 //		{
 //			// TODO iets beters dan printstacktrace
-//			log.log(Level.SEVERE,null,e);
+//			LOG.log(Level.SEVERE,null,e);
 //		}
         String launchDataString = StringCodeObject.encodeObjectToString(launchData);
 //		launchData.remove(LicMan.LICENSE_KEY);
@@ -468,7 +468,7 @@ public class Save2004Action extends GuiAction {
             out.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE, null, e);
         }
 
     }

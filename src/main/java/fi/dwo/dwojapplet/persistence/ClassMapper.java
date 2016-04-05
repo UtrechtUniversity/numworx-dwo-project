@@ -2,12 +2,19 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\ClassMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class ClassMapper extends XmlRpcMapper {
@@ -83,15 +90,25 @@ class ClassMapper extends XmlRpcMapper {
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
-        Hashtable ht = new Hashtable();
         if (obj instanceof Teacher) {
             Teacher t = (Teacher) obj;
-            ht.put("userID", new Integer(t.getID()));
+            DbAccessIF dbAccess = DbAccessCreator.instance();
+            Vector<Object> vList = null;
+            try {
+                long schoolId = MySQLPersistenceId.getId(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolId());
+                vList = dbAccess.getClassesOfTeacher(t.getUserID(), (int) schoolId);
+            }
+            catch (DwoXmlRpcException ex) {
+                Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return vList.toArray();
         } else if (obj instanceof School) {
+            Hashtable ht = new Hashtable();
             School s = (School) obj;
             ht.put("schoolID", new Integer(s.getSchoolID()));
+            return super.get(ht);
         }
-        return super.get(ht);
+        return null;
     }
 
     /*

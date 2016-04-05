@@ -2,10 +2,9 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ClassUsersPanel.java
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
@@ -53,7 +52,7 @@ import javax.swing.table.TableCellRenderer;
  */
 public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionListener*/ {
 
-    private static final Logger log = Logger.getLogger(ImageButtonEditor.class.getName());
+    private static final Logger LOG = Logger.getLogger(ImageButtonEditor.class.getName());
 
     private CenterPanel center;
 
@@ -123,13 +122,13 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         public void actionPerformed(ActionEvent event) {
             User u = model.userList[row];
             if (value == model.userImage) {
-                try {
+//                try {
                     //MapperCreator.instance(User.class).removeObject(u.getID()); // not good enough, need fresh copy.
                     PersistenceFacade.instance().clearObjectInMapperCache(User.class,u.getID());
-                    GuiCreator.instance().login(u.getUsername(), null);
-                } catch (LoginException e) {
-                    log.log(Level.SEVERE, null, e);
-                }
+                    GuiCreator.instance().logoff(u.getUsername());
+//                } catch (LoginException e) {
+//                    LOG.log(Level.SEVERE, null, e);
+//                }
             } else if (value == model.editImage) {
                 try {
                     String newPassword = JOptionPane.showInputDialog(ClassUsersPanel.this, TextMapper.getText(TextMapper.GUIP_PASSWORD), u.getUsername(), JOptionPane.QUESTION_MESSAGE);
@@ -139,7 +138,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
                         JOptionPane.showMessageDialog(ClassUsersPanel.this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
                     }
                 } catch (Exception e) {
-                    log.log(Level.SEVERE, null, e);
+                    LOG.log(Level.SEVERE, null, e);
                 }
             } else if (value == model.removeImage) {
                 String[] arguments = new String[1];
@@ -159,8 +158,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 
     void removeUserFromClass(User u, int row) {
         String[] arguments;
-        u.setInClass(null);
-        schoolClass.disconnect(u);
+        schoolClass.disconnectStudent(DwoHelper.getActiveSchoolClassId(),u);
         model.deleteRow(row);
         if (model.getRowCount() == 0) {
             // TODO dit is niet goed. createLabel(vbox) o.i.d.
@@ -168,7 +166,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
             arguments = new String[1];
             arguments[0] = schoolClass.getName();
             String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
-            JLabel label = new JLabel(MessageFormat.format(s, arguments));
+            JLabel label = new JLabel(MessageFormat.format(s, (Object[]) arguments));
             label.setFont(GuiConstants.SCO_TEXT);
             label.setAlignmentY(0.24f);
             ClassUsersPanel.this.removeAll();
@@ -250,7 +248,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
 // initialisatie images
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
-        userImage = DwoHelper.getResourceImage("resources/student.png");
+        userImage = DwoHelper.getResourceImage(GuiConstants.STUDENT_IMAGE);
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_SCO_IMAGE);
 
         MediaTracker tr = new MediaTracker(this);
@@ -293,7 +291,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         if (user.hasRight(User.CHANGE_CLASS_RIGHT_TEACHER)) {
             Box hbox = Box.createHorizontalBox();
             hbox.add(registerClassListButton);
-            if (true || user instanceof ContactDocent) {
+            if (true || user instanceof SchoolAdmin) {
                 hbox.add(Box.createHorizontalStrut(10));
                 removeStudentsButton = new JButton(new RemoveAllUsers(TextMapper.getText(TextMapper.GUIUMP_ALL_STUDENTS), new ImageIcon(removeImage)));
                 hbox.add(removeStudentsButton);

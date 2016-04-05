@@ -18,7 +18,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class ImportScorm extends GuiAction {
-    private static final Logger log = Logger.getLogger(ImportScorm.class.getName());
+    private static final Logger LOG = Logger.getLogger(ImportScorm.class.getName());
 
     private FileDialog openDial;
     private Sco sco;
@@ -112,7 +112,7 @@ public class ImportScorm extends GuiAction {
                 sco.setEditLaunchdata(params);
             }
         } catch (IOException e) {
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,null,e);
         }
     }
 

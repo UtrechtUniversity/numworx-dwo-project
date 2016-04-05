@@ -16,7 +16,7 @@ import javax.swing.table.AbstractTableModel;
 
 class UserModel extends AbstractTableModel {
 
-    private static final Logger log = Logger.getLogger(UserModel.class.getName());
+    private static final Logger LOG = Logger.getLogger(UserModel.class.getName());
 
     UserModel() {
         if (!GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER)) {
@@ -112,11 +112,12 @@ class UserModel extends AbstractTableModel {
             SchoolClass c = (SchoolClass) aValue;
             // TODO persist....
             try {
-                PersistenceFacade.instance().changeAccount(user, null, null, user.getFirstname(), user.getMiddleName(), user.getLastName(), user.getEmail(), c);
+//TODO MANY TO MANY: Fix GUI so that SchoolClass list of student can be updated.                
+                PersistenceFacade.instance().changeAccount(user, null, null, user.getFirstname(), user.getMiddleName(), user.getLastName(), user.getEmail());
                 user.setInClass(c);
                 fireTableCellUpdated(row, col);
             } catch (RegisterException e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
             return;
         }

@@ -15,7 +15,7 @@ import fi.dwo.dwojapplet.system.Loader;
 public class WiskOpdrEditPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private final Logger log = Logger.getLogger(getClass().getName());
+	private final Logger LOG = Logger.getLogger(getClass().getName());
 	
 	String text;
 	private Component component;
@@ -24,14 +24,14 @@ public class WiskOpdrEditPanel extends JPanel {
 		super(new BorderLayout());
 		this.text = text;
 		try {
-            if(DwoHelper.getGetResourceURLPathString()!=null) Loader.setPrefix(DwoHelper.getGetResourceURLPathString());
+            if(DwoHelper.getJarUrlPath()!=null) Loader.setPrefix(DwoHelper.getJarUrlPath().toString());
 			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
 			Method m = wiskopdr.getMethod("getWiskOpdrEditPanel", String.class);
 			component = (Component) m.invoke(null, text);
 			add(component, BorderLayout.CENTER);
 			return;
 		} catch (Exception e) {
-			log.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 			add(new JLabel("not implemented: " + e));
 		}
 	}
@@ -41,7 +41,7 @@ public class WiskOpdrEditPanel extends JPanel {
 			Method m = component.getClass().getMethod("getText");
 			return (String) m.invoke(component);
 		} catch(Exception e) {
-			log.log(Level.SEVERE, null, e);			
+			LOG.log(Level.SEVERE, null, e);			
 		}
 		return text;
 	}

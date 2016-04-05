@@ -4,6 +4,7 @@
  */
 package fi.beans.appletutil;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Image;
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class AppletUtil {
 
-    private static final Logger log = Logger.getLogger(AppletUtil.class.getName());
+    private static final Logger LOG = Logger.getLogger(AppletUtil.class.getName());
 
     private Applet applet;
     private String packageName, language;
@@ -35,6 +36,7 @@ public class AppletUtil {
 
     /**
      * Geef een Applet een standaard gelocaliseerde omgeving
+     *
      * @param applet
      */
     public AppletUtil(Applet applet) {
@@ -42,12 +44,16 @@ public class AppletUtil {
         language = applet.getParameter("language");
         if (language == null) {
             language = "nl";
+            //Sets global state variable for 
+            DwoHelper.setLocale(new Locale.Builder().setLanguage("nl").setRegion("NL").build());
         }
         locale = new Locale(language, "");
-//System.err.println("lang=" + language + ", locale = " + locale);
+        DwoHelper.setLocale(new Locale.Builder().setLanguage("nl").build());
+        LOG.log(Level.INFO, "Locale is set to: {0}", DwoHelper.getLocale().toString());
         try {
             Locale.setDefault(locale);
-        } catch (SecurityException ex) {
+        }
+        catch (SecurityException ex) {
         }
 
         applet.setLocale(locale);
@@ -57,7 +63,7 @@ public class AppletUtil {
      * het l10n deel van een applet.
      *
      * @param prefix bundleprefix inclusief packagenaam.
-     * @return 
+     * @return
      */
     public ResourceBundle getBundle(String prefix) {	// DIT IS 1.2
         //return ResourceBundle.getBundle(prefix, locale, applet.getClass().getClassLoader());
@@ -71,7 +77,7 @@ public class AppletUtil {
      * getResourceAsStream niet gesupport is.
      *
      * @param resourceName
-     * @return 
+     * @return
      * @see java.lang.ClassLoader#getResource
      */
     public Image getImage(String resourceName) {
@@ -104,8 +110,9 @@ public class AppletUtil {
                 in.close();
                 bos.close();
                 images.put(resourceName, buffer);
-            } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, null, e);
                 return null;
             }
         }
@@ -133,7 +140,8 @@ public class AppletUtil {
             } else {
                 return new URL(applet.getCodeBase(), getPackage() + resource);
             }
-        } catch (MalformedURLException muex) {
+        }
+        catch (MalformedURLException muex) {
             System.err.println(muex);
             return null;
         }
@@ -142,8 +150,9 @@ public class AppletUtil {
     /**
      * Haal een AudioClip-Resource op. Via getResource of via getCodeBase
      * (audiofile is dan NIET in JAR file)
+     *
      * @param resourceName
-     * @return 
+     * @return
      */
     public AudioClip getAudioClip(String resourceName) {
         AudioClip audio = null;
@@ -163,7 +172,7 @@ public class AppletUtil {
     /**
      * geef mij de Locale
      *
-     * @return 
+     * @return
      * @returns locale via applet parameter "language"
      */
     public Locale getLocale() {
@@ -188,7 +197,8 @@ public class AppletUtil {
             if (in != null) {
                 return in;
             }
-        } catch (SecurityException sex) {
+        }
+        catch (SecurityException sex) {
             System.err.println(sex);
         }
         URL u = getCodeBaseResource(resource);
@@ -198,7 +208,8 @@ public class AppletUtil {
                 if (in != null) {
                     return in;
                 }
-            } catch (IOException ioex) {
+            }
+            catch (IOException ioex) {
                 System.err.println(ioex);
             }
         }

@@ -5,6 +5,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.base64code.StringCodeObject;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -21,6 +22,8 @@ import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -37,6 +40,8 @@ import javax.swing.JLabel;
  *
  */
 public class GuiCreatorTeacher extends GuiCreator {
+
+    private static final Logger LOG = Logger.getLogger(GuiCreatorTeacher.class.getName());
 
     public static final class LazyAppletConfig extends AppletConfig {
 
@@ -90,7 +95,7 @@ public class GuiCreatorTeacher extends GuiCreator {
         User u = dwo.getUser();
 
         if (u instanceof Teacher) {
-            return new TeacherMenuPanel(dwo);
+            return new TeacherMenuPanel();
         } else if (u instanceof Admin) {
             return new AdminMenuPanel();
         } else {
@@ -110,7 +115,8 @@ public class GuiCreatorTeacher extends GuiCreator {
     public CenterSubPanel getProfilePanel() {
         dwo.setWait();
         CenterSubPanel csb;
-        csb = new TeacherProfilePanel();
+        csb = //new TeacherProfilePanel();
+                new AccountPanel();
         dwo.setReady();
         return csb;
     }
@@ -181,7 +187,13 @@ public class GuiCreatorTeacher extends GuiCreator {
      */
     @Override
     public CenterSubPanel getClassPanel() {
-        return new ClassPanel();
+        try {
+            return new ClassTeacherPanel();
+        }
+        catch (Dwo2Exception ex) {
+           LOG.log(Level.SEVERE, null, ex);
+           return null;
+        }
     }
 
     /**

@@ -6,8 +6,19 @@ package fi.dwo.dwojapplet.domain;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
+import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomSchool;
+import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
+import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
@@ -18,26 +29,33 @@ import java.awt.Point;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import netscape.javascript.JSObject;
 
 /**
- * Static Helper class for the DWO.
- *
- * @author M.J.B. Kupers
- *
+ * Static Helper class for the DWO. The DwoHelper has two startup phases. During
+ * the boot phase some parameters can and must be set. Afterwards the init
+ * method must be called which retrieves configuration of the application server
+ * and initializes the class. Information can only be considered correct in the
+ * DwoHelper after initialization has finished.
  */
 public final class DwoHelper {
 
-    private static final Logger log = Logger.getLogger(DwoHelper.class.getName());
+    private static final Logger LOG = Logger.getLogger(DwoHelper.class.getName());
 
+    /**
+     * DWO 1.0 properties
+     */
     private static AppletUtil au;
 
     private static Hashtable loadedImages;
 
     private static Applet applet;
+
+    private static GuiCreator guic;
 
     private static boolean isApplication = true; // default als je setApplet niet aanroept.
 
@@ -45,10 +63,120 @@ public final class DwoHelper {
 
     private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
 
-    private static String resourceURLPathString; // required null if to use the default
-    private static String servletConnectString=null; // required null, filled in main or init
-                                                     //depending on application or applet start.
+    /**
+     * DWO boot property attributes, set before calling init in DWO.main()
+     */
+    //TODO fix locale to be set within DWO_main.
+    private static Locale locale = new Locale.Builder().setLanguage("nl").setRegion("NL").build(); //runtime property for locale.
 
+    private static URL serverUrlPath = null;
+    private static URL resourceUrlPath = null; // required null if to use the default
+    private static URL jarUrlPath;
+    private static HttpAuthenticationType httpAuthentication;
+
+    //depending on application or applet start.
+    private static SchoolClass schoolClass;
+    private static School school;
+
+    /**
+     * Boot properties that need to be set before calling init()
+     */
+    private static DomUserFull currentUser; // null if none available.
+    private static DomSchool nullSchool;
+//    private static RoleType currentRole; // null if none available.
+
+    /**
+     * Init properties set by init() *
+     */
+    private static DomSchoolsRolesAndClasses schoolLogins;
+    //      
+    /**
+     * ********deprecated attributes **********
+     */
+    private static User currentFacadeUser;
+    private static String plainPassword;
+
+    /**
+     * @return the plainPassword
+     */
+    @Deprecated
+    public static String getPlainPassword() {
+        return plainPassword;
+    }
+
+    /**
+     * @param aPlainPassword the plainPassword to set
+     */
+    @Deprecated
+    public static void setPlainPassword(String aPlainPassword) {
+        plainPassword = aPlainPassword;
+    }
+
+    /**
+     * @return the locale
+     */
+    public static Locale getLocale() {
+        return locale;
+    }
+
+    /**
+     * @param aLocale the locale to set
+     */
+    public static void setLocale(Locale aLocale) {
+        locale = aLocale;
+    }
+
+    public static boolean isSingleSchoolStudent() {
+        return currentUser.getSingleSchool();
+    }
+
+    /**
+     * Initialization function that retrieves some basic configuration data from
+     * the server. DwoHelper is to be initialized after the DWO started and any
+     * pre-initialization occurred specifying resource locations.
+     *
+     * @throws Dwo2Exception
+     */
+    public static void init() throws Dwo2Exception {
+        //Fetch all the login roles from the server for the current roles
+        try {
+            schoolLogins = SecureUserAccountLoginsManager.getSchoolLogins();
+            nullSchool = SecureUserAccountManager.getNullSchool();
+            //TODO should set relevant properties when calling init using REST-interface: school, hasRole etc...
+
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * User initialization. When ever the user changes or his active schoollogin
+     * we reinitialize things.
+     *
+     *
+     * @param aCurrentUser
+     * @throws Dwo2Exception
+     */
+    public static void userInit(DomUserFull aCurrentUser) throws Dwo2Exception {
+        currentUser = aCurrentUser;
+        //Fetch all the login roles from the server for the current roles
+        try {
+            if (aCurrentUser != null) {
+                SecureUserAccountLoginsManager.getSchoolLogins();//updates DwoHelper
+//                nullSchool = SecureUserAccountManager.getNullSchool();
+            } else {
+                schoolLogins = null;
+            }
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * ****************************************
+     */
     /**
      * Returns the current AppletUtil.
      *
@@ -86,9 +214,11 @@ public final class DwoHelper {
         }
         try {
             return JSObject.getWindow(applet);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             // expect JSException of ClassNotFoundException
-        } catch (NoClassDefFoundError e) {
+        }
+        catch (NoClassDefFoundError e) {
             // expect NoClassDefFound ERROR
         }
         return null;
@@ -216,19 +346,22 @@ public final class DwoHelper {
                 try {
                     applicationBase = new URL("http://www.fisme.science.uu.nl/dwo/");
                     //TODO Gert: fix this to allow change of url by property file.
-                } catch (MalformedURLException e) {
+                }
+                catch (MalformedURLException e) {
                 }
             }
             try {
                 url = new URL(applicationBase, resource);
-            } catch (MalformedURLException e) {
-                log.log(Level.SEVERE, null, e);
+            }
+            catch (MalformedURLException e) {
+                LOG.log(Level.SEVERE, null, e);
             }
 
         } else {
             try {
                 url = new URL(applet.getCodeBase(), resource);
-            } catch (MalformedURLException e) {
+            }
+            catch (MalformedURLException e) {
             }/**/
 
         }
@@ -245,7 +378,8 @@ public final class DwoHelper {
         tr.addImage(im, 0);
         try {
             tr.waitForAll();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
         }
         if (im != null) {
             loadedImages.put(image, im);
@@ -254,6 +388,8 @@ public final class DwoHelper {
     }
 
     /**
+     * True if schoolAdmin.
+     *
      * @return the contact
      */
     public static boolean isContact() {
@@ -261,6 +397,8 @@ public final class DwoHelper {
     }
 
     /**
+     * True if schoolAdmin.
+     *
      * @param contact the contact to set
      */
     public static void setContact(boolean contact) {
@@ -275,7 +413,8 @@ public final class DwoHelper {
             String cookie;
             cookie = (String) JSObject.getWindow(applet).eval("document.cookie");
             return cookie;
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex) {
             return null;
         }
     }
@@ -309,7 +448,8 @@ public final class DwoHelper {
         }
         try {
             JSObject.getWindow(applet).eval("document.cookie ='" + name + "=" + value + "';");
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex) {
         }
     }
 
@@ -319,29 +459,217 @@ public final class DwoHelper {
         }
         try {
             JSObject.getWindow(applet).eval("document.cookie ='" + name + "=dummy" + "';");
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex) {
         }
     }
 
     /**
-     * @return the resourceURLPathString
+     * Returns the url path to the resource location where the resources are
+     * stored.
+     *
+     * @return the resourceUrlPathString
      */
-    public static String getGetResourceURLPathString() {
-        return resourceURLPathString;
+    public static URL getResourceUrlPath() {
+        return resourceUrlPath;
     }
 
     /**
-     * @param aGetResourceURLPathString the resourceURLPathString to set
+     * Sets the url path to the resource location where the resources are
+     * stored.
+     *
+     * @param aGetResourceURLPath
      */
-    public static void setGetResourceURLPathString(String aGetResourceURLPathString) {
-        resourceURLPathString = aGetResourceURLPathString;
+    public static void setResourceUrlPath(URL aGetResourceURLPath) {
+        resourceUrlPath = aGetResourceURLPath;
     }
 
-    public static void setServletConnectString(String aServletConnectString) {
-        servletConnectString = aServletConnectString;
+    /**
+     * Sets the url path to the resource location where the resources are
+     * stored.
+     *
+     * @param aJarURLPath
+     */
+    public static void setJarUrlPath(URL aJarURLPath) {
+        jarUrlPath = aJarURLPath;
     }
 
-    public static String getServletConnectString() {
-        return servletConnectString;
+    /**
+     * Returns the url path to the resource location where the resources are
+     * stored.
+     *
+     * @return
+     */
+    public static URL getJarUrlPath() {
+        return jarUrlPath;
+    }
+
+    public static void setServerUrlPath(URL aServerUrlPath) {
+        serverUrlPath = aServerUrlPath;
+    }
+
+    public static URL getServerUrlPath() {
+        return serverUrlPath;
+    }
+//
+//    /**
+//     * @return the schoolClass
+//     */
+//    public static SchoolClass getSchoolClass() {
+//        return currentFacadeUser.getInClass();
+//    }
+
+    /**
+     * Assisting function for hybrid code between old and new.
+     *
+     * @return
+     * @deprecated
+     */
+    @Deprecated
+    public static int getActiveSchoolClassId() {
+        return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchoolClassId());
+    }
+
+    /**
+     * Assisting function for hybrid code between old and new.
+     *
+     * @return
+     * @deprecated
+     */
+    @Deprecated
+    public static int getActiveSchoolId() {
+        return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchoolId());
+    }
+//    
+//    /**
+//     * @param aSchoolClass the schoolClass to set
+//     */
+//    public static void setSchoolClass(SchoolClass aSchoolClass) {
+//        currentFacadeUser.setInClass(schoolClass);
+//    }
+//
+//    /**
+//     * @return the school
+//     */
+//    public static School getSchool() {
+//        return currentFacadeUser.getSchool();
+//    }
+//
+//    /**
+//     * @param aSchool the school to set
+//     */
+//    public static void setSchool(School aSchool) {
+//        currentFacadeUser.setSchool(aSchool);
+//    }
+
+    /**
+     * @return the current User
+     */
+    public static DomUserFull getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * Only updates the user not its login roles for efficiency.
+     *
+     * @param aCurrentUser the current User to set
+     */
+    public static void updateCurrentUser(DomUserFull aCurrentUser) {
+        if (aCurrentUser.getId() == currentUser.getId()) {
+            currentUser = aCurrentUser;
+            try {
+                currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUserName());
+            }
+            catch (LoginException ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        } else {
+            currentFacadeUser = null;
+        }
+    }
+
+    /**
+     * @param aCurrentUser the current User to set
+     */
+    public static void setCurrentUser(DomUserFull aCurrentUser) throws Dwo2Exception {
+        userInit(aCurrentUser);
+        if (aCurrentUser != null) {
+            try {
+                GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(aCurrentUser.getId()));
+                currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUserName());
+            }
+            catch (LoginException ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        } else {
+            currentFacadeUser = null;
+        }
+    }
+
+    /**
+     * @return the currentFacadeUser
+     */
+    @Deprecated
+    public static User getCurrentFacadeUser() {
+        return currentFacadeUser;
+    }
+
+    /**
+     * @param aCurrentUser the currentFacadeUser to set
+     */
+    @Deprecated
+    public static void setCurrentFacadeUser(User aCurrentUser) {
+        currentFacadeUser = aCurrentUser;
+    }
+
+//    /**
+//     * @return the currentRole
+//     */
+//    public static RoleType getCurrentRole() {
+//                    return RoleType.valueOf(schoolLogins.getActiveSchoolRoleAndClass().getRoleName());
+//    }
+//
+//    /**
+//     * @param aCurrentRole the currentRole to set
+//     */
+//    public static void setCurrentRole(RoleType aCurrentRole) {
+//        currentRole = aCurrentRole;
+//    }
+    public static RoleType[] getRoles() {
+        RoleType[] list = new RoleType[5];
+        list[0] = RoleType.ANONYMOUS;
+        list[1] = RoleType.STUDENT;
+        list[2] = RoleType.TEACHER;
+        list[3] = RoleType.SCHOOLADMIN;
+        list[4] = RoleType.ADMIN;
+        return list;
+    }
+
+    /**
+     * @return the srcs
+     */
+    public static DomSchoolsRolesAndClasses getSchoolLogins() {
+        return schoolLogins;
+    }
+
+    /**
+     * @param aSchoolLogins
+     */
+    public static void setSchoolLogins(DomSchoolsRolesAndClasses aSchoolLogins) {
+        schoolLogins = aSchoolLogins;
+    }
+
+    /**
+     * @return the httpAuthentication
+     */
+    public static HttpAuthenticationType getHttpAuthentication() {
+        return httpAuthentication;
+    }
+
+    /**
+     * @param aHttpAuthentication the httpAuthentication to set
+     */
+    public static void setHttpAuthentication(HttpAuthenticationType aHttpAuthentication) {
+        httpAuthentication = aHttpAuthentication;
     }
 }

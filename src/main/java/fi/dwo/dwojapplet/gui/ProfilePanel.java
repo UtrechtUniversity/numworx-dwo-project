@@ -1,10 +1,11 @@
-// Source file:
-// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ProfilePanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;
@@ -14,6 +15,8 @@ import java.awt.Container;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,8 +34,10 @@ import javax.swing.event.ChangeEvent;
  * @author M.J.B. Kupers
  *
  */
+@Deprecated
 public class ProfilePanel extends JPanel implements CenterSubPanel,
         ActionListener {
+    private static final Logger LOG = Logger.getLogger(ProfilePanel.class.getName());
 
     protected Group groupList[];
 
@@ -424,26 +429,28 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
             l.setLocation(10, 55);
             l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
             p.add(l);
-
-            /* Class field */
-            groupChoice = new JComboBox();
-            groupChoice.setBackground(p.getBackground());
-            groupChoice.setFont(GuiConstants.NORMAL_TEXT);
-            if (user.getInClass() == null) {
-                groupChoice.addItem(TextMapper.getText(TextMapper.GUIP_OPT_SELECT_GROUP));
-            }
-
-            classList = user.getSchool().getClassList();
-
-            for (int i = 0; i < classList.length; i++) {
-                groupChoice.addItem(classList[i].getName());
-            }
-            if (user.getInClass() != null) {
-                groupChoice.setSelectedItem(user.getInClass().getName());
-            }
-            groupChoice.setBounds(160, 53, 120, 20);
-            groupChoice.setEnabled(!user.isReadonly() && user.hasRight(User.CHANGE_CLASS_RIGHT));
-            p.add(groupChoice);
+//TODO MANY TO MANY: Change panel to switch to different schools, roles and classes.
+//                   Add menu 'bewerken' to remove schools/roles or get registration panel.
+//                   Add menu to add/remove yourself to klasses. 
+//            /* Class field */
+//            groupChoice = new JComboBox();
+//            groupChoice.setBackground(p.getBackground());
+//            groupChoice.setFont(GuiConstants.NORMAL_TEXT);
+//            if (user.getInClass() == null) {
+//                groupChoice.addItem(TextMapper.getText(TextMapper.GUIP_OPT_SELECT_GROUP));
+//            }
+//
+//            classList = user.getSchool().getClassList();
+//
+//            for (int i = 0; i < classList.length; i++) {
+//                groupChoice.addItem(classList[i].getName());
+//            }
+//            if (user.getInClass() != null) {
+//                groupChoice.setSelectedItem(user.getInClass().getName());
+//            }
+//            groupChoice.setBounds(160, 53, 120, 20);
+//            groupChoice.setEnabled(!user.isReadonly() && user.hasRight(User.CHANGE_CLASS_RIGHT));
+//            p.add(groupChoice);
         }
 
         return p;
@@ -608,33 +615,35 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
                     }
 
                 }
-            } else {
-                /* User was already linked to a school */
-                SchoolClass sc = null;
-                if ((user.getInClass() == null)
-                        && (groupChoice.getSelectedIndex() != 0)) {
-                    /* User not linked to a class and a class is chosen */
-                    sc = classList[groupChoice.getSelectedIndex() - 1];
-                } else {
-                    /*
-                     * User was already linked to a class, but maybe he is in an
-                     * other class?
-                     */
-                    sc = classList[groupChoice.getSelectedIndex()];
-                }
-                try {
-                    if (sc != null) {
-                        /* Add user to a class */
-                        GuiCreator.instance().changeAccount(oldpassword.getText(), pwd, repwd, firstname.getText(), middlename.getText(), lastname.getText(), email.getText(), sc);
-                    } else {
-                        GuiCreator.instance().changeAccount(oldpassword.getText(), pwd, repwd, firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
-                    }
-                } catch (RegisterException exc) {
-                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                    correct = false;
-                }
-
-            }
+            } 
+            //TODO MANY TO MANY: parse class management panel.
+//            else {
+//                /* User was already linked to a school */
+//                SchoolClass sc = null;
+//                if ((user.getInClass() == null)
+//                        && (groupChoice.getSelectedIndex() != 0)) {
+//                    /* User not linked to a class and a class is chosen */
+//                    sc = classList[groupChoice.getSelectedIndex() - 1];
+//                } else {
+//                    /*
+//                     * User was already linked to a class, but maybe he is in an
+//                     * other class?
+//                     */
+//                    sc = classList[groupChoice.getSelectedIndex()];
+//                }
+//                try {
+//                    if (sc != null) {
+//                        /* Add user to a class */
+//                        GuiCreator.instance().changeAccount(oldpassword.getText(), pwd, repwd, firstname.getText(), middlename.getText(), lastname.getText(), email.getText(), sc);
+//                    } else {
+//                        GuiCreator.instance().changeAccount(oldpassword.getText(), pwd, repwd, firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
+//                    }
+//                } catch (RegisterException exc) {
+//                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                    correct = false;
+//                }
+//
+//            }
 
             if (correct) {
                 /*
@@ -646,15 +655,20 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
                     /* Evil trick to refresh user info */
                     if (password.getText().equals("")) {
                         // TODO this erases the canLogout flag.
-                        GuiCreator.instance().clearCurrentUserData();
+                        GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
                         GuiCreator.instance().login(user.getUsername(), oldpassword.getText());
                     } else {
-                        GuiCreator.instance().clearCurrentUserData();
+                        GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
                         GuiCreator.instance().login(user.getUsername(), password.getText());
                     }
                 } catch (LoginException exc) {
+                    LOG.log(Level.SEVERE, null, exc);
                     JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
 
+                }
+                catch (Dwo2Exception ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                 }
             }
 

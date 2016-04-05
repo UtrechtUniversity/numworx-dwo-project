@@ -2,17 +2,22 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\TeacherMenuPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -22,12 +27,12 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
 /**
- * This class is the menupanel for the teacher who logged in.
+ * Teacher menu panel, adds course-management and overloads class-management functionality
  *
- * @author M.J.B. Kupers
+ * original version by M.J.B. Kupers
  *
  */
-public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
+public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
 
     private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
     private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
@@ -40,19 +45,18 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
     private JScrollPane classPanel;
 
     /* (non-Javadoc)
-     * @see fi.dwo.client.gui.MenuPanel#createButtons()
+     * @see fi.dwo.client.gui.StudentMenuPanel#createButtons()
      */
     @Override
     protected void createMenuButtons() {
         super.createMenuButtons();
         createGap();
-
         /* Add ClassManagement button */
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
         classManagementButton.addActionListener(this);
         this.add(classManagementButton);
         /* Als dwo in Deeplink mode, geen coursemanagement */
-        if (dwo.getCourseViewNr() > 0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer()) {
+        if (GuiCreator.instance().getDWO().getCourseViewNr() > 0 || !GuiCreator.instance().getDWO().getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer()) {
             return;
         }
         createGap();
@@ -64,16 +68,23 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
     }
 
     /**
-     * Creates a new MenuPanel for the user. It contains the parent items (from
-     * MenuPanel) and buttons to show the result of students, and to add a
-     * class.
+     * Creates a new StudentMenuPanel for the user. It contains the parent items
+     * (from StudentMenuPanel) and buttons to show the result of students, and
+     * to add a class.
      *
      * @param dwo
      */
-    public TeacherMenuPanel(DwoIF dwo) {
-        super(dwo);
-        hasAdminRight = dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
-        schoolID = dwo.getUser().getSchool().getSchoolID();
+    public TeacherMenuPanel() {
+        super();
+
+        try {
+            School school = (School) PersistenceFacade.instance().get(DwoHelper.getActiveSchoolId(), School.class);
+            hasAdminRight = school.hasRight(User.PROFILE_ADMIN_RIGHT);
+            schoolID = DwoHelper.getActiveSchoolId();
+        }
+        catch (PersistenceException ex) {
+            Logger.getLogger(TeacherMenuPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -81,7 +92,6 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
      * overridden by subclasses.
      *
      */
-    @Override
     protected void addClassList() {
         /* Variables used to create items */
         FontMetrics fm;
@@ -103,8 +113,8 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
         classPanel.setViewportBorder(null);
         classPanel.setBorder(null);
         /* Add class-info */
-        if (dwo.getUser() instanceof Teacher) {
-            Teacher t = (Teacher) dwo.getUser();
+        if (DwoHelper.getCurrentFacadeUser() instanceof Teacher) {
+            Teacher t = (Teacher) DwoHelper.getCurrentFacadeUser();
             if ((t.getClasses() != null) && (t.getClasses().length != 0)) {
                 l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_CLASS_RESULTS)
                         + ":");
@@ -151,7 +161,13 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
             instance.getMainPanel().getCenter().select(ModuleTreePanel.ALLE_MODULES);
             return;
         }
-        super.actionPerformed(e);
+        if (src == classManagementButton) {
+            instance.setWait();
+            CenterSubPanel cp = instance.getClassPanel();
+            center.reset();
+            center.loadCenter(cp);
+            instance.setReady();
+        }
 
         if (src instanceof ClassLinkedLabel) {
             instance.setWait();
@@ -159,19 +175,16 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
             center.reset();
             center.loadCenter(cp);
             instance.setReady();
-        } else if (src == classManagementButton) {
-            instance.setWait();
-            CenterSubPanel cp = instance.getClassPanel();
-            center.reset();
-            center.loadCenter(cp);
-            instance.setReady();
+            return;
         } else if (src == courseManagementButton) {
             instance.setWait();
             CenterSubPanel cp = instance.getCourseManagementPanel();
             center.loadCenter(cp);
             center.setStrategy(this);
             instance.setReady();
+            return;
         }
+        super.actionPerformed(e);
     }
 
     @Override

@@ -11,14 +11,14 @@ import java.awt.event.ActionEvent;
  * @author M.J.B. Kupers
  *
  */
-public class AdminMenuPanel extends MenuPanel {
+public class AdminMenuPanel extends UserMenuPanel {
 
     private MenuPanelButton courseManagementButton;
 
     private MenuPanelButton schoolManagementButton;
 
     /* (non-Javadoc)
-     * @see fi.dwo.client.gui.MenuPanel#createMenuButtons()
+     * @see fi.dwo.client.gui.StudentMenuPanel#createMenuButtons()
      */
     @Override
     protected void createMenuButtons() {
@@ -52,21 +52,11 @@ public class AdminMenuPanel extends MenuPanel {
     }
 
     /**
-     * Creates a new MenuPanel for the user. It contains the parent items (from
-     * MenuPanel) and buttons to show the reult of students, and to add a class.
+     * Creates a new StudentMenuPanel for the user. It contains the parent items (from
+ StudentMenuPanel) and buttons to show the reult of students, and to add a class.
      */
     public AdminMenuPanel() {
         super();
-    }
-
-    /**
-     * Adds the name of the classes wherefrom the user is teacher. Can be
-     * overridden by subclasses.
-     *
-     */
-    @Override
-    protected void addClassList() {
-        createRuler();
     }
 
     /**

@@ -4,7 +4,7 @@ package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
-import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
@@ -19,12 +19,13 @@ import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class UserMapper extends XmlRpcMapper {
-    private static final Logger log = Logger.getLogger(UserMapper.class.getName());
 
+    private static final Logger LOG = Logger.getLogger(UserMapper.class.getName());
+    
     private static final String TABLENAME = "tblUser left join tblSchoolGroup on tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID left join tblGroup on tblSchoolGroup.groupID = tblGroup.groupID left join tblSchool on tblSchoolGroup.schoolID = tblSchool.schoolID";
     //private static final String TABLENAME = "tbluser";
     private static final String IDCOL = "userID";
-
+    
     private static final String ORDERCOL = "lastname";
     private static final Object NUL = 0;
 
@@ -32,7 +33,7 @@ class UserMapper extends XmlRpcMapper {
      *
      */
     public UserMapper() {
-
+        
     }
 
     /**
@@ -72,19 +73,19 @@ class UserMapper extends XmlRpcMapper {
             if (groupName != null) {
                 if (TextMapper.GUIR_OPT_TEACHER.equals(groupName)) {
                     if (DwoHelper.isContact()) {
-                        u = new ContactDocent();
+                        u = new SchoolAdmin();
                     } else {
                         u = new Teacher();
                     }
                 } else if (TextMapper.GUIR_OPT_ADMIN.equals(groupName)) {
                     u = new Admin();
                 } else if (TextMapper.GUIR_OPT_SCHOOLADMIN.equals(groupName)) {
-                    u = new ContactDocent();
+                    u = new SchoolAdmin();
                     DwoHelper.setContact(true);
                 }
             }
         }
-
+        
         if (u == null) {
             u = new User();
         }
@@ -175,31 +176,41 @@ class UserMapper extends XmlRpcMapper {
         String lastLogin = (String) data.get("timestamp"); // lastLogin is al in gebruik, maar dan een Date
         try {
             u.setLastLogin(Long.parseLong(lastLogin));
-        } catch (Exception e) {
         }
-
+        catch (Exception e) {
+        }
+        
         Object classID = data.get("classID");
-        if (!classID.equals("") && !NUL.equals(classID)) {
+        if (classID!=null && !classID.equals("") && !NUL.equals(classID)) {
             try {
                 SchoolClass c = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(((Integer) data.get("classID")).intValue());
                 if (c != null) {
                     u.setInClass(c);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 System.err.println("User: " + data);
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
-
+        
         if (u instanceof Teacher) {
             Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
-            ((Teacher) u).setClasses((SchoolClass[]) o);
+            if(o!=null){
+            SchoolClass[] slist = new SchoolClass[o.length];
+            for (int i = 0; i < o.length; i++) {
+                slist[i] = (SchoolClass) MapperCreator.instance(SchoolClass.class).getObjectFromReturn((java.util.Hashtable) o[i]);
+            };
+            ((Teacher) u).setClasses(slist);
+            }else{
+                ((Teacher) u).setClasses(null);
+            }
         }
         /*if(u instanceof Admin) {
          Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
          ((Admin) u).setClasses((SchoolClass[]) o);
          }*/
-
+        
         return u;
     }
 

@@ -91,19 +91,14 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
 
     protected JButton mainMenuButton;
 
-    protected DwoIF dwo;
+ //   protected DwoIF dwo;
 
-    /**
-     * Creates a new GuestMenuPanel. The panel contains only a button for the
-     * main menu.
-     *
-     */
-    public GuestMenuPanel() {
-        this(null);
-    }
 
     public GuestMenuPanel(DwoIF dwo) {
-        this.dwo = dwo;
+        this();
+    }
+    
+    public GuestMenuPanel() {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setDoubleBuffered(false);

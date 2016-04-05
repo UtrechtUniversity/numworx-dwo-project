@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class WrapSco extends Sco {
-    private static final Logger log = Logger.getLogger(WrapSco.class.getName());
+    private static final Logger LOG = Logger.getLogger(WrapSco.class.getName());
 
     /**
      * @param delegate
@@ -647,7 +647,7 @@ class WrapSco extends Sco {
             clazz = (Class<Applet>) Class.forName("fi.popupurlapplet.PopUpURLApplet");
             applet = clazz.newInstance();
         } catch (Exception e) {
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,null,e);
             applet = new Applet();
         }
         applet.setStub(this);

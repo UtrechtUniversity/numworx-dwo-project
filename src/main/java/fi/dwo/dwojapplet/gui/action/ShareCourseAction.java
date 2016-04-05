@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ShareCourseAction extends GuiAction {
-    private static final Logger log = Logger.getLogger(ShareCourseAction.class.getName());
+    private static final Logger LOG = Logger.getLogger(ShareCourseAction.class.getName());
 
     private CourseMap map;
 
@@ -42,7 +42,7 @@ public class ShareCourseAction extends GuiAction {
             dialog.setVisible(true);
             getCenter().updateMap(map);
         } catch (PersistenceException e1) {
-            log.log(Level.SEVERE,null,e1);
+            LOG.log(Level.SEVERE,null,e1);
         }
 
     }

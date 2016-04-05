@@ -29,14 +29,16 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author thijsk
  *
  */
-class UserResultListMapper extends XmlRpcMapper {
-    private static final Logger log = Logger.getLogger(UserResultListMapper.class.getName());
+public class UserResultListMapper extends XmlRpcMapper {
+    private static final Logger LOG = Logger.getLogger(UserResultListMapper.class.getName());
 
     private static final String TABLENAME = "tblUser";
 
     private static final String IDCOL = "userID";
 
     private static final String ORDERCOL = "lastname";
+
+    private ResultsModuleIF resultsModule;
 
     /**
      *
@@ -160,7 +162,7 @@ class UserResultListMapper extends XmlRpcMapper {
                 rs.setTotal_time(formatter.parse(total_time.toString()).getTime());
             } catch (ParseException e) {
 
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
         return rs;
@@ -217,6 +219,7 @@ class UserResultListMapper extends XmlRpcMapper {
         int currentResultScore = 0; //Current Column
 
         url = new UserResultList();
+        url.setResultsModule(resultsModule);
         for (int i = 0; i < data.size(); i++) {
             ht = (Hashtable) data.elementAt(i);
             rs[currentResultScore] = (ResultScore) getObjectFromReturn(ht);
@@ -231,6 +234,7 @@ class UserResultListMapper extends XmlRpcMapper {
                 rs = new ResultScore[colLength];
                 currentUrl++;
                 url = new UserResultList();
+                url.setResultsModule(resultsModule);
             }
         }
 
@@ -239,4 +243,9 @@ class UserResultListMapper extends XmlRpcMapper {
         return v;
 
     }
+
+    public void setResultsModule(ResultsModuleIF resultsModule) {
+        this.resultsModule = resultsModule;
+        removeAllObjects();
+}
 }

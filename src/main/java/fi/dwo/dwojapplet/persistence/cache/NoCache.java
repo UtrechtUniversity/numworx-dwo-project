@@ -2,7 +2,7 @@ package fi.dwo.dwojapplet.persistence.cache;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.dwojapplet.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.DbAccessIF;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class NoCache implements IStore {
-    private static final Logger log = Logger.getLogger(NoCache.class.getName());
+    private static final Logger LOG = Logger.getLogger(NoCache.class.getName());
 
     NoCache(DbAccessIF dbAccess) {
         this.dbAccess = dbAccess;
@@ -19,10 +19,10 @@ public class NoCache implements IStore {
     private DbAccessIF dbAccess;
 
     @Override
-    public String getValue(int uid, int scoid, String key) throws PersistenceException {
+    public String getValue(int uid, int scoid, int sgid, String key) throws PersistenceException {
         String result = null;
         try {
-            result = dbAccess.LMSGetValue(scoid, uid, key);
+            result = dbAccess.LMSGetValue(scoid, uid, sgid, key);
         } catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
@@ -34,11 +34,11 @@ public class NoCache implements IStore {
     }
 
     @Override
-    public String setValue(int uid, int scoid, String key, String value) throws PersistenceException {
+    public String setValue(int uid, int scoid, int sgid, String key, String value) throws PersistenceException {
         String random = Long.toHexString(Double.doubleToRawLongBits(Math.random()));
         String result;
         try {
-            result = dbAccess.LMSSetValue(scoid, uid, key, value, random);
+            result = dbAccess.LMSSetValue(scoid, uid, sgid, key, value, random);
             if (result.equals(random)) {
                 return "true"; // all's well
             }
@@ -62,7 +62,7 @@ public class NoCache implements IStore {
             dbAccess.log(result);
         } catch (Exception e) {
             System.err.println(result);
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,null,e);
         }
     }
 

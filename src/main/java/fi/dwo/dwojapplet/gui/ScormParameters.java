@@ -106,7 +106,7 @@ public class ScormParameters {
         //} catch (LicenseException e)
         //{
         // TODO iets beters dan printstacktrace
-        //	log.log(Level.SEVERE,null,e);
+        //	LOG.log(Level.SEVERE,null,e);
         //}
         parameters[SCO_LAUNCH_DATA] = StringCodeObject.encodeObjectToString(launchData);
         //launchData.remove(LicMan.LICENSE_KEY);

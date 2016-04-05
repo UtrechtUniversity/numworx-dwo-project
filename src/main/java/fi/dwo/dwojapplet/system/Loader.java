@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 public class Loader extends URLClassLoader {
 
-    private static final Logger log = Logger.getLogger(Loader.class.getName());
+    private static final Logger LOG = Logger.getLogger(Loader.class.getName());
 
     private static URL urlPrefix;
 
@@ -45,7 +45,7 @@ public class Loader extends URLClassLoader {
     public static void setPrefix(String prefix) {
         try {
             urlPrefix = new URL(prefix);
-            log.log(Level.FINE, "URL Prefix set to: {0}.", new Object[]{urlPrefix.toString()});
+            LOG.log(Level.FINE, "URL Prefix set to: {0}.", new Object[]{urlPrefix.toString()});
         } catch (MalformedURLException e) {
         }
     }
@@ -59,13 +59,13 @@ public class Loader extends URLClassLoader {
         URL u = null;
         try {
             u = new URL(urlPrefix, jar);
-             log.log(Level.FINE, "URL {0} added.", new Object[]{u});
+             LOG.log(Level.FINE, "URL {0} added.", new Object[]{u});
         } catch (IOException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         }
         ClassLoader parent = Loader.class.getClassLoader();
         Loader loader = new Loader(new URL[]{u} , parent);
-        log.log(Level.FINE, "Loader {0} added.", new Object[]{loader.toString()});
+        LOG.log(Level.FINE, "Loader {0} added.", new Object[]{loader.toString()});
         return loader;
     }
 

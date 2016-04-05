@@ -33,7 +33,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import org.xml.sax.SAXException;
 
 public class ImportModuleAction extends GuiAction {
-    private static final Logger log = Logger.getLogger(ImportModuleAction.class.getName());
+    private static final Logger LOG = Logger.getLogger(ImportModuleAction.class.getName());
 
     private CourseMap course;
     private FileDialog openDial;
@@ -77,7 +77,7 @@ public class ImportModuleAction extends GuiAction {
                 importScos((Course) course);
                 return;
             } catch (Exception e1) {
-                log.log(Level.SEVERE,null,e1);
+                LOG.log(Level.SEVERE,null,e1);
                 return;
             }
         }
@@ -86,7 +86,7 @@ public class ImportModuleAction extends GuiAction {
                 upload(course);
             } catch (Exception e1) {
 
-                log.log(Level.SEVERE,null,e1);
+                LOG.log(Level.SEVERE,null,e1);
             }
             return;
         }
@@ -97,7 +97,7 @@ public class ImportModuleAction extends GuiAction {
                 importScos((Course) map);
                 return;
             } catch (Exception e1) {
-                log.log(Level.SEVERE,null,e1);
+                LOG.log(Level.SEVERE,null,e1);
                 return;
             }
         }
@@ -106,7 +106,7 @@ public class ImportModuleAction extends GuiAction {
                 upload(map);
             } catch (Exception e1) {
 
-                log.log(Level.SEVERE,null,e1);
+                LOG.log(Level.SEVERE,null,e1);
             }
             return;
         }

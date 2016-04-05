@@ -64,7 +64,7 @@ import javax.swing.text.StyledDocument;
  */
 public class ResultsModulePanel extends JPanel implements ActionListener, CenterSubPanel {
 
-    private static final Logger log = Logger.getLogger(ResultsModulePanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(ResultsModulePanel.class.getName());
 
     public class ImageEditor extends AbstractCellEditor implements
             TableCellEditor, ActionListener {
@@ -461,7 +461,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
                 document.insertString(0, bold, boldStyle);
                 document.setParagraphAttributes(0, document.getLength(), centerStyle, false);
             } catch (BadLocationException e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
     }
