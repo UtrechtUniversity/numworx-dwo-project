@@ -69,6 +69,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	
 	private static native Object publish0(Object o) /*-{
 		$wnd.inner = {
+			stub: o,
 			getScore: function() {
 				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::view.@nl.uu.fi.dwo.interaction.client.InteractionView::getScore()();
 			},
@@ -116,16 +117,16 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		};
 		$wnd.inner.stub = o;
 		
-		$wnd.doPublish = function () {
+		function doPublish() {
 			if($wnd.publish)
 				$wnd.publish($wnd.inner, $wnd.outer)
 			else 
 			{	console.log("window.publish not defined, waiting...");
-				setTimeout("doPublish()",50)
+				//setTimeout("doPublish()",50)
 			}
 		}		
 		//$wnd.publish($wnd.inner, $wnd.outer);
-		$wnd.doPublish()
+		doPublish()
 		
 		return $wnd.inner
 		
