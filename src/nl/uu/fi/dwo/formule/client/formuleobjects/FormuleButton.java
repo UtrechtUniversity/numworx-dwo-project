@@ -7,6 +7,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 
+import fi.wiskopdr.text.Text;
 
 public class FormuleButton extends TouchButton{
 
@@ -113,9 +114,9 @@ public class FormuleButton extends TouchButton{
 		ctx.setFillStyle("black");
 		ctx.setStrokeStyle("black");
 		if(code.equals("abc") || code.equals("sub"))
-		{
+		{	String i18n = Text.rb.getString(code);
 			ctx.setFont("10px Arial");
-			ctx.fillText(code, 1, 15);
+			ctx.fillText(i18n, 1, 15);
 		}
 		else if(code.equals("wortelbewerk"))
 		{   ctx.beginPath();

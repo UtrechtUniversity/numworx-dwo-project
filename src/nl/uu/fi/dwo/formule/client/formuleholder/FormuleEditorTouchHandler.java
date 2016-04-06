@@ -47,8 +47,8 @@ public class FormuleEditorTouchHandler implements TouchHandler
 		try
 		{
 			editor.requestFocus();
-			int x = event.touches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
-			int y = event.touches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
+			int x = event.getTouches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
+			int y = event.getTouches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
 			//if(!isSupported()) y+=8;// vraag me niet waarom dit nodig is 
 			//21-09-2015: weggehaald, want zorgt dat je voor aanklikken/selecteren te hoog moet klikken.
 
@@ -76,15 +76,19 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	{
 		//NOTE: this is important for android otherwise the move method may not be triggered properly
 		//if(TouchStartEvent.isSupported())
+		if(isSupported())
 		{
 			event.preventDefault();
 			event.stopPropagation();
 		}
 		try
 		{
-			int x = event.touches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
-			int y = event.touches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
-			if(!isSupported()) y+=8; // vraag me niet waarom dit nodig is
+			int x = event.getTouches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
+			
+			int y = event.getTouches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
+			//01-04-2016: onderstaande was al weggehaald in onTouchStart, dus kan waarschijnlijk hier ook weg. 
+			//(in de hoop dat selecteren dan soepeler gaat)
+			//if(!isSupported()) y+=8; // vraag me niet waarom dit nodig is
 			editor.endSelection(x, y);
 			this.x = x; this.y = y;
 
@@ -104,12 +108,24 @@ public class FormuleEditorTouchHandler implements TouchHandler
 			event.preventDefault();
 			event.stopPropagation();
 		}	
+		try
+		{
+			int x = event.getChangedTouches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
+			int y = event.getChangedTouches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
+			editor.endSelection(x, y);
+			this.x = x; this.y = y;
+		}
+		catch (Exception e)
+		{
+			//Window.alert("Error: " + e.getMessage());
+		}
+		
 	}
 
 	@Override
 	public void onTouchCanceled(TouchCancelEvent event)
 	{
-
+		
 	}
 
 }
