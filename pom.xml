@@ -112,6 +112,12 @@
   		<version>${gwtVersion}</version>
   		<scope>test</scope>
   	</dependency>
+  	<dependency>
+  		<groupId>fi.restrpcgwt</groupId>
+  		<artifactId>RestRpcGWT</artifactId>
+  		<version>0.0.1</version>
+  		<classifier>classes</classifier>
+  	</dependency>
   </dependencies>
   <parent>
   	<groupId>fi.parentgwt</groupId>
@@ -168,7 +174,7 @@
   		<properties>
   			<finalName>DWO2player</finalName>
   			<gwtModule>${project.groupId}.DWO2player</gwtModule>
-  			<runTarget>${finalName}.html</runTarget>
+  			<runTarget>DWO2player.html</runTarget>
   			<warClassifier>dwo2</warClassifier>
   		</properties>
   	</profile> 
