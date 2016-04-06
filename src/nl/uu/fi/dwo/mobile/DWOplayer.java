@@ -328,6 +328,7 @@ public class DWOplayer implements EntryPoint
 				clientfactory.getRPCHandler().getCoursesClass(profiledata, callback);
 				return;
 			}
+// FIXME als je wel student bent, maar niet in een klas zit, krijg je ook dit te zien!!!!
 			if(!"".equals(profiledata.get("schoolID")))
 			{
 				count = 2;

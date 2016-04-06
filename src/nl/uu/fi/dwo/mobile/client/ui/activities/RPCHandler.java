@@ -33,7 +33,6 @@ public class RPCHandler {
 		this(Window.Location.getProtocol() +  "//" + DWOplayer.PARAMETERS.getHost() + "/DWOmAccess/dbaccess");
 	}
 	
-
 	private static int PROFILE_OFFSET = -1234;
 	
 	public void login(String name, String password, AsyncCallback<? super Map<String,Object>> callback)
@@ -63,7 +62,7 @@ public class RPCHandler {
 
 	private XmlRpcClient xmlRpcClient;
 	
-	private XmlRpcClient getClient() {
+	public XmlRpcClient getClient() {
 		if( xmlRpcClient == null)
 		{
 			xmlRpcClient = new XmlRpcClient(server);

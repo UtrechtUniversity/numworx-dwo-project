@@ -118,6 +118,13 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		return NoLogging.instance;
 	}
 
+	
+	
+	DWOplayerDefaults(String launchData) {
+		super();
+		this.launchData = launchData;
+	}
+
 	public DWOplayerDefaults() {
 		super();
 		String host = getHost();
