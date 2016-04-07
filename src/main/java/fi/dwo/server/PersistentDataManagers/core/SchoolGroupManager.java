@@ -1,8 +1,8 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
-import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;

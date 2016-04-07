@@ -1,6 +1,7 @@
 package fi.dwo.server.persistence;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
@@ -11,10 +12,14 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnectIF;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.ScormAccessIF;
 import fi.dwo.commons.exceptions.LoginException;
 import java.util.logging.Level;
 
-public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
+import java.util.logging.Level;
+//TODO this class should use reflection to delegate stuff going to be purely serverside.
+//
+public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAccessIF {
 //TODO this class should use reflection to delegate stuff going to be purely serverside.
 //
     protected abstract DbAccessIF createDelegate();
@@ -660,4 +665,29 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     public boolean addTeacherToClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         return getDelegate().addTeacherToClass(classID, teacherID);
     }
+
+	@Override
+	public boolean Commit(int userID, int schoolGroupID, int scoID,
+			Hashtable map) throws Exception {
+		return getScormAccess().Commit(userID, schoolGroupID, scoID, map);
+	}
+// TODO Need a super interface: DBConnectIF, DBAccessIF, ScormAccessIF
+	private ScormAccessIF getScormAccess() {
+		return (ScormAccessIF) getDelegate();
+	}
+
+	@Override
+	public Hashtable Initialize(int userID, int schoolGroupID, int scoID)
+			throws Exception {
+		return getScormAccess().Initialize(userID, schoolGroupID, scoID);
+	}
+
+	@Override
+	public Hashtable Initialize(int userID, int schoolGroupID, int scoID,
+			Vector keys) throws Exception {
+		return getScormAccess().Initialize(userID, schoolGroupID, scoID, keys);
+	}
+    
+    
+    
 }
