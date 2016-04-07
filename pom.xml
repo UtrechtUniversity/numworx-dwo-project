@@ -4,12 +4,12 @@
     <!-- Adjust artifact, name and description for new projects -->
     <parent>
         <groupId>fi.dwo</groupId>
-        <artifactId>DWO2</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <artifactId>DWO2-working</artifactId>
+   <version>2.0-SNAPSHOT</version>
         <relativePath>../../../DWO2/branches/working/pom.xml</relativePath>
     </parent>
-    <artifactId>DWOServer</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <artifactId>DWOServer-working</artifactId>
+<!--    <version>2.0-SNAPSHOT</version>-->
     <packaging>war</packaging>
     <name>DWOServer - working</name>
     <url>http://www.dwo.nl</url>
@@ -43,14 +43,14 @@
     <dependencies>
          <dependency>
             <groupId>fi.dwo</groupId>
-            <artifactId>DWO-commons-lib</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <artifactId>DWO-commons-lib-working</artifactId>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>fi.dwo.rest</groupId>
-            <artifactId>DWO-rest-lib</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <artifactId>DWO-rest-lib-working</artifactId>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
        <dependency>
