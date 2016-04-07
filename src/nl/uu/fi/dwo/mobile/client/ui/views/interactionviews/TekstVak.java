@@ -88,8 +88,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		regelVakken[0] = new TekstRegel(this);
 		regelVakken[1] = new TekstRegel(this);
 		
-//		regelVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(0, 255, 255).toString());
-//		regelVakken[1].getElement().getStyle().setBackgroundColor(CssColor.make(200, 135, 255).toString());
+		//regelVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(0, 255, 255).toString());
+		//regelVakken[1].getElement().getStyle().setBackgroundColor(CssColor.make(200, 135, 255).toString());
 		
 		aantalRegels = 1;
 		//vPanel = new VerticalPanel();
@@ -604,15 +604,30 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		return ashoogte;
 	}
 	
-	public void pasHoogteAanInhoudAan(boolean b)
+	public void pasHoogteAanInhoudAan(boolean vanTekstVakPanel)
 	{
 		FormuleFont fm = regelVakken[0].getFont();
 		int regelafstand = fm.getAscent()+fm.getDescent()+interlinie;
 		int regelHoogtes = 0;
+		//even de hoogte van alle tekstvakken met vulhoogte op 0 zetten, zorgen dat die later weer goed worden gezet.
+		if(vanTekstVakPanel)
+		{
+			for(int i = 0; i < opdrachtObjects.size(); i++)
+			{
+				Object obj = opdrachtObjects.get(i);
+				if(obj instanceof TekstVakPanel)
+				{	TekstVakPanel tvp = (TekstVakPanel) obj;
+					if(tvp.vulHoogteMogelijk())
+						tvp.setCurrentSize(tvp.getWidth(), 0);
+				}
+			}
+			
+		}
 		for(int i = 0; i < aantalRegels; i++)
 		{
-			if(b)
-				regelVakken[i].bepaalAshoogte();
+			if(vanTekstVakPanel)
+			{	regelVakken[i].bepaalAshoogte();
+			}
 		
 			int corr = 0;
         	if(i>0)corr = Math.max(regelafstand-(regelVakken[i-1].getHeight()-regelVakken[i-1].getAsHoogte()+regelVakken[i].getAsHoogte()), 0);
@@ -717,10 +732,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	public void resize()
 	{
 		hoogte = 0;
-		boolean opvulhoogteGecorrigeerd = corrigeerOpvulHoogte();
+		//boolean opvulhoogteGecorrigeerd = corrigeerOpvulHoogte();
 		
 		for(int i=0 ; i<aantalRegels; i++)
-	    {	if(opvulhoogteGecorrigeerd || contentUitklapbaar())
+	    {	if(contentUitklapbaar())// || opvulhoogteGecorrigeerd
 	    	{	regelVakken[i].bepaalAshoogte();	
 	    		regelVakken[i].hervulRegel();
 	    	}
@@ -879,28 +894,22 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		return 0;
 	}
 	
-	public boolean corrigeerOpvulHoogte()
+	public void corrigeerOpvulHoogte()
 	{
-		boolean correctieGedaan = false;
 		if(opdrachtObjects != null) // NPE voorkomen, why?
-		for(int i=0 ; i<opdrachtObjects.size() ; i++)  
-		{
-			Object currentObject = opdrachtObjects.get(i);
-			if(currentObject instanceof TekstVakPanel)
+		{	for(int i=0 ; i<opdrachtObjects.size() ; i++)  
 			{
-				TekstVakPanel tvp = (TekstVakPanel) currentObject;
-				if(tvp.vulHoogteMogelijk())
-				{	tvp.corrigeerRestHoogte();
-					correctieGedaan = correctieGedaan || true;
+				Object currentObject = opdrachtObjects.get(i);
+				if(currentObject instanceof TekstVakPanel)
+				{
+					TekstVakPanel tvp = (TekstVakPanel) currentObject;
+					if(tvp.vulHoogteMogelijk())
+						tvp.corrigeerRestHoogte();
+					else
+						tvp.corrigeerOpvulHoogtes();
 				}
-//				else
-//				{
-//					correctieGedaan = correctieGedaan || tvp.corrigeerOpvulHoogtes();
-//							
-//				}
 			}
 		}
-		return correctieGedaan;
 	}
 
 	public boolean contentUitklapbaar()

@@ -271,6 +271,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		tekstVakken[0][0] = new TekstVak(this, 0, 0);
 		tekstVakken[0][0].setSize(breedte, hoogte);
 		tekstVakken[0][0].setColor(fgColor);
+		
 		tekstVakken[0][0].setFontStyle(font_style);
 		tekstVakken[0][0].setFontName(font_name);
 		tekstVakken[0][0].setFontSize(font_size);
@@ -1395,7 +1396,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	public void resize()
 	{
 		//Allereerst zorgen dat ashoogtes op alle regels over de gehele regel gelijk zijn.
-		
+				
 		for(int i = 0; i < hoogtes.size(); i++)
 		{	int asHoogte = 0;
 			for(int j = 0; j < breedtes.size(); j++)
@@ -1420,6 +1421,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		int[] ashoogtes = new int[hoogtes.size()];
 		for(int i = 0; i < hoogtes.size(); i++) //ashoogtes vullen, voor het geval de hoogte niet wordt aangepast.
 		{	int ashoogte = tekstVakken[i][0].getAsHoogte();
+			//volgens mij is dit hieronder niet nodig, je hebt net  gezorgd dat de ashoogtes op de hele regel gelijk zijn. 
 			for(int j = 1; j < breedtes.size(); j++)
 			{	if(tekstVakken[i][j].getAsHoogte() > ashoogte)
 					ashoogte = tekstVakken[i][j].getAsHoogte();
@@ -1429,54 +1431,45 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		int totaleHoogte = hoogte;
 		int totaleBreedte = breedte;
 		
-		//if(pasAanH)
-		//{	
-			if(vulHoogte)
-				totaleHoogte = geefOpgevuldeHoogte();
-			else if(pasAanH)
-				totaleHoogte = 0;
-			for(int i = 0; i < hoogtes.size(); i++)
-			{
-				if(i > 0 && inklapbaar && ingeklapt)
-					break;
-				
-				int h1 = 0;
-				int h2 = 0;
-				for(int j = 0; j < breedtes.size(); j++)
-				{
-					//opnieuw alles plaatsen qua hoogte; zoals het tekstvak het zelf zou doen als hem geen hoogte was opgelegd.
-					if(pasAanH)
-						tekstVakken[i][j].pasHoogteAanInhoudAan(true);
-					else
-						for(int k = 0; k < tekstVakken[i][j].getAantalRegels(); k++)
-						{
-							tekstVakken[i][j].getRegelVak(k).bepaalAshoogte();
-						}
-					int hoogte = tekstVakken[i][j].hoogte;
-					int ash = tekstVakken[i][j].getAsHoogte();
-					if(!tekstVakken[i][j].isVisible())
-					{
-						hoogte = ash = 0;
-					}
-					
-					if(ash > h1)
-						h1 = ash;
-					if(hoogte - ash > h2)
-						h2 = hoogte - ash;
-				}
-				
-				
-				if(pasAanH)
-				{	hoogtes.set(i, new Double(h1 + h2));
-					totaleHoogte += h1 + h2 + cellSpaceRow;
-				}
-				ashoogtes[i] = h1;
-			}
-			if(pasAanH)
-				totaleHoogte -= cellSpaceRow;
+		if(pasAanH && !vulHoogte)
+			totaleHoogte = 0;
+		for(int i = 0; i < hoogtes.size(); i++)
+		{
+			if(i > 0 && inklapbaar && ingeklapt)
+				break;
 			
-		//}
-		
+			int h1 = 0;
+			int h2 = 0;
+			for(int j = 0; j < breedtes.size(); j++)
+			{
+				//opnieuw alles plaatsen qua hoogte; zoals het tekstvak het zelf zou doen als hem geen hoogte was opgelegd.
+				if(pasAanH)
+					tekstVakken[i][j].pasHoogteAanInhoudAan(true);
+				else
+					for(int k = 0; k < tekstVakken[i][j].getAantalRegels(); k++)
+					{
+						tekstVakken[i][j].getRegelVak(k).bepaalAshoogte();
+					}
+				int hoogte = tekstVakken[i][j].hoogte;
+				int ash = tekstVakken[i][j].getAsHoogte();
+				if(!tekstVakken[i][j].isVisible())
+				{
+					hoogte = ash = 0;
+				}
+				
+				if(ash > h1)
+					h1 = ash;
+				if(hoogte - ash > h2)
+					h2 = hoogte - ash;
+			}
+			if(pasAanH && !vulHoogte)
+			{	hoogtes.set(i, new Double(h1 + h2));
+				totaleHoogte += h1 + h2 + cellSpaceRow;
+			}
+			ashoogtes[i] = h1;
+		}
+		if(pasAanH && !vulHoogte)
+			totaleHoogte -= cellSpaceRow;
 		
 		if(pasAanB)
 		{	
@@ -1511,14 +1504,6 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			}
 		}
 		
-		//eventueel opvullen hoogtes in tekstvakken regelen (TODO: werkt nog niet goed: vak wordt wel groter, maar nooit meer kleiner.)
-				for(int i = 0; i < hoogtes.size(); i++)
-				{	for(int j = 0; j < breedtes.size(); j++)
-					{	//tekstVakken[i][j].resetOpvulHoogtes();
-						tekstVakken[i][j].corrigeerOpvulHoogte();
-					}
-				}
-		
 		if(parent != null)
 		{	if(isZwevend() && this.getAsPanel().isAttached())
 			{
@@ -1528,6 +1513,18 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			if(!vulHoogte)
 				parent.resize();
 		
+		}
+		//eventueel opvullen hoogtes in tekstvakken regelen 
+		corrigeerOpvulHoogtes();		
+				
+	}
+	
+	public void corrigeerOpvulHoogtes()
+	{
+		for(int i = 0; i < hoogtes.size(); i++)
+		{	for(int j = 0; j < breedtes.size(); j++)
+			{	tekstVakken[i][j].corrigeerOpvulHoogte();
+			}
 		}
 	}
 	
@@ -1883,15 +1880,13 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	public void corrigeerRestHoogte()
 	{
 		if(vulHoogte && parent != null)
-		{	
-			int restHoogte = parent.geefRestHoogte();
+		{	int restHoogte = parent.geefRestHoogte();
 			setCurrentSize(breedte, Math.max(0, hoogte + restHoogte));
-			parent.setSize(breedte, hoogte);
-			tekstVakken[0][0].plaatsRegels(true); //checken of inderdaad nodig.
+			parent.getRegelVak(0).setHeight(hoogte);
+			parent.plaatsRegels(true);
 		}
 	}
-	
-	
+		
 	public void mouseDownTouchStartAction(int eventX, int eventY)
 	{
 		if(selectable && !sleepbaar)
