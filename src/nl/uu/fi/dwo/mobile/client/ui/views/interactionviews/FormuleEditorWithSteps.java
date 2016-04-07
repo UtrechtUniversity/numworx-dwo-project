@@ -1873,8 +1873,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			}
 			else
 			{
-				formule = null;
-				formuleMin1 = null;
+				// neem het laatste antwoord
+				formule = getLatestAnswer();
+				formuleMin1 = getLatestAnswer();
 			}
 		}
 		
@@ -1908,9 +1909,19 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	 * @param formuleMin1
 	 * 		De formule uit de vorige stap.
 	 */
-	private void bepaalScoreEnCorrect(String formule, final String formuleMin1) throws RestartException
+	private void bepaalScoreEnCorrect(String formule, String formuleMin1) throws RestartException
 	{
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
+
+		// verwijder een eventuele prefix
+		if (hasPrefix)
+		{
+			formule = removePrefix(formule);
+			formuleMin1 = removePrefix(formuleMin1);
+		}
+		formule = removeIsTeken(formule);
+		formuleMin1 = removeIsTeken(formuleMin1);
+
 		// checkAnswer() verwacht gecodeerde formules
 		String formuleCoded = "$f" + formule + "@";
 		String formuleMin1Coded = "$f" + formuleMin1 + "@";
