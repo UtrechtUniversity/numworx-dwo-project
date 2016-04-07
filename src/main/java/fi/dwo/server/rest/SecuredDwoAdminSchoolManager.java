@@ -104,6 +104,8 @@ public class SecuredDwoAdminSchoolManager {
                 s = SchoolManager.findBySchoolLogin(school.getSchoolLogin());
                 LOG.log(Level.INFO, "Username {0}: created school with schoollogin {1} and id {2}.", new Object[]{sc.getUserPrincipal().getName(), s.getSchoolLogin(), s.getSchoolID()});
                 //add user roles
+                PersistentSchoolGroup newSg = new PersistentSchoolGroup();
+                newSg.getSchoolID();
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Method incomplete.");
 //                return true;
             }
