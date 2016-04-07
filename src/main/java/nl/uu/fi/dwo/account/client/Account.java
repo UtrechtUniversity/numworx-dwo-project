@@ -10,21 +10,21 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 
 public class Account implements EntryPoint {
 
-	Logger logger = Logger.getLogger("Account");
+	Logger LOG = Logger.getLogger("Account");
 	
 	@Override
 	public void onModuleLoad() {
 	
-		logger.info("started");
+		LOG.info("started");
 		HeaderPanel header = new HeaderPanel();
 		RootPanel.get().add(header);
 		
 		header.setCenter("Account");
 		UserBar user = new UserBar();
 		Map<String, Object> profile = new HashMap<String,Object>();
-		profile.put("firstname", "gert");
+		profile.put("firstname", "Gert");
 		profile.put("middlename", "van der");
-		profile.put("lastname", "plas");
+		profile.put("lastname", "Plas");
 		profile.put("userID", 12345);
 		profile.put("username", "project_plas");
 		user.setProfile(profile);
