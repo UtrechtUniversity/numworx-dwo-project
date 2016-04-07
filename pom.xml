@@ -10,8 +10,8 @@
         <relativePath>../../../DWO2/branches/working/pom.xml</relativePath>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
-    <artifactId>DWOJApplet</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <artifactId>DWOJApplet-working</artifactId>
+<!--    <version>2.0-SNAPSHOT</version>-->
     <name>DWOJApplet - working</name>
     <url>http://www.dwo.nl</url>
     <packaging>jar</packaging>
@@ -46,14 +46,14 @@
     <dependencies>   
         <dependency>
             <groupId>fi.dwo</groupId>
-            <artifactId>DWO-commons-lib</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <artifactId>DWO-commons-lib-working</artifactId>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>fi.dwo.rest</groupId>
-            <artifactId>DWO-rest-lib</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <artifactId>DWO-rest-lib-working</artifactId>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
