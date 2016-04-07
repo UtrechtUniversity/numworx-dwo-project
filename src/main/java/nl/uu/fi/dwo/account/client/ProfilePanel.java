@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,12 +66,12 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         // You can use the CellFormatter to affect the layout of the grid's cells.
         //g.getCellFormatter().setWidth(0, 2, "256px");
         this.add(g);
-        try {
-            props.init();
-        } catch (Dwo2Exception ex) {
-            Logger.getLogger(ProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
-                Window.alert("Init Failed.");
-        }
+//        try {
+//            props.init();
+//        } catch (Dwo2Exception ex) {
+//            Logger.getLogger(ProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
+//                Window.alert("Init Failed.");
+//        }
     }
     
      @Override
@@ -84,12 +83,12 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             popup.hide();
         }else if(event.getSource()==okBtn){
         Window.alert("OK!");
-            try {
-                props.Update();
-            } catch (Dwo2Exception ex) {
-                Logger.getLogger(ProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
-                Window.alert("Update Failed.");
-            }
+//            try {
+//                props.Update();
+//            } catch (Dwo2Exception ex) {
+//                Logger.getLogger(ProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
+//                Window.alert("Update Failed.");
+//            }
         popup.hide();
         }
     }
