@@ -1,9 +1,10 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.rest.dom.entities.DomHasRole;
+//import fi.dwo.rest.dom.entities.DomHasRole;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.PersistenceClassType;
+import fi.dwo.rest.dom.entities.DomHasRole;
+import fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
