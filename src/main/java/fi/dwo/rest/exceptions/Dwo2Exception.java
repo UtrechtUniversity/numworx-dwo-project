@@ -1,10 +1,8 @@
 /*Copyrighted 2015. */
 package fi.dwo.rest.exceptions;
 
-import com.owlike.genson.Genson;
-import java.util.HashMap;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +32,7 @@ public class Dwo2Exception extends Exception implements Dwo2ExceptionInterface {
      */
     @Override
     public Dwo2ExceptionCode getDwo2Code() {
-        return decodeCodeInJSON(super.getMessage());
+        return Dwo2ExceptionTranslator.decodeCodeInJSON(super.getMessage());
     }
 
     /**
@@ -48,7 +46,7 @@ public class Dwo2Exception extends Exception implements Dwo2ExceptionInterface {
      */
     @Override
     public String getDwo2Message() {
-        return decodeMessageInJSON(super.getMessage());
+        return Dwo2ExceptionTranslator.decodeMessageInJSON(super.getMessage());
     }
 
     /**
@@ -62,7 +60,7 @@ public class Dwo2Exception extends Exception implements Dwo2ExceptionInterface {
      * @see Response
      */
     public Dwo2Exception(Dwo2ExceptionCode code, String message) {
-        super(encodeJSON(code, message));
+        super(Dwo2ExceptionTranslator.encodeJSON(code, message));
         this.code = code;
         this.message = message;
     }
@@ -83,25 +81,4 @@ public class Dwo2Exception extends Exception implements Dwo2ExceptionInterface {
         return msg;
     }
 
-    public static String encodeJSON(Dwo2ExceptionCode code, String message) {
-        Genson genson = new Genson();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("Dwo2ExceptionCode", code.name());
-        map.put("msg", message);
-        String json = genson.serialize(map);
-        return json;
-    }
-
-    public static String decodeMessageInJSON(String json) {
-        Genson genson = new Genson();
-        Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
-        return (String) map.get("msg");
-    }
-
-    public static Dwo2ExceptionCode decodeCodeInJSON(String json) {
-        Genson genson = new Genson();
-        Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
-        String code = (String) map.get("Dwo2ExceptionCode");
-        return Dwo2ExceptionCode.valueOf(code);
-    }
 }
