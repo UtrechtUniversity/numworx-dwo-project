@@ -4,7 +4,7 @@
 
     <parent>
         <groupId>fi.dwo</groupId>
-        <artifactId>DWO2-working</artifactId>
+        <artifactId>DWO2</artifactId>
         <version>2.0-SNAPSHOT</version>
         <relativePath>../../DWO2/trunk/pom.xml</relativePath>
     </parent>
