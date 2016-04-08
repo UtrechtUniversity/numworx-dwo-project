@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.core.Response;
+import javax.xml.ws.Response;
 
 /**
  * A Dwo2Exception for handling application errors. See

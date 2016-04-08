@@ -32,8 +32,9 @@ public class Dwo2ExceptionTranslator {
         setTranslator(translator);
     }
 
-    public static synchronized void setTranslator(DWO2ExceptionTranslatorInterface translator) {
+    public static synchronized DWO2ExceptionTranslatorInterface setTranslator(DWO2ExceptionTranslatorInterface translator) {
         Dwo2ExceptionTranslator.translator = translator;
+        return translator;
     }
 
     public static String encodeJSON(Dwo2ExceptionCode code, String message) {

@@ -1,9 +1,7 @@
 package fi.dwo.rest.exceptions;
 
-import com.owlike.genson.Genson;
-import java.util.HashMap;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +35,7 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
      */
     @Override
     public Dwo2ExceptionCode getDwo2Code() {
-        return decodeCodeInJSON(super.getMessage());
+        return Dwo2ExceptionTranslator.decodeCodeInJSON(super.getMessage());
     }
 
     /**
@@ -51,7 +49,7 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
      */
     @Override
     public String getDwo2Message() {
-        return decodeMessageInJSON(super.getMessage());
+        return Dwo2ExceptionTranslator.decodeMessageInJSON(super.getMessage());
     }
 
 
@@ -65,7 +63,7 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
      */
     public Dwo2RestException(Dwo2Exception ex) {
         super(Response.status(400)
-                .entity(encodeJSON(ex.getDwo2Code(), ex.getDwo2Message())).type(MediaType.TEXT_HTML).build()
+                .entity(Dwo2ExceptionTranslator.encodeJSON(ex.getDwo2Code(), ex.getDwo2Message())).type(MediaType.TEXT_HTML).build()
         );
     }
     
@@ -82,7 +80,7 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
      */
     public Dwo2RestException(Dwo2ExceptionCode code, String message) {
         super(Response.status(400)
-                .entity(encodeJSON(code, message)).type(MediaType.TEXT_HTML).build()
+                .entity(Dwo2ExceptionTranslator.encodeJSON(code, message)).type(MediaType.TEXT_HTML).build()
         );
         this.code = code;
         this.message = message;
@@ -102,7 +100,7 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
      */
     public Dwo2RestException(Dwo2ExceptionCode code, String message, Response.Status status) {
         super(Response.status(status)
-                .entity(encodeJSON(code, message)).type(MediaType.TEXT_PLAIN).build()
+                .entity(Dwo2ExceptionTranslator.encodeJSON(code, message)).type(MediaType.TEXT_PLAIN).build()
         );
     }
 
@@ -130,25 +128,4 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
         return msg;
     }
 
-    public static String encodeJSON(Dwo2ExceptionCode code, String message) {
-        Genson genson = new Genson();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("Dwo2ExceptionCode", code.name());
-        map.put("msg", message);
-        String json = genson.serialize(map);
-        return json;
-    }
-
-    public static String decodeMessageInJSON(String json) {
-        Genson genson = new Genson();
-        Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
-        return (String) map.get("msg");
-    }
-
-    public static Dwo2ExceptionCode decodeCodeInJSON(String json) {
-        Genson genson = new Genson();
-        Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
-        String code = (String) map.get("Dwo2ExceptionCode");
-        return Dwo2ExceptionCode.valueOf(code);
-    }
 }
