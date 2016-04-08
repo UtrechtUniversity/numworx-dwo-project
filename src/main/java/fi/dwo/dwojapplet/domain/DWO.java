@@ -14,6 +14,7 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
+import fi.dwo.dwojapplet.domain.rest.Dwo2ExceptionGensonTranslator;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
@@ -28,6 +29,7 @@ import fi.dwo.dwojapplet.gui.action.Clipboard;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
 import fi.dwo.dwojapplet.system.Loader;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -1800,6 +1802,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws ClassNotFoundException
      */
     public static void main(String[] args) throws Exception {
+        
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGensonTranslator());
         //String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
         //lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
         //lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
