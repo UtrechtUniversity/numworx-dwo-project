@@ -150,10 +150,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.5</version>
-                <executions>
-                    <execution>
-                        <id>do-deploy</id>
-                        <phase>deploy</phase>
                         <configuration>
                             <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWO-rest-lib/trunk</developerConnection>
                             <tag>HEAD</tag>
@@ -164,11 +160,10 @@
                                 </manifest>
                                 <manifestEntries>
                                     <Implementation-Build>${buildNumber}</Implementation-Build>
+                                    <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
                                 </manifestEntries>
                             </archive>
                         </configuration>
-                    </execution>
-                </executions>            
             </plugin>
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
