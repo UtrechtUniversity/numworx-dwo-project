@@ -151,9 +151,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.5</version>
                         <configuration>
-                            <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWO-rest-lib/trunk</developerConnection>
-                            <tag>HEAD</tag>
-                                
                             <archive>
                                 <manifest>
                                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -161,6 +158,7 @@
                                 <manifestEntries>
                                     <Implementation-Build>${buildNumber}</Implementation-Build>
                                     <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+                                    <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
                                 </manifestEntries>
                             </archive>
                         </configuration>
