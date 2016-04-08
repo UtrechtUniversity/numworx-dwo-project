@@ -434,7 +434,7 @@ public class SymboolPanel implements InteractionStub, FacetAware
 
 	@Override
 	public int getAsHoogte() {
-		return 12;
+		return ashoogte;
 	}
 
 	@Override
@@ -449,7 +449,7 @@ public class SymboolPanel implements InteractionStub, FacetAware
 
 	@Override
 	public void setAsHoogte(int ashoogte) {
-		// TODO Auto-generated method stub
+		this.ashoogte = ashoogte;
 		
 	}
 

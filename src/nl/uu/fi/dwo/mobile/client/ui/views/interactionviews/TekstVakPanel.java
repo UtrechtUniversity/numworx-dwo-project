@@ -1514,8 +1514,9 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 				parent.resize();
 		
 		}
-		//eventueel opvullen hoogtes in tekstvakken regelen 
-		corrigeerOpvulHoogtes();		
+		//eventueel opvullen hoogtes in tekstvakken regelen en hoogtes symbolen instellen
+		corrigeerOpvulHoogtes();
+		vulSymboolHoogtes();
 				
 	}
 	
@@ -1524,6 +1525,17 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		for(int i = 0; i < hoogtes.size(); i++)
 		{	for(int j = 0; j < breedtes.size(); j++)
 			{	tekstVakken[i][j].corrigeerOpvulHoogte();
+			}
+		}
+	}
+	
+	public void vulSymboolHoogtes()
+	{
+		for(int i = 0; i < hoogtes.size(); i++)
+		{
+			for(int j = 0; j < breedtes.size(); j++)
+			{
+				tekstVakken[i][j].vulSymboolHoogtes();
 			}
 		}
 	}
@@ -1877,14 +1889,9 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		return vulHoogte;
 	}
 	
-	public void corrigeerRestHoogte()
+	public void corrigeerRestHoogte(int restHoogte)
 	{
-		if(vulHoogte && parent != null)
-		{	int restHoogte = parent.geefRestHoogte();
-			setCurrentSize(breedte, Math.max(0, hoogte + restHoogte));
-			parent.getRegelVak(0).setHeight(hoogte);
-			parent.plaatsRegels(true);
-		}
+		setCurrentSize(breedte, Math.max(0, hoogte + restHoogte));
 	}
 		
 	public void mouseDownTouchStartAction(int eventX, int eventY)

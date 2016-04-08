@@ -620,6 +620,11 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					if(tvp.vulHoogteMogelijk())
 						tvp.setCurrentSize(tvp.getWidth(), 0);
 				}
+				if(obj instanceof SymboolPanel)
+				{
+					SymboolPanel sp = (SymboolPanel) obj;
+					sp.zetVolledigeHoogte(0);
+				}
 			}
 			
 		}
@@ -904,11 +909,37 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				{
 					TekstVakPanel tvp = (TekstVakPanel) currentObject;
 					if(tvp.vulHoogteMogelijk())
-						tvp.corrigeerRestHoogte();
+					{	tvp.corrigeerRestHoogte(geefRestHoogte());
+						getRegelVak(0).setHeight(tvp.getHoogte());
+						plaatsRegels(true);
+					}
 					else
 						tvp.corrigeerOpvulHoogtes();
 				}
 			}
+		}
+	}
+	
+	public void vulSymboolHoogtes()
+	{
+		if(opdrachtObjects != null)
+		{
+			for(int i = 0; i < opdrachtObjects.size(); i++)
+			{
+				Object currentObject = opdrachtObjects.get(i);
+				if(currentObject instanceof SymboolPanel)
+				{	((SymboolPanel) currentObject).zetVolledigeHoogte(this.hoogte);
+					getRegelVak(0).setHeight(this.hoogte);
+					getRegelVak(0).hervulRegel();
+					plaatsRegels(true);
+				}
+				else if(currentObject instanceof TekstVakPanel)
+				{
+					((TekstVakPanel) currentObject).vulSymboolHoogtes();
+				}
+				
+			}
+			
 		}
 	}
 
