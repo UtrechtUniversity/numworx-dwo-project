@@ -185,7 +185,7 @@
                 </executions>
             </plugin> -->
                         
-             <!-- ensure the build number is available as ${buildNumber} -->
+            <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
@@ -240,6 +240,7 @@
                             <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version>
                             <Implementation-Build>${buildNumber}</Implementation-Build>
                             <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+                            <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
                             <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build>
                             <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
                             <Trusted-Only>true</Trusted-Only>
@@ -317,7 +318,7 @@
                             <libs>
                                 <lib>${java.home}/lib/rt.jar</lib>
                                 <lib>${java.home}/lib/jsse.jar</lib>
- <!--                               <lib>${java.home}/lib/jfxrt.jar</lib>                       -->
+                                <!--                               <lib>${java.home}/lib/jfxrt.jar</lib>                       -->
                             </libs>
                             <addMavenDescriptor>false</addMavenDescriptor>
                         </configuration>
