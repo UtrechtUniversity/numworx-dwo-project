@@ -4,14 +4,14 @@
     <!-- Adjust artifact, name and description for new projects -->
     <parent>
         <groupId>fi.dwo</groupId>
-        <artifactId>DWO2</artifactId>
+        <artifactId>DWO2-working</artifactId>
    <version>2.0-SNAPSHOT</version>
-        <relativePath>../../DWO2/trunk/pom.xml</relativePath>
+        <relativePath>../../../DWO2/branches/working/pom.xml</relativePath>
     </parent>
-    <artifactId>DWOServer</artifactId>
+    <artifactId>DWOServer-working</artifactId>
 <!--    <version>2.0-SNAPSHOT</version>-->
     <packaging>war</packaging>
-    <name>DWOServer - trunk</name>
+    <name>DWOServer - working</name>
     <url>http://www.dwo.nl</url>
     <!-- Update year to current when starting a new project -->
     <inceptionYear>2015</inceptionYear> 
@@ -35,7 +35,7 @@
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOServer/trunk</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOServer/branches/working</developerConnection>
         <tag>HEAD</tag>
     </scm>
   
@@ -43,13 +43,13 @@
     <dependencies>
          <dependency>
             <groupId>fi.dwo</groupId>
-            <artifactId>DWO-commons-lib</artifactId>
+            <artifactId>DWO-commons-lib-working</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>fi.dwo.rest</groupId>
-            <artifactId>DWO-rest-lib</artifactId>
+            <artifactId>DWO-rest-lib-working</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
