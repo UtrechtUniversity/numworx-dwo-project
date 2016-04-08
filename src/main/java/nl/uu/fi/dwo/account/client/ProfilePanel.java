@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import java.util.logging.Level;
+import fi.dwo.rest.dom.entities.DomUser;
 import java.util.logging.Logger;
 
 /**
@@ -27,6 +27,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
     PopupPanel popup;
     Button cnlBtn;
     Button okBtn;
+    DomUser user;
     
     public PopupPanel getPopup() {
         return popup;
@@ -36,24 +37,21 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         this.popup = popup;
     }
     
-    ProfilePanel(){
-//        add(uiBinder.createAndBindUi(this));
-        init();
+    ProfilePanel(DomUser user){
+        init(user);
     }
     
-    private void init() {
+    private void init(DomUser user) {
         this.setSize("400", "500");
-////        https://groups.google.com/forum/#!topic/google-web-toolkit/aIrm3mzaeyE
-//// Grids must be sized explicitly, though they can be resized later.
         Grid g = new Grid(3, 5);
         // Put some values in the grid cells.
         g.setText(0,0, "login");
         TextBox login = new TextBox();
-        login.setText("gert");
+        login.setText(user.getUserName());
         g.setWidget(0,1, login);
         g.setText(1,0, "name");
         TextBox name = new TextBox();
-        name.setText("Gert van der Plas");
+        name.setText(user.getUniqueDisplayName());
         g.setWidget(1,1, name);
 
         // Just for good measure, let's put a button in the center.

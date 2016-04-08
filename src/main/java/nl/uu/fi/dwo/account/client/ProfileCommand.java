@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.PopupPanel;
+import fi.dwo.rest.dom.entities.DomUser;
 import java.util.Map;
 
 public class ProfileCommand implements Command {
@@ -14,7 +15,14 @@ public class ProfileCommand implements Command {
         // Create the new popup.
         PopupPanel popup = new PopupPanel();
         //popup.setSize("500", "400");
-        ProfilePanel panel = new ProfilePanel();
+        DomUser testUser = new DomUser();
+        testUser.setGivenName("Gert");
+        testUser.setInsertion("van der");
+        testUser.setFamilyName("Plas");
+        testUser.setUserName("project_gert");
+        testUser.setSingleSchool(false);
+//        testUser.setId();
+        ProfilePanel panel = new ProfilePanel(testUser);
         panel.setPopup(popup);
         panel.setSize("300", "200");
         popup.add(panel);

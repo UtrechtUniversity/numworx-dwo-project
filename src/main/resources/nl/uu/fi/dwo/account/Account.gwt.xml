@@ -10,7 +10,8 @@
   <inherits name="nl.uu.fi.dwo.account.Account-DWO"/>
   <inherits name="com.google.gwt.logging.Logging"/>
   <inherits name="com.googlecode.mgwt.MGWTMin"/>
-
+  <inherits name="fi.dwo.rest.DWO-rest-lib"/>
+  
   <set-property name="gwt.logging.popupHandler" value="DISABLED"/>  
   <set-property name="gwt.logging.enabled" value="TRUE"/>
   <set-property name="gwt.logging.logLevel" value="FINEST"/>
@@ -19,6 +20,7 @@
   
   <!-- Specify the app entry point class.                         -->
   <entry-point class='nl.uu.fi.dwo.account.client.Account'/>
+  <!-- add entry point for each app in an external jar -->
 
 <!-- gebruik deze linker voor CDPLogica -->
   <add-linker name='xsiframe' />
