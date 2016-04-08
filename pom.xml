@@ -202,7 +202,7 @@
                 </executions>
             </plugin>-->
                                   
-            <!-- ensure the build number is available as ${buildNumber} -->
+             <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
@@ -212,15 +212,54 @@
                         <phase>validate</phase>
                         <goals>
                             <goal>create</goal>
-                            <goal>create-timestamp</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
+                    <!--
+                     doCheck and doUpdate actually talk to repository if it's true,
+                     Check would check that there are no local changes.
+                     Update would update it
+                    -->
                     <doCheck>false</doCheck>
-                    <doUpdate>true</doUpdate>
+                    <doUpdate>false</doUpdate>
+                    <!--
+                     This ensures that even if we are not connected to scm than also
+                     take the version from local .svn file
+                    -->
+                    <revisiononscmfailure>
+       
+                        <!--
+                         Generate sequence build number based on:
+                         build number and timestamp     
+                        -->
+                        <format>Build: #{0} ({1,date})</format>
+                        <items>
+                            <item>buildNumber\d*</item>
+                            <item>timestamp</item>
+                        </items>
+                    </revisiononscmfailure>
                 </configuration>
             </plugin>    
+            
+            <!-- put the build number in the manifest -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.5</version>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Implementation-Build>${buildNumber}</Implementation-Build>
+                                    <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+                                    <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -235,9 +274,9 @@
                         </manifest>
                         <manifestEntries>
                             <!-- put the project version and build number in the manifest -->
-                            <version>${project.version}</version>
-                            <buildnumber>${buildNumber}</buildnumber>
-                            <timestamp>${timestamp}</timestamp>
+                                    <Implementation-Build>${buildNumber}</Implementation-Build>
+                                    <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+                                    <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
                         </manifestEntries>
                     </archive>
                     <!-- put the build number in the web.xml of the war file -->
@@ -360,7 +399,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.15</version>
+                <version>2.17</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>
