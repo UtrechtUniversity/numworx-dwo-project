@@ -6,12 +6,12 @@
 package fi.dwo.commons.persistence.entities;
 
 import fi.dwo.rest.dom.entities.DomSchoolAdmin;
-import fi.dwo.rest.dom.entities.DomFullTeacher;
 import fi.dwo.rest.dom.entities.DomStudent;
 import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -312,8 +312,8 @@ public class PersistentUser implements Serializable {
         return user;
     }
 
-    public DomFullTeacher buildDomSingleSchoolStudent(){
-        DomFullTeacher user = new DomFullTeacher();
+    public DomSingleSchoolStudent buildDomSingleSchoolStudent(){
+        DomSingleSchoolStudent user = new DomSingleSchoolStudent();
         fillDomUser(user);
         return user;
     }
