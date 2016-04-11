@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.dwo.rest.util;
+package fi.dwo.rest.util; 
 
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Logger;
