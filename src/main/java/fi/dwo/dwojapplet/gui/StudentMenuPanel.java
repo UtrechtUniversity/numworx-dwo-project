@@ -5,7 +5,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.commons.persistence.RoleType;
+import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureStudentSchoolClassManager;

@@ -15,6 +15,7 @@ import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.rest.RestListClassTypes;
 import static fi.dwo.rest.RestListClassTypes.DomSchool4DwoAdmin;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -91,7 +92,7 @@ class RestManager {
             if (response.getStatus() == 400) {
                 //Assuming server side servlet generated exception has been sent.
                 String json = (String) response.readEntity(String.class);
-                e = new Dwo2Exception(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
+                e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
             } else {
                 //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                 //TODO To filter these for the user and suggest a course of action.
@@ -135,7 +136,7 @@ class RestManager {
             if (response.getStatus() == 400) {
                 //Assuming server side servlet generated exception has been sent.
                 String json = (String) response.readEntity(String.class);
-                e = new Dwo2Exception(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
+                e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
             } else {
                 //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                 //TODO To filter these for the user and suggest a course of action.
@@ -220,7 +221,7 @@ class RestManager {
             if (response.getStatus() == 400) {
                 //Assuming server side servlet generated exception has been sent.
                 String json = (String) response.readEntity(String.class);
-                e = new Dwo2Exception(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
+                e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
             } else {
                 //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                 //TODO To filter these for the user and suggest a course of action.
@@ -299,7 +300,7 @@ class RestManager {
             if (response.getStatus() == 400) {
                 //Assuming server side servlet generated exception has been sent.
                 String json = (String) response.readEntity(String.class);
-                e = new Dwo2Exception(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
+                e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
             } else {
                 //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                 //TODO To filter these for the user and suggest a course of action.

@@ -2,7 +2,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.rest.dom.entities.DomNewUser;
 import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.commons.persistence.RoleType;
+import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;

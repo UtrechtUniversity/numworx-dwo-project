@@ -16,6 +16,8 @@ import fi.dwo.rest.entities.RestStudent;
 import fi.dwo.rest.entities.RestTeacher;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.entities.RestUserFull;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -124,6 +126,15 @@ public class SecureSchoolAdminSchoolManager {
         restStudent.setDomStudent(domStudent);
         List<DomSchoolClass>  result = StoredRestManager.getInstance().getPutList("/rest/secure/schooladmin/school/getStudentsSchoolClassList", RestListClassTypes.DomSchoolClass, restStudent);
         LOG.log(Level.FINE, "Retrieved {1} schoolclasses of student {2} for schooladmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), result.size(), restStudent.getDomStudent().getId()});
+        return result;
+    }
+
+    public static Boolean submitTeacher(DomUserFull submit) throws Dwo2Exception {
+        RestUserFull sts = new RestUserFull();
+        sts.setRestContext(new DomContext());
+        sts.setDomUserFull(submit);
+        Boolean result = StoredRestManager.getInstance().put("/rest/secure/schooladmin/school/submitTeacher", Boolean.class, sts);
+        LOG.log(Level.FINE, "Submitted new user {1} enlisted as teacher in the school by user {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomUserFull().getId()});
         return result;
     }
 

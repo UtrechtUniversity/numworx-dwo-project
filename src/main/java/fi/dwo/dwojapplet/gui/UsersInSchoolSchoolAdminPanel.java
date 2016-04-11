@@ -62,7 +62,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
     private CenterPanel center;
 
 //    private JButton deleteButton;
-//    private JButton addStudentsButton;
+    private JButton addTeachersButton;
     JRadioButton studentRadio;
     JRadioButton teacherRadio;
     JRadioButton schoolAdminRadio;
@@ -336,11 +336,12 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         header.add(teacherRadio);
         header.add(schoolAdminRadio);
         header.setBackground(GuiConstants.MAIN_BACKGROUND);
-//        addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
-//        addStudentsButton.setSize(addStudentsButton.getPreferredSize());
-//        addStudentsButton.addActionListener(this);
-//        header.add(Box.createGlue());
-//        header.add(addStudentsButton);
+        addTeachersButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_TEACHERS));
+        addTeachersButton.setVisible(false);
+        addTeachersButton.setSize(addTeachersButton.getPreferredSize());
+        addTeachersButton.addActionListener(this);
+        header.add(Box.createGlue());
+        header.add(addTeachersButton);
 //        header.add(deleteButton);
         this.add(header);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -394,36 +395,18 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-
-//        if (e.getSource() == deleteButton) {
-//            try {
-//                for (int i = 0; i < tableModel.getRowCount(); i++) {
-//                    if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
-//                        DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
-//                        prop.(student);
-//                    }
-//                }
-//                tableModel.init(prop, editImage, emptyImage);
-//                tableModel.fireTableDataChanged();
-//                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
-//            }
-//            catch (Dwo2Exception ex) {
-//                LOG.log(Level.FINE, null, ex);
-//                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
-//            }
-//        }else
         if (e.getSource() == studentRadio) {
             //redo table
             try {
                 List userList = prop.getStudentsInSchool();
                 tableModel.init(userList, removeImage, studentImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
+                addTeachersButton.setVisible(false);
 //                addStudentsButton.setVisible(true);
 
             }
             catch (Dwo2Exception ex) {
-                Logger.getLogger(UsersInSchoolSchoolAdminPanel.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
         } else if (e.getSource() == teacherRadio) {
             //redo table
@@ -432,11 +415,10 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 List userList = prop.getTeachersInSchool();
                 tableModel.init(userList, removeImage, teacherImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
-
+                addTeachersButton.setVisible(true);
             }
             catch (Dwo2Exception ex) {
-                Logger.getLogger(UsersInSchoolSchoolAdminPanel.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
         } else if (e.getSource() == schoolAdminRadio) {
             //redo table
@@ -445,11 +427,19 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 List userList = prop.getSchoolAdminsInSchool();
                 tableModel.init(userList, removeImage, teacherImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
-
+                addTeachersButton.setVisible(false);
             }
             catch (Dwo2Exception ex) {
-                Logger.getLogger(UsersInSchoolSchoolAdminPanel.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        } else if (e.getSource() == addTeachersButton) {
+            try {
+                NewTeacherSchoolAdminPanel panel = new NewTeacherSchoolAdminPanel();
+                center.loadCenter(panel);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         }
     }

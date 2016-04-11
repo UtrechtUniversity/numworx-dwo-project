@@ -2,7 +2,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.commons.persistence.RoleType;
+import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
@@ -122,10 +122,9 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
 
         /* Password field */
         groupChoice = new JComboBox();
-        groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
+//        groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
         RoleType[] rl = DwoHelper.getRoles();
-        for (int i = 0; i < rl.length; i++) {
-            //if(!groupList[i].getName().equals("ADMIN"))
+        for (int i = 1; i < rl.length; i++) {
             groupChoice.addItem(TextMapper.getText(rl[i].name()));
         }
 //        RoleType[] rl = DwoHelper.getRoles();
@@ -237,12 +236,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                 }
             } else {
                 RoleType role = null;
-                role = DwoHelper.getRoles()[groupChoice.getSelectedIndex()];
-                if (groupChoice.getSelectedIndex() > 0) {
-                    role = DwoHelper.getRoles()[groupChoice.getSelectedIndex()-1];
-                }else{
-                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIR_ERR_REGISTER));
-                }
+                role = DwoHelper.getRoles()[groupChoice.getSelectedIndex()+1];
                 try {
                     DomNewSchoolLogin nur = new DomNewSchoolLogin();
                     nur.setRole(role);

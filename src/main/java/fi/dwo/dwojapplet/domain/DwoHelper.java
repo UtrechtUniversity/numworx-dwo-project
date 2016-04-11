@@ -12,7 +12,7 @@ import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.RoleType;
+import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
@@ -637,7 +637,7 @@ public final class DwoHelper {
 //    }
     public static RoleType[] getRoles() {
         RoleType[] list = new RoleType[5];
-        list[0] = RoleType.ANONYMOUS;
+        list[0] = RoleType.NULLSCHOOL;
         list[1] = RoleType.STUDENT;
         list[2] = RoleType.TEACHER;
         list[3] = RoleType.SCHOOLADMIN;

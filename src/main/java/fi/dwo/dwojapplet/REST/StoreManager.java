@@ -1,7 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.REST;
 
-import fi.dwo.commons.persistence.PersistenceId;
+import fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.commons.persistence.PersistenceIdFactory;
 import java.util.WeakHashMap;
 import java.util.logging.Level;

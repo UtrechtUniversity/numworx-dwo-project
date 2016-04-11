@@ -42,18 +42,21 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
         for (DomSchoolRoleAndClass src : srcList) {
             data[j][0] = src.getSchoolName();
             data[j][1] = TextMapper.getText(src.getRoleName());
-                if (prop.getActiveSchoolRoleAndClass()!=null 
-                    && prop.getActiveSchoolRoleAndClass().getSchoolId().equals(src.getSchoolId())     
-                    && prop.getActiveSchoolRoleAndClass().getRoleId().equals(src.getRoleId())     
+            if (prop.getActiveSchoolRoleAndClass() != null
+                    && prop.getActiveSchoolRoleAndClass().getSchoolId().equals(src.getSchoolId())
+                    && prop.getActiveSchoolRoleAndClass().getRoleId().equals(src.getRoleId())
                     && prop.getActiveSchoolRoleAndClass().getUserId().equals(src.getUserId())
-                    && ( (src.getSchoolClassId()==null && prop.getActiveSchoolRoleAndClass().getSchoolClassId()==null)|| 
-                    prop.getActiveSchoolRoleAndClass().getSchoolClassId().equals(src.getSchoolClassId())
-                    )) {
+                    && ((src.getSchoolClassId() == null && prop.getActiveSchoolRoleAndClass().getSchoolClassId() == null)
+                    || prop.getActiveSchoolRoleAndClass().getSchoolClassId().equals(src.getSchoolClassId()))) {
                 data[j][2] = emptyImage;
             } else {
                 data[j][2] = loginImage;
             }
-            data[j][3] = removeImage; // delete 
+            if (!src.getSchoolId().equals(prop.getNullSchool().getId())) {
+                data[j][3] = removeImage; // delete 
+            } else {
+                data[j][3] = emptyImage;
+            }
             data[j][4] = src;
             j++;
         }

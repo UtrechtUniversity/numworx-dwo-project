@@ -2,8 +2,6 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.rest.dom.entities.DomSchoolClass;
-import fi.dwo.rest.dom.entities.DomTeacher;
-import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.Image;
@@ -45,6 +43,7 @@ class UsersSchoolClassesSchoolAdminPanelTableModel extends AbstractTableModel {
             data[j][3] = c;
             j++;
         }
+        fireTableRowsInserted(0,rows-1);
         fireTableDataChanged();
     }
 

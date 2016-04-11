@@ -179,11 +179,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 catch (Dwo2Exception ex) {
                     LOG.log(Level.FINE, null, ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                }
-                finally {
-                    fireEditingStopped();
-                }
-
+                }                
             } else if (value == removeImage) {
                 try {
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
@@ -195,9 +191,6 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 catch (Dwo2Exception ex) {
                     Logger.getLogger(UsersSchoolClassesSchoolAdminPanel.class.getName()).log(Level.FINE, null, ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
-                }
-                finally {
-                    fireEditingStopped();
                 }
             }
         }
@@ -345,9 +338,10 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         if (e.getSource() == addSchoolClassBtn) {
             DomSchoolClass schoolClass = (DomSchoolClass) addSchoolClassBox.getSelectedItem();
             try {
-                prop.submitUserToSchoolClass(domUser, userType, schoolClass);
+                prop.submitUserToSchoolClass(domUser, userType, schoolClass);                
                 tableModel.init(getCurSchoolClassList(), editImage, removeImage);
-
+                UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(domUser, userType);
+                center.loadCenter(panel);
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
@@ -366,7 +360,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         } else if (e.getSource() == addSchoolClassBox) {
             //addTeacherBox.get
         }
-        tableModel.fireTableDataChanged();
+//        tableModel.fireTableDataChanged();
     }
 
     /**

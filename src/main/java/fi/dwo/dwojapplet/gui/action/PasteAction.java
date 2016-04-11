@@ -8,6 +8,7 @@ import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.CourseManagementPanel;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;

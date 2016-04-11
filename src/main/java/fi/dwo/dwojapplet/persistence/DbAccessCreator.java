@@ -55,7 +55,7 @@ class DbAccessCreator {
                     try {
                         //TODO FIX put the URL in the Manifest and pick it up from there
                         //THIS Allows it to be configured from the pom.
-                        server = new URL(new URL("http://ws.fisme.science.uu.nl/"), SERVLET);
+                        server = new URL(new URL("https://app.dwo.nl/"), SERVLET);
                         dbAccess = new DbAccessClient(server);
                     } catch (MalformedURLException e) {
                         LOG.log(Level.SEVERE,null,e);
