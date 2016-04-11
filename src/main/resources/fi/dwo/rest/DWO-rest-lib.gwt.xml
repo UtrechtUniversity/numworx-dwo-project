@@ -1,4 +1,3 @@
 <module>
-  <inherits name='fi.dwo.rest'/>
-  <source path="DWO-rest-lib"></source>
+  <source></source>
 </module> 
