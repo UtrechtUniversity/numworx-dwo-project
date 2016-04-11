@@ -1,6 +1,8 @@
 /* Copyrighted 2015. */
 package fi.dwo.commons.persistence;
 
+import fi.dwo.rest.persistence.PersistenceClassType;
+import fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentAppletConfig;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
@@ -20,8 +22,6 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.rest.persistence.PersistenceClassType;
-import fi.dwo.rest.persistence.PersistenceId;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

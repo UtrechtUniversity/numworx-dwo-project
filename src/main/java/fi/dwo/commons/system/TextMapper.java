@@ -35,6 +35,7 @@ public abstract class TextMapper {
     
     public static final String BTN_BACK = "BTN_BACK";
     public static final String BTN_NEW_STUDENTS = "BTN_ADD_STUDENTS";
+    public static final String BTN_NEW_TEACHERS = "BTN_ADD_TEACHERS";
     public static final String BTN_CREATE_STUDENTACCOUNTS = "BTN_CREATE_STUDENTACCOUNTS";
     public static final String BTN_NEW_CLASS = "BTN_ADD_CLASS";
     public static final String BTN_DELETE = "BTN_DELETE";
@@ -179,7 +180,7 @@ public abstract class TextMapper {
     public final static String GUIR_OPT_TEACHER = "TEACHER";
     public final static String GUIR_OPT_ADMIN = "ADMIN";
     public final static String GUIR_OPT_SCHOOLCODE = "SCHOOLCODE";
-    public final static String GUIR_OPT_NOSCHOOL = "NOSCHOOL";
+    public final static String GUIR_OPT_NULLSCHOOL = "NULLSCHOOL";
     public final static String GUIR_OPT_SCHOOLADMIN = "SCHOOLADMIN";
 
     public final static String GUIR_MSG_REGISTERED = "GUIR_MSG_REGISTERED";

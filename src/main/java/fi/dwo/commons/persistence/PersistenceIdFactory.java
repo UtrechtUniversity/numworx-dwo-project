@@ -1,5 +1,6 @@
 package fi.dwo.commons.persistence;
 
+import fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
@@ -19,7 +20,6 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
-import fi.dwo.rest.persistence.PersistenceId;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

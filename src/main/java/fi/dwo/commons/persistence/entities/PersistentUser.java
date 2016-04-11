@@ -6,12 +6,12 @@
 package fi.dwo.commons.persistence.entities;
 
 import fi.dwo.rest.dom.entities.DomSchoolAdmin;
-import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.rest.dom.entities.DomStudent;
 import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
