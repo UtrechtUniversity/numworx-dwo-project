@@ -61,12 +61,14 @@
                     <hostedWebapp>${webappDirectory}</hostedWebapp>  
                     <compileSourcesArtifacts>
                         <compileSourcesArtifact>groupId:artifactId</compileSourcesArtifact>
+                        <compileSourcesArtifact>fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact>
                     </compileSourcesArtifacts>                          
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>compile</goal>
+                            <goal>resources</goal>
                         </goals>
                     </execution>
                 </executions>
