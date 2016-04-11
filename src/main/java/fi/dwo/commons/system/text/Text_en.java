@@ -24,6 +24,7 @@ public class Text_en extends ListResourceBundle {
         {TextMapper.BTN_BACK, "Back"},
         {TextMapper.BTN_COPYSELECTEDTOCLASS, "Copy selected to schoolclass"},
         {TextMapper.BTN_NEW_STUDENTS, "New students"},
+        {TextMapper.BTN_NEW_TEACHERS, "New teachers"},
         {TextMapper.BTN_CREATE_STUDENTACCOUNTS, "Create accounts"},
         {TextMapper.BTN_NEW_CLASS, "New clas"},
         {TextMapper.BTN_DELETE, "Delete"},

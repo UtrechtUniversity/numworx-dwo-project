@@ -25,6 +25,7 @@ public class Text_nl extends ListResourceBundle {
         {TextMapper.BTN_COPYSELECTEDTOCLASS, "Voeg geselecteerden toe aan"},
         {TextMapper.BTN_DELSELECTED, "Verwijder geselecteerden"},
         {TextMapper.BTN_NEW_STUDENTS, "Nieuwe studenten"},
+        {TextMapper.BTN_NEW_TEACHERS, "Nieuwe docenten"},
         {TextMapper.BTN_CREATE_STUDENTACCOUNTS, "Maak accounts"},
         {TextMapper.BTN_NEW_CLASS, "Nieuwe klas"},
         {TextMapper.BTN_DELETE, "Delete"},

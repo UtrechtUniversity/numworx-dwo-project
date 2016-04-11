@@ -6,7 +6,7 @@
 package fi.dwo.commons.persistence.entities;
 
 import fi.dwo.rest.dom.entities.DomSchoolAdmin;
-import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomFullTeacher;
 import fi.dwo.rest.dom.entities.DomStudent;
 import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.dom.entities.DomUser;
@@ -312,8 +312,8 @@ public class PersistentUser implements Serializable {
         return user;
     }
 
-    public DomSingleSchoolStudent buildDomSingleSchoolStudent(){
-        DomSingleSchoolStudent user = new DomSingleSchoolStudent();
+    public DomFullTeacher buildDomSingleSchoolStudent(){
+        DomFullTeacher user = new DomFullTeacher();
         fillDomUser(user);
         return user;
     }
