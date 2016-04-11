@@ -1,17 +1,12 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
-import org.json.simple.JSONObject;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.utils.LaTransport;
-import nl.uu.fi.dwo.mobile.utils.Logging;
 
-import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ScoreNavMC2 extends ScoreNavFacade {
