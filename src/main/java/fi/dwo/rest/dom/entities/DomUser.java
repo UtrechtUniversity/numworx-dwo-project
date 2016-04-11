@@ -21,6 +21,9 @@ public class DomUser {
     private String insertion;
     private Boolean singleSchool;
 
+    /**
+     * Constructor
+     */
     public DomUser(){
         
     }
