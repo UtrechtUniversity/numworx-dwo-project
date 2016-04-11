@@ -4,16 +4,16 @@
 
     <parent>
         <groupId>fi.dwo</groupId>
-        <artifactId>DWO2-working-gert</artifactId>
+        <artifactId>DWO2</artifactId>
         <version>2.0-SNAPSHOT</version>
-        <relativePath>../../../DWO2/branches/working-gert/pom.xml</relativePath>
+        <relativePath>../../DWO2/trunk/pom.xml</relativePath>
     </parent>
         
     <groupId>fi.dwo.rest</groupId>
-    <artifactId>DWO-rest-lib-working-gert</artifactId>
+    <artifactId>DWO-rest-lib</artifactId>
 <!--    <version>2.0-SNAPSHOT</version>-->
     <packaging>jar</packaging>
-    <name>DWO-rest-lib - working-gert</name>
+    <name>DWO-rest-lib - trunk</name>
     <description>This is a Java library of common classes between the DWO-GWT-client, DwoJAppplet and the DwoServer applications.</description>
     <url>http://www.dwo.nl</url>
     <!-- Update year to current when starting a new project -->
