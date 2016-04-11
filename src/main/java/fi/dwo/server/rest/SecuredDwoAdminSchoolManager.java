@@ -9,6 +9,7 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
@@ -24,7 +25,6 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.rest.entities.RestHasRole;
 import fi.dwo.rest.entities.RestSchool4DwoAdmin;
 import fi.dwo.rest.entities.RestSchoolFull;
@@ -104,6 +104,8 @@ public class SecuredDwoAdminSchoolManager {
                 s = SchoolManager.findBySchoolLogin(school.getSchoolLogin());
                 LOG.log(Level.INFO, "Username {0}: created school with schoollogin {1} and id {2}.", new Object[]{sc.getUserPrincipal().getName(), s.getSchoolLogin(), s.getSchoolID()});
                 //add user roles
+                PersistentSchoolGroup newSg = new PersistentSchoolGroup();
+                newSg.getSchoolID();
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Method incomplete.");
 //                return true;
             }

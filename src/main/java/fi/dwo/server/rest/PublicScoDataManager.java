@@ -1,5 +1,7 @@
 package fi.dwo.server.rest;
 
+import fi.beans.base64code.StringCodeObject;
+import fi.beans.dwomaccess.JSONEncoder;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
@@ -7,9 +9,12 @@ import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -39,29 +44,39 @@ public class PublicScoDataManager {
     @Deprecated
     public String getJSONLaunchDataBytes(@QueryParam("scoId") int scoId) {
 
-            PersistentScoData scoData = ScoDataManager.findEntity(Integer.valueOf(scoId).longValue());
+            PersistentScoData scoData = ScoDataManager.findEntity(Long.valueOf(scoId));
             byte[] launchData = scoData.getLaunchdatabytes();
-
-            byte[] buffer = new byte[1024];
-
+            if(launchData != null)
+            {  
+            	byte[] buffer = new byte[1024];	
+	            try {
+	                ByteArrayInputStream inStream = new ByteArrayInputStream(launchData);
+	                ByteArrayOutputStream outStream = new ByteArrayOutputStream(launchData.length);
+	                GZIPInputStream gzIn = new GZIPInputStream(inStream);
+	
+	                int len;
+	                while ((len = gzIn.read(buffer)) > 0) {
+	                    outStream.write(buffer, 0, len);
+	                }
+	
+	                gzIn.close();
+	                outStream.close();
+	                
+	                return outStream.toString("UTF-8");
+	            }
+	            catch (IOException ex) {
+	                LOG.log(Level.SEVERE, "Error while unzipping launchdata with scoid " + scoId + ".", ex);
+	            }
+            }
+// The slow conversion, if bytes are missing.     
             try {
-                ByteArrayInputStream inStream = new ByteArrayInputStream(launchData);
-                ByteArrayOutputStream outStream = new ByteArrayOutputStream(launchData.length);
-                GZIPInputStream gzIn = new GZIPInputStream(inStream);
-
-                int len;
-                while ((len = gzIn.read(buffer)) > 0) {
-                    outStream.write(buffer, 0, len);
-                }
-
-                gzIn.close();
-                outStream.close();
-                
-                return outStream.toString("UTF-8");
+                Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(scoData.getLaunchdata());
+                StringWriter writer = new StringWriter();
+    			JSONEncoder.encode(map, writer);
+    	        return writer.toString();
+            } catch(Exception ex) {
+            	LOG.log(Level.SEVERE, "Error while decoding launchdata with scoid " + scoId + ".", ex);
             }
-            catch (IOException ex) {
-                LOG.log(Level.SEVERE, "Error while unzipping launchdata with scoid " + scoId + ".", ex);
-            }
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Error while unzipping launchdata with scoid " + scoId + ".");
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Error with launchdata with scoid " + scoId + ".");
         }
     }

@@ -10,6 +10,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -160,7 +161,10 @@ public class TeacherOfClassManager {
             List<PersistentTeacherOfClass> list = q.getResultList();
             LOG.log(Level.FINE, "PersistentTeacherOfClass-manager retrieved {0} PersistentTeacherOfClass with classid {1}", new Object[]{list.size(), sc.getClassID()});
             return list;
-        }
+        }catch(Exception e){
+            LOG.log(Level.FINE, "Exception retrieving schoolClass", e);
+            return new ArrayList<>();
+        }        
         finally {
             em.close();
         }

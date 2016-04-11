@@ -14,11 +14,9 @@ import fi.beans.jdbc.DbConnectIF;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.ScormAccessIF;
 import fi.dwo.commons.exceptions.LoginException;
-import java.util.logging.Level;
 
 import java.util.logging.Level;
-//TODO this class should use reflection to delegate stuff going to be purely serverside.
-//
+
 public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAccessIF {
 //TODO this class should use reflection to delegate stuff going to be purely serverside.
 //

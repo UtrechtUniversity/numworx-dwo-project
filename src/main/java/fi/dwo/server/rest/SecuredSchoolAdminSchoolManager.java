@@ -10,6 +10,7 @@ import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -23,7 +24,7 @@ import fi.dwo.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.rest.entities.RestStudent;
 import fi.dwo.rest.entities.RestTeacher;
 import fi.dwo.commons.util.DwoDateUtilities;
-import fi.dwo.rest.dom.entities.RoleType;
+import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -281,6 +282,58 @@ public class SecuredSchoolAdminSchoolManager {
         return true;
     }
 
+
+    /**
+     * Registers a new user and make him/her a teacher in the school.
+     *
+     * @param sc
+     * @param teacher
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/submitTeacher")
+    public Boolean submitTeacher(@Context SecurityContext sc, RestUserFull teacher) {
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+//        PersistentSchoolGroup sg = null;
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
+//            sg = SchoolGroupManager.findBySchoolAndRole(school, RoleType.TEACHER);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+
+//        if (sg != null) {
+            Date now = DwoDateUtilities.getCurrentDwoDate();
+            PersistentUser user = new PersistentUser();
+            user.setEmail(teacher.getDomUserFull().getEmail());
+            user.setGivenName(teacher.getDomUserFull().getGivenName());
+            user.setInsertion(teacher.getDomUserFull().getInsertion());
+            user.setLastname(teacher.getDomUserFull().getFamilyName());
+            user.setPassword(teacher.getDomUserFull().getPassword());
+            user.setRegisterDate(now);
+            user.setUsername(teacher.getDomUserFull().getUserName());
+  //          user.setSchoolGroupId(sg.getSchoolGroupID());
+            user.setSingleSchoolAccount(false);
+            try {
+                SchoolUtilManager.addAccountAsTeacherInSchool(user, school);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+                LOG.log(Level.SEVERE, null, ex);
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+            }
+//        } else {
+//            return false;
+//        }
+        return true;
+    }
+    
     /**
      * Edits a singleSchoolStudent.
      *

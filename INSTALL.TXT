@@ -1,8 +1,12 @@
 This software is compatible with tomcat7.0 and requires a mysql 5.5 database
-resource. For security reasons the application should best run in it's own tomcat.
+resource. For security reasons the application should best run in it's own 
+tomcat. As we only deploy production on Linux-based hosts our documentation 
+is limited to that platform, though an advanced developer may install it in
+any tomcat/mysql capable OS.
 
-Create an empty mysql database using the createdb.sql in the tools directory. 
-Next create a user account for that database.
+Create an empty mysql database and run the createdb.sql in the tools directory 
+on the commandline of the mysql executable to fill it with tables. Next create a 
+user account for the new database.
 
 The database account for the resource should have select, insert update and 
 delete rights. If the database is named dwodb. One might use the following 
@@ -20,9 +24,31 @@ contain all relevant applet files.
 <Parameter name="fi.dwo.dwojapplet.web.appletName" value="DWOJApplet-1.0.1-r9269.jar"
          override="true"/>
 
-Once the database was created configure a mysql-db resource in the main context.xml:
-
+Once the database was created configure a mysql-db resource in the main server.xml:
+ <GlobalNamingResources>
+...   
 <Resource name="jdbc/dwodb" auth="Container" type="javax.sql.DataSource"
                maxActive="100" maxIdle="30" maxWait="10000"
                username="dwo" password="dwopassword" driverClassName="com.mysql.jdbc.Driver"
                url="jdbc:mysql://localhost:3306/dwo_production_v1_2"/>
+...  
+</GlobalNamingResources>
+
+Deploy the war using a context fragment, it enables the resource db and sets the security realm to be used:
+
+<?xml version="1.0" encoding="utf-8"?>
+<Context path="/DWO/DWOServer"  docBase="/opt/dwo/tomcat7/wars/DWOServer" debug="0" crossContext="false" >
+<ResourceLink
+    name="jdbc/dwodb"
+    global="jdbc/dwodb"
+    type="javax.sql.DataSource"
+  />
+    <Realm localDataSource="true" roleNameCol="groupname" userRoleTable="tomcat_roles_view" userCredCol="passwd"
+          userNameCol="username" userTable="tomcat_user_view" dataSourceName="jdbc/dwodb"
+          className="org.apache.catalina.realm.DataSourceRealm"/>
+</Context>
+
+Verify there is enough permgenspace voor de tomcat.
+
+Note the localDataSource="true" attribute in <Realm/>.
+

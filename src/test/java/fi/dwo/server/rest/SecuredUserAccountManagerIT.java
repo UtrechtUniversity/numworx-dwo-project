@@ -7,9 +7,9 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.server.testutil.TestSecurityContext;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.rest.dom.entities.RoleType;
-import fi.dwo.rest.entities.RestFullUser;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -91,24 +91,24 @@ public class SecuredUserAccountManagerIT {
         System.out.println("updateCurrentUser");
         SecurityContext sc = new TestSecurityContext("user01", RoleType.STUDENT);
         SecuredUserAccountManager instance = new SecuredUserAccountManager();
-        RestFullUser user = new RestFullUser();
-        user.setDomFullUser(UserManager.findByUserName("user01").buildDomUserFull());
-        user.getDomFullUser().setGivenName("a");
-        user.getDomFullUser().setInsertion("b");
-        user.getDomFullUser().setFamilyName("c");
-        user.getDomFullUser().setEmail("d");
-        user.getDomFullUser().setPassword("e");
+        RestUserFull user = new RestUserFull();
+        user.setDomUserFull(UserManager.findByUserName("user01").buildDomUserFull());
+        user.getDomUserFull().setGivenName("a");
+        user.getDomUserFull().setInsertion("b");
+        user.getDomUserFull().setFamilyName("c");
+        user.getDomUserFull().setEmail("d");
+        user.getDomUserFull().setPassword("e");
 
         DomUserFull result = instance.updateCurrentUser(sc, user);
-        assertEquals(user.getDomFullUser().getUserName(), result.getUserName());
-        assertEquals(user.getDomFullUser().getGivenName(), result.getGivenName());
-        assertEquals(user.getDomFullUser().getInsertion(), result.getInsertion());
-        assertEquals(user.getDomFullUser().getFamilyName(), result.getFamilyName());
-        assertEquals(user.getDomFullUser().getPassword(), result.getPassword());
-        assertEquals(user.getDomFullUser().getEmail(), result.getEmail());
+        assertEquals(user.getDomUserFull().getUserName(), result.getUserName());
+        assertEquals(user.getDomUserFull().getGivenName(), result.getGivenName());
+        assertEquals(user.getDomUserFull().getInsertion(), result.getInsertion());
+        assertEquals(user.getDomUserFull().getFamilyName(), result.getFamilyName());
+        assertEquals(user.getDomUserFull().getPassword(), result.getPassword());
+        assertEquals(user.getDomUserFull().getEmail(), result.getEmail());
 
-        user.setDomFullUser(UserManager.findByUserName("user01").buildDomUserFull());
-        user.getDomFullUser().setUserName("bonk");
+        user.setDomUserFull(UserManager.findByUserName("user01").buildDomUserFull());
+        user.getDomUserFull().setUserName("bonk");
         try {
             result = instance.updateCurrentUser(sc, user);
             fail("Did not fail fake username with result." + result.getUserName());
@@ -117,7 +117,7 @@ public class SecuredUserAccountManagerIT {
             // succeeded
         }
 
-        user.setDomFullUser(UserManager.findByUserName("user01").buildDomUserFull());
+        user.setDomUserFull(UserManager.findByUserName("user01").buildDomUserFull());
 
     }
 

@@ -5,6 +5,9 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.rest.persistence.PersistenceClassType;
+import fi.dwo.rest.dom.entities.RoleType;
+import fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.rest.entities.RestNewSchoolLogin;
 import fi.dwo.rest.entities.RestSchoolRoleAndClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -22,9 +25,6 @@ import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.*;
 import fi.dwo.commons.util.DwoDateUtilities;
-import fi.dwo.rest.dom.entities.RoleType;
-import fi.dwo.rest.persistence.PersistenceClassType;
-import fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -190,9 +190,10 @@ public class SecuredUserAccountLoginsManager {
         curSac = this.getCurrentSchoolRoleAndClass(sc.getUserPrincipal().getName(), user.getId());
         sacs.setActiveSchoolRoleAndClass(curSac);
         sacs.setSchoolsRolesAndClassesList(sacList);
+        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+        sacs.setNullSchool(nullSchool.createDomSchool());
         return sacs;
-
-    }        // Create all the tuples.
+    }
 
     /**
      * Updates the User data of the current user and returns a copy of the
