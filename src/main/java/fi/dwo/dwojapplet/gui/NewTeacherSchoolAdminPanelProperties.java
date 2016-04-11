@@ -3,12 +3,9 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
-import fi.dwo.rest.dom.entities.DomSchoolClass;
-import fi.dwo.rest.dom.entities.DomFullTeacher;
+import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolManager;
+import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.dwojapplet.domain.rest.SecureTeacherSchoolClassManager;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -32,7 +29,7 @@ public class NewTeacherSchoolAdminPanelProperties {
 //        return SecureTeacherSchoolClassManager.submitSingleSchoolStudent(submit);
 //    }
 
-    public static Boolean IsValidUserDataInput(DomFullTeacher submit) throws Dwo2Exception {
+    public static Boolean IsValidUserDataInput(DomUserFull submit) throws Dwo2Exception {
         if (submit.getUserName() != null
                 && !submit.getUserName().equals("")
                 && submit.getPassword() != null) {
@@ -40,5 +37,9 @@ public class NewTeacherSchoolAdminPanelProperties {
         } else {
             return false;
         }
+    }
+
+    static Boolean submitNewTeacher(DomUserFull submit) throws Dwo2Exception {
+        return SecureSchoolAdminSchoolManager.submitTeacher(submit);
     }
 }

@@ -4,7 +4,7 @@ import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomSchool;
 import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.entities.RestFullUser;
+import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
@@ -49,9 +49,9 @@ public class SecureUserAccountManager {
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static DomUserFull updateAccountData(DomUserFull user) throws Dwo2Exception {
-        RestFullUser restUser = new RestFullUser();
+        RestUserFull restUser = new RestUserFull();
         restUser.setRestContext(new DomContext());
-        restUser.setDomFullUser(user);
+        restUser.setDomUserFull(user);
 
         user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", DomUserFull.class, restUser);
         HttpAuthenticationFeature feature = null;
@@ -67,7 +67,7 @@ public class SecureUserAccountManager {
         StoredRestManager.setWebTargetRest(target);
 
         DwoHelper.setCurrentUser(user);
-        LOG.log(Level.FINE, "Updated user profile of username {0}.", new Object[]{restUser.getDomFullUser().getUserName()});
+        LOG.log(Level.FINE, "Updated user profile of username {0}.", new Object[]{restUser.getDomUserFull().getUserName()});
         return user;
     }
 

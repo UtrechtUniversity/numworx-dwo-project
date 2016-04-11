@@ -1,9 +1,8 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomFullTeacher;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.rest.dom.entities.DomNewUser;
+import fi.dwo.rest.dom.entities.DomUserFull;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
     //define an empty field to add things.
     private int emptyRow = 0;
 
-    private List<DomNewUser> data = new ArrayList<DomNewUser>();
+    private List<DomUserFull> data = new ArrayList<DomUserFull>();
     private Image delImage;
 
     /**
@@ -42,11 +41,11 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
      * @param rmImage
      * @throws Dwo2Exception
      */
-    public void init(NewTeacherSchoolAdminPanelProperties props, String[] colNames, List<DomNewUser> teachers, Image rmImage) throws Dwo2Exception {
+    public void init(NewTeacherSchoolAdminPanelProperties props, String[] colNames, List<DomUserFull> teachers, Image rmImage) throws Dwo2Exception {
         delImage = rmImage;
         columnNames = colNames;
         data = teachers;
-        DomNewUser teacher = new DomNewUser();
+        DomUserFull teacher = new DomUserFull();
 //        teacher.clearSettings();
         data.add(teacher);
         prop = props;
@@ -84,7 +83,7 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
             case 2:
                 return data.get(row).getFamilyName();
             case 3:
-                return data.get(row).getUsername();
+                return data.get(row).getUserName();
             case 4:
                 return data.get(row).getPassword();
             case 5:
@@ -119,7 +118,7 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
             case 6:
                 return Image.class;
             default:
-                return DomFullTeacher.class;
+                return DomUserFull.class;
         }
     }
 
@@ -140,7 +139,7 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
         //don't change any setting, but update selected values.
         if (emptyRow == row) {
             emptyRow = data.size();
-            data.add(new DomNewUser());
+            data.add(new DomUserFull());
             this.fireTableStructureChanged();
         }
         setSelectedRow(row);
@@ -162,7 +161,7 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
                 data.get(row).setFamilyName((String) value);
                 break;
             case 3:
-                data.get(row).setUsername((String) value);
+                data.get(row).setUserName((String) value);
                 break;
             case 4:
                 data.get(row).setPassword((String) value);
@@ -212,10 +211,10 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
         }
     }
 
-    public void addRows(List<DomNewUser> teachers) {
-        DomNewUser temp = data.get(data.size() - 1);
+    public void addRows(List<DomUserFull> teachers) {
+        DomUserFull temp = data.get(data.size() - 1);
         data.remove(data.size() - 1);
-        for (DomNewUser s : teachers) {
+        for (DomUserFull s : teachers) {
             data.add(s);
         }
         data.add(temp);
@@ -225,7 +224,7 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
         
     }
 
-    List<DomNewUser> getSubmitList() {
+    List<DomUserFull> getSubmitList() {
         return data;
     }
 }

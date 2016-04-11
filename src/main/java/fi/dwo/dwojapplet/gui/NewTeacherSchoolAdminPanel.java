@@ -4,14 +4,11 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
-import fi.dwo.rest.dom.entities.DomSchoolClass;
-import fi.dwo.rest.dom.entities.DomFullTeacher;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.rest.dom.entities.DomNewUser;
+import fi.dwo.rest.dom.entities.DomUserFull;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -49,7 +46,6 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
 
     private static final Logger LOG = Logger.getLogger(NewTeacherSchoolAdminPanel.class.getName());
 
-    private DomSchoolClass schoolClass;
     private NewTeacherSchoolAdminPanelProperties prop = null;
     private NewTeacherSchoolAdminPanelTableModel tableModel;
     private CenterPanel center;
@@ -73,13 +69,11 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
 
     private JPanel jtbl;
 
-    public enum UserType {
-
-        TEACHER, SCHOOLADMIN
-    };
-
-    private UserType userType = UserType.TEACHER;
-
+//    public enum UserType {
+//        ADMIN, SCHOOLADMIN
+//    };
+//
+//    private UserType userType = UserType.SCHOOLADMIN;
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
         private ImageIcon icon = new ImageIcon();
@@ -163,7 +157,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         jtbl.add(jtable);
         jtbl.add(Box.createHorizontalGlue());
         tableModel = new NewTeacherSchoolAdminPanelTableModel();
-        List<DomNewUser> users = new ArrayList<DomNewUser>(1);
+        List<DomUserFull> users = new ArrayList<DomUserFull>(1);
         tableModel.init(prop, columnNames, users, delImage);
 
         jtable.setModel(tableModel);
@@ -186,18 +180,15 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         jtbl.setVisible(true);
     }
 
-    public NewTeacherSchoolAdminPanel(DomSchoolClass sc) throws Dwo2Exception {
+//    public NewTeacherSchoolAdminPanel(NewTeacherSchoolAdminPanel.UserType type) throws Dwo2Exception {
+//        super(null);
+//        init(type);
+//    }
+    public NewTeacherSchoolAdminPanel() throws Dwo2Exception {
         super(null);
-        init(sc, userType);
-
+        init();
     }
 
-    public NewTeacherSchoolAdminPanel(DomSchoolClass sc, NewTeacherSchoolAdminPanel.UserType type) throws Dwo2Exception {
-        super(null);
-        init(sc, type);
-
-    }
-    
     /**
      * Creates a new ClassPanel which shows a list of classes.
      *
@@ -205,9 +196,8 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
      * @param userType
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
-    private void init(DomSchoolClass sc, UserType userType) throws Dwo2Exception {
-        schoolClass = sc;
-        this.userType = userType;
+    private void init() throws Dwo2Exception {
+//        this.userType = userType;
         this.setSize(480, 500);
 
         //fetch user details.
@@ -298,10 +288,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) 
-                + " - " + TextMapper.getText(TextMapper.TBL_CLASSNAME) 
-                + ": " + schoolClass.getSchoolClassName()
-                + " - " + TextMapper.getText(TextMapper.HDR_NEW_STUDENTS));
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIMNU_USERS_SCHOOL));
     }
 
     /**
@@ -316,24 +303,14 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
 //                return;
 //            }
             try {
-                List<DomNewUser> submitList = tableModel.getSubmitList();
-                List<DomNewUser> resultList = new ArrayList<DomNewUser>();
+                List<DomUserFull> submitList = tableModel.getSubmitList();
+                List<DomUserFull> resultList = new ArrayList<DomUserFull>();
                 boolean failFlag = false;
                 boolean fatalFlag = false;
-                for (DomNewUser submit : submitList) {
-                    if (NewSingleSchoolStudentsTeacherPanelProperties.IsValidUserDataInput(submit)) {
+                for (DomUserFull submit : submitList) {
+                    if (NewTeacherSchoolAdminPanelProperties.IsValidUserDataInput(submit)) {
                         try {
-                            DomNewSingleSchoolStudent student = new DomNewSingleSchoolStudent();
-                            student.setDomSingleSchoolStudent(submit);
-                            student.setDomSchoolClass((DomSchoolClass) schoolClass);
-                            switch (userType) {
-                                case TEACHER:
-                                    NewSingleSchoolStudentsTeacherPanelProperties.submitSingleSchoolStudent(student);
-                                    break;
-                                case SCHOOLADMIN:
-                                    NewSingleSchoolStudentsSchoolAdminPanelProperties.submitSingleSchoolStudent(student);
-                                    break;
-                            }
+                            NewTeacherSchoolAdminPanelProperties.submitNewTeacher(submit);
                         }
                         catch (Dwo2Exception ex) {
                             resultList.add(submit);
@@ -350,7 +327,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 tableModel.init(prop, columnNames, resultList, delImage);
                 tableModel.fireTableDataChanged();
                 if (failFlag == true) {
-                    GuiCreator.instance().ShowMessageDialog(this, "De overgebleven studenten kunnen niet worden toegevoegd, vermoedelijk is de username niet uniek.");
+                    GuiCreator.instance().ShowMessageDialog(this, "De overgebleven docenten kunnen niet worden toegevoegd, vermoedelijk is de username niet uniek.");
                 }
                 if (fatalFlag == true) {
                     GuiCreator.instance().ShowMessageDialog(this, "Er was een systeem error, zie de log.");
@@ -367,7 +344,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
             pasteFromSystemClipboard();
         } else if (e.getSource() == backButton) {
             try {
-                ClassTeacherPanel panel = new ClassTeacherPanel();
+                UsersInSchoolSchoolAdminPanel panel = new UsersInSchoolSchoolAdminPanel();
                 center.loadCenter(panel);
 
             }
@@ -410,17 +387,19 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 tempString = (String) clipboardContent.getTransferData(DataFlavor.stringFlavor);
                 String[] rowStrings = tempString.split("\n"); // was: StringUtils.split(tempString, "\n");
                 String[][] celStrings = new String[rowStrings.length][];
-                List<DomNewUser> newUserList = new ArrayList<DomNewUser>();
+                List<DomUserFull> newUserList = new ArrayList<DomUserFull>();
                 for (int i = 0; i < rowStrings.length; i++) {
-                    newUserList.add(new DomNewUser());
+                    newUserList.add(new DomUserFull());
                     //userList.get(userList.size()).clearSettings();
                     celStrings[i] = rowStrings[i].split("\t", columnNames.length);
                     newUserList.get(newUserList.size() - 1).setGivenName(celStrings[i][0]);
                     newUserList.get(newUserList.size() - 1).setInsertion(celStrings[i][1]);
                     newUserList.get(newUserList.size() - 1).setFamilyName(celStrings[i][2]);
-                    newUserList.get(newUserList.size() - 1).setUsername(celStrings[i][3]);
+                    newUserList.get(newUserList.size() - 1).setUserName(celStrings[i][3]);
                     newUserList.get(newUserList.size() - 1).setPassword(celStrings[i][4]);
                     newUserList.get(newUserList.size() - 1).setEmail(celStrings[i][5]);
+                    // a teacher-account!
+                    newUserList.get(newUserList.size() - 1).setSingleSchool(false);
 //                    System.out.println(celStrings[i]);
                 }
                 tableModel.addRows(newUserList);

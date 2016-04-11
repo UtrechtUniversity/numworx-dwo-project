@@ -5,7 +5,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import fi.dwo.rest.dom.entities.DomSchoolAdmin;
-import fi.dwo.rest.dom.entities.DomFullTeacher;
+import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import fi.dwo.rest.dom.entities.DomStudent;
 import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.exceptions.Dwo2Exception;
@@ -141,7 +141,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                     DomStudent student = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
                     DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
                     getStudent.setDomStudent(student);
-                    DomFullTeacher user = prop.getSingleSchoolStudent(getStudent);
+                    DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
                     AccountDataFullStudentJPanel panel = new AccountDataFullStudentJPanel();
                     panel.setUser(user);
                     panel.setVisible(true);
@@ -151,7 +151,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                     //user = new DomSingleSchoolStudent(panel.getUser()); superfluous.
                     if (result == JOptionPane.OK_OPTION) {
                         //persist returned values
-                        user = new DomFullTeacher(panel.getUser());
+                        user = new DomSingleSchoolStudent(panel.getUser());
                         prop.updateSingleSchoolStudent(user);
                         tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
                         tableModel.fireTableDataChanged();
@@ -395,24 +395,6 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-
-//        if (e.getSource() == deleteButton) {
-//            try {
-//                for (int i = 0; i < tableModel.getRowCount(); i++) {
-//                    if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
-//                        DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
-//                        prop.(student);
-//                    }
-//                }
-//                tableModel.init(prop, editImage, emptyImage);
-//                tableModel.fireTableDataChanged();
-//                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
-//            }
-//            catch (Dwo2Exception ex) {
-//                LOG.log(Level.FINE, null, ex);
-//                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
-//            }
-//        }else
         if (e.getSource() == studentRadio) {
             //redo table
             try {
@@ -424,8 +406,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
 
             }
             catch (Dwo2Exception ex) {
-                Logger.getLogger(UsersInSchoolSchoolAdminPanel.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
         } else if (e.getSource() == teacherRadio) {
             //redo table
@@ -437,8 +418,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 addTeachersButton.setVisible(true);
             }
             catch (Dwo2Exception ex) {
-                Logger.getLogger(UsersInSchoolSchoolAdminPanel.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
         } else if (e.getSource() == schoolAdminRadio) {
             //redo table
@@ -450,8 +430,16 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 addTeachersButton.setVisible(false);
             }
             catch (Dwo2Exception ex) {
-                Logger.getLogger(UsersInSchoolSchoolAdminPanel.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        } else if (e.getSource() == addTeachersButton) {
+            try {
+                NewTeacherSchoolAdminPanel panel = new NewTeacherSchoolAdminPanel();
+                center.loadCenter(panel);
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         }
     }
