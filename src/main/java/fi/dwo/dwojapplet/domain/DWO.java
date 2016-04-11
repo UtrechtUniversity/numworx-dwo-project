@@ -355,7 +355,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @param args
      */
     public DWO(String[] args) {
-
+        
         nestedWait = 0;
         dwoProfileID = 1;
         int o = 0;
