@@ -123,4 +123,76 @@ public class SchoolUtilManager {
         return true;
     }
 
+    /**
+     * Adds the user to the database and places him in the school. User is
+     * expected to be fully initialized.
+     *
+     * @param user
+     * @param school
+     * @return
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     */
+    public static Boolean addAccountAsTeacherInSchool(PersistentUser user, PersistentSchool school) throws Dwo2Exception {
+        if (user == null || school == null) {
+            LOG.log(Level.SEVERE, "User or school parameter is invalid.");
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
+        }
+
+        PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(school, RoleType.TEACHER);
+        if (sg == null) {
+            LOG.log(Level.SEVERE, "Missing schoolgroup in database.");
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
+        }
+        //check if user single school student user
+        if (user.isSingleSchoolAccount()) {
+            LOG.log(Level.SEVERE, "User is a single school user.");
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
+        }
+
+        Date now = DwoDateUtilities.getCurrentDwoDate();
+        //rewrite some user data
+        user.setRegisterDate(now);
+        user.setSchoolGroupId(sg.getSchoolGroupID());
+        user.setSingleSchoolAccount(false);
+
+        try {
+            UserManager.create(user);
+        }
+        catch (PersistenceException e) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_exists, "Username exists");
+        }
+        try {
+            user = UserManager.findByUserName(user.getUsername());
+        }
+        catch (PersistenceException e) {
+            LOG.log(Level.SEVERE, "User creation failed.", e);
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
+        }
+        if (user == null) {
+            LOG.log(Level.SEVERE, "User creation failed.");
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "User created was not found.");
+        }
+
+        //make key
+        PersistentHasRolePK pk = new PersistentHasRolePK();
+        pk.setSchoolGroupID(sg.getSchoolGroupID());
+        pk.setUserID(user.getId());
+
+        PersistentHasRole hr = new PersistentHasRole();
+        hr.setPersistentHasRolePK(pk);
+        hr.setLastLogin(null);
+        hr.setRegisterDate(now);
+        hr.setRights("_");
+        hr.setUser(user);
+
+        try {
+            HasRoleManager.create(hr);
+        }
+        catch (PersistenceException e) {
+            LOG.log(Level.SEVERE, "User creation failed.");
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
+        }
+
+        return true;
+    }    
 }
