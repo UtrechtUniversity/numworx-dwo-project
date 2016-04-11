@@ -5,7 +5,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import fi.dwo.rest.dom.entities.DomSchoolAdmin;
-import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import fi.dwo.rest.dom.entities.DomFullTeacher;
 import fi.dwo.rest.dom.entities.DomStudent;
 import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.exceptions.Dwo2Exception;
@@ -62,7 +62,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
     private CenterPanel center;
 
 //    private JButton deleteButton;
-//    private JButton addStudentsButton;
+    private JButton addTeachersButton;
     JRadioButton studentRadio;
     JRadioButton teacherRadio;
     JRadioButton schoolAdminRadio;
@@ -141,7 +141,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                     DomStudent student = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
                     DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
                     getStudent.setDomStudent(student);
-                    DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
+                    DomFullTeacher user = prop.getSingleSchoolStudent(getStudent);
                     AccountDataFullStudentJPanel panel = new AccountDataFullStudentJPanel();
                     panel.setUser(user);
                     panel.setVisible(true);
@@ -151,7 +151,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                     //user = new DomSingleSchoolStudent(panel.getUser()); superfluous.
                     if (result == JOptionPane.OK_OPTION) {
                         //persist returned values
-                        user = new DomSingleSchoolStudent(panel.getUser());
+                        user = new DomFullTeacher(panel.getUser());
                         prop.updateSingleSchoolStudent(user);
                         tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
                         tableModel.fireTableDataChanged();
@@ -336,11 +336,12 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         header.add(teacherRadio);
         header.add(schoolAdminRadio);
         header.setBackground(GuiConstants.MAIN_BACKGROUND);
-//        addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
-//        addStudentsButton.setSize(addStudentsButton.getPreferredSize());
-//        addStudentsButton.addActionListener(this);
-//        header.add(Box.createGlue());
-//        header.add(addStudentsButton);
+        addTeachersButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_TEACHERS));
+        addTeachersButton.setVisible(false);
+        addTeachersButton.setSize(addTeachersButton.getPreferredSize());
+        addTeachersButton.addActionListener(this);
+        header.add(Box.createGlue());
+        header.add(addTeachersButton);
 //        header.add(deleteButton);
         this.add(header);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -418,6 +419,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 List userList = prop.getStudentsInSchool();
                 tableModel.init(userList, removeImage, studentImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
+                addTeachersButton.setVisible(false);
 //                addStudentsButton.setVisible(true);
 
             }
@@ -432,7 +434,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 List userList = prop.getTeachersInSchool();
                 tableModel.init(userList, removeImage, teacherImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
-
+                addTeachersButton.setVisible(true);
             }
             catch (Dwo2Exception ex) {
                 Logger.getLogger(UsersInSchoolSchoolAdminPanel.class
@@ -445,7 +447,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 List userList = prop.getSchoolAdminsInSchool();
                 tableModel.init(userList, removeImage, teacherImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
-
+                addTeachersButton.setVisible(false);
             }
             catch (Dwo2Exception ex) {
                 Logger.getLogger(UsersInSchoolSchoolAdminPanel.class
