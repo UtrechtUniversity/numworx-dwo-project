@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentCourse.findByParentID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID"),
     @NamedQuery(name = "PersistentCourse.findByNotVisible", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = :notVisible")})
 public class PersistentCourse implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -207,5 +208,5 @@ public class PersistentCourse implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentCourse[ courseID=" + courseID + " ]";
     }
-    
+
 }

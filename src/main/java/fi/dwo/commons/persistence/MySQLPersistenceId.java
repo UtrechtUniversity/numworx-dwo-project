@@ -42,6 +42,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
     /**
      * This constructor is only public because of jax-rs. Use a factory to
      * generate id's.
+     *
      * @param pid
      */
     public MySQLPersistenceId(PersistenceId pid) {
@@ -52,7 +53,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
             id = Long.parseLong(strList[2]);
             LOG.log(Level.FINE, "Converted IdString to id and type : {0} {1}", new Object[]{id, super.getType()});
         } else {
-            id=-1;
+            id = -1;
             super.setType(PersistenceClassType.none);
             LOG.log(Level.SEVERE, "Failed to convert IdString to id and type as it is for DB {0}", new Object[]{strList[0]});
         }
@@ -68,7 +69,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
     private MySQLPersistenceId(long aId, PersistenceClassType aType) {
         id = aId;
         super.setType(aType);
-        String s = String.format("MYSQL;%s;%020d", super.getType().name(),id);
+        String s = String.format("MYSQL;%s;%020d", super.getType().name(), id);
         super.setIdString(s);
     }
 
@@ -86,7 +87,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
             id = Long.parseLong(strList[2]);
             LOG.log(Level.FINE, "Converted IdString to id and type : {0} {1}", new Object[]{id, super.getType()});
         } else {
-            id=-1;
+            id = -1;
             super.setType(PersistenceClassType.none);
             LOG.log(Level.SEVERE, "Failed to convert IdString to id and type as it is for DB {0}", new Object[]{strList[0]});
         }
@@ -158,7 +159,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
      */
     @Override
     public boolean equals(PersistenceId aId) {
-        if(aId.getType().ordinal() == super.getType().ordinal()
+        if (aId.getType().ordinal() == super.getType().ordinal()
                 && id == ((MySQLPersistenceId) aId).getId()) {
             return true;
         } else {
@@ -177,7 +178,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
         r = r * id;
         return (int) r % Integer.MAX_VALUE;
     }
-    
+
     public static long getId(PersistenceId aId) {
         String[] strList = aId.getIdString().split(";");
         if (strList[0].equals("MYSQL")) {
@@ -185,7 +186,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
         } else {
             LOG.log(Level.SEVERE, "Failed to convert IdString {0}", new Object[]{aId.getIdString()});
             return -1;
-        } 
+        }
     }
 
     public static MySQLPersistenceId createPersistenceId(long id, PersistenceClassType t) {

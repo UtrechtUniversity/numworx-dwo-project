@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentTeacherOfClass.findByHasRolePK", query = "SELECT p FROM PersistentTeacherOfClass p WHERE p.persistentTeacherOfClassPK.userID = :userID and p.persistentTeacherOfClassPK.schoolGroupID= :schoolGroupID"),
     @NamedQuery(name = "PersistentTeacherOfClass.findByRegisterDate", query = "SELECT p FROM PersistentTeacherOfClass p WHERE p.registerDate = :registerDate")})
 public class PersistentTeacherOfClass implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected PersistentTeacherOfClassPK persistentTeacherOfClassPK;
@@ -100,5 +101,5 @@ public class PersistentTeacherOfClass implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentTeacherOfClass[ persistentTeacherOfClassPK=" + persistentTeacherOfClassPK + " ]";
     }
-    
+
 }

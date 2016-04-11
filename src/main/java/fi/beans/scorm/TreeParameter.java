@@ -41,10 +41,10 @@ public class TreeParameter extends ExtendedParameter {
     public void setItemLabel(String itemLabel) {
         this.itemLabel = itemLabel;
     }
+
     /* (non-Javadoc)
      * @see fi.beans.scorm.ExtendedParameter#addSubParameter(fi.beans.scorm.Parameter)
      */
-
     @Override
     public void addSubParameter(Parameter subParameter) {
         super.addSubParameter(subParameter);
@@ -52,10 +52,10 @@ public class TreeParameter extends ExtendedParameter {
             getType().setMustTabSheet(true);
         }
     }
+
     /* (non-Javadoc)
      * @see fi.beans.scorm.ExtendedParameter#setSubParameters(fi.beans.scorm.Parameter[])
      */
-
     @Override
     public void setSubParameters(Parameter[] subParameters) {
         super.setSubParameters(subParameters);

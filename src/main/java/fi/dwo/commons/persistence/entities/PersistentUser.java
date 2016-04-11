@@ -201,8 +201,8 @@ public class PersistentUser implements Serializable {
     /**
      * Returns true if the username indicates a single user account. It contains
      * a '#'token.
-     * 
-     * @return 
+     *
+     * @return
      */
     public Boolean isSingleSchoolAccount() {
         return singleSchoolAccount;
@@ -211,13 +211,12 @@ public class PersistentUser implements Serializable {
     /**
      * Returns true if the username indicates a single user account. It contains
      * a '#'token.
-     * 
-     * @return 
+     *
+     * @return
      */
     public void setSingleSchoolAccount(Boolean b) {
         singleSchoolAccount = b;
     }
-
 
     /**
      * @return the lastLoginTime
@@ -232,7 +231,7 @@ public class PersistentUser implements Serializable {
     public void setLastLoginTime(java.sql.Time lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -284,48 +283,51 @@ public class PersistentUser implements Serializable {
         return false;
     }
 
-    public DomUser buildDomUser(){
+    public DomUser buildDomUser() {
         DomUser user = new DomUser();
         fillDomUser(user);
         return user;
     }
 
-    public DomUserFull buildDomUserFull(){
+    public DomUserFull buildDomUserFull() {
         DomUserFull user = new DomUserFull();
         fillDomUserFull(user);
         return user;
     }
-    
-    public DomStudent buildDomStudent(){
+
+    public DomStudent buildDomStudent() {
         DomStudent user = new DomStudent();
         fillDomUser(user);
         return user;
     }
-    public DomTeacher buildDomTeacher(){
+
+    public DomTeacher buildDomTeacher() {
         DomTeacher user = new DomTeacher();
         fillDomUser(user);
         return user;
     }
-    public DomSchoolAdmin buildDomSchoolAdmin(){
+
+    public DomSchoolAdmin buildDomSchoolAdmin() {
         DomSchoolAdmin user = new DomSchoolAdmin();
         fillDomUser(user);
         return user;
     }
 
-    public DomSingleSchoolStudent buildDomSingleSchoolStudent(){
+    public DomSingleSchoolStudent buildDomSingleSchoolStudent() {
         DomSingleSchoolStudent user = new DomSingleSchoolStudent();
         fillDomUser(user);
         return user;
     }
-    
+
     /**
      * Fills the user with data from the current object.
-     * @param user 
+     *
+     * @param user
      */
-    private void fillDomUser(DomUser user){
-        if(getId()!=null){
+    private void fillDomUser(DomUser user) {
+        if (getId() != null) {
             user.setId(MySQLPersistenceId.createPersistenceId(getId().intValue(), PersistenceClassType.PersistentUser));
-        }else{
+        } else {
             user.setId(null);
         }
         user.setUserName(getUsername());
@@ -335,13 +337,11 @@ public class PersistentUser implements Serializable {
         user.setSingleSchool(isSingleSchoolAccount());
     }
 
-    private void fillDomUserFull(DomUserFull user){
+    private void fillDomUserFull(DomUserFull user) {
         fillDomUser(user);
         user.setPassword(getPassword());
         user.setEmail(getEmail());
 
     }
-    
-    
-    
+
 }

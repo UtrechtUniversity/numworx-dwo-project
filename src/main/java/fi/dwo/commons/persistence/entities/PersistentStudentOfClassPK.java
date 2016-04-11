@@ -17,19 +17,20 @@ import javax.validation.constraints.NotNull;
  */
 @Embeddable
 public class PersistentStudentOfClassPK implements Serializable {
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "userID", nullable = false)
     private Long userID;
     @Basic(optional = false)
-    @NotNull    
+    @NotNull
     @Column(name = "schoolGroupID", nullable = false)
     private Long schoolGroupID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "classID", nullable = false)
     private Long classID;
-    
+
     public Long getId() {
         Long id = classID;
         id = id << 32;
@@ -66,11 +67,10 @@ public class PersistentStudentOfClassPK implements Serializable {
         return schoolGroupID;
     }
 
-
     public void setSchoolGroupID(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

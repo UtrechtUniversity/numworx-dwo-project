@@ -13,6 +13,7 @@ import netscape.javascript.JSObject;
  *
  */
 public class WNScormAPI implements SCORM12APIInterface {
+
     private static final Logger LOG = Logger.getLogger(WNScormAPI.class.getName());
 
     public static final String GUID = "GUID";
@@ -34,7 +35,8 @@ public class WNScormAPI implements SCORM12APIInterface {
         }
         try {
             window = JSObject.getWindow(parent);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
         }
         LMSInitialize("");
     }
@@ -85,8 +87,9 @@ public class WNScormAPI implements SCORM12APIInterface {
                 args[0] = GUIDString;
                 args[1] = Boolean.TRUE;
                 result = (String) window.call("SetInitialized", args);
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE,null,e);
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         return result;
@@ -105,8 +108,9 @@ public class WNScormAPI implements SCORM12APIInterface {
                     args[1] = Boolean.FALSE;
                 }
                 result = (String) window.call("SetCompleted", args);
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE,null,e);
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         return result;
@@ -124,8 +128,9 @@ public class WNScormAPI implements SCORM12APIInterface {
                 args[0] = GUIDString;
                 args[1] = value;
                 result = (String) window.call("SetAssetData", args);
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE,null,e);
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         return result;
@@ -138,8 +143,9 @@ public class WNScormAPI implements SCORM12APIInterface {
                 Object[] args = new Object[1];
                 args[0] = GUIDString;
                 result = (String) window.call("GetAssetData", args);
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE,null,e);
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         if (result != null && !result.equals("")) {
@@ -156,8 +162,9 @@ public class WNScormAPI implements SCORM12APIInterface {
                 args[0] = GUIDString;
                 args[1] = score;
                 result = (String) window.call("SetScore", args);
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE,null,e);
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         return result;

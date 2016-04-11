@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentAppletConfig.findByName", query = "SELECT p FROM PersistentAppletConfig p WHERE p.name = :name"),
     @NamedQuery(name = "PersistentAppletConfig.findByLanguage", query = "SELECT p FROM PersistentAppletConfig p WHERE p.language = :language")})
 public class PersistentAppletConfig implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -133,5 +134,5 @@ public class PersistentAppletConfig implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentAppletConfig[ appletConfigID=" + appletConfigID + " ]";
     }
-    
+
 }

@@ -76,7 +76,8 @@ public class Scorm2Xml extends ScormAdapter {
         try {
             doc = builder.parse(is);
             root = doc.getDocumentElement();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             createEmptyDocument();
         }
     }
@@ -91,7 +92,8 @@ public class Scorm2Xml extends ScormAdapter {
         documentBuilderFactory.setNamespaceAware(true);
         try {
             builder = documentBuilderFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
+        }
+        catch (ParserConfigurationException e) {
             // should not happen
             LOG.log(Level.SEVERE, null, e);
         }
@@ -105,14 +107,16 @@ public class Scorm2Xml extends ScormAdapter {
         try {
             transformer = tFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.ENCODING, "US-ASCII");
-        } catch (TransformerConfigurationException e) {
+        }
+        catch (TransformerConfigurationException e) {
             // should not happen
             LOG.log(Level.SEVERE, null, e);
         }
         DOMSource source = new DOMSource(doc);
         try {
             transformer.transform(source, out);
-        } catch (TransformerException e) {
+        }
+        catch (TransformerException e) {
             throw (IOException) (new IOException(e.getMessage()).initCause(e));
         }
     }
@@ -122,7 +126,8 @@ public class Scorm2Xml extends ScormAdapter {
         StringWriter out = new StringWriter();
         try {
             write(new StreamResult(out));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return e.toString();
         }
         return out.toString();
@@ -233,7 +238,8 @@ public class Scorm2Xml extends ScormAdapter {
                         lastsubkey = null;
                         continue;
                     }
-                } catch (NumberFormatException e) {
+                }
+                catch (NumberFormatException e) {
                 }
                 Element newchild = doc.createElementNS(NAMESPACE, subkey);
                 r.appendChild(newchild);

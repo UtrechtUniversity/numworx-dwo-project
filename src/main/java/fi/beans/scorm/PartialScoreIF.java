@@ -6,8 +6,8 @@ import java.util.Map;
 
 /**
  * Interface for DWO Applets. Allow extraction of partial scores. To return a
- * List<Map<String,String>>
- * @
+ * List<Map<String,String>> @
+ *
  *
  * author wim
  *

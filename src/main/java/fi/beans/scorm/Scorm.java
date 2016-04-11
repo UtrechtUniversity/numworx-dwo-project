@@ -28,9 +28,11 @@ public abstract class Scorm {
         //Hier komt de default Scorm.findAPI(applet)....
         try {
             return new JSScormAPI(applet);
-        } catch (RuntimeException r) {
+        }
+        catch (RuntimeException r) {
             return null;
-        } catch (NoClassDefFoundError e) { // package netstape not found.
+        }
+        catch (NoClassDefFoundError e) { // package netstape not found.
             return null;
         }
     }

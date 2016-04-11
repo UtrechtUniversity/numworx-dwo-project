@@ -73,10 +73,10 @@ public class Base64OutputStream extends FilterOutputStream {
     private int col = 0;
     private int _i = 0;
     private final int[] inbuf = new int[3];
+
     /* (non-Javadoc)
      * @see java.io.FilterOutputStream#close()
      */
-
     @Override
     public void close() throws IOException {
         flush0();

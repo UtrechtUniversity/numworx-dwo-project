@@ -18,7 +18,7 @@
  * REGARDLESS OF THE * THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR
  * INABILITY TO USE * SOFTWARE, EVEN IF ADL Co-Lab HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH * DAMAGES. *
-******************************************************************************
+ ******************************************************************************
  */
 package fi.beans.scorm;
 
@@ -281,7 +281,7 @@ public interface SCORM12APIInterface {
      * <li> An integer number representing an error code. This requests
      * additional information on the listed error code.</li>
      *
- * <li> "". An empty string. This requests additional information on the
+     * <li> "". An empty string. This requests additional information on the
      * last error that occurred.</li>
      * </ul>
      *

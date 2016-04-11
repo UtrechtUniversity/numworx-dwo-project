@@ -7,102 +7,110 @@
  * accordance with the terms of the limited licence contained
  * in the accompanying file LICENSE.TXT.
  */
-
 package hplb.misc;
 
 import java.io.*;
 
 /**
- * A BASE64 encoder. BASE64 is a simple encoding defined by the IETF as
- * part of the MIME specification as published in RFC 1521.
- * 
- * @author      Anders Kristensen
+ * A BASE64 encoder. BASE64 is a simple encoding defined by the IETF as part of
+ * the MIME specification as published in RFC 1521.
+ *
+ * @author Anders Kristensen
  */
 public class BASE64Encoder extends CharacterEncoder {
-  private static byte[] alphabet = getBytes(
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
-  private boolean eol;
 
-  public BASE64Encoder() {this(true);}
+    private static byte[] alphabet = getBytes(
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+    private boolean eol;
 
-  /**
-   * Encode BASE64 with \n optional
-   *
-   * @param b boolean if true, print eols
-   */
-public BASE64Encoder(boolean b) {
-	eol = b;
-}
+    public BASE64Encoder() {
+        this(true);
+    }
 
-/**
-   * BASE64 encode the InputStream and write the encoded form to the
-   * OutputStream.
+    /**
+     * Encode BASE64 with \n optional
+     *
+     * @param b boolean if true, print eols
+     */
+    public BASE64Encoder(boolean b) {
+        eol = b;
+    }
+
+    /**
+     * BASE64 encode the InputStream and write the encoded form to the
+     * OutputStream.
+     *
      * @param out
-   * @throws IOException        if an I/O error has occurred.
-   */
-  public final void encodeBuffer(InputStream in,
-                                 OutputStream out) throws IOException {
-    BufferedInputStream bin = new BufferedInputStream(in);
-    int b1, b2, b3, n = 0;
+     * @throws IOException if an I/O error has occurred.
+     */
+    public final void encodeBuffer(InputStream in,
+            OutputStream out) throws IOException {
+        BufferedInputStream bin = new BufferedInputStream(in);
+        int b1, b2, b3, n = 0;
 
-    while ((b1 = bin.read()) != -1) {
-      b2 = bin.read();
-      if (b2 == -1) {
-        writeChars(b1, 0, 0, 2, out);
-      } else {
-        b3 = bin.read();
-        if (b3 == -1) {
-          writeChars(b1, b2, 0, 1, out);
-        } else {
-          writeChars(b1, b2, b3, 0, out);
+        while ((b1 = bin.read()) != -1) {
+            b2 = bin.read();
+            if (b2 == -1) {
+                writeChars(b1, 0, 0, 2, out);
+            } else {
+                b3 = bin.read();
+                if (b3 == -1) {
+                    writeChars(b1, b2, 0, 1, out);
+                } else {
+                    writeChars(b1, b2, b3, 0, out);
+                }
+            }
+            n += 4;
+            if (n == 76) {
+                if (eol) {
+                    out.write('\n');
+                }
+                n = 0;
+            }
         }
-      }
-      n += 4;
-      if (n == 76) {
-        if(eol)out.write('\n');
-        n = 0;
-      }
+        if (n > 0 && eol) {
+            out.write('\n');
+        }
     }
-    if (n > 0 && eol) out.write('\n');
-  }
 
-  private static final void writeChars(int b1, int b2, int b3, int padding,
-                                       OutputStream out) throws IOException {
-    out.write(alphabet[b1>>2]);
-    out.write(alphabet[((b1 & 0x3) << 4) | (b2 >> 4)]);
-    if (padding == 2) {
-      out.write('=');
-      out.write('=');
-    } else if (padding == 1) {
-      out.write(alphabet[((b2 & 0xF) << 2) | (b3 >> 6)]);
-      out.write('=');
-    } else {
-      out.write(alphabet[((b2 & 0xF) << 2) | (b3 >> 6)]);
-      out.write(alphabet[b3 & 0x3F]);
+    private static final void writeChars(int b1, int b2, int b3, int padding,
+            OutputStream out) throws IOException {
+        out.write(alphabet[b1 >> 2]);
+        out.write(alphabet[((b1 & 0x3) << 4) | (b2 >> 4)]);
+        if (padding == 2) {
+            out.write('=');
+            out.write('=');
+        } else if (padding == 1) {
+            out.write(alphabet[((b2 & 0xF) << 2) | (b3 >> 6)]);
+            out.write('=');
+        } else {
+            out.write(alphabet[((b2 & 0xF) << 2) | (b3 >> 6)]);
+            out.write(alphabet[b3 & 0x3F]);
+        }
     }
-  }
 
-  private static final byte[] getBytes(String s) {
-    int n = s.length();
-    byte[] buf = new byte[n];
-    s.getBytes(0, n, buf, 0);
-    return buf;
-  }
+    private static final byte[] getBytes(String s) {
+        int n = s.length();
+        byte[] buf = new byte[n];
+        s.getBytes(0, n, buf, 0);
+        return buf;
+    }
 
-  /**
-   * For testing. Base64 encodes the first argument or stdin if no
-   * argument is given. The result is written stdout.
+    /**
+     * For testing. Base64 encodes the first argument or stdin if no argument is
+     * given. The result is written stdout.
+     *
      * @throws java.io.IOException
-   */
-
-  public static void main(String[] args) throws IOException {
-    BASE64Encoder enc = new BASE64Encoder();
-    if (args.length > 0) 
-      System.out.println(enc.encodeBuffer(getBytes(args[0])));
-    else
-      enc.encodeBuffer(System.in, System.out);
-    System.out.flush();
-  }
+     */
+    public static void main(String[] args) throws IOException {
+        BASE64Encoder enc = new BASE64Encoder();
+        if (args.length > 0) {
+            System.out.println(enc.encodeBuffer(getBytes(args[0])));
+        } else {
+            enc.encodeBuffer(System.in, System.out);
+        }
+        System.out.flush();
+    }
 }
 
 
@@ -219,4 +227,4 @@ RFC 1521                          MIME                    September 1993
       encapsulation boundaries within base64-encoded parts of multipart
       entities because no hyphen characters are used in the base64
       encoding.
-*/
+ */

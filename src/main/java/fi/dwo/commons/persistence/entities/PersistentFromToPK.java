@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
  */
 @Embeddable
 public class PersistentFromToPK implements Serializable {
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolFrom")
@@ -76,5 +77,5 @@ public class PersistentFromToPK implements Serializable {
     public String toString() {
         return "fi.dwo.server.PersistentEntityManagers.TblfromtoPK[ schoolFrom=" + schoolFrom + ", schoolTo=" + schoolTo + " ]";
     }
-    
+
 }

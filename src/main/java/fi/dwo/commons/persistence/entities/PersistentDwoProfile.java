@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileRights", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileRights = :dwoProfileRights"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileDescription", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileDescription = :dwoProfileDescription")})
 public class PersistentDwoProfile implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -128,5 +129,5 @@ public class PersistentDwoProfile implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentDwoProfile[ dwoProfileID=" + dwoProfileID + " ]";
     }
-    
+
 }

@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentStudentScoData.findAll", query = "SELECT p FROM PersistentStudentScoData p"),
     @NamedQuery(name = "PersistentStudentScoData.findByStudentSco", query = "SELECT p FROM PersistentStudentScoData p WHERE p.studentSco = :studentSco")})
 public class PersistentStudentScoData implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -82,7 +83,6 @@ public class PersistentStudentScoData implements Serializable {
         this.cocd = cocd;
     }
 
-  
     @Override
     public int hashCode() {
         int hash = 0;
@@ -107,5 +107,5 @@ public class PersistentStudentScoData implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentStudentScoData[ studentSco=" + studentSco + " ]";
     }
-    
+
 }

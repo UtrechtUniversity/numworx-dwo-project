@@ -7,5 +7,6 @@ package fi.dwo.commons.persistence;
  * @param <T>
  */
 public interface PersistentUpdate<T> {
+
     public abstract T update(T o);
 }

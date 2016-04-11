@@ -30,7 +30,8 @@ public class ScormMainFrame extends MainFrame implements SCORM12APIInterface {
             BufferedReader in = new BufferedReader(new FileReader(new File(directory, naam)));
             s = in.readLine();
 
-        } catch (IOException ie) {
+        }
+        catch (IOException ie) {
         }
         return s;
     }
@@ -43,7 +44,8 @@ public class ScormMainFrame extends MainFrame implements SCORM12APIInterface {
             PrintWriter out = new PrintWriter(new FileWriter(new File(directory, naam)));
             out.println((String) value);
             out.close();
-        } catch (IOException ie) {
+        }
+        catch (IOException ie) {
             System.out.println(ie.toString());
             return null;
         }

@@ -9,29 +9,32 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Primary key for PersistentHasRole entity.
- * 
- * {@see PersistentHasRole}
- * 
+ *
+ * {
+ *
+ * @see PersistentHasRole}
+ *
  * @author G.A.J. van der Plas
  */
 @Embeddable
 public class PersistentHasRolePK implements Serializable {
+
     @Basic(optional = false)
-    @NotNull    
+    @NotNull
     @Column(name = "userID", nullable = false)
     private Long userID;
     @Basic(optional = false)
-    @NotNull    
+    @NotNull
     @Column(name = "schoolGroupID", nullable = false)
     private Long schoolGroupID;
 
-   public  long getId(){
+    public long getId() {
         long id = schoolGroupID;
-        id = id <<32;
+        id = id << 32;
         id = id & userID;
         return (id);
     }
-   
+
     public PersistentHasRolePK() {
     }
 
@@ -85,5 +88,4 @@ public class PersistentHasRolePK implements Serializable {
         return "fi.dwo.server.persistence.PersistentHasRolePK[ userID=" + userID + ", schoolGroupID=" + schoolGroupID + " ]";
     }
 
-    
 }

@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentCourseSequence.findByProfileID", query = "SELECT p FROM PersistentCourseSequence p WHERE p.profileID = :profileID"),
     @NamedQuery(name = "PersistentCourseSequence.findBySequencenr", query = "SELECT p FROM PersistentCourseSequence p WHERE p.sequencenr = :sequencenr")})
 public class PersistentCourseSequence implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -153,5 +154,5 @@ public class PersistentCourseSequence implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentCourseSequence[ coursesequenceID=" + coursesequenceID + " ]";
     }
-    
+
 }

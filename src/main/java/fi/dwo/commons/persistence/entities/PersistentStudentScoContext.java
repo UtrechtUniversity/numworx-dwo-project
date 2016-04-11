@@ -24,10 +24,10 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * StudentScoContext manager. Known issues are that is does not provide a way
- * to access data directly on a HasRolePK. Only via the component indices of the 
+ * StudentScoContext manager. Known issues are that is does not provide a way to
+ * access data directly on a HasRolePK. Only via the component indices of the
  * HasRolePK.
- * 
+ *
  * @author G.A.J. van der Plas
  */
 @Entity
@@ -43,6 +43,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentStudentScoContext.findByCreateDate", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.createDate = :createDate"),
     @NamedQuery(name = "PersistentStudentScoContext.findByScore", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.score = :score")})
 public class PersistentStudentScoContext implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Size(max = 100)
     @Column(name = "total_time", length = 100)
@@ -82,7 +83,7 @@ public class PersistentStudentScoContext implements Serializable {
     private String completionStatus;
     @Column(name = "location")
     private String location;
-    
+
     public PersistentStudentScoContext() {
     }
 
@@ -170,7 +171,6 @@ public class PersistentStudentScoContext implements Serializable {
         this.completionStatus = completionStatus;
     }
 
-
     public String getLocation() {
         return location;
     }
@@ -178,7 +178,7 @@ public class PersistentStudentScoContext implements Serializable {
     public void setLocation(String location) {
         this.location = location;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -217,5 +217,5 @@ public class PersistentStudentScoContext implements Serializable {
     public void setSchoolGroupID(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
-    
+
 }

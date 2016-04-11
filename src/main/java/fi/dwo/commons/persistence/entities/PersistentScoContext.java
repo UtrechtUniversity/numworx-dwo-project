@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentScoContext.findByShowscore", query = "SELECT p FROM PersistentScoContext p WHERE p.showscore = :showscore"),
     @NamedQuery(name = "PersistentScoContext.findBySequencenr", query = "SELECT p FROM PersistentScoContext p WHERE p.sequencenr = :sequencenr")})
 public class PersistentScoContext implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -146,5 +147,5 @@ public class PersistentScoContext implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PerisistentScoContext[ scoID=" + scoID + " ]";
     }
-    
+
 }

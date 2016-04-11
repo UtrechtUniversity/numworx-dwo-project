@@ -197,7 +197,8 @@ public class ScormDecorator extends Applet implements SCORM12APIInterface {
             f.close();
             sb.setLength(sb.length() - lineSeparator.length());
             return sb.toString();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
         }
         return "";
     }
@@ -210,7 +211,8 @@ public class ScormDecorator extends Applet implements SCORM12APIInterface {
             f.write(value);
             f.write(lineSeparator);
             f.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         return "";

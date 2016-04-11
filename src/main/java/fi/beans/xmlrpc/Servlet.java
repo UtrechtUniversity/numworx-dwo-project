@@ -1,5 +1,6 @@
 // $Id: Servlet.java,v 1.3 2004/03/16 12:00:43 wim Exp wim $
 package fi.beans.xmlrpc;
+
 /*
  * Revision 1.4
  * handler wordt nu getest op interface DbConnectIF in plaats van
@@ -14,7 +15,6 @@ package fi.beans.xmlrpc;
  * voor JDBC servlets volgens de regels van 1-03-04
  *
  */
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -43,6 +43,7 @@ public abstract class Servlet extends HttpServlet {
 
     /**
      * Standaard init. Moet aangeroepen worden in subclasses!
+     *
      * @param config
      * @throws javax.servlet.ServletException
      */

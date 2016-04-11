@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentJars.findByJarname", query = "SELECT p FROM PersistentJars p WHERE p.jarname = :jarname"),
     @NamedQuery(name = "PersistentJars.findByLastdate", query = "SELECT p FROM PersistentJars p WHERE p.lastdate = :lastdate")})
 public class PersistentJars implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -108,5 +109,5 @@ public class PersistentJars implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentJars[ key=" + key + " ]";
     }
-    
+
 }

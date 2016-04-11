@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentSchoolClass.findByClass1", query = "SELECT p FROM PersistentSchoolClass p WHERE p.class1 = :class1"),
     @NamedQuery(name = "PersistentSchoolClass.findByRegistrationKey", query = "SELECT p FROM PersistentSchoolClass p WHERE p.registrationKey = :registrationKey")})
 public class PersistentSchoolClass implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -150,41 +151,41 @@ public class PersistentSchoolClass implements Serializable {
         return "fi.dwo.server.persistence.PersistentSchoolClass[ classID=" + classID + " ]";
     }
 
-    public DomSchoolClass createDomSchoolClass(){
+    public DomSchoolClass createDomSchoolClass() {
         DomSchoolClass schoolClass = new DomSchoolClass();
         buildDomSchoolClass(schoolClass);
         return schoolClass;
     }
-    
-    private void buildDomSchoolClass(DomSchoolClass schoolClass){
+
+    private void buildDomSchoolClass(DomSchoolClass schoolClass) {
         schoolClass.setSchoolClassName(class1);
         if (this.classID != null) {
-        schoolClass.setId(MySQLPersistenceId.createPersistentId(this));
+            schoolClass.setId(MySQLPersistenceId.createPersistentId(this));
         }
         schoolClass.setHasRegKey(iconizer);
     }
 
-    public DomSchoolClassFull createDomSchoolClassFull(){
+    public DomSchoolClassFull createDomSchoolClassFull() {
         DomSchoolClassFull schoolClass = new DomSchoolClassFull();
         buildDomSchoolClassFull(schoolClass);
         return schoolClass;
     }
-    
-    private void buildDomSchoolClassFull(DomSchoolClassFull schoolClass){
+
+    private void buildDomSchoolClassFull(DomSchoolClassFull schoolClass) {
         buildDomSchoolClass(schoolClass);
         schoolClass.setIconizer(iconizer);
         schoolClass.setRegistrationKey(registrationKey);
     }
 
-    public DomNewSchoolClass4Student createDomNewSchoolClass4Student(){
+    public DomNewSchoolClass4Student createDomNewSchoolClass4Student() {
         DomNewSchoolClass4Student schoolClass = new DomNewSchoolClass4Student();
         buildDomNewSchoolClass4Student(schoolClass);
         return schoolClass;
     }
-    
+
     private void buildDomNewSchoolClass4Student(DomNewSchoolClass4Student schoolClass) {
         buildDomSchoolClass(schoolClass);
 //        schoolClass.setRegistrationKey(registrationKey); // clearly this info should neve be passed to a student
     }
-    
+
 }

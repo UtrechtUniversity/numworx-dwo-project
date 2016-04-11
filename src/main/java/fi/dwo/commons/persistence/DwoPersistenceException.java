@@ -27,7 +27,7 @@ public class DwoPersistenceException extends Exception {
 
     public String getLocalizedTypeMessage(Locale locale) {
         ResourceBundle localeLookup = ResourceBundle.getBundle("Exceptions", locale);
-        String msg = TextMapper.getText(localeLookup.getString("DwoPersistenceException" + type.name())); 
+        String msg = TextMapper.getText(localeLookup.getString("DwoPersistenceException" + type.name()));
         return msg;
     }
 

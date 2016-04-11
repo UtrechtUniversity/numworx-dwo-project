@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentScoData.findAll", query = "SELECT p FROM PersistentScoData p"),
     @NamedQuery(name = "PersistentScoData.findByScoID", query = "SELECT p FROM PersistentScoData p WHERE p.scoID = :scoID")})
 public class PersistentScoData implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -113,5 +114,5 @@ public class PersistentScoData implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentScoData[ scoID=" + scoID + " ]";
     }
-    
+
 }

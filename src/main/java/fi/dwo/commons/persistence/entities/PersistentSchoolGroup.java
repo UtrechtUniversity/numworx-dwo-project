@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentSchoolGroup.findBySchoolIDAndRole", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.schoolID = :schoolID and p.role.groupname = :rolename"),
     @NamedQuery(name = "PersistentSchoolGroup.findByPasswd", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.passwd = :passwd")})
 public class PersistentSchoolGroup implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,22 +44,21 @@ public class PersistentSchoolGroup implements Serializable {
     @NotNull
     @Column(name = "groupID", nullable = false)
     private int groupID;
-    @ManyToOne(fetch=FetchType.LAZY)
-    @PrimaryKeyJoinColumn(name="groupID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn(name = "groupID")
     private PersistentRole role;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolID", nullable = false)
     private int schoolID;
-    @ManyToOne(fetch=FetchType.LAZY)
-    @PrimaryKeyJoinColumn(name="schoolID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn(name = "schoolID")
     private PersistentSchool school;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "passwd", nullable = false, length = 128)
     private String passwd;
-    
 
     public PersistentSchoolGroup() {
     }
@@ -151,5 +151,5 @@ public class PersistentSchoolGroup implements Serializable {
     public void setRole(PersistentRole role) {
         this.role = role;
     }
-    
+
 }

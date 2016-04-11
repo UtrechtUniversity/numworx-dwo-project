@@ -25,7 +25,8 @@ public class JSScormAPI_1484_11 extends ScormAdapter implements SCORM12APIInterf
 
         try {
             window = JSObject.getWindow(parent);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
         }
 
     }
@@ -38,7 +39,8 @@ public class JSScormAPI_1484_11 extends ScormAdapter implements SCORM12APIInterf
                 Object[] args = new Object[1];
                 args[0] = iParam;
                 result = (String) window.call("LMSCommit", args);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 LOG.log(Level.SEVERE, null, e);
             }
         }
@@ -78,7 +80,8 @@ public class JSScormAPI_1484_11 extends ScormAdapter implements SCORM12APIInterf
                 Object[] args = new Object[1];
                 args[0] = cmiElement;
                 result = (String) window.call("GetValue", args);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 LOG.log(Level.SEVERE, null, e);
             }
         }
@@ -99,7 +102,8 @@ public class JSScormAPI_1484_11 extends ScormAdapter implements SCORM12APIInterf
                 args[0] = cmiElement;
                 args[1] = value;
                 result = (String) window.call("SetValue", args);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 LOG.log(Level.SEVERE, null, e);
             }
         }

@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentFromTo.findBySchoolFrom", query = "SELECT t FROM PersistentFromTo t WHERE t.tblfromtoPK.schoolFrom = :schoolFrom"),
     @NamedQuery(name = "PersistentFromTo.findBySchoolTo", query = "SELECT t FROM PersistentFromTo t WHERE t.tblfromtoPK.schoolTo = :schoolTo")})
 public class PersistentFromTo implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected PersistentFromToPK tblfromtoPK;
@@ -70,5 +71,5 @@ public class PersistentFromTo implements Serializable {
     public String toString() {
         return "fi.dwo.server.PersistentEntityManagers.Tblfromto[ tblfromtoPK=" + tblfromtoPK + " ]";
     }
-    
+
 }

@@ -27,86 +27,85 @@ public class DwoXmlRpcException extends XmlRpcException {
     public DwoXmlRpcException(int errorID) {
         super(getErrorCode(errorID), getErrorClass(errorID));
     }
-    
+
     private static String getErrorClass(int errorID) {
         String errorClass = "";
-        switch(errorID) {
-        	case EXC_CLASS_EXISTS:
-        	    errorClass = ClassException.class.getName();
-        	    break;
-        	case EXC_SCHOOL_UNSUPPORTED:
-       		case EXC_SCHOOL_EXISTS:
-        	    errorClass = SchoolException.class.getName();
-        	    break;
-        	case EXC_UNKNOWN_SCHOOLGROUP:
-        	    errorClass = RegisterException.class.getName();
-        	    break;
-        	case EXC_UNKNOWN_USER:
-        	    errorClass = LoginException.class.getName();
-        	    break;
-        	case EXC_USER_EXISTS:
-        	    errorClass = RegisterException.class.getName();
-        	    break;
-        	case EXC_WRONG_USERNAME_PASSWORD:
-        	    errorClass = RegisterException.class.getName();
-        	    break;
-        	case EXC_COURSE_EXISTS:
-        	    errorClass = CourseException.class.getName();
-        	    break;
-        	case EXC_SCO_EXISTS:
-        	    errorClass = ScoException.class.getName();
-        	    break;
-        	case EXC_NO_APPLET:
-        	    errorClass = ScoException.class.getName();
-        	    break;
+        switch (errorID) {
+            case EXC_CLASS_EXISTS:
+                errorClass = ClassException.class.getName();
+                break;
+            case EXC_SCHOOL_UNSUPPORTED:
+            case EXC_SCHOOL_EXISTS:
+                errorClass = SchoolException.class.getName();
+                break;
+            case EXC_UNKNOWN_SCHOOLGROUP:
+                errorClass = RegisterException.class.getName();
+                break;
+            case EXC_UNKNOWN_USER:
+                errorClass = LoginException.class.getName();
+                break;
+            case EXC_USER_EXISTS:
+                errorClass = RegisterException.class.getName();
+                break;
+            case EXC_WRONG_USERNAME_PASSWORD:
+                errorClass = RegisterException.class.getName();
+                break;
+            case EXC_COURSE_EXISTS:
+                errorClass = CourseException.class.getName();
+                break;
+            case EXC_SCO_EXISTS:
+                errorClass = ScoException.class.getName();
+                break;
+            case EXC_NO_APPLET:
+                errorClass = ScoException.class.getName();
+                break;
         }
-        
+
         return errorClass;
-        
+
     }
-    
+
     private static int getErrorCode(int errorID) {
         int errorCode = 0;
-        switch(errorID) {
-        	case EXC_CLASS_EXISTS:
-        	    errorCode = ClassException.CE_CLASS_EXISTS;
-        	    break;
-        	case EXC_SCHOOL_EXISTS:
-        	    errorCode = SchoolException.SE_SCHOOL_EXISTS;
-        	    break;
-        	case EXC_SCHOOL_UNSUPPORTED:
-        		errorCode = SchoolException.SE_SCHOOL_UNSUPPORTED;
-        		break;
-        	case EXC_UNKNOWN_SCHOOLGROUP:
-        	    errorCode = RegisterException.RE_UNKNOWN_SCHOOLGROUP;
-        	    break;
-        	case EXC_UNKNOWN_USER:
-        	    errorCode = LoginException.LE_UNKNOWN_USER;
-        	    break;
-        	case EXC_USER_EXISTS:
-        	    errorCode = RegisterException.RE_USER_EXISTS;
-        	    break;
-        	case EXC_WRONG_USERNAME_PASSWORD:
-        	    errorCode = RegisterException.RE_WRONG_USERNAME_PASSWORD;
-        	    break;
-        	case EXC_COURSE_EXISTS:
-        	    errorCode = CourseException.CE_COURSE_EXISTS;
-        	    break;
-        	case EXC_SCO_EXISTS:
-        	    errorCode = ScoException.SE_SCO_EXISTS;
-        	    break;
-        	case EXC_NO_APPLET:
-        	    errorCode = ScoException.SE_NO_APPLET;
-        	    break;
+        switch (errorID) {
+            case EXC_CLASS_EXISTS:
+                errorCode = ClassException.CE_CLASS_EXISTS;
+                break;
+            case EXC_SCHOOL_EXISTS:
+                errorCode = SchoolException.SE_SCHOOL_EXISTS;
+                break;
+            case EXC_SCHOOL_UNSUPPORTED:
+                errorCode = SchoolException.SE_SCHOOL_UNSUPPORTED;
+                break;
+            case EXC_UNKNOWN_SCHOOLGROUP:
+                errorCode = RegisterException.RE_UNKNOWN_SCHOOLGROUP;
+                break;
+            case EXC_UNKNOWN_USER:
+                errorCode = LoginException.LE_UNKNOWN_USER;
+                break;
+            case EXC_USER_EXISTS:
+                errorCode = RegisterException.RE_USER_EXISTS;
+                break;
+            case EXC_WRONG_USERNAME_PASSWORD:
+                errorCode = RegisterException.RE_WRONG_USERNAME_PASSWORD;
+                break;
+            case EXC_COURSE_EXISTS:
+                errorCode = CourseException.CE_COURSE_EXISTS;
+                break;
+            case EXC_SCO_EXISTS:
+                errorCode = ScoException.SE_SCO_EXISTS;
+                break;
+            case EXC_NO_APPLET:
+                errorCode = ScoException.SE_NO_APPLET;
+                break;
         }
-        
+
         return errorCode;
-        
+
     }
-    
+
     public String toString() {
         return getMessage();
     }
 
-    
 }

@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package fi.dwo.commons.util;
+
 import java.security.SecureRandom;
 
 /**
- * RandomPasswordGenerator for DWO allows to set and select characters to be used
- * for generation.
- * 
+ * RandomPasswordGenerator for DWO allows to set and select characters to be
+ * used for generation.
+ *
  * @author G.A.J. van der Plas
  */
 public class RandomPasswordGenerator {
@@ -25,7 +25,7 @@ public class RandomPasswordGenerator {
 
     public String Generate(int size) {
 
-        SecureRandom  random = new SecureRandom();
+        SecureRandom random = new SecureRandom();
         sb = new StringBuilder();
         for (int i = 0; i < size; i++) {
             char c = chars[random.nextInt(chars.length)];
@@ -33,12 +33,12 @@ public class RandomPasswordGenerator {
         }
         return sb.toString();
     }
-    
-    
-     /**
+
+    /**
      * Returns an instance of PersistenceFacade.
+     *
      * @return fi.dwo.client.persistence.PersistenceFacade
-     *  
+     *
      */
     public static RandomPasswordGenerator instance() {
         if (_instance == null) {

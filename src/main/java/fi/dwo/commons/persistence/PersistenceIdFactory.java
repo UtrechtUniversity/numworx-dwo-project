@@ -33,8 +33,10 @@ import java.util.logging.Logger;
 public class PersistenceIdFactory {
 
     private static final Logger LOG = Logger.getLogger(PersistenceIdFactory.class.getName());
-    
-    public enum DatabaseType{ MySQL};
+
+    public enum DatabaseType {
+        MySQL
+    };
 
     /**
      *

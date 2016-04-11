@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentApplet.findByFeatures", query = "SELECT p FROM PersistentApplet p WHERE p.features = :features"),
     @NamedQuery(name = "PersistentApplet.findByJarname", query = "SELECT p FROM PersistentApplet p WHERE p.jarname = :jarname")})
 public class PersistentApplet implements PersistentUpdate<PersistentApplet>, Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,7 +67,7 @@ public class PersistentApplet implements PersistentUpdate<PersistentApplet>, Ser
         jarname = a.jarname;
         return this;
     }
-        
+
     public PersistentApplet() {
     }
 

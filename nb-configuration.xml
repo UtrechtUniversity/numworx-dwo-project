@@ -17,5 +17,16 @@ Any value defined here will override the pom.xml file value but is only applicab
         <netbeans.hint.licensePath>${project.basedir}/licenseheader.txt</netbeans.hint.licensePath>
         <netbeans.checkstyle.format>true</netbeans.checkstyle.format>
         <org-netbeans-modules-javascript2-requirejs.enabled>true</org-netbeans-modules-javascript2-requirejs.enabled>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.SaveActionModifiedLinesOnly>false</de-markiewb-netbeans-plugins-eclipse-formatter.SaveActionModifiedLinesOnly>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.preserveBreakPoints>true</de-markiewb-netbeans-plugins-eclipse-formatter.preserveBreakPoints>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.linefeed/>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.eclipseFormatterActiveProfile/>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.useProjectPref>true</de-markiewb-netbeans-plugins-eclipse-formatter.useProjectPref>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.eclipseFormatterLocation/>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.showNotifications>true</de-markiewb-netbeans-plugins-eclipse-formatter.showNotifications>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.eclipseFormatterEnabled>false</de-markiewb-netbeans-plugins-eclipse-formatter.eclipseFormatterEnabled>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.enableFormatAsSaveAction>false</de-markiewb-netbeans-plugins-eclipse-formatter.enableFormatAsSaveAction>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.sourcelevel/>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.useProjectSettings>false</de-markiewb-netbeans-plugins-eclipse-formatter.useProjectSettings>
     </properties>
 </project-shared-configuration>

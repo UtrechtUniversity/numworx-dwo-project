@@ -50,7 +50,8 @@ public class SessionTime {
         } else {
             try {
                 accu = FORMAT.parse(stamp).getTime();
-            } catch (ParseException e) {
+            }
+            catch (ParseException e) {
                 throw new IllegalArgumentException("Illegal timestamp");
             }
         }

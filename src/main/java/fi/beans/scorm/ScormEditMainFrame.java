@@ -41,7 +41,8 @@ public class ScormEditMainFrame extends MainFrame implements ActionListener {
             PrintWriter out = new PrintWriter(new FileWriter("test.htm"));
             printTestHTML(out);
             out.close();
-        } catch (IOException ie) {
+        }
+        catch (IOException ie) {
         }
     }
 

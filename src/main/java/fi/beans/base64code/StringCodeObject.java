@@ -16,7 +16,8 @@ public class StringCodeObject {
             ObjectInputStream invoer = new ObjectInputStream(zis);
             object = invoer.readObject();
             codeString = s;
-        } catch (Exception io) {	//System.out.println(io.toString());
+        }
+        catch (Exception io) {	//System.out.println(io.toString());
         }
     }
 
@@ -32,7 +33,8 @@ public class StringCodeObject {
             uitvoer.close();
             codeString = baos.toString("ASCII");
             object = o;
-        } catch (IOException io) {	//System.out.println(io.toString());
+        }
+        catch (IOException io) {	//System.out.println(io.toString());
         }
     }
 
@@ -44,7 +46,8 @@ public class StringCodeObject {
             GZIPInputStream zis = new GZIPInputStream(b64is);
             ObjectInputStream invoer = new ObjectInputStream(zis);
             o = invoer.readObject();
-        } catch (Exception io) {	//System.out.println(io.toString());
+        }
+        catch (Exception io) {	//System.out.println(io.toString());
         }
         return o;
     }
@@ -61,7 +64,8 @@ public class StringCodeObject {
             zos.finish();
             uitvoer.close();
             s = baos.toString("ASCII");
-        } catch (IOException io) {	//System.out.println(io.toString());
+        }
+        catch (IOException io) {	//System.out.println(io.toString());
         }
         return s;
     }

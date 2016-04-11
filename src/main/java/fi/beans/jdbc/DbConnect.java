@@ -90,7 +90,8 @@ public class DbConnect implements DbConnectIF {
         for (String driver1 : driver) {
             try {
                 Class.forName(driver1).newInstance();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 //throw new NoClassDefFoundError(e.getMessage());
             }
         }
@@ -210,7 +211,8 @@ public class DbConnect implements DbConnectIF {
             if (c != null) {
                 c.close();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.log(Level.WARNING, "Could not close connection: {0}.", new Object[]{e.getMessage()});
         }
         c = null;

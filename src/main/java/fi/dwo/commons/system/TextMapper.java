@@ -13,7 +13,7 @@ public abstract class TextMapper {
     private static final String TEXT_CLASS = "Text";
 
     public final static String USER_GUEST = "USER_GUEST";
-    
+
     /* General word constants */
     public static final String LBL_USERNAME = "LBL_USERNAME";
     public static final String LBL_PASSWORD = "LBL_PASSWORD";
@@ -30,9 +30,9 @@ public abstract class TextMapper {
     public static final String BTN_NO = "BTN_NO";
 
     public static final String BTN_CLOSE = "BTN_CLOSE";
-    
+
     public static final String BTN_ADD = "BTN_ADD";
-    
+
     public static final String BTN_BACK = "BTN_BACK";
     public static final String BTN_NEW_STUDENTS = "BTN_ADD_STUDENTS";
     public static final String BTN_NEW_TEACHERS = "BTN_ADD_TEACHERS";
@@ -42,7 +42,7 @@ public abstract class TextMapper {
     public static final String BTN_COPYSELECTEDTOCLASS = "BTN_COPYTOSCHOOLCLASS";
     public static final String BTN_DELSELECTED = "BTN_DELETE";
     public static final String BTN_UPDATE = "BTN_UPDATE";
-    
+
     /* labels for radio buttons and others */
     public static final String LBL_STUDENTS = "LBL_STUDENTS";
     public static final String LBL_TEACHERS = "LBL_TEACHERS";
@@ -53,7 +53,7 @@ public abstract class TextMapper {
     public static final String HDR_EDITSTUDENTS = "HDR_EDITSTUDENTS";
     public static final String HDR_EDITTEACHERS = "HDR_EDITTEACHERS";
     public static final String HDR_SCHOOLCLASS = "HDR_SCHOOLCLASS";
-    
+
     /* Table headers */
     public static final String TBL_SCHOOL = "TBL_SCHOOL";
     public static final String TBL_LOGIN = "TBL_LOGIN";
@@ -61,7 +61,7 @@ public abstract class TextMapper {
     public static final String TBL_DELETE = "TBL_DELETE";
     public static final String TBL_EDIT = "TBL_EDIT";
     public static final String TBL_SELECT = "TBL_SELECT";
-    
+
     public static final String TBL_GIVENNAME = "TBL_GIVENNAME";
     public static final String TBL_INSERTION = "TBL_INSERTION";
     public static final String TBL_FAMILYNAME = "TBL_FAMILYNAME";
@@ -123,11 +123,10 @@ public abstract class TextMapper {
 
     /* Gui Messages */
     public final static String GUI_WAIT_A_MOMENT = "GUI_WAIT_A_MOMENT";
-    
+
     /* Reauthenticate Panel */
     public final static String GUIREAUTH_AREYOUSURE = "GUIREAUTH_AREYOUSURE";
 
-    
     /* Welcome Panel */
     public final static String GUIW_LOGINDATA = "GUIW_LOGINDATA";
     public final static String GUIW_USERNAME = "GUIW_USERNAME";
@@ -241,7 +240,7 @@ public abstract class TextMapper {
     public final static String GUIP_REGISTERINFO = "GUIP_REGISTERINFO";
     public final static String GUIP_PERSONALINFO = "GUIP_PERSONALINFO";
     public final static String GUIP_SCHOOLINFO = "GUIP_SCHOOLINFO";
-    public final static String GUIP_ACCOUNTANDCONTACTINFO = "GUIP_ACCOUNTANDCONTACTINFO"; 
+    public final static String GUIP_ACCOUNTANDCONTACTINFO = "GUIP_ACCOUNTANDCONTACTINFO";
     public final static String GUIP_USERNAME = "GUIP_USERNAME";
     public final static String GUIP_OLD_PASSWORD = "GUIP_OLD_PASSWORD";
     public final static String GUIP_PASSWORD = "GUIP_PASSWORD";
@@ -272,9 +271,9 @@ public abstract class TextMapper {
 
     public final static String GUIP_CONFIRM_REMOVE_USER = "GUIP_CONFIRM_REMOVE_USER";
     public final static String GUIP_CONFIRM_REMOVE_USER_TITLE = "GUIP_CONFIRM_REMOVE_USER_TITLE";
-    public final static String GUIP_MSG_USER_REMOVED="GUIP_MSG_USER_REMOVED";    
+    public final static String GUIP_MSG_USER_REMOVED = "GUIP_MSG_USER_REMOVED";
     public final static String GUIP_MSG_PROFILE_CHANGED = "GUIP_MSG_PROFILE_CHANGED";
-    
+
     public final static String GUIP_ROLE_OPTIONS = "GUIP_ROLE_OPTIONS";
     public final static String GUIP_BTN_ADD_ROLE = "GUIP_BTN_ADD_ROLE";
 
@@ -315,7 +314,7 @@ public abstract class TextMapper {
     public final static String GUIC_BTN_SWITCH_CLASS = "GUIC_BTN_SWITCH_CLASS";
 
     public final static String GUIC_TBL_CLASSNAME = "GUIC_TBL_CLASSNAME";
-    
+
     public final static String GUIC_TLTP_DELETE_CLASS = "GUIC_TLTP_DELETE_CLASS";
     public final static String GUIC_TLTP_EDIT_CLASS = "GUIC_TLTP_EDIT_CLASS";
     public final static String GUIC_TLTP_USERS_CLASS = "GUIC_TLTP_USERS_CLASS";

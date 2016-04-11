@@ -29,7 +29,8 @@ public class JSScormAPI implements SCORM12APIInterface {
 
         try {
             window = JSObject.getWindow(parent);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
         }
     }
 
@@ -52,7 +53,8 @@ public class JSScormAPI implements SCORM12APIInterface {
                 Object[] args = new Object[1];
                 args[0] = iDataModelElement;
                 result = (String) window.call("LMSGetValue", args);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 LOG.log(Level.SEVERE, null, e);
             }
         }
@@ -82,7 +84,8 @@ public class JSScormAPI implements SCORM12APIInterface {
                 args[0] = iDataModelElement;
                 args[1] = iValue;
                 result = (String) window.call("LMSSetValue", args);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 LOG.log(Level.SEVERE, null, e);
 
             }

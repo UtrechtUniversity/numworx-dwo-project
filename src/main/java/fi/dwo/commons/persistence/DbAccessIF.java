@@ -20,7 +20,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  */
 public interface DbAccessIF extends DbAccessLogin {
 
-	// LET OP: void/null returns en null parameters zijn niet gesupport!
+    // LET OP: void/null returns en null parameters zijn niet gesupport!
     public static String ERROR_CLASS = "__ERROR_CLASS__";
     public static String ERROR_CODE = "__ERROR_CODE__";
 
@@ -208,10 +208,10 @@ public interface DbAccessIF extends DbAccessLogin {
     public boolean renameClass(int classID, String newName /*, boolean iconizer*/) throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException;
 
-    public Vector<Object> getStudentsOfClass(int schoolClassID)throws DwoXmlRpcException, IOException, XmlRpcException,
+    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException;
 
-        public Vector<Object> getTeachersOfClass(int schoolClassID)throws DwoXmlRpcException, IOException, XmlRpcException,
+    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException;
 
     /**
@@ -371,7 +371,6 @@ public interface DbAccessIF extends DbAccessLogin {
 //            String lastname, String email, int classID)
 //            throws DwoXmlRpcException, IOException, XmlRpcException,
 //            SQLException;
-
     /**
      * @param userID
      * @param password
@@ -443,7 +442,7 @@ public interface DbAccessIF extends DbAccessLogin {
 
     /**
      * @param userID
-     * @return 
+     * @return
      *
      */
     public boolean deleteUser(int userID) throws IOException, XmlRpcException,
@@ -483,8 +482,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @throws XmlRpcException
      */
     public boolean log(String s) throws IOException, XmlRpcException;
+
     public boolean log(Level level, String s) throws IOException, XmlRpcException;
-    
+
     public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     public int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
@@ -639,7 +639,7 @@ public interface DbAccessIF extends DbAccessLogin {
 
     public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException;
 
-        public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
     public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 

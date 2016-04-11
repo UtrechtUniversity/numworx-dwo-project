@@ -5,5 +5,5 @@ package fi.dwo.commons.persistence.entities;
  * <p>
  * @since 1.0.3
  * @author G.A.J. van der Plas
- * 
+ *
  */

@@ -50,15 +50,14 @@ public abstract class URLCoder {
                 if (s.charAt(p) == '%') {
                     ret += (char) Integer.parseInt(s.substring(p + 1, p + 3), 16);
                     hex = 2;
+                } else if (hex > 0) {
+                    hex--;
                 } else {
-                    if (hex > 0) {
-                        hex--;
-                    } else {
-                        ret += s.charAt(p);
-                    }
+                    ret += s.charAt(p);
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return s;
         }
 

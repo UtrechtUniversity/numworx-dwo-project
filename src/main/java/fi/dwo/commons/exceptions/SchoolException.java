@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\system\\ClassException.java
-
 package fi.dwo.commons.exceptions;
 
 import fi.dwo.commons.system.TextMapper;
@@ -26,28 +25,29 @@ public class SchoolException extends Exception {
     }
 
     public SchoolException(int exIo, Exception e) {
-        super(getMesgFromInt(exIo),e);
-		
-	}
+        super(getMesgFromInt(exIo), e);
 
-	private static String getMesgFromInt(int exception) {
+    }
+
+    private static String getMesgFromInt(int exception) {
         String result = null;
         switch (exception) {
-        case (SE_SCHOOL_EXISTS):
-            result = TextMapper.getText(TextMapper.EXS_SCHOOL_EXISTS);
-            break;
-        default:
-            result = TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR);
-            break;
+            case (SE_SCHOOL_EXISTS):
+                result = TextMapper.getText(TextMapper.EXS_SCHOOL_EXISTS);
+                break;
+            default:
+                result = TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR);
+                break;
         }
 
         return result;
 
     }
-	
-	public String getMessage() { 
-		if(getCause() == null)
-			return super.getMessage();
-		return super.getMessage() + "\n" + getCause().getMessage();
-	}
+
+    public String getMessage() {
+        if (getCause() == null) {
+            return super.getMessage();
+        }
+        return super.getMessage() + "\n" + getCause().getMessage();
+    }
 }

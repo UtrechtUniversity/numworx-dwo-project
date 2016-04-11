@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\system\\ClassException.java
-
 package fi.dwo.commons.exceptions;
 
 import fi.dwo.commons.system.TextMapper;
@@ -26,30 +25,32 @@ public class ScoException extends Exception {
     }
 
     public ScoException(int exception, Exception e) {
-    	super(getMesgFromInt(exception),e);	}
+        super(getMesgFromInt(exception), e);
+    }
 
-	private static String getMesgFromInt(int exception) {
+    private static String getMesgFromInt(int exception) {
         String result = null;
         switch (exception) {
-        case (SE_SCO_EXISTS):
-            result = TextMapper.getText(TextMapper.EXS_SCO_EXISTS);
-            break;
-        case (SE_NO_APPLET):
-            result = TextMapper.getText(TextMapper.EXS_NO_APPLET);
-            break;
-        default:
-            result = TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR);
-            break;
+            case (SE_SCO_EXISTS):
+                result = TextMapper.getText(TextMapper.EXS_SCO_EXISTS);
+                break;
+            case (SE_NO_APPLET):
+                result = TextMapper.getText(TextMapper.EXS_NO_APPLET);
+                break;
+            default:
+                result = TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR);
+                break;
         }
 
         return result;
 
     }
-	
-	public String getMessage() { 
-		if(getCause() == null)
-			return super.getMessage();
-		return super.getMessage() + "\n" + getCause().getMessage();
-	}
+
+    public String getMessage() {
+        if (getCause() == null) {
+            return super.getMessage();
+        }
+        return super.getMessage() + "\n" + getCause().getMessage();
+    }
 
 }

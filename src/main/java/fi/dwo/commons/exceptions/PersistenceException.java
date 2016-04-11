@@ -8,9 +8,10 @@ import fi.dwo.commons.system.TextMapper;
 
 /**
  * @author thijsk
- *  
+ *
  */
 public class PersistenceException extends Exception {
+
     public final static int EX_SQL = -4;
 
     public final static int EX_XML_RPC = -3;
@@ -26,33 +27,34 @@ public class PersistenceException extends Exception {
         code = exception;
     }
 
-    private int code; 
-    
-    public int getCode() { 
-    	return code;
+    private int code;
+
+    public int getCode() {
+        return code;
     }
 
     public PersistenceException(int exXmlRpc, Exception e) {
-		this(exXmlRpc);
-		initCause(e);
-	}
+        this(exXmlRpc);
+        initCause(e);
+    }
 
-	private static String getMesgFromInt(int exception) {
+    private static String getMesgFromInt(int exception) {
         String result = null;
         switch (exception) {
-        default:
-            result = TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR);
-            break;
+            default:
+                result = TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR);
+                break;
         }
 
         return result;
 
     }
-	
-	public String getMessage() { 
-		if(getCause() == null)
-			return super.getMessage();
-		return super.getMessage() + "\n" + getCause().getMessage();
-	}
-	
+
+    public String getMessage() {
+        if (getCause() == null) {
+            return super.getMessage();
+        }
+        return super.getMessage() + "\n" + getCause().getMessage();
+    }
+
 }
