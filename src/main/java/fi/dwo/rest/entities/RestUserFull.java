@@ -14,9 +14,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @XmlRootElement
-public class RestFullUser {
+public class RestUserFull {
     private DomContext restContext;
-    private DomUserFull domFullUser;
+    private DomUserFull domUserFull;
 
     /**
      * @return the restContext
@@ -35,14 +35,14 @@ public class RestFullUser {
     /**
      * @return the domUser
      */
-    public DomUserFull getDomFullUser() {
-        return domFullUser;
+    public DomUserFull getDomUserFull() {
+        return domUserFull;
     }
 
     /**
      * @param domUser the domUser to set
      */
-    public void setDomFullUser(DomUserFull domUser) {
-        this.domFullUser = domUser;
+    public void setDomUserFull(DomUserFull domUser) {
+        this.domUserFull = domUser;
     }
 }
