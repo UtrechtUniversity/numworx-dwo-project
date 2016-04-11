@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * @author G.A.J. van der Plas
  */
 public class ProfilePanel extends VerticalPanel implements ClickHandler {
-    Logger logger = Logger.getLogger("Account");
+    Logger LOG = Logger.getLogger("Account");
     
     ProfileProperties props = new ProfileProperties();
     PopupPanel popup;
