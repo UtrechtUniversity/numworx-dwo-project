@@ -22,7 +22,7 @@ public class ProfileCommand implements Command {
         testUser.setUserName("project_gert");
         testUser.setSingleSchool(false);
 //        testUser.setId();
-        ProfilePanel panel = new ProfilePanel(testUser);
+        SchoolLoginPanel panel = new SchoolLoginPanel(testUser);
         panel.setPopup(popup);
         panel.setSize("300", "200");
         popup.add(panel);
