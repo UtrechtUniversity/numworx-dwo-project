@@ -10,9 +10,9 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
     <!-- Adjust artifact, name and description for new projects -->
     <parent>
         <groupId>fi.dwo</groupId>
-        <artifactId>DWO2-working</artifactId>
+        <artifactId>DWO2</artifactId>
         <version>2.0-SNAPSHOT</version>
-        <relativePath>../../../DWO2/branches/working/pom.xml</relativePath>
+        <relativePath>../../DWO2/trunk/pom.xml</relativePath>
     </parent>
     <artifactId>DWO-commons-lib-working</artifactId>
 <!--    <version>2.0-SNAPSHOT</version>-->
@@ -179,7 +179,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
     <dependencies>
         <dependency>
             <groupId>fi.dwo.rest</groupId>
-            <artifactId>DWO-rest-lib-working</artifactId>
+            <artifactId>DWO-rest-lib</artifactId>
             <version>${buildVersion}</version>
             <type>jar</type>
         </dependency>
