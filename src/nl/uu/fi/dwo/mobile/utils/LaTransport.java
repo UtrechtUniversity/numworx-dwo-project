@@ -27,11 +27,11 @@ import com.google.gwt.user.client.Window;
 public class LaTransport implements Logging {
 
 	public static Logging newInstance() { 
-		return new LaTransport(new LaconSender());		
+		return new LaTransport(new PairSender(new LaconSender(), new LogSender()));		
 	}
 
 	public static Logging newJSInstance() {
-		return new LaTransport(new JSSender());
+		return new LaTransport(new PairSender(new JSSender(), new LogSender()));
 	}
 	
 	private Sender sender;
@@ -72,6 +72,32 @@ public class LaTransport implements Logging {
 		}	
 	}
 	
+	static class LogSender extends Sender {
+		static native void send00(JavaScriptObject jso) /*-{
+			$wnd.logAction(jso)
+		}-*/;
+		
+		void send0(JSONObject jso) {
+			try {
+				send00(jso.getJavaScriptObject());
+			} catch(Exception e) {
+				lg.log(Level.SEVERE, "logAction", e);
+			}
+		}
+	}
+	
+	static class PairSender extends Sender {
+		Sender a,b;
+		PairSender(Sender a, Sender b) {
+			this.a = a;
+			this.b = b;
+		}
+		void send0(JSONObject jso) {
+			a.send0(jso);
+			b.send0(jso);
+		}
+	}
+	
 	static class JSSender extends Sender {
 		static native void send00(JavaScriptObject jso)/*-{
 				$wnd.updateHandler(jso)
@@ -81,7 +107,7 @@ public class LaTransport implements Logging {
 			try {
 				send00(jso.getJavaScriptObject());
 			} catch (Exception e) {
-				lg.log(Level.SEVERE, "send0", e);
+				lg.log(Level.SEVERE, "updateHandler", e);
 			}
 		}
 	}
@@ -107,12 +133,27 @@ public class LaTransport implements Logging {
 	}
 	
 	public void startSession() {
-		registration = new JSONString(GUID.get());
+		JSONObject msg = buildUnitMessage("started", null);
+		sender.send0(msg);
 	}
 	
 	public void stopSession() {
+		sender.send0(buildUnitMessage("stopped", null));
+	}
+		
+	public void setLocation(String location) {
+		JSONObject result = new JSONObject();
+		result.put("location", new JSONString(location));
+		JSONObject msg = buildUnitMessage("location", result);
+		sender.send0(msg);
+	}
+	
+	public void unitLog(Map<String, Object> response) {
+		JSONObject msg = buildUnitMessage("log", toJSONObject(response));
 		
 	}
+	
+	
 	
 	public void setClassName(JSONValue className) {
 		this.className = className;
@@ -138,17 +179,39 @@ public class LaTransport implements Logging {
 	private LaTransport(Sender laconSender) {
 		this.sender = laconSender;
 	}
+	public JSONObject buildUnitMessage(String id, JSONValue result) {
+		JSONObject msg = new JSONObject();
+		insertActor(msg);
+		JSONObject verb = new JSONObject();
+		verb.put("id", new JSONString(id));
+		msg.put("verb", verb);
+// object
+		JSONObject object = new JSONObject();
+		String uuid = comRoot.getUUID();
+		int i = uuid.indexOf('-');
+		uuid = uuid.substring(0, i);
+		object.put("id", new JSONString(uuid));
+		JSONObject definition = new JSONObject();
+		definition.put("type", className);
+		object.put("definition", definition);
+		msg.put("object", object);
+// version/context/timestamp
+		msg.put("version", VERSION);
+		msg.put("timestamp", getTimeStamp());
+		JSONObject context = new JSONObject();
+		context.put("registration", registration);
+		msg.put("context", context);
 
+		if(result != null) {
+			msg.put("result", result);
+		}
+		
+		return msg;
+	}
 	
 	public JSONObject buildMessage(Map<String, ?> parameters) {
 		JSONObject msg = new JSONObject();
-		JSONObject actor = new JSONObject();
-		JSONObject account = new JSONObject();
-		account.put("name", new JSONString(getLearnerId()));
-		account.put("homePage", new JSONString(getHomePage()));
-		actor.put("account", account);
-		actor.put("name", new JSONString(getLearnerName()));
-		msg.put("actor", actor);
+		insertActor(msg);
 		
 		JSONObject object = new JSONObject();
 		String uuid = comRoot.getUUID();
@@ -157,8 +220,10 @@ public class LaTransport implements Logging {
 		definition.put("type", className );
 		definition.put("name", logID);
 		msg.put("object", object);
+
 		msg.put("version", VERSION);
 		msg.put("timestamp", getTimeStamp());
+
 		msg.put("result", toJSONObject(parameters));
 		
 		JSONObject context = new JSONObject();
@@ -173,6 +238,16 @@ public class LaTransport implements Logging {
 		msg.put("context", context);
 		return msg;
 		
+	}
+
+	void insertActor(JSONObject msg) {
+		JSONObject actor = new JSONObject();
+		JSONObject account = new JSONObject();
+		account.put("name", new JSONString(getLearnerId()));
+		account.put("homePage", new JSONString(getHomePage()));
+		actor.put("account", account);
+		actor.put("name", new JSONString(getLearnerName()));
+		msg.put("actor", actor);
 	}
 
 	private String getLearnerName() {

@@ -286,6 +286,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 //			// Geen nakijkknop, dus ook niet keernagekeken
 //			// maar wel totaalscore
 //		}
+		
+		scoreNav.started();
+	
 	}
 
 	protected Memento createMemento() {
@@ -1355,6 +1358,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	@Override
 	public void close() {
+		scoreNav.stopped();
 		if(on != null)
 			on.close();
 		PopupFacade.removeAll();

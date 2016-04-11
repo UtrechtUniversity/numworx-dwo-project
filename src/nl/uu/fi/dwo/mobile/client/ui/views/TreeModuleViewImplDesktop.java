@@ -178,13 +178,19 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 	public void onTap(TapEvent event) {
 		// logout
 		//DWOplayer.profiledata = null;
-		this.presenter.goTo(new LoginPlace());
+		if(loadedModule != null)
+		  OpdrNav.defer(new ScheduledCommand() {
+			public void execute() {
+				TreeModuleViewImplDesktop.this.presenter.goTo(new LoginPlace());
+			}
+		}); 
+		else
+			this.presenter.goTo(new LoginPlace());
 	}
 	
 	@UiHandler("moduleBackButton")
 	public void onModuleTap(TapEvent event) {
 			toggleNavigationPanel();
-		
 	}
 	
 	private void selectItem(SelectModuleItem o) {

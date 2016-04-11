@@ -61,8 +61,8 @@ public class ScoreNavFacade implements ScoreNavIF {
 	 * Label met het aantal keer nagekeken, bijv. "2 keer nagekeken".
 	 */
 	private Label keerNagekekenLabel;
-	private GotoOpdracht gotoOpdracht;
-	private int currentOpdracht;
+	protected GotoOpdracht gotoOpdracht;
+	protected int currentOpdracht;
 
 	public ScoreNavFacade() {
 		nakijkKnop = new PushButton(Text.constants.nakijkKnopLabel());
@@ -374,14 +374,18 @@ public class ScoreNavFacade implements ScoreNavIF {
 
 	@Override
 	public void setAuthELOcheck(boolean b) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setAuthELOhelp(boolean b) {
-		// TODO Auto-generated method stub
-		
+	}
+
+	@Override
+	public void started() {
+	}
+
+	@Override
+	public void stopped() {
 	}
 	
 }

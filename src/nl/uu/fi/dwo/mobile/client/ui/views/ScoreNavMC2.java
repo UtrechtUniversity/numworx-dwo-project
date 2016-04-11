@@ -1,8 +1,14 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import org.json.simple.JSONObject;
+
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
+import nl.uu.fi.dwo.mobile.utils.LaTransport;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PushButton;
@@ -11,8 +17,10 @@ import com.google.gwt.user.client.ui.Widget;
 public class ScoreNavMC2 extends ScoreNavFacade {
 
 	private Widget help, check;
+	LaTransport logging;
 	
 	public ScoreNavMC2() {
+		logging = (LaTransport) DWOplayer.PARAMETERS.getLogging();
 	}
 
 	@Override
@@ -41,6 +49,38 @@ public class ScoreNavMC2 extends ScoreNavFacade {
 		}
 		if(help != null)
 			help.setVisible(b);
+	}
+
+	@Override
+	public void setGotoOpdracht(GotoOpdracht gotoOpdracht) {
+		super.setGotoOpdracht(gotoOpdracht);
+		logging.setCommunicationRoot(gotoOpdracht);
+	}
+
+	@Override
+	public void started() {
+		if(gotoOpdracht != null)
+		{
+			logging.startSession();
+			currentOpdracht = gotoOpdracht.getCurrentOpdracht();
+			logging.setLocation(Integer.toString(currentOpdracht+1));
+		}
+		super.started();
+	}
+
+	@Override
+	public void stopped() {
+		if(gotoOpdracht != null)
+			logging.stopSession();
+		super.stopped();
+	}
+
+	@Override
+	public void setOpdracht(int currentOpdracht) {
+// "1", "2", ...
+		if(gotoOpdracht != null)
+			logging.setLocation(Integer.toString(currentOpdracht+1));
+		super.setOpdracht(currentOpdracht);
 	}
 
 }

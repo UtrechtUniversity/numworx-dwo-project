@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -10,10 +12,11 @@ public interface ScoreNavIF {
 		void checkOpdracht(ScoreNavIF source);
 	}
 
-	interface GotoOpdracht {
+	interface GotoOpdracht extends OpdrNavIF {
 		void gotoOpdracht(int i, ScoreNavIF source);
 		void reloadOpdracht(int i, ScoreNavIF source);
 		void setButtonEnabled(int opdrNr, boolean b);
+		int getCurrentOpdracht();
 	}
 
 	public interface NextPrevHandler {
@@ -77,5 +80,8 @@ public interface ScoreNavIF {
 
 	void setAuthELOcheck(boolean b);
 	void setAuthELOhelp(boolean b);
+
+	void started();
+	void stopped();
 	
 }

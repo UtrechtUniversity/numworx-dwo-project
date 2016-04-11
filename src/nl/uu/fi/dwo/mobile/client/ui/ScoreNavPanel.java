@@ -425,6 +425,14 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 	public void setAuthELOhelp(boolean b) {
 	}
 
+	@Override
+	public void started() {
+	}
+
+	@Override
+	public void stopped() {
+	}
+
 }
 
 
