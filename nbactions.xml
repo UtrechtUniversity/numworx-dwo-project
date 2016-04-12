@@ -14,18 +14,6 @@
             </properties>
         </action>
         <action>
-            <actionName>CUSTOM-jetty:run</actionName>
-            <displayName>jetty:run</displayName>
-            <goals>
-                <goal>jetty:run</goal>
-            </goals>
-            <properties>
-                <jpda.listen>maven</jpda.listen>
-                <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
-                
-            </properties>
-        </action>
-        <action>
             <actionName>CUSTOM-jetty:run-exploded</actionName>
             <displayName>jetty:run-exploded</displayName>
             <goals>
@@ -39,5 +27,6 @@
                 <goal>gwt:run-codeserver</goal>
             </goals>
         </action>
+        
         
     </actions>

@@ -78,6 +78,7 @@
                 <artifactId>maven-jetty-plugin</artifactId>
                 <version>6.1.14</version>
                 <configuration>
+                    <jetty.http.port>9090</jetty.http.port>
                     <webAppSourceDirectory>${project.basedir}/war</webAppSourceDirectory>
                     <scanIntervalSeconds>5</scanIntervalSeconds>
                 </configuration>
