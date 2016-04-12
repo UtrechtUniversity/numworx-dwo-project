@@ -5,57 +5,66 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * A persistent id based on object information.
- * 
+ *
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
 public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
-    
+
     private String stringId;
     private PersistenceClassType type = PersistenceClassType.none;
+
     /**
-     * This returns a unique string id.  The implementing class of the
+     * This returns a unique string id. The implementing class of the
      * {@Link PersistenceId} interface should ensure that each id is an unique
-     * reference to any persistent entity it maps for. No assumptions are made on
-     * the order of the Id. However it is recommended that, if possible, lexicographical sorting
-     * sorts objects in incremental order of class type, object index. 
-     * 
+     * reference to any persistent entity it maps for. No assumptions are made
+     * on the order of the Id. However it is recommended that, if possible,
+     * lexicographical sorting sorts objects in incremental order of class type,
+     * object index.
+     *
      * @return A unique string id.
      */
-    public String getIdString(){
+    public String getIdString() {
         return stringId;
     }
 
     /**
-     * This decomposes a unique string id and sets a persistence Id. The implementing class of the
-     * {@Link PersistenceId} interface should ensure that each id is an unique
-     * reference to any persistent entity it maps for. No assumptions are made on
-     * the order of the Id. However it is recommended that, if possible, lexicographical sorting
-     * sorts objects in incremental order of class type, object index. 
-     * 
-     * @param id  set a PersistenceId from a String id.
+     * This decomposes a unique string id and sets a persistence Id. The
+     * implementing class of the {@Link PersistenceId} interface should ensure
+     * that each id is an unique reference to any persistent entity it maps for.
+     * No assumptions are made on the order of the Id. However it is recommended
+     * that, if possible, lexicographical sorting sorts objects in incremental
+     * order of class type, object index.
+     *
+     * @param id set a PersistenceId from a String id.
      */
-    public void setIdString(String id){
+    public void setIdString(String id) {
         stringId = id;
-    };
+    }
+
+    ;
     
     /**
      * Returns the persistence class type.
      * 
      * @return returns the PersistenceId type.
      */
-    public PersistenceClassType getType(){
+    public PersistenceClassType getType() {
         return type;
-    };
+    }
+
+    ;
 
     /**
      * Sets the persistence class type. Only meant for serialization.
      * 
      * @param aType 
      */
-    public void setType(PersistenceClassType aType){
+    public void setType(PersistenceClassType aType) {
         type = aType;
-    };
+    }
+
+    ;
     
      /**
      * Compare ordered state.
@@ -84,7 +93,7 @@ public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
      */
     @Override
     public int hashCode() {
-       return stringId.hashCode();
+        return stringId.hashCode();
     }
 
     @Override
@@ -99,16 +108,19 @@ public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
         return !((this.stringId == null) ? (other.stringId != null) : !this.stringId.equals(other.stringId));
     }
 
-    @Override
-    public Object clone() {
+    /** Clones a PersistenceId 
+     * 
+     * @return 
+     */
+    public PersistenceId duplicate() {
         PersistenceId id = new PersistenceId();
         id.setIdString(this.stringId);
         id.setType(this.type);
         return id;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return stringId;
     }
 }

@@ -5,6 +5,8 @@
  */
 package fi.dwo.rest.dom.entities;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -15,20 +17,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomNewSchoolClass4Student extends DomSchoolClass {
 
+    private static final Logger LOG = Logger.getLogger(DomNewSchoolClass4Student.class.getName());
+
     private String registrationKey = null;
 
-    
-    public DomNewSchoolClass4Student(){
-        
+    public DomNewSchoolClass4Student() {
+
     }
 
-    /** Initializes the object with a clone of the parameter and set the 
+    /**
+     * Initializes the object with a clone of the parameter and set the
      * registrationKey to null;
-     * 
+     *
      * @param sc
      */
-    public DomNewSchoolClass4Student(DomSchoolClass sc){
-        DomSchoolClass clone = (DomSchoolClass) sc.clone();
+    public DomNewSchoolClass4Student(DomSchoolClass sc) {
+        DomSchoolClass clone = null;
+        clone = sc.duplicate();
         this.setId(clone.getId());
         this.setHasRegKey(clone.getHasRegKey());
         this.setSchoolClassName(clone.getSchoolClassName());
