@@ -4,40 +4,47 @@
 package fi.dwo.rest.dom.entities;
 
 import fi.dwo.rest.persistence.PersistenceId;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author G.A.J. van der Plas
  */
-
 @XmlRootElement
 public class DomSchoolClass implements Cloneable {
+    private static final Logger LOG = Logger.getLogger(DomSchoolClass.class.getName());
+
     private PersistenceId id;
     private String schoolClassName;
     private Boolean hasRegKey;
 
+    public DomSchoolClass() {
 
-    public DomSchoolClass(){
-        
     }
-    
-    public DomSchoolClass(DomSchoolClass sc){
-        DomSchoolClass clone = (DomSchoolClass) sc.clone();
+
+    public DomSchoolClass(DomSchoolClass sc) {
+        DomSchoolClass clone=null;
+        try {
+            clone = (DomSchoolClass) sc.clone();
+        } catch (CloneNotSupportedException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
         this.id = clone.id;
         this.hasRegKey = clone.getHasRegKey();
         this.schoolClassName = clone.getSchoolClassName();
     }
-    
+
     @Override
-    public Object clone() {
+    public Object clone() throws CloneNotSupportedException {
         DomSchoolClass sc = new DomSchoolClass();
         sc.id = (PersistenceId) this.id.clone();
-        sc.schoolClassName=this.getSchoolClassName(); //strings are final
+        sc.schoolClassName = this.getSchoolClassName(); //strings are final
         sc.hasRegKey = this.getHasRegKey().equals(true); //ensuring cloned stuff
         return sc;
     }
-    
+
     /**
      * @return the id
      */
@@ -83,7 +90,7 @@ public class DomSchoolClass implements Cloneable {
     void clearSettings() {
         id = null;
         schoolClassName = "";
-        hasRegKey= new Boolean (false);
+        hasRegKey = new Boolean(false);
     }
-    
+
 }
