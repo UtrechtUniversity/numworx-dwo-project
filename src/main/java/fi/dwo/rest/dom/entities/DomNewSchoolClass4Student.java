@@ -16,27 +16,24 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomNewSchoolClass4Student extends DomSchoolClass {
+
     private static final Logger LOG = Logger.getLogger(DomNewSchoolClass4Student.class.getName());
 
     private String registrationKey = null;
 
-    
-    public DomNewSchoolClass4Student(){
-        
+    public DomNewSchoolClass4Student() {
+
     }
 
-    /** Initializes the object with a clone of the parameter and set the 
+    /**
+     * Initializes the object with a clone of the parameter and set the
      * registrationKey to null;
-     * 
+     *
      * @param sc
      */
-    public DomNewSchoolClass4Student(DomSchoolClass sc){
+    public DomNewSchoolClass4Student(DomSchoolClass sc) {
         DomSchoolClass clone = null;
-        try {
-            clone = (DomSchoolClass) sc.clone();
-        } catch (CloneNotSupportedException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
+        clone = sc.duplicate();
         this.setId(clone.getId());
         this.setHasRegKey(clone.getHasRegKey());
         this.setSchoolClassName(clone.getSchoolClassName());

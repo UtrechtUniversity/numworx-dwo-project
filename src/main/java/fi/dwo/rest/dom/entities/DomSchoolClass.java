@@ -26,20 +26,15 @@ public class DomSchoolClass implements Cloneable {
 
     public DomSchoolClass(DomSchoolClass sc) {
         DomSchoolClass clone=null;
-        try {
-            clone = (DomSchoolClass) sc.clone();
-        } catch (CloneNotSupportedException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
+            clone = sc.duplicate();
         this.id = clone.id;
         this.hasRegKey = clone.getHasRegKey();
         this.schoolClassName = clone.getSchoolClassName();
     }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
+    public DomSchoolClass duplicate() {
         DomSchoolClass sc = new DomSchoolClass();
-        sc.id = (PersistenceId) this.id.clone();
+        sc.id = (PersistenceId) this.id.duplicate();
         sc.schoolClassName = this.getSchoolClassName(); //strings are final
         sc.hasRegKey = this.getHasRegKey().equals(true); //ensuring cloned stuff
         return sc;

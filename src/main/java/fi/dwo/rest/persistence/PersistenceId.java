@@ -108,8 +108,11 @@ public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
         return !((this.stringId == null) ? (other.stringId != null) : !this.stringId.equals(other.stringId));
     }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
+    /** Clones a PersistenceId 
+     * 
+     * @return 
+     */
+    public PersistenceId duplicate() {
         PersistenceId id = new PersistenceId();
         id.setIdString(this.stringId);
         id.setType(this.type);
