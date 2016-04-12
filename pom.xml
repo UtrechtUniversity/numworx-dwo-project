@@ -39,7 +39,7 @@
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWO-rest-lib/trunk</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWO-rest-lib/branches/working-gert</developerConnection>
         <tag>HEAD</tag>
     </scm>
   
