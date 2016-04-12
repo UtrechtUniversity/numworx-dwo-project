@@ -10,10 +10,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import fi.dwo.rest.dom.entities.DomUser;
+import fi.dwo.rest.dom.entities.DomUserFull;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -37,11 +40,12 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         this.popup = popup;
     }
     
-    ProfilePanel(DomUser user){
+    ProfilePanel(DomUserFull user){
         init(user);
     }
     
-    private void init(DomUser user) {
+    private void init(DomUserFull user) {
+        LOG.log(Level.INFO, "testing");
         this.setSize("400", "500");
         Grid g = new Grid(10, 2);
         g.getColumnCount();
@@ -69,22 +73,22 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
 
         g.setText(4,0, "email");
         TextBox email = new TextBox();
-        email.setText(user.getFamilyName());
+        email.setText(user.getEmail());
         g.setWidget(4,1, email);
 
         
-        g.setText(5,0, "password");
-        TextBox password = new TextBox();
+        g.setText(6,0, "password");
+        PasswordTextBox password = new PasswordTextBox();
         password.setText("");
         g.setWidget(6,1, password);
         
         g.setText(7,0, "new password");
-        TextBox newPassword = new TextBox();
+        PasswordTextBox newPassword = new PasswordTextBox();
         newPassword.setText("");
         g.setWidget(7,1, newPassword);
         
         g.setText(8,0, "new password again");
-        TextBox newPasswordAgain = new TextBox();
+        PasswordTextBox newPasswordAgain = new PasswordTextBox();
         newPasswordAgain.setText("");
         g.setWidget(8,1, newPasswordAgain);
 

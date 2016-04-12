@@ -56,6 +56,9 @@
                             <g:customCell styleName="optionalBarCellStyle">
                                 <g:Label>bar</g:Label>
                             </g:customCell>
+                            <g:customCell styleName="optionalBarCellStyle">
+                                <g:Label>tra</g:Label>
+                            </g:customCell>
                         </g:row>
                         <g:row>
                             <g:cell>
@@ -63,6 +66,9 @@
                             </g:cell>
                             <g:cell>
                                 <div>bar</div>
+                            </g:cell>
+                            <g:cell>
+                                <div>tra</div>
                             </g:cell>
                         </g:row>
                     </g:Grid>

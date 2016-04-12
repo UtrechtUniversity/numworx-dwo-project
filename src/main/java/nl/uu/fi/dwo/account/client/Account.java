@@ -27,6 +27,7 @@ public class Account implements EntryPoint {
             curUser.setFamilyName("Plas");
             curUser.setId(null);
             curUser.setSingleSchool(false);
+            user=curUser;
         }
         UserBar userBar = new UserBar(user);
 

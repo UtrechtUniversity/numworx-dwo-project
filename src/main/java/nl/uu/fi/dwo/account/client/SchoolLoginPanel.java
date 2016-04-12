@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import fi.dwo.rest.dom.entities.DomUser;
+import fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.logging.Logger;
 
 /**
@@ -27,7 +28,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     PopupPanel popup;
     Button cnlBtn;
     Button newSchoolLoginBtn;
-    DomUser user;
+    DomUserFull user;
     
     public PopupPanel getPopup() {
         return popup;
@@ -37,13 +38,14 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         this.popup = popup;
     }
     
-    SchoolLoginPanel(DomUser user){
+    SchoolLoginPanel(DomUserFull user){
         init(user);
     }
     
-    private void init(DomUser user) {
+    private void init(DomUserFull user) {
+        this.user=user;
         this.setSize("400", "500");
-        Grid g = new Grid(3, 5);
+        Grid g = new Grid(5, 3);
         // Put some values in the grid cells.
         g.setText(0,0, "school");
         g.setText(0,1, "login");

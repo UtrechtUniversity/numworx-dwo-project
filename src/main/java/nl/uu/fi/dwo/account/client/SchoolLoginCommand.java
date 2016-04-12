@@ -7,7 +7,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.PopupPanel;
-import fi.dwo.rest.dom.entities.DomUser;
+import fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.logging.Logger;
 
 /**
@@ -16,10 +16,10 @@ import java.util.logging.Logger;
  */
 class SchoolLoginCommand implements Command {
 
-    private DomUser currentUser;
+    private DomUserFull currentUser;
     private static final Logger LOG = Logger.getLogger(SchoolLoginCommand.class.getName());
 
-    public SchoolLoginCommand(DomUser currentUser) {
+    public SchoolLoginCommand(DomUserFull currentUser) {
         this.currentUser = currentUser;
     }
 
@@ -39,14 +39,14 @@ class SchoolLoginCommand implements Command {
     /**
      * @return the currentUser
      */
-    public DomUser getCurrentUser() {
+    public DomUserFull getCurrentUser() {
         return currentUser;
     }
 
     /**
      * @param currentUser the currentUser to set
      */
-    public void setCurrentUser(DomUser currentUser) {
+    public void setCurrentUser(DomUserFull currentUser) {
         this.currentUser = currentUser;
     }
 

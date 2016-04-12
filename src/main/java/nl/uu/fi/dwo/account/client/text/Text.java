@@ -9,5 +9,7 @@ public interface Text extends Constants {
 
 	@DefaultStringValue("Mijn\u00A0Profiel")
 	String GUIMNU_MY_PROFILE();
+	@DefaultStringValue("Mijn\u00A0Schoollogins")
+	String GUIMNU_MY_SCHOOLLOGINS();
 
 }

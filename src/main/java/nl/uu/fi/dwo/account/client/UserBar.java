@@ -42,7 +42,7 @@ public class UserBar extends Composite {
 		schoolLoginCmd = new SchoolLoginCommand(user);
 		item = new MenuItem(rb.GUIMNU_MY_PROFILE(), profileCmd);
 		items.addItem(item);
-		item2 = new MenuItem("Mijn logins", schoolLoginCmd);
+		item2 = new MenuItem(rb.GUIMNU_MY_SCHOOLLOGINS(), schoolLoginCmd);
 		items.addItem(item2);
 	}
 
