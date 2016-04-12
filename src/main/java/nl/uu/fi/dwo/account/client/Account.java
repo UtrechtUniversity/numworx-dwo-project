@@ -9,25 +9,28 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 
 public class Account implements EntryPoint {
 
-	Logger LOG = Logger.getLogger("Account");
-	
-	@Override
-	public void onModuleLoad() {
-	
-		LOG.info("started");
-		HeaderPanel header = new HeaderPanel();
-		RootPanel.get().add(header);
-		
-		header.setCenter("Account");
-		UserBar user = new UserBar();
-                DomUserFull curUser = new DomUserFull();
-		curUser.setGivenName("Gert");
-                curUser.setInsertion("van der");
-                curUser.setFamilyName("Plas");
-		curUser.setId(null);
-		curUser.setSingleSchool(false);
-                
-		header.setRightWidget(user);
-	}
+    private static final Logger LOG = Logger.getLogger(Account.class.getName());
+    DomUserFull user = null;
+
+    @Override
+    public void onModuleLoad() {
+
+        LOG.info("started");
+        HeaderPanel header = new HeaderPanel();
+        RootPanel.get().add(header);
+
+        header.setCenter("Account");
+        if (user == null) {
+            DomUserFull curUser = new DomUserFull();
+            curUser.setGivenName("Gert");
+            curUser.setInsertion("van der");
+            curUser.setFamilyName("Plas");
+            curUser.setId(null);
+            curUser.setSingleSchool(false);
+        }
+        UserBar userBar = new UserBar(user);
+
+        header.setRightWidget(userBar);
+    }
 
 }

@@ -1,12 +1,12 @@
 package nl.uu.fi.dwo.account.client;
 
-import java.util.Map;
 
 import nl.uu.fi.dwo.account.client.text.Text;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import fi.dwo.rest.dom.entities.DomUserFull;
 
 public class UserBar extends Composite {	
 	
@@ -14,9 +14,11 @@ public class UserBar extends Composite {
 	private final MenuBar items;
 	private final Text rb = Text.constants;
 	private final ProfileCommand profileCmd;
-	private final ProfileCommand schoolLoginCmd;
+	private final SchoolLoginCommand schoolLoginCmd;
+        private DomUserFull user;
 	
-	public UserBar() {
+	public UserBar(DomUserFull user) {
+            this.user = user;
 		top = new MenuBar();
 		initWidget(top);		
 		items = new MenuBar(true);
@@ -36,15 +38,25 @@ public class UserBar extends Composite {
 		
 		top.addItem(item);
 		
-		profileCmd = new ProfileCommand();
-		schoolLoginCmd = new ProfileCommand();
+		profileCmd = new ProfileCommand(user);
+		schoolLoginCmd = new SchoolLoginCommand(user);
 		item = new MenuItem(rb.GUIMNU_MY_PROFILE(), profileCmd);
 		items.addItem(item);
 		item2 = new MenuItem("Mijn logins", schoolLoginCmd);
 		items.addItem(item2);
 	}
 
-	public void setProfile(Map<String,Object> map) {
-		profileCmd.setProfile(map);
-	}
+    /**
+     * @return the user
+     */
+    public DomUserFull getUser() {
+        return user;
+    }
+
+    /**
+     * @param user the user to set
+     */
+    public void setUser(DomUserFull user) {
+        this.user = user;
+    }
 }
