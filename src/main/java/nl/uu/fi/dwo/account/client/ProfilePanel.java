@@ -43,24 +43,58 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
     
     private void init(DomUser user) {
         this.setSize("400", "500");
-        Grid g = new Grid(3, 5);
-        // Put some values in the grid cells.
+        Grid g = new Grid(10, 2);
+        g.getColumnCount();
+        g.getRowCount();
+                // Put some values in the grid cells.
         g.setText(0,0, "login");
+        g.setText(0,1, user.getUserName());
         TextBox login = new TextBox();
         login.setText(user.getUserName());
-        g.setWidget(0,1, login);
-        g.setText(1,0, "name");
-        TextBox name = new TextBox();
-        name.setText(user.getUniqueDisplayName());
-        g.setWidget(1,1, name);
+
+        TextBox givenName = new TextBox();
+        g.setText(1,0, "given name");
+        givenName.setText(user.getGivenName());
+        g.setWidget(1,1, givenName);
+        
+        g.setText(2,0, "insertion");
+        TextBox insertion = new TextBox();
+        insertion.setText(user.getInsertion());
+        g.setWidget(2,1, insertion);
+        
+        g.setText(3,0, "family name");
+        TextBox familyName = new TextBox();
+        familyName.setText(user.getFamilyName());
+        g.setWidget(3,1, familyName);
+
+        g.setText(4,0, "email");
+        TextBox email = new TextBox();
+        email.setText(user.getFamilyName());
+        g.setWidget(4,1, email);
+
+        
+        g.setText(5,0, "password");
+        TextBox password = new TextBox();
+        password.setText("");
+        g.setWidget(6,1, password);
+        
+        g.setText(7,0, "new password");
+        TextBox newPassword = new TextBox();
+        newPassword.setText("");
+        g.setWidget(7,1, newPassword);
+        
+        g.setText(8,0, "new password again");
+        TextBox newPasswordAgain = new TextBox();
+        newPasswordAgain.setText("");
+        g.setWidget(8,1, newPasswordAgain);
 
         // Just for good measure, let's put a button in the center.
         okBtn = new Button("OK");
         okBtn.addClickHandler(this);
-        g.setWidget(2, 0, okBtn);
+        g.setWidget(9, 0, okBtn);
         cnlBtn = new Button("CANCEL");
         cnlBtn.addClickHandler(this);
-        g.setWidget(2, 1, cnlBtn);
+        g.setWidget(9, 1, cnlBtn);
         // You can use the CellFormatter to affect the layout of the grid's cells.
         //g.getCellFormatter().setWidth(0, 2, "256px");
         this.add(g);

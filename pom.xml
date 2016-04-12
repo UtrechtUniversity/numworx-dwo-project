@@ -61,7 +61,7 @@
                     <hostedWebapp>${webappDirectory}</hostedWebapp>  
                     <compileSourcesArtifacts>
                         <compileSourcesArtifact>groupId:artifactId</compileSourcesArtifact>
-                        <compileSourcesArtifact>fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact>
+                        <compileSourcesArtifact>fi.dwo.rest:DWO-rest-lib-working-gert</compileSourcesArtifact>
                     </compileSourcesArtifacts>                          
                 </configuration>
                 <executions>

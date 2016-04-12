@@ -59,10 +59,50 @@
                         </g:row>
                         <g:row>
                             <g:cell>
-                                <div>foo</div>
+                                <div>a</div>
                             </g:cell>
                             <g:cell>
-                                <div>bar</div>
+                                <div>b</div>
+                            </g:cell>
+                        </g:row>
+                        <g:row>
+                            <g:cell>
+                                <div>c</div>
+                            </g:cell>
+                            <g:cell>
+                                <div>d</div>
+                            </g:cell>
+                        </g:row>
+                        <g:row>
+                            <g:cell>
+                                <div>e</div>
+                            </g:cell>
+                            <g:cell>
+                                <div>f</div>
+                            </g:cell>
+                        </g:row>
+                        <g:row>
+                            <g:cell>
+                                <div>g</div>
+                            </g:cell>
+                            <g:cell>
+                                <div>e</div>
+                            </g:cell>
+                        </g:row>
+                        <g:row>
+                            <g:cell>
+                                <div>f</div>
+                            </g:cell>
+                            <g:cell>
+                                <div>h</div>
+                            </g:cell>
+                        </g:row>
+                        <g:row>
+                            <g:cell>
+                                <div>i</div>
+                            </g:cell>
+                            <g:cell>
+                                <div>j</div>
                             </g:cell>
                         </g:row>
                     </g:Grid>
