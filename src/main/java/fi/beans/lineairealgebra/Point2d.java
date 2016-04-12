@@ -1,7 +1,7 @@
 package fi.beans.lineairealgebra;
 
 public class Point2d {
-//	private static final long serialVersionUID = 478565903937391913L;
+	private static final long serialVersionUID = 1L;
 
 	private double x;
 	private double y;
