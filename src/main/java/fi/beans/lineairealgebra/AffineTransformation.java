@@ -1,8 +1,22 @@
 package fi.beans.lineairealgebra;
 
 public class AffineTransformation {
+	Point2dList src;
+	Point2dList dest;
+	// Matrix
+	
 	public AffineTransformation() {
-		
+		src = null;
+		dest = null;
+//		Matrix = null;
+	}
+	
+	public void setSource(Point2dList src) {
+		this.src = src;
+	}
+	
+	public void setDestination(Point2dList dest) {
+		this.dest = dest;
 	}
 	
 //	def Affine_Fit( from_pts, to_pts ):
