@@ -126,7 +126,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             user.setGivenName(givenName.getText());
             user.setInsertion(insertion.getText());
             user.setPassword(password.getText());
-            more
+//            more
             LOG.log(Level.INFO, "Sending data to server.");
             control.update();
             popup.hide();

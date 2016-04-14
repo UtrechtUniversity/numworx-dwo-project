@@ -18,7 +18,7 @@ public class ProfileCommand implements Command {
     @Override
     public void execute() {
         // Create the new popup.
-        PopupPanel popup = new PopupPanel();
+        PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
         //popup.setSize("500", "400");
         ProfilePanel panel = new ProfilePanel(currentUser);
         panel.setPopup(popup);
