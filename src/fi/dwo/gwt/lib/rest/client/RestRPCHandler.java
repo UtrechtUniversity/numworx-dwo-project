@@ -24,7 +24,7 @@ public class RestRPCHandler {
 	private DWO2Server service;
 
 	public RestRPCHandler() {
-		this("http://localhost:8080/DWO/DWOServer/rest/");
+		this("http://127.0.0.1:8080/dwo2/rest/");
 	}
 
 	public RestRPCHandler(String url) {
