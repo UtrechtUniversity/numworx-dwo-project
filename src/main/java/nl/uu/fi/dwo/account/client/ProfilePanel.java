@@ -5,17 +5,21 @@
  */
 package nl.uu.fi.dwo.account.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import fi.dwo.gwt.lib.rest.shared.FieldVerifier;
 import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -128,8 +132,11 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             user.setPassword(password.getText());
 //            more
             LOG.log(Level.INFO, "Sending data to server.");
+            control.setUpdateUser(user);
             control.update();
+            LOG.log(Level.INFO, "Sending ok to server.");
             popup.hide();
         }
     }
+
 }

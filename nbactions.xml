@@ -27,6 +27,13 @@
                 <goal>gwt:run-codeserver</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-tomcat7:run (is exploded).</actionName>
+            <displayName>tomcat7:run (is exploded).</displayName>
+            <goals>
+                <goal>tomcat7:run</goal>
+            </goals>
+        </action>
         
         
     </actions>
