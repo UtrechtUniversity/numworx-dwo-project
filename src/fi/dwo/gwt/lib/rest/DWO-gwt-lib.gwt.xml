@@ -1,3 +1,4 @@
 <module>
-  <source></source>
+    <inherits name="org.fusesource.restygwt.RestyGWT"/>
+    <source></source>
 </module> 
