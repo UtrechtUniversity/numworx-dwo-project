@@ -28,6 +28,7 @@ public class ProfileController {
      *
      */
     public void update() {
+        LOG.log(Level.INFO, "Calling REST-interface login.");
         handler.login(currentUser.getUserName(), currentUser.getPassword(), new AsyncCallback<Map<String, Object>>() {
 
                         @Override

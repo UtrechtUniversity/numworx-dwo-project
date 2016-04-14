@@ -5,21 +5,16 @@
  */
 package nl.uu.fi.dwo.account.client;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import fi.dwo.gwt.lib.rest.shared.FieldVerifier;
 import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,6 +38,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
     TextBox email = new TextBox();
     PasswordTextBox password = new PasswordTextBox();
     PasswordTextBox newPassword = new PasswordTextBox();
+    PasswordTextBox newPasswordAgain = new PasswordTextBox();
 
     public PopupPanel getPopup() {
         return popup;
@@ -58,6 +54,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
 
     private void init(DomUserFull user) {
         LOG.log(Level.INFO, "testing");
+        control.setCurrentUser(user);
         this.setSize("400", "500");
 
         Grid g = new Grid(10, 2);
@@ -93,7 +90,6 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         g.setWidget(7, 1, newPassword);
 
         g.setText(8, 0, "new password again");
-        PasswordTextBox newPasswordAgain = new PasswordTextBox();
         newPasswordAgain.setText("");
         g.setWidget(8, 1, newPasswordAgain);
 
@@ -117,11 +113,8 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
 
     @Override
     public void onClick(ClickEvent event) {
-        //logger.log(Level.INFO, "object {0}", new Object[]{event.getSource()});
-        Window.alert(event.getSource().toString());
         if (event.getSource() == cnlBtn) {
-            LOG.log(Level.INFO, "SCancelling user profile update.");
-            Window.alert("CANCEL!");
+            LOG.log(Level.INFO, "Cancelling user profile update.");
             popup.hide();
         } else if (event.getSource() == okBtn) {
             DomUserFull user = new DomUserFull();
@@ -129,7 +122,9 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             user.setFamilyName(familyName.getText());
             user.setGivenName(givenName.getText());
             user.setInsertion(insertion.getText());
-            user.setPassword(password.getText());
+            if (newPassword.getText().equals(newPasswordAgain.getText()) && password.getText().equals(control.getCurrentUser().getPassword())) {
+                user.setPassword(newPassword.getText());
+            }
 //            more
             LOG.log(Level.INFO, "Sending data to server.");
             control.setUpdateUser(user);
