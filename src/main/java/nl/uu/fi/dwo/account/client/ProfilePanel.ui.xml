@@ -41,7 +41,7 @@
             <mgwt:HeaderPanel >
                 <mgwt:center>
                     <g:Label ui:field="nav_title" >
-                        <ui:text from='{rb.login}'/>
+                        <ui:text from='{rb.GUIMNU_MY_SCHOOLLOGINS()}'/>
                     </g:Label>
                 </mgwt:center>
             </mgwt:HeaderPanel>

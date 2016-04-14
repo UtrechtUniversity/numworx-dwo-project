@@ -35,7 +35,6 @@ public class UserBar extends Composite {
 			}
 			
 		};
-		
 		top.addItem(item);
 		
 		profileCmd = new ProfileCommand(user);

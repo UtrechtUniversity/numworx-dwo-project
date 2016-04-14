@@ -24,14 +24,22 @@ import java.util.logging.Logger;
  * @author G.A.J. van der Plas
  */
 public class ProfilePanel extends VerticalPanel implements ClickHandler {
+
     Logger LOG = Logger.getLogger("Account");
-    
-    ProfileProperties props = new ProfileProperties();
+
+    ProfileController control = new ProfileController();
     PopupPanel popup;
     Button cnlBtn;
     Button okBtn;
     DomUser user;
-    
+    TextBox login = new TextBox();
+    TextBox givenName = new TextBox();
+    TextBox insertion = new TextBox();
+    TextBox familyName = new TextBox();
+    TextBox email = new TextBox();
+    PasswordTextBox password = new PasswordTextBox();
+    PasswordTextBox newPassword = new PasswordTextBox();
+
     public PopupPanel getPopup() {
         return popup;
     }
@@ -39,58 +47,51 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
     public void setPopup(PopupPanel popup) {
         this.popup = popup;
     }
-    
-    ProfilePanel(DomUserFull user){
+
+    ProfilePanel(DomUserFull user) {
         init(user);
     }
-    
+
     private void init(DomUserFull user) {
         LOG.log(Level.INFO, "testing");
         this.setSize("400", "500");
+
         Grid g = new Grid(10, 2);
         g.getColumnCount();
         g.getRowCount();
-                // Put some values in the grid cells.
-        g.setText(0,0, "login");
-        g.setText(0,1, user.getUserName());
-        TextBox login = new TextBox();
+        // Put some values in the grid cells.
+        g.setText(0, 0, "login");
+        g.setText(0, 1, user.getUserName());
         login.setText(user.getUserName());
 
-        TextBox givenName = new TextBox();
-        g.setText(1,0, "given name");
+        g.setText(1, 0, "given name");
         givenName.setText(user.getGivenName());
-        g.setWidget(1,1, givenName);
-        
-        g.setText(2,0, "insertion");
-        TextBox insertion = new TextBox();
+        g.setWidget(1, 1, givenName);
+
+        g.setText(2, 0, "insertion");
         insertion.setText(user.getInsertion());
-        g.setWidget(2,1, insertion);
-        
-        g.setText(3,0, "family name");
-        TextBox familyName = new TextBox();
+        g.setWidget(2, 1, insertion);
+
+        g.setText(3, 0, "family name");
         familyName.setText(user.getFamilyName());
-        g.setWidget(3,1, familyName);
+        g.setWidget(3, 1, familyName);
 
-        g.setText(4,0, "email");
-        TextBox email = new TextBox();
+        g.setText(4, 0, "email");
         email.setText(user.getEmail());
-        g.setWidget(4,1, email);
+        g.setWidget(4, 1, email);
 
-        
-        g.setText(6,0, "password");
-        PasswordTextBox password = new PasswordTextBox();
+        g.setText(6, 0, "password");
         password.setText("");
-        g.setWidget(6,1, password);
-        
-        g.setText(7,0, "new password");
-        PasswordTextBox newPassword = new PasswordTextBox();
+        g.setWidget(6, 1, password);
+
+        g.setText(7, 0, "new password");
         newPassword.setText("");
-        g.setWidget(7,1, newPassword);
-        
-        g.setText(8,0, "new password again");
+        g.setWidget(7, 1, newPassword);
+
+        g.setText(8, 0, "new password again");
         PasswordTextBox newPasswordAgain = new PasswordTextBox();
         newPasswordAgain.setText("");
-        g.setWidget(8,1, newPasswordAgain);
+        g.setWidget(8, 1, newPasswordAgain);
 
         // Just for good measure, let's put a button in the center.
         okBtn = new Button("OK");
@@ -109,23 +110,26 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
 //                Window.alert("Init Failed.");
 //        }
     }
-    
-     @Override
+
+    @Override
     public void onClick(ClickEvent event) {
         //logger.log(Level.INFO, "object {0}", new Object[]{event.getSource()});
         Window.alert(event.getSource().toString());
-        if(event.getSource() == cnlBtn){
-        Window.alert("CANCEL!");
+        if (event.getSource() == cnlBtn) {
+            LOG.log(Level.INFO, "SCancelling user profile update.");
+            Window.alert("CANCEL!");
             popup.hide();
-        }else if(event.getSource()==okBtn){
-        Window.alert("OK!");
-//            try {
-//                props.Update();
-//            } catch (Dwo2Exception ex) {
-//                Logger.getLogger(ProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
-//                Window.alert("Update Failed.");
-//            }
-        popup.hide();
+        } else if (event.getSource() == okBtn) {
+            DomUserFull user = new DomUserFull();
+            user.setEmail(email.getText());
+            user.setFamilyName(familyName.getText());
+            user.setGivenName(givenName.getText());
+            user.setInsertion(insertion.getText());
+            user.setPassword(password.getText());
+            more
+            LOG.log(Level.INFO, "Sending data to server.");
+            control.update();
+            popup.hide();
         }
     }
 }

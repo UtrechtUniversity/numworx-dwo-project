@@ -22,11 +22,13 @@ public class Account implements EntryPoint {
         header.setCenter("Account");
         if (user == null) {
             DomUserFull curUser = new DomUserFull();
-            curUser.setGivenName("Gert");
-            curUser.setInsertion("van der");
-            curUser.setFamilyName("Plas");
+            curUser.setGivenName("Wim");
+            curUser.setInsertion("van");
+            curUser.setFamilyName("Velthoven");
             curUser.setId(null);
             curUser.setSingleSchool(false);
+            curUser.setPassword("passw");
+            curUser.setUserName("project_wim");
             user=curUser;
         }
         UserBar userBar = new UserBar(user);

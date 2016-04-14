@@ -3,9 +3,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.PopupPanel;
-import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ProfileCommand implements Command {

@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     Logger LOG = Logger.getLogger("Account");
     
-    ProfileProperties props = new ProfileProperties();
+    ProfileController props = new ProfileController();
     PopupPanel popup;
     Button cnlBtn;
     Button newSchoolLoginBtn;
