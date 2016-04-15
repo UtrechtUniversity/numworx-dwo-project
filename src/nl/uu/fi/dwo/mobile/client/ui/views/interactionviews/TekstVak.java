@@ -610,7 +610,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		int regelafstand = fm.getAscent()+fm.getDescent()+interlinie;
 		int regelHoogtes = 0;
 		//even de hoogte van alle tekstvakken met vulhoogte op 0 zetten, zorgen dat die later weer goed worden gezet.
-		if(vanTekstVakPanel)
+		if(vanTekstVakPanel && opdrachtObjects != null)
 		{
 			for(int i = 0; i < opdrachtObjects.size(); i++)
 			{

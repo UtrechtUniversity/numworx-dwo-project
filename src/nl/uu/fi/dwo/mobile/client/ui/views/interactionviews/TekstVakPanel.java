@@ -42,7 +42,9 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
@@ -84,7 +86,7 @@ import fi.wiskopdr.expressies.Optelling;
 
 
 
-public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
+public class TekstVakPanel implements InteractionView, FacetAware, PopupListener, CBookEventListener
 {
 	public static final String TVP_KLAPUIT = "action.unfold";
 	public static final String TVP_KLAPIN = "action.fold";
@@ -233,6 +235,9 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	private int puntenAftrekPopup;
 	private boolean logOption;
 	
+	private boolean visible = true;
+	private boolean zichtbaarNaNakijken;
+	private boolean nagekeken;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -450,7 +455,8 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			checkExpressieString = "$f???@";
 
 		}
-		
+		visible = launchState.getBoolean("visible", true);
+		zichtbaarNaNakijken = launchState.getBoolean("zichtbaarNaNakijken", false);
 		
 		defaultBijNull = launchState.getBoolean("defaultBijNull",defaultBijNull);
 		if (launchState.containsKey("ipId"))
@@ -976,6 +982,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		else
 			resize();
 		
+		setVisibility(visible);
 		
 
 	}
@@ -1017,7 +1024,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		if(comRoot != null)
 			mode = comRoot.getMode();
 		if (dwologger != null) dwologger.setCommunicationRoot(comRoot);
-		
+		comRoot.addCBookEventListener(ACTION_SETVISIBLE, this);
 	}
 
 	public HashMap<String, Object> getState()
@@ -1037,6 +1044,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		h.put("selected", new Boolean(selected));
 		h.put("ingeklapt", new Boolean(ingeklapt));
 		h.put("popupUsed", Boolean.valueOf(popupUsed));
+		h.put("nagekeken", Boolean.valueOf(nagekeken));
 		if(zwevend)
 		{	h.put("locationX", new Integer(locationX));
 			h.put("locationY", new Integer(locationY));
@@ -1093,6 +1101,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		if(map.containsKey("selected"))
 			selected = map.getBoolean("selected");
 		popupUsed = map.getBoolean("popupUsed", false);
+		nagekeken = map.getBoolean("nagekeken", false);
 		if(map.containsKey("ingeklapt"))
 			ingeklapt = map.getBoolean("ingeklapt");
 		if(map.containsKey("locationX"))
@@ -1117,6 +1126,10 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			goedKrulImage.setVisible(isKlapvakCorrect());
 		}
 		resize();
+		
+		if(zichtbaarNaNakijken)
+			setVisibility(nagekeken);
+		
 		
 	}
 /**
@@ -1190,6 +1203,10 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 
 	public void zetNagekeken(boolean b)
 	{
+		nagekeken = b;
+		if(zichtbaarNaNakijken)
+			setVisibility(b);
+		
 		for (Object object : interactionViewObjects) {
 			if(object instanceof InteractionView)
 				((InteractionView) object).zetNagekeken(b);
@@ -2231,6 +2248,26 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		comRoot.fireEvent(event);
 	}
 	
+	private static final String ACTION_SETVISIBLE = "action.setVisible";
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		String command = event.getCommand();
+		if(ACTION_SETVISIBLE.equals(command)) {
+			setVisibility(true);
+		}
+		
+	}
+
+	// visible (default) or hidden.
+	private void setVisibility(boolean b) {
+		visible = b;
+		Element elem = getAsPanel().getElement();
+		Style style = elem.getStyle();
+		if(b)
+			style.clearVisibility();
+		else
+			style.setVisibility(Visibility.HIDDEN); // take space!
+	}
 	private static final int LEFT = 0;
 	private static final int RIGHT = 1;
 	private static final int MIDDLE = 2;
