@@ -27,23 +27,9 @@ public class ProfileController {
      * Update the currentUser.
      *
      */
-    public void update() {
+    public void update(final AsyncCallback<Boolean> callback) {
         LOG.log(Level.INFO, "Calling REST-interface login.");
-        handler.login(currentUser.getUserName(), currentUser.getPassword(), new AsyncCallback<Map<String, Object>>() {
-
-                        @Override
-                        public void onFailure(Throwable t) {
-                            LOG.log(Level.SEVERE, "failed!",t);
-                        }
-
-                        @Override
-                        public void onSuccess(Map<String, Object> result) {
-                            LOG.log(Level.INFO, "success!");
-                            for(String key : result.keySet()){
-                                LOG.log(Level.INFO,result.get(key).toString());
-                            }
-                        }
-                    });
+        handler.login(currentUser.getUserName(), currentUser.getPassword(), callback);
     }
 
     /**
