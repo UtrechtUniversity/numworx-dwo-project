@@ -1,7 +1,7 @@
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import fi.dwo.gwt.lib.rest.client.RestRPCHandler;
+import fi.dwo.gwt.lib.rest.CallManagers.RestRPCHandler;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.Map;
 import java.util.logging.Level;
