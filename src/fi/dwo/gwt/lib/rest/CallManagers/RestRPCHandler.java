@@ -1,4 +1,4 @@
-package fi.dwo.gwt.lib.rest.client;
+package fi.dwo.gwt.lib.rest.CallManagers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +10,8 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import fi.dwo.gwt.lib.rest.client.DWO2RestCaller;
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
 import fi.dwo.rest.dom.entities.DomLoginCheck;
 import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
@@ -20,8 +22,8 @@ import fi.dwo.rest.persistence.PersistenceClassType;
 import fi.dwo.rest.persistence.PersistenceId;
 
 public class RestRPCHandler {
-	private Authenticator auth = new Authenticator();
-	private DWO2Server service;
+	private RestAuthenticator auth = new RestAuthenticator();
+	private DWO2RestCaller service;
 
 	public RestRPCHandler() {
 		this("http://127.0.0.1:8080/dwo2/rest/");
@@ -31,7 +33,7 @@ public class RestRPCHandler {
 		Defaults.setServiceRoot(url);
 		Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
 		DefaultFilterawareDispatcher.singleton().addFilter(auth);
-		service = GWT.create(DWO2Server.class);
+		service = GWT.create(DWO2RestCaller.class);
 
 	}
 
@@ -80,24 +82,24 @@ public class RestRPCHandler {
 		PersistenceId schoolId = active.getSchoolId();
 		PersistenceId sgId = active.getSchoolGroupId();
 
-		profile.put("userID", DatabaseHelper.instance.idOf(userId, PersistenceClassType.PersistentUser));
+		profile.put("userID", PersistenceIdDecoderInterface.instance.idOf(userId, PersistenceClassType.PersistentUser));
 		profile.put("iconizer", active.getIconizer());
 		profile.put("classID", classId == null ? "" :
-				DatabaseHelper.instance.idOf(classId, PersistenceClassType.PersistentSchoolClass));
+				PersistenceIdDecoderInterface.instance.idOf(classId, PersistenceClassType.PersistentSchoolClass));
 		profile.put("schoolID", schoolId == null ? "" :
-				DatabaseHelper.instance.idOf(schoolId, PersistenceClassType.PersistentSchool));
+				PersistenceIdDecoderInterface.instance.idOf(schoolId, PersistenceClassType.PersistentSchool));
 		profile.put("schoolName", active.getSchoolName());
 		profile.put("groupname",  active.getRoleName());
 		profile.put("class", active.getSchoolClassName());
-		profile.put("groupID", DatabaseHelper.instance.idOf(active.getRoleId(), PersistenceClassType.PersistentRole));
-		profile.put("schoolGroupID", DatabaseHelper.instance.idOf(sgId, PersistenceClassType.PersistentSchoolGroup));
+		profile.put("groupID", PersistenceIdDecoderInterface.instance.idOf(active.getRoleId(), PersistenceClassType.PersistentRole));
+		profile.put("schoolGroupID", PersistenceIdDecoderInterface.instance.idOf(sgId, PersistenceClassType.PersistentSchoolGroup));
 	}
 
 	public void toProfile(DomUserFull result, Map<String, Object> profile) {
 		profile.put("firstname", result.getGivenName());
 		profile.put("middlename", result.getInsertion());
 		profile.put("lastname", result.getFamilyName());
-		profile.put("userID", DatabaseHelper.instance.idOf(result.getId(), PersistenceClassType.PersistentUser));
+		profile.put("userID", PersistenceIdDecoderInterface.instance.idOf(result.getId(), PersistenceClassType.PersistentUser));
 		profile.put("username", result.getUserName());
 	}
 	

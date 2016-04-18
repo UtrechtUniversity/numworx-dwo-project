@@ -21,7 +21,7 @@ package fi.dwo.gwt.lib.rest.shared;
  * </p>
  */
 public class FieldVerifier {
-
+//TODO move this to the DomNewUser stuff to test for a valid usename!
 	/**
 	 * Verifies that the specified name is valid for our service.
 	 * 

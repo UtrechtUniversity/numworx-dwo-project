@@ -1,9 +1,9 @@
-package fi.dwo.gwt.lib.rest.client;
+package fi.dwo.gwt.lib.rest.util;
 
 import fi.dwo.rest.persistence.PersistenceClassType;
 import fi.dwo.rest.persistence.PersistenceId;
 
-class MYSQL implements DatabaseHelper {
+class MySQLPersistenceIdDecoder implements PersistenceIdDecoderInterface {
 	
 	@Override
 	public Object idOf(PersistenceId id, PersistenceClassType type) {

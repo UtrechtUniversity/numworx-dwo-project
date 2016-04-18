@@ -1,4 +1,4 @@
-package fi.dwo.gwt.lib.rest.client;
+package fi.dwo.gwt.lib.rest.CallManagers;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;

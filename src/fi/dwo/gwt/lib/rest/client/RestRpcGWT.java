@@ -1,5 +1,6 @@
 package fi.dwo.gwt.lib.rest.client;
 
+import fi.dwo.gwt.lib.rest.CallManagers.RestRPCHandler;
 import java.util.Map;
 
 import fi.dwo.gwt.lib.rest.shared.FieldVerifier;

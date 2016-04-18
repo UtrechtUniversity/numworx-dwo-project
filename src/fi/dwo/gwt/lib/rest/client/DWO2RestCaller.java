@@ -11,7 +11,7 @@ import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.entities.RestLoginCheck;
 
-public interface DWO2Server extends RestService {
+public interface DWO2RestCaller extends RestService {
 	@PUT
 	@Path("/public/user/loginCheck")
 	public void loginCheck(RestLoginCheck arg, MethodCallback<Boolean> callback);

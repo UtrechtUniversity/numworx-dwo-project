@@ -1,6 +1,6 @@
-package fi.dwo.gwt.lib.rest.client;
+package fi.dwo.gwt.lib.rest.CallManagers;
 
-class MD5 {
+public class MD5 {
 
 	/**
 	 * https://groups.google.com/forum/?fromgroups#!topic/Google-Web-Toolkit/
