@@ -65,6 +65,8 @@ public class Text_nl extends ListResourceBundle {
         {TextMapper.DLG_MESSAGE, "Bericht"},
         {TextMapper.DLG_ERROR, "Error"},
         {TextMapper.DLG_DONE_MSG, "Verzochte taak uitgevoerd."},
+        {TextMapper.DLG_CREATESTUDENTERROR, "De overgebleven studenten kunnen niet worden toegevoegd, vermoedelijk is de username niet uniek."},
+        {TextMapper.DLG_CREATETEACHERERROR, "De overgebleven docenten kunnen niet worden toegevoegd, vermoedelijk is de username niet uniek."},
         {TextMapper.EX_UNKNOWN_ERROR, "Er is een interne fout opgetreden"},
         {TextMapper.EXR_USER_EXISTS, "De opgegeven gebruikersnaam bestaat al"},
         {TextMapper.EXR_USER_EXISTS2, "De gebruikersnaam {0} bestaat al"},

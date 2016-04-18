@@ -69,6 +69,8 @@ public class Text_en extends ListResourceBundle {
         {TextMapper.DLG_MESSAGE, "Message"},
         {TextMapper.DLG_ERROR, "Error"},
         {TextMapper.DLG_DONE_MSG, "Requested task completed."},
+        {TextMapper.DLG_CREATESTUDENTERROR, "The remaining students can not be added, likely their usernames are not unqiue."},
+        {TextMapper.DLG_CREATETEACHERERROR,  "The remaining teachers can not be added, likely their usernames are not unqiue."},
         {TextMapper.EX_UNKNOWN_ERROR, "An internal error occured"},
         {TextMapper.EXR_USER_EXISTS, "The specified username already exists"},
         {TextMapper.EXR_USER_EXISTS2, "The username {0} already exists"},

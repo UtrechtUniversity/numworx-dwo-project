@@ -316,6 +316,7 @@ public class PersistentUser implements Serializable {
     public DomSingleSchoolStudent buildDomSingleSchoolStudent() {
         DomSingleSchoolStudent user = new DomSingleSchoolStudent();
         fillDomUser(user);
+        user.setPassword(password);
         return user;
     }
 
