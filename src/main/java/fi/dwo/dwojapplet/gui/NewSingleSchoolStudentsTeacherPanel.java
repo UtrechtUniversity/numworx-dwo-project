@@ -349,10 +349,10 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 tableModel.init(prop, columnNames, resultList, delImage);
                 tableModel.fireTableDataChanged();
                 if (failFlag == true) {
-                    GuiCreator.instance().ShowMessageDialog(this, "De overgebleven studenten kunnen niet worden toegevoegd, vermoedelijk is de username niet uniek.");
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATESTUDENTERROR));
                 }
                 if (fatalFlag == true) {
-                    GuiCreator.instance().ShowMessageDialog(this, "Er was een systeem error, zie de log.");
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR));
                 }
                 if (fatalFlag == false && failFlag == false) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));

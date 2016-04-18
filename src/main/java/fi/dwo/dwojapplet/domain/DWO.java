@@ -45,6 +45,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.Authenticator;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -130,6 +131,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     private String limitedSchoolAccessString;
 
     private String schoolAccessPropertiesString;
+    
+    private static boolean isApplication=false;
 
     FocusTraversalPolicy delegate;
 
@@ -1269,6 +1272,17 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     }
 
+private boolean isRunningJavaWebStart() {
+    boolean hasJNLP = false;
+    try {
+      Class.forName("javax.jnlp.ServiceManager");
+      hasJNLP = true;
+    } catch (ClassNotFoundException ex) {
+      hasJNLP = false;
+    }
+    return hasJNLP;
+}
+
     /**
      * First phase of the applet life-cycle, {@Link start} is called immediately
      * after it.
@@ -1278,6 +1292,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (!DwoHelper.setApplet(this)) {
             return;
         }
+        if(isApplication==false|| isRunningJavaWebStart()){
+            Authenticator.setDefault(null);
+        }
+        
         Clipboard.initialize();
         // It we started from the command line then the
         // DwoHelper.getServletConnectString()
@@ -1836,7 +1854,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
 
-        // Initialize an applet
+        isApplication = true;
         DWO dwo = new DWO(args);
         // Configure the applet
         DWO.ReadLoggingProperties();

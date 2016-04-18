@@ -108,7 +108,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
         p.add(l);
 
         /* Username Label */
-        l = new JLabel("");
+        l = new JLabel(user.getUserName());
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
