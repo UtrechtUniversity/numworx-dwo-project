@@ -42,8 +42,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		};
 		String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
-		final RestRPCHandler restHandler = new RestRPCHandler(http + "//" + host + "/dwo2/rest/");
-		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwo2/xmlrpc"){
+		final RestRPCHandler restHandler = new RestRPCHandler(http + "//" + host + "/dwo/rest/");
+		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwo/xmlrpc"){
 
 			@Override
 			public void login(String name, String password,

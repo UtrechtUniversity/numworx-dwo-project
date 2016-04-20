@@ -11,10 +11,10 @@ public class DWO2playerDefaults extends DWOplayerDefaults {
 		String http = Window.Location.getProtocol();
 		launchData = http +"//"
 				+ host
-				+ "/dwo2/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
+				+ "/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
 		courseDescription = http + "//"
 				+ host
-				+ "/dwo2/rest/public/course/getCourseDescription?courseId=";		
+				+ "/dwo/rest/public/course/getCourseDescription?courseId=";		
 	}
 
 	public String getHost() {
