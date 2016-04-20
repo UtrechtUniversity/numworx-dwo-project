@@ -15,9 +15,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
@@ -251,7 +253,7 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	HashMap<String,Object> state;
 	PopupListener listener;
 
-	class NothingOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler  {
+	class NothingOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler, MouseDownHandler, MouseUpHandler, MouseMoveHandler  {
 
 		@Override
 		public void onTouchCancel(TouchCancelEvent event) {
@@ -271,6 +273,21 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		@Override
 		public void onTouchStart(TouchStartEvent event) {
 			event.stopPropagation();		
+		}
+
+		@Override
+		public void onMouseMove(MouseMoveEvent event) {
+			event.stopPropagation();
+		}
+
+		@Override
+		public void onMouseUp(MouseUpEvent event) {
+			event.stopPropagation();
+		}
+
+		@Override
+		public void onMouseDown(MouseDownEvent event) {
+			event.stopPropagation();
 		}
 	
 	}
@@ -353,6 +370,9 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 		btn.addClickHandler(this);
 // do not propagate...		
 		NothingOnTouch tt = new NothingOnTouch();
+		btn.addMouseDownHandler(tt);
+		btn.addMouseMoveHandler(tt);
+		btn.addMouseUpHandler(tt);
 		btn.addTouchStartHandler(tt);
 		btn.addTouchCancelHandler(tt);
 		btn.addTouchEndHandler(tt);

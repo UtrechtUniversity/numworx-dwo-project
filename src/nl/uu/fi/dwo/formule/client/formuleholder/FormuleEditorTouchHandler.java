@@ -48,9 +48,12 @@ public class FormuleEditorTouchHandler implements TouchHandler
 			event.preventDefault();
 			event.stopPropagation();
 		} else {
-			// Mouse simulatie: capture mouse
-			capture = getElement(event);
-			Event.setCapture(capture);
+			EventTarget target = event.getNativeEvent().getEventTarget();
+			boolean when = Element.is(target) && (Element.as(target) == editor.getCanvas().getElement());
+			if(when) {
+				capture = getElement(event);
+				Event.setCapture(capture);
+			}
 		}
 		
 		try
