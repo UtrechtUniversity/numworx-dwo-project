@@ -33,7 +33,7 @@ public class RPCHandler {
 		this(Window.Location.getProtocol() +  "//" + DWOplayer.PARAMETERS.getHost() + "/DWOmAccess/dbaccess");
 	}
 	
-	private static int PROFILE_OFFSET = -1234;
+	protected static int PROFILE_OFFSET = -1234;
 	
 	public void login(String name, String password, AsyncCallback<? super Map<String,Object>> callback)
 	{
@@ -110,7 +110,7 @@ public class RPCHandler {
 	}
 
 	
-	private  AsyncCallback<List<Map<String,Object>>> filterProfile(final AsyncCallback<List<Map<String,Object>>> callback) {
+	protected  AsyncCallback<List<Map<String,Object>>> filterProfile(final AsyncCallback<List<Map<String,Object>>> callback) {
 		return new AsyncCallback<List<Map<String,Object>>>() {
 
 			@Override
