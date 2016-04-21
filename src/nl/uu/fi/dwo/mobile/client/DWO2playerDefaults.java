@@ -24,7 +24,7 @@ public class DWO2playerDefaults extends DWOplayerDefaults {
 	}
 
 	private String getDefaultHost() {
-		return "localhost:8080";
+		return "dummytwo.dwo.nl";
 	}
 
 }
