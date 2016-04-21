@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO2;
@@ -8,6 +10,8 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
 
+import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
+import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -51,6 +55,54 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				restHandler.login(name, password, callback);
 			}
 			
+			public <T> void getCourses(Map<String, Object> userData,
+					AsyncCallback<T> getCoursesCallback) {
+				
+				String method = "getCoursesJS"; // sort sequencenr
+				int profileID = PROFILE_ID;
+				int guestID = PROFILE_OFFSET - profileID;
+				
+				XmlRpcClient client = getClient();
+
+				Object[] params = { guestID };
+
+				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
+
+				request.execute();
+			}
+
+			public <T> void getCourses(Object id, AsyncCallback<T> getCoursesCallback) {
+				HashMap<String, Object> g = new HashMap<String,Object>();
+				g.put("parentID", id);
+				String method = "getTableJS";
+				Object[] params = {"tblCourse", g, "name" };
+				XmlRpcClient client = getClient();
+				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
+				request.execute();
+			}
+
+			public <T> void getCoursesSchool(Map<String, Object> userData, AsyncCallback<T> getCoursesCallback) {
+				String method = "getTableJS";
+				HashMap<String,Object> g = new HashMap<String,Object>();
+				g.put("parentID", 0);
+				Object schoolID = userData.get("schoolID");
+				g.put("schoolID", schoolID);
+				g.put("dwoProfileID", PROFILE_ID);
+				Object[] params = {"tblCourse", g, "name" };
+				XmlRpcClient client = getClient();
+				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
+				request.execute();
+			}
+
+			public <T> void getCoursesClass(Map<String,Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+				String method = "getCoursesForClassJS";
+				Object classid = userData.get("classID");
+				Object[] params = { classid };
+				XmlRpcClient client = getClient();
+				XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, filterProfile(getCoursesCallback));
+				request.execute();
+			}
+
 		});
 		return factory;
 	}
