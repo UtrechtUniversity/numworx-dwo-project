@@ -8,6 +8,6 @@ var mc2 = {
 		"ewcbook.EpsiAplusixWidget": "http://www.epsilonwriter.com/GWT/EpsiAplusix.php",
 		"ewcbook.EpsiDrawWidget": "http://www.epsilonwriter.com/GWT/EpsiDraw.php",
 		"flwidget.FLWidget": "http://hansen.dcs.bbk.ac.uk/fl_DME/public_html/host.php",
-		"ewcbook.EpsilonChatWidget", "http://www.epsilonwriter.com/GWT/EpsilonChat.php",
+		"ewcbook.EpsilonChatWidget": "http://www.epsilonwriter.com/GWT/EpsilonChat.php"
 
 }
