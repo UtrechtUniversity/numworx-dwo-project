@@ -21,9 +21,9 @@
         	<warSourceDirectory>war</warSourceDirectory>
         	<warSourceIncludes>KeyboardGWT.css,DWOplayer.css,${runTarget},GeoGebra.html,MCSquared.jsp,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
  			<classifier>${warClassifier}</classifier>
-	<failOnMissingWebXml>false</failOnMissingWebXml>
-	<packagingIncludes>**</packagingIncludes>
-	<packagingExcludes>WEB-INF/**</packagingExcludes>
+			<failOnMissingWebXml>false</failOnMissingWebXml>
+			<packagingIncludes>**</packagingIncludes>
+			<packagingExcludes>WEB-INF/classes/**,WEB-INF/lib/**,WEB-INF/deploy/**</packagingExcludes>
         </configuration>
       </plugin>
       <plugin>
@@ -119,6 +119,13 @@
   		<version>0.0.1</version>
   		<classifier>classes</classifier>
   	</dependency>
+  	  	<dependency>
+    	<groupId>org.mitre.dsmiley.httpproxy</groupId>
+    	<artifactId>smiley-http-proxy-servlet</artifactId>
+    	<version>1.7</version>
+    	<scope>runtime</scope>
+	</dependency>
+  	
   </dependencies>
   <parent>
   	<groupId>fi.parentgwt</groupId>
@@ -177,6 +184,15 @@
   			<gwtModule>${project.groupId}.DWO2player</gwtModule>
   			<runTarget>DWOplayer.html</runTarget>
   			<warClassifier>dwo2</warClassifier>
+  			<maven.war.webxml>war/WEB-INF/web-dwo2.xml</maven.war.webxml>
+  		</properties>
+  	</profile> 
+  	<profile> <!--  gebruik deze voor gwt:run -->
+  		<id>DWO2player-run</id>
+  		<properties>
+  			<finalName>DWO2player</finalName>
+  			<gwtModule>${project.groupId}.DWO2player</gwtModule>
+  			<runTarget>DWO2player.html</runTarget>
   		</properties>
   	</profile> 
   </profiles>
