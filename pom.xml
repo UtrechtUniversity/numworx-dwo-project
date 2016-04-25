@@ -38,7 +38,7 @@
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOJApplet/branches/working-gert</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOJApplet/trunk</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
