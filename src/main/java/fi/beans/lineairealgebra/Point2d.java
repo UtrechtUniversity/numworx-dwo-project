@@ -28,5 +28,20 @@ public class Point2d {
 	public double getY() {
 		return this.y;
 	}
+	
+	public Point2d clone() {
+		Point2d cloneP = new Point2d(this.x, this.y);
+		return cloneP;
+	}
+	
+	public double squareDistance(Point2d p) {
+		final double dx = this.x-p.getX();
+		final double dy = this.y-p.getY();
+		return ( (dx*dx) + (dy*dy) );
+	}
+	
+	public double distance(Point2d p) {
+		return ( Math.sqrt(squareDistance(p)) );
+	}
 
 }
