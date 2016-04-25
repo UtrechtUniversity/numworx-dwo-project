@@ -128,7 +128,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
 //            more
             LOG.log(Level.INFO, "Sending data to server.");
             control.setUpdateUser(user);
-            control.update();
+//            control.update();
             LOG.log(Level.INFO, "Sending ok to server.");
             popup.hide();
         }

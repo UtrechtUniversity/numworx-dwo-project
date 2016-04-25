@@ -1,9 +1,8 @@
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import fi.dwo.gwt.lib.rest.CallManagers.RestRPCHandler;
+import fi.dwo.gwt.lib.rest.CallManagers.DWO2RestManager;
 import fi.dwo.rest.dom.entities.DomUserFull;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +16,7 @@ public class ProfileController {
 
     private DomUserFull currentUser;
     private DomUserFull updateUser;
-    private RestRPCHandler handler = new RestRPCHandler();
+    private DWO2RestManager handler = new DWO2RestManager();
 
     public void init(DomUserFull user) {
         currentUser = user;
@@ -29,7 +28,7 @@ public class ProfileController {
      */
     public void update(final AsyncCallback<Boolean> callback) {
         LOG.log(Level.INFO, "Calling REST-interface login.");
-        handler.login(currentUser.getUserName(), currentUser.getPassword(), callback);
+//        handler.login(currentUser.getUserName(), currentUser.getPassword(), callback);
     }
 
     /**
