@@ -37,6 +37,7 @@ import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -49,6 +50,14 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	//public static Text_nl rb = new Text_nl();
 	
+	public static final String ACTION_CORRECT = "action.correct";
+	public static final String ACTION_FALSE = "action.false";
+	public static final String ACTION_FALSE2 = "action.false2";
+
+	private static final CBookEvent CORRECT_EVENT = new CBookEvent(ACTION_CORRECT); 
+	private static final CBookEvent FALSE_EVENT = new CBookEvent(ACTION_FALSE); 
+	private static final CBookEvent FALSE2_EVENT = new CBookEvent(ACTION_FALSE2); 
+
 	static final String holderId = "dockholder";
 	private HashMap<String, Object> launchState; 
 	String[] randomVarNamen = null;
@@ -833,10 +842,24 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	{
 		this.mode = mode;
 	}
+	
+	private void fireEvent(CBookEvent event) 
+	{
+		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		comRoot.fireEvent(event);
+	}
 
 	@Override
-	public void kijkNa() {
+	public void kijkNa() 
+	{
 		kijkNa(true, false);
+		
+		if (correct) 
+			fireEvent(CORRECT_EVENT);
+    	if (fout) 
+			fireEvent(FALSE_EVENT);
+    	if (fout && errorCount > 0) 
+			fireEvent(FALSE2_EVENT);
 	}
 	
 	private void kijkNa(boolean show, boolean setState)
