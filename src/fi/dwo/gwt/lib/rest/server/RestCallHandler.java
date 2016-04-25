@@ -1,5 +1,6 @@
 package fi.dwo.gwt.lib.rest.server;
 
+import fi.dwo.gwt.lib.rest.ServerConstants;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -7,11 +8,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
+/**
+ * Handles RestCalls to the DWOServer.
+ * 
+ * @author Wim van Velthoven
+ */
 @SuppressWarnings("serial")
-public class DWO2Access extends HttpServlet {
+public class RestCallHandler extends HttpServlet {
 
 	String dwo2server;
-	final static String DWO2SERVER = "http://spindle.fisme.uu.nl/DWO/DWOServer";
+	final static String DWO2SERVER = ServerConstants.DWO2SERVER;
 	
 	@Override
 	public void init() throws ServletException {

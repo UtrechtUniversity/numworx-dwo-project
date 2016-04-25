@@ -1,6 +1,6 @@
 package fi.dwo.gwt.lib.rest.client;
 
-import fi.dwo.gwt.lib.rest.CallManagers.RestRPCHandler;
+import fi.dwo.gwt.lib.rest.CallManagers.DWO2RestManager;
 import java.util.Map;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -32,11 +32,12 @@ public class RestRpcGWT implements EntryPoint {
             + "attempting to contact the server. Please check your network "
             + "connection and try again.";
 
-    private RestRPCHandler handler = new RestRPCHandler();
+    private DWO2RestManager handler = new DWO2RestManager();
 
     /**
      * This is the entry point method.
      */
+    @Override
     public void onModuleLoad() {
 // Bootstrap		
 

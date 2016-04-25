@@ -10,26 +10,29 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import fi.dwo.gwt.lib.rest.ServerConstants;
 import fi.dwo.gwt.lib.rest.client.DWO2RestCaller;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
 import fi.dwo.rest.dom.entities.DomLoginCheck;
+import fi.dwo.rest.dom.entities.DomRole;
 import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.persistence.PersistenceClassType;
 import fi.dwo.rest.persistence.PersistenceId;
+import java.util.List;
 
-public class RestRPCHandler {
+public class DWO2RestManager {
 	private RestAuthenticator auth = new RestAuthenticator();
 	private DWO2RestCaller service;
 
-	public RestRPCHandler() {
-		this("http://127.0.0.1:8080/dwo2/rest/");
+	public DWO2RestManager() {
+		this(ServerConstants.DWO2SERVER);
 	}
 
-	public RestRPCHandler(String url) {
+	public DWO2RestManager(String url) {
 		Defaults.setServiceRoot(url);
 		Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
 		DefaultFilterawareDispatcher.singleton().addFilter(auth);
@@ -153,6 +156,10 @@ public class RestRPCHandler {
 			}
 		});
 		
+	}
+
+    public void getRoles(AsyncCallback<List<DomRole>> callBack) {
+		service.getRoles(new Callback<List<DomRole>>(callBack) );
 	}
 
 }
