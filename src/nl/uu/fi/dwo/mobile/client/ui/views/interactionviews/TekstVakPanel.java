@@ -238,6 +238,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	private boolean visible = true;
 	private boolean zichtbaarNaNakijken;
 	private boolean nagekeken;
+	private boolean bgColorZichtbaar;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -334,7 +335,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			launchState = JSONUtilities.wrapMap(Collections.<String, Object> emptyMap());
 		}
 		//System.out.println("launchState: " + launchState);
-		boolean bgColorZichtbaar = false;
+		bgColorZichtbaar = false;
 		boolean randZichtbaar = false;
 		boolean tableBorders = false;
 		//boolean centerV = false;
@@ -854,7 +855,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 					{
 						OpdrNavIF comRoot2 = comRoot;
 						Connector connector = find(currentObject);
-						comRoot2 = new OpdrNavContext(comRoot,connector, bgColor);
+						comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
 						((InteractionView) orgObject).setCommunicationRoot(comRoot2);
 						if(! (currentObject instanceof StateLess))
 						{	interactionViewObjects.add(orgObject);
