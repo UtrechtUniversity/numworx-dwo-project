@@ -1,7 +1,7 @@
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import fi.dwo.gwt.lib.rest.CallManagers.DWO2RestManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +16,7 @@ public class ProfileController {
 
     private DomUserFull currentUser;
     private DomUserFull updateUser;
-    private DWO2RestManager handler = new DWO2RestManager();
+    private SecuredUserAccountManager handler = new SecuredUserAccountManager();
 
     public void init(DomUserFull user) {
         currentUser = user;
