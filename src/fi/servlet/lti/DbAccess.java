@@ -29,10 +29,12 @@ public class DbAccess {
 	}
 	
 	DbAccessIF dbaccess;
+	RestHandler rest = new RestHandler();
 	
     private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
     private static final String DWO_SAML_ORGANIZATION = "dwoSAMLOrganization";    
 	private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
+	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 	
 	public void setCookie(HttpServletRequest request, HttpServletResponse response) {
 // persoonsgegevens:
@@ -77,40 +79,59 @@ public class DbAccess {
 		response.addCookie(user);
 		response.addCookie(orgid);
 		response.addCookie(org);
-		final PersistenceFacade facade = PersistenceFacade.instance();
-		Group group = getGroup(request.getParameter("roles"));
-		User u = null;
-		try {
-			u = mapUser(dbaccess.login_saml(lti_id, orgidStr));
-		} catch (Exception e) {
-			String schoolLogin = getRealm(oauth_consumer_key);
-			String username = user_id + "@" + schoolLogin;
-			String groupPassword = getSecret(oauth_consumer_key, group.getGroupID());
-			try {
-				dbaccess.register(username, "", name_given, name_prefix, name_family, email, schoolLogin, group.getGroupID(), groupPassword);
-			} 
-			catch(DwoXmlRpcException exists) {
-				System.err.println(exists);
-			}
-			catch(Exception e1) { e1.printStackTrace(); }
-			try {
-				u = mapUser(dbaccess.login(username, ""));
-				dbaccess.link_saml(lti_id, orgidStr, u.getID());
-			} catch (Exception e1) {
-				e1.printStackTrace();
-				return;
-			}
-		} 
-		if(group.getGroupID() == SchoolGroup.STUDENT)
-		{
-			try {
-				SchoolClass c = getSchoolClass(facade, oauth_consumer_key, context_label);
-				if(c != null)
-					facade.changeAccount(u, null, null, name_given, name_prefix, name_family, email, c);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		
+		String roles = request.getParameter("roles");
+		String role = "STUDENT";
+		if(roles != null && roles.toLowerCase().contains("instructor"))
+			role = "TEACHER";
+		int schoolID = Integer.parseInt(oauth_consumer_key);
+		
+		
+		
+		
+		String authTokenStr = rest.registerSAML(
+				
+				
+				);
+		Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, authTokenStr);
+		authToken.setPath(path);
+		response.addCookie(authToken);
+		
+		
+//		final PersistenceFacade facade = PersistenceFacade.instance();
+//		Group group = getGroup(request.getParameter("roles"));
+//		User u = null;
+//		try {
+//			u = mapUser(dbaccess.login_saml(lti_id, orgidStr));
+//		} catch (Exception e) {
+//			String schoolLogin = getRealm(oauth_consumer_key);
+//			String username = user_id + "@" + schoolLogin;
+//			String groupPassword = getSecret(oauth_consumer_key, group.getGroupID());
+//			try {
+//				dbaccess.register(username, "", name_given, name_prefix, name_family, email, schoolLogin, group.getGroupID(), groupPassword);
+//			} 
+//			catch(DwoXmlRpcException exists) {
+//				System.err.println(exists);
+//			}
+//			catch(Exception e1) { e1.printStackTrace(); }
+//			try {
+//				u = mapUser(dbaccess.login(username, ""));
+//				dbaccess.link_saml(lti_id, orgidStr, u.getID());
+//			} catch (Exception e1) {
+//				e1.printStackTrace();
+//				return;
+//			}
+//		} 
+//		if(group.getGroupID() == SchoolGroup.STUDENT)
+//		{
+//			try {
+//				SchoolClass c = getSchoolClass(facade, oauth_consumer_key, context_label);
+//				if(c != null)
+//					facade.changeAccount(u, null, null, name_given, name_prefix, name_family, email, c);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 		
 	}
 
