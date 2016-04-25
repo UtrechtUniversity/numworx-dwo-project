@@ -339,34 +339,42 @@ public final class DwoHelper {
         return loadImage(image, im);
     }
 
-    public static URL getURL(String resource) {
-        URL url = null;
-        if (isApplication) {
-            if (applicationBase == null) {
-                try {
-                    applicationBase = new URL("http://www.fisme.science.uu.nl/dwo/");
-                    //TODO Gert: fix this to allow change of url by property file.
-                }
-                catch (MalformedURLException e) {
-                }
-            }
-            try {
-                url = new URL(applicationBase, resource);
-            }
-            catch (MalformedURLException e) {
-                LOG.log(Level.SEVERE, null, e);
-            }
-
-        } else {
-            try {
-                url = new URL(applet.getCodeBase(), resource);
-            }
-            catch (MalformedURLException e) {
-            }/**/
-
+    /** get URL relative to /dwo.
+     * codebase is /dwo/jars/ 
+     * documentbase = /dwo/(?)
+     * applicationbase = /dwo/
+     * @param resource
+     * @return URL
+     */
+	public static URL getURL(String resource) {
+		URL url = null;
+        if(isApplication) 
+        {	
+        	if(applicationBase == null)
+				try {
+					applicationBase = new URL("https://app.dwo.nl/dwo/");
+				} catch (MalformedURLException e) {
+				}
+			try {
+				url = new URL(applicationBase, resource);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        
         }
-        return url;
-    }
+        else {
+        	try {
+	          	//applicationBase = applet.getDocumentBase(); // insecure
+        		if(applicationBase == null)
+        			applicationBase = new URL(applet.getCodeBase(), "../"); // secure
+				url = new URL(applicationBase, resource);
+		     } 
+		    catch (MalformedURLException e) {
+		    }/**/
+	    }
+		return url;
+	}
 
     /**
      * @param image

@@ -30,23 +30,25 @@ public class JMathPane extends JTextPane {
     public JMathPane(StyledDocument doc) {
         super(doc);
     }
+	private String text = "";
+	
+	public String getText() {
+		return text;
+	}
+	public void setText(String text)
+	{
+		try {
+			this.text = text;
+			super.setText(text);
+		} catch (Exception e) {
+			System.err.println("Text=[" + text + "]");
+			e.printStackTrace();
+		}
+	}
 
     @Override
     protected EditorKit createDefaultEditorKit() {
         return new MathKit();
-    }
-
-    private String text = "";
-
-    @Override
-    public String getText() {
-        return text;
-    }
-
-    @Override
-    public void setText(String text) {
-        this.text = text;
-        super.setText(text);
     }
 
     /**

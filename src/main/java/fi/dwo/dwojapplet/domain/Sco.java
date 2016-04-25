@@ -312,37 +312,49 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
     static public String gotoSco(String iValue, Object current, Course course, final Component sc) throws NumberFormatException {
         Sco[] list = course.getScoList();
         int sconr = list.length;
+		String pagenr = null;
+		int index = iValue.lastIndexOf('.');
+		if(index >= 0) {
+			try {
+				pagenr = iValue.substring(index+1);
+				pagenr = String.valueOf(-1 + Integer.parseInt(pagenr)); // make 0 based strings
+			} catch (Exception _) {  }
+			iValue = iValue.substring(0, index);
+		}
+		final String PAGE_NR = pagenr;
+		
 // XXX Sietske wil eerst op nummer daarna pas op titel
-        try {
-            sconr = Integer.parseInt(iValue) - 1;
-        } catch (Exception e) {
-        }
-        if (sconr <= -1 || sconr >= list.length) {
-            for (sconr = 0; sconr < list.length; sconr++) {
-                if (list[sconr].getScoName().startsWith(iValue)) {
-                    break; // found by prefix ? equals? 
-                }
-            }
-        }
-        if (sconr == list.length) // not found, try numeric
-        {
-            sconr = Integer.parseInt(iValue) - 1; // 1..length
-        }
-        final Object sco = sconr < 0 ? (Object) course : (Object) (course.getScoList()[sconr]); // array out of bounce?
-        if (sco == current) {
-            return "false"; // no jump, no stop/start.
-        }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (sc.isShowing()) {
-                    // setlessonmode nodig? TODO uitzoeken
-                    GuiCreator.instance().getMainPanel().getCenter().select(sco);
-                }
-            }
-        });
-        return "true";
-    }
+		try { 
+			sconr = Integer.parseInt(iValue)-1;
+		} catch(Exception _) {}
+		if(sconr <= -1 || sconr >= list.length)
+		for(sconr = 0; sconr < list.length; sconr++ ) {
+			if(list[sconr].getScoName().startsWith(iValue)) {
+				break; // found by prefix ? equals? 
+			}
+		}
+		if(sconr == list.length) // not found, try numeric
+			sconr = Integer.parseInt(iValue)-1; // 1..length
+		final Object sco = sconr < 0 ? (Object)course : (Object)(course.getScoList()[sconr]); // array out of bounce?
+		if(sco == current)
+			return "false"; // no jump, no stop/start.
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				if(sc.isShowing()) {
+					// setlessonmode nodig? TODO uitzoeken
+					if(PAGE_NR != null && sco instanceof Sco) {
+						
+						Sco sco2 = (Sco) sco;
+						sco2.dwo = GuiCreator.instance().getDWO();
+						sco2.user = GuiCreator.instance().getUser();
+						sco2.SetValue(LESSON_LOCATION, PAGE_NR);
+					}
+					GuiCreator.instance().getMainPanel().getCenter().select(sco);
+				}
+			}
+		});
+		return "true";
+	}
 
     public boolean isMergable(Sco other) {
         if (other.getAppletID() != getAppletID()) {

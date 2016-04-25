@@ -11,9 +11,11 @@ import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.BackupMapAction;
 import fi.dwo.dwojapplet.gui.action.BackupModuleAction;
 import fi.dwo.dwojapplet.gui.action.CutCopyAction;
 import fi.dwo.dwojapplet.gui.action.DeleteAction;
+import fi.dwo.dwojapplet.gui.action.ImportMapAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
 import fi.dwo.dwojapplet.gui.action.ImportScorm;
 import fi.dwo.dwojapplet.gui.action.NewAction;
@@ -23,6 +25,7 @@ import fi.dwo.dwojapplet.gui.action.Save2004Action;
 import fi.dwo.dwojapplet.gui.action.SaveAppletAction;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -37,6 +40,7 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -407,66 +411,46 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         tree.updateUI();;
     }
 
-    protected void createMenubar(Box hbox) {
-        bar = new JMenuBar();
-        bar.setOpaque(false);
-        bar.setVisible(GuiCreator.instance().getUser().hasRight(User.MODIFY_MODULES_RIGHT));
-        JMenu menu;
-        JMenuItem item;
-        menu = new JMenu(TextMapper.getText("file"));
-        item = new JMenuItem("Nieuwe map");
-        menu.add(item);
-        item.setAction(new NewAction(true, true));
-        item = new JMenuItem("Nieuwe module/activiteit");
-        menu.add(item);
-        item.setAction(new NewAction(false, false));
-        if (DwoHelper.isSecure()) {
-            menu.addSeparator();
-            item = new JMenuItem("Import module");
-            menu.add(item);
-            item.setAction(new ImportModuleAction());
-            item = new JMenuItem("Backup module");
-            menu.add(item);
-            item.setAction(new BackupModuleAction());
-            if (DwoHelper.isScormExportLoggedIn() || DwoHelper.isAppletExportLoggedIn()) {
-                menu.addSeparator();
-            }
-            if (DwoHelper.isScormExportLoggedIn()) {
-                item = new JMenuItem("Import activiteit");
-                menu.add(item);
-                item.setAction(new ImportScorm());
-                item = new JMenuItem("Backup activiteit");
-                menu.add(item);
-                item.setAction(new Save2004Action());
-            }
-            if (DwoHelper.isAppletExportLoggedIn()) {
-                item = new JMenuItem("Export Applet");
-                menu.add(item);
-                item.setAction(new SaveAppletAction());
-            }
-        }
-        bar.add(menu);
-        menu = new JMenu(TextMapper.getText("edit"));
-        item = new JMenuItem();
-        menu.add(item);
-        item.setAction(new CutCopyAction(true));
-        item.setText(TextMapper.getText("cut"));
-        item.setActionCommand("cut");
-        item = new JMenuItem();
-        menu.add(item);
-        item.setAction(new CutCopyAction(false));
-        item.setText(TextMapper.getText("copy"));
-        item.setActionCommand("copy");
-        item = new JMenuItem("paste");
-        menu.add(item);
-        item.setAction(new PasteAction());
-        menu.addSeparator();
-        item = new JMenuItem(new RenameAction());
-        menu.add(item);
-        menu.addSeparator();
-        item = new JMenuItem("delete");
-        menu.add(item);
-        item.setAction(new DeleteAction());
+	protected void createMenubar(Box hbox) {
+		bar = new JMenuBar();
+		bar.setOpaque(false);
+		bar.setVisible(GuiCreator.instance().getUser().hasRight(User.MODIFY_MODULES_RIGHT));
+		JMenu menu; JMenuItem item;
+		menu = new JMenu(TextMapper.getText("file"));
+		item = new JMenuItem("Nieuwe map");menu.add(item);item.setAction(new NewAction(true, true));
+		item = new JMenuItem("Nieuwe module/activiteit");menu.add(item);item.setAction(new NewAction(false, false));
+		if(DwoHelper.isSecure())
+		{  	
+			menu.addSeparator();
+			item = new JMenuItem("Import module");menu.add(item);item.setAction(new ImportModuleAction());
+			item = new JMenuItem("Backup module");menu.add(item);item.setAction(new BackupModuleAction());
+
+			item = new JMenuItem("Import map");menu.add(item);item.setAction(new ImportMapAction());
+			item = new JMenuItem("Backup map");menu.add(item);item.setAction(new BackupMapAction());
+			if( DwoHelper.isScormExportLoggedIn() || DwoHelper.isAppletExportLoggedIn())
+				menu.addSeparator();
+			if( DwoHelper.isScormExportLoggedIn() )
+			{
+				item = new JMenuItem("Import activiteit"); menu.add(item);item.setAction(new ImportScorm());
+				item = new JMenuItem("Backup activiteit"); menu.add(item);item.setAction(new Save2004Action());
+			}
+			 if (DwoHelper.isAppletExportLoggedIn())
+			{
+				item = new JMenuItem("Export Applet");menu.add(item);item.setAction(new SaveAppletAction()); 
+			}
+		}	
+		//menu.add(new RefreshAction());
+		bar.add(menu);
+		menu = new JMenu(TextMapper.getText("edit"));
+		item = new JMenuItem();menu.add(item);item.setAction(new CutCopyAction(true));item.setText(TextMapper.getText("cut"));
+		item.setActionCommand("cut");
+		item = new JMenuItem();menu.add(item);item.setAction(new CutCopyAction(false));item.setText(TextMapper.getText("copy"));
+		item.setActionCommand("copy");
+		item = new JMenuItem("paste");menu.add(item);item.setAction(new PasteAction());
+		menu.addSeparator();
+		item = new JMenuItem(new RenameAction());menu.add(item);
+		menu.addSeparator();
+		item = new JMenuItem("delete");menu.add(item);item.setAction(new DeleteAction());
 // op dit moment is er nog geen user bekend.
 //		if (dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
 //		{
@@ -650,82 +634,80 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
     }
 
     private void sort_fout(Course[] courses) {
-        // topology sort.
-
-        boolean again;
-        do {
-            again = false;
-            more:
-            for (int i = 0; i < courses.length;) {
-                Course c = courses[i];
-                if (c.getParentID() != 0) {
-                    for (int j = i + 1; j < courses.length; j++) {
-                        if (c.getParentID() == courses[j].getID()) {
-                            System.arraycopy(courses, i + 1, courses, i, j - i);
-                            courses[j] = c;
-                            again = true;
-                            continue more;
-                        }
-                    }
-                }
-                i++;
-            }
-        } while (again);
-    }
-
-    // topologie sort maar behoud ordening.
-    private void sort(Course[] courses) {
-        boolean again;
-        if (courses == null || courses.length <= 1) {
-            return;
-        }
-        //System.err.println(Arrays.asList(courses));
-        do {
-            again = false;
-            more:
-            for (int i = 1; i < courses.length; i++) {
-                Course c = courses[i];
-                if (c.getParentID() == 0) { // toplevel
-                    int j;
-                    for (j = i - 1; j >= 0; j--) {
-                        if (courses[j].getParentID() == 0) {
-                            if (j == i - 1) {
-                                break;
-                            }
-                            // move i to j+1
-                            System.arraycopy(courses, j + 1, courses, j + 2, i - j - 1);
-                            courses[j + 1] = c;
-                            continue more;
-                        }
-                    }
-                    if (j == -1) { // move i to 0, no 0's found
-                        System.arraycopy(courses, 0, courses, 1, i);
-                        courses[0] = c;
-                        continue more;
-                    }
-                } else {
-                    int pid = c.getParentID();
-                    int j;
-                    for (j = i - 1; j >= 0; j--) {
-                        if (courses[j].getParentID() == pid || courses[j].getID() == pid) {
-                            if (j == i - 1) {
-                                break;
-                            }
-                            // move i to j+1
-                            System.arraycopy(courses, j + 1, courses, j + 2, i - j - 1);
-                            courses[j + 1] = c;
-                            continue more;
-
-                        }
-                    }
-                    if (j == -1) {
-                        again = true; // still unsorted? Redo only if parent in i+1..length
-                    }
-                }
-            }
-        } while (again);
-        //System.err.println(Arrays.asList(courses));
-    }
+		// topology sort.
+ 
+		boolean again;
+		do { again = false;
+			more:
+			for (int i = 0; i < courses.length; ) {
+				Course c = courses[i];
+				if (c.getParentID() != 0)
+				for (int j = i+1; j < courses.length; j++ ) {
+					if(c.getParentID() == courses[j].getID() ) {
+						System.arraycopy(courses, i+1, courses, i, j-i);
+						courses[j] = c;
+						again = true;
+						continue more;
+					}
+				}
+				i++;
+			}
+		} while(again);
+	}
+	
+	// topologie sort maar behoud ordening.
+	private void sort(Course[] courses) {
+		boolean again, progress; 
+		if(courses == null || courses.length <= 1)
+			return;
+		//System.err.println(Arrays.asList(courses));
+		
+		do { again = false;
+		     progress = false;
+			more:
+			for (int i = 1; i < courses.length; i++ ) {
+				Course c = courses[i];
+				if(c.getParentID() == 0) { // toplevel
+					int j;
+					for(j = i-1; j >= 0; j--) {
+						if(courses[j].getParentID() == 0) {
+							if(j == i-1)
+								break;
+							// move i to j+1
+							System.arraycopy(courses, j+1, courses, j+2, i-j-1);
+							courses[j+1] = c;
+							progress=true;
+							continue more;
+						}
+					}
+					if(j == -1) { // move i to 0, no 0's found
+						System.arraycopy(courses, 0, courses, 1, i);
+						courses[0] = c;
+						progress=true;
+						continue more;
+					}
+				} else {
+					int pid = c.getParentID(); int j;
+					for(j = i-1; j>= 0; j--) {
+						if(courses[j].getParentID() == pid || courses[j].getID() == pid) {
+							if(j == i-1) break;
+							// move i to j+1
+							System.arraycopy(courses, j+1, courses, j+2, i-j-1);
+							courses[j+1] = c;
+							progress=true;
+							continue more;
+						
+						}
+					}
+					if( j == -1) {
+						again = true; // still unsorted? Redo only if parent in i+1..length
+					}
+				}
+			}
+		} while(again && progress);
+		//System.err.println(Arrays.asList(courses));
+	}
+	
 
     protected void insertScos(Course course, DefaultMutableTreeNode node) {
         course.loadScos();

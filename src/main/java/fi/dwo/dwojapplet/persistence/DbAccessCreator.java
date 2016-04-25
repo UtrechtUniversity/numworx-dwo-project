@@ -21,7 +21,7 @@ class DbAccessCreator {
      * @see fi.dwo.client.domain.DWO#main(String[])
      */
 
-    public static String SERVLET = "/servlet/dwodsaccess";
+    public static String SERVLET = "/dwo/dsaccess";
     //public static String SERVLET = "/servlet/dwodsaccess";
     //public static String SERVLET = "/dwo/dbaccess";
 

@@ -40,7 +40,11 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
         data = new Object[rows][5];
         int j = 0;
         for (DomSchoolRoleAndClass src : srcList) {
-            data[j][0] = src.getSchoolName();
+            if (!src.getSchoolId().equals(prop.getNullSchool().getId())) {
+                data[j][0] = src.getSchoolName();
+            } else {
+                data[j][0] = TextMapper.getText(TextMapper.GUIR_OPT_NULLSCHOOL);
+            }
             data[j][1] = TextMapper.getText(src.getRoleName());
             if (prop.getActiveSchoolRoleAndClass() != null
                     && prop.getActiveSchoolRoleAndClass().getSchoolId().equals(src.getSchoolId())

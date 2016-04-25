@@ -96,44 +96,48 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         FontMetrics fm;
 
         startY = 30;
-        String s = course.getDescription();
-        courseDescription = new JTextArea();
-        boolean htmlMode = false;
-
-        if ((s != null) && (!s.trim().equals(""))) {
-            if (s.startsWith("<html>")) {
-                htmlMode = true;
-                courseDescriptionHTML = new JMathPane(DwoHelper.getURL(".")); // was JLABEL
-                courseDescriptionHTML.setText(s);
-                courseDescriptionHTML.setEditable(false);
-                add(courseDescriptionHTML);
-                courseDescriptionHTML.setFont(new Font("SansSerif", Font.PLAIN, 13));
-                courseDescriptionHTML.setOpaque(false);
-                courseDescriptionHTML.setBounds(20, startY, 550, 110);
-                courseDescriptionHTML.setSize(courseDescriptionHTML.getPreferredSize());
-                startY += courseDescriptionHTML.getHeight() + 10;
-            } else if (s.startsWith("H4sIAAAAAA")) {
-                htmlMode = true;
-                wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
-                wiskOpdrPanel.setLocation(20, startY);
-                wiskOpdrPanel.setJSObjectOwner(this);
-                add(wiskOpdrPanel);
-                startY += wiskOpdrPanel.getHeight() + 10;
-            } else {
-                add(courseDescription);
-                htmlMode = course.isNotVisible();
-                courseDescription.setFont(new Font("SansSerif", Font.PLAIN, 13));
-                courseDescription.setOpaque(false);
-                courseDescription.setLineWrap(true);
-                courseDescription.setEditable(false);
-                courseDescription.setWrapStyleWord(true);
-                courseDescription.setBounds(20, startY, 550, 110);
-                courseDescription.setText(s);
-                courseDescription.setSize(courseDescription.getPreferredSize());
-                startY += courseDescription.getHeight() + 10;
-            }
-        }
-
+		String s = course.getDescription();
+		courseDescription = new JTextArea();
+		boolean htmlMode = false;
+		
+		if((s != null) && (!s.trim().equals(""))) 
+		{
+			if(s.startsWith("<html>"))
+			{	htmlMode=true;
+				courseDescriptionHTML = new JMathPane(DwoHelper.getURL(".")); // was JLABEL
+				courseDescriptionHTML.setText(s);
+				courseDescriptionHTML.setEditable(false);
+				add(courseDescriptionHTML);
+				courseDescriptionHTML.setFont(new Font("SansSerif", Font.PLAIN, 13));
+				courseDescriptionHTML.setOpaque(false);
+				courseDescriptionHTML.setBounds(20,startY,550,110);
+				courseDescriptionHTML.setSize(courseDescriptionHTML.getPreferredSize());
+				startY += courseDescriptionHTML.getHeight() + 10;
+			}
+			else if(s.startsWith("H4sIAAAAAA"))
+			{	htmlMode=true;
+				wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s, DwoHelper.getAu().getLocale()) ; //TODO java locale
+				wiskOpdrPanel.setLocation(20,startY);
+				wiskOpdrPanel.setJSObjectOwner(this);
+	        	add(wiskOpdrPanel);
+	        	startY += wiskOpdrPanel.getHeight() + 10;
+			}
+			else
+			{	add(courseDescription);
+				htmlMode = course.isNotVisible();
+				courseDescription.setFont(new Font("SansSerif", Font.PLAIN, 13));
+				courseDescription.setOpaque(false);
+				courseDescription.setLineWrap(true);
+				courseDescription.setEditable(false);
+				courseDescription.setWrapStyleWord(true);
+				courseDescription.setBounds(20,startY,550,110);
+				courseDescription.setText(s);
+				courseDescription.setSize(courseDescription.getPreferredSize());
+				startY += courseDescription.getHeight() + 10;
+			}
+		}
+		
+		
         scoListHeader = new JLabel(TextMapper.getText(TextMapper.GUICO_SCO_LIST_TITLE));
         scoListHeader.setFont(GuiConstants.SCO_HEADER_TEXT);
         fm = scoListHeader.getFontMetrics(scoListHeader.getFont());

@@ -6,14 +6,20 @@ import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
 
 /**
  * Handles login actions and updates user and role stored in the DwoHelper. Should
@@ -36,7 +42,16 @@ public class LoginManager {
             case DIGEST:
                 feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(username, password).build();
         }
-        Client client = ClientBuilder.newClient().register(feature);
+//        Client client = ClientBuilder.newClient().register(feature);
+        ConnectorProvider provider;
+        //provider = new ApacheConnectorProvider();
+        provider = new org.glassfish.jersey.jetty.connector.JettyConnectorProvider();
+        ClientConfig clientConfig = new ClientConfig().register(feature).connectorProvider(provider);
+        Client client = ClientBuilder.newClient(clientConfig);
+
+        client.property(ClientProperties.CONNECT_TIMEOUT, 5000); //connect within 5 seconds
+        client.property(ClientProperties.READ_TIMEOUT, 10000); // read stuff within 10 seconds.
+
         CacheControl cache = new CacheControl();
         cache.setNoCache(true);
         cache.setNoStore(true);

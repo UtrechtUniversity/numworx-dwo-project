@@ -4,6 +4,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.MD5;
 import fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
@@ -196,7 +197,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         init(sc, type);
 
     }
-    
+
     /**
      * Creates a new ClassPanel which shows a list of classes.
      *
@@ -297,8 +298,8 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) 
-                + " - " + TextMapper.getText(TextMapper.TBL_CLASSNAME) 
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)
+                + " - " + TextMapper.getText(TextMapper.TBL_CLASSNAME)
                 + ": " + schoolClass.getSchoolClassName()
                 + " - " + TextMapper.getText(TextMapper.HDR_NEW_STUDENTS));
     }
@@ -319,10 +320,15 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 List<DomSingleSchoolStudent> resultList = new ArrayList<DomSingleSchoolStudent>();
                 boolean failFlag = false;
                 boolean fatalFlag = false;
+                String tmpPassword = null;
+                int cnt=0;
                 for (DomSingleSchoolStudent submit : submitList) {
                     if (NewSingleSchoolStudentsTeacherPanelProperties.IsValidUserDataInput(submit)) {
+                        cnt++;
                         try {
+                            tmpPassword = submit.getPassword();
                             DomNewSingleSchoolStudent student = new DomNewSingleSchoolStudent();
+                            submit.setPassword(MD5.getHashString(submit.getPassword()));
                             student.setDomSingleSchoolStudent(submit);
                             student.setDomSchoolClass((DomSchoolClass) schoolClass);
                             switch (userType) {
@@ -346,13 +352,16 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                         }
                     }
                 }
+                if(cnt==0){
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
+                }
                 tableModel.init(prop, columnNames, resultList, delImage);
                 tableModel.fireTableDataChanged();
                 if (failFlag == true) {
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATESTUDENTERROR));
                 }
                 if (fatalFlag == true) {
-                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR));
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATETEACHERERROR));
                 }
                 if (fatalFlag == false && failFlag == false) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
@@ -366,9 +375,13 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
             pasteFromSystemClipboard();
         } else if (e.getSource() == backButton) {
             try {
-                ClassTeacherPanel panel = new ClassTeacherPanel();
-                center.loadCenter(panel);
-
+                if (userType.equals(UserType.TEACHER)) {
+                    StudentsInSchoolClassTeacherPanel panel = new StudentsInSchoolClassTeacherPanel(schoolClass);
+                    center.loadCenter(panel);
+                } else {
+                    StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
+                    center.loadCenter(panel);
+                }
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);

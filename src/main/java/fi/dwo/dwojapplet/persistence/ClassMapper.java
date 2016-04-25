@@ -101,7 +101,7 @@ class ClassMapper extends XmlRpcMapper {
             catch (DwoXmlRpcException ex) {
                 Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return vList.toArray();
+            return getObjectFromReturn(vList);
         } else if (obj instanceof School) {
             Hashtable ht = new Hashtable();
             School s = (School) obj;

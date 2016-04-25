@@ -23,6 +23,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -273,7 +274,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)+" - "+TextMapper.getText(TextMapper.HDR_EDITTEACHERS) + " - "+TextMapper.getText(TextMapper.HDR_SCHOOLCLASS)+": " +schoolClass.getSchoolClassName());
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITTEACHERS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
     }
 
     /**
@@ -287,6 +288,9 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
             DomTeacher teacher = (DomTeacher) addTeacherBox.getSelectedItem();
             try {
                 prop.submitTeacherToSchoolClass(schoolClass, teacher);
+                Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
+                DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+                addTeacherBox.setModel(model);
                 tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage);
                 tableModel.fireTableDataChanged();
 

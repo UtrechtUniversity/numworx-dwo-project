@@ -321,4 +321,11 @@ public class GuiCreatorAdmin extends GuiCreator {
         return panel;
     }
 
+	@Override
+	public CenterSubPanel getDwoProfilePanel() {
+		DwoProfilePanel panel = new DwoProfilePanel();
+		return panel;
+	}
+
+	
 }

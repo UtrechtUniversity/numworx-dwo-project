@@ -11,7 +11,6 @@ import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.gui.UsersSchoolClassesSchoolAdminPanel.UserType;
 import java.awt.Color;
 import java.awt.Component;
 import static java.awt.Component.LEFT_ALIGNMENT;
@@ -60,6 +59,12 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
     private UsersInSchoolSchoolAdminPanelProperties prop = new UsersInSchoolSchoolAdminPanelProperties();
     private UsersInSchoolSchoolAdminPanelTableModel tableModel;
     private CenterPanel center;
+
+    public enum UserType {
+
+        STUDENT, TEACHER, SCHOOLADMIN
+    };
+    UserType userType = UserType.STUDENT;
 
 //    private JButton deleteButton;
     private JButton addTeachersButton;
@@ -168,11 +173,11 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 try {
                     if (studentRadio.isSelected()) {
                         DomStudent user = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
-                        UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UserType.STUDENT);
+                        UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UsersSchoolClassesSchoolAdminPanel.UserType.STUDENT);
                         center.loadCenter(panel);
                     } else if (teacherRadio.isSelected()) {
                         DomTeacher user = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
-                        UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UserType.TEACHER);
+                        UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UsersSchoolClassesSchoolAdminPanel.UserType.TEACHER);
                         center.loadCenter(panel);
                     }
                 }
@@ -230,8 +235,24 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         jtbl.add(Box.createHorizontalGlue());
         jtbl.setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new UsersInSchoolSchoolAdminPanelTableModel();
+        List userList = null;
+        Image image=emptyImage;
+        switch (userType) {
+            case STUDENT:
+                userList = prop.getStudentsInSchool();
+                image = studentImage;
+                break;
+            case TEACHER:
+                userList = prop.getTeachersInSchool();
+                image = teacherImage;
+                break;
+            case SCHOOLADMIN:
+                userList = prop.getSchoolAdminsInSchool();
+                image = emptyImage;
+                break;
+        }
 
-        tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
+        tableModel.init(userList, removeImage, image, editImage, emptyImage);
         jtable.setModel(tableModel);
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
@@ -267,29 +288,50 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
 
     }
 
+    public UsersInSchoolSchoolAdminPanel() throws Dwo2Exception {
+        super(null);
+        init(UserType.STUDENT);
+    }
+
     /**
      * Creates a new ClassPanel which shows a list of classes.
      *
      */
-    public UsersInSchoolSchoolAdminPanel() throws Dwo2Exception {
+    public UsersInSchoolSchoolAdminPanel(UserType type) throws Dwo2Exception {
         super(null);
-        this.setSize(480, 500);
+        init(type);
+    }
 
+    private void init(UsersInSchoolSchoolAdminPanel.UserType type) throws Dwo2Exception {
+        this.setSize(480, 500);
+        userType = type;
         //Create the radio buttons.
         studentRadio = new JRadioButton(TextMapper.getText(TextMapper.LBL_STUDENTS));
         studentRadio.setMnemonic(KeyEvent.VK_S);
         studentRadio.setActionCommand("students");
-        studentRadio.setSelected(true);
+        if (type == UserType.STUDENT) {
+            studentRadio.setSelected(true);
+        } else {
+            studentRadio.setSelected(false);
+        }
         studentRadio.addActionListener(this);
         teacherRadio = new JRadioButton(TextMapper.getText(TextMapper.LBL_TEACHERS));
         teacherRadio.setActionCommand("teachers");
         studentRadio.setMnemonic(KeyEvent.VK_T);
-        teacherRadio.setSelected(false);
+        if (type == UserType.TEACHER) {
+            teacherRadio.setSelected(true);
+        } else {
+            teacherRadio.setSelected(false);
+        }
         teacherRadio.addActionListener(this);
         schoolAdminRadio = new JRadioButton(TextMapper.getText(TextMapper.LBL_SCHOOLADMINS));
         schoolAdminRadio.setActionCommand("schooladmins");
         studentRadio.setMnemonic(KeyEvent.VK_A);
-        schoolAdminRadio.setSelected(false);
+        if (type == UserType.SCHOOLADMIN) {
+            schoolAdminRadio.setSelected(true);
+        } else {
+            schoolAdminRadio.setSelected(false);
+        }
         schoolAdminRadio.addActionListener(this);
 
         //Group the radio buttons.

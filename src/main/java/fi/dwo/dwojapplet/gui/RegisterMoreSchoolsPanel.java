@@ -219,22 +219,23 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == registerButton) {
-            if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
-                try {
-                    DomNewSchoolLogin nur = new DomNewSchoolLogin();
-
-                    nur.setSchoolLogin(null);
-                    nur.setSchoolCode(null);
-                    nur.setRole(RoleType.STUDENT);
-                    SecureUserAccountLoginsManager.addASchoolLogin(nur);
-                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                    GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
-                }
-                catch (Dwo2Exception ex) {
-                    LOG.log(Level.WARNING, "Error adding schoollogin.",ex);
-                    GuiCreator.instance().ShowErrorDialog(this,ex);
-                }
-            } else {
+//            if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
+//                //add nullschool login
+//                try {
+//                    DomNewSchoolLogin nur = new DomNewSchoolLogin();
+//
+//                    nur.setSchoolLogin(null);
+//                    nur.setSchoolCode(null);
+//                    nur.setRole(RoleType.STUDENT);
+//                    SecureUserAccountLoginsManager.addASchoolLogin(nur);
+//                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                    GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
+//                }
+//                catch (Dwo2Exception ex) {
+//                    LOG.log(Level.WARNING, "Error adding schoollogin.",ex);
+//                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_NEW_SCHOOLLOGIN));
+//                }
+//            } else {
                 RoleType role = null;
                 role = DwoHelper.getRoles()[groupChoice.getSelectedIndex()+1];
                 try {
@@ -248,10 +249,11 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                     this.getParent().getParent().getParent().getParent().setVisible(false);
                 }
                 catch (Dwo2Exception ex) {
-                    GuiCreator.instance().ShowErrorDialog(this, ex);
+                    LOG.log(Level.WARNING, "Error adding schoollogin.",ex);
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_NEW_SCHOOLLOGIN));
                 }
 
-            }
+//            }
         } else if (e.getSource() == backButton) {
             //TODO fixe shameful hack.
             this.getParent().getParent().getParent().getParent().setVisible(false);

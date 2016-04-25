@@ -364,7 +364,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
     @Override
     public boolean gotoScoNr(String rest) {
-        System.out.println("GOTO #" + rest);
+        System.out.println("GOTO #" + rest); // TODO?
         return false;
     }
 

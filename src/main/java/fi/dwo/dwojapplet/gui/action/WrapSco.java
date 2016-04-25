@@ -9,6 +9,8 @@ import fi.dwo.dwojapplet.domain.Sco;
 import static fi.dwo.dwojapplet.domain.ScoBase.LAUNCH_DATA;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.system.Loader;
+
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.beans.PropertyChangeListener;
@@ -277,7 +279,13 @@ class WrapSco extends Sco {
     public void setScoID(int scoID) {
         delegate.setScoID(scoID);
     }
-
+	/**
+	 * @return
+	 * @see fi.dwo.client.domain.ScoBase#getLessonMode()
+	 */
+	public String getLessonMode() {
+		return delegate.getLessonMode();
+	}
     /**
      * @param u
      * @see fi.dwo.client.domain.ScoBase#setUser(fi.dwo.client.domain.User)
@@ -286,46 +294,44 @@ class WrapSco extends Sco {
     public void setUser(User u) {
         super.setUser(u);
     }
+	/**
+	 * @param lessonMode
+	 * @see fi.dwo.client.domain.ScoBase#setLessonMode(java.lang.String)
+	 */
+	public void setLessonMode(String lessonMode) {
+		delegate.setLessonMode(lessonMode);
+	}
 
-    /**
-     * @return @see fi.dwo.client.domain.ScoBase#getLessonMode()
-     */
-    @Override
-    public String getLessonMode() {
-        return super.getLessonMode();
-    }
-
-    /**
-     * @param lessonMode
-     * @see fi.dwo.client.domain.ScoBase#setLessonMode(java.lang.String)
-     */
-    @Override
-    public void setLessonMode(String lessonMode) {
-        super.setLessonMode(lessonMode);
-    }
-
+	/**
+	 * @param iDataModelElement
+	 * @return
+	 * @see fi.dwo.client.domain.ScoBase#GetValue(java.lang.String)
+	 */
+	public String GetValue(String iDataModelElement) {
+		System.out.println("wrap.GetValue " + iDataModelElement);
+		if(LESSON_LOCATION.equals(iDataModelElement))
+		{
+			String value = delegate.getLessonLocation();
+			return ok(value);
+		}
+		if(LESSON_MODE.equals(iDataModelElement))
+		{
+			String value = delegate.getLessonMode();
+			return ok(value);
+		}		
+    	if(LAUNCH_DATA.equals(iDataModelElement))
+    	{
+    		String value = getLaunchdataString();
+    		return ok(value);
+    	}
+		return super.GetValue(iDataModelElement);
+	}
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getAppletData()
      */
     @Override
     public AppletData getAppletData() {
         return delegate.getAppletData();
-    }
-
-    /**
-     * @param iDataModelElement
-     * @return
-     * @see fi.dwo.client.domain.ScoBase#GetValue(java.lang.String)
-     */
-    @Override
-    public String GetValue(String iDataModelElement) {
-        System.out.println("wrap.GetValue " + iDataModelElement);
-        if (LAUNCH_DATA.equals(iDataModelElement)) {
-            String value = getLaunchdataString();
-            return ok(value);
-        }
-
-        return super.GetValue(iDataModelElement);
     }
 
     /**
@@ -644,7 +650,8 @@ class WrapSco extends Sco {
         Applet applet;
         Class<Applet> clazz;
         try {
-            clazz = (Class<Applet>) Class.forName("fi.popupurlapplet.PopUpURLApplet");
+        	ClassLoader loader = Loader.create("popupurlapplet.jar");
+            clazz = (Class<Applet>) loader.loadClass("fi.popupurlapplet.PopUpURLApplet");
             applet = clazz.newInstance();
         } catch (Exception e) {
             LOG.log(Level.SEVERE,null,e);

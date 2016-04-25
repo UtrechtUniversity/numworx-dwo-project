@@ -57,7 +57,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     private JButton deleteButton;
     private JButton copyToSchoolClassButton;
     private JButton addStudentsButton;
-    
+
     private Image editImage;
     private Image emptyImage;
     private Image loginImage;
@@ -331,7 +331,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITSTUDENTS) + " - "+TextMapper.getText(TextMapper.HDR_SCHOOLCLASS)+": " +schoolClass.getSchoolClassName());
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITSTUDENTS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
     }
 
     /**
@@ -343,22 +343,32 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == copyToSchoolClassButton) {
-            try {
-                for (int i = 0; i < tableModel.getRowCount(); i++) {
-                    if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
-                        DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
-                        DomSchoolClass toSchoolClass = (DomSchoolClass) targetSchoolClassBox.getSelectedItem();
+            boolean failed = false;
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
+                    DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
+                    DomSchoolClass toSchoolClass = (DomSchoolClass) targetSchoolClassBox.getSelectedItem();
+                    try {
                         prop.submitStudentToSchoolClass(schoolClass, toSchoolClass, student);
                     }
+                    catch (Dwo2Exception ex) {
+                        LOG.log(Level.FINE, null, ex);
+                        failed = true;
+                    }
                 }
+            }
+            if (failed == true) {
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_COPYSTUDENTERROR));
+            }
+            try {
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
-                tableModel.fireTableDataChanged();
-                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
             }
             catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
             }
+            tableModel.fireTableDataChanged();
+            GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
         } else if (e.getSource() == deleteButton) {
             try {
                 for (int i = 0; i < tableModel.getRowCount(); i++) {
@@ -375,7 +385,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
             }
-        } else if (e.getSource() == backButton) {
+        } else if (e.getSource()
+                == backButton) {
             try {
                 ClassTeacherPanel panel = new ClassTeacherPanel();
                 center.loadCenter(panel);
@@ -385,7 +396,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
-        } else if (e.getSource() == addStudentsButton) {
+        } else if (e.getSource()
+                == addStudentsButton) {
             try {
                 NewSingleSchoolStudentsTeacherPanel panel = new NewSingleSchoolStudentsTeacherPanel(schoolClass);
                 center.loadCenter(panel);
@@ -395,6 +407,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 GuiCreator.instance().ShowErrorDialog(center, ex);
             }
         }
+
         tableModel.fireTableDataChanged();
     }
 

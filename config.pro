@@ -156,9 +156,9 @@
 #    <methods>;
 #}
 
-
-
--keep,allowshrinking class org.**
+#-keep class org.glassfish.jersey.client.JerseyClientBuilder
+#-keep,allowshrinking class org.**
+-keep class org.**
 
 -keep,allowshrinking class uk.** {
     <fields>;

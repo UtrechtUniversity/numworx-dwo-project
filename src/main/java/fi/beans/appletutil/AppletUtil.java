@@ -19,6 +19,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JComponent;
+
 /**
  * Standaard Fi Utilities voor applets. Gebruik voor resourceBundles, Images en
  * AudioClips
@@ -57,6 +59,7 @@ public class AppletUtil {
         }
 
         applet.setLocale(locale);
+	JComponent.setDefaultLocale(locale);
     }
 
     /**

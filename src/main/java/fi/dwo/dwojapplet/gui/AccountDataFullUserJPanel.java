@@ -64,6 +64,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
     public AccountDataFullUserJPanel() {
         try {
             prop.init();
+             user = prop.getUser();
         }
         catch (Dwo2Exception ex) {
             GuiCreator.instance().ShowErrorDialog(this, ex);

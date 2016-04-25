@@ -4,6 +4,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.MD5;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
@@ -307,12 +308,18 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 List<DomUserFull> resultList = new ArrayList<DomUserFull>();
                 boolean failFlag = false;
                 boolean fatalFlag = false;
+                String tmpPassword =null;
+                int cnt=0;
                 for (DomUserFull submit : submitList) {
                     if (NewTeacherSchoolAdminPanelProperties.IsValidUserDataInput(submit)) {
+                        cnt++;
                         try {
+                            tmpPassword = submit.getPassword();
+                            submit.setPassword(MD5.getHashString(submit.getPassword()));
                             NewTeacherSchoolAdminPanelProperties.submitNewTeacher(submit);
                         }
                         catch (Dwo2Exception ex) {
+                            submit.setPassword(tmpPassword);
                             resultList.add(submit);
                             if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
                                 LOG.log(Level.FINE, null, ex);
@@ -326,7 +333,10 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 }
                 tableModel.init(prop, columnNames, resultList, delImage);
                 tableModel.fireTableDataChanged();
-                if (failFlag == true) {
+               if(cnt==0){
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
+                }
+                 if (failFlag == true) {
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATETEACHERERROR));
                 }
                 if (fatalFlag == true) {
@@ -344,7 +354,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
             pasteFromSystemClipboard();
         } else if (e.getSource() == backButton) {
             try {
-                UsersInSchoolSchoolAdminPanel panel = new UsersInSchoolSchoolAdminPanel();
+                UsersInSchoolSchoolAdminPanel panel = new UsersInSchoolSchoolAdminPanel(UsersInSchoolSchoolAdminPanel.UserType.TEACHER);
                 center.loadCenter(panel);
 
             }

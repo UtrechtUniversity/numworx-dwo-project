@@ -349,7 +349,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
             }
         } else if (e.getSource() == backButton) {
             try {
-                UsersInSchoolSchoolAdminPanel panel = new UsersInSchoolSchoolAdminPanel();
+                UsersInSchoolSchoolAdminPanel panel = new UsersInSchoolSchoolAdminPanel(UsersInSchoolSchoolAdminPanel.UserType.valueOf(userType.name()));
                 center.loadCenter(panel);
 
             }

@@ -96,7 +96,7 @@ public abstract class GuiConstants {
 
     public static boolean GUI_SCOUPDATE_UNSAFE;
 
-    public final static String RESOURCES = (DwoHelper.isApplication() ? "" : "/dwo/");
+    public final static String RESOURCES =  "" ;
     //public final static String RESOURCES = "";
 
     public final static Font RED_TEXT = new Font("SansSerif", Font.BOLD, 13);

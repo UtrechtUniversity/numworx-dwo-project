@@ -15,7 +15,7 @@ public class StoreCreator {
         if (_instance == null) {
 // implement read only profile			
             if (DwoProfile.hasRight(DwoProfile.READONLY)) {
-                JOptionPane.showMessageDialog(DwoHelper.getApplet(), "Pas op: werk wordt niet opgeslagen", "DWO is READ ONLY", JOptionPane.WARNING_MESSAGE);
+                //JOptionPane.showMessageDialog(DwoHelper.getApplet(), "Pas op: werk wordt niet opgeslagen", "DWO is READ ONLY", JOptionPane.WARNING_MESSAGE);
                 return _instance = new ReadOnly(DbAccessCreator.instance());
             }
 

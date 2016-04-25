@@ -28,17 +28,23 @@ public class PreviewHtml5 extends GuiAction {
         setEnabled(sco.hasFeature(Sco.JSON_OUT) && DwoProfile.hasRight(DwoProfile.PREVIEW));
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        final CenterPanel center = instance().getMainPanel().getCenter();
-        final WrapSco wrap = new WrapSco(sco);
-        Hashtable tmp = panel.getLaunchdata();
-        panel.tmp = sco.getLaunchdata(); //????
-        panel.done = true;
-        sco.setLaunchdata(tmp);
-        ScoPanel sp = instance().previewSco(wrap);
-        sp.tmp = panel;
-        wrap.dwo.setCurrentSco(wrap);
-        center.loadCenter(sp);
-    }
+	@Override
+	public void actionPerformed(ActionEvent _) {
+		final CenterPanel center = instance().getMainPanel().getCenter();
+		final WrapSco wrap = new WrapSco(sco);
+    	Hashtable tmp = panel.getLaunchdata();
+    	String location = (String) tmp.remove(Sco.LESSON_LOCATION);
+    	if(location != null)
+    	{	//sco.SetValue(Sco.LESSON_LOCATION, location);
+    		wrap.setLocationOverride(location);
+    	}
+    	panel.tmp = sco.getLaunchdata(); //????
+    	panel.done = true;
+    	sco.setLaunchdata(tmp);
+    	ScoPanel sp = instance().previewSco(wrap);
+    	sp.tmp = panel;
+    	wrap.dwo.setCurrentSco(wrap);
+    	center.loadCenter(sp);
+	}
+
 }

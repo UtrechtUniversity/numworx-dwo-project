@@ -10,6 +10,7 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
+import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
@@ -27,12 +28,14 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.rest.LoginManager;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
@@ -1000,5 +1003,22 @@ public class GuiCreator {
         dwo.linkViaSAML();
 
     }
+
+	public boolean renameProfile(DwoProfile profile, String newName,
+			String newHeader, String newText) {
+		return false;
+	}
+
+	public boolean deleteProfile(DwoProfile profile) {
+		return false;
+	}
+	
+	public boolean addProfile(DwoProfile profile) {
+		return false;
+	}
+	
+	public CenterSubPanel getDwoProfilePanel() {
+		return null;
+	}
 
 }

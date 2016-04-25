@@ -2,6 +2,9 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\UserMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.SchoolAdmin;
@@ -11,11 +14,14 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class UserMapper extends XmlRpcMapper {
@@ -116,7 +122,17 @@ class UserMapper extends XmlRpcMapper {
         Hashtable ht = new Hashtable();
         if (obj instanceof SchoolClass) {
             SchoolClass sc = (SchoolClass) obj;
-            ht.put("classID", new Integer(sc.getID()));
+            DbAccessIF dbAccess = DbAccessCreator.instance();
+            Vector<Object> vList = null;
+            try {
+                int schoolClassID = sc.getID();
+                vList = dbAccess.getStudentsOfClass(schoolClassID);
+            }
+            catch (DwoXmlRpcException ex) {
+                Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return getObjectFromReturn(vList);
+
         } else if (obj instanceof SchoolGroup) {
             SchoolGroup sg = (SchoolGroup) obj;
             ht.put("tblSchoolGroup." + "schoolGroupID", new Integer(sg.getSchoolGroupID()));
@@ -163,6 +179,7 @@ class UserMapper extends XmlRpcMapper {
         u.setUserID(((Integer) data.get("userID")).intValue());
         u.setUsername((String) data.get("username"));
         u.setRights((String) data.get("rights"));
+        u.setSchoolGroupID(((Integer)data.get("schoolGroupID")));
         /* Maybe we've got some information about the school */
         School s = (School) MapperCreator.instance(School.class)
                 .getObjectFromReturn(data);
@@ -197,11 +214,8 @@ class UserMapper extends XmlRpcMapper {
         if (u instanceof Teacher) {
             Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
             if(o!=null){
-            SchoolClass[] slist = new SchoolClass[o.length];
-            for (int i = 0; i < o.length; i++) {
-                slist[i] = (SchoolClass) MapperCreator.instance(SchoolClass.class).getObjectFromReturn((java.util.Hashtable) o[i]);
-            };
-            ((Teacher) u).setClasses(slist);
+            	SchoolClass[] slist = (SchoolClass[]) o;
+            	((Teacher) u).setClasses(slist);
             }else{
                 ((Teacher) u).setClasses(null);
             }

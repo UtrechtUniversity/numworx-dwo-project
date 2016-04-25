@@ -4,8 +4,6 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FontMetrics;
@@ -16,7 +14,6 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -124,25 +121,25 @@ public class AccountDataFullStudentJPanel extends JPanel implements
         username.setEditable(false);
         p.add(username);
 
-        /* Old-Password label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD) + ":");
-        l.setForeground(Color.black);
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 55);
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        p.add(l);
-
-        /* Old-Password field */
-        oldpassword = new JPasswordField();
-        oldpassword.setBounds(160, 53, 120, 20);
-        oldpassword.setEchoChar('*');
-        p.add(oldpassword);
-
-        /* Old-Password mandatory label */
-        l = createMandatoryLabel();
-        l.setLocation(285, 53);
-        p.add(l);
+//        /* Old-Password label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD) + ":");
+//        l.setForeground(Color.black);
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setLocation(10, 55);
+//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+//        p.add(l);
+//
+//        /* Old-Password field */
+        oldpassword = new JPasswordField("");
+//        oldpassword.setBounds(160, 53, 120, 20);
+//        oldpassword.setEchoChar('*');
+//        p.add(oldpassword);
+//
+//        /* Old-Password mandatory label */
+//        l = createMandatoryLabel();
+//        l.setLocation(285, 53);
+//        p.add(l);
 
         /* Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_PASSWORD) + ":");

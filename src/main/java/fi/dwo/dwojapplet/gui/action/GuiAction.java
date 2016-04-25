@@ -81,8 +81,6 @@ abstract public class GuiAction extends AbstractAction implements PropertyChange
     }
 
     void setMap(CourseMap map) {
-		// TODO Auto-generated method stub
-
     }
 
 }

@@ -1,8 +1,12 @@
 package fi.dwo.dwojapplet.form;
 
+import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.dwo.dwojapplet.persistence.StoreCreator;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,6 +14,7 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,6 +23,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -200,58 +206,83 @@ class ManifestFile {
         return firstChild.getNodeValue();
     }
 
-    private Hashtable insertItem(Element element, int itemNr) {
-        Hashtable result = new Hashtable();
-        NodeList list = element.getChildNodes();
-        Attr appletID = element.getAttributeNodeNS(DWO, APPLET_ID);
-        result.put(APPLET_ID, new Integer(appletID.getValue()));
-        result.put(SEQUENCE_NR, itemNr);
-        int len = list.getLength();
-        for (int i = 0; i < len; i++) {
-            Node node = list.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                element = (Element) node;
-                Node firstChild = element.getFirstChild();
-                if (element.getLocalName().equals(TITLE)) {
-                    result.put(SCO_TITLE, getNodeValue(firstChild));
-                } else if (element.getLocalName().equals(DESCRIPTION)) {
-                    result.put(DESCRIPTION, getNodeValue(firstChild));
-                } else if (element.getLocalName().equals("datafromlms")) {
-                    result.put(LAUNCHDATA, getNodeValue(firstChild));
-                }
-            }
-        }
-        return result;
-    }
 
-    int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent) throws DwoXmlRpcException, SQLException, IOException, XmlRpcException {
-        String name;
-        String description;
-        name = (String) course.get(COURSE_TITLE);
-        description = (String) course.get(DESCRIPTION);
-        int courseID = PersistenceFacade.instance().addCourse(schoolID, notnull(name), notnull(description), dwoProfile, parent, false);
-        appendCourse(courseID, 0, course);
-        return courseID;
-    }
 
-    void appendCourse(int courseID, int offset, Hashtable course) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        Vector items = (Vector) course.get(SCO_ITEMS);
-        Iterator i = items.iterator();
-        while (i.hasNext()) {
-            Hashtable sco = (Hashtable) i.next();
-            String name = (String) sco.get(SCO_TITLE);
-            int appletID = ((Number) sco.get(APPLET_ID)).intValue();
-            int sequencenr = ((Number) sco.get(SEQUENCE_NR)).intValue();
-            String description = (String) sco.get(DESCRIPTION);
-            String launchdata = (String) sco.get(LAUNCHDATA);
-            PersistenceFacade.instance().addSco(courseID, notnull(name), notnull(description), appletID, notnull(launchdata), sequencenr + offset);
-        }
-    }
     
-    private static String notnull(String s) {
-        if (s == null) {
-            return "";
-        }
-        return s;
-    }
+// nieuw
+    private Hashtable insertItem(Element element, int itemNr) {
+		Hashtable result = new Hashtable();
+		NodeList list = element.getChildNodes();
+		Attr appletID = element.getAttributeNodeNS(DWO, APPLET_ID);
+		result.put(APPLET_ID, new Integer(appletID.getValue()));
+		result.put(SEQUENCE_NR, new Integer(itemNr));
+		int len = list.getLength();
+		for(int i = 0; i < len; i++)
+		{
+			Node node = list.item(i);
+			if( node.getNodeType()== Node.ELEMENT_NODE) {
+				element = (Element) node;
+				Node firstChild = element.getFirstChild();
+				if(element.getLocalName().equals(TITLE))
+				{
+					result.put(SCO_TITLE, getNodeValue(firstChild));
+				} else
+				if(element.getLocalName().equals(DESCRIPTION))
+				{
+						result.put(DESCRIPTION, getNodeValue(firstChild));
+				} else
+				if(element.getLocalName().equals("datafromlms"))
+				{
+						result.put(LAUNCHDATA, getNodeValue(firstChild));
+				} 
+			}
+		}
+		return result;
+	}
+	
+	int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent) throws DwoXmlRpcException, SQLException, IOException, XmlRpcException, PersistenceException, CourseException
+	{
+		String name;
+		String description;
+		name = (String) course.get(COURSE_TITLE);
+		description = (String) course.get(DESCRIPTION);
+		int courseID = PersistenceFacade.instance().addCourse(schoolID, notnull(name), notnull(description), dwoProfile, parent, false);
+		appendCourse(courseID, 0, course);
+		return courseID;
+	}
+	
+	void appendCourse(int courseID, int offset, Hashtable course) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, PersistenceException
+	{
+		Vector items = (Vector) course.get(SCO_ITEMS);
+		Iterator i = items.iterator();
+		while (i.hasNext()) {
+			Hashtable sco = (Hashtable) i.next();
+			String name = (String) sco.get(SCO_TITLE);
+			int appletID = ((Number)sco.get(APPLET_ID)).intValue();
+			int sequencenr = ((Number)sco.get(SEQUENCE_NR)).intValue();
+			String description = (String) sco.get(DESCRIPTION);
+			String launchdata = (String) sco.get(LAUNCHDATA);
+			int sconr = PersistenceFacade.instance().addSco(courseID, notnull(name), notnull(description), appletID, notnull(launchdata), sequencenr+offset);
+	
+			Sco newsco = (Sco) PersistenceFacade.instance().get(sconr, Sco.class);
+        	if(newsco.hasFeature(Sco.JSON_OUT))
+        	{	byte[] launchdataBytes = newsco.getLaunchdataBytes();
+        		System.out.println("JSON launchdata " + newsco.getID() + " " + launchdataBytes.length + " bytes");
+				StoreCreator.instance().changeSco(newsco.getID(), newsco.getScoName(), newsco.getDescription(), 
+				        true, launchdataBytes, newsco.getShowScore());
+        	}
+	
+		
+		
+		}
+	}
+	
+	private static String notnull(String s)
+	{
+		if(s==null)
+			return "";
+		return s;
+	}
+	
+
 }

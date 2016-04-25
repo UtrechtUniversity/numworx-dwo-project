@@ -189,14 +189,14 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
 
     @Override
     public void hideClassList() {
-        if (isEnabled()) {
+        if (isEnabled() && classPanel != null) {
             classPanel.setVisible(false);
         }
     }
 
     @Override
     public void showClassList() {
-        if (isEnabled()) {
+        if (isEnabled() && classPanel != null) {
             classPanel.setVisible(true);
         }
     }

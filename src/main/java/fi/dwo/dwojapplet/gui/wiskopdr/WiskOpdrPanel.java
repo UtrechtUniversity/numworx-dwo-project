@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +24,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 	String text;
 	LinkIF link;
 
+	@Deprecated
 	public WiskOpdrPanel(String s) {
 		super(new BorderLayout());
 		this.text = s;
@@ -40,6 +42,26 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 			add(new JLabel("not implemented: " + e));
 		}
 		setSize(getPreferredSize());
+	}
+
+	public WiskOpdrPanel(String s, Locale locale) {
+		super(new BorderLayout());
+		this.text = s;
+		
+		try {
+            if(DwoHelper.getJarUrlPath()!=null) Loader.setPrefix(DwoHelper.getJarUrlPath().toString());
+			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
+			Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class, Locale.class);
+			component = (Component) m.invoke(null, s, locale);
+			add(component, BorderLayout.CENTER);
+			setSize(component.getSize());
+			return;
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, null, e);
+			add(new JLabel("not implemented: " + e));
+		}
+		setSize(getPreferredSize());
+		
 	}
 
 	public void setJSObjectOwner(LinkIF link) {

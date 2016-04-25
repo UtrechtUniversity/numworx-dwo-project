@@ -24,8 +24,11 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
@@ -142,32 +145,47 @@ public class Save2004Action extends GuiAction {
             wr.flush();
             out.closeEntry();
 // copies.....
-            // TODO meer xsd's?
-            String HTML_SOURCE = WWWURL + "/dwo/scorm/course/cp/";
-            String[] scormFileNames = {
-                "adlcp_v1p3.xsd",
-                "imscp_v1p1.xsd",
-                "imsmd_v1p2p4.xsd",};
-
-            copyList(out, runner, HTML_SOURCE, scormFileNames);
-
-            String[] viewFileNames = {
-                "AlgebraPijlenGWT.html",
-                "AlgebraExprGWT.html",
-                "BalansFruitGWT.html",
-                "DoorzienGWT.html",
-                "DraaibankGWT.html",
-                "GeoGebra.html",
-                "GeomAlgGWT.html",
-                "GraphToolGWT.html",
-                "KladjeGWT.html",
-                "NabouwenAanzichtenGWT.html",
-                "StatistiekGWT.html",
-                "KansbomenGWT.html", // TODO more html files
-            };
-            copyList(out, runner, scormURL, viewFileNames);
-
-            out.close();
+			// TODO meer xsd's?
+	        String HTML_SOURCE = WWWURL + "/dwo/scorm/course/cp/";
+	        String[] scormFileNames = {
+	        		"adlcp_v1p3.xsd",
+	        		"imscp_v1p1.xsd",
+	        		"imsmd_v1p2p4.xsd",
+	        };
+	        
+	        copyList(out, runner, HTML_SOURCE, scormFileNames);
+	        
+	        String[] viewFileNames = {
+	        		"AlgebraPijlenGWT.html",
+	        		"AlgebraExprGWT.html",
+	        		"BalansFruitGWT.html",
+	        		"DoorzienGWT.html",
+	        		"DraaibankGWT.html",
+	        		"GeoGebra.html",
+	        		"GeomAlgGWT.html",
+	        		"GraphToolGWT.html",
+	        		"KladjeGWT.html",
+	        		"NabouwenAanzichtenGWT.html",
+	        		"StatistiekGWT.html",
+	        		"KansbomenGWT.html",
+	        		"TekenVeelvlakGWT.html"
+	        		// TODO more html files
+	        };
+        	HashSet<String> set = new HashSet<String>(Arrays.asList(viewFileNames));
+	        try {
+	        	in = new URL(scormURL + "index.lst").openStream();
+	        	BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+	        	String line;
+	        	while ( (line = reader.readLine())!= null) { set.add(line); }
+	        } catch(Exception e) {
+	        	e.printStackTrace();
+	        }
+	        viewFileNames = set.toArray(viewFileNames);
+	        
+	        copyList(out, runner, scormURL, viewFileNames);
+	        
+		
+			out.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             LOG.log(Level.SEVERE, null, e);

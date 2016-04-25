@@ -327,7 +327,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param sp The ScoPanel witch contains the data of the sco to show.
      * @param ug The usergroup, witch is used for the title.
      */
-    public static void showScoDialog(Component parent, ScoPanel sp, User ug) {
+    private static void showScoDialog(Component parent, ScoPanel sp, User ug) {
         String[] arguments = {sp.getSco().getScoName(), ug.getName()};
         String title = TextMapper.format((TextMapper.UG_RESULTS_OF_STUDENT), arguments);
         ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), title, true, sp);
@@ -350,29 +350,27 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         table.setRowSelectionInterval(combo.getSelectedIndex() + 1, combo.getSelectedIndex() + 1);
         final ItemListener itemListener = new ItemListener() {
 
-            @Override
-            public void itemStateChanged(ItemEvent event) {
-                User u = (User) event.getItem();
-                switch (event.getStateChange()) {
-                    case ItemEvent.DESELECTED:
-                        sp.getSco().setUser(u);
-                        sp.getSco().getApplet().stop();
-                        break;
-                    case ItemEvent.SELECTED:
-                        sp.getSco().setUser(u);
-                        userLabel.setText(u.getName());
-                        sp.getSco().getApplet().start();
-                        sp.repaint();
-                        //list.setSelectedValue(u, false);
-                        int i = combo.getSelectedIndex() + 1;
-                        table.setRowSelectionInterval(i, i);
-                        resetSeal(sp, sealmodel);
-                        break;
-                }
-            }
-        };
-        combo.addItemListener(itemListener);
-        hbox.add(userLabel);
+			public void itemStateChanged(ItemEvent event) {
+				User u = (User) event.getItem();
+				switch (event.getStateChange()) {
+				case ItemEvent.DESELECTED:
+						sp.getSco().setUser(u);
+						sp.getSco().getApplet().stop();
+						break;
+				case ItemEvent.SELECTED:
+						sp.getSco().setUser(u);
+						userLabel.setText(u.getName());
+						sp.appletStart();
+						sp.repaint();
+						//list.setSelectedValue(u, false);
+						int i = combo.getSelectedIndex()+1;
+						table.setRowSelectionInterval(i, i);
+						resetSeal(sp, sealmodel);
+						break;
+				}
+			}};
+		combo.addItemListener(itemListener);
+		hbox.add(userLabel);
         ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), hbox, true, sp);
         sd.table = table;
         resetSeal(sp, sealmodel);

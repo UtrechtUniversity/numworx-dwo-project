@@ -22,6 +22,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -142,7 +146,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
             applet.setSize(getSize()); // zet applet een default size, voor oude applets
 
             applet.init();
-            applet.start();
+            appletStart();
             validate();
         } catch (RuntimeException e) {
             // TODO Applet is niet gestart!
@@ -155,6 +159,14 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
             LOG.log(Level.FINE,pw.toString());
         }
     }
+
+	void appletStart() {
+		try {
+			applet.start();
+		} catch (Exception e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
+		}
+	}
 
     /**
      * Indicate that another panel is loaded and the connections of this panel

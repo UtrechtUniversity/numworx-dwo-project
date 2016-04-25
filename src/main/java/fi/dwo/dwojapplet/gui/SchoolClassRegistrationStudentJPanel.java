@@ -335,6 +335,8 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
             }
             catch (Dwo2Exception ex) {
                 Logger.getLogger(SchoolClassRegistrationStudentJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                //GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.));
+                
             }
         } else if (e.getSource() == backButton) {
             parentDialog.dispose();

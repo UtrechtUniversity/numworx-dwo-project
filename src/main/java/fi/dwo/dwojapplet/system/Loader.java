@@ -1,28 +1,12 @@
 package fi.dwo.dwojapplet.system;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.jar.Attributes;
-import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
-import java.util.jar.Manifest;
+import java.security.AllPermission;
+import java.security.CodeSource;
+import java.security.PermissionCollection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,7 +18,7 @@ public class Loader extends URLClassLoader {
 
     static {
         // set default directory for jars
-        setPrefix("https://ws.fisme.science.uu.nl/dwo/jars/");
+        setPrefix("https://app.dwo.nl/dwo/jars/");
     }
 
     /**
@@ -44,6 +28,7 @@ public class Loader extends URLClassLoader {
      */
     public static void setPrefix(String prefix) {
         try {
+        	if(!prefix.endsWith("/")) prefix += "/"; // Always with / 
             urlPrefix = new URL(prefix);
             LOG.log(Level.FINE, "URL Prefix set to: {0}.", new Object[]{urlPrefix.toString()});
         } catch (MalformedURLException e) {
@@ -69,5 +54,14 @@ public class Loader extends URLClassLoader {
         return loader;
     }
 
+	final AllPermission all = new AllPermission();
+
+	@Override
+	protected PermissionCollection getPermissions(
+			CodeSource codesource) {
+		PermissionCollection r = super.getPermissions(codesource);
+		r.add(all);
+		return r;
+	}				
 
 }

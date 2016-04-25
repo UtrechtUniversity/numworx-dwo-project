@@ -14,7 +14,7 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
-import fi.dwo.dwojapplet.domain.rest.Dwo2ExceptionGensonTranslator;
+import fi.dwo.commons.persistence.Dwo2ExceptionMySQLGensonTranslator;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
@@ -53,6 +53,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -132,8 +133,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     private String schoolAccessPropertiesString;
     
-    private static boolean isApplication=false;
-
     FocusTraversalPolicy delegate;
 
     /**
@@ -174,7 +173,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * Reads a config file if it exists when started as an application.
      *
      */
-    private static void ReadConfigProperties() throws MalformedURLException {
+    private void ReadConfigProperties() {
         // TODO set config properties when run as an applet.
 
         LOG.log(Level.INFO, "Checking for DWO.properties");
@@ -182,11 +181,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
 
             // folder relative to the current directory
-            String path = "./DWO.properties";
+            String path = "DWO.properties";
 
             // file handle for main.properties
-            FileInputStream file;
-            file = new FileInputStream(path);
+            InputStream file;
+            file = new URL(getDocumentBase(), path).openStream();
 
             // load the properties
             properties.load(file);
@@ -196,7 +195,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             file.close();
 
         }
-        catch (FileNotFoundException ex) {
+        catch (Exception ex) {
             LOG.log(Level.FINE, "No external DWO.property file found");
             try {
                 // try resource folder.
@@ -221,27 +220,23 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 throw new RuntimeException(ex2);
             }
         }
-        catch (IOException ex) {
-            LOG.log(Level.FINE, "IO error reading external DWO.properties file.");
-        }
+        
 
         // assign properties to static value.
-        String serverUrlPathProperty = properties.getProperty("serverUrlPath");
-        DwoHelper.setServerUrlPath(new URL(serverUrlPathProperty));
+        String serverUrlPathProperty = properties.getProperty("serverUrlPath", "./");
+        DwoHelper.setServerUrlPath(DwoHelper.getURL(serverUrlPathProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}",
                 new Object[]{"setServerUrlPathString", DwoHelper.getServerUrlPath()});
 
-        // if not set pick default path
-        String resourceURLPathStringProperty = properties.getProperty("resourceUrlPath",
-                (new URL(DwoHelper.getServerUrlPath(), "resources")).toString());
-        DwoHelper.setResourceUrlPath(new URL(resourceURLPathStringProperty));
+        //if not set pick default path
+        String resourceURLPathStringProperty = properties.getProperty("resourceUrlPath",  "resources/");
+        DwoHelper.setResourceUrlPath(DwoHelper.getURL(resourceURLPathStringProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}",
                 new Object[]{"resourceURLPathStringProperty", DwoHelper.getResourceUrlPath()});
 
-        // if not set pick default path
-        String jarURLPathStringProperty = properties.getProperty("jarUrlPath",
-                (new URL(DwoHelper.getServerUrlPath(), "jars")).toString());
-        DwoHelper.setJarUrlPath(new URL(jarURLPathStringProperty));
+        //if not set pick default path
+        String jarURLPathStringProperty = properties.getProperty("jarUrlPath",  "jars");
+        DwoHelper.setJarUrlPath(DwoHelper.getURL(jarURLPathStringProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}",
                 new Object[]{"jarURLPathStringProperty", DwoHelper.getJarUrlPath()});
 
@@ -366,61 +361,59 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         dwoProfileID = 1;
         int o = 0;
 
-        // while (args != null && args.length > 1 + o
-        // && args[0].length() > 1
-        // && '-' == args[o].charAt(0)
-        // && "rlsxb".indexOf(args[0].charAt(1)) >= 0) {
-        // if ("-b".equals(args[o])) {
-        // Sco.setDefaultLessonMode(Sco.BROWSE);
-        // o += 1;
-        // }
-        //
-        // // allow update van SERVLET
-        // if ("-s".equals(args[o])) {
-        // DwoHelper.setServerUrlPath(args[1 + o]);
-        // o += 2;
-        // }
-        // // initialize applicationBase
-        // if (args.length > 1 + o && "-r".equals(args[o])) {
-        // try {
-        // DwoHelper.applicationBase = new URL(args[o + 1]);
-        // }
-        // catch (MalformedURLException e) {
-        // System.err.println("-r option: " + e);
-        // }
-        // o += 2;
-        // }
-        // // allow definitie van Locale.
-        // if (args.length > 1 + o && "-l".equals(args[o])) {
-        // languageOveride = args[o + 1];
-        // o += 2;
-        // }
-        // if (args.length > 1 + o && "-x".equals(args[o])) {
-        // extensionOverride = args[o + 1];
-        // o += 2;
-        // }
-        //
-        // }
-        // if (args != null && args.length > o && args[o] != null) {
-        // try {
-        // dwoProfileID = Integer.parseInt(args[o]);
-        // }
-        // catch (NumberFormatException e) {
-        // }
-        // if (args.length > 2 + o && args[1 + o] != null && args[2 + o] !=
-        // null) {
-        // limitedSchoolAccessString = args[1 + o];
-        // schoolAccessPropertiesString = args[2 + o];
-        // o += 2;
-        // }
-        // if (args.length > 2 + o && args[1 + o] != null && args[2 + o] !=
-        // null) {
-        // userName = args[1 + o];
-        // passWord = args[2 + o];
-        // o += 2;
-        // }
-        //
-        // }
+//        while (args != null && args.length > 1 + o
+//                && args[0].length() > 1
+//                && '-' == args[o].charAt(0)
+//                && "rlsxb".indexOf(args[0].charAt(1)) >= 0) {
+//            if ("-b".equals(args[o])) {
+//                Sco.setDefaultLessonMode(Sco.BROWSE);
+//                o += 1;
+//            }
+//
+//            // allow update van SERVLET
+//            if ("-s".equals(args[o])) {
+//                DwoHelper.setServerUrlPath(args[1 + o]);
+//                o += 2;
+//            }
+//            // initialize applicationBase
+//            if (args.length > 1 + o && "-r".equals(args[o])) {
+//                try {
+//                    DwoHelper.applicationBase = new URL(args[o + 1]);
+//                }
+//                catch (MalformedURLException e) {
+//                    System.err.println("-r option: " + e);
+//                }
+//                o += 2;
+//            }
+//            // allow definitie van Locale.
+//            if (args.length > 1 + o && "-l".equals(args[o])) {
+//                languageOveride = args[o + 1];
+//                o += 2;
+//            }
+//            if (args.length > 1 + o && "-x".equals(args[o])) {
+//                extensionOverride = args[o + 1];
+//                o += 2;
+//            }
+//
+//        }
+        if (args != null && args.length > o && args[o] != null) {
+            try {
+                dwoProfileID = Integer.parseInt(args[o]);
+            }
+            catch (NumberFormatException e) {
+            }
+//            if (args.length > 2 + o && args[1 + o] != null && args[2 + o] != null) {
+//                limitedSchoolAccessString = args[1 + o];
+//                schoolAccessPropertiesString = args[2 + o];
+//                o += 2;
+//            }
+//            if (args.length > 2 + o && args[1 + o] != null && args[2 + o] != null) {
+//                userName = args[1 + o];
+//                passWord = args[2 + o];
+//                o += 2;
+//            }
+
+        }
     }
 
     /**
@@ -1292,10 +1285,11 @@ private boolean isRunningJavaWebStart() {
         if (!DwoHelper.setApplet(this)) {
             return;
         }
-        if(isApplication==false|| isRunningJavaWebStart()){
+        if(DwoHelper.isApplication()==false|| isRunningJavaWebStart()){
             Authenticator.setDefault(null);
         }
-        
+        ReadConfigProperties();
+
         Clipboard.initialize();
         // It we started from the command line then the
         // DwoHelper.getServletConnectString()
@@ -1831,6 +1825,10 @@ private boolean isRunningJavaWebStart() {
         currentSco = sco;
     }
 
+    static {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionMySQLGensonTranslator());
+    }
+    
     /**
      * The main method of the class.
      *
@@ -1842,7 +1840,6 @@ private boolean isRunningJavaWebStart() {
      */
     public static void main(String[] args) throws Exception {
 
-        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGensonTranslator());
         // String lookAndFeel =
         // UIManager.getCrossPlatformLookAndFeelClassName();
         // lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
@@ -1854,11 +1851,9 @@ private boolean isRunningJavaWebStart() {
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
 
-        isApplication = true;
         DWO dwo = new DWO(args);
         // Configure the applet
         DWO.ReadLoggingProperties();
-        DWO.ReadConfigProperties();
         // Put applet in a frame.
         MainFrame mf = new MainFrame(dwo, width, height);
         mf.setTitle("DWO");
@@ -2196,12 +2191,15 @@ private boolean isRunningJavaWebStart() {
 
     @Override
     public String LMSInitialize(String iParam) {
-        if (currentSco != null) {
-            return currentSco.LMSInitialize(iParam);
-        } else if (currentCourse != null && currentCourse.getCurrentSco() != null) {
-            return currentCourse.getCurrentSco().LMSInitialize(iParam);
+        if(currentSco != null)
+        {   currentSco.LMSInitialize(iParam);
+        	return "true";
+        } 
+        else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+        {	currentCourse.getCurrentSco().LMSInitialize(iParam);
+        	return "true";
         } else {
-            return "false";
+        	return "false";
         }
     }
 

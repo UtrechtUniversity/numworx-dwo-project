@@ -7,12 +7,19 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.persistence.PersistenceId;
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -23,6 +30,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -38,6 +46,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
@@ -211,6 +220,18 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                         prop.updateSchoolClass(fullSchoolClass);
                         tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
                         tableModel.fireTableDataChanged();
+                        
+                        //FIXED legacy schoolclass updaten!
+                        
+                        int classId = getSchoolClassID(sc);
+                        try {
+							SchoolClass scold = (SchoolClass) PersistenceFacade.instance().get(classId, SchoolClass.class);
+							scold.setClassName(fullSchoolClass.getSchoolClassName());
+						} catch (PersistenceException e) {
+							LOG.log(Level.SEVERE, "should not happen!", e);
+						}
+                        center.loadMenu();
+                        
                     }
                 }
                 catch (Dwo2Exception ex) {
@@ -286,6 +307,8 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                         tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
                         tableModel.fireTableDataChanged();
                     }
+                    // update legacy stuff
+                    refreshSchoolClasses();
                 }
                 catch (Dwo2Exception ex) {
                     Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
@@ -296,7 +319,12 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 }
             }
         }
+
     }
+
+    private int getSchoolClassID(DomSchoolClass sc) {
+		return (int) MySQLPersistenceId.getId(sc.getId());
+	}
 
     private void buildJTable() throws Dwo2Exception {
         if (jtbl != null) {
@@ -454,7 +482,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     prop.addClass(sc);
                     tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
                     tableModel.fireTableDataChanged();
-
+                    refreshSchoolClasses();
                 }
                 catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
@@ -473,6 +501,21 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 //            }
 //        }
     }
+
+	private void refreshSchoolClasses() {
+		// update schoolclass[] of teacher and school
+		try {
+			SchoolClass[] scold = (SchoolClass[]) PersistenceFacade.instance().get(SchoolClass.class, DwoHelper.getCurrentFacadeUser());
+			((Teacher) DwoHelper.getCurrentFacadeUser()).setClasses(scold);
+		    School school = DwoHelper.getCurrentFacadeUser().getSchool();
+			if (school != null) {
+		        school.setClassList((SchoolClass[]) PersistenceFacade.instance().get(SchoolClass.class, school));
+		    }
+		} catch (PersistenceException e1) {
+			LOG.log(Level.SEVERE, "should not happen!", e1); // famous last words
+		}
+		center.loadMenu();
+	}
 
     /**
      * Returns the current object, as the object to add to a gui.

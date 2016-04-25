@@ -9,13 +9,17 @@ import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureStudentSchoolClassManager;
+
+import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -53,7 +57,6 @@ public class StudentMenuPanel extends UserMenuPanel {
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
         classManagementButton.addActionListener(this);
         this.add(classManagementButton);
-        addClassList();
     }
 
     /**
@@ -72,10 +75,8 @@ public class StudentMenuPanel extends UserMenuPanel {
     /**
      * Adds the name of the class of the user to the panel. Can be overridden by
      * subclasses.
-     *
      */
     protected void addClassList() {
-
         /* Variables used to create items */
         FontMetrics fm;
         JLabel l;
@@ -107,7 +108,7 @@ public class StudentMenuPanel extends UserMenuPanel {
             }
 
             if ((scList != null) && (scList.size() > 0)) {
-                l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_CLASS_RESULTS)
+                l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_IN_CLASS)
                         + ":");
                 l.setOpaque(false);
                 l.setFont(GuiConstants.NORMAL_TEXT);

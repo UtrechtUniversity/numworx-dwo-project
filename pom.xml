@@ -110,7 +110,7 @@
             <artifactId>jersey-client</artifactId>
             <version>2.17</version>
         </dependency>
-        <!-- json support -->
+        <!-- 8MB file with dependencies -->
 <!--
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
@@ -118,16 +118,45 @@
             <version>2.4.1</version>
         </dependency>        
 -->
+        <!-- 7MB file with dependencies -->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jettison</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <!-- 10MB file with dependencies -->
+<!--
+        <dependency>
+	<groupId>com.sun.jersey</groupId>
+	<artifactId>jersey-json</artifactId>
+	<version>1.19</version>
+</dependency>
+-->
+<!--
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>2.4.1</version>
+        </dependency>        
+-->
+<!--
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>
             <version>2.17</version>
         </dependency>
+        -->
         <dependency>
             <groupId>org.jdesktop</groupId>
             <artifactId>beansbinding</artifactId>
             <version>1.2.1</version>
         </dependency>
+   		<dependency>
+			<groupId>org.glassfish.jersey.connectors</groupId>
+			<artifactId>jersey-jetty-connector</artifactId>
+			<version>2.17</version>
+		</dependency>
+        
     </dependencies>
 
     <build>
@@ -260,6 +289,8 @@
                             <Permissions>all-permissions</Permissions>
                             <Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Codebase>
                             <Caller-Allowable-Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Caller-Allowable-Codebase>
+                            <Application-Name>DWO v2</Application-Name>
+                            <Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>                       		
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -270,8 +301,23 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addClasspath>true</addClasspath>
                         </manifest>
+                        <manifestEntries>
+                            <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version>
+                            <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+                            <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
+                            <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build>
+                            <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
+                            <Trusted-Only>true</Trusted-Only>
+                            <Permissions>all-permissions</Permissions>
+                            <Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Codebase>
+                            <Caller-Allowable-Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Caller-Allowable-Codebase>
+                            <Application-Name>DWO v2</Application-Name>
+                            <Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>                       		
+                        </manifestEntries>
                     </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -322,10 +368,10 @@
                             </options>
                             <obfuscate>true</obfuscate>                    
                             <inputDirectory>${project.build.directory}</inputDirectory>
-                            <injar>${project.build.finalName}.jar</injar>
+                            <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
                             <!-- uncomment to change the output file
                             <outputDirectory>${project.build.directory}</outputDirectory>
-                            <outjar>${project.build.finalName}-proguarded.jar</outjar>
+                            <outjar>${project.build.finalName}.jar</outjar>
                             -->
                             <proguardInclude>config.pro</proguardInclude>
                             <libs>

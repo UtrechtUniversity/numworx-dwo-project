@@ -33,9 +33,13 @@ public class UserMenuPanel extends GuestMenuPanel {
     final protected void createButtons() {
         super.createButtons();
         createMenuButtons();
+        addClassList();
     }
 
-    protected void createMenuButtons() {
+    protected void addClassList() {
+	}
+
+	protected void createMenuButtons() {
         createGap();
         /* Add MainMenu button */
         myProfileButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_MY_PROFILE));

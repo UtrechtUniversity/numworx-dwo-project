@@ -33,6 +33,8 @@ import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.persistence.cache.ReadOnly;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +50,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
@@ -410,6 +413,12 @@ public class PersistenceFacade {
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
     }
+    
+    public boolean setAllowSuspendData(boolean allow) {
+    	boolean old = ReadOnly.hasSuspendData;
+    	ReadOnly.hasSuspendData = allow;
+    	return old;
+    }
 
     public boolean removeTeacherFromClass(int classId, int userId) throws PersistenceException {
         try {
@@ -433,10 +442,22 @@ public class PersistenceFacade {
      * =============================================================================
      * SCO FUNCTIONALITY
      * =============================================================================
-     * @param i
+     * @param sequencenr
+     * @throws PersistenceException 
      */
-    public void addSco(int courseID, String notnull, String notnull0, int appletID, String notnull1, int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int addSco(int courseID, String name, String description, int appletID, String launchdata, int sequencenr) throws PersistenceException {
+    	try {
+			return DbAccessCreator.instance().addSco(courseID, name, description, appletID, launchdata, sequencenr);
+		} catch (DwoXmlRpcException e) {
+			throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+		} catch (IOException e) {
+			throw new PersistenceException(PersistenceException.EX_IO, e);
+		} catch (XmlRpcException e) {
+			throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+		} catch (SQLException e) {
+			throw new PersistenceException(PersistenceException.EX_DB, e);
+		}
+    
     }
 
     public Vector getScos(Hashtable restriction, String SEQUENCE_NR)
@@ -1378,8 +1399,37 @@ public class PersistenceFacade {
         return (Course[]) MapperCreator.instance(Course.class).get(o);
     }
 
-    public int addCourse(int schoolID, String notnull, String notnull0, int dwoProfile, int parent, boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws CourseException {
+    	try {
+			return DbAccessCreator.instance().addCourse(schoolID, name, description, dwoProfile, parentID, withChildren);
+		}  
+    	catch (IOException e) {
+            throw new CourseException(CourseException.EX_IO);
+        }
+        catch (XmlRpcException e) {
+            if (e.code != 0) {
+                CourseException exception;
+				try {
+					exception = (CourseException) getException(e, e.code);
+					throw exception;
+				} catch (PersistenceException e1) {
+		            throw new CourseException(CourseException.EX_UNKNOWN_ERROR);
+				}
+            } else {
+                throw new CourseException(CourseException.EX_XML_RPC);
+            }
+        }
+        catch (SQLException e) {
+            throw new CourseException(CourseException.EX_DB);
+        }
+        catch (DwoXmlRpcException e) {
+            try {
+				throw (CourseException) getException(e, e.code);
+			} catch (PersistenceException e1) {
+                throw new CourseException(CourseException.EX_XML_RPC);
+			}
+        }
+
     }
 
     /**
@@ -2578,7 +2628,44 @@ public class PersistenceFacade {
         ((Hashtable) v.firstElement()).put("dwoProfileID", new Integer(id));
 
         try {
+//<<<<<<< .working
             DbAccessCreator.instance().selectCoursesForClass(schoolClass.getID(), v);
+//=======
+//            try {
+//                int parentID = parent==null ? 0 : parent.getID();
+//				int schoolID = parent==null ? school.getSchoolID() : parent.getSchoolID();
+//				int result = dbAccess.addCourse(schoolID, name,
+//                        description, dwoProfile.getID(), parentID, withChildren);
+//                Course c = new Course();
+//                c.setCourseID(result);
+//                c.setDescription(description);
+//                c.setName(name);
+//                c.setImageUrl(school.getImage());
+//                c.setDwoProfile(dwoProfile.getID());
+//                c.setSchoolID(schoolID); // DEZE IS VERGETEN, WIM 9/5/2011
+//                c.setParentID(parentID);
+//                c.resetParent();
+//                if(withChildren) c.setChildren(Course.NO_CHILDREN);
+//                else c.setScoList(Course.NO_SCOS);
+//                MapperIF map = MapperCreator.instance(Course.class);
+//                map.put(result, c);
+//                return c;
+//            } catch (IOException e) {
+//                throw new CourseException(CourseException.EX_IO);
+//            } catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (CourseException) getException(e, e.code);
+//                } else {
+//                    throw new CourseException(CourseException.EX_XML_RPC, e);
+//                }
+//            } catch (SQLException e) {
+//                throw new CourseException(CourseException.EX_DB);
+//            } catch (DwoXmlRpcException e) {
+//                throw (CourseException) getException(e, e.code);
+//            }
+//        } catch (PersistenceException e) {
+//            throw new CourseException(CourseException.EX_UNKNOWN_ERROR);
+//>>>>>>> .merge-right.r12522
         }
         catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
@@ -2637,6 +2724,31 @@ public class PersistenceFacade {
                 }
                 catch (Exception e) {
                 }
+//<<<<<<< .working
+//=======
+//                sco.setScoID(result);
+//                sco.setAppletID(appletConfig.getAppletID());
+//                sco.setName(name);
+//                sco.setDescription(description);
+//                sco.setSequencenr(max);
+//                sco.setCourse(course);
+//                sco.setLaunchdata((Hashtable)new StringCodeObject((String) appletConfig.getLaunchdata()).toObject());
+//                sco.setCourseChanged(false);
+//                MapperCreator.instance(Sco.class).put(result, sco);
+//                return sco;
+//            } catch (IOException e) {
+//                throw new ScoException(ScoException.EX_IO);
+//            } catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (ScoException) getException(e, e.code);
+//                } else {
+//                    throw new ScoException(ScoException.EX_XML_RPC, e);
+//                }
+//            } catch (SQLException e) {
+//                throw new ScoException(ScoException.EX_DB);
+//            } catch (DwoXmlRpcException e) {
+//                throw (ScoException) getException(e, e.code);
+//>>>>>>> .merge-right.r12522
             }
 
         }

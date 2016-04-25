@@ -99,23 +99,22 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
             boolean htmlSco = sco.getApplet().getClass().getName().equals("fi.popupurlapplet.PopUpURLApplet");
             if (!htmlSco && !sco.getLessonMode().equals(Sco.REVIEW)) {
                 sco.setLessonMode(Sco.REVIEW);
+                final boolean old = PersistenceFacade.instance().setAllowSuspendData(true);
                 dwo.setWait();
                 Thread thread = new Thread() {
-                    @Override
                     public void run() {
 
                         ScoPanel sp = sco.getScoPanel(dwo, user);
                         dwo.setReady();
                         if (sp != null) {
-                            ScoDialog.showScoDialog(dwo, sp, user, user.getInClass());
+                            ScoDialog.showScoDialog(dwo, sp, user, (SchoolClass) currentlyZoomedUser);
                         }
+                        PersistenceFacade.instance().setAllowSuspendData(old);
                         sco.setLessonMode(Sco.NORMAL);
                     }
                 };
                 thread.start();/**/
-
                 //rs.end();
-
             }
         }
     }
@@ -225,27 +224,31 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
         if ((currentlyZoomedLesson == null) && (currentlyZoomedUser == null)) {
             try {
                 userResultList = PersistenceFacade.instance().getResults(courses, teacher);
-            } catch (PersistenceException e) {
+            }
+            catch (PersistenceException e) {
                 JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
         } else if ((currentlyZoomedUser == null)
                 && (currentlyZoomedLesson instanceof Course)) {
             try {
                 userResultList = PersistenceFacade.instance().getResults((Course) currentlyZoomedLesson, teacher);
-            } catch (PersistenceException e) {
+            }
+            catch (PersistenceException e) {
                 JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
         } else if ((currentlyZoomedLesson == null)
                 && (currentlyZoomedUser instanceof SchoolClass)) {
             try {
                 userResultList = PersistenceFacade.instance().getResults(courses, (SchoolClass) currentlyZoomedUser, teacher);
-            } catch (PersistenceException e) {
+            }
+            catch (PersistenceException e) {
                 JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
         } else {
             try {
                 userResultList = PersistenceFacade.instance().getResults((Course) currentlyZoomedLesson, (SchoolClass) currentlyZoomedUser, teacher);
-            } catch (PersistenceException e) {
+            }
+            catch (PersistenceException e) {
                 JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
         }
@@ -403,7 +406,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      *
      * @param courses The courses to select.
      * @param getResults Indicates if the results must be returned.
-     * @return 
+     * @return
      * @see
      * fi.dwo.client.domain.ResultsModuleIF#selectCourses(fi.dwo.client.domain.Course[],
      * boolean)

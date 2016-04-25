@@ -187,7 +187,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         jtbl.setVisible(true);
 
     }
-
+    
     /**
      * Creates a new ClassPanel which shows a list of classes.
      *
