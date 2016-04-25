@@ -14,6 +14,7 @@ import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -24,6 +25,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	public DWO2player() {
 
 	}
+	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 
 	
 	protected ClientFactory createClientFactory() {
@@ -101,6 +103,13 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				XmlRpcClient client = getClient();
 				XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, filterProfile(getCoursesCallback));
 				request.execute();
+			}
+
+			@Override
+			public void samlLogin(String name, String org,
+					AsyncCallback<? super Map<String, Object>> callback) {
+				String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
+				restHandler.samlLogin(name, org, authToken, callback);
 			}
 
 		});
