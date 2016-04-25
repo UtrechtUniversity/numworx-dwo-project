@@ -1,1 +1,0 @@
-Note upgrading assigns the current date as registration date for teachers.

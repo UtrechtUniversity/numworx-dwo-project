@@ -46,23 +46,23 @@ import javax.persistence.Persistence;
  *
  */
 public class DataSourceAccessServlet extends Servlet {
-
+	private DelayedDatasource ds;
+	private boolean monitor;
+	private boolean threading;
+	private ThreadLocal<HttpSession> session = new ThreadLocal<HttpSession>();
+	static private Logger logger = Logger.getLogger(DataSourceAccessServlet.class.getName());
+	
     private static final Logger LOG = Logger.getLogger(DataSourceAccessServlet.class.getName());
 
     private final static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
-
-    private DataSource ds;
-    private boolean monitor;
-    private boolean threading;
-    static private ThreadLocal<HttpSession> session = new ThreadLocal<HttpSession>();
 
     private static EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
-    static class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF, ScormAccessIF {
+    static private int count = 0;
+    class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF, ScormAccessIF {
 
-        static private int count;
 
         public MonitorDataSourceAccess(DataSource ds) {
             super(ds);
@@ -165,7 +165,7 @@ public class DataSourceAccessServlet extends Servlet {
 
     }
 
-    static class MonitoringProxy extends DbAccessProxy {
+    class MonitoringProxy extends DbAccessProxy {
 
         DataSource ds;
 
@@ -206,49 +206,77 @@ public class DataSourceAccessServlet extends Servlet {
             maxthreads = Integer.parseInt(param);
         }
         XmlRpc.setMaxThreads(maxthreads);
-
-        String source = getInitParameter("datasource");
-        monitor = !"false".equals(getInitParameter("monitor"));
-        threading = "true".equals(getInitParameter("threading"));
-
+		
+		String source = getInitParameter("datasource");
+		monitor = ! "false".equals (getInitParameter("monitor"));
+		threading = "true".equals(getInitParameter("threading"));
+		
         LOG.log(Level.INFO, "monitoring = {0}, threading = {1}", new Object[]{monitor, threading});
-        try {
-// find datasource from tomcat
-            Context initContext = new InitialContext();
-            Context envContext = (Context) initContext.lookup("java:/comp/env");
-            ds = (DataSource) envContext.lookup(source);
-            if (ds == null) {
-                throw new ServletException("Resource " + source + " is null");
-            } else {
-                LOG.log(Level.INFO, "Found datasource {0}", new Object[]{ds});
-            }
+//		try {
+//// find datasource from tomcat
+//			Context initContext = new InitialContext();
+//			//Context envContext  = (Context)initContext.lookup("java:/comp/env");
+//
+//			ds = lookup(source, initContext);
+//			if( ds  == null) {
+//				// voor TOMCAT: java:/comp/env/...
+//				ds = lookup("java:/comp/env/"+source, initContext);
+//			}
+//			if( ds  == null) {
+//				// voor OSGI,   osgi:service/
+//				ds = lookup("osgi:service/"+source, initContext);
+//			}
+//			initContext.close();
+//			if(ds == null) {
+//				throw new ServletException("Resource " + source + " is null");
+//			} else log("found datasource " + ds);
+//
+//// CHECK version here:
+//// TODO bij soft error suspend, 
+//			if (new DataSourceAccess(ds).checkVersion())
+//				throw new ServletException("Datasource invalid version, restart tomcat once fixed");
+			ds = new DelayedDatasource(source);
+		
+			// try immediately
+			try { 
+				ds.getDelegate();
+			} catch (Exception e) {
+				logger.info("getDelegate at init " + e);
+			}
+			
+			
+			DbAccessIF dbaccess;
+			if (threading)
+			{
+				if(monitor)
+					dbaccess = new MonitoringProxy(ds);
+				else
+					dbaccess = new DataSourceProxy(ds);
+				unLock();
+			}
+			else 
+			{
+				if(monitor)
+					dbaccess = (DbAccessIF) MonProxyFactory.monitor(new MonitorDataSourceAccess(ds));
+				else
+					dbaccess = new DataSourceAccess(ds);
+			}
+			
+			setHandler(dbaccess);
 
-            if (new DataSourceAccess(ds).checkVersion()) {
-                throw new ServletException("Datasource invalid version");
-            }
+//		} catch (NamingException e) {
+//			throw new ServletException("Datasource in error",e);
+//		}
 
-            DbAccessIF dbaccess;
-            if (threading) {
-                if (monitor) {
-                    dbaccess = new MonitoringProxy(ds);
-                } else {
-                    dbaccess = new DataSourceProxy(ds);
-                }
-                unLock();
-            } else {
-                if (monitor) {
-                    dbaccess = (DbAccessIF) MonProxyFactory.monitor(new MonitorDataSourceAccess(ds));
-                } else {
-                    dbaccess = new DataSourceAccess(ds);
-                }
-            }
+	}
 
-            setHandler(dbaccess);
-
-        } catch (NamingException e) {
-            throw new ServletException("Datasource in error", e);
-        }
-
+	private DataSource lookup(String source, Context initContext)
+   {
+		try {
+			return (DataSource)initContext.lookup(source);
+		} catch (NamingException e) {
+			return null;
+		}
     }
 
     private void printRS(ResultSet rs, PrintWriter out) throws SQLException {
@@ -262,7 +290,8 @@ public class DataSourceAccessServlet extends Servlet {
             out.println();
         }
 
-    }
+	}
+	
 
     /**
      * Returns public servlet status information in a plain text webpage.
@@ -341,30 +370,40 @@ public class DataSourceAccessServlet extends Servlet {
     }
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        try {
-            HttpSession s = req.getSession(true);
-            session.set(s);
-            s.setAttribute("ip", req.getRemoteAddr());
-            super.service(req, resp);
-        } catch (RuntimeException re) {
-            LOG.log(Level.SEVERE, "service", re);
-            throw re;
-        } finally {
-            try {
-                ((DbConnectIF) getHandler()).close();
-            } catch (Exception e) {
-                LOG.log(Level.FINE, "Closing handler in finally failed:", e);
-            }
-        }
-    }
+	protected void service(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		try { 
+			ds.getDelegate();
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "service", e);
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}  
+
+		try { 
+			HttpSession s = req.getSession(true);
+			session.set(s);
+			s.setAttribute("ip", req.getRemoteAddr());
+			super.service(req, resp);
+		} catch (RuntimeException re) {
+			LOG.log(Level.SEVERE, "service", re);
+			throw re;
+		} finally { 
+			try {
+				((DbConnectIF) getHandler()).close();
+			} catch (Exception e) {
+				LOG.log(Level.FINE, "finally close failed", e);
+			}
+			session.remove();
+		}
+	}
 
     @Override
     public void destroy() {
         LOG.log(Level.FINE, "Closing xmlrpc handler.");
         ((DbConnectIF) getHandler()).close();
         super.destroy();
+        ds = null;
     }
 
 }

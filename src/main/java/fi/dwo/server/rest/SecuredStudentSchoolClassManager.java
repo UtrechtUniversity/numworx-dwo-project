@@ -181,7 +181,8 @@ public class SecuredStudentSchoolClassManager {
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(id));
 
         if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())
-                && (schoolClass.getRegistrationKey() == null || schoolClass.getRegistrationKey().equals(restSchoolClass.getDomNewSchoolClass4Student().getRegistrationKey()))) {
+                && (schoolClass.getRegistrationKey() == null || schoolClass.getRegistrationKey().equals("")
+                || schoolClass.getRegistrationKey().equals(restSchoolClass.getDomNewSchoolClass4Student().getRegistrationKey()))) {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
                 PersistentStudentOfClass soc = new PersistentStudentOfClass();

@@ -17,30 +17,30 @@ import fi.dwo.commons.exceptions.LoginException;
 
 import java.util.logging.Level;
 
-public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAccessIF {
+public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAccessIF, DbAccessJS {
 //TODO this class should use reflection to delegate stuff going to be purely serverside.
 //
     protected abstract DbAccessIF createDelegate();
+	
+	ThreadLocal<DbAccessIF> delegate = new ThreadLocal<DbAccessIF>() {
+		protected DbAccessIF initialValue() {
+			return createDelegate();
+		}
+		
+	};
+	
+	
+	public void close() {
+		DbConnectIF connector = (DbConnectIF) delegate.get();
+		connector.close();
+		delegate.remove();
+	}
 
-    ThreadLocal delegate = new ThreadLocal() {
+	protected DbAccessIF getDelegate() {
+		DbAccessIF local = delegate.get();
+		return local;
+	}
 
-        @Override
-        protected Object initialValue() {
-            return createDelegate();
-        }
-
-    };
-
-    @Override
-    public void close() {
-        DbConnectIF connector = (DbConnectIF) delegate.get();
-        connector.close();
-    }
-
-    protected DbAccessIF getDelegate() {
-        DbAccessIF local = (DbAccessIF) delegate.get();
-        return local;
-    }
 
     @Override
     public Vector getCoursesForClass(int classID) throws IOException,
@@ -686,6 +686,38 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 		return getScormAccess().Initialize(userID, schoolGroupID, scoID, keys);
 	}
     
-    
+    private DbAccessJS getDbAccessJS() {
+    	return (DbAccessJS) getDelegate();
+    }
+
+	@Override
+	public Vector getCoursesJS(int profileValue) throws IOException,
+			XmlRpcException, SQLException {
+		return getDbAccessJS().getCoursesJS(profileValue);
+	}
+
+	@Override
+	public Vector getCoursesForClassJS(int classID) throws IOException,
+			XmlRpcException, SQLException {
+		return getDbAccessJS().getCoursesForClassJS(classID);
+	}
+
+	@Override
+	public Vector getEditableCoursesJS(int schoolID) throws IOException,
+			XmlRpcException, SQLException {
+		return getDbAccessJS().getEditableCoursesJS(schoolID);
+	}
+
+	@Override
+	public Vector getEditableCoursesAdminJS() throws IOException,
+			XmlRpcException, SQLException {
+		return getDbAccessJS().getEditableCoursesAdminJS();
+	}
+
+	@Override
+	public Vector getTableJS(String table, Hashtable wheredef, String orderby)
+			throws IOException, XmlRpcException, SQLException {
+		return getDbAccessJS().getTableJS(table, wheredef, orderby);
+	}
     
 }

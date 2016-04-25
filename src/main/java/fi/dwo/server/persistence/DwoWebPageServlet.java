@@ -1,12 +1,11 @@
-package fi.dwo.server.persistence;
-
 /*
  * Created on Apr 5, 2005
  *
  */
-
+package fi.dwo.server.persistence;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,181 +14,138 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
-import java.util.Random;
+import java.util.Enumeration;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import fi.beans.xmlrpc.Servlet;
-
 /**
  * @author M.J.B. Kupers
- * @web.servlet name="DwoWebPage" description="Servlet voor het genereren van de
- * dwo.html pagina"
- * @web.servlet-init-param name="html_source" value="file:webapps/dwo/dwo.html"
- * @web.servlet-init-param name="local" value="true"
- * @web.servlet-init-param name="servlet" value="/dwo/dbaccess"
- * @web.servlet-mapping url-pattern="/dwowebpage"
+ * @author Wim van Velthoven
+ * @web.servlet
+ *   name="DwoWebPage"
+ *   description="Servlet voor het genereren van de dwo.html pagina"
+ * @web.servlet-init-param
+ *   name="html_source"
+ *   value="/dwo.jsp"
+ * @web.servlet-init-param
+ *  	name="SERVLET"
+ *  	value="/dwo/dbaccess"
+ * @web.servlet-mapping
+ *     url-pattern="/dwowebpage"
  */
-public class DwoWebPageServlet extends Servlet {
+public class DwoWebPageServlet extends HttpServlet {
 
-    //TODO Wim: Do we need a static default? It makes things go easily awry.
-    private String HTML_SOURCE = "file:/home/projects/fisme-sites/www/dwo/dwo.html";
-
-    //private String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessServlet";
-    //private DbAccess dbAccess;
+    private String HTML_SOURCE = "/dwo.jsp";
+    private String SERVLET = "dsaccess"; // relatief t.o.v contextpath
+    private String language = "nl";
+    private Boolean guestUser = Boolean.FALSE;
+    private String IDEAS = "/ideas/IdeasServlet";
+    private Boolean cookies = Boolean.TRUE;
+	private RequestDispatcher dispatch;
+    
     /**
-     *
-     */
-    public DwoWebPageServlet() {
-        super();
-
-    }
-
-    /**
-     * @param arg0
-     */
-    public DwoWebPageServlet(Object arg0) {
-        super(arg0);
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        /* Read the html file */
-        BufferedReader in = null;
-
-        try {
-            if (HTML_SOURCE.startsWith("file:")) {
-                FileReader fis = new FileReader(HTML_SOURCE.substring(5));
-                in = new BufferedReader(fis);
-            } else {
-                URL htmlSource = new URL(HTML_SOURCE);
-                URLConnection connection = htmlSource.openConnection();
-                in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            }
-        } catch (FileNotFoundException exception) {
-            log(exception.toString());
-        }
-
-        if (in != null) {
-            String result = "";
-            String tmp = "";
-            while ((tmp = in.readLine()) != null) {
-                result += tmp + "\n";
-            }
-            in.close();
-
-            String key = randomstring();
-
-            String jar = null;
-
-            String archives = "";
-	        // End of life!
-//	        /* Create for the number of jars a reference to the servlet */
-//	        try {
-//		        dbAccess.close(); //for lazy connection
-//	            int nrJars = dbAccess.getNrJars();
-////	            log("Total nr Jars: " + nrJars);
-//                for(int i = 0; i < nrJars; i++) {
-//                    /* the 'nr'-param is just for uniquenes of the archive name */
-//                    archives += "," + SERVLET + "?key=" + key + "&nr=" + i;
-//                    //log("loop: " + i + ";" + archives);
-//                }
-//            } catch (Exception e) {
-//                getServletContext().log(e, "nrjars");
-//            }
-//	        dbAccess.close(); //for lazy connection
-
-            String lang = (String) req.getParameter("language");
-
-            if ((lang == null) || (lang.equals(""))) {
-                lang = "nl";
-            }
-
-            String profile = (String) req.getParameter("profile");
-
-            if ((profile == null) || (profile.equals(""))) {
-                profile = "1";
-            }
-
-            String guestUser = (String) req.getParameter("guestUser");
-
-            if ((guestUser == null) || (guestUser.equals(""))) {
-                guestUser = "false";
-            }
-
-            String scoViewNr = (String) req.getParameter("scoViewNr");
-
-            if ((scoViewNr == null) || (scoViewNr.equals(""))) {
-                scoViewNr = "0";
-            }
-
-            String courseViewNr = (String) req.getParameter("courseViewNr");
-
-            if ((courseViewNr == null) || (courseViewNr.equals(""))) {
-                courseViewNr = "0";
-            }
-
-            String[] arguments = {archives, lang, key, profile, guestUser, scoViewNr, courseViewNr};
-            result = MessageFormat.format(result, (Object) arguments);
-
-            resp.setContentType("text/html");
-
-            PrintWriter pw = resp.getWriter();
-
-            pw.print(result);
-
-        }
-    }
-
-    private static Random rn = new Random();
-
-    private static int rand(int lo, int hi) {
-        int n = hi - lo + 1;
-        int i = rn.nextInt() % n;
-        if (i < 0) {
-            i = -i;
-        }
-        return lo + i;
-    }
-
-    private static String randomstring(int lo, int hi) {
-        int n = rand(lo, hi);
-        byte b[] = new byte[n];
-        for (int i = 0; i < n; i++) {
-            b[i] = (byte) rand('a', 'z');
-        }
-        return new String(b, 0);
-    }
-
-    private static String randomstring() {
-        return randomstring(10, 20);
-    }
-
-    /**
-     * Haal parameter html_source op. Andere parameters zijn servlet en local.
-     *
-     * @param config
-     * @throws javax.servlet.ServletException
-     * 
+     * Haal parameter html_source op.
+     * Andere parameters zijn SERVLET etc...
      * @see #HTML_SOURCE
      * @see fi.beans.xmlrpc.Servlet#init(javax.servlet.ServletConfig)
      */
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        //TODO Discuss: Note that these parameters can be overridden in the server context.xml and hence should have reverse domain/package naming prefix
+
+    public void init() throws ServletException
+    {
         String param = getInitParameter("html_source");
-        if (param != null) {
+        if(param!=null)
             HTML_SOURCE = param;
-        }
-//        param = getInitParameter("servlet");
-//        if(param!=null)
-//        	SERVLET = param;
+        log("html_source = " + HTML_SOURCE);
+        param = getInitParameter("SERVLET");
+        if(param!=null)
+        	SERVLET = param;
+        param = getInitParameter("cookies");
+        if(param != null)
+        	cookies = Boolean.valueOf(param);
+        param = getInitParameter("guestUser");
+        if(param != null) 
+        	guestUser = Boolean.valueOf(param);
+        param = getInitParameter("language");
+        if(param != null)
+        	language = param;        
+        param = getInitParameter("IDEAS");
+        if (param != null)
+        	IDEAS = param;
+        
+        dispatch = getServletContext().getRequestDispatcher(HTML_SOURCE);
     }
+
+    /**
+     * Maak een relatief path absoluut t.o.v contextPath
+     * @param path
+     * @param req
+     * @return absolute path 
+     */
+    private String p(String path, HttpServletRequest req) {
+    	if(path.startsWith("/"))
+    		return path;
+    	String contextPath = req.getContextPath();
+    	return contextPath + "/" + path;
+    }
+    
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+// prepare
+//		log("doGet started");
+		req.setAttribute("SERVLET", p(SERVLET, req) );
+		req.setAttribute("IDEAS", p(IDEAS, req));
+		req.setAttribute("language", language);
+// guestUser is a parameter
+		String guestUserStr = req.getParameter("guestUser");
+		Boolean guestUser = this.guestUser;
+		try {
+			if(guestUserStr != null)
+				guestUser = Boolean.valueOf(guestUserStr);
+		} catch(Exception e) {
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;	
+		}
+		req.setAttribute("guestUser", guestUser);
+	
+		req.setAttribute("cookies", cookies);
+// profile is missing -> NOT_FOUND		
+		Object profile = req.getParameter("profile");
+		if(profile == null)
+		{
+			profile = "1";
+//			resp.sendError(resp.SC_NOT_FOUND);
+//			return;
+		} else 
+			profile = profile.toString().trim();
+		if(profile.toString().isEmpty()) profile=Integer.valueOf(1);
+		else
+		try {
+			profile = new Integer(profile.toString());
+		} catch(Exception e) {
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;	
+		}
+		
+		req.setAttribute("profile", profile);
+		req.setAttribute("extras", "");
+//		Enumeration<String> e = req.getAttributeNames();
+//		while (e.hasMoreElements()) {
+//			String object = e.nextElement();
+//			log("doGet  " + object + " : " + req.getAttribute(object));
+//		}
+		
+		if(dispatch == null)
+		{
+			log(HTML_SOURCE + " not found");
+			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+//		log("doGet dispatch");
+		dispatch.forward(req, resp);
+	}
 
 }

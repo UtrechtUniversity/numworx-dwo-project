@@ -5,10 +5,13 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="DWO-commons-lib-2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DWO-commons-lib/DWO-commons-lib">
+        <dependent-module archiveName="DWO-commons-lib-working-gert-2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DWO-commons-lib/DWO-commons-lib">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <property name="context-root" value="DWOServer"/>
+        <dependent-module archiveName="DWO-rest-lib-working-gert-2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DWO-rest-lib/DWO-rest-lib">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="java-output-path" value="/DWOServer/target/classes"/>
+        <property name="context-root" value="DWOServer-working-gert"/>
     </wb-module>
 </project-modules>

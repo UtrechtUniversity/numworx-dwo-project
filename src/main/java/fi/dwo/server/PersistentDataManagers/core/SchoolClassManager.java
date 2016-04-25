@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -170,6 +171,8 @@ public class SchoolClassManager {
             PersistentSchoolClass r = (PersistentSchoolClass) q.getSingleResult();
             LOG.log(Level.FINE, "SchoolClass-manager retrieved PersistentSchoolClass with schoolid {1} and classname {0}", new Object[]{className, school.getSchoolID()});
             return r;
+        }catch(NoResultException e){
+            return null;
         }
         finally {
             em.close();

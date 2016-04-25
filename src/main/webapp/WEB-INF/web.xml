@@ -19,33 +19,140 @@
         <res-auth>Container</res-auth>
     </resource-ref>
     <filter>
-    	<filter-name>xss</filter-name>
-    	<filter-class>fi.dwo.server.xss.XSSFilter</filter-class>
+        <filter-name>xss</filter-name>
+        <filter-class>fi.dwo.server.xss.XSSFilter</filter-class>
     </filter>
     <filter-mapping>
-    	<filter-name>xss</filter-name>
-    	<url-pattern>/*</url-pattern>
+        <filter-name>xss</filter-name>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <filter>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+
+        <!-- set the amount of seconds the conf file will be checked for reload can be
+        a valid integer (0 denotes check every time, empty/not set denotes no reload check) -->
+        <init-param>
+            <param-name>confReloadCheckInterval</param-name>
+            <param-value>0</param-value>
+        </init-param>
+
+        <!-- sets up log level (will be logged to context log) can be: TRACE, DEBUG,
+         INFO (default), WARN, ERROR, FATAL, log4j, commons, sysout:{level}
+        (ie, sysout:DEBUG) if you are having trouble using normal levels use sysout:DEBUG -->
+        <init-param>
+            <param-name>logLevel</param-name>
+            <!--param-value>sysout:DEBUG</param-value-->
+            <param-value>INFO</param-value>
+        </init-param>
+
+        <!-- you can disable status page if desired can be: true, false (default true) -->
+        <init-param>
+            <param-name>statusEnabled</param-name>
+            <param-value>true</param-value>
+        </init-param>
+
+        <!-- you can change status path so that it does not conflict with your installed
+        apps (note, defaults to /rewrite-status) note, must start with / -->
+        <init-param>
+            <param-name>statusPath</param-name>
+            <param-value>/rewrite-status</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>ExpiresFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
+        <init-param>
+            <param-name>ExpiresByType image</param-name>
+            <param-value>access plus 10 minutes</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExpiresByType text/css</param-name>
+            <param-value>access plus 10 minutes</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExpiresByType application/javascript</param-name>
+            <param-value>access plus 10 minutes</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExpiresByType application/json</param-name>
+            <param-value>access plus 0 minutes</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>Remote Address Filter</filter-name>
+        <filter-class>org.apache.catalina.filters.RemoteAddrFilter</filter-class>
+        <init-param>
+            <param-name>allow</param-name>
+            <param-value>127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>Remote Address Filter</filter-name>
+        <url-pattern>/public/user/registerSAML</url-pattern>
+    </filter-mapping>
+    <!--     <filter-mapping> -->
+    <!--        <filter-name>ExpiresFilter</filter-name> -->
+    <!--        <url-pattern>/*</url-pattern> -->
+    <!--        <dispatcher>REQUEST</dispatcher> -->
+    <!--     </filter-mapping> -->
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     
     <!-- Servlets -->
     <servlet>
-        <description>Servlet voor het genereren van de dwo.html paginaServlet voor het genereren van de dwo.html pagina</description>
+        <description><![CDATA[Servlet voor het genereren van de dwo.html pagina]]></description>
         <servlet-name>DwoWebPage</servlet-name>
         <servlet-class>fi.dwo.server.persistence.DwoWebPageServlet</servlet-class>
-        <!-- note that these parameters can be overridden in the server context.xml and hence should have reverse domain/package naming prefix -->
+
         <init-param>
             <param-name>html_source</param-name>
-            <param-value>file:webapps/dwo/dwo.html</param-value>
+            <param-value>/dwo.jsp</param-value>
         </init-param>
         <init-param>
-            <param-name>local</param-name>
-            <param-value>true</param-value>
+            <param-name>cookies</param-name>
+            <param-value>false</param-value>
         </init-param>
         <init-param>
-            <param-name>servlet</param-name>
-            <param-value>/xmlrpc</param-value>
+            <param-name>SERVLET</param-name>
+            <param-value>xmlrpc</param-value> <!-- t.o.v contextPath -->
         </init-param>
-        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet>
+        <description><![CDATA[Servlet voor het genereren van de dwo.jnlp pagina]]></description>
+        <servlet-name>DwoJnlpPage</servlet-name>
+        <servlet-class>fi.dwo.server.persistence.DwoWebPageServlet</servlet-class>
+
+        <init-param>
+            <param-name>html_source</param-name>
+            <param-value>/dwo_jnlp.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>SERVLET</param-name>
+            <param-value>xmlrpc</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <description><![CDATA[Servlet voor het genereren van de index.html pagina]]></description>
+        <servlet-name>DwoIndexPage</servlet-name>
+        <servlet-class>fi.dwo.server.persistence.DwoWebPageServlet</servlet-class>
+
+        <init-param>
+            <param-name>html_source</param-name>
+            <param-value>/dwo_index.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>SERVLET</param-name>
+            <param-value>xmlrpc</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <description>Download servlet</description>
+        <servlet-name>download</servlet-name>
+        <servlet-class>fi.dwo.server.persistence.DownloadServlet</servlet-class>
     </servlet>
     <servlet>
         <description>Datasource servlet</description>
@@ -95,6 +202,23 @@
         <servlet-name>DwoWebPage</servlet-name>
         <url-pattern>/dwowebpage</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DwoJnlpPage</servlet-name>
+        <url-pattern>/dwojnlppage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DwoIndexPage</servlet-name>
+        <url-pattern>/dwoindexpage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>download</servlet-name>
+        <url-pattern>/jars/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>download</servlet-name>
+        <url-pattern>/resources/*</url-pattern>
+    </servlet-mapping>
+	
     <!-- Jersey JAX_RS JAXB JSON service provider -->
     <servlet-mapping>
         <servlet-name>jersey-servlet</servlet-name>
@@ -140,4 +264,9 @@
         <role-name>ADMIN</role-name>
     </security-role>
 
+    <listener>
+        <listener-class>
+            fi.dwo.server.rest.TranslatorServletContextListener 
+        </listener-class>
+    </listener>
 </web-app>

@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -164,6 +165,8 @@ public class SamlUserManager {
             PersistentSamlUser r = (PersistentSamlUser) q.getSingleResult();
             LOG.log(Level.FINE, "SamlUser-manager retrieved PersistentSamlUser with id {0} and user id {1}", new Object[]{r.getId(), r.getUserID()});
             return r;
+        }catch(NoResultException e){
+            return null;
         }
         finally {
             em.close();
