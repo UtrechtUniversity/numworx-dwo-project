@@ -18,7 +18,8 @@ public abstract class TextMapper {
     public static final String LBL_USERNAME = "LBL_USERNAME";
     public static final String LBL_PASSWORD = "LBL_PASSWORD";
 
-    /* Button text constants */
+    /* General word constants */
+ /* Button text constants */
     public static final String BTN_LOGIN = "BTN_LOGIN";
 
     public static final String BTN_CANCEL = "BTN_CANCEL";
@@ -28,7 +29,6 @@ public abstract class TextMapper {
     public static final String BTN_YES = "BTN_YES";
 
     public static final String BTN_NO = "BTN_NO";
-
     public static final String BTN_CLOSE = "BTN_CLOSE";
 
     public static final String BTN_ADD = "BTN_ADD";
@@ -78,15 +78,19 @@ public abstract class TextMapper {
     public static final String TBL_SCHOOLLOGIN = "TBL_SCHOOLLOGIN";
     public static final String TBL_SCHOOLRIGHTS = "TBL_SCHOOLRIGHTS";
 
-    /* Message dialog messages */
+    public static final String DLG_CREATESTUDENTERROR = "DLG_CREATESTUDENTERROR";
+    public static final String DLG_CREATETEACHERERROR = "DLG_CREATETEACHERERROR";
+
+    /* labels for radio buttons and others */
+ /* Message dialog messages */
     public static final String DLG_CONFIRM = "DLG_CONFIRM";
     public static final String DLG_Q_REMOVE = "DLG_Q_REMOVE";
     public static final String DLG_DONE_MSG = "DLG_DONE_MSG";
 
     public static final String DLG_MESSAGE = "DLG_MESSAGE";
     public static final String DLG_ERROR = "DLG_ERROR";
-    public static final String DLG_CREATESTUDENTERROR = "DLG_CREATESTUDENTERROR";
-    public static final String DLG_CREATETEACHERERROR = "DLG_CREATETEACHERERROR";
+    public static final String DLG_COPYSTUDENTERROR = "DLG_COPYSTUDENTERROR";
+    public static final String DLG_NO_USERS_SELECTED = "DLG_NO_USERS_SELECTED";
 
     public static final String DLG_ENTER_INPUT = "DLG_ENTER_INPUT";
     /* Exception Messages */
@@ -105,12 +109,23 @@ public abstract class TextMapper {
     public final static String EXR_WRONG_FORMAT = "EXR_WRONG_FORMAT";
     public final static String EXR_WRONG_EMAILFORMAT = "EXR_WRONG_EMAILFORMAT";
 
+    /* Gui Messages */
+    public final static String GUI_WAIT_A_MOMENT = "GUI_WAIT_A_MOMENT";
+
+    /* Reauthenticate Panel */
+    public final static String GUIREAUTH_AREYOUSURE = "GUIREAUTH_AREYOUSURE";
     /* School Exception Messages */
     public final static String EXS_SCHOOL_EXISTS = "EXS_SCHOOL_EXISTS";
 
     /* SchoolClass Exception Messages */
     public final static String EXC_CLASS_EXISTS = "EXC_CLASS_EXISTS";
     public final static String EXR_MANDATORY = "EXR_MANDATORY";
+    /* Welcome Panel */
+    public final static String GUIW_LOGINDATA = "GUIW_LOGINDATA";
+    public final static String GUIW_USERNAME = "GUIW_USERNAME";
+    public final static String GUIW_PASSWORD = "GUIW_PASSWORD";
+    public final static String GUIW_WELCOME = "GUIW_WELCOME";
+    public final static String GUIW_REGISTER = "GUIW_REGISTER";
 
     /* Course Exception Messages */
     public final static String EXC_COURSE_EXISTS = "EXC_COURSE_EXISTS";
@@ -119,23 +134,11 @@ public abstract class TextMapper {
     public final static String EXS_SCO_EXISTS = "EXS_SCO_EXISTS";
     public final static String EXS_NO_APPLET = "EXS_NO_APPLET";
 
-
     /* Login Exception Messages */
     public final static String EXL_UNKNOWN_USER = "EXL_UNKNOWN_USER";
 
-    /* Gui Messages */
-    public final static String GUI_WAIT_A_MOMENT = "GUI_WAIT_A_MOMENT";
-
-    /* Reauthenticate Panel */
-    public final static String GUIREAUTH_AREYOUSURE = "GUIREAUTH_AREYOUSURE";
 
     /* Welcome Panel */
-    public final static String GUIW_LOGINDATA = "GUIW_LOGINDATA";
-    public final static String GUIW_USERNAME = "GUIW_USERNAME";
-    public final static String GUIW_PASSWORD = "GUIW_PASSWORD";
-    public final static String GUIW_WELCOME = "GUIW_WELCOME";
-    public final static String GUIW_REGISTER = "GUIW_REGISTER";
-
     public final static String GUIW_GUESTLOGIN = "GUIW_GUESTLOGIN";
     public final static String GUIW_MSG_WORK_NOT_SAVE = "GUIW_MSG_WORK_NOT_SAVE";
     public final static String GUIW_MSG_REGISTER_NEW = "GUIW_MSG_REGISTER_NEW";
@@ -146,6 +149,7 @@ public abstract class TextMapper {
     public final static String GUIW_BTN_REGISTER = "GUIW_BTN_REGISTER";
 
     public final static String GUIW_ERR_LOGIN = "GUIW_ERR_LOGIN";
+    public final static String GUIW_ERR_NEW_SCHOOLLOGIN = "GUIW_ERR_NEW_SCHOOLLOGIN";
     public final static String GUIW_ERR_NOROLE = "GUIW_ERR_NOROLE";
 
     /* Register Panel */
@@ -207,6 +211,14 @@ public abstract class TextMapper {
     public final static String GUIMNU_STUDENT_NO_CLASS_2 = "GUIMNU_STUDENT_NO_CLASS_2";
     public final static String GUIMNU_STUDENT_NO_CLASS_3 = "GUIMNU_STUDENT_NO_CLASS_3";
     public final static String GUIMNU_STUDENT_NO_CLASS_4 = "GUIMNU_STUDENT_NO_CLASS_4";
+    public final static String GUIP_REGISTERINFO = "GUIP_REGISTERINFO";
+    public final static String GUIP_PERSONALINFO = "GUIP_PERSONALINFO";
+    public final static String GUIP_SCHOOLINFO = "GUIP_SCHOOLINFO";
+    public final static String GUIP_ACCOUNTANDCONTACTINFO = "GUIP_ACCOUNTANDCONTACTINFO";
+    public final static String GUIP_USERNAME = "GUIP_USERNAME";
+    public final static String GUIP_OLD_PASSWORD = "GUIP_OLD_PASSWORD";
+    public final static String GUIP_PASSWORD = "GUIP_PASSWORD";
+    public final static String GUIP_RE_PASSWORD = "GUIP_RE_PASSWORD";
 
     public final static String GUIMNU_CLASS_RESULTS = "GUIMNU_CLASS_RESULTS";
     public final static String GUIMNU_RESULTS = "GUIMNU_RESULTS";
@@ -239,19 +251,17 @@ public abstract class TextMapper {
     /* Profile Panel */
     public final static String GUIP_MY_PROFILE = "GUIP_MY_PROFILE";
 
-    public final static String GUIP_REGISTERINFO = "GUIP_REGISTERINFO";
-    public final static String GUIP_PERSONALINFO = "GUIP_PERSONALINFO";
-    public final static String GUIP_SCHOOLINFO = "GUIP_SCHOOLINFO";
-    public final static String GUIP_ACCOUNTANDCONTACTINFO = "GUIP_ACCOUNTANDCONTACTINFO";
-    public final static String GUIP_USERNAME = "GUIP_USERNAME";
-    public final static String GUIP_OLD_PASSWORD = "GUIP_OLD_PASSWORD";
-    public final static String GUIP_PASSWORD = "GUIP_PASSWORD";
-    public final static String GUIP_RE_PASSWORD = "GUIP_RE_PASSWORD";
-
     public final static String GUIP_FIRSTNAME = "GUIP_FIRSTNAME";
     public final static String GUIP_MIDDLENAME = "GUIP_MIDDLENAME";
     public final static String GUIP_LASTNAME = "GUIP_LASTNAME";
     public final static String GUIP_EMAIL = "GUIP_EMAIL";
+    public final static String GUIP_CONFIRM_REMOVE_USER = "GUIP_CONFIRM_REMOVE_USER";
+    public final static String GUIP_CONFIRM_REMOVE_USER_TITLE = "GUIP_CONFIRM_REMOVE_USER_TITLE";
+    public final static String GUIP_MSG_USER_REMOVED = "GUIP_MSG_USER_REMOVED";
+    public final static String GUIP_MSG_PROFILE_CHANGED = "GUIP_MSG_PROFILE_CHANGED";
+
+    public final static String GUIP_ROLE_OPTIONS = "GUIP_ROLE_OPTIONS";
+    public final static String GUIP_BTN_ADD_ROLE = "GUIP_BTN_ADD_ROLE";
 
     public final static String GUIP_SCHOOLLOGIN = "GUIP_SCHOOLLOGIN";
     public final static String GUIP_SCHOOLGROUP = "GUIP_SCHOOLGROUP";
@@ -271,14 +281,10 @@ public abstract class TextMapper {
 
     public final static String GUIP_OPT_SELECT_GROUP = "GUIP_OPT_SELECT_GROUP";
 
-    public final static String GUIP_CONFIRM_REMOVE_USER = "GUIP_CONFIRM_REMOVE_USER";
-    public final static String GUIP_CONFIRM_REMOVE_USER_TITLE = "GUIP_CONFIRM_REMOVE_USER_TITLE";
-    public final static String GUIP_MSG_USER_REMOVED = "GUIP_MSG_USER_REMOVED";
-    public final static String GUIP_MSG_PROFILE_CHANGED = "GUIP_MSG_PROFILE_CHANGED";
-
-    public final static String GUIP_ROLE_OPTIONS = "GUIP_ROLE_OPTIONS";
-    public final static String GUIP_BTN_ADD_ROLE = "GUIP_BTN_ADD_ROLE";
-
+    public final static String GUIC_TLTP_DELETE_CLASS = "GUIC_TLTP_DELETE_CLASS";
+    public final static String GUIC_TLTP_EDIT_CLASS = "GUIC_TLTP_EDIT_CLASS";
+    public final static String GUIC_TLTP_USERS_CLASS = "GUIC_TLTP_USERS_CLASS";
+    public final static String GUIC_TLTP_ASSIGN_CLASS = "GUIC_TLTP_ASSIGN_CLASS";
 
     /* Teacher-Profile Panel */
     public final static String GUIPT_SCHOOL = "GUIPT_SCHOOL";
@@ -317,11 +323,6 @@ public abstract class TextMapper {
 
     public final static String GUIC_TBL_CLASSNAME = "GUIC_TBL_CLASSNAME";
 
-    public final static String GUIC_TLTP_DELETE_CLASS = "GUIC_TLTP_DELETE_CLASS";
-    public final static String GUIC_TLTP_EDIT_CLASS = "GUIC_TLTP_EDIT_CLASS";
-    public final static String GUIC_TLTP_USERS_CLASS = "GUIC_TLTP_USERS_CLASS";
-    public final static String GUIC_TLTP_ASSIGN_CLASS = "GUIC_TLTP_ASSIGN_CLASS";
-
     public final static String GUIC_DELETE_CLASS = "GUIC_DELETE_CLASS";
     public final static String GUIC_DELETE_CLASS_TITLE = "GUIC_DELETE_CLASS_TITLE";
     public final static String GUIC_RENAME_CLASS = "GUIC_RENAME_CLASS";
@@ -352,7 +353,7 @@ public abstract class TextMapper {
     public final static String GUISC_BTN_SELECT_ALL = "GUISC_BTN_SELECT_ALL";
     public final static String GUISC_BTN_DESELECT_ALL = "GUISC_BTN_DESELECT_ALL";
 
-    /*UserGroup Strings */
+    /* UserGroup Strings */
     public final static String UG_CLASSES = "UG_CLASSES";
     public final static String UG_STUDENTS_OF_CLASS = "UG_STUDENTS_OF_CLASS";
     public final static String UG_RESULTS_OF_STUDENT = "UG_RESULTS_OF_STUDENT";
@@ -368,7 +369,7 @@ public abstract class TextMapper {
     public final static String UG_USER_ORDER_ASC = "UG_USER_ORDER_ASC";
     public final static String UG_USER_ORDER_DESC = "UG_USER_ORDER_DESC";
 
-    /*LessonGroup Strings */
+    /* LessonGroup Strings */
     public final static String LG_COURSES = "LG_COURSES";
     public final static String LG_SCOS_OF_COURSE = "LG_SCOS_OF_COURSE";
 
@@ -500,6 +501,17 @@ public abstract class TextMapper {
 
     private static String language;
 
+    public static final String DWO_PROFILE_ADMIN = "DwoProfileAdmin";
+
+    // Full Screen DWO
+    public static final String FSD_TITLE = "FSD_TITLE";
+    public static final String FSD_CONFIRM_TITLE = "FSD_CONFIRM_TITLE";
+    public static final String FSD_ACTIVITEIT = "FSD_ACTIVITEIT";
+    public static final String FSD_AFSLUITEN = "FSD_AFSLUITEN";
+    public static final String FSD_SURE = "FSD_SURE";
+    public static final String FSD_TIMEUP = "FSD_TIMEUP";
+    public static final String FSD_START = "FSD_START";
+
     /**
      *
      */
@@ -514,10 +526,9 @@ public abstract class TextMapper {
             }
             Locale lang = new Locale(language, "");
 
-            String className = "fi.dwo.commons.system.text" + "."
-                    + TEXT_CLASS;
-//            String className = TextMapper.class.getPackage().getName() + "."
-//                    + TEXT_CLASS;
+            String className = "fi.dwo.commons.system.text" + "." + TEXT_CLASS;
+            // String className = TextMapper.class.getPackage().getName() + "."
+            // + TEXT_CLASS;
             rb = ResourceBundle.getBundle(className, lang);
         }
 

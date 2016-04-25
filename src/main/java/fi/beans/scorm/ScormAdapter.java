@@ -113,20 +113,20 @@ public abstract class ScormAdapter {
         return FORMAT2004.format(new Date(time));
     }
 
-    /**
-     *
-     * @param cmiElement
-     * @return
-     */
-    public abstract String GetValue(String cmiElement);
-
-    private String getValue0(String key) {
-        if (!key.startsWith("cmi.")) {
-            return "";
-        }
-        key = map(key);
-        return GetValue("cmi." + key);
-    }
+	/**
+	 * 
+	 * @param cmiElement
+	 * @return
+	 */
+	public abstract String GetValue(String cmiElement);
+	
+	private String getValue0(String key) {
+		if(key.startsWith("dme.")) return GetValue(key); // private extensions.
+		if(!key.startsWith("cmi."))
+			return "";
+		key = map(key);		
+		return GetValue("cmi." + key);
+	}
 
     /**
      * Get een value van het cmi data model. Versie Scorm 1.2

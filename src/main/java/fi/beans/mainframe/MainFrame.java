@@ -93,7 +93,11 @@ public class MainFrame extends Frame implements WindowListener, AppletStub, Appl
 
     @Override
     public URL getDocumentBase() {
-        return null;
+        try {
+			return new File(".").toURI().toURL();
+		} catch (MalformedURLException e) {
+			return null;
+		}
     }
 
     @Override

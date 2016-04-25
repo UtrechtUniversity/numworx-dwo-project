@@ -31,7 +31,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentSamlUser.findById", query = "SELECT p FROM PersistentSamlUser p WHERE p.id = :id"),
     @NamedQuery(name = "PersistentSamlUser.findBySamlorgid", query = "SELECT p FROM PersistentSamlUser p WHERE p.samlorgid = :samlorgid"),
     @NamedQuery(name = "PersistentSamlUser.findBySamluserid", query = "SELECT p FROM PersistentSamlUser p WHERE p.samluserid = :samluserid"),
+    @NamedQuery(name = "PersistentSamlUser.findBySamlOrgAndSamlUser", query = "SELECT p FROM PersistentSamlUser p WHERE p.samlorgid = :samlOrgId and p.samluserid = :samlUserId"),
     @NamedQuery(name = "PersistentSamlUser.findByUserID", query = "SELECT p FROM PersistentSamlUser p WHERE p.userID = :userID")})
+    
+
 public class PersistentSamlUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,8 +58,8 @@ public class PersistentSamlUser implements Serializable {
     @Column(name = "userID", nullable = false)
     private Long userID;
     @NotNull
-    @Column(name = "authtoken", nullable = false)
-    private Long authToken;
+    @Column(name = "authtoken", nullable = false, length = 16)
+    private String authToken;
     @NotNull
     @Column(name = "timestampauthtoken", nullable = false)
     private long authTokenTimestamp;
@@ -135,14 +138,14 @@ public class PersistentSamlUser implements Serializable {
     /**
      * @return the authToken
      */
-    public Long getAuthToken() {
+    public String getAuthToken() {
         return authToken;
     }
 
     /**
      * @param authToken the authToken to set
      */
-    public void setAuthToken(Long authToken) {
+    public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
 
@@ -156,7 +159,7 @@ public class PersistentSamlUser implements Serializable {
     /**
      * @param authTokenTimestamp the authTokenTimestamp to set
      */
-    public void setAuthTokenTimestamp(int authTokenTimestamp) {
+    public void setAuthTokenTimestamp(long authTokenTimestamp) {
         this.authTokenTimestamp = authTokenTimestamp;
     }
 
