@@ -92,7 +92,20 @@ public class SimilarityModel2D
 		double qcx = 0, qcy = 0;
 
 		double ws = 0.0f;
-
+		// RPJ ***
+		for ( int i = 0; i < l; ++i ) {
+			System.out.println("IN px::p[0]["+i+"]="+ p[0][i]);
+		}
+		for ( int i = 0; i < l; ++i ) {
+			System.out.println("IN py::p[1]["+i+"]="+ p[1][i]);
+		}
+		for ( int i = 0; i < l; ++i ) {
+			System.out.println("IN qx::q[0]["+i+"]="+ q[0][i]);
+		}
+		for ( int i = 0; i < l; ++i ) {
+			System.out.println("IN qy::q[1]["+i+"]="+ q[1][i]);
+		}
+		// *** RPJ
 		for ( int i = 0; i < l; ++i )
 		{
 			final double[] pX = p[ 0 ];

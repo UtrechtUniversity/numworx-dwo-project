@@ -43,5 +43,11 @@ public class Point2d {
 	public double distance(Point2d p) {
 		return ( Math.sqrt(squareDistance(p)) );
 	}
+	
+	@Override
+	public String toString() {
+		String s = "Point2d("+this.x+","+this.y+")";
+		return s;
+	}
 
 }
