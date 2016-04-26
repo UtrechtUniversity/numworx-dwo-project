@@ -1,8 +1,10 @@
 package fi.servlet.lti;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Hashtable;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +20,7 @@ import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.LoginException;
 import fi.dwo.client.system.PersistenceException;
 import fi.dwo.server.persistence.DwoXmlRpcException;
+import fi.servlet.dwomaccess.DbAccessFactory;
 
 public class DbAccess {
 	
@@ -27,6 +30,18 @@ public class DbAccess {
 	public DbAccess(DbAccessIF dbaccess) {
 		this.dbaccess = dbaccess;
 		DbAccessCreator.setInstance(dbaccess);
+	}
+	
+	public DbAccess(ServletContext context) {
+		this(DbAccessFactory.getDbAccess(context));
+		String dbrest_url = context.getInitParameter("dbrest.url");
+		if(dbrest_url != null)
+			try {
+				rest = new RestHandler(dbrest_url);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 	
 	DbAccessIF dbaccess;

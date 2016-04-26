@@ -38,7 +38,7 @@
 
 	private DbAccess getDbAccess() {
 		if(instance == null) {
-			instance = new DbAccess(DbAccessFactory.getDbAccess(getServletContext()));
+			instance = new DbAccess(getServletContext());
 		}
 		return instance;
 	}

@@ -39,8 +39,8 @@ public class RestHandler {
 	    }
 	}
 
-	public RestHandler(URL endpoint) {
-		this.endpoint = endpoint;
+	public RestHandler(URL endpoint) throws MalformedURLException {
+		this.endpoint = new URL(endpoint,"public/user/registerSAML");
 	}
 	
 	public RestHandler(String endpoint) throws MalformedURLException {

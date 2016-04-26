@@ -12,6 +12,7 @@
         <maven.compiler.target>1.6</maven.compiler.target>
         <dsaccess>/dwo/xmlrpc</dsaccess>
   		<dsaccess.url>http://127.0.0.1/dwo/xmlrpc</dsaccess.url>
+  		<dsrest.url>http://127.0.0.1/dwo/rest/</dsrest.url>
   		<ideas>/ideas/IdeasServlet</ideas>
   		<comment>amazon, *.dwo.nl</comment>
   </properties>
@@ -125,20 +126,19 @@
         	<version>3.1</version>
       	</plugin>
       	  	<plugin>
-        	<!-- Jetty < 9 is in org.mortbay.jetty groupId -->
-            <groupId>org.mortbay.jetty</groupId>
-            <version>8.1.9.v20130131</version>
-            <!-- Starting from Jetty 9 groupId is org.eclipse.jetty already -->
-            <!-- <groupId>org.eclipse.jetty</groupId> -->
-            <!-- Change to latest version available from http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.eclipse.jetty%22%20AND%20a%3A%22jetty-maven-plugin%22 -->
-            <!-- <version>9.x.y.z</version> -->
-            <artifactId>jetty-maven-plugin</artifactId>
+  				<groupId>org.eclipse.jetty</groupId>
+  				<artifactId>jetty-maven-plugin</artifactId>
+  				<version>9.3.7.v20160115</version>
             <configuration>
             	<webAppSourceDirectory>WebContent</webAppSourceDirectory>
  				<webApp>
  				  <contextPath>/DWOmAccess</contextPath>
  				  <descriptor>target/${project.build.finalName}/WEB-INF/web.xml</descriptor>
- 				</webApp>           
+ 				</webApp>
+ 				<httpConntector>
+ 					<port>8081</port>
+ 					<host>127.0.0.1</host>
+ 				</httpConntector>          
             </configuration>
             <dependencies>
   				<dependency>
@@ -172,6 +172,7 @@
   			<comment>speciaal for ws.fisme.science.uu.nl</comment>
   			<dsaccess>//app.dwo.nl/dwo/dsaccess</dsaccess>
   			<dsaccess.url>https://app.dwo.nl/dwo/dsaccess</dsaccess.url>
+  			<dsrest.url>https://app.dwo.nl/dwo/rest/</dsrest.url>
   			<ideas>/servlet/IdeasServlet</ideas>
   		</properties>
   	</profile>
@@ -181,9 +182,10 @@
   			<finalName>${project.artifactId}_local</finalName>
   		</build>
   		<properties>
-  			<comment>speciaal for localhost met local.dwo.nl als database</comment>
-  			<dsaccess>//dummytwo.dwo.nl/dwo/xmlrpc</dsaccess>
+  			<comment>speciaal for localhost met dummytwo.dwo.nl als database</comment>
+  			<dsaccess>https://dummytwo.dwo.nl/dwo/xmlrpc</dsaccess>
   			<dsaccess.url>http://dummytwo.dwo.nl/dwo/xmlrpc</dsaccess.url>
+  			<dsrest.url>http://dummytwo.dwo.nl/dwo/rest/</dsrest.url>
   		</properties>
   	</profile>
   </profiles>

@@ -9,6 +9,10 @@
 	<param-value>${dsaccess.url}</param-value>  
   </context-param>
   <context-param>
+  	<param-name>dbrest.url</param-name>
+	<param-value>${dsrest.url}</param-value>  
+  </context-param>
+  <context-param>
   	<param-name>SERVLET</param-name>
   	<param-value>${dsaccess}</param-value>
   </context-param>
