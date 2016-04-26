@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.servlet</groupId>
   <artifactId>DWOmAccess</artifactId>
-  <version>0.0.5</version>
+  <version>0.0.5.dwo2</version>
   <packaging>war</packaging>
   <name>DWOmAccess</name>
   <description>HTML5 access to dwo-server</description>
@@ -10,8 +10,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
-        <dsaccess>/dwo/dsaccess</dsaccess>
-  		<dsaccess.url>http://127.0.0.1/dwo/dsaccess</dsaccess.url>
+        <dsaccess>/dwo/xmlrpc</dsaccess>
+  		<dsaccess.url>http://127.0.0.1/dwo/xmlrpc</dsaccess.url>
   		<ideas>/ideas/IdeasServlet</ideas>
   		<comment>amazon, *.dwo.nl</comment>
   </properties>
@@ -182,8 +182,8 @@
   		</build>
   		<properties>
   			<comment>speciaal for localhost met local.dwo.nl als database</comment>
-  			<dsaccess>//local.dwo.nl/dwo/dsaccess</dsaccess>
-  			<dsaccess.url>http://local.dwo.nl/dwo/dsaccess</dsaccess.url>
+  			<dsaccess>//dummytwo.dwo.nl/dwo/xmlrpc</dsaccess>
+  			<dsaccess.url>http://dummytwo.dwo.nl/dwo/xmlrpc</dsaccess.url>
   		</properties>
   	</profile>
   </profiles>

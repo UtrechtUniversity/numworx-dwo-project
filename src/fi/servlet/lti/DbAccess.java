@@ -1,5 +1,6 @@
 package fi.servlet.lti;
 
+import java.io.IOException;
 import java.util.Hashtable;
 
 import javax.servlet.http.Cookie;
@@ -84,18 +85,26 @@ public class DbAccess {
 		String role = "STUDENT";
 		if(roles != null && roles.toLowerCase().contains("instructor"))
 			role = "TEACHER";
-		int schoolID = Integer.parseInt(oauth_consumer_key);
 		
-		
-		
-		
-		String authTokenStr = rest.registerSAML(
-				
-				
-				);
-		Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, authTokenStr);
-		authToken.setPath(path);
-		response.addCookie(authToken);
+		String authTokenStr;
+		try {
+			authTokenStr = rest.registerSAML(
+					user_id,
+					lti_id,
+					orgidStr,
+					name_given, name_prefix, name_family,
+					email,
+					role,
+					oauth_consumer_key,
+					context_label
+					);
+			Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, authTokenStr);
+			authToken.setPath(path);
+			response.addCookie(authToken);
+		} catch (IOException e) {
+			//TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 //		final PersistenceFacade facade = PersistenceFacade.instance();
