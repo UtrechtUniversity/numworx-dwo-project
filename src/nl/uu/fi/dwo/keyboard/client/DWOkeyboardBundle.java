@@ -65,6 +65,8 @@ public interface DWOkeyboardBundle extends ClientBundle {
 	@Source("nl/uu/fi/dwo/keyboard/client/resources/empty.png")
 	ImageResource empty();
 
+	@Source("nl/uu/fi/dwo/keyboard/client/resources/vinkje.png")
+	ImageResource vinkje();
 	
 	
 }
