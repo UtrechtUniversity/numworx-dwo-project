@@ -29,7 +29,11 @@ public class ScoreNavMC2 extends ScoreNavFacade {
 				check = btn;
 		}
 		if(check != null)
+		{
+			if(check.getParent() == null)
+				sb.addKnop(check, true);
 			check.setVisible(b);
+		}
 	}
 
 	@Override
@@ -43,6 +47,8 @@ public class ScoreNavMC2 extends ScoreNavFacade {
 				help = btn;
 		}
 		if(help != null)
+			if(help.getParent() == null)
+				sb.addKnop(help, true);
 			help.setVisible(b);
 	}
 
@@ -68,6 +74,8 @@ public class ScoreNavMC2 extends ScoreNavFacade {
 		if(gotoOpdracht != null)
 			logging.stopSession();
 		super.stopped();
+		if(check != null) check.removeFromParent();
+		if(help != null) help.removeFromParent();
 	}
 
 	@Override
