@@ -118,10 +118,15 @@ public class JSONEncoder {
 		return Collections.singletonMap("@type", "javaclass:" + value.getClass().getName());
 	}
 	
-	
+	/**
+	 * Make map JSON like.
+	 * public voor Wiskopdr-facet
+	 * @param map
+	 * @return converted map
+	 */
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static Map transformMap(Map map) {
+	public static Map transformMap(Map map) {
 		Map result = map;
 		Iterator iter = map.entrySet().iterator();
 		while (iter.hasNext()) {
