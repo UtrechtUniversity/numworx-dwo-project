@@ -20,7 +20,7 @@ public class LoginStatusPanel extends VerticalPanel {
         this.add(login);
         this.add(status);
     }
-    
+
     public void setStatus(String usercode, boolean loggedIn ){
         login.setText("usercode: "+ usercode);
         status.setText(Boolean.valueOf(loggedIn).toString());

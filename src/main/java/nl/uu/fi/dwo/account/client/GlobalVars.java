@@ -33,8 +33,9 @@ public class GlobalVars {
     private void initProperties() throws Dwo2Exception {
         try {
             Properties properties = new Properties();
-            properties.load(this.getClass().getResourceAsStream("run.properties"));
+            properties.load(this.getClass().getResourceAsStream("/META-INF/run.properties"));
             setServer(properties.getProperty("server","https://app.dwo.nl"));
+            LOG.log(Level.INFO, "restserver="+server+".");
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }

@@ -52,8 +52,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         init(user);
     }
 
-    private void init(DomUserFull user) {
-        LOG.log(Level.INFO, "testing");
+    public void init(DomUserFull user) {
         control.setCurrentUser(user);
         this.setSize("400", "500");
 
@@ -102,13 +101,8 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         g.setWidget(9, 1, cnlBtn);
         // You can use the CellFormatter to affect the layout of the grid's cells.
         //g.getCellFormatter().setWidth(0, 2, "256px");
+        this.clear();
         this.add(g);
-//        try {
-//            props.init();
-//        } catch (Dwo2Exception ex) {
-//            Logger.getLogger(ProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
-//                Window.alert("Init Failed.");
-//        }
     }
 
     @Override
