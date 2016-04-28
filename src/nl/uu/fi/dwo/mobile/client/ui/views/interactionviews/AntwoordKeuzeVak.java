@@ -52,11 +52,11 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
-	public static final String ACTION_FALSE2 = "action.false2";
+	public static final String ACTION_FALSE2 = "action.false_2";
 
-	private static final CBookEvent CORRECT_EVENT = new CBookEvent(ACTION_CORRECT); 
-	private static final CBookEvent FALSE_EVENT = new CBookEvent(ACTION_FALSE); 
-	private static final CBookEvent FALSE2_EVENT = new CBookEvent(ACTION_FALSE2); 
+	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
+	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
+	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
 
 	static final String holderId = "dockholder";
 	private HashMap<String, Object> launchState; 
@@ -853,13 +853,6 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	public void kijkNa() 
 	{
 		kijkNa(true, false);
-		
-		if (correct) 
-			fireEvent(CORRECT_EVENT);
-    	if (fout) 
-			fireEvent(FALSE_EVENT);
-    	if (fout && errorCount > 0) 
-			fireEvent(FALSE2_EVENT);
 	}
 	
 	private void kijkNa(boolean show, boolean setState)
@@ -942,6 +935,13 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		
 		if (show && ingevuld && !setState)
 			comRoot.setChanged(teltMee && fout);
+		
+		if (correct) 
+			fireEvent(EVENT_CORRECT);
+		if (fout && errorCount > 1) 
+			fireEvent(EVENT_FALSE2);
+		if (fout)
+			fireEvent(EVENT_FALSE);
 	}
 	
 	private void verhoogErrorCount()
