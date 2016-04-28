@@ -194,7 +194,15 @@
   			<gwtModule>${project.groupId}.DWO2player</gwtModule>
   			<runTarget>DWO2player.html</runTarget>
   		</properties>
-  	</profile> 
+  	</profile>
+  	<profile>
+  		<id>Trifork</id>
+  		<properties>
+  			<gwtModule>${project.groupId}.Trifork</gwtModule>
+  			<finalName>Trifork</finalName>
+  			<gwt.style>PRETTY</gwt.style>
+  		</properties>
+  	</profile>
   </profiles>
   <version>0.0.1-SNAPSHOT</version>
 </project>

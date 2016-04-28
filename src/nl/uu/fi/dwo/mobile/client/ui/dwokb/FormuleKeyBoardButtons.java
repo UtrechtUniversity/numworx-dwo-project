@@ -211,6 +211,7 @@ public abstract class FormuleKeyBoardButtons
 		buttonImages_put("prv", KB.prv());
 		buttonImages_put("subscript", KB.subscript());
 		buttonImages_put("wortel", KB.wortel());
+		buttonImages_put("apply", KB.vinkje());
 		
 		buttonImages_put(FormuleKeyboard.VVV, KB.VVV());
 	}
@@ -262,7 +263,7 @@ public abstract class FormuleKeyBoardButtons
 		
 		buttonImages.put("copy", "images/resources/CopyIcon.png");
 		buttonImages.put("paste", "images/resources/PasteIcon.png");
-		buttonImages.put("apply", "images/resources/vinkje.png");
+		//buttonImages.put("apply", "images/resources/vinkje.png");
 		buttonImages.put("backspace", "images/resources/BackSpaceIcon.png");
 		buttonImages.put("back", "images/resources/BackSpaceIcon.png");
 
