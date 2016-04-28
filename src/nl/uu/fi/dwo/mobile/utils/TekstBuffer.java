@@ -472,7 +472,7 @@ public class TekstBuffer
 		{
 // Deze werkt niet als stub.
 			result = //new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					 new AntwoordKeuzeVak(currentVakGegevens, randomVarNamen, randomVarWaarden);
+					 x(map, new AntwoordKeuzeVak(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if(soortVak == 16)
 		{	
