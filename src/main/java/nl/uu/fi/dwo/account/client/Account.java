@@ -19,6 +19,7 @@ public class Account implements EntryPoint {
             + "attempting to contact the server. Please check your network "
             + "connection and try again.";
     private SecuredUserAccountManager handler = new SecuredUserAccountManager();
+    private LoginStatusPanel loginStatusPanel=new LoginStatusPanel();
 
     @Override
     public void onModuleLoad() {
@@ -43,6 +44,7 @@ public class Account implements EntryPoint {
             handler.login("project_wim", "passw", new AsyncCallback<DomUserFull>() {
                 @Override
                 public void onFailure(Throwable t) {
+                    loginStatusPanel.setStatus("", false);
                     LOG.log(Level.INFO, t.getStackTrace().toString());
                     Window.alert("Couldn't fetch a testuser from the server.");
                 }
@@ -51,7 +53,7 @@ public class Account implements EntryPoint {
                 public void onSuccess(DomUserFull result) {
                     LOG.log(Level.INFO, "Fetched a test user with username:" + result.getUserName() + ".");
                     user = (DomUserFull) result;
-                    loginStatusPanel.setUser(user);
+                    loginStatusPanel.setStatus(user.getUserName(), true);
                 }
             });
         } else {
