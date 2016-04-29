@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -73,6 +74,14 @@ import fi.wiskopdr.expressies.repr.ContentMathML;
  */
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView, CBookEventListener, FacetAware, TekstElementWithFont, PopupListener
 {
+	public static final String ACTION_CORRECT = "action.correct";
+	public static final String ACTION_FALSE = "action.false";
+	public static final String ACTION_FALSE2 = "action.false_2";
+
+	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
+	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
+	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
+
 	private int extraWidth = 23 ; // of 43; breedte voor nakijkplaatje en als nodig voor knop voor uitklappen.
 	
 	class FormuleEditorPopup extends FormuleEditorWithSteps implements CBookEventListener, StateLess {
@@ -882,6 +891,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		// in maakNakijkenAf wordt voor setState = false comRoot.setChanged(false) gedaan;
 		// als fe == null dus niet...
+		
+		if (goedHalfFout == AntwoordVakChecker.GOED)
+			fireEvent(EVENT_CORRECT);
+		else if (goedHalfFout == AntwoordVakChecker.FOUT && errorCount > 1) 
+			fireEvent(EVENT_FALSE2);
+		else if (goedHalfFout == AntwoordVakChecker.FOUT)
+			fireEvent(EVENT_FALSE);
 	}
 	
 	public void zetGoedFout(int uitslag)
@@ -905,6 +921,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		check = checkWas;
 	}
 	
+	private void fireEvent(CBookEvent event) 
+	{
+		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		if (this.comRoot != null)
+			this.comRoot.fireEvent(event);
+		else if (this.fe != null)
+			this.fe.fireEvent(event);
+			
+	}
+
 	public boolean wordtGecheckt()
 	{
 		return check;
