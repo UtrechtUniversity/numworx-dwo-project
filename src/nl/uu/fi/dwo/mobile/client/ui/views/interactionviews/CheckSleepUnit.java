@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -44,6 +45,14 @@ import fi.wiskopdr.text.Text_nl;
 
 public class CheckSleepUnit implements InteractionStub{
 	
+	public static final String ACTION_CORRECT = "action.correct";
+	public static final String ACTION_FALSE = "action.false";
+	public static final String ACTION_FALSE2 = "action.false_2";
+
+	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
+	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
+	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
+
 	public static Text_nl rb = new Text_nl();
 	static final String holderId = "dockholder";
 	
@@ -560,11 +569,20 @@ public class CheckSleepUnit implements InteractionStub{
         	
         }
         
-       
-			
-        
+		if (correct) 
+			fireEvent(EVENT_CORRECT);
+		if (fout && errorCount > 1) 
+			fireEvent(EVENT_FALSE2);
+		if (fout)
+			fireEvent(EVENT_FALSE);
     }
     
+	private void fireEvent(CBookEvent event) 
+	{
+		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		comRoot.fireEvent(event);
+	}
+
     public void kijkNa(int stapNr)
     { 	kijkNa();
     }
