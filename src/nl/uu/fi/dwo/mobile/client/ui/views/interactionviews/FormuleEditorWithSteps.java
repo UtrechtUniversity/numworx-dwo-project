@@ -77,6 +77,14 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 {
 	private final static Logger logger = Logger.getLogger("FormuleEditorWithSteps");
 
+	public static final String ACTION_CORRECT = "action.correct";
+	public static final String ACTION_FALSE = "action.false";
+	public static final String ACTION_FALSE2 = "action.false_2";
+
+	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
+	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
+	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
+
 	//static int GOED = 1;
 	//static int FOUT = 0;
 	//static int HALF = 2;
@@ -1016,7 +1024,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 	public String removeIsTeken(String s)
 	{
-		if ((s.length() > 0) && (s.charAt(s.length() - 1) == '=' || s.charAt(s.length() - 1) == '\u2248'))
+		if ((s != null) && (s.length() > 0) && (s.charAt(s.length() - 1) == '=' || s.charAt(s.length() - 1) == '\u2248'))
 		{
 			int isIndex = s.length() - 1;
 			s = s.substring(0, isIndex);
@@ -2035,6 +2043,18 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		kijkNa(false, true, setState);
 	}
 	
+	/**
+	 * Vuurt een cbook event af. Is ook aan te roepen vanuit FormuleEditorWithAnswer. Deze klasse 
+	 * handelt de kijkNa() af van een stap in FormuleEditorWithSteps.
+	 * 
+	 * @param event
+	 */
+	void fireEvent(CBookEvent event) 
+	{
+		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		comRoot.fireEvent(event);
+	}
+
 	public void kijkNa(boolean backStep, boolean show, boolean setState)
 	{
 		if(!isToets() && editor == null)
