@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.account.client;
 
-import fi.dwo.gwt.lib.rest.client.SecuredUserAccountManager;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -8,6 +7,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.logging.Level;
 

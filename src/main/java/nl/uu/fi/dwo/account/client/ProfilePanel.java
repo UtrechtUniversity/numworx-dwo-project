@@ -26,7 +26,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
 
     Logger LOG = Logger.getLogger("Account");
 
-    ProfileController control = new ProfileController();
+    ProfileController control;
     PopupPanel popup;
     Button cnlBtn;
     Button okBtn;
@@ -50,6 +50,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
 
     ProfilePanel(DomUserFull user) {
         init(user);
+         control= new ProfileController(this,user);
     }
 
     public void init(DomUserFull user) {

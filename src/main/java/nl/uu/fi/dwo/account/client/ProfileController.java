@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.GWTGlobals;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,17 +11,23 @@ import java.util.logging.Logger;
  *
  * @author Gert van der Plas
  */
-public class ProfileController {
+class ProfileController {
 
     private static final Logger LOG = Logger.getLogger(ProfileController.class.getName());
 
     private ProfilePanel view;
     private DomUserFull currentUser;
     private DomUserFull updateUser;
-    private SecuredUserAccountManager caller = new SecuredUserAccountManager();
+    private SecuredUserAccountManager manager = new SecuredUserAccountManager();
 
+    ProfileController(ProfilePanel view, DomUserFull user){
+        this.view = view;
+        init(user);
+    }
+    
     public void init(DomUserFull user) {
         currentUser = user;
+        updateUser = currentUser.duplicate();
     }
 
     /**
@@ -30,7 +37,7 @@ public class ProfileController {
      */
     public void callUpdate() {
         LOG.log(Level.INFO, "Calling REST-interface login.");
-        caller.update(updateUser, new AsyncCallback<DomUserFull>() {
+        manager.updateAccountData(updateUser, new AsyncCallback<Boolean>() {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
@@ -38,11 +45,18 @@ public class ProfileController {
             }
 
             @Override
-            public void onSuccess(DomUserFull result) {
+            public void onSuccess(Boolean result) {
                 //success and set all the data in the view
-                view.init(result);
+                if(result == true){
                 currentUser = updateUser;
                 updateUser = currentUser.duplicate();
+                //update Globals otherwise can't login in passwd change!
+                GWTGlobals.instance().setCurUser(currentUser);
+                view.init(currentUser);
+                }else{
+                    updateUser = currentUser.duplicate();
+                    view.init(currentUser);
+                }
             }
         });
     }
