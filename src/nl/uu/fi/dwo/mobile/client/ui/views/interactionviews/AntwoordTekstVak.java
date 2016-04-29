@@ -44,6 +44,7 @@ import java.util.Vector;
 
 
 
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -56,6 +57,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.FacetAware.Type;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -103,6 +105,14 @@ import fi.wiskopdr.expressies.repr.ContentMathML;
 
 
 public class AntwoordTekstVak implements InteractionView, FacetAware, TekstElementWithFont {
+
+	public static final String ACTION_CORRECT = "action.correct";
+	public static final String ACTION_FALSE = "action.false";
+	public static final String ACTION_FALSE2 = "action.false_2";
+
+	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
+	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
+	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
 
 	private Map<String, Object> launchState; 
 	OpdrNavIF comRoot;
@@ -883,8 +893,22 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		
 		//if (ingevuld && show && mode != -1)
 		//	comRoot.setChanged();
+		
+		if (correct) 
+			fireEvent(EVENT_CORRECT);
+		if (!correct && errorCount > 1) 
+			fireEvent(EVENT_FALSE2);
+		if (!correct)
+			fireEvent(EVENT_FALSE);
+
 	}
-	
+
+	private void fireEvent(CBookEvent event) 
+	{
+		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		comRoot.fireEvent(event);
+	}
+
 	public void verhoogErrorCount()
 	{
 		if(changed)
