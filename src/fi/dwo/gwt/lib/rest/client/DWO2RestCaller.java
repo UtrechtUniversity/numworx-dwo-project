@@ -21,7 +21,7 @@ public interface DWO2RestCaller extends RestService {
 	
 	@GET
 	@Path("/secure/user/account/get")
-	public void getCurrentUser(MethodCallback<DomUserFull> callback);
+	public void getAccountData(MethodCallback<DomUserFull> callback);
 
 	@GET
 	@Path("/secure/user/account/logins/getList")
@@ -30,5 +30,9 @@ public interface DWO2RestCaller extends RestService {
 	@GET
 	@Path("/public/roles/getList")
 	public void getRoles(Callback<List<DomRole>> callback);
+
+        @GET
+        @Path("/public/user/account/update")
+        public void updateAccountData(DomUserFull updateUser, Callback<Boolean> callback);
 	
 }
