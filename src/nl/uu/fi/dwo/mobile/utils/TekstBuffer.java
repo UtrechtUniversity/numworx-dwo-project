@@ -461,7 +461,7 @@ public class TekstBuffer
 		}
 		else if(soortVak == 12)
 		{	
-			result = new CheckSelectieUnit(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = x(map, new CheckSelectieUnit(currentVakGegevens, randomVarNamen, randomVarWaarden));
 			
 		}
 		else if(soortVak == 49)
@@ -476,10 +476,10 @@ public class TekstBuffer
 		}
 		else if(soortVak == 16)
 		{	
-			result = new CheckSleepUnit(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = x(map, new CheckSleepUnit(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if(soortVak == 33)
-		{	result = new CheckValueUnit(currentVakGegevens, randomVarNamen, randomVarWaarden);
+		{	result = x(map, new CheckValueUnit(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 41)
 		{
@@ -488,7 +488,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 13)
 		{
-			result = new AntwoordTekstVak(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = x(map, new AntwoordTekstVak(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 25)
 		{
