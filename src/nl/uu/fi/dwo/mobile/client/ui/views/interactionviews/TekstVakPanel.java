@@ -1288,6 +1288,11 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		return mouseHandler.isMouseDown();
 	}
 	
+	public void setMouseDown(boolean b)
+	{
+		mouseHandler.setMouseDown(b);
+	}
+	
 	public Point geefLocatie()
 	{
 		return new Point(locationX, locationY);
@@ -1998,38 +2003,35 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	
 	class MouseHandler implements MouseDownHandler, MouseMoveHandler, MouseUpHandler
 	{   
-		boolean mouseDown = false;
+		private boolean mouseDown = false;
 		
 		public void onMouseDown(MouseDownEvent e)
 		{
 			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
 				return;
 			e.stopPropagation();
-			
 			int eventX = e.getClientX();
 			int eventY = e.getClientY();
 			
 			mouseDown = true;
 			
 			mouseDownTouchStartAction(eventX, eventY);
-			
 		}
 		
 		public void onMouseMove(MouseMoveEvent e)	
-		{
-			// prevent scrolling
-			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
-			{	mouseDown = false;
-				return;
-			}
-			
+		{	// prevent scrolling
+//			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
+//			{	mouseDown = false;
+//				return;
+//			}
 			e.stopPropagation(); 
 			
 			int eventX = e.getClientX();
 			int eventY = e.getClientY();
 			
 			if (!mouseDown)
-			{	for(int i = 0; i < interactionViewObjects.size(); i++)
+			{	//Kijken of zich binnen huidige tekstvakpanel een object bevindt dat momenteel wordt gesleept
+				for(int i = 0; i < interactionViewObjects.size(); i++)
 				{
 					Object object = interactionViewObjects.get(i);
 					if(object instanceof TekstVakPanel && ((TekstVakPanel) object).isSleepbaar() && ((TekstVakPanel) object).isMouseDown())
@@ -2037,9 +2039,14 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 						return;
 					}
 				}
-				if(parent != null && zwevend)
+				TekstVak localParent = parent;
+				while(localParent != null)
 				{
-					TekstVakPanel tekstVakParent = parent.getTekstVakParent();
+					TekstVakPanel tekstVakParent = localParent.getTekstVakParent();
+					if(tekstVakParent.isSleepbaar() && tekstVakParent.isMouseDown())
+					{	tekstVakParent.mouseMoveTouchMoveAction(eventX, eventY);
+						return;
+					}
 					for(int i = 0; i < tekstVakParent.interactionViewObjects.size(); i++)
 					{
 						Object object = tekstVakParent.interactionViewObjects.get(i);
@@ -2048,11 +2055,12 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 							return;
 						}
 					}
+					localParent = tekstVakParent.parent;
 				}
 				return;
 			}
 
-			if(sleepbaar)
+			if(sleepbaar && mouseDown)
 			{	e.preventDefault();
 				mouseMoveTouchMoveAction(eventX, eventY);
 			}
@@ -2067,11 +2075,38 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			}
 			
 			e.stopPropagation();
+			int eventX = e.getClientX();
+			int eventY = e.getClientY();
+			
+			if (!mouseDown)
+				{	for(int i = 0; i < interactionViewObjects.size(); i++)
+					{
+						Object object = interactionViewObjects.get(i);
+						if(object instanceof TekstVakPanel && ((TekstVakPanel) object).isSleepbaar() && ((TekstVakPanel) object).isMouseDown())
+						{	((TekstVakPanel) object).setMouseDown(false);
+							((TekstVakPanel) object).mouseUpTouchEndAction(eventX, eventY);
+							break;
+						}
+					}
+					if(parent != null && zwevend)
+					{
+						TekstVakPanel tekstVakParent = parent.getTekstVakParent();
+						for(int i = 0; i < tekstVakParent.interactionViewObjects.size(); i++)
+						{
+							Object object = tekstVakParent.interactionViewObjects.get(i);
+							if(object instanceof TekstVakPanel && ((TekstVakPanel) object).isSleepbaar() && ((TekstVakPanel) object).isMouseDown())
+							{	((TekstVakPanel) object).setMouseDown(false);
+								((TekstVakPanel) object).mouseUpTouchEndAction(eventX, eventY);
+								break;
+							}
+						}
+					}
+					
+				}
 			
 			mouseDown = false;
 
-			int eventX = e.getClientX();
-			int eventY = e.getClientY();
+			
 			
 			mouseUpTouchEndAction(eventX,eventY);
 
@@ -2080,6 +2115,11 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		public boolean isMouseDown()
 		{
 			return mouseDown;
+		}
+		
+		public void setMouseDown(boolean b)
+		{
+			mouseDown = b;
 		}
 
 	} //MouseHandler
@@ -2119,11 +2159,11 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			
 			Touch touch = e.getTouches().get(0);
 			
-			if(sleepbaar && sleepHandle && (touch.getPageX() - getAsPanel().getAbsoluteLeft() > 20 || 
-					touch.getPageY() - getAsPanel().getAbsoluteTop() > 20))
-			{	e.preventDefault();
-				return;
-			}
+//			if(sleepbaar && sleepHandle && (touch.getPageX() - getAsPanel().getAbsoluteLeft() > 20 || 
+//					touch.getPageY() - getAsPanel().getAbsoluteTop() > 20))
+//			{	e.preventDefault();
+//				return;
+//			}
 		
 			int eventX = touch.getClientX();
 			int eventY = touch.getClientY();
