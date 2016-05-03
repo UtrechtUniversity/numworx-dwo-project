@@ -1450,7 +1450,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			editor.kijkNa();
 		
 		// zet score/correct als editor nog open staat en gevuld is.
-		if ((editor != null && isToets() && !editor.toString().isEmpty())
+		if ((editor != null && isToets())// && !editor.toString().isEmpty()) // ook berekenen als editor leeg!
 			|| editor == null) // als editor null dan wordt in getState() geen kijkNa() gedaan en wordt correct ten onrechte false
 		{
 			// bepaal score en correct
