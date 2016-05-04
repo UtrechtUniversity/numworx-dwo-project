@@ -50,8 +50,10 @@ public class ScoreNavFacade implements ScoreNavIF {
 	private PushButton volgendeKnop, vorigeKnop, eindeKnop;
 	boolean vorigeKnopZichtbaar, volgendeKnopZichtbaar;
 	private PushButton scoresObjectivesKnop;
+	private PushButton viewMisconceptionsKnop;
 	private NextPrevHandler nextprev;
 	private ObjectivesHandler objectivesHandler;
+	private MisconceptionsHandler misconceptionsHandler;
 	private PushButton allesOpnieuwKnop, opnieuwKnop;
 	/**
 	 * Label met de totaalscore, bijv. "Totaal: 35".
@@ -182,7 +184,7 @@ public class ScoreNavFacade implements ScoreNavIF {
 		{
 			if(scoresObjectivesKnop == null)
 			{
-				scoresObjectivesKnop = new PushButton("Deelscores");
+				scoresObjectivesKnop = new PushButton(Text.constants.objectivesKnopLabel());
 				scoresObjectivesKnop.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent e)
 					{
@@ -196,6 +198,29 @@ public class ScoreNavFacade implements ScoreNavIF {
 		}
 		else if(scoresObjectivesKnop != null)
 			scoresObjectivesKnop.setVisible(false);
+	}
+
+	public void setViewMisconceptionsKnop(boolean b)
+	{
+		if(b)
+		{
+			if(viewMisconceptionsKnop == null)
+			{
+				viewMisconceptionsKnop = new PushButton(Text.constants.viewMisconceptionsKnopLabel());
+				viewMisconceptionsKnop.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent e)
+					{
+						misconceptionsHandler.openMisconceptionsPanel(ScoreNavFacade.this);
+					}
+				});
+			}
+			if(viewMisconceptionsKnop.getParent() == null)
+				sb.addKnop(viewMisconceptionsKnop, false);
+			viewMisconceptionsKnop.setVisible(true);
+		}
+		else if(viewMisconceptionsKnop != null)
+			viewMisconceptionsKnop.setVisible(false);
+		
 	}
 
 
@@ -212,6 +237,11 @@ public class ScoreNavFacade implements ScoreNavIF {
 	@Override
 	public void setObjectivesHandler(ObjectivesHandler objectivesHandler) {
 		this.objectivesHandler = objectivesHandler;
+	}
+	
+	@Override
+	public void setMisconceptionsHandler(MisconceptionsHandler misconceptionsHandler) {
+		this.misconceptionsHandler = misconceptionsHandler;
 	}
 
 	@Override

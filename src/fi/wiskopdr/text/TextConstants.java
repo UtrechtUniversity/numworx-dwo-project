@@ -39,6 +39,12 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String onderdeelLabel();
 	@DefaultStringValue("Score:")
 	String scoreLabel();
+	@DefaultStringValue("Deelscores")
+	String objectivesKnopLabel();
+	@DefaultStringValue("Analyse")
+	String viewMisconceptionsKnopLabel();
+
+
 	
 	@DefaultStringValue("Deze stap bevat correcte en niet correcte onderdelen. Verwijder of vervang de delen die niet correct zijn.")
 	String feedbackTekst01();

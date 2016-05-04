@@ -28,6 +28,10 @@ public interface ScoreNavIF {
 		void openObjectivesPanel(ScoreNavIF source);//source nodig?
 	}
 	
+	public interface MisconceptionsHandler {
+		void openMisconceptionsPanel(ScoreNavIF source);
+	}
+	
 	void setStatusBar(StatusBarIF bar);
 	
 	void setBeantwoord(int aantalBeantwoord);
@@ -53,6 +57,8 @@ public interface ScoreNavIF {
 	void setOpnieuw(boolean b);
 	
 	void setScoresObjectivesKnop(boolean b);
+	
+	void setViewMisconceptionsKnop(boolean b);
 
 	void setKijkNa(Checker checker);
 	
@@ -63,6 +69,7 @@ public interface ScoreNavIF {
 	Widget getEndButton();
 	
 	void setObjectivesHandler(ObjectivesHandler objectivesHandler);
+	void setMisconceptionsHandler(MisconceptionsHandler misconceptionsHandler);
 
 	PushButton getKijkNaButton();
 	Label getTotaalScoreLabel();

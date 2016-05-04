@@ -390,11 +390,19 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 	@Override
 	public void setScoresObjectivesKnop(boolean b) {
 	}
+	
+	@Override
+	public void setViewMisconceptionsKnop(boolean b) {
+	}
 
 	@Override
 	public void setObjectivesHandler(ObjectivesHandler objectivesHandler) {
 	}
 
+	@Override
+	public void setMisconceptionsHandler(MisconceptionsHandler misconceptionsHandler) {
+	}
+	
 	@Override
 	public Label getTotaalScoreLabel()
 	{

@@ -95,6 +95,8 @@ public abstract class XMLView {
 	public static String[][] objectives;
 	private String[] categorieString;
 	private int[][][][] scoresMaxObjectives;
+	public static String[][] misconceptions;
+	private String[] mccCategorieString;
 	boolean objectivesAanwezig;
 	boolean globalParam;
 	
@@ -196,10 +198,26 @@ public abstract class XMLView {
 			}
 			if(wrap.containsKey("categorieString"))
 				categorieString = wrap.getStringArray("categorieString");
-			
+			if (wrap.containsKey("misconceptions"))
+			{	
+				ObjectList misconceptionsList = wrap.getObjectList("misconceptions");
+				misconceptions = new String[misconceptionsList.size()][];
+				for(int i = 0; i < misconceptions.length; i++)
+				{	try{
+					misconceptions[i] = misconceptionsList.getStringArray(i);
+					}
+					catch(Exception e)
+					{}
+				}
+			}
+			if(wrap.containsKey("mccCategorieString"))
+				mccCategorieString = wrap.getStringArray("mccCategorieString");
+
 			OpdrNav.setObjectives(objectives);
 			OpdrNav.setCategorieString(categorieString);
-			
+			OpdrNav.setMisconceptions(misconceptions);
+			OpdrNav.setMccCategorieString(mccCategorieString);
+
 			globalParam = wrap.getBoolean("globalParam", false);
 		}
 		

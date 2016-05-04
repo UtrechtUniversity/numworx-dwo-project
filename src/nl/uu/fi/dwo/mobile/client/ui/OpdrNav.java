@@ -45,6 +45,8 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
+import fi.wiskopdr.text.Text;
+
 /**
  * Used for navigation between assignments
  * 
@@ -60,6 +62,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	private static String[][] objectives;
 	private static String[] categorieString;
+	private static String[][] misconceptions;
+	private static String[] mccCategorieString;
 	private boolean objectivesAanwezig = false;
 	
 	private static final int foutStraf = 2;
@@ -87,9 +91,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	private int[][][][] scoresMaxObjectives;
 	private int[][][][] scoresObjectives;
+	private int[][][][] possibleMisconceptions;
+	private int[][][][] measuredMisconceptions;
+	
 	private DialogBox scoresObjectivesDialog;
 	private ScoresObjectivesPanel scoresObjectivesPanel;
-	
+	private DialogBox viewMisconceptionsDialog;
+	private ScoresObjectivesPanel viewMisconceptionsPanel;
+
 	private int mode;
 	private int[][] strafpunten;
 
@@ -177,6 +186,19 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 						scoresMaxObjectives[k][j][i] = new int[objectives[i].length];
 					}
 		}
+		if (misconceptions != null)
+		{
+			possibleMisconceptions = new int[aantalActiviteiten][maxAantalOpdrachten][misconceptions.length][];
+			measuredMisconceptions = new int[aantalActiviteiten][maxAantalOpdrachten][misconceptions.length][];
+			for (int k = 0; k < aantalActiviteiten; k++)
+				for (int j = 0; j < maxAantalOpdrachten; j++)
+					for (int i = 0; i < misconceptions.length; i++)
+					{
+						possibleMisconceptions[k][j][i] = new int[misconceptions[i].length];
+						measuredMisconceptions[k][j][i] = new int[misconceptions[i].length];
+					}
+		}
+
 		
 		if(mode == OEFENEN_STRAFPUNTEN)
 			strafpunten = new int[aantalActiviteiten][maxAantalOpdrachten];
@@ -297,6 +319,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public static void setCategorieString(String[] c)
 	{
 		categorieString = c;
+	}
+
+	public static void setMisconceptions(String[][] m)
+	{
+		misconceptions = m;
+	}
+	
+	public static void setMccCategorieString(String[] c)
+	{
+		mccCategorieString = c;
 	}
 
 	public Panel getAsPanel()
@@ -819,6 +851,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		isCorrect[currentActiviteit][currentOpdracht] = Boolean.TRUE == entry.isCorrect();
 		if (objectives != null)
 			scoresObjectives[currentActiviteit][currentOpdracht] = entry.getScoreObjectives();
+		if (misconceptions != null)
+		{
+			possibleMisconceptions[currentActiviteit][currentOpdracht] = entry.getPossibleMisconceptions();
+			measuredMisconceptions[currentActiviteit][currentOpdracht] = entry.getMeasuredMisconceptions();
+		}
+
 	}	
 	
 	public void kijkToetsNa()
@@ -1004,6 +1042,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return objectivesAanwezig;
 	}
 	
+	public boolean zijnMisconceptionsAanwezig()
+	{
+		return misconceptions != null;
+	}
+	
 	public void openObjectivesPanel()
 	{
 		/**
@@ -1026,7 +1069,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			scoresObjectivesDialog = new DialogBox(true); //evt argument true meegeven voor autohide.
 	        //Misschien geen dialogbox maar een popup. Moet in elk geval ook weer te sluiten zijn.
 	        //scoresObjectivesDialog = new DialogBox(true);
-	        scoresObjectivesDialog.setText("Deelscores"); //TODO: woord uit textbundle halen.
+	        scoresObjectivesDialog.setText(Text.constants.objectivesKnopLabel()); 
 	       // scoresObjectivesDialog = new DialogBox(this,"deelscores", true);
 	        scoresObjectivesPanel = new ScoresObjectivesPanel(getScoresObjectivesForDiagram());
 //	        if(aantalDiagrammen < 4)
@@ -1047,6 +1090,38 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	        scoresObjectivesDialog.show();
 	       // scoresObjectivesDialog.setVisible(true);
 	}
+	
+	public void openMisconceptionsPanel()
+	{
+		/**
+		 * Maakt panel met analyse van misconcepties zichtbaar mbv een popup-venster
+		 */
+		    int aantalDiagrammen = misconceptions.length;
+	        viewMisconceptionsDialog = new DialogBox(true); //evt argument true meegeven voor autohide.
+	        //Misschien geen dialogbox maar een popup. Moet in elk geval ook weer te sluiten zijn.
+	        //scoresObjectivesDialog = new DialogBox(true);
+	        viewMisconceptionsDialog.setText(Text.constants.viewMisconceptionsKnopLabel()); 
+	       // scoresObjectivesDialog = new DialogBox(this,"deelscores", true);
+	        viewMisconceptionsPanel = new ScoresObjectivesPanel(getMisconceptionsForDiagram());
+//	        if(aantalDiagrammen < 4)
+//	        	scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
+//	        else 
+//	        	scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
+	        viewMisconceptionsDialog.add(viewMisconceptionsPanel.asWidget());
+	        //scoresObjectivesDialog.setSize(scoresObjectivesPanel.getSize());
+	        int width = 1200;
+			int height = 730;
+			if(aantalDiagrammen < 4)
+			{	
+				width = 400 * aantalDiagrammen;
+				height = 380;
+			}
+			viewMisconceptionsDialog.setWidth(width + "px");
+			viewMisconceptionsDialog.setHeight(height + "px");
+			viewMisconceptionsDialog.show();
+	       // scoresObjectivesDialog.setVisible(true);
+	}
+
 	
 	/**
 	 * Verzamelt de maximale scores per leerdoel, de gerealiseerde scores per
@@ -1103,6 +1178,63 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		return h;
 	}
+	
+	/**
+	 * Verzamelt de maximale scores per leerdoel, de gerealiseerde scores per
+	 * leerdoel en de leerdoelen zelf en geeft deze terug tbv het diagram.
+	 */
+	public HashMap<String, Object> getMisconceptionsForDiagram()
+	{
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		if (misconceptions == null)
+			return h;
+		
+		int[][] totaalMeasuredMisconceptions = null;
+		int[][] totaalPossibleMisconceptions = null;
+		//double[][] scoresPercObjectives = null;
+
+		totaalMeasuredMisconceptions = new int[misconceptions.length][];
+		totaalPossibleMisconceptions = new int[misconceptions.length][];
+		//scoresPercObjectives = new double[objectives.length][];
+
+		for (int i = 0; i < misconceptions.length; i++)
+		{
+			totaalMeasuredMisconceptions[i] = new int[misconceptions[i].length];
+			totaalPossibleMisconceptions[i] = new int[misconceptions[i].length];
+			//scoresPercObjectives[i] = new double[objectives[i].length];
+		}
+
+		for (int i = 0; i < aantalActiviteiten; i++)
+		{ //String scoreString = scores[i].getText();
+			//int score = Integer.parseInt(scoreString.substring(7));
+			//totaalScore += score;
+			for (int j = 0; j < aantalOpdrachten[i]; j++)
+			{	if(measuredMisconceptions[i][j] != null)
+					for (int k = 0; k < misconceptions.length && k < measuredMisconceptions[i][j].length; k++)
+					{	if (measuredMisconceptions[i][j][k] != null)
+							for (int l = 0; l < misconceptions[k].length && l < measuredMisconceptions[i][j][k].length; l++)
+								totaalMeasuredMisconceptions[k][l] += measuredMisconceptions[i][j][k][l];
+					}	
+			}
+
+			for (int j = 0; j < aantalOpdrachten[i]; j++)
+			{	if(possibleMisconceptions[i][j] != null)
+					for (int k = 0; k < misconceptions.length && k < possibleMisconceptions[i][j].length; k++)
+					{	if (possibleMisconceptions[i][j][k] != null)
+							for (int l = 0; l < misconceptions[k].length && l < possibleMisconceptions[i][j][k].length; l++)
+								totaalPossibleMisconceptions[k][l] += possibleMisconceptions[i][j][k][l];
+					}	
+			}
+		}
+
+		h.put("objectives", misconceptions);
+		h.put("totaalScoreObjectives", totaalMeasuredMisconceptions);
+		h.put("totaalMaxObjectives", totaalPossibleMisconceptions);
+		h.put("categorieString", mccCategorieString);
+
+		return h;
+	}
+
 
 	public void reloadOpdracht(int opdracht, ScoreNavIF source) {
 		saveCurrentState();

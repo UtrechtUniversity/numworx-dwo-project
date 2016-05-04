@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 //import nl.uu.fi.dwo.mobile.client.ui.KeyBoardTabPanel;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.MisconceptionsHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.ObjectivesHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
@@ -77,7 +78,7 @@ import fi.wiskopdr.text.Text_nl;
  * @author Danny Hendrix, Evertson Croes, Sietske Tacoma, Wim van Velthoven
  * 
  */
-public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint, NextPrevHandler, ObjectivesHandler, HasHeight
+public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight
 {
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
@@ -265,7 +266,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		scoreNav.setNextPrevHandler(this);
 		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig()
 			&& mode != OpdrNav.EINDTOETS);
+		scoreNav.setViewMisconceptionsKnop(on.zijnMisconceptionsAanwezig() 
+			&& mode != OpdrNav.EINDTOETS);
 		scoreNav.setObjectivesHandler(this);
+		scoreNav.setMisconceptionsHandler(this);
 		stelNavigatieIn();
 
 		if (mode == OpdrNav.ZELFTOETS)
@@ -321,6 +325,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			//scoresObjectivesKnop.setEnabled(true);//goed? nodig?
 			prev.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
 			scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig());
+			scoreNav.setViewMisconceptionsKnop(on.zijnMisconceptionsAanwezig());
 			
 			scoreNav.setTotaalScoreLabel(on.getTotaalScore());
 			scoreNav.setKeerNagekekenLabel(on.getKeerNagekeken());
@@ -941,6 +946,57 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		return scoreObjectives;
 	}
 	
+	public int[][] getPossibleMisconceptions()
+	{
+		if (misconceptions == null)
+			return null;
+		int[][] totalPossibleMisconceptions = new int[misconceptions.length][];
+		for (int i = 0; i < misconceptions.length; i++)
+			totalPossibleMisconceptions[i] = new int[misconceptions[i].length];
+		for (int i = 0; i < opdrachtObjects.size(); i++)
+		{
+			Object currentObject = opdrachtObjects.get(i);
+//			if (currentObject instanceof InteractionView)
+//			{
+//				int[][] possibleMisconceptions = ((InteractionView) currentObject).getPossibleMisconceptions();
+//				for (int j = 0; possibleMisconceptions != null && j < misconceptions.length && j < possibleMisconceptions.length; j++)
+//				{
+//					for (int k = 0; possibleMisconceptions[j] != null && k < misconceptions[j].length && k < possibleMisconceptions[j].length; k++)
+//						try{	totalPossibleMisconceptions[j][k] += possibleMisconceptions[j][k];
+//						}
+//						catch(Exception e){}
+//				}
+//			}
+		}
+		return totalPossibleMisconceptions;
+	}
+	
+	public int[][] getMeasuredMisconceptions()
+	{
+		if (misconceptions == null)
+			return null;
+		int[][] totalMeasuredMisconceptions = new int[misconceptions.length][];
+		for (int i = 0; i < misconceptions.length; i++)
+			totalMeasuredMisconceptions[i] = new int[misconceptions[i].length];
+		for (int i = 0; i < opdrachtObjects.size(); i++)
+		{
+			Object currentObject = opdrachtObjects.get(i);
+//			if (currentObject instanceof InteractionView)
+//			{
+//				int[][] measuredMisconceptions = ((InteractionView) currentObject).getMeasuredMisconceptions();
+//				for (int j = 0; measuredMisconceptions != null && j < misconceptions.length && j < measuredMisconceptions.length; j++)
+//				{
+//					for (int k = 0; measuredMisconceptions[j] != null && k < misconceptions[j].length && k < measuredMisconceptions[j].length; k++)
+//						try{	totalMeasuredMisconceptions[j][k] += measuredMisconceptions[j][k];
+//						}
+//						catch(Exception e){}
+//				}
+//			}
+		}
+		return totalMeasuredMisconceptions;
+	}
+
+	
 	public int getScore()
 	{
 		int score = 0;
@@ -1447,6 +1503,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void openObjectivesPanel(ScoreNavIF source) {
 		on.openObjectivesPanel();
 	}
+	
+	@Override
+	public void openMisconceptionsPanel(ScoreNavIF source) {
+		on.openMisconceptionsPanel();
+	}
 
 	// WaitScreen management: p(); .....; v();
 	private int sema;
@@ -1480,6 +1541,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			return null;
 		return Double.valueOf(on.getScore());
 	}
+
+	
 	
 	
 }
