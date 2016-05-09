@@ -5,12 +5,12 @@
  */
 package fi.dwo.gwt.lib.rest.util;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONValue;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,30 +20,26 @@ import java.util.logging.Logger;
  */
 public class Dwo2ExceptionRestyTranslator implements DWO2ExceptionTranslatorInterface {
     private static final Logger LOG = Logger.getLogger(Dwo2ExceptionRestyTranslator.class.getName());
+    
+    Dwo2ExceptionConverter converter = GWT.create(Dwo2ExceptionConverter.class);
 
     public Dwo2ExceptionRestyTranslator() {
     }
 
     public String encodeJSON(Dwo2ExceptionCode code, String message) {
-        Genson genson = new Genson();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("Dwo2ExceptionCode", code.name());
-        map.put("msg", message);
-        String json = genson.serialize(map);
-        return json;
+        Dwo2Exception exception = new Dwo2Exception(code, message);
+        JSONValue json = converter.encode(exception);
+        return json.toString();
     }
 
     public String decodeMessageInJSON(String json) {
-        Genson genson = new Genson();
-        Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
-        return (String) map.get("msg");
+        Dwo2Exception exception = converter.decode(json);
+        return exception.getDwo2Message();
     }
 
     public Dwo2ExceptionCode decodeCodeInJSON(String json) {
-        Genson genson = new Genson();
-        Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
-        String code = (String) map.get("Dwo2ExceptionCode");
-        return Dwo2ExceptionCode.valueOf(code);
+        Dwo2Exception exception = converter.decode(json);
+        return exception.getDwo2Code();
     }
 
     @Override
@@ -52,8 +48,9 @@ public class Dwo2ExceptionRestyTranslator implements DWO2ExceptionTranslatorInte
         try {
             //Current resources are in /java/resources, however if in java/resources/fi/dwo then
             //replace getBundle("Dwo2Exceptions", locale); with getBundle("fi.dwo.Dwo2Exceptions", locale);
-            ResourceBundle localeLookup = ResourceBundle.getBundle("Dwo2Exceptions", locale);
-            msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
+            //ResourceBundle localeLookup = ResourceBundle.getBundle("Dwo2Exceptions", locale);
+            //msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
+            msg = "";
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't find the resource Dwo2Exceptions.properties, returning English log message.", e);
