@@ -24,21 +24,21 @@ import java.util.logging.Logger;
  */
 public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandler {
 
-    Logger LOG = Logger.getLogger("Account");
+    private Logger LOG = Logger.getLogger("Account");
 
-    ProfileController control;
-    PopupPanel popup;
-    Button cnlBtn;
-    Button okBtn;
-    DomUser user;
-    TextBox login = new TextBox();
-    TextBox givenName = new TextBox();
-    TextBox insertion = new TextBox();
-    TextBox familyName = new TextBox();
-    TextBox email = new TextBox();
-    PasswordTextBox password = new PasswordTextBox();
-    PasswordTextBox newPassword = new PasswordTextBox();
-    PasswordTextBox newPasswordAgain = new PasswordTextBox();
+    private SchoolClassStudentController control;
+    private PopupPanel popup;
+    private Button cnlBtn;
+    private Button okBtn;
+    private DomUser user;
+    private TextBox login = new TextBox();
+    private TextBox givenName = new TextBox();
+    private TextBox insertion = new TextBox();
+    private TextBox familyName = new TextBox();
+    private TextBox email = new TextBox();
+    private PasswordTextBox password = new PasswordTextBox();
+    private PasswordTextBox newPassword = new PasswordTextBox();
+    private PasswordTextBox newPasswordAgain = new PasswordTextBox();
 
     public PopupPanel getPopup() {
         return popup;
