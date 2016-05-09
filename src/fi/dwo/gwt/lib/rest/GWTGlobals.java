@@ -5,14 +5,10 @@
  */
 package fi.dwo.gwt.lib.rest;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
-import fi.dwo.gwt.lib.rest.client.DWO2RestCaller;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
-import java.io.IOException;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.fusesource.restygwt.client.Defaults;
@@ -20,6 +16,7 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 /**
  *
+ * 
  * @author Gert van der Plas
  */
 public class GWTGlobals  {
