@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
-import fi.dwo.gwt.lib.rest.GWTGlobals;
+import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.List;
@@ -39,7 +39,7 @@ class SchoolClassStudentController {
      */
     public void callUpdate() {
         LOG.log(Level.INFO, "Calling REST-interface login.");
-        manager.updateAccountData(updateUser, new AsyncCallback<Boolean>() {
+        manager.updateAccountData(updateUser, new AsyncCallback<DomUserFull>() {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
@@ -47,18 +47,13 @@ class SchoolClassStudentController {
             }
 
             @Override
-            public void onSuccess(Boolean result) {
+            public void onSuccess(DomUserFull result) {
                 //success and set all the data in the view
-                if(result == true){
                 currentUser = updateUser;
                 updateUser = currentUser.duplicate();
                 //update Globals otherwise can't login in passwd change!
-                GWTGlobals.instance().setCurUser(currentUser);
+                DwoGlobalVars.instance().setCurrentUser(currentUser);
                 view.init(currentUser);
-                }else{
-                    updateUser = currentUser.duplicate();
-                    view.init(currentUser);
-                }
             }
         });
     }

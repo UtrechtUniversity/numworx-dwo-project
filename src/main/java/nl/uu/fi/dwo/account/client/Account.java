@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionRestyTranslator;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -16,13 +17,11 @@ import java.util.logging.Level;
 public class Account implements EntryPoint {
 
     private static final Logger LOG = Logger.getLogger(Account.class.getName());
-    DomUserFull user = null;
-    private static final String SERVER_ERROR = "An error occurred while "
-            + "attempting to contact the server. Please check your network "
-            + "connection and try again.";
+    private DomUserFull user = null;
     private SecuredUserAccountManager handler = new SecuredUserAccountManager();
-    private LoginStatusPanel loginStatusPanel=new LoginStatusPanel();
-    
+    private LoginStatusPanel loginStatusPanel = new LoginStatusPanel();
+    UserBar userBar = new UserBar();
+
     static {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionRestyTranslator());
     }
@@ -60,12 +59,13 @@ public class Account implements EntryPoint {
                     LOG.log(Level.INFO, "Fetched a test user with username:" + result.getUserName() + ".");
                     user = (DomUserFull) result;
                     loginStatusPanel.setStatus(user.getUserName(), true);
+                    DwoGlobalVars.instance().setCurrentUser(user);
+                    LOG.log(Level.INFO, "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName()+ ".");
                 }
             });
         } else {
             LOG.log(Level.INFO, "Configured username for the UserBar is: " + user.getUserName() + ".");
         }
-        UserBar userBar = new UserBar(user);
         header.setRightWidget(userBar);
     }
 

@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
-import fi.dwo.gwt.lib.rest.GWTGlobals;
+import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,16 +15,16 @@ class ProfileController {
 
     private static final Logger LOG = Logger.getLogger(ProfileController.class.getName());
 
-    private ProfilePanel view;
-    private DomUserFull currentUser;
-    private DomUserFull updateUser;
+    private ProfilePanel view = null;
+    private DomUserFull currentUser = null;
+    private DomUserFull updateUser = null;
     private SecuredUserAccountManager manager = new SecuredUserAccountManager();
 
-    ProfileController(ProfilePanel view, DomUserFull user){
+    public ProfileController(ProfilePanel view, DomUserFull user) {
         this.view = view;
-        init(user);
+        this.init(user);
     }
-    
+
     public void init(DomUserFull user) {
         currentUser = user;
         updateUser = currentUser.duplicate();
@@ -37,26 +37,22 @@ class ProfileController {
      */
     public void callUpdate() {
         LOG.log(Level.INFO, "Calling REST-interface login.");
-        manager.updateAccountData(updateUser, new AsyncCallback<Boolean>() {
+        manager.updateAccountData(updateUser, new AsyncCallback<DomUserFull>() {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
-                view.init(currentUser);
             }
 
             @Override
-            public void onSuccess(Boolean result) {
+            public void onSuccess(DomUserFull result) {
                 //success and set all the data in the view
-                if(result == true){
-                currentUser = updateUser;
-                updateUser = currentUser.duplicate();
-                //update Globals otherwise can't login in passwd change!
-                GWTGlobals.instance().setCurUser(currentUser);
-                view.init(currentUser);
-                }else{
+                    LOG.log(Level.INFO, "update was succesful.");
+                    currentUser = result;
                     updateUser = currentUser.duplicate();
+                    //update Globals otherwise can't login in passwd change!
+                    DwoGlobalVars.instance().setCurrentUser(currentUser);
                     view.init(currentUser);
-                }
+                    view.getPopup().hide();
             }
         });
     }
@@ -71,8 +67,8 @@ class ProfileController {
     /**
      * @param currentUser the currentUser to set
      */
-    public void setCurrentUser(DomUserFull currentUser) {
-        this.currentUser = currentUser;
+    public void setCurrentUser(DomUserFull aCurrentUser) {
+        currentUser = aCurrentUser;
     }
 
     /**

@@ -13,12 +13,15 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Allows user update.
  *
  * @author G.A.J. van der Plas
  */
@@ -49,12 +52,11 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
     }
 
     ProfilePanel(DomUserFull user) {
+        control = new ProfileController(this, user);
         init(user);
-         control= new ProfileController(this,user);
     }
 
     public void init(DomUserFull user) {
-        control.setCurrentUser(user);
         this.setSize("400", "500");
 
         Grid g = new Grid(10, 2);
@@ -94,12 +96,12 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         g.setWidget(8, 1, newPasswordAgain);
 
         // Just for good measure, let's put a button in the center.
-        okBtn = new Button("OK");
-        okBtn.addClickHandler(this);
-        g.setWidget(9, 0, okBtn);
         cnlBtn = new Button("CANCEL");
         cnlBtn.addClickHandler(this);
-        g.setWidget(9, 1, cnlBtn);
+        g.setWidget(9, 0, cnlBtn);
+        okBtn = new Button("UPDATE");
+        okBtn.addClickHandler(this);
+        g.setWidget(9, 1, okBtn);
         // You can use the CellFormatter to affect the layout of the grid's cells.
         //g.getCellFormatter().setWidth(0, 2, "256px");
         this.clear();
@@ -113,19 +115,24 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             popup.hide();
         } else if (event.getSource() == okBtn) {
             DomUserFull user = new DomUserFull();
+            user.setUserName(control.getCurrentUser().getUserName());
+            user.setSingleSchool(control.getCurrentUser().getSingleSchool());
+            user.setPassword(control.getCurrentUser().getPassword());
             user.setEmail(email.getText());
             user.setFamilyName(familyName.getText());
             user.setGivenName(givenName.getText());
             user.setInsertion(insertion.getText());
-            if (newPassword.getText().equals(newPasswordAgain.getText()) && password.getText().equals(control.getCurrentUser().getPassword())) {
-                user.setPassword(newPassword.getText());
+            if (MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) {
+                if (newPassword.getText().equals(newPasswordAgain.getText()) && MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) {
+                    user.setPassword(MD5.md5(newPassword.getText()));
+                }
+                LOG.log(Level.INFO, "Sending data to server.");
+                control.setUpdateUser(user);
+                control.callUpdate();
+                LOG.log(Level.INFO, "Data send to server.");
+            }else{
+                DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
             }
-//            more
-            LOG.log(Level.INFO, "Sending data to server.");
-            control.setUpdateUser(user);
-//            control.update();
-            LOG.log(Level.INFO, "Sending ok to server.");
-            popup.hide();
         }
     }
 

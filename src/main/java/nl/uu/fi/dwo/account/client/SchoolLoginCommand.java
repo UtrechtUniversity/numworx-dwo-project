@@ -7,7 +7,8 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.PopupPanel;
-import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.gwt.lib.rest.DwoGlobalVars;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Logger;
 
 /**
@@ -16,39 +17,24 @@ import java.util.logging.Logger;
  */
 class SchoolLoginCommand implements Command {
 
-    private DomUserFull currentUser;
     private static final Logger LOG = Logger.getLogger(SchoolLoginCommand.class.getName());
 
-    public SchoolLoginCommand(DomUserFull currentUser) {
-        this.currentUser = currentUser;
+    public SchoolLoginCommand() {
     }
 
-    
     @Override
     public void execute() {
+        if (DwoGlobalVars.instance().getCurrentUser() == null) {
+            DwoViewer.showMessage(Dwo2ExceptionCode.GUI_NoUserIsSignedIn);
+            return;
+        }
         // Create the new popup.
         PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
         //popup.setSize("500", "400");
-        SchoolLoginPanel panel = new SchoolLoginPanel(currentUser);
+        SchoolLoginPanel panel = new SchoolLoginPanel(DwoGlobalVars.instance().getCurrentUser());
         panel.setPopup(popup);
         panel.setSize("300", "200");
         popup.add(panel);
         popup.center();
     }
-
-    /**
-     * @return the currentUser
-     */
-    public DomUserFull getCurrentUser() {
-        return currentUser;
-    }
-
-    /**
-     * @param currentUser the currentUser to set
-     */
-    public void setCurrentUser(DomUserFull currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    
 }
