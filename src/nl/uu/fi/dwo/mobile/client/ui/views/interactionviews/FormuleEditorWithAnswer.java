@@ -1461,5 +1461,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 // zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
 		fews.setUitgeklapt(false);
 		popupBtn.state = state; // XXX ???
+		
+		// na setState() is het goede antwoord in FEWA gezet
+		comRoot.setChanged(false);
 	}
 }
