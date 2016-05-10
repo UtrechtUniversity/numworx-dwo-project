@@ -8,7 +8,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionRestyTranslator;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.logging.Level;
 
 public class Account implements EntryPoint {
@@ -20,6 +22,10 @@ public class Account implements EntryPoint {
             + "connection and try again.";
     private SecuredUserAccountManager handler = new SecuredUserAccountManager();
     private LoginStatusPanel loginStatusPanel=new LoginStatusPanel();
+    
+    static {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionRestyTranslator());
+    }
 
     @Override
     public void onModuleLoad() {

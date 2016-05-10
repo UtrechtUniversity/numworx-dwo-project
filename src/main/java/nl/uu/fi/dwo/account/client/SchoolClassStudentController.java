@@ -3,7 +3,9 @@ package nl.uu.fi.dwo.account.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.GWTGlobals;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -87,5 +89,9 @@ class SchoolClassStudentController {
      */
     public void setUpdateUser(DomUserFull updateUser) {
         this.updateUser = updateUser;
+    }
+
+    public List<DomSchoolClass> getSchoolClasses() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

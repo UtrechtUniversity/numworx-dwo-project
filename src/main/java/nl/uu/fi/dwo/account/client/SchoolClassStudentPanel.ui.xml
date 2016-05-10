@@ -41,7 +41,7 @@
             <mgwt:HeaderPanel >
                 <mgwt:center>
                     <g:Label ui:field="nav_title" >
-                        <ui:text from='{rb.GUIMNU_MY_SCHOOLLOGINS()}'/>
+                        <ui:text from='{rb.GUIMNU_MY_SCHOOLCLASSES()}'/>
                     </g:Label>
                 </mgwt:center>
             </mgwt:HeaderPanel>
@@ -55,6 +55,9 @@
                             </g:customCell>
                             <g:customCell styleName="optionalBarCellStyle">
                                 <g:Label>bar</g:Label>
+                            </g:customCell>
+                            <g:customCell styleName="optionalBarCellStyle">
+                                <g:Label>mee</g:Label>
                             </g:customCell>
                         </g:row>
                         <g:row>

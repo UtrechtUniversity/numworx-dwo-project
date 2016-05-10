@@ -13,5 +13,7 @@ public interface Text extends Constants {
 	String GUIMNU_MY_SCHOOLLOGINS();
 	@DefaultStringValue("Even\u00A0wachten...")
 	String GUIMSG_LOADING();
+        @DefaultStringValue("Mijn schoolklassen")
+        String GUIMNU_MY_SCHOOLCLASSES();
 
 }

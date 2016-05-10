@@ -9,7 +9,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -28,17 +27,12 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
     private SchoolClassStudentController control;
     private PopupPanel popup;
-    private Button cnlBtn;
-    private Button okBtn;
+    private Button loginBtn;
+    private Button delBtn;
+    private Button newBtn;
+    private Button doneButton;
     private DomUser user;
-    private TextBox login = new TextBox();
-    private TextBox givenName = new TextBox();
-    private TextBox insertion = new TextBox();
-    private TextBox familyName = new TextBox();
-    private TextBox email = new TextBox();
-    private PasswordTextBox password = new PasswordTextBox();
-    private PasswordTextBox newPassword = new PasswordTextBox();
-    private PasswordTextBox newPasswordAgain = new PasswordTextBox();
+    private TextBox schoolClass = new TextBox();
 
     public PopupPanel getPopup() {
         return popup;
@@ -56,75 +50,36 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     public void init(DomUserFull user) {
         control.setCurrentUser(user);
         this.setSize("400", "500");
-
-        Grid g = new Grid(10, 2);
-        g.getColumnCount();
-        g.getRowCount();
-        // Put some values in the grid cells.
-        g.setText(0, 0, "login");
-        g.setText(0, 1, user.getUserName());
-        login.setText(user.getUserName());
-
-        g.setText(1, 0, "given name");
-        givenName.setText(user.getGivenName());
-        g.setWidget(1, 1, givenName);
-
-        g.setText(2, 0, "insertion");
-        insertion.setText(user.getInsertion());
-        g.setWidget(2, 1, insertion);
-
-        g.setText(3, 0, "family name");
-        familyName.setText(user.getFamilyName());
-        g.setWidget(3, 1, familyName);
-
-        g.setText(4, 0, "email");
-        email.setText(user.getEmail());
-        g.setWidget(4, 1, email);
-
-        g.setText(6, 0, "password");
-        password.setText("");
-        g.setWidget(6, 1, password);
-
-        g.setText(7, 0, "new password");
-        newPassword.setText("");
-        g.setWidget(7, 1, newPassword);
-
-        g.setText(8, 0, "new password again");
-        newPasswordAgain.setText("");
-        g.setWidget(8, 1, newPasswordAgain);
+        control.getSchoolClasses();
+        Grid g = new Grid(control.getSchoolClasses().size()+1, 3);
+        for(int i=0;i<control.getSchoolClasses().size();i++){
+            g.setText(i, 0, control.getSchoolClasses().get(i).getSchoolClassName());
+            loginBtn = new Button("login");
+            loginBtn.addClickHandler(this);
+            g.setWidget(i, 1, loginBtn);
+            delBtn = new Button("del");
+            delBtn.addClickHandler(this);
+            g.setWidget(i, 2, delBtn);
+        }
 
         // Just for good measure, let's put a button in the center.
-        okBtn = new Button("OK");
-        okBtn.addClickHandler(this);
-        g.setWidget(9, 0, okBtn);
-        cnlBtn = new Button("CANCEL");
-        cnlBtn.addClickHandler(this);
-        g.setWidget(9, 1, cnlBtn);
-        // You can use the CellFormatter to affect the layout of the grid's cells.
-        //g.getCellFormatter().setWidth(0, 2, "256px");
+        doneButton = new Button("Done");
+        doneButton.addClickHandler(this);
+        g.setWidget(control.getSchoolClasses().size(), 0, doneButton);
+        newBtn = new Button("NEW");
+        newBtn.addClickHandler(this);
+        g.setWidget(control.getSchoolClasses().size(), 2, newBtn);
         this.clear();
         this.add(g);
     }
 
     @Override
     public void onClick(ClickEvent event) {
-        if (event.getSource() == cnlBtn) {
-            LOG.log(Level.INFO, "Cancelling user profile update.");
+        if (event.getSource() == newBtn) {
+            LOG.log(Level.INFO, "Should add new window for adding a schoolclass.");
             popup.hide();
-        } else if (event.getSource() == okBtn) {
-            DomUserFull user = new DomUserFull();
-            user.setEmail(email.getText());
-            user.setFamilyName(familyName.getText());
-            user.setGivenName(givenName.getText());
-            user.setInsertion(insertion.getText());
-            if (newPassword.getText().equals(newPasswordAgain.getText()) && password.getText().equals(control.getCurrentUser().getPassword())) {
-                user.setPassword(newPassword.getText());
-            }
-//            more
-            LOG.log(Level.INFO, "Sending data to server.");
-            control.setUpdateUser(user);
-//            control.update();
-            LOG.log(Level.INFO, "Sending ok to server.");
+        } else if (event.getSource() == doneButton) {
+            LOG.log(Level.INFO, "Done, hiding window.");
             popup.hide();
         }
     }
