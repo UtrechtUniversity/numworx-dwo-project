@@ -5,12 +5,12 @@
  */
 package fi.dwo.gwt.lib.rest.util;
 
+import fi.dwo.rest.DwoLocale;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,8 +43,10 @@ public class Dwo2ExceptionRestyTranslator implements DWO2ExceptionTranslatorInte
     }
 
     @Override
-    public String getLocalizedCodeExplanation(Locale locale, Dwo2ExceptionCode code) {
+    public String getLocalizedCodeExplanation(DwoLocale locale, Dwo2ExceptionCode code) {
         String msg;
+        LOG.log(Level.INFO,"Curent locale is : "+locale.toString());
+
         try {
             //Current resources are in /java/resources, however if in java/resources/fi/dwo then
             //replace getBundle("Dwo2Exceptions", locale); with getBundle("fi.dwo.Dwo2Exceptions", locale);
