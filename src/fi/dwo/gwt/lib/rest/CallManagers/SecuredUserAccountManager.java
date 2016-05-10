@@ -10,6 +10,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.gwt.lib.rest.client.DWO2RestCaller;
+import fi.dwo.gwt.lib.rest.client.SecuredUserAccountRestCaller;
 import fi.dwo.rest.dom.entities.DomContext;
 
 import fi.dwo.rest.dom.entities.DomLoginCheck;
@@ -19,7 +20,7 @@ import fi.dwo.rest.entities.RestUserFull;
 
 public class SecuredUserAccountManager {
 
-    private DWO2RestCaller service;
+    private SecuredUserAccountRestCaller service;
 
     public SecuredUserAccountManager() {
         this(DwoGlobalVars.instance().getServer());
@@ -70,37 +71,6 @@ public class SecuredUserAccountManager {
 
     }
 
-//    void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClasses> callback) {
-//        service.getSchoolLogins(new Callback<DomSchoolsRolesAndClasses>(callback));
-//    }
-//
-//    void toProfile(DomSchoolsRolesAndClasses result, Map<String, Object> profile) {
-//        DomSchoolRoleAndClass active = result.getActiveSchoolRoleAndClass();
-//        PersistenceId userId = active.getUserId();
-//        PersistenceId classId = active.getSchoolClassId();
-//        PersistenceId schoolId = active.getSchoolId();
-//        PersistenceId sgId = active.getSchoolGroupId();
-//
-//        profile.put("userID", PersistenceIdDecoderInterface.instance.idOf(userId, PersistenceClassType.PersistentUser));
-//        profile.put("iconizer", active.getIconizer());
-//        profile.put("classID", classId == null ? ""
-//                : PersistenceIdDecoderInterface.instance.idOf(classId, PersistenceClassType.PersistentSchoolClass));
-//        profile.put("schoolID", schoolId == null ? ""
-//                : PersistenceIdDecoderInterface.instance.idOf(schoolId, PersistenceClassType.PersistentSchool));
-//        profile.put("schoolName", active.getSchoolName());
-//        profile.put("groupname", active.getRoleName());
-//        profile.put("class", active.getSchoolClassName());
-//        profile.put("groupID", PersistenceIdDecoderInterface.instance.idOf(active.getRoleId(), PersistenceClassType.PersistentRole));
-//        profile.put("schoolGroupID", PersistenceIdDecoderInterface.instance.idOf(sgId, PersistenceClassType.PersistentSchoolGroup));
-//    }
-//
-//    public void toProfile(DomUserFull result, Map<String, Object> profile) {
-//        profile.put("firstname", result.getGivenName());
-//        profile.put("middlename", result.getInsertion());
-//        profile.put("lastname", result.getFamilyName());
-//        profile.put("userID", PersistenceIdDecoderInterface.instance.idOf(result.getId(), PersistenceClassType.PersistentUser));
-//        profile.put("username", result.getUserName());
-//    }
     public void login(String name, String password, final AsyncCallback<DomUserFull> callback) {
         final String pwmd5 = MD5.md5(password);
         GWT.log(pwmd5);
