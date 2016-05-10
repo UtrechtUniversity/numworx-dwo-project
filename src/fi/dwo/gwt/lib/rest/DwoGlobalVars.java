@@ -7,6 +7,7 @@ package fi.dwo.gwt.lib.rest;
 
 import com.google.gwt.user.client.Window;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
+import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Level;
@@ -16,61 +17,78 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 /**
  *
- * 
+ *
  * @author Gert van der Plas
  */
-public class GWTGlobals  {
+public class DwoGlobalVars {
 
-    private static final Logger LOG = Logger.getLogger(GWTGlobals.class.getName());
+    private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
 
-    private static volatile GWTGlobals instance;
+    private static volatile DwoGlobalVars instance;
+
+    /**
+     * @return the dwoLocale
+     */
+    public static DwoLocale getDwoLocale() {
+        return dwoLocale;
+    }
+
+    /**
+     * @param aDwoLocale the dwoLocale to set
+     */
+    public static void setDwoLocale(DwoLocale aDwoLocale) {
+        dwoLocale = aDwoLocale;
+    }
     private RestAuthenticator authenticator = new RestAuthenticator();
 
     static {
         try {
-            instance = new GWTGlobals();
+            instance = new DwoGlobalVars();
 
         } catch (Dwo2Exception ex) {
-            Logger.getLogger(GWTGlobals.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DwoGlobalVars.class.getName()).log(Level.SEVERE, null, ex);
             Window.alert("System error: app improperly configured.");
         }
     }
     //properties
     private static String server;
+    private static DwoLocale dwoLocale = new DwoLocale("nl-NL");
 
     /**
      * @return the instance
      */
-    public static GWTGlobals instance() {
+    public static DwoGlobalVars instance() {
         return instance;
     }
 
     //Runtime Variabes
-    DomUserFull curUser;
+    DomUserFull currentUser;
 
-    public GWTGlobals() throws Dwo2Exception {
+    public DwoGlobalVars() throws Dwo2Exception {
         initProperties();
         initObjects();
-        
+
     }
 
-    private void initObjects(){
-            Defaults.setServiceRoot(this.getServer());
-            Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
-            setAuthenticator(new RestAuthenticator());
-            DefaultFilterawareDispatcher.singleton().addFilter(this.getAuthenticator());
+    private void initObjects() {
+        Defaults.setServiceRoot(this.getServer());
+        Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
+        setAuthenticator(new RestAuthenticator());
+        DefaultFilterawareDispatcher.singleton().addFilter(this.getAuthenticator());
 //            restService = GWT.create(DWO2RestCaller.class);
-        
-    }
-    private void initProperties() throws Dwo2Exception {
-            setServer(DwoConstants.constants.server());
-            LOG.log(Level.INFO, "restserver=" + server + ".");
+
     }
 
-    public void setUser(DomUserFull user){
-        this.curUser=user;
-        getAuthenticator().setCredentials(user.getUserName(),user.getPassword());
+    private void initProperties() throws Dwo2Exception {
+        setServer(DwoConstants.constants.server());
+        LOG.log(Level.INFO, "restserver=" + server + ".");
     }
+
+    public void setUser(DomUserFull user) {
+        this.currentUser = user;
+        getAuthenticator().setCredentials(user.getUserName(), user.getPassword());
+    }
+
     /**
      * @return the server
      */
@@ -86,17 +104,17 @@ public class GWTGlobals  {
     }
 
     /**
-     * @return the curUser
+     * @return the currentUser
      */
-    public DomUserFull getCurUser() {
-        return curUser;
+    public DomUserFull getCurrentUser() {
+        return currentUser;
     }
 
     /**
-     * @param curUser the curUser to set
+     * @param curUser the currentUser to set
      */
-    public void setCurUser(DomUserFull aCurUser) {
-        curUser = aCurUser;
+    public void setCurrentUser(DomUserFull aCurUser) {
+        currentUser = aCurUser;
     }
 
     /**

@@ -1,6 +1,6 @@
 package fi.dwo.gwt.lib.rest.server;
 
-import fi.dwo.gwt.lib.rest.GWTGlobals;
+import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -23,7 +23,7 @@ public class RestCallHandler extends HttpServlet {
 	public void init() throws ServletException {
 		dwo2server = getInitParameter("dwo2server");
 		if(dwo2server == null)
-			dwo2server = GWTGlobals.instance().getServer();
+			dwo2server = DwoGlobalVars.instance().getServer();
 	}
 
 	@Override

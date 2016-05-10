@@ -8,7 +8,7 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import fi.dwo.gwt.lib.rest.GWTGlobals;
+import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.gwt.lib.rest.client.DWO2RestCaller;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.rest.dom.entities.DomLoginCheck;
@@ -34,7 +34,7 @@ public class SecuredUserSchoolLoginManager {
     private DWO2RestCaller service;
 
     public SecuredUserSchoolLoginManager() {
-        this(GWTGlobals.instance().getServer());
+        this(DwoGlobalVars.instance().getServer());
     }
 
     public SecuredUserSchoolLoginManager(String url) {

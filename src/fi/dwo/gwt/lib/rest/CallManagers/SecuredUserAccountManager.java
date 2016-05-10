@@ -8,25 +8,27 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import fi.dwo.gwt.lib.rest.GWTGlobals;
+import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.gwt.lib.rest.client.DWO2RestCaller;
+import fi.dwo.rest.dom.entities.DomContext;
 
 import fi.dwo.rest.dom.entities.DomLoginCheck;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.entities.RestLoginCheck;
+import fi.dwo.rest.entities.RestUserFull;
 
 public class SecuredUserAccountManager {
 
     private DWO2RestCaller service;
 
     public SecuredUserAccountManager() {
-        this(GWTGlobals.instance().getServer());
+        this(DwoGlobalVars.instance().getServer());
     }
 
     public SecuredUserAccountManager(String url) {
         Defaults.setServiceRoot(url);
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
-        DefaultFilterawareDispatcher.singleton().addFilter(GWTGlobals.instance().getAuthenticator());
+        DefaultFilterawareDispatcher.singleton().addFilter(DwoGlobalVars.instance().getAuthenticator());
         service = GWT.create(DWO2RestCaller.class);
 
     }
@@ -49,13 +51,13 @@ public class SecuredUserAccountManager {
         domLoginCheck.setPassword(DomLoginCheck.crypt(password));
         RestLoginCheck restLoginCheck = new RestLoginCheck();
         restLoginCheck.setDomLoginCheck(domLoginCheck);
-        GWTGlobals.instance().getAuthenticator().setCredentials(null, null);
+        DwoGlobalVars.instance().getAuthenticator().setCredentials(null, null);
         service.loginCheck(restLoginCheck, new MethodCallback<Boolean>() {
 
             @Override
             public void onSuccess(Method method, Boolean response) {
                 if (Boolean.TRUE.equals(response)) {
-                    GWTGlobals.instance().getAuthenticator().setCredentials(username, password);
+                    DwoGlobalVars.instance().getAuthenticator().setCredentials(username, password);
                 }
                 callback.onSuccess(response);
             }
@@ -143,8 +145,11 @@ public class SecuredUserAccountManager {
      * @param updateUser
      * @param callBack 
      */
-    public void updateAccountData(DomUserFull updateUser, AsyncCallback<Boolean> callBack) {
-        service.updateAccountData(updateUser, new Callback<Boolean>(callBack));
+    public void updateAccountData(DomUserFull updateUser, AsyncCallback<DomUserFull> callBack) {
+        RestUserFull user = new RestUserFull();
+        user.setRestContext(new DomContext());
+        user.setDomUserFull(updateUser);
+        service.updateAccountData(user, new Callback<DomUserFull>(callBack));
     }
 
     /**

@@ -12,6 +12,7 @@ import org.fusesource.restygwt.client.RestService;
 import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.entities.RestLoginCheck;
+import fi.dwo.rest.entities.RestUserFull;
 import java.util.List;
 
 public interface DWO2RestCaller extends RestService {
@@ -31,8 +32,8 @@ public interface DWO2RestCaller extends RestService {
 	@Path("/public/roles/getList")
 	public void getRoles(Callback<List<DomRole>> callback);
 
-        @GET
-        @Path("/public/user/account/update")
-        public void updateAccountData(DomUserFull updateUser, Callback<Boolean> callback);
+        @PUT
+        @Path("/secure/user/account/update")
+        public void updateAccountData(RestUserFull updateUser, Callback<DomUserFull> callback);
 	
 }
