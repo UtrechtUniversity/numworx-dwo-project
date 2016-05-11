@@ -751,10 +751,20 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		{
 			if (stapOk || isToets())
 			{	
+				String userAnswer = "";
 				if (editor == null)
-					voegRegelToe("$f" + latest_answer_viewer.toString() + "@", !isToets(), false);
+				{
+					userAnswer = latest_answer_viewer.toString();
+				}
 				else
-					voegRegelToe("$f" + editor.toString() + "@", !isToets(), false);
+				{
+					userAnswer = editor.toString();
+				}
+
+				if (!"".equals(userAnswer))
+				{
+					voegRegelToe("$f" + userAnswer + "@", !isToets(), false);
+				}
 			}
 		}
 	}
