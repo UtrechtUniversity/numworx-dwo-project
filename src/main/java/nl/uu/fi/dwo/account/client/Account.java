@@ -9,7 +9,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.DwoGlobalVars;
-import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionRestyTranslator;
+import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.logging.Level;
@@ -23,7 +23,8 @@ public class Account implements EntryPoint {
     UserBar userBar = new UserBar();
 
     static {
-        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionRestyTranslator());
+        //Initialize an Exception translator.
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
     }
 
     @Override
