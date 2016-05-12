@@ -213,6 +213,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private int foutStraf = 2;//in later stadium wordt deze instelbaar, dan bij init foutstraf instelbaar maken.
 	private boolean ingevuld = false;
 	private boolean nagekeken = false;
+	private boolean isVeranderdNaNakijken = false;
 	
 	private boolean[][] logObjectives;
 	
@@ -614,11 +615,20 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		resize();
 	}
 
+	/**
+	 * Verwijder het huidige element.
+	 * Als al is nagekeken, wordt isVeranderdNaNakijken true
+	 * gezet.
+	 */
 	@Override
 	public void removeCurrentElement()
 	{
 		super.removeCurrentElement();
 		resetimg();
+				
+		if (nagekeken)
+			zetIsVeranderdNaNakijken(true);
+
 		resize();
 		
 	}
@@ -643,7 +653,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		resize();
 	}
 
-	void resetimg() {
+	/**
+	 * Reset het goed/fout-plaatje en verberg de feedback.
+	 */
+	void resetimg() 
+	{
 		checkimg.setVisible(false);
 		zetFeedbackZichtbaar(false);
 		feedbackPanel.hide();
@@ -759,6 +773,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 	}
 	
+	/**
+	 * Deze methode wordt aangeroepen door een klik op de nakijkenknop
+	 * in een zelftoets.
+	 * 
+	 * Waar nog meer...?
+	 */
 	public void kijkNa()
 	{
 		if(fews != null) {
@@ -767,6 +787,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			fews.kijkNa();
 			fews.transfer = false;
 		}
+		
+		// reset isVeranderdNaNakijken
+		zetIsVeranderdNaNakijken(false);
 		kijkNa(false);
 	}
 	
@@ -1124,16 +1147,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				this.ingevuld = true;
 			boolean ingevuld = this.ingevuld;
 			boolean nagekeken = false;
+			boolean isVeranderdNaNakijken = false;
 			int errorCount = this.errorCount;
 			
 			//ingevuld = this.ingevuld;
 			nagekeken = this.nagekeken;
-			
+			isVeranderdNaNakijken = this.isVeranderdNaNakijken;
 			
 			h.put("formuleVakInhouden", formuleVakInhouden);
 			h.put(ANTWOORD_STRING, formuleVakInhouden[0]);
 			h.put("ingevuld", new Boolean(ingevuld));
 			h.put("nagekeken", new Boolean(nagekeken));
+			h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
 			h.put("errorCount", new Integer(errorCount));
 			
 		}
@@ -1143,7 +1168,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
-		if(h == null) return; // setStateNull();
+		if (h == null) return; // setStateNull();
 		logger.fine("setState " + h);
 		//antwoord eruit halen en dan uit h halen, zodat de antwoordstring niet wordt meegenomen in setState. 
 		
@@ -1160,16 +1185,20 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		boolean ingevuld = true;
 		boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 		int errorCount = 0;
 		if (h.get("ingevuld") != null)
 			ingevuld = (Boolean) h.get("ingevuld");
 		if (h.get("nagekeken") != null)
 			nagekeken = ((Boolean) h.get("nagekeken")).booleanValue();
+		if (h.get("isVeranderdNaNakijken") != null)
+			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 		if (map.containsKey("errorCount"))
 			errorCount = map.getInt("errorCount");
 		
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
+		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
 		this.errorCount = errorCount;
 		String antwoord = (String) h.get(ANTWOORD_STRING);
 		if( (antwoord == null || "".equals(antwoord.trim()) || "$f@".equals(antwoord.trim())) && fews != null)
@@ -1191,7 +1220,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//if(mode != 2 && mode != 3)
 			//	kijkNa();
 			setChanged(false);
-			if (mode == 0 || mode == 1 || nagekeken)
+			if (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken))
 				kijkNa(true); // FIXME kijkna in setstate
 		}
 
@@ -1255,6 +1284,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			{	fews.zetNagekeken(b);
 			}
 		}
+	}
+	
+	private void zetIsVeranderdNaNakijken(boolean b)
+	{
+		this.isVeranderdNaNakijken = b;
 	}
 	
 	public boolean isIngevuld()
