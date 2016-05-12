@@ -26,6 +26,15 @@ public class DwoGlobalVars {
 
     private static volatile DwoGlobalVars instance;
 
+    static {
+        try {
+            instance = new DwoGlobalVars();
+
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            Window.alert("System error: app improperly configured.");
+        }
+    }    
     /**
      * @return the dwoLocale
      */
@@ -41,15 +50,6 @@ public class DwoGlobalVars {
     }
     private RestAuthenticator authenticator = new RestAuthenticator();
 
-    static {
-        try {
-            instance = new DwoGlobalVars();
-
-        } catch (Dwo2Exception ex) {
-            Logger.getLogger(DwoGlobalVars.class.getName()).log(Level.SEVERE, null, ex);
-            Window.alert("System error: app improperly configured.");
-        }
-    }
     //properties
     private static String server;
     private static DwoLocale dwoLocale = new DwoLocale("nl-NL");
@@ -58,6 +58,13 @@ public class DwoGlobalVars {
      * @return the instance
      */
     public static DwoGlobalVars instance() {
+        if(instance==null){
+            try {
+                instance = new DwoGlobalVars();
+            } catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        }
         return instance;
     }
 
@@ -67,15 +74,18 @@ public class DwoGlobalVars {
     public DwoGlobalVars() throws Dwo2Exception {
         initProperties();
         initObjects();
-
     }
 
     private void initObjects() {
+        LOG.log(Level.INFO, "Starting initObjects():" );
+
         Defaults.setServiceRoot(this.getServer());
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
         setAuthenticator(new RestAuthenticator());
         DefaultFilterawareDispatcher.singleton().addFilter(this.getAuthenticator());
 //            restService = GWT.create(DWO2RestCaller.class);
+        LOG.log(Level.INFO, "Done initObjects():" );
+
 
     }
 

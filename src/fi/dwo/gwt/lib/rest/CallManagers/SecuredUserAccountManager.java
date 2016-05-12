@@ -21,16 +21,24 @@ import fi.dwo.rest.entities.RestUserFull;
 public class SecuredUserAccountManager {
 
     private SecuredUserAccountRestCaller service;
+    private DwoGlobalVars dgv;
 
     public SecuredUserAccountManager() {
-        this(DwoGlobalVars.instance().getServer());
+        String url = DwoGlobalVars.instance().getServer();
+        init(url);
+                
     }
 
     public SecuredUserAccountManager(String url) {
+        dgv= new DwoGlobalVars();
+     init(url);   
+    }
+    
+    private void init(String url){
         Defaults.setServiceRoot(url);
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
         DefaultFilterawareDispatcher.singleton().addFilter(DwoGlobalVars.instance().getAuthenticator());
-        service = GWT.create(DWO2RestCaller.class);
+        service = (SecuredUserAccountRestCaller) GWT.create(SecuredUserAccountRestCaller.class);
 
     }
     
