@@ -45,6 +45,13 @@
                 <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-Generatie PropertyConstants</actionName>
+            <displayName>Generatie PropertyConstants</displayName>
+            <goals>
+                <goal>gwt:i18n</goal>
+            </goals>
+        </action>
         
         
         

@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.account.client;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
@@ -30,11 +31,26 @@ public class Account implements EntryPoint {
     @Override
     public void onModuleLoad() {
         LOG.log(Level.INFO, "onModuleLoad...");
-        HeaderPanel header = new HeaderPanel();
-        RootPanel.get().add(header);
+        GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
+            @Override
+            public void onUncaughtException(Throwable e) {
+                LOG.log(Level.SEVERE, "UncaughtException:", e);
+            }
+        });
+        
+        //create Constants 
+//        Dwo2Exceptions exceptions = (Dwo2Exceptions) GWT.create(Dwo2Exceptions.class);
+//        LOG.log(Level.INFO,exceptions.Dwo2ExceptionCode_GUI_NoUserIsSignedIn());
 
-        header.setCenter("Account");
-        if (user == null) {
+        HeaderPanel header = new HeaderPanel();
+
+        RootPanel.get()
+                .add(header);
+
+        header.setCenter(
+                "Account");
+        if (user
+                == null) {
             LOG.log(Level.INFO, "filling in test user...");
 //            DomUserFull curUser;// = new DomUserFull();
 //            curUser.setGivenName("Wim");
@@ -61,12 +77,13 @@ public class Account implements EntryPoint {
                     user = (DomUserFull) result;
                     loginStatusPanel.setStatus(user.getUserName(), true);
                     DwoGlobalVars.instance().setCurrentUser(user);
-                    LOG.log(Level.INFO, "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName()+ ".");
+                    LOG.log(Level.INFO, "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");
                 }
             });
         } else {
             LOG.log(Level.INFO, "Configured username for the UserBar is: " + user.getUserName() + ".");
         }
+
         header.setRightWidget(userBar);
     }
 
