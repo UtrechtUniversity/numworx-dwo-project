@@ -9,7 +9,6 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.DwoGlobalVars;
-import fi.dwo.gwt.lib.rest.client.DWO2RestCaller;
 import fi.dwo.gwt.lib.rest.client.SecuredUserAccountRestCaller;
 import fi.dwo.rest.dom.entities.DomContext;
 
@@ -17,8 +16,12 @@ import fi.dwo.rest.dom.entities.DomLoginCheck;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestUserFull;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SecuredUserAccountManager {
+    private static final Logger LOG = Logger.getLogger(SecuredUserAccountManager.class.getName());
 
     private SecuredUserAccountRestCaller service;
     private DwoGlobalVars dgv;
@@ -30,7 +33,11 @@ public class SecuredUserAccountManager {
     }
 
     public SecuredUserAccountManager(String url) {
-        dgv= new DwoGlobalVars();
+        try {
+            dgv= new DwoGlobalVars();
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
      init(url);   
     }
     

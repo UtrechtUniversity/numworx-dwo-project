@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-Process propertyfiles.</actionName>
+            <displayName>Process propertyfiles.</displayName>
+            <goals>
+                <goal>gwt:i18n</goal>
+            </goals>
+        </action>
+    </actions>

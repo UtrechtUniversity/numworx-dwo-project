@@ -67,7 +67,7 @@
                     <packagingIncludes>*.css,*gwt/**,${project.artifactId}.html</packagingIncludes>
                 </configuration>
             </plugin>
-<!--             jetty stuff 
+<!--             jetty stuff -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
@@ -75,17 +75,23 @@
                 <configuration>
                     <module>${project.groupId}.${project.artifactId}</module>
                     <runTarget>${project.artifactId}.html</runTarget>
-                    <warSourceDirectory>war</warSourceDirectory>        
-                </configuration>
+<!--                    <warSourceDirectory>war</warSourceDirectory>        -->
+                        <i18nMessagesBundles>
+                        <i18nMessagesBundle>fi.dwo.rest.locale.Dwo2Exceptions</i18nMessagesBundle>                          
+                    </i18nMessagesBundles>
+                    <!-- And the generated sources should be generated in our src dir -->
+                    <generateDirectory>${basedir}/src</generateDirectory>
+            </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>compile</goal>
+                            <goal>i18n</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+<!--            <plugin>
                  usage: jetty:run-war of jetty:run-exploded 
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
