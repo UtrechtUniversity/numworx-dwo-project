@@ -14,6 +14,7 @@ import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.entities.RestNewSchoolClass4Student;
 import fi.dwo.rest.entities.RestSchoolClass;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -33,6 +34,7 @@ public class SecuredStudentSchoolClassManager {
         restSchoolClass.setRestContext(new DomContext());
         restSchoolClass.setDomSchoolClass(schoolClass);
         service.setActiveSchoolClass(restSchoolClass, new Callback<Boolean>(callBack));
+        LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
     public void removeSchoolClass(DomSchoolClass schoolClass, AsyncCallback<Boolean> callBack) {
@@ -40,10 +42,12 @@ public class SecuredStudentSchoolClassManager {
         restSchoolClass.setRestContext(new DomContext());
         restSchoolClass.setDomSchoolClass(schoolClass);
         service.removeSchoolClass(restSchoolClass, new Callback<Boolean>(callBack));
+        LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
     public void getStudentsSchoolClasses(AsyncCallback<List<DomSchoolClass>> callBack) {
         service.getStudentsSchoolClasses(new Callback<List<DomSchoolClass>>(callBack));
+        LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
     public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit, AsyncCallback<Boolean> callBack) {
@@ -51,14 +55,17 @@ public class SecuredStudentSchoolClassManager {
         restData.setRestContext(new DomContext());
         restData.setDomNewSchoolClass4Student(submit);
         service.registerStudentForSchoolClass(restData, new Callback<Boolean>(callBack));
+        LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
     public void getSchoolsClasses(AsyncCallback<List<DomSchoolClass>> callBack) {
         service.getSchoolsClasses(new Callback<List<DomSchoolClass>>(callBack));
+        LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
     public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack) {
         service.getActiveSchoolClass(new Callback<DomSchoolClass>(callBack));
+        LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
 }
