@@ -14,6 +14,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.VerticalAlign;
@@ -83,6 +84,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	    
     private boolean ingevuld;
     private boolean nagekeken;
+	private boolean isVeranderdNaNakijken = false;
     
     private boolean correct;
     private boolean fout;
@@ -587,6 +589,16 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	public void zetSelectie(int index)
 	{
+		
+		if (selectedIndex != index)
+		{
+			// er is een verandering
+			resetimg();
+			
+			if (nagekeken)
+				zetIsVeranderdNaNakijken(true);
+		}
+
 		selectedIndex = index;
 		huidigeKeuzeVak.clear();
 		
@@ -619,6 +631,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	{
 		boolean ingevuld = false;
 		boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 		String antwoord = "";
 		Vector attempts = new Vector();
 		int attemptsCount = 0;
@@ -630,6 +643,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		
 		ingevuld = this.ingevuld;
 		nagekeken = this.nagekeken;
+		isVeranderdNaNakijken = this.isVeranderdNaNakijken;
 		if(selectedIndex > 0)
 			antwoord = keuzeMogelijkheden[selectedIndex - 1];
 		else
@@ -660,7 +674,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("ingevuld", new Boolean(ingevuld));
-		h.put("nagekeken", new Boolean(nagekeken)); // deze is false net als this.nagekeken
+		h.put("nagekeken", new Boolean(nagekeken));
+		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
 		h.put("antwoord", antwoord);
 		h.put("attempts", attempts);
 		h.put("attemptsCount", new Integer(attemptsCount));
@@ -731,6 +746,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		if( h == null) return; // setStateNull();
 		boolean ingevuld = false;
 		boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 		String antwoord = "";
 		Vector attempts = new Vector();
 		int attemptsCount = 0;
@@ -740,6 +756,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			ingevuld = ((Boolean) h.get("ingevuld")).booleanValue();
 		if (h.containsKey("nagekeken"))
 			nagekeken = ((Boolean) h.get("nagekeken")).booleanValue();
+		if (h.containsKey("isVeranderdNaNakijken"))
+			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 		if (h.containsKey("antwoord"))
 			antwoord = (String) h.get("antwoord");
 		if (h.containsKey("attempts"))
@@ -754,6 +772,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
+		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
 		this.attempts = attempts;
 		this.attemptsCount = attemptsCount;
 		this.errorCount = errorCount;
@@ -777,7 +796,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		//antwoordKV.setSelectedIndex(index);
 		//antwoordKV.setSelectedItem(antwoord);
 
-		if (ingevuld && (mode == 0 || mode == 1 || nagekeken))
+		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
 			kijkNa(true, true);
 	}
 	
@@ -852,6 +871,9 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	@Override
 	public void kijkNa() 
 	{
+		// reset isVeranderdNaNakijken
+		zetIsVeranderdNaNakijken(false);
+		
 		kijkNa(true, false);
 	}
 	
@@ -1090,6 +1112,32 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			nagekeken = b;
 	}
 
+	private void zetIsVeranderdNaNakijken(boolean b)
+	{
+		this.isVeranderdNaNakijken = b;
+	}
+	
+	/**
+	 * Reset het goed/fout-plaatje en verberg de feedback.
+	 */
+	void resetimg() 
+	{
+		goedKrulImage.setVisible(false);
+		goedKrulHalfImage.setVisible(false);
+		foutKruisImage.setVisible(false);
+		//zetFeedbackZichtbaar(false); waar dan weer op true?
+		feedbackPanel.hide();
+	}
+	
+	public void zetFeedbackZichtbaar(boolean b)
+	{
+		feedbackLabel.setVisible(b);
+		if(b)
+			checkPanel.getElement().getStyle().setCursor(Cursor.POINTER);
+		else
+			checkPanel.getElement().getStyle().setCursor(Cursor.DEFAULT);
+	}
+	
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
