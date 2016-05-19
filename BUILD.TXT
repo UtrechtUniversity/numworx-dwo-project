@@ -1,0 +1,6 @@
+Before building and running you need to run:
+
+mvn gwt:i18n
+
+this updates fi.dwo.rest.local.Dwo2Exceptions.java for GWT-localisation.
+
