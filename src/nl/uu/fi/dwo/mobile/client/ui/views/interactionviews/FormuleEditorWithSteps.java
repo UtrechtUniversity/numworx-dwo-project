@@ -1022,13 +1022,17 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 	public String removePrefix(String s)
 	{
-		int index = s.indexOf("=");
-		if (index == -1)
-			index = s.indexOf("\u2248");
-		if (index > -1)
+		if ((s != null) && (s.length() > 0))
 		{
-			s = s.substring(index + 1);
+			int index = s.indexOf("=");
+			if (index == -1)
+				index = s.indexOf("\u2248");
+			if (index > -1)
+			{
+				s = s.substring(index + 1);
+			}
 		}
+		
 		return s;
 	}
 
@@ -1930,6 +1934,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	private void bepaalScoreEnCorrect(String formule, String formuleMin1) throws RestartException
 	{
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
+		
+		if (formule == null)
+			formule = "";
+		if (formuleMin1 == null)
+			formuleMin1 = "";
 
 		// verwijder een eventuele prefix
 		if (hasPrefix)
