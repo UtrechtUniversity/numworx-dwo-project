@@ -8,6 +8,7 @@ package fi.dwo.gwt.lib.rest;
 import com.google.gwt.user.client.Window;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import fi.dwo.rest.DwoLocale;
+import fi.dwo.rest.dom.entities.DomSchool;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Level;
@@ -25,6 +26,7 @@ public class DwoGlobalVars {
     private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
 
     private static volatile DwoGlobalVars instance;
+    private DomSchool nullSchool;
 
     static {
         try {
@@ -47,6 +49,20 @@ public class DwoGlobalVars {
      */
     public static void setDwoLocale(DwoLocale aDwoLocale) {
         dwoLocale = aDwoLocale;
+    }
+
+    /**
+     * @return the nullSchool
+     */
+    public DomSchool getNullSchool() {
+        return nullSchool;
+    }
+
+    /**
+     * @param aNullSchool the nullSchool to set
+     */
+    public void setNullSchool(DomSchool aNullSchool) {
+        nullSchool = aNullSchool;
     }
     private RestAuthenticator authenticator = new RestAuthenticator();
 
@@ -74,6 +90,7 @@ public class DwoGlobalVars {
     public DwoGlobalVars() throws Dwo2Exception {
         initProperties();
         initObjects();
+        initVars();
     }
 
     private void initObjects() {
@@ -93,6 +110,10 @@ public class DwoGlobalVars {
         setServer(DwoConstants.constants.server());
         LOG.log(Level.INFO, "restserver=" + server + ".");
     }
+    private void initVars() throws Dwo2Exception {
+        //TODO fill DwoSystemParameters and more into the instance.
+    }
+            
 
     public void setUser(DomUserFull user) {
         this.currentUser = user;
