@@ -24,7 +24,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
 
     Logger LOG = Logger.getLogger("Account");
 
-    //SchoolLoginController control;
+    SchoolLoginController control;
     PopupPanel popup;
     Button cnlBtn;
     Button newSchoolLoginBtn;
@@ -40,7 +40,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
 
     SchoolLoginPanel(DomUserFull user) {
         init(user);
- //       control = new SchoolLoginController(this, user);
+        control = new SchoolLoginController(this, user);
 
     }
 
