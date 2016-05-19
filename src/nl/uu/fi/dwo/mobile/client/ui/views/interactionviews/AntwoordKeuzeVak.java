@@ -594,6 +594,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		{
 			// er is een verandering
 			resetimg();
+			zetFeedbackZichtbaar(false);
 			
 			if (nagekeken)
 				zetIsVeranderdNaNakijken(true);
