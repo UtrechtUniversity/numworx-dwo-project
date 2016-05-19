@@ -83,7 +83,7 @@ public class Account implements EntryPoint {
         } else {
             LOG.log(Level.INFO, "Configured username for the UserBar is: " + user.getUserName() + ".");
         }
-
+        RootPanel.get().add(loginStatusPanel);
         header.setRightWidget(userBar);
     }
 

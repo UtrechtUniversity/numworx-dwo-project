@@ -59,21 +59,20 @@
                     <warSourceDirectory>war</warSourceDirectory>
                     <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>  
-                    <compileSourcesArtifacts>
+                    <compileSourcesArtifacts> 
                         <compileSourcesArtifact>fi.dwo.rest:DWO-rest-lib-working-gert</compileSourcesArtifact>
-                        <compileSourcesArtifact>fi.dwo.rest:DWO-gwt-lib</compileSourcesArtifact>
-                    </compileSourcesArtifacts>
-                    <i18nMessagesBundles>
+                        <!--                        <compileSourcesArtifact>fi.dwo.rest:DWO-gwt-lib</compileSourcesArtifact> -->
+                    </compileSourcesArtifacts> 
+                    <!--                     <i18nMessagesBundles>
                         <i18nMessagesBundle>fi.dwo.rest.locale.Dwo2Exceptions</i18nMessagesBundle>                          
-                    </i18nMessagesBundles>
-                    <!-- And the generated sources should be generated in our src dir -->
-                    <generateDirectory>${basedir}/src/main/java</generateDirectory>
+                    </i18nMessagesBundles> -->
+                    <generateDirectory>${basedir}/src/main/java</generateDirectory> 
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>compile</goal>
-                            <goal>i18n</goal>
+<!--                            <goal>i18n</goal> -->
                         </goals>
                     </execution>
                 </executions>
@@ -116,7 +115,7 @@
             <classifier>sources</classifier>
         </dependency>
         <dependency>
-            <groupId>fi.dwo.rest</groupId>
+            <groupId>fi.dwo.gwt.lib.rest</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
