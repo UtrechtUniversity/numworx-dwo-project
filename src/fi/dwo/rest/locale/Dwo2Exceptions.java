@@ -2,25 +2,25 @@ package fi.dwo.rest.locale;
 
 /**
  * Interface to represent the messages contained in resource bundle:
- * 	/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2Exceptions.properties'.
+ * 	D:/GertvanderPlas/netbeans-checkout/project.fisme.java/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2Exceptions.properties'.
  */
 public interface Dwo2Exceptions extends com.google.gwt.i18n.client.Messages {
   
   /**
-   * Translated "\"An incorrect password was given.\"".
+   * Translated "An incorrect password was given.".
    * 
-   * @return translated "\"An incorrect password was given.\""
+   * @return translated "An incorrect password was given."
    */
-  @DefaultMessage("\"An incorrect password was given.\"")
+  @DefaultMessage("An incorrect password was given.")
   @Key("Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven")
   String Dwo2ExceptionCode_GUI_AnIncorrectPasswordWasGiven();
 
   /**
-   * Translated "\"No user is signed in.\"".
+   * Translated "No user is signed in.".
    * 
-   * @return translated "\"No user is signed in.\""
+   * @return translated "No user is signed in."
    */
-  @DefaultMessage("\"No user is signed in.\"")
+  @DefaultMessage("No user is signed in.")
   @Key("Dwo2ExceptionCode.GUI_NoUserIsSignedIn")
   String Dwo2ExceptionCode_GUI_NoUserIsSignedIn();
 
