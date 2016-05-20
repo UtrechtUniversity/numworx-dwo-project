@@ -45,6 +45,8 @@ import java.util.Vector;
 
 
 
+
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -131,6 +133,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	
 	private boolean ingevuld;
 	private boolean nagekeken;
+	private boolean isVeranderdNaNakijken = false;
 
 	private Boolean correct;
 	
@@ -315,7 +318,11 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		//antwoordTF.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
 		antwoordTF.addKeyDownHandler(new KeyDownHandler() {
 			public void onKeyDown(KeyDownEvent event) 
-			{	changed = true;
+			{	
+				if (nagekeken)
+					zetIsVeranderdNaNakijken(true);
+
+				changed = true;
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) 
 		    	{	kijkNa();
 		    		setAttempt();
@@ -356,6 +363,9 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				changed = true;
 				resize();
 				resetimg();
+				
+				if (nagekeken)
+					zetIsVeranderdNaNakijken(true);
 			}
 
 			@Override
@@ -365,6 +375,9 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				changed = true;
 				resize();
 				resetimg();
+				
+				if (nagekeken)
+					zetIsVeranderdNaNakijken(true);
 			}
 
 			@Override
@@ -374,6 +387,9 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				changed = true;
 				resize();
 				resetimg();
+				
+				if (nagekeken)
+					zetIsVeranderdNaNakijken(true);
 			}
 
 			@Override
@@ -628,6 +644,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	{
 		boolean ingevuld = false;
 		boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 		String antwoord = "";
 		Vector attempts = new Vector();
 		int attemptsCount = 0;
@@ -640,6 +657,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 
 		ingevuld = this.ingevuld;
 		nagekeken = this.nagekeken;
+		isVeranderdNaNakijken = this.isVeranderdNaNakijken;
 		if (formuleMode)
 			antwoord = "$f" + formuleVak.toString() + "@"; // Wiskopdr heeft $f ... @
 		else
@@ -671,6 +689,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("ingevuld", new Boolean(ingevuld));
 		h.put("nagekeken", new Boolean(nagekeken));
+		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
 		h.put("antwoord", antwoord);
 		h.put("attempts", attempts);
 		h.put("attemptsCount", new Integer(attemptsCount));
@@ -684,6 +703,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		if(h == null) return; // setStateNull();
 		boolean ingevuld = false;
 		boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 		String antwoord = "";
 		List attempts = new Vector();
 		int attemptsCount = 0;
@@ -693,6 +713,8 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			ingevuld = ((Boolean) h.get("ingevuld")).booleanValue();
 		if (h.containsKey("nagekeken"))
 			nagekeken = ((Boolean) h.get("nagekeken")).booleanValue();
+		if (h.get("isVeranderdNaNakijken") != null)
+			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 		if (h.containsKey("antwoord"))
 			antwoord = (String) h.get("antwoord");
 		if (h.containsKey("attempts"))
@@ -704,6 +726,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
+		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
 		this.attempts = new Vector(attempts);
 		this.attemptsCount = attemptsCount;
 		this.errorCount = errorCount;
@@ -717,7 +740,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		else
 			antwoordTF.setText(antwoord);
 
-		if (ingevuld && (mode == 0 || mode == 1 || nagekeken))
+		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
 			kijkNa(true, false);
 	}
 	
@@ -824,6 +847,9 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	
 	public void kijkNa()
 	{
+		// reset isVeranderdNaNakijken
+		zetIsVeranderdNaNakijken(false);
+
 		kijkNa(true, true);
 	}
 
@@ -922,6 +948,11 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			nagekeken = b;
 	}
 	
+	private void zetIsVeranderdNaNakijken(boolean b)
+	{
+		this.isVeranderdNaNakijken = b;
+	}
+	
 	public void checkAntwoord()
 	{
 		checkAntwoord(true);
@@ -943,7 +974,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 					if (formuleMode)
 					{
 						antw = formuleVak.toString();
-						antw = "$f" + antw + "@";
+						//antw = "$f" + antw + "@"; // niet nodig; hier gaat iets mis... Codering antwoord komt niet overeen met juistAntwoorden
 						//antw = antw.substring(2, antw.length()-1);
 					}
 					
@@ -983,7 +1014,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				if (formuleMode)
 				{
 					antw = formuleVak.toString();
-					antw = "$f" + antw + "@";
+//					antw = "$f" + antw + "@"; // dit maakt het antwoord fout...
 					//antw = antw.substring(2, antw.length()-1);
 				}
 				antw = StringUtils.replaceStr(antw, " ", "");
