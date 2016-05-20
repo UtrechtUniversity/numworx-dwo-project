@@ -85,6 +85,7 @@ public class CheckSelectieUnit implements InteractionStub
 	    
     private boolean ingevuld;
     private boolean nagekeken;
+	private boolean isVeranderdNaNakijken = false;
     
     private boolean correct;
     private boolean fout;
@@ -152,6 +153,9 @@ public class CheckSelectieUnit implements InteractionStub
 	
 	public void kijkNa()
     {
+		// reset isVeranderdNaNakijken
+		zetIsVeranderdNaNakijken(false);
+
     	kijkNa(true);
     }
     
@@ -283,12 +287,14 @@ public class CheckSelectieUnit implements InteractionStub
 		
 		boolean ingevuld = false;
 	    boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
 		
 		ingevuld = this.ingevuld;
 	    nagekeken = this.nagekeken;
+		isVeranderdNaNakijken = this.isVeranderdNaNakijken;
 	    attempts = this.attempts;
 	    attemptsCount = this.attemptsCount;
 	    errorCount = this.errorCount;
@@ -321,6 +327,7 @@ public class CheckSelectieUnit implements InteractionStub
         
         h.put("ingevuld", new Boolean(ingevuld));
         h.put("nagekeken", new Boolean(nagekeken));
+		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
         h.put("attempts", attempts);
         h.put("attemptsCount", new Integer(attemptsCount));
         h.put("errorCount", new Integer(errorCount));
@@ -333,6 +340,7 @@ public class CheckSelectieUnit implements InteractionStub
 		Point[] randomizedPositions = null;
 	    boolean ingevuld = false;
 	    boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
@@ -356,6 +364,8 @@ public class CheckSelectieUnit implements InteractionStub
 	    	ingevuld = map.getBoolean("ingevuld");
 	    if(map.containsKey("nagekeken")) 
 	    	nagekeken = map.getBoolean("nagekeken");
+		if (h.get("isVeranderdNaNakijken") != null)
+			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 	    if(map.containsKey("attempts"))
 	    	attempts = new Vector(map.getList("attempts"));
 	    if(map.containsKey("attemptsCount")) 
@@ -366,6 +376,7 @@ public class CheckSelectieUnit implements InteractionStub
         this.randomizedPositions = randomizedPositions;
         this.ingevuld = ingevuld;
         this.nagekeken = nagekeken;
+		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
         this.attempts = attempts;
         this.attemptsCount = attemptsCount;
 	    this.errorCount = errorCount;
@@ -379,7 +390,8 @@ public class CheckSelectieUnit implements InteractionStub
 	        //(((TekstInteractiePanelVak)((Component)ipList[0]).getParent()).getTekstVak()).layoutTekst();
         }
         
-        if(ingevuld && (mode==0 || mode == 1 || nagekeken)){
+        if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
+        {
         	kijkNa();
         }
 	}
@@ -504,6 +516,11 @@ public class CheckSelectieUnit implements InteractionStub
 			nagekeken = b;
 	}
 
+	private void zetIsVeranderdNaNakijken(boolean b)
+	{
+		this.isVeranderdNaNakijken = b;
+	}
+	
 	public void stop()
 	{
 		kijkNa();
@@ -742,6 +759,9 @@ public class CheckSelectieUnit implements InteractionStub
 
 	public void selectClickAction(int i)
 	{
+		if (nagekeken)
+			zetIsVeranderdNaNakijken(true);
+
 		nakijkAchtergrond.setVisible(false);
 		goedKrulImage.setVisible(false);
 		//goedKrulHalfImage.setVisible(false);
