@@ -121,10 +121,11 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			if(richting == RICHTING_LINKS)
 			{	ctx.beginPath();
 				ctx.moveTo(breedte, hoogte / 2);
-				ctx.lineTo(0, hoogte / 2);
-				ctx.lineTo(5, hoogte / 2 - 5);
-				ctx.moveTo(0, hoogte / 2);
-				ctx.lineTo(5, hoogte / 2 + 5);
+				ctx.lineTo(dikte, hoogte / 2);
+				ctx.moveTo(dikte/2, hoogte / 2 + dikte/2);
+				ctx.lineTo(5 + dikte, hoogte / 2 - 5 - dikte/2);
+				ctx.moveTo(dikte/2, hoogte / 2 - dikte/2);
+				ctx.lineTo(5 + dikte, hoogte / 2 + 5 + dikte/2);
 				ctx.stroke();
 //				g2.drawLine(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
 //				g2.drawLine(0, this.getHeight()/2, 5, this.getHeight()/2 - 5);
@@ -133,10 +134,11 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			else if(richting == RICHTING_RECHTS)
 			{	ctx.beginPath();
 				ctx.moveTo(0, hoogte / 2);
-				ctx.lineTo(breedte, hoogte / 2);
-				ctx.lineTo(breedte - 5, hoogte / 2 - 5);
-				ctx.moveTo(breedte, hoogte / 2);
-				ctx.lineTo(breedte - 5, hoogte / 2 + 5);
+				ctx.lineTo(breedte - dikte, hoogte / 2);
+				ctx.moveTo(breedte - dikte/2, hoogte / 2 + dikte/2);
+				ctx.lineTo(breedte - 5 - dikte, hoogte / 2 - 5 - dikte/2);
+				ctx.moveTo(breedte - dikte/2, hoogte / 2 - dikte/2);
+				ctx.lineTo(breedte - 5 - dikte, hoogte / 2 + 5 + dikte/2);
 				ctx.stroke();
 				
 //				g2.drawLine(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
@@ -147,10 +149,11 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			{	
 				ctx.beginPath();
 				ctx.moveTo(breedte / 2, hoogte);
-				ctx.lineTo(breedte / 2, 0);
-				ctx.lineTo(breedte / 2 - 5, 5);
-				ctx.moveTo(breedte / 2, 0);
-				ctx.lineTo(breedte / 2 + 5, 5);
+				ctx.lineTo(breedte / 2, dikte);
+				ctx.moveTo(breedte / 2 + dikte / 2, dikte / 2);
+				ctx.lineTo(breedte / 2 - 5 - dikte / 2, 5 + dikte);
+				ctx.moveTo(breedte / 2 - dikte/2, dikte / 2);
+				ctx.lineTo(breedte / 2 + 5 + dikte / 2, 5 + dikte);
 				ctx.stroke();
 				
 //				g2.drawLine(this.getWidth()/2, 0, this.getWidth()/2, this.getHeight());
@@ -162,10 +165,11 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			{	
 				ctx.beginPath();
 				ctx.moveTo(breedte / 2, 0);
-				ctx.lineTo(breedte / 2, hoogte);
-				ctx.lineTo(breedte / 2 - 5, hoogte - 5);
-				ctx.moveTo(breedte / 2, hoogte);
-				ctx.lineTo(breedte / 2 + 5, hoogte - 5);
+				ctx.lineTo(breedte / 2, hoogte - dikte);
+				ctx.moveTo(breedte / 2 + dikte / 2, hoogte - dikte/2);
+				ctx.lineTo(breedte / 2 - 5 - dikte / 2, hoogte - 5 - dikte);
+				ctx.moveTo(breedte / 2 - dikte/2, hoogte - dikte/2);
+				ctx.lineTo(breedte / 2 + 5 + dikte / 2, hoogte - 5 - dikte);
 				ctx.stroke();
 				
 //				g2.drawLine(this.getWidth()/2, 0, this.getWidth()/2, this.getHeight());
@@ -176,10 +180,10 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			{	
 				ctx.beginPath();
 				ctx.moveTo(breedte, hoogte);
-				ctx.lineTo(0, 0);
-				ctx.lineTo(5, 0);
-				ctx.moveTo(0, 0);
-				ctx.lineTo(0, 5);
+				ctx.lineTo(dikte/2, dikte /2);
+				ctx.lineTo(6 + dikte, dikte /2);
+				ctx.moveTo(dikte /2, dikte /2);
+				ctx.lineTo(dikte /2, 6 + dikte);
 				ctx.stroke();
 				
 //				g2.drawLine(0, 0, this.getWidth(), this.getHeight());
@@ -192,9 +196,11 @@ public class SymboolPanel implements InteractionStub, FacetAware
 				ctx.beginPath();
 				ctx.moveTo(0, 0);
 				ctx.lineTo(breedte - 1, hoogte - 1);
-				ctx.lineTo(breedte - 1, hoogte - 6);
+				
+				ctx.lineTo(breedte - 1, hoogte - 6 - dikte);
+				
 				ctx.moveTo(breedte - 1, hoogte - 1);
-				ctx.lineTo(breedte - 6, hoogte - 1);
+				ctx.lineTo(breedte - 6 - dikte, hoogte - 1);
 				ctx.stroke();
 				
 //				g2.drawLine(0, 0, this.getWidth(), this.getHeight());
@@ -207,9 +213,10 @@ public class SymboolPanel implements InteractionStub, FacetAware
 				ctx.beginPath();
 				ctx.moveTo(breedte, 0);
 				ctx.lineTo(0, hoogte - 1);
-				ctx.lineTo(5, hoogte - 1);
-				ctx.moveTo(0, hoogte - 1);
-				ctx.lineTo(0, hoogte - 6);
+				ctx.lineTo(dikte / 2, hoogte - 1);
+				ctx.lineTo(dikte / 2, hoogte - 7 - dikte);
+				ctx.moveTo(0, hoogte - 1 - dikte / 2);
+				ctx.lineTo(6 + dikte, hoogte - 1 - dikte / 2);
 				ctx.stroke();
 				
 //				g2.drawLine(0, this.getHeight(), this.getWidth(), 0);
@@ -221,10 +228,12 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			{	
 				ctx.beginPath();
 				ctx.moveTo(0, hoogte);
+				//ctx.lineTo(breedte - 1, dikte / 2);
 				ctx.lineTo(breedte - 1, 0);
-				ctx.lineTo(breedte - 6, 0);
-				ctx.moveTo(breedte - 1, 0);
-				ctx.lineTo(breedte - 1, 5);
+				ctx.moveTo(breedte - 1, dikte / 2);
+				ctx.lineTo(breedte - 7 - dikte, dikte / 2);
+				ctx.moveTo(breedte - 1 - dikte/2, 0);
+				ctx.lineTo(breedte - 1 - dikte/2 , 6 + dikte);
 				ctx.stroke();
 				
 //				g2.drawLine(0, this.getHeight(), this.getWidth(), 0);
@@ -233,6 +242,8 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			
 			}
 		}
+
+
 		else if(type == LIJN)
 		{
 			if(richting == RICHTING_LINKS || richting == RICHTING_RECHTS)
