@@ -66,6 +66,7 @@ public class CheckValueUnit implements InteractionStub{
     
     private boolean ingevuld;
     private boolean nagekeken;
+	private boolean isVeranderdNaNakijken = false;
     
     private boolean correct;
     private boolean fout;
@@ -271,27 +272,37 @@ public class CheckValueUnit implements InteractionStub{
 	public void zetWaardeObjecten(TekstVakPanel[] waardeObjecten)
 	{
 		ipValueList = waardeObjecten;
-		 for(int i=0 ; i<ipValueList.length ; i++)
-        {  if(ipValueList[i] != null)
-            {	ipValueList[i].getAsPanel().addDomHandler(new MouseDownHandler(){
-	    			public void onMouseDown(MouseDownEvent e){
-	    				for(int i = 0; i < ipValueList.length; i++)
-	    				{	if(e.getSource() == ipValueList[i].getAsPanel())
-	    				
-	    					{	nakijkAchtergrond.setVisible(false);
-	    						goedKrulImage.setVisible(false);
-	    						//goedKrulHalfImage.setVisible(false);
-	    						foutKruisImage.setVisible(false);
-	    						correct = false;
-	    						score = 0;
-	    						
-	    						break;
-	    					}
-	    				}
-	    			}
-	    		}, MouseDownEvent.getType());
-            }
-        }
+		for (int i = 0; i < ipValueList.length; i++)
+		{
+			if (ipValueList[i] != null)
+			{
+				ipValueList[i].getAsPanel().addDomHandler(
+					new MouseDownHandler()
+					{
+						public void onMouseDown(MouseDownEvent e)
+						{
+							for (int i = 0; i < ipValueList.length; i++)
+							{
+								if (e.getSource() == ipValueList[i].getAsPanel())
+
+								{
+									if (nagekeken)
+										zetIsVeranderdNaNakijken(true);
+
+									nakijkAchtergrond.setVisible(false);
+									goedKrulImage.setVisible(false);
+									// goedKrulHalfImage.setVisible(false);
+									foutKruisImage.setVisible(false);
+									correct = false;
+									score = 0;
+
+									break;
+								}
+							}
+						}
+					}, MouseDownEvent.getType());
+			}
+		}
 	}
 	
 	public int getAantalValueObjects()
@@ -305,6 +316,7 @@ public class CheckValueUnit implements InteractionStub{
 		if(h == null) return; // setStateNull();
 	    boolean ingevuld = false;
 	    boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
@@ -313,6 +325,8 @@ public class CheckValueUnit implements InteractionStub{
 	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();
 	    if(h.get("nagekeken") != null) 
 	    	nagekeken = ((Boolean)h.get("nagekeken")).booleanValue();
+		if (h.get("isVeranderdNaNakijken") != null)
+			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 	    if(h.get("attempts") != null)
 	    	attempts = new Vector(JSONUtilities.toArrayList(h.get("attempts")));
 	    if(h.get("attemptsCount") != null) 
@@ -322,23 +336,27 @@ public class CheckValueUnit implements InteractionStub{
 	    
         this.ingevuld = ingevuld;
         this.nagekeken = nagekeken;
+		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
         this.attempts = attempts;
         this.attemptsCount = attemptsCount;
 	    this.errorCount = errorCount;
         
-        if(ingevuld && (mode==0 || mode==1 || nagekeken)) kijkNa();
+        if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken))) 
+        	kijkNa();
 	}
 	
 	public HashMap<String, Object> getState()
 	{   
 	    boolean ingevuld = false;
 	    boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
 		
 	    ingevuld = this.ingevuld;
 	    nagekeken = this.nagekeken;
+		isVeranderdNaNakijken = this.isVeranderdNaNakijken;
 	    
 	    attempts = this.attempts;
 	    attemptsCount = this.attemptsCount;
@@ -364,6 +382,7 @@ public class CheckValueUnit implements InteractionStub{
 	    HashMap<String, Object> h = new HashMap<String, Object>();
         h.put("ingevuld", new Boolean(ingevuld));
         h.put("nagekeken", new Boolean(nagekeken));
+		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
         h.put("attempts", attempts);
         h.put("attemptsCount", new Integer(attemptsCount));
         h.put("errorCount", new Integer(errorCount));
@@ -470,6 +489,11 @@ public class CheckValueUnit implements InteractionStub{
 	{	if(ingevuld) nagekeken = b;
 	}
 	
+	private void zetIsVeranderdNaNakijken(boolean b)
+	{
+		this.isVeranderdNaNakijken = b;
+	}
+	
     public void stop()
     {
         kijkNa();
@@ -500,6 +524,9 @@ public class CheckValueUnit implements InteractionStub{
     
     public void kijkNa()
     {
+		// reset isVeranderdNaNakijken
+		zetIsVeranderdNaNakijken(false);
+
     	kijkNa(true);
     }
     
