@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.gwt.lib.rest;
 
 import com.google.gwt.user.client.Window;
+import static com.google.gwt.user.client.ui.RootPanel.get;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.dom.entities.DomSchool;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Level;
@@ -17,7 +14,9 @@ import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 /**
- *
+ * Stores global variables The class is state is initialized by calls in
+ * different boot phases. Whenever a global state is changed it should be called
+ * and have the state updated.
  *
  * @author Gert van der Plas
  */
@@ -26,7 +25,24 @@ public class DwoGlobalVars {
     private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
 
     private static volatile DwoGlobalVars instance;
-    private DomSchool nullSchool;
+    private DomSchool nullSchool=null;
+    private DomSchoolClass currentSchoolClass=null;
+
+    public static DwoGlobalVars getInstance() {
+        return instance;
+    }
+
+    public static void setInstance(DwoGlobalVars instance) {
+        DwoGlobalVars.instance = instance;
+    }
+
+    public DomSchoolClass getCurrentSchoolClass() {
+        return currentSchoolClass;
+    }
+
+    public void setCurrentSchoolClass(DomSchoolClass currentSchoolClass) {
+        this.currentSchoolClass = currentSchoolClass;
+    }
 
     static {
         try {
@@ -36,7 +52,8 @@ public class DwoGlobalVars {
             LOG.log(Level.SEVERE, null, ex);
             Window.alert("System error: app improperly configured.");
         }
-    }    
+    }
+
     /**
      * @return the dwoLocale
      */
@@ -74,7 +91,7 @@ public class DwoGlobalVars {
      * @return the instance
      */
     public static DwoGlobalVars instance() {
-        if(instance==null){
+        if (instance == null) {
             try {
                 instance = new DwoGlobalVars();
             } catch (Dwo2Exception ex) {
@@ -93,27 +110,35 @@ public class DwoGlobalVars {
         initVars();
     }
 
-    private void initObjects() {
-        LOG.log(Level.INFO, "Starting initObjects():" );
+    /**
+     * boot phase one
+     */
+    private void initProperties() throws Dwo2Exception {
+        LOG.log(Level.INFO, "Starting initProperties():");
+        setServer(DwoConstants.constants.server());
+        LOG.log(Level.INFO, "restserver=" + server + ".");
+        LOG.log(Level.INFO, "Done initProperties():");
+    }
 
+    /**
+     * boot phase two
+     */
+    private void initObjects() {
+        LOG.log(Level.INFO, "Starting initObjects():");
         Defaults.setServiceRoot(this.getServer());
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
         setAuthenticator(new RestAuthenticator());
         DefaultFilterawareDispatcher.singleton().addFilter(this.getAuthenticator());
+        //init basic stuff
+        get nullschool here? After login?
+        get currentschoolclass here?
 //            restService = GWT.create(DWO2RestCaller.class);
-        LOG.log(Level.INFO, "Done initObjects():" );
-
-
+        LOG.log(Level.INFO, "Done initObjects():");
     }
 
-    private void initProperties() throws Dwo2Exception {
-        setServer(DwoConstants.constants.server());
-        LOG.log(Level.INFO, "restserver=" + server + ".");
-    }
     private void initVars() throws Dwo2Exception {
         //TODO fill DwoSystemParameters and more into the instance.
     }
-            
 
     public void setUser(DomUserFull user) {
         this.currentUser = user;
