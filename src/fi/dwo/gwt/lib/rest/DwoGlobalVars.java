@@ -1,10 +1,8 @@
 package fi.dwo.gwt.lib.rest;
 
 import com.google.gwt.user.client.Window;
-import static com.google.gwt.user.client.ui.RootPanel.get;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import fi.dwo.rest.DwoLocale;
-import fi.dwo.rest.dom.entities.DomSchool;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
@@ -25,7 +23,6 @@ public class DwoGlobalVars {
     private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
 
     private static volatile DwoGlobalVars instance;
-    private DomSchool nullSchool=null;
     private DomSchoolClass currentSchoolClass=null;
 
     public static DwoGlobalVars getInstance() {
@@ -68,19 +65,6 @@ public class DwoGlobalVars {
         dwoLocale = aDwoLocale;
     }
 
-    /**
-     * @return the nullSchool
-     */
-    public DomSchool getNullSchool() {
-        return nullSchool;
-    }
-
-    /**
-     * @param aNullSchool the nullSchool to set
-     */
-    public void setNullSchool(DomSchool aNullSchool) {
-        nullSchool = aNullSchool;
-    }
     private RestAuthenticator authenticator = new RestAuthenticator();
 
     //properties
@@ -129,9 +113,6 @@ public class DwoGlobalVars {
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
         setAuthenticator(new RestAuthenticator());
         DefaultFilterawareDispatcher.singleton().addFilter(this.getAuthenticator());
-        //init basic stuff
-        get nullschool here? After login?
-        get currentschoolclass here?
 //            restService = GWT.create(DWO2RestCaller.class);
         LOG.log(Level.INFO, "Done initObjects():");
     }
