@@ -1,16 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.uu.fi.dwo.account.client;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
-import fi.dwo.gwt.lib.rest.DwoGlobalVars;
-import fi.dwo.rest.dom.entities.DomSchool;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Logger;
 
 /**
@@ -24,20 +18,33 @@ public class SchoolLoginController {
     private SchoolLoginPanel view = null;
     private DomUserFull currentUser = null;
     private SecuredUserSchoolLoginManager manager = new SecuredUserSchoolLoginManager();
-    
-    private DomSchoolRoleAndClass selectedSrc;
-    private DomSchool nullSchool;
     private DomSchoolsRolesAndClasses srcs;
 
+    public DomSchoolsRolesAndClasses getSrcs() {
+        return srcs;
+    }
 
-    public SchoolLoginController(SchoolLoginPanel view, DomUserFull user) {
+    public SchoolLoginController(SchoolLoginPanel view, DomUserFull user) throws Dwo2Exception {
         this.view = view;
         this.init(user);
     }
 
-    public void init(DomUserFull user) {
+    public void init(DomUserFull user) throws Dwo2Exception {
         setCurrentUser(user);
-        nullSchool = DwoGlobalVars.instance().getNullSchool();
+        manager.getSchoolLogins(new AsyncCallback<DomSchoolsRolesAndClasses>() {
+            @Override
+            public void onFailure(Throwable t) {
+                view.init(currentUser);
+            }
+
+            @Override
+            public void onSuccess(DomSchoolsRolesAndClasses result) {
+                //success and set all the data in the view
+                srcs = result;
+                view.update(srcs);
+            }
+        }
+        );
     }
 
     /**

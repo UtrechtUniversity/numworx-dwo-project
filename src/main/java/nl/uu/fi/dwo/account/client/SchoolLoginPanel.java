@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -13,7 +8,9 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Logger;
 
 /**
@@ -38,13 +35,13 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         this.popup = popup;
     }
 
-    SchoolLoginPanel(DomUserFull user) {
+    SchoolLoginPanel(DomUserFull user) throws Dwo2Exception {
         init(user);
         control = new SchoolLoginController(this, user);
 
     }
 
-    private void init(DomUserFull user) {
+    protected void init(DomUserFull user) {
         this.user = user;
         this.setSize("400", "500");
         Grid g = new Grid(5, 3);
@@ -87,13 +84,33 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
             popup.hide();
         } else if (event.getSource() == newSchoolLoginBtn) {
             Window.alert("OK!");
-//            try {
-//                control.Update();
-//            } catch (Dwo2Exception ex) {
-//                Logger.getLogger(ProfilePanel.class.getName()).log(Level.SEVERE, null, ex);
-//                Window.alert("Update Failed.");
-//            }
             popup.hide();
         }
     }
+
+    void update(DomSchoolsRolesAndClasses srcs) {
+        //reinitiale the table.
+       Grid g = new Grid(5, 3);
+        // Put some values in the grid cells.
+        g.setText(0, 0, "school");
+        g.setText(0, 1, "login");
+        g.setText(0, 2, "delete");
+        TextBox login = new TextBox();
+        login.setText(user.getUserName());
+        g.setWidget(1, 0, login);
+        TextBox name = new TextBox();
+        name.setText(user.getUniqueDisplayName());
+        g.setWidget(1, 1, name);
+        TextBox delete = new TextBox();
+        delete.setText("X");
+        g.setWidget(1, 2, delete);
+
+        // Just for good measure, let's put a button in the center.
+        newSchoolLoginBtn = new Button("New SchoolLogin");
+        newSchoolLoginBtn.addClickHandler(this);
+        g.setWidget(2, 0, newSchoolLoginBtn);
+        cnlBtn = new Button("CANCEL");
+        cnlBtn.addClickHandler(this);
+        g.setWidget(2, 1, cnlBtn);
+        this.add(g);    }
 }
