@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,6 +14,7 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * Allows user update.
@@ -32,7 +28,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
     ProfileController control;
     PopupPanel popup;
     Button cnlBtn;
-    Button okBtn;
+    Button updateBtn;
     DomUser user;
     TextBox login = new TextBox();
     TextBox givenName = new TextBox();
@@ -63,45 +59,45 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         g.getColumnCount();
         g.getRowCount();
         // Put some values in the grid cells.
-        g.setText(0, 0, "login");
+        g.setText(0, 0, DwoLocalesForGWT.instance.GUI_Username());
         g.setText(0, 1, user.getUserName());
         login.setText(user.getUserName());
 
-        g.setText(1, 0, "given name");
+        g.setText(1, 0, DwoLocalesForGWT.instance.GUI_GivenName());
         givenName.setText(user.getGivenName());
         g.setWidget(1, 1, givenName);
 
-        g.setText(2, 0, "insertion");
+        g.setText(2, 0, DwoLocalesForGWT.instance.GUI_Insertion());
         insertion.setText(user.getInsertion());
         g.setWidget(2, 1, insertion);
 
-        g.setText(3, 0, "family name");
+        g.setText(3, 0,DwoLocalesForGWT.instance.GUI_FamilyName());
         familyName.setText(user.getFamilyName());
         g.setWidget(3, 1, familyName);
 
-        g.setText(4, 0, "email");
+        g.setText(4, 0, DwoLocalesForGWT.instance.GUI_Email());
         email.setText(user.getEmail());
         g.setWidget(4, 1, email);
 
-        g.setText(6, 0, "password");
+        g.setText(6, 0, DwoLocalesForGWT.instance.GUI_Password());
         password.setText("");
         g.setWidget(6, 1, password);
 
-        g.setText(7, 0, "new password");
+        g.setText(7, 0, DwoLocalesForGWT.instance.GUI_NewPassword());
         newPassword.setText("");
         g.setWidget(7, 1, newPassword);
 
-        g.setText(8, 0, "new password again");
+        g.setText(8, 0, DwoLocalesForGWT.instance.GUI_NewPasswordAgain());
         newPasswordAgain.setText("");
         g.setWidget(8, 1, newPasswordAgain);
 
         // Just for good measure, let's put a button in the center.
-        cnlBtn = new Button("CANCEL");
+        cnlBtn = new Button(DwoLocalesForGWT.instance.GUI_Button_Cancel());
         cnlBtn.addClickHandler(this);
         g.setWidget(9, 0, cnlBtn);
-        okBtn = new Button("UPDATE");
-        okBtn.addClickHandler(this);
-        g.setWidget(9, 1, okBtn);
+        updateBtn = new Button(DwoLocalesForGWT.instance.GUI_Button_Update());
+        updateBtn.addClickHandler(this);
+        g.setWidget(9, 1, updateBtn);
         // You can use the CellFormatter to affect the layout of the grid's cells.
         //g.getCellFormatter().setWidth(0, 2, "256px");
         this.clear();
@@ -113,7 +109,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         if (event.getSource() == cnlBtn) {
             LOG.log(Level.INFO, "Cancelling user profile update.");
             popup.hide();
-        } else if (event.getSource() == okBtn) {
+        } else if (event.getSource() == updateBtn) {
             DomUserFull user = new DomUserFull();
             user.setUserName(control.getCurrentUser().getUserName());
             user.setSingleSchool(control.getCurrentUser().getSingleSchool());
@@ -123,7 +119,9 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             user.setGivenName(givenName.getText());
             user.setInsertion(insertion.getText());
             if (MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) {
-                if (newPassword.getText().equals(newPasswordAgain.getText()) && MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) {
+                if (!newPassword.equals("") 
+                        && newPassword.getText().equals(newPasswordAgain.getText()) 
+                        ) {
                     user.setPassword(MD5.md5(newPassword.getText()));
                 }
                 LOG.log(Level.INFO, "Sending data to server.");

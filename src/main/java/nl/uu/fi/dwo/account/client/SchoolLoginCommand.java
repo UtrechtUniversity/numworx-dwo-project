@@ -8,7 +8,9 @@ package nl.uu.fi.dwo.account.client;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.PopupPanel;
 import fi.dwo.gwt.lib.rest.DwoGlobalVars;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -24,17 +26,21 @@ class SchoolLoginCommand implements Command {
 
     @Override
     public void execute() {
-        if (DwoGlobalVars.instance().getCurrentUser() == null) {
-            DwoViewer.showMessage(Dwo2ExceptionCode.GUI_NoUserIsSignedIn);
-            return;
+        try {
+            if (DwoGlobalVars.instance().getCurrentUser() == null) {
+                DwoViewer.showMessage(Dwo2ExceptionCode.GUI_NoUserIsSignedIn);
+                return;
+            }
+            // Create the new popup.
+            PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
+            //popup.setSize("500", "400");
+            SchoolLoginPanel panel = new SchoolLoginPanel(DwoGlobalVars.instance().getCurrentUser());
+            panel.setPopup(popup);
+            panel.setSize("300", "200");
+            popup.add(panel);
+            popup.center();
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(SchoolLoginCommand.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // Create the new popup.
-        PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
-        //popup.setSize("500", "400");
-        SchoolLoginPanel panel = new SchoolLoginPanel(DwoGlobalVars.instance().getCurrentUser());
-        panel.setPopup(popup);
-        panel.setSize("300", "200");
-        popup.add(panel);
-        popup.center();
     }
 }

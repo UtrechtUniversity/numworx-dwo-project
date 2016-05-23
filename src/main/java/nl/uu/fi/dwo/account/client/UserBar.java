@@ -1,21 +1,17 @@
 package nl.uu.fi.dwo.account.client;
 
-import nl.uu.fi.dwo.account.client.text.Text;
-
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
-import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class UserBar extends Composite {
 
     private final MenuBar top = new MenuBar();;
     private final MenuBar items = new MenuBar(true);
-    private final Text rb = Text.constants;
     private final ProfileCommand profileCmd = new ProfileCommand();
     private final SchoolLoginCommand schoolLoginCmd = new SchoolLoginCommand();
     private final SchoolClassStudentCommand schoolClassCmd = new SchoolClassStudentCommand();
-    private DomUserFull user;
 
     public UserBar() {
         init();
@@ -40,13 +36,13 @@ public class UserBar extends Composite {
 
         top.addItem(item);
 
-        item = new MenuItem(rb.GUIMNU_MY_PROFILE(), profileCmd);
+        item = new MenuItem(DwoLocalesForGWT.instance.GUI_MyProfile(), profileCmd);
 
         items.addItem(item);
-        item2 = new MenuItem(rb.GUIMNU_MY_SCHOOLLOGINS(), schoolLoginCmd);
+        item2 = new MenuItem(DwoLocalesForGWT.instance.GUI_MySchoolLogins(), schoolLoginCmd);
 
         items.addItem(item2);
-        item3 = new MenuItem(rb.GUIMNU_MY_SCHOOLCLASSES(), schoolClassCmd);
+        item3 = new MenuItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), schoolClassCmd);
 
         items.addItem(item3);
     }

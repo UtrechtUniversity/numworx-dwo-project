@@ -31,6 +31,7 @@ public class Account implements EntryPoint {
     @Override
     public void onModuleLoad() {
         LOG.log(Level.INFO, "onModuleLoad...");
+        
         GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
             @Override
             public void onUncaughtException(Throwable e) {

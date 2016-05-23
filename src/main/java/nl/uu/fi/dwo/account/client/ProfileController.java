@@ -51,6 +51,9 @@ class ProfileController {
                     updateUser = currentUser.duplicate();
                     //update Globals otherwise can't login in passwd change!
                     DwoGlobalVars.instance().setCurrentUser(currentUser);
+                    //update rest authentication 
+                    DwoGlobalVars.instance().getAuthenticator()
+                            .setCredentials(currentUser.getUserName(), currentUser.getPassword());
                     view.init(currentUser);
                     view.getPopup().hide();
             }
