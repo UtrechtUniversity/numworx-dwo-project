@@ -974,8 +974,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 					if (formuleMode)
 					{
 						antw = formuleVak.toString();
-						//antw = "$f" + antw + "@"; // niet nodig; hier gaat iets mis... Codering antwoord komt niet overeen met juistAntwoorden
-						//antw = antw.substring(2, antw.length()-1);
+						antw = "$f" + antw + "@";
 					}
 					
 					
@@ -1014,8 +1013,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				if (formuleMode)
 				{
 					antw = formuleVak.toString();
-//					antw = "$f" + antw + "@"; // dit maakt het antwoord fout...
-					//antw = antw.substring(2, antw.length()-1);
+					antw = "$f" + antw + "@";
 				}
 				antw = StringUtils.replaceStr(antw, " ", "");
 				gelijkwaardig = gelijkwaardig || antw.equals(juisteAntwoorden[i]);
