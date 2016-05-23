@@ -71,6 +71,7 @@ public class CheckSleepUnit implements InteractionStub{
 	    
     private boolean ingevuld;
     private boolean nagekeken;
+	private boolean isVeranderdNaNakijken = false;
     
     private boolean correct;
     private boolean fout;
@@ -172,12 +173,14 @@ public class CheckSleepUnit implements InteractionStub{
 		
 		boolean ingevuld = false;
 	    boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
 		
 		ingevuld = this.ingevuld;
 	    nagekeken = this.nagekeken;
+		isVeranderdNaNakijken = this.isVeranderdNaNakijken;
 	    attempts = this.attempts;
 	    attemptsCount = this.attemptsCount;
 	    errorCount = this.errorCount;
@@ -207,6 +210,7 @@ public class CheckSleepUnit implements InteractionStub{
         
         h.put("ingevuld", new Boolean(ingevuld));
         h.put("nagekeken", new Boolean(nagekeken));
+		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
         h.put("attempts", attempts);
         h.put("attemptsCount", new Integer(attemptsCount));
         h.put("errorCount", new Integer(errorCount));
@@ -219,6 +223,7 @@ public class CheckSleepUnit implements InteractionStub{
 		Point[] randomizedPositions = null;
 	    boolean ingevuld = false;
 	    boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
@@ -241,6 +246,8 @@ public class CheckSleepUnit implements InteractionStub{
 	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();
 	    if(h.get("nagekeken") != null) 
 	    	nagekeken = ((Boolean)h.get("nagekeken")).booleanValue();
+		if (h.get("isVeranderdNaNakijken") != null)
+			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 	    if(h.get("attempts") != null)
 	    	attempts = new Vector(JSONUtilities.toArrayList(h.get("attempts")));
 	    if(h.get("attemptsCount") != null) 
@@ -251,6 +258,7 @@ public class CheckSleepUnit implements InteractionStub{
         this.randomizedPositions = randomizedPositions;
         this.ingevuld = ingevuld;
         this.nagekeken = nagekeken;
+		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
         this.attempts = attempts;
         this.attemptsCount = attemptsCount;
 	    this.errorCount = errorCount;
@@ -263,7 +271,8 @@ public class CheckSleepUnit implements InteractionStub{
 	        }
 	    }
         
-        if(ingevuld && (mode==0 || mode == 1 || nagekeken)){
+        if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
+        {
         	kijkNa();
         }
 	}
@@ -361,6 +370,11 @@ public class CheckSleepUnit implements InteractionStub{
 	{	if(ingevuld) nagekeken = b;
 	}
 	
+	private void zetIsVeranderdNaNakijken(boolean b)
+	{
+		this.isVeranderdNaNakijken = b;
+	}
+	
     public void stop()
     {
         kijkNa();
@@ -379,15 +393,14 @@ public class CheckSleepUnit implements InteractionStub{
     
     public void kijkNa()
     {
-    	kijkNa(true);
+		// reset isVeranderdNaNakijken
+		zetIsVeranderdNaNakijken(false);
+
+		kijkNa(true);
     }
     
     public void kijkNa(boolean show)
     {
-    	nakijkAchtergrond.setVisible(false);
-    	goedKrulImage.setVisible(false);
-        foutKruisImage.setVisible(false);
-        
     	boolean juist = true;
         answer = "";
                 
@@ -826,6 +839,9 @@ public class CheckSleepUnit implements InteractionStub{
 	
 	public void clickAction()
 	{
+		if (nagekeken)
+			zetIsVeranderdNaNakijken(true);
+
 		nakijkAchtergrond.setVisible(false);
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
