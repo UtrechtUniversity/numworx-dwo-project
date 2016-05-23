@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -20,42 +21,17 @@ class SchoolClassStudentController {
     private SchoolClassStudentPanel view;
     private DomUserFull currentUser;
     private DomUserFull updateUser;
-    private SecuredUserAccountManager manager = new SecuredUserAccountManager();
+    private List<DomSchoolClass> schoolClasses;
+    private SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
 
-    SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user){
+    SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user) {
         this.view = view;
         init(user);
     }
-    
+
     public void init(DomUserFull user) {
         currentUser = user;
         updateUser = currentUser.duplicate();
-    }
-
-    /**
-     * Update the currentUser.
-     *
-     * @param callback
-     */
-    public void callUpdate() {
-        LOG.log(Level.INFO, "Calling REST-interface login.");
-        manager.updateAccountData(updateUser, new AsyncCallback<DomUserFull>() {
-            @Override
-            public void onFailure(Throwable t) {
-                //fail and reset all the data.
-                view.init(currentUser);
-            }
-
-            @Override
-            public void onSuccess(DomUserFull result) {
-                //success and set all the data in the view
-                currentUser = updateUser;
-                updateUser = currentUser.duplicate();
-                //update Globals otherwise can't login in passwd change!
-                DwoGlobalVars.instance().setCurrentUser(currentUser);
-                view.init(currentUser);
-            }
-        });
     }
 
     /**
@@ -72,21 +48,25 @@ class SchoolClassStudentController {
         this.currentUser = currentUser;
     }
 
-    /**
-     * @return the updateUser
-     */
-    public DomUserFull getUpdateUser() {
-        return updateUser;
-    }
+    public void getSchoolClasses() {
+        manager.getStudentsSchoolClasses(new AsyncCallback<List<DomSchoolClass>>() {
+            @Override
+            public void onFailure(Throwable t) {
+                //fail and reset all the data.
+            }
 
-    /**
-     * @param updateUser the updateUser to set
-     */
-    public void setUpdateUser(DomUserFull updateUser) {
-        this.updateUser = updateUser;
-    }
-
-    public List<DomSchoolClass> getSchoolClasses() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            @Override
+            public void onSuccess(List<DomSchoolClass> result) {
+                //success and set all the data in the view
+                LOG.log(Level.INFO, "Fetched students schoolclasses.");
+                schoolClasses = result;
+                //update Globals otherwise can't login in passwd change!
+                DwoGlobalVars.instance().setSchoolClasses(schoolClasses);
+                view.init(schoolClasses);
+                view.getPopup().hide();
+            }
+        });
+        do modal popup, no click outside allowed, without timeout. then success then close and relogin
+                when fail then close and exit.
     }
 }
