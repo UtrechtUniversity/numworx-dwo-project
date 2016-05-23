@@ -82,7 +82,8 @@
                     </compileSourcesArtifacts> 
 
                         <i18nMessagesBundles>
-                        <i18nMessagesBundle>fi.dwo.rest.locale.Dwo2Exceptions</i18nMessagesBundle>                          
+                        <i18nMessagesBundle>fi.dwo.rest.locale.Dwo2ExceptionMessages</i18nMessagesBundle>                          
+                        <i18nMessagesBundle>fi.dwo.rest.locale.DwoLocaleMessages</i18nMessagesBundle>                          
                     </i18nMessagesBundles>
                     <!-- And the generated sources should be generated in our src dir -->
                     <generateDirectory>${basedir}/src</generateDirectory>
