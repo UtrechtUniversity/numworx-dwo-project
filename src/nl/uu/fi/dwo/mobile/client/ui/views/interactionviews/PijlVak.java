@@ -98,7 +98,12 @@ public class PijlVak extends LayoutPanel{
 				prefixVak.setFont(fm);
 			}
 			if(operator.equals("sub"))
-			{	prefixVak = new FormuleViewer("p=");
+			{	
+				if (this.fe.isVergelijkingVak)
+					prefixVak = new FormuleViewer("p="); // dit is in de java-versie het geval
+				else
+					prefixVak = new FormuleViewer("u=");
+				
 				prefixVak.setFont(fm);
 			}
 			//Panel p = prefixVak.getAsPanel();
