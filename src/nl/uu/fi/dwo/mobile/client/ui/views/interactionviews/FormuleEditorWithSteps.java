@@ -2292,7 +2292,12 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 		VergelijkingMeerv vergAntwoord = FormuleParser.parseVergelijking("$f" + editor.toString() + "@");
 		if (op.equals("sub"))
-			vergAntwoord = vergAntwoord.substitueer(substitutie, "p");
+		{
+			if (isVergelijkingVak)
+				vergAntwoord = vergAntwoord.substitueer(substitutie, "p");
+			else
+				vergAntwoord = vergAntwoord.substitueer(substitutie, "u");
+		}
 		return vergNieuw.isGelijkMet(vergAntwoord);
 	}
 	
