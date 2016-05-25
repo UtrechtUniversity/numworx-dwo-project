@@ -1956,6 +1956,12 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 		this.correct = (Boolean) checkResults.get("correct");
 		this.score = (Integer) checkResults.get("score");
+		
+		// strafpunten
+		if(mode == 1) 
+		{
+			score = Math.max(0, score - foutStraf * errorCount);
+		}
 	}
 	
 	private String setViewerString(String[] formuleVakInhouden, int i) {
