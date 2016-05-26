@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
@@ -20,7 +19,6 @@ class SchoolClassStudentController {
 
     private SchoolClassStudentPanel view;
     private DomUserFull currentUser;
-    private DomUserFull updateUser;
     private List<DomSchoolClass> schoolClasses;
     private SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
 
@@ -31,7 +29,22 @@ class SchoolClassStudentController {
 
     public void init(DomUserFull user) {
         currentUser = user;
-        updateUser = currentUser.duplicate();
+        manager.getStudentsSchoolClasses(new AsyncCallback<List<DomSchoolClass>>() {
+            @Override
+            public void onFailure(Throwable t) {
+                //fail and reset all the data.
+                thrown an exception
+            }
+
+            @Override
+            public void onSuccess(List<DomSchoolClass> result) {
+                //success and set all the data in the view
+                LOG.log(Level.INFO, "Fetched students schoolclasses.");
+                schoolClasses = result;
+                view.setSchoolClasses(schoolClasses);                
+            }
+        });
+
     }
 
     /**
@@ -48,25 +61,26 @@ class SchoolClassStudentController {
         this.currentUser = currentUser;
     }
 
-    public void getSchoolClasses() {
-        manager.getStudentsSchoolClasses(new AsyncCallback<List<DomSchoolClass>>() {
+    public List<DomSchoolClass> getSchoolClasses() {
+        return schoolClasses;
+    }
+
+    public void setActiveSchoolClass(DomSchoolClass submit) {
+        manager.setActiveSchoolClass(new AsyncCallback<DomSchoolClass>() {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
+                extract Dwo2ExceptionCode and display result;
+                DwoViewer.showMessage();
             }
 
             @Override
-            public void onSuccess(List<DomSchoolClass> result) {
+            public void onSuccess() {
                 //success and set all the data in the view
-                LOG.log(Level.INFO, "Fetched students schoolclasses.");
-                schoolClasses = result;
-                //update Globals otherwise can't login in passwd change!
-                DwoGlobalVars.instance().setSchoolClasses(schoolClasses);
-                view.init(schoolClasses);
-                view.getPopup().hide();
+                //relogin with some user
+                
             }
         });
-        do modal popup, no click outside allowed, without timeout. then success then close and relogin
-                when fail then close and exit.
+
     }
 }

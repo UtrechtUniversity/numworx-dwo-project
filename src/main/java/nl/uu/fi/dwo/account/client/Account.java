@@ -62,9 +62,9 @@ public class Account implements EntryPoint {
 //            curUser.setPassword("passw"); //md5Hash = d79096188b670c2f81b7001f73801117
 //            curUser.setUserName("project_wim");
 //            user = curUser;
-            //Try to login and fetch the user
+            //Try to loginUser and fetch the user
             LOG.log(Level.INFO, "filled in test user.");
-            handler.login("project_wim", "passw", new AsyncCallback<DomUserFull>() {
+            handler.loginUser("project_wim", "passw", new AsyncCallback<DomUserFull>() {
                 @Override
                 public void onFailure(Throwable t) {
                     loginStatusPanel.setStatus("", false);

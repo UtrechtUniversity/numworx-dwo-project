@@ -12,8 +12,10 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -82,6 +84,10 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
             LOG.log(Level.INFO, "Done, hiding window.");
             popup.hide();
         }
+    }
+
+    void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

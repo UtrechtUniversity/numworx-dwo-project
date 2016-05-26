@@ -49,7 +49,7 @@ class ProfileController {
                     LOG.log(Level.INFO, "update was succesful.");
                     currentUser = result;
                     updateUser = currentUser.duplicate();
-                    //update Globals otherwise can't login in passwd change!
+                    //update Globals otherwise can't loginUser in passwd change!
                     DwoGlobalVars.instance().setCurrentUser(currentUser);
                     //update rest authentication 
                     DwoGlobalVars.instance().getAuthenticator()
