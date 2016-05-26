@@ -162,6 +162,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	private FormuleFont font;
 	private boolean ingevuld = false;
 	private boolean nagekeken = false;
+	private boolean isVeranderdNaNakijken = false;
 	private boolean hasFeedback = false;
 	private int aantalStappen = 0;
 	private boolean stepsForLinKwad = false;
@@ -626,9 +627,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		nagekeken = true;
 		correct = Boolean.TRUE;
 		score = scoreMax;
-		if(mode == 1)
+		if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 			score = Math.max(0, scoreMax - errorCount * foutStraf);
-		if(!setState)
+		if (!setState)
 			comRoot.setChanged(false);
 	}
 	
@@ -722,11 +723,12 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 	public void copyStep()
 	{
-		if ( correct != Boolean.TRUE || isToets()) // FIXME copystep in mode 2 of 3
+		if (correct != Boolean.TRUE || isToets()) // FIXME copystep in mode 2 of 3
 		{
 			String currentTekst = "";
-			if(editor == null)
-			{	if(latest_answer_viewer != null)
+			if (editor == null)
+			{	
+				if (latest_answer_viewer != null)
 					voegRegelToe("$f" + latest_answer_viewer.toString() + "@", !isToets(), false);
 				else
 					voegRegelToe("$f@", !isToets(), false);
@@ -782,6 +784,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	public boolean isUitgeklapt()
 	{
 		return isUitgeklapt;
+	}
+
+	public boolean isNagekeken()
+	{
+		return nagekeken;
 	}
 
 	public boolean isBoss()
@@ -1454,6 +1461,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		
 		boolean ingevuld = true;
 		boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 		String antwoordString = "";
 		String substitutieString = "";
 		String[] gebruikersSubStrings = null;
@@ -1502,6 +1510,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		ingevuld = this.ingevuld;
 		
 		nagekeken = this.nagekeken;
+		isVeranderdNaNakijken = this.isVeranderdNaNakijken;
+
 		if (substitutie != null)
 			substitutieString = "$f" + substitutie.toString() + "@";
 		//terugzetten als gebruikersSubstitutiesVak gemaakt:
@@ -1515,6 +1525,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		h.put("pijlVakOperatoren", pijlVakOperatoren);
 		h.put("ingevuld", new Boolean(ingevuld));
 		h.put("nagekeken", new Boolean(nagekeken));
+		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
 		h.put("errorCount", new Integer(errorCount));
 		h.put("substitutieString", substitutieString);
 		h.put("gebruikersSubStrings", gebruikersSubStrings);
@@ -1556,6 +1567,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		String[] pijlVakOperatoren = null;
 		boolean ingevuld = false;
 		boolean nagekeken = false;
+		boolean isVeranderdNaNakijken = false;
 		int errorCount = 0;
 		String substitutieString = "";
 		String antwoordString = "";
@@ -1568,6 +1580,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			ingevuld = (Boolean) h.get("ingevuld");
 		if (h.get("nagekeken") != null)
 			nagekeken = (Boolean) h.get("nagekeken");
+		if (h.get("isVeranderdNaNakijken") != null)
+			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 		if (h.get("errorCount") != null)
 			errorCount = ((Number) h.get("errorCount")).intValue();
 		if (h.get("formuleVakInhouden") != null)
@@ -1579,9 +1593,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			}
 		}
 		if (h.containsKey("pijlVakInhouden"))
-		{	pijlVakInhouden = JSONUtilities.toStringArray(h.get("pijlVakInhouden"));
-			for(int i = 0; i < pijlVakInhouden.length; i++)
-			{	if(pijlVakInhouden[i] != null && pijlVakInhouden[i].startsWith("$f"))
+		{	
+			pijlVakInhouden = JSONUtilities.toStringArray(h.get("pijlVakInhouden"));
+			for (int i = 0; i < pijlVakInhouden.length; i++)
+			{	
+				if (pijlVakInhouden[i] != null && pijlVakInhouden[i].startsWith("$f"))
 					pijlVakInhouden[i] = pijlVakInhouden[i].substring(2, pijlVakInhouden[i].length() - 1);
 			}
 		}
@@ -1599,6 +1615,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		this.stapNr = stapNr;
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
+		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
 		this.errorCount = errorCount;
 		//terugzetten als gebruikersSubstitutiesVak gemaakt:
 		//gebruikersSubstitutiesVak.zetRegels(gebruikersSubStrings);
@@ -1615,8 +1632,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			if (i == 0 && hasStartString)
 			{	
 				if(i < stapNr)
-				{	if(linStrategieVersie || linOefenVersie || bordjesMethode || !(pijlVakOperatoren[i] == null || pijlVakOperatoren[i].equals("")))
-					{	zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2);
+				{	
+					if(linStrategieVersie || linOefenVersie || bordjesMethode || !(pijlVakOperatoren[i] == null || pijlVakOperatoren[i].equals("")))
+					{	
+						zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2);
 					}
 					i++;
 				}
@@ -1630,10 +1649,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			fv.setFont(font);
 			
 			while(i < viewers.size())
-			{	int last = viewers.size()-1;
+			{	
+				int last = viewers.size()-1;
 				
 				Panel asPanel = viewers.get(last).getAsPanel();
-				if(asPanel.getParent() != null)
+				if (asPanel.getParent() != null)
 					stepPanels.get(last).remove(asPanel);
 				viewers.remove(last);
 				asPanel.removeFromParent();
@@ -1644,13 +1664,14 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			if (i == 0 || i == 1 && hasStartString && !(linStrategieVersie || linOefenVersie || bordjesMethode))
 			{
 				stepPanel = stepPanels.get(i);
-				if(editor != null)
-				{	stepPanel.remove(editor.getAsPanel());
+				if (editor != null)
+				{	
+					stepPanel.remove(editor.getAsPanel());
 					editor.getAsPanel().removeFromParent();
 					editor = null;
 					checkimg.setVisible(false);
 				}
-				else if(viewers.size() > i)
+				else if (viewers.size() > i)
 					stepPanel.remove(viewers.get(i).getAsPanel());
 				if (hasPrefix && (i < stapNr || nagekeken))
 					stepPanel.remove(prefixViewer.getAsPanel());
@@ -1672,7 +1693,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				
 				viewers.remove(fv);
 				editor = addNewEditor(stepPanel);
-				if(antwoordString.startsWith("$f") && antwoordString.endsWith("@"))
+				if (antwoordString.startsWith("$f") && antwoordString.endsWith("@"))
 					antwoordString = antwoordString.substring(2, antwoordString.length() - 1);
 				
 				// lege formulevakinhoud alleen vervangen door het antwoord uit FEWA als die er niet al in staat
@@ -1688,27 +1709,27 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				}
 				
 				//hier setChanged(false)?
-				if(viewers.size() > 0)
+				if (viewers.size() > 0)
 					stepPanelY += viewers.get(viewers.size() - 1).getHeight() + stapH;
 				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 				
-				if(i < stapNr)
+				if (i < stapNr)
 					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + hoogteStepPanelMetEditor()/2);
 			}
 			else
 			{
 				addFormuleViewer(fv, stepPanel);
-				if(viewers.size() > 1)
+				if (viewers.size() > 1)
 					stepPanelY += viewers.get(viewers.size() - 2).getHeight() + stapH;
 				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeightWithImage(), Style.Unit.PX);
 				
-				if(i < stapNr)
+				if (i < stapNr)
 					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeightWithImage()/2);
 					
-				if(bordjesMethode)
-				{	if(viewers.size() > 1)
+				if (bordjesMethode)
+				{	if (viewers.size() > 1)
 						freezeViewer(viewers.get(viewers.size() - 2));
-					if(!nagekeken)
+					if (!nagekeken)
 						addFormulePanelListeners((TouchPanel) fv.getAsPanel(), fv); 
 				}
 			}
@@ -1718,22 +1739,26 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			
 //			if(isToets())
 //				fv.getAsPanel().getElement().getStyle().setMarginLeft(23, Unit.PX);
-			if(!isToets())
-			{	if (i == stapNr && nagekeken)
-				{	VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
-					if(linStrategieVersie || (bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar())))
-					{	fv.showResult(FormuleViewer.CORRECT);
+			if (!isToets())
+			{	
+				if (i == stapNr && nagekeken)
+				{	
+					VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
+					if (linStrategieVersie || (bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar())))
+					{	
+						fv.showResult(FormuleViewer.CORRECT);
 						setAndAddFeedback(Text.constants.feedbackTekst04());
 						//"De vergelijking is correct opgelost."
 						stapOk = false;
 					}
-					else if(editor != null)//doel: laatste antwoord nogmaals nakijken, om juiste feedback te genereren.
+					else if (editor != null)//doel: laatste antwoord nogmaals nakijken, om juiste feedback te genereren.
 					{
 						editor.kijkNa(true);
 						//maakNakijkenAf(false);
 					}
 					else
-					{	viewers.remove(fv);
+					{	
+						viewers.remove(fv);
 						stepPanel.remove(fv.getAsPanel());
 						editor = addNewEditor(stepPanel);
 						String currentTekst = latest_answer_viewer.toString();
@@ -1742,16 +1767,16 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 						currentTekst = removeIsTeken(currentTekst);
 						editor.insert(currentTekst);
 						//hier setChanged(false)?
-						if(viewers.size() > 0)
+						if (viewers.size() > 0)
 							latest_answer_viewer = viewers.get(viewers.size() - 1);
 						editor.kijkNa(true);
 						//maakNakijkenAf(false);
 					}
 					
 				}
-				else if(i == stapNr && editor != null)
+				else if (i == stapNr && editor != null)
 				{
-					if(editor.toString().equals("") && (i > 1 || (!hasStartString && i > 0)))
+					if (editor.toString().equals("") && (i > 1 || (!hasStartString && i > 0)))
 					{
 						//stap terug doen en die nakijken, zodat de feedback goed kan worden bepaald. Alleen nodig bij oefenmodi.
 						stepPanel.remove(editor);
@@ -1763,9 +1788,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 						stepPanel.remove(viewers.get(viewers.size() - 1).getAsPanel());
 						stepPanelY -= stapH + viewers.get(viewers.size() - 1).getHeight();
 						viewers.remove(viewers.size() - 1);
-						if(pijlVakken.size() > 0)
+						if (pijlVakken.size() > 0)
 						{	
-							if(pijlVakken.get(pijlVakken.size() - 1).getParent() != null)
+							if (pijlVakken.get(pijlVakken.size() - 1).getParent() != null)
 								contentPanel.remove(pijlVakken.get(pijlVakken.size() - 1));
 							pijlVakken.remove(pijlVakken.size() - 1);
 						}
@@ -1777,7 +1802,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 						currentTekst = removeIsTeken(currentTekst);
 						editor.insert(currentTekst);
 						
-						if(viewers.size() > 0)
+						if (viewers.size() > 0)
 							latest_answer_viewer = viewers.get(viewers.size() - 1);
 						editor.kijkNa(true);
 					}
@@ -1786,11 +1811,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 						
 					}
 				}
-				else if(i == stapNr && (bordjesMethode || linOefenVersie))
+				else if (i == stapNr && (bordjesMethode || linOefenVersie))
 				{
 					fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				}
-				else if(i == stapNr && !linStrategieVersie)
+				else if (i == stapNr && !linStrategieVersie)
 				{
 					//nu: editor = null. 
 					viewers.remove(fv);
@@ -1804,18 +1829,20 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 					fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				else
 					fv.showResult(FormuleViewer.NONE);
-				if(correct == Boolean.TRUE)
-				{	score = scoreMax;
-					if(mode == 1) // met aftrek
+				if (correct == Boolean.TRUE)
+				{	
+					score = scoreMax;
+					if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN) // met aftrek
 						score = Math.max(scoreMax - errorCount * foutStraf, 0);
 				}
 				else
 					score = 0;
 			}	
-		}
+		} // for loop over alle stappen 
+		
 		if (isToets())
 		{	
-			if (nagekeken)
+			if (nagekeken && !isVeranderdNaNakijken)
 			{	
 				kijkToetsNa(true, true);
 			}
@@ -2037,17 +2064,17 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	
 	private void zetGoedFoutEditor(int uitslag)
 	{
-		if(!check)
+		if (!check)
 			return;
 		//contentPanel.remove(checkimg);
-		if(latest_answer_viewer != null)
+		if ((latest_answer_viewer != null) && !isToets())
 			latest_answer_viewer.showResult(FormuleViewer.NONE);
 
-		if(uitslag == AntwoordVakChecker.FOUT)
+		if (uitslag == AntwoordVakChecker.FOUT)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
-		else if(uitslag == AntwoordVakChecker.HALF || uitslag == AntwoordVakChecker.DOOR)
+		else if (uitslag == AntwoordVakChecker.HALF || uitslag == AntwoordVakChecker.DOOR)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
-		else if(uitslag == AntwoordVakChecker.GOED)
+		else if (uitslag == AntwoordVakChecker.GOED)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		
 		checkimg.setVisible(true);
@@ -2060,6 +2087,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	
 	public void kijkNa()
 	{
+		// reset isVeranderdNaNakijken
+		zetIsVeranderdNaNakijken(false);
+
 		kijkNa(false);
 	}
 	
@@ -2113,23 +2143,27 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		int start = 0;
 		if (hasStartString)
 			start = 1;
-		if(editor != null && editor.toString().equals(""))
-		{	backStep(setState); 
+		if (editor != null && editor.toString().equals(""))
+		{	
+			backStep(setState); 
 		}
 		if (editor != null && !editor.toString().equals(""))
-		{	vervangEditorDoorViewer("$f" + editor.toString() + "@", true, true);
+		{	
+			vervangEditorDoorViewer("$f" + editor.toString() + "@", true, true);
 		}
 				
 		aantalStappen = viewers.size();
 		String[] viewersInhouden = new String[viewers.size()];
-		if(viewers.size() > 0)
+		if (viewers.size() > 0)
 			viewersInhouden[0] = viewers.get(0).toString();
-		for(int i = viewers.size() - 1; i > start - 1; i--)
+		
+		for (int i = viewers.size() - 1; i > start - 1; i--)
 		{
 			viewersInhouden[i] = viewers.get(i).toString();
 			stepPanels.get(i).remove(viewers.get(i).getAsPanel());
-			if(i > start)
-			{	stepPanelY -= stapH + viewers.get(i).getHeight();
+			if (i > start)
+			{	
+				stepPanelY -= stapH + viewers.get(i).getHeight();
 				stepPanels.remove(i);
 				haalPijlVakWeg();
 			}
@@ -2144,7 +2178,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		stapNr = start;
 		for (int i = start; i < aantalStappen; i++)
 		{
-			if(editor == null)
+			if (editor == null)
 				editor = addNewEditor(stepPanels.get(i));
 			editor.clearAll();
 			String currentTekst = viewersInhouden[i];
@@ -2167,17 +2201,17 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	public void maakNakijkenAf(boolean backStep, boolean show, boolean setState)
 	{
 		int goedHalfFout = editor.getGoedHalfFout();
-		if(goedHalfFout == AntwoordVakChecker.GEEN)
+		if (goedHalfFout == AntwoordVakChecker.GEEN)
 			ingevuld = false;
 		else
 			ingevuld = true;
-		if(isToets())
+		if (isToets())
 		{
 			correct = editor.isCorrect(); //XXX wordt elders gezet, maar waar en waarom?
 			score = editor.getScore(); // altijd score ophalen, ook bij noshow
-			if(show)
+			if (show)
 			{
-				if(stepPanels.size() < aantalStappen)
+				if (stepPanels.size() < aantalStappen)
 				{
 					setFeedback(editor.getFeedback());
 					addStep("$f" + editor.toString() + "@", show, setState);
@@ -2200,13 +2234,15 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				return;
 			}
 			else // hier ook score ophalen!!!! 
-			{	if(goedHalfFout == AntwoordVakChecker.FOUT && editor.isSyntaxFout())
+			{	
+				if(goedHalfFout == AntwoordVakChecker.FOUT && editor.isSyntaxFout())
 				{
 					nagekeken = true;
 					setAndAddFeedback(editor.getFeedback());
 				}
 				else
-				{	setFeedback("");
+				{	
+					setFeedback("");
 					feedbackPanel.removeFromParent();
 				
 					addStep("$f" + editor.toString() + "@", show, setState);
@@ -2215,34 +2251,38 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			}
 		}
 		//stapOk juiste waarde geven.
-		if(goedHalfFout == AntwoordVakChecker.GOED)
-		{	stapOk = false;
+		if (goedHalfFout == AntwoordVakChecker.GOED)
+		{	
+			stapOk = false;
 			if (!pijl)
 				stapOk = true;
 			//correct = true; -- dit gebeurt in lastStep nog (en anders gebeurt lastStep niet!)
 			//score = editor.getScore();
 		}
 		else if(goedHalfFout == AntwoordVakChecker.DOOR)
-		{	stapOk = true;
+		{	
+			stapOk = true;
 			//score = editor.getScore();
 			
 		}
 		else 
-		{	stapOk = false;
+		{	
+			stapOk = false;
 			nagekeken = true;
 			//score = editor.getScore();
 		}
 		score = editor.getScore();
-		if(mode == 1)
+		if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 		{
 			//in score niet aantal fouten uit deze specifieke editor (regel), maar aantal fouten uit gehele editorWithSteps meenemen
 			score = editor.getScoreZonderAftrek();
 			score = Math.max(0, score - foutStraf * errorCount);
 		}
 		
-		if(bordjesMethode)
-		{	if(stapOk || goedHalfFout == AntwoordVakChecker.GOED)
-			{	vervangEditorDoorViewer("$f" + editor.toString() + "@", show, setState);
+		if (bordjesMethode)
+		{	if (stapOk || goedHalfFout == AntwoordVakChecker.GOED)
+			{	
+			vervangEditorDoorViewer("$f" + editor.toString() + "@", show, setState);
 			}
 			else
 				zetGoedFoutEditor(editor.getGoedHalfFout());
@@ -2347,6 +2387,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		}
 	}
 	
+	void zetIsVeranderdNaNakijken(boolean b)
+	{
+		this.isVeranderdNaNakijken = b;
+	}
+	
 	public void zetIngevuld(boolean b) {
 		ingevuld = b;
 	}
@@ -2447,7 +2492,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	 */
 	public void vervangEditorDoorViewer(String antwoord, boolean show, boolean setState)
 	{
-		if(editor == null)
+		if (editor == null)
 		{
 			// TODO voeg in de laatste viewer zonodig een =-teken toe
 //			if (!isVergelijkingVak && !hasPrefix && (antwoord.charAt(antwoord.length() - 2)) != '=')
@@ -2468,8 +2513,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		int selectionStartY = 0;
 		int selectionEndX = -1;
 		int selectionEndY = 0;
-		if(editor.hasSelection())
-		{	int[] selectionBounds = editor.getSelectionBounds();
+		if (editor.hasSelection())
+		{	
+			int[] selectionBounds = editor.getSelectionBounds();
 			selectionStartX = selectionBounds[0];
 			selectionEndX = selectionBounds[1];
 			selectionStartY = selectionBounds[2];
@@ -2477,16 +2523,18 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		}
 		int goedHalfFout = editor.getGoedHalfFout();
 		editor = null;
-		checkimg.setVisible(false);
-		if(hasPrefix)
+		//checkimg.setVisible(false); // laten zoals het is?
+		if (hasPrefix)
 			current.remove(prefixViewer.getAsPanel());
 // formule eindigt op = of ≈ 
 		if (!isVergelijkingVak && !hasPrefix && 
 				((antwoord.charAt(antwoord.length() - 2)) != '=')&&(antwoord.charAt(antwoord.length() - 2) != '≈'))
 			antwoord = antwoord.substring(0, antwoord.length() - 1) + "=@";
-		if(bordjesMethode) {
+		if (bordjesMethode) 
+		{
 			// convert to stringStrikt.
-			try{
+			try
+			{
 				VergelijkingMeerv e = FormuleParser.parseVergelijking(antwoord);
 				antwoord = "$f"+ e.toStringStrikt() + "@";
 			}
@@ -2495,29 +2543,36 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		FormuleViewer fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + antwoord.substring(2, antwoord.length() - 1));
 		fv.setFont(font);
 		fv.setSelection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
-		if(show) fv.showResult(FormuleViewer.ALMOSTCORRECT); else fv.showResult(FormuleViewer.NONE);
+		
+		if (show) 
+			fv.showResult(FormuleViewer.ALMOSTCORRECT); 
+		else if (!isToets())
+			fv.showResult(FormuleViewer.NONE);
+		
 		VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
-		if(bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar()))
-		{	fv.showResult(FormuleViewer.CORRECT);
+		if (bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar()))
+		{	
+			fv.showResult(FormuleViewer.CORRECT);
 			setAndAddFeedback(Text.constants.feedbackTekst04());
 			//"De vergelijking is correct opgelost."
 			stapOk = false;
 			nagekeken = true;
 			correct = Boolean.TRUE;
 			score = scoreMax;
-			if(mode == 1)
+			if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 				score = Math.max(0, scoreMax - errorCount * foutStraf);
-			if(!setState)
+			if (!setState)
 				comRoot.setChanged(false);
 		}
-		if(isToets())
+		if (isToets())
 		{
-			if(show && !stepsForLinKwad)
-			{	if(goedHalfFout == AntwoordVakChecker.GOED)
+			if (show && !stepsForLinKwad)
+			{	
+				if (goedHalfFout == AntwoordVakChecker.GOED)
 					fv.showResult(FormuleViewer.CORRECT);
-				else if(goedHalfFout == AntwoordVakChecker.DOOR || goedHalfFout == AntwoordVakChecker.HALF)
+				else if (goedHalfFout == AntwoordVakChecker.DOOR || goedHalfFout == AntwoordVakChecker.HALF)
 					fv.showResult(FormuleViewer.ALMOSTCORRECT);
-				else if(goedHalfFout == AntwoordVakChecker.FOUT)
+				else if (goedHalfFout == AntwoordVakChecker.FOUT)
 					fv.showResult(FormuleViewer.WRONG);
 			}
 			else
@@ -2528,15 +2583,19 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		}
 			
 		
-		if (latest_answer_viewer != null && !(hasStartString && stapNr == 1) && !((mode == 2 || mode == 3) && show && !stepsForLinKwad))
+		if (latest_answer_viewer != null 
+			&& !(hasStartString && stapNr == 1) 
+			&& !(isToets() && show && !stepsForLinKwad))
+		{
 			latest_answer_viewer.showResult(FormuleViewer.NONE);
+		}
 		latest_answer_viewer = fv;
 		viewers.add(fv);
 		addFormuleViewer(fv, current);
-		if(bordjesMethode)
-		{	if(viewers.size() > 1)
+		if (bordjesMethode)
+		{	if (viewers.size() > 1)
 				freezeViewer(viewers.get(viewers.size() - 2));
-			if(!verg.isEindOplossing(verg.geefVergelijkingVar()))
+			if (!verg.isEindOplossing(verg.geefVergelijkingVar()))
 				addFormulePanelListeners((TouchPanel) fv.getAsPanel(), fv); 
 		}
 	}
@@ -2570,12 +2629,13 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		else
 			vergNieuw = verg.bewerkVergelijking(operator, en);
 
-		if ((mode != 2 && mode != 3) || (hasStartString && stapNr - 1 == 0))
-		{	//formuleVakken[stapNr - 1].setEditable(false);
+		if (!isToets() || (hasStartString && stapNr - 1 == 0))
+		{	
+			//formuleVakken[stapNr - 1].setEditable(false);
 		}
 		
 		LayoutPanel stepPanel = maakNieuwStapPanel();
-		if(linOefenVersie)
+		if (linOefenVersie)
 		{
 			editor = addNewEditor(stepPanel);
 			stepPanelY += stapH + latest_answer_viewer.getHeight();
@@ -2588,10 +2648,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		else //if(linStrategieVersie || bordjesMethode)
 		{
 			FormuleViewer fv = null;
-			try{
+			try
+			{
 				fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + vergNieuw.toString());
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{	fv = new FormuleViewer("");
 				vergNieuw = null;
 			}
@@ -2601,26 +2662,28 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			if (latest_answer_viewer != null && !(hasStartString && stapNr == 1))
 				latest_answer_viewer.showResult(FormuleViewer.NONE);
 			stepPanelY += stapH + latest_answer_viewer.getHeight();
-			if(vergNieuw != null)
+			if (vergNieuw != null)
 				latest_answer_viewer = fv;
 			
-			if(vergNieuw != null && vergNieuw.isEindOplossing(vergNieuw.geefVergelijkingVar()))
-			{	fv.showResult(FormuleViewer.CORRECT);
+			if (vergNieuw != null && vergNieuw.isEindOplossing(vergNieuw.geefVergelijkingVar()))
+			{	
+				fv.showResult(FormuleViewer.CORRECT);
 				setAndAddFeedback(Text.constants.feedbackTekst04());
 				//"De vergelijking is correct opgelost."
 				stapOk = false;
 				nagekeken = true;
 				correct = Boolean.TRUE;
 				score = scoreMax;
-				if(mode == 1)
+				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, scoreMax - errorCount * foutStraf);
 				comRoot.setChanged(false);
 			}
-			else if(vergNieuw != null && linStrategieVersie)
-			{	fv.showResult(FormuleViewer.NONE);
+			else if (vergNieuw != null && linStrategieVersie)
+			{	
+				fv.showResult(FormuleViewer.NONE);
 				stapOk = true;
 			}
-			else if(vergNieuw != null)
+			else if (vergNieuw != null)
 			{
 				fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				stapOk = true;
@@ -2634,18 +2697,18 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			Panel p = fv.getAsPanel();
 			p.getElement().getStyle().setProperty("display", "inline");
 			stepPanel.add(p);
-			if(bordjesMethode)
+			if (bordjesMethode)
 				addFormulePanelListeners((TouchPanel) p, fv); 
 			
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeightWithImage(), Style.Unit.PX);
-			if(linOefenVersie)
+			if (linOefenVersie)
 			{	
 				stepPanel.remove(p);
 				viewers.remove(fv);
 				addStep("$f" + fv.toString() + "@", !isToets(), false); 
 				stapOk = false;
 			}
-			else if(!bordjesMethode && !linStrategieVersie)
+			else if (!bordjesMethode && !linStrategieVersie)
 			{
 				addStep("$f" + fv.toString() + "@", !isToets(), false);
 				stapOk = false;
