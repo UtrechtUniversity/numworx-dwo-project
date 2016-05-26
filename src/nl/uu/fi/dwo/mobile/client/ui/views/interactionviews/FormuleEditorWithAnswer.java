@@ -618,7 +618,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	/**
 	 * Verwijder het huidige element.
 	 * Als al is nagekeken, wordt isVeranderdNaNakijken true
-	 * gezet.
+	 * gezet. Dit werkt alleen voor een 'standalone' FEWA. 
+	 * Als hij onderdeel is van een FEWS, is nagekeken false.
+	 * In dat geval zet FEWS.
 	 */
 	@Override
 	public void removeCurrentElement()
@@ -628,6 +630,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				
 		if (nagekeken)
 			zetIsVeranderdNaNakijken(true);
+		
+		if (this.fe != null && this.fe.isNagekeken())
+		{
+			this.fe.zetIsVeranderdNaNakijken(true);
+		}
 
 		resize();
 		
@@ -658,6 +665,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	 */
 	void resetimg() 
 	{
+		// TODO in geval van een FEWA in een FEWS verdwijnt checkimg niet na aanroep van deze methode vanuit removeCurrentElement()
+		checkPanel.removeFromParent();
+		checkimg.removeFromParent();
 		checkimg.setVisible(false);
 		zetFeedbackZichtbaar(false);
 		feedbackPanel.hide();
@@ -925,14 +935,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void zetGoedFout(int uitslag)
 	{
-		
 		if(uitslag == AntwoordVakChecker.GOED)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		else if(uitslag == AntwoordVakChecker.DOOR || uitslag == AntwoordVakChecker.HALF)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
 		else if(uitslag == AntwoordVakChecker.FOUT)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
-		
+
+		sp.add(checkPanel);
+		checkPanel.add(checkimg);
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
 	}
 	
@@ -1294,6 +1305,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public boolean isIngevuld()
 	{
 		return ingevuld;
+	}
+
+	public boolean isNagekeken()
+	{
+		return nagekeken;
+	}
+
+	public boolean isVeranderdNaNakijken()
+	{
+		return isVeranderdNaNakijken;
 	}
 
 	@Override
