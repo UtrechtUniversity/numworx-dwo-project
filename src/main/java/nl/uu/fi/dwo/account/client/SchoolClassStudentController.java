@@ -1,10 +1,11 @@
 package nl.uu.fi.dwo.account.client;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
-import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +34,7 @@ class SchoolClassStudentController {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
-                thrown an exception
+                DwoViewer.showMessage(Dwo2ExceptionCode.Rest_ConnectionTimeout);
             }
 
             @Override
@@ -66,19 +67,18 @@ class SchoolClassStudentController {
     }
 
     public void setActiveSchoolClass(DomSchoolClass submit) {
-        manager.setActiveSchoolClass(new AsyncCallback<DomSchoolClass>() {
+        manager.setActiveSchoolClass(submit, new AsyncCallback<Boolean>() {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
-                extract Dwo2ExceptionCode and display result;
-                DwoViewer.showMessage();
+                Window.alert(t.getMessage());
             }
 
             @Override
-            public void onSuccess() {
+            public void onSuccess(Boolean result) {
                 //success and set all the data in the view
                 //relogin with some user
-                
+                Window.alert("Wim does relogin.");                
             }
         });
 

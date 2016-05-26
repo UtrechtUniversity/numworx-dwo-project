@@ -7,11 +7,14 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
@@ -35,6 +38,8 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     private Button doneButton;
     private DomUser user;
     private TextBox schoolClass = new TextBox();
+    CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
+    ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
 
     public PopupPanel getPopup() {
         return popup;
@@ -46,33 +51,57 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
     SchoolClassStudentPanel(DomUserFull user) {
         init(user);
-         control= new SchoolClassStudentController(this,user);
+        control = new SchoolClassStudentController(this, user);
     }
 
     public void init(DomUserFull user) {
         control.setCurrentUser(user);
         this.setSize("400", "500");
         control.getSchoolClasses();
-        Grid g = new Grid(control.getSchoolClasses().size()+1, 3);
-        for(int i=0;i<control.getSchoolClasses().size();i++){
-            g.setText(i, 0, control.getSchoolClasses().get(i).getSchoolClassName());
-            loginBtn = new Button("login");
-            loginBtn.addClickHandler(this);
-            g.setWidget(i, 1, loginBtn);
-            delBtn = new Button("del");
-            delBtn.addClickHandler(this);
-            g.setWidget(i, 2, delBtn);
-        }
+//        Grid g = new Grid(control.getSchoolClasses().size() + 1, 3);
+//        for (int i = 0; i < control.getSchoolClasses().size(); i++) {
+//            g.setText(i, 0, control.getSchoolClasses().get(i).getSchoolClassName());
+//            loginBtn = new Button("login");
+//            loginBtn.addClickHandler(this);
+//            g.setWidget(i, 1, loginBtn);
+//            delBtn = new Button("del");
+//            delBtn.addClickHandler(this);
+//            g.setWidget(i, 2, delBtn);
+//        }
+//
+//        // Just for good measure, let's put a button in the center.
+//        doneButton = new Button("Done");
+//        doneButton.addClickHandler(this);
+//        g.setWidget(control.getSchoolClasses().size(), 0, doneButton);
+//        newBtn = new Button("NEW");
+//        newBtn.addClickHandler(this);
+//        g.setWidget(control.getSchoolClasses().size(), 2, newBtn);
+//        this.clear();
+//        this.add(g);
 
-        // Just for good measure, let's put a button in the center.
-        doneButton = new Button("Done");
-        doneButton.addClickHandler(this);
-        g.setWidget(control.getSchoolClasses().size(), 0, doneButton);
-        newBtn = new Button("NEW");
-        newBtn.addClickHandler(this);
-        g.setWidget(control.getSchoolClasses().size(), 2, newBtn);
-        this.clear();
-        this.add(g);
+        CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
+        // Create name column.
+        TextColumn<DomSchoolClass> schoolClassColumn = new TextColumn<DomSchoolClass>() {
+            @Override
+            public String getValue(DomSchoolClass data) {
+                return data.getSchoolClassName();
+            }
+        };
+
+        schoolClassColumn.setSortable(true);
+
+        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
+            @Override
+            public String getValue(DomSchoolClass data) {
+                return "login";
+            }
+        };
+
+        // Add the columns.
+        table.addColumn(schoolClassColumn, "schoolclass");
+        table.addColumn(loginColumn, "login");
+        dataProvider.addDataDisplay(table);
+
     }
 
     @Override
@@ -87,7 +116,12 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     }
 
     void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<DomSchoolClass> list = dataProvider.getList();
+        list.clear();
+        for (DomSchoolClass schoolClass : schoolClasses) {
+            list.add(schoolClass);
+        }
+
     }
 
 }

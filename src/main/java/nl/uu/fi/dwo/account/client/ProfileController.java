@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.DwoGlobalVars;
@@ -41,6 +42,7 @@ class ProfileController {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
+                Window.alert(t.getMessage());
             }
 
             @Override
