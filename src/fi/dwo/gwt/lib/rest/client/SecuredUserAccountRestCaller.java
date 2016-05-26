@@ -19,6 +19,11 @@ public interface SecuredUserAccountRestCaller extends RestService {
     public void loginCheck(RestLoginCheck arg, MethodCallback<Boolean> callback);
 
     @GET
+    @Path("/secure/user/account/login")
+    public void login(MethodCallback<DomUserFull> callback);
+    
+    
+    @GET
     @Path("/secure/user/account/get")
     public void getAccountData(MethodCallback<DomUserFull> callback);
 

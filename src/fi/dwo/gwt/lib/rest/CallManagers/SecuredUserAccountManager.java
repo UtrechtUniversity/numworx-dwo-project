@@ -86,7 +86,7 @@ public class SecuredUserAccountManager {
 
     }
 
-    public void login(String name, String password, final AsyncCallback<DomUserFull> callback) {
+    public void loginUser(String name, String password, final AsyncCallback<DomUserFull> callback) {
         final String pwmd5 = MD5.md5(password);
         GWT.log(pwmd5);
 
@@ -95,7 +95,7 @@ public class SecuredUserAccountManager {
             @Override
             public void onSuccess(Boolean result) {
                 if (Boolean.TRUE.equals(result)) {
-                    getAccountData(new AsyncCallback<DomUserFull>() {
+                    login(new AsyncCallback<DomUserFull>() {
 
                         @Override
                         public void onFailure(Throwable caught) {
@@ -124,6 +124,14 @@ public class SecuredUserAccountManager {
 *   Interface login stuff
 * 
 ********************************************************************************/
+
+    /**
+     * 
+     * @param callBack 
+     */
+    public void login(AsyncCallback<DomUserFull> callBack) {
+        service.login(new Callback<DomUserFull>(callBack));
+    }
 
     /**
      * 
