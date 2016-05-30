@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUser;
@@ -121,7 +120,5 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         for (DomSchoolClass schoolClass : schoolClasses) {
             list.add(schoolClass);
         }
-
     }
-
 }

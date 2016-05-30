@@ -70,7 +70,7 @@ class ProfileController {
     }
 
     /**
-     * @param currentUser the currentUser to set
+     * @param aCurrentUser
      */
     public void setCurrentUser(DomUserFull aCurrentUser) {
         currentUser = aCurrentUser;

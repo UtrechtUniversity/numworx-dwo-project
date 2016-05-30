@@ -6,6 +6,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +21,7 @@ class SchoolClassStudentController {
 
     private SchoolClassStudentPanel view;
     private DomUserFull currentUser;
-    private List<DomSchoolClass> schoolClasses;
+    private List<DomSchoolClass> schoolClasses = new ArrayList<DomSchoolClass>();    
     private SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
 
     SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user) {
@@ -71,6 +72,7 @@ class SchoolClassStudentController {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
+                //TODO Wim
                 Window.alert(t.getMessage());
             }
 
@@ -78,6 +80,7 @@ class SchoolClassStudentController {
             public void onSuccess(Boolean result) {
                 //success and set all the data in the view
                 //relogin with some user
+                //TODO Wim
                 Window.alert("Wim does relogin.");                
             }
         });
