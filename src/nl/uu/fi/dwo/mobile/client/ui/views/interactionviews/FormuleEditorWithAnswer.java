@@ -46,8 +46,6 @@ import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -610,8 +608,21 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	@Override
 	public void addElement(FormuleElement e)
-	{	super.addElement(e);
+	{	
+		super.addElement(e);
 		resetimg();
+		
+		if (nagekeken)
+			zetIsVeranderdNaNakijken(true);
+		
+		if (this.fe != null) 
+		{
+			this.fe.resetimg();
+			
+			if (this.fe.isNagekeken())
+				this.fe.zetIsVeranderdNaNakijken(true);
+		}
+
 		resize();
 	}
 
@@ -631,9 +642,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (nagekeken)
 			zetIsVeranderdNaNakijken(true);
 		
-		if (this.fe != null && this.fe.isNagekeken())
+		if (this.fe != null) 
 		{
-			this.fe.zetIsVeranderdNaNakijken(true);
+			this.fe.resetimg();
+			
+			if (this.fe.isNagekeken())
+				this.fe.zetIsVeranderdNaNakijken(true);
 		}
 
 		resize();
@@ -665,9 +679,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	 */
 	void resetimg() 
 	{
-		// TODO in geval van een FEWA in een FEWS verdwijnt checkimg niet na aanroep van deze methode vanuit removeCurrentElement()
-		checkPanel.removeFromParent();
-		checkimg.removeFromParent();
 		checkimg.setVisible(false);
 		zetFeedbackZichtbaar(false);
 		feedbackPanel.hide();
@@ -942,8 +953,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		else if(uitslag == AntwoordVakChecker.FOUT)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 
-		sp.add(checkPanel);
-		checkPanel.add(checkimg);
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
 	}
 	
