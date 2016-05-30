@@ -2084,6 +2084,13 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		
 	}
 
+	/**
+	 * Reset het goed/fout-plaatje en verberg de feedback.
+	 */
+	void resetimg() 
+	{
+		checkimg.setVisible(false);
+	}
 	
 	public void kijkNa()
 	{
