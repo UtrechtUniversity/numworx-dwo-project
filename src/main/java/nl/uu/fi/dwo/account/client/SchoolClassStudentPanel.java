@@ -1,18 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.uu.fi.dwo.account.client;
 
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUser;
@@ -33,8 +32,8 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     private PopupPanel popup;
     private Button loginBtn;
     private Button delBtn;
-    private Button newBtn;
-    private Button doneButton;
+    private Button addBtn;
+    private Button closeBtn;
     private DomUser user;
     private TextBox schoolClass = new TextBox();
     CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
@@ -52,12 +51,12 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         init(user);
         control = new SchoolClassStudentController(this, user);
         control.init(user);
-        
+
     }
 
     public void init(DomUserFull user) {
-        //control = new ProfileController(this, user);
         this.setSize("400", "500");
+
         //control.getSchoolClasses();
 //        Grid g = new Grid(control.getSchoolClasses().size() + 1, 3);
 //        for (int i = 0; i < control.getSchoolClasses().size(); i++) {
@@ -80,40 +79,88 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 //        this.clear();
 //        this.add(g);
 //
-//        CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
-//        // Create name column.
-//        TextColumn<DomSchoolClass> schoolClassColumn = new TextColumn<DomSchoolClass>() {
-//            @Override
-//            public String getValue(DomSchoolClass data) {
-//                return data.getSchoolClassName();
-//            }
-//        };
-//
-//        schoolClassColumn.setSortable(true);
-//
-//        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
-//            @Override
-//            public String getValue(DomSchoolClass data) {
-//                return "login";
-//            }
-//        };
-//
-//        // Add the columns.
-//        table.addColumn(schoolClassColumn, "schoolclass");
-//        table.addColumn(loginColumn, "login");
-//        dataProvider.addDataDisplay(table);
+        CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
+        // Create name column.
+        TextColumn<DomSchoolClass> schoolClassColumn = new TextColumn<DomSchoolClass>() {
+            @Override
+            public String getValue(DomSchoolClass data) {
+                return data.getSchoolClassName();
+            }
+        };
+
+        schoolClassColumn.setSortable(true);
+
+        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
+            @Override
+            public String getValue(DomSchoolClass data) {
+                return "_0_";
+            }
+        };
+
+        TextColumn<DomSchoolClass> deleteColumn = new TextColumn<DomSchoolClass>() {
+            @Override
+            public String getValue(DomSchoolClass data) {
+                return "X";
+            }
+        };
+
+        CellPreviewEvent.Handler<DomSchoolClass> cellPreviewHandler = new CellPreviewEvent.Handler<DomSchoolClass>() {
+            @Override
+            public void onCellPreview(CellPreviewEvent<DomSchoolClass> event) {
+                int rowIndex = event.getIndex();
+                int columnIndex = event.getColumn();
+                int button = event.getNativeEvent().getButton();
+                NativeEvent nativeEvent = event.getNativeEvent();
+                if ("click".equals(nativeEvent.getType())
+ //                       && columnIndex == 0 // klik op rijnummer doet selectie
+                        && button == NativeEvent.BUTTON_LEFT) {
+                    LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
+                }
+            }
+        };
+
+        table.addCellPreviewHandler(cellPreviewHandler);
+
+        // Add the columns.
+        table.addColumn(schoolClassColumn, "schoolclass");
+        table.addColumn(loginColumn, "activate");
+        table.addColumn(deleteColumn, "del");
+        dataProvider.addDataDisplay(table);
+
+        VerticalPanel vPanel = new VerticalPanel();
+        vPanel.add(table);
+
+        HorizontalPanel hPanel = new HorizontalPanel();
+        hPanel.setHorizontalAlignment(HorizontalAlignmentConstant.endOf(Direction.DEFAULT));
+//            hPanel.getElement().getStyle().setPadding(20, Unit.PX);
+        closeBtn = new Button("Close");
+        closeBtn.addClickHandler(this);
+        addBtn = new Button("Add");
+        addBtn.addClickHandler(this);
+        addBtn.addStyleName("paddedHorizontalPanel");
+        hPanel.add(addBtn);
+//            hPanel.add(new InlineHTML(" "));
+        closeBtn.addStyleName("paddedHorizontalPanel");
+        hPanel.add(closeBtn);
+
+        vPanel.add(hPanel);
+
+        this.add(vPanel);
 
     }
 
     @Override
     public void onClick(ClickEvent event) {
-        if (event.getSource() == newBtn) {
+        if (event.getSource() == addBtn) {
             LOG.log(Level.INFO, "Should add new window for adding a schoolclass.");
             popup.hide();
-        } else if (event.getSource() == doneButton) {
+        } else if (event.getSource() == closeBtn) {
             LOG.log(Level.INFO, "Done, hiding window.");
             popup.hide();
+        } else if (event.getSource() == delBtn) {
+            LOG.log(Level.INFO, "" + event.getSource());
         }
+        LOG.log(Level.INFO, event.getSource().toString());
     }
 
     void setSchoolClasses(List<DomSchoolClass> schoolClasses) {

@@ -23,6 +23,9 @@
   <entry-point class='nl.uu.fi.dwo.account.client.Account'/>
   <!-- add entry point for each app in an external jar -->
 
+  <!-- local settings -->
+  <extend-property name="locale" values="nl"/>
+
 <!-- gebruik deze linker voor CDPLogica -->
   <add-linker name='xsiframe' />
 <!--  chrome only -->

@@ -4,10 +4,15 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
@@ -15,13 +20,16 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.logging.Level;
 
-public class Account implements EntryPoint {
+public class Account implements EntryPoint, ClickHandler {
 
     private static final Logger LOG = Logger.getLogger(Account.class.getName());
     private DomUserFull user = null;
     private SecuredUserAccountManager handler = new SecuredUserAccountManager();
     private LoginStatusPanel loginStatusPanel = new LoginStatusPanel();
-    UserBar userBar = new UserBar();
+    private HeaderPanel header = new HeaderPanel();
+    private UserBar userBar = new UserBar();
+    private Button loginButton;
+    private LoginPanel loginPanel;
 
     static {
         //Initialize an Exception translator.
@@ -31,28 +39,45 @@ public class Account implements EntryPoint {
     @Override
     public void onModuleLoad() {
         LOG.log(Level.INFO, "onModuleLoad...");
-        
+
         GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
             @Override
             public void onUncaughtException(Throwable e) {
                 LOG.log(Level.SEVERE, "UncaughtException:", e);
             }
         });
-        
+
         //create Constants 
 //        Dwo2Exceptions exceptions = (Dwo2Exceptions) GWT.create(Dwo2Exceptions.class);
 //        LOG.log(Level.INFO,exceptions.Dwo2ExceptionCode_GUI_NoUserIsSignedIn());
-
-        HeaderPanel header = new HeaderPanel();
-
         RootPanel.get()
                 .add(header);
 
         header.setCenter(
                 "Account");
-        if (user
-                == null) {
-            LOG.log(Level.INFO, "filling in test user...");
+
+        RootPanel.get().add(loginStatusPanel);
+        loginPanel = new LoginPanel();
+        loginPanel.setUserCode("gert_project");
+        loginPanel.setPassWord("passw");
+        loginButton = new Button();
+        loginButton.setText("login");
+        loginButton.addClickHandler(this);
+        loginPanel.setVisible(true);
+        VerticalPanel contentPanel = new VerticalPanel();
+        contentPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        contentPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+    
+        contentPanel.add(loginStatusPanel);
+        contentPanel.add(loginPanel);
+        contentPanel.add(loginButton);
+        RootPanel.get().add(contentPanel);
+
+    }
+
+    @Override
+    public void onClick(ClickEvent event) {
+        if (event.getSource() == loginButton) {
 //            DomUserFull curUser;// = new DomUserFull();
 //            curUser.setGivenName("Wim");
 //            curUser.setInsertion("van");
@@ -64,28 +89,28 @@ public class Account implements EntryPoint {
 //            user = curUser;
             //Try to loginUser and fetch the user
             LOG.log(Level.INFO, "filled in test user.");
-            handler.loginUser("project_wim", "passw", new AsyncCallback<DomUserFull>() {
+            handler.loginUser(loginPanel.getUserCode(), loginPanel.getPassWord(), new AsyncCallback<DomUserFull>() {
                 @Override
                 public void onFailure(Throwable t) {
                     loginStatusPanel.setStatus("", false);
                     LOG.log(Level.INFO, t.getStackTrace().toString());
-                    Window.alert("Couldn't fetch a testuser from the server.");
+                    header.setRightWidget(null);
                 }
 
                 @Override
                 public void onSuccess(DomUserFull result) {
+                    loginPanel.setVisible(false);
+                    loginButton.setVisible(false);
                     LOG.log(Level.INFO, "Fetched a test user with username:" + result.getUserName() + ".");
                     user = (DomUserFull) result;
                     loginStatusPanel.setStatus(user.getUserName(), true);
                     DwoGlobalVars.instance().setCurrentUser(user);
+                    header.setRightWidget(userBar);
                     LOG.log(Level.INFO, "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");
                 }
             });
         } else {
             LOG.log(Level.INFO, "Configured username for the UserBar is: " + user.getUserName() + ".");
         }
-        RootPanel.get().add(loginStatusPanel);
-        header.setRightWidget(userBar);
     }
-
 }

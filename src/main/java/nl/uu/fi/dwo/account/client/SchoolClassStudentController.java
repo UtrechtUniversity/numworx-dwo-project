@@ -36,6 +36,8 @@ class SchoolClassStudentController {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
+                LOG.log(Level.INFO,t.getMessage());
+                
                 DwoViewer.showMessage(Dwo2ExceptionCode.Rest_ConnectionTimeout);
             }
 
