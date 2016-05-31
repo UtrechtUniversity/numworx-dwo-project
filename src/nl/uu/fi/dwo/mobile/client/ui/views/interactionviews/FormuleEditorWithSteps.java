@@ -1467,7 +1467,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		String[] gebruikersSubStrings = null;
 		int errorCount = 0;
 		
-		if(editor != null && !isToets())
+		if (editor != null && !isToets())
 			//Sietske: Hier wellicht ook beter editor.kijkNa(false, false, false); zie getState FormuleEditorWithAnswer.
 			editor.kijkNa();
 		
@@ -1496,16 +1496,16 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			pijlVakInhouden[i] = pijlVakken.get(i).geefExpressieString();
 			pijlVakOperatoren[i] = pijlVakken.get(i).geefOperator();
 		}
-		if(editor != null)
+		if (editor != null)
 			antwoordString = editor.toString();
-		if(!antwoordString.equals(""))
+		if (!antwoordString.equals(""))
 		{
 			this.ingevuld = true;
 			formuleVakInhouden[stapNr] = "$f" + antwoordString + "@"; // antwoordstring is laatste inhoud.
 		}
-		if(!hasStartString && !formuleVakInhouden[0].equals("$f@"))
+		if (!hasStartString && !formuleVakInhouden[0].equals("$f@"))
 			this.ingevuld = true;
-		if(hasStartString && stapNr > 0 && !formuleVakInhouden[1].equals("$f@"))
+		if (hasStartString && stapNr > 0 && !formuleVakInhouden[1].equals("$f@"))
 			this.ingevuld = true;
 		ingevuld = this.ingevuld;
 		
@@ -1530,15 +1530,16 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		h.put("substitutieString", substitutieString);
 		h.put("gebruikersSubStrings", gebruikersSubStrings);
 		
-		if(dwologger!= null) dwologger.getStateHook(h);
+		if (dwologger!= null) 
+			dwologger.getStateHook(h);
 		return h;
 	}
 
-	private String getViewerString(int i) {
+	private String getViewerString(int i) 
+	{
 		String string = (viewers.get(i)).toString();
-		if(hasPrefix && !isVergelijkingVak)
-		{	 
-			
+		if (hasPrefix && !isVergelijkingVak)
+		{
 			string = removePrefix(string);
 		}
 		
@@ -1587,8 +1588,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		if (h.get("formuleVakInhouden") != null)
 		{
 			formuleVakInhouden = JSONUtilities.toStringArray(h.get("formuleVakInhouden"));
-			for (int i = 0; i < formuleVakInhouden.length; i++) {
-				if(formuleVakInhouden[i].startsWith("$f"))
+			for (int i = 0; i < formuleVakInhouden.length; i++) 
+			{
+				if (formuleVakInhouden[i].startsWith("$f"))
 					formuleVakInhouden[i] = formuleVakInhouden[i].substring(2, formuleVakInhouden[i].length()-1);
 			}
 		}
@@ -1631,16 +1633,17 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			
 			if (i == 0 && hasStartString)
 			{	
-				if(i < stapNr)
+				if (i < stapNr)
 				{	
 					if(linStrategieVersie || linOefenVersie || bordjesMethode || !(pijlVakOperatoren[i] == null || pijlVakOperatoren[i].equals("")))
 					{	
 						zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2);
 					}
-					i++;
+					i++; // sla de eerste over
 				}
 				else //in dit geval is stapNr 0. 
-				{	stepPanelY = oudStepPanelY;
+				{	
+					stepPanelY = oudStepPanelY;
 					return;
 				}
 			}
@@ -1648,7 +1651,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			FormuleViewer fv = new FormuleViewer(setViewerString(formuleVakInhouden, i));
 			fv.setFont(font);
 			
-			while(i < viewers.size())
+			while (i < viewers.size()) // haal de rest van de viewers vanaf i weg
 			{	
 				int last = viewers.size()-1;
 				
@@ -1837,7 +1840,17 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				}
 				else
 					score = 0;
-			}	
+				
+			} // if !toets
+			else if ((i == stapNr) && (editor == null))
+			{
+				// de laatste stap moet een editor zijn
+				viewers.remove(fv);
+				stepPanel.remove(fv.getAsPanel());
+				editor = addNewEditor(stepPanel);
+				editor.insert(latest_answer_viewer.toString());
+			}
+			
 		} // for loop over alle stappen 
 		
 		if (isToets())
@@ -1848,22 +1861,19 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			}
 			else
 			{	
-				// FIXME bepaal score voor 'getScore()' en haal daarna alle vinkjes weer weg....	kijkna(false,false,false)?		
-				
 				bepaalScoreEnCorrect();
 				
-				for(int i = 0; i < viewers.size(); i++)
+				for (int i = 0; i < viewers.size(); i++)
 				{
 					viewers.get(i).showResult(FormuleViewer.NONE);
 				}
 			}
-			
 		}
 
-		if (stapNr > 0 || stapNr == 0 && !hasStartString)//1 || stapNr == 1 && !hasStartString)
+		if (stapNr > 0 || stapNr == 0 && !hasStartString)
 			terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 		
-		if(editor != null)
+		if (editor != null)
 		{	
 			editor.setCurrentElementRepaint();
 		}
@@ -1999,6 +2009,14 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		return string;
 	}
 	
+	/**
+	 * Zet zo nodig pijlvakken neer.
+	 * 
+	 * @param pijlVakOperatoren
+	 * @param pijlVakInhouden
+	 * @param i
+	 * @param h
+	 */
 	public void zetPijlVakNeer(String[] pijlVakOperatoren, String[] pijlVakInhouden, int i, int h)
 	{
 		if(pijlVakken.size() > i && pijlVakken.get(i) != null)
