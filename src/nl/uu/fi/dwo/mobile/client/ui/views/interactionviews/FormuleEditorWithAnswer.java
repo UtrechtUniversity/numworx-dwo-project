@@ -823,6 +823,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	private String lastanswer = "$f@";
 	private boolean isVergelijkingVak;
+	private String isTeken = "=";
 	
 	public void kijkNa(final boolean backStep, final boolean show, final boolean setState) {
 		try {
@@ -1140,7 +1141,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				if (leegAntwoord.equals(formuleVakInhouden[laatste]) && (laatste > 0))
 				{
 					if (!isVergelijkingVak)
-						formuleVakInhouden[laatste - 1] = laatsteAntwoord.substring(0, laatsteAntwoord.length() - 1) + "=@"; // voor formules moet er een = achter
+						formuleVakInhouden[laatste - 1] = laatsteAntwoord.substring(0, laatsteAntwoord.length() - 1) + isTeken + "@"; // voor formules moet er een = achter
 					else
 						formuleVakInhouden[laatste - 1] = laatsteAntwoord;
 				}
