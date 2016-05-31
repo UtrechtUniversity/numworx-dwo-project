@@ -15,26 +15,26 @@ import javax.ws.rs.GET;
 public interface SecuredStudentSchoolClassRestCaller extends RestService {
 
     @PUT
-    @Path("/rest/secure/student/schoolclass/select")
+    @Path("/secure/student/schoolclass/select")
     public void setActiveSchoolClass(RestSchoolClass restSchoolClass, Callback<Boolean> callback);
 
     @PUT
-    @Path("/rest/secure/student/schoolclass/remove")
+    @Path("/secure/student/schoolclass/remove")
     public void removeSchoolClass(RestSchoolClass restSchoolClass, Callback<Boolean> callback);
 
     @GET
-    @Path("/rest/secure/student/schoolclass/getList")
+    @Path("/secure/student/schoolclass/getList")
     public void getStudentsSchoolClasses(Callback<List<DomSchoolClass>> callback);
     
     @PUT
-    @Path("/rest/secure/student/schoolclass/submit")
+    @Path("/secure/student/schoolclass/submit")
     public void registerStudentForSchoolClass(RestNewSchoolClass4Student restData, Callback<Boolean> callback);
 
     @GET
-    @Path("/rest/secure/student/schoolclass/getSchoolsList")
+    @Path("/secure/student/schoolclass/getSchoolsList")
     public void getSchoolsClasses(Callback<List<DomSchoolClass>> callback);
 
     @GET
-    @Path("/rest/secure/student/schoolclass/getActive")
+    @Path("/secure/student/schoolclass/getActive")
     public void getActiveSchoolClass(Callback<DomSchoolClass> callback);
 }

@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.gwt.lib.rest.CallManagers;
 
-import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.gwt.lib.rest.client.SecuredStudentSchoolClassRestCaller;
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
@@ -22,12 +18,15 @@ import java.util.logging.Logger;
  * @author Gert van der Plas
  */
 public class SecuredStudentSchoolClassManager {
-
-    private RestAuthenticator auth = new RestAuthenticator();
-    private SecuredStudentSchoolClassRestCaller service;
     private static final Logger LOG = Logger.getLogger(SecuredStudentSchoolClassManager.class.getName());
+    private SecuredStudentSchoolClassRestCaller service;
 
-    
+    private DwoGlobalVars dgv;
+
+    public SecuredStudentSchoolClassManager() {
+        service = (SecuredStudentSchoolClassRestCaller) GWT.create(SecuredStudentSchoolClassRestCaller.class);
+    }
+
 
     public void setActiveSchoolClass(DomSchoolClass schoolClass, AsyncCallback<Boolean> callBack) {
         RestSchoolClass restSchoolClass = new RestSchoolClass();

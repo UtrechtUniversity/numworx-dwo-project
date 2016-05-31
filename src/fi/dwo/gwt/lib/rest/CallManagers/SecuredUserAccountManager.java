@@ -16,7 +16,6 @@ import fi.dwo.rest.dom.entities.DomLoginCheck;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestUserFull;
-import fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,11 +32,11 @@ public class SecuredUserAccountManager {
     }
 
     public SecuredUserAccountManager(String url) {
-        try {
-            dgv= new DwoGlobalVars();
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            dgv= new DwoGlobalVars();
+//        } catch (Dwo2Exception ex) {
+//            LOG.log(Level.SEVERE, null, ex);
+//        }
      init(url);   
     }
     
@@ -46,7 +45,7 @@ public class SecuredUserAccountManager {
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
         DefaultFilterawareDispatcher.singleton().addFilter(DwoGlobalVars.instance().getAuthenticator());
         service = (SecuredUserAccountRestCaller) GWT.create(SecuredUserAccountRestCaller.class);
-
+        LOG.log(Level.INFO,""+service);
     }
     
 /********************************************************************************
