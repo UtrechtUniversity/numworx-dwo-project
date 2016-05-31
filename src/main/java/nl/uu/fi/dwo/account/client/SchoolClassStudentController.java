@@ -31,6 +31,7 @@ class SchoolClassStudentController {
 
     public void init(DomUserFull user) {
         currentUser = user;
+        LOG.log(Level.INFO,""+manager);
         manager.getStudentsSchoolClasses(new AsyncCallback<List<DomSchoolClass>>() {
             @Override
             public void onFailure(Throwable t) {

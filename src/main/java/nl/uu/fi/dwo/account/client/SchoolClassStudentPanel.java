@@ -51,12 +51,14 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     SchoolClassStudentPanel(DomUserFull user) {
         init(user);
         control = new SchoolClassStudentController(this, user);
+        control.init(user);
+        
     }
 
     public void init(DomUserFull user) {
-        control.setCurrentUser(user);
+        //control = new ProfileController(this, user);
         this.setSize("400", "500");
-        control.getSchoolClasses();
+        //control.getSchoolClasses();
 //        Grid g = new Grid(control.getSchoolClasses().size() + 1, 3);
 //        for (int i = 0; i < control.getSchoolClasses().size(); i++) {
 //            g.setText(i, 0, control.getSchoolClasses().get(i).getSchoolClassName());
@@ -77,29 +79,29 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 //        g.setWidget(control.getSchoolClasses().size(), 2, newBtn);
 //        this.clear();
 //        this.add(g);
-
-        CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
-        // Create name column.
-        TextColumn<DomSchoolClass> schoolClassColumn = new TextColumn<DomSchoolClass>() {
-            @Override
-            public String getValue(DomSchoolClass data) {
-                return data.getSchoolClassName();
-            }
-        };
-
-        schoolClassColumn.setSortable(true);
-
-        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
-            @Override
-            public String getValue(DomSchoolClass data) {
-                return "login";
-            }
-        };
-
-        // Add the columns.
-        table.addColumn(schoolClassColumn, "schoolclass");
-        table.addColumn(loginColumn, "login");
-        dataProvider.addDataDisplay(table);
+//
+//        CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
+//        // Create name column.
+//        TextColumn<DomSchoolClass> schoolClassColumn = new TextColumn<DomSchoolClass>() {
+//            @Override
+//            public String getValue(DomSchoolClass data) {
+//                return data.getSchoolClassName();
+//            }
+//        };
+//
+//        schoolClassColumn.setSortable(true);
+//
+//        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
+//            @Override
+//            public String getValue(DomSchoolClass data) {
+//                return "login";
+//            }
+//        };
+//
+//        // Add the columns.
+//        table.addColumn(schoolClassColumn, "schoolclass");
+//        table.addColumn(loginColumn, "login");
+//        dataProvider.addDataDisplay(table);
 
     }
 
