@@ -1,7 +1,13 @@
 package fi.beans.lineairealgebra;
 
+import com.google.gwt.json.client.JSONObject;
+
 public class Point2d {
+	
 	private static final long serialVersionUID = 1L;
+	
+	private static final String cJsonIdPointXStr = "X";
+	private static final String cJsonIdPointYStr = "Y";
 
 	private double x;
 	private double y;
@@ -14,6 +20,11 @@ public class Point2d {
 	public Point2d(double x, double y) {
 		this.x = x;
 		this.y = y;
+	}
+	
+	public Point2d(JSONObject jsonPoint) {
+        this.x = jsonPoint.get(cJsonIdPointXStr).isNumber().doubleValue();
+        this.y = jsonPoint.get(cJsonIdPointYStr).isNumber().doubleValue();
 	}
 	
 	public void set(double x, double y) {
