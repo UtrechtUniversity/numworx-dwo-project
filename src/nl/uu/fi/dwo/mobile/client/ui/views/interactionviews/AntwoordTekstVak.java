@@ -47,6 +47,7 @@ import java.util.Vector;
 
 
 
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -65,6 +66,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOPlayerMC2;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -870,7 +872,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			{	if (show)
 					zetGoedFout(GOED);
 				score = puntenFeedback;
-				if(mode == 1)
+				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = Boolean.TRUE;
 			}
@@ -878,7 +880,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			{	if (show)
 					zetGoedFout(HALF);
 				score = puntenFeedback;
-				if(mode == 1)
+				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = null;
 
@@ -887,7 +889,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			{	if (show)
 					zetGoedFout(FOUT);
 				score = puntenFeedback;
-				if(mode == 1)
+				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = Boolean.FALSE;
 				verhoogErrorCount();
@@ -901,7 +903,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 					zetGoedFout(GOED);
 				correct = Boolean.TRUE;
 				score = scoreMax;
-				if(mode == 1)
+				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, scoreMax - errorCount * foutStraf);
 			}
 			else
