@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
@@ -561,7 +562,7 @@ public class CheckSleepUnit implements InteractionStub{
         {   correct = true;
             fout = false;
             score = scoreMax;
-            if(mode == 1)
+            if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
             	score = Math.max(0, scoreMax - errorCount * foutStraf);
         }
         else 
