@@ -55,6 +55,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 
 public class CheckSelectieUnit implements InteractionStub
@@ -217,7 +218,7 @@ public class CheckSelectieUnit implements InteractionStub
             correct = true;
             fout = false;
             score = scoreMax;
-            if(mode == 1)
+            if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
             	score = Math.max(0, scoreMax - errorCount * foutStraf);
         }
         else 
