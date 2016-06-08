@@ -1349,9 +1349,12 @@ public class FormuleRegel extends FormuleElement
 		int i;
 		for (i = this.currentPosition; i >= this.selectionStart; i--)
 		{
-			if (this.children.elementAt(i).isNumber() == false)
-				removeNonNumberChild();
-			this.children.remove(i);
+			if (!this.children.isEmpty())
+			{
+				if (this.children.elementAt(i).isNumber() == false)
+					removeNonNumberChild();
+				this.children.remove(i);
+			}
 		}
 		//clear selection
 		this.selectionStart = -1;
