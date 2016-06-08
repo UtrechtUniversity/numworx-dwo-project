@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
@@ -701,9 +702,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 //	}
 
 	@Override 
-	public void enter() {
-		
-		if(!this.toString().equals(""))
+	public void enter() 
+	{
+		if (!this.toString().equals(""))
 			ingevuld = true;
 		else
 			ingevuld = false;
@@ -718,7 +719,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			return;
 		}
 		*/
-		if(fews != null) // is er een uitwerking
+		if (fews != null) // is er een uitwerking
 		{
 			fews.transfer = true;
 			transferToFEWS();
@@ -752,41 +753,49 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	private void processAntwoord0() throws RestartException
 	{
-		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
+		if (mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
 			kijkNa0(false, false, false);
 		else
 			kijkNa0(false, true, false);
-		if(comRoot != null) // alleen niet null als fewa een toplevel is.
+		
+		if (comRoot != null) // alleen niet null als fewa een toplevel is.
 		{
 			comRoot.fireEvent(new CBookEvent(this, "input", toString()));
 		}
-		else if( fe != null) {
+		else if (fe != null)
+		{
 			fe.fire("input", toString());
 		}
 
-		if(logging != null) {
-				Map<String, Object> map = new HashMap<String,Object>();
-				map.put("response", "<math xmlns='http://www.w3.org/1998/Math/MathML'>" + getMainRegel().toMathML() + "</math>");
-				map.put("score", Collections.singletonMap("raw", getScore()));
-				if(correct != null) {
-					map.put("success", correct);
-				}
-				map.put("formula", getMainRegel().toString());
-				map.put("step", getStep());
-				String feedback = getFeedback();
-				if(feedback != null && !feedback.isEmpty()) map.put("feedback", feedback);
-				logging.log(map);
+		if (logging != null)
+		{
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("response",
+				"<math xmlns='http://www.w3.org/1998/Math/MathML'>"
+					+ getMainRegel().toMathML() + "</math>");
+			map.put("score", Collections.singletonMap("raw", getScore()));
+			if (correct != null)
+			{
+				map.put("success", correct);
 			}
+			map.put("formula", getMainRegel().toString());
+			map.put("step", getStep());
+			String feedback = getFeedback();
+			if (feedback != null && !feedback.isEmpty())
+				map.put("feedback", feedback);
+			logging.log(map);
+		}
 	}
 	
-	private Object getStep() {
-		if(fe != null) return fe.getStep();
+	private Object getStep() 
+	{
+		if (fe != null) return fe.getStep();
 		return "";
 	}
 
 	public void haalAntwoordOp() 
 	{
-		if(fews != null && fews.getEditor() != null && !fews.getEditor().toString().equals(""))
+		if (fews != null && fews.getEditor() != null && !fews.getEditor().toString().equals(""))
 		{
 			clearMain();
 			insert(fews.getEditor().toString());
@@ -842,64 +851,71 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	private void kijkNa0(boolean backStep, boolean show, boolean setState) throws RestartException
 	{
-		if(setState)
+		if (setState)
 			setChanged(false);
+		
 		String useranswer = "$f" + this.toString() + "@";
-		if(useranswer.equals("$f@"))
+		if (useranswer.equals("$f@"))
 			ingevuld = false;
 		else
 			ingevuld = true;
-		if(fe != null) // fe: onderdeel van formuleeditorwithsteps
+		
+		if (fe != null) // fe: onderdeel van formuleeditorwithsteps
 			fe.zetIngevuld(ingevuld);
 		
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
-		if(fe != null)
+		if (fe != null)
 			checkResults = avChecker.checkAnswer(useranswer, fe.getLatestAnswer(), fe.getSubstitutie(), fe.getGebruikersSubstituties());
 		else	
 			checkResults = avChecker.checkAnswer(useranswer);
 
 		this.goedHalfFout = (Integer) checkResults.get("goedHalfFout");
 		this.syntaxFout = (Boolean) checkResults.get("syntaxFout");
-		if(goedHalfFout == AntwoordVakChecker.FOUT && !syntaxFout)
+		if (goedHalfFout == AntwoordVakChecker.FOUT && !syntaxFout)
 			verhoogErrorCount();
 		this.correct = (Boolean) checkResults.get("correct");
-		if(goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR) correct = null;
+		if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR)
+			correct = null;
 		this.score = (Integer) checkResults.get("score");
 //		if(fe != null) { // waarom werkt dit überhaupt? normaal gebeurt dit in 'maakNakijkenAf'
 //			fe.correct = this.correct; // update correct van parent fe
 //			fe.score = this.score;     // update score van parent fe
 //		}
 		this.scoreZonderAftrek = (Integer) checkResults.get("score");
-		if(mode == 1)
+		if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
 			score = Math.max(0, score - errorCount * foutStraf);
 		//System.out.println("score = " + score);
-		if(hasFeedback || correct == null || !correct)
-		{	this.feedback = (String) checkResults.get("feedback");
+		if (hasFeedback || correct == null || !correct)
+		{	
+			this.feedback = (String) checkResults.get("feedback");
 		}
 		else
 			this.feedback = "";
-		if(!ingevuld)
+		if (!ingevuld)
 			return;
 		
 		
 
-		if(fe != null)
-		{	boolean stapCorrect = fe.controleerStap();
-			if(!stapCorrect)
+		if (fe != null)
+		{	
+			boolean stapCorrect = fe.controleerStap();
+			if (!stapCorrect)
 				this.goedHalfFout = AntwoordVakChecker.FOUT;
 		}
-		if((mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS) && !show)
-		{	if(this.fe != null)
+		if ((mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS) && !show)
+		{	
+			if (this.fe != null)
 				fe.maakNakijkenAf(backStep, show, setState);
 			
-			if(syntaxFout)
+			if (syntaxFout)
 			{	//checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 				//checkimg.setVisible(true);
 				zetFeedback();
 				
 				//TODO: feedback syntaxfout tonen.
 			}
-			if(setState && teltMee)
+			
+			if (setState && teltMee)
 				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
 			return;
 		}
@@ -912,7 +928,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 //		if(fe != null)
 //			fe.zetStapOk(goedHalfFout);
-		if(show)
+		if (show)
 			zetGoedFout(goedHalfFout);
 		resize();
 		//logger.finer(String.valueOf(checkimg.isVisible()));
@@ -920,19 +936,20 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (this.fe == null && !useranswer.equals(lastanswer))
 		{
 			lastanswer = useranswer;
-			if((mode == 0 || mode == 1) && teltMee) 
+			if ((mode == OpdrNav.OEFENEN || mode == OpdrNav.OEFENEN_STRAFPUNTEN) && teltMee) 
 				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
 		
 		}
 		//if(this.fe != null && !(mode == 2 || mode == 3))
 		//	fe.maakNakijkenAf(backStep);
-		if(!feedback.equals("") && fe == null)
+		if (!feedback.equals("") && fe == null)
 		{
 			zetFeedback();
 		}
 		
-		if(this.fe != null && ingevuld)
-		{	fe.maakNakijkenAf(backStep, show, setState);
+		if (this.fe != null && ingevuld)
+		{	
+			fe.maakNakijkenAf(backStep, show, setState);
 		}
 		// in maakNakijkenAf wordt voor setState = false comRoot.setChanged(false) gedaan;
 		// als fe == null dus niet...
@@ -947,11 +964,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void zetGoedFout(int uitslag)
 	{
-		if(uitslag == AntwoordVakChecker.GOED)
+		if (uitslag == AntwoordVakChecker.GOED)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-		else if(uitslag == AntwoordVakChecker.DOOR || uitslag == AntwoordVakChecker.HALF)
+		else if (uitslag == AntwoordVakChecker.DOOR || uitslag == AntwoordVakChecker.HALF)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
-		else if(uitslag == AntwoordVakChecker.FOUT)
+		else if (uitslag == AntwoordVakChecker.FOUT)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
