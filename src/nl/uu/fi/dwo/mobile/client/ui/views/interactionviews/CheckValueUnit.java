@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
@@ -531,8 +532,9 @@ public class CheckValueUnit implements InteractionStub{
     }
     
     private void kijkNa(boolean show)
-    {	//Er wordt zonder show nagekeken vanuit getState. Als er dan al een checkimg staat, moet dit niet worden weggehaald. 
-    	if(show)
+    {	
+    	//Er wordt zonder show nagekeken vanuit getState. Als er dan al een checkimg staat, moet dit niet worden weggehaald. 
+    	if (show)
     	{
     		nakijkAchtergrond.setVisible(false);
     		goedKrulImage.setVisible(false);
@@ -544,9 +546,9 @@ public class CheckValueUnit implements InteractionStub{
         ingevuld = false;
         answer = "";
         boolean changed = false;
-    	for(int i=0 ; i<aantalValueObjects ; i++)
+    	for (int i=0 ; i<aantalValueObjects ; i++)
         {   
-    		if(ipValueList[i].ipObjectIsChanged())
+    		if (ipValueList[i].ipObjectIsChanged())
     			changed = true;
         }
     	correct = false;
@@ -559,13 +561,13 @@ public class CheckValueUnit implements InteractionStub{
             //ipValueList[i].addActionListener(this);
         //}
         
-        if(checkSamen)
+        if (checkSamen)
         {
-        	if(formuleStrings!=null)
+        	if (formuleStrings!=null)
         	{
         		
         		VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
-        		for(int h=0 ; h<formuleStrings.length ; h++)
+        		for (int h=0 ; h<formuleStrings.length ; h++)
 		        {
         			String formuleString = formuleStrings[h];
         			String locationStringTotal = null;
@@ -573,7 +575,8 @@ public class CheckValueUnit implements InteractionStub{
         			
         			
         			int indexSC = formuleStrings[h].indexOf(";");
-        			if(indexSC>-1){
+        			if (indexSC>-1)
+        			{
         				formuleString = formuleStrings[h].substring(0,indexSC) + "@";
         				locationStringTotal = formuleStrings[h].substring(indexSC+1, formuleStrings[h].length()-1);
         				locationStrings = StringUtils.split(locationStringTotal, ",");
@@ -582,18 +585,20 @@ public class CheckValueUnit implements InteractionStub{
         				
         			boolean stapJuist = true;
         			v[h] = FormuleParser.parseVergelijking(formuleString);
-        			for(int i=0 ; i<aantalValueObjects ; i++)
+        			for (int i=0 ; i<aantalValueObjects ; i++)
     		        {   
     	        		Expressie e = ipValueList[i].geefObjectWaarde();
-    	        		if(e!=null) 
-    	        		{	ingevuld = true;
+    	        		if (e!=null) 
+    	        		{	
+    	        			ingevuld = true;
     	        			v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
     	        		}
     	        		else if (ipValueList[i].objectNullWaarde())
     	        		{	
     	        		}
     	        		else 
-    	        		{	stapJuist = false;
+    	        		{	
+    	        			stapJuist = false;
     	        			break;
     	        		}
     		        }
@@ -601,45 +606,47 @@ public class CheckValueUnit implements InteractionStub{
         			String[][] tekenParen = {{"<","<"},{"<","\u2264"},{"\u2264","<"},{"\u2264","\u2264"},{">",">"},{"\u2265",">"},{">","\u2265"},{"\u2265","\u2265"}};
         			
         			boolean[] stappenJuist = new boolean[v[h].geefAantal()];
-        			for(int k=0 ; k<stappenJuist.length ; k++)
+        			for (int k=0 ; k<stappenJuist.length ; k++)
         			{
         				stappenJuist[k] = false;
-        				if(v[h].geefVergelijking(k).geefVergTeken().equals(">") 
+        				if (v[h].geefVergelijking(k).geefVergTeken().equals(">") 
         						|| v[h].geefVergelijking(k).geefVergTeken().equals("<")
         						|| v[h].geefVergelijking(k).geefVergTeken().equals("\u2265") //groter dan of gelijk aan
         						|| v[h].geefVergelijking(k).geefVergTeken().equals("\u2264")
         						|| v[h].geefVergelijking(k).geefVergTeken().equals("~")) //kleiner dan of gelijk aan
-            			{	Expressie expL = v[h].geefVergelijking(k).geefExpLinks();
+            			{	
+        					Expressie expL = v[h].geefVergelijking(k).geefExpLinks();
             				Expressie expR = v[h].geefVergelijking(k).geefExpRechts();
-            				if(expL.isWaarde() && expR.isWaarde() && v[h].geefVergelijking(k).geefVergTeken().equals("<"))
+            				if (expL.isWaarde() && expR.isWaarde() && v[h].geefVergelijking(k).geefVergTeken().equals("<"))
             					stappenJuist[k] = expL.geefWaarde() < expR.geefWaarde()-0.000000001;
-            				else if(expL.isWaarde() && expR.isWaarde() && v[h].geefVergelijking(k).geefVergTeken().equals(">"))
+            				else if (expL.isWaarde() && expR.isWaarde() && v[h].geefVergelijking(k).geefVergTeken().equals(">"))
             					stappenJuist[k] = expL.geefWaarde() > expR.geefWaarde()+0.000000001;
-            				else if(expL.isWaarde() && expR.isWaarde() && v[h].geefVergelijking(k).geefVergTeken().equals("\u2264"))
+            				else if (expL.isWaarde() && expR.isWaarde() && v[h].geefVergelijking(k).geefVergTeken().equals("\u2264"))
             					stappenJuist[k] = expL.geefWaarde() < expR.geefWaarde()+0.000000001;
-            				else if(expL.isWaarde() && expR.isWaarde() && v[h].geefVergelijking(k).geefVergTeken().equals("\u2265"))
+            				else if (expL.isWaarde() && expR.isWaarde() && v[h].geefVergelijking(k).geefVergTeken().equals("\u2265"))
             					stappenJuist[k] = expL.geefWaarde() > expR.geefWaarde()-0.000000001;
-            				else if(v[h].geefVergelijking(k).geefVergTeken().equals("~"))
-            				{	Expressie e1 = expR.kind2.kind1;
+            				else if (v[h].geefVergelijking(k).geefVergTeken().equals("~"))
+            				{	
+            					Expressie e1 = expR.kind2.kind1;
             					Expressie e2 = expL;
             					Expressie e3 = expR.kind2.kind2;
-            					if(e1.isWaarde() && e2.isWaarde() && e3.isWaarde())
+            					if (e1.isWaarde() && e2.isWaarde() && e3.isWaarde())
             					{
-            						if(Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 0)) //{"<","<"}
+            						if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 0)) //{"<","<"}
             							stappenJuist[k] = e1.geefWaarde() < e2.geefWaarde()-0.000000001 && e2.geefWaarde() < e3.geefWaarde()-0.000000001;
-            						else if(Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 1)) //{"<","\u2264"}
+            						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 1)) //{"<","\u2264"}
             							stappenJuist[k] = e1.geefWaarde() < e2.geefWaarde()-0.000000001 && e2.geefWaarde() < e3.geefWaarde()+0.000000001;
-            						else if(Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 2)) //{"\u2264","<"}
+            						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 2)) //{"\u2264","<"}
             							stappenJuist[k] = e1.geefWaarde() < e2.geefWaarde()+0.000000001 && e2.geefWaarde() < e3.geefWaarde()-0.000000001;
-            						else if(Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 3)) //{"\u2264","\u2264"}
+            						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 3)) //{"\u2264","\u2264"}
             							stappenJuist[k] = e1.geefWaarde() < e2.geefWaarde()+0.000000001 && e2.geefWaarde() < e3.geefWaarde()+0.000000001;
-            						else if(Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 4)) //{">",">"}
+            						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 4)) //{">",">"}
             							stappenJuist[k] = e1.geefWaarde() > e2.geefWaarde()+0.000000001 && e2.geefWaarde() > e3.geefWaarde()+0.000000001;
-            						else if(Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 5)) //{"\u2265",">"}
+            						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 5)) //{"\u2265",">"}
             							stappenJuist[k] = e1.geefWaarde() > e2.geefWaarde()-0.000000001 && e2.geefWaarde() > e3.geefWaarde()+0.000000001;
-            						else if(Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 6)) //{">","\u2265"}
+            						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 6)) //{">","\u2265"}
             							stappenJuist[k] = e1.geefWaarde() > e2.geefWaarde()+0.000000001 && e2.geefWaarde() > e3.geefWaarde()-0.000000001;
-            						else if(Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 7)) //{"\u2265","\u2265"}
+            						else if (Algebra.isGelijkDouble(expR.kind1.geefWaarde(), 7)) //{"\u2265","\u2265"}
             							stappenJuist[k] = e1.geefWaarde() > e2.geefWaarde()-0.000000001 && e2.geefWaarde() > e3.geefWaarde()-0.000000001;
             					}
             				}
@@ -647,7 +654,7 @@ public class CheckValueUnit implements InteractionStub{
             			}
             			else stappenJuist[k] = v[h].geefVergelijking(k).isOplossing(new BasisExpressie(1.212131415),"q");
         				
-        				if(k==0)
+        				if (k==0)
         					stapJuist = stappenJuist[k];
         				else
         					stapJuist = stapJuist || stappenJuist[k];
@@ -666,12 +673,12 @@ public class CheckValueUnit implements InteractionStub{
         			else stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
         			*/
         			juist = juist && stapJuist;
-        			if(!juist && locationStrings==null) break;
+        			if (!juist && locationStrings==null) break;
         			
-        			if(locationStrings!=null){
-        				for(int i=0 ; i<locationStrings.length ; i++){
+        			if (locationStrings!=null){
+        				for (int i=0 ; i<locationStrings.length ; i++){
             				int location = Integer.parseInt(locationStrings[i].trim());
-            				if(show)
+            				if (show)
             					(ipValueList[location-1]).zetGoedFout(stapJuist);
             			}
         			}
@@ -679,16 +686,19 @@ public class CheckValueUnit implements InteractionStub{
 		        }
         	}
         	else
-        	{	VergelijkingMeerv v = FormuleParser.parseVergelijking(formuleString);
-	        	for(int i=0 ; i<aantalValueObjects ; i++)
+        	{	
+        		VergelijkingMeerv v = FormuleParser.parseVergelijking(formuleString);
+	        	for (int i=0 ; i<aantalValueObjects ; i++)
 		        {   
 	        		Expressie e = (ipValueList[i]).geefObjectWaarde();
-	        		if(e!=null) 
-	        		{	ingevuld = true;
+	        		if (e!=null) 
+	        		{	
+	        			ingevuld = true;
 	        			v = v.substitueer(e, "V?("+(i+1)+")");
 	        		}
 	        		else 
-	        		{	juist = false;
+	        		{	
+	        			juist = false;
 	        			break;
 	        		}
 		        }
@@ -697,8 +707,9 @@ public class CheckValueUnit implements InteractionStub{
         }
         else
         {
-        	for(int i=0 ; i<aantalValueObjects ; i++)
-	        {   //changed opvragen en straks weer terugzetten; wordt altijd op false gezet door kijkNa in ipobjectIsCorrect.
+        	for (int i=0 ; i<aantalValueObjects ; i++)
+	        {   
+        		//changed opvragen en straks weer terugzetten; wordt altijd op false gezet door kijkNa in ipobjectIsCorrect.
         		boolean ipValueChanged = ipValueList[i].ipObjectIsChanged();
         		boolean stapJuist = ipValueList[i].ipObjectIsCorrect();
 	        	ingevuld = ingevuld || ipValueList[i].ipObjectIsIngevuld();
@@ -709,12 +720,12 @@ public class CheckValueUnit implements InteractionStub{
 	        	ipValueList[i].setChanged(ipValueChanged);
 		    }
 	    }
-        if(juist)
+        if (juist)
         {   
             correct = true;
             fout = false;
             score = scoreMax;
-            if(mode == 1)
+            if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
             	score = Math.max(0, scoreMax - errorCount * foutStraf);
         }
         else 
@@ -724,8 +735,9 @@ public class CheckValueUnit implements InteractionStub{
             verhoogErrorCount(changed);
             score = 0;
         }
-        if(show && check)
-        {	if (ingevuld && changed)
+        if (show && check)
+        {	
+        	if (ingevuld && changed)
 				comRoot.setChanged(teltMee && !juist);
         	nakijkAchtergrond.setVisible(true);
 			if(correct)
