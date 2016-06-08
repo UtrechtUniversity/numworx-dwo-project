@@ -302,11 +302,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	void zetToetsNagekeken(ScoreNavIF source)
 	{
 		int mode = on.getMode();
-		if (mode == 2 || mode == 3)
+		if (mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
 		{
 			zelftoetsNagekeken = true;
 
-			if (mode == 2 && zelftoetsGeenCorr)
+			if (mode == OpdrNavIF.ZELFTOETS && zelftoetsGeenCorr)
 			{
 				// laatste kans op update sessiontime
 //				if (!zelftoetsNagekeken)
@@ -357,7 +357,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public void gaNaarVolgendeOpdracht()
 	{
-		if(condNav && condNavVoorwaarden)
+		if (condNav && condNavVoorwaarden)
 		{
 			
 //		{	states[activiteitNr][opdrachtNr] = opdrContainer.getState();
