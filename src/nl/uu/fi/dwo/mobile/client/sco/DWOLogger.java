@@ -107,11 +107,6 @@ public class DWOLogger implements Logging {
 			fbTekst = "";
 
 		s += SEPARATOR;
-		s += new Date();
-		s += SEPARATOR;
-		
-		if(stapNr != null) s +=  "Regelnummer = " + stapNr;
-		s += SEPARATOR;
 		if (START.equals(stapNr))
 			s = s + "start";
 		else
@@ -119,6 +114,10 @@ public class DWOLogger implements Logging {
 		s = s + SEPARATOR;
 		s = s + "score = " + getScore(parameters);
 		s = s + SEPARATOR;
+		s += new Date();
+		s += SEPARATOR;
+		if(stapNr != null) s +=  "Regelnummer = " + stapNr;
+		s += SEPARATOR;
 		s = s + fbTekst;
 		return s;
 	}

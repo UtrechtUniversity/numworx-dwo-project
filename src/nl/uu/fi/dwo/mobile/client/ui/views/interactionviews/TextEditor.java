@@ -598,6 +598,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				string = string.replace(";", ".,");
 				map.put("response", string);
 				map.put("action", "modify");
+				map.put("success", "null");
 				logging.log(map);
 		}}
 		

@@ -754,13 +754,12 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	public void setAttempt(boolean start)
 	{
 		if(logOption) {
-			Map log = new HashMap();
+			Map<String, Object> log = new HashMap<String, Object>();
 			if(goedKrulImage.isVisible())
 				log.put("success", Boolean.TRUE);
 			else if(foutKruisImage.isVisible())
-				log.put("sucesss", Boolean.FALSE);
+				log.put("success", Boolean.FALSE);
 			String response = "";
-			log.put("step", "0");
 			if(formuleMode) {
 				response = formuleVak.getMainRegel().toMathML();
 			} else
