@@ -72,7 +72,7 @@
                     <execution>
                         <goals>
                             <goal>compile</goal>
-<!--                            <goal>i18n</goal> -->
+                            <!--                            <goal>i18n</goal> -->
                         </goals>
                     </execution>
                 </executions>
@@ -82,9 +82,14 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <configuration>
-                        <warSourceDirectory>${basedir}/target/web</warSourceDirectory>
-                    </configuration>
+                    <server>TomcatServer</server>
+                    <username>${tomcat.local.deploy.username}</username>
+                    <password>${tomcat.local.deploy.password}</password>
+                    <url>${tomcat.local.deploy.url}</url>
+                    <path>/Account</path>
+                   <warSourceDirectory>target/${project.build.finalName}</warSourceDirectory>
+<!--                    <warFile>target/${project.artifactId}-${project.version}.war</warFile>-->
+<!--                   <archiveClasses>true</archiveClasses>                    -->
                 </configuration>
             </plugin>            
             <!--            <plugin>
