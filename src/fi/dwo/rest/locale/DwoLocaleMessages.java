@@ -142,6 +142,15 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
   String GUI_NewPasswordAgain();
 
   /**
+   * Translated "new login".
+   * 
+   * @return translated "new login"
+   */
+  @DefaultMessage("new login")
+  @Key("GUI.NewSchoolLogin")
+  String GUI_NewSchoolLogin();
+
+  /**
    * Translated "No user is signed in.".
    * 
    * @return translated "No user is signed in."
@@ -160,6 +169,15 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
   String GUI_Password();
 
   /**
+   * Translated "role name".
+   * 
+   * @return translated "role name"
+   */
+  @DefaultMessage("role name")
+  @Key("GUI.RoleName")
+  String GUI_RoleName();
+
+  /**
    * Translated "schoollogin".
    * 
    * @return translated "schoollogin"
@@ -167,6 +185,15 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
   @DefaultMessage("schoollogin")
   @Key("GUI.SchoolLogin")
   String GUI_SchoolLogin();
+
+  /**
+   * Translated "school name".
+   * 
+   * @return translated "school name"
+   */
+  @DefaultMessage("school name")
+  @Key("GUI.SchoolName")
+  String GUI_SchoolName();
 
   /**
    * Translated "klasnaam".
