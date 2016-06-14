@@ -191,6 +191,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         vPanel.add(table);
 
         HorizontalPanel hPanel = new HorizontalPanel();
+        vPanel.setHorizontalAlignment(HorizontalAlignmentConstant.endOf(Direction.DEFAULT));
         hPanel.setHorizontalAlignment(HorizontalAlignmentConstant.endOf(Direction.DEFAULT));
 //            hPanel.getElement().getStyle().setPadding(20, Unit.PX);
         closeBtn = new Button("Close");
@@ -199,7 +200,6 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         addBtn.addClickHandler(this);
         addBtn.addStyleName("paddedHorizontalPanel");
         hPanel.add(addBtn);
-//            hPanel.add(new InlineHTML(" "));
         closeBtn.addStyleName("paddedHorizontalPanel");
         hPanel.add(closeBtn);
 
