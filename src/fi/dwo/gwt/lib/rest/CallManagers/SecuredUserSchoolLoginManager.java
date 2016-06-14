@@ -34,7 +34,7 @@ public class SecuredUserSchoolLoginManager {
 //        service.updateAccountData(user, new Callback<DomUserFull>(callBack));
 //    }
 
-    public void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClasses> callBack)  throws Dwo2Exception {
+    public void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClasses> callBack)  {
         service.getSchoolLogins(new Callback<DomSchoolsRolesAndClasses> (callBack));
     }
 
