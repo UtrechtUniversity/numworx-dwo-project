@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.account.client;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -37,7 +36,6 @@ class SchoolClassStudentController {
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
                 LOG.log(Level.INFO,t.getMessage());
-                
                 DwoViewer.showMessage(Dwo2ExceptionCode.Rest_ConnectionTimeout);
             }
 
@@ -70,23 +68,14 @@ class SchoolClassStudentController {
         return schoolClasses;
     }
 
-    public void setActiveSchoolClass(DomSchoolClass submit) {
-        manager.setActiveSchoolClass(submit, new AsyncCallback<Boolean>() {
-            @Override
-            public void onFailure(Throwable t) {
-                //fail and reset all the data.
-                //TODO Wim
-                Window.alert(t.getMessage());
-            }
-
-            @Override
-            public void onSuccess(Boolean result) {
-                //success and set all the data in the view
-                //relogin with some user
-                //TODO Wim
-                Window.alert("Wim does relogin.");                
-            }
-        });
-
+    public void setActiveSchoolClass(DomSchoolClass submit,AsyncCallback<Boolean> callBack) {
+        manager.setActiveSchoolClass(submit, callBack);
+    }
+    
+    public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack){
+        manager.getActiveSchoolClass(callBack);
+    }
+    public void removeSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
+        manager.removeSchoolClass(submit, callBack);
     }
 }

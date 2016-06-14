@@ -1,11 +1,16 @@
 package nl.uu.fi.dwo.account.client;
 
+import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.HasDirection.Direction;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -19,6 +24,7 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
 
 /**
  *
@@ -90,19 +96,33 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
         schoolClassColumn.setSortable(true);
 
-        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
+        Column<DomSchoolClass, ImageResource> loginColumn
+                = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
             @Override
-            public String getValue(DomSchoolClass data) {
-                return "_0_";
+            public ImageResource getValue(DomSchoolClass object) {
+                return AccountImageBundle.instance.student();
             }
         };
-
-        TextColumn<DomSchoolClass> deleteColumn = new TextColumn<DomSchoolClass>() {
+       Column<DomSchoolClass, ImageResource> deleteColumn
+                = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
             @Override
-            public String getValue(DomSchoolClass data) {
-                return "X";
+            public ImageResource getValue(DomSchoolClass object) {
+                return AccountImageBundle.instance.delete();
             }
-        };
+        };        
+//        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
+//            @Override
+//            public Image getValue(DomSchoolClass data) {
+//                return AccountImageBundle.instance.student();
+//            }
+//        };
+//
+//        ImageColumn<DomSchoolClass> deleteColumn = new TextColumn<DomSchoolClass>() {
+//            @Override
+//            public Image getValue(DomSchoolClass data) {
+//                return AccountImageBundle.instance.delete();
+//            }
+//        };
 
         CellPreviewEvent.Handler<DomSchoolClass> cellPreviewHandler = new CellPreviewEvent.Handler<DomSchoolClass>() {
             @Override
@@ -112,13 +132,53 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                 int button = event.getNativeEvent().getButton();
                 NativeEvent nativeEvent = event.getNativeEvent();
                 if ("click".equals(nativeEvent.getType())
- //                       && columnIndex == 0 // klik op rijnummer doet selectie
+                        //                       && columnIndex == 0 // klik op rijnummer doet selectie
                         && button == NativeEvent.BUTTON_LEFT) {
                     LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
+                    DomSchoolClass sc = dataProvider.getList().get(rowIndex);
+                    switch (rowIndex) {
+                        case 1: //relogin with schoolclass set...
+                            control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
+                                @Override
+                                public void onFailure(Throwable t) {
+                                    //fail and reset all the data.
+                                    Window.alert(t.getMessage());
+                                    //TODO Wim
+                                    Window.alert("wim handles error here.");
+                                }
+
+                                @Override
+                                public void onSuccess(Boolean result) {
+                                    //TODO Wim
+                                    Window.alert("wim calls a new login here.");
+                                }
+                            });
+                            break;
+                        case 2:     //remove schoolclass and relogin if it was the active schoolclass.
+//                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {
+                            control.removeSchoolClass(sc, new AsyncCallback<Boolean>() {
+                                @Override
+                                public void onFailure(Throwable t) {
+                                    //fail and reset all the data.
+                                    Window.alert(t.getMessage());
+                                    //TODO Wim
+                                    Window.alert("wim handles error here.");
+                                }
+
+                                @Override
+                                public void onSuccess(Boolean result) {
+                                    //TODO update table.
+                                    
+                                    //TODO Wim
+                                    Window.alert("wim calls a new login here in case new.");
+                                }
+                            });
+                            break;
+                        default:
+                    }
                 }
             }
         };
-
         table.addCellPreviewHandler(cellPreviewHandler);
 
         // Add the columns.
@@ -150,6 +210,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     }
 
     @Override
+
     public void onClick(ClickEvent event) {
         if (event.getSource() == addBtn) {
             LOG.log(Level.INFO, "Should add new window for adding a schoolclass.");

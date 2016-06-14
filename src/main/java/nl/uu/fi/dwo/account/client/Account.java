@@ -99,6 +99,7 @@ public class Account implements EntryPoint, ClickHandler {
 
                 @Override
                 public void onSuccess(DomUserFull result) {
+                    //TODO Wim wat te doen indien niet ingelogd als student?
                     loginPanel.setVisible(false);
                     loginButton.setVisible(false);
                     LOG.log(Level.INFO, "Fetched a test user with username:" + result.getUserName() + ".");
