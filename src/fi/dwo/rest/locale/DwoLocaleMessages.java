@@ -2,7 +2,7 @@ package fi.dwo.rest.locale;
 
 /**
  * Interface to represent the messages contained in resource bundle:
- * 	D:/GertvanderPlas/netbeans-checkout/project.fisme.java/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/DwoLocaleMessages.properties'.
+ * 	/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/DwoLocaleMessages.properties'.
  */
 public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
   
@@ -43,6 +43,15 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
   String GUI_Button_Update();
 
   /**
+   * Translated "delete".
+   * 
+   * @return translated "delete"
+   */
+  @DefaultMessage("delete")
+  @Key("GUI.Delete")
+  String GUI_Delete();
+
+  /**
    * Translated "email address".
    * 
    * @return translated "email address"
@@ -79,6 +88,15 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
   String GUI_Insertion();
 
   /**
+   * Translated "login".
+   * 
+   * @return translated "login"
+   */
+  @DefaultMessage("login")
+  @Key("GUI.Login")
+  String GUI_Login();
+
+  /**
    * Translated "My Profile".
    * 
    * @return translated "My Profile"
@@ -88,11 +106,11 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
   String GUI_MyProfile();
 
   /**
-   * Translated "My school classes".
+   * Translated "My schoolclasses".
    * 
-   * @return translated "My school classes"
+   * @return translated "My schoolclasses"
    */
-  @DefaultMessage("My school classes")
+  @DefaultMessage("My schoolclasses")
   @Key("GUI.MySchoolClasses")
   String GUI_MySchoolClasses();
 
@@ -140,6 +158,24 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
   @DefaultMessage("password")
   @Key("GUI.Password")
   String GUI_Password();
+
+  /**
+   * Translated "schoollogin".
+   * 
+   * @return translated "schoollogin"
+   */
+  @DefaultMessage("schoollogin")
+  @Key("GUI.SchoolLogin")
+  String GUI_SchoolLogin();
+
+  /**
+   * Translated "klasnaam".
+   * 
+   * @return translated "klasnaam"
+   */
+  @DefaultMessage("klasnaam")
+  @Key("GUI.SchoolclassName")
+  String GUI_SchoolclassName();
 
   /**
    * Translated "username".

@@ -2,7 +2,7 @@ package fi.dwo.rest.locale;
 
 /**
  * Interface to represent the messages contained in resource bundle:
- * 	D:/GertvanderPlas/netbeans-checkout/project.fisme.java/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
+ * 	/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
  */
 public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messages {
   
