@@ -6,7 +6,6 @@
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.Window;
-import fi.dwo.gwt.lib.rest.DwoGlobalVars;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 

@@ -20,7 +20,7 @@ class SchoolClassStudentController {
 
     private SchoolClassStudentPanel view;
     private DomUserFull currentUser;
-    private List<DomSchoolClass> schoolClasses = new ArrayList<DomSchoolClass>();    
+    private List<DomSchoolClass> schoolClasses = new ArrayList<DomSchoolClass>();
     private SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
 
     SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user) {
@@ -30,23 +30,8 @@ class SchoolClassStudentController {
 
     public void init(DomUserFull user) {
         currentUser = user;
-        LOG.log(Level.INFO,""+manager);
-        manager.getStudentsSchoolClasses(new AsyncCallback<List<DomSchoolClass>>() {
-            @Override
-            public void onFailure(Throwable t) {
-                //fail and reset all the data.
-                LOG.log(Level.INFO,t.getMessage());
-                DwoViewer.showMessage(Dwo2ExceptionCode.Rest_ConnectionTimeout);
-            }
-
-            @Override
-            public void onSuccess(List<DomSchoolClass> result) {
-                //success and set all the data in the view
-                LOG.log(Level.INFO, "Fetched students schoolclasses.");
-                schoolClasses = result;
-                view.setSchoolClasses(schoolClasses);                
-            }
-        });
+        LOG.log(Level.INFO, "" + manager);
+        updateStudentsSchoolClassesInView();
 
     }
 
@@ -64,17 +49,33 @@ class SchoolClassStudentController {
         this.currentUser = currentUser;
     }
 
-    public List<DomSchoolClass> getSchoolClasses() {
-        return schoolClasses;
+    public void updateStudentsSchoolClassesInView() {
+        manager.getStudentsSchoolClasses(new AsyncCallback<List<DomSchoolClass>>() {
+            @Override
+            public void onFailure(Throwable t) {
+                //fail and reset all the data.
+                LOG.log(Level.INFO, t.getMessage());
+                DwoViewer.showMessage(Dwo2ExceptionCode.Rest_ConnectionTimeout);
+            }
+
+            @Override
+            public void onSuccess(List<DomSchoolClass> result) {
+                //success and set all the data in the view
+                LOG.log(Level.INFO, "Fetched students schoolclasses.");
+                schoolClasses = result;
+                view.setSchoolClasses(schoolClasses);
+            }
+        });
     }
 
-    public void setActiveSchoolClass(DomSchoolClass submit,AsyncCallback<Boolean> callBack) {
+    public void setActiveSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
         manager.setActiveSchoolClass(submit, callBack);
     }
-    
-    public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack){
+
+    public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack) {
         manager.getActiveSchoolClass(callBack);
     }
+
     public void removeSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
         manager.removeSchoolClass(submit, callBack);
     }

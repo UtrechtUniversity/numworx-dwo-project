@@ -29,11 +29,11 @@ import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
  *
  * @author G.A.J. van der Plas
  */
-public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandler {
+public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHandler {
 
     private Logger LOG = Logger.getLogger("Account");
 
-    private SchoolClassStudentController control;
+    private AddSchoolClassStudentController control;
     private PopupPanel popup;
     private Button delBtn;
     private Button addBtn;
@@ -49,9 +49,9 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         this.popup = popup;
     }
 
-    SchoolClassStudentPanel(DomUserFull user) {
+    AddSchoolClassStudentPanel(DomUserFull user) {
         init(user);
-        control = new SchoolClassStudentController(this, user);
+        control = new AddSchoolClassStudentController(this, user);
         control.init(user);
 
     }
@@ -94,18 +94,18 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
         Column<DomSchoolClass, ImageResource> loginColumn
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-                    @Override
-                    public ImageResource getValue(DomSchoolClass object) {
-                        return AccountImageBundle.instance.student();
-                    }
-                };
-        Column<DomSchoolClass, ImageResource> deleteColumn
+            @Override
+            public ImageResource getValue(DomSchoolClass object) {
+                return AccountImageBundle.instance.student();
+            }
+        };
+       Column<DomSchoolClass, ImageResource> deleteColumn
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-                    @Override
-                    public ImageResource getValue(DomSchoolClass object) {
-                        return AccountImageBundle.instance.delete();
-                    }
-                };
+            @Override
+            public ImageResource getValue(DomSchoolClass object) {
+                return AccountImageBundle.instance.delete();
+            }
+        };        
 //        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
 //            @Override
 //            public Image getValue(DomSchoolClass data) {
@@ -163,12 +163,10 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
                                 @Override
                                 public void onSuccess(Boolean result) {
-                                    if (sc != GlobalVars) {
-                                        control.updateStudentsSchoolClassesInView();
-                                    } else {
-                                        //TODO Wim
-                                        Window.alert("wim calls a new login here in case new.");
-                                    }
+                                    //TODO update table.
+                                    control.getSchoolClasses();
+                                    //TODO Wim
+                                    Window.alert("wim calls a new login here in case new.");
                                 }
                             });
                             break;
