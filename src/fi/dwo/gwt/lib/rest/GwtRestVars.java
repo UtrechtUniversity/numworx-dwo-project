@@ -111,11 +111,6 @@ public class GwtRestVars {
         //TODO fill DwoSystemParameters and more into the instance.
     }
 
-    public void setUser(DomUserFull user) {
-        this.currentUser = user;
-        getAuthenticator().setCredentials(user.getUserName(), user.getPassword());
-    }
-
     /**
      * @return the server
      */
@@ -142,6 +137,7 @@ public class GwtRestVars {
      */
     public void setCurrentUser(DomUserFull aCurUser) {
         currentUser = aCurUser;
+        getAuthenticator().setCredentials(currentUser.getUserName(), currentUser.getPassword());        
     }
 
     /**
