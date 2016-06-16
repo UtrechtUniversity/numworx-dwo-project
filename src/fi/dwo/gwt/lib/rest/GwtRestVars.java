@@ -3,7 +3,6 @@ package fi.dwo.gwt.lib.rest;
 import com.google.gwt.user.client.Window;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import fi.dwo.rest.DwoLocale;
-import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Level;
@@ -18,32 +17,23 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
  *
  * @author Gert van der Plas
  */
-public class DwoGlobalVars {
+public class GwtRestVars {
 
-    private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
+    private static final Logger LOG = Logger.getLogger(GwtRestVars.class.getName());
 
-    private static volatile DwoGlobalVars instance;
-    private DomSchoolClass currentSchoolClass=null;
+    private static volatile GwtRestVars instance;
 
-    public static DwoGlobalVars getInstance() {
+    public static GwtRestVars getInstance() {
         return instance;
     }
 
-    public static void setInstance(DwoGlobalVars instance) {
-        DwoGlobalVars.instance = instance;
-    }
-
-    public DomSchoolClass getCurrentSchoolClass() {
-        return currentSchoolClass;
-    }
-
-    public void setCurrentSchoolClass(DomSchoolClass currentSchoolClass) {
-        this.currentSchoolClass = currentSchoolClass;
+    public static void setInstance(GwtRestVars instance) {
+        GwtRestVars.instance = instance;
     }
 
     static {
         try {
-            instance = new DwoGlobalVars();
+            instance = new GwtRestVars();
 
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
@@ -51,19 +41,19 @@ public class DwoGlobalVars {
         }
     }
 
-    /**
-     * @return the dwoLocale
-     */
-    public static DwoLocale getDwoLocale() {
-        return dwoLocale;
-    }
-
-    /**
-     * @param aDwoLocale the dwoLocale to set
-     */
-    public static void setDwoLocale(DwoLocale aDwoLocale) {
-        dwoLocale = aDwoLocale;
-    }
+//    /**
+//     * @return the dwoLocale
+//     */
+//    public static DwoLocale getDwoLocale() {
+//        return dwoLocale;
+//    }
+//
+//    /**
+//     * @param aDwoLocale the dwoLocale to set
+//     */
+//    public static void setDwoLocale(DwoLocale aDwoLocale) {
+//        dwoLocale = aDwoLocale;
+//    }
 
     private RestAuthenticator authenticator = new RestAuthenticator();
 
@@ -74,10 +64,10 @@ public class DwoGlobalVars {
     /**
      * @return the instance
      */
-    public static DwoGlobalVars instance() {
+    public static GwtRestVars instance() {
         if (instance == null) {
             try {
-                instance = new DwoGlobalVars();
+                instance = new GwtRestVars();
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
@@ -88,7 +78,7 @@ public class DwoGlobalVars {
     //Runtime Variabes
     DomUserFull currentUser;
 
-    public DwoGlobalVars() throws Dwo2Exception {
+    public GwtRestVars() throws Dwo2Exception {
         initProperties();
         initObjects();
         initVars();

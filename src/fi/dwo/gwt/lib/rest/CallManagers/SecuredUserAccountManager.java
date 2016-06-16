@@ -8,7 +8,7 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import fi.dwo.gwt.lib.rest.DwoGlobalVars;
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.SecuredUserAccountRestCaller;
 import fi.dwo.rest.dom.entities.DomContext;
 
@@ -23,17 +23,17 @@ public class SecuredUserAccountManager {
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountManager.class.getName());
 
     private SecuredUserAccountRestCaller service;
-    private DwoGlobalVars dgv;
+    private GwtRestVars dgv;
 
     public SecuredUserAccountManager() {
-        String url = DwoGlobalVars.instance().getServer();
+        String url = GwtRestVars.instance().getServer();
         init(url);
                 
     }
 
     public SecuredUserAccountManager(String url) {
 //        try {
-//            dgv= new DwoGlobalVars();
+//            dgv= new GwtRestVars();
 //        } catch (Dwo2Exception ex) {
 //            LOG.log(Level.SEVERE, null, ex);
 //        }
@@ -43,7 +43,7 @@ public class SecuredUserAccountManager {
     private void init(String url){
         Defaults.setServiceRoot(url);
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
-        DefaultFilterawareDispatcher.singleton().addFilter(DwoGlobalVars.instance().getAuthenticator());
+        DefaultFilterawareDispatcher.singleton().addFilter(GwtRestVars.instance().getAuthenticator());
         service = (SecuredUserAccountRestCaller) GWT.create(SecuredUserAccountRestCaller.class);
         LOG.log(Level.INFO,""+service);
     }
@@ -66,13 +66,13 @@ public class SecuredUserAccountManager {
         domLoginCheck.setPassword(DomLoginCheck.crypt(password));
         RestLoginCheck restLoginCheck = new RestLoginCheck();
         restLoginCheck.setDomLoginCheck(domLoginCheck);
-        DwoGlobalVars.instance().getAuthenticator().setCredentials(null, null);
+        GwtRestVars.instance().getAuthenticator().setCredentials(null, null);
         service.loginCheck(restLoginCheck, new MethodCallback<Boolean>() {
 
             @Override
             public void onSuccess(Method method, Boolean response) {
                 if (Boolean.TRUE.equals(response)) {
-                    DwoGlobalVars.instance().getAuthenticator().setCredentials(username, password);
+                    GwtRestVars.instance().getAuthenticator().setCredentials(username, password);
                 }
                 callback.onSuccess(response);
             }

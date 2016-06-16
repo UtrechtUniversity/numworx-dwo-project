@@ -2,7 +2,7 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import fi.dwo.gwt.lib.rest.DwoGlobalVars;
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.SecuredStudentSchoolClassRestCaller;
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
@@ -21,7 +21,7 @@ public class SecuredStudentSchoolClassManager {
     private static final Logger LOG = Logger.getLogger(SecuredStudentSchoolClassManager.class.getName());
     private SecuredStudentSchoolClassRestCaller service;
 
-    private DwoGlobalVars dgv;
+    private GwtRestVars dgv;
 
     public SecuredStudentSchoolClassManager() {
         service = (SecuredStudentSchoolClassRestCaller) GWT.create(SecuredStudentSchoolClassRestCaller.class);

@@ -7,7 +7,7 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import com.google.gwt.core.client.GWT;
-import fi.dwo.gwt.lib.rest.DwoGlobalVars;
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.DWO2RestCaller;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
@@ -22,7 +22,7 @@ public class SecuredUserSchoolLoginManager_old {
     private DWO2RestCaller service;
 
     public SecuredUserSchoolLoginManager_old() {
-        this(DwoGlobalVars.instance().getServer());
+        this(GwtRestVars.instance().getServer());
     }
 
     public SecuredUserSchoolLoginManager_old(String url) {
