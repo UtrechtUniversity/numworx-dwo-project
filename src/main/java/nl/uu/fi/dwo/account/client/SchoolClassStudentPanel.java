@@ -94,18 +94,18 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
         Column<DomSchoolClass, ImageResource> loginColumn
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-                    @Override
-                    public ImageResource getValue(DomSchoolClass object) {
-                        return AccountImageBundle.instance.student();
-                    }
-                };
+            @Override
+            public ImageResource getValue(DomSchoolClass object) {
+                return AccountImageBundle.instance.student();
+            }
+        };
         Column<DomSchoolClass, ImageResource> deleteColumn
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-                    @Override
-                    public ImageResource getValue(DomSchoolClass object) {
-                        return AccountImageBundle.instance.delete();
-                    }
-                };
+            @Override
+            public ImageResource getValue(DomSchoolClass object) {
+                return AccountImageBundle.instance.delete();
+            }
+        };
 //        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
 //            @Override
 //            public Image getValue(DomSchoolClass data) {
@@ -130,9 +130,9 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                 if ("click".equals(nativeEvent.getType())
                         //                       && columnIndex == 0 // klik op rijnummer doet selectie
                         && button == NativeEvent.BUTTON_LEFT) {
-                    LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
+                    //LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
-                    switch (rowIndex) {
+                    switch ( columnIndex) {
                         case 1: //relogin with schoolclass set...
                             control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
                                 @Override
@@ -163,12 +163,25 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
                                 @Override
                                 public void onSuccess(Boolean result) {
-                                    if (sc != GlobalVars) {
-                                        control.updateStudentsSchoolClassesInView();
-                                    } else {
-                                        //TODO Wim
-                                        Window.alert("wim calls a new login here in case new.");
-                                    }
+                                    //If active schoolClass is the same in DwoGlobalsVars 
+                                    //then we did not unsubscribe from the active schoolClass
+                                    control.getActiveSchoolClass(new AsyncCallback<DomSchoolClass>() {
+                                        @Override
+                                        public void onFailure(Throwable t) {
+                                            //fail and reset all the data.
+                                            Window.alert(t.getMessage());
+                                        }
+
+                                        @Override
+                                        public void onSuccess(DomSchoolClass result) {
+                                            if (result.getId().equals(DwoGlobalVars.getInstance().getCurrentSchoolClass().getId())) {
+                                                control.updateStudentsSchoolClassesInView();
+                                            } else {
+                                                //TODO Wim
+                                                Window.alert("wim calls a new login here in case new.");
+                                            }
+                                        }
+                                    });
                                 }
                             });
                             break;
@@ -194,8 +207,9 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 //            hPanel.getElement().getStyle().setPadding(20, Unit.PX);
         closeBtn = new Button("Close");
         closeBtn.addClickHandler(this);
-        addBtn = new Button("Add");
-        addBtn.addClickHandler(this);
+        //TODO need to resolve unknown class id in hasRole first
+//        addBtn = new Button("Add");
+//        addBtn.addClickHandler(this);
         addBtn.addStyleName("paddedHorizontalPanel");
         hPanel.add(addBtn);
         closeBtn.addStyleName("paddedHorizontalPanel");

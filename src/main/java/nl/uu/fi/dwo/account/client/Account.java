@@ -13,8 +13,10 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.logging.Level;
@@ -66,7 +68,7 @@ public class Account implements EntryPoint, ClickHandler {
         VerticalPanel contentPanel = new VerticalPanel();
         contentPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
         contentPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-    
+
         contentPanel.add(loginStatusPanel);
         contentPanel.add(loginPanel);
         contentPanel.add(loginButton);
@@ -96,6 +98,7 @@ public class Account implements EntryPoint, ClickHandler {
                     header.setRightWidget(null);
                 }
 
+                //Process login results
                 @Override
                 public void onSuccess(DomUserFull result) {
                     //TODO Wim wat te doen indien niet ingelogd als student?
@@ -105,8 +108,25 @@ public class Account implements EntryPoint, ClickHandler {
                     user = (DomUserFull) result;
                     loginStatusPanel.setStatus(user.getUserName(), true);
                     DwoGlobalVars.instance().setCurrentUser(user);
-                    header.setRightWidget(userBar);
-                    LOG.log(Level.INFO, "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");
+                    SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
+                    manager.getActiveSchoolClass(new AsyncCallback<DomSchoolClass>() {
+                        @Override
+                        public void onFailure(Throwable t) {
+                            LOG.log(Level.INFO, t.getStackTrace().toString());
+                            header.setRightWidget(null);
+                        }
+
+                        //Process getActiveSchoolClass results (Only works for student?)
+                        @Override
+                        public void onSuccess(DomSchoolClass result) {
+                            DwoGlobalVars.instance()
+                                    .setCurrentSchoolClass(result);
+                            loginStatusPanel.setSchoolClass(result.getSchoolClassName());
+                            header.setRightWidget(userBar);
+                            LOG.log(Level.INFO,
+                                    "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");
+                        }
+                    });
                 }
             });
         } else {

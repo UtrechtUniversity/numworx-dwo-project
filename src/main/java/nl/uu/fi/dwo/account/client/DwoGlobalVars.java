@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.Window;
 import fi.dwo.gwt.lib.rest.DwoConstants;
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -25,7 +26,6 @@ public class DwoGlobalVars {
 
     private static volatile DwoGlobalVars instance;
     private DomSchoolClass currentSchoolClass=null;
-    
 
     public static DwoGlobalVars getInstance() {
         return instance;
@@ -113,20 +113,14 @@ public class DwoGlobalVars {
         LOG.log(Level.INFO, "Starting initObjects():");
         Defaults.setServiceRoot(this.getServer());
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
-        setAuthenticator(new RestAuthenticator());
-        DefaultFilterawareDispatcher.singleton().addFilter(this.getAuthenticator());
+        GwtRestVars.instance().setAuthenticator(new RestAuthenticator());
+        DefaultFilterawareDispatcher.singleton().addFilter(GwtRestVars.instance().getAuthenticator());
 //            restService = GWT.create(DWO2RestCaller.class);
         LOG.log(Level.INFO, "Done initObjects():");
     }
 
     private void initVars() throws Dwo2Exception {
         //TODO fill DwoSystemParameters and more into the instance.
-    }
-
-    public void setUser(DomUserFull user) {
-        this.currentUser = user;
-        getAuthenticator().setCredentials(user.getUserName(), user.getPassword());
-        GwtRestVars.instance set user en such
     }
 
     /**
@@ -155,20 +149,10 @@ public class DwoGlobalVars {
      */
     public void setCurrentUser(DomUserFull aCurUser) {
         currentUser = aCurUser;
-    }
-
-    /**
-     * @return the authenticator
-     */
-    public RestAuthenticator getAuthenticator() {
-        return authenticator;
-    }
-
-    /**
-     * @param authenticator the authenticator to set
-     */
-    public void setAuthenticator(RestAuthenticator authenticator) {
-        this.authenticator = authenticator;
+        this.currentUser = aCurUser;
+        //notify the gwt-rest interface configuration
+        GwtRestVars.getInstance().setCurrentUser(aCurUser);
+        
     }
 
 }

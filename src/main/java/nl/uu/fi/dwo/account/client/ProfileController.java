@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.account.client;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,7 +54,7 @@ class ProfileController {
                     //update Globals otherwise can't loginUser in passwd change!
                     DwoGlobalVars.instance().setCurrentUser(currentUser);
                     //update rest authentication 
-                    DwoGlobalVars.instance().getAuthenticator()
+                    GwtRestVars.instance().getAuthenticator()
                             .setCredentials(currentUser.getUserName(), currentUser.getPassword());
                     view.init(currentUser);
                     view.getPopup().hide();

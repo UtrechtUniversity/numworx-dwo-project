@@ -16,6 +16,7 @@ import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
  */
 public class LoginStatusPanel extends VerticalPanel {
     Label login = new Label("usercode:");
+    Label schoolClass = new Label("schoolclass name:");
     Label status = new Label("logged in: false");
     Label localization = new Label("Localisation: "+LocaleInfo.getLocaleNativeDisplayName("en-gb"));
     
@@ -23,11 +24,15 @@ public class LoginStatusPanel extends VerticalPanel {
     
     public LoginStatusPanel() {
         this.add(login);
+        this.add(schoolClass);
         this.add(status);
         this.add(localization);
         this.add(test);
     }
 
+    public void setSchoolClass(String schoolClassName){
+        schoolClass.setText("schoolclass name:"+schoolClassName);
+    }
     public void setStatus(String usercode, boolean loggedIn ){
         login.setText("usercode: "+ usercode);
         status.setText("logged in: "+Boolean.valueOf(loggedIn).toString());
