@@ -41,6 +41,8 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
     ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
 
+    private AddSchoolClassStudentPanel addSchoolClassPanel;
+
     public PopupPanel getPopup() {
         return popup;
     }
@@ -52,6 +54,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     SchoolClassStudentPanel(DomUserFull user) {
         init(user);
         control = new SchoolClassStudentController(this, user);
+        addSchoolClassPanel = new AddSchoolClassStudentPanel(user);
         control.init(user);
 
     }
@@ -94,18 +97,18 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
         Column<DomSchoolClass, ImageResource> loginColumn
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-            @Override
-            public ImageResource getValue(DomSchoolClass object) {
-                return AccountImageBundle.instance.student();
-            }
-        };
+                    @Override
+                    public ImageResource getValue(DomSchoolClass object) {
+                        return AccountImageBundle.instance.student();
+                    }
+                };
         Column<DomSchoolClass, ImageResource> deleteColumn
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-            @Override
-            public ImageResource getValue(DomSchoolClass object) {
-                return AccountImageBundle.instance.delete();
-            }
-        };
+                    @Override
+                    public ImageResource getValue(DomSchoolClass object) {
+                        return AccountImageBundle.instance.delete();
+                    }
+                };
 //        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
 //            @Override
 //            public Image getValue(DomSchoolClass data) {
@@ -132,7 +135,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                         && button == NativeEvent.BUTTON_LEFT) {
                     //LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
-                    switch ( columnIndex) {
+                    switch (columnIndex) {
                         case 1: //relogin with schoolclass set...
                             control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
                                 @Override
@@ -207,9 +210,9 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 //            hPanel.getElement().getStyle().setPadding(20, Unit.PX);
         closeBtn = new Button("Close");
         closeBtn.addClickHandler(this);
-        //TODO need to resolve unknown class id in hasRole first
-//        addBtn = new Button("Add");
-//        addBtn.addClickHandler(this);
+//        TODO need to resolve unknown class id in hasRole first
+        addBtn = new Button("Add");
+        addBtn.addClickHandler(this);
         addBtn.addStyleName("paddedHorizontalPanel");
         hPanel.add(addBtn);
         closeBtn.addStyleName("paddedHorizontalPanel");
@@ -225,8 +228,15 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == addBtn) {
-            LOG.log(Level.INFO, "Should add new window for adding a schoolclass.");
-            popup.hide();
+            LOG.log(Level.INFO, "Popup of AddSchoolClassStudentPanel.");
+            PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
+            //popup.setSize("500", "400");
+            AddSchoolClassStudentPanel panel = new AddSchoolClassStudentPanel(DwoGlobalVars.instance().getCurrentUser());
+            panel.setPopup(popup);
+            panel.setSize("300", "200");
+            popup.add(panel);
+            popup.center();
+            popup.show();
         } else if (event.getSource() == closeBtn) {
             LOG.log(Level.INFO, "Done, hiding window.");
             popup.hide();

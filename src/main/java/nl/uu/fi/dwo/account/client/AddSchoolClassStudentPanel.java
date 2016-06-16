@@ -1,13 +1,10 @@
 package nl.uu.fi.dwo.account.client;
 
-import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.HasDirection.Direction;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -23,7 +20,6 @@ import fi.dwo.rest.locale.DwoLocalesForGWT;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
 
 /**
  *
@@ -35,7 +31,8 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 
     private AddSchoolClassStudentController control;
     private PopupPanel popup;
-    private Button delBtn;
+
+//    private Button delBtn;
     private Button addBtn;
     private Button closeBtn;
     CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
@@ -92,20 +89,20 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 
         schoolClassColumn.setSortable(true);
 
-        Column<DomSchoolClass, ImageResource> loginColumn
-                = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-            @Override
-            public ImageResource getValue(DomSchoolClass object) {
-                return AccountImageBundle.instance.student();
-            }
-        };
-       Column<DomSchoolClass, ImageResource> deleteColumn
-                = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-            @Override
-            public ImageResource getValue(DomSchoolClass object) {
-                return AccountImageBundle.instance.delete();
-            }
-        };        
+//        Column<DomSchoolClass, ImageResource> loginColumn
+//                = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
+//            @Override
+//            public ImageResource getValue(DomSchoolClass object) {
+//                return AccountImageBundle.instance.student();
+//            }
+//        };
+//       Column<DomSchoolClass, ImageResource> deleteColumn
+//                = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
+//            @Override
+//            public ImageResource getValue(DomSchoolClass object) {
+//                return AccountImageBundle.instance.delete();
+//            }
+//        };        
 //        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
 //            @Override
 //            public Image getValue(DomSchoolClass data) {
@@ -133,43 +130,44 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                     LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
                     switch (rowIndex) {
-                        case 1: //relogin with schoolclass set...
-                            control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
+                        case 1: //selected schoolclass to add
+                            //check for password required
+                            if(sc.getHasRegKey()){
+                                do a popup... and get a password
+                            }
+                            control.addSchoolClass (sc, new AsyncCallback<Boolean>() {
                                 @Override
                                 public void onFailure(Throwable t) {
                                     //fail and reset all the data.
                                     Window.alert(t.getMessage());
-                                    //TODO Wim
-                                    Window.alert("wim handles error here.");
                                 }
 
                                 @Override
                                 public void onSuccess(Boolean result) {
-                                    //TODO Wim
-                                    Window.alert("wim calls a new login here.");
+                                    //update a view list
                                 }
                             });
                             break;
-                        case 2:     //remove schoolclass and relogin if it was the active schoolclass.
-//                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {
-                            control.removeSchoolClass(sc, new AsyncCallback<Boolean>() {
-                                @Override
-                                public void onFailure(Throwable t) {
-                                    //fail and reset all the data.
-                                    Window.alert(t.getMessage());
-                                    //TODO Wim
-                                    Window.alert("wim handles error here.");
-                                }
-
-                                @Override
-                                public void onSuccess(Boolean result) {
-                                    //TODO update table.
-                                    control.getSchoolClasses();
-                                    //TODO Wim
-                                    Window.alert("wim calls a new login here in case new.");
-                                }
-                            });
-                            break;
+//                        case 2:     //
+////                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {
+//                            control.removeSchoolClass(sc, new AsyncCallback<Boolean>() {
+//                                @Override
+//                                public void onFailure(Throwable t) {
+//                                    //fail and reset all the data.
+//                                    Window.alert(t.getMessage());
+//                                    //TODO Wim
+//                                    Window.alert("wim handles error here.");
+//                                }
+//
+//                                @Override
+//                                public void onSuccess(Boolean result) {
+//                                    //TODO update table.
+//                                    control.getSchoolClasses();
+//                                    //TODO Wim
+//                                    Window.alert("wim calls a new login here in case new.");
+//                                }
+//                            });
+//                            break;
                         default:
                     }
                 }
@@ -179,8 +177,8 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 
         // Add the columns.
         table.addColumn(schoolClassColumn, DwoLocalesForGWT.instance.GUI_SchoolclassName());
-        table.addColumn(loginColumn, DwoLocalesForGWT.instance.GUI_Login());
-        table.addColumn(deleteColumn, DwoLocalesForGWT.instance.GUI_Delete());
+//        table.addColumn(loginColumn, DwoLocalesForGWT.instance.GUI_Login());
+//        table.addColumn(deleteColumn, DwoLocalesForGWT.instance.GUI_Delete());
         dataProvider.addDataDisplay(table);
 
         VerticalPanel vPanel = new VerticalPanel();
@@ -214,7 +212,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
         } else if (event.getSource() == closeBtn) {
             LOG.log(Level.INFO, "Done, hiding window.");
             popup.hide();
-        } else if (event.getSource() == delBtn) {
+        } else if (event.getSource() == closeBtn) {
             LOG.log(Level.INFO, "" + event.getSource());
         }
         LOG.log(Level.INFO, event.getSource().toString());
