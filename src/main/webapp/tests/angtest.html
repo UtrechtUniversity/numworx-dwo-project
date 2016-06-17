@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="dwoApp"  ng-controller="dwoControl">
+    <head>
+        <title>DwoStatus</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/dwostyle.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div> Current status: <b>{{status}}</b> </div>
+        <table  align=center ng-show="showLogin" >
+            <tr>
+                <td>username</td><td> <input type="text" ng-model="credentials.username" ng-change="credentials.username"/></td>
+            </tr>
+             <tr>
+                <td>password</td><td> <input type="password" ng-model="credentials.password" ng-change="credentials.password"/></td>
+            </tr>
+            <tr align="right"><td><button ng-click="reset()">reset</button></td><td><button ng-click="getStatus()">getStatus</button><button ng-click="getProfile()">getProfile</button></td></tr>
+        </table>
+        <table  align=center ng-show="showStatus">
+            <tr>
+                <th ng-repeat="(name, value) in list[0]" align='left'>{{name}}</th>
+            </tr>
+            <tr ng-repeat="data in list">
+                <td ng-repeat="(name, value) in data" align='right'>{{value}}</td>
+            </tr>
+        </table>
+        <div align="center"><button ng-click="reset()" ng-show="showStatus" >back</button></div>
+        <table  align=center ng-show="showProfile">
+            <tr>
+                <th align='left'>property</th><th>value</th>
+            </tr>
+            <tr><td align='right'>username</td><td>{{list.userName}}</td></tr>
+            <tr><td align='right'>Given name</td><td> <input type="text" ng-model="list.givenName" ng-change="list.givenName"/></td></tr>
+            <tr><td align='right'>Insertion</td><td> <input type="text" ng-model="list.insertion" ng-change="list.insertion"/></td></tr>
+            <tr><td align='right'>Family name</td><td> <input type="text" ng-model="list.familyName" ng-change="list.familyName"/></td></tr>
+            <tr><td align='right'>Email</td><td><input type="text" ng-model="list.email" ng-change="list.email"/></td></tr>
+            <tr><td align='right'>Single school</td><td>{{list.singleSchool}}</td></tr>
+        </table>
+        <div align="center"><button ng-click="reset()" ng-show="showProfile" >back</button><button ng-click="updateProfile()" ng-show="showProfile" >update</button></div>
+        <script src="/dwo/tests/js/libs/angular.js/angular.js" type="text/javascript" ></script>
+<!--        <script src="js/libs/angular-digest-auth.js" type="text/javascript" ></script>-->
+        <script src="/dwo/tests/js/dwo.js" type="text/javascript" ></script>
+    </body>
+</html>
