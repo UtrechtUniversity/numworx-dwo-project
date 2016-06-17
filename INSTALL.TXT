@@ -18,8 +18,8 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON `dwodb`.* TO 'dwo'@'%';
 Configure the following tomcat context-parameter in the tomcat
 main context.xml. 'fi.dwo.dwojapplet.web.appletName' is the name of the 
 DWOJApplet jar which should be placed in a subdirectory of the location where 
-the index.jsp of the war file is unpacked by the tomcat. The jars directory should 
-contain all relevant applet files.
+the index.jsp of the war file is unpacked by the tomcat. The jars directory 
+should contain all relevant applet files.
 
 <Parameter name="fi.dwo.dwojapplet.web.appletName" value="DWOJApplet-1.0.1-r9269.jar"
          override="true"/>
@@ -34,7 +34,8 @@ Once the database was created configure a mysql-db resource in the main server.x
 ...  
 </GlobalNamingResources>
 
-Deploy the war using a context fragment, it enables the resource db and sets the security realm to be used:
+Deploy the war using a context fragment, it enables the resource db and sets the 
+security realm to be used:
 
 <?xml version="1.0" encoding="utf-8"?>
 <Context path="/DWO/DWOServer"  docBase="/opt/dwo/tomcat7/wars/DWOServer" debug="0" crossContext="false" >
@@ -56,3 +57,15 @@ For authentication by tomcat we should use create some views in the MySQL databa
 
 CREATE VIEW tomcat_user_view AS SELECT username, passwd FROM tblUser;
 CREATE VIEW tomcat_roles_view AS select u.username, g.groupname from tblUser u  join tblhasrole h using (userid) join tblschoolgroup sg on (h.schoolGroupID =  sg.schoolGroupID) join tblgroup g using (groupID);
+
+For sending emails to allow a password change we need an smtp server that allows 
+authentication. Configure it in the context.xml or the server.xml:
+
+  <!-- may be configured in server.xml of tomcat -->
+  <Parameter name="fi.dwo.server.rest.smtp.server" override="true" value="email-smtp.eu-west-1.amazonaws.com"/>
+  <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="465"/>
+  <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="yes"/>
+  <Parameter name="fi.dwo.server.rest.smtp.user" override="true" value="me"/>
+  <Parameter name="fi.dwo.server.rest.smtp.password" override="true" value="mySecret"/>
+  <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="noreply@dwo.nl"/>
+

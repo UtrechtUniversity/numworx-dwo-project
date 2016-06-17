@@ -3,7 +3,7 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.persistence.Dwo2ExceptionMySQLGensonTranslator;
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +26,6 @@ public class TranslatorServletContextListener implements ServletContextListener{
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		LOG.log(Level.FINE,"Servlet context intialized.");
-                Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionMySQLGensonTranslator());
+                Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 	}
 }

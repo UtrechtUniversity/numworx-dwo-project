@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import com.digitalmolehill.crypto.SymmetricCryptor;
 import fi.dwo.rest.dom.entities.DomLoginCheck;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -14,6 +15,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.rest.entities.RestSamlUser;
@@ -30,23 +32,31 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import javax.mail.*;
+import javax.mail.internet.*;
+
+import static java.lang.Thread.sleep;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-
 import java.util.Date;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 /**
@@ -58,6 +68,9 @@ import javax.ws.rs.core.SecurityContext;
 public class PublicUserManager {
 
     private static final Logger LOG = Logger.getLogger(PublicUserManager.class.getName());
+
+    @Context
+    private ServletContext servletContext;
 
     /**
      * Registers a new user.
@@ -188,7 +201,7 @@ public class PublicUserManager {
     @Path("/loginCheck")
     public Boolean getLoginCheck(RestLoginCheck loginCheck) {
         DomLoginCheck domCheck = loginCheck.getDomLoginCheck();
-        PersistentUser user = UserManager.login(domCheck.getUsername(), domCheck.crypt(domCheck.getPassword()));
+        PersistentUser user = UserManager.login(domCheck.getUsername(), DomLoginCheck.crypt(domCheck.getPassword()));
 
         //not using sleep in synchronized semaphore resource, using 
         //<Realm className="org.apache.catalina.realm.LockOutRealm" failureCount="5">
@@ -208,10 +221,15 @@ public class PublicUserManager {
     public DomUserFull getSamlUser(RestSamlUser samlRestUser) {
         //should return a DomFullUser. 
         PersistentSamlUser samlUser = SamlUserManager.findEntity(samlRestUser.getDomSamlUser().getSamlUserId(), samlRestUser.getDomSamlUser().getSamlOrgId());
-        if (samlUser.tokenIsValid(1000)) {//milisseconden
+        if (samlUser != null
+                && samlUser.getAuthToken().equals(samlRestUser.getDomSamlUser().getAuthToken()) //&& samlUser.tokenIsValid(20000) //TODO TESTING, productie aan.
+                ) {//milisseconden
+
+            LOG.log(Level.SEVERE, "equal {0}, tokenValid {1} {2} time={3}", new Object[]{samlUser.getAuthToken().equals(samlRestUser.getDomSamlUser().getAuthToken()), samlUser.tokenIsValid(20000), samlUser, System.currentTimeMillis()});
+
             return UserManager.findEntity(samlUser.getUserID()).buildDomUserFull();
         } else {
-            LOG.log(Level.SEVERE, "Incorrect saml-athentication event for samlOrg {0} samlUser {1} and authToken {2}", new Object[]{samlRestUser.getDomSamlUser().getSamlOrgId(), samlRestUser.getDomSamlUser().getSamlUserId(), samlRestUser.getDomSamlUser().getAuthToken()});
+            LOG.log(Level.SEVERE, "Incorrect saml-authentication event for samlOrg {0} samlUser {1} and authToken {2}: {3}", new Object[]{samlRestUser.getDomSamlUser().getSamlOrgId(), samlRestUser.getDomSamlUser().getSamlUserId(), samlRestUser.getDomSamlUser().getAuthToken(), samlUser});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The authentication is invalid, this event is logged.");
         }
     }
@@ -224,7 +242,7 @@ public class PublicUserManager {
     public String registerSAML(@Context SecurityContext sc,
             @FormParam("userident") String userIdent,
             @FormParam("samluserid") String samlUserId,
-            @FormParam("samlorgid") String samlOrgId,            
+            @FormParam("samlorgid") String samlOrgId,
             @FormParam("gn") String givenName,
             @FormParam("prefix") String insertion,
             @FormParam("fn") String familyName,
@@ -234,13 +252,15 @@ public class PublicUserManager {
             @FormParam("classname") String schoolClassName
     /*... more? ...*/
     ) {
+        LOG.log(Level.FINE, "Starting registerSAML(usercode, samlUserId, samlOrgId: {0},{1},{2}", new Object[]{userIdent, samlUserId, samlOrgId});
+
         PersistentSchool school = SchoolManager.findEntity(schoolID);
         if (school == null) {
             LOG.log(Level.SEVERE, "SchoolID given in form does not exists!");
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Illegal form values, this will be logged!");
         }
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(schoolClassName, school);
-
+        LOG.log(Level.FINE, "starting secureRandom.");
         SecureRandom secureRandom = null;
         try {
             secureRandom = SecureRandom.getInstanceStrong();
@@ -249,10 +269,18 @@ public class PublicUserManager {
             LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "SecureRandom failed.");
         }
+        LOG.log(Level.FINE, "Creating authToken.");
         Short authToken = (short) secureRandom.nextInt();
         RoleType roleType = RoleType.NONE;
+        try {
+            roleType = RoleType.valueOf(role);
+        }
+        catch (Exception e1) {
+            LOG.log(Level.SEVERE, "unknown RoleType " + role, e1);
+        }
         PersistentUser pUser;
         //DONE check if username + domain exists, in tblsamluser
+        LOG.log(Level.FINE, "Checking samluser.");
         PersistentSamlUser samlUser = SamlUserManager.findEntity(samlUserId, samlOrgId);
         if (samlUser == null) {
             //generate new persistentUser
@@ -265,7 +293,6 @@ public class PublicUserManager {
             pUser.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
             //TODO Wim change the parameters.
             pUser.setUsername(userIdent + '@' + school.getSchoolLogin());
-            roleType = RoleType.valueOf(role);
             pUser.setSchoolGroupId(SchoolGroupManager.findBySchoolAndRole(school, roleType).getSchoolGroupID());
 
             try {
@@ -311,14 +338,16 @@ public class PublicUserManager {
             sUser.setAuthTokenTimestamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
             sUser.setUserID(pUser.getId());
             SamlUserManager.create(sUser);
+            LOG.log(Level.FINE, "Created new  samluser.");
         } else {
             try {
                 //TODO put randstring in tblsamluser (add column to database)
-                samlUser.setAuthTokenTimestamp((int) DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+                samlUser.setAuthTokenTimestamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                 samlUser.setAuthToken(authToken.toString());
                 SamlUserManager.edit(samlUser);
                 if (schoolClass != null && roleType == RoleType.STUDENT) {
                     PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(UserManager.findEntity(samlUser.getUserID()), school, roleType);
+                    //TODO hr == null? aanmaken of overslaan? nu fatal DWO2 exception
                     PersistentStudentOfClassPK socPK = new PersistentStudentOfClassPK(hr.getPersistentHasRolePK().getUserID(),
                             schoolClass.getClassID(), hr.getPersistentHasRolePK().getSchoolGroupID());
                     PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socPK);
@@ -339,6 +368,7 @@ public class PublicUserManager {
                     hr.setClassID(schoolClass.getClassID());
                     HasRoleManager.edit(hr);
                 }
+                LOG.log(Level.FINE, "Set class and update samluser.");
             }
             catch (Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
@@ -348,4 +378,173 @@ public class PublicUserManager {
         return authToken.toString();
     }
 
+    /**
+     * Used for manual testing.
+     * 
+     * @return 
+     */    
+    @GET
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/requestNewPassword/html")
+    public String reqPasswordChangeForm() {
+        String r = "<HTML><BODY><p> "+TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD)
+                + "<form action=\"http://localhost:8080/dwo/rest/public/user/requestPasswordChange\" method=\"post\" >\n"
+                + "<table>"
+                + "<tr><td align=\"right\">"+TextMapper.getText(TextMapper.LBL_USERNAME)+": </td> <td><input type=\"text\" size=\"80\" name=\"usercode\" value=\"project_wim\"></td></tr>"
+                + "<tr><td align=\"right\">"+TextMapper.getText(TextMapper.LBL_EMAIL)+":</td> <td><input type=\"text\" size=\"80\" name=\"email\" value=\"w.p.g.vanvelthoven@uu.nl\"> </td></tr>"
+                + "<tr><td/><td align=\"right\"><input type=\"submit\" value=\""+TextMapper.getText(TextMapper.BTN_OK)+"\" ></td></tr>"
+                + "<table>"
+                + "</form>";
+        r += "</p></BODY> </HTML>";
+        return r;
+    }
+
+    /**
+     * Registers a new user.
+     *
+     * @param sc
+     * @param usercode
+     * @param email
+     * @return
+     * @throws java.lang.Exception
+     */
+    @POST
+    @Produces({"text/plain"})
+    @Consumes({"application/x-www-form-urlencoded"})
+    @Path("/requestPasswordChange")
+    public String requestPasswordChange(
+            @FormParam("usercode") String usercode,
+            @FormParam("email") String email
+    ) throws Exception {
+        String result = TextMapper.getText(TextMapper.DLG_CONFIRM);;
+        //Check if <username,email> exists 
+        PersistentUser user = UserManager.findByUserName(usercode);
+        if (user != null && user.getEmail().equals(email)) {
+            //Create JSON string for changing password        
+
+            //Password for encrypting is unix timestamp modulus 10 minutes + randomseed
+            long timeslot = 78578 + DwoDateUtilities.getCurrentDwoUnixTimeStamp() / 600000;
+            String seed = Long.toHexString(timeslot);
+            String data = "dwoAuthCode:" + usercode + ":" + email; //TODO are ':' allowed in usercodes?
+            SymmetricCryptor cryptor = new SymmetricCryptor();
+            String authCode = cryptor.encrypt(seed.toCharArray(), data); //encrypt JSON String
+            LOG.log(Level.INFO, "For username {0} and timeslot {1} the server generated an authcode.", new Object[]{user.getUsername(), timeslot});
+            LOG.log(Level.FINER, "For username {0} and timeslot {1} the server generated authcode {2} .", new Object[]{user.getUsername(), timeslot, authCode});
+            
+            //place this in servlet
+            String smtpServer = servletContext.getInitParameter("fi.dwo.server.rest.smtp.server");
+            String smtpPort = servletContext.getInitParameter("fi.dwo.server.rest.smtp.port");
+            String smtpTLS = servletContext.getInitParameter("fi.dwo.server.rest.smtp.tls");
+            String smtpUser = servletContext.getInitParameter("fi.dwo.server.rest.smtp.user");
+            String smtpPassword = servletContext.getInitParameter("fi.dwo.server.rest.smtp.password");
+            String smtpEmail = servletContext.getInitParameter("fi.dwo.server.rest.smtp.email");//from address.
+            Properties props = new Properties();
+            props.put("mail.transport.protocol", "smtp");
+            props.put("mail.smtp.starttls.enable", "true");            
+            props.put("mail.smtp.host", smtpServer);
+            props.put("mail.smtp.port", smtpPort);
+            props.put("mail.smtp.auth", "true");
+            
+            Session session = Session.getInstance(props,
+		  new javax.mail.Authenticator() {
+                        @Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(smtpUser, smtpPassword);
+			}
+		  });            
+
+            // uncomment for debugging infos to stdout
+            // mailSession.setDebug(true);
+            Transport transport = session.getTransport();
+
+            MimeMessage message = new MimeMessage(session);
+            message.setContent("Your authcode is:"+authCode, "text/plain");
+            message.setFrom(new InternetAddress(smtpEmail));
+            message.addRecipient(Message.RecipientType.TO,
+                    new InternetAddress(user.getEmail()));
+
+            transport.connect();
+            transport.sendMessage(message,
+                    message.getRecipients(Message.RecipientType.TO));
+            transport.close();
+        } else {
+            result = TextMapper.getText(TextMapper.LBL_UNKNOWN_COMBINATION);
+        }
+        //Always wait 30 seconds before response.        
+        sleep(3000); //shorter for debugging
+        //return response (ok or logging).
+        return result;
+    }
+
+    /**
+     * Used for manual testing.
+     * 
+     * @return 
+     */
+    @GET
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/submitNewPassword/html")
+    public String passwordChangeForm() {
+        String r = "<HTML><BODY><p>"+TextMapper.getText(TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD)
+                + "<form action=\"http://localhost:8080/dwo/rest/public/user/submitPasswordChange\" method=\"post\" >"
+                + "<table>"
+                + "<tr><td align = \"right\">authCode:</td><td><input type=\"text\" size=\"80\" name=\"authCode\" value=\"wim_project\" ></td></tr>"
+                + "<tr><td align = \"right\">new password:</td><td><input type=\"text\" size=\"80\" name=\"newPassword\" value=\"pass\" ></td></tr>"
+                + "<tr><td/><td align =\"right\"><input type=\""+TextMapper.getText(TextMapper.BTN_OK)+"\" value=\"Submit\"></td></tr>"
+                + "</table>"
+                + "</form>";
+        r += "</BODY></HTML>";
+        return r;
+    }
+
+    /**
+     * Registers a new user.
+     *
+     * @param authCode
+     * @param newPassword
+     * @return
+     * @throws java.lang.Exception
+     */
+    @POST
+    @Produces({"text/plain"})
+    @Consumes({"application/x-www-form-urlencoded"})
+    @Path("/submitPasswordChange")
+    public String submitPasswordChange(
+            @FormParam("authCode") String authCode,
+            @FormParam("newPassword") String newPassword
+    ) throws Exception {
+        //Password for encrypting current unix timestamp modulus 10 minutes + randomseed
+        //decrypt JSON String
+        String data = "";
+        long timeslot = 78578 + DwoDateUtilities.getCurrentDwoUnixTimeStamp() / 600000;
+        for (int i = 0; i < 6; i++) {
+            String seed = Long.toHexString(timeslot);
+            try {
+                SymmetricCryptor cryptor = new SymmetricCryptor();
+                data = cryptor.decrypt(seed.toCharArray(), authCode);
+                if (data.startsWith("dwoAuthCode:")) {
+                    break;
+                }
+            }
+            catch (Exception e) {
+                //illegal code
+            }
+            timeslot = timeslot - 1;
+        }
+        if (data.startsWith("dwoAuthCode:")) {
+            PersistentUser user = UserManager.findByUserName(data.split(":")[1]);
+            user.setPassword(newPassword);
+            UserManager.edit(user);
+            LOG.log(Level.INFO, "Updated password of user with username {0} of timeslot {1}  from valid authCode.", new Object[]{user.getUsername(), timeslot});
+            LOG.log(Level.FINER, "Updated password of user with username {0} of timeslot {1} using authcode {2}.", new Object[]{user.getUsername(), timeslot, authCode});
+            newPassword = TextMapper.getText(TextMapper.DLG_CONFIRM);
+        } else {
+            newPassword = TextMapper.getText(TextMapper.LBL_ILLEGAL_AUTHCODE);
+        }
+        //Always wait 30 seconds before response.        
+        sleep(3000);//10 timesshorter for debugging
+        //return response (ok or logging).
+        return newPassword;
+
+    }
 }

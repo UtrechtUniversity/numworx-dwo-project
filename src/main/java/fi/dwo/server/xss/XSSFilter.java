@@ -25,7 +25,7 @@ public class XSSFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
         String method;
-        logger.info("doFilter called");
+        logger.fine("doFilter called");
         if (request instanceof HttpServletRequest) {
             method = ((HttpServletRequest) request).getMethod();
             if ("OPTIONS".equals(method) && response instanceof HttpServletResponse) {
@@ -78,7 +78,7 @@ public class XSSFilter implements Filter {
 //        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 //        response.setHeader("Expires", "0"); // Proxies.
 
-        response.setContentType("text/plain");
+//        response.setContentType("text/plain");
         response.getOutputStream().close();
     }
 

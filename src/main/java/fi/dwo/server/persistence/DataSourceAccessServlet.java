@@ -1,7 +1,5 @@
 package fi.dwo.server.persistence;
 
-import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 
 import java.io.IOException;
@@ -15,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

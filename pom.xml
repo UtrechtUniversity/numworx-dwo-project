@@ -53,6 +53,11 @@
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -74,19 +79,24 @@
             <groupId>com.jamonapi</groupId>
             <artifactId>jamon</artifactId>
             <version>2.80</version>
-        </dependency>
-        <dependency>
-            <groupId>jre.plugin</groupId>
-            <artifactId>plugin</artifactId>
-            <version>1.8.0_31</version>
-            <classifier>deprecated</classifier>
-            <type>jar</type>
         </dependency>        
+		<dependency>
+    		<groupId>netscape.javascript</groupId>
+    		<artifactId>mayscript</artifactId>
+    		<version>1.0.0</version>
+    		<scope>provided</scope>
+		</dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>140</version>
+            <!--  <scope>provided</scope>-->
         </dependency>
         <!-- Datanucleus currently not in use as on-the-fly persistence compilation
         does not work without tomcat configurations. Eclipse toplink however does work -->
@@ -131,7 +141,7 @@
             <artifactId>jersey-client</artifactId>
             <version>2.17</version>
         </dependency>
-        <!--  best found media type json support -->
+        <!--  best found media type json support, faster than jackson -->
         <dependency>
             <groupId>com.owlike</groupId>
             <artifactId>genson</artifactId>
@@ -306,9 +316,9 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>              
-                  <artifactId>DWOJApplet</artifactId>
+                  <artifactId>DWOJApplet-working-gert</artifactId>
                   <version>${project.version}</version>
-<!--                  <classifier>jar-with-dependencies</classifier>-->
+                  <classifier>jar-with-dependencies</classifier>
                   <overWrite>true</overWrite>
                   <destFileName>DWOJApplet.jar</destFileName>
                 </artifactItem>
@@ -327,6 +337,7 @@
                 <configuration>
                     <useDefaultManifestFile>true</useDefaultManifestFile>
                     <warSourceDirectory>src/main/webapp</warSourceDirectory>
+<!--                    <contextFile>${basedir}/config/tomcat/context.xml</contextFile>                    -->
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                     <archive>
                         <manifest>
@@ -355,9 +366,21 @@
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
+<!-- Add a profile to your maven settings file (.n2/settings.xml) and configure it to talk to your local tomcat
+        <profile>
+            <id>localTomcat</id> 
+            <properties>
+                <tomcat.local.deploy.username>me</tomcat.local.deploy.username>
+                <tomcat.local.deploy.password>bla</tomcat.local.deploy.password>
+                <tomcat.local.deploy.url>http://localhost:8080/manager/text</tomcat.local.deploy.url> 
+            </properties>
+        </profile>
+-->                
                 <configuration>
                     <server>TomcatServer</server>
-                    <url>${tomcat.deploy.url}</url>
+                <username>${tomcat.local.deploy.username}</username>
+                <password>${tomcat.local.deploy.password}</password>
+                    <url>${tomcat.local.deploy.url}</url>
                     <path>/dwo</path>
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                     <contextFile>src/test/tomcat/context.xml</contextFile>

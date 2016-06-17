@@ -29,7 +29,7 @@ Any value defined here will override the pom.xml file value but is only applicab
         <de-markiewb-netbeans-plugins-eclipse-formatter.SaveActionModifiedLinesOnly>false</de-markiewb-netbeans-plugins-eclipse-formatter.SaveActionModifiedLinesOnly>
         <de-markiewb-netbeans-plugins-eclipse-formatter.preserveBreakPoints>true</de-markiewb-netbeans-plugins-eclipse-formatter.preserveBreakPoints>
         <de-markiewb-netbeans-plugins-eclipse-formatter.linefeed/>
-        <de-markiewb-netbeans-plugins-eclipse-formatter.eclipseFormatterActiveProfile>GoogleStyle</de-markiewb-netbeans-plugins-eclipse-formatter.eclipseFormatterActiveProfile>
+        <de-markiewb-netbeans-plugins-eclipse-formatter.eclipseFormatterActiveProfile/>
         <de-markiewb-netbeans-plugins-eclipse-formatter.useProjectPref>true</de-markiewb-netbeans-plugins-eclipse-formatter.useProjectPref>
         <de-markiewb-netbeans-plugins-eclipse-formatter.eclipseFormatterLocation>D:\GertvanderPlas\netbeans-checkout\project.fisme.java\DWOServer\branches\working-gert\tools\eclipse-java-google-style.xml</de-markiewb-netbeans-plugins-eclipse-formatter.eclipseFormatterLocation>
         <de-markiewb-netbeans-plugins-eclipse-formatter.showNotifications>true</de-markiewb-netbeans-plugins-eclipse-formatter.showNotifications>

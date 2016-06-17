@@ -1958,8 +1958,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         }
         ps.setInt(1, classID);
         return executeQueryWithResult(ps);
-    }
-
+        }
+        
     /**
      *
      */

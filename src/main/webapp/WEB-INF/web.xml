@@ -34,7 +34,7 @@
         a valid integer (0 denotes check every time, empty/not set denotes no reload check) -->
         <init-param>
             <param-name>confReloadCheckInterval</param-name>
-            <param-value>0</param-value>
+            <param-value></param-value>
         </init-param>
 
         <!-- sets up log level (will be logged to context log) can be: TRACE, DEBUG,
@@ -246,7 +246,7 @@
 
     <!-- Required to be directly below the security constraint -->
     <login-config>
-        <auth-method>DIGEST</auth-method>
+        <auth-method>BASIC</auth-method>
         <realm-name>DWO account credentials required.</realm-name>
     </login-config>
 

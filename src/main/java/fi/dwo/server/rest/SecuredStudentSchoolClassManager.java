@@ -46,13 +46,14 @@ public class SecuredStudentSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredStudentSchoolClassManager.class.getName());
 
-@GET
+    @GET
     @Produces({"application/json"})
     @Path("/getActive")
     public DomSchoolClass getActiveSchoolClass(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentSchoolClass schoolClass = null;
+        //check if user has matching hasRole
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
@@ -63,10 +64,22 @@ public class SecuredStudentSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        if(phr.getClassID()==null) return null;
+        if (phr.getClassID() == null) {
+            return null;
+        }
         
+        //fetch schoolclass from hasRole
         schoolClass = SchoolClassManager.findEntity(phr.getClassID());
+        
+        //verify if user is in class
+        PersistentStudentOfClassPK key = new PersistentStudentOfClassPK();
+        key.setClassID(schoolClass.getClassID());
+        key.setSchoolGroupID(phr.getPersistentHasRolePK().getSchoolGroupID());
+        key.setUserID(phr.getPersistentHasRolePK().getUserID());
+        PersistentStudentOfClass soc = StudentOfClassManager.findEntity(key);
+        if(soc==null) return null;
 
+        //verify if schoolClass is in school
         if (schoolClass == null || !schoolClass.getSchoolID().equals(school.getSchoolID())) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Active schoolClass {2} from a different school that registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), schoolClass.getClassID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -74,7 +87,6 @@ public class SecuredStudentSchoolClassManager {
         return schoolClass.createDomSchoolClass();
     }
 
-    
     @PUT
     @Produces({"application/json"})
     @Path("/select")
@@ -140,6 +152,10 @@ public class SecuredStudentSchoolClassManager {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
                 StudentOfClassManager.destroy(socId);
+                if (phr.getClassID().equals(socId.getClassID()))  {
+                    phr.setClassID(null);
+                        HasRoleManager.edit(phr);
+                    }
             }
             catch (PersistenceException e) {
                 return false;

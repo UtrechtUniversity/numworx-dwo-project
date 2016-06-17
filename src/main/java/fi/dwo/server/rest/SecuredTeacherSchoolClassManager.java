@@ -30,6 +30,7 @@ import fi.dwo.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -657,6 +658,10 @@ public class SecuredTeacherSchoolClassManager {
         if (toc != null && student != null && soc != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
                 StudentOfClassManager.destroy(soc.getPersistentStudentOfClassPK());
+                if (shr.getClassID().equals(soc.getPersistentStudentOfClassPK().getClassID()))  {
+                    shr.setClassID(null);
+                        HasRoleManager.edit(shr);
+                    }                
             }
             catch (PersistenceException e) {
                 return false;

@@ -1,4 +1,3 @@
-
 package fi.dwo.server.rest;
 
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -8,21 +7,26 @@ import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 
 /**
  * Public server status. Showing health of the service. Under development.
  *
  * @author G.A.J. van der Plas
  */
-@Path("/public/systemparam")
+@Path("/public/status")
 public class PublicServerStatus {
+
+    @Context
+    private ServletContext context;
 
     private static final Logger LOG = Logger.getLogger(PublicServerStatus.class.getName());
 
-    public List<PersistentDwoSystemParameters> getStatus() {
+    public List<PersistentDwoSystemParameters> getDwoSystemParamStatus() {
         List<PersistentDwoSystemParameters> result;
         try {
             result = DwoSystemParametersManager.findEntities();
@@ -47,16 +51,16 @@ public class PublicServerStatus {
 
     @GET
     @Produces({"application/json"})
-    @Path("/getList")
+    @Path("/getDwoSystemParamList")
     public List<PersistentDwoSystemParameters> getStatusJson() {
-        return getStatus();
+        return getDwoSystemParamStatus();
     }
 
     @GET
     @Produces({"text/plain"})
-    @Path("/get/html")
-    public String getStatusText() {
-        List<PersistentDwoSystemParameters> result = getStatus();
+    @Path("/getDwoSystemParamList/html")
+    public String getDwoSystemStatusText() {
+        List<PersistentDwoSystemParameters> result = getDwoSystemParamStatus();
         StringBuilder string = new StringBuilder();
         for (PersistentDwoSystemParameters p : result) {
             string.append(p.getName());
@@ -65,6 +69,45 @@ public class PublicServerStatus {
             string.append("\n");
         }
         return string.toString();
+    }
+
+    @GET
+    @Produces({"text/plain"})
+    @Path("/getServletRevision/html")
+    public String getServletRevision() {
+        String buildNumber = context.getInitParameter("buildnumber");
+        String softwareVersion = context.getInitParameter("projectVersion");
+        String timeStamp = context.getInitParameter("timestamp");
+
+        String out = "Software version, buildnumber: " + softwareVersion + ", " + buildNumber + ", timestamp " + timeStamp + "\n";
+        LOG.log(Level.INFO, "Software version {0}, buildnumber {1}, timestamp {2}", new Object[]{softwareVersion, buildNumber, timeStamp});
+
+        return out;
+    }
+
+    @GET
+    @Produces({"application/json"})
+    @Path("/get")
+    public String getStatusJSON() {
+        StringBuilder result = new StringBuilder();
+        result.append("[")
+                .append("{\"name\":\"projectVersion\", \"value\":\"").append(context.getInitParameter("projectVersion")).append("\"},")
+                .append("{\"name\":\"buildNumber\", \"value\":\"").append(context.getInitParameter("buildnumber")).append("\"},")
+                .append("{\"name\":\"timestamp\", \"value\":\"").append(context.getInitParameter("timestamp"));
+        for (PersistentDwoSystemParameters p : getDwoSystemParamStatus()) {
+            result.append("\"},{\"name\":\"").append(p.getName()).append("\", \"value\":\"").append(p.getValue());
+        }
+        result.append("\"}]");
+        return result.toString();
+    }
+
+    @GET
+    @Produces({"text/plain"})
+    @Path("/get/html")
+    public String getStatus() {
+
+        return getServletRevision()
+                + "\n" + getDwoSystemStatusText();
     }
 
 }

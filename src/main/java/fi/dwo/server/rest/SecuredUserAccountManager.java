@@ -1,20 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.persistence.LogType;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentLogData;
+import fi.dwo.commons.persistence.entities.PersistentLoginDataPK;
+import fi.dwo.commons.persistence.entities.PersistentRole;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginDataManager;
+import fi.dwo.server.PersistentDataManagers.core.RoleManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -61,13 +65,13 @@ public class SecuredUserAccountManager {
     public DomUserFull getCurrentUser(@Context SecurityContext sc) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser user = null;
-        
+
         try {
             user = UserManager.findByUserName(sc.getUserPrincipal().getName());
-            LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(),user.getUsername()});
+            LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
         }
         catch (Exception e) {
-            LOG.log(Level.SEVERE, "Username "+sc.getUserPrincipal().getName()+": Unexpected exception",e);
+            LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
         }
         finally {
@@ -76,6 +80,73 @@ public class SecuredUserAccountManager {
         return user.buildDomUserFull();
     }
 
+    /**
+     * Returns the currentUser. The information is extracted from the security
+     * context.
+     *
+     * @param sc
+     * @return Returns null if there was an error.
+     */
+    @GET
+    @Produces({"application/json"})
+    @Path("/login")
+    public DomUserFull loginUser(@Context SecurityContext sc) {
+        DomUserFull user = getCurrentUser(sc);
+        //al ready retrieved and cached in getCurrentUser
+        PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
+        try {//LoginData may fail, but login should succeed.
+            //register login action
+            PersistentLogData loginData = new PersistentLogData();
+            PersistentLoginDataPK ldKey = new PersistentLoginDataPK();
+            ldKey.setUsername(user.getUserName());
+            ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+            PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
+            PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
+            
+            loginData.setRole(g.getGroupname());
+            loginData.setMessage(LogType.Login);
+            loginData.setLogLevel(Level.INFO.toString());
+            LoginDataManager.create(loginData);
+        }
+        catch (Exception e) {
+            LOG.log(Level.SEVERE, null, e);
+        }
+        return user;
+    }
+
+    /**
+     * Returns the currentUser. The information is extracted from the security
+     * context.
+     *
+     * @param sc
+     * @return Returns null if there was an error.
+     */
+    @GET
+    @Produces({"application/json"})
+    @Path("/logout")
+    public Boolean logoutUser(@Context SecurityContext sc) {
+        PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
+        try {//LoginData may fail, but login should succeed.
+            //register login action
+            PersistentLogData loginData = new PersistentLogData();
+            PersistentLoginDataPK ldKey = new PersistentLoginDataPK();
+            ldKey.setUsername(u.getUsername());
+            ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+            PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
+            PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
+            
+            loginData.setRole(g.getGroupname());
+            loginData.setMessage(LogType.Logout);
+            loginData.setLogLevel(Level.INFO.toString());
+            LoginDataManager.create(loginData);
+        }
+        catch (Exception e) {
+            LOG.log(Level.SEVERE, null, e);
+            return false;
+        }
+        return true;
+    }
+    
     /**
      * Updates the User data of the current user and returns a copy of the
      * updated data.
@@ -102,8 +173,8 @@ public class SecuredUserAccountManager {
                 return pUser.buildDomUserFull();
             }
             catch (Exception e) {
-            LOG.log(Level.SEVERE, "Username "+sc.getUserPrincipal().getName()+": Unexpected exception",e);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update user id " + sc.getUserPrincipal().getName() + " .");
+                LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update user id " + sc.getUserPrincipal().getName() + " .");
             }
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getDomUserFull().getUserName()});
@@ -113,8 +184,9 @@ public class SecuredUserAccountManager {
 
     /**
      * Removes all the User data of the current user and returns true.
-     * \texttt{StudentScoData},\texttt{StudentScoContext}, \texttt{StudentOf}, \texttt{TeacherOf\texttt{HasRole}, \texttt{SamlUser}, \texttt{User}.
-
+     * \texttt{StudentScoData},\texttt{StudentScoContext}, \texttt{StudentOf},
+     * \texttt{TeacherOf\texttt{HasRole}, \texttt{SamlUser}, \texttt{User}.
+     *
      *
      * @param sc
      * @return
@@ -124,29 +196,30 @@ public class SecuredUserAccountManager {
     @Path("/remove")
     public Boolean removeCurrentUser(@Context SecurityContext sc) {
         PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
-        if(u==null) return true;
+        if (u == null) {
+            return true;
+        }
         List<PersistentHasRole> hrList = HasRoleManager.findEntities(u);
-            for(PersistentHasRole hr : hrList){
-                List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
-                for(PersistentStudentScoContext ssc : sscList){
-                    StudentScoDataManager.destroy(ssc.getStudentSco());
-                    StudentScoContextManager.destroy(ssc.getStudentSco());
-                }
-                //Remove StudentOf and TeacherOf
-                List<PersistentStudentOfClass> soList = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
-                for(PersistentStudentOfClass so : soList){
-                    StudentOfClassManager.destroy(so.getPersistentStudentOfClassPK());
-                }
-                List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
-                for(PersistentTeacherOfClass to : toList){
-                    TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());
-                }
-                //Ready to remove hasRoles
-                HasRoleManager.destroy(hr.getPersistentHasRolePK());
+        for (PersistentHasRole hr : hrList) {
+            List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
+            for (PersistentStudentScoContext ssc : sscList) {
+                StudentScoDataManager.destroy(ssc.getStudentSco());
+                StudentScoContextManager.destroy(ssc.getStudentSco());
             }
-            //Ready to remove User
-            UserManager.destroy(u.getId());
+            //Remove StudentOf and TeacherOf
+            List<PersistentStudentOfClass> soList = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
+            for (PersistentStudentOfClass so : soList) {
+                StudentOfClassManager.destroy(so.getPersistentStudentOfClassPK());
+            }
+            List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
+            for (PersistentTeacherOfClass to : toList) {
+                TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());
+            }
+            //Ready to remove hasRoles
+            HasRoleManager.destroy(hr.getPersistentHasRolePK());
+        }
+        //Ready to remove User
+        UserManager.destroy(u.getId());
         return new Boolean(true);
-    }    
-    
+    }
 }

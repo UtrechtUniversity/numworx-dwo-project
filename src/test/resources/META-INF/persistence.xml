@@ -28,7 +28,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentClassCourse</class>
     <class>fi.dwo.commons.persistence.entities.PersistentFromTo</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
-    <shared-cache-mode>NONE</shared-cache-mode>
+    <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/dwojunittest"/>

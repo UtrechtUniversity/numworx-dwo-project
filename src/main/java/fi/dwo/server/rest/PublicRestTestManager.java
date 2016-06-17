@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.rest;
 
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -16,16 +11,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- * Operations for the GUI Component that manages the User profile section.
+ * REST functions that allows one to test the proper catching of HTML-errors.
  *
  * @see fi.dwo.dwojapplet.gui.panels.JPanel.MyProfile
  *
  * @author G.A.J. van der Plas
  */
-@Path("/secure/test")
-public class RestTestManager {
+@Path("/public/test")
+public class PublicRestTestManager {
 
-    private static final Logger LOG = Logger.getLogger(RestTestManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(PublicRestTestManager.class.getName());
 
     @GET
     @Produces({"application/json"})

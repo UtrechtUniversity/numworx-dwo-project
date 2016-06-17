@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--<Context aliases="/jars=/opt/dwo/webapps/war-shared/jars,/resources=/opt/dwo/webapps/war-shared/resources, /apps=/opt/dwo/webapps/war-shared/apps, /tablet=/opt/dwo/webapps/war-shared/tablet" antiJARLocking="true" crossContext="false" path="/dwo2">-->
-<Context aliases="/jars=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\jars, /resources=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\resources, /apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps, /tablet=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\tablet" antiJARLocking="true" crossContext="false" path="/dwo2">
+<Context aliases="/jars=/opt/dwo/webapps/war-shared/jars,/resources=/opt/dwo/webapps/war-shared/resources, /apps=/opt/dwo/webapps/war-shared/apps" antiJARLocking="true" crossContext="false" path="/dwo">
+<!--<Context aliases="/jars=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\jars, /resources=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\resources, /apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
   <!-- maxActive: Maximum number of database connections in pool. Make sure you
     configure your mysqld max_connections large enough to handle
     all of your db connections. Set to -1 for no limit.
@@ -25,5 +25,11 @@
   <Realm cacheRemovalWarningTime="360" cacheSize="100" className="org.apache.catalina.realm.LockOutRealm" failureCount="5" lockOutTime="300">
     <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
   </Realm>
-  <Parameter name="fi.dwo.dwojapplet.web.appletName" override="true" value="DWOJApplet-2.0-SNAPSHOT.jar"/>
+  <!-- may be configured in server.xml of tomcat -->
+  <Parameter name="fi.dwo.server.rest.smtp.server" override="true" value="email-smtp.eu-west-1.amazonaws.com"/>
+  <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="465"/>
+  <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="yes"/>
+  <Parameter name="fi.dwo.server.rest.smtp.user" override="true" value="me"/>
+  <Parameter name="fi.dwo.server.rest.smtp.password" override="true" value="mySecret"/>
+  <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="noreply@dwo.nl"/>
 </Context>
