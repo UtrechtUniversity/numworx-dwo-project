@@ -31,7 +31,7 @@ public class SecureUserAccountLoginsManager {
      */
     public static DomSchoolsRolesAndClasses getSchoolLogins() throws Dwo2Exception {
         DomSchoolsRolesAndClasses src;
-        src = StoredRestManager.getInstance().get("/rest/secure/user/account/logins/getList", DomSchoolsRolesAndClasses.class);
+        src = StoredRestManager.getInstance().get("rest/secure/user/account/logins/getList", DomSchoolsRolesAndClasses.class);
         //update local copy
         DwoHelper.setSchoolLogins(src);        
         return src;
@@ -48,7 +48,7 @@ public class SecureUserAccountLoginsManager {
         RestSchoolRoleAndClass rsrc = new RestSchoolRoleAndClass();
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(src);
-        DomSchoolRoleAndClass result = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/select", DomSchoolRoleAndClass.class, rsrc);
+        DomSchoolRoleAndClass result = StoredRestManager.getInstance().put("rest/secure/user/account/logins/select", DomSchoolRoleAndClass.class, rsrc);
         //update local copy
         DwoHelper.getSchoolLogins().setActiveSchoolRoleAndClass(src);
         return result;
@@ -65,7 +65,7 @@ public class SecureUserAccountLoginsManager {
         RestNewSchoolLogin rnl = new RestNewSchoolLogin();
         rnl.setRestContext(new DomContext());
         rnl.setDomNewSchoolLogin(newSchoolLogin);
-        r = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/submit", Boolean.class, rnl);
+        r = StoredRestManager.getInstance().put("rest/secure/user/account/logins/submit", Boolean.class, rnl);
         DwoHelper.setSchoolLogins(getSchoolLogins());        
         return r;
     }
@@ -81,7 +81,7 @@ public class SecureUserAccountLoginsManager {
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(toRemoveSchoolLogin);
         boolean r;
-        r = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/remove", Boolean.class, rsrc);
+        r = StoredRestManager.getInstance().put("rest/secure/user/account/logins/remove", Boolean.class, rsrc);
         DwoHelper.setSchoolLogins(getSchoolLogins());        
         return r;
 

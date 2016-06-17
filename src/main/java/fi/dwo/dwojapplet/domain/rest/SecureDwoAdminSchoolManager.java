@@ -27,7 +27,7 @@ public class SecureDwoAdminSchoolManager {
 
     public static List<DomSchool4DwoAdmin> getSchoolList() throws Dwo2Exception {
         List<DomSchool4DwoAdmin> src;
-        src = StoredRestManager.getInstance().getList("/rest/secure/dwoadmin/school/getList", RestListClassTypes.DomSchool4DwoAdmin);
+        src = StoredRestManager.getInstance().getList("rest/secure/dwoadmin/school/getList", RestListClassTypes.DomSchool4DwoAdmin);
         LOG.log(Level.FINE, "Retrieved list of schoolsfor the dwoadmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId()});
         return src;
     }
@@ -36,7 +36,7 @@ public class SecureDwoAdminSchoolManager {
         RestSchool4DwoAdmin sts = new RestSchool4DwoAdmin();
         sts.setRestContext(new DomContext());
         sts.setDomSchool4DwoAdmin(submit);
-        DomSchoolFull result = StoredRestManager.getInstance().put("/rest/secure/dwoadmin/school/get", DomSchoolFull.class, sts);
+        DomSchoolFull result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/school/get", DomSchoolFull.class, sts);
         LOG.log(Level.FINE, "Retrieved full school with login {1} for dwoadmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), sts.getDomSchool4DwoAdmin().getId()});
         return result;
     }
@@ -45,7 +45,7 @@ public class SecureDwoAdminSchoolManager {
         RestSchoolFull sts = new RestSchoolFull();
         sts.setRestContext(new DomContext());
         sts.setDomSchoolFull(submit);
-        Boolean result = StoredRestManager.getInstance().put("/rest/secure/dwoadmin/school/update", Boolean.class, sts);
+        Boolean result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/school/update", Boolean.class, sts);
         LOG.log(Level.FINE, "Updated data for school {1} by user {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), submit.getId()});
         return result;
     }
@@ -55,7 +55,7 @@ public class SecureDwoAdminSchoolManager {
         restSchool.setRestContext(new DomContext());
         restSchool.setDomSchool4DwoAdmin(submit);
 
-        Boolean result = StoredRestManager.getInstance().put("/rest/secure/dwoadmin/school/remove", Boolean.class, restSchool);
+        Boolean result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/school/remove", Boolean.class, restSchool);
         LOG.log(Level.FINE, "Submitted school {1} for removal by user with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), submit.getId()});
         return result;
     }
@@ -65,7 +65,7 @@ public class SecureDwoAdminSchoolManager {
         sts.setRestContext(new DomContext());
         sts.setDomSchoolFull(submit);
 
-        Boolean result = StoredRestManager.getInstance().put("/rest/secure/dwoadmin/school/submit", Boolean.class, sts);
+        Boolean result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/school/submit", Boolean.class, sts);
         LOG.log(Level.FINE, "Submitted school with login {1} to be added by dwoadmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), submit.getId()});
         return result;
     }
@@ -75,7 +75,7 @@ public class SecureDwoAdminSchoolManager {
         restSchool.setRestContext(new DomContext());
         restSchool.setDomSchool4DwoAdmin(domSchool);
         List<DomTeacherAndHasRole> result;
-        result = StoredRestManager.getInstance().getPutList("/rest/secure/dwoadmin/school/getTeachersAndHasRoleInSchool", RestListClassTypes.DomTeacherAndHasRole, restSchool);
+        result = StoredRestManager.getInstance().getPutList("rest/secure/dwoadmin/school/getTeachersAndHasRoleInSchool", RestListClassTypes.DomTeacherAndHasRole, restSchool);
         LOG.log(Level.FINE, "Retrieved list of teachers and hasRoles in the school {1} for the dwoadmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), domSchool.getId()});
         return result;
     }
@@ -85,7 +85,7 @@ public class SecureDwoAdminSchoolManager {
         sts.setRestContext(new DomContext());
         sts.setDomHasRole(hr);
 
-        Boolean result = StoredRestManager.getInstance().put("/rest/secure/dwoadmin/school/updateHasRoleRights", Boolean.class, sts);
+        Boolean result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/school/updateHasRoleRights", Boolean.class, sts);
         LOG.log(Level.FINE, "Submitted school with login {1} to be added by dwoadmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), hr.getId()});
         return result;
     }

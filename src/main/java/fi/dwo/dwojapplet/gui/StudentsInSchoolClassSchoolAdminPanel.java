@@ -40,6 +40,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 /**
  * The panel which shows the school classes for a teacher.
@@ -64,6 +65,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
     private Image loginImage;
 
     private JPanel jtbl;
+    private TableRowSorter rowSorter;
 
     /**
      * @return the schoolClass
@@ -141,7 +143,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == editImage) {
                 try {
-                    DomStudent student = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomStudent student = (DomStudent) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
                     getStudent.setDomSchoolClass(schoolClass);
                     getStudent.setDomStudent(student);
@@ -214,6 +216,9 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
 
         tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
         jtable.setModel(tableModel);
+        rowSorter = new TableRowSorter(tableModel);
+        jtable.setRowSorter(rowSorter);
+
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }
@@ -353,7 +358,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     studentBox.setModel(model);
 
                     tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
-                //confirm is overkill
+                    //confirm is overkill
                     //GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 }
                 catch (Dwo2Exception ex) {
@@ -369,6 +374,9 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                         prop.removeStudentFromSchoolClass(schoolClass, student);
                     }
                 }
+                Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
+                DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+                studentBox.setModel(model);
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);

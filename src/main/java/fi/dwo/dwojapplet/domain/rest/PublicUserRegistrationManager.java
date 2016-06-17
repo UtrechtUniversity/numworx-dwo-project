@@ -22,7 +22,7 @@ public class PublicUserRegistrationManager {
         restNewUserReg.setRestContext(new DomContext());
         restNewUserReg.setDomNewUser(newUserReg);
 
-        r = StoredRestManager.getInstance().put("/rest/public/user/submit", Boolean.class, restNewUserReg);
+        r = StoredRestManager.getInstance().put("rest/public/user/submit", Boolean.class, restNewUserReg);
 
         return r;
     }

@@ -30,6 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 /**
  * This panel allows one to manage and switch between SchoolLogins.
@@ -46,6 +47,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
     private final JButton registerSchoolClass;
 
     private JPanel jtbl;
+    private TableRowSorter rowSorter;
 
     private Image removeImage, loginImage;
     private static final int SWITCH_COL = 1;
@@ -77,7 +79,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         this.setAlignmentY(TOP_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
-        /* Add Remove-class image */
+ /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         loginImage = DwoHelper.getResourceImage(GuiConstants.STUDENT_IMAGE); //"resources/student.png");
@@ -235,12 +237,12 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                     //switch role now
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else if (value == removeImage) {
-                    if(GuiCreator.instance().ShowConfirmDialog(null, TextMapper.getText(TextMapper.DLG_Q_REMOVE))==JOptionPane.OK_OPTION){
-                    int row = tableModel.getSelectedRow();
-                    DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
-                    prop.removeSchoolClass(schoolClass);
-                    tableModel.init(prop, loginImage, removeImage);
-                }
+                    if (GuiCreator.instance().ShowConfirmDialog(null, TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
+                        int row = tableModel.getSelectedRow();
+                        DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
+                        prop.removeSchoolClass(schoolClass);
+                        tableModel.init(prop, loginImage, removeImage);
+                    }
 //                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else {
                     // show warning
@@ -277,6 +279,8 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
 
         tableModel.init(prop, loginImage, removeImage);
         jtable.setModel(tableModel);
+        rowSorter = new TableRowSorter(tableModel);
+        jtable.setRowSorter(rowSorter);
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }

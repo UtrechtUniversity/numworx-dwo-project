@@ -1,29 +1,28 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.domain.rest;
 
+import com.owlike.genson.Genson;
+import fi.dwo.rest.dom.entities.DomSamlUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Base64;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Response;
-
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.glassfish.jersey.client.spi.ConnectorProvider;
-
 /**
- * Handles login actions and updates user and role stored in the DwoHelper. Should
- * call a session password Manager in the future. Particular for students.
+ * Handles login actions and updates user and role stored in the DwoHelper.
+ * Should call a session password Manager in the future. Particular for
+ * students.
  *
  * @author G.A.J. van der Plas
  */
@@ -34,45 +33,92 @@ public class LoginManager {
     public static DomUserFull login(String username, String password) throws Dwo2Exception {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
         DomUserFull user;
-        HttpAuthenticationFeature feature=null;
-        switch(DwoHelper.getHttpAuthentication()){
-            case BASIC:
-                feature = HttpAuthenticationFeature.universalBuilder().credentialsForBasic(username, password).build();
-                break;
-            case DIGEST:
-                feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(username, password).build();
-        }
-//        Client client = ClientBuilder.newClient().register(feature);
-        ConnectorProvider provider;
-        //provider = new ApacheConnectorProvider();
-        provider = new org.glassfish.jersey.jetty.connector.JettyConnectorProvider();
-        ClientConfig clientConfig = new ClientConfig().register(feature).connectorProvider(provider);
-        Client client = ClientBuilder.newClient(clientConfig);
+        try {
+            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make login            
+            String authString = username + ":" + password;
+            authString = "Basic " +   Base64.getEncoder().encodeToString(authString.getBytes());
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Authorization", authString);
+            conn.setUseCaches(false);
 
-        client.property(ClientProperties.CONNECT_TIMEOUT, 5000); //connect within 5 seconds
-        client.property(ClientProperties.READ_TIMEOUT, 10000); // read stuff within 10 seconds.
+            if (conn.getResponseCode() != 200) {
+                throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
+            }
 
-        CacheControl cache = new CacheControl();
-        cache.setNoCache(true);
-        cache.setNoStore(true);
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
 
-        Response response = client.target(DwoHelper.getServerUrlPath().toString())
-                .path("/rest/secure/user/account/get")
-                .request().cacheControl(cache).get(Response.class);
-        if (response.getStatus() != 200) {
-            // failed login
-            throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, response.getStatusInfo().getReasonPhrase());
-        } else {
-            //Set return value
-            user = response.readEntity(DomUserFull.class);
-            // succeeded login
-            LOG.log(Level.INFO, "Logged in with username {0}.", new Object[]{user.getUserName()});
-            //Set webtarget with credentials for future rest login.
-            WebTarget target = client.target(DwoHelper.getServerUrlPath().toString());
-            StoredRestManager.setWebTargetRest(target);
+            String output;
+            StringBuilder json = new StringBuilder();
+            while ((output = br.readLine()) != null) {
+                json.append(output);
+            }
+            conn.disconnect();
+            //decode JSON
+            Genson genson = new Genson();
+
+//          LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
+            user = genson.deserialize(json.toString(), DomUserFull.class);
+            StoredRestManager.setBasicAuthString(authString);
             //Set current user for domain
             DwoHelper.setCurrentUser(user);
+            return user;
         }
-        return user;
+        catch (MalformedURLException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
+
+        }
+        catch (IOException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
+        }
+    }
+
+    public static DomUserFull samlLogin(String user_id, String org_id, String authToken) throws Dwo2Exception {
+        DomUserFull user;
+        RestSamlUser samlRestUser = new RestSamlUser();
+        DomSamlUser samlUser = new DomSamlUser();
+        samlUser.setSamlUserId(user_id);
+        samlUser.setSamlOrgId(org_id);
+        samlUser.setAuthToken(authToken);
+        samlRestUser.setDomSamlUser(samlUser);
+        try {
+            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/public/user/submitSaml"); //TODO make login
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setUseCaches(false);
+
+            if (conn.getResponseCode() != 200) {
+                throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+            StringBuilder json = new StringBuilder();
+            while ((output = br.readLine()) != null) {
+                json.append(output);
+                System.out.println(output);
+            }
+            conn.disconnect();
+            //decode JSON
+            Genson genson = new Genson();
+
+            user = genson.deserialize(json.toString(), DomUserFull.class);
+            String authString = user.getUserName() + ":" + user.getPassword();
+            authString = "Basic " +   Base64.getEncoder().encodeToString(authString.getBytes());
+            StoredRestManager.setBasicAuthString(authString);
+            return user;
+        }
+        catch (MalformedURLException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
+
+        }
+        catch (IOException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
+        }
     }
 }

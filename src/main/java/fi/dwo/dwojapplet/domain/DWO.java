@@ -14,9 +14,10 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
-import fi.dwo.commons.persistence.Dwo2ExceptionMySQLGensonTranslator;
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.REST.StoredRestManager;
+import fi.dwo.dwojapplet.domain.rest.LoginManager;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -50,7 +51,6 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
@@ -74,12 +74,8 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 
 import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
-import org.glassfish.jersey.client.ClientProperties;
 
 /**
  * This is the main DWO application. It can be started as an applet or as a
@@ -174,16 +170,16 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      *
      */
     private void ReadConfigProperties() {
-        // TODO set config properties when run as an applet.
+        //TODO set config properties when run as an applet.
 
         LOG.log(Level.INFO, "Checking for DWO.properties");
         Properties properties = new Properties();
         try {
 
-            // folder relative to the current directory
+            //folder relative to the current directory
             String path = "DWO.properties";
 
-            // file handle for main.properties
+            //file handle for main.properties
             InputStream file;
             file = new URL(getDocumentBase(), path).openStream();
 
@@ -221,27 +217,35 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             }
         }
         
-
-        // assign properties to static value.
+        //assign properties to static value.
+        String defaultUsernameProperty = properties.getProperty("defaultUsername", "");
+        DwoHelper.setDefaultUsername(defaultUsernameProperty);
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultUsernameProperty",
+            DwoHelper.getDefaultUsername()});
+        String defaultPasswordProperty = properties.getProperty("defaultPassword", "");
+        DwoHelper.setDefaultPassword(defaultPasswordProperty);
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultPasswordProperty",
+            DwoHelper.getDefaultPassword()});
+        
+        //assign properties to static value.
         String serverUrlPathProperty = properties.getProperty("serverUrlPath", "./");
         DwoHelper.setServerUrlPath(DwoHelper.getURL(serverUrlPathProperty));
-        LOG.log(Level.INFO, "Property {0} is value: {1}",
-                new Object[]{"setServerUrlPathString", DwoHelper.getServerUrlPath()});
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"setServerUrlPathString",
+            DwoHelper.getServerUrlPath()});
 
         //if not set pick default path
         String resourceURLPathStringProperty = properties.getProperty("resourceUrlPath",  "resources/");
         DwoHelper.setResourceUrlPath(DwoHelper.getURL(resourceURLPathStringProperty));
-        LOG.log(Level.INFO, "Property {0} is value: {1}",
-                new Object[]{"resourceURLPathStringProperty", DwoHelper.getResourceUrlPath()});
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
+            DwoHelper.getResourceUrlPath()});
 
         //if not set pick default path
         String jarURLPathStringProperty = properties.getProperty("jarUrlPath",  "jars");
         DwoHelper.setJarUrlPath(DwoHelper.getURL(jarURLPathStringProperty));
-        LOG.log(Level.INFO, "Property {0} is value: {1}",
-                new Object[]{"jarURLPathStringProperty", DwoHelper.getJarUrlPath()});
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"jarURLPathStringProperty",
+            DwoHelper.getJarUrlPath()});
 
-        HttpAuthenticationType httpAuthentication = HttpAuthenticationType
-                .valueOf(properties.getProperty("httpAuthentication"));
+        HttpAuthenticationType httpAuthentication = HttpAuthenticationType.valueOf(properties.getProperty("httpAuthentication", "DIGEST"));        
         DwoHelper.setHttpAuthentication(httpAuthentication);
         LOG.log(Level.INFO, "Property {0} is value: {1}",
                 new Object[]{"httpAuthentication", DwoHelper.getHttpAuthentication()});
@@ -918,6 +922,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     @Override
     public void logoff() {
         try {
+            SecureUserAccountManager.logoutUser();
             DwoHelper.setCurrentUser(null);
         }
         catch (Dwo2Exception ex) {
@@ -1309,23 +1314,19 @@ private boolean isRunningJavaWebStart() {
             }
         }
 
-        // intialize the proper connection but without any credentials.
-        Client client = ClientBuilder.newClient();
-        client.property(ClientProperties.CONNECT_TIMEOUT, 5000); // connect
-        // within 5
-        // seconds
-        client.property(ClientProperties.READ_TIMEOUT, 10000); // read stuff
-        // within 10
-        // seconds.
-        WebTarget target;
-        try {
-            target = client.target(DwoHelper.getServerUrlPath().toURI());
-        }
-        catch (URISyntaxException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
-        }
-        StoredRestManager.setWebTargetRest(target);
+//        //intialize the proper connection but without any credentials.
+//        Client client = ClientBuilder.newClient();
+//        client.property(ClientProperties.CONNECT_TIMEOUT, 5000); //connect within 5 seconds
+//        client.property(ClientProperties.READ_TIMEOUT, 10000); // read stuff within 10 seconds.
+//        WebTarget target;
+//        try {
+//            target = client.target(DwoHelper.getServerUrlPath().toURI());
+//        }
+//        catch (URISyntaxException ex) {
+//            LOG.log(Level.SEVERE, null, ex);
+//            throw new RuntimeException(ex);
+//        }
+//        StoredRestManager.setWebTargetAndCredentials(target);
 
         // TODO make it configurable in the servlet via a attribute in the jsp
         // initialized via the tomcat context.xml
@@ -1826,7 +1827,7 @@ private boolean isRunningJavaWebStart() {
     }
 
     static {
-        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionMySQLGensonTranslator());
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
     
     /**
@@ -1839,14 +1840,13 @@ private boolean isRunningJavaWebStart() {
      * @throws ClassNotFoundException
      */
     public static void main(String[] args) throws Exception {
-
-        // String lookAndFeel =
-        // UIManager.getCrossPlatformLookAndFeelClassName();
-        // lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-        // lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
-        // lookAndFeel = UIManager.getSystemLookAndFeelClassName();
-        // UIManager.setLookAndFeel(lookAndFeel);
-        // UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        
+        //String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
+        //lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+        //lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+        //lookAndFeel = UIManager.getSystemLookAndFeelClassName();
+        //UIManager.setLookAndFeel(lookAndFeel);
+//        UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         LOG.log(Level.INFO, "Starting the DWO as an application.");
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
@@ -1854,7 +1854,7 @@ private boolean isRunningJavaWebStart() {
         DWO dwo = new DWO(args);
         // Configure the applet
         DWO.ReadLoggingProperties();
-        // Put applet in a frame.
+        //Put applet in a frame.
         MainFrame mf = new MainFrame(dwo, width, height);
         mf.setTitle("DWO");
         mf.pack();
@@ -2359,19 +2359,25 @@ private boolean isRunningJavaWebStart() {
         String samlUserID = getDecodedCookie(DWO_SAML_USER_ID);
         String samlOrgID = getDecodedCookie(DWO_SAML_ORGANIZATION_ID);
         String samlOrg = getDecodedCookie("dwoSAMLOrganization");
-        // if(false)
-        // {
-        // samlUserID = "c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl";
-        // samlOrgID = "SURFIN";
-        // samlOrg = "SURFnet Instelling";
-        // }
+    	String authToken = getDecodedCookie("dwoSAMLAuthToken");
+    	System.err.println("Cookies: " + samlUserID + "," + samlOrgID + "," + authToken);
+    	if(false)
+    	{
+    		samlUserID = "c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl";
+    		samlOrgID = "SURFIN";
+    		samlOrg   = "SURFnet Instelling";
+    		authToken = "0";
+    	}
 
         if (samlUserID != null && samlOrgID != null) {
             try {
-                User u = PersistenceFacade.instance().loginViaSAML(samlUserID, samlOrgID);
-                return u;
+                LoginManager.samlLogin(samlUserID, samlOrgID, authToken);
+                return DwoHelper.getCurrentFacadeUser();
             }
-            catch (LoginException e) {
+            catch (Dwo2Exception e) {
+            	//TODO LOG.log(...)
+            	System.err.println("Cookies: " + samlUserID + "," + samlOrgID + "," + authToken);
+            	e.printStackTrace();
             }
             samlData = new HashMap();
             samlData.put(DWO_SAML_USER_ID, samlUserID);

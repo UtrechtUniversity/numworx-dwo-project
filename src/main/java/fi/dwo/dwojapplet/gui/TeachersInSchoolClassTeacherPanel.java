@@ -36,6 +36,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 /**
  * The panel which shows the school classes for a teacher.
@@ -53,9 +54,10 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
     private JButton addTeacherButton;
     private JComboBox addTeacherBox;
 
-    private Image removeImage;
+    private Image removeImage, emptyImage;
 
     private JPanel jtbl;
+    private TableRowSorter rowSorter;
 
     /**
      * @return the schoolClass
@@ -132,13 +134,15 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == removeImage) {
                 try {
-                    DomTeacher teacher = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomTeacher teacher = (DomTeacher) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
 
-                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
                         //persist returned values	
                         prop.removeTeacherFromSchoolClass(getSchoolClass(), teacher);
-                        tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage);
-                        tableModel.fireTableDataChanged();
+                        Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
+                        DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+                        addTeacherBox.setModel(model);
+                        tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
                     }
                 }
                 catch (Dwo2Exception ex) {
@@ -169,8 +173,9 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new TeachersInSchoolClassTeacherPanelTableModel();
 
-        tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage);
+        tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
         jtable.setModel(tableModel);
+
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }
@@ -181,6 +186,8 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         TableUtil.setJTableSizes(jtable);
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
+        rowSorter = new TableRowSorter(tableModel);
+        jtable.setRowSorter(rowSorter);
         this.add(jtbl);
         jtbl.setVisible(true);
 
@@ -204,7 +211,9 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
+        emptyImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE);
         tr.addImage(removeImage, 0);
+        tr.addImage(emptyImage, 1);
         try {
             tr.waitForAll();
         }
@@ -291,7 +300,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                 Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
                 DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
                 addTeacherBox.setModel(model);
-                tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage);
+                tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
                 tableModel.fireTableDataChanged();
 
             }

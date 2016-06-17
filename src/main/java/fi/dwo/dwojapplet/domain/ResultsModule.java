@@ -97,25 +97,25 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
             final Sco sco = (Sco) rs.getLessonGroup();
             final User user = (User) rs.getUserGroup();
             boolean htmlSco = sco.getApplet().getClass().getName().equals("fi.popupurlapplet.PopUpURLApplet");
-            if (!htmlSco && !sco.getLessonMode().equals(Sco.REVIEW)) {
-                sco.setLessonMode(Sco.REVIEW);
-                final boolean old = PersistenceFacade.instance().setAllowSuspendData(true);
-                dwo.setWait();
-                Thread thread = new Thread() {
-                    public void run() {
-
-                        ScoPanel sp = sco.getScoPanel(dwo, user);
-                        dwo.setReady();
-                        if (sp != null) {
-                            ScoDialog.showScoDialog(dwo, sp, user, (SchoolClass) currentlyZoomedUser);
-                        }
-                        PersistenceFacade.instance().setAllowSuspendData(old);
-                        sco.setLessonMode(Sco.NORMAL);
-                    }
-                };
-                thread.start();/**/
-                //rs.end();
-            }
+	        if(!htmlSco && !sco.getLessonMode().equals(Sco.REVIEW)) {
+	        	sco.setLessonMode(Sco.REVIEW);
+	        	final boolean old = PersistenceFacade.instance().setAllowSuspendData(true);
+	        	dwo.setWait();
+	            Thread thread = new Thread() {	
+	                public void run() {	
+	                	
+			            ScoPanel sp = sco.getScoPanel(dwo, user);
+			            dwo.setReady();
+			            if(sp != null) {
+			                ScoDialog.showScoDialog(dwo, sp, user, (SchoolClass)currentlyZoomedUser);
+			            }
+			            PersistenceFacade.instance().setAllowSuspendData(old);
+			            sco.setLessonMode(Sco.NORMAL);
+					}
+				};
+	            thread.start();/**/
+	            //rs.end();
+	        }
         }
     }
 

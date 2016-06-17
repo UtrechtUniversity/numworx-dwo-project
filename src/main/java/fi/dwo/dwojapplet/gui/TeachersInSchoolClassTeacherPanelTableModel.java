@@ -5,6 +5,7 @@ import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ class TeachersInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(List<DomTeacher> userList, Image removeImage) throws Dwo2Exception {
+    public void init(List<DomTeacher> userList, Image removeImage, Image emptyImage) throws Dwo2Exception {
 
         int rows = 0;
         if (userList == null) {
@@ -46,7 +47,11 @@ class TeachersInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
             data[j][1] = u.getGivenName();
             data[j][2] = u.getInsertion();
             data[j][3] = u.getFamilyName();
-            data[j][4] = removeImage;
+            if(data.length==1 && u.getId().equals(DwoHelper.getCurrentUser().getId())){
+                data[j][4] = emptyImage;
+            }else{
+                data[j][4] = removeImage;
+            }
             data[j][5] = u;
             j++;
         }

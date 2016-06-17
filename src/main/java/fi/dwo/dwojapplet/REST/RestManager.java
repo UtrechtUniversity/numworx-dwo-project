@@ -1,6 +1,10 @@
 /* Copyrighted 2015. */
 package fi.dwo.dwojapplet.REST;
 
+import com.owlike.genson.GenericType;
+import com.owlike.genson.Genson;
+import static fi.dwo.dwojapplet.REST.RestManager.getBasicAuthString;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.rest.dom.entities.DomRole;
 import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -9,23 +13,22 @@ import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.dom.entities.DomStudent;
 import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomTeacher;
-import fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.rest.RestListClassTypes;
 import static fi.dwo.rest.RestListClassTypes.DomSchool4DwoAdmin;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  * This is the plain and direct restManager. Please use the
@@ -36,10 +39,11 @@ import javax.ws.rs.core.Response;
 class RestManager {
 //TODO Reduce code by implementing an WebException handler
 //TODO Handle  non exception 400 errors gracefully using Dwo2Exception.
+
     protected static final Logger LOG = Logger.getLogger(RestManager.class.getName());
 
     protected static final RestManager instance = new RestManager();
-    protected static WebTarget webTargetRest;
+    protected static String basicAuthString;
 
     /**
      * @return the instance
@@ -49,17 +53,26 @@ class RestManager {
     }
 
     /**
-     * @return the webTargetRest
+     * @return the basicAuthString
      */
-    public static WebTarget getWebTargetRest() {
-        return webTargetRest;
+    public static String getBasicAuthString() {
+        return basicAuthString;
     }
 
     /**
-     * @param aWebTargetRest the webTargetRest to set
+     * @param data
      */
-    public synchronized static void  setWebTargetRest(WebTarget aWebTargetRest) {
-        webTargetRest = aWebTargetRest;
+    public synchronized static void setBasicAuthString(String data) {
+        basicAuthString = data;
+    }
+
+    /**
+     * @param username
+     * @param password
+     */
+    public synchronized static void setBasicAuthString(String username, String password) {
+        String authString = username + ":" + password;
+        basicAuthString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
     }
 
     /**
@@ -72,36 +85,51 @@ class RestManager {
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public <T> T get(String path, Class<T> c) throws Dwo2Exception {
-        CacheControl cache = new CacheControl();
-        cache.setNoCache(true);
-        cache.isNoStore();
-        Response response;
-        try{
-            response = webTargetRest.path(path).request().cacheControl(cache).get();
-        }catch(javax.ws.rs.ProcessingException e){
-            //catch time-outs
-            if(e.getMessage().contains("java.net.SocketTimeoutException: connect timed out")){
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, "Connection time-out.");
-            }else{
+        try {
+            URL url = new URL(DwoHelper.getServerUrlPath().toString() + path); //TODO make login
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Authorization", "Basic " + getBasicAuthString());
+            conn.setUseCaches(false);
+
+            if (conn.getResponseCode() != 200) {
+                LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{conn.getResponseCode(), conn.getResponseMessage()});
+                Dwo2Exception e;
+                if (conn.getResponseCode() == 400) {//Dwo2Exception
+                    String json = conn.getResponseMessage();
+                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
+                } else {
+                    //non-servlet generated exception has been sent. Convert to Dwo2RestException.
+                    e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
+                }
+                LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
                 throw e;
             }
-        }
-        if (response.getStatus() != 200) {
-            LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2Exception e;
-            if (response.getStatus() == 400) {
-                //Assuming server side servlet generated exception has been sent.
-                String json = (String) response.readEntity(String.class);
-                e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
-            } else {
-                //non-servlet generated exception has been sent. Convert to Dwo2RestException.
-                //TODO To filter these for the user and suggest a course of action.
-                e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+            StringBuilder json = new StringBuilder();
+            while ((output = br.readLine()) != null) {
+                json.append(output);
             }
-            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
-            throw e;
-        } else {
-            return response.readEntity(c);
+            conn.disconnect();
+            //decode JSON
+            Genson genson = new Genson();
+//            List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
+            LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
+            T result = genson.deserialize(json.toString(), c);
+            return result;
+        }
+        catch (MalformedURLException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
+
+        }
+        catch (IOException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
         }
     }
 
@@ -114,80 +142,151 @@ class RestManager {
      * @return A list of Class c.
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
-    public <T> List<T> getList(String path, RestListClassTypes type) throws Dwo2RestException, Dwo2Exception {
-        CacheControl cache = new CacheControl();
-        cache.setNoCache(true);
-        cache.isNoStore();
-        Response response;
-        try{
-            response = webTargetRest.path(path).request().cacheControl(cache).get();
-        }catch(javax.ws.rs.ProcessingException e){
-            //catch time-outs
-            if(e.getMessage().contains("java.net.SocketTimeoutException: connect timed out")){
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, "Connection time-out.");
-            }else{
+    public <T> List<T> getList(String path, RestListClassTypes type) throws Dwo2Exception {
+        try {
+            URL url = new URL(DwoHelper.getServerUrlPath().toString() + path); //TODO make login
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Accept-Encoding", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", "Basic " + getBasicAuthString());
+            conn.setUseCaches(false);
+
+            if (conn.getResponseCode() != 200) {
+                LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{conn.getResponseCode(), conn.getResponseMessage()});
+                Dwo2Exception e;
+                if (conn.getResponseCode() == 400) {//Dwo2Exception
+                    String json = conn.getResponseMessage();
+                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
+                } else {
+                    //non-servlet generated exception has been sent. Convert to Dwo2RestException.
+                    e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
+                }
+                LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
                 throw e;
             }
-        }
 
-        if (response.getStatus() != 200) {
-            LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2Exception e;
-            if (response.getStatus() == 400) {
-                //Assuming server side servlet generated exception has been sent.
-                String json = (String) response.readEntity(String.class);
-                e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
-            } else {
-                //non-servlet generated exception has been sent. Convert to Dwo2RestException.
-                //TODO To filter these for the user and suggest a course of action.
-                e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+            StringBuilder json = new StringBuilder();
+            while ((output = br.readLine()) != null) {
+                json.append(output);
             }
-            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
-            throw e;
-        } else {
-            //Note concerning the switch statement:JAX-RS does not seem to cope 
-            //well with advanced generics. 
+            conn.disconnect();
+            //decode JSON
+            Genson genson = new Genson();
+            LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
             switch (type) {
                 case DomUser:
-                    GenericType<ArrayList<DomUser>> pUserType = new GenericType<ArrayList<DomUser>>() {
-                    };
-                    return (List<T>) response.readEntity(pUserType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomUser>>() {
+                    });
                 case DomRole:
-                    GenericType<ArrayList<DomRole>> pRoleType = new GenericType<ArrayList<DomRole>>() {
-                    };
-                    return (List<T>) response.readEntity(pRoleType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomRole>>() {
+                    });
                 case DomStudent:
-                    GenericType<ArrayList<DomStudent>> sSType = new GenericType<ArrayList<DomStudent>>() {
-                    };                    
-                    return (List<T>) response.readEntity(sSType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomStudent>>() {
+                    });
                 case DomTeacher:
-                    GenericType<ArrayList<DomTeacher>> sTType = new GenericType<ArrayList<DomTeacher>>() {
-                    };                    
-                    return (List<T>) response.readEntity(sTType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomTeacher>>() {
+                    });
                 case DomSchoolAdmin:
-                    GenericType<ArrayList<DomSchoolAdmin>> sAType = new GenericType<ArrayList<DomSchoolAdmin>>() {
-                    };                    
-                    return (List<T>) response.readEntity(sAType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolAdmin>>() {
+                    });
                 case DomSchool4DwoAdmin:
-                    GenericType<ArrayList<DomSchool4DwoAdmin>> s4daType = new GenericType<ArrayList<DomSchool4DwoAdmin>>() {
-                    };                    
-                    return (List<T>) response.readEntity(s4daType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchool4DwoAdmin>>() {
+                    });
                 case DomSchoolClass:
-                    GenericType<ArrayList<DomSchoolClass>> pScType = new GenericType<ArrayList<DomSchoolClass>>() {
-                    };                    
-                    return (List<T>) response.readEntity(pScType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolClass>>() {
+                    });
                 case DomSchoolsRolesAndClasses:
-                    GenericType<ArrayList<DomSchoolsRolesAndClasses>> pSRCType = new GenericType<ArrayList<DomSchoolsRolesAndClasses>>() {
-                    };                    
-                    return (List<T>) response.readEntity(pSRCType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClasses>>() {
+                    });
                 default:
                     String msg = "Programming error, trying to get an unsupported dataType.";
                     LOG.log(Level.SEVERE, msg);
                     throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
         }
+        catch (MalformedURLException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
+        }
+        catch (IOException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
+        }
     }
 
+    /**
+     * GET operation to the restful server.
+     *
+     * @param <T>
+     * @param path sub context path servlet.
+     * @param c Class type to return.
+     * @param o object of Class type c being send.
+     * @return A list of class c objects.
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     */
+    public <T> T put(String path, Class<T> c, Object o) throws Dwo2Exception { //due to genson now c is superflous
+        try {
+            URL url = new URL(DwoHelper.getServerUrlPath().toString() + path); //TODO make login
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            DataOutputStream outStream = null;
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Accept-Encoding", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", "Basic " + getBasicAuthString());
+            conn.setRequestProperty("Accept-Charset", "UTF-8");
+//            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            outStream = new DataOutputStream(conn.getOutputStream());
+            Genson genson = new Genson();
+//            List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
+            String jsonOut = genson.serialize(o);
+            LOG.log(Level.FINEST, "Sending: {0}", new Object[]{jsonOut.toString()});
+            outStream.write(jsonOut.getBytes("UTF-8"));
+            outStream.close();
+            if (conn.getResponseCode() != 200) {
+                LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{conn.getResponseCode(), conn.getResponseMessage()});
+                Dwo2Exception e;
+                if (conn.getResponseCode() == 400) {//Dwo2Exception
+                    String json = conn.getResponseMessage();
+                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
+                } else {
+                    //non-servlet generated exception has been sent. Convert to Dwo2RestException.
+                    e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
+                }
+                LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
+                throw e;
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+            StringBuilder json = new StringBuilder();
+            while ((output = br.readLine()) != null) {
+                json.append(output);
+            }
+            conn.disconnect();
+            //decode JSON
+//            List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
+            LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
+            T result = genson.deserialize(json.toString(), c);
+            return result;
+        }
+        catch (MalformedURLException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
+
+        }
+        catch (IOException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
+        }
+    }
 
     /**
      * GET operation to the restful server.
@@ -199,120 +298,89 @@ class RestManager {
      * @return A list of Class c.
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
-    public <T> List<T> getPutList(String path, RestListClassTypes type, Object o) throws Dwo2RestException, Dwo2Exception {
-        CacheControl cache = new CacheControl();
-        cache.setNoCache(true);
-        cache.isNoStore();
-        Response response;
-        try{
-            response = webTargetRest.path(path).request().cacheControl(cache).put(Entity.entity(o, MediaType.APPLICATION_JSON));//fix call add objects
-        }catch(javax.ws.rs.ProcessingException e){
-            //catch time-outs
-            if(e.getMessage().contains("java.net.SocketTimeoutException: connect timed out")){
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, "Connection time-out.");
-            }else{
+    public <T> List<T> getPutList(String path, RestListClassTypes type, Object o) throws Dwo2Exception {
+        try {
+            URL url = new URL(DwoHelper.getServerUrlPath().toString() + path); //TODO make login
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            DataOutputStream outStream = null;
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Accept-Encoding", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", "Basic " + getBasicAuthString());
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            outStream = new DataOutputStream(conn.getOutputStream());
+            Genson genson = new Genson();
+//            List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
+            String jsonOut = genson.serialize(o);
+            LOG.log(Level.FINEST, "Sending: {0}", new Object[]{jsonOut.toString()});
+            outStream.write(jsonOut.getBytes());
+            if (conn.getResponseCode() != 200) {
+                LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{conn.getResponseCode(), conn.getResponseMessage()});
+                Dwo2Exception e;
+                if (conn.getResponseCode() == 400) {//Dwo2Exception
+                    String json = conn.getResponseMessage();
+                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
+                } else {
+                    //non-servlet generated exception has been sent. Convert to Dwo2RestException.
+                    e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
+                }
+                LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
                 throw e;
             }
-        }
 
-        if (response.getStatus() != 200) {
-            LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2Exception e;
-            if (response.getStatus() == 400) {
-                //Assuming server side servlet generated exception has been sent.
-                String json = (String) response.readEntity(String.class);
-                e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
-            } else {
-                //non-servlet generated exception has been sent. Convert to Dwo2RestException.
-                //TODO To filter these for the user and suggest a course of action.
-                 e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+            StringBuilder json = new StringBuilder();
+            while ((output = br.readLine()) != null) {
+                json.append(output);
             }
-            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
-            throw e;
-        } else {
+            conn.disconnect();
+            LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
+            //decode JSON
+//            List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
+
             switch (type) {
                 case DomUser:
-                    GenericType<ArrayList<DomUser>> pUserType = new GenericType<ArrayList<DomUser>>() {
-                    };
-                    return (List<T>) response.readEntity(pUserType);
-                case DomTeacher:
-                    GenericType<ArrayList<DomTeacher>> pTeacherType = new GenericType<ArrayList<DomTeacher>>() {
-                    };
-                    return (List<T>) response.readEntity(pTeacherType);
-                case DomSchoolClass:
-                    GenericType<ArrayList<DomSchoolClass>> scType = new GenericType<ArrayList<DomSchoolClass>>() {
-                    };
-                    return (List<T>) response.readEntity(scType);
-                case DomStudent:
-                    GenericType<ArrayList<DomStudent>> sStudentType = new GenericType<ArrayList<DomStudent>>() {
-                    };
-                    return (List<T>) response.readEntity(sStudentType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomUser>>() {
+                    });
                 case DomRole:
-                    GenericType<ArrayList<DomRole>> pRoleType = new GenericType<ArrayList<DomRole>>() {
-                    };
-                    return (List<T>) response.readEntity(pRoleType);
-                case DomTeacherAndHasRole:
-                    GenericType<ArrayList<DomTeacherAndHasRole>> tType = new GenericType<ArrayList<DomTeacherAndHasRole>>() {
-                    };                    
-                    return (List<T>) response.readEntity(tType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomRole>>() {
+                    });
+                case DomStudent:
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomStudent>>() {
+                    });
+                case DomTeacher:
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomTeacher>>() {
+                    });
+                case DomSchoolAdmin:
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolAdmin>>() {
+                    });
+                case DomSchool4DwoAdmin:
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchool4DwoAdmin>>() {
+                    });
+                case DomSchoolClass:
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolClass>>() {
+                    });
                 case DomSchoolsRolesAndClasses:
-                    GenericType<ArrayList<DomSchoolsRolesAndClasses>> pSRCType = new GenericType<ArrayList<DomSchoolsRolesAndClasses>>() {
-                    };                    
-                    return (List<T>) response.readEntity(pSRCType);
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClasses>>() {
+                    });
                 default:
                     String msg = "Programming error, trying to get an unsupported dataType.";
                     LOG.log(Level.SEVERE, msg);
                     throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
         }
-    }
-    
-    /**
-     * GET operation to the restful server.
-     *
-     * @param <T>
-     * @param path sub context path servlet.
-     * @param c Class type to return.
-     * @param o object of Class type c being send.
-     * @return A list of class c objects.
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
-     */
-    public <T> T put(String path, Class<T> c, Object o) throws Dwo2Exception {
-        CacheControl cache = new CacheControl();
-        cache.setNoCache(true);
-        cache.isNoStore();
-        Response response;        
-        try{
-            response = webTargetRest.path(path).request().cacheControl(cache).put(Entity.entity(o, MediaType.APPLICATION_JSON));
+        catch (MalformedURLException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
 
-        }catch(javax.ws.rs.ProcessingException e){
-            //catch time-outs
-            if(e.getMessage().contains("java.net.SocketTimeoutException: connect timed out")){
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, "Connection time-out.");
-            }else{
-                throw e;
-            }
         }
-        
-        if (response.getStatus() != 200) {
-            LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2Exception e;
-            if (response.getStatus() == 400) {
-                //Assuming server side servlet generated exception has been sent.
-                String json = (String) response.readEntity(String.class);
-                e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
-            } else {
-                //non-servlet generated exception has been sent. Convert to Dwo2RestException.
-                //TODO To filter these for the user and suggest a course of action.
-                e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
-            }
-            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
-            throw e;
-
-        } else {
-            T r = response.readEntity(c);
-            return (r);
+        catch (IOException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
         }
     }
-    //
 }

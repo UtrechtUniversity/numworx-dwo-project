@@ -27,6 +27,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -39,6 +40,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 /**
  * The panel which shows the school classes for a teacher.
@@ -63,6 +65,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     private Image loginImage;
 
     private JPanel jtbl;
+    private TableRowSorter rowSorter;
 
     /**
      * @return the schoolClass
@@ -140,7 +143,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == editImage) {
                 try {
-                    DomStudent student = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomStudent student = (DomStudent) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
                     getStudent.setDomSchoolClass(schoolClass);
                     getStudent.setDomStudent(student);
@@ -213,6 +216,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 
         tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
         jtable.setModel(tableModel);
+
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }
@@ -224,6 +228,9 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
+        rowSorter = new TableRowSorter(tableModel);
+        jtable.setRowSorter(rowSorter);
+
         this.add(jtbl);
         jtbl.setVisible(true);
 
@@ -273,6 +280,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
         if (schoolClassVector.size() > 0) {
             targetSchoolClassBox.setSelectedIndex(0);
+        } else {
+            targetSchoolClassBox.setEnabled(false);
         }
         targetSchoolClassBox.setRenderer(renderer);
         targetSchoolClassBox.setMaximumRowCount(10);
@@ -361,7 +370,11 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_COPYSTUDENTERROR));
             }
             try {
+                Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
+                DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+                targetSchoolClassBox.setModel(model);
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
+                tableModel.fireTableDataChanged();
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
@@ -377,6 +390,9 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         prop.removeStudentFromSchoolClass(schoolClass, student);
                     }
                 }
+                Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
+                DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+                targetSchoolClassBox.setModel(model);
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));

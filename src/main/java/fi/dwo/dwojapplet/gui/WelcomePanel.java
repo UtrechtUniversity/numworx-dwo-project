@@ -211,7 +211,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.add(l);
 
         /* Username field */
-        loginname = new JTextField();
+        loginname = new JTextField(DwoHelper.getDefaultUsername());
         loginname.setBounds(130, 28, 120, 20);
         loginname.addActionListener(this);
         p.add(loginname);
@@ -226,7 +226,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.add(l);
 
         /* Password field */
-        password = new JPasswordField();
+        password = new JPasswordField(DwoHelper.getDefaultPassword());
         password.setBounds(130, 53, 120, 20);
         password.setEchoChar('*');
         password.addActionListener(this);

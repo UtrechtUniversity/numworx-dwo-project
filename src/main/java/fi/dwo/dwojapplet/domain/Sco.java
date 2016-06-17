@@ -318,7 +318,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 			try {
 				pagenr = iValue.substring(index+1);
 				pagenr = String.valueOf(-1 + Integer.parseInt(pagenr)); // make 0 based strings
-			} catch (Exception _) {  }
+			} catch (Exception e) {  }
 			iValue = iValue.substring(0, index);
 		}
 		final String PAGE_NR = pagenr;
@@ -326,7 +326,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 // XXX Sietske wil eerst op nummer daarna pas op titel
 		try { 
 			sconr = Integer.parseInt(iValue)-1;
-		} catch(Exception _) {}
+		} catch(Exception e) {}
 		if(sconr <= -1 || sconr >= list.length)
 		for(sconr = 0; sconr < list.length; sconr++ ) {
 			if(list[sconr].getScoName().startsWith(iValue)) {

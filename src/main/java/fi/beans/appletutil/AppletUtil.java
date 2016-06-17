@@ -5,6 +5,7 @@
 package fi.beans.appletutil;
 
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.rest.DwoLocale;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Image;
@@ -47,10 +48,10 @@ public class AppletUtil {
         if (language == null) {
             language = "nl";
             //Sets global state variable for 
-            DwoHelper.setLocale(new Locale.Builder().setLanguage("nl").setRegion("NL").build());
+            DwoHelper.setLocale(new DwoLocale("nl-NL"));
         }
         locale = new Locale(language, "");
-        DwoHelper.setLocale(new Locale.Builder().setLanguage("nl").build());
+        DwoHelper.setLocale(new DwoLocale("nl-NL"));
         LOG.log(Level.INFO, "Locale is set to: {0}", DwoHelper.getLocale().toString());
         try {
             Locale.setDefault(locale);

@@ -19,6 +19,7 @@ import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.dwo.rest.DwoLocale;
 import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
@@ -29,7 +30,6 @@ import java.awt.Point;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -67,8 +67,10 @@ public final class DwoHelper {
      * DWO boot property attributes, set before calling init in DWO.main()
      */
     //TODO fix locale to be set within DWO_main.
-    private static Locale locale = new Locale.Builder().setLanguage("nl").setRegion("NL").build(); //runtime property for locale.
+    private static DwoLocale locale = new DwoLocale("nl-NL"); //runtime property for locale.
 
+    private static String defaultUsername = "";
+    private static String defaultPassword = "";
     private static URL serverUrlPath = null;
     private static URL resourceUrlPath = null; // required null if to use the default
     private static URL jarUrlPath;
@@ -115,14 +117,14 @@ public final class DwoHelper {
     /**
      * @return the locale
      */
-    public static Locale getLocale() {
+    public static DwoLocale getLocale() {
         return locale;
     }
 
     /**
      * @param aLocale the locale to set
      */
-    public static void setLocale(Locale aLocale) {
+    public static void setLocale(DwoLocale aLocale) {
         locale = aLocale;
     }
 
@@ -141,7 +143,6 @@ public final class DwoHelper {
         //Fetch all the login roles from the server for the current roles
         try {
             schoolLogins = SecureUserAccountLoginsManager.getSchoolLogins();
-            nullSchool = SecureUserAccountManager.getNullSchool();
             //TODO should set relevant properties when calling init using REST-interface: school, hasRole etc...
 
         }
@@ -679,5 +680,33 @@ public final class DwoHelper {
      */
     public static void setHttpAuthentication(HttpAuthenticationType aHttpAuthentication) {
         httpAuthentication = aHttpAuthentication;
+    }
+
+    /**
+     * @return the defaultUsername
+     */
+    public static String getDefaultUsername() {
+        return defaultUsername;
+    }
+
+    /**
+     * @param aDefaultUsername the defaultUsername to set
+     */
+    public static void setDefaultUsername(String aDefaultUsername) {
+        defaultUsername = aDefaultUsername;
+    }
+
+    /**
+     * @return the defaultPassword
+     */
+    public static String getDefaultPassword() {
+        return defaultPassword;
+    }
+    
+    /**
+     * @param aDefaultUsername the defaultUsername to set
+     */
+    public static void setDefaultPassword(String aDefaultPassword) {
+        defaultPassword = aDefaultPassword;
     }
 }

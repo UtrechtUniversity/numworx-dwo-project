@@ -40,6 +40,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 /**
  * The panel which shows the school classes for a teacher.
@@ -68,6 +69,8 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
     private Image editImage;
 
     private JPanel jtbl;
+    private TableRowSorter rowSorter;
+    
 
     /**
      * @param user
@@ -160,7 +163,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
             fireEditingStopped();
             if (value == editImage) {
                 try{
-                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     ClassConfigurePanel panel = new ClassConfigurePanel();
                     DomSchoolClassFull fullSchoolClass = prop.getFullSchoolClass(sc);
                     panel.setSchoolClass(fullSchoolClass);
@@ -214,7 +217,8 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new UsersSchoolClassesSchoolAdminPanelTableModel();
         tableModel.init(getCurSchoolClassList(), editImage, removeImage);
-        jtable.setModel(tableModel);
+        jtable.setModel(tableModel);      
+        
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }
@@ -225,6 +229,8 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         TableUtil.setJTableSizes(jtable);
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
+        rowSorter = new TableRowSorter(tableModel);
+        jtable.setRowSorter(rowSorter);        
         this.add(jtbl);
         jtbl.setVisible(true);
 

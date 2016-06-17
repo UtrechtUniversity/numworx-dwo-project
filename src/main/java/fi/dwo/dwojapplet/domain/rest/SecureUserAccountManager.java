@@ -2,17 +2,12 @@ package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.dom.entities.DomSchool;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 /**
  * Manages the user profile.
@@ -34,10 +29,35 @@ public class SecureUserAccountManager {
      */
     public static DomUserFull getAccountData() throws Dwo2Exception {
         DomUserFull user;
-        user = StoredRestManager.getInstance().get("/rest/secure/user/account/get", DomUserFull.class);
+        user = StoredRestManager.getInstance().get("rest/secure/user/account/get", DomUserFull.class);
         return user;
     }
 
+    /**
+     * Login for a user. Registers service that the user is logging in. As the REST
+     * interface is stateless this is merely for gathering statistics.
+     *
+     * @return
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     */
+    public static DomUserFull loginUser() throws Dwo2Exception {
+        DomUserFull user;
+        user = StoredRestManager.getInstance().get("rest/secure/user/account/login", DomUserFull.class);
+        return user;
+    }
+
+    /**
+     * Registers that the user logs out. 
+     *
+     * @return
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     */
+    public static Boolean logoutUser() throws Dwo2Exception {
+        Boolean result;
+        result = StoredRestManager.getInstance().get("rest/secure/user/account/logout", Boolean.class);
+        return result;
+    }
+    
     /**
      * Updates the user profile of a user.
      *
@@ -53,19 +73,12 @@ public class SecureUserAccountManager {
         restUser.setRestContext(new DomContext());
         restUser.setDomUserFull(user);
 
-        user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", DomUserFull.class, restUser);
-        HttpAuthenticationFeature feature = null;
-        switch (DwoHelper.getHttpAuthentication()) {
-            case BASIC:
-                feature = HttpAuthenticationFeature.universalBuilder().credentialsForBasic(user.getUserName(), user.getPassword()).build();
-                break;
-            case DIGEST:
-                feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(user.getUserName(), user.getPassword()).build();
-        }
-        Client client = ClientBuilder.newClient().register(feature);
-        WebTarget target = client.target(DwoHelper.getServerUrlPath().toString());
-        StoredRestManager.setWebTargetRest(target);
-
+        user = StoredRestManager.getInstance().put("rest/secure/user/account/update", DomUserFull.class, restUser);
+//        Client client = ClientBuilder.newClient().register(feature);
+//        WebTarget target = client.target(DwoHelper.getServerUrlPath().toString());
+//        StoredRestManager.setWebTargetAndCredentials(target);
+        StoredRestManager.setBasicAuthString(null);
+        
         DwoHelper.setCurrentUser(user);
         LOG.log(Level.FINE, "Updated user profile of username {0}.", new Object[]{restUser.getDomUserFull().getUserName()});
         return user;
@@ -81,11 +94,7 @@ public class SecureUserAccountManager {
      */
     public static Boolean removeAccountData() throws Dwo2Exception {
         Boolean b;
-        b = StoredRestManager.getInstance().get("/rest/secure/user/account/remove", Boolean.class);
+        b = StoredRestManager.getInstance().get("rest/secure/user/account/remove", Boolean.class);
         return b;
-    }
-
-    public static DomSchool getNullSchool() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

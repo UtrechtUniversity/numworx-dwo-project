@@ -32,6 +32,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 /**
  * The panel which shows the school classes for a teacher.
@@ -51,6 +52,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
     private Image editImage, modulesImage, studentsImage, teachersImage, removeImage;
 
     private JPanel jtbl;
+    private TableRowSorter rowSorter;
 
 //
 //    class ClassModel extends AbstractTableModel {
@@ -189,7 +191,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == editImage) {
                 try {
-                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     ClassConfigurePanel panel = new ClassConfigurePanel();
                     DomSchoolClassFull fullSchoolClass = prop.getFullSchoolClass(sc);
                     panel.setSchoolClass(fullSchoolClass);
@@ -215,7 +217,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                 }
             } else if (value == studentsImage) {
                 try {
-                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(sc);
                     center.loadCenter(panel);
                 }
@@ -225,7 +227,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                 fireEditingStopped();
             } else if (value == teachersImage) {
                 try {
-                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     TeachersInSchoolClassSchoolAdminPanel panel = new TeachersInSchoolClassSchoolAdminPanel(sc);
                     center.loadCenter(panel);
                 }
@@ -235,7 +237,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                 fireEditingStopped();
             } else if (value == removeImage) {
                 try {
-                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
 
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
                         //persist returned values	
@@ -273,6 +275,9 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
 
         tableModel.init(prop, editImage, studentsImage, teachersImage, removeImage);
         jtable.setModel(tableModel);
+        rowSorter = new TableRowSorter(tableModel);        
+        jtable.setRowSorter(rowSorter);        
+        
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }

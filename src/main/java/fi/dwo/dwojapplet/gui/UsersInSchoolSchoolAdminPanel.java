@@ -41,6 +41,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 /**
  * Panel that displays a list of users of a type selected by a radio button. The
@@ -80,6 +81,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
     private Image removeImage;
 
     private JPanel jtbl;
+    private TableRowSorter rowSorter;    
 
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
@@ -143,7 +145,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == editImage) {
                 try {
-                    DomStudent student = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                    DomStudent student = (DomStudent) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
                     getStudent.setDomStudent(student);
                     DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
@@ -172,11 +174,11 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
             } else if (value == studentImage || value == teacherImage) {
                 try {
                     if (studentRadio.isSelected()) {
-                        DomStudent user = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                        DomStudent user = (DomStudent) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                         UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UsersSchoolClassesSchoolAdminPanel.UserType.STUDENT);
                         center.loadCenter(panel);
                     } else if (teacherRadio.isSelected()) {
-                        DomTeacher user = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
+                        DomTeacher user = (DomTeacher) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                         UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UsersSchoolClassesSchoolAdminPanel.UserType.TEACHER);
                         center.loadCenter(panel);
                     }
@@ -189,7 +191,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 if (JOptionPane.OK_OPTION == GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_CONFIRM))) {
                     try {
                         if (studentRadio.isSelected()) {
-                            DomStudent user = (DomStudent) tableModel.getValueAt(row, tableModel.getColumnCount());
+                            DomStudent user = (DomStudent) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                             if (user.getSingleSchool()) {
                                 prop.removeSingleSchoolStudentFromSchool(user);
                             } else {
@@ -197,11 +199,11 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                             }
                             tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
                         } else if (teacherRadio.isSelected()) {
-                            DomTeacher user = (DomTeacher) tableModel.getValueAt(row, tableModel.getColumnCount());
+                            DomTeacher user = (DomTeacher) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                             prop.removeTeacherFromSchool(user);
                             tableModel.init(prop.getTeachersInSchool(), removeImage, studentImage, editImage, emptyImage);
                         } else if (schoolAdminRadio.isSelected()) {
-                            DomSchoolAdmin user = (DomSchoolAdmin) tableModel.getValueAt(row, tableModel.getColumnCount());
+                            DomSchoolAdmin user = (DomSchoolAdmin) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                             prop.removeSchoolAdminFromSchool(user);
                             tableModel.init(prop.getSchoolAdminsInSchool(), removeImage, studentImage, editImage, emptyImage);
                         }
@@ -254,6 +256,9 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
 
         tableModel.init(userList, removeImage, image, editImage, emptyImage);
         jtable.setModel(tableModel);
+        rowSorter = new TableRowSorter(tableModel);
+        jtable.setRowSorter(rowSorter);        
+        
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }

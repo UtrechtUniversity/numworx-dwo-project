@@ -1019,6 +1019,7 @@ public class PersistenceFacade {
                     } else {
                         v = DbAccessCreator.instance().getCoursesForClass(
                                 schoolClass.getID());
+                        if(v.size()==0) return new Course[0];
 // FIXME aanzetten als clipBeforeAfter weer in gebruik wordt genomen.
 // Het XML-RPC protocol doet niet aan TIMEZONES 
 // dat betekent dat date(0) niet werkt voor 'notAfter'
