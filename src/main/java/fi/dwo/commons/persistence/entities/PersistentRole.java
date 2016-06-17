@@ -19,6 +19,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.CacheType;
 
 /**
  *
@@ -32,7 +34,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentRole.findAll", query = "SELECT p FROM PersistentRole p"),
     @NamedQuery(name = "PersistentRole.findByGroupID", query = "SELECT p FROM PersistentRole p WHERE p.groupID = :groupID"),
     @NamedQuery(name = "PersistentRole.findByGroupname", query = "SELECT p FROM PersistentRole p WHERE p.groupname = :groupname")})
-public class PersistentRole implements Serializable {
+@Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
+        size=10, // Use 64,000 as the initial cache size. 
+        expiry=36000000 // 10 minutes 
+)public class PersistentRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id

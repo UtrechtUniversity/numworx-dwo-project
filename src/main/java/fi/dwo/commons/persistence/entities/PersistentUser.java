@@ -32,9 +32,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.CacheType;
 
 /**
- * PersistentUser
+ * PersistentUser. 
  *
  * @author G.A.J. van der Plas
  */
@@ -54,7 +56,14 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "PersistentUser.findByEmail", query = "SELECT p FROM PersistentUser p WHERE p.email = :email"),
     @NamedQuery(name = "PersistentUser.findByRegisterDate", query = "SELECT p FROM PersistentUser p WHERE p.registerDate = :registerDate"),
     @NamedQuery(name = "PersistentUser.findByLastLogin", query = "SELECT p FROM PersistentUser p WHERE p.lastLogin = :lastLogin")})
-
+/**
+ * @Cacheable(true) instead do
+ * <cache type="SOFT" size="64000" expiry="36000000" coordination-type="INVALIDATE_CHANGED_OBJECTS"/> - See more at: http://www.eclipse.org/eclipselink/documentation/2.5/jpa/extensions/a_cache.htm#sthash.jkf8vpLB.dpuf
+ */
+@Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
+        size=10000, // Use 64,000 as the initial cache size. 
+        expiry=36000000 // 10 minutes 
+)
 public class PersistentUser implements Serializable {
 
     private static final long serialVersionUID = 1L;

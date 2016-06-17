@@ -19,6 +19,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.CacheType;
 
 /**
  *
@@ -35,6 +37,10 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = "PersistentHasRole.findByRegisterDate", query = "SELECT p FROM PersistentHasRole p WHERE p.registerDate = :registerDate"),
     @NamedQuery(name = "PersistentHasRole.findByRights", query = "SELECT p FROM PersistentHasRole p WHERE p.rights = :rights"),
     @NamedQuery(name = "PersistentHasRole.findByLastLogin", query = "SELECT p FROM PersistentHasRole p WHERE p.lastLogin = :lastLogin")})
+@Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
+        size=10000, // Use 64,000 as the initial cache size. 
+        expiry=36000000 // 10 minutes 
+)
 public class PersistentHasRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
