@@ -1,5 +1,6 @@
 package fi.dwo.rest.exceptions;
 
+import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -104,28 +105,34 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
         );
     }
 
-    /**
-     * Returns a localized human readable explanation of the exception code. In 
-     * case the resource can not be read. Return the English log message.
-     * 
-     * @param locale
-     * @return 
-     */
-    @Override
-    public String getLocalizedCodeExplanation(Locale locale) {
-        String msg;
-        try {
-            //Current resources are in /java/resources, however if in java/resources/fi/dwo then
-            //replace getBundle("Dwo2Exceptions", locale); with getBundle("fi.dwo.Dwo2Exceptions", locale);
-            ResourceBundle localeLookup = ResourceBundle.getBundle("Dwo2Exceptions", locale);
-            msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
-        }
-        catch (Exception e) {
-            //If resource fails, return the english log message.
-            LOG.log(Level.SEVERE, "Can't find the resource Dwo2Exceptions.properties, returning English log message.", e);
-            msg = message;
-        }
-        return msg;
-    }
+        @Override
+    public String getLocalizedCodeExplanation(DwoLocale locale) {
+        return Dwo2ExceptionTranslator.getLocalizedCodeExplanation(locale, this.code);
+    }    
+    
+//        /**
+//     * Returns a localized human readable explanation of the exception code. In 
+//     * case the resource can not be read. Return the English log message.
+//     * 
+//     * @param locale
+//     * @return 
+//     */
+//    @Override
+//    public String getLocalizedCodeExplanation(DwoLocale locale) {
+//        String msg;
+//        try {
+//            
+//            //Current resources are in /java/resources, however if in java/resources/fi/dwo then
+//            //replace getBundle("Dwo2Exceptions", locale); with getBundle("fi.dwo.Dwo2Exceptions", locale);
+//            ResourceBundle localeLookup = ResourceBundle.getBundle("Dwo2Exceptions", Locale.forLanguageTag(locale.getLocale()));
+//            msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
+//        }
+//        catch (Exception e) {
+//            //If resource fails, return the english log message.
+//            LOG.log(Level.SEVERE, "Can't find the resource Dwo2Exceptions.properties, returning English log message.", e);
+//            msg = message;
+//        }
+//        return msg;
+//    }
 
 }

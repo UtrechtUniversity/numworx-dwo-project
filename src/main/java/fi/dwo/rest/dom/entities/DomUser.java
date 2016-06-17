@@ -8,12 +8,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * A class for transferring need-to-know User data over the REST-interface.
- * 
+ *
  * @author G.A.J. van der Plas
  */
-
 @XmlRootElement
 public class DomUser {
+
     private PersistenceId id;
     private String userName;
     private String givenName;
@@ -24,11 +24,11 @@ public class DomUser {
     /**
      * Constructor
      */
-    public DomUser(){
-        
+    public DomUser() {
+
     }
 
-    public DomUser(DomUser user){
+    public DomUser(DomUser user) {
         setId(user.getId());
         setUserName(user.getUserName());
         setGivenName(user.getGivenName());
@@ -36,9 +36,8 @@ public class DomUser {
         setInsertion(user.getInsertion());
         setSingleSchool(user.getSingleSchool());
     }
-     
 
-    public void clearSettings(){
+    public void clearSettings() {
         id = null;
         userName = "";
         givenName = "";
@@ -46,20 +45,19 @@ public class DomUser {
         insertion = "";
         singleSchool = new Boolean(true);
     }
-    
+
     /**
      * The persistence id of the {@Link PersistentUser}.
-     * 
+     *
      * @return the classId
      */
     public PersistenceId getId() {
         return id;
     }
 
-
     /**
      * The persistence id of the {@Link PersistentUser}.
-     * 
+     *
      * @param id the id to set
      */
     public void setId(PersistenceId id) {
@@ -145,10 +143,10 @@ public class DomUser {
         result.append(this.insertion);
         result.append(" ");
         result.append(this.familyName);
-        
+
         return result.toString();
     }
-    
+
     public String getDisplayName() {
         StringBuilder result = new StringBuilder();
         result.append(this.givenName);
@@ -156,8 +154,22 @@ public class DomUser {
         result.append(this.insertion);
         result.append(" ");
         result.append(this.familyName);
-        
+
         return result.toString();
     }
 
+    public DomUser duplicate() {
+        DomUser user = new DomUser();
+        fill(user);
+        return user;
+    }
+
+    protected void fill(DomUser user) {
+        user.id = this.getId().duplicate();
+        user.userName = this.userName;
+        user.singleSchool = (boolean) this.getSingleSchool();
+        user.givenName = this.givenName;
+        user.insertion = this.insertion;
+        user.familyName = this.familyName;
+    }
 }

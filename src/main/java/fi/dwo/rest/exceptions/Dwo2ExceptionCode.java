@@ -25,4 +25,7 @@ public enum Dwo2ExceptionCode {
     Rest_Registration_School_license_expired,  
     Rest_Registration_hasRole_exists, //User is already registered for this role.
     
+    //GUI
+    GUI_NoUserIsSignedIn,
+    GUI_AnIncorrectPasswordWasGiven
 }

@@ -5,6 +5,7 @@
  */
 package fi.dwo.rest.util; 
 
+import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Logger;
 
@@ -56,5 +57,12 @@ public class Dwo2ExceptionTranslator {
             throw new RuntimeException("Dwo2ExceptionTranlator must be initialized with a translator.");
         }
         return translator.decodeCodeInJSON(json);
+    }
+    
+    public static String getLocalizedCodeExplanation(DwoLocale locale, Dwo2ExceptionCode code) {
+        if (translator == null) {
+            throw new RuntimeException("Dwo2ExceptionTranlator must be initialized with a translator.");
+        }
+        return translator.getLocalizedCodeExplanation(locale, code);
     }
 }

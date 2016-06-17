@@ -60,6 +60,10 @@
                     <executable>${jdk}/bin/javac</executable>
                     <fork>false</fork>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <excludes>
+                        <exclude>**/src/main/java/fi/dwo/rest/test/locale/*.java</exclude>
+                    </excludes>                    
+                    
                 </configuration>
             </plugin>
             

@@ -55,4 +55,16 @@ public class DomUserFull extends DomUser implements Serializable {
         this.email = email;
     }
 
+    @Override
+    public DomUserFull duplicate() {
+        DomUserFull user = new DomUserFull();
+        fill(user);
+        return user;
+    }
+
+    protected void fill(DomUserFull user) {
+        super.fill(user);
+        user.email = this.email;
+        user.password = this.password;
+    }    
 }

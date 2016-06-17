@@ -1,10 +1,8 @@
 /*Copyrighted 2015. */
 package fi.dwo.rest.exceptions;
 
+import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.ws.Response;
 
@@ -20,6 +18,9 @@ public class Dwo2Exception extends Exception implements Dwo2ExceptionInterface {
 
     Dwo2ExceptionCode code;
     String message;
+
+    public Dwo2Exception() {
+    }
 
     /**
      *
@@ -64,21 +65,10 @@ public class Dwo2Exception extends Exception implements Dwo2ExceptionInterface {
         this.code = code;
         this.message = message;
     }
-
+    
     @Override
-    public String getLocalizedCodeExplanation(Locale locale) {
-        String msg;
-        try {
-            //Current resources are in /java/resources, however if in java/resources/fi/dwo then
-            //replace getBundle("Dwo2Exceptions", locale); with getBundle("fi.dwo.Dwo2Exceptions", locale);
-            ResourceBundle localeLookup = ResourceBundle.getBundle("Dwo2Exceptions", locale);
-            msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't find the resource Dwo2Exceptions.properties, returning English log message.", e);
-            msg = message;
-        }
-        return msg;
+    public String getLocalizedCodeExplanation(DwoLocale locale) {
+        return Dwo2ExceptionTranslator.getLocalizedCodeExplanation(locale, this.code);
     }
 
 }

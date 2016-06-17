@@ -1,7 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.rest.exceptions;
 
-import java.util.Locale;
+import fi.dwo.rest.DwoLocale;
 
 /**
  * DWO2 exception interface. An unilateral interface for different base-type Exceptions.
@@ -34,7 +34,7 @@ public interface Dwo2ExceptionInterface {
      * @param locale
      * @return 
      */
-    public String getLocalizedCodeExplanation(Locale locale);
+    public String getLocalizedCodeExplanation(DwoLocale locale);
 
     
 }
