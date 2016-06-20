@@ -694,6 +694,10 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
 
         if (phr != null && restSchoolClass != null) {
+            PersistentSchoolClass existingClass = SchoolClassManager.findEntity(restSchoolClass.getDomSchoolClassFull().getSchoolClassName(), school);
+            if (existingClass != null) {
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Submitted_SchoolClass_exists, "A schoolclass with that name already exists within the school.");
+            }
             PersistentSchoolClass schoolClass = new PersistentSchoolClass();
             schoolClass.setSchoolID(school.getSchoolID());
             schoolClass.setClass1(restSchoolClass.getDomSchoolClassFull().getSchoolClassName());
