@@ -249,12 +249,16 @@ public class SecuredTeacherSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            
-                    LOG.log(Level.SEVERE, null, ex);
+
+            LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
         if (phr != null && restSchoolClass != null) {
+            PersistentSchoolClass existingClass = SchoolClassManager.findEntity(restSchoolClass.getDomSchoolClassFull().getSchoolClassName(), school);
+            if (existingClass != null) {
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Submitted_SchoolClass_exists, "A schoolclass with that name already exists within the school.");
+            }
             PersistentSchoolClass schoolClass = new PersistentSchoolClass();
             schoolClass.setSchoolID(school.getSchoolID());
             schoolClass.setClass1(restSchoolClass.getDomSchoolClassFull().getSchoolClassName());
@@ -298,8 +302,8 @@ public class SecuredTeacherSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            
-                    LOG.log(Level.SEVERE, null, ex);
+
+            LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -348,8 +352,8 @@ public class SecuredTeacherSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            
-                    LOG.log(Level.SEVERE, null, ex);
+
+            LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -658,10 +662,10 @@ public class SecuredTeacherSchoolClassManager {
         if (toc != null && student != null && soc != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
                 StudentOfClassManager.destroy(soc.getPersistentStudentOfClassPK());
-                if (shr.getClassID().equals(soc.getPersistentStudentOfClassPK().getClassID()))  {
+                if (shr.getClassID().equals(soc.getPersistentStudentOfClassPK().getClassID())) {
                     shr.setClassID(null);
-                        HasRoleManager.edit(shr);
-                    }                
+                    HasRoleManager.edit(shr);
+                }
             }
             catch (PersistenceException e) {
                 return false;
@@ -751,7 +755,7 @@ public class SecuredTeacherSchoolClassManager {
 
         student = UserManager.findEntity(MySQLPersistenceId.getId(submit.getDomGetSingleSchoolStudent().getDomStudent().getId()));
         schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(submit.getDomGetSingleSchoolStudent().getDomSchoolClass().getId()));
-        
+
         try {
             shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
         }
@@ -762,22 +766,22 @@ public class SecuredTeacherSchoolClassManager {
         }
 
         teacherInSchoolClass = TeacherOfClassManager.findEntity(
-                    new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(),
-                            schoolClass.getClassID(),
-                            phr.getPersistentHasRolePK().getSchoolGroupID()));
+                new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(),
+                        schoolClass.getClassID(),
+                        phr.getPersistentHasRolePK().getSchoolGroupID()));
         studentInSchoolClass = StudentOfClassManager.findEntity(
-                    new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(),
-                            schoolClass.getClassID(),
-                            shr.getPersistentHasRolePK().getSchoolGroupID()));
-        
-        if(student.isSingleSchoolAccount() && teacherInSchoolClass.getPersistentTeacherOfClassPK().getClassID().equals(studentInSchoolClass.getPersistentStudentOfClassPK().getClassID())){
+                new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(),
+                        schoolClass.getClassID(),
+                        shr.getPersistentHasRolePK().getSchoolGroupID()));
+
+        if (student.isSingleSchoolAccount() && teacherInSchoolClass.getPersistentTeacherOfClassPK().getClassID().equals(studentInSchoolClass.getPersistentStudentOfClassPK().getClassID())) {
             return student.buildDomSingleSchoolStudent();
-        }else{
-            LOG.log(Level.SEVERE,"User {0} tried to access full userdata of user {1}.", new Object[]{phr.getPersistentHasRolePK().getId(), shr.getUser().getId()});
+        } else {
+            LOG.log(Level.SEVERE, "User {0} tried to access full userdata of user {1}.", new Object[]{phr.getPersistentHasRolePK().getId(), shr.getUser().getId()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
     }
-    
+
     /**
      * Edits a singleSchoolStudent.
      *
