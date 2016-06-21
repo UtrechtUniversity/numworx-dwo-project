@@ -225,6 +225,9 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new StudentsInSchoolClassTeacherPanel.ImageRenderer(), new StudentsInSchoolClassTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
+        for(int i=0;i<jtable.getColumnModel().getColumnCount();i++){
+            jtable.getColumnModel().getColumn(i).setPreferredWidth(jtable.getColumnModel().getColumn(i).getMinWidth());
+        }
 
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
