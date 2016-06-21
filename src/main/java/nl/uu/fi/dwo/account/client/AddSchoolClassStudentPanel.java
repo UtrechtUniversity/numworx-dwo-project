@@ -116,7 +116,6 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 //                return AccountImageBundle.instance.delete();
 //            }
 //        };
-
         CellPreviewEvent.Handler<DomSchoolClass> cellPreviewHandler = new CellPreviewEvent.Handler<DomSchoolClass>() {
             @Override
             public void onCellPreview(CellPreviewEvent<DomSchoolClass> event) {
@@ -132,21 +131,29 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                     switch (rowIndex) {
                         case 1: //selected schoolclass to add
                             //check for password required
-                            if(sc.getHasRegKey()){
-                                do a popup... and get a password
+                            if (sc.getHasRegKey()) {
+                                PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
+                                //popup.setSize("500", "400");
+                                SchoolClassAskRegistrationKeyPanel panel = new SchoolClassAskRegistrationKeyPanel();
+                                panel.setSchoolClassName(sc.getSchoolClassName());
+                                panel.setRegKey("required");
+                                panel.setPopup(popup);
+                                panel.setSize("300", "200");
+                                popup.add(panel);
+                                popup.center();
                             }
-                            control.addSchoolClass (sc, new AsyncCallback<Boolean>() {
-                                @Override
-                                public void onFailure(Throwable t) {
-                                    //fail and reset all the data.
-                                    Window.alert(t.getMessage());
-                                }
-
-                                @Override
-                                public void onSuccess(Boolean result) {
-                                    //update a view list
-                                }
-                            });
+//                            control.addSchoolClass(sc, new AsyncCallback<Boolean>() {
+//                                @Override
+//                                public void onFailure(Throwable t) {
+//                                    //fail and reset all the data.
+//                                    Window.alert(t.getMessage());
+//                                }
+//
+//                                @Override
+//                                public void onSuccess(Boolean result) {
+//                                    //update a view list
+//                                }
+//                            });
                             break;
 //                        case 2:     //
 ////                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {
