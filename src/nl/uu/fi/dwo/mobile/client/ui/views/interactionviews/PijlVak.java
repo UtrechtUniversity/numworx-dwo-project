@@ -461,7 +461,7 @@ public class PijlVak extends LayoutPanel{
 			}
 		
 		}
-		fe.zetPijlVakMaat();
+		fe.zetPijlVakMaat(this);
 		paintComponent();
 	}
 	
@@ -559,7 +559,6 @@ public class PijlVak extends LayoutPanel{
 		
 		public void resize()
 		{
-			System.out.println("resize aangeroepen");
 			pijlvak.zetMaat();
 		}
 		

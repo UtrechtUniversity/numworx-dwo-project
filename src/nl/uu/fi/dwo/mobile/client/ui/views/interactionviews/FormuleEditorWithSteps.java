@@ -700,7 +700,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		voegRegelToe(useranswer, show, setState);
 	}
 	
-	public void zetPijlVakMaat()
+	public void zetPijlVakMaat(PijlVak pijlVak)
 	{
 		contentPanel.setWidgetTopHeight(pijlVak, pijlVak.getAbsoluteTop() - contentPanel.getAbsoluteTop(), Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
 	}
@@ -2979,7 +2979,6 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		
 		if (stapNr > 0 || stapNr == 0 && !hasStartString)
 			terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
-		
 	}
 	
 	public void wis() {
