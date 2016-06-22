@@ -88,7 +88,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 		doInsert(e);
 	}
 
-	@UiHandler("t4_13") void onT4_13(ClickEvent e) {getEditor().diff();};
+	@UiHandler("t4_13") void onT4_13(ClickEvent e) {getEditor().diff_partial();};
 	@UiHandler("t4_14") void onT4_14(ClickEvent e) {blur();}
 //	@UiHandler("t4_15") void onT4_15(ClickEvent e) {getEditor().insert('∞');}
 

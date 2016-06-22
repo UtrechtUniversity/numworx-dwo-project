@@ -96,6 +96,11 @@ public class KeyboardGWT implements EntryPoint {
 		public void diff() {
 			x("diff()");
 		}
+		
+		@Override
+		public void diff_partial() {
+			x("diff_partial()");
+		}
 
 		@Override
 		public void limiet0() {
