@@ -93,6 +93,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
     private int attemptsCount;
 	private Vector attempts;
 	
+	ArrayList<Object> kiesObjects;
 	private String antwoordString;
 	private String[] keuzeMogelijkheden;
 	private ObjectMap[] answerModels;
@@ -140,7 +141,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	
 	
-	public AntwoordKeuzeVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
+	public AntwoordKeuzeVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, int volleBreedte)
 	{
 		
 		if (h != null && h.containsKey("breedte"))
@@ -154,6 +155,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
+		if(volledigeBreedte)
+			breedte = volleBreedte;
 		
 		init(breedte, hoogte, launchState, randomVarWaarden);
 		
@@ -236,7 +239,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		basisPanel.add(huidigeKeuzeVak);
 		basisPanel.setWidgetLeftRight(huidigeKeuzeVak, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		basisPanel.setWidgetTopBottom(huidigeKeuzeVak, 0, Style.Unit.PX, 0, Style.Unit.PX);
-		ArrayList<Object> kiesObjects = new ArrayList<Object> ();
+		kiesObjects = new ArrayList<Object> ();
 		kiesObjects.add(Text.constants.keuzeVakKiesLabel());
 		huidigeKeuzeVak.setObjects(kiesObjects);
 		
@@ -1170,17 +1173,13 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
-	{
+	{	//niet meer nodig, want volledige breedte wordt al gezet in constructor.
 		if(volledigeBreedte)
 		{
 			this.breedte = breedte;
 			basisPanel.setPixelSize(breedte, hoogte);
 			popupPanel.setPixelSize(breedte - 23, hoogtePopup);
-			huidigeKeuzeVak.setPixelSize(breedte - 22, hoogte - 2);
-			for(int i = 0; i < keuzeOptieVakken.length; i++)
-			{	keuzeOptieVakken[i].setWidth((breedte - 23) + "px");
-			
-			}		
+			huidigeKeuzeVak.setPixelSize(breedte - 22, hoogte - 2);	
 		}
 	}
 

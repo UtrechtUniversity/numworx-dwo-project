@@ -36,6 +36,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.SymboolPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
+//binnenkort: import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselAntwoordVak;
 
 /**
  * Uses information in the launchdata HashMap to create objects that will be
@@ -472,7 +473,7 @@ public class TekstBuffer
 		{
 // Deze werkt niet als stub.
 			result = //new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					 x(map, new AntwoordKeuzeVak(currentVakGegevens, randomVarNamen, randomVarWaarden));
+					 x(map, new AntwoordKeuzeVak(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]));
 		}
 		else if(soortVak == 16)
 		{	
@@ -494,6 +495,12 @@ public class TekstBuffer
 		{
 			result = new GetallenlijnSprongPanel(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
+		//binnenkort
+//		else if (soortVak == 53)
+//		{
+//			result = new StelselAntwoordVak(currentVakGegevens, randomVarNamen, randomVarWaarden);
+//			//result = "";
+//		}
 		else if (soortVak == 55)
 		{
 			result = new SymboolPanel(currentVakGegevens, randomVarNamen, randomVarWaarden);
