@@ -1191,7 +1191,6 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		{	antwoord = antwoordIngevuld.substitueer(substitutie, "p");
 		}
 		
-		//updateGebruikersSubstituties();
 		if (gebruikersSubstituties != null && antwoord != null) {
 			for (int i = 0; i < gebruikersSubstituties.length; i++) {
 				antwoord = antwoord.substitueer(gebruikersSubstituties[i].geefExpRechts(), gebruikersSubstituties[i].geefExpLinks().geefVarNaam());
@@ -1302,7 +1301,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		}
 		Algebra.setDefaultTestValues();
 	}
-
+	
 	public String vertaalIdeasExpressie(String s)
 	{
 		//System.out.println(s);

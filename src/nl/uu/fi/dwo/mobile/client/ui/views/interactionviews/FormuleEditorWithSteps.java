@@ -103,8 +103,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	private boolean volledigeBreedte = false;
 	private HashMap<String, Object> launchState;
 	private ObjectMap instellingen;
-	private ArrayList<FormuleViewer> viewers = new ArrayList<FormuleViewer>();
-	private FormuleEditorWithAnswer editor = null;
+	protected ArrayList<FormuleViewer> viewers = new ArrayList<FormuleViewer>();
+	protected FormuleEditorWithAnswer editor = null;
 	private FormuleViewer prefixViewer;
 	private FormuleViewer latest_answer_viewer;
 	private ScrollPanel sp = null;
@@ -114,27 +114,31 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	private TekstVak feedbackPanel = null;
 	int feedbackPanelHeight = 34;
 	private FlowPanel mainPanel = null;
+	protected FlowPanel headerPanel = null;
 	private OpdrNavIF comRoot;
-	private int mode;
+	protected int mode;
 	
 	private PijlVak pijlVak;
 	private boolean pijl = false;
 	//private int pijlX = "GR".equals(WiskOpdr.deployVariant) ? 105 : 130;
 	private int pijlX = 130;
 	private int stepPanelY = 0; //locatie van bovenrand van het laatste (onderste) stepPanel
-	private int stapH = 21;
+	protected int stapH = 21;
 	
 	private Expressie substitutie;
 	private Vergelijking[] gebruikersSubstituties;
+	private FormuleEditorWithSteps gebruikersSubstitutiesVak;
+	private boolean substitutieVak = false;
 	
 	private TouchButton terugButton;
 	private TouchButton downButton;
 	private TouchButton copyButton;
+	private TouchButton closeButton;
 	private FormuleButton plusKnop, minKnop, maalKnop, deelKnop, haakjesKnop, herleidKnop, abcKnop, subKnop;
 	private TouchButton rmKnop;
 	private int aantalDecRm = 10;
 	private FormuleButton ontbindKnop, splitsKnop, wortelBewerkKnop;
-	private boolean abcVisible, subVisible;
+	private boolean abcVisible, subVisible, subExtra;
 	private boolean bewerkingKnoppen, bewerkingKnoppenExtra;
 	private int stapNr = 0;
 	protected HashMap<String, Object> h = null;
@@ -144,7 +148,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	private ArrayList<PijlVak> pijlVakken = new ArrayList<PijlVak>();
 	
 	private ArrayList<Image> imagesStappen = new ArrayList<Image>();
-	private Image checkimg;
+	protected Image checkimg;
 	
 	private boolean[][] logObjectives;
 	DWOLogger dwologger;
@@ -231,6 +235,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				abcVisible = ((Boolean) launchState.get("abcKnop")).booleanValue();
 			if (launchState.containsKey("subKnop"))
 				subVisible = ((Boolean) launchState.get("subKnop")).booleanValue();
+			if (launchState.containsKey("subKnopExtra"))
+				subExtra = ((Boolean) launchState.get("subKnopExtra")).booleanValue();
 			if (launchState.containsKey("bewerkingKnoppen"))
 				bewerkingKnoppen = ((Boolean) launchState.get("bewerkingKnoppen")).booleanValue();
 			if (launchState.containsKey("bewerkingKnoppenExtra"))
@@ -261,13 +267,31 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				aantalDecRm = launchStateMap.getInt("aantalDecRm");
 			if (launchState.containsKey("pijl"))
 				pijl = ((Boolean) launchState.get("pijl")).booleanValue();
-			
+			if (launchState.containsKey("substitutieVak"))
+				substitutieVak = ((Boolean) launchState.get("substitutieVak")).booleanValue();
 			//op verzoek van Noordhoff:
 			if(isNoordhoff())
 				pijl = false;
 			bordjesMethode = Boolean.TRUE.equals( launchState.get("bordjesMethode"));
 			linStrategieVersie = Boolean.TRUE.equals(launchState.get("linStrategieVersie"));
 			linOefenVersie = Boolean.TRUE.equals(launchState.get("linOefenVersie"));
+			if(substitutieVak)
+			{
+				subVisible = false;
+				abcVisible = false;
+				startString = "$f@";
+				check = false;
+				teltMee = false;
+				pijl = false;
+				boxMetRand = true;
+				bewerkingKnoppen = false;
+				bewerkingKnoppenExtra = false;
+				rmknop = false;
+				bordjesMethode = false;
+				linStrategieVersie = false;
+				linOefenVersie = false;
+			}
+		
 			
 			
 		}
@@ -335,6 +359,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		mainPanel.getElement().getStyle().setBackgroundColor("white");
 		mainPanel.getElement().getStyle().setBorderWidth(boxMetRand ? 1 : 0, Unit.PX);
 		
+		headerPanel = new FlowPanel();
+		headerPanel.setPixelSize(breedte - 2, 22);//TODO: hoogte nog even checken
+		headerPanel.getElement().getStyle().setBackgroundColor("white");
+		headerPanel.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+		
 		Image buttonImg = new Image(DWOplayer.DWO_BUNDLE.pijlterug().getSafeUri());
 		buttonImg.getElement().getStyle().setMargin(2, Unit.PX);
 		terugButton = new TouchButton();
@@ -357,8 +386,16 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		copyButton.add(copyButtonImg);
 		copyButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		addCopyButtonHandler(copyButton);
-		copyButton.setVisible(!linStrategieVersie && !bordjesMethode);
+		copyButton.setVisible(!linStrategieVersie && !bordjesMethode && !substitutieVak);
 
+		Image closeButtonImg = new Image(DWOplayer.DWO_BUNDLE.closebutton().getSafeUri());
+		closeButtonImg.getElement().getStyle().setMargin(2, Unit.PX);
+		closeButton = new TouchButton();
+		closeButton.add(closeButtonImg);
+		closeButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		addCloseButtonHandler(closeButton);
+		closeButton.setVisible(substitutieVak);
+		
 		rmKnop = new TouchButton();
 		Image rmImage = new Image(DWOplayer.DWO_BUNDLE.rmknop().getSafeUri());
 		rmKnop.add(rmImage);
@@ -410,23 +447,27 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		addSplitsButtonHandler(splitsKnop);
 		addWortelButtonHandler(wortelBewerkKnop);
 		
+		if(substitutieVak)
+			headerPanel.add(closeButton);
 		if(!(linStrategieVersie || bordjesMethode))
-		{	mainPanel.add(copyButton);
-			mainPanel.add(downButton);
+		{	if(!substitutieVak)
+				headerPanel.add(copyButton);
+			headerPanel.add(downButton);
 		}
-		mainPanel.add(terugButton);
-		if(rmknop)mainPanel.add(rmKnop);
-		mainPanel.add(subKnop);
-		mainPanel.add(abcKnop);
-		mainPanel.add(plusKnop);
-		mainPanel.add(minKnop);
-		mainPanel.add(maalKnop);
-		mainPanel.add(deelKnop);
-		mainPanel.add(haakjesKnop);
-		mainPanel.add(herleidKnop);
-		mainPanel.add(ontbindKnop);
-		mainPanel.add(splitsKnop);
-		mainPanel.add(wortelBewerkKnop);
+		headerPanel.add(terugButton);
+		if(rmknop)headerPanel.add(rmKnop);
+		headerPanel.add(subKnop);
+		headerPanel.add(abcKnop);
+		headerPanel.add(plusKnop);
+		headerPanel.add(minKnop);
+		headerPanel.add(maalKnop);
+		headerPanel.add(deelKnop);
+		headerPanel.add(haakjesKnop);
+		headerPanel.add(herleidKnop);
+		headerPanel.add(ontbindKnop);
+		headerPanel.add(splitsKnop);
+		headerPanel.add(wortelBewerkKnop);
+		mainPanel.add(headerPanel);
 		
 		abcKnop.setVisible(abcVisible);
 		subKnop.setVisible(subVisible);
@@ -463,6 +504,26 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		
 		sp.setWidget(contentPanel);
 		mainPanel.add(sp);
+		
+		if(subExtra && !substitutieVak)
+		{
+			HashMap<String, Object> hh = new HashMap<String,Object>();
+			hh.put("volledigeBreedte", Boolean.FALSE);
+			hh.put("breedte", breedte);
+			hh.put("hoogte" , 150); 
+			hh.put("breedte", 220);
+			HashMap<String, Object> subLaunchState = new HashMap<String, Object>();
+			subLaunchState.putAll(launchState);
+			subLaunchState.put("substitutieVak", Boolean.TRUE);
+			hh.put("interactiePanelLaunchState", subLaunchState);
+			gebruikersSubstitutiesVak = new FormuleEditorWithSteps(hh, true, randomVarNamen, randomVarWaarden, null);
+			
+		}
+		
+		
+			
+		
+
 
 		LayoutPanel stepPanel = maakNieuwStapPanel();
 		//stepPanel.setWidth((breedte - 5) + "px");
@@ -541,9 +602,6 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		if(editor != null)
 			editor.setCurrentElementRepaint();
 		
-	}
-
-	private FormuleEditorWithSteps() {
 	}
 
 	public void zetInstellingen(ObjectMap instellingen2)
@@ -686,7 +744,20 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 		requestFocus();
 		checkimg.setVisible(false);
+		
+		//nodig om te zorgen dat gebruikerssubstituties voor pijlen blijven staan:
+		if(gebruikersSubstitutiesVak != null && gebruikersSubstitutiesVak.asWidget().isAttached())
+			voegGebruikersSubstitutiesVakToe();
+		
 		scrollToBottom();
+	}
+	
+	public void voegGebruikersSubstitutiesVakToe()
+	{
+		gebruikersSubstitutiesVak.asWidget().removeFromParent();
+		contentPanel.add(gebruikersSubstitutiesVak);
+		contentPanel.setWidgetRightWidth(gebruikersSubstitutiesVak, 21, Style.Unit.PX, gebruikersSubstitutiesVak.getWidth(), Style.Unit.PX);
+		contentPanel.setWidgetTopHeight(gebruikersSubstitutiesVak, 27, Style.Unit.PX, gebruikersSubstitutiesVak.getHeight(), Style.Unit.PX);
 	}
 	
 	public void addBordjesStap()
@@ -749,6 +820,12 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		}
 	}
 	
+	public void closeEditor()
+	{
+		this.asWidget().removeFromParent();
+		
+	}
+	
 	public void downStep()
 	{
 		if (nagekeken)
@@ -756,7 +833,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 		if (correct != Boolean.TRUE || isToets())
 		{
-			if (stapOk || isToets())
+			if (stapOk || isToets() || substitutieVak)
 			{	
 				String userAnswer = "";
 				if (editor == null)
@@ -1226,8 +1303,17 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	if(substitutie == null)
-				maakStap("sub");
+			{	if(subExtra)
+				{
+					voegGebruikersSubstitutiesVakToe();
+					
+				}
+				else
+				{
+					if(substitutie == null)
+						maakStap("sub");
+					
+				}
 			}
 		});
 	}
@@ -1338,6 +1424,18 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			public void onTouchStart(TouchStartEvent event)
 			{
 				copyStep();
+			}
+		});
+	}
+	
+	private void addCloseButtonHandler(final TouchButton tb)
+	{
+		tb.addTouchStartHandler(new TouchStartHandler()
+		{
+			@Override
+			public void onTouchStart(TouchStartEvent event)
+			{
+				closeEditor();
 			}
 		});
 	}
@@ -1538,8 +1636,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 		if (substitutie != null)
 			substitutieString = "$f" + substitutie.toString() + "@";
-		//terugzetten als gebruikersSubstitutiesVak gemaakt:
-		//gebruikersSubStrings = gebruikersSubstitutiesVak.geefRegels();
+		gebruikersSubStrings = gebruikersSubstitutiesVak.geefRegels();
 
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("stapNr", new Integer(stapNr));
@@ -1665,8 +1762,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		this.nagekeken = nagekeken;
 		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
 		this.errorCount = errorCount;
-		//terugzetten als gebruikersSubstitutiesVak gemaakt:
-		//gebruikersSubstitutiesVak.zetRegels(gebruikersSubStrings);
+		if(gebruikersSubstitutiesVak != null)
+			gebruikersSubstitutiesVak.zetRegels(gebruikersSubStrings);
 		
 		if (!substitutieString.equals(""))
 			substitutie = FormuleParser.geefExpressie(substitutieString);
@@ -1878,7 +1975,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 					editor.kijkNa(true);
 					//maakNakijkenAf(false);
 				}
-				else if (i == stapNr - 1 && !nagekeken && !linStrategieVersie)
+				else if (i == stapNr - 1 && !nagekeken && !linStrategieVersie && !substitutieVak)
 					fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				else
 					fv.showResult(FormuleViewer.NONE);
@@ -2181,7 +2278,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	void fireEvent(CBookEvent event) 
 	{
 		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
-		comRoot.fireEvent(event);
+		if(comRoot != null) //comRoot is null bij substitutieAntwoordVak
+			comRoot.fireEvent(event);
 	}
 
 	public void kijkNa(boolean backStep, boolean show, boolean setState)
@@ -2490,8 +2588,58 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	
 	public Vergelijking[] getGebruikersSubstituties()
 	{
+		if(gebruikersSubstitutiesVak == null)
+			return null;
+		String[] gebruikersSubstitutieStrings = gebruikersSubstitutiesVak.geefRegels();
+		if (gebruikersSubstitutieStrings != null)
+		{
+			boolean subCorrect = true;
+			gebruikersSubstituties = new Vergelijking[gebruikersSubstitutieStrings.length];
+			for (int i = 0; i < gebruikersSubstitutieStrings.length; i++)
+			{
+				try
+				{
+					//gebruikersSubstituties[i] = (FormuleParser.parseVergelijking(gebruikersSubstitutieStrings[i], functieDefSet)).geefVergelijking(0);
+					gebruikersSubstituties[i] = (FormuleParser.parseVergelijking(gebruikersSubstitutieStrings[i])).geefVergelijking(0);
+					if (!gebruikersSubstituties[i].geefExpLinks().isVar())
+						subCorrect = false;
+				}
+				catch (Exception e)
+				{
+					subCorrect = false;
+				}
+			}
+			if (!subCorrect)
+				gebruikersSubstituties = null;
+		}
 		return gebruikersSubstituties;
 	}
+	
+	//gebruikt voor opvragen gebruikerssubstituties
+	public String[] geefRegels()
+	{
+		String[] regels = new String[stapNr + 1];
+		for (int i = 0; i < viewers.size(); i++)
+			regels[i] = "$f" + this.getViewerString(i) + "@";
+		if(viewers.size() < stapNr + 1 && editor != null)
+			regels[stapNr] = "$f" + editor.toString() + "@";
+		return regels;
+		
+	}
+	
+	//gebruikt voor terugzetten gebruikerssubstituties
+	public void zetRegels(String[] regelStrings)
+	{	if(regelStrings==null) return;
+		int aantalFormuleRegels = regelStrings.length;
+		for(int i=0 ; i<aantalFormuleRegels ; i++)
+		{	if(i>0)
+				downStep();
+		if (regelStrings[i].startsWith("$f") && regelStrings[i].endsWith("@"))
+			regelStrings[i] = regelStrings[i].substring(2, regelStrings[i].length() - 1);	
+		editor.insert(regelStrings[i]);
+		}
+	}
+	
 	
 	private void maakStap(String operator)
 	{
@@ -2632,7 +2780,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		fv.setFont(font);
 		fv.setSelection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
 		
-		if (show) 
+		if (show && !substitutieVak) 
 			fv.showResult(FormuleViewer.ALMOSTCORRECT); // waarom? Voor bordjesmethode kom ik hier met een goed antwoord...
 		else if (!isToets())
 			fv.showResult(FormuleViewer.NONE);
@@ -2668,7 +2816,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		
 		if (isToets())
 		{
-			if (show && !stepsForLinKwad)
+			if (show && !stepsForLinKwad && !substitutieVak)
 			{	
 				if (goedHalfFout == AntwoordVakChecker.GOED)
 					fv.showResult(FormuleViewer.CORRECT);
@@ -2796,7 +2944,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				fv.showResult(FormuleViewer.NONE);
 				stapOk = true;
 			}
-			else if (vergNieuw != null)
+			else if (vergNieuw != null && !substitutieVak)
 			{
 				fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				stapOk = true;
@@ -2912,6 +3060,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		if(volledigeBreedte)
 		{	this.breedte = breedte;
 			mainPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);
+			headerPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);
 			sp.getElement().getStyle().setWidth(breedte - 5, Unit.PX);
 			feedbackPanel.getElement().getStyle().setWidth(breedte - 25, Unit.PX);	
 			for(int i = 0; i < stepPanels.size(); i++)
@@ -3010,5 +3159,49 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		if(stapNr == 0)
 			return "start";
 		return Integer.valueOf(stapNr);
+	}
+	
+	public int bepaalHoogte()
+	{
+		int hoogte = 0;
+		for(int i = 0; i < viewers.size(); i++)
+		{
+			hoogte += viewers.get(i).getHeight() + stapH;
+		}
+		if(editor != null)
+			hoogte += editor.getHeight() + stapH;
+		//TODO: if (feedbackTekst != null && feedbackTekst.isShowing()) 
+		//	hoogte += 30 + feedbackTekst.getHeight();
+		return hoogte;
+	}
+	
+	public void zetPijl(boolean p)
+	{
+		pijl = p;
+	}
+	
+	public void zetCheck(boolean c)
+	{
+		check = c;
+	}
+	
+	public boolean getCheck()
+	{
+		return check;
+	}
+
+	public int getStapNr()
+	{
+		return stapNr;
+	}
+	
+	public void setHeader(boolean b)
+	{
+		//headerAan = b;
+	}
+	
+	public FlowPanel getHeaderPanel()
+	{
+		return headerPanel;
 	}
 }
