@@ -910,7 +910,14 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					TekstVakPanel tvp = (TekstVakPanel) currentObject;
 					if(tvp.vulHoogteMogelijk())
 					{	tvp.corrigeerRestHoogte(geefRestHoogte());
-						getRegelVak(0).setHeight(tvp.getHoogte());
+						for(int j = 0; j < aantalRegels; j++)
+						{
+							ArrayList<Object> regelList = getRegelVak(j).getRegelObjects();
+							if(regelList.contains(currentObject))
+							{	getRegelVak(j).setHeight(tvp.getHoogte());
+								break;
+							}
+						}
 						plaatsRegels(true);
 					}
 					else
@@ -929,8 +936,19 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				Object currentObject = opdrachtObjects.get(i);
 				if(currentObject instanceof SymboolPanel)
 				{	((SymboolPanel) currentObject).zetVolledigeHoogte(this.hoogte);
-					getRegelVak(0).setHeight(this.hoogte);
-					getRegelVak(0).hervulRegel();
+					
+					for(int j = 0; j < aantalRegels; j++)
+					{
+						ArrayList<Object> regelList = getRegelVak(j).getRegelObjects();
+						if(regelList.contains(currentObject))
+						{	getRegelVak(j).setHeight(this.hoogte);
+							getRegelVak(j).hervulRegel();
+							break;
+						}
+					}
+				
+//					getRegelVak(0).setHeight(this.hoogte);
+//					getRegelVak(0).hervulRegel();
 					plaatsRegels(true);
 				}
 				else if(currentObject instanceof TekstVakPanel)
