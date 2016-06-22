@@ -52,6 +52,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	private Expressie[] juisteVormen;
 	
 	private Expressie substitutie;
+	private Vergelijking[] antwoordSubstituties;
 	private Vergelijking[] gebruikersSubstituties;
 	
 	//private TekstArea feedbackTekst;
@@ -131,6 +132,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		double eqTestValueMin = 0;
 		double eqTestValueMax = 5;
 		int scoreMax = 0;
+		List<String> antwoordSubStrings = null;
 		boolean tips = false;
 		String strategieDomein = "";
 		boolean meerTips = false;
@@ -160,6 +162,9 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		if(tips){
 			if(afvCheckerModel.containsKey("ideasInstellingen")) ideasInstellingen = afvCheckerModel.getObjectMap("ideasInstellingen");
 	    }
+		if (afvCheckerModel.containsKey("antwoordSubStrings"))
+			antwoordSubStrings = afvCheckerModel.getStringList("antwoordSubStrings");
+		
 		
 		this.herleiding = herleiding;
 		this.soortHerleiding = soortHerleiding;
@@ -186,7 +191,22 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
         }
         zetJuisteAntwoord(antwoordString);
         zetJuisteVorm(vormString);
-         
+        if (antwoordSubStrings != null) {
+			boolean subCorrect = true;
+			antwoordSubstituties = new Vergelijking[antwoordSubStrings.size()];
+			for (int i = 0; i < antwoordSubStrings.size(); i++) {
+				try {
+					String ass = FormuleParser.randomizeString(antwoordSubStrings.get(i), randomVars, randomValues);
+					antwoordSubstituties[i] = (FormuleParser.parseVergelijking(ass)).geefVergelijking(0);
+					if (!antwoordSubstituties[i].geefExpLinks().isVar())
+						subCorrect = false;
+				} catch (Exception e) {
+					subCorrect = false;
+				}
+			}
+			if (!subCorrect)
+				antwoordSubstituties = null;
+		}
         
         this.gekozenAntwoordString = antwoordString;
         this.answerModels = new ArrayList<Map<String, Object>> ();
@@ -859,7 +879,12 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		if(substitutie!=null && antwoord!=null) 
 		{	antwoord = antwoord.substitueer(substitutie,"u");
 		}
-		
+		if (antwoordSubstituties != null && antwoord != null) {
+			for (int i = 0; i < antwoordSubstituties.length; i++)
+			{
+				antwoord = antwoord.substitueer(antwoordSubstituties[i].geefExpRechts(), antwoordSubstituties[i].geefExpLinks().geefVarNaam());
+			}
+		}
 		
 		Expressie antwoordEvalCAS = null;
 		boolean casNodig = false;
