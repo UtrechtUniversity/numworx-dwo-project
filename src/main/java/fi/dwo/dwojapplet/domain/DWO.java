@@ -128,7 +128,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     private String limitedSchoolAccessString;
 
     private String schoolAccessPropertiesString;
-    
+
     FocusTraversalPolicy delegate;
 
     /**
@@ -146,19 +146,16 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
             LogManager.getLogManager().readConfiguration(file);
             LOG.log(Level.INFO, "Using external logging.properties file.");
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             Logger.getAnonymousLogger().log(Level.INFO,
                     "No logging.properties file found in current directory. Using default.");
             try {
                 final InputStream inputStream2 = DWO.class.getResourceAsStream("/logging.properties");
                 LogManager.getLogManager().readConfiguration(inputStream2);
                 Logger.getAnonymousLogger().log(Level.INFO, "logging.properties file read from property folder.");
-            }
-            catch (final IOException e2) {
+            } catch (final IOException e2) {
                 Logger.getAnonymousLogger().severe("Could not load internal logging.properties file.");
-            }
-            catch (final SecurityException e3) {
+            } catch (final SecurityException e3) {
                 Logger.getAnonymousLogger().severe("Could not load internal logging.properties file.");
                 throw e3;
             }
@@ -190,8 +187,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             // done with file
             file.close();
 
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             LOG.log(Level.FINE, "No external DWO.property file found");
             try {
                 // try resource folder.
@@ -206,17 +202,15 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 // done with file
                 inStream.close();
 
-            }
-            catch (FileNotFoundException ex2) {
+            } catch (FileNotFoundException ex2) {
                 LOG.log(Level.FINE, "No internal DWO.properties file found");
                 throw new RuntimeException(ex2);
-            }
-            catch (IOException ex2) {
+            } catch (IOException ex2) {
                 LOG.log(Level.SEVERE, "IO error reading internal DWO.properties file.");
                 throw new RuntimeException(ex2);
             }
         }
-        
+
         //assign properties to static value.
         String defaultUsernameProperty = properties.getProperty("defaultUsername", "");
         DwoHelper.setDefaultUsername(defaultUsernameProperty);
@@ -226,7 +220,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         DwoHelper.setDefaultPassword(defaultPasswordProperty);
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultPasswordProperty",
             DwoHelper.getDefaultPassword()});
-        
+
         //assign properties to static value.
         String serverUrlPathProperty = properties.getProperty("serverUrlPath", "./");
         DwoHelper.setServerUrlPath(DwoHelper.getURL(serverUrlPathProperty));
@@ -234,18 +228,18 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             DwoHelper.getServerUrlPath()});
 
         //if not set pick default path
-        String resourceURLPathStringProperty = properties.getProperty("resourceUrlPath",  "resources/");
+        String resourceURLPathStringProperty = properties.getProperty("resourceUrlPath", "resources/");
         DwoHelper.setResourceUrlPath(DwoHelper.getURL(resourceURLPathStringProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
             DwoHelper.getResourceUrlPath()});
 
         //if not set pick default path
-        String jarURLPathStringProperty = properties.getProperty("jarUrlPath",  "jars");
+        String jarURLPathStringProperty = properties.getProperty("jarUrlPath", "jars");
         DwoHelper.setJarUrlPath(DwoHelper.getURL(jarURLPathStringProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"jarURLPathStringProperty",
             DwoHelper.getJarUrlPath()});
 
-        HttpAuthenticationType httpAuthentication = HttpAuthenticationType.valueOf(properties.getProperty("httpAuthentication", "DIGEST"));        
+        HttpAuthenticationType httpAuthentication = HttpAuthenticationType.valueOf(properties.getProperty("httpAuthentication", "DIGEST"));
         DwoHelper.setHttpAuthentication(httpAuthentication);
         LOG.log(Level.INFO, "Property {0} is value: {1}",
                 new Object[]{"httpAuthentication", DwoHelper.getHttpAuthentication()});
@@ -267,8 +261,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         public Component getComponentAfter(Container focusCycleRoot, Component aComponent) {
             try {
                 return delegate.getComponentAfter(focusCycleRoot, aComponent);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 recover(e);
             }
             return getFirstComponent(focusCycleRoot); // don't crash
@@ -278,8 +271,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         public Component getComponentBefore(Container focusCycleRoot, Component aComponent) {
             try {
                 return delegate.getComponentBefore(focusCycleRoot, aComponent);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 recover(e);
             }
             return getLastComponent(focusCycleRoot);
@@ -289,8 +281,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         public Component getDefaultComponent(Container focusCycleRoot) {
             try {
                 return delegate.getDefaultComponent(focusCycleRoot);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 recover(e);
             }
             return null;
@@ -300,8 +291,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         public Component getFirstComponent(Container focusCycleRoot) {
             try {
                 return delegate.getFirstComponent(focusCycleRoot);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 recover(e);
             }
             return null;
@@ -311,8 +301,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         public Component getInitialComponent(Window window) {
             try {
                 return delegate.getInitialComponent(window);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 recover(e);
             }
             return super.getInitialComponent(window);
@@ -322,8 +311,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         public Component getLastComponent(Container focusCycleRoot) {
             try {
                 return delegate.getLastComponent(focusCycleRoot);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 recover(e);
             }
             return null;
@@ -403,8 +391,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (args != null && args.length > o && args[o] != null) {
             try {
                 dwoProfileID = Integer.parseInt(args[o]);
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
             }
 //            if (args.length > 2 + o && args[1 + o] != null && args[2 + o] != null) {
 //                limitedSchoolAccessString = args[1 + o];
@@ -656,8 +643,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             checkEmail = new CheckEmail(DwoHelper.getApplet().getCodeBase());
             return checkEmail.check(email);
-        }
-        catch (MalformedURLException ex) {
+        } catch (MalformedURLException ex) {
             return true;
         }
     }
@@ -811,8 +797,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public Group[] getGroups() {
         try {
             return (Group[]) PersistenceFacade.instance().get(Group.class);
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -860,8 +845,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             courseList = PersistenceFacade.instance().getCourses(DwoHelper.getCurrentFacadeUser());
             return PersistenceFacade.instance().sequence(selectDwoProfileCourses(courseList));
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -896,8 +880,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             courseList = PersistenceFacade.instance().getCourses(schoolClass);
             return selectDwoProfileCourses(courseList);
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -923,9 +906,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public void logoff() {
         try {
             SecureUserAccountManager.logoutUser();
-            DwoHelper.setCurrentUser(null);
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch (Dwo2Exception ex) {
+        try {
+            DwoHelper.setCurrentUser(null);
+        } catch (Dwo2Exception ex) {
             Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, null, ex);
         }
         currentCourse = null;
@@ -1154,8 +1140,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public void deleteUser() {
         try {
             PersistenceFacade.instance().deleteUser(DwoHelper.getCurrentFacadeUser());
-        }
-        catch (RegisterException e) {
+        } catch (RegisterException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
@@ -1181,8 +1166,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             } else {
                 returnvalue = true;
             }
-        }
-        catch (ClassException e) {
+        } catch (ClassException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
 
@@ -1270,16 +1254,16 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     }
 
-private boolean isRunningJavaWebStart() {
-    boolean hasJNLP = false;
-    try {
-      Class.forName("javax.jnlp.ServiceManager");
-      hasJNLP = true;
-    } catch (ClassNotFoundException ex) {
-      hasJNLP = false;
+    private boolean isRunningJavaWebStart() {
+        boolean hasJNLP = false;
+        try {
+            Class.forName("javax.jnlp.ServiceManager");
+            hasJNLP = true;
+        } catch (ClassNotFoundException ex) {
+            hasJNLP = false;
+        }
+        return hasJNLP;
     }
-    return hasJNLP;
-}
 
     /**
      * First phase of the applet life-cycle, {@Link start} is called immediately
@@ -1290,7 +1274,7 @@ private boolean isRunningJavaWebStart() {
         if (!DwoHelper.setApplet(this)) {
             return;
         }
-        if(DwoHelper.isApplication()==false|| isRunningJavaWebStart()){
+        if (DwoHelper.isApplication() == false || isRunningJavaWebStart()) {
             Authenticator.setDefault(null);
         }
         ReadConfigProperties();
@@ -1308,8 +1292,7 @@ private boolean isRunningJavaWebStart() {
                 DwoHelper.setServerUrlPath((new URL(url, ".."))); // denotes the
                 // base
                 // servlet url
-            }
-            catch (MalformedURLException ex) {
+            } catch (MalformedURLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
         }
@@ -1327,7 +1310,6 @@ private boolean isRunningJavaWebStart() {
 //            throw new RuntimeException(ex);
 //        }
 //        StoredRestManager.setWebTargetAndCredentials(target);
-
         // TODO make it configurable in the servlet via a attribute in the jsp
         // initialized via the tomcat context.xml
         // Read the versioning from the MANIFEST
@@ -1357,8 +1339,7 @@ private boolean isRunningJavaWebStart() {
                         "No version numbering available. Possible running from IDE. Wrong 'Main-Class' value in MANIFEST-MF: '{0}'.",
                         new Object[]{mainClass});
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             LOG.log(Level.SEVERE, "Can't open /META-INF/MANIFEST.MF", ex);
         }
         DwoHelper.setAu(new AppletUtil(this));
@@ -1410,8 +1391,7 @@ private boolean isRunningJavaWebStart() {
         if (scoViewNrString != null && (!scoViewNrString.equals(""))) {
             try {
                 scoViewNr = Integer.parseInt(scoViewNrString);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
             }
         }
         // scoViewNr = 58010;
@@ -1419,8 +1399,7 @@ private boolean isRunningJavaWebStart() {
         if (courseViewNrString != null && (!courseViewNrString.equals(""))) {
             try {
                 courseViewNr = Integer.parseInt(courseViewNrString);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
             }
         }
         // courseViewNr = 13916;
@@ -1454,8 +1433,7 @@ private boolean isRunningJavaWebStart() {
                     String testNumber = testProperties.getProperty("test." + i);
                     testViewKeys.put(classNumber, testNumber);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 testViewKeys = null;
                 testView = false;
                 LOG.log(Level.SEVERE, null, e);
@@ -1494,8 +1472,7 @@ private boolean isRunningJavaWebStart() {
                         schoolAccessKeys.put("rights." + schoolNumber, rights);
                     }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 schoolAccessKeys = null;
                 limitedSchoolAccess = false;
                 LOG.log(Level.SEVERE, null, e);
@@ -1515,8 +1492,7 @@ private boolean isRunningJavaWebStart() {
             if ((dwoProfileString != null) && (!dwoProfileString.equals(""))) {
                 try {
                     dwoProfileID = Integer.parseInt(dwoProfileString);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                 }
             }
             JVMChecker jvmChecker = new JVMChecker(this);
@@ -1525,8 +1501,7 @@ private boolean isRunningJavaWebStart() {
 
         try {
             dwoProfile = (DwoProfile) PersistenceFacade.instance().get(dwoProfileID, DwoProfile.class);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
         GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
         ModuleTreePanel.initialize(dwoProfile);
@@ -1566,13 +1541,11 @@ private boolean isRunningJavaWebStart() {
             try {
                 GuiCreator.instance().login(userName, passWord);
                 return;
-            }
-            catch (LoginException exc) {
+            } catch (LoginException exc) {
                 LOG.log(Level.SEVERE, null, exc);
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN),
                         JOptionPane.ERROR_MESSAGE);
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this, ex.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN),
                         JOptionPane.ERROR_MESSAGE);
@@ -1581,8 +1554,7 @@ private boolean isRunningJavaWebStart() {
             try {
                 GuiCreator.instance().login();
                 return;
-            }
-            catch (LoginException exc) {
+            } catch (LoginException exc) {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN),
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -1593,8 +1565,7 @@ private boolean isRunningJavaWebStart() {
                 try {
                     GuiCreator.instance().login(userName, passWord);
                     return;
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                 }
             }
         }
@@ -1730,8 +1701,7 @@ private boolean isRunningJavaWebStart() {
         } else {
             try {
                 return PersistenceFacade.instance().LMSGetValue(sco, user, iDataModelElement);
-            }
-            catch (PersistenceException e) {
+            } catch (PersistenceException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
                 return "";
             }
@@ -1758,8 +1728,7 @@ private boolean isRunningJavaWebStart() {
     public String LMSSetValue(ScoBase sco, User user, String iDataModelElement, String iValue) {
         try {
             return PersistenceFacade.instance().LMSSetValue(sco, user, iDataModelElement, iValue);
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return "false";
         }
@@ -1829,7 +1798,7 @@ private boolean isRunningJavaWebStart() {
     static {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
-    
+
     /**
      * The main method of the class.
      *
@@ -1840,7 +1809,7 @@ private boolean isRunningJavaWebStart() {
      * @throws ClassNotFoundException
      */
     public static void main(String[] args) throws Exception {
-        
+
         //String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
         //lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
         //lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
@@ -1887,8 +1856,7 @@ private boolean isRunningJavaWebStart() {
             schoolClass.setRegistrationKey(newRegistrationKey);
             schoolClass.setIconizer(iconizer);
             return true;
-        }
-        catch (ClassException e) {
+        } catch (ClassException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -2006,8 +1974,7 @@ private boolean isRunningJavaWebStart() {
         try {
             courseList = PersistenceFacade.instance().getEditableCourses(DwoHelper.getCurrentFacadeUser());
             return PersistenceFacade.instance().sequence(selectDwoProfileCourses(courseList));
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -2035,8 +2002,7 @@ private boolean isRunningJavaWebStart() {
         try {
             return PersistenceFacade.instance().addCourse(DwoHelper.getCurrentFacadeUser().getSchool(), name,
                     description, dwoProfile, parent, isMap);
-        }
-        catch (CourseException e) {
+        } catch (CourseException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -2051,8 +2017,7 @@ private boolean isRunningJavaWebStart() {
     public boolean updateCourse(Course course) {
         try {
             return PersistenceFacade.instance().updateCourse(course);
-        }
-        catch (CourseException e) {
+        } catch (CourseException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -2068,8 +2033,7 @@ private boolean isRunningJavaWebStart() {
     public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
         try {
             return PersistenceFacade.instance().addSco(course, appletConfig, name, description, showScore);
-        }
-        catch (ScoException e) {
+        } catch (ScoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -2084,8 +2048,7 @@ private boolean isRunningJavaWebStart() {
     public boolean updateSco(Sco sco) {
         try {
             return PersistenceFacade.instance().updateSco(sco);
-        }
-        catch (ScoException e) {
+        } catch (ScoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -2100,8 +2063,7 @@ private boolean isRunningJavaWebStart() {
     public boolean deleteCourse(Course course) {
         try {
             return PersistenceFacade.instance().deleteCourse(course);
-        }
-        catch (CourseException e) {
+        } catch (CourseException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -2116,8 +2078,7 @@ private boolean isRunningJavaWebStart() {
     public boolean deleteSco(Sco sco) {
         try {
             return PersistenceFacade.instance().deleteSco(sco);
-        }
-        catch (ScoException e) {
+        } catch (ScoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -2137,8 +2098,7 @@ private boolean isRunningJavaWebStart() {
             // + ac[i].getName() + "; " + ac[i].getLaunchdata());
             // }
             return ac;
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -2154,8 +2114,7 @@ private boolean isRunningJavaWebStart() {
         try {
             School[] sc = (School[]) PersistenceFacade.instance().get(School.class);
             return sc;
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -2191,15 +2150,14 @@ private boolean isRunningJavaWebStart() {
 
     @Override
     public String LMSInitialize(String iParam) {
-        if(currentSco != null)
-        {   currentSco.LMSInitialize(iParam);
-        	return "true";
-        } 
-        else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
-        {	currentCourse.getCurrentSco().LMSInitialize(iParam);
-        	return "true";
+        if (currentSco != null) {
+            currentSco.LMSInitialize(iParam);
+            return "true";
+        } else if (currentCourse != null && currentCourse.getCurrentSco() != null) {
+            currentCourse.getCurrentSco().LMSInitialize(iParam);
+            return "true";
         } else {
-        	return "false";
+            return "false";
         }
     }
 
@@ -2283,8 +2241,7 @@ private boolean isRunningJavaWebStart() {
     public String LMSCommit(ScoBase sco, String param) {
         try {
             return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return "false";
         }
@@ -2343,8 +2300,7 @@ private boolean isRunningJavaWebStart() {
             if (value != null) {
                 value = URLDecoder.decode(value, "UTF-8");
             }
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
         }
         return value;
     }
@@ -2359,25 +2315,23 @@ private boolean isRunningJavaWebStart() {
         String samlUserID = getDecodedCookie(DWO_SAML_USER_ID);
         String samlOrgID = getDecodedCookie(DWO_SAML_ORGANIZATION_ID);
         String samlOrg = getDecodedCookie("dwoSAMLOrganization");
-    	String authToken = getDecodedCookie("dwoSAMLAuthToken");
-    	System.err.println("Cookies: " + samlUserID + "," + samlOrgID + "," + authToken);
-    	if(false)
-    	{
-    		samlUserID = "c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl";
-    		samlOrgID = "SURFIN";
-    		samlOrg   = "SURFnet Instelling";
-    		authToken = "0";
-    	}
+        String authToken = getDecodedCookie("dwoSAMLAuthToken");
+        System.err.println("Cookies: " + samlUserID + "," + samlOrgID + "," + authToken);
+        if (false) {
+            samlUserID = "c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl";
+            samlOrgID = "SURFIN";
+            samlOrg = "SURFnet Instelling";
+            authToken = "0";
+        }
 
         if (samlUserID != null && samlOrgID != null) {
             try {
                 LoginManager.samlLogin(samlUserID, samlOrgID, authToken);
                 return DwoHelper.getCurrentFacadeUser();
-            }
-            catch (Dwo2Exception e) {
-            	//TODO LOG.log(...)
-            	System.err.println("Cookies: " + samlUserID + "," + samlOrgID + "," + authToken);
-            	e.printStackTrace();
+            } catch (Dwo2Exception e) {
+                //TODO LOG.log(...)
+                System.err.println("Cookies: " + samlUserID + "," + samlOrgID + "," + authToken);
+                e.printStackTrace();
             }
             samlData = new HashMap();
             samlData.put(DWO_SAML_USER_ID, samlUserID);
@@ -2421,11 +2375,9 @@ private boolean isRunningJavaWebStart() {
                         PersistenceFacade.instance().changeAccount(u, null, null, u.getFirstname(), u.getMiddleName(),
                                 u.getLastName(), u.getEmail());
                         PersistenceFacade.instance().addStudentToClass(u.getInClass(), u.getID());
-                    }
-                    catch (PersistenceException e) {
+                    } catch (PersistenceException e) {
                         LOG.log(Level.SEVERE, null, e);
-                    }
-                    catch (RegisterException ex) {
+                    } catch (RegisterException ex) {
                         LOG.log(Level.SEVERE, null, ex);
                     }
                 }
@@ -2466,8 +2418,7 @@ private boolean isRunningJavaWebStart() {
     public boolean deleteSchool(School sc) {
         try {
             return PersistenceFacade.instance().deleteSchool(sc);
-        }
-        catch (SchoolException e) {
+        } catch (SchoolException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -2485,8 +2436,7 @@ private boolean isRunningJavaWebStart() {
     public boolean swapSco(Sco sco1, Sco sco2) {
         try {
             return PersistenceFacade.instance().swapScoSequenceNr(sco1, sco2);
-        }
-        catch (ScoException e) {
+        } catch (ScoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -2575,8 +2525,7 @@ private boolean isRunningJavaWebStart() {
             Sco sco = (Sco) PersistenceFacade.instance().get(id, Sco.class);
             GuiCreator.instance().getMainPanel().getCenter().select(sco);
             return "true";
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
             return "false";
         }

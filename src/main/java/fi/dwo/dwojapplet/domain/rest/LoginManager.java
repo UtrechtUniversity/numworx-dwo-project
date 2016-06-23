@@ -42,6 +42,7 @@ public class LoginManager {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Authorization", authString);
             conn.setUseCaches(false);
+            conn.connect();
 
             if (conn.getResponseCode() != 200) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());

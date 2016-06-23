@@ -15,7 +15,6 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
-import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -145,8 +144,7 @@ public final class DwoHelper {
             schoolLogins = SecureUserAccountLoginsManager.getSchoolLogins();
             //TODO should set relevant properties when calling init using REST-interface: school, hasRole etc...
 
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
     }
@@ -169,8 +167,7 @@ public final class DwoHelper {
             } else {
                 schoolLogins = null;
             }
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
     }
@@ -215,11 +212,9 @@ public final class DwoHelper {
         }
         try {
             return JSObject.getWindow(applet);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // expect JSException of ClassNotFoundException
-        }
-        catch (NoClassDefFoundError e) {
+        } catch (NoClassDefFoundError e) {
             // expect NoClassDefFound ERROR
         }
         return null;
@@ -340,42 +335,41 @@ public final class DwoHelper {
         return loadImage(image, im);
     }
 
-    /** get URL relative to /dwo.
-     * codebase is /dwo/jars/ 
-     * documentbase = /dwo/(?)
+    /**
+     * get URL relative to /dwo. codebase is /dwo/jars/ documentbase = /dwo/(?)
      * applicationbase = /dwo/
+     *
      * @param resource
      * @return URL
      */
-	public static URL getURL(String resource) {
-		URL url = null;
-        if(isApplication) 
-        {	
-        	if(applicationBase == null)
-				try {
-					applicationBase = new URL("https://app.dwo.nl/dwo/");
-				} catch (MalformedURLException e) {
-				}
-			try {
-				url = new URL(applicationBase, resource);
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        
+    public static URL getURL(String resource) {
+        URL url = null;
+        if (isApplication) {
+            if (applicationBase == null) {
+                try {
+                    applicationBase = new URL("https://app.dwo.nl/dwo/");
+                } catch (MalformedURLException e) {
+                }
+            }
+            try {
+                url = new URL(applicationBase, resource);
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        } else {
+            try {
+                //applicationBase = applet.getDocumentBase(); // insecure
+                if (applicationBase == null) {
+                    applicationBase = new URL(applet.getCodeBase(), "../"); // secure
+                }
+                url = new URL(applicationBase, resource);
+            } catch (MalformedURLException e) {
+            }/**/
         }
-        else {
-        	try {
-	          	//applicationBase = applet.getDocumentBase(); // insecure
-        		if(applicationBase == null)
-        			applicationBase = new URL(applet.getCodeBase(), "../"); // secure
-				url = new URL(applicationBase, resource);
-		     } 
-		    catch (MalformedURLException e) {
-		    }/**/
-	    }
-		return url;
-	}
+        return url;
+    }
 
     /**
      * @param image
@@ -387,8 +381,7 @@ public final class DwoHelper {
         tr.addImage(im, 0);
         try {
             tr.waitForAll();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
         if (im != null) {
             loadedImages.put(image, im);
@@ -422,8 +415,7 @@ public final class DwoHelper {
             String cookie;
             cookie = (String) JSObject.getWindow(applet).eval("document.cookie");
             return cookie;
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
             return null;
         }
     }
@@ -457,8 +449,7 @@ public final class DwoHelper {
         }
         try {
             JSObject.getWindow(applet).eval("document.cookie ='" + name + "=" + value + "';");
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
         }
     }
 
@@ -468,8 +459,7 @@ public final class DwoHelper {
         }
         try {
             JSObject.getWindow(applet).eval("document.cookie ='" + name + "=dummy" + "';");
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
         }
     }
 
@@ -588,8 +578,7 @@ public final class DwoHelper {
             currentUser = aCurrentUser;
             try {
                 currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUserName());
-            }
-            catch (LoginException ex) {
+            } catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
         } else {
@@ -606,11 +595,13 @@ public final class DwoHelper {
             try {
                 GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(aCurrentUser.getId()));
                 currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUserName());
-            }
-            catch (LoginException ex) {
+            } catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
         } else {
+            if (currentFacadeUser != null) {
+                GuiCreator.instance().clearCurrentUserData(currentFacadeUser.getID());
+            }
             currentFacadeUser = null;
         }
     }
@@ -702,7 +693,7 @@ public final class DwoHelper {
     public static String getDefaultPassword() {
         return defaultPassword;
     }
-    
+
     /**
      * @param aDefaultUsername the defaultUsername to set
      */
