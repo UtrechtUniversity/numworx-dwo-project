@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import com.owlike.genson.Genson;
+import fi.dwo.dwojapplet.REST.SimpleDigestHttpClient;
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomNewUser;
 import fi.dwo.rest.exceptions.Dwo2Exception;
@@ -17,8 +18,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.logging.Logger;
+import org.apache.http.auth.params.AuthPNames;
+import org.apache.http.client.params.AuthPolicy;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
  * Manages the user profile.
@@ -29,54 +35,70 @@ public class PublicUserManager {
 
     private static final Logger LOG = Logger.getLogger(PublicUserManager.class.getName());
 
+    /**
+     * DigestLogin
+     *
+     * @param username
+     * @param password
+     * @return
+     * @throws Dwo2Exception
+     */
+//    public static DomUserFull digestLogin(String username, String password) throws Dwo2Exception {
+//        //request a
+//        //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
+//        DomUserFull user;
+//        try {
+//            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make login   
+//                
+//            DefaultHttpClient httpclient = new DefaultHttpClient(ccm, params);
+//// Choose BASIC over DIGEST for proxy authentication
+//            List<String> authpref = new ArrayList<String>();
+//            authpref.add(AuthPolicy.BASIC);
+//            authpref.add(AuthPolicy.DIGEST);
+//            httpclient.getParams().setParameter(AuthPNames.PROXY_AUTH_PREF, authpref);
+//
+//            HttpURLConnection conn;
+//            conn = SimpleDigestHttpClient.instance().getAuthorizedURLConnection(username, password, url);
+//            String authString = username + ":" + password;
+//            authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
+////            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//            conn.setRequestMethod("GET");
+//            conn.setRequestProperty("Accept", "application/json");
+////            conn.setRequestProperty("Authorization", authString);
+//            conn.setUseCaches(false);
+//            conn.connect();
+//
+//            if (conn.getResponseCode() != 200) {
+//                throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
+//            }
+//
+//            BufferedReader br = new BufferedReader(new InputStreamReader(
+//                    (conn.getInputStream())));
+//
+//            String output;
+//            StringBuilder json = new StringBuilder();
+//            while ((output = br.readLine()) != null) {
+//                json.append(output);
+//            }
+//            conn.disconnect();
+//            //decode JSON
+//            Genson genson = new Genson();
+//
+////          LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
+//            user = genson.deserialize(json.toString(), DomUserFull.class);
+//            StoredRestManager.setBasicAuthString(authString);
+//            //Set current user for domain
+//            DwoHelper.setCurrentUser(user);
+//            return user;
+//        } catch (MalformedURLException e) {
+//            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
+//
+//        } catch (IOException e) {
+//            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
+//        }
+//    }
 
-    public static DomUserFull login(String username, String password) throws Dwo2Exception {
-        //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
-        DomUserFull user;
-        try {
-            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make login            
-            String authString = username + ":" + password;
-            authString = "Basic " +   Base64.getEncoder().encodeToString(authString.getBytes());
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Authorization", authString);
-            conn.setUseCaches(false);
-            conn.connect();
-
-            if (conn.getResponseCode() != 200) {
-                throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
-            }
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-            String output;
-            StringBuilder json = new StringBuilder();
-            while ((output = br.readLine()) != null) {
-                json.append(output);
-            }
-            conn.disconnect();
-            //decode JSON
-            Genson genson = new Genson();
-
-//          LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
-            user = genson.deserialize(json.toString(), DomUserFull.class);
-            StoredRestManager.setBasicAuthString(authString);
-            //Set current user for domain
-            DwoHelper.setCurrentUser(user);
-            return user;
-        }
-        catch (MalformedURLException e) {
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
-
-        }
-        catch (IOException e) {
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
-        }
-    }
-
-public static DomUserFull samlLogin(String user_id, String org_id, String authToken) throws Dwo2Exception {
+    public static DomUserFull samlLogin(String user_id, String org_id, String authToken) throws Dwo2Exception {
         DomUserFull user;
         RestSamlUser samlRestUser = new RestSamlUser();
         DomSamlUser samlUser = new DomSamlUser();
@@ -110,18 +132,17 @@ public static DomUserFull samlLogin(String user_id, String org_id, String authTo
 
             user = genson.deserialize(json.toString(), DomUserFull.class);
             String authString = user.getUserName() + ":" + user.getPassword();
-            authString = "Basic " +   Base64.getEncoder().encodeToString(authString.getBytes());
+            authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             StoredRestManager.setBasicAuthString(authString);
             return user;
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
         }
-    }    
+    }
+
     public static boolean RegisterNewUser(DomNewUser newUserReg) throws Dwo2Exception {
         boolean r;
         RestNewUser restNewUserReg = new RestNewUser();

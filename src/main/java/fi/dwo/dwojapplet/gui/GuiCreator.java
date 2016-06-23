@@ -142,7 +142,7 @@ public class GuiCreator {
         dwo.setWait();
         try {
             DwoHelper.setContact(false);
-            LoginManager.login(username, MD5.getHashString(String.valueOf(password)));
+            LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
 
             if (DwoHelper.getCurrentUser() != null) {
                 // TODO: remove, currently checks if licence is still valid
@@ -176,7 +176,7 @@ public class GuiCreator {
         dwo.setWait();
         try {
             DwoHelper.setContact(false);
-            LoginManager.login(username, password);
+            LoginManager.basicLogin(username, password);
 
             if (DwoHelper.getCurrentUser() != null) {
                 // TODO: remove, currently checks if licence is still valid

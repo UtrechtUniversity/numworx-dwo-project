@@ -7,7 +7,7 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
-import fi.dwo.dwojapplet.domain.rest.PublicUserRegistrationManager;
+import fi.dwo.dwojapplet.domain.rest.PublicUserManager;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -466,7 +466,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     nur.setSchoolLogin(null);
                     nur.setSchoolCode(null);
                     nur.setRole(RoleType.STUDENT);
-                    PublicUserRegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
+                    PublicUserManager.RegisterNewUser(nur); //throws Dwo2RestException.
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED));
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
@@ -487,7 +487,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     nur.setRole(role);
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
-                    PublicUserRegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
+                    PublicUserManager.RegisterNewUser(nur); //throws Dwo2RestException.
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED));
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }

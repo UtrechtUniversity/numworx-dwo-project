@@ -2,9 +2,7 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import com.owlike.genson.Genson;
-import fi.dwo.rest.dom.entities.DomSamlUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
@@ -20,7 +18,7 @@ import java.util.Base64;
 import java.util.logging.Logger;
 
 /**
- * Handles login actions and updates user and role stored in the DwoHelper.
+ * Handles basicLogin actions and updates user and role stored in the DwoHelper.
  * Should call a session password Manager in the future. Particular for
  * students.
  *
@@ -30,11 +28,12 @@ public class LoginManager {
 
     private static final Logger LOG = Logger.getLogger(LoginManager.class.getName());
 
-    public static DomUserFull login(String username, String password) throws Dwo2Exception {
+    @Deprecated
+    public static DomUserFull basicLogin(String username, String password) throws Dwo2Exception {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
         DomUserFull user;
         try {
-            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make login            
+            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make basicLogin            
             String authString = username + ":" + password;
             authString = "Basic " +   Base64.getEncoder().encodeToString(authString.getBytes());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
