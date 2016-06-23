@@ -76,50 +76,5 @@ public class LoginManager {
         }
     }
 
-    public static DomUserFull samlLogin(String user_id, String org_id, String authToken) throws Dwo2Exception {
-        DomUserFull user;
-        RestSamlUser samlRestUser = new RestSamlUser();
-        DomSamlUser samlUser = new DomSamlUser();
-        samlUser.setSamlUserId(user_id);
-        samlUser.setSamlOrgId(org_id);
-        samlUser.setAuthToken(authToken);
-        samlRestUser.setDomSamlUser(samlUser);
-        try {
-            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/public/user/submitSaml"); //TODO make login
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("PUT");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setUseCaches(false);
-
-            if (conn.getResponseCode() != 200) {
-                throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
-            }
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-            String output;
-            StringBuilder json = new StringBuilder();
-            while ((output = br.readLine()) != null) {
-                json.append(output);
-                System.out.println(output);
-            }
-            conn.disconnect();
-            //decode JSON
-            Genson genson = new Genson();
-
-            user = genson.deserialize(json.toString(), DomUserFull.class);
-            String authString = user.getUserName() + ":" + user.getPassword();
-            authString = "Basic " +   Base64.getEncoder().encodeToString(authString.getBytes());
-            StoredRestManager.setBasicAuthString(authString);
-            return user;
-        }
-        catch (MalformedURLException e) {
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
-
-        }
-        catch (IOException e) {
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
-        }
-    }
+    
 }
