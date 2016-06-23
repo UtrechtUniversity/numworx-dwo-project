@@ -37,7 +37,7 @@ public abstract class TextMapper {
 	public static final String BTN_CLOSE = "BTN_CLOSE";
 
 	public static final String BTN_ADD = "BTN_ADD";
-
+ 
 	public static final String BTN_BACK = "BTN_BACK";
 	public static final String BTN_NEW_STUDENTS = "BTN_ADD_STUDENTS";
 	public static final String BTN_NEW_TEACHERS = "BTN_ADD_TEACHERS";
