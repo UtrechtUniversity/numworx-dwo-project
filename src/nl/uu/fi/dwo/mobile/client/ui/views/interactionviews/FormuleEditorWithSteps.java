@@ -1636,7 +1636,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 		if (substitutie != null)
 			substitutieString = "$f" + substitutie.toString() + "@";
-		gebruikersSubStrings = gebruikersSubstitutiesVak.geefRegels();
+		if(gebruikersSubstitutiesVak != null)
+			gebruikersSubStrings = gebruikersSubstitutiesVak.geefRegels();
 
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("stapNr", new Integer(stapNr));
