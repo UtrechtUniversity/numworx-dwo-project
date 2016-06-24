@@ -247,7 +247,7 @@
     <!-- Required to be directly below the security constraint -->
     <login-config>
         <auth-method>BASIC</auth-method>
-        <realm-name>DWO account credentials required.</realm-name>
+        <realm-name>DWO.nl</realm-name>
     </login-config>
 
     <!-- Security roles referenced by this web application -->
