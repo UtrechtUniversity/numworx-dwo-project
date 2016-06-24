@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Base64;
 import java.util.logging.Logger;
 
@@ -37,81 +38,75 @@ public class PublicUserManager {
      * @return
      * @throws Dwo2Exception
      */
-//    public static DomUserFull digestLogin(String username, String password) throws Dwo2Exception {
-//        //request a
-//        //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
-//        DomUserFull user;
-//            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make login   
-//            
-//            
-//            HttpClient client = new HttpClient();
-//            client.getState().setCredentials(
-//                    new AuthScope(url.toString(), 80, "myrealm"),
-//                    new UsernamePasswordCredentials(username,password));
-//            // Suppose the site supports several authetication schemes: NTLM and Basic
-//            // Basic authetication is considered inherently insecure. Hence, NTLM authentication
-//            // is used per default
+    public static DomUserFull basicLogin(String username, String password) throws Dwo2Exception {
+        try {
+            DomUserFull user;
+            //http://stackoverflow.com/questions/2793150/using-java-net-urlconnection-to-fire-and-handle-http-requests
+            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get");
+            URLConnection conn = url.openConnection();
+            conn.setRequestProperty("Accept-Charset", "UTF-8");
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+            StringBuilder json = new StringBuilder();
+            while ((output = br.readLine()) != null) {
+                json.append(output);
+            }
+            //decode JSON
+            Genson genson = new Genson();
+
+//          LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
+            user = genson.deserialize(json.toString(), DomUserFull.class);
+//            StoredRestManager.setBasicAuthString(authString);
+            //Set current user for domain
+            DwoHelper.setCurrentUser(user);
+            return user;
+        } catch (MalformedURLException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
+
+        } catch (IOException e) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
+        }
+    }
+////        //request a
+////        //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
+//        DomUserFull user = null;
+//        HttpURLConnection conn;
+//        try {
+//            SimpleDigestHttpClient client = new SimpleDigestHttpClient(DwoHelper.getServerUrlPath(), username, password);
 //
-//            // This is to make HttpClient pick the Basic authentication scheme over NTLM & Digest
-//            List authPrefs = new ArrayList(1);
-//            authPrefs.add(AuthPolicy.DIGEST);
-//            client.getParams().setParameter(AuthPolicy.AUTH_SCHEME_PRIORITY, authPrefs);
+//            conn = client.digestGet("rest/secure/user/account/get");
 //
-//            GetMethod httpget = new GetMethod("http://myhost/protected/auth-required.html");
-//
-//            try {
-//                int status = client.executeMethod(httpget);
-//                // print the status and response
-//                System.out.println(httpget.getStatusLine());
-//                System.out.println(httpget.getResponseBodyAsString());
-//            } finally {
-//                httpget.releaseConnection();
+//            if (conn.getResponseCode() != 200) {                
+//                throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
 //            }
-//                // release any connection resources used by the method
-//                httpget.releaseConnection();
 //
-//                HttpURLConnection conn;
-//                conn = SimpleDigestHttpClient.instance().getAuthorizedURLConnection(username, password, url);
-//                String authString = username + ":" + password;
-//                authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
-////            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                conn.setRequestMethod("GET");
-//                conn.setRequestProperty("Accept", "application/json");
-////            conn.setRequestProperty("Authorization", authString);
-//                conn.setUseCaches(false);
-//                conn.connect();
+//            BufferedReader br = new BufferedReader(new InputStreamReader(
+//                    (conn.getInputStream())));
 //
-//                if (conn.getResponseCode() != 200) {
-//                    throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
-//                }
-//
-//                BufferedReader br = new BufferedReader(new InputStreamReader(
-//                        (conn.getInputStream())));
-//
-//                String output;
-//                StringBuilder json = new StringBuilder();
-//                while ((output = br.readLine()) != null) {
-//                    json.append(output);
-//                }
-//                conn.disconnect();
-//                //decode JSON
-//                Genson genson = new Genson();
+//            String output;
+//            StringBuilder json = new StringBuilder();
+//            while ((output = br.readLine()) != null) {
+//                json.append(output);
+//            }
+//            conn.disconnect();
+//            //decode JSON
+//            Genson genson = new Genson();
 //
 ////          LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
-//                user = genson.deserialize(json.toString(), DomUserFull.class);
-//                StoredRestManager.setBasicAuthString(authString);
-//                //Set current user for domain
-//                DwoHelper.setCurrentUser(user);
-//                return user;
-//            }catch (MalformedURLException e) {
+//            user = genson.deserialize(json.toString(), DomUserFull.class);
+////            StoredRestManager.setBasicAuthString(authString);
+//            //Set current user for domain
+//            DwoHelper.setCurrentUser(user);
+//            return user;
+//        } catch (MalformedURLException e) {
 //            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
 //
-//        }catch (IOException e) {
+//        } catch (IOException e) {
 //            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
 //        }
-//        }
-
-    
+//    }
 
     public static DomUserFull samlLogin(String user_id, String org_id, String authToken) throws Dwo2Exception {
         DomUserFull user;

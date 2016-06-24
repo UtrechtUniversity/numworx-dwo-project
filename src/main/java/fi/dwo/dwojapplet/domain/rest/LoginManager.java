@@ -10,8 +10,10 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.Base64;
 
@@ -28,19 +30,33 @@ public class LoginManager {
 
     private static final Logger LOG = Logger.getLogger(LoginManager.class.getName());
 
+    /**
+     * Does basic login for authentication. To be replaced by digest.
+     *
+     * @param username
+     * @param password
+     * @return
+     * @throws Dwo2Exception
+     * @deprecated
+     */
     @Deprecated
     public static DomUserFull basicLogin(String username, String password) throws Dwo2Exception {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
         DomUserFull user;
+// Should clear any existing autentication cache but does not work due to feature bug.
         try {
+            RestAuthenticator restAuth = new RestAuthenticator(username,password);
+            RestAuthenticator.setInstance(restAuth);
+            Authenticator.setDefault(restAuth);
             URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make basicLogin            
             String authString = username + ":" + password;
-            authString = "Basic " +   Base64.getEncoder().encodeToString(authString.getBytes());
+            authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Authorization", authString);
+//            conn.setRequestProperty("Authorization", authString);
             conn.setUseCaches(false);
+            conn.setAllowUserInteraction(false);
             conn.connect();
 
             if (conn.getResponseCode() != 200) {
@@ -56,6 +72,7 @@ public class LoginManager {
                 json.append(output);
             }
             conn.disconnect();
+            Authenticator.setDefault(null);
             //decode JSON
             Genson genson = new Genson();
 
@@ -65,15 +82,12 @@ public class LoginManager {
             //Set current user for domain
             DwoHelper.setCurrentUser(user);
             return user;
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
         }
     }
 
-    
 }

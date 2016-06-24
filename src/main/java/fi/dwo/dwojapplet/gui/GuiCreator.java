@@ -26,6 +26,7 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.rest.LoginManager;
+import fi.dwo.dwojapplet.domain.rest.PublicUserManager;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
@@ -143,6 +144,8 @@ public class GuiCreator {
         try {
             DwoHelper.setContact(false);
             LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
+//            Code underdevelopment to do digest.
+//            PublicUserManager.digestLogin(username, password);
 
             if (DwoHelper.getCurrentUser() != null) {
                 // TODO: remove, currently checks if licence is still valid
@@ -177,6 +180,8 @@ public class GuiCreator {
         try {
             DwoHelper.setContact(false);
             LoginManager.basicLogin(username, password);
+//          Code under development for digest.
+//            PublicUserManager.digestLogin(username, password);
 
             if (DwoHelper.getCurrentUser() != null) {
                 // TODO: remove, currently checks if licence is still valid
