@@ -938,12 +938,20 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 					if (viewers.size() > 0)
 						latest_answer_viewer = viewers.get(viewers.size() - 1);
 				}
+				else
+				{
+					editor = null; // fix selecteren bordjesmethode
+				}
 			}
 			else if (!hasStartString) //stapNr is nu 0, je zit dus in eerste regel
 			{
 				if (!linStrategieVersie && !bordjesMethode)
 				{
 					editor = addNewEditor(current);
+				}
+				else
+				{
+					editor = null; // fix selecteren bordjesmethode
 				}
 			}
 			else
@@ -997,11 +1005,20 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	public void haalPijlVakWeg()
 	{
 		if(pijlVak != null && pijlVak.getParent() != null)
-		{	contentPanel.remove(pijlVak);
-			if(pijlVak.geefOperator().equals("sub"))
+		{	
+			// vinkje weg
+			if (imagesStappen != null && imagesStappen.size() > 0)
+			{
+				contentPanel.remove(imagesStappen.get(imagesStappen.size() - 1));
+				imagesStappen.remove(imagesStappen.size() - 1);
+			}
+			
+			contentPanel.remove(pijlVak);
+			
+			if (pijlVak.geefOperator().equals("sub"))
 				substitutie = null;
 			pijlVakken.remove(pijlVakken.size() - 1);
-			if(pijlVakken.size() > 0)
+			if (pijlVakken.size() > 0)
 				pijlVak = pijlVakken.get(pijlVakken.size() - 1);
 			else
 				pijlVak = null;
