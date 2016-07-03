@@ -1,8 +1,5 @@
 package fi.beans.lineairealgebra.transformations;
 
-import java.awt.geom.AffineTransform;
-import java.util.Collection;
-
 /**
  * 2d-rigid transformation models to be applied to points in 2d-space.
  * This model includes the closed form weighted least squares solution as

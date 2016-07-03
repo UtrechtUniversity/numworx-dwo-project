@@ -21,7 +21,6 @@ public class NotEnoughDataPointsException extends Exception
 		super( message );
 	}
 
-
 	public NotEnoughDataPointsException( final Throwable cause )
 	{
 		super( cause );
