@@ -9,33 +9,40 @@ import java.net.PasswordAuthentication;
  */
 public class RestAuthenticator extends Authenticator{
 
-    private static volatile Authenticator instance;
-    private static volatile PasswordAuthentication pwa;
-
+//    private static volatile Authenticator instance;
+    String username;
+    String password;
+    
     public RestAuthenticator(String username, String password) {
-        pwa = new PasswordAuthentication(username, password.toCharArray());
+        this.username = username;
+        this.password = password;
+
     }
 
-    /**
-     * @return the instance
-     */
-    public static Authenticator getInstance() {
-        return instance;
-    }
+//    /**
+//     * @return the instance
+//     */
+//    public static Authenticator getInstance() {
+//        return instance;
+//    }
+//
+//    /**
+//     * @param aInstance the instance to set
+//     */
+//    public synchronized static void setInstance(Authenticator aInstance) {
+//        instance = aInstance;
+//    }
 
-    /**
-     * @param aInstance the instance to set
-     */
-    public synchronized static void setInstance(Authenticator aInstance) {
-        instance = aInstance;
-    }
+//    @Override
+//    protected PasswordAuthentication getPasswordAuthentication() {
+//        return pwa;
+//    }
 
-    @Override
-    protected PasswordAuthentication getPasswordAuthentication() {
-        return pwa;
+    protected PasswordAuthentication GetPasswordAuthentication() {
+        return new PasswordAuthentication(username, password.toCharArray());
     }
-
-    protected void setPasswordAuthentication(String username, String password) {
-        pwa = new PasswordAuthentication(username, password.toCharArray());
-    }
+    
+//    protected void setPasswordAuthentication(String username, String password) {
+//        pwa = new PasswordAuthentication(username, password.toCharArray());
+//    }
 }

@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.Base64;
 
@@ -45,9 +44,8 @@ public class LoginManager {
         DomUserFull user;
 // Should clear any existing autentication cache but does not work due to feature bug.
         try {
-            RestAuthenticator restAuth = new RestAuthenticator(username,password);
-            RestAuthenticator.setInstance(restAuth);
-            Authenticator.setDefault(restAuth);
+            //RestAuthenticator restAuth = RestAuthenticator.(username,password);
+            Authenticator.setDefault(new RestAuthenticator(username, password));
             URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make basicLogin            
             String authString = username + ":" + password;
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
