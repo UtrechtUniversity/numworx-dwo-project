@@ -347,7 +347,7 @@ public final class DwoHelper {
         if (isApplication) {
             if (applicationBase == null) {
                 try {
-                    applicationBase = new URL("https://app.dwo.nl/dwo/");
+                    applicationBase = new URL("https://dummytwo.dwo.nl/dwo/");
                 } catch (MalformedURLException e) {
                 }
             }

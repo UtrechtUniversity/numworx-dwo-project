@@ -74,7 +74,7 @@ public class LoginManager {
             }
             br.close();
             conn.disconnect();
-            Authenticator.setDefault(null);
+//            Authenticator.setDefault(null);
             //decode JSON
             Genson genson = new Genson();
 

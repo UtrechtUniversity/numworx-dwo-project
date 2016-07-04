@@ -92,7 +92,6 @@ class RestManager {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Authorization", getBasicAuthString());
-            conn.addRequestProperty("Cookie", "");
             conn.setUseCaches(false);
 
             if (conn.getResponseCode() != 200) {
@@ -152,7 +151,7 @@ class RestManager {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Accept-Encoding", "application/json");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", "Basic " + getBasicAuthString());
+            conn.setRequestProperty("Authorization", getBasicAuthString());
             conn.setUseCaches(false);
 
             if (conn.getResponseCode() != 200) {
@@ -239,7 +238,7 @@ class RestManager {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Accept-Encoding", "application/json");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", "Basic " + getBasicAuthString());
+            conn.setRequestProperty("Authorization", getBasicAuthString());
             conn.setRequestProperty("Accept-Charset", "UTF-8");
 //            conn.setDoInput(true);
             conn.setDoOutput(true);
@@ -308,7 +307,7 @@ class RestManager {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Accept-Encoding", "application/json");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", "Basic " + getBasicAuthString());
+            conn.setRequestProperty("Authorization", getBasicAuthString());
             conn.setDoInput(true);
             conn.setDoOutput(true);
             conn.setUseCaches(false);
