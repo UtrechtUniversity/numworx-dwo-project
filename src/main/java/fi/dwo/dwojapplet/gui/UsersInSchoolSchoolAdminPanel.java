@@ -389,6 +389,9 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         addTeachersButton.addActionListener(this);
         header.add(Box.createGlue());
         header.add(addTeachersButton);
+        if (type == UserType.TEACHER) {
+            addTeachersButton.setVisible(true);
+        }
 //        header.add(deleteButton);
         this.add(header);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
