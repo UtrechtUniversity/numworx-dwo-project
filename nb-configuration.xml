@@ -15,7 +15,7 @@
     <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
         <configurations>
             <configuration id="dwo-obfuscate-pack-sign" profiles="dwo-obfuscate dwo-pack-sign"/>
-            <configuration id="&lt;default home&gt;" profiles=""/>
+            <configuration id="home-profile" profiles=""/>
         </configurations>
     </config-data>
 </project-shared-configuration>
