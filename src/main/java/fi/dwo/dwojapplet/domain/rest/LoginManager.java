@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Authenticator;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,14 +46,16 @@ public class LoginManager {
 // Should clear any existing autentication cache but does not work due to feature bug.
         try {
             //RestAuthenticator restAuth = RestAuthenticator.(username,password);
-            Authenticator.setDefault(new RestAuthenticator(username, password));
+            Authenticator.setDefault(null);
+            CookieManager.setDefault(null);
             URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make basicLogin            
             String authString = username + ":" + password;
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
-//            conn.setRequestProperty("Authorization", authString);
+            conn.setRequestProperty("Authorization", authString);
+            conn.addRequestProperty("Cookie", "");
             conn.setUseCaches(false);
             conn.setAllowUserInteraction(false);
             conn.connect();
@@ -69,6 +72,7 @@ public class LoginManager {
             while ((output = br.readLine()) != null) {
                 json.append(output);
             }
+            br.close();
             conn.disconnect();
             Authenticator.setDefault(null);
             //decode JSON

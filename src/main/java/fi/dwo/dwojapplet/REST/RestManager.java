@@ -91,7 +91,8 @@ class RestManager {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Authorization", "Basic " + getBasicAuthString());
+            conn.setRequestProperty("Authorization", getBasicAuthString());
+            conn.addRequestProperty("Cookie", "");
             conn.setUseCaches(false);
 
             if (conn.getResponseCode() != 200) {
