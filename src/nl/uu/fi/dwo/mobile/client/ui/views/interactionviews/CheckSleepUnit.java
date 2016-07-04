@@ -188,12 +188,7 @@ public class CheckSleepUnit implements InteractionStub{
 	    errorCount = this.errorCount;
 
 	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
-	    try {
-			kijkNa(false);
-		} catch (RestartException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	   	kijkNa(false);
 		if(logOption)
 		{	
 	    	HashMap logMap = new HashMap<String, Object>();
@@ -403,15 +398,10 @@ public class CheckSleepUnit implements InteractionStub{
 		// reset isVeranderdNaNakijken
 		zetIsVeranderdNaNakijken(false);
 
-		try {
-			kijkNa(true);
-		} catch (RestartException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+		kijkNa(true);
+	}
     
-    public void kijkNa(boolean show) throws RestartException
+    public void kijkNa(boolean show)
     {
     	boolean juist = true;
         answer = "";

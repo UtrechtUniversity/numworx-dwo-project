@@ -35,7 +35,6 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
-import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
@@ -366,7 +365,6 @@ public class CheckValueUnit implements InteractionStub{
 
 	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
 	    kijkNa(false);
-		
 		if(logOption)
 		{	
 	    	HashMap<String, Object> logMap = new HashMap<String, Object>();
@@ -531,7 +529,7 @@ public class CheckValueUnit implements InteractionStub{
 		zetIsVeranderdNaNakijken(false);
 
     	kijkNa(true);
-	}
+    }
     
     private void kijkNa(boolean show)
     {	

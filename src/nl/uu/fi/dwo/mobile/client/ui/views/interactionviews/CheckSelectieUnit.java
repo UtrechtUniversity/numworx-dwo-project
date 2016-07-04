@@ -158,14 +158,11 @@ public class CheckSelectieUnit implements InteractionStub
 		// reset isVeranderdNaNakijken
 		zetIsVeranderdNaNakijken(false);
 
-		try {
-			kijkNa(true);
-		} catch (RestartException e) {
-			
-		}
+		kijkNa(true);
+		
     }
     
-    public void kijkNa(boolean show) throws RestartException
+    public void kijkNa(boolean show)
     {
         boolean juist = true;
         ingevuld = false;
@@ -305,10 +302,7 @@ public class CheckSelectieUnit implements InteractionStub
 	    attemptsCount = this.attemptsCount;
 	    errorCount = this.errorCount;
 
-	    try {
-			kijkNa(false);
-		} catch (RestartException e) {
-		}
+	    kijkNa(false);
 		if(logOption)
 		{	
 	    	HashMap logMap = new HashMap<String, Object>();
