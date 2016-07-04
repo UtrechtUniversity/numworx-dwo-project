@@ -3,6 +3,7 @@ package fi.wiskopdr;
 import java.util.HashMap;
 
 import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.FunctieMVDefSet;
 import fi.wiskopdr.expressies.Vergelijking;
 
 public interface AntwoordVakChecker {
@@ -18,5 +19,8 @@ public interface AntwoordVakChecker {
 	public HashMap<String,Object> checkAnswer(String answer) throws RestartException;
 	
 	public void zetSubstitutie(Expressie e);
+	
+	public FunctieMVDefSet getFunctieMVDefSet();
+	
 	
 }

@@ -63,8 +63,6 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	
 	private Expressie substitutie;
 	private boolean geenOplossing;
-	
-	
 
 	private List<Map<String,Object>> answerModels;
 	private String[] randomVarNamen;
@@ -88,9 +86,10 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	//private boolean hulpGebruikt;
 	//private int aftrekTipHulp;
 
+	private FunctieMVDefSet functieMVDefSet = new FunctieMVDefSet();
+	
 	private Vergelijking[] antwoordSubstituties;
 	private Vergelijking[] gebruikersSubstituties;
-	//private FormuleEditor gebruikersSubstitutiesVak;
 	
 	private boolean linStrategieVersie = false;
 	private boolean linOefenVersie = false;
@@ -159,6 +158,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		String strategieDomein = "";
 		//int feedbackModus = 0;
 		List<String> antwoordSubStrings = null;
+		List<String> antwoordFuncStrings = null;
 		boolean pijl = true;
 		boolean linStrategieVersie = false;
 		boolean linOefenVersie = false;
@@ -263,6 +263,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 //			feedbackModus = ((Integer) avvCheckerModel.get("feedbackModus")).intValue();
 		if (map.containsKey("antwoordSubStrings"))
 			antwoordSubStrings = map.getStringList("antwoordSubStrings");
+		if (map.containsKey("antwoordFuncStrings"))
+			antwoordFuncStrings = map.getStringList("antwoordFuncStrings");
 		if (map.containsKey("pijl"))
 			pijl = map.getBoolean("pijl");
 		if (map.containsKey("linStrategieVersie"))
@@ -315,7 +317,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			for (int i = 0; i < antwoordSubStrings.size(); i++) {
 				try {
 					String ass = FormuleParser.randomizeString(antwoordSubStrings.get(i), randomVars, randomValues);
-					antwoordSubstituties[i] = (FormuleParser.parseVergelijking(ass)).geefVergelijking(0);
+					antwoordSubstituties[i] = (FormuleParser.parseVergelijking(ass, functieMVDefSet)).geefVergelijking(0);
 					if (!antwoordSubstituties[i].geefExpLinks().isVar())
 						subCorrect = false;
 				} catch (Exception e) {
@@ -326,6 +328,32 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 				antwoordSubstituties = null;
 		}
 
+		if (antwoordFuncStrings != null) {
+			
+			for (int i = 0; i < antwoordFuncStrings.size(); i++)
+			{
+				String[] functieDelen = antwoordFuncStrings.get(i).split("=");
+				if(functieDelen.length<2) break;
+				String functieExpressieString = "$f"+functieDelen[1];
+				String functieNaam = functieDelen[0].substring(2, functieDelen[0].indexOf('('));
+				String varString = functieDelen[0].substring(functieDelen[0].indexOf('(')+1, functieDelen[0].indexOf(')'));
+				String[] functieMVVariabelen = varString.split(",");
+				//String functieVariabele = functieDelen[0].substring(functieDelen[0].indexOf('(')+1, functieDelen[0].indexOf('(')+2);
+				//System.out.println("varString:"+varString);
+				//System.out.println("functieExpressieString:"+functieExpressieString);
+				//System.out.println("functieMVVariabelen:"+functieMVVariabelen[0]);
+				try
+				{
+					functieExpressieString = FormuleParser.randomizeString(functieExpressieString, randomVars, randomValues);
+					
+				} catch (Exception e) {
+					
+				}
+				Expressie functieExpressie = FormuleParser.geefExpressie(functieExpressieString);
+				//functieDefSet.addFunctieExpressie(functieNaam, functieVariabele, functieExpressie);
+				functieMVDefSet.addFunctieMVExpressie(functieNaam, functieMVVariabelen, functieExpressie);
+			}
+		}
 		try {
 			vormString = FormuleParser.randomizeString(vormString, randomVars, randomValues);
 		} catch (Exception e) {
@@ -342,8 +370,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		}
 
 		if (bordjesMethode && startString.length()>3) {
-			startString = "$f" + (FormuleParser.parseVergelijking(startString)).toStringStrikt() + "@";
-			// System.out.println(startString);
+			startString = "$f" + (FormuleParser.parseVergelijking(startString, functieMVDefSet)).toStringStrikt() + "@";
 		}
 		zetStartString(startString);
 
@@ -388,7 +415,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 //	{	return checkAnswer(answer, answerPrevious, null,null);
 //	}
 	
-	public HashMap<String,Object> checkAnswer(String answer)
+	public HashMap<String,Object> checkAnswer(String answer) throws RestartException
 	{	return checkAnswer(answer,null,null,null);
 	}
 	
@@ -411,8 +438,9 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		}
 	}
 	
-	public HashMap<String,Object> checkAnswer(String answer, String answerPrevious, Expressie substitutie, Vergelijking[] gebruikersSubstituties)
-	{	isDeelOplossing = false;
+	public HashMap<String,Object> checkAnswer(String answer, String answerPrevious, Expressie substitutie, Vergelijking[] gebruikersSubstituties) throws RestartException
+	{	
+		isDeelOplossing = false;
 		isGelijkwaardig = false;
 		isEindOplossing = false;
 		isEindOplossingSignificant = false;
@@ -534,6 +562,11 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	}
 	
 	
+	
+	public FunctieMVDefSet getFunctieMVDefSet()
+	{
+		return functieMVDefSet;
+	}
 	
 	
 	
@@ -660,10 +693,10 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		int index = s.indexOf(";");
 		if (index > -1) {
 			String s1 = s.substring(0, index) + "@";
-			gewensteTussenOplossing = p.parseVergelijking(s1);
+			gewensteTussenOplossing = p.parseVergelijking(s1, functieMVDefSet);
 			s = "$f" + s.substring(index + 1);
 		}
-		gewensteEindOplossing = p.parseVergelijking(s);
+		gewensteEindOplossing = p.parseVergelijking(s, functieMVDefSet);
 	}
 	
 	public void zetJuisteVorm(String s)
@@ -676,7 +709,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		FormuleParser p = new FormuleParser();
 		for (int i = 0; i < antwoordStrings.length; i++) {
 			String antwoordStr = "$f" + antwoordStrings[i] + "@";
-			juisteVormen[i] = p.parseVergelijking(antwoordStr);
+			juisteVormen[i] = p.parseVergelijking(antwoordStr);//TODO, functieMVDefSet);
 		}
 		
 	}
@@ -1099,7 +1132,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	}
 
 	
-	public void checkFeedback(String antwoordVergString) {
+	public void checkFeedback(String antwoordVergString) throws RestartException {
 		int aantalAnswerModels = answerModels.size();
 		for (int h = 0; h < aantalAnswerModels; h++) {
 			setAnswerModel(h);
@@ -1144,7 +1177,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		}
 	}
 	
-	public void check(String antwoordVergString) {
+	public void check(String antwoordVergString) throws RestartException {
 		if (gewensteEindOplossing == null)
 			return;
 
@@ -1175,7 +1208,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
             vn[0] = v;
             antwoordAlles = new VergelijkingMeerv(vn);
         }
-		VergelijkingMeerv antwoordIngevuld = FormuleParser.parseVergelijking(antwoordVergString);
+		VergelijkingMeerv antwoordIngevuld = FormuleParser.parseVergelijking(antwoordVergString, functieMVDefSet);
 		antwoord = antwoordIngevuld;
 		if (antwoord == null) {
 			antwoord = antwoordGeen;
@@ -1228,6 +1261,19 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 //			if (gewensteEindOplossing != null)
 //				var = gewensteEindOplossing.geefVergelijkingVar();
 
+			String diffVar = "x";
+			for(int i = 0; i < antwoord.geefAantal(); i++)
+			{	String diffVar2 = antwoord.geefVergelijking(i).geefVarNaam();
+				if(diffVar2 != null && !diffVar2.equals(""))
+				{	diffVar = diffVar2;
+					break;
+				}
+			}
+			if(FormuleParser.isDiffOperatoren())
+			{	antwoord = antwoord.vervangDifferentialen(diffVar);
+				antwoord = antwoord.vervangDiffs(gewensteEindOplossing.geefEindOplossingen(var), var);
+			}
+			
 			boolean isGelijkwaardigEind = antwoord.isOplossing(gewensteEindOplossing.geefEindOplossingen(var), var, gewensteEindOplossing.geefVergTekens());
 
 			// Hiermee wordt, in geval er geen eindoplossing is, maar wel een

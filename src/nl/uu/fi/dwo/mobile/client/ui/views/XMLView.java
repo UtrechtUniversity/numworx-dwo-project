@@ -119,6 +119,9 @@ public abstract class XMLView {
 	
 			boolean maalTeken =  wrap.getBoolean("maalTeken");
 			FormuleTeken.zetMaalTeken(maalTeken);
+			boolean diffOperatoren = wrap.getBoolean("diffOperatoren");
+			FormuleTeken.zetDiffOperatoren(diffOperatoren);
+			FormuleParser.zetDiffOperatoren(diffOperatoren);
 			boolean hoekGraden = wrap.getBoolean("hoekGraden");
 			Expressie.zetHoekGraden(hoekGraden);
 			if(wrap.containsKey("fontName")) // optional

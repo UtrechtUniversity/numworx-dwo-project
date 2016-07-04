@@ -54,6 +54,15 @@ public class ArcTangens extends Expressie
 	{	return new ArcTangens(kind1.substitueer(subst,var));
 	}
 	
+	public Expressie vervangDifferentialen(String var)
+	{	return new ArcTangens(kind1.vervangDifferentialen(var));
+	}
+	
+	public Expressie vervangDiffs(Expressie subst, String var)
+	{
+		return new ArcTangens(kind1.vervangDiffs(subst, var));
+	}
+	
 	public boolean isWaarde(double subst)
 	{	return kind1.isWaarde(subst);
 	}

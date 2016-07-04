@@ -2,6 +2,7 @@ package fi.wiskopdr.expressies;
 
 import java.util.Vector;
 
+import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.repr.AbstractConverter;
 import fi.wiskopdr.text.Text;
 
@@ -201,12 +202,22 @@ public class Vergelijking
 	public boolean isOplossing(Expressie subst, String var)
 	{
 
-		Expressie e1 = evalCAS(kind1.substitueer(subst, var));
-		Expressie e2 = evalCAS(kind2.substitueer(subst, var));
-
-		//Expressie e1 = evalCAS(kind1).substitueer(subst, var);
-		//Expressie e2 = evalCAS(kind2).substitueer(subst, var);
-
+		// herleidMild om de afgeleiden eruit te halen
+		
+		Expressie e1 = null;
+		Expressie e2 = null; 
+		
+		if(kind1.toString().indexOf("$d")>-1 || kind2.toString().indexOf("$d")>-1)
+		{
+			e1 = evalCAS(Algebra.herleidMild(kind1).substitueer(subst, var));
+			e2 = evalCAS(Algebra.herleidMild(kind2).substitueer(subst, var));
+		}
+		else
+		{
+			e1 = evalCAS(kind1.substitueer(subst, var));
+			e2 = evalCAS(kind2.substitueer(subst, var));
+		}
+		
 		if (Algebra.isGelijkwaardig(e1, e2))
 		{
 			return true;
@@ -233,6 +244,44 @@ public class Vergelijking
 		else
 			return false;
 
+	}
+	
+	public boolean isOplossing(Expressie[] subst, String[] vars)
+	{	
+		// herleidMild om de afgeleiden eruit te halen
+		
+		Expressie e1 = null;
+		Expressie e2 = null; 
+		
+		if(kind1.toString().indexOf("$d")>-1 || kind2.toString().indexOf("$d")>-1)
+		{
+			Expressie k1 = kind1;
+			Expressie k2 = kind2;
+			for(int i = 0; i < subst.length; i++)
+			{	k1 = Algebra.herleidMild(k1).substitueer(subst[i], vars[i]);
+				k2 = Algebra.herleidMild(k2).substitueer(subst[i], vars[i]);
+			}
+			e1 = evalCAS(Algebra.herleidMild(k1));
+			e2 = evalCAS(Algebra.herleidMild(k2));
+		}
+		else
+		{
+			Expressie k1 = kind1;
+			Expressie k2 = kind2;
+			for(int i = 0; i < subst.length; i++)
+			{
+				k1 = k1.substitueer(subst[i], vars[i]);
+				k2 = k2.substitueer(subst[i], vars[i]);
+			}
+			e1 = evalCAS(k1);
+			e2 = evalCAS(k2);
+		}
+		
+		if(Algebra.isGelijkwaardig(e1,e2))
+		{	return true;
+		}
+		else return false;
+		
 	}
 
 	public boolean isOplossing(Expressie subst, String var, String vergTeken)
@@ -310,6 +359,17 @@ public class Vergelijking
 			}
 		}
 		return false;
+	}
+	
+	public boolean bevatStelselOplossing(Expressie[][] subst, String[] vars)
+	{
+		for(int i = 0; i < subst.length; i++)
+		{	if(isOplossing(subst[i], vars))
+			{	return true;
+			}
+		}
+		return false;
+		
 	}
 
 	public boolean bevatOplossingP(Expressie[] subst, String var, String vergTeken)
@@ -483,6 +543,27 @@ public class Vergelijking
 		}
 		return false;
 	}
+	
+	public boolean isStelselEindOplossing(String var, String[] vars)
+	{
+		if(kind1.isVar() && kind1.geefVarNaam().equals(vars))
+		{
+			for(int i = 0; i < vars.length; i++)
+			{	if(Algebra.bevatVarNaam(kind2, var))
+					return false;
+			}
+			return true;
+		}
+		if(kind2.isVar() && kind2.geefVarNaam().equals(vars))
+		{
+			for(int i = 0; i < vars.length; i++)
+			{	if(Algebra.bevatVarNaam(kind1, var))
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
 
 	/*public boolean isEindOplossing()
 	{	return(kind1.isVar() && kind2.isWaarde() || kind2.isVar() && kind1.isWaarde());
@@ -556,6 +637,22 @@ public class Vergelijking
 			e1 = kind1.substitueer(subst, var);
 		if(!(kind2.isVar() && kind2.geefVarNaam().equals(var)))
 			e2 = kind2.substitueer(subst, var);
+		return new Vergelijking(e1, e2, vergelijkingsTeken);
+	}
+	
+	public Vergelijking vervangDifferentialen(String diffVar)
+	{
+		Expressie e1 = kind1.vervangDifferentialen(diffVar);
+		Expressie e2 = kind2.vervangDifferentialen(diffVar);
+		
+		return new Vergelijking(e1, e2, vergelijkingsTeken);
+	}
+	
+	public Vergelijking vervangDiffs(Expressie subst, String var)
+	{
+		Expressie e1 = kind1.vervangDiffs(subst, var);
+		Expressie e2 = kind2.vervangDiffs(subst, var);
+		
 		return new Vergelijking(e1, e2, vergelijkingsTeken);
 	}
 

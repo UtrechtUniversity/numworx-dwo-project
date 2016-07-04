@@ -50,6 +50,18 @@ public class DecRoundStrict extends Expressie
 			return exp;
 	}
 	
+	public Expressie vervangDifferentialen(String var)
+	{	DecRoundStrict exp = new DecRoundStrict(kind1.vervangDifferentialen(var), kind2.vervangDifferentialen(var));
+		
+		return exp;
+	}
+	
+	public Expressie vervangDiffs(Expressie subst, String var)
+	{
+		DecRoundStrict exp = new DecRoundStrict(kind1.vervangDiffs(subst, var), kind2.vervangDiffs(subst, var));
+		return exp;
+	}
+	
 	public boolean isWaarde(double subst)
 	{	return kind1.isWaarde(subst) && kind2.isWaarde(subst);
 	}

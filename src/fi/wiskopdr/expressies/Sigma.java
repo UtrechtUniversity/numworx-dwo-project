@@ -49,6 +49,15 @@ public class Sigma extends Expressie
 		//System.out.println(""+Expressie.evalWithCAS(this.toStringCAS()));
 		//return Expressie.evalWithCAS(this.toStringCAS());
 	}
+	
+	public Expressie vervangDifferentialen(String var)
+	{	return new Sigma(kind1.vervangDifferentialen(var), kind2.vervangDifferentialen(var), kind2.vervangDifferentialen(var), kind4.vervangDifferentialen(var));
+	}
+	
+	public Expressie vervangDiffs(Expressie subst, String var)
+	{
+		return new Sigma(kind1.vervangDiffs(subst, var), kind2.vervangDiffs(subst, var), kind3.vervangDiffs(subst, var), kind4.vervangDiffs(subst, var));
+	}
 
 	public boolean isWaarde(double subst)
 	{

@@ -21,9 +21,12 @@ import fi.wiskopdr.expressies.DecRoundStrict;
 import fi.wiskopdr.expressies.Deling;
 import fi.wiskopdr.expressies.Diff;
 import fi.wiskopdr.expressies.DiffPartial;
+import fi.wiskopdr.expressies.Differentiaal;
 import fi.wiskopdr.expressies.E;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Faculteit;
+import fi.wiskopdr.expressies.FunctieMV;
+import fi.wiskopdr.expressies.FunctieMVDefSet;
 import fi.wiskopdr.expressies.GCD;
 import fi.wiskopdr.expressies.Integraal;
 import fi.wiskopdr.expressies.InvNorm;
@@ -59,6 +62,7 @@ public class FormuleParser
 	private static boolean woordFormule = false;
 	private static boolean tweeHoofdletterVariabele = false;
 	private static boolean significantie = false;
+	private static boolean diffOperatoren = false;
 
 	private static String ofLabel = Text.constants.ofLabel();
 	
@@ -71,6 +75,11 @@ public class FormuleParser
 		woordFormule = b;
 	}
 
+	public static void zetDiffOperatoren(boolean b)
+	{
+		diffOperatoren = b;
+	}
+	
 	public static void zetTweeHoofdletterVariabele(boolean b)
 	{
 		tweeHoofdletterVariabele = b;
@@ -90,9 +99,20 @@ public class FormuleParser
 	{
 		return tweeHoofdletterVariabele;
 	}
-
+	
+	public static boolean isDiffOperatoren()
+	{
+		return diffOperatoren;
+	}
+	
 	public static VergelijkingMeerv parseVergelijking(String s)
 	{
+		return parseVergelijking(s, null);
+	}
+
+	public static VergelijkingMeerv parseVergelijking(String s, FunctieMVDefSet fds)
+	{
+		FunctieMV.setFunctieMVDefSet(fds);
 		try
 		{
 			s = s.substring(2, s.length() - 1);
@@ -226,11 +246,13 @@ public class FormuleParser
 				if (!split && vergelijkingen[i] == null)
 					return null;
 			}
+			FunctieMV.setFunctieMVDefSet(null);
 			return new VergelijkingMeerv(vergelijkingen);
 
 		}
 		catch (Exception e)
 		{
+			FunctieMV.setFunctieMVDefSet(null);
 			return null;
 		}
 	}
@@ -535,6 +557,10 @@ public class FormuleParser
 		s = vervangFunctieScheidingstekens(s, "poissonpdf");
 		s = vervangFunctieScheidingstekens(s, "gcd");
 
+		String[] functieNamen = FunctieMV.getFunctieMVDefSet().geefFunctieMVNamen();
+        for(int i = 0 ; i<functieNamen.length ; i++)
+        {	s = vervangFunctieScheidingstekens(s,functieNamen[i]);
+        }
 		s = s.replace(',', '.');
 		s = s.replace(':', '/');
 		s = s.replace('\u00b0', ' ');
@@ -965,6 +991,18 @@ public class FormuleParser
 			if (index > -1)
 				s = s.substring(0, index) + "ln" + s.substring(index + 3);
 		}
+		
+		String[] fMetMaalFunctie = FunctieMV.getFunctieMVDefSet().geefFunctieMVNamenSubst();
+		for(int i=0 ; i<fMetMaalFunctie.length ; i++)
+		{	int fLength = fMetMaalFunctie[i].length();
+			String fZonderMaal = fMetMaalFunctie[i].replace("*", "");
+			index = 0;
+			while(index >-1)
+			{	index = s.indexOf(fMetMaalFunctie[i]);
+				if(index >-1)s = s.substring(0,index) + fZonderMaal + s.substring(index+fLength);
+			}
+		}
+		
 		index = 0;
 		while (index > -1)
 		{
@@ -1041,6 +1079,12 @@ public class FormuleParser
 	        if(index1==-1 && lev==1 && string.charAt(i)==scheidingsChar) index1 = i;
 	        else if(index2==-1 && lev==1 && string.charAt(i)==scheidingsChar) index2 = i;
 	        else if(index3==-1 && lev==1 && string.charAt(i)==scheidingsChar) index3 = i;
+	    }
+	    if(index1==-1)
+	    {	Expressie[] expressies = new Expressie[1];
+    		expressies[0] = parse(string);
+    		if(expressies[0]==null)return null;
+            else return expressies;
 	    }
 	    if(index2==-1)
         { 	Expressie[] expressies = new Expressie[2];
@@ -1202,6 +1246,56 @@ public class FormuleParser
 			{
 				double d = Double.NEGATIVE_INFINITY;
 				exp = new BasisExpressie(s);
+			}
+			
+			if(diffOperatoren && s.charAt(0) == 'd' && (s.charAt(1) == '*')) //(als charAt(1) i is, dan heb je een diff)
+			{	//begin met een d, en dan ofwel een haakje openen die hoort bij het haakje sluiten
+				//helemaal achteraan, of één teken, of een subscript-constructie.
+				if(s.length() == 3)
+				{	return new Differentiaal(parse(s.substring(2, s.length())));
+				}
+				boolean isDifferentiaal = true;
+				if(s.charAt(2) == '(')
+				{
+					int niv = 1;
+					for(int i = 3; i < s.length(); i++)
+					{
+						if(s.charAt(i) == '(')
+							niv++;
+						else if(s.charAt(i) == ')')
+							niv--;
+						if(niv == 0 && i < s.length() - 1)
+						{	isDifferentiaal = false;
+							break;
+						}
+					}
+				}
+				else if(s.length() > 4 && s.charAt(3) == '$' && s.charAt(4) == 's')//subscript
+				{
+					int niv = 1;
+					for(int i = 4; i < s.length(); i++)
+					{
+						if(s.charAt(i) == '$')
+							niv++;
+						else if(s.charAt(i) == '@')
+							niv--;
+						if(niv == 0 && i < s.length() - 1)
+						{
+							isDifferentiaal = false;
+							break;
+						}
+					}
+				}
+				else
+					isDifferentiaal = false;
+				
+		
+				if(isDifferentiaal)	
+				{
+					Expressie e1 = parse(s.substring(2, s.length()));
+					return new Differentiaal(e1);
+				}
+				
 			}
 
 			//is het een optelling, aftrekking, enz?
@@ -1690,7 +1784,17 @@ public class FormuleParser
 					Expressie e2 = parse(s.substring(i + 1));
 					if (e1 == null || e2 == null)
 						return null;
-					return new Vermenigvuldiging(e1, e2);
+					
+					if(diffOperatoren && e1 instanceof Deling && e1.kind2 instanceof Differentiaal 
+							&& e1.kind1.toString().equals("d"))//geval: d/dx (f(x))
+						return new Diff(e2, e1.kind2.kind1);
+					else if(diffOperatoren && e1 instanceof Vermenigvuldiging &&
+							e1.kind2.toString().equals("d"))//geval: iets*dx
+					{	return new Vermenigvuldiging(e1.kind1, new Differentiaal(e2));
+					}
+						
+					else
+						return new Vermenigvuldiging(e1, e2);
 
 				}
 
@@ -1713,7 +1817,11 @@ public class FormuleParser
 					Expressie e2 = parse(s.substring(i + 1));
 					if (e1 == null || e2 == null)
 						return null;
-					return new Deling(e1, e2);
+					if(diffOperatoren && e1 instanceof Differentiaal && e2 instanceof Differentiaal)
+					{	return new Diff(e1.kind1, e2.kind1); 
+					}
+					else
+						return new Deling(e1, e2);
 
 				}
 			}
@@ -1818,6 +1926,23 @@ public class FormuleParser
 					return new BasisExpressie(s.substring(0, i) + "?" + s.substring(i + 1));
 				}
 			}
+			
+			String[] functieNamen = FunctieMV.getFunctieMVDefSet().geefFunctieMVNamen();
+	        for(int i = 0 ; i<functieNamen.length ; i++)
+	        {	String functieNaam = functieNamen[i];
+	        	if(s.length()>functieNaam.length() && s.substring(0,functieNaam.length()).equals(functieNaam) && s.charAt(functieNaam.length())=='(')
+	    		{	//Expressie e = parse(s.substring(functieNaam.length(),s.length()));
+	        		int aantalVar = FunctieMV.getFunctieMVDefSet().geefFunctieMVVariabele(functieNaam).length;
+	        		String string = s.substring(functieNaam.length()+1,s.length()-1);
+	        		Expressie[] expressies = splitExpressieParameters(string,'_',aantalVar);
+	        		boolean parseOK = true;
+	    			for(int j=0 ; j<expressies.length ; j++)
+	    				parseOK = parseOK && expressies[j] !=null;
+	        		if(parseOK==false)
+	        			return null;
+	    			return new FunctieMV(functieNaam,expressies);
+	    		}
+	        }
 
 			//is het een wortel
 			if (s.length() > 4 && s.substring(0, 4).equals("sqrt"))
@@ -2314,6 +2439,13 @@ public class FormuleParser
 	{
 		return parse(schoon(formuleString(codeString)));
 	}
+	
+	public static Expressie geefExpressie(String codeString, FunctieMVDefSet fds) //FunctieDefSet
+	{	FunctieMV.setFunctieMVDefSet(fds);
+		Expressie e = parse(schoon(formuleString(codeString)));
+		FunctieMV.setFunctieMVDefSet(null);
+		return e;
+	}
 
 	public static Expressie geefExpressie(String codeString, boolean woordformule)
 	{
@@ -2407,12 +2539,12 @@ public class FormuleParser
 		return tekst;
 	}
 
-	public static String substitueerRandom(String formString, String[] varnamen, HashMap waarden)
+	public static String substitueerRandom(String formString, String[] varnamen, HashMap waarden) throws RestartException
 	{
 		return substitueerRandom(formString, varnamen, waarden, true);
 	}
 
-	public static String substitueerRandom(String formString, String[] varnamen, HashMap waarden, boolean breukenGemengd)
+	public static String substitueerRandom(String formString, String[] varnamen, HashMap waarden, boolean breukenGemengd) throws RestartException
 	{
 		String sNieuw = null;
 		String s1Nieuw = null;

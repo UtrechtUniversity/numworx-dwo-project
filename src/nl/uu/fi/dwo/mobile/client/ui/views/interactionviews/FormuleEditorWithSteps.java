@@ -2617,8 +2617,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			{
 				try
 				{
-					//gebruikersSubstituties[i] = (FormuleParser.parseVergelijking(gebruikersSubstitutieStrings[i], functieDefSet)).geefVergelijking(0);
-					gebruikersSubstituties[i] = (FormuleParser.parseVergelijking(gebruikersSubstitutieStrings[i])).geefVergelijking(0);
+					gebruikersSubstituties[i] = (FormuleParser.parseVergelijking(gebruikersSubstitutieStrings[i], avChecker.getFunctieMVDefSet())).geefVergelijking(0);
+					//gebruikersSubstituties[i] = (FormuleParser.parseVergelijking(gebruikersSubstitutieStrings[i])).geefVergelijking(0);
 					if (!gebruikersSubstituties[i].geefExpLinks().isVar())
 						subCorrect = false;
 				}

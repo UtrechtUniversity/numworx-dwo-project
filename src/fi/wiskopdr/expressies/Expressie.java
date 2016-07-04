@@ -366,4 +366,13 @@ public class Expressie
 	public Object visit(AbstractConverter converter) {
 		return converter.expressie(this);
 	}
+	
+	public Expressie vervangDifferentialen(String diffVar) {
+		
+		return null;
+	}
+	
+	public Expressie vervangDiffs(Expressie subst, String var) {
+		return null;
+	}
 }

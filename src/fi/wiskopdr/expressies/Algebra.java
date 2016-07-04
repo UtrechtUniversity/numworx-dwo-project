@@ -4,6 +4,8 @@ import java.util.Vector;
 
 import com.google.gwt.i18n.client.NumberFormat;
 
+import fi.wiskopdr.RestartException;
+
 public class Algebra
 {
 	private static double tryValuesStart = 0;
@@ -2298,21 +2300,30 @@ public class Algebra
 			if (isGelijkDouble(e.kind2.geefWaarde(), 1))
 				return e.kind1;
 		}
-		//TODO:ungecommend door Danny ivm CAS
-		/*
-		else if (e instanceof Diff)
-		{
-			return Expressie.evalWithCAS(e);
-		}
-		else if (e instanceof DiffPartial)
-		{
-			return Expressie.evalWithCAS(e);
-		}
-		else if (e instanceof Sigma)
-		{
-			return Expressie.evalWithCAS(e);
-		}
-		*/
+		else if(e instanceof Diff)
+		{	Expressie diff = ((Diff) e).evalDiff();
+			if(diff!=null)return herleidMild(diff,breukenGemengd);
+				try {
+					return Expressie.evalWithCAS(e);
+				} catch (RestartException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		}	
+		else if(e instanceof DiffPartial)
+			try {
+				return Expressie.evalWithCAS(e);
+			} catch (RestartException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		else if(e instanceof Sigma)
+			try {
+				return Expressie.evalWithCAS(e);
+			} catch (RestartException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		else if (e instanceof BasisExpressie && e.geefWaarde() < 0)
 		{
 			return new Aftrekking(new BasisExpressie(0), new BasisExpressie(-e.geefWaarde()));

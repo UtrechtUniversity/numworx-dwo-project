@@ -972,7 +972,7 @@ public class FormuleRegel extends FormuleElement
 		cm3 = fe;//editor.getCurrentRegel().getElementAt(nr - 1);//this.getComponent(nr - 1);
 		//we already checked if fe is a formuleteken so we can cast it here
 		ft3 = (FormuleTeken) cm3;
-		if (ft3.geefChar() == 'e')
+		if (ft3.geefChar() == 'e'|| ft3.geefChar()=='d' && FormuleTeken.isDiffOperator())
 		{
 			ft3.zetFunctieTeken(true);
 		}

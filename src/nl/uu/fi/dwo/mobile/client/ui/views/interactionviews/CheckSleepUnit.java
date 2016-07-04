@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
@@ -187,7 +188,12 @@ public class CheckSleepUnit implements InteractionStub{
 	    errorCount = this.errorCount;
 
 	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
-	    kijkNa(false);
+	    try {
+			kijkNa(false);
+		} catch (RestartException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(logOption)
 		{	
 	    	HashMap logMap = new HashMap<String, Object>();
@@ -397,10 +403,15 @@ public class CheckSleepUnit implements InteractionStub{
 		// reset isVeranderdNaNakijken
 		zetIsVeranderdNaNakijken(false);
 
-		kijkNa(true);
+		try {
+			kijkNa(true);
+		} catch (RestartException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
-    public void kijkNa(boolean show)
+    public void kijkNa(boolean show) throws RestartException
     {
     	boolean juist = true;
         answer = "";

@@ -41,6 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.RoundPanel;
 
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
@@ -157,10 +158,14 @@ public class CheckSelectieUnit implements InteractionStub
 		// reset isVeranderdNaNakijken
 		zetIsVeranderdNaNakijken(false);
 
-    	kijkNa(true);
+		try {
+			kijkNa(true);
+		} catch (RestartException e) {
+			
+		}
     }
     
-    public void kijkNa(boolean show)
+    public void kijkNa(boolean show) throws RestartException
     {
         boolean juist = true;
         ingevuld = false;
@@ -300,7 +305,10 @@ public class CheckSelectieUnit implements InteractionStub
 	    attemptsCount = this.attemptsCount;
 	    errorCount = this.errorCount;
 
-	    kijkNa(false);
+	    try {
+			kijkNa(false);
+		} catch (RestartException e) {
+		}
 		if(logOption)
 		{	
 	    	HashMap logMap = new HashMap<String, Object>();
