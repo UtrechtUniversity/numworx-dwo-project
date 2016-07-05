@@ -1,14 +1,7 @@
 package fi.dwo.server.rest;
 
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.exceptions.Dwo2RestException;
 import java.util.logging.Logger;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * REST functions that allows one to test the proper catching of HTML-errors.

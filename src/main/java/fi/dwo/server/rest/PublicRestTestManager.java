@@ -36,9 +36,21 @@ public class PublicRestTestManager {
         String userName = sc.getUserPrincipal().getName();
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 400 thrown on request of user: " + userName + ".");
-        throw e;
+        Response r = Response.status(400).entity(e.getMessage()).build();
+        return r;
     }
 
+    @GET
+    @Produces({"application/json"})
+    @Path("/test401Error/json")
+    public Response test401Error(@Context SecurityContext sc) {
+        String userName = sc.getUserPrincipal().getName();
+        //TODO REST update lastLogin and such.
+        Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 401 thrown on request of user: " + userName + ".");
+        Response r = Response.status(401).entity(e.getMessage()).build();
+        return r;
+    }
+    
     @GET
     @Produces({"application/json"})
     @Path("/test500Error/json")
