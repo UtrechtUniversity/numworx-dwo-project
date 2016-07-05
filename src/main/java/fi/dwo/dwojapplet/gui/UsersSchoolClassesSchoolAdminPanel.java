@@ -185,7 +185,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 }                
             } else if (value == removeImage) {
                 try {
-                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
                         DomSchoolClass domSchoolClass = (DomSchoolClass) tableModel.getValueAt(tableModel.getSelectedRow(),tableModel.getColumnCount());
                         prop.removeUserFromSchoolClass(domUser, userType, domSchoolClass);
                         tableModel.init(getCurSchoolClassList(), editImage, removeImage);
