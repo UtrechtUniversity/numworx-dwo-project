@@ -1091,7 +1091,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			if(!hoogtes.isEmpty() && Math.round(hoogtes.get(0).doubleValue()) > hoogte)
 				hoogte = (int) Math.round(hoogtes.get(0).doubleValue());
 		}
-		if(map.containsKey("visible"));
+		if(map.containsKey("visible"))
 			visible = map.getBoolean("visible");
 		if(!visible)
 		{	hoogte = 0;
