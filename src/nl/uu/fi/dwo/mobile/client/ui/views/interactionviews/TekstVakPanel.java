@@ -457,6 +457,10 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 
 		}
 		visible = launchState.getBoolean("visible", true);
+		if(!visible)
+		{	hoogte = 0;
+			breedte = 0;
+		}
 		zichtbaarNaNakijken = launchState.getBoolean("zichtbaarNaNakijken", false);
 		
 		defaultBijNull = launchState.getBoolean("defaultBijNull",defaultBijNull);
@@ -980,9 +984,10 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		{	initieerKlapUitButton(ingeklapt);
 			//hierin gebeurt ook resize();
 		}
-		else
-			resize();
+//		else
+//			resize();
 		
+		//resize gebeurt in setVisibility.
 		setVisibility(visible);
 		
 
@@ -1026,6 +1031,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			mode = comRoot.getMode();
 		if (dwologger != null) dwologger.setCommunicationRoot(comRoot);
 		comRoot.addCBookEventListener(ACTION_SETVISIBLE, this);
+		comRoot.addCBookEventListener(ACTION_SETNOTVISIBLE, this);
 	}
 
 	public HashMap<String, Object> getState()
@@ -1046,6 +1052,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		h.put("ingeklapt", new Boolean(ingeklapt));
 		h.put("popupUsed", Boolean.valueOf(popupUsed));
 		h.put("nagekeken", Boolean.valueOf(nagekeken));
+		h.put("visible", new Boolean(visible));
 		if(zwevend)
 		{	h.put("locationX", new Integer(locationX));
 			h.put("locationY", new Integer(locationY));
@@ -1083,6 +1090,12 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 				Logger.getLogger("TekstVakPanel").severe("hoogtes <> hoogteState");
 			if(!hoogtes.isEmpty() && Math.round(hoogtes.get(0).doubleValue()) > hoogte)
 				hoogte = (int) Math.round(hoogtes.get(0).doubleValue());
+		}
+		if(map.containsKey("visible"));
+			visible = map.getBoolean("visible");
+		if(!visible)
+		{	hoogte = 0;
+			breedte = 0;
 		}
 
 		
@@ -1126,11 +1139,13 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		{
 			goedKrulImage.setVisible(isKlapvakCorrect());
 		}
-		resize();
+		//resize();
 		
+		//resize gebeurt in setVisibility;
 		if(zichtbaarNaNakijken)
 			setVisibility(nagekeken);
-		
+		else
+			setVisibility(visible);
 		
 	}
 /**
@@ -1512,7 +1527,11 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			}
 			totaleBreedte -= cellSpaceColumn;
 		}
-		
+		if(!visible)
+		{	totaleHoogte = 0;
+			totaleBreedte = 0;
+		}
+		System.out.println("resize; setCurrentSize hoogte: " + totaleHoogte);
 		setCurrentSize(totaleBreedte, totaleHoogte);
 		plaatsTabelRanden();
 		
@@ -2290,11 +2309,15 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	}
 	
 	private static final String ACTION_SETVISIBLE = "action.setVisible";
+	private static final String ACTION_SETNOTVISIBLE = "action.setNotVisible";
 	@Override
 	public void acceptCBookEvent(CBookEvent event) {
 		String command = event.getCommand();
 		if(ACTION_SETVISIBLE.equals(command)) {
 			setVisibility(true);
+		}
+		if(ACTION_SETNOTVISIBLE.equals(command)) {
+			setVisibility(false);
 		}
 		
 	}
@@ -2305,9 +2328,24 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		Element elem = getAsPanel().getElement();
 		Style style = elem.getStyle();
 		if(b)
-			style.clearVisibility();
+		{	style.clearVisibility();
+			double hoogteDouble = 0;
+			for(int i = 0; i < hoogtes.size(); i++)
+				hoogteDouble += hoogtes.get(i).doubleValue();
+			hoogte = (int) Math.round(hoogteDouble);
+			double breedteDouble = 0;
+			for(int j = 0; j < breedtes.size(); j++)
+				breedteDouble += breedtes.get(j).doubleValue();
+			breedte = (int) Math.round(breedteDouble);
+			setCurrentSize( breedte, hoogte);
+		}
 		else
-			style.setVisibility(Visibility.HIDDEN); // take space!
+		{	style.setVisibility(Visibility.HIDDEN); 
+			setCurrentSize( 0, 0);
+		}
+		resize();
+//		if(parent!=null)
+//			parent.resize();
 	}
 	private static final int LEFT = 0;
 	private static final int RIGHT = 1;
