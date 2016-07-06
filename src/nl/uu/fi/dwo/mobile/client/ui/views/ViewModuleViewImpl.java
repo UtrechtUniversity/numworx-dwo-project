@@ -70,7 +70,6 @@ import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
-import fi.wiskopdr.text.Text_nl;
 
 
 /**

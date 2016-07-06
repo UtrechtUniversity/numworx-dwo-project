@@ -17,7 +17,8 @@ import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
-import fi.wiskopdr.text.Text_nl;
+import fi.wiskopdr.text.Text;
+import fi.wiskopdr.text.TextConstants;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -31,7 +32,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 
 public class PijlVak extends LayoutPanel{
 
-	public static Text_nl rb = new Text_nl();
+	public static TextConstants rb = Text.constants;
+	
 	private static String font = "14px sans-serif";
 	
 	private String operator;
@@ -277,44 +279,44 @@ public class PijlVak extends LayoutPanel{
 //			g.drawLine(b/4+11,ashoogte+2,3*b/4+10,ashoogte+2);
 		}
 		else if(operator.equals("haakjes"))
-		{	ctx.fillText(rb.getString("haakjesLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
-			ctx.fillText(rb.getString("haakjesLabel1"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+		{	ctx.fillText(rb.haakjesLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
+			ctx.fillText(rb.haakjesLabel1(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 			//g.drawString(WiskOpdr.rb.getString("haakjesLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
 			//g.drawString(WiskOpdr.rb.getString("haakjesLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 		}
 		else if(operator.equals("herleid"))
-		{	ctx.fillText(rb.getString("herleidLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
-			ctx.fillText(rb.getString("herleidLabel1"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+		{	ctx.fillText(rb.herleidLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+			ctx.fillText(rb.herleidLabel1(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 			//g.drawString(WiskOpdr.rb.getString("herleidLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			//g.drawString(WiskOpdr.rb.getString("herleidLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 		}
 		else if(operator.equals("ontbind"))
-		{	ctx.fillText(rb.getString("ontbindLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+		{	ctx.fillText(rb.ontbindLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			ctx.fillText("", (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 			
 			//g.drawString(WiskOpdr.rb.getString("ontbindLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			//g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		}
 		else if(operator.equals("splits"))
-		{	ctx.fillText(rb.getString("splitsLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+		{	ctx.fillText(rb.splitsLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			ctx.fillText("", (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 			
 			//g.drawString(WiskOpdr.rb.getString("splitsLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			//g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		}
 		else if(operator.equals("wortel"))
-		{	ctx.fillText(rb.getString("wortelLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+		{	ctx.fillText(rb.wortelLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			ctx.fillText("", (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 			
 			//g.drawString(WiskOpdr.rb.getString("wortelLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			//g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		}
 		else if(operator.equals("gelijkwaardig"))
-		{	ctx.fillText(rb.getString("gelijkwaardigLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
-			ctx.fillText(rb.getString("gelijkwaardigLabel1"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+		{	ctx.fillText(rb.gelijkwaardigLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
+			ctx.fillText(rb.gelijkwaardigLabel1(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 			//g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
 			//g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
@@ -363,7 +365,7 @@ public class PijlVak extends LayoutPanel{
 			ctx.stroke();
 			
 			ctx.setFillStyle("black");
-			ctx.fillText(rb.getString("subLabel"), 5, ashoogte - fm.getDescent());
+			ctx.fillText(rb.subLabel(), 5, ashoogte - fm.getDescent());
 		}
 		else
 		{	

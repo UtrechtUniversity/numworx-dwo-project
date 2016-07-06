@@ -573,5 +573,7 @@ public class Text_nl implements TextIF
 	{ "algebra.equations.linear.balance.buggy.par8", "par8. fout bij haakjes wegwerken, kijk goed waar de haakjes staan" },
 	{ "algebra.equations.linear.balance.buggy.par9", "par9. fout bij haakjes wegwerken, rekenfout bij vermenigvuldigen (2)" },
 
+	{"oplossingenLabel", "Oplossingen"},
+	
 	};
 }

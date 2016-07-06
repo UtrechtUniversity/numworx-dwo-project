@@ -45,7 +45,8 @@ import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
-import fi.wiskopdr.text.Text_nl;
+import fi.wiskopdr.text.Text;
+import fi.wiskopdr.text.TextConstants;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -69,7 +70,7 @@ public class CheckSelectieUnit implements InteractionStub
 	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
 	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
 
-	public static Text_nl rb = new Text_nl();
+	public static TextConstants rb = Text.constants;
 	static final String holderId = "dockholder";
 	
 	private HashMap<String, Object> launchState; 
@@ -661,7 +662,7 @@ public class CheckSelectieUnit implements InteractionStub
 			checkButton.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		}
 		else
-		{	checkButton = new PushButton(rb.getString("klaarKnopLabel"));
+		{	checkButton = new PushButton(Text.constants.klaarKnopLabel());
 			checkButton.getElement().getStyle().setFontSize(12, Style.Unit.PX);
 			checkButton.getElement().getStyle().setTextAlign(TextAlign.CENTER);
 		}

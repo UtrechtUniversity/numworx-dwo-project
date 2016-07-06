@@ -81,8 +81,28 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	@DefaultStringValue("Oplossing is goed, significantie klopt maar heeft nog niet in de juiste vorm.")
 	String feedbackTekst20();
 	
+	//pijlvak
+	@DefaultStringValue("  haakjes") 
+	String haakjesLabel0();
+	@DefaultStringValue("    weg") 
+	String haakjesLabel1();
+	@DefaultStringValue("   herleid") 
+	String herleidLabel0();
+	@DefaultStringValue("") 
+	String herleidLabel1();
+	@DefaultStringValue("  ontbind") 
+	String ontbindLabel0();
+	@DefaultStringValue("  splits") 
+	String splitsLabel0();
+	@DefaultStringValue("  wortels") 
+	String wortelLabel0();
+	@DefaultStringValue("  gelijkwaardig") 
+	String gelijkwaardigLabel0();
+	@DefaultStringValue("    met:") 
+	String gelijkwaardigLabel1();
+	@DefaultStringValue("Substitueer:") 
+	String subLabel();
 	
-
 	@DefaultStringValue("geen oplossingen") // vergelijking.java
 	String geenOplossingen();
 	@DefaultStringValue("alles is een oplossing") // vergelijking.java
@@ -120,5 +140,9 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	
 	@DefaultStringValue("sub")
 	String sub();
+	
+	@DefaultStringValue("Oplossingen")
+	String oplossingenLabel();
+	
 // enzovoort
 }
