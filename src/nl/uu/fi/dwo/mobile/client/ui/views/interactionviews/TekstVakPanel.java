@@ -1531,7 +1531,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		{	totaleHoogte = 0;
 			totaleBreedte = 0;
 		}
-		System.out.println("resize; setCurrentSize hoogte: " + totaleHoogte);
+
 		setCurrentSize(totaleBreedte, totaleHoogte);
 		plaatsTabelRanden();
 		
