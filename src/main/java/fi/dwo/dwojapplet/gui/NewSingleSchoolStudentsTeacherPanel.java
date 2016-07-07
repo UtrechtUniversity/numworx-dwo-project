@@ -375,7 +375,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         } else if (e.getSource() == importButton) {
             pasteFromSystemClipboard();
         } else if (e.getSource() == backButton) {
-            if(tableModel.getRowCount()!=0){
+            if(tableModel.getRowCount()>1){
                 if(GuiCreator.instance().ShowConfirmDialog(center,TextMapper.getText(TextMapper.DLG_LOSE_NEW_STUDENT_ACCOUNTS))!=JOptionPane.OK_OPTION){
                     return;
                 }

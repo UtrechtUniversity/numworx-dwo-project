@@ -32,6 +32,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -213,13 +214,11 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         tr.addImage(delImage, 0);
         try {
             tr.waitForAll();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
         try {
             systemClipboard = getToolkit().getSystemClipboard();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             systemClipboard = null;
         }
 
@@ -308,8 +307,8 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 List<DomUserFull> resultList = new ArrayList<DomUserFull>();
                 boolean failFlag = false;
                 boolean fatalFlag = false;
-                String tmpPassword =null;
-                int cnt=0;
+                String tmpPassword = null;
+                int cnt = 0;
                 for (DomUserFull submit : submitList) {
                     if (NewTeacherSchoolAdminPanelProperties.IsValidUserDataInput(submit)) {
                         cnt++;
@@ -317,8 +316,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                             tmpPassword = submit.getPassword();
                             submit.setPassword(MD5.getHashString(submit.getPassword()));
                             NewTeacherSchoolAdminPanelProperties.submitNewTeacher(submit);
-                        }
-                        catch (Dwo2Exception ex) {
+                        } catch (Dwo2Exception ex) {
                             submit.setPassword(tmpPassword);
                             resultList.add(submit);
                             if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
@@ -333,10 +331,10 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 }
                 tableModel.init(prop, columnNames, resultList, delImage);
                 tableModel.fireTableDataChanged();
-               if(cnt==0){
+                if (cnt == 0) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
                 }
-                 if (failFlag == true) {
+                if (failFlag == true) {
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATETEACHERERROR));
                 }
                 if (fatalFlag == true) {
@@ -345,20 +343,23 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 if (fatalFlag == false && failFlag == false) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 }
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == importButton) {
             pasteFromSystemClipboard();
         } else if (e.getSource() == backButton) {
+            if (tableModel.getRowCount() > 1) {
+                if (GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_LOSE_NEW_STUDENT_ACCOUNTS)) != JOptionPane.OK_OPTION) {
+                    return;
+                }
+            }
             try {
                 UsersInSchoolSchoolAdminPanel panel = new UsersInSchoolSchoolAdminPanel(UsersInSchoolSchoolAdminPanel.UserType.TEACHER);
                 center.loadCenter(panel);
 
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
@@ -414,8 +415,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 }
                 tableModel.addRows(newUserList);
                 return true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.SEVERE, null, e);
                 return false;
             }

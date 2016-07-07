@@ -1280,7 +1280,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             ReadConfigProperties();
         } catch (MalformedURLException ex) {
             LOG.log(Level.SEVERE, null, ex);
-            System.exit();
         }
 
         Clipboard.initialize();
@@ -1298,7 +1297,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 // servlet url
             } catch (MalformedURLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
-                System.exit();
             }
         }
 
