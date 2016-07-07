@@ -188,7 +188,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                     GuiCreator.instance().ShowErrorDialog(center, ex);
                 }
             } else if (value == removeImage) {
-                if (JOptionPane.OK_OPTION == GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_CONFIRM))) {
+                if (JOptionPane.OK_OPTION == GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_REMOVE))) {
                     try {
                         if (studentRadio.isSelected()) {
                             DomStudent user = (DomStudent) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
