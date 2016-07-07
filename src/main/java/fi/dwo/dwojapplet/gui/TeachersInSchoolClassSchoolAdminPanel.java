@@ -54,10 +54,10 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
     private JButton addTeacherButton;
     private JComboBox addTeacherBox;
 
-    private Image removeImage,emptyImage;
+    private Image removeImage, emptyImage;
 
     private JPanel jtbl;
-    private TableRowSorter rowSorter;    
+    private TableRowSorter rowSorter;
 
     /**
      * @return the schoolClass
@@ -142,14 +142,19 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                         Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
                         DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
                         addTeacherBox.setModel(model);
-                        tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage,emptyImage);
+                        if (teacherVector.isEmpty()) {
+                            addTeacherButton.setEnabled(false);
+                            addTeacherBox.setEnabled(false);
+                        } else {
+                            addTeacherButton.setEnabled(true);
+                            addTeacherBox.setEnabled(true);
+                        }
+                        tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
                     }
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     Logger.getLogger(TeachersInSchoolClassSchoolAdminPanel.class.getName()).log(Level.FINE, null, ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
-                }
-                finally {
+                } finally {
                     fireEditingStopped();
                 }
             }
@@ -173,11 +178,11 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new TeachersInSchoolClassTeacherPanelTableModel();
 
-        tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage,emptyImage);
+        tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);
-        jtable.setRowSorter(rowSorter);        
-        
+        jtable.setRowSorter(rowSorter);
+
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }
@@ -192,7 +197,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         jtbl.setVisible(true);
 
     }
-    
+
     /**
      * Creates a new ClassPanel which shows a list of classes.
      *
@@ -216,8 +221,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         tr.addImage(emptyImage, 0);
         try {
             tr.waitForAll();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
 
         //FontMetrics fm;
@@ -232,6 +236,13 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         DomUserListCellRenderer renderer = new DomUserListCellRenderer();
         if (teacherVector.size() > 0) {
             addTeacherBox.setSelectedIndex(0);
+        }
+        if (teacherVector.isEmpty()) {
+            addTeacherButton.setEnabled(false);
+            addTeacherBox.setEnabled(false);
+        } else {
+            addTeacherButton.setEnabled(true);
+            addTeacherBox.setEnabled(true);
         }
 
         addTeacherBox.setRenderer(renderer);
@@ -302,9 +313,15 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
                     DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
                     addTeacherBox.setModel(model);
-                    tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage,emptyImage);
-                }
-                catch (Dwo2Exception ex) {
+                    if (teacherVector.isEmpty()) {
+                        addTeacherButton.setEnabled(false);
+                        addTeacherBox.setEnabled(false);
+                    } else {
+                        addTeacherButton.setEnabled(true);
+                        addTeacherBox.setEnabled(true);
+                    }
+                    tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
+                } catch (Dwo2Exception ex) {
                     LOG.log(Level.SEVERE, null, ex);
                     GuiCreator.instance().ShowErrorDialog(this, ex);
                 }
@@ -314,8 +331,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                 SchoolClassesSchoolAdminPanel panel = new SchoolClassesSchoolAdminPanel();
                 center.loadCenter(panel);
 
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }

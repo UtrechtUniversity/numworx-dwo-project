@@ -58,7 +58,6 @@ public class AccountDataJPanel extends JPanel implements
 
     protected JButton deleteButton;
 
-    private JComboBox groupChoice;
 
 //    protected User user;
     private AccountDataProperties prop = new AccountDataProperties();

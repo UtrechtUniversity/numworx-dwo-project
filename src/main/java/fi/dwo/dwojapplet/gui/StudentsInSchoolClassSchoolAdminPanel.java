@@ -279,6 +279,8 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         DomUserListCellRenderer renderer = new DomUserListCellRenderer();
         if (schoolClassVector.size() > 0) {
             studentBox.setSelectedIndex(0);
+        }else{
+            studentBox.setEnabled(false);
         }
         studentBox.setRenderer(renderer);
         studentBox.setMaximumRowCount(10);
@@ -356,6 +358,13 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
                     DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
                     studentBox.setModel(model);
+                    if(teacherVector.isEmpty()){
+                        studentBox.setEnabled(false);
+                        copyToSchoolClassButton.setEnabled(false);
+                    }else{
+                        studentBox.setEnabled(true);
+                        copyToSchoolClassButton.setEnabled(true);
+                    }
 
                     tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                     //confirm is overkill
@@ -377,6 +386,13 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                 Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
                 DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
                 studentBox.setModel(model);
+                    if(teacherVector.isEmpty()){
+                        studentBox.setEnabled(false);
+                        copyToSchoolClassButton.setEnabled(false);
+                    }else{
+                        studentBox.setEnabled(true);
+                        copyToSchoolClassButton.setEnabled(true);
+                    }
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);

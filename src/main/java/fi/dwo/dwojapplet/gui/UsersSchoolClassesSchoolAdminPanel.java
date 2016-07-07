@@ -56,7 +56,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
     public enum UserType {
         STUDENT, TEACHER
     };
-    
+
     private UserType userType;
     private CenterPanel center;
 
@@ -70,7 +70,6 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
 
     private JPanel jtbl;
     private TableRowSorter rowSorter;
-    
 
     /**
      * @param user
@@ -92,11 +91,10 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
      * @param type
      */
     public void setDomUserAndType(DomUser user, UserType type) throws Dwo2Exception {
-        if((user instanceof DomTeacher && type==UserType.TEACHER) || (user instanceof DomStudent && type == UserType.STUDENT)){
-        this.domUser = user;
-        this.userType=type;
-        }
-        else{
+        if ((user instanceof DomTeacher && type == UserType.TEACHER) || (user instanceof DomStudent && type == UserType.STUDENT)) {
+            this.domUser = user;
+            this.userType = type;
+        } else {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Programmers error");
         }
     }
@@ -162,7 +160,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
 //            final GuiCreator instance = GuiCreator.instance();
             fireEditingStopped();
             if (value == editImage) {
-                try{
+                try {
                     DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     ClassConfigurePanel panel = new ClassConfigurePanel();
                     DomSchoolClassFull fullSchoolClass = prop.getFullSchoolClass(sc);
@@ -178,20 +176,18 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                         prop.updateSchoolClass(fullSchoolClass);
                         tableModel.init(getCurSchoolClassList(), editImage, removeImage);
                     }
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     LOG.log(Level.FINE, null, ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                }                
+                }
             } else if (value == removeImage) {
                 try {
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
-                        DomSchoolClass domSchoolClass = (DomSchoolClass) tableModel.getValueAt(tableModel.getSelectedRow(),tableModel.getColumnCount());
+                        DomSchoolClass domSchoolClass = (DomSchoolClass) tableModel.getValueAt(tableModel.getSelectedRow(), tableModel.getColumnCount());
                         prop.removeUserFromSchoolClass(domUser, userType, domSchoolClass);
                         tableModel.init(getCurSchoolClassList(), editImage, removeImage);
                     }
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     Logger.getLogger(UsersSchoolClassesSchoolAdminPanel.class.getName()).log(Level.FINE, null, ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
@@ -209,7 +205,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         JTable jtable = new JTable();
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.getTableHeader().setReorderingAllowed(false);
-        
+
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         jtbl.add(jtable);
@@ -217,8 +213,8 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new UsersSchoolClassesSchoolAdminPanelTableModel();
         tableModel.init(getCurSchoolClassList(), editImage, removeImage);
-        jtable.setModel(tableModel);      
-        
+        jtable.setModel(tableModel);
+
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }
@@ -230,7 +226,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
         rowSorter = new TableRowSorter(tableModel);
-        jtable.setRowSorter(rowSorter);        
+        jtable.setRowSorter(rowSorter);
         this.add(jtbl);
         jtbl.setVisible(true);
 
@@ -264,8 +260,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         tr.addImage(classImage, 2);
         try {
             tr.waitForAll();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
 
         //FontMetrics fm;
@@ -280,6 +275,13 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
         if (userVector.size() > 0) {
             addSchoolClassBox.setSelectedIndex(0);
+        }
+        if (userVector.isEmpty()) {
+            addSchoolClassBtn.setEnabled(false);
+            addSchoolClassBox.setEnabled(false);
+        } else {
+            addSchoolClassBtn.setEnabled(true);
+            addSchoolClassBox.setEnabled(true);
         }
 
         addSchoolClassBox.setRenderer(renderer);
@@ -344,12 +346,11 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         if (e.getSource() == addSchoolClassBtn) {
             DomSchoolClass schoolClass = (DomSchoolClass) addSchoolClassBox.getSelectedItem();
             try {
-                prop.submitUserToSchoolClass(domUser, userType, schoolClass);                
+                prop.submitUserToSchoolClass(domUser, userType, schoolClass);
                 tableModel.init(getCurSchoolClassList(), editImage, removeImage);
                 UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(domUser, userType);
                 center.loadCenter(panel);
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
@@ -358,8 +359,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 UsersInSchoolSchoolAdminPanel panel = new UsersInSchoolSchoolAdminPanel(UsersInSchoolSchoolAdminPanel.UserType.valueOf(userType.name()));
                 center.loadCenter(panel);
 
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
@@ -398,8 +398,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 DomTeacher teacher = (DomTeacher) domUser;
                 return prop.getTeachersSchoolClasses(teacher);
             }
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
             throw ex;
         }

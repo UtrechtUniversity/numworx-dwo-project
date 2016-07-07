@@ -172,6 +172,9 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 
         public ComboBoxRenderer(String[] items) {
             super(items);
+            if(items.length==0){
+                this.setEnabled(false);
+            }
         }
 
         @Override

@@ -283,8 +283,11 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
         if (schoolClassVector.size() > 0) {
             targetSchoolClassBox.setSelectedIndex(0);
+            targetSchoolClassBox.setEnabled(true);
+            copyToSchoolClassButton.setEnabled(true);
         } else {
             targetSchoolClassBox.setEnabled(false);
+            copyToSchoolClassButton.setEnabled(false);
         }
         targetSchoolClassBox.setRenderer(renderer);
         targetSchoolClassBox.setMaximumRowCount(10);
@@ -376,6 +379,13 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
                 DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
                 targetSchoolClassBox.setModel(model);
+                if(teacherVector.isEmpty()){
+                    targetSchoolClassBox.setEnabled(false);
+                    copyToSchoolClassButton.setEnabled(false);
+                }else{
+                    targetSchoolClassBox.setEnabled(true);
+                    copyToSchoolClassButton.setEnabled(true);
+                }
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
             }
@@ -396,6 +406,13 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
                 DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
                 targetSchoolClassBox.setModel(model);
+                if(teacherVector.isEmpty()){
+                    targetSchoolClassBox.setEnabled(false);
+                    copyToSchoolClassButton.setEnabled(false);
+                }else{
+                    targetSchoolClassBox.setEnabled(true);
+                    copyToSchoolClassButton.setEnabled(true);
+                }
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
