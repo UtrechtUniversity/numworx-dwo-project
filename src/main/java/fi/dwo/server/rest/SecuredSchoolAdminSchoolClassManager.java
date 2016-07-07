@@ -512,7 +512,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         if (student != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID());
-                if (shr.getClassID().equals(socId.getClassID())) {
+                if (shr.getClassID()!=null && shr.getClassID().equals(socId.getClassID())) {
                     shr.setClassID(null);
                     HasRoleManager.edit(shr);
                 }
