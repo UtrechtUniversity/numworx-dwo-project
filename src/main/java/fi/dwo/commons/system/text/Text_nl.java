@@ -76,6 +76,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.DLG_ERROR, "Error" },
 			{ TextMapper.DLG_DONE_MSG, "Verzochte taak uitgevoerd." },
                         { TextMapper.DLG_LOSE_NEW_STUDENT_ACCOUNTS, "U heeft nog ongeregistreerde leerlingen in uw lijst. Doorgaan?" },                        
+                        { TextMapper.DLG_LOSE_NEW_TEACHER_ACCOUNTS, "U heeft nog ongeregistreerde docenten in uw lijst. Doorgaan?" },                        
 			{
 					TextMapper.DLG_CREATESTUDENTERROR,
 					"De overgebleven leerlingen kunnen niet worden toegevoegd, vermoedelijk is de username niet uniek." },

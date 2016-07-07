@@ -80,7 +80,7 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.DLG_ERROR, "Error" },
 			{ TextMapper.DLG_DONE_MSG, "Requested task completed." },
                         { TextMapper.DLG_LOSE_NEW_STUDENT_ACCOUNTS, "You still have unregistered student accounts in the list. Continue?" },                        
-                        
+                        { TextMapper.DLG_LOSE_NEW_TEACHER_ACCOUNTS, "You still have unregistered teacher accounts in the list. Continue?" },                        
 			{TextMapper.DLG_CREATESTUDENTERROR,
 					"The remaining students can not be added, likely their usernames are not unqiue." },
 			{TextMapper.DLG_COPYSTUDENTERROR,"Some students could not be copied, probabely they were already in the schoolclass"},
