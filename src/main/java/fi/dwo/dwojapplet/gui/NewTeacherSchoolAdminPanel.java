@@ -351,7 +351,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
             pasteFromSystemClipboard();
         } else if (e.getSource() == backButton) {
             if (tableModel.getRowCount() > 1) {
-                if (GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_LOSE_NEW_STUDENT_ACCOUNTS)) != JOptionPane.OK_OPTION) {
+                if (GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS)) != JOptionPane.OK_OPTION) {
                     return;
                 }
             }

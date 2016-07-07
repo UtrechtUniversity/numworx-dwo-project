@@ -443,7 +443,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         Object source = e.getSource();
         if (zoekField == source || zoekBtn == source) {
             //zoek(zoekField.getText().trim().toLowerCase());
-            tableFilter = RowFilter.regexFilter(zoekField.getText().trim().toLowerCase(), 0);
+            tableFilter = RowFilter.regexFilter(zoekField.getText().trim(), 0);
             rowSorter.setRowFilter(tableFilter);
             //table.setRowSorter(rowSorter);
 
