@@ -140,7 +140,7 @@ public class DomUser {
         result.append(" - ");
         result.append(this.givenName);
         result.append(" ");
-        result.append(this.insertion);
+        result.append((this.insertion == null) ? "" : this.insertion);
         result.append(" ");
         result.append(this.familyName);
 
@@ -151,7 +151,7 @@ public class DomUser {
         StringBuilder result = new StringBuilder();
         result.append(this.givenName);
         result.append(" ");
-        result.append(this.insertion);
+        result.append((this.insertion == null) ? "" : this.insertion);
         result.append(" ");
         result.append(this.familyName);
 
