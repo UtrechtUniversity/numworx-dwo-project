@@ -118,7 +118,7 @@ public class GuiCreator {
     public int ShowConfirmDialog(Component parentComponent,
             Object message) {
         if(parentComponent==null) parentComponent = GuiCreator.instance().getMainPanel();
-        return JOptionPane.showConfirmDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_CONFIRM), JOptionPane.OK_OPTION);
+        return JOptionPane.showConfirmDialog(parentComponent, message, "", JOptionPane.OK_OPTION);
     }
     
     /**
