@@ -34,7 +34,6 @@ import fi.dwo.server.persistence.DwoEmfFactory;
 import javax.mail.*;
 import javax.mail.internet.*;
 
-import static java.lang.Thread.sleep;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -57,6 +56,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+import static java.lang.Thread.sleep;
 
 /**
  * Handles the public registration of new users.
