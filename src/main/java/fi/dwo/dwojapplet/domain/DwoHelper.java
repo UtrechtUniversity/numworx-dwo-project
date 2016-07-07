@@ -489,7 +489,7 @@ public final class DwoHelper {
      *
      * @param aJarURLPath
      */
-    public static void setJarUrlPath(URL aJarURLPath) {
+    public static void setJarUrlPath(URL  aJarURLPath) {
         jarUrlPath = aJarURLPath;
     }
 
