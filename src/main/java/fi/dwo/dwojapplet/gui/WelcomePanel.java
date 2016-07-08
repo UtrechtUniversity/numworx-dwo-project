@@ -49,7 +49,6 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     private JButton guestButton;
 
     private JButton registerNewUserButton;
-    private JButton registerExistingUserButton;
 
     FIButton fiButton;
     JPanel dialog;
@@ -331,6 +330,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 //        p.add(l);
         guestButton.addActionListener(this);
         registerNewUserButton.addActionListener(this);
+        loginButton.requestFocus();
+
 
     }
     private static final Logger LOG = Logger.getLogger(WelcomePanel.class.getName());
@@ -361,7 +362,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
             catch (Dwo2Exception ex) {
-                JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), null, JOptionPane.ERROR_MESSAGE);
                 Logger.getLogger(WelcomePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (src == guestButton) {

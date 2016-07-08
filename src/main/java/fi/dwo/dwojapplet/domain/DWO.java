@@ -1505,6 +1505,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             dwoProfile = (DwoProfile) PersistenceFacade.instance().get(dwoProfileID, DwoProfile.class);
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.DLG_SERVER_OUT), e.getMessage(), JOptionPane.ERROR_MESSAGE);
         }
         GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
         ModuleTreePanel.initialize(dwoProfile);

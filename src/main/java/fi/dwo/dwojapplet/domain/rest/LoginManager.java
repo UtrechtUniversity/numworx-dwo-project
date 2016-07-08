@@ -88,7 +88,11 @@ public class LoginManager {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
 
         } catch (IOException e) {
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Server error");
+            if(e.getClass().equals(java.net.ConnectException.class)){
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, e.getMessage());
+            }else{
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+            }
         }
     }
 
