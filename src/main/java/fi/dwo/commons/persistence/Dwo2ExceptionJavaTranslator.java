@@ -5,11 +5,12 @@ package fi.dwo.commons.persistence;
 
 import com.owlike.genson.Genson;
 import fi.dwo.rest.DwoLocale;
-import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,9 +68,9 @@ public class Dwo2ExceptionJavaTranslator implements DWO2ExceptionTranslatorInter
         try {
             //Current resources are in /java/resources, however if in java/resources/fi/dwo then
             //replace getBundle("Dwo2Exceptions", locale); with getBundle("fi.dwo.Dwo2Exceptions", locale);
-//            ResourceBundle localeLookup = ResourceBundle.getBundle("fi.dwo.rest.locale.Dwo2Exceptions", Locale.forLanguageTag(locale.getLocale()));
-//            msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
-            msg = code.name();
+            ResourceBundle localeLookup = ResourceBundle.getBundle("fi.dwo.rest.locale.Dwo2Exceptions", Locale.forLanguageTag(locale.getLocale()));
+            msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
+//            msg = code.name();
         }
         catch (Exception e) {
             //If resource fails, return the english log message.

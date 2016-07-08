@@ -92,6 +92,7 @@ public abstract class TextMapper {
 
 	public static final String DLG_MESSAGE = "DLG_MESSAGE";
 	public static final String DLG_ERROR = "DLG_ERROR";
+        public static final String DLG_SERVER_OUT = "DLG_SERVER_OUT";
 	public static final String DLG_CREATESTUDENTERROR = "DLG_CREATESTUDENTERROR";
 	public static final String DLG_CREATETEACHERERROR = "DLG_CREATETEACHERERROR";
         public static final String DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS = "DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS";
