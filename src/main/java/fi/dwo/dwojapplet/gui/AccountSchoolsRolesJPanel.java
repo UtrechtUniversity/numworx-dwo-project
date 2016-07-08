@@ -337,7 +337,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.addRoleButton) {
-            ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new RegisterMoreSchoolsPanel());
+            ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new RegisterMoreSchoolLoginsPanel());
             dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
             dialog.setVisible(true);
             GuiCreator.instance().getMainPanel().center.loadCenter(GuiCreator.instance().getProfilePanel());

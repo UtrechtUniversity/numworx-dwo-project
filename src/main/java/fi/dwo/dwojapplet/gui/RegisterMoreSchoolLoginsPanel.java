@@ -41,8 +41,8 @@ import javax.swing.JTextField;
  * <li> Test the reset button </li>
  * </ul>
  */
-public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
-    private static final Logger LOG = Logger.getLogger(RegisterMoreSchoolsPanel.class.getName());
+public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListener {
+    private static final Logger LOG = Logger.getLogger(RegisterMoreSchoolLoginsPanel.class.getName());
 
     private JTextField schoollogin;
 
@@ -61,7 +61,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
      * himself.
      *
      */
-    public RegisterMoreSchoolsPanel() {
+    public RegisterMoreSchoolLoginsPanel() {
 //        groupList = groups;
 
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -164,7 +164,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
         fm = registerButton.getFontMetrics(registerButton.getFont());
         registerButton.setSize(registerButton.getPreferredSize());
         registerButton.setLocation(p.getX() + this.getWidth() / 2 - registerButton.getWidth(), p.getY() + p.getHeight() / 2 - registerButton.getHeight());
-        registerButton.setLocation((p.getSize().width / 4)
+        registerButton.setLocation(3 * (p.getSize().width / 4)
                 - (registerButton.getSize().width / 2), 10);
         p.add(registerButton);
 
@@ -173,7 +173,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
         fm = backButton.getFontMetrics(backButton.getFont());
         backButton.setSize(backButton.getPreferredSize());
 
-        backButton.setLocation(3 * (p.getSize().width / 4)
+        backButton.setLocation((p.getSize().width / 4)
                 - (backButton.getSize().width / 2), 10);
         p.add(backButton);
 
@@ -245,7 +245,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                     nur.setSchoolCode(schoolpassword.getText());
                     SecureUserAccountLoginsManager.addASchoolLogin(nur); //throws Dwo2RestException.
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
-//                    center.loadCenter(new RegisterMoreSchoolsPanel());
+//                    center.loadCenter(new RegisterMoreSchoolLoginsPanel());
                     this.getParent().getParent().getParent().getParent().setVisible(false);
                 }
                 catch (Dwo2Exception ex) {

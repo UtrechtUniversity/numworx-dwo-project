@@ -24,7 +24,7 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
     private CenterPanel center;
     private AccountDataFullUserJPanel accountDataPanel;
     private AccountSchoolsRolesJPanel sarPanel;
-    private RegisterMoreSchoolsPanel rmsPanel = new RegisterMoreSchoolsPanel();
+    private RegisterMoreSchoolLoginsPanel rmsPanel = new RegisterMoreSchoolLoginsPanel();
 
     /**
      * Creates a new ProfilePanel for the current user. The account of the
