@@ -142,8 +142,9 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                                 panel.setSize("300", "200");
                                 popup.add(panel);
                                 popup.center();
+//                                nsc.setRegistrationKey(panel.getRegKey());
                             }
-                            DomNewSchoolClass4Student nsc = DomNewSchoolClass4Student();
+                            DomNewSchoolClass4Student nsc = new DomNewSchoolClass4Student(sc);
                             control.registerStudentForSchoolClass(nsc,  new AsyncCallback<Boolean>() {
                                 @Override
                                 public void onFailure(Throwable t) {
