@@ -2328,14 +2328,23 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		Element elem = getAsPanel().getElement();
 		Style style = elem.getStyle();
 		if(b)
-		{	style.clearVisibility();
+		{	
+			style.clearVisibility();
 			double hoogteDouble = 0;
 			for(int i = 0; i < hoogtes.size(); i++)
-				hoogteDouble += hoogtes.get(i).doubleValue();
+			{	hoogteDouble += hoogtes.get(i).doubleValue();
+				hoogteDouble += cellSpaceRow;
+			}
+			if(hoogtes.size() > 0)
+				hoogteDouble -= cellSpaceRow;
 			hoogte = (int) Math.round(hoogteDouble);
 			double breedteDouble = 0;
 			for(int j = 0; j < breedtes.size(); j++)
-				breedteDouble += breedtes.get(j).doubleValue();
+			{	breedteDouble += breedtes.get(j).doubleValue();
+				breedteDouble += cellSpaceColumn;
+			}
+			if(breedtes.size() > 0)
+				breedteDouble -= cellSpaceColumn;
 			breedte = (int) Math.round(breedteDouble);
 			setCurrentSize( breedte, hoogte);
 		}
