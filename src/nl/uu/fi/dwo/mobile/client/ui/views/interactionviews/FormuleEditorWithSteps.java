@@ -108,7 +108,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	private FormuleViewer prefixViewer;
 	private FormuleViewer latest_answer_viewer;
 	private ScrollPanel sp = null;
-	private AntwoordVakChecker avChecker = null;
+	protected AntwoordVakChecker avChecker = null;
 	
 	private LayoutPanel contentPanel = null;
 	private TekstVak feedbackPanel = null;
@@ -3042,6 +3042,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				});
 		}
 		
+	}
+	
+	public OpdrNavIF getCommunicationRoot()
+	{
+		return comRoot;
 	}
 
 	@Override
