@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
+import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.locale.DwoLocalesForGWT;
@@ -142,18 +143,19 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                                 popup.add(panel);
                                 popup.center();
                             }
-//                            control.addSchoolClass(sc, new AsyncCallback<Boolean>() {
-//                                @Override
-//                                public void onFailure(Throwable t) {
-//                                    //fail and reset all the data.
-//                                    Window.alert(t.getMessage());
-//                                }
-//
-//                                @Override
-//                                public void onSuccess(Boolean result) {
-//                                    //update a view list
-//                                }
-//                            });
+                            DomNewSchoolClass4Student nsc = DomNewSchoolClass4Student();
+                            control.registerStudentForSchoolClass(nsc,  new AsyncCallback<Boolean>() {
+                                @Override
+                                public void onFailure(Throwable t) {
+                                    //fail and reset all the data.
+                                    Window.alert(t.getMessage());
+                                }
+
+                                @Override
+                                public void onSuccess(Boolean result) {
+                                    //update a view list
+                                }
+                            });
                             break;
 //                        case 2:     //
 ////                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {

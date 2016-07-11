@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
+import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -31,7 +32,7 @@ class AddSchoolClassStudentController {
     public void init(DomUserFull user) {
         currentUser = user;
         LOG.log(Level.INFO,""+manager);
-        manager.getStudentsSchoolClasses(new AsyncCallback<List<DomSchoolClass>>() {
+        manager.getSchoolsClasses(new AsyncCallback<List<DomSchoolClass>>() {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
@@ -75,7 +76,12 @@ class AddSchoolClassStudentController {
     public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack){
         manager.getActiveSchoolClass(callBack);
     }
+    
     public void removeSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
         manager.removeSchoolClass(submit, callBack);
+    }
+
+    public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit, AsyncCallback<Boolean> callBack) {
+        manager.registerStudentForSchoolClass(submit, callBack);
     }
 }

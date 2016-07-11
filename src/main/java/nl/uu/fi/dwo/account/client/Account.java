@@ -121,7 +121,11 @@ public class Account implements EntryPoint, ClickHandler {
                         public void onSuccess(DomSchoolClass result) {
                             DwoGlobalVars.instance()
                                     .setCurrentSchoolClass(result);
+                            if(result!=null){
                             loginStatusPanel.setSchoolClass(result.getSchoolClassName());
+                            }else{
+                                loginStatusPanel.setSchoolClass("");
+                            }
                             header.setRightWidget(userBar);
                             LOG.log(Level.INFO,
                                     "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");
