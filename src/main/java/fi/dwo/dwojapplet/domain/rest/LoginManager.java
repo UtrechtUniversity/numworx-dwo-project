@@ -46,6 +46,7 @@ public class LoginManager {
 // Should clear any existing autentication cache but does not work due to feature bug.
         try {
             //RestAuthenticator restAuth = RestAuthenticator.(username,password);
+            //clears any auth data and cookies remaining from a previous session in Java browser-like framework
             Authenticator.setDefault(null);
             CookieManager.setDefault(null);
             URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make basicLogin            

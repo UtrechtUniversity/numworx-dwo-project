@@ -6,6 +6,8 @@ import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import java.net.Authenticator;
+import java.net.CookieManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,8 +36,8 @@ public class SecureUserAccountManager {
     }
 
     /**
-     * Login for a user. Registers service that the user is logging in. As the REST
-     * interface is stateless this is merely for gathering statistics.
+     * Login for a user. Registers service that the user is logging in. As the
+     * REST interface is stateless this is merely for gathering statistics.
      *
      * @return
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
@@ -47,7 +49,7 @@ public class SecureUserAccountManager {
     }
 
     /**
-     * Registers that the user logs out. 
+     * Registers that the user logs out.
      *
      * @return
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
@@ -55,9 +57,13 @@ public class SecureUserAccountManager {
     public static Boolean logoutUser() throws Dwo2Exception {
         Boolean result;
         result = StoredRestManager.getInstance().get("rest/secure/user/account/logout", Boolean.class);
+        //ensures basic auth data and cookies are wiped from Java Browser-like framework
+        Authenticator.setDefault(null);
+        CookieManager.setDefault(null);
+
         return result;
     }
-    
+
     /**
      * Updates the user profile of a user.
      *
@@ -78,7 +84,7 @@ public class SecureUserAccountManager {
 //        WebTarget target = client.target(DwoHelper.getServerUrlPath().toString());
 //        StoredRestManager.setWebTargetAndCredentials(target);
         StoredRestManager.setBasicAuthString(null);
-        
+
         DwoHelper.setCurrentUser(user);
         LOG.log(Level.FINE, "Updated user profile of username {0}.", new Object[]{restUser.getDomUserFull().getUserName()});
         return user;
