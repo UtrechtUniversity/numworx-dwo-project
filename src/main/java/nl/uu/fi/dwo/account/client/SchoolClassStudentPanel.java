@@ -54,7 +54,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     SchoolClassStudentPanel(DomUserFull user) {
         init(user);
         control = new SchoolClassStudentController(this, user);
-        addSchoolClassPanel = new AddSchoolClassStudentPanel(user);
+//        addSchoolClassPanel = new AddSchoolClassStudentPanel(user, control);
         control.init(user);
 
     }
@@ -231,7 +231,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
             LOG.log(Level.INFO, "Popup of AddSchoolClassStudentPanel.");
             PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
             //popup.setSize("500", "400");
-            AddSchoolClassStudentPanel panel = new AddSchoolClassStudentPanel(DwoGlobalVars.instance().getCurrentUser());
+            AddSchoolClassStudentPanel panel = new AddSchoolClassStudentPanel(DwoGlobalVars.instance().getCurrentUser(), control);
             panel.setPopup(popup);
             panel.setSize("300", "200");
             popup.add(panel);

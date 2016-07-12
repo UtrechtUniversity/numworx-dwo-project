@@ -11,19 +11,20 @@ import java.util.logging.Logger;
 
 /**
  *
+ *
  * @author Gert van der Plas
  */
 public class SchoolClassAskRegistrationKeyPanel extends VerticalPanel {
 
     private static final Logger LOG = Logger.getLogger(SchoolClassAskRegistrationKeyPanel.class.getName());
 
+    private SchoolClassStudentController control;
     private Label schoolClassLabel = new Label("schoolClassName:");
     private Label regKeyLabel = new Label("registrationKey:");
     private TextBox schoolClassNameText = new TextBox();
     private PasswordTextBox regKeyText = new PasswordTextBox();
     private Label localization = new Label("Localisation: " + LocaleInfo.getLocaleNativeDisplayName("en-gb"));
     private PopupPanel popup;
-    
 
     //Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_GUI_AnIncorrectPasswordWasGiven());
     public SchoolClassAskRegistrationKeyPanel() {
@@ -65,9 +66,23 @@ public class SchoolClassAskRegistrationKeyPanel extends VerticalPanel {
     public void setSchoolClassName(String name) {
         this.schoolClassNameText.setText(name);
     }
-    
+
     void setPopup(PopupPanel popup) {
         this.popup = popup;
+    }
+
+    /**
+     * @return the control
+     */
+    public SchoolClassStudentController getControl() {
+        return control;
+    }
+
+    /**
+     * @param control the control to set
+     */
+    public void setControl(SchoolClassStudentController control) {
+        this.control = control;
     }
 
 }

@@ -30,7 +30,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 
     private Logger LOG = Logger.getLogger("Account");
 
-    private AddSchoolClassStudentController control;
+    private SchoolClassStudentController control;
     private PopupPanel popup;
 
 //    private Button delBtn;
@@ -38,6 +38,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
     private Button closeBtn;
     CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
     ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
+    DomSchoolClass selectedClass = null;
 
     public PopupPanel getPopup() {
         return popup;
@@ -47,9 +48,9 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
         this.popup = popup;
     }
 
-    AddSchoolClassStudentPanel(DomUserFull user) {
+    AddSchoolClassStudentPanel(DomUserFull user, SchoolClassStudentController aControl) {
         init(user);
-        control = new AddSchoolClassStudentController(this, user);
+        control = aControl;
         control.init(user);
 
     }
@@ -57,7 +58,8 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
     public void init(DomUserFull user) {
         this.setSize("400", "500");
 
-        //control.getSchoolClasses();
+        control.updateSchoolClassesAddSchoolClassView();
+
 //        Grid g = new Grid(control.getSchoolClasses().size() + 1, 3);
 //        for (int i = 0; i < control.getSchoolClasses().size(); i++) {
 //            g.setText(i, 0, control.getSchoolClasses().get(i).getSchoolClassName());
@@ -130,54 +132,9 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                     LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
                     switch (rowIndex) {
-                        case 1: //selected schoolclass to add
-                            //check for password required
-                            if (sc.getHasRegKey()) {
-                                PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
-                                //popup.setSize("500", "400");
-                                SchoolClassAskRegistrationKeyPanel panel = new SchoolClassAskRegistrationKeyPanel();
-                                panel.setSchoolClassName(sc.getSchoolClassName());
-                                panel.setRegKey("required");
-                                panel.setPopup(popup);
-                                panel.setSize("300", "200");
-                                popup.add(panel);
-                                popup.center();
-//                                nsc.setRegistrationKey(panel.getRegKey());
-                            }
-                            DomNewSchoolClass4Student nsc = new DomNewSchoolClass4Student(sc);
-                            control.registerStudentForSchoolClass(nsc,  new AsyncCallback<Boolean>() {
-                                @Override
-                                public void onFailure(Throwable t) {
-                                    //fail and reset all the data.
-                                    Window.alert(t.getMessage());
-                                }
-
-                                @Override
-                                public void onSuccess(Boolean result) {
-                                    //update a view list
-                                }
-                            });
+                        case 1: // set selected schoolclass to add
+                            selectedClass = sc;
                             break;
-//                        case 2:     //
-////                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {
-//                            control.removeSchoolClass(sc, new AsyncCallback<Boolean>() {
-//                                @Override
-//                                public void onFailure(Throwable t) {
-//                                    //fail and reset all the data.
-//                                    Window.alert(t.getMessage());
-//                                    //TODO Wim
-//                                    Window.alert("wim handles error here.");
-//                                }
-//
-//                                @Override
-//                                public void onSuccess(Boolean result) {
-//                                    //TODO update table.
-//                                    control.getSchoolClasses();
-//                                    //TODO Wim
-//                                    Window.alert("wim calls a new login here in case new.");
-//                                }
-//                            });
-//                            break;
                         default:
                     }
                 }
@@ -214,10 +171,39 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
     }
 
     @Override
-
     public void onClick(ClickEvent event) {
         if (event.getSource() == addBtn) {
             LOG.log(Level.INFO, "Should add new window for adding a schoolclass.");
+            //check for password required
+            if (selectedClass != null && selectedClass.getHasRegKey()) {
+                PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
+                //popup.setSize("500", "400");
+                SchoolClassAskRegistrationKeyPanel panel = new SchoolClassAskRegistrationKeyPanel();
+                panel.setSchoolClassName(selectedClass.getSchoolClassName());
+                panel.setRegKey("required");
+                panel.setPopup(popup);
+                panel.setSize("300", "200");
+                panel.setControl(control);
+                popup.add(panel);
+                popup.center();
+//                                nsc.setRegistrationKey(panel.getRegKey());
+            } else {
+                DomNewSchoolClass4Student nsc = new DomNewSchoolClass4Student(selectedClass);
+                control.registerStudentForSchoolClass(nsc, new AsyncCallback<Boolean>() {
+                    @Override
+                    public void onFailure(Throwable t) {
+                        //fail and reset all the data.
+                        Window.alert(t.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean result) {
+                        //update a view list
+                        control.updateStudentsSchoolClassesInView();
+                        popup.hide();
+                    }
+                });
+            }
             popup.hide();
         } else if (event.getSource() == closeBtn) {
             LOG.log(Level.INFO, "Done, hiding window.");
@@ -228,7 +214,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
         LOG.log(Level.INFO, event.getSource().toString());
     }
 
-    void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
+    protected void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
         List<DomSchoolClass> list = dataProvider.getList();
         list.clear();
         for (DomSchoolClass schoolClass : schoolClasses) {

@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
+import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -22,7 +23,8 @@ class SchoolClassStudentController {
     private DomUserFull currentUser;
     private List<DomSchoolClass> schoolClasses = new ArrayList<DomSchoolClass>();
     private SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
-
+    private AddSchoolClassStudentPanel addSchoolClassView;
+    
     SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user) {
         this.view = view;
         init(user);
@@ -68,6 +70,25 @@ class SchoolClassStudentController {
         });
     }
 
+    public void updateSchoolClassesAddSchoolClassView() {
+        manager.getStudentsSchoolClasses(new AsyncCallback<List<DomSchoolClass>>() {
+            @Override
+            public void onFailure(Throwable t) {
+                //fail and reset all the data.
+                LOG.log(Level.INFO, t.getMessage());
+                DwoViewer.showMessage(Dwo2ExceptionCode.Rest_ConnectionTimeout);
+            }
+
+            @Override
+            public void onSuccess(List<DomSchoolClass> result) {
+                //success and set all the data in the view
+                LOG.log(Level.INFO, "Fetched students schoolclasses.");
+                schoolClasses = result;
+                addSchoolClassView.setSchoolClasses(schoolClasses);
+            }
+        });
+    }
+    
     public void setActiveSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
         manager.setActiveSchoolClass(submit, callBack);
     }
@@ -78,5 +99,23 @@ class SchoolClassStudentController {
 
     public void removeSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
         manager.removeSchoolClass(submit, callBack);
+    }
+
+    public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit, AsyncCallback<Boolean> callBack) {
+        manager.registerStudentForSchoolClass(submit, callBack);
+    }
+    
+    /**
+     * @return the addSchoolClassView
+     */
+    public AddSchoolClassStudentPanel getAddSchoolClassView() {
+        return addSchoolClassView;
+    }
+
+    /**
+     * @param addSchoolClassView the addSchoolClassView to set
+     */
+    public void setAddSchoolClassView(AddSchoolClassStudentPanel addSchoolClassView) {
+        this.addSchoolClassView = addSchoolClassView;
     }
 }
