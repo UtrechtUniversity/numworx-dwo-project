@@ -38,12 +38,19 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
         for (DomSchoolRoleAndClass src : srcList) {
             rows++; // one for each item in List
         }
+        //subtract 1 if null school is not to be displayed.
+        if(prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.TEACHER.name()) 
+                        || prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.SCHOOLADMIN.name())){
+            rows--;
+        }
+                
         data = new Object[rows][5];
         int j = 0;
         for (DomSchoolRoleAndClass src : srcList) {
+            //skip src if null school for teacher or schooladmin
             if (!(src.getSchoolId().equals(prop.getNullSchool().getId()) 
-                    && (src.getRoleName().equals(RoleType.SCHOOLADMIN) 
-                        || src.getRoleName().equals(RoleType.SCHOOLADMIN) ))) {
+                    && (prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.TEACHER.name()) 
+                        || prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.SCHOOLADMIN.name()) ))) {
                 if (!src.getSchoolId().equals(prop.getNullSchool().getId())) {
                     data[j][0] = src.getSchoolName();
                 } else {
