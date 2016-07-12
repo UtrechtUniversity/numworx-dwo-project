@@ -2,11 +2,12 @@
 <html>
 	<head>
     	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    	<link type="text/css" rel="stylesheet" href="http://cdplogica.toegang.nu/noordhoff/vo/fi/dwo/2014_v1_0/DWOplayer.css">
+    	<script type="text/javascript" language="javascript" src='logica.js'></script> 	
+    	<script>css("DWOplayer.css")</script>
 		<title>{0}</title>
-    	<script type="text/javascript" language="javascript" src="http://cdplogica.toegang.nu/noordhoff/vo/fi/dwo/2014_v1_0/scripts/lz-string.js"></script>
-    	<script type="text/javascript" language="javascript" src="http://cdplogica.toegang.nu/noordhoff/vo/fi/dwo/2014_v1_0/scripts/assetapi.js"></script>  
-    	<script type="text/javascript" language="javascript" src="http://cdplogica.toegang.nu/noordhoff/vo/fi/dwo/2014_v1_0/DWOplayer/DWOplayer.nocache.js"></script>
+    	<script>script("scripts/lz-string.js")</script>
+    	<script>script("scripts/assetapi.js")</script>  
+    	<script>script("DWOplayer/DWOplayer.nocache.js")</script>
 	</head>
 	<body id='main'></body>
 </html>
