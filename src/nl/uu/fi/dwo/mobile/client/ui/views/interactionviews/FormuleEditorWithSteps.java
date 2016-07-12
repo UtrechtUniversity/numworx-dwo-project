@@ -2515,7 +2515,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			return true;
 		String op = pijlVakken.get(stapNr - 1).geefOperator();
 		Expressie en = FormuleParser.geefExpressie("$f" + pijlVakken.get(stapNr - 1).geefExpressieString() + "@");
-		if (op.equals("implicatie") || en == null)
+		if (op.equals("implicatie") || op.equals("abc") || en == null)
 			return true;
 		
 		VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + latest_answer_viewer.toString() + "@");
