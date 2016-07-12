@@ -166,12 +166,30 @@
     <artifactId>httpclient</artifactId>
     <version>4.1.1</version>
 </dependency>-->
-    
+
     </dependencies>
+    
+    <distributionManagement>
+        <repository>
+            <id>snapshots</id>
+            <!--<name>libs-snapshot</name>-->
+            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
+        </repository>
+    </distributionManagement>       
 
     <build>
         <!-- order is relevant -->
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.0-beta-9</version>
+                <configuration>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <goals>deploy</goals>
+                    <scmCommentPrefix>[bus-core-api-release-checkin]</scmCommentPrefix>
+                </configuration>
+            </plugin>            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -345,7 +363,6 @@
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
-       
     <profiles>
         <profile>
             <id>dwo-obfuscate</id> 
