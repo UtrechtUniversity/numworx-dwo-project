@@ -159,7 +159,15 @@
 			<version>4.0.3</version>
 		</dependency>
     </dependencies>
-
+    
+    <distributionManagement>
+        <repository>
+            <id>snapshots</id>
+            <!--<name>libs-snapshot</name>-->
+            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
+        </repository>
+    </distributionManagement>    
+    
     <build>
         <plugins>
             <plugin>
