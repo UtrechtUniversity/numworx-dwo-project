@@ -3,8 +3,9 @@
         <action>
             <actionName>CUSTOM-deploy to artifactory</actionName>
             <displayName>deploy to artifactory</displayName>
+            <preAction>build-with-dependencies</preAction>
             <goals>
-                <goal>deploy:deploy</goal>
+                <goal>deploy</goal>
             </goals>
         </action>
     </actions>

@@ -49,11 +49,12 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
     </scm>
   
   
-    <build><resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      </resources>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <!-- Order is important ! Execution follows the declaration order -->
             <plugin>
@@ -155,18 +156,18 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.5</version>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                                </manifest>
-                                <manifestEntries>
-                                    <Implementation-Build>${buildNumber}</Implementation-Build>
-                                    <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
-                                    <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+                            <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -272,6 +273,15 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
         </dependency>        
         
     </dependencies>
+    
+    <distributionManagement>
+        <repository>
+            <id>snapshots</id>
+            <!--<name>libs-snapshot</name>-->
+            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
+        </repository>
+    </distributionManagement>    
+        
     <reporting>
         <plugins>
             <plugin>
