@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.rest.dom.entities.RoleType;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,29 +41,33 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
         data = new Object[rows][5];
         int j = 0;
         for (DomSchoolRoleAndClass src : srcList) {
-            if (!src.getSchoolId().equals(prop.getNullSchool().getId())) {
-                data[j][0] = src.getSchoolName();
-            } else {
-                data[j][0] = TextMapper.getText(TextMapper.GUIR_OPT_NULLSCHOOL);
+            if (!(src.getSchoolId().equals(prop.getNullSchool().getId()) 
+                    && (src.getRoleName().equals(RoleType.SCHOOLADMIN) 
+                        || src.getRoleName().equals(RoleType.SCHOOLADMIN) ))) {
+                if (!src.getSchoolId().equals(prop.getNullSchool().getId())) {
+                    data[j][0] = src.getSchoolName();
+                } else {
+                    data[j][0] = TextMapper.getText(TextMapper.GUIR_OPT_NULLSCHOOL);
+                }
+                data[j][1] = TextMapper.getText(src.getRoleName());
+                if (prop.getActiveSchoolRoleAndClass() != null
+                        && prop.getActiveSchoolRoleAndClass().getSchoolId().equals(src.getSchoolId())
+                        && prop.getActiveSchoolRoleAndClass().getRoleId().equals(src.getRoleId())
+                        && prop.getActiveSchoolRoleAndClass().getUserId().equals(src.getUserId())
+                        && ((src.getSchoolClassId() == null && prop.getActiveSchoolRoleAndClass().getSchoolClassId() == null)
+                        || prop.getActiveSchoolRoleAndClass().getSchoolClassId().equals(src.getSchoolClassId()))) {
+                    data[j][2] = emptyImage;
+                } else {
+                    data[j][2] = loginImage;
+                }
+                if (!src.getSchoolId().equals(prop.getNullSchool().getId())) {
+                    data[j][3] = removeImage; // delete 
+                } else {
+                    data[j][3] = emptyImage;
+                }
+                data[j][4] = src;
+                j++;
             }
-            data[j][1] = TextMapper.getText(src.getRoleName());
-            if (prop.getActiveSchoolRoleAndClass() != null
-                    && prop.getActiveSchoolRoleAndClass().getSchoolId().equals(src.getSchoolId())
-                    && prop.getActiveSchoolRoleAndClass().getRoleId().equals(src.getRoleId())
-                    && prop.getActiveSchoolRoleAndClass().getUserId().equals(src.getUserId())
-                    && ((src.getSchoolClassId() == null && prop.getActiveSchoolRoleAndClass().getSchoolClassId() == null)
-                    || prop.getActiveSchoolRoleAndClass().getSchoolClassId().equals(src.getSchoolClassId()))) {
-                data[j][2] = emptyImage;
-            } else {
-                data[j][2] = loginImage;
-            }
-            if (!src.getSchoolId().equals(prop.getNullSchool().getId())) {
-                data[j][3] = removeImage; // delete 
-            } else {
-                data[j][3] = emptyImage;
-            }
-            data[j][4] = src;
-            j++;
         }
         fireTableDataChanged();
     }
