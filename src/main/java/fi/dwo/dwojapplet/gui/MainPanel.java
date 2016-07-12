@@ -157,8 +157,8 @@ public class MainPanel extends BackgroundPanel {
 
         /* Logged In panel */
         loggedIn = new LoggedInPanel();
-        loggedIn.setBounds(645, 20, 151, 70);
-        int w = 151;
+        int w = 250; // size of login-role and username
+        loggedIn.setBounds(605, 20, w, 70);
         if (GuiConstants.GUI_IMAGE_BG) {
             w = w - 30;
         }

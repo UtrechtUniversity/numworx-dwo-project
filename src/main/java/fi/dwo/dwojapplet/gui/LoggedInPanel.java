@@ -3,6 +3,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Guest;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.LogoutAction;
@@ -41,7 +42,7 @@ public class LoggedInPanel extends Box {
 //	}
     /**
      * Creates a new LoggedInPanel. It shows who is logged in, and a button to
-     * logg of.
+     * log of.
      */
     public LoggedInPanel() {
         super(BoxLayout.Y_AXIS);
@@ -67,11 +68,11 @@ public class LoggedInPanel extends Box {
         JLabel username = null;
         if (!gast) {
             if (GuiConstants.GUI_IMAGE_BG) {
-                loggedin.setText(user.getName());
+                loggedin.setText(TextMapper.getText(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName())+" "+user.getName());
                 loggedin.setHorizontalAlignment(SwingConstants.RIGHT);
             } else {
                 username = new JLabel(user.getName());
-                username.setAlignmentX(CENTER_ALIGNMENT);
+                username.setAlignmentX(RIGHT_ALIGNMENT);
                 username.setFont(GuiConstants.NORMAL_TEXT);
             }
         }
