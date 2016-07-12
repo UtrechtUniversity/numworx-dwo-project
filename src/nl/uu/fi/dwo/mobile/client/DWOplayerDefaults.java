@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationCss;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationBundle;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextAndroid;
@@ -165,5 +166,10 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	
 	public OpdrNav.Prepare getPrepareInstance() {
 		return new OpdrNav.Prepare();
+	}
+
+	@Override
+	public Text getTextBundle() {
+		return GWT.create(Text.class);
 	}
 }

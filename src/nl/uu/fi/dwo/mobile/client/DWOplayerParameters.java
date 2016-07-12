@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationCss;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
@@ -65,4 +66,5 @@ public interface DWOplayerParameters {
 // More to come....
 	OpdrNav.Prepare getPrepareInstance();
 	String getCourseDescription();
+	Text   getTextBundle();
 }

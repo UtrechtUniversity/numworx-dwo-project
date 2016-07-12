@@ -1,10 +1,12 @@
 package nl.uu.fi.dwo.mobile.client.text;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Constants;
 
 public interface Text extends Constants {
-	Text constants = GWT.create(Text.class);
+	Text constants = DWOplayer.PARAMETERS.getTextBundle();
 	
 	@DefaultStringValue("Gebruikersnaam:")
 	String gebruikersnaam();
