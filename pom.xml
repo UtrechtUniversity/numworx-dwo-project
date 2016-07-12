@@ -267,6 +267,15 @@
                </dependency>                
         -->
     </dependencies>
+    
+    <distributionManagement>
+        <repository>
+            <id>snapshots</id>
+            <!--<name>libs-snapshot</name>-->
+            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
+        </repository>
+    </distributionManagement>    
+        
     <reporting>
         <plugins>
             <plugin>
