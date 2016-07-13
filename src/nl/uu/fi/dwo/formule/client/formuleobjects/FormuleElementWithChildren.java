@@ -210,4 +210,25 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 		}
 		return null;
 	}
+	
+	public String getSelectionString()
+	{
+		if(this.isSelected())
+			return this.toString();
+		else
+		{	for(int i = 0; i < children.size(); i++)
+			{
+				FormuleElement fe = children.get(i);
+				if(fe instanceof FormuleElementWithChildren)
+				{
+					String s = ((FormuleElementWithChildren) fe).getSelectionString();
+					if (!s.equals(""))
+						return s;
+				}
+				else if(fe.isSelected())
+					return fe.toString();
+			}
+		}
+		return "";
+	}
 }

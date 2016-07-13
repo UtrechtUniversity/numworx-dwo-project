@@ -1270,21 +1270,39 @@ public class FormuleRegel extends FormuleElement
 
 	public String getSelectionString()
 	{
-		String s = "";
+//		String s = "";
+//		System.out.println("FormuleRegel getSelectionString selectionStart: " + this.selectionStart + " en currentPosition: " + this.currentPosition);
+//		if(this.selectionStart <= this.currentPosition)
+//		{	int start = this.selectionStart;
+//			if (start < 0)
+//			start = 0;
+//			for (int i = start; i <= this.currentPosition; i++)
+//				s += ((FormuleElement) this.children.get(i)).toString();
+//		}
+//		else
+//		{	int start = currentPosition + 1;
+//			for(int i = start; i <= this.selectionStart; i++)
+//				s += ((FormuleElement) this.children.get(i)).toString();
+//		}
 		
-		if(this.selectionStart <= this.currentPosition)
-		{	int start = this.selectionStart;
-			if (start < 0)
-			start = 0;
-			for (int i = start; i <= this.currentPosition; i++)
-				s += ((FormuleElement) this.children.get(i)).toString();
-		}
+		String s = "";
+		if(this.isSelected())
+			return this.toString();
 		else
-		{	int start = currentPosition + 1;
-			for(int i = start; i <= this.selectionStart; i++)
-				s += ((FormuleElement) this.children.get(i)).toString();
-		}
+			for(int i = 0; i < children.size(); i++)
+			{
+				FormuleElement fe = children.get(i);
+				if(fe instanceof FormuleElementWithChildren)
+				{	s = ((FormuleElementWithChildren) fe).getSelectionString();
+					if(!s.equals(""))
+						return s;
+				}
+				else if(fe.isSelected())
+					return fe.toString();
+				
+			}
 		return s;
+		
 	}
 	
 	public int getSelectionStart()
