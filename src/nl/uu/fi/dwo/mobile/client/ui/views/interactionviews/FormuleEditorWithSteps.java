@@ -707,15 +707,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 	public void voegRegelToe(String useranswer, boolean show, boolean setState)
 	{
-		//int goedHalfFout = editor.getGoedHalfFout();
-		stapOk = false;
-		nagekeken = false;
-		correct = Boolean.FALSE;//moet correct hier niet null zijn?
-		contentPanel.remove(feedbackPanel);
-		
-		vervangEditorDoorViewer(useranswer, show, setState);
-		
-		terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+		sluitRegelAf(useranswer, show, setState);
 		FormuleViewer fv = viewers.get(viewers.size() - 1);
 		
 		pijlVak = new PijlVak("", this, false); 
@@ -750,6 +742,16 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 			voegGebruikersSubstitutiesVakToe();
 		
 		scrollToBottom();
+	}
+	
+	public void sluitRegelAf(String useranswer, boolean show, boolean setState)
+	{
+		stapOk = false;
+		nagekeken = false;
+		correct = Boolean.FALSE;//moet correct hier niet null zijn?
+		contentPanel.remove(feedbackPanel);
+		vervangEditorDoorViewer(useranswer, show, setState);
+		terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 	}
 	
 	public void voegGebruikersSubstitutiesVakToe()
@@ -3192,8 +3194,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		}
 		if(editor != null)
 			hoogte += editor.getHeight() + stapH;
-		//TODO: if (feedbackTekst != null && feedbackTekst.isShowing()) 
-		//	hoogte += 30 + feedbackTekst.getHeight();
+		if (hasFeedback) 
+			hoogte += feedbackPanelHeight;
 		return hoogte;
 	}
 	

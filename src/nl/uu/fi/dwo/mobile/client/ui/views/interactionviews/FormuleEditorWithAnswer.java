@@ -1027,6 +1027,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return feedback;
 	}
 	
+	public void zetFeedbackTekst(String feedback)
+	{
+		this.feedback = feedback;
+	}
+	
+	
 	public int getGoedHalfFout()
 	{
 		return goedHalfFout;

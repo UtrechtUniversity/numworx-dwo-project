@@ -29,7 +29,7 @@ public class StelselPijl {
 	public void paint()
 	{
 		g.setStrokeStyle(CssColor.make("gray"));
-		g.setLineWidth(2.0);
+		g.setLineWidth(1.0);
 		g.beginPath();
 		g.stroke();
 		if(xBegin < xEind)

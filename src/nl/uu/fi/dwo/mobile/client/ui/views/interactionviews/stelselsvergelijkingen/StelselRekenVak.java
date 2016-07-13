@@ -53,13 +53,10 @@ public class StelselRekenVak extends LayoutPanel  {
 	public StelselRekenVak(StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		
-		//TODO: gegevens uit h gebruiken om hieronder hoogtes en breedtes te berekenen.
-		
-		this.setPixelSize(antwoordVak.breedte, antwoordVak.hoogte - 25);
+		this.setPixelSize(antwoordVak.breedte, antwoordVak.hoogte - (antwoordVak.oplossingenRegelZichtbaar?25:0));
 		contentPanel = new LayoutPanel();
 		contentPanel.getElement().getStyle().setBackgroundColor("white");
-		contentPanel.setPixelSize(antwoordVak.breedte - 2, antwoordVak.hoogte - headerHoogte - marge);//TODO hier mist nog de oplossingenregel.
-		
+		contentPanel.setPixelSize(antwoordVak.breedte - 2, antwoordVak.hoogte - headerHoogte - marge - (antwoordVak.oplossingenRegelZichtbaar?25:0));
 		scrollPane = new ScrollPanel();
 		scrollPane.setPixelSize(antwoordVak.breedte - 2, antwoordVak.hoogte - headerHoogte - marge);
 		//scrollPane.setPixelSize(breedte-5, hoogte-50 + 20); // waar komt die 50 vandaan, er kan nog 20 pixels bij
@@ -87,7 +84,7 @@ public class StelselRekenVak extends LayoutPanel  {
 		hoofdEditor = new StelselEditor(this, h, randomVarNamen, randomVarWaarden, avChecker);
 		contentPanel.add(hoofdEditor);
 		contentPanel.setWidgetLeftRight(hoofdEditor, -1, Style.Unit.PX, 0, Style.Unit.PX);
-		contentPanel.setWidgetTopHeight(hoofdEditor, -1, Style.Unit.PX, 100, Style.Unit.PX);
+		contentPanel.setWidgetTopHeight(hoofdEditor, 0, Style.Unit.PX, 100, Style.Unit.PX);
 		//hoofdEditor.setLocation(-1, 0);
 		headerPanel = hoofdEditor.getHeaderPanel();
 		add(headerPanel);
@@ -180,14 +177,15 @@ public class StelselRekenVak extends LayoutPanel  {
 			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 20, h);
 		else
 			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 3, h); 
-		int x = 0;
-		int y = 0;
-		if(hoofdEditor.vindKindMetFocus() != null)
-		{
-			x = hoofdEditor.vindKindMetFocus().getAsPanel().getAbsoluteLeft() + 30;
-			y = hoofdEditor.vindKindMetFocus().getAsPanel().getAbsoluteTop() + hoofdEditor.vindKindMetFocus().getEditor().getAsPanel().getAbsoluteTop();
-			
-		}
+		contentPanel.setWidgetTopHeight(hoofdEditor, -1, Style.Unit.PX, hoofdEditor.geefHoogte(), Style.Unit.PX);
+//		int x = 0;
+//		int y = 0;
+//		if(hoofdEditor.vindKindMetFocus() != null)
+//		{
+//			x = hoofdEditor.vindKindMetFocus().getAsPanel().getAbsoluteLeft() + 30;
+//			y = hoofdEditor.vindKindMetFocus().getAsPanel().getAbsoluteTop() + hoofdEditor.vindKindMetFocus().getEditor().getAsPanel().getAbsoluteTop();
+//			
+//		}
 		//contentPanel.revalidate();
 		//contentPanel.scrollRectToVisible(new Rectangle(x, y + 45, 1, 1));
 		//contentPanel.doLayout();

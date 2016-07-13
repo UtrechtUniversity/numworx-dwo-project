@@ -80,6 +80,14 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String feedbackTekst19();
 	@DefaultStringValue("Oplossing is goed, significantie klopt maar heeft nog niet in de juiste vorm.")
 	String feedbackTekst20();
+	@DefaultStringValue("Je hebt alle oplossingen gevonden, vul ze onderaan in.")
+	String feedbackTekst21a();
+	@DefaultStringValue("Je hebt alle oplossingen gevonden.")
+	String feedbackTekst21b();
+	@DefaultStringValue("Je hebt de oplossingen in deze tak gevonden, ga verder met een andere tak.")
+	String feedbackTekst22();
+	
+	
 	
 	//pijlvak
 	@DefaultStringValue("  haakjes") 
