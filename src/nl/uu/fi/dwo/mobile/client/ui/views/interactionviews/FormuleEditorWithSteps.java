@@ -98,8 +98,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	boolean hasStartString = false;
 	boolean boxMetRand = true;
 	private Boolean exact = false;
-	private int breedte = 600;
-	private int hoogte = 250;
+	protected int breedte = 600;
+	protected int hoogte = 250;
 	private boolean volledigeBreedte = false;
 	private HashMap<String, Object> launchState;
 	private ObjectMap instellingen;
@@ -781,10 +781,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		if(editor != null && editor.getAsPanel().getParent() == current)
 		{	if(current.getParent() == contentPanel) // FIXME why? 
 				contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
-			current.setWidgetTopHeight(editor.getAsPanel(), 0, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
+			current.setWidgetTopHeight(editor.getAsPanel(), hasPrefix?Math.max(prefixViewer.getAsHoogte() - editor.getAsHoogte(), 0):0, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 			current.setWidgetLeftWidth(editor.getAsPanel(), hasPrefix?prefixViewer.getWidth() + 23:23, Style.Unit.PX, editor.getMainRegel().getWidth(), Style.Unit.PX);
 			if(hasPrefix)
-			{	current.setWidgetTopHeight(prefixViewer.getAsPanel(), editor.getMainRegel().getAsHoogte() - prefixViewer.getMainRegel().getAsHoogte(), Style.Unit.PX, prefixViewer.getHeight(), Style.Unit.PX);
+			{	current.setWidgetTopHeight(prefixViewer.getAsPanel(), Math.max(editor.getMainRegel().getAsHoogte() - prefixViewer.getMainRegel().getAsHoogte(), 0), Style.Unit.PX, prefixViewer.getHeight(), Style.Unit.PX);
 			}
 			if(feedbackPanel.isAttached())
 			{
@@ -1220,7 +1220,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		TouchPanel tp = (TouchPanel) editor.getAsPanel();
 		p.add(tp);
 		p.setWidgetLeftWidth(tp, hasPrefix?prefixViewer.getWidth() + 23:23, Style.Unit.PX, editor.getMainRegel().getWidth(), Style.Unit.PX);
-		p.setWidgetTopHeight(tp, 0, Style.Unit.PX, Math.max(hasPrefix?prefixViewer.getHeight():0, editor.getMainRegel().getHeight()), Style.Unit.PX);
+		p.setWidgetTopHeight(tp, hasPrefix?Math.max(prefixViewer.getAsHoogte() - editor.getAsHoogte(), 0):0, Style.Unit.PX, Math.max(hasPrefix?prefixViewer.getHeight():0, editor.getMainRegel().getHeight()), Style.Unit.PX);
 		addFormulePanelListeners(tp, editor);
 		return editor;
 	}
@@ -2261,7 +2261,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		
 		checkimg.setVisible(true);
 		contentPanel.setWidgetLeftWidth(checkimg, 3, Style.Unit.PX, 20, Style.Unit.PX);
-		contentPanel.setWidgetTopHeight(checkimg, stepPanelY, Style.Unit.PX, 20, Style.Unit.PX);
+		contentPanel.setWidgetTopHeight(checkimg, editor.getAsPanel().getAbsoluteTop() - contentPanel.getAbsoluteTop() + editor.getAsHoogte() - 15, Style.Unit.PX, 20, Style.Unit.PX);
 		
 		
 	}
@@ -3202,6 +3202,17 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		pijl = p;
 	}
 	
+	public void zetMetRand(boolean b)
+	{
+		boxMetRand = b;
+		mainPanel.getElement().getStyle().setBorderWidth(boxMetRand ? 1 : 0, Unit.PX);
+	}
+	
+	public void zetLinkerRand()
+	{
+		mainPanel.getElement().getStyle().setProperty("borderLeft", "1px solid gray" );
+	}
+	
 	public void zetCheck(boolean c)
 	{
 		check = c;
@@ -3219,6 +3230,12 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	
 	public void setHeader(boolean b)
 	{
+		
+		//TODO: testen en exceptions afvangen; wat als headerPanel al is toegevoegd en b is true? Of juist nog niet toegevoegd en b is false?
+		if(b)
+			mainPanel.add(headerPanel);
+		else
+			mainPanel.remove(headerPanel);
 		//headerAan = b;
 	}
 	
