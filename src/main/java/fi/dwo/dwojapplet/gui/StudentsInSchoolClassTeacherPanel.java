@@ -210,7 +210,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         jtbl.add(jtable);
-        jtbl.add(Box.createHorizontalGlue());
+//        jtbl.add(Box.createHorizontalGlue());
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new StudentsInSchoolClassTeacherPanelTableModel();
 
@@ -295,7 +295,6 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         targetSchoolClassBox.addActionListener(this);
         Box header = Box.createHorizontalBox();
         header.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        header.setMaximumSize(new Dimension(3000, 100));
         header.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
         header.add(backButton);
         header.add(Box.createRigidArea(new Dimension(30, 0)));
@@ -304,7 +303,10 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         header.add(copyToSchoolClassButton);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
         header.add(targetSchoolClassBox);
-        header.add(Box.createGlue());
+        header.add(Box.createHorizontalGlue());
+        header.setPreferredSize(new Dimension(400, backButton.getHeight()));
+        header.setMaximumSize(new Dimension(3000, 100));
+        
         this.add(header);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         buildJTable();
