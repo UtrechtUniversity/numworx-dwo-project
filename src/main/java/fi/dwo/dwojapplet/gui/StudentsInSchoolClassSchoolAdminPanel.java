@@ -206,7 +206,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
 
         JTable jtable = new JTable();
         jtable.getTableHeader().setReorderingAllowed(false);
-        jtable.setMinimumSize(new Dimension(400, 300));
+        jtable.setMinimumSize(new Dimension(400,300));
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         jtbl.add(jtable);
@@ -228,7 +228,6 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new StudentsInSchoolClassSchoolAdminPanel.ImageRenderer(), new StudentsInSchoolClassSchoolAdminPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
-
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
         this.add(jtbl);
@@ -244,6 +243,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         super(null);
         this.schoolClass = sc;
         this.setSize(480, 500);
+        this.setPreferredSize(new Dimension(300,300));
 
         //fetch user details.
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -288,8 +288,10 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         studentBox.addActionListener(this);
         Box header = Box.createHorizontalBox();
         header.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        header.setMaximumSize(new Dimension(3000, 100));
+        header.setPreferredSize(new Dimension(-1,studentBox.getMinimumSize().height));
+        header.setMaximumSize(new Dimension(3000,100));
         header.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
+        header.add(Box.createVerticalStrut(100));
         header.add(backButton);
         header.add(Box.createRigidArea(new Dimension(30, 0)));
         header.add(deleteButton);
@@ -297,20 +299,22 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         header.add(studentBox);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
         header.add(copyToSchoolClassButton);
-        header.add(Box.createGlue());
+        header.add(Box.createHorizontalGlue());
         this.add(header);
-        this.add(Box.createRigidArea(new Dimension(0, 10)));
+        this.add(Box.createRigidArea(new Dimension(0, 30)));
         buildJTable();
         addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
         Box footer = Box.createHorizontalBox();
         footer.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        footer.setMaximumSize(new Dimension(3000, 100));
+        footer.setPreferredSize(header.getMinimumSize());
         footer.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
-        footer.add(addStudentsButton);
-        this.add(footer);
         this.add(Box.createVerticalGlue());
+        footer.add(addStudentsButton);
+        footer.add(Box.createHorizontalGlue());
+        this.add(footer);
+//        this.add(Box.createVerticalGlue());
     }
 
     /**
