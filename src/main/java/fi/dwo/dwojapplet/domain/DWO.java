@@ -227,15 +227,20 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             DwoHelper.getServerUrlPath()});
 
         //if not set pick default path
-        String resourceURLPathStringProperty = properties.getProperty("resourceUrlPath", "resources/");
-        DwoHelper.setResourceUrlPath(new URL(resourceURLPathStringProperty));
-        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
+        String resourceURLPathProperty = properties.getProperty("resourceUrlPath", "resources/");
+        DwoHelper.setResourceUrlPath(new URL(resourceURLPathProperty));
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"resourceURLPathProperty",
             DwoHelper.getResourceUrlPath()});
 
         //if not set pick default path
-        String jarURLPathStringProperty = properties.getProperty("jarUrlPath", "jars");
-        DwoHelper.setJarUrlPath(new URL(jarURLPathStringProperty));
-        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"jarURLPathStringProperty",
+        String jarURLPathProperty = properties.getProperty("jarUrlPath", "jars");
+        DwoHelper.setJarUrlPath(new URL(jarURLPathProperty));
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"jarURLPathProperty",
+            DwoHelper.getJarUrlPath()});
+        
+        String appURLPathProperty = properties.getProperty("appUrlPath", "http://www.fisme.science.uu.nl/dwo/apps/");
+        DwoHelper.setAppURLPath(new URL(appURLPathProperty));
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"appURLPathProperty",
             DwoHelper.getJarUrlPath()});
 
         HttpAuthenticationType httpAuthentication = HttpAuthenticationType.valueOf(properties.getProperty("httpAuthentication", "DIGEST"));

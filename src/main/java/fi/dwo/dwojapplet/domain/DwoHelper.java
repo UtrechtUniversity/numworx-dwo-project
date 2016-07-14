@@ -72,6 +72,7 @@ public final class DwoHelper {
     private static String defaultPassword = "";
     private static URL serverUrlPath = null;
     private static URL resourceUrlPath = null; // required null if to use the default
+    private static URL appUrlPath = null;
     private static URL jarUrlPath;
     private static HttpAuthenticationType httpAuthentication;
 
@@ -700,4 +701,13 @@ public final class DwoHelper {
     public static void setDefaultPassword(String aDefaultPassword) {
         defaultPassword = aDefaultPassword;
     }
+
+    public static void setAppURLPath(URL url) {
+        appUrlPath = url;
+    }
+
+    public static URL getAppURLPath() {
+        return appUrlPath;
+    }
+
 }

@@ -115,7 +115,8 @@ public class Save2004Action extends GuiAction {
             id = id.replace('#', '_');
             runner.setId(id);
 
-            String scormURL = "http://www.fisme.science.uu.nl/dwo/apps/" + variant + "/";
+            // ugly string creation
+            String scormURL = DwoHelper.getAppURLPath().toString() + variant + "/";
             runner.setBase(scormURL);
             runner.setUser(GuiCreator.instance().getUser());
 
