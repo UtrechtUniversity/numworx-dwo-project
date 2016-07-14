@@ -226,6 +226,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
         rowSorter = new TableRowSorter(tableModel);
+        rowSorter.toggleSortOrder(0);//
         jtable.setRowSorter(rowSorter);
         this.add(jtbl);
         jtbl.setVisible(true);

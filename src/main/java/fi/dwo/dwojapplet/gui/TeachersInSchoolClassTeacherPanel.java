@@ -192,6 +192,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
         rowSorter = new TableRowSorter(tableModel);
+        rowSorter.toggleSortOrder(3);//
         jtable.setRowSorter(rowSorter);
         this.add(jtbl);
         jtbl.setVisible(true);

@@ -7,13 +7,11 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
@@ -345,6 +343,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);        
+        rowSorter.toggleSortOrder(0);//
         jtable.setRowSorter(rowSorter);        
         
         if (jtable.getRowCount() > 0) {

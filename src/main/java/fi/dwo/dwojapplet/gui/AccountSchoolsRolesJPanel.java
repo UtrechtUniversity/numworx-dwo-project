@@ -30,6 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 /**
  * This panel allows one to manage and switch between SchoolLogins.
@@ -49,8 +50,9 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 
     private JPanel jtbl;
 
-    private static final int ASSIGN_COL = 3;
-    private static final int REMOVE_COL = 4;
+//    private static final int ASSIGN_COL = 3;
+//    private static final int REMOVE_COL = 4;
+    TableRowSorter rowSorter;
 
     /**
      * Creates a new ProfilePanel for the current user. The account of the
@@ -299,6 +301,11 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 
         tableModel.init(prop, loginImage, removeImage, emptyImage);
         jtable.setModel(tableModel);
+
+        rowSorter = new TableRowSorter(tableModel);
+        rowSorter.toggleSortOrder(0);//
+        jtable.setRowSorter(rowSorter);
+
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }

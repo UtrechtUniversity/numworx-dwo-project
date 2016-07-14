@@ -391,6 +391,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         rowSorter = new TableRowSorter(tableModel);
         tableFilter = RowFilter.regexFilter(".*", 0);
         rowSorter.setRowFilter(tableFilter);
+        rowSorter.toggleSortOrder(0);//
         table.setRowSorter(rowSorter);
         TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
         TableUtil.setJTableSizes(table);

@@ -217,6 +217,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);
+        rowSorter.toggleSortOrder(3);//
         jtable.setRowSorter(rowSorter);
 
         if (jtable.getRowCount() > 0) {

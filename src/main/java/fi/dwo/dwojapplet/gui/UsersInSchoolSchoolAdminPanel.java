@@ -257,6 +257,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         tableModel.init(userList, removeImage, image, editImage, emptyImage);
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);
+        rowSorter.toggleSortOrder(3);//
         jtable.setRowSorter(rowSorter);        
         
         if (jtable.getRowCount() > 0) {

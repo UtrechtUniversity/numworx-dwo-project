@@ -280,6 +280,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         tableModel.init(prop, loginImage, removeImage);
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);
+        rowSorter.toggleSortOrder(0);//
         jtable.setRowSorter(rowSorter);
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
