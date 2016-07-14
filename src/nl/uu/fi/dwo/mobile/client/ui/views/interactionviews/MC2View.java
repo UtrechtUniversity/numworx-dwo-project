@@ -279,8 +279,12 @@ public class MC2View extends SimplePanel implements InteractionView {
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
-		if(h == null) return;
 		facade.setPopupState(h);
+		if(h == null)
+		{	
+			setSuspendData(getUUID(), null);
+			return;
+		}
 		if(h.containsKey("STUBVIEW_score"))
 			score = Integer.parseInt(h.remove("STUBVIEW_score").toString());
 		if(h.containsKey("STUBVIEW_correct"))
