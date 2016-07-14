@@ -24,7 +24,7 @@ public class TableUtil {
     private TableUtil() {
     }
 
-    static void setJTableSizes(JTable jTable) {
+    public static void setJTableSizes(JTable jTable) {
         TableColumn column;
         JTableHeader header = jTable.getTableHeader();
         int h = 0;
@@ -56,7 +56,7 @@ public class TableUtil {
         jTable.setRowHeight(h + jTable.getRowMargin());
     }
 
-    static void setDefaults(JTable jTable, boolean header, TableCellRenderer imageRenderer, TableCellEditor imageEditor) {
+    public static void setDefaults(JTable jTable, boolean header, TableCellRenderer imageRenderer, TableCellEditor imageEditor) {
         if (!header) {
             jTable.setTableHeader(null);
         }

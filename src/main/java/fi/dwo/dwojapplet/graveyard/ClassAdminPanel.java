@@ -1,4 +1,4 @@
-package fi.dwo.dwojapplet.gui;
+package fi.dwo.dwojapplet.graveyard;
 
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.SchoolAdmin;
@@ -9,7 +9,15 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.CenterPanel;
+import fi.dwo.dwojapplet.gui.CenterSubPanel;
+import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.HeaderPanel;
+import fi.dwo.dwojapplet.gui.ImageRenderer;
+import fi.dwo.dwojapplet.gui.TableUtil;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -19,6 +27,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.AbstractCellEditor;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;

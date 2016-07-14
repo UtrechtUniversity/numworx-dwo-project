@@ -54,7 +54,7 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
                 data[j][4] = noImage;
                 data[j][5] = noImage;
             }
-            data[j][6] = new Boolean(false);
+            data[j][6] = Boolean.FALSE;
             data[j][7] = u;
             j++;
         }
@@ -85,10 +85,13 @@ class StudentsInSchoolClassTeacherPanelTableModel extends AbstractTableModel {
      * JTable uses this method to determine the default renderer/ editor for
      * each cell. If we didn't implement this method, then the last column
      * would contain text ("true"/"false"), rather than a check box.
+     * FIXME onafhankelijk van inhoud van data[0]
      */
     @Override
     public Class getColumnClass(int c) {
-        return getValueAt(0, c).getClass();
+    	if( getRowCount() > 0)
+    		return getValueAt(0, c).getClass();
+    	return super.getColumnClass(c);
     }
 
     /*
