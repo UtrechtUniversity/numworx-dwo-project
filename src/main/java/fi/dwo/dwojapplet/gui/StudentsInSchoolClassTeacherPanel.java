@@ -89,7 +89,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         public Component getTableCellRendererComponent(JTable table,
                 Object value, boolean selected, boolean hasFocus, int row, int col) {
             Image image = (Image) value;
-            icon.setImage(image);
+            icon.setImage(image);            
             setIcon(icon);
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
