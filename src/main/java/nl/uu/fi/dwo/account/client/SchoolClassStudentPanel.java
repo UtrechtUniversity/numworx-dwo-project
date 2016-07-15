@@ -41,8 +41,6 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
     ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
 
-    private AddSchoolClassStudentPanel addSchoolClassPanel;
-
     public PopupPanel getPopup() {
         return popup;
     }
@@ -232,6 +230,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
             PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
             //popup.setSize("500", "400");
             AddSchoolClassStudentPanel panel = new AddSchoolClassStudentPanel(DwoGlobalVars.instance().getCurrentUser(), control);
+            control.setAddSchoolClassView(panel);
             panel.setPopup(popup);
             panel.setSize("300", "200");
             popup.add(panel);
@@ -246,7 +245,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         LOG.log(Level.INFO, event.getSource().toString());
     }
 
-    void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
+    public void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
         List<DomSchoolClass> list = dataProvider.getList();
         list.clear();
         for (DomSchoolClass schoolClass : schoolClasses) {

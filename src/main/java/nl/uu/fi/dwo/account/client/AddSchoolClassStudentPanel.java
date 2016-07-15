@@ -36,9 +36,9 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 //    private Button delBtn;
     private Button addBtn;
     private Button closeBtn;
-    CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
-    ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
-    DomSchoolClass selectedClass = null;
+    private CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
+    private ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
+    private DomSchoolClass selectedClass = null;
 
     public PopupPanel getPopup() {
         return popup;
@@ -49,9 +49,11 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
     }
 
     AddSchoolClassStudentPanel(DomUserFull user, SchoolClassStudentController aControl) {
-        init(user);
+        dataProvider.getList().clear();
+        selectedClass =null;
         control = aControl;
-        control.init(user);
+        init(user);
+//        control.init(user);
 
     }
 
@@ -131,12 +133,12 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                         && button == NativeEvent.BUTTON_LEFT) {
                     LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
-                    switch (rowIndex) {
-                        case 1: // set selected schoolclass to add
+//                    switch (rowIndex) {
+//                        case 1: // set selected schoolclass to add
                             selectedClass = sc;
-                            break;
-                        default:
-                    }
+//                            break;
+//                        default:
+//                    }
                 }
             }
         };
@@ -215,6 +217,9 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
     }
 
     protected void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
+        if(dataProvider==null){
+            dataProvider = new ListDataProvider<DomSchoolClass>();
+        }
         List<DomSchoolClass> list = dataProvider.getList();
         list.clear();
         for (DomSchoolClass schoolClass : schoolClasses) {
