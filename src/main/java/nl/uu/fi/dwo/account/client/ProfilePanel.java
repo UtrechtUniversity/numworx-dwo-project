@@ -71,7 +71,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         insertion.setText(user.getInsertion());
         g.setWidget(2, 1, insertion);
 
-        g.setText(3, 0,DwoLocalesForGWT.instance.GUI_FamilyName());
+        g.setText(3, 0, DwoLocalesForGWT.instance.GUI_FamilyName());
         familyName.setText(user.getFamilyName());
         g.setWidget(3, 1, familyName);
 
@@ -119,16 +119,16 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             user.setGivenName(givenName.getText());
             user.setInsertion(insertion.getText());
             if (MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) {
-                if (!newPassword.equals("") 
-                        && newPassword.getText().equals(newPasswordAgain.getText()) 
-                        ) {
+                if (!newPassword.equals("")
+                        && newPassword.getText().equals(newPasswordAgain.getText())) {
                     user.setPassword(MD5.md5(newPassword.getText()));
                 }
                 LOG.log(Level.INFO, "Sending data to server.");
                 control.setUpdateUser(user);
+                String pw = user.getPassword();
                 control.callUpdate();
                 LOG.log(Level.INFO, "Data send to server.");
-            }else{
+            } else {
                 DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
             }
         }

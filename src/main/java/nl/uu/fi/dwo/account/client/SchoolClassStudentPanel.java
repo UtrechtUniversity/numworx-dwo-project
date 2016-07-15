@@ -95,18 +95,18 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
         Column<DomSchoolClass, ImageResource> loginColumn
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-                    @Override
-                    public ImageResource getValue(DomSchoolClass object) {
-                        return AccountImageBundle.instance.student();
-                    }
-                };
+            @Override
+            public ImageResource getValue(DomSchoolClass object) {
+                return AccountImageBundle.instance.student();
+            }
+        };
         Column<DomSchoolClass, ImageResource> deleteColumn
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-                    @Override
-                    public ImageResource getValue(DomSchoolClass object) {
-                        return AccountImageBundle.instance.delete();
-                    }
-                };
+            @Override
+            public ImageResource getValue(DomSchoolClass object) {
+                return AccountImageBundle.instance.delete();
+            }
+        };
 //        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
 //            @Override
 //            public Image getValue(DomSchoolClass data) {
@@ -175,12 +175,10 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
                                         @Override
                                         public void onSuccess(DomSchoolClass result) {
-                                            if (result.getId().equals(DwoGlobalVars.getInstance().getCurrentSchoolClass().getId())) {
-                                                control.updateStudentsSchoolClassesInView();
-                                            } else {
-                                                //TODO Wim
+                                            if (result == null || result.getId().equals(DwoGlobalVars.getInstance().getCurrentSchoolClass().getId())) {
                                                 Window.alert("wim calls a new login here in case new.");
                                             }
+                                            control.updateStudentsSchoolClassesInView();
                                         }
                                     });
                                 }

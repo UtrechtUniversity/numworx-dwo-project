@@ -180,7 +180,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
             if (selectedClass != null && selectedClass.getHasRegKey()) {
                 PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
                 //popup.setSize("500", "400");
-                SchoolClassAskRegistrationKeyPanel panel = new SchoolClassAskRegistrationKeyPanel();
+                SchoolClassAskRegistrationKeyPanel panel = new SchoolClassAskRegistrationKeyPanel(control, selectedClass);
                 panel.setSchoolClassName(selectedClass.getSchoolClassName());
                 panel.setRegKey("required");
                 panel.setPopup(popup);

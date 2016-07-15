@@ -37,13 +37,12 @@ public class UserBar extends Composite {
         top.addItem(item);
 
         item = new MenuItem(DwoLocalesForGWT.instance.GUI_MyProfile(), profileCmd);
-
         items.addItem(item);
-        item2 = new MenuItem(DwoLocalesForGWT.instance.GUI_MySchoolLogins(), schoolLoginCmd);
 
-        items.addItem(item2);
+//        item2 = new MenuItem(DwoLocalesForGWT.instance.GUI_MySchoolLogins(), schoolLoginCmd);
+//        items.addItem(item2);
+
         item3 = new MenuItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), schoolClassCmd);
-
         items.addItem(item3);
     }
 }
