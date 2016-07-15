@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
-import fi.dwo.rest.dom.entities.DomUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Level;
