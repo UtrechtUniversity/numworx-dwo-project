@@ -29,7 +29,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
     PopupPanel popup;
     Button cnlBtn;
     Button updateBtn;
-    DomUser user;
+    DomUserFull user;
     TextBox login = new TextBox();
     TextBox givenName = new TextBox();
     TextBox insertion = new TextBox();
@@ -52,7 +52,8 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         init(user);
     }
 
-    public void init(DomUserFull user) {
+    public void init(DomUserFull aUser) {
+        user = aUser;
         this.setSize("400", "500");
 
         Grid g = new Grid(10, 2);
@@ -113,19 +114,21 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             DomUserFull user = new DomUserFull();
             user.setUserName(control.getCurrentUser().getUserName());
             user.setSingleSchool(control.getCurrentUser().getSingleSchool());
-            user.setPassword(control.getCurrentUser().getPassword());
+//            user.setPassword(control.getCurrentUser().getPassword());
             user.setEmail(email.getText());
             user.setFamilyName(familyName.getText());
             user.setGivenName(givenName.getText());
             user.setInsertion(insertion.getText());
-            if (MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) {
-                if (!newPassword.equals("")
-                        && newPassword.getText().equals(newPasswordAgain.getText())) {
+            if (MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) 
+            {
+                if (!newPassword.getText().equals("") && newPassword.getText().equals(newPasswordAgain.getText())) 
+                {
                     user.setPassword(MD5.md5(newPassword.getText()));
+                }else{
+                    user.setPassword(control.getCurrentUser().getPassword());
                 }
                 LOG.log(Level.INFO, "Sending data to server.");
                 control.setUpdateUser(user);
-                String pw = user.getPassword();
                 control.callUpdate();
                 LOG.log(Level.INFO, "Data send to server.");
             } else {
