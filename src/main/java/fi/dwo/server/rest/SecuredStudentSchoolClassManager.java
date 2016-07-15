@@ -67,17 +67,19 @@ public class SecuredStudentSchoolClassManager {
         if (phr.getClassID() == null) {
             return null;
         }
-        
+
         //fetch schoolclass from hasRole
         schoolClass = SchoolClassManager.findEntity(phr.getClassID());
-        
+
         //verify if user is in class
         PersistentStudentOfClassPK key = new PersistentStudentOfClassPK();
         key.setClassID(schoolClass.getClassID());
         key.setSchoolGroupID(phr.getPersistentHasRolePK().getSchoolGroupID());
         key.setUserID(phr.getPersistentHasRolePK().getUserID());
         PersistentStudentOfClass soc = StudentOfClassManager.findEntity(key);
-        if(soc==null) return null;
+        if (soc == null) {
+            return null;
+        }
 
         //verify if schoolClass is in school
         if (schoolClass == null || !schoolClass.getSchoolID().equals(school.getSchoolID())) {
@@ -151,11 +153,11 @@ public class SecuredStudentSchoolClassManager {
         if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
                 PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
-                StudentOfClassManager.destroy(socId);
-                if (phr.getClassID().equals(socId.getClassID()))  {
+                if (phr.getClassID()!=null && socId!=null && phr.getClassID().equals(socId.getClassID())) {
                     phr.setClassID(null);
-                        HasRoleManager.edit(phr);
-                    }
+                    HasRoleManager.edit(phr);
+                }
+                StudentOfClassManager.destroy(socId);
             }
             catch (PersistenceException e) {
                 return false;
