@@ -3,18 +3,13 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.Color;
-import static java.awt.Component.LEFT_ALIGNMENT;
-import static java.awt.Component.TOP_ALIGNMENT;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -60,7 +55,7 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         
         // Constructing Pane
-        classLabel = new JLabel(TextMapper.getText("klasnaam"));
+        classLabel = new JLabel(TextMapper.getText(TextMapper.GUIC_MSG_CLASS_NAME));
 
         classTextField = new JTextField(25);
         classTextField.setEditable(false);
@@ -68,15 +63,15 @@ public class SchoolClassRegistrationAskKeyJPanel extends JPanel implements Actio
         classTextField.requestFocusInWindow();// request focus for typing
 
         registrationKeyLabel = new JLabel(
-                TextMapper.getText("registratiesleutel"));
+                TextMapper.getText(TextMapper.GUIC_MSG_CLASS_REGISTRATIONKEY));
         registrationKeyLabel.setVisible(true);
 
         registrationKeyTextField = new JTextField(25);
 
         STYLE_COLOUR = registrationKeyTextField.getForeground();
-        registrationKeyTextField
-                .setToolTipText(TextMapper
-                        .getText("Geef de registratiesleutel op om te registreen."));
+//        registrationKeyTextField
+//                .setToolTipText(TextMapper
+//                        .getText("Geef de registratiesleutel op om te registreen."));
         registrationKeyTextField.addFocusListener(this);
         registrationKeyTextField.setVisible(true);
 //        okBtn.addActionListener(this);
