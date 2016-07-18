@@ -349,6 +349,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 //			prefixViewer.getElement().getStyle().setMarginLeft(23, Unit.PX);
 			prefixViewer = new FormuleViewer(prefix);
 			prefixViewer.setFont(font);
+			prefixViewer.setSelectable(false);
 		}
 		
 		mainPanel = new FlowPanel();
@@ -771,11 +772,15 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		if (editor == null)
 			addStep("$f" + latest_answer_viewer.toString() + "@", !isToets(), false);
 		
-		editor.clearAll();
-		editor.insert(select);
-		editor.insert("=");
-		editor.paint();
-		requestFocus();
+		if(!editor.toString().equals(select + "="))
+		{
+			editor.clearAll();
+			editor.insert(select);
+			editor.insert("=");
+			editor.paint();
+			requestFocus();
+		}
+		
 	}
 	
 	public void resize()

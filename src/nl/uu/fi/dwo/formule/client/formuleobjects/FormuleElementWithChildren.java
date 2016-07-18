@@ -213,6 +213,7 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 	
 	public String getSelectionString()
 	{
+		String s = "";
 		if(this.isSelected())
 			return this.toString();
 		else
@@ -221,14 +222,12 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 				FormuleElement fe = children.get(i);
 				if(fe instanceof FormuleElementWithChildren)
 				{
-					String s = ((FormuleElementWithChildren) fe).getSelectionString();
-					if (!s.equals(""))
-						return s;
+					s += ((FormuleElementWithChildren) fe).getSelectionString();
 				}
 				else if(fe.isSelected())
-					return fe.toString();
+					s += fe.toString();
 			}
 		}
-		return "";
+		return s;
 	}
 }

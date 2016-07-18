@@ -1284,7 +1284,6 @@ public class FormuleRegel extends FormuleElement
 //			for(int i = start; i <= this.selectionStart; i++)
 //				s += ((FormuleElement) this.children.get(i)).toString();
 //		}
-		
 		String s = "";
 		if(this.isSelected())
 			return this.toString();
@@ -1293,13 +1292,9 @@ public class FormuleRegel extends FormuleElement
 			{
 				FormuleElement fe = children.get(i);
 				if(fe instanceof FormuleElementWithChildren)
-				{	s = ((FormuleElementWithChildren) fe).getSelectionString();
-					if(!s.equals(""))
-						return s;
-				}
+					s += ((FormuleElementWithChildren) fe).getSelectionString();
 				else if(fe.isSelected())
-					return fe.toString();
-				
+					s += fe.toString();
 			}
 		return s;
 		
