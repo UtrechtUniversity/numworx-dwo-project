@@ -7,9 +7,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RestHandler {
@@ -85,20 +85,20 @@ public class RestHandler {
 		uc.setDoOutput(true);
 		uc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		OutputStream out = uc.getOutputStream();
-		LOG.info("RegisterSAML " + sb);
+		LOG.log(Level.INFO, "RegisterSAML {0}", sb);
 		out.write(sb.toString().getBytes(Charset.forName(UTF8)));
 		out.flush();
 		out.close();
 		uc.connect();
 		int status = uc.getResponseCode();
 		int size = uc.getContentLength();
-		LOG.info("status " + status + ", size "+ size);
+		LOG.log(Level.INFO, "status {0}, size {1}", new Object[]{status, size});
 		InputStream in = uc.getInputStream();
 		byte[] bytes = new byte[size];
 		in.read(bytes);
 		in.close();
 		String string = new String(bytes, Charset.forName(UTF8));
-		LOG.info("result " + string);
+		LOG.log(Level.INFO, "result {0}", string);
 		return string;
 	}
 	

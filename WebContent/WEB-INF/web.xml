@@ -21,7 +21,7 @@
   	<param-value>${ideas}</param-value>
   </context-param>
   
-   <filter>
+<!--   <filter>
     <filter-name>JAMonFilter</filter-name>
     <filter-class>com.jamonapi.JAMonFilter</filter-class>
   </filter>
@@ -29,7 +29,7 @@
   <filter-mapping>
     <filter-name>JAMonFilter</filter-name>
     <url-pattern>/*</url-pattern>
-  </filter-mapping>
+  </filter-mapping>-->
   
   
   <!-- Servlets -->
