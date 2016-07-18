@@ -10,10 +10,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.logging.Logger;
 
 public class RestHandler {
 	private URL endpoint;
 
+	Logger LOG = Logger.getLogger(getClass().getName());
+	
 	static final String UTF8 = "UTF-8";
 
 	static void encode(String key, char value, StringBuilder sb)
@@ -41,6 +44,7 @@ public class RestHandler {
 
 	public RestHandler(URL endpoint) throws MalformedURLException {
 		this.endpoint = new URL(endpoint,"public/user/registerSAML");
+		LOG.info("endpoint = "+endpoint);
 	}
 	
 	public RestHandler(String endpoint) throws MalformedURLException {
@@ -81,17 +85,21 @@ public class RestHandler {
 		uc.setDoOutput(true);
 		uc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		OutputStream out = uc.getOutputStream();
+		LOG.info("RegisterSAML " + sb);
 		out.write(sb.toString().getBytes(Charset.forName(UTF8)));
 		out.flush();
 		out.close();
 		uc.connect();
 		int status = uc.getResponseCode();
 		int size = uc.getContentLength();
+		LOG.info("status " + status + ", size "+ size);
 		InputStream in = uc.getInputStream();
 		byte[] bytes = new byte[size];
 		in.read(bytes);
 		in.close();
-		return new String(bytes, Charset.forName(UTF8));
+		String string = new String(bytes, Charset.forName(UTF8));
+		LOG.info("result " + string);
+		return string;
 	}
 	
 }

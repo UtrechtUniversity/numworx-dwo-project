@@ -14,7 +14,7 @@
   		<dsaccess.url>http://127.0.0.1/dwo/xmlrpc</dsaccess.url>
   		<dsrest.url>http://127.0.0.1/dwo/rest/</dsrest.url>
   		<ideas>/ideas/IdeasServlet</ideas>
-  		<comment>amazon, *.dwo.nl</comment>
+  		<comment>DWO2 dwo.nl</comment>
   </properties>
   <dependencies>
   	<dependency>
