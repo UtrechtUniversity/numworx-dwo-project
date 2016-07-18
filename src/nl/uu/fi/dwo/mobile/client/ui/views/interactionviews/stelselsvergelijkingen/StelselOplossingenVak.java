@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
@@ -95,7 +96,7 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 
 	private Image checkimg;
 
-	private LayoutPanel mainPanel;
+	//private LayoutPanel mainPanel;
 	private FormuleEditorWithAnswer editor;
 	private int minBreedte;
 	private int ashoogte;
@@ -142,7 +143,6 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		this.breedte = map.getInt("breedte");
-		System.out.println("breedte oplossingenvak: " + breedte);
 		this.hoogte = map.getInt("hoogte");
 		font = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
 		
@@ -164,11 +164,12 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		editor.setFormuleToolBijFocus(true);
 		editor.setFont(font);
 		editor.setCurrent(0, 0);
+		editor.setParentStelselOplossingenVak(this);
 		
-		mainPanel = new LayoutPanel();
-		mainPanel.setWidth(breedte + "px");
-		hoogte = editor.getMainRegel().getHeight();
-		mainPanel.setHeight(hoogte + "px");
+	//	mainPanel = new LayoutPanel();
+	//	mainPanel.setWidth(breedte + "px");
+		hoogte = editor.getHeight();
+	//	mainPanel.setHeight(hoogte + "px");
 		
 		feedbackLabel = new Label("?");
 		feedbackLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
@@ -214,16 +215,11 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		});
 		
 		//editor.getAsPanel().getElement().getStyle().setBackgroundColor("red");
-		mainPanel.add(editor.getAsPanel());
+	//	mainPanel.add(editor.getAsPanel());
 		//mainPanel.setWidgetLeftRight(editor.getAsPanel(), 0, Style.Unit.PX, -100, Style.Unit.PX);
 //		mainPanel.add(checkPanel);
 //		mainPanel.setWidgetRightWidth(checkPanel, 0, Style.Unit.PX, 15, Style.Unit.PX);
 		editor.setCurrentElementRepaint();
-		System.out.println("mainPanel breedte = " + mainPanel.getOffsetWidth() + " en editor breedte = " + editor.getWidth());
-		
-		
-		
-	
 	}
 
 	public void zetMinBreedte(int b)
@@ -367,6 +363,11 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 	{
 		juisteOplossingen = oplossingen;
 		avChecker.zetJuisteOplossingen(oplossingen);
+	}
+	
+	public void zetVolledigeBreedte(int b)
+	{
+		editor.zetVolledigeBreedte(b);
 	}
 
 	public void setState(HashMap<String, Object> h)
@@ -532,6 +533,19 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 //			((TekstElement) getParent()).zetMaat();
 //	}
 
+	
+	public void resize()
+	{
+		hoogte = editor.getHeight();
+	//	mainPanel.setHeight(hoogte + "px");
+		parent.resize();
+	}
+	
+	public int getHeight()
+	{
+		return hoogte;
+	}
+	
 	public FormuleEditor geefFormuleVak()
 	{
 		return editor;
@@ -731,9 +745,9 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 
 	
 	
-	public LayoutPanel asWidget()
+	public Panel asWidget()
 	{
-		return mainPanel;
+		return editor.getAsPanel();
 	}
 
 //	public void mousePressed(MouseEvent e)

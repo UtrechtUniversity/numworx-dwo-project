@@ -106,12 +106,11 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	{
 		zetPijl(false);
 		
-		//TODO: nog maken
-		//zetScrollOptie(false);
+		zetScrollOptie(false);
 		zetMetRand(false);
 		zetLinkerRand();
 		
-		/* TODO: nog maken 
+		/* TODO: nog maken? 
 		feedbackButton = new FormuleButton("?");
 		feedbackButton.addActionListener(this);
 		feedbackButton.setBackground(new Color(215,215,215));
@@ -177,17 +176,8 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		checkimg.removeFromParent();
 		int breedteVergelijkingen = this.getAsPanel().getAbsoluteLeft() + this.editor.getAsPanel().getAbsoluteLeft();
 		
-		//TODO: sluitRegelAf("$f" + editor.toString() + "@", true, false);
-		//En zorgen dat dat dan ook netjes gaat werken... editor wordt hiermee null, maar die wordt verderop (in setLocations) nog wel gebruikt. 
+		sluitRegelAf("$f" + editor.toString() + "@", true, false);
 		
-		//TODO: hoofdPanel.zetIC(huidigIC);//.contentPanel.add(huidigIC, 0);
-		//TODO: ..setWidgetLeftWidth(checkimg, this.)...
-		//TODO: huidigIC.setLocation(this.getX() + 5, this.getY() + hoogte - 30); //TODO: stapH was '20', kijken hoe het uitkomt..
-		//getHuidigIC().setVisible(false);
-		
-		//hoogte = 100;
-		
-		//VergelijkingMeerv vergelijkingen = geefVergelijking(); // deze bestaat uit k vergelijkingen. 
 		int k = vergelijkingen.geefAantal();
 		kinderen = new StelselEditor[k];
 		pijlen = new StelselPijl[k];
@@ -828,10 +818,10 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			if(kinderen[i].heeftKinderen())
 				hoofdPanel.contentPanel.setWidgetTopHeight(kinderen[i], y, Style.Unit.PX, kinderen[i].getHeight(), Style.Unit.PX);
 			else
-			{	kinderen[i].setHeight(hoofdPanel.contentPanel.getOffsetHeight() - y);
-			System.out.println("hoogte gezet op " + kinderen[i].hoogte + "en hoofdPanel.contentPanel.getOffsetHeight = " + hoofdPanel.contentPanel.getOffsetHeight());
+			{	//kinderen[i].setHeight(hoofdPanel.hoofdEditor.geefHoogteEditorEnKinderen() - y);
+				if(kinderen[i].getHeight() < hoofdPanel.scrollPane.getOffsetHeight() - y)
+					kinderen[i].setHeight(hoofdPanel.scrollPane.getOffsetHeight() - y);
 				hoofdPanel.contentPanel.setWidgetTopBottom(kinderen[i], y, Style.Unit.PX, 0, Style.Unit.PX);
-			
 			}
 			//kinderen[i].scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 			
@@ -842,7 +832,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 				//TODO: wat te doen met deze 20? stapH?
 			}
 			hulpEditor.clearAll();
-			hulpEditor.insert(FormuleParser.parseVergelijking("$f" + editor.toString() + "@").geefVergelijking(i).toString());
+			hulpEditor.insert(FormuleParser.parseVergelijking("$f" + this.getLatestAnswer().toString() + "@").geefVergelijking(i).toString());
 			pijlen[i].zetBeginX(breedteVergelijkingen + hulpEditor.getMainRegel().getWidth() / 2 + 23); //23 correctie voor ruimte voor checkimg, nog checken of juiste waarde
 			breedteVergelijkingen += hulpEditor.getMainRegel().getWidth() + 20;//20 correctie voor woordje 'of'.
 			pijlen[i].zetEindX(x + kinderen[i].getWidth()/3);
@@ -1020,7 +1010,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	
 	public void maakNakijkenAf(boolean backStep, boolean show, boolean setState)
 	{
-		System.out.println("stelselEditor maakNakijkenAf");
 		int goedHalfFout = editor.getGoedHalfFout();
 		if (goedHalfFout == AntwoordVakChecker.GEEN)
 			ingevuld = false;

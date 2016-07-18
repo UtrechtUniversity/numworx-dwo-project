@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselOplossingenVak;
 import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -234,6 +235,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private Logging logging;
 	
 	private TekstRegel parentRegel;
+	private StelselOplossingenVak stelselVak;
 	private FormuleEditorPopup fews;
 	
 	private static boolean fontOvererving = false;
@@ -605,6 +607,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		paint();
 		
+	}
+	
+	public void setParentStelselOplossingenVak(StelselOplossingenVak vak)
+	{
+		stelselVak = vak;		
 	}
 	
 	@Override
@@ -1070,6 +1077,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(fe != null)
 		{	fe.resize();
 		}
+		if(stelselVak != null)
+			stelselVak.resize();
 		
 	}
 	
@@ -1099,7 +1108,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void zetVolledigeBreedte(int breedte)
 	{
 		if(volledigeBreedte)
-			this.breedte = breedte;
+		{	this.breedte = breedte;
+			this.getMainRegel().setMinimumWidth(breedte - 20);
+			getMainRegel().setSize(breedte - 20, hoogte);
+			paint();
+//			
+//		System.out.println("voor editor is volledige breedte ook ingesteld");
+		}
 	}
 	
 	public int getAsHoogte()

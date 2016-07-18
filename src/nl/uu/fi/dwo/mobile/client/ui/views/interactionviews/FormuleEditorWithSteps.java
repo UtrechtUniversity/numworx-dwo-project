@@ -3209,6 +3209,25 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		pijl = p;
 	}
 	
+	public void zetScrollOptie(boolean b)
+	{
+		//poging: gewoon scrollPanel er tussenuit halen.
+		if(b)
+		{
+			mainPanel.remove(contentPanel);
+			sp.setWidget(contentPanel);
+			mainPanel.add(sp);
+				
+		}
+		else
+		{
+			mainPanel.remove(sp);
+			mainPanel.add(contentPanel);
+				
+		}
+		
+	}
+	
 	public void zetMetRand(boolean b)
 	{
 		boxMetRand = b;

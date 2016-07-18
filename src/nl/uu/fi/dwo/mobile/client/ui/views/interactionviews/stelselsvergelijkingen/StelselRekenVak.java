@@ -52,14 +52,14 @@ public class StelselRekenVak extends LayoutPanel  {
 	
 	public StelselRekenVak(StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
-		
-		this.setPixelSize(antwoordVak.breedte, antwoordVak.hoogte - (antwoordVak.oplossingenRegelZichtbaar?25:0));
+		int hoogte = antwoordVak.hoogte - (antwoordVak.oplossingenRegelZichtbaar?27:0);//FIXME later 27 weer terugzetten, nu even wat speelruimte
+		this.setPixelSize(antwoordVak.breedte, hoogte);
 		contentPanel = new LayoutPanel();
 		contentPanel.getElement().getStyle().setBackgroundColor("white");
-		contentPanel.setPixelSize(antwoordVak.breedte - 2, antwoordVak.hoogte - headerHoogte - marge - (antwoordVak.oplossingenRegelZichtbaar?25:0));
+//contentPanel.getElement().getStyle().setBackgroundColor("red");
+		contentPanel.setPixelSize(antwoordVak.breedte - 2, hoogte - headerHoogte - marge); // wordt aangepast zodra hoogte hoofdEditor wordt aangepast.
 		scrollPane = new ScrollPanel();
-		scrollPane.setPixelSize(antwoordVak.breedte - 2, antwoordVak.hoogte - headerHoogte - marge);
-		//scrollPane.setPixelSize(breedte-5, hoogte-50 + 20); // waar komt die 50 vandaan, er kan nog 20 pixels bij
+		scrollPane.setPixelSize(antwoordVak.breedte - 2, hoogte - headerHoogte - marge);
 		scrollPane.getElement().getStyle().setOverflow(Overflow.AUTO);
 		scrollPane.getElement().getStyle().setFloat(Style.Float.LEFT);
 		scrollPane.setWidget(contentPanel);
@@ -145,6 +145,29 @@ public class StelselRekenVak extends LayoutPanel  {
 		contentPanel.add(ic);
 	}
 	
+	public void setHeight(int h)
+	{
+		super.setHeight(h + "px");
+		scrollPane.setPixelSize(antwoordVak.breedte - 2, h - headerHoogte - marge);
+		if(contentPanel.getOffsetHeight() > scrollPane.getOffsetHeight())
+			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 20, contentPanel.getOffsetHeight());
+		else
+			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 3, contentPanel.getOffsetHeight());
+		
+		scrollPane.scrollToBottom();
+	}
+	
+	public void zetVolledigeBreedte(int b)
+	{
+		super.setWidth(b + "px");
+		int scrollPaneWidth = b - 2;
+		scrollPane.setPixelSize(scrollPaneWidth, scrollPane.getOffsetHeight());
+		if(contentPanel.getOffsetHeight() > scrollPane.getOffsetHeight())
+			contentPanel.setPixelSize(scrollPaneWidth - 20, contentPanel.getOffsetHeight());
+		else
+			contentPanel.setPixelSize(scrollPaneWidth - 3, contentPanel.getOffsetHeight());
+	}
+	
 	public HashMap<String, Object> getState()
 	{
 		return hoofdEditor.getState();
@@ -166,18 +189,18 @@ public class StelselRekenVak extends LayoutPanel  {
 	public void plaatsEditors()
 	{
 		int aantalKolommen = hoofdEditor.geefEindAantalKinderen();
-		int kolomBreedte = this.getOffsetWidth()/aantalKolommen;
+		int kolomBreedte = contentPanel.getOffsetWidth()/aantalKolommen;
 		hoofdEditor.setSizes(kolomBreedte);
-		//hoofdEditor.setLocation(-1, 0);
-		//hoofdEditor.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 		if(hoofdEditor.heeftKinderen())
 			hoofdEditor.setLocations();
 		int h = hoofdEditor.geefHoogteEditorEnKinderen();
+		System.out.println("plaatsEditors; h = " + h + " en scrollPane.getOffsetHeight() = " + scrollPane.getOffsetHeight());
 		if(h > scrollPane.getOffsetHeight())
 			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 20, h);
 		else
-			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 3, h); 
-		contentPanel.setWidgetTopHeight(hoofdEditor, -1, Style.Unit.PX, hoofdEditor.geefHoogte(), Style.Unit.PX);
+			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 3, scrollPane.getOffsetHeight());
+		contentPanel.setWidgetTopHeight(hoofdEditor, 0, Style.Unit.PX, hoofdEditor.geefHoogte(), Style.Unit.PX);
+		scrollPane.scrollToBottom();
 //		int x = 0;
 //		int y = 0;
 //		if(hoofdEditor.vindKindMetFocus() != null)

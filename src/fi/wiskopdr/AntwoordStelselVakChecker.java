@@ -133,7 +133,6 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 	//gebruiken voor antwoorden uit StelselEditors in StelselRekenVak
 	public HashMap checkAnswer(String answer, String answerPrevious, Expressie substitutie, Vergelijking[] gebruikersSubstituties) throws RestartException
 	{	
-		System.out.println("stelselAntwoordVak checkAnswer");
 		this.score = 0;
 		this.correct = false;
 		this.goedHalfFout = AntwoordVakChecker.GEEN;
