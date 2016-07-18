@@ -47,19 +47,19 @@ public class ClassConfigurePanel extends JPanel implements ActionListener,
 	public ClassConfigurePanel() {
 
 		// Constructing Pane
-		classLabel = new JLabel(TextMapper.getText("klasnaam "));
+		classLabel = new JLabel(TextMapper.getText(TextMapper.GUIC_MSG_CLASS_NAME));
 		classTextField = new JTextField(25);
 		classTextField.addFocusListener(this);
 		classTextField.requestFocusInWindow();// request focus for typing
 
-		treeCB = new JCheckBox(TextMapper.getText("boomstructuur?"));
+		treeCB = new JCheckBox(TextMapper.getText(TextMapper.GUIC_MSG_CLASS_TREESTRUCTURE));
 		treeCB.addActionListener(this);
 
-		classKeyCB = new JCheckBox(TextMapper.getText("klassleutel gebruiken"));
+		classKeyCB = new JCheckBox(TextMapper.getText(TextMapper.GUIC_MSG_CLASS_REGISTRATIONKEYQ));
 		classKeyCB.addActionListener(this);
 
 		registrationKeyLabel = new JLabel(
-				TextMapper.getText("registratiesleutel"));
+				TextMapper.getText(TextMapper.GUIC_MSG_CLASS_REGISTRATIONKEY));
 		registrationKeyLabel.setVisible(false);
 
 		registrationKeyTextField = new JTextField(25);
