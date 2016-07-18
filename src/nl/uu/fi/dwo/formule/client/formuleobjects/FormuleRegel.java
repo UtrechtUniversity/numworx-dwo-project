@@ -372,7 +372,11 @@ public class FormuleRegel extends FormuleElement
 		this.drawline(ctx, selectioncords[0], selectioncords[1], selectioncords[2], selectioncords[3]);
 		
 		if(children.size() == 0 && stippels)
+		{	String font = ctx.getFont();
+			ctx.setFont(fm.getFontStyle());
 			ctx.fillText("...", 0, getAsHoogte());
+			ctx.setFont(font);
+		}
 	}
 
 
