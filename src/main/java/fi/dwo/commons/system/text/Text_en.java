@@ -279,6 +279,7 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.GUIC_ADD_CLASS, "Create class" },
 			{ TextMapper.GUIC_DELETE_CLASS, "Delete class" },
 			{ TextMapper.GUIC_RENAME_CLASS, "Edit classname" },
+			{ TextMapper.GUIC_MSG_CLASS_CONFIGURATION, "Schoolclass configuration" },
 			{ TextMapper.GUIC_MSG_RENAME_CLASS, "New name of the class" },
 			{ TextMapper.GUIC_MSG_DELETE_CLASS,
 					"Are you sure you want to delete the class" },
