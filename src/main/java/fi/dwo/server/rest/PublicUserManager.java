@@ -34,7 +34,6 @@ import fi.dwo.server.persistence.DwoEmfFactory;
 import javax.mail.*;
 import javax.mail.internet.*;
 
-
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Date;
@@ -57,6 +56,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import static java.lang.Thread.sleep;
+import java.util.Random;
 
 /**
  * Handles the public registration of new users.
@@ -237,7 +237,7 @@ public class PublicUserManager {
     @POST
     @Produces({"text/plain"})
     @Consumes({"application/x-www-form-urlencoded"})
-    @Path("registerSAML")
+    @Path("/registerSAML")
     public String registerSAML(@Context SecurityContext sc,
             @FormParam("userident") String userIdent,
             @FormParam("samluserid") String samlUserId,
@@ -260,14 +260,16 @@ public class PublicUserManager {
         }
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(schoolClassName, school);
         LOG.log(Level.FINE, "starting secureRandom.");
-        SecureRandom secureRandom = null;
-        try {
-            secureRandom = SecureRandom.getInstanceStrong();
-        }
-        catch (NoSuchAlgorithmException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "SecureRandom failed.");
-        }
+//        SecureRandom secureRandom = null;
+//        try {
+//            secureRandom = SecureRandom.getInstanceStrong();
+//        }
+//        catch (NoSuchAlgorithmException ex) {
+//            LOG.log(Level.SEVERE, null, ex);
+//            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "SecureRandom failed.");
+//        }
+        Random secureRandom = null;
+        secureRandom = new Random();
         LOG.log(Level.FINE, "Creating authToken.");
         Short authToken = (short) secureRandom.nextInt();
         RoleType roleType = RoleType.NONE;
@@ -312,7 +314,7 @@ public class PublicUserManager {
                         }
                         catch (PersistenceException e) {
                             LOG.log(Level.SEVERE, null, e);
-                            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
+                            //throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                         }
                         PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(pUser, school, roleType);
                         hr.setClassID(schoolClass.getClassID());
@@ -336,8 +338,13 @@ public class PublicUserManager {
             sUser.setAuthToken(authToken.toString());
             sUser.setAuthTokenTimestamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
             sUser.setUserID(pUser.getId());
-            SamlUserManager.create(sUser);
-            LOG.log(Level.FINE, "Created new  samluser.");
+            try {
+                SamlUserManager.create(sUser);
+                LOG.log(Level.FINE, "Created new  samluser.");
+            }
+            catch (PersistenceException e) {
+                LOG.log(Level.SEVERE, "User exits probably.", e);
+            }
         } else {
             try {
                 //TODO put randstring in tblsamluser (add column to database)
@@ -361,7 +368,7 @@ public class PublicUserManager {
                         }
                         catch (PersistenceException e) {
                             LOG.log(Level.SEVERE, null, e);
-                            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
+//                            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                         }
                     }
                     hr.setClassID(schoolClass.getClassID());
@@ -379,19 +386,19 @@ public class PublicUserManager {
 
     /**
      * Used for manual testing.
-     * 
-     * @return 
-     */    
+     *
+     * @return
+     */
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/requestNewPassword/html")
     public String reqPasswordChangeForm() {
-        String r = "<HTML><BODY><p> "+TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD)
+        String r = "<HTML><BODY><p> " + TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD)
                 + "<form action=\"http://localhost:8080/dwo/rest/public/user/requestPasswordChange\" method=\"post\" >\n"
                 + "<table>"
-                + "<tr><td align=\"right\">"+TextMapper.getText(TextMapper.LBL_USERNAME)+": </td> <td><input type=\"text\" size=\"80\" name=\"usercode\" value=\"project_wim\"></td></tr>"
-                + "<tr><td align=\"right\">"+TextMapper.getText(TextMapper.LBL_EMAIL)+":</td> <td><input type=\"text\" size=\"80\" name=\"email\" value=\"w.p.g.vanvelthoven@uu.nl\"> </td></tr>"
-                + "<tr><td/><td align=\"right\"><input type=\"submit\" value=\""+TextMapper.getText(TextMapper.BTN_OK)+"\" ></td></tr>"
+                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_USERNAME) + ": </td> <td><input type=\"text\" size=\"80\" name=\"usercode\" value=\"project_wim\"></td></tr>"
+                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_EMAIL) + ":</td> <td><input type=\"text\" size=\"80\" name=\"email\" value=\"w.p.g.vanvelthoven@uu.nl\"> </td></tr>"
+                + "<tr><td/><td align=\"right\"><input type=\"submit\" value=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\" ></td></tr>"
                 + "<table>"
                 + "</form>";
         r += "</p></BODY> </HTML>";
@@ -429,7 +436,7 @@ public class PublicUserManager {
             String authCode = cryptor.encrypt(seed.toCharArray(), data); //encrypt JSON String
             LOG.log(Level.INFO, "For username {0} and timeslot {1} the server generated an authcode.", new Object[]{user.getUsername(), timeslot});
             LOG.log(Level.FINER, "For username {0} and timeslot {1} the server generated authcode {2} .", new Object[]{user.getUsername(), timeslot, authCode});
-            
+
             //place this in servlet
             String smtpServer = servletContext.getInitParameter("fi.dwo.server.rest.smtp.server");
             String smtpPort = servletContext.getInitParameter("fi.dwo.server.rest.smtp.port");
@@ -439,25 +446,25 @@ public class PublicUserManager {
             String smtpEmail = servletContext.getInitParameter("fi.dwo.server.rest.smtp.email");//from address.
             Properties props = new Properties();
             props.put("mail.transport.protocol", "smtp");
-            props.put("mail.smtp.starttls.enable", "true");            
+            props.put("mail.smtp.starttls.enable", "true");
             props.put("mail.smtp.host", smtpServer);
             props.put("mail.smtp.port", smtpPort);
             props.put("mail.smtp.auth", "true");
-            
+
             Session session = Session.getInstance(props,
-		  new javax.mail.Authenticator() {
-                        @Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(smtpUser, smtpPassword);
-			}
-		  });            
+                    new javax.mail.Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(smtpUser, smtpPassword);
+                }
+            });
 
             // uncomment for debugging infos to stdout
             // mailSession.setDebug(true);
             Transport transport = session.getTransport();
 
             MimeMessage message = new MimeMessage(session);
-            message.setContent("Your authcode is:"+authCode, "text/plain");
+            message.setContent("Your authcode is:" + authCode, "text/plain");
             message.setFrom(new InternetAddress(smtpEmail));
             message.addRecipient(Message.RecipientType.TO,
                     new InternetAddress(user.getEmail()));
@@ -477,19 +484,19 @@ public class PublicUserManager {
 
     /**
      * Used for manual testing.
-     * 
-     * @return 
+     *
+     * @return
      */
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/submitNewPassword/html")
     public String passwordChangeForm() {
-        String r = "<HTML><BODY><p>"+TextMapper.getText(TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD)
+        String r = "<HTML><BODY><p>" + TextMapper.getText(TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD)
                 + "<form action=\"http://localhost:8080/dwo/rest/public/user/submitPasswordChange\" method=\"post\" >"
                 + "<table>"
                 + "<tr><td align = \"right\">authCode:</td><td><input type=\"text\" size=\"80\" name=\"authCode\" value=\"wim_project\" ></td></tr>"
                 + "<tr><td align = \"right\">new password:</td><td><input type=\"text\" size=\"80\" name=\"newPassword\" value=\"pass\" ></td></tr>"
-                + "<tr><td/><td align =\"right\"><input type=\""+TextMapper.getText(TextMapper.BTN_OK)+"\" value=\"Submit\"></td></tr>"
+                + "<tr><td/><td align =\"right\"><input type=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\" value=\"Submit\"></td></tr>"
                 + "</table>"
                 + "</form>";
         r += "</BODY></HTML>";
