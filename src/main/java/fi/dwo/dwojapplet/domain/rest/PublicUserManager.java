@@ -12,6 +12,7 @@ import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -19,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Base64;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -116,12 +118,23 @@ public class PublicUserManager {
         samlUser.setSamlOrgId(org_id);
         samlUser.setAuthToken(authToken);
         samlRestUser.setDomSamlUser(samlUser);
+        samlRestUser.setRestContext(new DomContext());
         try {
             URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/public/user/submitSaml"); //TODO make login
+            DataOutputStream outStream = null;
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("PUT");
             conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept-Charset", "UTF-8");
+            conn.setDoOutput(true);
             conn.setUseCaches(false);
+            outStream = new DataOutputStream(conn.getOutputStream());
+            Genson genson = new Genson();
+            String jsonOut = genson.serialize(samlRestUser);
+            LOG.log(Level.FINEST, "Sending: {0}", new Object[]{jsonOut.toString()});
+            outStream.write(jsonOut.getBytes("UTF-8"));
+            outStream.close();
 
             if (conn.getResponseCode() != 200) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
@@ -138,7 +151,7 @@ public class PublicUserManager {
             }
             conn.disconnect();
             //decode JSON
-            Genson genson = new Genson();
+            //genson = new Genson();
 
             user = genson.deserialize(json.toString(), DomUserFull.class);
             String authString = user.getUserName() + ":" + user.getPassword();

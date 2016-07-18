@@ -2325,17 +2325,18 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         String samlOrgID = getDecodedCookie(DWO_SAML_ORGANIZATION_ID);
         String samlOrg = getDecodedCookie("dwoSAMLOrganization");
         String authToken = getDecodedCookie("dwoSAMLAuthToken");
-        System.err.println("Cookies: " + samlUserID + "," + samlOrgID + "," + authToken);
-        if (false) {
-            samlUserID = "c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl";
-            samlOrgID = "SURFIN";
-            samlOrg = "SURFnet Instelling";
-            authToken = "0";
+        LOG.log(Level.INFO,"Cookies: dwoSAMLUserID {0} dwoSAMLOrganizationID {1} dwoSAMLAuthToken {2}", new Object[]{samlUserID, samlOrgID, authToken});
+        if (true) {
+            samlUserID = "292832126";
+            samlOrgID = "\"lti:385\"";
+            samlOrg = "bla";
+            authToken = "-1039";
         }
 
         if (samlUserID != null && samlOrgID != null) {
             try {
-                PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
+                //PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
+                DwoHelper.setCurrentUser(PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken));
                 return DwoHelper.getCurrentFacadeUser();
             } catch (Dwo2Exception e) {
                 //TODO LOG.log(...)
