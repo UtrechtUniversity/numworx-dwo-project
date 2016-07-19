@@ -207,6 +207,9 @@ public class SecuredUserAccountLoginsManager {
     @Produces({"application/json"})
     @Path("/select")
     public DomSchoolRoleAndClass switchToSchoolLogin(@Context SecurityContext sc, RestSchoolRoleAndClass sarc) {
+        if(sarc==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         EntityManager em = DwoEmfFactory.getEntityManager();
 
         PersistentUser user;
@@ -265,6 +268,9 @@ public class SecuredUserAccountLoginsManager {
     @Produces({"application/json"})
     @Path("/submit")
     public Boolean submitASchoolLogin(@Context SecurityContext sc, RestNewSchoolLogin existingUserReg) {
+        if(existingUserReg==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         EntityManager em = DwoEmfFactory.getEntityManager();
 
         //Check for userid, should exist.
@@ -353,6 +359,9 @@ public class SecuredUserAccountLoginsManager {
     @Produces({"application/json"})
     @Path("/remove")
     public Boolean removeASchoolLogin(@Context SecurityContext sc, RestSchoolRoleAndClass sarc) {
+        if(sarc==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
 
         Long userId = (Long) MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getUserId());

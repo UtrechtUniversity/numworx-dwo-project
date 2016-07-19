@@ -80,6 +80,9 @@ public class SecuredDwoAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/submit")
     public Boolean submitSchool(@Context SecurityContext sc, RestSchoolFull restSchool) {
+        if(restSchool==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole hr = null;
         DomSchoolFull school = restSchool.getDomSchoolFull();
         try {
@@ -129,6 +132,9 @@ public class SecuredDwoAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/get")
     public DomSchoolFull getSchool(@Context SecurityContext sc, RestSchool4DwoAdmin school) {
+        if(school==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
@@ -209,6 +215,9 @@ public class SecuredDwoAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/update")
     public Boolean updateSchool(@Context SecurityContext sc, RestSchoolFull restSchool) {
+        if(restSchool==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole hr = null;
         DomSchoolFull school = restSchool.getDomSchoolFull();
         try {
@@ -252,6 +261,9 @@ public class SecuredDwoAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/remove")
     public Boolean removeSchool(@Context SecurityContext sc, RestSchool4DwoAdmin restSchool) {
+        if(restSchool==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         //unwrap persistentid
         PersistentSchool school = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(restSchool.getDomSchool4DwoAdmin().getId()));
 
@@ -390,6 +402,9 @@ public class SecuredDwoAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/getTeachersAndHasRoleInSchool")
     public List<DomTeacherAndHasRole> getTeachersAndHasRoleInSchool(@Context SecurityContext sc, RestSchool4DwoAdmin restSchool) {
+        if(restSchool==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         List<DomTeacherAndHasRole> resultList = null;
@@ -438,6 +453,9 @@ public class SecuredDwoAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/updateHasRoleRights")
     public Boolean updateHasRoleRights(@Context SecurityContext sc, RestHasRole restHasRole) {
+        if(restHasRole==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole hr = null;
         DomHasRole domHasRole = restHasRole.getDomHasRole();
         try {

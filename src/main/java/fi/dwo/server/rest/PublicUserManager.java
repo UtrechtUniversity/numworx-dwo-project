@@ -20,6 +20,7 @@ import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
@@ -34,8 +35,6 @@ import fi.dwo.server.persistence.DwoEmfFactory;
 import javax.mail.*;
 import javax.mail.internet.*;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -81,7 +80,17 @@ public class PublicUserManager {
     @Produces({"application/json"})
     @Path("/submit")
     public Boolean submitNewUser(RestNewUser newUserReg) {
-        EntityManager em = DwoEmfFactory.getEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();        
+        if(newUserReg==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
+        if(!ValidUserFieldsChecker.isValidEmail(newUserReg.getDomNewUser().getEmail())){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Adres_Invalid, "The email address does not  conform with RFC 5322.");
+        }
+        if(!ValidUserFieldsChecker.isValidUserName(newUserReg.getDomNewUser().getUsername())){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
+        }
+        
         PersistentUser u;
         u = UserManager.findByUserName(newUserReg.getDomNewUser().getUsername());
         if (u != null) {

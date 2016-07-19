@@ -187,7 +187,9 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/removeSingleSchoolStudentFromSchool")
     public Boolean removeSingleSchoolStudentFromSchool(@Context SecurityContext sc, RestStudent restStudent) {
-
+        if(restStudent==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser student = null;
@@ -241,6 +243,9 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/submitSingleSchoolStudent")
     public Boolean SubmitSingleSchoolStudent(@Context SecurityContext sc, RestSingleSchoolStudent nssStudent) {
+        if(nssStudent==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentSchoolGroup sg = null;
@@ -294,6 +299,9 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/submitTeacher")
     public Boolean submitTeacher(@Context SecurityContext sc, RestUserFull teacher) {
+        if(teacher==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
 //        PersistentSchoolGroup sg = null;
@@ -345,6 +353,9 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/updateSingleSchoolStudent")
     public Boolean updateSingleSchoolStudent(@Context SecurityContext sc, RestSingleSchoolStudent nssStudent) {
+        if(nssStudent==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentSchoolGroup sg = null;
@@ -441,6 +452,9 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/removeTeacher")
     public Boolean removeTeacherFromSchool(@Context SecurityContext sc, RestTeacher restTeacher) {
+        if(restTeacher==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser teacher = null;
@@ -484,6 +498,9 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/removeStudent")
     public Boolean removeStudentFromSchool(@Context SecurityContext sc, RestStudent restStudent) {
+        if(restStudent==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser student = null;
@@ -533,6 +550,9 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/removeSchoolAdmin")
     public Boolean removeSchoolAdminFromSchool(@Context SecurityContext sc, RestSchoolAdmin restSchoolAdmin) {
+        if(restSchoolAdmin==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser schoolAdmin = null;
@@ -575,6 +595,9 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/getSingleSchoolStudent")
     public DomSingleSchoolStudent getSingleSchoolStudent(@Context SecurityContext sc, RestGetSingleSchoolStudent submit) {
+        if(submit==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
 
         PersistentHasRole phr = null;
         PersistentHasRole shr = null;
@@ -614,6 +637,9 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/getTeachersSchoolClassList")
     public List<DomSchoolClass> getTeachersSchoolClasses(@Context SecurityContext sc, RestTeacher restTeacher) {
+        if(restTeacher==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentHasRole thr = null;
@@ -655,6 +681,9 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/getStudentsSchoolClassList")
     public List<DomSchoolClass> getStudentsSchoolClasses(@Context SecurityContext sc, RestStudent restStudent) {
+        if(restStudent==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentHasRole thr = null;

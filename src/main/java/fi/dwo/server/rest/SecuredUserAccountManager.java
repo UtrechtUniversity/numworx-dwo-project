@@ -14,6 +14,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginDataManager;
@@ -159,6 +160,16 @@ public class SecuredUserAccountManager {
     @Produces({"application/json"})
     @Path("/update")
     public DomUserFull updateCurrentUser(@Context SecurityContext sc, RestUserFull user) {
+        if(user==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }        
+        if(!ValidUserFieldsChecker.isValidEmail(user.getDomUserFull().getEmail())){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Adres_Invalid, "The email address does not  conform with RFC 5322.");
+        }
+        if(!ValidUserFieldsChecker.isValidUserName(user.getDomUserFull().getUserName())){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
+        }
+        
         if (user.getDomUserFull().getUserName().equals(sc.getUserPrincipal().getName())) {
             try {
                 PersistentUser dbUser = UserManager.findByUserName(user.getDomUserFull().getUserName());

@@ -93,6 +93,9 @@ public class SecuredStudentSchoolClassManager {
     @Produces({"application/json"})
     @Path("/select")
     public Boolean setActiveSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
+        if(restSchoolClass==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentSchoolClass schoolClass = null;
@@ -136,6 +139,9 @@ public class SecuredStudentSchoolClassManager {
     @Produces({"application/json"})
     @Path("/remove")
     public Boolean removeStudentFromSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
+        if(restSchoolClass==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         try {
@@ -183,6 +189,9 @@ public class SecuredStudentSchoolClassManager {
     @Produces({"application/json"})
     @Path("/submit")
     public Boolean registerStudentForSchoolClass(@Context SecurityContext sc, RestNewSchoolClass4Student restSchoolClass) {
+        if(restSchoolClass==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         try {
