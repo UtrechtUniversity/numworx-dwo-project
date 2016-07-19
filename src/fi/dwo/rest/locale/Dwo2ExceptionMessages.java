@@ -34,6 +34,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
   String Dwo2ExceptionCode_Rest_ConnectionTimeout();
 
   /**
+   * Translated "Incorrect formatted REST-request.".
+   * 
+   * @return translated "Incorrect formatted REST-request."
+   */
+  @DefaultMessage("Incorrect formatted REST-request.")
+  @Key("Dwo2ExceptionCode.Rest_FormatError")
+  String Dwo2ExceptionCode_Rest_FormatError();
+
+  /**
    * Translated "Invalid REST-request.".
    * 
    * @return translated "Invalid REST-request."
