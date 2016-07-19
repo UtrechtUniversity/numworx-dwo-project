@@ -689,7 +689,7 @@ public class SecuredTeacherSchoolClassManager {
 
         if (toc != null && student != null && soc != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
-                if (shr.getClassID().equals(soc.getPersistentStudentOfClassPK().getClassID())) {
+                if (shr.getClassID()!=null && shr.getClassID().equals(soc.getPersistentStudentOfClassPK().getClassID())) {
                     shr.setClassID(null);
                     HasRoleManager.edit(shr);
                 }
