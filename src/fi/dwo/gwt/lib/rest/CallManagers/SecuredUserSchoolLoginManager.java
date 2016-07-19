@@ -6,7 +6,10 @@
 package fi.dwo.gwt.lib.rest.CallManagers;
 
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import fi.dwo.gwt.lib.rest.client.SecuredUserSchoolLoginRestCaller;
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomNewSchoolLogin;
@@ -15,6 +18,7 @@ import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.entities.RestNewSchoolLogin;
 import fi.dwo.rest.entities.RestSchoolRoleAndClass;
 import fi.dwo.rest.exceptions.Dwo2Exception;
+
 import java.util.logging.Logger;
 
 /**
@@ -23,8 +27,7 @@ import java.util.logging.Logger;
  */
 public class SecuredUserSchoolLoginManager {
 
-    private RestAuthenticator auth = new RestAuthenticator();
-    private SecuredUserSchoolLoginRestCaller service;
+    private SecuredUserSchoolLoginRestCaller service = GWT.create(SecuredUserSchoolLoginRestCaller.class);
     private static final Logger LOG = Logger.getLogger(SecuredUserSchoolLoginManager.class.getName());
 
 //    public void updateAccountData(DomUserFull updateUser, AsyncCallback<DomUserFull> callBack) {

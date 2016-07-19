@@ -8,14 +8,19 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.SecuredUserAccountRestCaller;
 import fi.dwo.rest.dom.entities.DomContext;
-
 import fi.dwo.rest.dom.entities.DomLoginCheck;
+import fi.dwo.rest.dom.entities.DomSamlUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.entities.RestLoginCheck;
+import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.entities.RestUserFull;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -151,5 +156,32 @@ public class SecuredUserAccountManager {
     public void getAccountData(AsyncCallback<DomUserFull> callBack) {
         service.getAccountData(new Callback<DomUserFull>(callBack));
     }
+
+	public void samlLogin(String userid, String org, String token, final AsyncCallback<DomUserFull> callback)
+	{
+		DomSamlUser domSamlUser = new DomSamlUser();
+		domSamlUser.setSamlUserId(userid);
+		domSamlUser.setSamlOrgId(org);
+		domSamlUser.setAuthToken(token);
+		GwtRestVars.instance().getAuthenticator().setCredentials(null, null);
+		RestSamlUser samlRestUser = new RestSamlUser();
+		samlRestUser.setDomSamlUser(domSamlUser);
+		MethodCallback<DomUserFull> restcallback = new MethodCallback<DomUserFull>() {
+
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				callback.onFailure(exception);
+			}
+
+			@Override
+			public void onSuccess(Method method, DomUserFull response) {
+				String username = response.getUserName();
+				String password = response.getPassword();
+				GwtRestVars.instance().getAuthenticator().setCredentials(username, password);
+				callback.onSuccess(response);
+			}
+		};
+		service.getSamlUser(samlRestUser, restcallback);
+	}
 
 }
