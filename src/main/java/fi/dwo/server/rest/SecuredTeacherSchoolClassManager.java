@@ -30,6 +30,7 @@ import fi.dwo.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -889,6 +890,12 @@ public class SecuredTeacherSchoolClassManager {
     ) {
         if(nssStudent==null){
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
+        if(!ValidUserFieldsChecker.isValidEmail(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getEmail())){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Adres_Invalid, "The email address does not  conform with RFC 5322.");
+        }
+        if(!ValidUserFieldsChecker.isValidUserName(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName())){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
         }
         
         PersistentHasRole phr = null;
