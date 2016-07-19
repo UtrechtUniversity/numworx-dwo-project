@@ -62,7 +62,7 @@ public class XSSFilter implements Filter {
         Principal u = request.getUserPrincipal();
         String a = request.getAuthType();
         String up = request.getHeader("Authorization");
-        logger.info(u + " " + a + " " + up);
+        logger.info("doOptions: " + u + " " + a + " " + up + ": " + request.getRequestURI());
 
         String origin = request.getHeader("Origin");
         if (origin == null) {
