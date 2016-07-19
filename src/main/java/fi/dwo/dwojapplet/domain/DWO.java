@@ -2326,22 +2326,22 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         String samlOrg = getDecodedCookie("dwoSAMLOrganization");
         String authToken = getDecodedCookie("dwoSAMLAuthToken");
         LOG.log(Level.INFO,"Cookies: dwoSAMLUserID {0} dwoSAMLOrganizationID {1} dwoSAMLAuthToken {2}", new Object[]{samlUserID, samlOrgID, authToken});
-        if (true) {
-            samlUserID = "292832126";
-            samlOrgID = "\"lti:385\"";
-            samlOrg = "bla";
-            authToken = "-1039";
-        }
+//      Test code for Jane Public
+//        if (true) {
+//            samlUserID = "292832126";
+//            samlOrgID = "\"lti:385\"";
+//            samlOrg = "bla";
+//            authToken = "-1039";
+//        }
 
         if (samlUserID != null && samlOrgID != null) {
             try {
-                //PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
                 DwoHelper.setCurrentUser(PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken));
                 return DwoHelper.getCurrentFacadeUser();
             } catch (Dwo2Exception e) {
                 //TODO LOG.log(...)
-                System.err.println("Cookies: " + samlUserID + "," + samlOrgID + "," + authToken);
-                e.printStackTrace();
+                LOG.log(Level.INFO,"Dwo2ExceptionCode {0}, msg: {1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
+                GuiCreator.instance().ShowErrorDialog(rootPane, e);
             }
             samlData = new HashMap();
             samlData.put(DWO_SAML_USER_ID, samlUserID);
