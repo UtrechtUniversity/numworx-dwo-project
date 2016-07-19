@@ -2,6 +2,7 @@ package fi.dwo.rest.locale;
 
 /**
  * Interface to represent the messages contained in resource bundle:
+ * 	/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
  */
 public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messages {
   
@@ -51,6 +52,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
   String Dwo2ExceptionCode_Rest_InternalError();
 
   /**
+   * Translated "You entered an invalid email address string.".
+   * 
+   * @return translated "You entered an invalid email address string."
+   */
+  @DefaultMessage("You entered an invalid email address string.")
+  @Key("Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid")
+  String Dwo2ExceptionCode_Rest_Registration_Email_Address_Invalid();
+
+  /**
    * Translated "Illegal combination of school login and pass code. This will be logged.".
    * 
    * @return translated "Illegal combination of school login and pass code. This will be logged."
@@ -58,6 +68,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
   @DefaultMessage("Illegal combination of school login and pass code. This will be logged.")
   @Key("Dwo2ExceptionCode.Rest_Registration_Invalid_school_role_credentials")
   String Dwo2ExceptionCode_Rest_Registration_Invalid_school_role_credentials();
+
+  /**
+   * Translated "The password length exceeds 128 characters.".
+   * 
+   * @return translated "The password length exceeds 128 characters."
+   */
+  @DefaultMessage("The password length exceeds 128 characters.")
+  @Key("Dwo2ExceptionCode.Rest_Registration_Password_Invalid")
+  String Dwo2ExceptionCode_Rest_Registration_Password_Invalid();
 
   /**
    * Translated "School authentication is incorrect.".
@@ -78,6 +97,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
   String Dwo2ExceptionCode_Rest_Registration_School_license_expired();
 
   /**
+   * Translated "Invalid username, it may contain one or more illegal characters.".
+   * 
+   * @return translated "Invalid username, it may contain one or more illegal characters."
+   */
+  @DefaultMessage("Invalid username, it may contain one or more illegal characters.")
+  @Key("Dwo2ExceptionCode.Rest_Registration_UserName_Invalid")
+  String Dwo2ExceptionCode_Rest_Registration_UserName_Invalid();
+
+  /**
    * Translated "That username already exists in the database.".
    * 
    * @return translated "That username already exists in the database."
@@ -94,6 +122,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
   @DefaultMessage("You are already registered for that combination of school and role. ")
   @Key("Dwo2ExceptionCode.Rest_Registration_hasRole_exists")
   String Dwo2ExceptionCode_Rest_Registration_hasRole_exists();
+
+  /**
+   * Translated "A school class with that name already exists within the school.".
+   * 
+   * @return translated "A school class with that name already exists within the school."
+   */
+  @DefaultMessage("A school class with that name already exists within the school.")
+  @Key("Dwo2ExceptionCode.Rest_Submitted_SchoolClass_exists")
+  String Dwo2ExceptionCode_Rest_Submitted_SchoolClass_exists();
 
   /**
    * Translated "Invalid authentication details.".
