@@ -13,6 +13,10 @@
 	<resources>
 		<j2se version="1.8+" />
 		<jar href="jars/DWOJApplet.jar" />
+                <property name="httpAuthentication" value="httpAuthentication=BASIC"/>
+                <property name="serverUrlPath" value="http://dummytwo.dwo.nl/dwo/"/>
+                <property name="jarUrlPath" value="https://dummytwo.dwo.nl/dwo/jars"/>
+                <property name="resourceUrlPath" value="https://dummytwo.dwo.nl/dwo/resources"/>
 	</resources>
 	<application-desc main-class="fi.dwo.dwojapplet.domain.DWO" />
 </jnlp>
