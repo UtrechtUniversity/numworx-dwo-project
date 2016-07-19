@@ -209,31 +209,44 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 throw new RuntimeException(ex2);
             }
         }
-
-        //assign properties to static value.
-        String defaultUsernameProperty = properties.getProperty("defaultUsername", "");
+        //Code below should allow properties set in a jnlp file to overrule
+        //internal and external property files.
+//        <resources>
+//        <j2se version="1.8+" href="http://java.sun.com/products/autodl/j2se" />
+//          ...
+//          ...
+//          <property name="defaultUsername" value="jane"/>
+//          </resources>
+        
+        
+        String defaultUsernameProperty = (System.getProperty("defaultUsername") == null) 
+                ? properties.getProperty("defaultUsername", "") : System.getProperty("defaultUsername");
         DwoHelper.setDefaultUsername(defaultUsernameProperty);
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultUsernameProperty",
             DwoHelper.getDefaultUsername()});
-        String defaultPasswordProperty = properties.getProperty("defaultPassword", "");
+        String defaultPasswordProperty = (System.getProperty("defaultPassword") == null) 
+                ? properties.getProperty("defaultPassword", "") : System.getProperty("defaultPassword");
         DwoHelper.setDefaultPassword(defaultPasswordProperty);
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultPasswordProperty",
             DwoHelper.getDefaultPassword()});
 
         //assign properties to static value.
-        String serverUrlPathProperty = properties.getProperty("serverUrlPath", "./");
+        String serverUrlPathProperty =  (System.getProperty("serverUrlPath") == null) 
+                ? properties.getProperty("serverUrlPath", "./") : System.getProperty("serverUrlPath");
         DwoHelper.setServerUrlPath(new URL(serverUrlPathProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"setServerUrlPathString",
             DwoHelper.getServerUrlPath()});
 
         //if not set pick default path
-        String resourceURLPathProperty = properties.getProperty("resourceUrlPath", "resources/");
+        String resourceURLPathProperty = (System.getProperty("resourceUrlPath") == null) 
+                ? properties.getProperty("resourceUrlPath", "resources/") : System.getProperty("resourceUrlPath");
         DwoHelper.setResourceUrlPath(new URL(resourceURLPathProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"resourceURLPathProperty",
             DwoHelper.getResourceUrlPath()});
 
         //if not set pick default path
-        String jarURLPathProperty = properties.getProperty("jarUrlPath", "jars");
+        String jarURLPathProperty = (System.getProperty("jarUrlPath") == null) 
+                ? properties.getProperty("jarUrlPath", "jars") : System.getProperty("jarUrlPath");
         DwoHelper.setJarUrlPath(new URL(jarURLPathProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"jarURLPathProperty",
             DwoHelper.getJarUrlPath()});
@@ -243,12 +256,16 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"appURLPathProperty",
             DwoHelper.getJarUrlPath()});
 
-        HttpAuthenticationType httpAuthentication = HttpAuthenticationType.valueOf(properties.getProperty("httpAuthentication", "DIGEST"));
+        HttpAuthenticationType httpAuthentication = (System.getProperty("httpAuthentication") == null) 
+                ? HttpAuthenticationType.valueOf(properties.getProperty("httpAuthentication", "DIGEST"))
+                : HttpAuthenticationType.valueOf(System.getProperty("httpAuthentication"));
         DwoHelper.setHttpAuthentication(httpAuthentication);
         LOG.log(Level.INFO, "Property {0} is value: {1}",
                 new Object[]{"httpAuthentication", DwoHelper.getHttpAuthentication()});
 
-        String xmlrpc_debug = properties.getProperty("xmlrpc.debug", "false");
+        String xmlrpc_debug = (System.getProperty("xmlrpc.debug") == null) 
+                ? properties.getProperty("xmlrpc.debug", "false") : System.getProperty("xmlrpc.debug") ;
+        
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug", xmlrpc_debug});
         MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
 
