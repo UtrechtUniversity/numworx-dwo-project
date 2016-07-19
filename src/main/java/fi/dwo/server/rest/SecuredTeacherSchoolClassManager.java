@@ -688,11 +688,11 @@ public class SecuredTeacherSchoolClassManager {
 
         if (toc != null && student != null && soc != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
-                StudentOfClassManager.destroy(soc.getPersistentStudentOfClassPK());
                 if (shr.getClassID().equals(soc.getPersistentStudentOfClassPK().getClassID())) {
                     shr.setClassID(null);
                     HasRoleManager.edit(shr);
                 }
+                StudentOfClassManager.destroy(soc.getPersistentStudentOfClassPK());
             }
             catch (PersistenceException e) {
                 return false;
