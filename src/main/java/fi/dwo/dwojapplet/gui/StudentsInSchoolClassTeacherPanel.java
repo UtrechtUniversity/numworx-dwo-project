@@ -406,10 +406,10 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         prop.removeStudentFromSchoolClass(schoolClass, student);
                     }
                 }
-                Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
-                DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+                Vector<DomSchoolClass> schoolClassVector = new Vector<>(prop.getTeachersOtherSchoolClasses(schoolClass));
+                DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
                 targetSchoolClassBox.setModel(model);
-                if(teacherVector.isEmpty()){
+                if(schoolClassVector.isEmpty()){
                     targetSchoolClassBox.setEnabled(false);
                     copyToSchoolClassButton.setEnabled(false);
                 }else{
