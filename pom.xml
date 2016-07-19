@@ -324,7 +324,7 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>              
-                  <artifactId>DWOJApplet-working-gert</artifactId>
+                  <artifactId>DWOJApplet</artifactId>
                   <version>${project.version}</version>
                   <classifier>jar-with-dependencies</classifier>
                   <overWrite>true</overWrite>
