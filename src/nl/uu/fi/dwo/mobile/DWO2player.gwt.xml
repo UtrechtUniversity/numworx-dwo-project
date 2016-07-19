@@ -39,7 +39,8 @@
   <inherits name="com.google.gwt.xml.XML"/> 
   <inherits name="com.google.gwt.http.HTTP"/> 
   <inherits name="fi.wiskopdr.WiskOpdr"/>
-  <inherits name="fi.restrpcgwt.RestRpcGWT"/>
+  <inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
+  <inherits name="fi.dwo.rest.DWO-rest-lib"/>
   
 <!-- Only run test on safari, this speeds up the unit testing, should not be included in release-trunk -->
 <!--  <set-property name="user.agent" value="safari" /> -->
@@ -74,6 +75,10 @@
     
     <replace-with class="nl.uu.fi.dwo.mobile.client.DWOIdeasClient" >
     	<when-type-is class="fi.wiskopdr.FailingIdeas" />
+    </replace-with>
+    
+    <replace-with class="fi.dwo.gwt.lib.rest.DwoConstantsImpl">
+    	<when-type-is class="fi.dwo.gwt.lib.rest.DwoConstants" />
     </replace-with>
     
     

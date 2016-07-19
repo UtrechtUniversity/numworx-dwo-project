@@ -113,19 +113,25 @@
   		<version>${gwtVersion}</version>
   		<scope>test</scope>
   	</dependency>
-  	<dependency>
-  		<groupId>fi.restrpcgwt</groupId>
-  		<artifactId>RestRpcGWT</artifactId>
-  		<version>0.0.1</version>
-  		<classifier>classes</classifier>
-  	</dependency>
   	  	<dependency>
     	<groupId>org.mitre.dsmiley.httpproxy</groupId>
     	<artifactId>smiley-http-proxy-servlet</artifactId>
     	<version>1.7</version>
     	<scope>runtime</scope>
 	</dependency>
-  	
+
+  	  	<dependency>
+  	  		<groupId>nl.uu.fi.dwo.account</groupId>
+  	  		<artifactId>Account</artifactId>
+  	  		<version>0.0.1-SNAPSHOT</version>
+  	  		<classifier>classes</classifier>
+  	  	</dependency>
+  	  	<dependency>
+  	  		<groupId>nl.uu.fi.dwo.account</groupId>
+  	  		<artifactId>Account</artifactId>
+  	  		<version>0.0.1-SNAPSHOT</version>
+  	  		<classifier>sources</classifier>
+  	  	</dependency>
   </dependencies>
   <parent>
   	<groupId>fi.parentgwt</groupId>

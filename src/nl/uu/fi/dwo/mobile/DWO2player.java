@@ -18,9 +18,53 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import fi.restrpcgwt.client.RestRPCHandler;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
+import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
+import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.persistence.PersistenceClassType;
+import fi.dwo.rest.persistence.PersistenceId;
 
 public class DWO2player extends DWOplayer implements EntryPoint {
+
+	final class AsyncUserCallback implements AsyncCallback<DomUserFull> {
+		private final SecuredUserSchoolLoginManager schoolManager;
+		Map<String,Object> profile = new HashMap<String,Object>();
+		AsyncCallback<? super Map<String,Object>> callback;
+
+		AsyncUserCallback(SecuredUserSchoolLoginManager schoolManager, AsyncCallback<? super Map<String,Object>> callback) {
+			this.schoolManager = schoolManager;
+			this.callback = callback;
+		}
+
+		@Override
+		public void onSuccess(DomUserFull result) {
+			
+				toProfile(result, profile);
+				schoolManager.getSchoolLogins(new AsyncCallback<DomSchoolsRolesAndClasses>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						callback.onFailure(caught);			
+					}
+
+					@Override
+					public void onSuccess(DomSchoolsRolesAndClasses result) {
+						toProfile(result, profile);
+						callback.onSuccess(profile);
+					}
+				});
+			
+			
+		}
+
+		@Override
+		public void onFailure(Throwable caught) {
+			callback.onFailure(caught);
+		}
+	}
 
 	public DWO2player() {
 
@@ -48,15 +92,17 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		};
 		String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
-		final RestRPCHandler restHandler = new RestRPCHandler(http + "//" + host + "/dwo/rest/");
+		final SecuredUserAccountManager accountManager = new SecuredUserAccountManager(http + "//" + host + "/dwo/rest/");
+		final SecuredUserSchoolLoginManager schoolManager = new SecuredUserSchoolLoginManager();
 		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwo/xmlrpc"){
 
-			@Override
-			public void login(String name, String password,
-					AsyncCallback<? super Map<String, Object>> callback) {
-				restHandler.login(name, password, callback);
+			public void login(final String name, final String password, final AsyncCallback<? super Map<String,Object>> callback)
+			{
+				final AsyncCallback<DomUserFull> userCallback = new AsyncUserCallback(schoolManager, callback);
+				accountManager.loginUser(name, password, userCallback);
+				
 			}
-			
+
 			public <T> void getCourses(Map<String, Object> userData,
 					AsyncCallback<T> getCoursesCallback) {
 				
@@ -109,11 +155,43 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			public void samlLogin(String name, String org,
 					AsyncCallback<? super Map<String, Object>> callback) {
 				String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
-				restHandler.samlLogin(name, org, authToken, callback);
+				final AsyncCallback<DomUserFull> userCallback = new AsyncUserCallback(schoolManager, callback);
+				accountManager.samlLogin(name, org, authToken, userCallback);
 			}
 
 		});
 		return factory;
 	}
 
+// From RestRpcHandler
+	void toProfile(DomSchoolsRolesAndClasses result, Map<String, Object> profile) {
+		DomSchoolRoleAndClass active = result.getActiveSchoolRoleAndClass();
+		PersistenceId userId = active.getUserId();
+		PersistenceId classId = active.getSchoolClassId();
+		PersistenceId schoolId = active.getSchoolId();
+		PersistenceId sgId = active.getSchoolGroupId();
+
+		PersistenceIdDecoderInterface instance = PersistenceIdDecoderInterface.instance;
+		profile.put("userID", instance.idOf(userId, PersistenceClassType.PersistentUser));
+		profile.put("iconizer", active.getIconizer());
+		profile.put("classID", classId == null ? "" :
+				instance.idOf(classId, PersistenceClassType.PersistentSchoolClass));
+		profile.put("schoolID", schoolId == null ? "" :
+				instance.idOf(schoolId, PersistenceClassType.PersistentSchool));
+		profile.put("schoolName", active.getSchoolName());
+		profile.put("groupname",  active.getRoleName());
+		profile.put("class", active.getSchoolClassName());
+		profile.put("groupID", instance.idOf(active.getRoleId(), PersistenceClassType.PersistentRole));
+		profile.put("schoolGroupID", instance.idOf(sgId, PersistenceClassType.PersistentSchoolGroup));
+	}
+
+	void toProfile(DomUserFull result, Map<String, Object> profile) {
+		profile.put("firstname", result.getGivenName());
+		profile.put("middlename", result.getInsertion());
+		profile.put("lastname", result.getFamilyName());
+		profile.put("userID", PersistenceIdDecoderInterface.instance.idOf(result.getId(), PersistenceClassType.PersistentUser));
+		profile.put("username", result.getUserName());
+	}
+
+	
 }
