@@ -53,7 +53,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
 
     public void init(DomUserFull aUser) {
         user = aUser;
-        this.setSize("400", "500");
+        //this.setPixelSize(400, 500); Wim: wrong size, default is okay
 
         Grid g = new Grid(10, 2);
         g.getColumnCount();
