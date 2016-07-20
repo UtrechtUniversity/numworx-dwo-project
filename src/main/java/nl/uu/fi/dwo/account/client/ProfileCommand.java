@@ -24,7 +24,7 @@ public class ProfileCommand implements Command {
         //popup.setSize("500", "400");
         ProfilePanel panel = new ProfilePanel(DwoGlobalVars.instance().getCurrentUser());
         panel.setPopup(popup);
-        panel.setSize("300", "200");
+        //panel.setSize("300", "200");
         popup.add(panel);
         popup.center();
     }
