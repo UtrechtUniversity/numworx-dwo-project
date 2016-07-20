@@ -90,7 +90,7 @@ public class SecuredUserAccountManager {
 
     }
 
-    public void loginUser(String name, String password, final AsyncCallback<DomUserFull> callback) {
+    public void loginUser(final String name, String password, final AsyncCallback<DomUserFull> callback) {
         final String pwmd5 = MD5.md5(password);
         GWT.log(pwmd5);
 
@@ -108,7 +108,10 @@ public class SecuredUserAccountManager {
 
                         @Override
                         public void onSuccess(DomUserFull result) {
-                            callback.onSuccess(result);
+                        	if(name.equals(result.getUserName()))
+                        		callback.onSuccess(result);
+                        	else
+                        		callback.onFailure(new RuntimeException("Please restart browser")); // FIXME showstopper?
                         }
                     });
                 } else {

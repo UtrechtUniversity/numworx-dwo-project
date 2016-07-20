@@ -92,7 +92,7 @@
                     <execution>
                         <goals>
                             <goal>compile</goal>
-                            <goal>i18n</goal>
+<!--                             <goal>i18n</goal> -->
                         </goals>
                     </execution>
                 </executions>

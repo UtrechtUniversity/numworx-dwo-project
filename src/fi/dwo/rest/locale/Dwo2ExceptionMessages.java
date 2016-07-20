@@ -1,17 +1,19 @@
 package fi.dwo.rest.locale;
 
+import com.google.gwt.i18n.client.ConstantsWithLookup;
+
 /**
  * Interface to represent the messages contained in resource bundle:
  * 	/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
  */
-public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messages {
+public interface Dwo2ExceptionMessages extends ConstantsWithLookup {
   
   /**
    * Translated "An incorrect password was given.".
    * 
    * @return translated "An incorrect password was given."
    */
-  @DefaultMessage("An incorrect password was given.")
+  @DefaultStringValue("An incorrect password was given.")
   @Key("Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven")
   String Dwo2ExceptionCode_GUI_AnIncorrectPasswordWasGiven();
 
@@ -20,7 +22,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "No user is signed in."
    */
-  @DefaultMessage("No user is signed in.")
+  @DefaultStringValue("No user is signed in.")
   @Key("Dwo2ExceptionCode.GUI_NoUserIsSignedIn")
   String Dwo2ExceptionCode_GUI_NoUserIsSignedIn();
 
@@ -29,7 +31,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "Can not contact the server, please try  again before reporting."
    */
-  @DefaultMessage("Can not contact the server, please try  again before reporting.")
+  @DefaultStringValue("Can not contact the server, please try  again before reporting.")
   @Key("Dwo2ExceptionCode.Rest_ConnectionTimeout")
   String Dwo2ExceptionCode_Rest_ConnectionTimeout();
 
@@ -38,7 +40,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "Incorrect formatted REST-request."
    */
-  @DefaultMessage("Incorrect formatted REST-request.")
+  @DefaultStringValue("Incorrect formatted REST-request.")
   @Key("Dwo2ExceptionCode.Rest_FormatError")
   String Dwo2ExceptionCode_Rest_FormatError();
 
@@ -47,7 +49,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "Invalid REST-request."
    */
-  @DefaultMessage("Invalid REST-request.")
+  @DefaultStringValue("Invalid REST-request.")
   @Key("Dwo2ExceptionCode.Rest_InterfaceError")
   String Dwo2ExceptionCode_Rest_InterfaceError();
 
@@ -56,7 +58,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "An internal error occurred, please try again before reporting."
    */
-  @DefaultMessage("An internal error occurred, please try again before reporting.")
+  @DefaultStringValue("An internal error occurred, please try again before reporting.")
   @Key("Dwo2ExceptionCode.Rest_InternalError")
   String Dwo2ExceptionCode_Rest_InternalError();
 
@@ -65,7 +67,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "You entered an invalid email address string."
    */
-  @DefaultMessage("You entered an invalid email address string.")
+  @DefaultStringValue("You entered an invalid email address string.")
   @Key("Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid")
   String Dwo2ExceptionCode_Rest_Registration_Email_Address_Invalid();
 
@@ -74,7 +76,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "Illegal combination of school login and pass code. This will be logged."
    */
-  @DefaultMessage("Illegal combination of school login and pass code. This will be logged.")
+  @DefaultStringValue("Illegal combination of school login and pass code. This will be logged.")
   @Key("Dwo2ExceptionCode.Rest_Registration_Invalid_school_role_credentials")
   String Dwo2ExceptionCode_Rest_Registration_Invalid_school_role_credentials();
 
@@ -83,7 +85,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "The password length exceeds 128 characters."
    */
-  @DefaultMessage("The password length exceeds 128 characters.")
+  @DefaultStringValue("The password length exceeds 128 characters.")
   @Key("Dwo2ExceptionCode.Rest_Registration_Password_Invalid")
   String Dwo2ExceptionCode_Rest_Registration_Password_Invalid();
 
@@ -92,7 +94,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "School authentication is incorrect."
    */
-  @DefaultMessage("School authentication is incorrect.")
+  @DefaultStringValue("School authentication is incorrect.")
   @Key("Dwo2ExceptionCode.Rest_Registration_School_authentication_failed")
   String Dwo2ExceptionCode_Rest_Registration_School_authentication_failed();
 
@@ -101,7 +103,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "The school license has expired. You can register once it has renewed. Contact the school."
    */
-  @DefaultMessage("The school license has expired. You can register once it has renewed. Contact the school.")
+  @DefaultStringValue("The school license has expired. You can register once it has renewed. Contact the school.")
   @Key("Dwo2ExceptionCode.Rest_Registration_School_license_expired")
   String Dwo2ExceptionCode_Rest_Registration_School_license_expired();
 
@@ -110,7 +112,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "Invalid username, it may contain one or more illegal characters."
    */
-  @DefaultMessage("Invalid username, it may contain one or more illegal characters.")
+  @DefaultStringValue("Invalid username, it may contain one or more illegal characters.")
   @Key("Dwo2ExceptionCode.Rest_Registration_UserName_Invalid")
   String Dwo2ExceptionCode_Rest_Registration_UserName_Invalid();
 
@@ -119,7 +121,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "That username already exists in the database."
    */
-  @DefaultMessage("That username already exists in the database.")
+  //@DefaultMessage("That username already exists in the database.")
   @Key("Dwo2ExceptionCode.Rest_Registration_UserName_exists")
   String Dwo2ExceptionCode_Rest_Registration_UserName_exists();
 
@@ -128,7 +130,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "You are already registered for that combination of school and role. "
    */
-  @DefaultMessage("You are already registered for that combination of school and role. ")
+  @DefaultStringValue("You are already registered for that combination of school and role. ")
   @Key("Dwo2ExceptionCode.Rest_Registration_hasRole_exists")
   String Dwo2ExceptionCode_Rest_Registration_hasRole_exists();
 
@@ -137,7 +139,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "A school class with that name already exists within the school."
    */
-  @DefaultMessage("A school class with that name already exists within the school.")
+  @DefaultStringValue("A school class with that name already exists within the school.")
   @Key("Dwo2ExceptionCode.Rest_Submitted_SchoolClass_exists")
   String Dwo2ExceptionCode_Rest_Submitted_SchoolClass_exists();
 
@@ -146,7 +148,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "Invalid authentication details."
    */
-  @DefaultMessage("Invalid authentication details.")
+  //@DefaultMessage("Invalid authentication details.")
   @Key("Dwo2ExceptionCode.User_AuthenticationError")
   String Dwo2ExceptionCode_User_AuthenticationError();
 
@@ -155,7 +157,7 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Messag
    * 
    * @return translated "Illegal REST-request, the details of this action are logged."
    */
-  @DefaultMessage("Illegal REST-request, the details of this action are logged.")
+  @DefaultStringValue("Illegal REST-request, the details of this action are logged.")
   @Key("Dwo2ExceptionCode.User_IllegalAction")
   String Dwo2ExceptionCode_User_IllegalAction();
 }

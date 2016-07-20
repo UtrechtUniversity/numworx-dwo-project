@@ -6,11 +6,15 @@
 package fi.dwo.gwt.lib.rest.util;
 
 import fi.dwo.rest.DwoLocale;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
+
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,6 +60,7 @@ public class Dwo2ExceptionGWTTranslator implements DWO2ExceptionTranslatorInterf
             //msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
             
             msg = code.name();
+            msg = Dwo2ExceptionsForGWT.instance.getString("Dwo2ExceptionCode_"+msg);
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't find the resource Dwo2Exceptions.properties, returning English log message.", e);
