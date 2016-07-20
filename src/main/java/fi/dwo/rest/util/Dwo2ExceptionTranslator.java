@@ -40,28 +40,28 @@ public class Dwo2ExceptionTranslator {
 
     public static String encodeJSON(Dwo2ExceptionCode code, String message) {
         if (translator == null) {
-            throw new RuntimeException("Dwo2ExceptionTranlator must be initialized with a translator.");
+            throw new RuntimeException("Dwo2ExceptionTranslator must be initialized with a translator.");
         }
         return translator.encodeJSON(code, message);
     }
 
     public static String decodeMessageInJSON(String json) {
         if (translator == null) {
-            throw new RuntimeException("Dwo2ExceptionTranlator must be initialized with a translator.");
+            throw new RuntimeException("Dwo2ExceptionTranslator must be initialized with a translator.");
         }
         return translator.decodeMessageInJSON(json);
     }
 
     public static Dwo2ExceptionCode decodeCodeInJSON(String json) {
         if (translator == null) {
-            throw new RuntimeException("Dwo2ExceptionTranlator must be initialized with a translator.");
+            throw new RuntimeException("Dwo2ExceptionTranslator must be initialized with a translator.");
         }
         return translator.decodeCodeInJSON(json);
     }
     
     public static String getLocalizedCodeExplanation(DwoLocale locale, Dwo2ExceptionCode code) {
         if (translator == null) {
-            throw new RuntimeException("Dwo2ExceptionTranlator must be initialized with a translator.");
+            throw new RuntimeException("Dwo2ExceptionTranslator must be initialized with a translator.");
         }
         return translator.getLocalizedCodeExplanation(locale, code);
     }
