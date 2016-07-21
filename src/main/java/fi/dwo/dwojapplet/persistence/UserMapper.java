@@ -4,7 +4,6 @@ package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.persistence.DbAccessIF;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.SchoolAdmin;
