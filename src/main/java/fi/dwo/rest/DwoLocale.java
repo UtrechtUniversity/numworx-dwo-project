@@ -14,7 +14,7 @@ public class DwoLocale {
     private String locale;//IETF BCP 47 language tag required.
  
    public DwoLocale(){
-        locale = "nl-NL";
+        locale = "nl";
     }
      
     public DwoLocale(String lcl){

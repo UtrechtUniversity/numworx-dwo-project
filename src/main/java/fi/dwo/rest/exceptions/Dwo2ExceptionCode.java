@@ -14,7 +14,9 @@ public enum Dwo2ExceptionCode {
     User_AuthenticationError, //Illegal account details.
     User_IllegalAction, //Illegal action logged.
     User_NewPasswordsDoNotMatch, //Illegal action logged.
-
+    User_ConfirmRoleSwitch,
+    User_ConfirmSchoolClassSwitch,
+    
     //REST interface errors
     Rest_InternalError, //Internal software error, a stack trace should be acquired.
     Rest_InterfaceError, // Error due to an improper REST-interface.
