@@ -18,9 +18,11 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
+import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import fi.dwo.rest.locale.DwoLocalesForGWT;
 
 import java.util.List;
@@ -141,6 +143,9 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
                     switch (columnIndex) {
                         case 1: //relogin with schoolclass set...
+                            if(Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch())==false){
+                                return;
+                            }
                             control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
                                 @Override
                                 public void onFailure(Throwable t) {

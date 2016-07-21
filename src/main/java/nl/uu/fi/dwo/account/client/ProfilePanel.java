@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -11,6 +12,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import fi.dwo.rest.locale.DwoLocalesForGWT;
@@ -122,6 +124,9 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
                 if (newPassword.getText().equals("") && newPassword.getText().equals(newPasswordAgain.getText())) {
                     user.setPassword(control.getCurrentUser().getPassword());
                 } else if (!newPassword.getText().equals("") && newPassword.getText().equals(newPasswordAgain.getText())) {
+                            if(Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch())==false){
+                                return;
+                            }
                     user.setPassword(MD5.md5(newPassword.getText()));
                 } else {
                     //do warning
