@@ -68,7 +68,7 @@ public class Dwo2ExceptionJavaTranslator implements DWO2ExceptionTranslatorInter
         try {
             //Current resources are in /java/resources, however if in java/resources/fi/dwo then
             //replace getBundle("Dwo2Exceptions", locale); with getBundle("fi.dwo.Dwo2Exceptions", locale);
-            ResourceBundle localeLookup = ResourceBundle.getBundle("fi.dwo.rest.locale.Dwo2Exceptions", Locale.forLanguageTag(locale.getLocale()));
+            ResourceBundle localeLookup = ResourceBundle.getBundle("fi.dwo.rest.locale.Dwo2ExceptionMessages", Locale.forLanguageTag(locale.getLocale()));
             msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
 //            msg = code.name();
         }
