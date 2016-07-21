@@ -35,7 +35,7 @@ class SchoolLoginCommand implements Command {
             //popup.setSize("500", "400");
             SchoolLoginPanel panel = new SchoolLoginPanel(DwoGlobalVars.instance().getCurrentUser());
             panel.setPopup(popup);
-            panel.setSize("300", "200");
+            //panel.setSize("300", "200");
             popup.add(panel);
             popup.center();
         } catch (Dwo2Exception ex) {
