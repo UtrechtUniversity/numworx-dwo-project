@@ -17,7 +17,6 @@ import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.entities.RestNewSchoolLogin;
 import fi.dwo.rest.entities.RestSchoolRoleAndClass;
-import fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.util.logging.Logger;
 
