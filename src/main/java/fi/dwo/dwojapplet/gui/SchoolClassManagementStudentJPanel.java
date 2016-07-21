@@ -6,6 +6,8 @@ import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.awt.Component;
 import java.awt.Dialog;
@@ -226,6 +228,11 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             //Let's check the selected col by the image and from the selected row value.
             try {
                 if (value == loginImage) {
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
+                            Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmSchoolClassSwitch)
+                    ) != JOptionPane.OK_OPTION) {
+                        return;
+                    }
 //            //get Table setting
 //                int col = tableModel.getSelectedColumn();
                     int row = tableModel.getSelectedRow();

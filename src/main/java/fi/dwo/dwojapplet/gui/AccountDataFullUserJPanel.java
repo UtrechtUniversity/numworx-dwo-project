@@ -6,6 +6,8 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FontMetrics;
@@ -64,11 +66,10 @@ public class AccountDataFullUserJPanel extends JPanel implements
     public AccountDataFullUserJPanel() {
         try {
             prop.init();
-             user = prop.getUser();
-        }
-        catch (Dwo2Exception ex) {
+            user = prop.getUser();
+        } catch (Dwo2Exception ex) {
             GuiCreator.instance().ShowErrorDialog(this, ex);
-           LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
         //fetch user details.
 //        groupList = groups;
@@ -351,8 +352,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
             middlename.setText(user.getInsertion());
             familyname.setText(user.getFamilyName());
             email.setText(user.getEmail());
-        }
-        else if (e.getSource() == changeButton) {
+        } else if (e.getSource() == changeButton) {
             if (prop.getUser().getPassword().equals(MD5.getHashString(oldpassword.getText()))) {
                 //update the data
                 try {
@@ -364,9 +364,15 @@ public class AccountDataFullUserJPanel extends JPanel implements
                             && repassword.getText().equals(password.getText())) {
                         //leave password as it is
                     } else if (!password.getText().equals("")
-                            && repassword.getText().equals(password.getText())){
-                        prop.getUser().setPassword(MD5.getHashString(password.getText()));
-                    }else{
+                            && repassword.getText().equals(password.getText())) {
+                        if (GuiCreator.instance().ShowConfirmDialog(this,
+                                Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmPasswordSwitch)
+                        ) == JOptionPane.OK_OPTION) {
+                            prop.getUser().setPassword(MD5.getHashString(password.getText()));
+                        } else {
+                            return;
+                        }
+                    } else {
                         //warn
                         GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_SECOND_PASSWORD));
                         return;
@@ -374,13 +380,12 @@ public class AccountDataFullUserJPanel extends JPanel implements
                     prop.Update();
                     oldpassword.setText("");
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     GuiCreator.instance().ShowErrorDialog(this, ex);
                 }
             } else {
                 GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
-            }            
+            }
 //            if (prop.getUser().getPassword().equals(MD5.getHashString(oldpassword.getText()))) {
 //                //update the data
 //                try {
@@ -403,8 +408,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 //            } else {
 //                GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
 //            }
-        }
-        else if (e.getSource() == deleteButton) {
+        } else if (e.getSource() == deleteButton) {
             /* Delete the user account */
             while (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
                     + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -414,8 +418,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
                             GuiCreator.instance().logoff();
                         }
                         JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), JOptionPane.PLAIN_MESSAGE);
-                    }
-                    catch (Dwo2Exception ex) {
+                    } catch (Dwo2Exception ex) {
                         Logger.getLogger(AccountDataFullUserJPanel.class.getName()).log(Level.SEVERE, null, ex);
                         JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                     }

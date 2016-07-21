@@ -110,7 +110,7 @@ public class GuiCreator {
     }
 
     /**
-     * Ask confirmation
+     * Ask confirmation, returns ok or cancel of a JOptionPane.
      *
      * @param parentComponent
      * @param message
@@ -118,7 +118,7 @@ public class GuiCreator {
     public int ShowConfirmDialog(Component parentComponent,
             Object message) {
         if(parentComponent==null) parentComponent = GuiCreator.instance().getMainPanel();
-        return JOptionPane.showConfirmDialog(parentComponent, message, "", JOptionPane.OK_OPTION);
+        return JOptionPane.showConfirmDialog(parentComponent, message, "", JOptionPane.OK_CANCEL_OPTION);
     }
     
     /**

@@ -4,9 +4,12 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.system.MD5;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.awt.Component;
 import java.awt.Dialog;
@@ -24,6 +27,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -66,8 +70,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         //fetch user details.
         try {
             prop.init();
-        }
-        catch (Dwo2Exception e) {
+        } catch (Dwo2Exception e) {
             LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
             GuiCreator.instance().ShowErrorDialog(this, e);
         }
@@ -88,8 +91,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         tr.addImage(emptyImage, 2);
         try {
             tr.waitForAll();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
 
         //FontMetrics fm;
@@ -187,12 +189,10 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 //                //switch role now
                 LOG.log(Level.INFO, "switching role now");
                 GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
-            }
-            catch (LoginException ex) {
+            } catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().mainPanel, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().mainPanel, ex);
             }
@@ -224,6 +224,11 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                 if (value == loginImage) {
 //            //get Table setting
 //                int col = tableModel.getSelectedColumn();
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
+                            Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmRoleSwitch)
+                    ) != JOptionPane.OK_OPTION) {
+                        return;
+                    }
                     int row = tableModel.getSelectedRow();
 
                     //set prop to table setting
@@ -275,8 +280,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                             break;
                     }
                 }
-            }
-            catch (Dwo2Exception e) {
+            } catch (Dwo2Exception e) {
                 LOG.log(Level.SEVERE, null, e);
                 GuiCreator.instance().ShowErrorDialog(null, e);
             }
