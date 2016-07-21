@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public enum Dwo2ExceptionCode {
     User_AuthenticationError, //Illegal account details.
     User_IllegalAction, //Illegal action logged.
+    User_NewPasswordsDoNotMatch, //Illegal action logged.
 
     //REST interface errors
     Rest_InternalError, //Internal software error, a stack trace should be acquired.
