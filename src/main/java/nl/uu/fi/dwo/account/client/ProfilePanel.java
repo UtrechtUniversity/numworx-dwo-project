@@ -118,13 +118,15 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             user.setFamilyName(familyName.getText());
             user.setGivenName(givenName.getText());
             user.setInsertion(insertion.getText());
-            if (MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) 
-            {
-                if (!newPassword.getText().equals("") && newPassword.getText().equals(newPasswordAgain.getText())) 
-                {
-                    user.setPassword(MD5.md5(newPassword.getText()));
-                }else{
+            if (MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) {
+                if (newPassword.getText().equals("") && newPassword.getText().equals(newPasswordAgain.getText())) {
                     user.setPassword(control.getCurrentUser().getPassword());
+                } else if (!newPassword.getText().equals("") && newPassword.getText().equals(newPasswordAgain.getText())) {
+                    user.setPassword(MD5.md5(newPassword.getText()));
+                } else {
+                    //do warning
+                    DwoViewer.showMessage(Dwo2ExceptionCode.User_NewPasswordsDoNotMatch);
+                    return;
                 }
                 LOG.log(Level.INFO, "Sending data to server.");
                 control.setUpdateUser(user);
