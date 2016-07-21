@@ -2868,6 +2868,28 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		}
 	}
 
+	/**
+	 * Bij stap terug in StelselEditor moet viewer weer vervangen kunnen worden door editor.
+	 * 
+	 * @param setState
+	 */
+	public void vervangViewerDoorEditor(boolean setState)
+	{
+		String antwoord = latest_answer_viewer.toString();
+		LayoutPanel current = stepPanels.get(stepPanels.size() - 1);
+		current.remove(latest_answer_viewer.getAsPanel());
+		viewers.remove(latest_answer_viewer);
+		latest_answer_viewer = viewers.get(viewers.size() - 1);
+		if (hasPrefix)
+		{	//TODO: als ook gebruikt voor plekken waar een prefix aanwezig: prefix van antwoord af halen.
+		
+		}
+		
+		editor = addNewEditor(current);
+		editor.insert(antwoord);
+		
+	}
+	
 	
 	public void maakBewerkingStap()
 	{

@@ -48,8 +48,8 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 
 	private int mode;
 
-	private boolean ingevuld;
-	private boolean nagekeken;
+	//private boolean ingevuld;
+	//private boolean nagekeken;
 
 	private boolean correct;
 	private boolean fout;
@@ -78,31 +78,16 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 	private int breedte;
 	private int hoogte;
 
-	private int goedHalfFout;
-	private int puntenFeedback;
-	private String feedback;
-	private FlowPanel feedbackPanel;
-	private boolean gelijkwaardig;
-	//private TekstArea feedbackTekst;
-	//private FormuleButton feedbackButton;
-	private Label feedbackLabel;
-	private TouchPanel checkPanel;
 
 	private boolean check;
 	private boolean teltMee;
 
-	private String[] randomVars;
-	private HashMap<String, Number> randomVarWaarden;
+	
 
 	private Image checkimg;
 
-	//private LayoutPanel mainPanel;
 	private FormuleEditorWithAnswer editor;
-	private int minBreedte;
-	private int ashoogte;
-
-	private boolean tabletAan;
-	private boolean formuleToolBijFocus;
+	
 
 	private boolean logOption;
 	private String logID;
@@ -122,21 +107,7 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 	{	fontOvererving = b;
 	}
 
-	/*private static String[] imageNames = 
-	{	"goedkrul.gif",
-		"goedkrulhalf.gif",
-		"foutkruis.gif",
-		"goedkrul_en.gif",
-		
-	};
 	
-	private static Hashtable images;*/
-
-	/*public static void zetPlaatjes(Image gk, Image fk, Image hk)
-	{	GOEDKRUL = gk;
-		FOUTKRUIS = fk;
-		HALFKRUL = hk;
-	}*/
 	
 	public StelselOplossingenVak(StelselAntwoordVak parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
@@ -166,66 +137,10 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		editor.setCurrent(0, 0);
 		editor.setParentStelselOplossingenVak(this);
 		
-	//	mainPanel = new LayoutPanel();
-	//	mainPanel.setWidth(breedte + "px");
 		hoogte = editor.getHeight();
-	//	mainPanel.setHeight(hoogte + "px");
-		
-		feedbackLabel = new Label("?");
-		feedbackLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
-		feedbackLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
-		feedbackLabel.getElement().getStyle().setPadding(0, Style.Unit.PX);
-		feedbackLabel.getElement().getStyle().setMarginTop(-1, Style.Unit.PX);
-		feedbackLabel.getElement().getStyle().setMarginLeft(1, Style.Unit.PX);
-		feedbackLabel.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
-		//feedbackLabel.getElement().getStyle().setBackgroundColor("white");
-		feedbackLabel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		feedbackLabel.getElement().getStyle().setVerticalAlign(VerticalAlign.TOP);
-		feedbackLabel.setWidth(10 + "px");
-		feedbackLabel.setVisible(false);
-		
-		checkimg = new Image(FORMULE_BUNDLE.goedkrul().getSafeUri());
-		checkimg.getElement().getStyle().setMarginRight(10, Unit.PX);
-		checkimg.setVisible(false);
-		
-		
-		checkPanel = new TouchPanel();
-		checkPanel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		checkPanel.getElement().getStyle().setPaddingLeft(5, Style.Unit.PX);
-		checkPanel.getElement().getStyle().setProperty("verticalAlign", "top");
-		checkPanel.getElement().getStyle().setMarginTop(-3, Style.Unit.PX);
-		checkPanel.add(checkimg);
-		checkPanel.add(feedbackLabel);
-		checkPanel.setPixelSize(15, hoogte);
-		checkPanel.addTapHandler(new TapHandler(){
-
-			@Override
-			public void onTap(TapEvent event) {
-				//later invullen. Of toch FormuleEditorWithAnswer maken; daar komt dit rechtstreeks uit. Goede interactiePanelLaunchState meegeven..
-//				if(feedbackLabel.isVisible())
-//				{	int yPos = asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10;
-//					if(yPos + feedbackTekst.hoogte + 10 > Window.getClientHeight())
-//						yPos = Window.getClientHeight() - feedbackTekst.hoogte - 10;
-//					
-//					feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, yPos);
-//					feedbackPanel.show();
-//				}
-			}
-			
-		});
-		
-		//editor.getAsPanel().getElement().getStyle().setBackgroundColor("red");
-	//	mainPanel.add(editor.getAsPanel());
-		//mainPanel.setWidgetLeftRight(editor.getAsPanel(), 0, Style.Unit.PX, -100, Style.Unit.PX);
-//		mainPanel.add(checkPanel);
-//		mainPanel.setWidgetRightWidth(checkPanel, 0, Style.Unit.PX, 15, Style.Unit.PX);
 		editor.setCurrentElementRepaint();
 	}
 
-	public void zetMinBreedte(int b)
-	{
-		minBreedte = b;
-	}
 	
 	public void requestFocus()
 	{
@@ -282,9 +197,6 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		this.hasFeedback = hasFeedback;
 		this.check = check;
 		this.teltMee = teltMee;
-		this.randomVars = randomVars;
-		this.randomVarWaarden = randomValues;
-		this.formuleToolBijFocus = formuleToolBijFocus;
 		this.logOption = logOption;
 		this.logID = logID;
 		this.logObjectives = logObjectives;
@@ -306,52 +218,7 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 
 	}
 
-	public void setAnswerModel(int nr)
-	{
-		Map h = answerModels.get(nr);
-		if (h == null)
-			return;
-
-		String antwoordString = "$f@";
-		int puntenFeedback = 0;
-		String feedback = "";
-		int goedHalfFout = 0;
-
-		if (h != null)
-		{
-			if (h.containsKey("antwoordString"))
-				antwoordString = (String) h.get("antwoordString");
-			if (h.containsKey("puntenFeedback"))
-				puntenFeedback = ((Integer) h.get("puntenFeedback")).intValue();
-			if (h.containsKey("feedback"))
-				feedback = (String) h.get("feedback");
-			if (h.containsKey("goedHalfFout"))
-				goedHalfFout = ((Integer) h.get("goedHalfFout")).intValue();
-
-		}
-		try
-		{
-			antwoordString = FormuleParser.randomizeTekstVakString(antwoordString, randomVars, randomVarWaarden);
-		}
-		catch (Exception e)
-		{
-		}
-
-		try
-		{
-			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVars, randomVarWaarden);
-		}
-		catch (Exception e)
-		{
-			feedback = "$f???@";
-		}
-
-		this.goedHalfFout = goedHalfFout;
-		this.puntenFeedback = puntenFeedback;
-		//this.antwoordString = antwoordString;
-		this.feedback = feedback;
-
-	}
+	
 	
 	public void zetVarNamen(String[] namen)
 	{
@@ -394,16 +261,19 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		if (h.containsKey("errorCount"))
 			errorCount = ((Number) h.get("errorCount")).intValue();
 
-		this.ingevuld = ingevuld;
-		this.nagekeken = nagekeken;
+		//this.ingevuld = ingevuld;
+		//this.nagekeken = nagekeken;
 		this.attempts = attempts;
 		this.attemptsCount = attemptsCount;
 		this.errorCount = errorCount;
 		editor.clearAll();
 		editor.insert(antwoord);
-		
+		System.out.println("editor setState, antwoord geinsert");
 		if (ingevuld && (mode == 0 || nagekeken))
-			editor.kijkNa();
+		{	System.out.println("editor wordt nagekeken in setState..");
+			editor.kijkNa(true);
+		//met deze kijkNa komen ook de waarden voor ingevuld en nagekeken in de editor wel weer goed?
+		}
 	}
 
 	public HashMap<String, Object> getState()
@@ -417,9 +287,11 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 
 		editor.kijkNa(false);
 
-		ingevuld = this.ingevuld;
-		nagekeken = this.nagekeken;
+		ingevuld = editor.isIngevuld();
+		nagekeken = editor.isNagekeken();
 		antwoord = editor.toString();
+		
+		//TODO: deze info ook uit editor halen ipv uit this.
 		attempts = this.attempts;
 		attemptsCount = this.attemptsCount;
 		errorCount = this.errorCount;
@@ -515,23 +387,11 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 
 		correct = false;
 		score = 0;
-		nagekeken = false;
-		ingevuld = false;
+		//nagekeken = false;
+		//ingevuld = false;
 
 		attempts = new Vector();
 	}
-
-//	public void zetMaat()
-//	{
-//		setSize(Math.max(minBreedte, editor.getSize().width + 24), editor.getSize().height + 8);
-//		editor.setLocation(4, 4);
-//		feedbackButton.setBounds(getSize().width - 15, getSize().height - 12, 15, 15);
-//		ashoogte = editor.ashoogte + 4;
-//		if (getParent() instanceof FormuleElement)
-//			((FormuleElement) getParent()).zetMaat();
-//		if (getParent() instanceof TekstElement)
-//			((TekstElement) getParent()).zetMaat();
-//	}
 
 	
 	public void resize()
@@ -549,11 +409,6 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 	public FormuleEditor geefFormuleVak()
 	{
 		return editor;
-	}
-
-	public void zetTabletAan(boolean b)
-	{
-		tabletAan = b;
 	}
 
 	public int geefAsHoogte()
@@ -601,11 +456,9 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		return scoreMax;
 	}
 
-	public boolean isCorrect()
+	public Boolean isCorrect()
 	{
-		if (!teltMee)
-			return true;
-		return correct;
+		return editor.isCorrect();
 	}
 
 	public boolean isFout()
@@ -622,8 +475,8 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 
 	public void zetNagekeken(boolean b)
 	{
-		if (ingevuld)
-			nagekeken = b;
+		if (editor.isIngevuld())
+			editor.zetNagekeken(b);
 	}
 
 
@@ -641,151 +494,22 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		correct = false;
 	}
 
-	public void zetGoedFout(int uitslag)
-	{
-		if (uitslag == AntwoordVakChecker.GOED)
-			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-		else if (uitslag == AntwoordVakChecker.DOOR || uitslag == AntwoordVakChecker.HALF)
-			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
-		else if (uitslag == AntwoordVakChecker.FOUT)
-			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
-
-		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
-	}
-	
-	
-
-	public void setFeedback(String tekst, boolean closeable)
-	{
-//		feedbackTekst.setText("");
-//		feedbackTekst.setCloseable(closeable);
-//		feedbackTekst.setSize(200, 20);
-//		feedbackTekst.setText(tekst);
-//		feedbackTekst.resize();
-		//add(feedbackTekst);
-		//produceAction("feedback");
-	}
-
-//	public void activateFeedback(Component c)
-//	{
-//		Container parent = getParent();
-//		int x = parent.getLocation().x;
-//		int y = parent.getLocation().y;
-//		int h = parent.getSize().height;
-//		for (int i = 0; parent != null && i < 40; i++)
-//		{
-//			if (parent instanceof OpdrNavStruct)
-//			{
-//				int cx = Math.min(parent.getSize().width - c.getSize().width, x + 10);
-//				int cy = y + h + 10 > parent.getSize().height ? y - c.getSize().height - 10 : y + h + 10;
-//				c.setLocation(cx, cy);
-//				((OpdrNavStruct) parent).add(c, 0);
-//				parent.repaint();
-//				break;
-//			}
-//			else
-//			{
-//				parent = parent.getParent();
-//				x += parent.getLocation().x;
-//				y += parent.getLocation().y;
-//			}
-//		}
-//	}
-
-//	public void activateTablet()
-//	{
-//		Container parent = getParent();
-//		int x = parent.getLocation().x;
-//		int y = parent.getLocation().y;
-//		int h = parent.getSize().height;
-//		for (int i = 0; parent != null && i < 40; i++)
-//		{
-//			if (parent instanceof TabletOwner)
-//			{
-//				((TabletOwner) parent).addTablet(this, x + 20, y + h + 20);
-//				Tablet tablet = ((TabletOwner) parent).getTablet();
-//				int tx = Math.min(parent.getSize().width - tablet.getSize().width, x + 20);
-//				int ty = y + h + 20 + tablet.getSize().height > parent.getSize().height ? y - tablet.getSize().height - 10 : y + h + 20;
-//				tablet.setLocation(tx, ty);
-//				break;
-//			}
-//			else
-//			{
-//				parent = parent.getParent();
-//				if (parent == null)
-//					return;
-//				x += parent.getLocation().x;
-//				y += parent.getLocation().y;
-//			}
-//		}
-//
-//		//if(getParent().getParent()instanceof TabletOwner)((TabletOwner)getParent().getParent()).addTablet(antwoordFormuleVak,getLocation().x+20, getLocation().y+getSize().height-120);
-//		//else if(getParent().getParent().getParent() instanceof TabletOwner)((TabletOwner)getParent().getParent().getParent()).addTablet(antwoordFormuleVak,getLocation().x+20, getLocation().y+getSize().height+50);
-//		//else if(getParent().getParent().getParent().getParent() instanceof TabletOwner)((TabletOwner)getParent().getParent().getParent().getParent()).addTablet(antwoordFormuleVak,getLocation().x+20,getLocation().y+getSize().height+70);
-//		//else if(getParent().getParent().getParent().getParent().getParent() instanceof TabletOwner)((TabletOwner)getParent().getParent().getParent().getParent().getParent()).addTablet(antwoordFormuleVak,getLocation().x+20, getParent().getParent().getLocation().y+getSize().height+70);
-//		//else if(getParent().getParent().getParent().getParent().getParent().getParent() instanceof TabletOwner)((TabletOwner)getParent().getParent().getParent().getParent().getParent().getParent()).addTablet(antwoordFormuleVak,getLocation().x+20, getParent().getParent().getLocation().y+getSize().height+70);
-//	}
-
-//	public void zetTabletUser()
-//	{
-//		Container parent = getParent();
-//		for (int i = 0; parent != null && i < 40; i++)
-//		{
-//			if (parent instanceof TabletOwner)
-//			{
-//				((TabletOwner) parent).zetTabletUser(this);
-//				break;
-//			}
-//			else
-//			{
-//				parent = parent.getParent();
-//			}
-//		}
-//	}
-
-	
 	
 	public Panel asWidget()
 	{
 		return editor.getAsPanel();
 	}
 
-//	public void mousePressed(MouseEvent e)
-//	{
-//		editor.requestFocus();
-//		editor.zetOpEind();
-//		if (formuleToolBijFocus)
-//			activateTablet();
-//	}
 
-//	public void mouseClicked(MouseEvent e)
-//	{
-//		;
-//	}
-//
-//	public void mouseReleased(MouseEvent e)
-//	{
-//		;
-//	}
-//
-//	public void mouseEntered(MouseEvent e)
-//	{
-//		;
-//	}
-//
-//	public void mouseExited(MouseEvent e)
-//	{
-//		;
-//	}
 	
 	public boolean isIngevuld()
 	{
-		return ingevuld;
+		return editor.isIngevuld();
 	}
 	
 	public boolean isNagekeken()
 	{
-		return nagekeken;
+		return editor.isNagekeken();
 	}
 	
 	public void setCommunicationRoot(OpdrNavIF comRoot)
@@ -798,53 +522,5 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		}
 	}
 
-//	public void actionPerformed(ActionEvent e)
-//	{
-//		if (e.getSource() == editor && e.getActionCommand().equals("ingevuld"))
-//		{
-//			if (mode == 0 || mode == 1)
-//			{
-//				kijkNa();
-//				zetNagekeken(true);
-//				if (ingevuld)
-//					parent.produceAction("checked");
-//			}
-//		}
-//		else if (e.getSource() == editor && e.getActionCommand().equals("formChanged"))
-//		{
-//			if (feedbackTekst != null && getParent() == null && feedbackTekst.getParent() != null)
-//			{
-//				remove(feedbackTekst);
-//				parent.produceAction("feedbackWeg");
-//			}
-//			zetGoedFout(GEEN);
-//		}
-//		else if(e.getSource() == editor && e.getActionCommand().equals("zetMaat"))
-//			parent.resize();
-//		else if(e.getSource() == editor && e.getActionCommand().equals("focus"))
-//		{
-//			if(parent.rekenVakZichtbaar)
-//			{
-//				parent.rekenVak.geefHoofdEditor().zetFocusOplossingenRegel();
-//			}
-//		}
-//		else if (e.getSource() == feedbackButton)
-//		{
-//			feedbackTekst.setLocation(0, 0);
-//			feedbackPanel.setSize(feedbackTekst.getSize().width, feedbackTekst.getSize().height);
-//			feedbackPanel.add(feedbackTekst);
-//			this.activateFeedback(feedbackPanel);
-//			feedbackButton.setVisible(false);
-//		}
-//		else if (e.getSource() == feedbackTekst)
-//		{
-//			if (feedbackPanel.getParent() != null)
-//			{
-//				Container c = feedbackPanel.getParent();
-//				c.remove(feedbackPanel);
-//				c.repaint();
-//			}
-//			feedbackButton.setVisible(true);
-//		}
-//	}
+
 }

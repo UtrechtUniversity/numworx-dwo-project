@@ -316,11 +316,31 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	
 	@Override
 	public HashMap<String, Object> getState() {
-		return null;
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		if(rekenVakZichtbaar)
+		{	h = rekenVak.getState();
+		}
+		if(oplossingenRegelZichtbaar)
+		{
+			HashMap<String, Object> h1 = oplossingenVak.getState();
+			h.put("oplRegelState", h1);
+		}
+		return h;
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
+		if(h == null)
+			return;
+		if(rekenVakZichtbaar)
+			rekenVak.setState(h);
+		if(oplossingenRegelZichtbaar)
+		{	if(h.containsKey("oplRegelState"))
+			{
+				HashMap<String, Object> h1 = (HashMap<String, Object>) h.get("oplRegelState");
+				oplossingenVak.setState(h1);
+			}
+		}
 	}
 
 	@Override
@@ -335,7 +355,11 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 
 	@Override
 	public Boolean isCorrect() {
-		return Boolean.TRUE;
+		if(oplossingenRegelZichtbaar)
+			return oplossingenVak.isCorrect();
+		else
+		{	return rekenVak.isCorrect();
+		}
 	}
 
 	@Override

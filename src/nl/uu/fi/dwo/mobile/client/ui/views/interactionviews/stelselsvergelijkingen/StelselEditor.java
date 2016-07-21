@@ -217,7 +217,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			hoofdPanel.contentPanel.add(kinderen[i]);
 			stelselEditor.editor.clearAll();
 			stelselEditor.editor.insert(vergelijking.toString());
-			//editor.vulVak("$f"+ vergelijking.toString() + "@");
 			int xBegin = breedteVergelijkingen + stelselEditor.editor.getWidth()/2;
 			breedteVergelijkingen += stelselEditor.editor.getWidth() + 20; //+20 voor breedte van woordje 'of', moet misschien nog wat preciezer ingesteld.
 			stelselEditor.editor.clearAll();
@@ -393,10 +392,12 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		Vector<String> v = new Vector<String>();
 		for(int i = 0; i < getStapNr() + 1; i++)
 		{
-			if(viewers.get(i) != null && (i == 0 || !viewers.get(i).toString().equals("$f@"))) 
+			if(viewers.size() > i && viewers.get(i) != null && (i == 0 || !viewers.get(i).toString().equals("$f@"))) 
 			//	v.add("$f@");
 			//else 
 				v.add(viewers.get(i).toString());
+			else if(i == 0 && editor != null)
+				v.add(editor.toString());
 		}
 		if(kinderen != null)
 		{
@@ -534,141 +535,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		return aantalKinderen;
 	}
 	
-	
-	
-	public void kijkNa(int stapNr, boolean show, boolean backStep)
-	{
-		checkAntwoord();
 		
-		if (!ingevuld)
-		{
-			//if (show)
-			//	zetGoedFout(GEEN, -1);
-			if (editor.toString().equals("$f@") && show)
-			{
-//				remove(getFeedbackComponent());
-//				produceAction("feedbackWeg");
-			}
-			return;
-		}
-		
-		
-		else if (isGelijkwaardig)
-		{
-			
-		
-		if (bevatVoldoetNiet) // isGelijkwaardig && eindOplossingNodig
-		{
-			zetCorrectFoutStap(stapNr, false, false, false, "feedbackTekst02", show); // "Niet alle oplossingen voldoen aan de oorspronkelijke vergelijking. Verwijder de oplossingen die niet voldoen."
-		}
-		else if (isEindOplossing)
-		{
-			if (exactNodig)
-			{	if (isEindOplossingExact) // isGelijkwaardig &&
-											// eindOplossingNodig &&
-											// isEindOplossing &&
-											// exactNodig &&
-											// isEindOplossingExact
-				{	
-					//score = puntenGelijkwaardig + puntenEindOplossing + puntenSignificant + puntenExact;
-					correct = true;
-					if(hoofdPanel.geefHoofdEditor().zijnEditorOfKinderenCorrect())
-					{	//TODO: feedback maken voor als oplossingenvak niet aanwezig is.
-						if(hoofdPanel.geefAntwoordVak().oplossingenRegelZichtbaar)
-							zetCorrectFoutStap(stapNr, true, false, false, "feedbackTekst21a", show);// "Je hebt alle oplossingen gevonden, vul ze onderaan in."
-						else
-						{	score = scoreMax;
-							zetCorrectFoutStap(stapNr, true, false, false, "feedbackTekst21b", show);// "Je hebt alle oplossingen gevonden."
-						}
-						geefFocusDoor();
-					}
-					else
-					{	zetCorrectFoutStap(stapNr, true, false, false, "feedbackTekst22", show);// "Je hebt de oplossingen in deze tak gevonden, ga verder met een andere tak."
-						geefFocusDoor();
-					}
-				}
-			}
-			else
-			// isGelijkwaardig && eindOplossingNodig &&
-			// isEindOplossing && ! exactNodig
-			{	
-				//score = puntenGelijkwaardig + puntenEindOplossing;
-				correct = true;
-				score = scoreMax;
-				if(hoofdPanel.geefHoofdEditor().zijnEditorOfKinderenCorrect())
-				{	//TODO: feedback maken voor als oplossingenvak niet aanwezig is.
-					if(hoofdPanel.geefAntwoordVak().oplossingenRegelZichtbaar)
-						zetCorrectFoutStap(stapNr, true, false, false, "feedbackTekst21a", show);// "Je hebt alle oplossingen gevonden, vul ze onderaan in."
-					else
-						zetCorrectFoutStap(stapNr, true, false, false, "feedbackTekst21b", show);// "Je hebt alle oplossingen gevonden."
-					geefFocusDoor();
-				}
-				else
-				{	zetCorrectFoutStap(stapNr, true, false, false, "feedbackTekst22", show);// "Je hebt de oplossingen in deze tak gevonden, ga verder met een andere tak."
-					geefFocusDoor();
-				}
-
-			}
-		}
-		else
-		// niet isGelijkwaardig
-		{	if (isDeelOplossing)
-			{	if (bevatFouteOplossing) // !isGelijkwaardig && isDeelOplossing
-											// && bevatFouteOplossing
-				{
-					zetCorrectFoutStap(stapNr, false, true, false, "feedbackTekst01", show);// "Deze stap bevat correcte en niet correcte onderdelen. Verwijder of vervang de delen die niet correct zijn"
-				}
-				else
-				// !isGelijkwaardig && isDeelOplossing &&
-				// !bevatFouteOplossing
-				{
-					zetCorrectFoutStap(stapNr, false, true, false, "feedbackTekst07", show);// "Er ontbreken oplossingen. Vul aan."
-				}
-			}
-			else
-			// niet isDeelOplossing
-			{
-				zetCorrectFoutStap(stapNr, false, true, true, "", show);
-			}
-		}
-//		feedbackButton.setBounds(30, this.geefLaatsteFormuleVak().getY() + this.geefLaatsteFormuleVak().getHeight() + 5, 15, 15);
-//		if(!(getFeedbackComponent().getText().equals("") || getFeedbackComponent().getText().equals("\n")))
-//			feedbackButton.setVisible(true);
-		
-		if(backStep)
-			return;
-		
-		//TODO: opnemen dat je niet splitst als je alle oplossingen al hebt gevonden met deze laatste stap.
-		if ((mode == 0 || mode == 1) && hasFeedback && !correct)
-		{
-			splitsOfMaakStap(backStep, show, false);
-		}
-		else if ((mode == 0 || mode == 1) && !hasFeedback && isGelijkwaardig && (onafhankelijkNodig && !isEindOplossingStelsel || !isEindOplossing || exactNodig && !isEindOplossingExact))
-		{
-			splitsOfMaakStap(backStep, show, false);
-//			if (moetNogAfgerond)
-//				formuleVakken[stapNr].vulVak("$f" + gewensteEindOplossing.geefVergelijkingVar() + "\u2248@");
-		}
-		else
-		{	hoogte = bepaalHoogte();
-			hoofdPanel.plaatsEditors();
-		}
-		if ((mode == 2 || mode == 3) && !editor.toString().equals("$f@"))
-		{
-			VergelijkingMeerv antwoordIngevuld = FormuleParser.parseVergelijking(editor.toString());
-			if (antwoordIngevuld == null)
-			{
-				setFeedback(rb.feedbackTekst09());//, true);
-			}
-			else
-			{
-				splitsOfMaakStap(backStep, show, false);
-			}
-		}
-		}
-		
-	}
-	
 	public void geefFocusDoor()
 	{
 		if(hoofdPanel.geefHoofdEditor().zijnEditorOfKinderenCorrect())
@@ -735,15 +602,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		}
 	}
 	
-	public void zetCorrectFoutStap(int stapNr, boolean correct, boolean fout, boolean stapOk, String feedbackKey, boolean show)
-	{
-		this.correct = correct;
-		this.fout = fout;
-		//super.zetCorrectFoutStap(stapNr, correct, fout, stapOk, feedbackKey, show);
-		//if(show)
-		//	hoofdPanel.antwoordVak.produceAction("changed");
-	}
-	
 	public void splitsOfMaakStap(boolean backStep, boolean show, boolean setState)
 	{
 		if(FormuleParser.parseVergelijking("$f" + editor.toString() + "@") == null)
@@ -791,14 +649,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	public void setSizes(int kolomBreedte)
 	{
 		int h = hoogte;
-//		if(kinderen == null && !isHoofdEditor()) //Kinderen (met lijnen etc) door laten lopen tot onderrand
-//		{	System.out.println("hoofdPanel.contentPanel.getOffsetHeight: " + hoofdPanel.contentPanel.getOffsetHeight());
-//			System.out.println("this.getAsPanel.top: " + this.getAsPanel().getAbsoluteTop());
-//			System.out.println("hoofdPanel.contentPanel.top: " + hoofdPanel.contentPanel.getAbsoluteTop());
-//			
-//			h = Math.max(h, hoofdPanel.contentPanel.getOffsetHeight() - this.getAsPanel().getAbsoluteTop() + hoofdPanel.contentPanel.getAbsoluteTop()); 
-//			System.out.println("setSizes; hoogte = " + hoogte + " en berekendehoogte = " + h);
-//		}
 		breedte = geefBreedte(kolomBreedte);
 		this.getAsPanel().setPixelSize(geefBreedte(kolomBreedte), h);
 		if(kinderen != null)
@@ -815,6 +665,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		FormuleEditor hulpEditor = new FormuleEditor();
 		for(int i = 0; i < kinderen.length; i++)
 		{	hoofdPanel.contentPanel.setWidgetLeftWidth(kinderen[i], x, Style.Unit.PX, kinderen[i].getWidth(), Style.Unit.PX);
+			//als editor geen kinderen heeft, door laten lopen tot onderkant scrollpanel.
 			if(kinderen[i].heeftKinderen())
 				hoofdPanel.contentPanel.setWidgetTopHeight(kinderen[i], y, Style.Unit.PX, kinderen[i].getHeight(), Style.Unit.PX);
 			else
@@ -960,53 +811,12 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	}
 	
 	
-//	public void setNewScrollSize()
-//	{
-//		super.setNewScrollSize();
-//		this.scrollRectToVisible(aRect);
-//	}
-	/*
-	public void setNewScrollSize()
-    {   
-		//voorkomen dat al onderstaande gebeurt, of in elk geval scrollRectToVisible.
-		//Waarom wilde je dit voorkomen??
-    	//int maxX = 0; 
-        //int maxY = 0; 
-//        for(int i=0 ; i<contentPane.getComponentCount() ; i++)
-//        {   Component c = contentPane.getComponent(i);
-//            int b = c.getLocation().x + c.getSize().width;
-//            if(b>maxX) maxX = b;
-//            int h = c.getLocation().y + c.getSize().height + 20;
-//            if(h>maxY) maxY = h;
-//        }
-//        if(scrollHorizontal)
-//        {	contentPane.setPreferredSize(new Dimension(maxX,maxY));
-//        }
-//        else 
-//        {	contentPane.setPreferredSize(new Dimension(contentPane.getSize().width-20, maxY));
-//        }
-//        contentPane.scrollRectToVisible(new Rectangle(0,maxY-10, contentPane.getSize().width, maxY));
-//        contentPane.revalidate();
-//        contentPane.doLayout();
-        
-    }*/
-	
+
 	public boolean isHoofdEditor()
 	{
 		return this.equals(hoofdPanel.geefHoofdEditor());
 	}
 	
-	//kan weg? wordt niet aangeroepen
-//	public void maakStap()
-//	{
-//		if(heeftFocus)
-//			splitsOfMaakStap();
-//		else
-//		{
-//				StelselEditor editorMetFocus = vindKindMetFocus();
-//				editorMetFocus.splitsOfMaakStap();
-//		}
-//	}
 	
 	public void maakNakijkenAf(boolean backStep, boolean show, boolean setState)
 	{
@@ -1036,7 +846,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		return hoogte;
 	}
 	
-	public void stapTerug(boolean setState)
+	public void backStep(boolean setState)
 	{
 		if(heeftFocus)
 		{
@@ -1053,8 +863,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			{
 				//focus in meest linker kolom
 				if(parent.kinderen[0].heeftFocus)
-				{
-					for(int i = 0; i < parent.kinderen.length; i++)
+				{	for(int i = 0; i < parent.kinderen.length; i++)
 					{	hoofdPanel.contentPanel.remove(parent.kinderen[i]); 
 						hoofdPanel.contentPanel.remove(parent.pijlen[i].getCanvas());
 					}
@@ -1064,7 +873,9 @@ public class StelselEditor extends FormuleEditorWithSteps {
 					parent.pijlen = null;
 					parent.hoogte = parent.bepaalHoogte();
 					hoofdPanel.plaatsEditors();
+					parent.vervangViewerDoorEditor(setState);
 					parent.requestFocus();
+					
 				}
 				else
 				{
@@ -1083,7 +894,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		else
 		{
 			StelselEditor editorMetFocus = vindKindMetFocus();
-			//editorMetFocus.stapTerug();
+			editorMetFocus.backStep(setState);
 		}
 	}
 	

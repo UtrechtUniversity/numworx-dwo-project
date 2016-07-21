@@ -52,7 +52,7 @@ public class StelselRekenVak extends LayoutPanel  {
 	
 	public StelselRekenVak(StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
-		int hoogte = antwoordVak.hoogte - (antwoordVak.oplossingenRegelZichtbaar?27:0);//FIXME later 27 weer terugzetten, nu even wat speelruimte
+		int hoogte = antwoordVak.hoogte - (antwoordVak.oplossingenRegelZichtbaar?27:0);
 		this.setPixelSize(antwoordVak.breedte, hoogte);
 		contentPanel = new LayoutPanel();
 		contentPanel.getElement().getStyle().setBackgroundColor("white");
@@ -65,16 +65,8 @@ public class StelselRekenVak extends LayoutPanel  {
 		scrollPane.setWidget(contentPanel);
 		add(scrollPane);
 		
-		//scrollPane.setLocation(0,headerHoogte + marge);
-		//scrollPane.setBorder(BorderFactory.createEmptyBorder());
-		
 		this.antwoordVak = antwoordVak;
 		
-//		contentPanel = new JPanel();
-//		contentPanel.setLayout(null);
-//		contentPanel.setBounds(0, 0, getWidth(), getHeight() - 20);
-//		scrollPane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//		super.add(scrollPane);
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		Map<String, Object> launchState = null;
 		if(map.containsKey("interactiePanelLaunchState"))
@@ -85,7 +77,6 @@ public class StelselRekenVak extends LayoutPanel  {
 		contentPanel.add(hoofdEditor);
 		contentPanel.setWidgetLeftRight(hoofdEditor, -1, Style.Unit.PX, 0, Style.Unit.PX);
 		contentPanel.setWidgetTopHeight(hoofdEditor, 0, Style.Unit.PX, 100, Style.Unit.PX);
-		//hoofdEditor.setLocation(-1, 0);
 		headerPanel = hoofdEditor.getHeaderPanel();
 		add(headerPanel);
 		setWidgetLeftRight(headerPanel, 0, Style.Unit.PX, 2, Style.Unit.PX);
@@ -97,16 +88,6 @@ public class StelselRekenVak extends LayoutPanel  {
 			init(launchState, randomVarNamen, randomVarWaarden);
 		
 	}
-	
-//	public void setBounds(int x, int y, int b, int h)
-//	{
-//		super.setBounds(x, y, b, h);
-//		//contentPanel.setBounds(0, 30, b/2, 30);
-//		//scrollPane.setPreferredSize(new Dimension(b, h));
-//		scrollPane.setSize(b, h - headerHoogte - marge);
-//		hoofdEditor.setBounds(-1, 0, b, h - headerHoogte - marge);
-//		headerPanel.setBounds(0, 0, b, headerHoogte);
-//	}
 	
 	public void init(Map<String, Object> h, String[] randomVars, HashMap<String, Number> randomValues)
 	{
@@ -136,13 +117,6 @@ public class StelselRekenVak extends LayoutPanel  {
 	{
 		this.varNamen = varNamen;
 		hoofdEditor.zetVarNamen(varNamen);
-	}
-	
-	public void zetIC(Image ic)
-	{
-		this.ic = ic;
-		//contentPanel.add(ic, 0);
-		contentPanel.add(ic);
 	}
 	
 	public void setHeight(int h)
@@ -183,7 +157,6 @@ public class StelselRekenVak extends LayoutPanel  {
 	{
 		this.oplossingen = oplossingen;
 		hoofdEditor.zetOplossingen(oplossingen);
-		
 	}
 	
 	public void plaatsEditors()
@@ -194,30 +167,13 @@ public class StelselRekenVak extends LayoutPanel  {
 		if(hoofdEditor.heeftKinderen())
 			hoofdEditor.setLocations();
 		int h = hoofdEditor.geefHoogteEditorEnKinderen();
-		System.out.println("plaatsEditors; h = " + h + " en scrollPane.getOffsetHeight() = " + scrollPane.getOffsetHeight());
 		if(h > scrollPane.getOffsetHeight())
 			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 20, h);
 		else
 			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 3, scrollPane.getOffsetHeight());
 		contentPanel.setWidgetTopHeight(hoofdEditor, 0, Style.Unit.PX, hoofdEditor.geefHoogte(), Style.Unit.PX);
 		scrollPane.scrollToBottom();
-//		int x = 0;
-//		int y = 0;
-//		if(hoofdEditor.vindKindMetFocus() != null)
-//		{
-//			x = hoofdEditor.vindKindMetFocus().getAsPanel().getAbsoluteLeft() + 30;
-//			y = hoofdEditor.vindKindMetFocus().getAsPanel().getAbsoluteTop() + hoofdEditor.vindKindMetFocus().getEditor().getAsPanel().getAbsoluteTop();
-//			
-//		}
-		//contentPanel.revalidate();
-		//contentPanel.scrollRectToVisible(new Rectangle(x, y + 45, 1, 1));
-		//contentPanel.doLayout();
-		//headerPanel.setBounds(0, 0, getWidth(), headerHoogte);
-		//repaint();
-		//TODO: hier ook locaties pijlen regelen?
 	}
-	
-	
 	
 	public StelselAntwoordVak geefAntwoordVak()
 	{
@@ -277,9 +233,4 @@ public class StelselRekenVak extends LayoutPanel  {
 		
 	}
 	
-//	public Component add(Component c)
-//	{
-//		contentPanel.add(c);
-//		return c;
-//	}
 }
