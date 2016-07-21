@@ -41,7 +41,7 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
         //subtract 1 if null school is not to be displayed.
         if(prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.TEACHER.name()) 
                         || prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.SCHOOLADMIN.name())){
-            rows--;
+          rows--;
         }
                 
         data = new Object[rows][5];

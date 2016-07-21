@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.system.MD5;
@@ -367,11 +368,17 @@ public class AccountDataJPanel extends JPanel implements
                     prop.getUser().setInsertion(middlename.getText());
                     prop.getUser().setFamilyName(lastname.getText());
                     prop.getUser().setEmail(email.getText());
-                    if (!password.getText().equals("")
+                    if (password.getText().equals("")
                             && repassword.getText().equals(password.getText())) {
-                        //updates password following some logic.
+                        //leave password as it is
+                    } else if (!password.getText().equals("")
+                            && repassword.getText().equals(password.getText())){
                         prop.getUser().setPassword(MD5.getHashString(password.getText()));
-                    } 
+                    }else{
+                        //warn
+                        GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_SECOND_PASSWORD));
+                        return;
+                    }
                     prop.Update();
                     oldpassword.setText("");
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
@@ -382,8 +389,8 @@ public class AccountDataJPanel extends JPanel implements
             } else {
                 GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
             }
-        } 
-        else if (e.getSource() == deleteButton) {
+        }
+       else if (e.getSource() == deleteButton) {
             /* Delete the user account */
             while (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
                     + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {

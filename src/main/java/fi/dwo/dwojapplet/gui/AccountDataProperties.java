@@ -1,10 +1,12 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
+import java.util.Base64;
 import java.util.logging.Logger;
 
 /**
@@ -47,6 +49,9 @@ public class AccountDataProperties {
     public void Update() throws Dwo2Exception{
             user = SecureUserAccountManager.updateAccountData(user);
             // update local Global storage.
+            String authString = user.getUserName() + ":" + user.getPassword();
+            authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
+            StoredRestManager.setBasicAuthString(authString);
             DwoHelper.updateCurrentUser(user);
             //TODO above method currently updates the login date, this should not occur for this function.
             
