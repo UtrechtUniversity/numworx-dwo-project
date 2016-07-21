@@ -83,7 +83,15 @@ class ClassTeacherPanelTableModel extends AbstractTableModel {
      */
     @Override
     public Class getColumnClass(int c) {
-        return getValueAt(0, c).getClass();
+        switch(c) {
+            case 0:
+                return String.class;
+            case 6:
+                return DomSchoolClass.class;
+            default:
+                return Image.class;
+                
+        }
     }
 
     /*

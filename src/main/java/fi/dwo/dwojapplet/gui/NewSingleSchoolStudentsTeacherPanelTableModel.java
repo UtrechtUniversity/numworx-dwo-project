@@ -102,24 +102,9 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
      */
     @Override
     public Class getColumnClass(int c) {
-        switch (c) {
-            case 0:
-                return String.class;
-            case 1:
-                return String.class;
-            case 2:
-                return String.class;
-            case 3:
-                return String.class;
-            case 4:
-                return String.class;
-            case 5:
-                return String.class;
-            case 6:
-                return Image.class;
-            default:
-                return DomSingleSchoolStudent.class;
-        }
+    	if( getRowCount() > 0)
+    		return getValueAt(0, c).getClass();
+    	return super.getColumnClass(c);
     }
 
     /*

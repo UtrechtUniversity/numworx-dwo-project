@@ -70,7 +70,9 @@ class SchoolClassRegistrationStudentTableModel extends AbstractTableModel {
      */
     @Override
     public Class getColumnClass(int c) {
-        return getValueAt(0, c).getClass();
+    	if( getRowCount() > 0)
+    		return getValueAt(0, c).getClass();
+    	return super.getColumnClass(c);
     }
 
     /*
