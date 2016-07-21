@@ -59,7 +59,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         init(user);
         control = new SchoolClassStudentController(this, user);
 //        addSchoolClassPanel = new AddSchoolClassStudentPanel(user, control);
-        control.init(user);
+//        control.init(user); wordt al in constructor gedaan.
 
     }
 
@@ -147,11 +147,12 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                                     //fail and reset all the data.
                                     Window.alert(t.getMessage());
                                     //TODO Wim
-                                    Window.alert("wim handles error here.");
+                                    //Window.alert("wim handles error here.");
                                 }
 
                                 @Override
                                 public void onSuccess(Boolean result) {
+                                	popup.hide();
                                     resetLogin.execute();
                                 }
                             });
@@ -164,7 +165,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                                     //fail and reset all the data.
                                     Window.alert(t.getMessage());
                                     //TODO Wim
-                                    Window.alert("wim handles error here.");
+                                    //Window.alert("wim handles error here.");
                                 }
 
                                 @Override
@@ -181,9 +182,11 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                                         @Override
                                         public void onSuccess(DomSchoolClass result) {
                                             if (result == null || result.getId().equals(DwoGlobalVars.getInstance().getCurrentSchoolClass().getId())) {
+                                            	popup.hide();
                                                 resetLogin.execute();
-                                            }
-                                            control.updateStudentsSchoolClassesInView();
+                                                // no need to update schoolclassses.
+                                            } else
+                                            	control.updateStudentsSchoolClassesInView();
                                         }
                                     });
                                 }
