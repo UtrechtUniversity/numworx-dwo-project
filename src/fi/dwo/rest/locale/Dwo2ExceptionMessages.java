@@ -2,7 +2,7 @@ package fi.dwo.rest.locale;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/Users/peterboon/Documents/workspace-luna/DWO-gwt-lib/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
+ * 	'/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
  */
 public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
@@ -149,6 +149,33 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   @DefaultStringValue("Invalid authentication details.")
   @Key("Dwo2ExceptionCode.User_AuthenticationError")
   String Dwo2ExceptionCode_User_AuthenticationError();
+
+  /**
+   * Translated "Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?".
+   * 
+   * @return translated "Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?"
+   */
+  @DefaultStringValue("Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?")
+  @Key("Dwo2ExceptionCode.User_ConfirmPasswordSwitch")
+  String Dwo2ExceptionCode_User_ConfirmPasswordSwitch();
+
+  /**
+   * Translated "Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?".
+   * 
+   * @return translated "Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?"
+   */
+  @DefaultStringValue("Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?")
+  @Key("Dwo2ExceptionCode.User_ConfirmRoleSwitch")
+  String Dwo2ExceptionCode_User_ConfirmRoleSwitch();
+
+  /**
+   * Translated "Ensure that you have closed all your DWO-applications before continuing to prevent data loss. Continue?".
+   * 
+   * @return translated "Ensure that you have closed all your DWO-applications before continuing to prevent data loss. Continue?"
+   */
+  @DefaultStringValue("Ensure that you have closed all your DWO-applications before continuing to prevent data loss. Continue?")
+  @Key("Dwo2ExceptionCode.User_ConfirmSchoolClassSwitch")
+  String Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch();
 
   /**
    * Translated "Illegal REST-request, the details of this action are logged.".
