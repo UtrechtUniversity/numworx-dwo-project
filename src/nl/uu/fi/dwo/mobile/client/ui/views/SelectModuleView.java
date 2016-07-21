@@ -24,5 +24,8 @@ public interface SelectModuleView extends IsWidget
 	public HasTapHandlers getBackBtn();
 	public HasCellSelectedHandler getList();
 	public void setLogout(boolean b);
+	
+	void setMenuWidget(IsWidget w);    
+
 
 }

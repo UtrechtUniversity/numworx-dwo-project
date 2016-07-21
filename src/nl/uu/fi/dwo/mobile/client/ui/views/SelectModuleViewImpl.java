@@ -20,6 +20,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -182,5 +183,10 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView,
 		this.gotoHandler = cellSelectedHandler;
 		return list.addCellSelectedHandler(cellSelectedHandler);
 	}
-	
+
+	@Override
+	public void setMenuWidget(IsWidget w) {
+		header.setRightWidget(Widget.asWidgetOrNull(w));
+	}
+
 }

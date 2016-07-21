@@ -33,6 +33,8 @@ public class FlatModuleActivity extends MGWTAbstractActivity {
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		final SelectModuleView view = clientFactory.getHomeView();
+		if(true)
+			view.setMenuWidget(clientFactory.getMenuWidget());
 
 		currentModel = SelectModuleItemHolder.getItems();
 		if(item == null || item == SelectModuleItem.ROOT)

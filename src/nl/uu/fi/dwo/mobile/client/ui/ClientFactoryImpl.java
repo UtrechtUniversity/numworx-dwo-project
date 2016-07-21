@@ -4,10 +4,8 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_MC2mAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
-import nl.uu.fi.dwo.mobile.client.ui.user.UserBar;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
@@ -138,28 +136,18 @@ public class ClientFactoryImpl implements ClientFactory
 		SCORM_guest api;
 		if(profiledata == null) {
 			api = new SCORM_guest();
-			menuWidget = null;
 		} else {
 			Integer userID = (Integer) profiledata.get("userID");
-			getUserBar().setProfile(profiledata);
 			api = new SCORM_DWOmAccess(userID.intValue());
 		}
 		return api;
 	}
 
-	protected UserBar menuWidget;
 	
 	@Override
 	public IsWidget getMenuWidget() {
-		return getUserBar();
+		return null;
 	}
-
-	protected UserBar getUserBar() {
-		if (menuWidget == null) 
-			menuWidget = new UserBar();
-		return menuWidget;
-	}
-
 
 	public IsWidget getLogoutWidget() {
 		return logoutWidget;

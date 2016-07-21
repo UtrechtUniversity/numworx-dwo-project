@@ -3,7 +3,9 @@ package nl.uu.fi.dwo.mobile.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
-public class DWO2playerDefaults extends DWOplayerDefaults {
+import fi.dwo.gwt.lib.rest.DwoConstants;
+
+public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstants {
 
 	public DWO2playerDefaults() {
 		super(null);
@@ -25,6 +27,13 @@ public class DWO2playerDefaults extends DWOplayerDefaults {
 
 	private String getDefaultHost() {
 		return "dummytwo.dwo.nl";
+	}
+
+	@Override
+	public String server() {
+		String host = getHost();
+		String http = Window.Location.getProtocol();
+		return http + "//" + host + "/dwo/rest/";
 	}
 
 }

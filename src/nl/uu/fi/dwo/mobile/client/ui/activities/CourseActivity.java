@@ -37,6 +37,9 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 	{
 		DWOplayer.api = clientFactory.setupAPI(DWOplayer.profiledata);
 		final SelectModuleView view = clientFactory.getHomeView();
+		if(true)
+			view.setMenuWidget(clientFactory.getMenuWidget());
+
 		view.setLogout(true); // terug of logout
 		final Place next = 
 				new LoginPlace(

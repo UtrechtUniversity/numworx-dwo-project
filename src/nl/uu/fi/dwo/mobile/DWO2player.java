@@ -4,28 +4,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.account.client.UserBar;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO2;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.IsWidget;
 
+import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
+import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
+import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.rest.persistence.PersistenceClassType;
 import fi.dwo.rest.persistence.PersistenceId;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class DWO2player extends DWOplayer implements EntryPoint {
 
@@ -42,6 +53,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		@Override
 		public void onSuccess(DomUserFull result) {
 			
+				DwoGlobalVars.getInstance().setCurrentUser(result);
 				toProfile(result, profile);
 				schoolManager.getSchoolLogins(new AsyncCallback<DomSchoolsRolesAndClasses>() {
 
@@ -67,14 +79,40 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	}
 
 	public DWO2player() {
-
+        //Initialize an Exception translator.
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
+        
+        getUserBar().setResetLogin(new Command() {
+        	Place place = new LoginPlace(); // FIXME met een hash?
+        	
+			@Override
+			public void execute() {
+				clientfactory.getPlaceController().goTo(place);
+			}
+        	
+        });
+        
+        
 	}
 	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
+	private UserBar userBar = new UserBar();
+
+	protected UserBar getUserBar() {
+		return userBar;
+	}
 
 	
 	protected ClientFactory createClientFactory() {
 		ClientFactoryImpl factory = new ClientFactoryImpl() { 
 			
+			private IsWidget  menuWidget;
+			@Override
+			public IsWidget getMenuWidget() {
+				return menuWidget;
+			}
+
+
+
 			public SCORM_guest setupAPI(final Map<String, Object> profiledata) {
 				SCORM_guest api;
 				if(profiledata == null) {
@@ -84,7 +122,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					Object userID = profiledata.get("userID");
 					Object sgID = profiledata.get("schoolGroupID");
 					api = new SCORM_DWO2(userID, sgID);
-					getUserBar().setProfile(profiledata);
+					//getUserBar().setProfile(profiledata);
+					menuWidget = getUserBar();
 				}
 				return api;
 			}
@@ -92,7 +131,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		};
 		String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
-		final SecuredUserAccountManager accountManager = new SecuredUserAccountManager(http + "//" + host + "/dwo/rest/");
+		final SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
 		final SecuredUserSchoolLoginManager schoolManager = new SecuredUserSchoolLoginManager();
 		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwo/xmlrpc"){
 
@@ -183,6 +222,17 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		profile.put("class", active.getSchoolClassName());
 		profile.put("groupID", instance.idOf(active.getRoleId(), PersistenceClassType.PersistentRole));
 		profile.put("schoolGroupID", instance.idOf(sgId, PersistenceClassType.PersistentSchoolGroup));
+		DomSchoolClass schoolClass = null;
+		if(classId != null) {
+			schoolClass = new DomSchoolClass();
+			schoolClass.setId(classId);
+			schoolClass.setSchoolClassName(active.getSchoolClassName());
+			schoolClass.setHasRegKey(Boolean.TRUE); // unknown?
+		}
+		DwoGlobalVars.instance().setCurrentSchoolClass(schoolClass);
+		RoleType role = RoleType.NONE;
+		try { role = RoleType.valueOf(active.getRoleName()); } catch(Exception ignore) {}
+		getUserBar().setRole(role);
 	}
 
 	void toProfile(DomUserFull result, Map<String, Object> profile) {

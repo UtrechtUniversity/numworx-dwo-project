@@ -38,7 +38,7 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		view = clientFactory.getTreeModuleView();
-		if(false)
+		if(true)
 			view.setMenuWidget(clientFactory.getMenuWidget());
 		boolean select = true;
 		if(item.getType() == Type.MODULE && DWOplayer.profiledata != null) {
