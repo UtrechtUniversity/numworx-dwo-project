@@ -353,7 +353,6 @@ public class AccountDataFullUserJPanel extends JPanel implements
             email.setText(user.getEmail());
         }
         else if (e.getSource() == changeButton) {
-            
             if (prop.getUser().getPassword().equals(MD5.getHashString(oldpassword.getText()))) {
                 //update the data
                 try {
@@ -361,10 +360,16 @@ public class AccountDataFullUserJPanel extends JPanel implements
                     prop.getUser().setInsertion(middlename.getText());
                     prop.getUser().setFamilyName(familyname.getText());
                     prop.getUser().setEmail(email.getText());
-                    if (!password.getText().equals("")
+                    if (password.getText().equals("")
                             && repassword.getText().equals(password.getText())) {
-                        //updates password following some logic.
+                        //leave password as it is
+                    } else if (!password.getText().equals("")
+                            && repassword.getText().equals(password.getText())){
                         prop.getUser().setPassword(MD5.getHashString(password.getText()));
+                    }else{
+                        //warn
+                        GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_SECOND_PASSWORD));
+                        return;
                     }
                     prop.Update();
                     oldpassword.setText("");
@@ -375,7 +380,29 @@ public class AccountDataFullUserJPanel extends JPanel implements
                 }
             } else {
                 GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
-            }
+            }            
+//            if (prop.getUser().getPassword().equals(MD5.getHashString(oldpassword.getText()))) {
+//                //update the data
+//                try {
+//                    prop.getUser().setGivenName(firstname.getText());
+//                    prop.getUser().setInsertion(middlename.getText());
+//                    prop.getUser().setFamilyName(familyname.getText());
+//                    prop.getUser().setEmail(email.getText());
+//                    if (!password.getText().equals("")
+//                            && repassword.getText().equals(password.getText())) {
+//                        //updates password following some logic.
+//                        prop.getUser().setPassword(MD5.getHashString(password.getText()));
+//                    }
+//                    prop.Update();
+//                    oldpassword.setText("");
+//                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
+//                }
+//                catch (Dwo2Exception ex) {
+//                    GuiCreator.instance().ShowErrorDialog(this, ex);
+//                }
+//            } else {
+//                GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
+//            }
         }
         else if (e.getSource() == deleteButton) {
             /* Delete the user account */
