@@ -9,6 +9,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -17,12 +18,15 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
+
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.locale.DwoLocalesForGWT;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
 
 /**
@@ -40,7 +44,8 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     private Button closeBtn;
     CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
     ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
-
+    Command resetLogin;
+    
     public PopupPanel getPopup() {
         return popup;
     }
@@ -49,7 +54,8 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         this.popup = popup;
     }
 
-    SchoolClassStudentPanel(DomUserFull user) {
+    SchoolClassStudentPanel(Command resetLogin, DomUserFull user) {
+    	this.resetLogin = resetLogin;
         init(user);
         control = new SchoolClassStudentController(this, user);
 //        addSchoolClassPanel = new AddSchoolClassStudentPanel(user, control);
@@ -58,7 +64,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     }
 
     public void init(DomUserFull user) {
-        this.setSize("400", "500");
+        //this.setSize("400", "500");
 
         //control.getSchoolClasses();
 //        Grid g = new Grid(control.getSchoolClasses().size() + 1, 3);
@@ -146,8 +152,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
                                 @Override
                                 public void onSuccess(Boolean result) {
-                                    //TODO Wim
-                                    Window.alert("wim calls a new login here.");
+                                    resetLogin.execute();
                                 }
                             });
                             break;
@@ -176,7 +181,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                                         @Override
                                         public void onSuccess(DomSchoolClass result) {
                                             if (result == null || result.getId().equals(DwoGlobalVars.getInstance().getCurrentSchoolClass().getId())) {
-                                                Window.alert("wim calls a new login here in case new.");
+                                                resetLogin.execute();
                                             }
                                             control.updateStudentsSchoolClassesInView();
                                         }
@@ -230,7 +235,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
             AddSchoolClassStudentPanel panel = new AddSchoolClassStudentPanel(DwoGlobalVars.instance().getCurrentUser(), control);
             control.setAddSchoolClassView(panel);
             panel.setPopup(popup);
-            panel.setSize("300", "200");
+            //panel.setSize("300", "200");
             popup.add(panel);
             popup.center();
             popup.show();
