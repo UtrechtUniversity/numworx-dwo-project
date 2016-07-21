@@ -77,12 +77,14 @@
                     <runTarget>${project.artifactId}.html</runTarget>
 <!--                    <warSourceDirectory>war</warSourceDirectory>        -->
                     <compileSourcesArtifacts> 
-                        <compileSourcesArtifact>fi.dwo.rest:DWO-rest-lib-working-gert</compileSourcesArtifact>
+                        <compileSourcesArtifact>fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact>
                         <!--                        <compileSourcesArtifact>fi.dwo.rest:DWO-gwt-lib</compileSourcesArtifact> -->
                     </compileSourcesArtifacts> 
 
-                        <i18nMessagesBundles>
-                        <i18nMessagesBundle>fi.dwo.rest.locale.Dwo2ExceptionMessages</i18nMessagesBundle>                          
+                        <i18nConstantsWithLookupBundles>
+                        <i18nConstantsWithLookupBundle>fi.dwo.rest.locale.Dwo2ExceptionMessages</i18nConstantsWithLookupBundle>
+                        </i18nConstantsWithLookupBundles>
+                        <i18nMessagesBundles>                        
                         <i18nMessagesBundle>fi.dwo.rest.locale.DwoLocaleMessages</i18nMessagesBundle>                          
                     </i18nMessagesBundles>
                     <!-- And the generated sources should be generated in our src dir -->
