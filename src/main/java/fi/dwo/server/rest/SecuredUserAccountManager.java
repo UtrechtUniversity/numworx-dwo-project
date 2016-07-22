@@ -26,16 +26,21 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.annotation.security.PermitAll;
 import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 /**
@@ -115,6 +120,34 @@ public class SecuredUserAccountManager {
         return user;
     }
 
+    /**
+     * Returns the currentUser. The information is extracted from the security
+     * context.
+     *
+     * @param sc security context
+     * @param user use this name or fail
+     * @return Returns null if there was an error.
+     */
+    @GET
+    @Path("/loginUser/{user}")
+    public Response loginUser(@Context SecurityContext sc, @PathParam("user") String user) 
+    {
+    	Response result;
+    	DomUserFull domUser = loginUser(sc);
+    	String domUserName = domUser.getUserName();
+    	if(domUserName.equals(user))
+    	{
+    		result = Response.ok().
+    				type(MediaType.APPLICATION_JSON_TYPE).
+    				entity(domUser).build();
+    	} else {
+    		result = Response.status(Response.Status.UNAUTHORIZED).
+    				header("WWW-Authenticate", "Basic realm=\"dwo.nl\'").
+    				build();			
+    	}	
+    	return result;
+    }
+  
     /**
      * Returns the currentUser. The information is extracted from the security
      * context.
