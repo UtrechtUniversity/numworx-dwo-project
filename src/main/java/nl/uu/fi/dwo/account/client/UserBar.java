@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.account.client;
 
+import java.util.MissingResourceException;
+
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
@@ -98,7 +100,11 @@ public class UserBar extends Composite implements Command {
 	}
 	
 	private void setStatus() {
-		String rolename = role.toString(); // FIXME i18n
+		String rolename = role.name();
+		try {
+			rolename = DwoLocalesForGWT.instance.getString(rolename);
+		} catch (MissingResourceException e) {
+		}
 		display = DwoGlobalVars.getInstance().getCurrentUser().getDisplayName();
 
 		status.setText(rolename + " " + display);
