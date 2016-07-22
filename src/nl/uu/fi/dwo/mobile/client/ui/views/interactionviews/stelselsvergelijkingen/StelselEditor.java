@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Visibility;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -184,7 +185,8 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		
 		for(int i = 0; i < k; i++)
 		{
-			StelselEditor stelselEditor = new StelselEditor(this, h, randomVarNamen, randomVarWaarden, avChecker);
+			AntwoordStelselVakChecker newAvChecker = new AntwoordStelselVakChecker((AntwoordStelselVakChecker) avChecker);
+			StelselEditor stelselEditor = new StelselEditor(this, h, randomVarNamen, randomVarWaarden, newAvChecker);
 			Vergelijking vergelijking = vergelijkingen.geefVergelijking(i);
 			int teller = 0;
 			for(int j = 0; j < oplossingen.length; j++)
@@ -396,7 +398,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			//	v.add("$f@");
 			//else 
 				v.add(viewers.get(i).toString());
-			else if(i == 0 && editor != null)
+			else if(editor != null)
 				v.add(editor.toString());
 		}
 		if(kinderen != null)
@@ -430,7 +432,8 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		else
 		{
 			int stapNr = getStapNr();
-			if(stapNr > 0 && (viewers.get(stapNr) == null || viewers.get(stapNr).toString().equals("$f@")))
+			//is dit handig?
+			if(stapNr > 0 && (viewers.size() < stapNr + 1 && (editor == null || editor.toString().equals("$f@"))))
 				stapNr--;
 			v.add(stapNr);
 		}
@@ -606,7 +609,9 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	{
 		if(FormuleParser.parseVergelijking("$f" + editor.toString() + "@") == null)
 			return;
-		if(isGelijkwaardig && FormuleParser.parseVergelijking("$f" + editor.toString() + "@").geefAantal() > 1)
+		if(parent != null)
+			parent.latest_answer_viewer.showResult(FormuleViewer.NONE);
+		if(isGelijkwaardig && editor.getGoedHalfFout() != AntwoordVakChecker.GOED && FormuleParser.parseVergelijking("$f" + editor.toString() + "@").geefAantal() > 1)
 			splits();
 		else
 		{	
@@ -659,7 +664,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	
 	public void setLocations()
 	{
-		int x = this.getAsPanel().getAbsoluteLeft() - hoofdPanel.contentPanel.getAbsoluteLeft();
+		int x = this.getAsPanel().getAbsoluteLeft() - hoofdPanel.contentPanel.getAbsoluteLeft() - 1;
 		int y = this.getAsPanel().getAbsoluteTop() - hoofdPanel.contentPanel.getAbsoluteTop() + hoogte;
 		int breedteVergelijkingen = x;// + geefLaatsteFormuleVak().getX();
 		FormuleEditor hulpEditor = new FormuleEditor();
@@ -829,9 +834,10 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			isGelijkwaardig = true;
 		else
 			isGelijkwaardig = false;
+		
 		if(heeftFocus)
 			splitsOfMaakStap(backStep, show, setState);
-		else
+		else 
 		{
 			StelselEditor editorMetFocus = vindKindMetFocus();
 			editorMetFocus.splitsOfMaakStap(backStep, show, setState);

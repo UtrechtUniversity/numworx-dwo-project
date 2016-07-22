@@ -92,6 +92,17 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
         this.scoreMax = scoreMax;
     }
 	
+	public AntwoordStelselVakChecker(AntwoordStelselVakChecker avChecker)
+	{
+		randomVarNamen = avChecker.randomVarNamen;
+		randomVarWaarden = avChecker.randomVarWaarden;
+		answerModels = avChecker.answerModels;
+		hasFeedback = avChecker.hasFeedback;
+		scoreMax = avChecker.scoreMax;
+		varNamen = avChecker.varNamen;
+		juisteOplossingen = avChecker.juisteOplossingen;
+	}
+	
 	//gebruiken voor antwoorden uit StelselOplossingenVak
 	public HashMap checkAnswer(String answer) throws RestartException
 	{	this.score = 0;

@@ -345,7 +345,10 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 
 	@Override
 	public int getScore() {
-		return 0;
+		if(oplossingenRegelZichtbaar)
+			return oplossingenVak.getScore();
+		else
+			return rekenVak.getScore();
 	}
 
 	@Override

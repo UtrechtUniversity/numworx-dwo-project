@@ -430,7 +430,7 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 	{
 		if (!teltMee)
 			return 0;
-		return score;
+		return editor.getScore();
 	}
 
 	public int[][] getScoreObjectives()

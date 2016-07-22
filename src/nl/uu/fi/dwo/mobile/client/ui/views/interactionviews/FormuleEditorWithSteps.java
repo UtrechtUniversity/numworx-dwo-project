@@ -106,7 +106,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	protected ArrayList<FormuleViewer> viewers = new ArrayList<FormuleViewer>();
 	protected FormuleEditorWithAnswer editor = null;
 	private FormuleViewer prefixViewer;
-	private FormuleViewer latest_answer_viewer;
+	protected FormuleViewer latest_answer_viewer;
 	private ScrollPanel sp = null;
 	protected AntwoordVakChecker avChecker = null;
 	
