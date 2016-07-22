@@ -8,7 +8,9 @@
 	<classpathentry kind="lib" path="lib/xmlrpc.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/oauth-20100601.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/oauth-provider-20100601.jar"/>
-	<classpathentry kind="lib" path="lib/RestRpcGWT-classes.jar"/>
+	<classpathentry kind="lib" path="lib/DWO-rest-lib-2.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/DWO-gwt-lib.jar"/>
+	<classpathentry kind="lib" path="lib/Account-0.0.1-SNAPSHOT-classes.jar"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
