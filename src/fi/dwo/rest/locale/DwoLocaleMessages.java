@@ -1,17 +1,26 @@
 package fi.dwo.rest.locale;
 
 /**
- * Interface to represent the messages contained in resource bundle:
- * 	/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/DwoLocaleMessages.properties'.
+ * Interface to represent the constants contained in resource bundle:
+ * 	'C:/Users/wim/workspace-luna/DWO-gwt-lib/src/fi/dwo/rest/locale/DwoLocaleMessages.properties'.
  */
-public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
+public interface DwoLocaleMessages extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
+  /**
+   * Translated "Administrator".
+   * 
+   * @return translated "Administrator"
+   */
+  @DefaultStringValue("Administrator")
+  @Key("ADMIN")
+  String ADMIN();
+
   /**
    * Translated "An incorrect password was given.".
    * 
    * @return translated "An incorrect password was given."
    */
-  @DefaultMessage("An incorrect password was given.")
+  @DefaultStringValue("An incorrect password was given.")
   @Key("GUI.AnIncorrectPasswordWasGiven")
   String GUI_AnIncorrectPasswordWasGiven();
 
@@ -20,7 +29,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "cancel"
    */
-  @DefaultMessage("cancel")
+  @DefaultStringValue("cancel")
   @Key("GUI.Button.Cancel")
   String GUI_Button_Cancel();
 
@@ -29,7 +38,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "ok    "
    */
-  @DefaultMessage("ok    ")
+  @DefaultStringValue("ok    ")
   @Key("GUI.Button.Ok")
   String GUI_Button_Ok();
 
@@ -38,7 +47,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "update"
    */
-  @DefaultMessage("update")
+  @DefaultStringValue("update")
   @Key("GUI.Button.Update")
   String GUI_Button_Update();
 
@@ -47,7 +56,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "delete"
    */
-  @DefaultMessage("delete")
+  @DefaultStringValue("delete")
   @Key("GUI.Delete")
   String GUI_Delete();
 
@@ -56,7 +65,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "email address"
    */
-  @DefaultMessage("email address")
+  @DefaultStringValue("email address")
   @Key("GUI.Email")
   String GUI_Email();
 
@@ -65,7 +74,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "family name"
    */
-  @DefaultMessage("family name")
+  @DefaultStringValue("family name")
   @Key("GUI.FamilyName")
   String GUI_FamilyName();
 
@@ -74,7 +83,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "given name"
    */
-  @DefaultMessage("given name")
+  @DefaultStringValue("given name")
   @Key("GUI.GivenName")
   String GUI_GivenName();
 
@@ -83,7 +92,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "insertion"
    */
-  @DefaultMessage("insertion")
+  @DefaultStringValue("insertion")
   @Key("GUI.Insertion")
   String GUI_Insertion();
 
@@ -92,7 +101,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "login"
    */
-  @DefaultMessage("login")
+  @DefaultStringValue("login")
   @Key("GUI.Login")
   String GUI_Login();
 
@@ -101,7 +110,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "My Profile"
    */
-  @DefaultMessage("My Profile")
+  @DefaultStringValue("My Profile")
   @Key("GUI.MyProfile")
   String GUI_MyProfile();
 
@@ -110,7 +119,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "My schoolclasses"
    */
-  @DefaultMessage("My schoolclasses")
+  @DefaultStringValue("My schoolclasses")
   @Key("GUI.MySchoolClasses")
   String GUI_MySchoolClasses();
 
@@ -119,7 +128,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "My school logins"
    */
-  @DefaultMessage("My school logins")
+  @DefaultStringValue("My school logins")
   @Key("GUI.MySchoolLogins")
   String GUI_MySchoolLogins();
 
@@ -128,7 +137,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "new password"
    */
-  @DefaultMessage("new password")
+  @DefaultStringValue("new password")
   @Key("GUI.NewPassword")
   String GUI_NewPassword();
 
@@ -137,7 +146,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "new password again"
    */
-  @DefaultMessage("new password again")
+  @DefaultStringValue("new password again")
   @Key("GUI.NewPasswordAgain")
   String GUI_NewPasswordAgain();
 
@@ -146,7 +155,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "new login"
    */
-  @DefaultMessage("new login")
+  @DefaultStringValue("new login")
   @Key("GUI.NewSchoolLogin")
   String GUI_NewSchoolLogin();
 
@@ -155,7 +164,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "No user is signed in."
    */
-  @DefaultMessage("No user is signed in.")
+  @DefaultStringValue("No user is signed in.")
   @Key("GUI.NoUserIsSignedIn")
   String GUI_NoUserIsSignedIn();
 
@@ -164,7 +173,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "password"
    */
-  @DefaultMessage("password")
+  @DefaultStringValue("password")
   @Key("GUI.Password")
   String GUI_Password();
 
@@ -173,7 +182,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "role name"
    */
-  @DefaultMessage("role name")
+  @DefaultStringValue("role name")
   @Key("GUI.RoleName")
   String GUI_RoleName();
 
@@ -182,7 +191,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "schoollogin"
    */
-  @DefaultMessage("schoollogin")
+  @DefaultStringValue("schoollogin")
   @Key("GUI.SchoolLogin")
   String GUI_SchoolLogin();
 
@@ -191,7 +200,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "school name"
    */
-  @DefaultMessage("school name")
+  @DefaultStringValue("school name")
   @Key("GUI.SchoolName")
   String GUI_SchoolName();
 
@@ -200,7 +209,7 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "klasnaam"
    */
-  @DefaultMessage("klasnaam")
+  @DefaultStringValue("klasnaam")
   @Key("GUI.SchoolclassName")
   String GUI_SchoolclassName();
 
@@ -209,7 +218,52 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.Messages {
    * 
    * @return translated "username"
    */
-  @DefaultMessage("username")
+  @DefaultStringValue("username")
   @Key("GUI.Username")
   String GUI_Username();
+
+  /**
+   * Translated "No school".
+   * 
+   * @return translated "No school"
+   */
+  @DefaultStringValue("No school")
+  @Key("NULLSCHOOL")
+  String NULLSCHOOL();
+
+  /**
+   * Translated "School admin".
+   * 
+   * @return translated "School admin"
+   */
+  @DefaultStringValue("School admin")
+  @Key("SCHOOLADMIN")
+  String SCHOOLADMIN();
+
+  /**
+   * Translated "Key code".
+   * 
+   * @return translated "Key code"
+   */
+  @DefaultStringValue("Key code")
+  @Key("SCHOOLCODE")
+  String SCHOOLCODE();
+
+  /**
+   * Translated "Student".
+   * 
+   * @return translated "Student"
+   */
+  @DefaultStringValue("Student")
+  @Key("STUDENT")
+  String STUDENT();
+
+  /**
+   * Translated "Teacher".
+   * 
+   * @return translated "Teacher"
+   */
+  @DefaultStringValue("Teacher")
+  @Key("TEACHER")
+  String TEACHER();
 }
