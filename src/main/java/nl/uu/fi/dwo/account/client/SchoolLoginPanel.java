@@ -8,6 +8,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -17,14 +18,17 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
+
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.locale.DwoLocalesForGWT;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
 
 /**
@@ -33,7 +37,7 @@ import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
  */
 public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
 
-    Logger LOG = Logger.getLogger("Account");
+    Logger LOG = Logger.getLogger("SchoolLoginPanel");
 
     SchoolLoginController control;
     PopupPanel popup;
@@ -43,6 +47,8 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     CellTable<DomSchoolRoleAndClass> table = new CellTable<DomSchoolRoleAndClass>();
     ListDataProvider<DomSchoolRoleAndClass> dataProvider = new ListDataProvider<DomSchoolRoleAndClass>();
 
+	private Command resetLogin;
+
     public PopupPanel getPopup() {
         return popup;
     }
@@ -51,14 +57,15 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         this.popup = popup;
     }
 
-    SchoolLoginPanel(DomUserFull user) throws Dwo2Exception {
+    SchoolLoginPanel(Command resetLogin, DomUserFull user) throws Dwo2Exception {
         init(user);
+        this.resetLogin = resetLogin;
         control = new SchoolLoginController(this, user);
-        control.init(user);
+        //control.init(user); dubbel!
     }
 
     protected void init(DomUserFull user) {
-        this.setSize("400", "500");
+        //this.setSize("400", "500");
         //
         CellTable<DomSchoolRoleAndClass> table = new CellTable<DomSchoolRoleAndClass>();
         // Create name column.
@@ -117,8 +124,8 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
 
                                 @Override
                                 public void onSuccess(DomSchoolRoleAndClass result) {
-                                    //TODO Wim
-                                    Window.alert("wim calls a new login here.");
+                                	popup.hide();
+                                	resetLogin.execute();;
                                 }
                             });
                             break;
@@ -138,7 +145,13 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
                                     //TODO update table.
                                     
                                     //TODO Wim
-                                    Window.alert("wim calls a new login here in case new.");
+                                	//TODO if( currentschoolclass is removed )
+                                	if(true)
+                                	{
+                                		popup.hide();
+                                		resetLogin.execute();
+                                	}
+                                    
                                 }
                             });
                             break;
@@ -151,7 +164,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
 
         // Add the columns.
         table.addColumn(schoolColumn, DwoLocalesForGWT.instance.GUI_SchoolName());
-        table.addColumn(schoolColumn, DwoLocalesForGWT.instance.GUI_RoleName());
+        table.addColumn(roleColumn, DwoLocalesForGWT.instance.GUI_RoleName());
         table.addColumn(loginColumn, DwoLocalesForGWT.instance.GUI_Login());
         table.addColumn(deleteColumn, DwoLocalesForGWT.instance.GUI_Delete());
         dataProvider.addDataDisplay(table);
@@ -174,6 +187,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     }
 
     void update(DomSchoolsRolesAndClasses srcs) {
+    	// FIXME Gert?
         //reinitiale the table.
        Grid g = new Grid(5, 3);
         // Put some values in the grid cells.
@@ -197,5 +211,6 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         closeBtn = new Button(DwoLocalesForGWT.instance.GUI_Button_Cancel());
         closeBtn.addClickHandler(this);
         g.setWidget(2, 1, closeBtn);
-        this.add(g);    }
+        this.add(g);
+    }
 }
