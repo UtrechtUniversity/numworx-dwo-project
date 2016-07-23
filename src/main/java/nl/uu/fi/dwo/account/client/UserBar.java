@@ -64,7 +64,7 @@ public class UserBar extends Composite implements Command {
         items.addItem(item);
 
         itemSchoolLogin = new MenuItem(DwoLocalesForGWT.instance.GUI_MySchoolLogins(), schoolLoginCmd);
-        items.addItem(itemSchoolLogin);
+        //items.addItem(itemSchoolLogin);
 
         itemSchoolClass = new MenuItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), schoolClassCmd);
         items.addItem(itemSchoolClass);

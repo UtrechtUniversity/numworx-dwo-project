@@ -186,7 +186,11 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
                                         @Override
                                         public void onSuccess(DomSchoolClass result) {
-                                            if (result == null || result.getId().equals(DwoGlobalVars.getInstance().getCurrentSchoolClass().getId())) {
+                                            DomSchoolClass current = DwoGlobalVars.getInstance().getCurrentSchoolClass();
+											if (result != current 
+													&& (result == null || 
+													    current == null || 
+													    !result.getId().equals(current.getId()))) {
                                             	popup.hide();
                                                 resetLogin.execute();
                                                 // no need to update schoolclassses.
