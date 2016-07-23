@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.FlatModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ProfileActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ReloginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SelectModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
@@ -12,6 +13,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
@@ -86,6 +88,13 @@ public class TabletActivityMapper implements ActivityMapper
 		}
 		if (place instanceof LoginPlace)
 			return new LoginActivity(clientFactory, ((LoginPlace) place).getPlace());
+		if (place instanceof ReloginPlace)
+		{
+			if(DWOplayer.profiledata != null)
+				return new ReloginActivity(clientFactory, ((ReloginPlace) place).getPlace());
+			else
+				return new LoginActivity(clientFactory, ((ReloginPlace) place).getPlace());
+		}
 		if (place instanceof ProfilePlace)
 		{
 			if(DWOplayer.profiledata == null)

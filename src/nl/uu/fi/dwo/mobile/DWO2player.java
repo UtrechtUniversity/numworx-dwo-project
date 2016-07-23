@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
@@ -83,7 +84,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
         
         getUserBar().setResetLogin(new Command() {
-        	Place place = new LoginPlace(); // FIXME met een hash?
+        	Place place = new ReloginPlace(); // FIXME met een hash?
         	
 			@Override
 			public void execute() {
@@ -135,6 +136,12 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		final SecuredUserSchoolLoginManager schoolManager = new SecuredUserSchoolLoginManager();
 		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwo/xmlrpc"){
 
+			public void loginMD5(final String name, final String password, final AsyncCallback<? super Map<String,Object>> callback)
+			{
+				final AsyncCallback<DomUserFull> userCallback = new AsyncUserCallback(schoolManager, callback);
+				accountManager.loginUserMD5(name, password, userCallback);
+				
+			}
 			public void login(final String name, final String password, final AsyncCallback<? super Map<String,Object>> callback)
 			{
 				final AsyncCallback<DomUserFull> userCallback = new AsyncUserCallback(schoolManager, callback);
@@ -241,6 +248,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		profile.put("lastname", result.getFamilyName());
 		profile.put("userID", PersistenceIdDecoderInterface.instance.idOf(result.getId(), PersistenceClassType.PersistentUser));
 		profile.put("username", result.getUserName());
+		
+		getUserBar().setSingleSchool(result.getSingleSchool());
 	}
 
 	

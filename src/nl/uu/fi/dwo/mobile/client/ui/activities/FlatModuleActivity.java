@@ -54,7 +54,7 @@ public class FlatModuleActivity extends MGWTAbstractActivity {
 			@Override
 			public void onTap(TapEvent event)
 			{
-				History.back();
+				History.back(); // FIXME na Relogin
 			}
 		}));
 		addHandlerRegistration(view.getList().addCellSelectedHandler(new CellSelectedHandler()

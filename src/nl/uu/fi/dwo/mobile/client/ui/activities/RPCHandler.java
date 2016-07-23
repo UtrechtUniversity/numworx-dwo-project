@@ -38,7 +38,11 @@ public class RPCHandler {
 	public void login(String name, String password, AsyncCallback<? super Map<String,Object>> callback)
 	{
 		String pwmd5 = MD5.md5(password);
+		loginMD5(name, pwmd5, callback);
+	}
 
+	public void loginMD5(String name, String pwmd5,
+			AsyncCallback<? super Map<String, Object>> callback) {
 		XmlRpcClient client = getClient();
 
 		String method = "login";

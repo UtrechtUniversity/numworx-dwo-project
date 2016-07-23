@@ -58,8 +58,8 @@ public class LoginActivity extends MGWTAbstractActivity
 
 	};
 
-    private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
-	private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
+    static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
+	static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 	
 	
 	ClientFactory clientFactory;
