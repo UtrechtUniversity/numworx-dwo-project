@@ -142,7 +142,7 @@ public class SecuredUserAccountManager {
     				entity(domUser).build();
     	} else {
     		result = Response.status(Response.Status.UNAUTHORIZED).
-    				header("WWW-Authenticate", "Basic realm=\"dwo.nl\'").
+    				header("WWW-Authenticate", "Basic realm=\"DWO.nl\"").
     				build();			
     	}	
     	return result;
