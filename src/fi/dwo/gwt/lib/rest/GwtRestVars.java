@@ -55,7 +55,7 @@ public class GwtRestVars {
 //        dwoLocale = aDwoLocale;
 //    }
 
-    private RestAuthenticator authenticator = new RestAuthenticator();
+    private RestAuthenticator authenticator = RestAuthenticator.instance;
 
     //properties
     private static String server;
@@ -101,8 +101,8 @@ public class GwtRestVars {
         LOG.log(Level.INFO, "Starting initObjects():");
         Defaults.setServiceRoot(this.getServer());
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
-        setAuthenticator(new RestAuthenticator());
-        DefaultFilterawareDispatcher.singleton().addFilter(this.getAuthenticator());
+        setAuthenticator(RestAuthenticator.instance);
+//        DefaultFilterawareDispatcher.singleton().addFilter(this.getAuthenticator());
 //            restService = GWT.create(DWO2RestCaller.class);
         LOG.log(Level.INFO, "Done initObjects():");
     }

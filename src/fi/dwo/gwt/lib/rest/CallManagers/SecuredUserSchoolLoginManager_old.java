@@ -18,7 +18,7 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
  */
 public class SecuredUserSchoolLoginManager_old {
 
-    private RestAuthenticator auth = new RestAuthenticator();
+    private RestAuthenticator auth = RestAuthenticator.instance;
     private DWO2RestCaller service;
 
     public SecuredUserSchoolLoginManager_old() {
@@ -27,8 +27,7 @@ public class SecuredUserSchoolLoginManager_old {
 
     public SecuredUserSchoolLoginManager_old(String url) {
         Defaults.setServiceRoot(url);
-        Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
-        DefaultFilterawareDispatcher.singleton().addFilter(auth);
+        Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());    
         service = GWT.create(DWO2RestCaller.class);
 
     }

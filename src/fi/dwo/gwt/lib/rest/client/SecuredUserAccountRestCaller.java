@@ -5,6 +5,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.Callback;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
@@ -23,8 +24,11 @@ public interface SecuredUserAccountRestCaller extends RestService {
     @GET
     @Path("/secure/user/account/login")
     public void login(MethodCallback<DomUserFull> callback);
-    
-    
+
+    @GET
+    @Path("/secure/user/account/loginUser/{user}")
+    public void loginUser(@PathParam("user")  String user, MethodCallback<DomUserFull> callback);
+   
     @GET
     @Path("/secure/user/account/get")
     public void getAccountData(MethodCallback<DomUserFull> callback);

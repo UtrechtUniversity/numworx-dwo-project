@@ -48,7 +48,6 @@ public class SecuredUserAccountManager {
     private void init(String url){
         Defaults.setServiceRoot(url);
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
-        DefaultFilterawareDispatcher.singleton().addFilter(GwtRestVars.instance().getAuthenticator());
         service = (SecuredUserAccountRestCaller) GWT.create(SecuredUserAccountRestCaller.class);
         LOG.log(Level.INFO,""+service);
     }
@@ -93,13 +92,18 @@ public class SecuredUserAccountManager {
     public void loginUser(final String name, String password, final AsyncCallback<DomUserFull> callback) {
         final String pwmd5 = MD5.md5(password);
         GWT.log(pwmd5);
+        loginUserMD5(name, pwmd5, callback);
 
-        loginCheck(name, pwmd5, new AsyncCallback<Boolean>() {
+    }
+
+	public void loginUserMD5(final String name, final String pwmd5,
+			final AsyncCallback<DomUserFull> callback) {
+		loginCheck(name, pwmd5, new AsyncCallback<Boolean>() {
 
             @Override
             public void onSuccess(Boolean result) {
                 if (Boolean.TRUE.equals(result)) {
-                    login(new AsyncCallback<DomUserFull>() {
+                    loginUser(name, new AsyncCallback<DomUserFull>() {
 
                         @Override
                         public void onFailure(Throwable caught) {
@@ -124,8 +128,7 @@ public class SecuredUserAccountManager {
                 callback.onFailure(caught);
             }
         });
-
-    }
+	}
 
 /********************************************************************************
 *   Interface login stuff
@@ -136,8 +139,8 @@ public class SecuredUserAccountManager {
      * 
      * @param callBack 
      */
-    public void login(AsyncCallback<DomUserFull> callBack) {
-        service.login(new Callback<DomUserFull>(callBack));
+    public void loginUser(String username, AsyncCallback<DomUserFull> callBack) {
+        service.loginUser(username, new Callback<DomUserFull>(callBack));
     }
 
     /**
