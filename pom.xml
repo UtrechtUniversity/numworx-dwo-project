@@ -195,15 +195,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
-        </dependency>       
-        <dependency>
-            <groupId>jre.plugin</groupId>
-            <artifactId>plugin</artifactId>
-            <version>1.8.0_31</version>
-            <type>jar</type>
-            <classifier>deprecated</classifier>
-            <scope>provided</scope>
-        </dependency>         
+        </dependency>                
         <!--        <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>javax.persistence</artifactId>
