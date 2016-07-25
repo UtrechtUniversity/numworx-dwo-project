@@ -270,6 +270,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		profile.put("lastname", result.getFamilyName());
 		profile.put("userID", PersistenceIdDecoderInterface.instance.idOf(result.getId(), PersistenceClassType.PersistentUser));
 		profile.put("username", result.getUserName());
+		profile.put("password",result.getPassword());
 		
 		getUserBar().setSingleSchool(result.getSingleSchool());
 	}
