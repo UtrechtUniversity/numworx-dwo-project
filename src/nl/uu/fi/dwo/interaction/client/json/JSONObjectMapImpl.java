@@ -215,7 +215,11 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 		int size = array.size();
 		int[] result = new int[size];
 		for(int i = 0; i < size; i++ ) {
-			result[i] = (int) array.get(i).isNumber().doubleValue();
+			JSONValue jsonValue = array.get(i);
+			if(jsonValue != null) {
+				JSONNumber number = jsonValue.isNumber();
+				if(number != null) result[i] = (int) number.doubleValue();
+			}
 		}
 		return result;
 	}
