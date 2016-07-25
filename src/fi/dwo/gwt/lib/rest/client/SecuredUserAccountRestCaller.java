@@ -28,8 +28,8 @@ public interface SecuredUserAccountRestCaller extends RestService {
 
     @GET
     @Path("/secure/user/account/loginUser/{user}")
-    public void loginUser(@PathParam("user")  String user, MethodCallback<DomUserFull> callback);
-   
+    public void loginUser(@PathParam("user") String user, MethodCallback<DomUserFull> callback);
+
     @GET
     @Path("/secure/user/account/get")
     public void getAccountData(MethodCallback<DomUserFull> callback);
@@ -38,9 +38,9 @@ public interface SecuredUserAccountRestCaller extends RestService {
     @Path("/secure/user/account/update")
     public void updateAccountData(RestUserFull updateUser, Callback<DomUserFull> callback);
 
-	@PUT
-	@Path("/public/user/submitSaml")
-	public void getSamlUser(RestSamlUser samlRestUser, MethodCallback<DomUserFull> callback);
+    @PUT
+    @Path("/public/user/submitSaml")
+    public void getSamlUser(RestSamlUser samlRestUser, MethodCallback<DomUserFull> callback);
 
 	@GET
 	@Path("/secure/user/basicAuthLogout")
