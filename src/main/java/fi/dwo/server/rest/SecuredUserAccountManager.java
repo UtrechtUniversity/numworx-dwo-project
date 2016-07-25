@@ -33,6 +33,8 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
 import javax.persistence.EntityManager;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -55,6 +57,8 @@ import javax.ws.rs.core.SecurityContext;
 public class SecuredUserAccountManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountManager.class.getName());
+    @Context
+    private ServletContext servletContext;
 //    @Context  //injected response proxy supporting multiple threads
 //    private HttpServletResponse response;
 
@@ -108,7 +112,7 @@ public class SecuredUserAccountManager {
             ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
             PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
             PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
-            
+
             loginData.setRole(g.getGroupname());
             loginData.setMessage(LogType.Login);
             loginData.setLogLevel(Level.INFO.toString());
@@ -123,43 +127,43 @@ public class SecuredUserAccountManager {
     @GET
     @Produces({"application/json"})
     @Path("/basicAuthLogout")
-    public Response basicAuthLogout(@Context SecurityContext sc) {
-//        logoutUser(sc);
+    public Response basicAuthLogout(@Context SecurityContext sc, @Context HttpServletRequest servletRequest) {
+        logoutUser(sc);
         String userName = sc.getUserPrincipal().getName();
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Logout for basic Authentication performed: " + userName + ".");
         Response r = Response.status(401).entity(e.getMessage()).build();
+        if (servletRequest.getSession() != null) {
+            servletRequest.getSession().invalidate();
+        }
         return r;
     }
 
-    
     /**
-     * Returns the DomUserFull if the path parameter equals the security context user name otherwise
-     * a 401. 
+     * Returns the DomUserFull if the path parameter equals the security context
+     * user name otherwise a 401.
      *
      * @param sc security context
      * @param user us
      */
     @GET
     @Path("/loginUser/{user}")
-    public Response loginUser(@Context SecurityContext sc, @PathParam("user") String user) 
-    {
-    	Response result;
-    	DomUserFull domUser = loginUser(sc);
-    	String domUserName = domUser.getUserName();
-    	if(domUserName.equals(user))
-    	{
-    		result = Response.ok().
-    				type(MediaType.APPLICATION_JSON_TYPE).
-    				entity(domUser).build();
-    	} else {
-    		result = Response.status(Response.Status.UNAUTHORIZED).
-    				header("WWW-Authenticate", "Basic realm=\"DWO.nl\"").
-    				build();			
-    	}	
-    	return result;
+    public Response loginUser(@Context SecurityContext sc, @PathParam("user") String user) {
+        Response result;
+        DomUserFull domUser = loginUser(sc);
+        String domUserName = domUser.getUserName();
+        if (domUserName.equals(user)) {
+            result = Response.ok().
+                    type(MediaType.APPLICATION_JSON_TYPE).
+                    entity(domUser).build();
+        } else {
+            result = Response.status(Response.Status.UNAUTHORIZED).
+                    header("WWW-Authenticate", "Basic realm=\"DWO.nl\"").
+                    build();
+        }
+        return result;
     }
-  
+
     /**
      * Returns the currentUser. The information is extracted from the security
      * context.
@@ -180,7 +184,7 @@ public class SecuredUserAccountManager {
             ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
             PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
             PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
-            
+
             loginData.setRole(g.getGroupname());
             loginData.setMessage(LogType.Logout);
             loginData.setLogLevel(Level.INFO.toString());
@@ -192,7 +196,7 @@ public class SecuredUserAccountManager {
         }
         return true;
     }
-    
+
     /**
      * Updates the User data of the current user and returns a copy of the
      * updated data.
@@ -205,17 +209,17 @@ public class SecuredUserAccountManager {
     @Produces({"application/json"})
     @Path("/update")
     public DomUserFull updateCurrentUser(@Context SecurityContext sc, RestUserFull user) {
-        if(user==null){
+        if (user == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
-        }        
+        }
         //passwords are already hashed.
-        if(!ValidUserFieldsChecker.isValidEmail(user.getDomUserFull().getEmail())){
+        if (!ValidUserFieldsChecker.isValidEmail(user.getDomUserFull().getEmail())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Adres_Invalid, "The email address does not  conform with RFC 5322.");
         }
-        if(!ValidUserFieldsChecker.isValidUserName(user.getDomUserFull().getUserName())){
+        if (!ValidUserFieldsChecker.isValidUserName(user.getDomUserFull().getUserName())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
         }
-        
+
         if (user.getDomUserFull().getUserName().equals(sc.getUserPrincipal().getName())) {
             try {
                 PersistentUser dbUser = UserManager.findByUserName(user.getDomUserFull().getUserName());

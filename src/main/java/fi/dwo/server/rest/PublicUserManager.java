@@ -505,7 +505,7 @@ public class PublicUserManager {
                 + "<table>"
                 + "<tr><td align = \"right\">authCode:</td><td><input type=\"text\" size=\"80\" name=\"authCode\" value=\"wim_project\" ></td></tr>"
                 + "<tr><td align = \"right\">new password:</td><td><input type=\"text\" size=\"80\" name=\"newPassword\" value=\"pass\" ></td></tr>"
-                + "<tr><td/><td align =\"right\"><input type=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\" value=\"Submit\"></td></tr>"
+                + "<tr><td/><td align =\"right\"><input type=submit value=\""+TextMapper.getText(TextMapper.BTN_OK) + "\"></td></tr>"
                 + "</table>"
                 + "</form>";
         r += "</BODY></HTML>";
