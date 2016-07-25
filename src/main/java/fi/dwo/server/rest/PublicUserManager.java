@@ -15,6 +15,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestNewUser;
@@ -552,7 +553,8 @@ public class PublicUserManager {
         }
         if (data.startsWith("dwoAuthCode:")) {
             PersistentUser user = UserManager.findByUserName(data.split(":")[1]);
-            user.setPassword(newPassword);
+            
+            user.setPassword(MD5.getHashString(newPassword));
             UserManager.edit(user);
             LOG.log(Level.INFO, "Updated password of user with username {0} of timeslot {1}  from valid authCode.", new Object[]{user.getUsername(), timeslot});
             LOG.log(Level.FINER, "Updated password of user with username {0} of timeslot {1} using authcode {2}.", new Object[]{user.getUsername(), timeslot, authCode});
