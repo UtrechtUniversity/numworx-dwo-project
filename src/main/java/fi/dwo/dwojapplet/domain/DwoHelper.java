@@ -347,10 +347,10 @@ public final class DwoHelper {
         URL url = null;
         if (isApplication) {
             if (applicationBase == null) {
-                try {
-                    applicationBase = new URL("https://dummytwo.dwo.nl/dwo/");
-                } catch (MalformedURLException e) {
-                }
+                    try {
+                        applicationBase = new URL("https://app.dwo.nl/dwo/");
+                    } catch (MalformedURLException e) {
+                    }
             }
             try {
                 url = new URL(applicationBase, resource);
@@ -490,7 +490,7 @@ public final class DwoHelper {
      *
      * @param aJarURLPath
      */
-    public static void setJarUrlPath(URL  aJarURLPath) {
+    public static void setJarUrlPath(URL aJarURLPath) {
         jarUrlPath = aJarURLPath;
     }
 

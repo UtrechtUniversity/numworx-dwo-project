@@ -119,16 +119,17 @@ public class StudentMenuPanel extends UserMenuPanel {
 
                 for (int i = 0; i < scList.size(); i++) {
                     cll = new DomSchoolClassLinkedLabel(scList.get(i));
-                    if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null 
+                    if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null
                             && scList.get(i).getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId())) {
                         cll.setFont(GuiConstants.RED_TEXT);
+                        cll.setBorder(CLASS_BORDER);
+//                        cll.setBorder(BorderFactory.createLineBorder(Color.RED));
                     } else {
                         cll.setFont(GuiConstants.NORMAL_TEXT);
+                        cll.setBorder(CLASS_BORDER);
                     }
-                    cll.setBorder(CLASS_BORDER);
                     cll.addActionListener(this);
                     classLinkedList[i] = cll;
-                    cll.setFont(GuiConstants.NORMAL_TEXT);
                     classBox.add(cll);
                 }
             }

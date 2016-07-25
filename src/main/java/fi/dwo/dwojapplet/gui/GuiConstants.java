@@ -317,7 +317,7 @@ public abstract class GuiConstants {
             result.load(in);
             String resource = "resources/profile-" + profile + testExtension + ".properties";
             URL u;
-            u = DwoHelper.getURL(GuiConstants.RESOURCES + resource);
+            u = new URL(DwoHelper.getResourceUrlPath(),resource);
 // testing....
             //u = GuiConstants.class.getResource("/" + resource);
             result = getProperties(u, result);

@@ -2837,7 +2837,7 @@ public class PersistenceFacade {
             } else if (c.getImageUrl() != null && c.getImageUrl().length() > 0) {
 // TODO er is geen update by reference.
                 String imu = GuiConstants.RESOURCES + c.getImageUrl();
-                URL u = DwoHelper.getURL(imu);
+                URL u = new URL(DwoHelper.getResourceUrlPath(),imu);
                 URLConnection connection = u.openConnection();
                 InputStream in = connection.getInputStream();
 // Check image contentType

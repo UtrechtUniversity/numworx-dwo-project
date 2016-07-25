@@ -123,7 +123,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
         if ((s != null) && (!s.trim().equals(""))) {
             if (s.startsWith("<html>")) {
-                URL base = DwoHelper.getURL(".");
+                URL base = DwoHelper.getServerUrlPath();
                 profileTextArea = new JMathPane(base);
             } else if (s.startsWith("H4sIAAAAAA")) {
                 wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);

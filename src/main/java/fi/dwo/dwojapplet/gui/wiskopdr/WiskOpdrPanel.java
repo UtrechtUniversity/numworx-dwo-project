@@ -24,26 +24,6 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 	String text;
 	LinkIF link;
 
-	@Deprecated
-	public WiskOpdrPanel(String s) {
-		super(new BorderLayout());
-		this.text = s;
-		
-		try {
-            if(DwoHelper.getResourceUrlPath()!=null) Loader.setPrefix(DwoHelper.getResourceUrlPath().toString());
-			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
-			Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class);
-			component = (Component) m.invoke(null, s);
-			add(component, BorderLayout.CENTER);
-			setSize(component.getSize());
-			return;
-		} catch (Exception e) {
-			LOG.log(Level.SEVERE, null, e);
-			add(new JLabel("not implemented: " + e));
-		}
-		setSize(getPreferredSize());
-	}
-
 	public WiskOpdrPanel(String s, Locale locale) {
 		super(new BorderLayout());
 		this.text = s;
