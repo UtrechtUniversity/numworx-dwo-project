@@ -14,6 +14,7 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.entities.RestUserFull;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 
 public interface SecuredUserAccountRestCaller extends RestService {
 
@@ -41,4 +42,8 @@ public interface SecuredUserAccountRestCaller extends RestService {
 	@Path("/public/user/submitSaml")
 	public void getSamlUser(RestSamlUser samlRestUser, MethodCallback<DomUserFull> callback);
 
+	@GET
+	@Path("/secure/user/basicAuthLogout")
+	public void logout(MethodCallback<Dwo2RestException> callback);
+	
 }
