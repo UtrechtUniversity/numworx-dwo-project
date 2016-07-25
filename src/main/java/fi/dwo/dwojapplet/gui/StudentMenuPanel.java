@@ -98,12 +98,11 @@ public class StudentMenuPanel extends UserMenuPanel {
         classPanel.setBorder(null);
         /* Add class-info */
         DomUserFull t = (DomUserFull) DwoHelper.getCurrentUser();
-        if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass()!=null && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.STUDENT.name())) {
+        if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.STUDENT.name())) {
             List<DomSchoolClass> scList = null;
             try {
                 scList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 Logger.getLogger(StudentMenuPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -120,6 +119,12 @@ public class StudentMenuPanel extends UserMenuPanel {
 
                 for (int i = 0; i < scList.size(); i++) {
                     cll = new DomSchoolClassLinkedLabel(scList.get(i));
+                    if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null 
+                            && scList.get(i).getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId())) {
+                        cll.setFont(GuiConstants.RED_TEXT);
+                    } else {
+                        cll.setFont(GuiConstants.NORMAL_TEXT);
+                    }
                     cll.setBorder(CLASS_BORDER);
                     cll.addActionListener(this);
                     classLinkedList[i] = cll;
