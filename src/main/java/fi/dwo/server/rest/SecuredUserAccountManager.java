@@ -196,6 +196,7 @@ public class SecuredUserAccountManager {
         if(user==null){
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }        
+        //passwords are already hashed.
         if(!ValidUserFieldsChecker.isValidEmail(user.getDomUserFull().getEmail())){
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Adres_Invalid, "The email address does not  conform with RFC 5322.");
         }

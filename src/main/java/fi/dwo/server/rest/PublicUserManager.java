@@ -528,6 +528,10 @@ public class PublicUserManager {
             @FormParam("authCode") String authCode,
             @FormParam("newPassword") String newPassword
     ) throws Exception {
+        if(!ValidUserFieldsChecker.isValidPassword(newPassword)){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password has illegal characters or length.");
+        }
+        
         //Password for encrypting current unix timestamp modulus 10 minutes + randomseed
         //decrypt JSON String
         String data = "";
