@@ -120,6 +120,7 @@ public class StudentMenuPanel extends UserMenuPanel {
                 for (int i = 0; i < scList.size(); i++) {
                     cll = new DomSchoolClassLinkedLabel(scList.get(i));
                     if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null
+                            && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId() != null
                             && scList.get(i).getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId())) {
                         cll.setFont(GuiConstants.RED_TEXT);
                         cll.setBorder(CLASS_BORDER);
