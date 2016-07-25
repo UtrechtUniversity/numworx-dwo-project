@@ -49,7 +49,8 @@ public class SecureUserAccountManager {
     }
 
     /**
-     * Registers that the user logs out.
+     * Registers that the user logs out. When doing basic authentication basicAuthLogout is 
+     * recommended to be used.
      *
      * @return
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
@@ -60,10 +61,26 @@ public class SecureUserAccountManager {
         //ensures basic auth data and cookies are wiped from Java Browser-like framework
         Authenticator.setDefault(null);
         CookieManager.setDefault(null);
-
         return result;
     }
 
+    /**
+     * Registers that the user logs out, clears client-side cookies and authenticator data,
+     * and clears the session server-side.
+     *
+     * @return
+     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     */
+    public static Boolean basicAuthLogout() throws Dwo2Exception {
+        Boolean result;
+        result = StoredRestManager.getInstance().get("rest/secure/user/account/basicAuthLogout", Boolean.class);
+        //ensures basic auth data and cookies are wiped from Java Browser-like framework
+        Authenticator.setDefault(null);
+        CookieManager.setDefault(null);
+
+        return result;
+    }
+    
     /**
      * Updates the user profile of a user.
      *
