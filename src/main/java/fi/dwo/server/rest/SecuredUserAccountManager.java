@@ -124,7 +124,7 @@ public class SecuredUserAccountManager {
     @Produces({"application/json"})
     @Path("/basicAuthLogout")
     public Response basicAuthLogout(@Context SecurityContext sc) {
-        logoutUser(sc);
+//        logoutUser(sc);
         String userName = sc.getUserPrincipal().getName();
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Logout for basic Authentication performed: " + userName + ".");

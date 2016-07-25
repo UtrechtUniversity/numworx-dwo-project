@@ -36,7 +36,7 @@ public class SecuredRestTestManager {
         String userName = sc.getUserPrincipal().getName();
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 401 thrown on request of user: " + userName + ".");
-        Response r = Response.status(401).entity(e.getMessage()).build();
+        Response r = Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
         return r;
     }
 //
