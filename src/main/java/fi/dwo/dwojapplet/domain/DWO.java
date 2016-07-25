@@ -928,7 +928,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     @Override
     public void logoff() {
         try {
-            if(DwoHelper.getCurrentUser()!=null) SecureUserAccountManager.logoutUser();
+            if(DwoHelper.getCurrentUser()!=null) SecureUserAccountManager.basicAuthLogout();
         } catch (Dwo2Exception ex) {
             Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, null, ex);
         }
