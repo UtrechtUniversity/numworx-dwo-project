@@ -120,13 +120,25 @@ public class SecuredUserAccountManager {
         return user;
     }
 
+    @GET
+    @Produces({"application/json"})
+    @Path("/basicAuthLogout")
+    public Response basicAuthLogout(@Context SecurityContext sc) {
+        logoutUser(sc);
+        String userName = sc.getUserPrincipal().getName();
+        //TODO REST update lastLogin and such.
+        Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Logout for basic Authentication performed: " + userName + ".");
+        Response r = Response.status(401).entity(e.getMessage()).build();
+        return r;
+    }
+
+    
     /**
-     * Returns the currentUser. The information is extracted from the security
-     * context.
+     * Returns the DomUserFull if the path parameter equals the security context user name otherwise
+     * a 401. 
      *
      * @param sc security context
-     * @param user use this name or fail
-     * @return Returns null if there was an error.
+     * @param user us
      */
     @GET
     @Path("/loginUser/{user}")
