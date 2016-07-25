@@ -51,7 +51,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
     private JPanel jtbl;
     private TableRowSorter rowSorter;
 
-    private Image removeImage, loginImage;
+    private Image removeImage, loginImage, emptyImage;
     private static final int SWITCH_COL = 1;
     private static final int REMOVE_COL = 2;
 
@@ -84,9 +84,11 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
  /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
+        emptyImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE);
         loginImage = DwoHelper.getResourceImage(GuiConstants.STUDENT_IMAGE); //"resources/student.png");
         tr.addImage(removeImage, 0);
         tr.addImage(loginImage, 1);
+        tr.addImage(emptyImage, 1);
         try {
             tr.waitForAll();
         }
@@ -248,7 +250,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                         int row = tableModel.getSelectedRow();
                         DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
                         prop.removeSchoolClass(schoolClass);
-                        tableModel.init(prop, loginImage, removeImage);
+                        tableModel.init(prop, loginImage, removeImage,emptyImage);
                     }
 //                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else {
@@ -284,7 +286,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new SchoolClassManagementStudentTableModel();
 
-        tableModel.init(prop, loginImage, removeImage);
+        tableModel.init(prop, loginImage, removeImage, emptyImage);
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);
         rowSorter.toggleSortOrder(0);//
@@ -336,7 +338,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
-            tableModel.init(prop, loginImage, removeImage);
+            tableModel.init(prop, loginImage, removeImage,emptyImage);
             tableModel.fireTableDataChanged();
             CenterSubPanel cp = GuiCreator.instance().getClassPanel();
             GuiCreator.instance().getMainPanel().center.reset();

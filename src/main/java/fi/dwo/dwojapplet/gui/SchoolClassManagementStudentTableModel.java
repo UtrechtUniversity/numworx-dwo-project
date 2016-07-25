@@ -24,7 +24,7 @@ class SchoolClassManagementStudentTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(SchoolClassManagementStudentProperties props,Image loginImage, Image removeImage) {
+    public void init(SchoolClassManagementStudentProperties props, Image loginImage, Image removeImage, Image emptyImage) {
 
         prop = props;
         List<DomSchoolClass> scList = prop.getStudentsSchoolClasses();
@@ -32,16 +32,22 @@ class SchoolClassManagementStudentTableModel extends AbstractTableModel {
         if (scList == null) {
             scList = new ArrayList<DomSchoolClass>();
         }
-        
+
         for (DomSchoolClass sc : scList) {
             rows++; // one for each item in List
         }
-        
+
         data = new Object[rows][4];
         int j = 0;
         for (DomSchoolClass sc : scList) {
             data[j][0] = sc.getSchoolClassName();
-            data[j][1] = loginImage;
+            if (props.getActiveSchoolClass()!=null
+                    && props.getActiveSchoolClass().getId() != null
+                    && sc.getId().equals(props.getActiveSchoolClass().getId())) {
+                data[j][1] = emptyImage;
+            } else {
+                data[j][1] = loginImage;
+            }
             data[j][2] = removeImage;
             data[j][3] = sc;
             j++;
@@ -76,9 +82,10 @@ class SchoolClassManagementStudentTableModel extends AbstractTableModel {
      */
     @Override
     public Class getColumnClass(int c) {
-    	if( getRowCount() > 0)
-    		return getValueAt(0, c).getClass();
-    	return super.getColumnClass(c);
+        if (getRowCount() > 0) {
+            return getValueAt(0, c).getClass();
+        }
+        return super.getColumnClass(c);
     }
 
     /*
