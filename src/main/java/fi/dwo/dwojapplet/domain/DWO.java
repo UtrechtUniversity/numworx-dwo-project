@@ -170,6 +170,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
         LOG.log(Level.INFO, "Checking for DWO.properties");
         Properties properties = new Properties();
+        URL base = null;
         try {
 
             //folder relative to the current directory
@@ -178,7 +179,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             //file handle for main.properties
             InputStream file;
             file = new URL(getDocumentBase(), path).openStream();
-
+            base = getDocumentBase();
             // load the properties
             properties.load(file);
             LOG.log(Level.INFO, "Loaded external DWO.property file");
@@ -196,6 +197,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 final InputStream inStream = DWO.class.getResourceAsStream("/DWO.properties");
                 // load the properties
                 properties.load(inStream);
+                base = getCodeBase();
                 LOG.log(Level.INFO, "Loaded internal DWO.property file");
 
                 // done with file
@@ -222,38 +224,38 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         String defaultUsernameProperty = (System.getProperty("defaultUsername") == null) 
                 ? properties.getProperty("defaultUsername", "") : System.getProperty("defaultUsername");
         DwoHelper.setDefaultUsername(defaultUsernameProperty);
-        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultUsernameProperty",
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultUsername",
             DwoHelper.getDefaultUsername()});
         String defaultPasswordProperty = (System.getProperty("defaultPassword") == null) 
                 ? properties.getProperty("defaultPassword", "") : System.getProperty("defaultPassword");
         DwoHelper.setDefaultPassword(defaultPasswordProperty);
-        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultPasswordProperty",
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultPassword",
             DwoHelper.getDefaultPassword()});
 
         //assign properties to static value.
         String serverUrlPathProperty =  (System.getProperty("serverUrlPath") == null) 
                 ? properties.getProperty("serverUrlPath", "./") : System.getProperty("serverUrlPath");
-        DwoHelper.setServerUrlPath(new URL(serverUrlPathProperty));
-        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"setServerUrlPathString",
+        DwoHelper.setServerUrlPath(new URL(base, serverUrlPathProperty));
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"serverUrlPath",
             DwoHelper.getServerUrlPath()});
 
         //if not set pick default path
         String resourceURLPathProperty = (System.getProperty("resourceUrlPath") == null) 
                 ? properties.getProperty("resourceUrlPath", "resources/") : System.getProperty("resourceUrlPath");
-        DwoHelper.setResourceUrlPath(new URL(resourceURLPathProperty));
-        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"resourceURLPathProperty",
+        DwoHelper.setResourceUrlPath(new URL(base, resourceURLPathProperty));
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"resourceUrlLPath",
             DwoHelper.getResourceUrlPath()});
 
         //if not set pick default path
         String jarURLPathProperty = (System.getProperty("jarUrlPath") == null) 
                 ? properties.getProperty("jarUrlPath", "jars") : System.getProperty("jarUrlPath");
-        DwoHelper.setJarUrlPath(new URL(jarURLPathProperty));
-        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"jarURLPathProperty",
+        DwoHelper.setJarUrlPath(new URL(base, jarURLPathProperty));
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"jarUrlPath",
             DwoHelper.getJarUrlPath()});
         
         String appURLPathProperty = properties.getProperty("appUrlPath", "http://www.fisme.science.uu.nl/dwo/apps/");
-        DwoHelper.setAppURLPath(new URL(appURLPathProperty));
-        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"appURLPathProperty",
+        DwoHelper.setAppURLPath(new URL(base, appURLPathProperty));
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"appUrlPath",
             DwoHelper.getJarUrlPath()});
 
         HttpAuthenticationType httpAuthentication = (System.getProperty("httpAuthentication") == null) 
