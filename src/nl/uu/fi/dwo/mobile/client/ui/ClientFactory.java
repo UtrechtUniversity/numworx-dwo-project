@@ -51,5 +51,7 @@ public interface ClientFactory
 	void setEntryView(ViewModuleView view);
 	
 	public SCORM_guest setupAPI(final Map<String, Object> profiledata);
+
+	void logout();
 	
 }

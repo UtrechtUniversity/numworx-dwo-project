@@ -283,8 +283,12 @@ public class CheckSelectieUnit implements InteractionStub
 			randomizedPositionsY = new Object[randomizedPositions.length];
 			for(int i = 0; i < randomizedPositions.length; i++)
 			{
-				randomizedPositionsX[i] = (int) randomizedPositions[i].getX();
-				randomizedPositionsY[i] = (int) randomizedPositions[i].getY();
+				Point point = randomizedPositions[i];
+				if(point != null) {
+					randomizedPositionsX[i] = (int) point.getX();
+					randomizedPositionsY[i] = (int) point.getY();
+				} else
+					randomizedPositionsX[i] = randomizedPositionsY[i] = 0;
 			}
 		}
 		
@@ -357,12 +361,12 @@ public class CheckSelectieUnit implements InteractionStub
 	    		randomizedPositions[i] = (Point) list.get(i);
 	    }
 	    else if(map.containsKey("randomizedPositionsX"))
-	    {	ObjectList listX = map.getObjectList("randomizedPositionsX");
-	    	ObjectList listY = map.getObjectList("randomizedPositionsY");
-	    	randomizedPositions = new Point[listX.size()];
-	    	for(int i = 0; i < listX.size(); i++)
-	    		randomizedPositions[i] = new Point(listX.getInt(i), 
-	    				listY.getInt(i));
+	    {	int[] listX = map.getIntArray("randomizedPositionsX");
+	    	int[] listY = map.getIntArray("randomizedPositionsY");
+	    	randomizedPositions = new Point[listX.length];
+	    	for(int i = 0; i < listX.length; i++)
+	    		randomizedPositions[i] = new Point(listX[i], 
+	    				listY[i]);
 	    }
 	    if(map.containsKey("ingevuld")) 
 	    	ingevuld = map.getBoolean("ingevuld");

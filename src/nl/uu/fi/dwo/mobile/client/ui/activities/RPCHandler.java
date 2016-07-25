@@ -282,6 +282,9 @@ public class RPCHandler {
 //		}
 //		getCourseSequence0(null, csc);
 	}
+
+	public void logout() {
+	}
 	
 	
 }

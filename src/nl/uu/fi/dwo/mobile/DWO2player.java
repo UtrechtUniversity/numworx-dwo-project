@@ -35,6 +35,7 @@ import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.RoleType;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.persistence.PersistenceClassType;
 import fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -112,7 +113,12 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				return menuWidget;
 			}
 
-
+			@Override
+			public void logout() {
+				super.logout();
+				menuWidget = null;
+				getRPCHandler().logout();
+			}
 
 			public SCORM_guest setupAPI(final Map<String, Object> profiledata) {
 				SCORM_guest api;
@@ -203,6 +209,22 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
 				final AsyncCallback<DomUserFull> userCallback = new AsyncUserCallback(schoolManager, callback);
 				accountManager.samlLogin(name, org, authToken, userCallback);
+			}
+
+			@Override
+			public void logout() {
+				super.logout();
+				if(DwoGlobalVars.instance().getCurrentUser() != null)
+					accountManager.logout(new AsyncCallback<Dwo2Exception>() {
+	
+						@Override
+						public void onFailure(Throwable caught) {
+						}
+	
+						@Override
+						public void onSuccess(Dwo2Exception result) {
+							Window.alert(String.valueOf(result));						
+						}});
 			}
 
 		});

@@ -24,6 +24,7 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 	}
 
 	public String getDefaultHost() {
+		if (false)return "localhost:8080";
 		return "8-dot-mc2dme.appspot.com";
 	}
 

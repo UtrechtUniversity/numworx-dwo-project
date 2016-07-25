@@ -156,4 +156,10 @@ public class ClientFactoryImpl implements ClientFactory
 	public void setLogoutWidget(IsWidget logoutWidget) {
 		this.logoutWidget = logoutWidget;
 	}
+	
+	@Override
+	public void logout() {
+	}
+
+	
 }

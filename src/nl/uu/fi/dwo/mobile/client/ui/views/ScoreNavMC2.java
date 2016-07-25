@@ -47,9 +47,10 @@ public class ScoreNavMC2 extends ScoreNavFacade {
 				help = btn;
 		}
 		if(help != null)
-			if(help.getParent() == null)
+		{	if(help.getParent() == null)
 				sb.addKnop(help, true);
 			help.setVisible(b);
+		}
 	}
 
 	@Override

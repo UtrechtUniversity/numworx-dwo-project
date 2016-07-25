@@ -79,6 +79,8 @@ public class LoginActivity extends MGWTAbstractActivity
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
+		clientFactory.logout();
+		
 		SelectModuleItemHolder.destroy();
 		boolean logout = DWOplayer.profiledata != null;
 		String user_id = Cookies.getCookie(DWO_SAML_USER_ID);

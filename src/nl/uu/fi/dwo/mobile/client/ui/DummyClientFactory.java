@@ -91,4 +91,8 @@ public class DummyClientFactory implements ClientFactory {
 		logoutWidget = widget;
 	}
 
+	@Override
+	public void logout() {
+	}
+
 }
