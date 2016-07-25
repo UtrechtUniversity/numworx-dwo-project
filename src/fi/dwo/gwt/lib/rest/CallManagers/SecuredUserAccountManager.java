@@ -18,6 +18,7 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.entities.RestUserFull;
+import fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -190,4 +191,8 @@ public class SecuredUserAccountManager {
 		service.getSamlUser(samlRestUser, restcallback);
 	}
 
+	
+	public void logout(AsyncCallback<Dwo2Exception> callback) {
+		service.logout(new Callback<Dwo2Exception>(callback));
+	}
 }
