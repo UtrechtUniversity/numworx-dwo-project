@@ -57,8 +57,8 @@ public class PersistentLoginContext implements Serializable {
 //CREATE TABLE `tbllogincontext` (
 //  `loginid` int(11) NOT NULL AUTO_INCREMENT,
 //  `userID` int(11) NOT NULL,
-//  `registerTimeStamp` int(11) DEFAULT NULL,
-//  `lastLoginTimeStamp` int(11) DEFAULT NULL,
+//  `registerTimeStamp` bigint(20) DEFAULT NULL,
+//  `lastLoginTimeStamp` bigint(20) DEFAULT NULL,
 //  PRIMARY KEY (`loginID`),
 //  UNIQUE KEY `AK_ID_LOGIN_USER`  (`userID`),
 //  UNIQUE KEY `AK_ID_LOGIN_TIMESTAMP` (`lastLoginTimeStamp`)
