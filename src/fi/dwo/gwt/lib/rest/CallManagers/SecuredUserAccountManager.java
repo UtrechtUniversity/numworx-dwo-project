@@ -1,6 +1,5 @@
 package fi.dwo.gwt.lib.rest.CallManagers;
 
-
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
@@ -113,7 +112,7 @@ public class SecuredUserAccountManager {
 
                         @Override
                         public void onSuccess(DomUserFullwLoginContext result) {
-                        	if(name.equals(result.getDomUserFull().getUserName()))
+                        	if(result.getDomUserFull() != null && name.equals(result.getDomUserFull().getUserName()))
                         		callback.onSuccess(result);
                         	else
                         		callback.onFailure(new RuntimeException("Please restart browser")); // FIXME showstopper?
@@ -165,7 +164,7 @@ public class SecuredUserAccountManager {
         service.getAccountData(new Callback<DomUserFull>(callBack));
     }
 
-	public void samlLogin(String userid, String org, String token, final AsyncCallback<DomUserFull> callback)
+	public void samlLogin(String userid, String org, String token, final AsyncCallback<DomUserFullwLoginContext> userCallback)
 	{
 		DomSamlUser domSamlUser = new DomSamlUser();
 		domSamlUser.setSamlUserId(userid);
@@ -174,19 +173,19 @@ public class SecuredUserAccountManager {
 		GwtRestVars.instance().getAuthenticator().setCredentials(null, null);
 		RestSamlUser samlRestUser = new RestSamlUser();
 		samlRestUser.setDomSamlUser(domSamlUser);
-		MethodCallback<DomUserFull> restcallback = new MethodCallback<DomUserFull>() {
+		MethodCallback<DomUserFullwLoginContext> restcallback = new MethodCallback<DomUserFullwLoginContext>() {
 
 			@Override
 			public void onFailure(Method method, Throwable exception) {
-				callback.onFailure(exception);
+				userCallback.onFailure(exception);
 			}
 
 			@Override
-			public void onSuccess(Method method, DomUserFull response) {
-				String username = response.getUserName();
-				String password = response.getPassword();
+			public void onSuccess(Method method, DomUserFullwLoginContext response) {
+				String username = response.getDomUserFull().getUserName();
+				String password = response.getDomUserFull().getPassword();
 				GwtRestVars.instance().getAuthenticator().setCredentials(username, password);
-				callback.onSuccess(response);
+				userCallback.onSuccess(response);
 			}
 		};
 		service.getSamlUser(samlRestUser, restcallback);
