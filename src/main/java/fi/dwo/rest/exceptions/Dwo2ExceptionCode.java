@@ -14,6 +14,7 @@ public enum Dwo2ExceptionCode {
     User_AuthenticationError, //Illegal account details.
     User_IllegalAction, //Illegal action logged.
     User_NewPasswordsDoNotMatch, //Illegal action logged.
+    User_ConfirmNewLoginSession,
     User_ConfirmPasswordSwitch,
     User_ConfirmRoleSwitch,
     User_ConfirmSchoolClassSwitch,
