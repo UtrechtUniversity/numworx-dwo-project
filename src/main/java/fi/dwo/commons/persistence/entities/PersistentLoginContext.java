@@ -121,7 +121,13 @@ public class PersistentLoginContext implements Serializable {
     }
 
 
-    public void buildDomLoginContext(DomLoginContext loginContext) {
+    public DomLoginContext createDomLoginContext(){
+        DomLoginContext loginContext = new DomLoginContext();
+        buildDomLoginContext(loginContext);
+        return loginContext;
+    }
+    
+    private void buildDomLoginContext(DomLoginContext loginContext) {
         if (this.id != null) {
             loginContext.setId(MySQLPersistenceId.createPersistentId(this));
             loginContext.setLastLoginTimeStamp(lastLoginTimeStamp);
