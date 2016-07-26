@@ -6,6 +6,7 @@ import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentLogData;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentLoginDataPK;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
@@ -17,6 +18,7 @@ import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginDataManager;
 import fi.dwo.server.PersistentDataManagers.core.RoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -117,6 +119,20 @@ public class SecuredUserAccountManager {
             loginData.setMessage(LogType.Login);
             loginData.setLogLevel(Level.INFO.toString());
             LoginDataManager.create(loginData);
+
+            //experimental test with PersistentLoginContext
+            List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
+            switch (loginContextList.size()) {
+                case 0:
+                    //none yet
+                    loginContextList.add(new PersistentLoginContext());
+                case 1:
+                    //update if exists
+                    loginContextList.get(0).setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+                    break;
+                default:
+            }
+            LoginContextManager.edit(loginContextList.get(0));
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
@@ -189,6 +205,18 @@ public class SecuredUserAccountManager {
             loginData.setMessage(LogType.Logout);
             loginData.setLogLevel(Level.INFO.toString());
             LoginDataManager.create(loginData);
+
+            //experimental test with PersistentLoginContext            
+            List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
+            if (loginContextList.size() == 1) {
+                loginContextList.get(0).setLastLogin(null);
+                LoginContextManager.edit(loginContextList.get(0));
+            } else {
+                //logout while no login tried before.
+                LOG.log(Level.FINE, "Logging out by user {0} while no login registered", u.getId());
+
+            }
+
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
