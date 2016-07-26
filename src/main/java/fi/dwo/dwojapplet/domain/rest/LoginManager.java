@@ -7,6 +7,7 @@ import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,7 +42,7 @@ public class LoginManager {
      */
     public static DomUserFull basicLogin(String username, String password) throws Dwo2Exception {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
-        DomUserFull user;
+        DomUserFullwLoginContext user;
 // Should clear any existing autentication cache but does not work due to feature bug.
         try {
             //RestAuthenticator restAuth = RestAuthenticator.(username,password);
@@ -79,11 +80,12 @@ public class LoginManager {
             Genson genson = new Genson();
 
 //          LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
-            user = genson.deserialize(json.toString(), DomUserFull.class);
+            user = genson.deserialize(json.toString(), DomUserFullwLoginContext.class);
             StoredRestManager.setBasicAuthString(authString);
             //Set current user for domain
-            DwoHelper.setCurrentUser(user);
-            return user;
+            DwoHelper.setCurrentUser(user.getDomUserFull());
+            DwoHelper.setCurrentLoginContext(user.getDomLoginContext());
+            return user.getDomUserFull();
         } catch (MalformedURLException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
 

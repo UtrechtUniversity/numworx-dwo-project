@@ -13,7 +13,10 @@ import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
+import fi.dwo.rest.dom.entities.DomLoginContext;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -182,6 +185,15 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     getStudent.setDomSchoolClass(schoolClass);
                     getStudent.setDomStudent(student);
                     DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
+//                    DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(user.getUserName(),
+//                            user.getPassword());
+//                    if (loginContext.getLastLoginTimeStamp() != null) {
+//                        if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
+//                                Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
+//                        ) != JOptionPane.OK_OPTION) {
+//                            return;
+//                        };
+//                    }
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 }
                 catch (LoginException ex) {

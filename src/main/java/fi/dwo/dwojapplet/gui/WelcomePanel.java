@@ -5,8 +5,13 @@ package fi.dwo.dwojapplet.gui;
 import fi.beans.copyright.FIButton;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
+import fi.dwo.rest.dom.entities.DomLoginContext;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -110,8 +115,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             Manifest manifest = new Manifest(url.openStream());
             // do stuff with it
             version = manifest.getMainAttributes().getValue("Implementation-Version");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOG.log(Level.SEVERE, "Can't read Implementation-Version from manifest.mf.");
         }
         fiButton = new FIButton("DWO", new String[]{"versie-info: " + version,
@@ -143,7 +147,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         }
 
         /* Warning Label */
-        /*l = new Label("Helaas zijn er problemen met de DWO. Wordt aan gewerkt.");
+ /*l = new Label("Helaas zijn er problemen met de DWO. Wordt aan gewerkt.");
          l.setFont(GuiConstants.RED_TEXT_ITALIC);
          l.setForeground(Color.red);
          fm = l.getFontMetrics(l.getFont());
@@ -151,7 +155,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
          l.setVisible(false);
          this.add(l);
          l.setVisible(true);*/
-        /* Welcome Label */
+ /* Welcome Label */
         //l = new Label(TextMapper.getText(TextMapper.GUIW_WELCOME) + "!");
         l = new JLabel(TextMapper.getText(TextMapper.GUIM_FI_NAME));
         l.setFont(new Font("SansSerif", Font.BOLD, 26));
@@ -310,7 +314,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         fm = registerNewUserButton.getFontMetrics(registerNewUserButton.getFont());
         registerNewUserButton.setSize(registerNewUserButton.getPreferredSize());
         registerNewUserButton.setLocation((p.getSize().width / 2)
-               - (registerNewUserButton.getPreferredSize().width / 2), 27);
+                - (registerNewUserButton.getPreferredSize().width / 2), 27);
         p.setBounds(dialog.getWidth() / 2 - 175, 330 + h, 350, 65);
         p.add(registerNewUserButton);
 
@@ -332,7 +336,6 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         registerNewUserButton.addActionListener(this);
         loginButton.requestFocus();
 
-
     }
     private static final Logger LOG = Logger.getLogger(WelcomePanel.class.getName());
 
@@ -347,29 +350,35 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if ((src == loginButton) || (src == loginname) || (src == password)) {
-            try {                
+            try {
+                //Fetch LoginContext to see if there is already a session.
+                DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(loginname.getText(), MD5.getHashString(String.valueOf(password.getPassword())));
+                if (loginContext.getLastLoginTimeStamp() != null) {
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
+                            Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
+                    ) != JOptionPane.OK_OPTION) {
+                        return;
+                    };
+                }
                 GuiCreator.instance().login(loginname.getText(), String.valueOf(password.getPassword()));
                 if (linkcheck != null && linkcheck.isSelected()) {
                     GuiCreator.instance().linkViaSAML();
                 }
-            }
-            catch (LoginException exc) {
-                if(LOG.getLevel()==Level.INFO){
+            } catch (LoginException exc) {
+                if (LOG.getLevel() == Level.INFO) {
                     LOG.log(Level.INFO, "Login failed.");
-                }else{
-                LOG.log(Level.FINE, "Login exception.", exc);
+                } else {
+                    LOG.log(Level.FINE, "Login exception.", exc);
                 }
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), null, JOptionPane.ERROR_MESSAGE);
                 Logger.getLogger(WelcomePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (src == guestButton) {
             try {
                 GuiCreator.instance().login();
-            }
-            catch (LoginException exc) {
+            } catch (LoginException exc) {
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
         } else if (src == registerNewUserButton) {

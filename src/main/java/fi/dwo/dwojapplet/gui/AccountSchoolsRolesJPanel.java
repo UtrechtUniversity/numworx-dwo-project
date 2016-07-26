@@ -8,6 +8,8 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
+import fi.dwo.rest.dom.entities.DomLoginContext;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -224,10 +226,15 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                 if (value == loginImage) {
 //            //get Table setting
 //                int col = tableModel.getSelectedColumn();
-                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
-                            Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmRoleSwitch)
-                    ) != JOptionPane.OK_OPTION) {
-                        return;
+                    //Fetch LoginContext to see if there is already a session.
+                    DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(DwoHelper.getCurrentUser().getUserName(),
+                            DwoHelper.getCurrentUser().getPassword());
+                    if (loginContext.getLastLoginTimeStamp() != null) {
+                        if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
+                                Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
+                        ) != JOptionPane.OK_OPTION) {
+                            return;
+                        };
                     }
                     int row = tableModel.getSelectedRow();
 

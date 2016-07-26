@@ -19,6 +19,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.rest.DwoLocale;
+import fi.dwo.rest.dom.entities.DomLoginContext;
 import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
@@ -85,6 +86,7 @@ public final class DwoHelper {
      */
     private static DomUserFull currentUser; // null if none available.
     private static DomSchool nullSchool;
+    private static DomLoginContext currentLoginContext;
 //    private static RoleType currentRole; // null if none available.
 
     /**
@@ -708,6 +710,17 @@ public final class DwoHelper {
 
     public static URL getAppURLPath() {
         return appUrlPath;
+    }
+
+    public static void setCurrentLoginContext(DomLoginContext domLoginContext) {
+        currentLoginContext = domLoginContext;
+    }
+
+    /**
+     * @return the currentLoginContext
+     */
+    public static DomLoginContext getCurrentLoginContext() {
+        return currentLoginContext;
     }
 
 }
