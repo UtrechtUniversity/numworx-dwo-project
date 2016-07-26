@@ -35,7 +35,7 @@ public class DwoDateUtilities {
     }
 
     /**
-     * Unix timestamp in milliseconds since 1st of January 1970 in UTC.
+     * Timestamp in milliseconds since 1st of January 1970 in GMT.
      *
      * @return
      */
