@@ -10,6 +10,7 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -193,6 +194,8 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
         return new MySQLPersistenceId(id, t);
     }
 
+
+        
     public static MySQLPersistenceId createPersistentId(PersistentApplet o) {
         return new MySQLPersistenceId(o.getAppletID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
@@ -225,6 +228,10 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
         return new MySQLPersistenceId(o.getPersistentHasRolePK().getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
+    public static MySQLPersistenceId createPersistentId(PersistentLoginContext o) {
+        return new MySQLPersistenceId(o.getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+    }
+    
 //    public static MySQLPersistenceId createPersistenceId(PersistentImage o) {
 //                return new MySQLPersistenceId(o.(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
 //    }
