@@ -21,7 +21,7 @@ public enum PersistenceClassType {
     PersistentHasRole,
     PersistentImage,
     PersistentJars,
-    PeristentLoginClassType,
+    PersistentLoginContext,
     PersistentRole,
     PersistentSamlUser,
     PersistentSchool,
