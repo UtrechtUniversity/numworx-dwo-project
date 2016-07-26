@@ -3,6 +3,9 @@
  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.rest.dom.entities.DomLoginContext;
+import fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -13,8 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 /**
@@ -27,12 +28,12 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "tbllogincontext", schema = "", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"userid"})})
+    @UniqueConstraint(columnNames = {"userID"})})
 @NamedQueries({
     @NamedQuery(name = "PersistentLoginContext.findAll", query = "SELECT p FROM PersistentLoginContext p"),
     @NamedQuery(name = "PersistentLoginContext.findByUserID", query = "SELECT p FROM PersistentLoginContext p WHERE p.userID = :userID"),
-    @NamedQuery(name = "PersistentUser.findByRegisterTimeStamp", query = "SELECT p FROM PersistentUser p WHERE p.registerTimeStamp = :registerTimeStamp"),
-    @NamedQuery(name = "PersistentUser.findByLoginTimeStamp", query = "SELECT p FROM PersistentUser p WHERE p.lastLoginTimeStamp = :lastLoginTimeStamp")})
+    @NamedQuery(name = "PersistentLoginContext.findByRegisterTimeStamp", query = "SELECT p FROM PersistentLoginContext p WHERE p.registerTimeStamp = :registerTimeStamp"),
+    @NamedQuery(name = "PersistentLoginContext.findByLoginTimeStamp", query = "SELECT p FROM PersistentLoginContext p WHERE p.lastLoginTimeStamp = :lastLoginTimeStamp")})
 public class PersistentLoginContext implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -46,12 +47,13 @@ public class PersistentLoginContext implements Serializable {
     @Column(name = "userID", nullable = false)
     private Long userID;
     @Basic(optional = false)
-    @Column(name = "registerTimeStamp", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Long registerTimeStamp;
-    @Column(name = "lastLoginTimeStamp")
-    @Temporal(TemporalType.DATE)
-    private Long lastLoginTimeStamp;
+    @Column(name = "registerTimeStamp", nullable = true)
+//    @Temporal(TemporalType.DATE)
+    private Long  registerTimeStamp;
+    @Basic(optional = false)
+    @Column(name = "lastLoginTimeStamp", nullable = true)
+//    @Temporal(TemporalType.DATE)
+    private Long  lastLoginTimeStamp;
 //CREATE TABLE `tbllogincontext` (
 //  `loginid` int(11) NOT NULL AUTO_INCREMENT,
 //  `userID` int(11) NOT NULL,
@@ -118,4 +120,14 @@ public class PersistentLoginContext implements Serializable {
         this.lastLoginTimeStamp = lastLogin;
     }
 
+
+    public void buildDomLoginContext(DomLoginContext loginContext) {
+        if (this.id != null) {
+            loginContext.setId(MySQLPersistenceId.createPersistentId(this));
+            loginContext.setLastLoginTimeStamp(lastLoginTimeStamp);
+            loginContext.setRegisterTimeStamp(registerTimeStamp);
+        }
+        loginContext.setUserId(MySQLPersistenceId.createPersistenceId(userID.longValue(), PersistenceClassType.PeristentLoginClassType));
+    }
+    
 }
