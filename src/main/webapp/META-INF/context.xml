@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context aliases="/apps=/opt/dwo/webapps/war-shared/apps" antiJARLocking="true" crossContext="false" path="/dwo">
+<!--<Context aliases="/apps=/opt/dwo/webapps/war-shared/apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
+<Context aliases="/apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps" antiJARLocking="true" crossContext="false" path="/dwo">
 <!-- paths for jars and resources have moved. Jars and resources are configured in the DWO.properties file. Apps are in a different path. For example:
 # htttpAuthentication = {BASIC, DIGEST}, BASIC currently required.
 httpAuthentication=BASIC
