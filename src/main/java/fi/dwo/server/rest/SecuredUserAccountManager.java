@@ -103,7 +103,6 @@ public class SecuredUserAccountManager {
     @Produces({"application/json"})
     @Path("/getLoginContext")
     public DomLoginContext getLoginContext(@Context SecurityContext sc) {
-        EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser user = null;
         PersistentLoginContext loginContext = null;
 
@@ -113,7 +112,11 @@ public class SecuredUserAccountManager {
             if (list.size() == 1) {
                 loginContext = list.get(0);
             } else {
-                return null;
+                loginContext = new PersistentLoginContext();
+                loginContext.setUserId(user.getId());
+                loginContext.setLastLogin(null);
+                loginContext.setRegisterTimeStamp(user.getRegisterDate().getTime());
+                LoginContextManager.create(loginContext);
             }
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
         }
@@ -121,10 +124,6 @@ public class SecuredUserAccountManager {
             LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
         }
-        finally {
-            em.close();
-        }
-        
         return loginContext.createDomLoginContext();
     }
 
