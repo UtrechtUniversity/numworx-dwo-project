@@ -59,7 +59,6 @@ public class GwtRestVars {
 
     //properties
     private static String server;
-    private static DwoLocale dwoLocale = new DwoLocale("nl-NL");
 
     /**
      * @return the instance

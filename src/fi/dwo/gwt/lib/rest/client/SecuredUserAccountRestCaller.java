@@ -1,6 +1,7 @@
 package fi.dwo.gwt.lib.rest.client;
 
 import fi.dwo.gwt.lib.rest.CallManagers.Callback;
+import fi.dwo.rest.dom.entities.DomLoginContext;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -11,6 +12,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.entities.RestUserFull;
@@ -24,11 +26,11 @@ public interface SecuredUserAccountRestCaller extends RestService {
 
     @GET
     @Path("/secure/user/account/login")
-    public void login(MethodCallback<DomUserFull> callback);
+    public void login(MethodCallback<DomUserFullwLoginContext> callback);
 
     @GET
     @Path("/secure/user/account/loginUser/{user}")
-    public void loginUser(@PathParam("user") String user, MethodCallback<DomUserFull> callback);
+    public void loginUser(@PathParam("user") String user, MethodCallback<DomUserFullwLoginContext> callback);
 
     @GET
     @Path("/secure/user/account/get")
@@ -42,8 +44,8 @@ public interface SecuredUserAccountRestCaller extends RestService {
     @Path("/public/user/submitSaml")
     public void getSamlUser(RestSamlUser samlRestUser, MethodCallback<DomUserFull> callback);
 
-	@GET
-	@Path("/secure/user/account/basicAuthLogout")
-	public void logout(MethodCallback<Dwo2Exception> callback);
-	
+    @PUT
+    @Path("/secure/user/account/basicAuthLogout")
+    public void logout(DomLoginContext loginContext, MethodCallback<Dwo2Exception> callback);
+
 }

@@ -13,15 +13,15 @@ import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.SecuredUserAccountRestCaller;
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomLoginCheck;
+import fi.dwo.rest.dom.entities.DomLoginContext;
 import fi.dwo.rest.dom.entities.DomSamlUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -90,7 +90,7 @@ public class SecuredUserAccountManager {
 
     }
 
-    public void loginUser(final String name, String password, final AsyncCallback<DomUserFull> callback) {
+    public void loginUser(final String name, String password, final AsyncCallback<DomUserFullwLoginContext> callback) {
         final String pwmd5 = MD5.md5(password);
         GWT.log(pwmd5);
         loginUserMD5(name, pwmd5, callback);
@@ -98,13 +98,13 @@ public class SecuredUserAccountManager {
     }
 
 	public void loginUserMD5(final String name, final String pwmd5,
-			final AsyncCallback<DomUserFull> callback) {
+			final AsyncCallback<DomUserFullwLoginContext> callback) {
 		loginCheck(name, pwmd5, new AsyncCallback<Boolean>() {
 
             @Override
             public void onSuccess(Boolean result) {
                 if (Boolean.TRUE.equals(result)) {
-                    loginUser(name, new AsyncCallback<DomUserFull>() {
+                    loginUser(name, new AsyncCallback<DomUserFullwLoginContext>() {
 
                         @Override
                         public void onFailure(Throwable caught) {
@@ -112,8 +112,8 @@ public class SecuredUserAccountManager {
                         }
 
                         @Override
-                        public void onSuccess(DomUserFull result) {
-                        	if(name.equals(result.getUserName()))
+                        public void onSuccess(DomUserFullwLoginContext result) {
+                        	if(name.equals(result.getDomUserFull().getUserName()))
                         		callback.onSuccess(result);
                         	else
                         		callback.onFailure(new RuntimeException("Please restart browser")); // FIXME showstopper?
@@ -138,10 +138,11 @@ public class SecuredUserAccountManager {
 
     /**
      * 
+     * @param username
      * @param callBack 
      */
-    public void loginUser(String username, AsyncCallback<DomUserFull> callBack) {
-        service.loginUser(username, new Callback<DomUserFull>(callBack));
+    public void loginUser(String username, AsyncCallback<DomUserFullwLoginContext> callBack) {
+        service.loginUser(username, new Callback<DomUserFullwLoginContext>(callBack));
     }
 
     /**
@@ -192,7 +193,7 @@ public class SecuredUserAccountManager {
 	}
 
 	
-	public void logout(AsyncCallback<Dwo2Exception> callback) {
-		service.logout(new Callback<Dwo2Exception>(callback));
+	public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
+		service.logout(loginContext, new Callback<Dwo2Exception>(callback));
 	}
 }
