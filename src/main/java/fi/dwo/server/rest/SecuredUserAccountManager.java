@@ -15,7 +15,10 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.rest.dom.entities.DomLoginContext;
+import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import fi.dwo.rest.entities.RestLoginContext;
 import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
@@ -35,7 +38,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
 import javax.persistence.EntityManager;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -59,8 +61,6 @@ import javax.ws.rs.core.SecurityContext;
 public class SecuredUserAccountManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountManager.class.getName());
-    @Context
-    private ServletContext servletContext;
 //    @Context  //injected response proxy supporting multiple threads
 //    private HttpServletResponse response;
 
@@ -101,16 +101,61 @@ public class SecuredUserAccountManager {
      */
     @GET
     @Produces({"application/json"})
+    @Path("/getLoginContext")
+    public DomLoginContext getLoginContext(@Context SecurityContext sc) {
+        EntityManager em = DwoEmfFactory.getEntityManager();
+        PersistentUser user = null;
+        PersistentLoginContext loginContext = null;
+
+        try {
+            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
+            if (list.size() == 1) {
+                loginContext = list.get(0);
+            } else {
+                return null;
+            }
+            LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+        }
+        catch (Exception e) {
+            LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
+        }
+        finally {
+            em.close();
+        }
+        
+        return loginContext.createDomLoginContext();
+    }
+
+    /**
+     * Returns the currentUser. The information is extracted from the security
+     * context.
+     *
+     * @param sc
+     * @return Returns null if there was an error.
+     */
+    @GET
+    @Produces({"application/json"})
     @Path("/login")
-    public DomUserFull loginUser(@Context SecurityContext sc) {
-        DomUserFull user = getCurrentUser(sc);
+    public DomUserFullwLoginContext loginUser(@Context SecurityContext sc) {
+        PersistentUser u;
+
+        try {
+            u = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), u.getUsername()});
+        }
+        catch (Exception e) {
+            LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
+        }
+
         //al ready retrieved and cached in getCurrentUser
-        PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
         try {//LoginData may fail, but login should succeed.
             //register login action
             PersistentLogData loginData = new PersistentLogData();
             PersistentLoginDataPK ldKey = new PersistentLoginDataPK();
-            ldKey.setUsername(user.getUserName());
+            ldKey.setUsername(u.getUsername());
             ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
             PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
             PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
@@ -119,32 +164,50 @@ public class SecuredUserAccountManager {
             loginData.setMessage(LogType.Login);
             loginData.setLogLevel(Level.INFO.toString());
             LoginDataManager.create(loginData);
-
-            //experimental test with PersistentLoginContext
-            List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
-            switch (loginContextList.size()) {
-                case 0:
-                    //none yet
-                    loginContextList.add(new PersistentLoginContext());
-                case 1:
-                    //update if exists
-                    loginContextList.get(0).setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-                    break;
-                default:
-            }
-            LoginContextManager.edit(loginContextList.get(0));
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
         }
-        return user;
+
+        //setting PersistentLoginContext
+        DomLoginContext domLoginContext = null;
+        try {
+            List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
+            PersistentLoginContext loginContext = new PersistentLoginContext();
+            switch (loginContextList.size()) {
+                case 0:
+                    //none yet
+                    loginContext.setUserId(u.getId());
+                    loginContext.setLastLogin(null);
+                    loginContext.setRegisterTimeStamp(u.getRegisterDate().getTime());
+                    loginContextList.add(loginContext);
+                    LoginContextManager.create(loginContext);
+                    break;
+                case 1:
+                    //update if exists
+                    loginContext = loginContextList.get(0);
+                    loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+                    LoginContextManager.edit(loginContext);
+                    break;
+                default:
+            }
+            //add or update
+            domLoginContext = loginContext.createDomLoginContext();
+        }
+        catch (Exception e) {
+            LOG.log(Level.SEVERE, null, e);
+        }
+        DomUserFullwLoginContext result = new DomUserFullwLoginContext();
+        result.setDomLoginContext(domLoginContext);
+        result.setDomUserFull(u.buildDomUserFull());
+        return result;
     }
 
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/basicAuthLogout")
-    public Response basicAuthLogout(@Context SecurityContext sc, @Context HttpServletRequest servletRequest) {
-        logoutUser(sc);
+    public Response basicAuthLogout(@Context SecurityContext sc, @Context HttpServletRequest servletRequest, RestLoginContext loginContext) {
+        logoutUser(sc, loginContext);
         String userName = sc.getUserPrincipal().getName();
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Logout for basic Authentication performed: " + userName + ".");
@@ -166,7 +229,7 @@ public class SecuredUserAccountManager {
     @Path("/loginUser/{user}")
     public Response loginUser(@Context SecurityContext sc, @PathParam("user") String user) {
         Response result;
-        DomUserFull domUser = loginUser(sc);
+        DomUserFull domUser = loginUser(sc).getDomUserFull();
         String domUserName = domUser.getUserName();
         if (domUserName.equals(user)) {
             result = Response.ok().
@@ -185,12 +248,13 @@ public class SecuredUserAccountManager {
      * context.
      *
      * @param sc
+     * @param loginContext
      * @return Returns null if there was an error.
      */
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/logout")
-    public Boolean logoutUser(@Context SecurityContext sc) {
+    public Boolean logoutUser(@Context SecurityContext sc, RestLoginContext loginContext) {
         PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
         try {//LoginData may fail, but login should succeed.
             //register login action
@@ -206,21 +270,29 @@ public class SecuredUserAccountManager {
             loginData.setLogLevel(Level.INFO.toString());
             LoginDataManager.create(loginData);
 
-            //experimental test with PersistentLoginContext            
-            List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
-            if (loginContextList.size() == 1) {
-                loginContextList.get(0).setLastLogin(null);
-                LoginContextManager.edit(loginContextList.get(0));
-            } else {
-                //logout while no login tried before.
-                LOG.log(Level.FINE, "Logging out by user {0} while no login registered", u.getId());
-
-            }
-
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
-            return false;
+            //return false;
+        }
+        //erasing PersistentLoginContext only if proper setRegisterTimeStamp
+        if (loginContext != null) {
+            try {
+                List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
+                if (loginContextList.size() == 1) {
+                    if (loginContext.getDomLoginContext().getRegisterTimeStamp().equals((loginContextList.get(0).getRegisterTimeStamp()))) {
+                        loginContextList.get(0).setLastLogin(null);
+                        LoginContextManager.edit(loginContextList.get(0));
+                    }
+                } else {
+                    //logout while no login tried before.
+                    LOG.log(Level.FINE, "Logging out by user {0} while user has never logged in.", u.getId());
+
+                }
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, null, e);
+            }
         }
         return true;
     }

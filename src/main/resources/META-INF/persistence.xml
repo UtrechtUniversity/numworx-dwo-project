@@ -27,6 +27,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentSchool</class>
     <class>fi.dwo.commons.persistence.entities.PersistentClassCourse</class>
     <class>fi.dwo.commons.persistence.entities.PersistentFromTo</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentLoginContext</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
     <properties>
