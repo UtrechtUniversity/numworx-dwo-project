@@ -229,7 +229,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                     //Fetch LoginContext to see if there is already a session.
                     DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(DwoHelper.getCurrentUser().getUserName(),
                             DwoHelper.getCurrentUser().getPassword());
-                    if (loginContext!=null && loginContext.getLastLoginTimeStamp() != null) {
+                    if (loginContext!=null && !loginContext.getLastLoginTimeStamp().equals(DwoHelper.getCurrentLoginContext().getLastLoginTimeStamp())) {
                         if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
                                 Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
                         ) != JOptionPane.OK_OPTION) {

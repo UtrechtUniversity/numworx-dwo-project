@@ -185,15 +185,16 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     getStudent.setDomSchoolClass(schoolClass);
                     getStudent.setDomStudent(student);
                     DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
-//                    DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(user.getUserName(),
-//                            user.getPassword());
-//                    if (loginContext.getLastLoginTimeStamp() != null) {
-//                        if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
-//                                Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
-//                        ) != JOptionPane.OK_OPTION) {
-//                            return;
-//                        };
-//                    }
+                    DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(user.getUserName(),
+                            user.getPassword());
+                    if (loginContext!=null && loginContext.getLastLoginTimeStamp() != null) {
+                        if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
+                                Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
+                        ) != JOptionPane.OK_OPTION) {
+                            return;
+                        };
+                    }
+                    SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 }
                 catch (LoginException ex) {
