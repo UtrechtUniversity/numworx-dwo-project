@@ -17,7 +17,8 @@ import javax.persistence.criteria.Root;
 
 /**
  * Manages LoginContext in the persistent storage. Sample UserManager for building more
- * code. Also useful as it is being reused.
+ * code. Also useful as it is being reused. The registered timestamp is null if no session
+ * is active.
  *
  * @author G.A.J. van der Plas
  */
@@ -55,6 +56,7 @@ public class LoginContextManager {
         }
     }
 
+    
     /**
      * Update
      *
