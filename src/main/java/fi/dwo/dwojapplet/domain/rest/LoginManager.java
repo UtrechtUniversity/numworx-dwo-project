@@ -39,7 +39,6 @@ public class LoginManager {
      * @throws Dwo2Exception
      * @deprecated
      */
-    @Deprecated
     public static DomUserFull basicLogin(String username, String password) throws Dwo2Exception {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
         DomUserFull user;
@@ -49,7 +48,7 @@ public class LoginManager {
             //clears any auth data and cookies remaining from a previous session in Java browser-like framework
             Authenticator.setDefault(null);
             CookieManager.setDefault(null);
-            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/get"); //TODO make basicLogin            
+            URL url = new URL(DwoHelper.getServerUrlPath().toString() + "rest/secure/user/account/login"); //TODO make basicLogin            
             String authString = username + ":" + password;
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
