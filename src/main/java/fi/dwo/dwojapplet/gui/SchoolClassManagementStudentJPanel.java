@@ -234,7 +234,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                 if (value == loginImage) {
                     DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(DwoHelper.getCurrentUser().getUserName(),
                             DwoHelper.getCurrentUser().getPassword());
-                    if (loginContext.getLastLoginTimeStamp() != null && !loginContext.getLastLoginTimeStamp().equals(DwoHelper.getCurrentLoginContext().getLastLoginTimeStamp())) {
+                    if (loginContext!=null && loginContext.getLastLoginTimeStamp() != null && !loginContext.getLastLoginTimeStamp().equals(DwoHelper.getCurrentLoginContext().getLastLoginTimeStamp())) {
                         if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
                                 Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
                         ) != JOptionPane.OK_OPTION) {
