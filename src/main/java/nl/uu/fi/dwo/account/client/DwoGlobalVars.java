@@ -5,6 +5,7 @@ import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import fi.dwo.rest.DwoLocale;
+import fi.dwo.rest.dom.entities.DomLoginContext;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
@@ -26,6 +27,9 @@ public class DwoGlobalVars {
 
     private static volatile DwoGlobalVars instance;
     private DomSchoolClass currentSchoolClass=null;
+    private DomUserFull currentUser;
+    private DomLoginContext currentLoginContext;
+    
 
     public static DwoGlobalVars getInstance() {
         return instance;
@@ -67,8 +71,6 @@ public class DwoGlobalVars {
         dwoLocale = aDwoLocale;
     }
 
-    private RestAuthenticator authenticator = RestAuthenticator.instance;
-
     //properties
     private static String server;
     private static DwoLocale dwoLocale = new DwoLocale("nl-NL");
@@ -86,9 +88,6 @@ public class DwoGlobalVars {
         }
         return instance;
     }
-
-    //Runtime Variabes
-    DomUserFull currentUser;
 
     public DwoGlobalVars() throws Dwo2Exception {
         initProperties();
@@ -152,6 +151,20 @@ public class DwoGlobalVars {
         //notify the gwt-rest interface configuration
         GwtRestVars.getInstance().setCurrentUser(aCurUser);
         
+    }
+
+    /**
+     * @return the currentLoginContext
+     */
+    public DomLoginContext getCurrentLoginContext() {
+        return currentLoginContext;
+    }
+
+    /**
+     * @param currentLoginContext the currentLoginContext to set
+     */
+    public void setCurrentLoginContext(DomLoginContext currentLoginContext) {
+        this.currentLoginContext = currentLoginContext;
     }
 
 }

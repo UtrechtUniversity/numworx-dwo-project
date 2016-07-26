@@ -18,6 +18,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.logging.Level;
 
@@ -90,7 +91,7 @@ public class Account implements EntryPoint, ClickHandler {
 //            user = curUser;
             //Try to loginUser and fetch the user
             LOG.log(Level.INFO, "filled in test user.");
-            handler.loginUser(loginPanel.getUserCode(), loginPanel.getPassWord(), new AsyncCallback<DomUserFull>() {
+            handler.loginUser(loginPanel.getUserCode(), loginPanel.getPassWord(), new AsyncCallback<DomUserFullwLoginContext>() {
                 @Override
                 public void onFailure(Throwable t) {
                     loginStatusPanel.setStatus("", false);
@@ -100,12 +101,12 @@ public class Account implements EntryPoint, ClickHandler {
 
                 //Process login results
                 @Override
-                public void onSuccess(DomUserFull result) {
+                public void onSuccess(DomUserFullwLoginContext result) {
                     //TODO Wim wat te doen indien niet ingelogd als student?
                     loginPanel.setVisible(false);
                     loginButton.setVisible(false);
-                    LOG.log(Level.INFO, "Fetched a test user with username:" + result.getUserName() + ".");
-                    user = (DomUserFull) result;
+                    LOG.log(Level.INFO, "Fetched a test user with username:" + result.getDomUserFull().getUserName()+ ".");
+                    user = ((DomUserFullwLoginContext) result).getDomUserFull();
                     loginStatusPanel.setStatus(user.getUserName(), true);
                     DwoGlobalVars.instance().setCurrentUser(user);
                     SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();

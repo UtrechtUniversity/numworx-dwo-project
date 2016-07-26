@@ -15,10 +15,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
-import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
@@ -247,8 +247,11 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
             AddSchoolClassStudentPanel panel = new AddSchoolClassStudentPanel(DwoGlobalVars.instance().getCurrentUser(), control);
             control.setAddSchoolClassView(panel);
             panel.setPopup(popup);
-            //panel.setSize("300", "200");
-            popup.add(panel);
+//            panel.setPixelSize(-1,200);
+            ScrollPanel scrollPanel = new ScrollPanel();
+            scrollPanel.add(panel);
+            scrollPanel.setPixelSize(-1,200);
+            popup.add(scrollPanel);
             popup.center();
             popup.show();
         } else if (event.getSource() == closeBtn) {
