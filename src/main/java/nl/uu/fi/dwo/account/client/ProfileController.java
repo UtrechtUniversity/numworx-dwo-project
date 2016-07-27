@@ -53,9 +53,7 @@ class ProfileController {
                     updateUser = currentUser.duplicate();
                     //update Globals otherwise can't loginUser in passwd change!
                     DwoGlobalVars.instance().setCurrentUser(currentUser);
-                    //update rest authentication 
-                    GwtRestVars.instance().getAuthenticator()
-                            .setCredentials(currentUser.getUserName(), currentUser.getPassword());
+                    //update rest authentication done by setcurrentuser
                     view.init(currentUser);
                     view.getPopup().hide();
             }
