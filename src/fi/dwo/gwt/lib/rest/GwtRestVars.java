@@ -136,13 +136,20 @@ public class GwtRestVars {
      */
     public void setCurrentUser(DomUserFull aCurUser) {
         currentUser = aCurUser;
-        getAuthenticator().setCredentials(currentUser.getUserName(), currentUser.getPassword());        
+        if(currentUser != null)
+        	setCredentials(currentUser.getUserName(), currentUser.getPassword());        
+        else
+        	setCredentials(null, null);
     }
 
+    public void setCredentials(String username, String password) {
+    	getAuthenticator().setCredentials(username, password);
+    }
+    
     /**
      * @return the authenticator
      */
-    public RestAuthenticator getAuthenticator() {
+    RestAuthenticator getAuthenticator() {
         return authenticator;
     }
 

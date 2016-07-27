@@ -42,10 +42,14 @@ public interface SecuredUserAccountRestCaller extends RestService {
 
     @PUT
     @Path("/public/user/submitSaml")
-    public void getSamlUser(RestSamlUser samlRestUser, MethodCallback<DomUserFullwLoginContext> restcallback);
+    public void getSamlUser(RestSamlUser samlRestUser, MethodCallback<DomUserFull> restcallback);
 
     @PUT
     @Path("/secure/user/account/basicAuthLogout")
     public void logout(DomLoginContext loginContext, MethodCallback<Dwo2Exception> callback);
 
+    @GET
+    @Path("/secure/user/account/getLoginContext")
+    public void getLoginContext(MethodCallback<DomLoginContext> callback);
+    
 }

@@ -70,13 +70,13 @@ public class SecuredUserAccountManager {
         domLoginCheck.setPassword(DomLoginCheck.crypt(password));
         RestLoginCheck restLoginCheck = new RestLoginCheck();
         restLoginCheck.setDomLoginCheck(domLoginCheck);
-        GwtRestVars.instance().getAuthenticator().setCredentials(null, null);
+        GwtRestVars.instance().setCurrentUser(null);
         service.loginCheck(restLoginCheck, new MethodCallback<Boolean>() {
 
             @Override
             public void onSuccess(Method method, Boolean response) {
                 if (Boolean.TRUE.equals(response)) {
-                    GwtRestVars.instance().getAuthenticator().setCredentials(username, password);
+                    GwtRestVars.instance().setCredentials(username, password);
                 }
                 callback.onSuccess(response);
             }
@@ -103,21 +103,7 @@ public class SecuredUserAccountManager {
             @Override
             public void onSuccess(Boolean result) {
                 if (Boolean.TRUE.equals(result)) {
-                    loginUser(name, new AsyncCallback<DomUserFullwLoginContext>() {
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            callback.onFailure(caught);
-                        }
-
-                        @Override
-                        public void onSuccess(DomUserFullwLoginContext result) {
-                        	if(result.getDomUserFull() != null && name.equals(result.getDomUserFull().getUserName()))
-                        		callback.onSuccess(result);
-                        	else
-                        		callback.onFailure(new RuntimeException("Please restart browser")); // FIXME showstopper?
-                        }
-                    });
+                    getDomUserFullwLoginContext(name, callback);
                 } else {
                     callback.onFailure(new RuntimeException("LoginException"));
                 }
@@ -170,10 +156,10 @@ public class SecuredUserAccountManager {
 		domSamlUser.setSamlUserId(userid);
 		domSamlUser.setSamlOrgId(org);
 		domSamlUser.setAuthToken(token);
-		GwtRestVars.instance().getAuthenticator().setCredentials(null, null);
+		GwtRestVars.instance().setCurrentUser(null);
 		RestSamlUser samlRestUser = new RestSamlUser();
 		samlRestUser.setDomSamlUser(domSamlUser);
-		MethodCallback<DomUserFullwLoginContext> restcallback = new MethodCallback<DomUserFullwLoginContext>() {
+		MethodCallback<DomUserFull> restcallback = new MethodCallback<DomUserFull>() {
 
 			@Override
 			public void onFailure(Method method, Throwable exception) {
@@ -181,11 +167,10 @@ public class SecuredUserAccountManager {
 			}
 
 			@Override
-			public void onSuccess(Method method, DomUserFullwLoginContext response) {
-				String username = response.getDomUserFull().getUserName();
-				String password = response.getDomUserFull().getPassword();
-				GwtRestVars.instance().getAuthenticator().setCredentials(username, password);
-				userCallback.onSuccess(response);
+			public void onSuccess(Method method, DomUserFull response) {
+				String username = response.getUserName();
+				GwtRestVars.instance().setCurrentUser(response);
+				getDomUserFullwLoginContext(username, userCallback);
 			}
 		};
 		service.getSamlUser(samlRestUser, restcallback);
@@ -194,5 +179,24 @@ public class SecuredUserAccountManager {
 	
 	public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
 		service.logout(loginContext, new Callback<Dwo2Exception>(callback));
+	}
+
+	private void getDomUserFullwLoginContext(final String name,
+			final AsyncCallback<DomUserFullwLoginContext> callback) {
+		loginUser(name, new AsyncCallback<DomUserFullwLoginContext>() {
+
+		    @Override
+		    public void onFailure(Throwable caught) {
+		        callback.onFailure(caught);
+		    }
+
+		    @Override
+		    public void onSuccess(DomUserFullwLoginContext result) {
+		    	if(result.getDomUserFull() != null && name.equals(result.getDomUserFull().getUserName()))
+		    		callback.onSuccess(result);
+		    	else
+		    		callback.onFailure(new RuntimeException("Please restart browser")); // FIXME showstopper?
+		    }
+		});
 	}
 }
