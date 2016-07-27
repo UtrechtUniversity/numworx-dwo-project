@@ -17,6 +17,9 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.DockPanel.DockLayoutConstant;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -26,6 +29,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,6 +38,8 @@ import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
 import com.googlecode.mgwt.ui.client.widget.Button;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
+//import com.googlecode.mgwt.ui.client.widget.ScrollPanel;
+
 
 import fi.wiskopdr.text.Text;
 
@@ -101,13 +107,11 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 	public ScoreNavPanel() {
 		top = new VerticalPanel();
 		initialize();
-		VerticalPanel vbox = new VerticalPanel();
-		vbox.add(top);
-		vbox.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
-		FlowPanel flow = new FlowPanel();
-		flow.add(vbox);
-		flow.getElement().getStyle().setOverflowY(Overflow.AUTO);
-		initWidget(flow);
+		dock = new DockLayoutPanel(Unit.PX);
+		dock.setWidth("426px");
+		dock.addNorth(top, 140);
+		dock.add(sp);
+		initWidget(dock);
 		popup = new MyPopup(this);
 	}
 	
@@ -165,7 +169,9 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 			max[i] = 10;
 		}
 		createVragen(max);
-		top.add(vragen);
+		sp = new ScrollPanel();
+		sp.add(vragen);
+		top.add(sp);
 	}
 
 	public Widget setFontFamily(Widget widget) {
@@ -180,6 +186,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 	private int[] scoreMax;
 	private int currentOpdracht;
 	private SlidingPopup popup;
+	ScrollPanel  sp;
 	public SlidingPopup getPopup() {
 		return popup;
 	}
@@ -314,6 +321,9 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 	private boolean nextEnabled = true;
 	private boolean prevEnabled = true;
 
+
+	private DockLayoutPanel dock;
+
 	@Override
 	public Widget getNextButton() {
 		if(next == null) {
@@ -439,6 +449,12 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 
 	@Override
 	public void stopped() {
+	}
+
+	public void refresh() {
+		//sp.setPixelSize(-1, 200);
+		//if(sp != null) sp.refresh(); // alleen bij mgwt scrollpanel
+		
 	}
 
 }

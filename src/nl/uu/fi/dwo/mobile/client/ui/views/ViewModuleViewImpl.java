@@ -1254,7 +1254,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	            left = 0;
 	            top  = hp.getOffsetHeight();
 	            popup.setPopupPosition(left, top);
-	            popup.setPixelSize(offsetWidth, Window.getClientHeight()-top);
+	            popup.setPixelSize(offsetWidth, Window.getClientHeight()-top-12);
 	          }
 	        });
 		
