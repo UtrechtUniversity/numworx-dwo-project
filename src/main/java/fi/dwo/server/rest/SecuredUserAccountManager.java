@@ -228,8 +228,9 @@ public class SecuredUserAccountManager {
     @Path("/loginUser/{user}")
     public Response loginUser(@Context SecurityContext sc, @PathParam("user") String user) {
         Response result;
-        DomUserFull domUser = loginUser(sc).getDomUserFull();
-        String domUserName = domUser.getUserName();
+        
+        DomUserFullwLoginContext domUser = loginUser(sc);
+        String domUserName = domUser.getDomUserFull().getUserName();
         if (domUserName.equals(user)) {
             result = Response.ok().
                     type(MediaType.APPLICATION_JSON_TYPE).
@@ -240,6 +241,19 @@ public class SecuredUserAccountManager {
                     build();
         }
         return result;
+//      //original code that does no longer matches Account.
+//        DomUserFull domUser = loginUser(sc).getDomUserFull();
+//        String domUserName = domUser.getUserName();
+//        if (domUserName.equals(user)) {
+//            result = Response.ok().
+//                    type(MediaType.APPLICATION_JSON_TYPE).
+//                    entity(domUser).build();
+//        } else {
+//            result = Response.status(Response.Status.UNAUTHORIZED).
+//                    header("WWW-Authenticate", "Basic realm=\"DWO.nl\"").
+//                    build();
+//        }
+//        return result;
     }
 
     /**
