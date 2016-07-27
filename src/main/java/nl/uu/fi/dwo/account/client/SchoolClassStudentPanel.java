@@ -47,7 +47,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
     ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
     Command resetLogin;
-    
+
     public PopupPanel getPopup() {
         return popup;
     }
@@ -57,7 +57,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     }
 
     SchoolClassStudentPanel(Command resetLogin, DomUserFull user) {
-    	this.resetLogin = resetLogin;
+        this.resetLogin = resetLogin;
         init(user);
         control = new SchoolClassStudentController(this, user);
 //        addSchoolClassPanel = new AddSchoolClassStudentPanel(user, control);
@@ -143,7 +143,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
                     switch (columnIndex) {
                         case 1: //relogin with schoolclass set...
-                            if(Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch())==false){
+                            if (Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch()) == false) {
                                 return;
                             }
                             control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
@@ -157,7 +157,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
                                 @Override
                                 public void onSuccess(Boolean result) {
-                                	popup.hide();
+                                    popup.hide();
                                     resetLogin.execute();
                                 }
                             });
@@ -187,15 +187,16 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                                         @Override
                                         public void onSuccess(DomSchoolClass result) {
                                             DomSchoolClass current = DwoGlobalVars.getInstance().getCurrentSchoolClass();
-											if (result != current 
-													&& (result == null || 
-													    current == null || 
-													    !result.getId().equals(current.getId()))) {
-                                            	popup.hide();
+                                            if (result != current
+                                                    && (result == null
+                                                    || current == null
+                                                    || !result.getId().equals(current.getId()))) {
+                                                popup.hide();
                                                 resetLogin.execute();
                                                 // no need to update schoolclassses.
-                                            } else
-                                            	control.updateStudentsSchoolClassesInView();
+                                            } else {
+                                                control.updateStudentsSchoolClassesInView();
+                                            }
                                         }
                                     });
                                 }
@@ -242,24 +243,37 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     public void onClick(ClickEvent event) {
         if (event.getSource() == addBtn) {
             LOG.log(Level.INFO, "Popup of AddSchoolClassStudentPanel.");
-            PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
+            final PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
             //popup.setSize("500", "400");
             AddSchoolClassStudentPanel panel = new AddSchoolClassStudentPanel(DwoGlobalVars.instance().getCurrentUser(), control);
             control.setAddSchoolClassView(panel);
             panel.setPopup(popup);
 //            panel.setPixelSize(-1,200);
-            ScrollPanel scrollPanel = new ScrollPanel();
-            scrollPanel.add(panel);
-            scrollPanel.setPixelSize(-1,200);
-            popup.add(scrollPanel);
+//            final ScrollPanel scrollPanel = new ScrollPanel();
+//            scrollPanel.add(panel);
+//            scrollPanel.setPixelSize(-1, 400);
+//            popup.add(scrollPanel);
+            popup.add(panel);
+//            popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+//                @Override
+//                public void setPosition(int offsetWidth, int offsetHeight) {
+//                    scrollPanel.setPixelSize(-1, 2*(Window.getClientHeight() - offsetHeight) / 3);
+//                    int left = (Window.getClientWidth() - offsetWidth) / 3;
+//                    int top = (Window.getClientHeight() - offsetHeight) / 3;
+//                    popup.setPopupPosition(left, top);
+//                }
+//            });
             popup.center();
             popup.show();
-        } else if (event.getSource() == closeBtn) {
+        } else if (event.getSource()
+                == closeBtn) {
             LOG.log(Level.INFO, "Done, hiding window.");
             popup.hide();
-        } else if (event.getSource() == delBtn) {
+        } else if (event.getSource()
+                == delBtn) {
             LOG.log(Level.INFO, "" + event.getSource());
         }
+
         LOG.log(Level.INFO, event.getSource().toString());
     }
 

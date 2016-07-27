@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
@@ -50,7 +51,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 
     AddSchoolClassStudentPanel(DomUserFull user, SchoolClassStudentController aControl) {
         dataProvider.getList().clear();
-        selectedClass =null;
+        selectedClass = null;
         control = aControl;
         init(user);
 //        control.init(user);
@@ -135,7 +136,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
 //                    switch (rowIndex) {
 //                        case 1: // set selected schoolclass to add
-                            selectedClass = sc;
+                    selectedClass = sc;
 //                            break;
 //                        default:
 //                    }
@@ -150,8 +151,12 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 //        table.addColumn(deleteColumn, DwoLocalesForGWT.instance.GUI_Delete());
         dataProvider.addDataDisplay(table);
 
+        ScrollPanel scrollPanel = new ScrollPanel();
+        scrollPanel.add(table);
+        scrollPanel.setPixelSize(-1, 300);
         VerticalPanel vPanel = new VerticalPanel();
-        vPanel.add(table);
+        vPanel.add(scrollPanel);
+//            panel.setPixelSize(-1,200);
 
         HorizontalPanel hPanel = new HorizontalPanel();
         vPanel.setHorizontalAlignment(HorizontalAlignmentConstant.endOf(Direction.DEFAULT));
@@ -215,7 +220,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
     }
 
     protected void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
-        if(dataProvider==null){
+        if (dataProvider == null) {
             dataProvider = new ListDataProvider<DomSchoolClass>();
         }
         List<DomSchoolClass> list = dataProvider.getList();
