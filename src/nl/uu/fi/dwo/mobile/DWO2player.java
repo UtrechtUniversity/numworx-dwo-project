@@ -30,10 +30,12 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
+import fi.dwo.rest.dom.entities.DomLoginContext;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.persistence.PersistenceClassType;
@@ -42,7 +44,7 @@ import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class DWO2player extends DWOplayer implements EntryPoint {
 
-	final class AsyncUserCallback implements AsyncCallback<DomUserFull> {
+	final class AsyncUserCallback implements AsyncCallback<DomUserFullwLoginContext> {
 		private final SecuredUserSchoolLoginManager schoolManager;
 		Map<String,Object> profile = new HashMap<String,Object>();
 		AsyncCallback<? super Map<String,Object>> callback;
@@ -53,10 +55,13 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		}
 
 		@Override
-		public void onSuccess(DomUserFull result) {
-			
-				DwoGlobalVars.getInstance().setCurrentUser(result);
-				toProfile(result, profile);
+		public void onSuccess(DomUserFullwLoginContext result) {
+				DomUserFull user = result.getDomUserFull();
+				DomLoginContext context = result.getDomLoginContext();
+				DwoGlobalVars.getInstance().setCurrentUser(user);
+				DwoGlobalVars.getInstance().setCurrentLoginContext(context);
+				
+				toProfile(user, profile);
 				schoolManager.getSchoolLogins(new AsyncCallback<DomSchoolsRolesAndClasses>() {
 
 					@Override
@@ -144,13 +149,13 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 			public void loginMD5(final String name, final String password, final AsyncCallback<? super Map<String,Object>> callback)
 			{
-				final AsyncCallback<DomUserFull> userCallback = new AsyncUserCallback(schoolManager, callback);
+				final AsyncCallback<DomUserFullwLoginContext> userCallback = new AsyncUserCallback(schoolManager, callback);
 				accountManager.loginUserMD5(name, password, userCallback);
 				
 			}
 			public void login(final String name, final String password, final AsyncCallback<? super Map<String,Object>> callback)
 			{
-				final AsyncCallback<DomUserFull> userCallback = new AsyncUserCallback(schoolManager, callback);
+				final AsyncCallback<DomUserFullwLoginContext> userCallback = new AsyncUserCallback(schoolManager, callback);
 				accountManager.loginUser(name, password, userCallback);
 				
 			}
@@ -207,7 +212,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			public void samlLogin(String name, String org,
 					AsyncCallback<? super Map<String, Object>> callback) {
 				String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
-				final AsyncCallback<DomUserFull> userCallback = new AsyncUserCallback(schoolManager, callback);
+				final AsyncUserCallback userCallback = new AsyncUserCallback(schoolManager, callback);
 				accountManager.samlLogin(name, org, authToken, userCallback);
 			}
 
@@ -215,7 +220,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			public void logout() {
 				super.logout();
 				if(DwoGlobalVars.instance().getCurrentUser() != null)
-					accountManager.logout(new AsyncCallback<Dwo2Exception>() {
+					accountManager.logout(DwoGlobalVars.instance().getCurrentLoginContext(), new AsyncCallback<Dwo2Exception>() {
 	
 						@Override
 						public void onFailure(Throwable caught) {
