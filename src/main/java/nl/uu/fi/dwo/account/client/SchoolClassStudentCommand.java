@@ -45,17 +45,17 @@ public class SchoolClassStudentCommand implements Command {
         panel.setPopup(popup);
         //panel.setSize("300", "200");
         popup.add(panel);
-//        popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-//            @Override
-//            public void setPosition(int offsetWidth, int offsetHeight) {
-//                int left = (Window.getClientWidth() - offsetWidth) / 3;
-//                int top = (Window.getClientHeight() - offsetHeight) / 3;
-//                popup.setPopupPosition(left, top);
-//            }
-//        ;
-//    }
-//
-//);
-        popup.center();
+        popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+            @Override
+            public void setPosition(int offsetWidth, int offsetHeight) {
+                int left = (Window.getClientWidth() - offsetWidth) / 3;
+                int top = (Window.getClientHeight() - offsetHeight) / 3;
+                popup.setPopupPosition(left, top);
+            }
+        ;
+    }
+
+);
+//        popup.center();
     }
 }
