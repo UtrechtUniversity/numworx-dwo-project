@@ -99,8 +99,16 @@ class RestManager {
                 LOG.log(Level.WARNING, "Code: {0}. Reason: {1}", new Object[]{conn.getResponseCode(), conn.getResponseMessage()});
                 Dwo2Exception e;
                 if (conn.getResponseCode() == 400) {//Dwo2Exception
-                    String json = conn.getResponseMessage();
-                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getErrorStream())));
+
+                    String output;
+                    StringBuilder json = new StringBuilder();
+                    while ((output = br.readLine()) != null) {
+                        json.append(output);
+                    }
+                    conn.disconnect();
+                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json.toString()), Dwo2ExceptionTranslator.decodeMessageInJSON(json.toString()));
                 } else {
                     //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                     e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
@@ -124,16 +132,14 @@ class RestManager {
             LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
             T result = genson.deserialize(json.toString(), c);
             return result;
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
 
-        }
-        catch (IOException e) {
-            if(e.getClass().equals(java.net.ConnectException.class)){
+        } catch (IOException e) {
+            if (e.getClass().equals(java.net.ConnectException.class)) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, e.getMessage());
-            }else{
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+            } else {
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
             }
         }
     }
@@ -163,8 +169,16 @@ class RestManager {
                 LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{conn.getResponseCode(), conn.getResponseMessage()});
                 Dwo2Exception e;
                 if (conn.getResponseCode() == 400) {//Dwo2Exception
-                    String json = conn.getResponseMessage();
-                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getErrorStream())));
+
+                    String output;
+                    StringBuilder json = new StringBuilder();
+                    while ((output = br.readLine()) != null) {
+                        json.append(output);
+                    }
+                    conn.disconnect();
+                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json.toString()), Dwo2ExceptionTranslator.decodeMessageInJSON(json.toString()));
                 } else {
                     //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                     e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
@@ -215,15 +229,13 @@ class RestManager {
                     LOG.log(Level.SEVERE, msg);
                     throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
-        }
-        catch (IOException e) {
-            if(e.getClass().equals(java.net.ConnectException.class)){
+        } catch (IOException e) {
+            if (e.getClass().equals(java.net.ConnectException.class)) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, e.getMessage());
-            }else{
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+            } else {
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
             }
         }
     }
@@ -263,8 +275,17 @@ class RestManager {
                 LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{conn.getResponseCode(), conn.getResponseMessage()});
                 Dwo2Exception e;
                 if (conn.getResponseCode() == 400) {//Dwo2Exception
-                    String json = conn.getResponseMessage();
-                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
+//                    String json = conn.getResponseMessage();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getErrorStream())));
+
+                    String output;
+                    StringBuilder json = new StringBuilder();
+                    while ((output = br.readLine()) != null) {
+                        json.append(output);
+                    }
+                    conn.disconnect();
+                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json.toString()), Dwo2ExceptionTranslator.decodeMessageInJSON(json.toString()));
                 } else {
                     //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                     e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
@@ -287,16 +308,14 @@ class RestManager {
             LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
             T result = genson.deserialize(json.toString(), c);
             return result;
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
 
-        }
-        catch (IOException e) {
-            if(e.getClass().equals(java.net.ConnectException.class)){
+        } catch (IOException e) {
+            if (e.getClass().equals(java.net.ConnectException.class)) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, e.getMessage());
-            }else{
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+            } else {
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
             }
         }
     }
@@ -335,8 +354,16 @@ class RestManager {
                 LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{conn.getResponseCode(), conn.getResponseMessage()});
                 Dwo2Exception e;
                 if (conn.getResponseCode() == 400) {//Dwo2Exception
-                    String json = conn.getResponseMessage();
-                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json), Dwo2ExceptionTranslator.decodeMessageInJSON(json));
+                    BufferedReader br = new BufferedReader(new InputStreamReader(
+                            (conn.getErrorStream())));
+
+                    String output;
+                    StringBuilder json = new StringBuilder();
+                    while ((output = br.readLine()) != null) {
+                        json.append(output);
+                    }
+                    conn.disconnect();
+                    e = new Dwo2Exception(Dwo2ExceptionTranslator.decodeCodeInJSON(json.toString()), Dwo2ExceptionTranslator.decodeMessageInJSON(json.toString()));
                 } else {
                     //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                     e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
@@ -391,15 +418,13 @@ class RestManager {
                     LOG.log(Level.SEVERE, msg);
                     throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
-        }
-        catch (IOException e) {
-            if(e.getClass().equals(java.net.ConnectException.class)){
+        } catch (IOException e) {
+            if (e.getClass().equals(java.net.ConnectException.class)) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, e.getMessage());
-            }else{
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+            } else {
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
             }
         }
     }
