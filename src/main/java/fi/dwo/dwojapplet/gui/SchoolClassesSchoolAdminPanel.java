@@ -209,7 +209,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                     }
                 }
                 catch (Dwo2Exception ex) {
-                    LOG.log(Level.FINE, null, ex);
+                    LOG.log(Level.FINE, "", ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
                 finally {
@@ -239,7 +239,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                 try {
                     DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
 
-                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_CONFIRM)) == JOptionPane.OK_OPTION) {
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
                         //persist returned values	
                         prop.removeSchoolClass(sc);
                         tableModel.init(prop, editImage, studentsImage, teachersImage, removeImage);
