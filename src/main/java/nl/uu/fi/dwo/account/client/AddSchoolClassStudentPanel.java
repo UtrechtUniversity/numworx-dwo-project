@@ -88,7 +88,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 
         control.updateSchoolClassesAddSchoolClassView();
 
-        CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
+        CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>(1000);
         // Create name column.
         TextColumn<DomSchoolClass> schoolClassColumn = new TextColumn<DomSchoolClass>() {
             @Override
@@ -208,14 +208,16 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
     }
 
     protected void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
-        if (dataProvider == null) {
-            dataProvider = new ListDataProvider<DomSchoolClass>();
-        }
+//        if (dataProvider == null) {
+//            dataProvider = new ListDataProvider<DomSchoolClass>();
+//        }
+        table.setVisibleRange(0, schoolClasses.size());
         List<DomSchoolClass> list = dataProvider.getList();
         list.clear();
-        for (DomSchoolClass schoolClass : schoolClasses) {
-            list.add(schoolClass);
-        }
-        //Collections.sort(list, classComparator);
+        list.addAll(schoolClasses);
+        Collections.sort(list, classComparator);
+        LOG.info("list size = " + list.size());
+        dataProvider.refresh();
+        table.redraw();
     }
 }
