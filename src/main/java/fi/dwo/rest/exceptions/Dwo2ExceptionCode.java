@@ -18,6 +18,8 @@ public enum Dwo2ExceptionCode {
     User_ConfirmPasswordSwitch,
     User_ConfirmRoleSwitch,
     User_ConfirmSchoolClassSwitch,
+    User_ConfirmSingleSchoolStudentDelete,
+    User_ConfirmRegularSchoolStudentDelete,
     
     //REST interface errors
     Rest_InternalError, //Internal software error, a stack trace should be acquired.
