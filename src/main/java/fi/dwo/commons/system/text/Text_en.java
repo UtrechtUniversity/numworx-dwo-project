@@ -80,6 +80,9 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.DLG_ERROR, "Error" },
                         { TextMapper.DLG_SERVER_OUT, "Server can not be reached, please close this application and inform the application manager."},
 			{ TextMapper.DLG_DONE_MSG, "Requested task completed." },
+                        { TextMapper.DLG_NO_STUDENTS_SELECTED, "Please select one or more students first"},
+                        { TextMapper.DLG_NO_TEACHERS_SELECTED, "Please select one or more teachers first"},
+                        
                         { TextMapper.DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS, "You still have unregistered student accounts in the list. Continue?" },                        
                         { TextMapper.DLG_Q_LOSE_NEW_TEACHER_ACCOUNTS, "You still have unregistered teacher accounts in the list. Continue?" },                        
 			{TextMapper.DLG_CREATESTUDENTERROR,

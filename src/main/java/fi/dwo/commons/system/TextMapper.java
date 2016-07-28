@@ -89,6 +89,8 @@ public abstract class TextMapper {
 	public static final String DLG_CONFIRM = "DLG_CONFIRM";
 	public static final String DLG_Q_REMOVE = "DLG_Q_REMOVE";
 	public static final String DLG_DONE_MSG = "DLG_DONE_MSG";
+	public static final String DLG_NO_STUDENTS_SELECTED = "DLG_NO_STUDENTS_SELECTED";
+	public static final String DLG_NO_TEACHERS_SELECTED = "DLG_NO_TEACHERS_SELECTED";
 
 	public static final String DLG_MESSAGE = "DLG_MESSAGE";
 	public static final String DLG_ERROR = "DLG_ERROR";
