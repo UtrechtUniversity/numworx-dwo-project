@@ -17,6 +17,8 @@ import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
 import fi.dwo.rest.dom.entities.DomLoginContext;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -28,6 +30,7 @@ import java.util.Comparator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -309,14 +312,14 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         targetSchoolClassBox.setMaximumRowCount(10);
         targetSchoolClassBox.addActionListener(this);
         Box header = Box.createHorizontalBox();
-        header.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        header.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
+        //header.setAlignmentX(Component.RIGHT_ALIGNMENT); ????????????
+        //header.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
         header.add(backButton);
-        header.add(Box.createRigidArea(new Dimension(30, 0)));
+        header.add(new Box.Filler(new Dimension(0,0), new Dimension(30, 0),new Dimension(30, 0)));
         header.add(deleteButton);
-        header.add(Box.createRigidArea(new Dimension(30, 0)));
+        header.add(new Box.Filler(new Dimension(0,0), new Dimension(30, 0),new Dimension(30, 0)));
         header.add(copyToSchoolClassButton);
-        header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.add(new Box.Filler(new Dimension(0,0), new Dimension(10, 0),new Dimension(10, 0)));
         header.add(targetSchoolClassBox);
         header.add(Box.createHorizontalGlue());
         header.setPreferredSize(new Dimension(400, backButton.getHeight()));
