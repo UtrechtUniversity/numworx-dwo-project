@@ -418,25 +418,35 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
             GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
         } else if (e.getSource() == deleteButton) {
             try {
+                int cnt = 0;
                 for (int i = 0; i < tableModel.getRowCount(); i++) {
                     if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
-                        DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
-                        prop.removeStudentFromSchoolClass(schoolClass, student);
+                        cnt++;
                     }
                 }
-                Vector<DomSchoolClass> schoolClassVector = new Vector<>(prop.getTeachersOtherSchoolClasses(schoolClass));
-                DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
-                targetSchoolClassBox.setModel(model);
-                if (schoolClassVector.isEmpty()) {
-                    targetSchoolClassBox.setEnabled(false);
-                    copyToSchoolClassButton.setEnabled(false);
+                if (cnt ==0) {
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_STUDENTS_SELECTED));
                 } else {
-                    targetSchoolClassBox.setEnabled(true);
-                    copyToSchoolClassButton.setEnabled(true);
+                    for (int i = 0; i < tableModel.getRowCount(); i++) {
+                        if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
+                            DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
+                            prop.removeStudentFromSchoolClass(schoolClass, student);
+                        }
+                    }
+                    Vector<DomSchoolClass> schoolClassVector = new Vector<>(prop.getTeachersOtherSchoolClasses(schoolClass));
+                    DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
+                    targetSchoolClassBox.setModel(model);
+                    if (schoolClassVector.isEmpty()) {
+                        targetSchoolClassBox.setEnabled(false);
+                        copyToSchoolClassButton.setEnabled(false);
+                    } else {
+                        targetSchoolClassBox.setEnabled(true);
+                        copyToSchoolClassButton.setEnabled(true);
+                    }
+                    tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
+                    tableModel.fireTableDataChanged();
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 }
-                tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
-                tableModel.fireTableDataChanged();
-                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);

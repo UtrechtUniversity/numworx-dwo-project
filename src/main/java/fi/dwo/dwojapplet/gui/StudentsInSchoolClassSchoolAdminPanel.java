@@ -390,6 +390,15 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             }
         } else if (e.getSource() == deleteButton) {
             try {
+                int cnt = 0;
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
+                        cnt++;
+                    }
+                }
+                if (cnt ==0) {
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_STUDENTS_SELECTED));
+                } else {
                 for (int i = 0; i < tableModel.getRowCount(); i++) {
                     if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
                         DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
@@ -410,6 +419,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
                 center.loadCenter(panel);
+                }
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
