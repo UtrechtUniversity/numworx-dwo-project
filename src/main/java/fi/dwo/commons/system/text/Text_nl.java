@@ -78,7 +78,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.DLG_DONE_MSG, "Verzochte taak uitgevoerd." },
                         { TextMapper.DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS, "U heeft nog ongeregistreerde leerlingen in uw lijst. Doorgaan?" },                        
                         { TextMapper.DLG_Q_LOSE_NEW_TEACHER_ACCOUNTS, "U heeft nog ongeregistreerde docenten in uw lijst. Doorgaan?" },                        
-                        { TextMapper.DLG_NO_STUDENTS_SELECTED, "U moet eerst een of meer studenten aanvinken."},
+                        { TextMapper.DLG_NO_STUDENTS_SELECTED, "U moet eerst een of meer leerlingen aanvinken."},
                         { TextMapper.DLG_NO_TEACHERS_SELECTED, "U moet eest een of meer docenten aanvinken."},
 			{
 					TextMapper.DLG_CREATESTUDENTERROR,
