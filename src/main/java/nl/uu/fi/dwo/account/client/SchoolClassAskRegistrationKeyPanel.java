@@ -14,8 +14,11 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.locale.DwoLocalesForGWT;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,11 +32,10 @@ public class SchoolClassAskRegistrationKeyPanel extends VerticalPanel implements
     private static final Logger LOG = Logger.getLogger(SchoolClassAskRegistrationKeyPanel.class.getName());
 
     private SchoolClassStudentController control;
-    private Label schoolClassLabel = new Label("schoolClassName:");
+    private Label schoolClassLabel = new Label(DwoLocalesForGWT.instance.GUI_SchoolclassName() + ":");
     private Label regKeyLabel = new Label("registrationKey:");
     private TextBox schoolClassNameText = new TextBox();
     private PasswordTextBox regKeyText = new PasswordTextBox();
-    private Label localization = new Label("Localisation: " + LocaleInfo.getLocaleNativeDisplayName("en-gb"));
     private PopupPanel popup;
     private Button addBtn;
     private Button closeBtn;
