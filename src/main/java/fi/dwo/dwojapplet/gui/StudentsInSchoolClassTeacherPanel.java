@@ -311,6 +311,9 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         targetSchoolClassBox.setRenderer(renderer);
         targetSchoolClassBox.setMaximumRowCount(10);
         targetSchoolClassBox.addActionListener(this);
+        targetSchoolClassBox.setMaximumSize(targetSchoolClassBox.getPreferredSize());
+        targetSchoolClassBox.setMinimumSize(new Dimension(40, targetSchoolClassBox.getPreferredSize().height ));
+
         Box header = Box.createHorizontalBox();
         //header.setAlignmentX(Component.RIGHT_ALIGNMENT); ????????????
         //header.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
@@ -411,6 +414,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     targetSchoolClassBox.setEnabled(true);
                     copyToSchoolClassButton.setEnabled(true);
                 }
+                targetSchoolClassBox.setMaximumSize(targetSchoolClassBox.getPreferredSize());
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
             } catch (Dwo2Exception ex) {
@@ -446,6 +450,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         targetSchoolClassBox.setEnabled(true);
                         copyToSchoolClassButton.setEnabled(true);
                     }
+                    targetSchoolClassBox.setMaximumSize(targetSchoolClassBox.getPreferredSize());
+
                     tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                     tableModel.fireTableDataChanged();
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
