@@ -89,7 +89,7 @@ public class SecuredDwoAdminSchoolManager {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -140,7 +140,7 @@ public class SecuredDwoAdminSchoolManager {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
         if (hr != null) {
@@ -178,7 +178,7 @@ public class SecuredDwoAdminSchoolManager {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
         if (hr != null) {
@@ -224,7 +224,7 @@ public class SecuredDwoAdminSchoolManager {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
         if (hr != null) {
@@ -272,7 +272,7 @@ public class SecuredDwoAdminSchoolManager {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
         if (hr != null) {
@@ -413,7 +413,7 @@ public class SecuredDwoAdminSchoolManager {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
         school = SchoolManager.findBySchoolLogin(restSchool.getDomSchool4DwoAdmin().getSchoolLogin());
@@ -435,7 +435,7 @@ public class SecuredDwoAdminSchoolManager {
             }
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
         return resultList;
@@ -462,7 +462,7 @@ public class SecuredDwoAdminSchoolManager {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
         if (hr != null) {

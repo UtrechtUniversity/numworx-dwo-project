@@ -250,7 +250,7 @@ public class PublicUserManager {
                 return result;
             }
             catch (Dwo2Exception ex) {
-                Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The LoginContext failed to be handled for this user.");
             }
 
@@ -355,7 +355,7 @@ public class PublicUserManager {
                 }
             }
             catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, registration failed.");
             }
             //generate samlUser

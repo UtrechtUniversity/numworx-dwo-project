@@ -81,7 +81,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -122,7 +122,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
         List<PersistentHasRole> hrList;
@@ -135,7 +135,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             }
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -162,7 +162,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
         List<PersistentHasRole> hrList;
@@ -175,7 +175,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             }
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -205,7 +205,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -259,7 +259,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -319,7 +319,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -366,7 +366,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -419,7 +419,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -447,7 +447,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
         } else {
@@ -485,7 +485,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -532,7 +532,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -580,7 +580,7 @@ public class SecuredSchoolAdminSchoolClassManager {
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -628,7 +628,7 @@ public class SecuredSchoolAdminSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schoolamdin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -675,7 +675,7 @@ public class SecuredSchoolAdminSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -730,7 +730,7 @@ public class SecuredSchoolAdminSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 

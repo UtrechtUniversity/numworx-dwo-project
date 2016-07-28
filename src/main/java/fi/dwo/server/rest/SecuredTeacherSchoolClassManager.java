@@ -83,7 +83,7 @@ public class SecuredTeacherSchoolClassManager {
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -130,7 +130,7 @@ public class SecuredTeacherSchoolClassManager {
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -172,7 +172,7 @@ public class SecuredTeacherSchoolClassManager {
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
         List<PersistentHasRole> hrList;
@@ -185,7 +185,7 @@ public class SecuredTeacherSchoolClassManager {
             }
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -211,7 +211,7 @@ public class SecuredTeacherSchoolClassManager {
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
         List<PersistentHasRole> hrList;
@@ -226,7 +226,7 @@ public class SecuredTeacherSchoolClassManager {
             }
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -257,7 +257,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
 
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -313,7 +313,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
 
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -366,7 +366,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
 
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -414,7 +414,7 @@ public class SecuredTeacherSchoolClassManager {
 //        }
 //        catch (Dwo2Exception ex) {
 //            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-//            LOG.log(Level.SEVERE, null, ex);
+//            LOG.log(Level.SEVERE, "", ex);
 //            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
 //        }
 //
@@ -457,7 +457,7 @@ public class SecuredTeacherSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -521,7 +521,7 @@ public class SecuredTeacherSchoolClassManager {
 
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -570,7 +570,7 @@ public class SecuredTeacherSchoolClassManager {
             shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -625,7 +625,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -679,7 +679,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -731,7 +731,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -783,7 +783,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -795,7 +795,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -842,7 +842,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -867,7 +867,7 @@ public class SecuredTeacherSchoolClassManager {
             }
             catch (PersistenceException ex) {
                 LOG.log(Level.WARNING, "User {0} could not update user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getUserName()});
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user " + sc.getUserPrincipal().getName() + ".");
             }
         } else {
@@ -911,7 +911,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -940,7 +940,7 @@ public class SecuredTeacherSchoolClassManager {
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(ex);
             }
         } else {
