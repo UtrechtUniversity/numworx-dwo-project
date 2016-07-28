@@ -204,20 +204,20 @@ public class SecuredStudentSchoolClassManager {
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(id));
 
         if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-            if(!(schoolClass.getRegistrationKey()==null 
-                    || schoolClass.getRegistrationKey().equals(restSchoolClass.getDomNewSchoolClass4Student().getRegistrationKey()))){
+            if (!(schoolClass.getRegistrationKey() == null
+                    || schoolClass.getRegistrationKey().equals(restSchoolClass.getDomNewSchoolClass4Student().getRegistrationKey()))) {
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Invalid_schoolclass_registration_key, "Incorrect password to add yourself to this school class.");
             }
-                try {
-                    PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
-                    PersistentStudentOfClass soc = new PersistentStudentOfClass();
-                    soc.setPersistentStudentOfClassPK(socId);
-                    soc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
-                    StudentOfClassManager.create(soc);
-                }
-                catch (PersistenceException e) {
-                    return false;
-                }
+            try {
+                PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
+                PersistentStudentOfClass soc = new PersistentStudentOfClass();
+                soc.setPersistentStudentOfClassPK(socId);
+                soc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
+                StudentOfClassManager.create(soc);
+            }
+            catch (PersistenceException e) {
+                return false;
+            }
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove self from a schoolclass id {1} while one or both do not exists or are not in the same school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to submit yourself to this school class.");
