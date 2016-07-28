@@ -23,6 +23,8 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -92,7 +94,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         public Component getTableCellRendererComponent(JTable table,
                 Object value, boolean selected, boolean hasFocus, int row, int col) {
             Image image = (Image) value;
-            icon.setImage(image);            
+            icon.setImage(image);
             setIcon(icon);
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
@@ -165,12 +167,10 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                         tableModel.fireTableDataChanged();
                     }
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     LOG.log(Level.FINE, null, ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                }
-                finally {
+                } finally {
                     fireEditingStopped();
                 }
             } else if (value == loginImage) {
@@ -187,7 +187,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
                     DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(user.getUserName(),
                             user.getPassword());
-                    if (loginContext!=null && loginContext.getLastLoginTimeStamp() != null) {
+                    if (loginContext != null && loginContext.getLastLoginTimeStamp() != null) {
                         if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
                                 Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
                         ) != JOptionPane.OK_OPTION) {
@@ -196,13 +196,11 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     }
                     SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
-                }
-                catch (LoginException ex) {
+                } catch (LoginException ex) {
                     Dwo2Exception err = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
                     LOG.log(Level.SEVERE, null, ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), err);
-                }
-                catch (Dwo2Exception e) {
+                } catch (Dwo2Exception e) {
                     LOG.log(Level.SEVERE, null, e);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), e);
                 }
@@ -238,7 +236,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new StudentsInSchoolClassTeacherPanel.ImageRenderer(), new StudentsInSchoolClassTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
-        for(int i=0;i<jtable.getColumnModel().getColumnCount();i++){
+        for (int i = 0; i < jtable.getColumnModel().getColumnCount(); i++) {
             jtable.getColumnModel().getColumn(i).setPreferredWidth(jtable.getColumnModel().getColumn(i).getMinWidth());
         }
 
@@ -278,8 +276,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         tr.addImage(loginImage, 2);
         try {
             tr.waitForAll();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
 
         //FontMetrics fm;
@@ -293,6 +290,11 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
         copyToSchoolClassButton.addActionListener(this);
         Vector<DomSchoolClass> schoolClassVector = new Vector<DomSchoolClass>(prop.getTeachersOtherSchoolClasses(sc));
+        Collections.sort(schoolClassVector, new Comparator<DomSchoolClass>() {
+            public int compare(DomSchoolClass a, DomSchoolClass b) {
+                return a.getSchoolClassName().compareTo(b.getSchoolClassName());
+            }
+        });
         targetSchoolClassBox = new JComboBox(schoolClassVector);
         DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
         if (schoolClassVector.size() > 0) {
@@ -319,7 +321,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         header.add(Box.createHorizontalGlue());
         header.setPreferredSize(new Dimension(400, backButton.getHeight()));
         header.setMaximumSize(new Dimension(3000, 100));
-        
+
         this.add(header);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         buildJTable();
@@ -381,8 +383,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     DomSchoolClass toSchoolClass = (DomSchoolClass) targetSchoolClassBox.getSelectedItem();
                     try {
                         prop.submitStudentToSchoolClass(schoolClass, toSchoolClass, student);
-                    }
-                    catch (Dwo2Exception ex) {
+                    } catch (Dwo2Exception ex) {
                         LOG.log(Level.FINE, null, ex);
                         failed = true;
                     }
@@ -393,19 +394,23 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
             }
             try {
                 Vector<DomSchoolClass> schoolClassVector = new Vector<DomSchoolClass>(prop.getTeachersOtherSchoolClasses(schoolClass));
+                Collections.sort(schoolClassVector, new Comparator<DomSchoolClass>() {
+                    public int compare(DomSchoolClass a, DomSchoolClass b) {
+                        return a.getSchoolClassName().compareTo(b.getSchoolClassName());
+                    }
+                });
                 DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
                 targetSchoolClassBox.setModel(model);
-                if(schoolClassVector.isEmpty()){
+                if (schoolClassVector.isEmpty()) {
                     targetSchoolClassBox.setEnabled(false);
                     copyToSchoolClassButton.setEnabled(false);
-                }else{
+                } else {
                     targetSchoolClassBox.setEnabled(true);
                     copyToSchoolClassButton.setEnabled(true);
                 }
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
             }
@@ -422,18 +427,17 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 Vector<DomSchoolClass> schoolClassVector = new Vector<>(prop.getTeachersOtherSchoolClasses(schoolClass));
                 DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
                 targetSchoolClassBox.setModel(model);
-                if(schoolClassVector.isEmpty()){
+                if (schoolClassVector.isEmpty()) {
                     targetSchoolClassBox.setEnabled(false);
                     copyToSchoolClassButton.setEnabled(false);
-                }else{
+                } else {
                     targetSchoolClassBox.setEnabled(true);
                     copyToSchoolClassButton.setEnabled(true);
                 }
                 tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
             }
@@ -443,8 +447,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                 ClassTeacherPanel panel = new ClassTeacherPanel();
                 center.loadCenter(panel);
 
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
@@ -453,8 +456,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
             try {
                 NewSingleSchoolStudentsTeacherPanel panel = new NewSingleSchoolStudentsTeacherPanel(schoolClass);
                 center.loadCenter(panel);
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(center, ex);
             }

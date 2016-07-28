@@ -20,6 +20,8 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -272,6 +274,11 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         addSchoolClassBtn.setSize(addSchoolClassBtn.getPreferredSize());
         addSchoolClassBtn.addActionListener(this);
         Vector<DomSchoolClass> userVector = new Vector<DomSchoolClass>(prop.getOtherSchoolClasses(domUser, userType));
+        Collections.sort(userVector, new Comparator<DomSchoolClass>() {
+            public int compare(DomSchoolClass a, DomSchoolClass b) {
+                return a.getSchoolClassName().compareTo(b.getSchoolClassName());
+            }
+        });
         addSchoolClassBox = new JComboBox(userVector);
         DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
         if (userVector.size() > 0) {

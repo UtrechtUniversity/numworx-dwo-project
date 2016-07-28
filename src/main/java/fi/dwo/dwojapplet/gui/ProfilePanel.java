@@ -434,6 +434,12 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 //                   Add menu to add/remove yourself to klasses. 
 //            /* Class field */
 //            groupChoice = new JComboBox();
+//        Collections.sort(userVector, new Comparator<DomSchoolClass>() {
+//            public int compare(DomSchoolClass a, DomSchoolClass b) {
+//                return a.getSchoolClassName().compareTo(b.getSchoolClassName());
+//            }
+//        });
+
 //            groupChoice.setBackground(p.getBackground());
 //            groupChoice.setFont(GuiConstants.NORMAL_TEXT);
 //            if (user.getInClass() == null) {

@@ -16,6 +16,8 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -233,6 +235,11 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         addTeacherButton.setSize(addTeacherButton.getPreferredSize());
         addTeacherButton.addActionListener(this);
         Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(sc));
+        Collections.sort(teacherVector, new Comparator<DomTeacher>() {
+            public int compare(DomTeacher a, DomTeacher b) {
+                return a.getFamilyName().compareTo(b.getFamilyName());
+            }
+        });
         addTeacherBox = new JComboBox(teacherVector);
         DomUserListCellRenderer renderer = new DomUserListCellRenderer();
         if (teacherVector.size() > 0) {
@@ -312,6 +319,11 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     prop.submitTeacherToSchoolClass(schoolClass, teacher);
                     TeachersInSchoolClassSchoolAdminPanel panel = new TeachersInSchoolClassSchoolAdminPanel(schoolClass);
                     Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
+                    Collections.sort(teacherVector, new Comparator<DomTeacher>() {
+                        public int compare(DomTeacher a, DomTeacher b) {
+                            return a.getFamilyName().compareTo(b.getFamilyName());
+                        }
+                    });
                     DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
                     addTeacherBox.setModel(model);
                     if (teacherVector.isEmpty()) {

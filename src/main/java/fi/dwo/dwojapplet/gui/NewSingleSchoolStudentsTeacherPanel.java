@@ -242,6 +242,12 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         addButton.addActionListener(this);
 //        Vector<DomSchoolClass> classList = new Vector<DomSchoolClass>(prop.getTeachersSchoolClasses());
 //        schoolClassComboBox = new JComboBox(classList);
+//       fix code first Collections.sort(userVector, new Comparator<DomSchoolClass>() {
+//            public int compare(DomSchoolClass a, DomSchoolClass b) {
+//                return a.getSchoolClassName().compareTo(b.getSchoolClassName());
+//            }
+//        });
+
 //        if (classList.size() > 0) {
 //            schoolClassComboBox.setSelectedIndex(0);
 //        }
