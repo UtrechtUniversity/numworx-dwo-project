@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.rest.dom.entities.RoleType;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -43,7 +44,6 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
                         || prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.SCHOOLADMIN.name())){
           rows--;
         }
-                
         data = new Object[rows][5];
         int j = 0;
         for (DomSchoolRoleAndClass src : srcList) {

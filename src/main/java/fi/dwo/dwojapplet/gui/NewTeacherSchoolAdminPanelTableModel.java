@@ -14,20 +14,20 @@ import javax.swing.table.AbstractTableModel;
  */
 class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
 
-            private String[] columnNames = {
-            TextMapper.getText(TextMapper.TBL_GIVENNAME),
-            TextMapper.getText(TextMapper.TBL_INSERTION),
-            TextMapper.getText(TextMapper.TBL_FAMILYNAME),
-            TextMapper.getText(TextMapper.TBL_USERNAME),
-            TextMapper.getText(TextMapper.TBL_PASSWORD),
-            TextMapper.getText(TextMapper.TBL_EMAIL),
-            TextMapper.getText(TextMapper.TBL_DELETE)};
+    private String[] columnNames = {
+        TextMapper.getText(TextMapper.TBL_GIVENNAME),
+        TextMapper.getText(TextMapper.TBL_INSERTION),
+        TextMapper.getText(TextMapper.TBL_FAMILYNAME),
+        TextMapper.getText(TextMapper.TBL_USERNAME),
+        TextMapper.getText(TextMapper.TBL_PASSWORD),
+        TextMapper.getText(TextMapper.TBL_EMAIL),
+        TextMapper.getText(TextMapper.TBL_DELETE)};
 
     static boolean DEBUG = false;
     private NewTeacherSchoolAdminPanelProperties prop;
 
     private int selectedRow, selectedColumn;
-    
+
     //define an empty field to add things.
     private int emptyRow = 0;
 
@@ -102,9 +102,24 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
      */
     @Override
     public Class getColumnClass(int c) {
-    	if( getRowCount() > 0)
-    		return getValueAt(0, c).getClass();
-    	return super.getColumnClass(c);
+        switch (c) {
+            case 0:
+                return String.class;
+            case 1:
+                return String.class;
+            case 2:
+                return String.class;
+            case 3:
+                return String.class;
+            case 4:
+                return String.class;
+            case 5:
+                return String.class;
+            case 6:
+                return Image.class;
+            default:
+                return DomUserFull.class;
+        }
     }
 
     /*
@@ -203,10 +218,10 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
             data.add(s);
         }
         data.add(temp);
-        emptyRow = data.size()-1;
+        emptyRow = data.size() - 1;
 //        this.fireTableDataChanged();
-            this.fireTableStructureChanged();
-        
+        this.fireTableStructureChanged();
+
     }
 
     List<DomUserFull> getSubmitList() {
