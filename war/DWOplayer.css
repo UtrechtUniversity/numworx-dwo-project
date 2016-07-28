@@ -293,3 +293,15 @@ div.listItem-dwo-separator {
 .gwt-MenuItem-disabled {
 	display: none;
 }
+
+.UserBar {
+	background: initial !important;
+	border: initial !important;
+}
+
+.UserBar .UserItem.gwt-MenuItem {
+	color: inherit;
+}
+.UserBar .UserItem.gwt-MenuItem-selected {
+	background: initial !important;	
+}
