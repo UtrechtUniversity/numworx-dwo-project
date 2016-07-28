@@ -112,7 +112,7 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
             buildJTable();
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             GuiCreator.instance().ShowErrorDialog(this, ex);
         }
 
@@ -196,11 +196,11 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
                 GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
             }
             catch (LoginException ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
             catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
             }
 
@@ -334,8 +334,8 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
                 }
             }
             catch (Dwo2Exception ex) {
-                Logger.getLogger(SchoolClassRegistrationStudentJPanel.class.getName()).log(Level.SEVERE, null, ex);
-                //GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.));
+                Logger.getLogger(SchoolClassRegistrationStudentJPanel.class.getName()).log(Level.SEVERE, "", ex);
+                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().mainPanel, ex);
                 
             }
         } else if (e.getSource() == backButton) {
