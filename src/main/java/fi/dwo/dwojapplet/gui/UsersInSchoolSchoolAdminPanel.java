@@ -196,21 +196,24 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                         } else {
                             answer = GuiCreator.instance().ShowConfirmDialog(center, Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmRegularSchoolStudentDelete));
                         };
+                        if(answer==JOptionPane.OK_OPTION){
                         if (user.getSingleSchool()) {
                             prop.removeSingleSchoolStudentFromSchool(user);
                         } else {
                             prop.removeStudentFromSchool(user);
                         }
                         tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
-
+                        }
                     } else if (teacherRadio.isSelected()) {
-                        if (JOptionPane.OK_OPTION == GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_REMOVE))) {
+                        if (JOptionPane.OK_OPTION 
+                                == GuiCreator.instance().ShowConfirmDialog(center, Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmTeacherFromSchoolDelete))) {
                             DomTeacher user = (DomTeacher) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                             prop.removeTeacherFromSchool(user);
                             tableModel.init(prop.getTeachersInSchool(), removeImage, studentImage, editImage, emptyImage);
                         }
                     } else if (schoolAdminRadio.isSelected()) {
-                        if (JOptionPane.OK_OPTION == GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_REMOVE))) {
+                        if (JOptionPane.OK_OPTION 
+                                == GuiCreator.instance().ShowConfirmDialog(center, Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmSchoolAdminFromSchoolDelete))) {
                             DomSchoolAdmin user = (DomSchoolAdmin) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                             prop.removeSchoolAdminFromSchool(user);
                             tableModel.init(prop.getSchoolAdminsInSchool(), removeImage, studentImage, editImage, emptyImage);
