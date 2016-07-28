@@ -2,12 +2,12 @@ package fi.dwo.server.rest;
 
 import com.digitalmolehill.crypto.SymmetricCryptor;
 import fi.dwo.rest.dom.entities.DomLoginCheck;
-import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -21,9 +21,11 @@ import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -31,6 +33,7 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import javax.mail.*;
@@ -81,17 +84,17 @@ public class PublicUserManager {
     @Produces({"application/json"})
     @Path("/submit")
     public Boolean submitNewUser(RestNewUser newUserReg) {
-        EntityManager em = DwoEmfFactory.getEntityManager();        
-        if(newUserReg==null){
+        EntityManager em = DwoEmfFactory.getEntityManager();
+        if (newUserReg == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
-        if(!ValidUserFieldsChecker.isValidEmail(newUserReg.getDomNewUser().getEmail())){
+        if (!ValidUserFieldsChecker.isValidEmail(newUserReg.getDomNewUser().getEmail())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Adres_Invalid, "The email address does not  conform with RFC 5322.");
         }
-        if(!ValidUserFieldsChecker.isValidUserName(newUserReg.getDomNewUser().getUsername())){
+        if (!ValidUserFieldsChecker.isValidUserName(newUserReg.getDomNewUser().getUsername())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
         }
-        
+
         PersistentUser u;
         u = UserManager.findByUserName(newUserReg.getDomNewUser().getUsername());
         if (u != null) {
@@ -219,7 +222,7 @@ public class PublicUserManager {
     }
 
     /**
-     * Retrieves a user from samluser.
+     * Retrieves a DomUserFullwLoginContext from samluser. In this case a new loginContext is forced.
      *
      * @param samlRestUser
      * @return
@@ -227,7 +230,7 @@ public class PublicUserManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submitSaml")
-    public DomUserFull getSamlUser(RestSamlUser samlRestUser) {
+    public DomUserFullwLoginContext getSamlUser(RestSamlUser samlRestUser) {
         //should return a DomFullUser. 
         PersistentSamlUser samlUser = SamlUserManager.findEntity(samlRestUser.getDomSamlUser().getSamlUserId(), samlRestUser.getDomSamlUser().getSamlOrgId());
         if (samlUser != null
@@ -236,7 +239,21 @@ public class PublicUserManager {
 
             LOG.log(Level.SEVERE, "equal {0}, tokenValid {1} {2} time={3}", new Object[]{samlUser.getAuthToken().equals(samlRestUser.getDomSamlUser().getAuthToken()), samlUser.tokenIsValid(20000), samlUser, System.currentTimeMillis()});
 
-            return UserManager.findEntity(samlUser.getUserID()).buildDomUserFull();
+            PersistentUser user = UserManager.findEntity(samlUser.getUserID());
+            try {
+                PersistentLoginContext loginContext = LoginContextUtilManager.getLoginContext(user);
+                loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+                LoginContextManager.edit(loginContext);
+                DomUserFullwLoginContext result = new DomUserFullwLoginContext();
+                result.setDomLoginContext(loginContext.createDomLoginContext());
+                result.setDomUserFull(user.buildDomUserFull());
+                return result;
+            }
+            catch (Dwo2Exception ex) {
+                Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, null, ex);
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The LoginContext failed to be handled for this user.");
+            }
+
         } else {
             LOG.log(Level.SEVERE, "Incorrect saml-authentication event for samlOrg {0} samlUser {1} and authToken {2}: {3}", new Object[]{samlRestUser.getDomSamlUser().getSamlOrgId(), samlRestUser.getDomSamlUser().getSamlUserId(), samlRestUser.getDomSamlUser().getAuthToken(), samlUser});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The authentication is invalid, this event is logged.");
@@ -506,7 +523,7 @@ public class PublicUserManager {
                 + "<table>"
                 + "<tr><td align = \"right\">authCode:</td><td><input type=\"text\" size=\"80\" name=\"authCode\" value=\"wim_project\" ></td></tr>"
                 + "<tr><td align = \"right\">new password:</td><td><input type=\"text\" size=\"80\" name=\"newPassword\" value=\"pass\" ></td></tr>"
-                + "<tr><td/><td align =\"right\"><input type=submit value=\""+TextMapper.getText(TextMapper.BTN_OK) + "\"></td></tr>"
+                + "<tr><td/><td align =\"right\"><input type=submit value=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\"></td></tr>"
                 + "</table>"
                 + "</form>";
         r += "</BODY></HTML>";
@@ -529,10 +546,10 @@ public class PublicUserManager {
             @FormParam("authCode") String authCode,
             @FormParam("newPassword") String newPassword
     ) throws Exception {
-        if(!ValidUserFieldsChecker.isValidPassword(newPassword)){
+        if (!ValidUserFieldsChecker.isValidPassword(newPassword)) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password has illegal characters or length.");
         }
-        
+
         //Password for encrypting current unix timestamp modulus 10 minutes + randomseed
         //decrypt JSON String
         String data = "";
@@ -553,7 +570,7 @@ public class PublicUserManager {
         }
         if (data.startsWith("dwoAuthCode:")) {
             PersistentUser user = UserManager.findByUserName(data.split(":")[1]);
-            
+
             user.setPassword(MD5.getHashString(newPassword));
             UserManager.edit(user);
             LOG.log(Level.INFO, "Updated password of user with username {0} of timeslot {1}  from valid authCode.", new Object[]{user.getUsername(), timeslot});
