@@ -11,6 +11,8 @@ import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.awt.Color;
 import java.awt.Component;
 import static java.awt.Component.LEFT_ALIGNMENT;
@@ -81,7 +83,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
     private Image removeImage;
 
     private JPanel jtbl;
-    private TableRowSorter rowSorter;    
+    private TableRowSorter rowSorter;
 
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
@@ -163,12 +165,10 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                         tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
                         tableModel.fireTableDataChanged();
                     }
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     LOG.log(Level.FINE, null, ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                }
-                finally {
+                } finally {
                     fireEditingStopped();
                 }
             } else if (value == studentImage || value == teacherImage) {
@@ -182,39 +182,45 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                         UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(user, UsersSchoolClassesSchoolAdminPanel.UserType.TEACHER);
                         center.loadCenter(panel);
                     }
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     LOG.log(Level.SEVERE, null, ex);
                     GuiCreator.instance().ShowErrorDialog(center, ex);
                 }
             } else if (value == removeImage) {
-                if (JOptionPane.OK_OPTION == GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_REMOVE))) {
-                    try {
-                        if (studentRadio.isSelected()) {
-                            DomStudent user = (DomStudent) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-                            if (user.getSingleSchool()) {
-                                prop.removeSingleSchoolStudentFromSchool(user);
-                            } else {
-                                prop.removeStudentFromSchool(user);
-                            }
-                            tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
-                        } else if (teacherRadio.isSelected()) {
+                try {
+                    if (studentRadio.isSelected()) {
+                        DomStudent user = (DomStudent) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+                        int answer;
+                        if (user.getSingleSchool()) {
+                            answer = GuiCreator.instance().ShowConfirmDialog(center, Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmSingleSchoolStudentDelete));
+                        } else {
+                            answer = GuiCreator.instance().ShowConfirmDialog(center, Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmRegularSchoolStudentDelete));
+                        };
+                        if (user.getSingleSchool()) {
+                            prop.removeSingleSchoolStudentFromSchool(user);
+                        } else {
+                            prop.removeStudentFromSchool(user);
+                        }
+                        tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
+
+                    } else if (teacherRadio.isSelected()) {
+                        if (JOptionPane.OK_OPTION == GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_REMOVE))) {
                             DomTeacher user = (DomTeacher) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                             prop.removeTeacherFromSchool(user);
                             tableModel.init(prop.getTeachersInSchool(), removeImage, studentImage, editImage, emptyImage);
-                        } else if (schoolAdminRadio.isSelected()) {
+                        }
+                    } else if (schoolAdminRadio.isSelected()) {
+                        if (JOptionPane.OK_OPTION == GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_REMOVE))) {
                             DomSchoolAdmin user = (DomSchoolAdmin) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                             prop.removeSchoolAdminFromSchool(user);
                             tableModel.init(prop.getSchoolAdminsInSchool(), removeImage, studentImage, editImage, emptyImage);
                         }
                     }
-                    catch (Dwo2Exception ex) {
-                        LOG.log(Level.FINE, null, ex);
-                        JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                    }
-                    finally {
-                        fireEditingStopped();
-                    }
+                } catch (Dwo2Exception ex) {
+                    LOG.log(Level.FINE, null, ex);
+                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    fireEditingStopped();
                 }
             }
         }
@@ -238,7 +244,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         jtbl.setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new UsersInSchoolSchoolAdminPanelTableModel();
         List userList = null;
-        Image image=emptyImage;
+        Image image = emptyImage;
         switch (userType) {
             case STUDENT:
                 userList = prop.getStudentsInSchool();
@@ -258,8 +264,8 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);
         rowSorter.toggleSortOrder(3);//
-        jtable.setRowSorter(rowSorter);        
-        
+        jtable.setRowSorter(rowSorter);
+
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }
@@ -367,8 +373,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
 
         try {
             tr.waitForAll();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
 
         //FontMetrics fm;
@@ -455,8 +460,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 addTeachersButton.setVisible(false);
 //                addStudentsButton.setVisible(true);
 
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
         } else if (e.getSource() == teacherRadio) {
@@ -467,8 +471,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 tableModel.init(userList, removeImage, teacherImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
                 addTeachersButton.setVisible(true);
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
         } else if (e.getSource() == schoolAdminRadio) {
@@ -479,16 +482,14 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 tableModel.init(userList, removeImage, teacherImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
                 addTeachersButton.setVisible(false);
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
         } else if (e.getSource() == addTeachersButton) {
             try {
                 NewTeacherSchoolAdminPanel panel = new NewTeacherSchoolAdminPanel();
                 center.loadCenter(panel);
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
