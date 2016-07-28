@@ -471,6 +471,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
             catch (SchoolException ex) {
+                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), ex.getMessage());
                 Logger.getLogger(SchoolDwoAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

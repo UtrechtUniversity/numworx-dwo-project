@@ -120,33 +120,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         l.setVisible(true);
 
         /* schoolName field */
-        Hashtable fidentitySchools = PersistenceFacade.instance().getFidentitySchools();
-        if (!"".equals(schoolName)) {
-            JTextField tf = new JTextField(schoolName);
-            tf.setEditable(fidentitySchools == null);
-            schoolNameField = tf;
-        } else {
-            schoolIdVector.clear();
-            schoolIdVector.addElement(ZERO);
-            if (fidentitySchools == null) {
-                schoolNameField = new JTextField();
-            } else {
-                TreeMap reversemap = new TreeMap();
-                Iterator iter = fidentitySchools.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Entry object = (Entry) iter.next();
-                    reversemap.put(object.getValue(), object.getKey());
-                }
-                JComboBox combo;
-                schoolNameField = combo = new JComboBox();
-                Iterator enumeration = reversemap.keySet().iterator();
-                while (enumeration.hasNext()) {
-                    Object element = enumeration.next();
-                    schoolIdVector.addElement(new Integer(reversemap.get(element).toString()));
-                    combo.addItem(element.toString());
-                }
-            }
-        }
+        schoolNameField = new JTextField();
 
         int w = Math.max(300, schoolNameField.getPreferredSize().width);
         schoolNameField.setBounds(150, 28, w, 20);
@@ -192,7 +166,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         form.add(l);
         JSpinnerDateEditor dateEditor = new JSpinnerDateEditor(); // zie ook selectcoursesdialog
         dateField = new JDateChooser(null, expire, null, dateEditor);
-        dateField.setEnabled(fidentitySchools == null);
+        dateField.setEnabled(true);
 //        dateField.setMinimumSize(dateField.getPreferredSize());
 //        dateField.setMinimumSize(new Dimension());
         form.add(dateField);
