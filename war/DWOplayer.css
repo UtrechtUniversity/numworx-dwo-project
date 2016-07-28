@@ -288,3 +288,9 @@ div.listItem-dwo-separator {
 	margin-left: 10px;
 	margin-right: 10px;
 }
+
+
+.gwt-MenuItem-disabled {
+	display: none;
+}
+}
