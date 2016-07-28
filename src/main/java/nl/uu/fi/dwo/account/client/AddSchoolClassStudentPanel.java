@@ -5,6 +5,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -15,10 +17,17 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionChangeEvent.Handler;
+import com.google.gwt.view.client.SingleSelectionModel;
+
 import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.locale.DwoLocalesForGWT;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,33 +66,28 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 //        control.init(user);
 
     }
+    
+    final Comparator<DomSchoolClass> classComparator = new Comparator<DomSchoolClass>() {
+    	public int compare(DomSchoolClass o1, DomSchoolClass o2) {
+		    if (o1 == o2) {
+		      return 0;
+		    }
+		
+		    // Compare the name columns.
+		    if (o1 != null) {
+		      return (o2 != null) ? o1.getSchoolClassName().compareTo(o2.getSchoolClassName()) : 1;
+		    }
+		    return -1;
+		  }
+		};
+
+	private SingleSelectionModel<DomSchoolClass> selectionModel;
 
     public void init(DomUserFull user) {
         this.setSize("400", "500");
 
         control.updateSchoolClassesAddSchoolClassView();
 
-//        Grid g = new Grid(control.getSchoolClasses().size() + 1, 3);
-//        for (int i = 0; i < control.getSchoolClasses().size(); i++) {
-//            g.setText(i, 0, control.getSchoolClasses().get(i).getSchoolClassName());
-//            loginBtn = new Button("login");
-//            loginBtn.addClickHandler(this);
-//            g.setWidget(i, 1, loginBtn);
-//            delBtn = new Button("del");
-//            delBtn.addClickHandler(this);
-//            g.setWidget(i, 2, delBtn);
-//        }
-//
-//        // Just for good measure, let's put a button in the center.
-//        doneButton = new Button("Done");
-//        doneButton.addClickHandler(this);
-//        g.setWidget(control.getSchoolClasses().size(), 0, doneButton);
-//        newBtn = new Button("NEW");
-//        newBtn.addClickHandler(this);
-//        g.setWidget(control.getSchoolClasses().size(), 2, newBtn);
-//        this.clear();
-//        this.add(g);
-//
         CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
         // Create name column.
         TextColumn<DomSchoolClass> schoolClassColumn = new TextColumn<DomSchoolClass>() {
@@ -95,33 +99,14 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 
         schoolClassColumn.setSortable(true);
 
-//        Column<DomSchoolClass, ImageResource> loginColumn
-//                = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-//            @Override
-//            public ImageResource getValue(DomSchoolClass object) {
-//                return AccountImageBundle.instance.student();
-//            }
-//        };
-//       Column<DomSchoolClass, ImageResource> deleteColumn
-//                = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
-//            @Override
-//            public ImageResource getValue(DomSchoolClass object) {
-//                return AccountImageBundle.instance.delete();
-//            }
-//        };        
-//        TextColumn<DomSchoolClass> loginColumn = new TextColumn<DomSchoolClass>() {
-//            @Override
-//            public Image getValue(DomSchoolClass data) {
-//                return AccountImageBundle.instance.student();
-//            }
-//        };
-//
-//        ImageColumn<DomSchoolClass> deleteColumn = new TextColumn<DomSchoolClass>() {
-//            @Override
-//            public Image getValue(DomSchoolClass data) {
-//                return AccountImageBundle.instance.delete();
-//            }
-//        };
+        ListHandler<DomSchoolClass> columnSortHandler = new ListHandler<DomSchoolClass>(
+                dataProvider.getList());
+			columnSortHandler.setComparator(schoolClassColumn,
+                classComparator);
+            table.addColumnSortHandler(columnSortHandler);
+        
+        
+        
         CellPreviewEvent.Handler<DomSchoolClass> cellPreviewHandler = new CellPreviewEvent.Handler<DomSchoolClass>() {
             @Override
             public void onCellPreview(CellPreviewEvent<DomSchoolClass> event) {
@@ -134,21 +119,25 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                         && button == NativeEvent.BUTTON_LEFT) {
                     LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
-//                    switch (rowIndex) {
-//                        case 1: // set selected schoolclass to add
                     selectedClass = sc;
-//                            break;
-//                        default:
-//                    }
+                    AddSchoolClassStudentPanel.this.table.setKeyboardSelectedRow(rowIndex);
                 }
             }
         };
-        table.addCellPreviewHandler(cellPreviewHandler);
+       // table.addCellPreviewHandler(cellPreviewHandler);
+		selectionModel = new SingleSelectionModel<DomSchoolClass>();
+		selectionModel.addSelectionChangeHandler(new Handler() {
+
+			@Override
+			public void onSelectionChange(SelectionChangeEvent event) {
+				LOG.info("selection event " + selectionModel.getSelectedObject());
+				selectedClass = selectionModel.getSelectedObject();
+			}}); 
+		table.setSelectionModel(selectionModel);
+		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
 
         // Add the columns.
         table.addColumn(schoolClassColumn, DwoLocalesForGWT.instance.GUI_SchoolclassName());
-//        table.addColumn(loginColumn, DwoLocalesForGWT.instance.GUI_Login());
-//        table.addColumn(deleteColumn, DwoLocalesForGWT.instance.GUI_Delete());
         dataProvider.addDataDisplay(table);
 
         ScrollPanel scrollPanel = new ScrollPanel();
@@ -179,7 +168,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 
     @Override
     public void onClick(ClickEvent event) {
-        if (event.getSource() == addBtn) {
+        if (event.getSource() == addBtn) {        	
             LOG.log(Level.INFO, "Should add new window for adding a schoolclass.");
             //check for password required
             if (selectedClass != null && selectedClass.getHasRegKey()) {
@@ -191,7 +180,6 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                 panel.setControl(control);
                 popup.add(panel);
                 popup.center();
-//                                nsc.setRegistrationKey(panel.getRegKey());
             } else {
                 DomNewSchoolClass4Student nsc = new DomNewSchoolClass4Student(selectedClass);
                 control.registerStudentForSchoolClass(nsc, new AsyncCallback<Boolean>() {
@@ -228,5 +216,6 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
         for (DomSchoolClass schoolClass : schoolClasses) {
             list.add(schoolClass);
         }
+        //Collections.sort(list, classComparator);
     }
 }
