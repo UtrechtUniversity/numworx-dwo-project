@@ -327,7 +327,7 @@ public class SecuredUserAccountManager {
         }
         //passwords are already hashed.
         if (!ValidUserFieldsChecker.isValidEmail(user.getDomUserFull().getEmail())) {
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Adres_Invalid, "The email address does not  conform with RFC 5322.");
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
         }
         if (!ValidUserFieldsChecker.isValidUserName(user.getDomUserFull().getUserName())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");

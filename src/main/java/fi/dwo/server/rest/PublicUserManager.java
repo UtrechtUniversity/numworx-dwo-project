@@ -89,7 +89,7 @@ public class PublicUserManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         if (!ValidUserFieldsChecker.isValidEmail(newUserReg.getDomNewUser().getEmail())) {
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Adres_Invalid, "The email address does not  conform with RFC 5322.");
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
         }
         if (!ValidUserFieldsChecker.isValidUserName(newUserReg.getDomNewUser().getUsername())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
