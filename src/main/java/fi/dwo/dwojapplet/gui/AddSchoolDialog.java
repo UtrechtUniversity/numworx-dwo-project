@@ -92,7 +92,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
             SchoolPasswdMap spm, Date expire) {
         super(DwoHelper.getFrameForComponent(owner),
                 windowTitle, true);
-        this.setMinimumSize(new Dimension(400,300));
+        this.setMinimumSize(new Dimension(400, 300));
         Container contentPane = getContentPane();
         SpringLayout layout = new SpringLayout();
         contentPane.setLayout(new BorderLayout());
@@ -259,16 +259,24 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      */
     public static School addSchool(Component owner) throws SchoolException {
         AddSchoolDialog asd = new AddSchoolDialog(owner, "Nieuwe school", "", "", new SchoolPasswdMap(), null);
-        asd.show();
-        if (asd.isConfirmed()) {
-            School s = GuiCreator.instance().addSchool(asd.getSchoolId(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate());
-            if (s == null) { //something went wrong, reshow the dialog
-                s = addSchool(owner);
+        School s=null;
+        boolean flagReShow = true;
+        while (flagReShow) {
+            asd.show();
+            if (asd.isConfirmed()) {
+                try {
+                    s = GuiCreator.instance().addSchool(asd.getSchoolId(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate());
+                    if (s != null) { //something went wrong, reshow the dialog
+                        flagReShow = false;
+                    }
+                } catch (SchoolException ex) {
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), ex.getMessage());
+                }
+            } else { //action canceled
+                flagReShow = false;
             }
-            return s;
-        } else { //action canceled
-            return null;
         }
+        return s;
     }
 
     public static School editSchool(School school) throws SchoolException {
@@ -324,6 +332,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == cancelButton) {
+            confirmed = false;
             this.setVisible(false);
         } else if (e.getSource() == okButton) {
             if (schoolNameField instanceof JComboBox) {
@@ -529,8 +538,8 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         pCons.setConstraint(SpringLayout.SOUTH, y);
         pCons.setConstraint(SpringLayout.EAST, x);
     }
-    /* Used by makeCompactGrid. */
 
+    /* Used by makeCompactGrid. */
     private static SpringLayout.Constraints getConstraintsForCell(
             int row, int col,
             Container parent,
