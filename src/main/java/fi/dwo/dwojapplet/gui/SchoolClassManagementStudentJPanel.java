@@ -199,11 +199,11 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                 GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
             }
             catch (LoginException ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
             catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(null, ex);
             }
 
@@ -266,11 +266,11 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                 }
             }
             catch (Dwo2Exception e) {
-                LOG.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, "", e);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), e);
             }
             catch (LoginException ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
         }

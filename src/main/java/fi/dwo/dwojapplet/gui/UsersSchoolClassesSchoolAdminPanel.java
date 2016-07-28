@@ -179,7 +179,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                         tableModel.init(getCurSchoolClassList(), editImage, removeImage);
                     }
                 } catch (Dwo2Exception ex) {
-                    LOG.log(Level.FINE, null, ex);
+                    LOG.log(Level.FINE, "", ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             } else if (value == removeImage) {
@@ -190,7 +190,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                         tableModel.init(getCurSchoolClassList(), editImage, removeImage);
                     }
                 } catch (Dwo2Exception ex) {
-                    Logger.getLogger(UsersSchoolClassesSchoolAdminPanel.class.getName()).log(Level.FINE, null, ex);
+                    Logger.getLogger(UsersSchoolClassesSchoolAdminPanel.class.getName()).log(Level.FINE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
             }
@@ -359,7 +359,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(domUser, userType);
                 center.loadCenter(panel);
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == backButton) {
@@ -368,7 +368,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 center.loadCenter(panel);
 
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == addSchoolClassBox) {
@@ -407,7 +407,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 return prop.getTeachersSchoolClasses(teacher);
             }
         } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             throw ex;
         }
         return null;

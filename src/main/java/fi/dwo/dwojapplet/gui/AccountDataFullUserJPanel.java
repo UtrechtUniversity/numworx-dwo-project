@@ -69,7 +69,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
             user = prop.getUser();
         } catch (Dwo2Exception ex) {
             GuiCreator.instance().ShowErrorDialog(this, ex);
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
         }
         //fetch user details.
 //        groupList = groups;
@@ -419,7 +419,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
                         }
                         JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), JOptionPane.PLAIN_MESSAGE);
                     } catch (Dwo2Exception ex) {
-                        Logger.getLogger(AccountDataFullUserJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(AccountDataFullUserJPanel.class.getName()).log(Level.SEVERE, "", ex);
                         JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                     }
                     break;

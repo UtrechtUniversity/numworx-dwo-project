@@ -192,10 +192,10 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                 LOG.log(Level.INFO, "switching role now");
                 GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
             } catch (LoginException ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().mainPanel, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().mainPanel, ex);
             }
 
@@ -288,7 +288,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                     }
                 }
             } catch (Dwo2Exception e) {
-                LOG.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, "", e);
                 GuiCreator.instance().ShowErrorDialog(null, e);
             }
         }
@@ -380,11 +380,11 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 //                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPassword());
 //            }
 //            catch (LoginException ex) {
-//                LOG.log(Level.SEVERE, null, ex);
+//                LOG.log(Level.SEVERE, "", ex);
 //                GuiCreator.instance().ShowMessageDialog(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
 //            }
 //            catch (Dwo2Exception ex) {
-//                LOG.log(Level.SEVERE, null, ex);
+//                LOG.log(Level.SEVERE, "", ex);
 //                GuiCreator.instance().ShowMessageDialog(this, ex.getLocalizedMessage(), "Error", JDialog.ERROR);
 //            }
 //

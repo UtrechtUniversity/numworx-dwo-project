@@ -350,11 +350,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                         catch (Dwo2Exception ex) {
                             resultList.add(submit);
                             if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
-                                LOG.log(Level.FINE, null, ex);
+                                LOG.log(Level.FINE, "", ex);
                                 failFlag = true;
                             } else {
                                 fatalFlag = true;
-                                LOG.log(Level.SEVERE, null, ex);
+                                LOG.log(Level.SEVERE, "", ex);
                             }
                         }
                     }
@@ -375,7 +375,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 }
             }
             catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == importButton) {
@@ -396,7 +396,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 }
             }
             catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         }
@@ -451,7 +451,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 return true;
             }
             catch (Exception e) {
-                LOG.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, "", e);
                 return false;
             }
         } else {

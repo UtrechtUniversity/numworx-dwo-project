@@ -451,7 +451,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         // DwoHelper.currentFacadeUser
         // }
         // catch (Dwo2Exception ex) {
-        // Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, null, ex);
+        // Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, "", ex);
         // }
         //
         // if (user == null) {
@@ -486,7 +486,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         // user = LoginManager.login(username, password);
         // }
         // catch (Dwo2Exception ex) {
-        // Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, null, ex);
+        // Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, "", ex);
         // }
         // if (user == null) {
         // throw new LoginException(LoginException.LE_UNKNOWN_USER);
@@ -930,12 +930,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             if(DwoHelper.getCurrentUser()!=null) SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
         } catch (Dwo2Exception ex) {
-            Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, "", ex);
         }
         try {
             DwoHelper.setCurrentUser(null);
         } catch (Dwo2Exception ex) {
-            Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, "", ex);
         }
         currentCourse = null;
         courseList = null;
@@ -1303,7 +1303,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             ReadConfigProperties();
         } catch (MalformedURLException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
         }
 
         Clipboard.initialize();
@@ -1320,7 +1320,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 // base
                 // servlet url
             } catch (MalformedURLException ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
             }
         }
 
@@ -1333,7 +1333,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 //            target = client.target(DwoHelper.getServerUrlPath().toURI());
 //        }
 //        catch (URISyntaxException ex) {
-//            LOG.log(Level.SEVERE, null, ex);
+//            LOG.log(Level.SEVERE, "", ex);
 //            throw new RuntimeException(ex);
 //        }
 //        StoredRestManager.setWebTargetAndCredentials(target);
@@ -1463,7 +1463,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             } catch (Exception e) {
                 testViewKeys = null;
                 testView = false;
-                LOG.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, "", e);
             }
         }
 
@@ -1502,7 +1502,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             } catch (Exception e) {
                 schoolAccessKeys = null;
                 limitedSchoolAccess = false;
-                LOG.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, "", e);
             }
 
         }
@@ -1570,11 +1570,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 GuiCreator.instance().login(userName, passWord);
                 return;
             } catch (LoginException exc) {
-                LOG.log(Level.SEVERE, null, exc);
+                LOG.log(Level.SEVERE, "", exc);
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN),
                         JOptionPane.ERROR_MESSAGE);
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 JOptionPane.showMessageDialog(this, ex.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN),
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -2405,9 +2405,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                                 u.getLastName(), u.getEmail());
                         PersistenceFacade.instance().addStudentToClass(u.getInClass(), u.getID());
                     } catch (PersistenceException e) {
-                        LOG.log(Level.SEVERE, null, e);
+                        LOG.log(Level.SEVERE, "", e);
                     } catch (RegisterException ex) {
-                        LOG.log(Level.SEVERE, null, ex);
+                        LOG.log(Level.SEVERE, "", ex);
                     }
                 }
             }
@@ -2555,7 +2555,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             GuiCreator.instance().getMainPanel().getCenter().select(sco);
             return "true";
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, "", e);
             return "false";
         }
     }

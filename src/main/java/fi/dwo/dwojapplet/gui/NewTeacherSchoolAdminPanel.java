@@ -320,11 +320,11 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                             submit.setPassword(tmpPassword);
                             resultList.add(submit);
                             if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
-                                LOG.log(Level.FINE, null, ex);
+                                LOG.log(Level.FINE, "", ex);
                                 failFlag = true;
                             } else {
                                 fatalFlag = true;
-                                LOG.log(Level.SEVERE, null, ex);
+                                LOG.log(Level.SEVERE, "", ex);
                             }
                         }
                     }
@@ -344,7 +344,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 }
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == importButton) {
@@ -360,7 +360,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 center.loadCenter(panel);
 
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         }
@@ -416,7 +416,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 tableModel.addRows(newUserList);
                 return true;
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, "", e);
                 return false;
             }
         } else {

@@ -165,7 +165,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                         tableModel.fireTableDataChanged();
                     }
                 } catch (Dwo2Exception ex) {
-                    LOG.log(Level.FINE, null, ex);
+                    LOG.log(Level.FINE, "", ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 } finally {
                     fireEditingStopped();
@@ -185,10 +185,10 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } catch (LoginException ex) {
                     Dwo2Exception err = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
-                    LOG.log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), err);
                 } catch (Dwo2Exception e) {
-                    LOG.log(Level.SEVERE, null, e);
+                    LOG.log(Level.SEVERE, "", e);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), e);
                 }
             }
@@ -384,7 +384,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     //confirm is overkill
                     //GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 } catch (Dwo2Exception ex) {
-                    LOG.log(Level.FINE, null, ex);
+                    LOG.log(Level.FINE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
             }
@@ -421,7 +421,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                 center.loadCenter(panel);
                 }
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
             }
         } else if (e.getSource() == backButton) {
@@ -430,7 +430,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                 center.loadCenter(panel);
 
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == addStudentsButton) {
@@ -440,7 +440,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                                 NewSingleSchoolStudentsTeacherPanel.UserType.SCHOOLADMIN);
                 center.loadCenter(panel);
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(center, ex);
             }
         }

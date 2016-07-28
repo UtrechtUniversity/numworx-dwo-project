@@ -373,7 +373,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             } catch (Dwo2Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), null, JOptionPane.ERROR_MESSAGE);
-                Logger.getLogger(WelcomePanel.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(WelcomePanel.class.getName()).log(Level.SEVERE, "", ex);
             }
         } else if (src == guestButton) {
             try {
