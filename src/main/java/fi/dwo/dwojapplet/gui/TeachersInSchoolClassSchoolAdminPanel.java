@@ -145,6 +145,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                         //persist returned values	
                         prop.removeTeacherFromSchoolClass(getSchoolClass(), teacher);
                         addTeacherBox.setSelectedIndex(-1);
+                        addTeacherBox.removeAllItems();
 //                        if (teacherVector.isEmpty()) {
 //                            addTeacherButton.setEnabled(false);
 //                            addTeacherBox.setEnabled(false);
@@ -257,7 +258,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
                     addTeacherBox.setModel(model);
                 } catch (Dwo2Exception ex) {
-                    Logger.getLogger(StudentsInSchoolClassSchoolAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, null, ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
             }
@@ -346,12 +347,12 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                 try {
                     prop.submitTeacherToSchoolClass(schoolClass, teacher);
                     TeachersInSchoolClassSchoolAdminPanel panel = new TeachersInSchoolClassSchoolAdminPanel(schoolClass);
-                    Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
-                    Collections.sort(teacherVector, new Comparator<DomTeacher>() {
-                        public int compare(DomTeacher a, DomTeacher b) {
-                            return a.getFamilyName().compareTo(b.getFamilyName());
-                        }
-                    });
+//                    Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
+//                    Collections.sort(teacherVector, new Comparator<DomTeacher>() {
+//                        public int compare(DomTeacher a, DomTeacher b) {
+//                            return a.getFamilyName().compareTo(b.getFamilyName());
+//                        }
+//                    });
 //                    DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
 //                    addTeacherBox.setModel(model);
 //                    if (teacherVector.isEmpty()) {
@@ -362,6 +363,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
 //                        addTeacherBox.setEnabled(true);
 //                    }
                     addTeacherBox.setSelectedIndex(-1);
+                    addTeacherBox.removeAllItems();
                     tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
                 } catch (Dwo2Exception ex) {
                     LOG.log(Level.SEVERE, null, ex);

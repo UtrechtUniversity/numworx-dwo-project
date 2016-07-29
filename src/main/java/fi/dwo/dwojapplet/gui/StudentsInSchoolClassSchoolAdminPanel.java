@@ -297,7 +297,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
                     studentBox.setModel(model);
                 } catch (Dwo2Exception ex) {
-                    Logger.getLogger(StudentsInSchoolClassSchoolAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, null, ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
             }

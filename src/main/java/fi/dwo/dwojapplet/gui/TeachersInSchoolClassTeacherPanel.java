@@ -36,6 +36,8 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
@@ -141,21 +143,8 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
                         //persist returned values	
                         prop.removeTeacherFromSchoolClass(getSchoolClass(), teacher);
-                        Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
-                        Collections.sort(teacherVector, new Comparator<DomTeacher>() {
-                            public int compare(DomTeacher a, DomTeacher b) {
-                                return a.getFamilyName().compareTo(b.getFamilyName());
-                            }
-                        });
-                        DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
-                        addTeacherBox.setModel(model);
-                        if (teacherVector.isEmpty()) {
-                            addTeacherButton.setEnabled(false);
-                            addTeacherBox.setEnabled(false);
-                        } else {
-                            addTeacherButton.setEnabled(true);
-                            addTeacherBox.setEnabled(true);
-                        }
+                        addTeacherBox.setSelectedItem(-1);
+                        addTeacherBox.removeAllItems();
                         tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
                     }
                 } catch (Dwo2Exception ex) {
@@ -239,39 +228,66 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         addTeacherButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
         addTeacherButton.setSize(addTeacherButton.getPreferredSize());
         addTeacherButton.addActionListener(this);
-        Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(sc));
-        Collections.sort(teacherVector, new Comparator<DomTeacher>() {
-            public int compare(DomTeacher a, DomTeacher b) {
-                return a.getFamilyName().compareTo(b.getFamilyName());
+//        Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(sc));
+//        Collections.sort(teacherVector, new Comparator<DomTeacher>() {
+//            public int compare(DomTeacher a, DomTeacher b) {
+//                return a.getFamilyName().compareTo(b.getFamilyName());
+//            }
+//        });
+        addTeacherBox = new JComboBox();
+        addTeacherBox.addPopupMenuListener(new PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+//                JComboBox comboBox = (JComboBox) e.getSource();
+                Vector<DomTeacher> schoolClassVector;
+                try {
+                    schoolClassVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(sc));
+                    Collections.sort(schoolClassVector, new Comparator<DomTeacher>() {
+                        public int compare(DomTeacher a, DomTeacher b) {
+                            return a.getFamilyName().compareTo(b.getFamilyName());
+                        }
+                    });
+                    DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
+                    addTeacherBox.setModel(model);
+                } catch (Dwo2Exception ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+                }
+            }
+
+            public void popupMenuCanceled(PopupMenuEvent e) {
+            }
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
             }
         });
-        addTeacherBox = new JComboBox(teacherVector);
-        DomUserListCellRenderer renderer = new DomUserListCellRenderer();
-        if (teacherVector.size() > 0) {
-            addTeacherBox.setSelectedIndex(0);
-        }
-        if (teacherVector.isEmpty()) {
-            addTeacherButton.setEnabled(false);
-            addTeacherBox.setEnabled(false);
-        } else {
-            addTeacherButton.setEnabled(true);
-            addTeacherBox.setEnabled(true);
-        }
 
+        DomUserListCellRenderer renderer = new DomUserListCellRenderer();
+//        if (teacherVector.size() > 0) {
+//            addTeacherBox.setSelectedIndex(0);
+//        }
+//        if (teacherVector.isEmpty()) {
+//            addTeacherButton.setEnabled(false);
+//            addTeacherBox.setEnabled(false);
+//        } else {
+//            addTeacherButton.setEnabled(true);
+//            addTeacherBox.setEnabled(true);
+//        }
+//
         addTeacherBox.setRenderer(renderer);
         addTeacherBox.setMaximumRowCount(10);
         addTeacherBox.addActionListener(this);
 
         Box header = Box.createHorizontalBox();
-        header.setAlignmentX(Component.RIGHT_ALIGNMENT);
+//        header.setAlignmentX(Component.RIGHT_ALIGNMENT);
         header.setMaximumSize(new Dimension(3000, 100));
         header.setBorder(BorderFactory.createEmptyBorder());
         header.add(backButton);
-        header.add(Box.createHorizontalGlue());
+        header.add(Box.createRigidArea(new Dimension(30, 0)));
 //        header.add(Box.createRigidArea(new Dimension(10, 0)));
-        header.add(addTeacherBox);
-        header.add(Box.createRigidArea(new Dimension(10, 0)));
         header.add(addTeacherButton);
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.add(addTeacherBox);
+        header.add(Box.createHorizontalGlue());
         this.add(header);
         //addClassButton.setVisible(true);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -321,21 +337,23 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
             DomTeacher teacher = (DomTeacher) addTeacherBox.getSelectedItem();
             try {
                 prop.submitTeacherToSchoolClass(schoolClass, teacher);
-                Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
-                Collections.sort(teacherVector, new Comparator<DomTeacher>() {
-                    public int compare(DomTeacher a, DomTeacher b) {
-                        return a.getFamilyName().compareTo(b.getFamilyName());
-                    }
-                });
-                DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
-                addTeacherBox.setModel(model);
-                if (teacherVector.isEmpty()) {
-                    addTeacherButton.setEnabled(false);
-                    addTeacherBox.setEnabled(false);
-                } else {
-                    addTeacherButton.setEnabled(true);
-                    addTeacherBox.setEnabled(true);
-                }
+//                Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
+//                Collections.sort(teacherVector, new Comparator<DomTeacher>() {
+//                    public int compare(DomTeacher a, DomTeacher b) {
+//                        return a.getFamilyName().compareTo(b.getFamilyName());
+//                    }
+//                });
+//                DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+//                addTeacherBox.setModel(model);
+//                if (teacherVector.isEmpty()) {
+//                    addTeacherButton.setEnabled(false);
+//                    addTeacherBox.setEnabled(false);
+//                } else {
+//                    addTeacherButton.setEnabled(true);
+//                    addTeacherBox.setEnabled(true);
+//                }
+                addTeacherBox.setSelectedItem(-1);
+                addTeacherBox.removeAllItems();
                 tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
                 tableModel.fireTableDataChanged();
 
