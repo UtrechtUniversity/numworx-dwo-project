@@ -32,7 +32,7 @@ public class UserBar extends Composite implements Command {
 
     private void init() {
         initWidget(top);
-
+        top.addStyleName("UserBar");
         MenuItem item;
         final int correctie = 10; // width popup 
         item = new MenuItem("<i class='fa fa-navicon fa-2x'></i>", true, items) {
@@ -44,7 +44,7 @@ public class UserBar extends Composite implements Command {
             }
 
         };
-
+        item.addStyleName("UserItem");
         top.addItem(item);
 
         status = new MenuItem("this is a status", new Command(){
