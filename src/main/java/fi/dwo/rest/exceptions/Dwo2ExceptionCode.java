@@ -21,7 +21,9 @@ public enum Dwo2ExceptionCode {
     User_ConfirmSingleSchoolStudentDelete,
     User_ConfirmRegularSchoolStudentDelete,
     User_ConfirmRegularSchoolTeacherDelete,
-    
+    User_ConfirmTeacherFromSchoolDelete,
+    User_ConfirmSchoolAdminFromSchoolDelete,
+
     //REST interface errors
     Rest_InternalError, //Internal software error, a stack trace should be acquired.
     Rest_InterfaceError, // Error due to an improper REST-interface.
