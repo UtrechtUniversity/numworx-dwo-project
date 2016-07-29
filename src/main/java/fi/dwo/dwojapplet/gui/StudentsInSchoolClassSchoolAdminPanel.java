@@ -40,6 +40,8 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
@@ -269,40 +271,69 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         deleteButton = new JButton(TextMapper.getText(TextMapper.BTN_DELSELECTED));
         deleteButton.setSize(deleteButton.getPreferredSize());
         deleteButton.addActionListener(this);
-        copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
+        copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD) + ":");
         copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
         copyToSchoolClassButton.addActionListener(this);
-        Vector<DomStudent> schoolClassVector = new Vector<DomStudent>(prop.getStudentsInSchoolNotInClass(sc));
-        Collections.sort(schoolClassVector, new Comparator<DomStudent>() {
-            public int compare(DomStudent a, DomStudent b) {
-                return a.getFamilyName().compareTo(b.getFamilyName());
+//        Vector<DomStudent> schoolClassVector = new Vector<DomStudent>(prop.getStudentsInSchoolNotInClass(sc));
+//        Collections.sort(schoolClassVector, new Comparator<DomStudent>() {
+//            public int compare(DomStudent a, DomStudent b) {
+//                return a.getFamilyName().compareTo(b.getFamilyName());
+//            }
+//        });
+//        studentBox = new JComboBox(schoolClassVector);
+        studentBox = new JComboBox();
+//        studentBox.setSize(70,studentBox.getHeight());
+        studentBox.addPopupMenuListener(new PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+//                JComboBox comboBox = (JComboBox) e.getSource();
+                Vector<DomStudent> schoolClassVector;
+                try {
+                    schoolClassVector = new Vector<DomStudent>(prop.getStudentsInSchoolNotInClass(sc));
+                    Collections.sort(schoolClassVector, new Comparator<DomStudent>() {
+                        public int compare(DomStudent a, DomStudent b) {
+                            return a.getFamilyName().compareTo(b.getFamilyName());
+                        }
+                    });
+                    DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
+                    studentBox.setModel(model);
+                } catch (Dwo2Exception ex) {
+                    Logger.getLogger(StudentsInSchoolClassSchoolAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+                }
+            }
+
+            public void popupMenuCanceled(PopupMenuEvent e) {
+            }
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
             }
         });
-        studentBox = new JComboBox(schoolClassVector);
 
         DomUserListCellRenderer renderer = new DomUserListCellRenderer();
-        if (schoolClassVector.size() > 0) {
-            studentBox.setSelectedIndex(0);
-        } else {
-            studentBox.setEnabled(false);
-        }
+//        if (schoolClassVector.size() > 0) {
+//            studentBox.setSelectedIndex(0);
+//        } else {
+//            studentBox.setEnabled(false);
+//        }
         studentBox.setRenderer(renderer);
         studentBox.setMaximumRowCount(10);
         studentBox.addActionListener(this);
         Box header = Box.createHorizontalBox();
-        header.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        header.setPreferredSize(new Dimension(-1, studentBox.getMinimumSize().height));
+//        header.setAlignmentX(Component.RIGHT_ALIGNMENT);
+//        header.setAlignmentX(Component.RIGHT_ALIGNMENT);
+//        header.setPreferredSize(new Dimension(-1, studentBox.getMinimumSize().height));
         header.setMaximumSize(new Dimension(3000, 100));
         header.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
-        header.add(Box.createVerticalStrut(100));
+//        header.add(Box.createVerticalStrut(100));
         header.add(backButton);
         header.add(Box.createRigidArea(new Dimension(30, 0)));
         header.add(deleteButton);
         header.add(Box.createRigidArea(new Dimension(30, 0)));
-        header.add(studentBox);
-        header.add(Box.createRigidArea(new Dimension(10, 0)));
         header.add(copyToSchoolClassButton);
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.add(studentBox);
         header.add(Box.createHorizontalGlue());
+//        header.add(Box.createHorizontalGlue());
         this.add(header);
         this.add(Box.createRigidArea(new Dimension(0, 30)));
         buildJTable();
@@ -310,7 +341,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
         Box footer = Box.createHorizontalBox();
-        footer.setAlignmentX(Component.RIGHT_ALIGNMENT);
+//        footer.setAlignmentX(Component.RIGHT_ALIGNMENT);
         footer.setPreferredSize(header.getMinimumSize());
         footer.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
         this.add(Box.createVerticalGlue());
@@ -363,23 +394,23 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             if (student != null) {
                 try {
                     prop.submitStudentToSchoolClass(schoolClass, student);
-                    Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
-                    Collections.sort(teacherVector, new Comparator<DomStudent>() {
-                        public int compare(DomStudent a, DomStudent b) {
-                            return a.getFamilyName().compareTo(b.getFamilyName());
-                        }
-                    });
-
-                    DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
-                    studentBox.setModel(model);
-                    if (teacherVector.isEmpty()) {
-                        studentBox.setEnabled(false);
-                        copyToSchoolClassButton.setEnabled(false);
-                    } else {
-                        studentBox.setEnabled(true);
-                        copyToSchoolClassButton.setEnabled(true);
-                    }
-
+//                    Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
+//                    Collections.sort(teacherVector, new Comparator<DomStudent>() {
+//                        public int compare(DomStudent a, DomStudent b) {
+//                            return a.getFamilyName().compareTo(b.getFamilyName());
+//                        }
+//                    });
+//
+//                    DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+//                    studentBox.setModel(model);
+//                    if (teacherVector.isEmpty()) {
+//                        studentBox.setEnabled(false);
+//                        copyToSchoolClassButton.setEnabled(false);
+//                    } else {
+//                        studentBox.setEnabled(true);
+//                        copyToSchoolClassButton.setEnabled(true);
+//                    }
+                    studentBox.setSelectedIndex(-1);
                     tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                     //confirm is overkill
                     //GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
@@ -396,29 +427,30 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                         cnt++;
                     }
                 }
-                if (cnt ==0) {
+                if (cnt == 0) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_STUDENTS_SELECTED));
                 } else {
-                for (int i = 0; i < tableModel.getRowCount(); i++) {
-                    if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
-                        DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
-                        prop.removeStudentFromSchoolClass(schoolClass, student);
+                    for (int i = 0; i < tableModel.getRowCount(); i++) {
+                        if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
+                            DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
+                            prop.removeStudentFromSchoolClass(schoolClass, student);
+                        }
                     }
-                }
-                Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
-                DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
-                studentBox.setModel(model);
-                if (teacherVector.isEmpty()) {
-                    studentBox.setEnabled(false);
-                    copyToSchoolClassButton.setEnabled(false);
-                } else {
-                    studentBox.setEnabled(true);
-                    copyToSchoolClassButton.setEnabled(true);
-                }
-                tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
-                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
-                StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
-                center.loadCenter(panel);
+//                    Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
+//                    DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
+//                    studentBox.setModel(model);
+//                    if (teacherVector.isEmpty()) {
+//                        studentBox.setEnabled(false);
+//                        copyToSchoolClassButton.setEnabled(false);
+//                    } else {
+//                        studentBox.setEnabled(true);
+//                        copyToSchoolClassButton.setEnabled(true);
+//                    }
+                    studentBox.setSelectedIndex(-1);
+                    tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                    StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
+                    center.loadCenter(panel);
                 }
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, "", ex);

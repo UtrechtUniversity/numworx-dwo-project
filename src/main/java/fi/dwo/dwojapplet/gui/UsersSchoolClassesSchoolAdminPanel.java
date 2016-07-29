@@ -30,6 +30,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -40,6 +41,8 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
@@ -187,6 +190,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
                         DomSchoolClass domSchoolClass = (DomSchoolClass) tableModel.getValueAt(tableModel.getSelectedRow(), tableModel.getColumnCount());
                         prop.removeUserFromSchoolClass(domUser, userType, domSchoolClass);
+                        addSchoolClassBox.setSelectedIndex(-1);
                         tableModel.init(getCurSchoolClassList(), editImage, removeImage);
                     }
                 } catch (Dwo2Exception ex) {
@@ -273,25 +277,50 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         addSchoolClassBtn = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
         addSchoolClassBtn.setSize(addSchoolClassBtn.getPreferredSize());
         addSchoolClassBtn.addActionListener(this);
-        Vector<DomSchoolClass> userVector = new Vector<DomSchoolClass>(prop.getOtherSchoolClasses(domUser, userType));
-        Collections.sort(userVector, new Comparator<DomSchoolClass>() {
-            public int compare(DomSchoolClass a, DomSchoolClass b) {
-                return a.getSchoolClassName().compareTo(b.getSchoolClassName());
+//        Vector<DomSchoolClass> userVector = new Vector<DomSchoolClass>(prop.getOtherSchoolClasses(domUser, userType));
+//        Collections.sort(userVector, new Comparator<DomSchoolClass>() {
+//            public int compare(DomSchoolClass a, DomSchoolClass b) {
+//                return a.getSchoolClassName().compareTo(b.getSchoolClassName());
+//            }
+//        });
+        addSchoolClassBox = new JComboBox();
+        addSchoolClassBox.addPopupMenuListener(new PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+//                JComboBox comboBox = (JComboBox) e.getSource();
+                Vector<DomSchoolClass> schoolClassVector;
+                try {
+                    schoolClassVector = new Vector<DomSchoolClass>(prop.getOtherSchoolClasses(user, userType));
+                    Collections.sort(schoolClassVector, new Comparator<DomSchoolClass>() {
+                        public int compare(DomSchoolClass a, DomSchoolClass b) {
+                            return a.getSchoolClassName().compareTo(b.getSchoolClassName());
+                        }
+                    });
+                    DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
+                    addSchoolClassBox.setModel(model);
+                } catch (Dwo2Exception ex) {
+                    Logger.getLogger(StudentsInSchoolClassSchoolAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+                }
+            }
+
+            public void popupMenuCanceled(PopupMenuEvent e) {
+            }
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
             }
         });
-        addSchoolClassBox = new JComboBox(userVector);
-        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
-        if (userVector.size() > 0) {
-            addSchoolClassBox.setSelectedIndex(0);
-        }
-        if (userVector.isEmpty()) {
-            addSchoolClassBtn.setEnabled(false);
-            addSchoolClassBox.setEnabled(false);
-        } else {
-            addSchoolClassBtn.setEnabled(true);
-            addSchoolClassBox.setEnabled(true);
-        }
 
+        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
+//        if (userVector.size() > 0) {
+//            addSchoolClassBox.setSelectedIndex(0);
+//        }
+//        if (userVector.isEmpty()) {
+//            addSchoolClassBtn.setEnabled(false);
+//            addSchoolClassBox.setEnabled(false);
+//        } else {
+//            addSchoolClassBtn.setEnabled(true);
+//            addSchoolClassBox.setEnabled(true);
+//        }
         addSchoolClassBox.setRenderer(renderer);
         addSchoolClassBox.setMaximumRowCount(10);
         addSchoolClassBox.addActionListener(this);
@@ -355,6 +384,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
             DomSchoolClass schoolClass = (DomSchoolClass) addSchoolClassBox.getSelectedItem();
             try {
                 prop.submitUserToSchoolClass(domUser, userType, schoolClass);
+                addSchoolClassBox.setSelectedIndex(-1);
                 tableModel.init(getCurSchoolClassList(), editImage, removeImage);
                 UsersSchoolClassesSchoolAdminPanel panel = new UsersSchoolClassesSchoolAdminPanel(domUser, userType);
                 center.loadCenter(panel);
