@@ -231,7 +231,7 @@ public class SecuredUserAccountManager {
         
         DomUserFullwLoginContext domUser = loginUser(sc);
         String domUserName = domUser.getDomUserFull().getUserName();
-        if (domUserName.equals(user)) {
+        if (domUserName.equalsIgnoreCase(user)) {
             result = Response.ok().
                     type(MediaType.APPLICATION_JSON_TYPE).
                     entity(domUser).build();
