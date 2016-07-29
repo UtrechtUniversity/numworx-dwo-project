@@ -27,7 +27,8 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 	public NoordhoffKeyboard() {
 		OsDetection detection = MGWT.getOsDetection();
 		if(detection.isDesktop()
-				//&& false
+				//
+				&& false
 				) {
 			factory = new DesktopKeyboardFactory();
 		} else {
