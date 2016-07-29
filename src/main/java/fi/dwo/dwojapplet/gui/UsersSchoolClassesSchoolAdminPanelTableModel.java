@@ -43,7 +43,6 @@ class UsersSchoolClassesSchoolAdminPanelTableModel extends AbstractTableModel {
             data[j][3] = c;
             j++;
         }
-        fireTableRowsInserted(0,rows-1);
         fireTableDataChanged();
     }
 
