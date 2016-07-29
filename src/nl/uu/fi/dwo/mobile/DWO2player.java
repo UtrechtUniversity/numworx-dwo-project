@@ -24,6 +24,9 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.googlecode.mgwt.ui.client.MGWT;
+import com.googlecode.mgwt.ui.client.MGWTStyle;
+import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
@@ -101,6 +104,16 @@ public class DWO2player extends DWOplayer implements EntryPoint {
         
         
 	}
+	
+	
+	@Override
+	public void setupDWOPlayer() {
+		super.setupDWOPlayer();
+		if( MGWT.getOsDetection().isAndroid() )
+			getUserBar().getElement().getStyle().setColor("white");
+	}
+
+
 	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 	private UserBar userBar = new UserBar();
 
