@@ -1,0 +1,4 @@
+For building a signed and obfuscated release please activate the two profiles
+dwo-obfuscate and dwo-pack-sign. This will produce a DWOJApplet-*-with-dependencies.jar
+which is the only jar that is signed and obfuscated. The others built-products 
+are not for public release or access.
