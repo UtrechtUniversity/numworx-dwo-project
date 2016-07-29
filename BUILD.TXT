@@ -1,0 +1,6 @@
+For building a release please first built a release DWOJApplet with activated the profiles
+dwo-obfuscate and dwo-pack-sign manually. This will produce a DWOJApplet-*-with-dependencies.jar
+which is the only jar that is signed and obfuscated. Then building DWOServer will
+copy the signed and obfuscated jar into the war for  production release. 
+
+Verify the context.xml for the proper jars, resources and apps location.
