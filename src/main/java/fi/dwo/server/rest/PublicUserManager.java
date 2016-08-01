@@ -1,6 +1,8 @@
 package fi.dwo.server.rest;
 
 import com.digitalmolehill.crypto.SymmetricCryptor;
+
+import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.dom.entities.DomLoginCheck;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
@@ -24,6 +26,7 @@ import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
@@ -37,9 +40,12 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
 import javax.mail.*;
 import javax.mail.internet.*;
 
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -49,6 +55,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -59,7 +66,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+
 import java.util.Random;
+
 import static java.lang.Thread.sleep;
 
 /**
@@ -419,17 +428,25 @@ public class PublicUserManager {
      */
     @GET
     @Produces({MediaType.TEXT_HTML})
-    @Path("/requestNewPassword/html")
-    public String reqPasswordChangeForm() {
+    @Path("/requestNewPassword")
+    public String reqPasswordChangeForm(@Context HttpServletRequest request) {
+    	String language = request.getParameter("language");
+    	if(language == null) language = TextMapper.getLanguage();
+    	String old = TextMapper.getLanguage();
+    	TextMapper.setLanguage(language);
         String r = "<HTML><BODY><p> " + TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD)
-                + "<form action=\"http://localhost:8080/dwo/rest/public/user/requestPasswordChange\" method=\"post\" >\n"
+                + "<form action=\"requestPasswordChange\" method=\"post\" >\n"
+                + "<input type='hidden' name='language' value=\"" + URLEncoder.encode(language)  + "\">\n"
                 + "<table>"
-                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_USERNAME) + ": </td> <td><input type=\"text\" size=\"80\" name=\"usercode\" value=\"project_wim\"></td></tr>"
-                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_EMAIL) + ":</td> <td><input type=\"text\" size=\"80\" name=\"email\" value=\"w.p.g.vanvelthoven@uu.nl\"> </td></tr>"
+                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_USERNAME) + ": </td> <td><input type=\"text\" size=\"80\" name=\"usercode\" value=\""
+                		+ "\"></td></tr>"
+                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_EMAIL) + ":</td> <td><input type=\"text\" size=\"80\" name=\"email\" value=\""
+                		+ "\"> </td></tr>"
                 + "<tr><td/><td align=\"right\"><input type=\"submit\" value=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\" ></td></tr>"
                 + "<table>"
                 + "</form>";
         r += "</p></BODY> </HTML>";
+        TextMapper.setLanguage(old);
         return r;
     }
 
@@ -443,27 +460,33 @@ public class PublicUserManager {
      * @throws java.lang.Exception
      */
     @POST
-    @Produces({"text/plain"})
+    @Produces({"text/html"})
     @Consumes({"application/x-www-form-urlencoded"})
     @Path("/requestPasswordChange")
     public String requestPasswordChange(
             @FormParam("usercode") String usercode,
-            @FormParam("email") String email
+            @FormParam("email") String email,
+            @FormParam("language") String language,
+            @Context HttpServletRequest request
     ) throws Exception {
-        String result = TextMapper.getText(TextMapper.DLG_CONFIRM);;
+        String result = TextMapper.getText(TextMapper.DLG_CONFIRM);
+        if(language == null) language = TextMapper.getLanguage();
         //Check if <username,email> exists 
-        PersistentUser user = UserManager.findByUserName(usercode);
-        if (user != null && user.getEmail().equals(email)) {
+        PersistentUser user = null;
+        user = UserManager.findByUserName(usercode);
+        if (user != null && user.getEmail().equals(email))
+        {
+        	
             //Create JSON string for changing password        
 
             //Password for encrypting is unix timestamp modulus 10 minutes + randomseed
             long timeslot = 78578 + DwoDateUtilities.getCurrentDwoUnixTimeStamp() / 600000;
             String seed = Long.toHexString(timeslot);
-            String data = "dwoAuthCode:" + usercode + ":" + email; //TODO are ':' allowed in usercodes?
+            String data = "dwoAuthCode:" + usercode + ":" + email; // ':' is NOT allowed in usercodes!
             SymmetricCryptor cryptor = new SymmetricCryptor();
             String authCode = cryptor.encrypt(seed.toCharArray(), data); //encrypt JSON String
-            LOG.log(Level.INFO, "For username {0} and timeslot {1} the server generated an authcode.", new Object[]{user.getUsername(), timeslot});
-            LOG.log(Level.FINER, "For username {0} and timeslot {1} the server generated authcode {2} .", new Object[]{user.getUsername(), timeslot, authCode});
+            LOG.log(Level.INFO, "For username {0} and timeslot {1} the server generated an authcode.", new Object[]{usercode, timeslot});
+            LOG.log(Level.FINER, "For username {0} and timeslot {1} the server generated authcode {2} .", new Object[]{usercode, timeslot, authCode});
 
             //place this in servlet
             String smtpServer = servletContext.getInitParameter("fi.dwo.server.rest.smtp.server");
@@ -490,9 +513,16 @@ public class PublicUserManager {
             // uncomment for debugging infos to stdout
             // mailSession.setDebug(true);
             Transport transport = session.getTransport();
-
+ 
+            StringBuffer url = request.getRequestURL();
+            int i = url.lastIndexOf("/");
+            url.setLength(i+1);
+            url.append("submitNewPassword").append("?authcode=").append(authCode).append("&language=").append(language);
             MimeMessage message = new MimeMessage(session);
-            message.setContent("Your authcode is:" + authCode, "text/plain");
+            String content = "Your authcode is:" + authCode;
+            content += "\nGo to\n";
+            content += url.toString();
+			message.setContent(content, "text/plain");
             message.setFrom(new InternetAddress(smtpEmail));
             message.addRecipient(Message.RecipientType.TO,
                     new InternetAddress(user.getEmail()));
@@ -507,6 +537,9 @@ public class PublicUserManager {
         //Always wait 30 seconds before response.        
         sleep(3000); //shorter for debugging
         //return response (ok or logging).
+        String terug = TextMapper.getText(TextMapper.BTN_BACK);
+        result = "<HTML><BODY>" + result + "<P><A HREF=\"requestNewPassword?language="
+        		+ URLEncoder.encode(language) + "\">" + terug + "</A></BODY></HTML>";
         return result;
     }
 
@@ -517,19 +550,36 @@ public class PublicUserManager {
      */
     @GET
     @Produces({MediaType.TEXT_HTML})
-    @Path("/submitNewPassword/html")
-    public String passwordChangeForm() {
-        String r = "<HTML><BODY><p>" + TextMapper.getText(TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD)
-                + "<form action=\"http://localhost:8080/dwo/rest/public/user/submitPasswordChange\" method=\"post\" >"
+    @Path("/submitNewPassword")
+    public String passwordChangeForm(@Context HttpServletRequest request) {
+    	String authCode = request.getParameter("authCode");
+    	String language = request.getParameter("language");
+    	
+    	return passwordChangeForm(authCode, language, null);
+    }
+
+	private String passwordChangeForm(String authCode, String language,
+			String message) {
+		if(authCode == null) authCode = "";
+    	if(language == null) language = TextMapper.getLanguage();
+    	String old = TextMapper.getLanguage();
+    	TextMapper.setLanguage(language);
+    	if(message == null) message = TextMapper.getText(TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD);
+    	
+        String r = "<HTML><BODY><p>" + message
+                + "<form action=\"submitPasswordChange\" method=\"post\" >"
+                + "<input type='hidden' name='language' value=\"" + language + "\" >"
                 + "<table>"
-                + "<tr><td align = \"right\">authCode:</td><td><input type=\"text\" size=\"80\" name=\"authCode\" value=\"wim_project\" ></td></tr>"
-                + "<tr><td align = \"right\">new password:</td><td><input type=\"text\" size=\"80\" name=\"newPassword\" value=\"pass\" ></td></tr>"
+                + "<tr><td align = \"right\">authCode:</td><td><input type=\"text\" size=\"80\" name=\"authCode\" value=\""
+                + authCode + "\" ></td></tr>"
+                + "<tr><td align = \"right\">new password:</td><td><input type=\"password\" size=\"80\" name=\"newPassword\" value=\"\" ></td></tr>"
                 + "<tr><td/><td align =\"right\"><input type=submit value=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\"></td></tr>"
                 + "</table>"
                 + "</form>";
         r += "</BODY></HTML>";
+        TextMapper.setLanguage(old);
         return r;
-    }
+	}
 
     /**
      * Registers a new user.
@@ -540,15 +590,19 @@ public class PublicUserManager {
      * @throws java.lang.Exception
      */
     @POST
-    @Produces({"text/plain"})
+    @Produces({"text/html"})
     @Consumes({"application/x-www-form-urlencoded"})
     @Path("/submitPasswordChange")
     public String submitPasswordChange(
             @FormParam("authCode") String authCode,
-            @FormParam("newPassword") String newPassword
+            @FormParam("newPassword") String newPassword,
+            @FormParam("language") String language
     ) throws Exception {
         if (!ValidUserFieldsChecker.isValidPassword(newPassword)) {
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password has illegal characters or length.");
+            //throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password has illegal characters or length.");
+        	DwoLocale locale = new DwoLocale(language);
+			return passwordChangeForm(authCode, language, 
+        			Dwo2ExceptionTranslator.getLocalizedCodeExplanation(locale, Dwo2ExceptionCode.Rest_Registration_Password_Invalid));
         }
 
         //Password for encrypting current unix timestamp modulus 10 minutes + randomseed
@@ -582,7 +636,6 @@ public class PublicUserManager {
         }
         //Always wait 30 seconds before response.        
         sleep(3000);//10 timesshorter for debugging
-        //return response (ok or logging).
         return newPassword;
 
     }
