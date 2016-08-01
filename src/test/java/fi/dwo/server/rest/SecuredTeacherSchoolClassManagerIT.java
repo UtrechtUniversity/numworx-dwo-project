@@ -545,7 +545,7 @@ public class SecuredTeacherSchoolClassManagerIT {
             PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findEntity(3L), RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);
             fail("Could not find created user's hasRole");
         }
     }    

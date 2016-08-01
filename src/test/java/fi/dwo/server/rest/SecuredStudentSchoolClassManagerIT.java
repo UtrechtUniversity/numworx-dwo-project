@@ -103,7 +103,7 @@ public class SecuredStudentSchoolClassManagerIT {
             hr = HasRoleUtilManager.getCurrentHasRole("user02", RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredStudentSchoolClassManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredStudentSchoolClassManagerIT.class.getName()).log(Level.SEVERE, "", ex);
             fail("Setting the active school threw an error.");
         }
         if (hr == null || (long) hr.getPersistentHasRolePK().getUserID() != (long) UserManager.findByUserName("user02").getId()
