@@ -27,7 +27,7 @@ public class SchoolClassManagementStudentProperties {
             scList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();
             activeSchoolClass = SecureStudentSchoolClassManager.getActiveSchoolClass();
         } catch (Dwo2Exception ex) {
-            if (ex.getDwo2Code().equals(Dwo2ExceptionCode.Rest_User_Has_No_Active_SchoolClass)) {
+            if (ex.getDwo2Code().equals(Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set)) {
                 LOG.log(Level.FINE, ex.getMessage());
             } else {
                 LOG.log(Level.SEVERE, ex.getMessage());

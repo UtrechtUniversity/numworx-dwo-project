@@ -183,7 +183,7 @@ class RestManager {
                     //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                     e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
                 }
-                LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
+                LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason: {1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
                 throw e;
             }
 
@@ -290,7 +290,7 @@ class RestManager {
                     //non-servlet generated exception has been sent. Convert to Dwo2RestException.
                     e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, conn.getResponseMessage());
                 }
-                LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
+                LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason: {1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
                 throw e;
             }
 
