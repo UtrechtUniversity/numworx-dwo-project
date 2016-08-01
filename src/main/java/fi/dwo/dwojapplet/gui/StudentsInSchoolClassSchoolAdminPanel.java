@@ -63,6 +63,8 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
     private JButton deleteButton;
     private JButton copyToSchoolClassButton;
     private JButton addStudentsButton;
+    private JButton toggleSelectButton;
+    private JButton deleteFromSchoolButton;
 
     private Image editImage;
     private Image emptyImage;
@@ -216,6 +218,57 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
 
         tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
         jtable.setModel(tableModel);
+
+        /**
+         * testing *
+         */
+        final TableCellRenderer r = jtable.getTableHeader().getDefaultRenderer();
+        TableCellRenderer wrapper = new TableCellRenderer() {
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                    Object value, boolean isSelected, boolean hasFocus,
+                    int row, int column) {
+                Component comp = r.getTableCellRendererComponent(table, value, isSelected,
+                        hasFocus, row, column);
+                if (comp instanceof JLabel && column ==6 ) {
+                    JLabel label = (JLabel) comp;
+                }
+                return comp;
+            }
+//
+//            /**
+//             * Implements the logic to choose the appropriate icon.
+//             */
+//            private Icon getSortIcon(JTable table, int column) {
+//                SortOrder sortOrder = getColumnSortOrder(table, column);
+//                if (SortOrder.UNSORTED == sortOrder) {
+//                    return null;
+//                }
+//                
+//                return SortOrder.ASCENDING == sortOrder ? new ImageIcon(editImage) : new ImageIcon(loginImage);
+//            }
+//
+//            private SortOrder getColumnSortOrder(JTable table, int column) {
+//                if (table == null || table.getRowSorter() == null) {
+//                    return SortOrder.UNSORTED;
+//                }
+//                List<? extends SortKey> keys = table.getRowSorter().getSortKeys();
+//                if (keys.size() > 0) {
+//                    SortKey key = keys.get(0);
+//                    if (key.getColumn() == table.convertColumnIndexToModel(column)) {
+//                        return key.getSortOrder();
+//                    }
+//                }
+//                return SortOrder.UNSORTED;
+//            }
+
+        };
+        jtable.getTableHeader().setDefaultRenderer(wrapper);
+
+        /**
+         * testing *
+         */
         rowSorter = new TableRowSorter(tableModel);
         rowSorter.toggleSortOrder(3);//
         jtable.setRowSorter(rowSorter);
@@ -340,6 +393,12 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
+        deleteFromSchoolButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
+        deleteFromSchoolButton.setSize(deleteFromSchoolButton.getPreferredSize());
+        deleteFromSchoolButton.addActionListener(this);
+        toggleSelectButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
+        toggleSelectButton.setSize(toggleSelectButton.getPreferredSize());
+        toggleSelectButton.addActionListener(this);
         Box footer = Box.createHorizontalBox();
 //        footer.setAlignmentX(Component.RIGHT_ALIGNMENT);
         footer.setPreferredSize(header.getMinimumSize());
