@@ -9,7 +9,7 @@ package fi.dwo.rest.dom.entities;
 public final class ValidUserFieldsChecker {
     public static boolean isValidPassword(String password){
         if(password==null) return false;
-        if(password.length()==128) return false;
+        if(password.length()>=128) return false;
         return true;
     }
     
