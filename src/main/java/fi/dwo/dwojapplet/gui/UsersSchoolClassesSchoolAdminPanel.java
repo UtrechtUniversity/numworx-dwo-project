@@ -298,7 +298,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                     DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
                     addSchoolClassBox.setModel(model);
                 } catch (Dwo2Exception ex) {
-                    Logger.getLogger(StudentsInSchoolClassSchoolAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(StudentsInSchoolClassSchoolAdminPanel.class.getName()).log(Level.SEVERE,  ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
             }

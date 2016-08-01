@@ -148,7 +148,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                         tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
                     }
                 } catch (Dwo2Exception ex) {
-                    Logger.getLogger(TeachersInSchoolClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+                    Logger.getLogger(TeachersInSchoolClassTeacherPanel.class.getName()).log(Level.FINE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 } finally {
                     fireEditingStopped();
@@ -249,7 +249,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                     DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
                     addTeacherBox.setModel(model);
                 } catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
             }
@@ -358,7 +358,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                 tableModel.fireTableDataChanged();
 
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == backButton) {
@@ -367,7 +367,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                 center.loadCenter(panel);
 
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == addTeacherBox) {

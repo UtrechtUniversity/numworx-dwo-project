@@ -123,7 +123,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                         GuiCreator.instance().ShowMessageDialog(center, TextMapper.getText(TextMapper.DLG_DONE_MSG));
                     }
                     catch (Dwo2Exception ex) {
-                        LOG.log(Level.SEVERE, null, ex);
+                        LOG.log(Level.SEVERE, "", ex);
                         GuiCreator.instance().ShowErrorDialog(center, ex);
                     }
                 }
@@ -134,7 +134,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                     rightsDialog.show();
                 }
                 catch (Dwo2Exception ex) {
-                        LOG.log(Level.SEVERE, null, ex);
+                        LOG.log(Level.SEVERE, "", ex);
                         GuiCreator.instance().ShowErrorDialog(center, ex);
                 }
             }
@@ -359,7 +359,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         }
         catch (Dwo2Exception ex) {
             GuiCreator.instance().ShowErrorDialog(this, ex);
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
         }
         this.add(jtbl);
     }

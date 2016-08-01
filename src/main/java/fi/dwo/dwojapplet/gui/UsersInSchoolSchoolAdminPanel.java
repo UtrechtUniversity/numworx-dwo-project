@@ -166,7 +166,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                         tableModel.fireTableDataChanged();
                     }
                 } catch (Dwo2Exception ex) {
-                    LOG.log(Level.FINE, null, ex);
+                    LOG.log(Level.FINE, "", ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 } finally {
                     fireEditingStopped();
@@ -183,7 +183,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                         center.loadCenter(panel);
                     }
                 } catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(center, ex);
                 }
             } else if (value == removeImage) {
@@ -220,7 +220,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                         }
                     }
                 } catch (Dwo2Exception ex) {
-                    LOG.log(Level.FINE, null, ex);
+                    LOG.log(Level.FINE, "", ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 } finally {
                     fireEditingStopped();
@@ -464,7 +464,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
 //                addStudentsButton.setVisible(true);
 
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
             }
         } else if (e.getSource() == teacherRadio) {
             //redo table
@@ -475,7 +475,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 tableModel.fireTableDataChanged();
                 addTeachersButton.setVisible(true);
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
             }
         } else if (e.getSource() == schoolAdminRadio) {
             //redo table
@@ -486,14 +486,14 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 tableModel.fireTableDataChanged();
                 addTeachersButton.setVisible(false);
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
             }
         } else if (e.getSource() == addTeachersButton) {
             try {
                 NewTeacherSchoolAdminPanel panel = new NewTeacherSchoolAdminPanel();
                 center.loadCenter(panel);
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         }

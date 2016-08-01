@@ -66,7 +66,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
         }
         catch (Dwo2Exception ex) {
             GuiCreator.instance().ShowErrorDialog(this, ex);
-           LOG.log(Level.SEVERE, null, ex);
+           LOG.log(Level.SEVERE, "", ex);
         }
         //fetch user details.
 //        groupList = groups;

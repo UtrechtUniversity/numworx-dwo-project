@@ -191,7 +191,7 @@ public class GuiCreatorTeacher extends GuiCreator {
             return new ClassTeacherPanel();
         }
         catch (Dwo2Exception ex) {
-           LOG.log(Level.SEVERE, null, ex);
+           LOG.log(Level.SEVERE, ex);
            return null;
         }
     }

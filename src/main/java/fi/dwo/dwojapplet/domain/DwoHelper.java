@@ -148,7 +148,7 @@ public final class DwoHelper {
             //TODO should set relevant properties when calling init using REST-interface: school, hasRole etc...
 
         } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
         }
     }
 
@@ -171,7 +171,7 @@ public final class DwoHelper {
                 schoolLogins = null;
             }
         } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
         }
     }
 

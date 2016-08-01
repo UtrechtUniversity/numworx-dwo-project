@@ -103,7 +103,7 @@ public class StudentMenuPanel extends UserMenuPanel {
             try {
                 scList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();
             } catch (Dwo2Exception ex) {
-                Logger.getLogger(StudentMenuPanel.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StudentMenuPanel.class.getName()).log(Level.SEVERE, "", ex);
             }
 
             if ((scList != null) && (scList.size() > 0)) {

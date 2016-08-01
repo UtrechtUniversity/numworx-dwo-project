@@ -222,7 +222,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                     center.loadCenter(panel);
                 }
                 catch (Dwo2Exception ex) {
-                    Logger.getLogger(SchoolClassesSchoolAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(SchoolClassesSchoolAdminPanel.class.getName()).log(Level.SEVERE, "", ex);
                 }
                 fireEditingStopped();
             } else if (value == teachersImage) {
@@ -232,7 +232,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                     center.loadCenter(panel);
                 }
                 catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, "", ex);
                 }
                 fireEditingStopped();
             } else if (value == removeImage) {
@@ -247,7 +247,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                     }
                 }
                 catch (Dwo2Exception ex) {
-                    LOG.log(Level.FINE, null, ex);
+                    LOG.log(Level.FINE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
                 finally {
@@ -420,7 +420,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                     tableModel.init(prop, editImage, studentsImage, teachersImage, removeImage);
                 }
                 catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(center, ex);
                 }
             }

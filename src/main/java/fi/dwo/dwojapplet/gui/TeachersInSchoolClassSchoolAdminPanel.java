@@ -10,7 +10,6 @@ import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomUserListCellRenderer;
-import fi.dwo.rest.dom.entities.DomStudent;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -156,7 +155,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                         tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
                     }
                 } catch (Dwo2Exception ex) {
-                    Logger.getLogger(TeachersInSchoolClassSchoolAdminPanel.class.getName()).log(Level.FINE, null, ex);
+                    Logger.getLogger(TeachersInSchoolClassSchoolAdminPanel.class.getName()).log(Level.FINE, ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 } finally {
                     fireEditingStopped();
@@ -258,7 +257,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
                     addTeacherBox.setModel(model);
                 } catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE,ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
             }
@@ -366,7 +365,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     addTeacherBox.removeAllItems();
                     tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
                 } catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(this, ex);
                 }
             }
@@ -376,7 +375,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                 center.loadCenter(panel);
 
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == addTeacherBox) {

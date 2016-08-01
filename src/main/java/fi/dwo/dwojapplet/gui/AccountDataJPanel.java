@@ -402,7 +402,7 @@ public class AccountDataJPanel extends JPanel implements
                         JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), TextMapper.getText(TextMapper.GUIP_MSG_USER_REMOVED), JOptionPane.PLAIN_MESSAGE);
                     }
                     catch (Dwo2Exception ex) {
-                        Logger.getLogger(AccountDataJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(AccountDataJPanel.class.getName()).log(Level.SEVERE, "", ex);
                         JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                     }
                     break;

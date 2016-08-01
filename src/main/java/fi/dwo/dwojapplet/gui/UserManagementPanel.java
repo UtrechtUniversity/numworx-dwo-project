@@ -209,7 +209,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                     LOG.log(Level.SEVERE,null,e);
                 }
                 catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, "", ex);
                 }
             } else if (value == model.editImage) {
                 try {

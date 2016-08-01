@@ -673,7 +673,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
                 }
                 catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, ex);
                     JOptionPane.showMessageDialog(this, ex.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                 }
             }

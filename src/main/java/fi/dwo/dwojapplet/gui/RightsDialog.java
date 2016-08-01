@@ -181,7 +181,7 @@ public class RightsDialog extends JDialog implements ActionListener {
                 }
             }
             catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(rootPane, ex);
             }
         }

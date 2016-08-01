@@ -234,7 +234,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     }
                 }
                 catch (Dwo2Exception ex) {
-                    LOG.log(Level.FINE, null, ex);
+                    LOG.log(Level.FINE, "", ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
                 finally {
@@ -283,7 +283,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     center.loadCenter(panel);
                 }
                 catch (Dwo2Exception ex) {
-                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, "", ex);
                 }
                 fireEditingStopped();
             } else if (value == teachersImage) {
@@ -293,7 +293,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     center.loadCenter(panel);
                 }
                 catch (Dwo2Exception ex) {
-                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, "", ex);
                 }
                 fireEditingStopped();
             } else if (value == removeImage) {
@@ -310,7 +310,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     refreshSchoolClasses();
                 }
                 catch (Dwo2Exception ex) {
-                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, null, ex);
+                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
                 finally {
@@ -488,7 +488,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     refreshSchoolClasses();
                 }
                 catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, null, ex);
+                LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(center, ex);
                 }
             }

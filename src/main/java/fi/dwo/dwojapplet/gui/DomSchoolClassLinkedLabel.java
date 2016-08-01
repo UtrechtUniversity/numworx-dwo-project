@@ -72,11 +72,11 @@ public class DomSchoolClassLinkedLabel extends LinkedLabel {
                 GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
             }
             catch (LoginException ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
             catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this,ex);
             }
         }
