@@ -342,7 +342,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
 //            dialog.setLocationRelativeTo(null);
             dialog.setLocationRelativeTo(GuiCreator.instance().mainPanel);
             dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-            dialog.setAlwaysOnTop(true);
+//            dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
             tableModel.init(prop, loginImage, removeImage,emptyImage);
             tableModel.fireTableDataChanged();

@@ -182,29 +182,29 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
 
         Object value;
         int row;
-
-        /**
-         * Switches/relogins to the active role set in the persistent store.
-         *
-         */
-        private void switchToActiveSchoolClass(DomSchoolClass sc) {
-            DomUserFull user = DwoHelper.getCurrentUser();
-            try {
-                prop.setActiveSchoolClass(sc);
-//                //switch role now
-                LOG.log(Level.INFO, "switching role now");
-                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
-            }
-            catch (LoginException ex) {
-                LOG.log(Level.SEVERE, "", ex);
-                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
-            }
-            catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, "", ex);
-                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
-            }
-
-        }
+//
+//        /**
+//         * Switches/relogins to the active role set in the persistent store.
+//         *
+//         */
+//        private void switchToActiveSchoolClass(DomSchoolClass sc) {
+//            DomUserFull user = DwoHelper.getCurrentUser();
+//            try {
+//                prop.setActiveSchoolClass(sc);
+////                //switch role now
+//                LOG.log(Level.INFO, "switching role now");
+//                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
+//            }
+//            catch (LoginException ex) {
+//                LOG.log(Level.SEVERE, "", ex);
+//                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
+//            }
+//            catch (Dwo2Exception ex) {
+//                LOG.log(Level.SEVERE, "", ex);
+//                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+//            }
+//
+//        }
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value,
