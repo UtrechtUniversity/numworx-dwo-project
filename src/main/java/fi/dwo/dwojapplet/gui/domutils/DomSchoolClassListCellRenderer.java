@@ -49,6 +49,8 @@ public class DomSchoolClassListCellRenderer extends JLabel
             DomSchoolClass sc = (DomSchoolClass) value;
             setText(sc.getSchoolClassName());
             setFont(list.getFont());
+        } else if (value == null) {
+            setText("");
         } else {
             setText("Object of unsupported type");
         }
