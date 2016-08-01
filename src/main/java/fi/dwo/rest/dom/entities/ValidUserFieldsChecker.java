@@ -14,7 +14,8 @@ public final class ValidUserFieldsChecker {
     }
     
     /**
-     *  Tests for RFC 5322 addresses, but not RFC 6530
+     *  Tests for RFC 5322 addresses, but not RFC 6530.
+     * 
      * @param email
      * @return 
      */
@@ -57,15 +58,6 @@ public final class ValidUserFieldsChecker {
                 return false;
             }
         }
-//    private static final String[] realms = {"@kennisnet.org", "@fi.uu.nl", "@w2k3.fi.uu.nl", "@soliscom.uu.nl"};
-//
-//        for (String realm : realms) {
-//            if (username.endsWith(realm)) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
         return true;
     }    
 }
