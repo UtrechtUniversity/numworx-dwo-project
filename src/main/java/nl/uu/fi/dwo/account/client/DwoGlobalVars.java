@@ -52,7 +52,7 @@ public class DwoGlobalVars {
             instance = new DwoGlobalVars();
 
         } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             Window.alert("System error: app improperly configured.");
         }
     }
@@ -83,7 +83,7 @@ public class DwoGlobalVars {
             try {
                 instance = new DwoGlobalVars();
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
             }
         }
         return instance;
