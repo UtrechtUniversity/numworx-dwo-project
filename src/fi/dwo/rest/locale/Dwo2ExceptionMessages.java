@@ -2,7 +2,7 @@ package fi.dwo.rest.locale;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'D:/GertvanderPlas/netbeans-checkout/project.fisme.java/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
+ * 	'/Users/peterboon/Documents/workspace-luna/DWO-gwt-lib/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
  */
 public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
@@ -23,6 +23,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   @DefaultStringValue("No user is signed in.")
   @Key("Dwo2ExceptionCode.GUI_NoUserIsSignedIn")
   String Dwo2ExceptionCode_GUI_NoUserIsSignedIn();
+
+  /**
+   * Translated "You have not yet selected a schoolclass.".
+   * 
+   * @return translated "You have not yet selected a schoolclass."
+   */
+  @DefaultStringValue("You have not yet selected a schoolclass.")
+  @Key("Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set")
+  String Dwo2ExceptionCode_Rest_Active_SchoolClass_Not_Set();
 
   /**
    * Translated "Can not contact the server, please try  again before reporting.".
@@ -77,6 +86,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   @DefaultStringValue("Illegal combination of school login and pass code. This will be logged.")
   @Key("Dwo2ExceptionCode.Rest_Registration_Invalid_school_role_credentials")
   String Dwo2ExceptionCode_Rest_Registration_Invalid_school_role_credentials();
+
+  /**
+   * Translated "The registration key for this school class is invalid.".
+   * 
+   * @return translated "The registration key for this school class is invalid."
+   */
+  @DefaultStringValue("The registration key for this school class is invalid.")
+  @Key("Dwo2ExceptionCode.Rest_Registration_Invalid_schoolclass_registration_key")
+  String Dwo2ExceptionCode_Rest_Registration_Invalid_schoolclass_registration_key();
 
   /**
    * Translated "The password length exceeds 128 characters.".
@@ -151,6 +169,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_User_AuthenticationError();
 
   /**
+   * Translated "You did not logout in your last session. Ensure that you have closed all your other DWO-applications before continuing to prevent data corruption. Continue?".
+   * 
+   * @return translated "You did not logout in your last session. Ensure that you have closed all your other DWO-applications before continuing to prevent data corruption. Continue?"
+   */
+  @DefaultStringValue("You did not logout in your last session. Ensure that you have closed all your other DWO-applications before continuing to prevent data corruption. Continue?")
+  @Key("Dwo2ExceptionCode.User_ConfirmNewLoginSession")
+  String Dwo2ExceptionCode_User_ConfirmNewLoginSession();
+
+  /**
    * Translated "Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?".
    * 
    * @return translated "Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?"
@@ -158,6 +185,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   @DefaultStringValue("Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?")
   @Key("Dwo2ExceptionCode.User_ConfirmPasswordSwitch")
   String Dwo2ExceptionCode_User_ConfirmPasswordSwitch();
+
+  /**
+   * Translated "Do you want to remove the student and all his data irrevocably from the school?".
+   * 
+   * @return translated "Do you want to remove the student and all his data irrevocably from the school?"
+   */
+  @DefaultStringValue("Do you want to remove the student and all his data irrevocably from the school?")
+  @Key("Dwo2ExceptionCode.User_ConfirmRegularSchoolStudentDelete")
+  String Dwo2ExceptionCode_User_ConfirmRegularSchoolStudentDelete();
 
   /**
    * Translated "Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?".
@@ -169,6 +205,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_User_ConfirmRoleSwitch();
 
   /**
+   * Translated "Do you want to remove the schooladmin and his results irrevocably from the school?".
+   * 
+   * @return translated "Do you want to remove the schooladmin and his results irrevocably from the school?"
+   */
+  @DefaultStringValue("Do you want to remove the schooladmin and his results irrevocably from the school?")
+  @Key("Dwo2ExceptionCode.User_ConfirmSchoolAdminFromSchoolDelete")
+  String Dwo2ExceptionCode_User_ConfirmSchoolAdminFromSchoolDelete();
+
+  /**
    * Translated "Ensure that you have closed all your DWO-applications before continuing to prevent data loss. Continue?".
    * 
    * @return translated "Ensure that you have closed all your DWO-applications before continuing to prevent data loss. Continue?"
@@ -176,6 +221,24 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   @DefaultStringValue("Ensure that you have closed all your DWO-applications before continuing to prevent data loss. Continue?")
   @Key("Dwo2ExceptionCode.User_ConfirmSchoolClassSwitch")
   String Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch();
+
+  /**
+   * Translated "Do you want to remove the student account and all his data irrevocably?".
+   * 
+   * @return translated "Do you want to remove the student account and all his data irrevocably?"
+   */
+  @DefaultStringValue("Do you want to remove the student account and all his data irrevocably?")
+  @Key("Dwo2ExceptionCode.User_ConfirmSingleSchoolStudentDelete")
+  String Dwo2ExceptionCode_User_ConfirmSingleSchoolStudentDelete();
+
+  /**
+   * Translated "Do you want to remove the teacher and his results irrevocably from the school?".
+   * 
+   * @return translated "Do you want to remove the teacher and his results irrevocably from the school?"
+   */
+  @DefaultStringValue("Do you want to remove the teacher and his results irrevocably from the school?")
+  @Key("Dwo2ExceptionCode.User_ConfirmTeacherFromSchoolDelete")
+  String Dwo2ExceptionCode_User_ConfirmTeacherFromSchoolDelete();
 
   /**
    * Translated "Illegal REST-request, the details of this action are logged.".

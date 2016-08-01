@@ -8,6 +8,9 @@ package fi.dwo.gwt.lib.rest.util;
 import fi.dwo.rest.DwoLocale;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
 import fi.dwo.rest.exceptions.Dwo2Exception;
@@ -26,28 +29,29 @@ import java.util.logging.Logger;
 public class Dwo2ExceptionGWTTranslator implements DWO2ExceptionTranslatorInterface {
     private static final Logger LOG = Logger.getLogger(Dwo2ExceptionGWTTranslator.class.getName());
     
-    Dwo2ExceptionConverter converter = GWT.create(Dwo2ExceptionConverter.class);
-
     public Dwo2ExceptionGWTTranslator() {
     }
 
     @Override
     public String encodeJSON(Dwo2ExceptionCode code, String message) {
-        Dwo2Exception exception = new Dwo2Exception(code, message);
-        JSONValue json = converter.encode(exception);
+        JSONObject json = new JSONObject();
+        json.put("msg", new JSONString(message));
+        json.put("Dwo2ExceptionCode", new JSONString(code.name()));
         return json.toString();
     }
 
     @Override
     public String decodeMessageInJSON(String json) {
-        Dwo2Exception exception = converter.decode(json);
-        return exception.getDwo2Message();
+		JSONValue value = JSONParser.parseLenient(json);
+		JSONObject obj = value.isObject();
+		return obj.get("msg").isString().stringValue();
     }
 
     @Override
     public Dwo2ExceptionCode decodeCodeInJSON(String json) {
-        Dwo2Exception exception = converter.decode(json);
-        return exception.getDwo2Code();
+		JSONValue value = JSONParser.parseLenient(json);
+		JSONObject obj = value.isObject();
+		return Dwo2ExceptionCode.valueOf(obj.get("Dwo2ExceptionCode").isString().stringValue());
     }
 
     @Override
