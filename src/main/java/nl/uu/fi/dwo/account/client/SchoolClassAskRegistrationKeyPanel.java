@@ -17,7 +17,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.locale.DwoLocalesForGWT;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -128,8 +131,13 @@ public class SchoolClassAskRegistrationKeyPanel extends VerticalPanel implements
             control.registerStudentForSchoolClass(nsc, new AsyncCallback<Boolean>() {
                 @Override
                 public void onFailure(Throwable t) {
-                    //fail and reset all the data.
-                    Window.alert(t.getMessage());
+                	LOG.log(Level.SEVERE, "onFailure", t);
+                    String message = t.getMessage();
+                	if(t instanceof Dwo2Exception) {
+                		Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+                		message = Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), code);
+                	}
+                	Window.alert(message);
                 }
 
                 @Override
