@@ -13,8 +13,10 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.util.Date;
 import java.util.List;
@@ -192,6 +194,22 @@ public class SchoolUtilManager {
             LOG.log(Level.SEVERE, "User creation failed.");
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
         }
+
+   //building hasRole for null school
+        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+        Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
+        pk.setSchoolGroupID(schoolGroupId);
+        pk.setUserID(user.getId());
+        hr.setPersistentHasRolePK(pk);
+
+        hr.setClassID(null);
+        hr.setLastLogin(now); //considering an account creation a first login as there is a password
+        hr.setRegisterDate(now);
+        hr.setRights("_"); //TODO make a rights manager
+        HasRoleManager.create(hr);
+
+        LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});            
+        
 
         return true;
     }    
