@@ -155,7 +155,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                         tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
                     }
                 } catch (Dwo2Exception ex) {
-                    Logger.getLogger(TeachersInSchoolClassSchoolAdminPanel.class.getName()).log(Level.FINE, ex);
+                    Logger.getLogger(TeachersInSchoolClassSchoolAdminPanel.class.getName()).log(Level.FINE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 } finally {
                     fireEditingStopped();
@@ -257,7 +257,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
                     addTeacherBox.setModel(model);
                 } catch (Dwo2Exception ex) {
-                    LOG.log(Level.SEVERE,ex);
+                    LOG.log(Level.SEVERE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
                 }
             }

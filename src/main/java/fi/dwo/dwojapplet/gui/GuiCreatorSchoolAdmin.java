@@ -40,7 +40,7 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
             csp = new UsersInSchoolSchoolAdminPanel();
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, ex);
+            LOG.log(Level.SEVERE, "", ex);
             GuiCreator.instance().ShowErrorDialog(mainPanel, ex);
         }
         return csp;
@@ -54,7 +54,7 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
             csp = new SchoolClassesSchoolAdminPanel();
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, ex);
+            LOG.log(Level.SEVERE, "", ex);
             GuiCreator.instance().ShowErrorDialog(mainPanel, ex);
         }
         return csp;
