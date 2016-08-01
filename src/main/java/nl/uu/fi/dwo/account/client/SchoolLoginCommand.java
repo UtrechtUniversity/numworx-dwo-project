@@ -41,7 +41,7 @@ class SchoolLoginCommand implements Command {
             popup.add(panel);
             popup.center();
         } catch (Dwo2Exception ex) {
-            Logger.getLogger(SchoolLoginCommand.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
         }
     }
 

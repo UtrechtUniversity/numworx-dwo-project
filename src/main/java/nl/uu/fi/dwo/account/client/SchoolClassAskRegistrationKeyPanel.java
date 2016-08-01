@@ -33,7 +33,7 @@ public class SchoolClassAskRegistrationKeyPanel extends VerticalPanel implements
 
     private SchoolClassStudentController control;
     private Label schoolClassLabel = new Label(DwoLocalesForGWT.instance.GUI_SchoolclassName() + ":");
-    private Label regKeyLabel = new Label("registrationKey:");
+    private Label regKeyLabel = new Label(DwoLocalesForGWT.instance.GUI_RegistrationKey() + ":");
     private TextBox schoolClassNameText = new TextBox();
     private PasswordTextBox regKeyText = new PasswordTextBox();
     private PopupPanel popup;
