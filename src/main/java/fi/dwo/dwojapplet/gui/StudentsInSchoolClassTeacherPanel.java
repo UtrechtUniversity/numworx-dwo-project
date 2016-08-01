@@ -18,7 +18,6 @@ import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
 import fi.dwo.rest.dom.entities.DomLoginContext;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -339,8 +338,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         targetSchoolClassBox.setRenderer(renderer);
         targetSchoolClassBox.setMaximumRowCount(10);
         targetSchoolClassBox.addActionListener(this);
-        targetSchoolClassBox.setMaximumSize(targetSchoolClassBox.getPreferredSize());
-        targetSchoolClassBox.setMinimumSize(new Dimension(40, targetSchoolClassBox.getPreferredSize().height));
+//        targetSchoolClassBox.setMaximumSize(targetSchoolClassBox.getPreferredSize());
+//        targetSchoolClassBox.setMinimumSize(new Dimension(40, targetSchoolClassBox.getPreferredSize().height));
 
         Box header = Box.createHorizontalBox();
         //header.setAlignmentX(Component.RIGHT_ALIGNMENT); ????????????
