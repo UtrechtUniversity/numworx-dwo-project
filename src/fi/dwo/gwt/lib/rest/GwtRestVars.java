@@ -1,12 +1,16 @@
 package fi.dwo.gwt.lib.rest;
 
 import com.google.gwt.user.client.Window;
+
+import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionMapper;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
@@ -100,6 +104,7 @@ public class GwtRestVars {
         LOG.log(Level.INFO, "Starting initObjects():");
         Defaults.setServiceRoot(this.getServer());
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
+        Defaults.setExceptionMapper(new Dwo2ExceptionMapper());
         setAuthenticator(RestAuthenticator.instance);
 //        DefaultFilterawareDispatcher.singleton().addFilter(this.getAuthenticator());
 //            restService = GWT.create(DWO2RestCaller.class);
