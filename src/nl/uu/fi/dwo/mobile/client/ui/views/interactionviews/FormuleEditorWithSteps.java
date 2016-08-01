@@ -3278,13 +3278,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	
 	public void setHeader(boolean b)
 	{
-		
-		//TODO: testen en exceptions afvangen; wat als headerPanel al is toegevoegd en b is true? Of juist nog niet toegevoegd en b is false?
 		if(b)
 			mainPanel.add(headerPanel);
 		else
 			mainPanel.remove(headerPanel);
-		//headerAan = b;
 	}
 	
 	public FlowPanel getHeaderPanel()

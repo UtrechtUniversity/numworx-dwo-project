@@ -48,15 +48,11 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	private boolean volledigeBreedte = false;
 	int ashoogte = 12;
 	
-	//private Canvas symboolCanvas;
-	//private Context2d ctx;
-	
 	FlowPanel mainPanel;
 	StelselRekenVak rekenVak;
 	StelselOplossingenVak oplossingenVak;
 	TekstVak oplossingenLabelVak;
 	LayoutPanel oplossingenRegel;
-	//FlowPanel oplossingenRegel;
 	
 	boolean rekenVakZichtbaar = true;
 	boolean oplossingenRegelZichtbaar = true;
@@ -174,10 +170,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 			//variabelen omzetten naar nette varnamen (met name belangrijk voor variabelen met subscripts)
 			for(int i = 0; i < varNamen.length; i++)
 			{
-//				FormuleEditor hulpVak = new FormuleEditor();
-//				hulpVak.insert("$f" + varNamen[i] + "@");
-//				varNamen[i] = hulpVak.geefExpressie().geefVarNaam();
-				FormuleParser.geefExpressie("$f"+ varNamen[i] + "@").geefVarNaam();//TODO: checken of dit werkt en of ik nog $f en @ moet toevoegen.
+				FormuleParser.geefExpressie("$f"+ varNamen[i] + "@").geefVarNaam();
 				
 			}
 			//splitsen in verschillende oplossingen. Eerst $f en @ weghalen.
@@ -219,7 +212,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	
 	public void initialize()
 	{
-		// alle vakken op een panel zetten. Misschien ook nog wat maatzetting? Maar misschien is dat ook al in orde.
+		// alle vakken op een panel zetten. 
 		
 		mainPanel = new FlowPanel();
 		mainPanel.getElement().getStyle().setBackgroundColor("white");
@@ -240,48 +233,26 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		rekenVakMap.put("volledigeBreedte", volledigeBreedte);
 		rekenVakMap.put("interactiePanelLaunchState", launchState);
 		rekenVak = new StelselRekenVak(this, rekenVakMap, randomVarNamen, randomVarWaarden);
-		//rekenVak.init(launchState, randomVarNamen, randomVarWaarden);
 		rekenVak.zetVarNamen(varNamen);
 		rekenVak.zetJuisteOplossingen(oplossingen);
 		
 		//oplossingenVak en oplossingenRegel initialiseren
-		HashMap<String, Object> oplossingenVakMap = new HashMap<String, Object>();
-		oplossingenVakMap.put("breedte", breedte - oplossingenLabelVak.getInhoudBreedte() - 15); //15 is door trial-en-error gevonden
-		oplossingenVakMap.put("hoogte", 30);//deze hoogte doet er volgens mij niet zo veel meer toe.
-		oplossingenVakMap.put("volledigeBreedte", volledigeBreedte);
-		oplossingenVakMap.put("interactiePanelLaunchState", launchState);
-		oplossingenVak = new StelselOplossingenVak(this, oplossingenVakMap, randomVarNamen, randomVarWaarden);
-		//oplossingenVak.init(launchState, randomVarNamen, randomVarWaarden);
-		oplossingenVak.zetVarNamen(varNamen);
-		oplossingenVak.zetJuisteOplossingen(oplossingen);
-		
-		oplossingenRegel = new LayoutPanel();
-//		oplossingenRegel.setPixelSize(breedte - 2, Math.max(oplossingenLabelVak.getHeight(), oplossingenVak.getHeight()) + 4);
-//		for(int i = 0; i < 10; i++)
-//		{	FlowPanel panel = new FlowPanel();
-//			panel.getElement().getStyle().setBackgroundColor(CssColor.make(200 + 5*i, 200 + 5*i, 200 + 5*i).toString());
-//			int regelHoogte = Math.max(oplossingenLabelVak.getHeight(), oplossingenVak.getHeight()) + 4;
-//			System.out.println("regelHoogte = " + regelHoogte);
-//			oplossingenRegel.add(panel);
-//			oplossingenRegel.setWidgetLeftRight(panel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-//			oplossingenRegel.setWidgetTopHeight(panel, regelHoogte - (i + 1)*regelHoogte/10, Style.Unit.PX, regelHoogte/10 + 1, Style.Unit.PX);
-//		}	
-		
-		//om het oplossingenLabelVak afmetingen te geven groter dan 0x0:
-		oplossingenLabelVak.resize();
-		
-		resize();
-//		oplossingenRegel.add(oplossingenLabelVak);
-//		oplossingenRegel.setWidgetLeftWidth(oplossingenLabelVak, 2, Style.Unit.PX, oplossingenLabelVak.getInhoudBreedte(), Style.Unit.PX);
-//		oplossingenRegel.setWidgetTopHeight(oplossingenLabelVak, 0, Style.Unit.PX, oplossingenLabelVak.getHeight(), Style.Unit.PX);
-//		oplossingenRegel.add(oplossingenVak.asWidget());
-//		oplossingenRegel.setWidgetLeftRight(oplossingenVak.asWidget(), 2 + oplossingenLabelVak.getInhoudBreedte() + 5, Style.Unit.PX, 3, Style.Unit.PX);
-//		oplossingenRegel.setWidgetTopHeight(oplossingenVak.asWidget(), 2, Style.Unit.PX, Math.max(oplossingenLabelVak.getHeight(), oplossingenVak.getHeight()), Style.Unit.PX);
-//		
-//		TouchPanel tp = (TouchPanel) oplossingenVak.geefFormuleVak().getAsPanel();
-//		oplossingenRegel.add(tp);
-//		oplossingenRegel.setWidgetLeftRight(tp, 2 + oplossingenLabelVak.getInhoudBreedte() + 5, Style.Unit.PX, 0, Style.Unit.PX);
-//		oplossingenRegel.setWidgetTopBottom(tp, 2, Style.Unit.PX, 0, Style.Unit.PX);
+		if(oplossingenRegelZichtbaar)
+		{
+			HashMap<String, Object> oplossingenVakMap = new HashMap<String, Object>();
+			oplossingenVakMap.put("breedte", breedte - oplossingenLabelVak.getInhoudBreedte() - 15); //15 is door trial-en-error gevonden
+			oplossingenVakMap.put("hoogte", 30);//deze hoogte doet er volgens mij niet zo veel meer toe.
+			oplossingenVakMap.put("volledigeBreedte", volledigeBreedte);
+			oplossingenVakMap.put("interactiePanelLaunchState", launchState);
+			oplossingenVak = new StelselOplossingenVak(this, oplossingenVakMap, randomVarNamen, randomVarWaarden);
+			oplossingenVak.zetVarNamen(varNamen);
+			oplossingenVak.zetJuisteOplossingen(oplossingen);
+			
+			oplossingenRegel = new LayoutPanel();
+			oplossingenLabelVak.resize();
+			
+			resize();
+		}
 		
 		if(rekenVakZichtbaar)
 			mainPanel.add(rekenVak);
@@ -295,7 +266,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		int hoogteRegel = Math.max(oplossingenLabelVak.getHeight(), oplossingenVak.getHeight());
 		if(hoogteRegel == oplossingenRegel.getOffsetHeight())
 			return;
-		
+		System.out.println("voorbij return resize StelselAntwoordVak");
 		oplossingenRegel.setPixelSize(breedte - 2, hoogteRegel);
 		oplossingenRegel.clear();
 		for(int i = 0; i < hoogteRegel/2 + 1; i++)
@@ -390,9 +361,12 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	public void zetVolledigeBreedte(int breedte) {
 		if(volledigeBreedte)
 		{	this.breedte = breedte;
-			rekenVak.zetVolledigeBreedte(breedte);
-			oplossingenVak.zetVolledigeBreedte(breedte - oplossingenLabelVak.getInhoudBreedte() - 15);
-			resize();
+			if(rekenVakZichtbaar)
+				rekenVak.zetVolledigeBreedte(breedte);
+			if(oplossingenRegelZichtbaar)
+			{	oplossingenVak.zetVolledigeBreedte(breedte - oplossingenLabelVak.getInhoudBreedte() - 15);
+				resize();
+			}
 		}
 	}
 

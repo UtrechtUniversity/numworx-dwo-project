@@ -42,14 +42,9 @@ import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.Expressie;
 
 
-public class StelselOplossingenVak //extends FormuleHolder //implements ActionListener, MouseListener, FormuleVakHouder
+public class StelselOplossingenVak 
 {
-	//static Image GOEDKRUL,FOUTKRUIS, HALFKRUL;
-
 	private int mode;
-
-	//private boolean ingevuld;
-	//private boolean nagekeken;
 
 	private boolean correct;
 	private boolean fout;
@@ -66,29 +61,21 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 	private AntwoordStelselVakChecker avChecker = null;
 	
 	public static final FormuleClientBundle FORMULE_BUNDLE = GWT.create(FormuleClientBundle.class);
-	
-	
-	//private String variabelenString;
 	private String[] varNamen;
 	private Expressie[][] juisteOplossingen;
-	//private String[] juisteAntwoorden;
 	private List<Map<String,Object>> answerModels;
 	private boolean hasFeedback;
 	
 	private int breedte;
 	private int hoogte;
 
-
 	private boolean check;
 	private boolean teltMee;
-
-	
 
 	private Image checkimg;
 
 	private FormuleEditorWithAnswer editor;
 	
-
 	private boolean logOption;
 	private String logID;
 
@@ -107,7 +94,6 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 	{	fontOvererving = b;
 	}
 
-	
 	
 	public StelselOplossingenVak(StelselAntwoordVak parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
@@ -130,7 +116,6 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		avChecker.zetJuisteOplossingen(juisteOplossingen);
 		avChecker.zetVarNamen(varNamen);
 		
-		
 		editor = new FormuleEditorWithAnswer(h, false, null, randomVarNamen, randomVarWaarden, avChecker);
 		editor.setFormuleToolBijFocus(true);
 		editor.setFont(font);
@@ -144,6 +129,7 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 	
 	public void requestFocus()
 	{
+		editor.setCurrent(0, 0);
 		editor.requestFocus();
 	}
 
@@ -200,11 +186,6 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		this.logOption = logOption;
 		this.logID = logID;
 		this.logObjectives = logObjectives;
-
-//		if (editor != null)
-//			editor.zetStippels(!boxMetRand);
-		
-		//add(editor);
 		
 		//TODO: fontOvererving
 //		if(fontOvererving && getParent() instanceof TekstInteractiePanelVak)
@@ -268,12 +249,8 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 		this.errorCount = errorCount;
 		editor.clearAll();
 		editor.insert(antwoord);
-		System.out.println("editor setState, antwoord geinsert");
 		if (ingevuld && (mode == 0 || nagekeken))
-		{	System.out.println("editor wordt nagekeken in setState..");
 			editor.kijkNa(true);
-		//met deze kijkNa komen ook de waarden voor ingevuld en nagekeken in de editor wel weer goed?
-		}
 	}
 
 	public HashMap<String, Object> getState()
@@ -367,22 +344,10 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 //		System.out.println(s);
 	}
 
-//	public void setBounds(int x, int y, int b, int h)
-//	{
-//		feedbackButton.setBounds(editor.getWidth() - 15, getSize().height - 14, 14, 14);
-//		goedIC.setLocation(getWidth() - 18, 0);
-//		halfIC.setLocation(getWidth() - 18, 0);
-//		foutIC.setLocation(getWidth() - 18, 0);
-//		super.setBounds(x, y, b, h);
-//	}
+
 
 	public void wis()
 	{
-//		if (huidigIC != null)
-//		{
-//			huidigIC.setVisible(false);
-//
-//		}
 		checkimg.setVisible(false);
 
 		correct = false;
@@ -397,7 +362,6 @@ public class StelselOplossingenVak //extends FormuleHolder //implements ActionLi
 	public void resize()
 	{
 		hoogte = editor.getHeight();
-	//	mainPanel.setHeight(hoogte + "px");
 		parent.resize();
 	}
 	

@@ -23,7 +23,6 @@ public class StelselPijl {
 		pijlCanvas.setCoordinateSpaceHeight(hoogte);
 		pijlCanvas.setCoordinateSpaceWidth(Math.max(5, Math.abs(xBegin - xEind)));
 		
-		//setPixelSize(Math.max(5, Math.abs(xBegin - xEind)), hoogte);
 	}
 	
 	public void paint()

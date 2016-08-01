@@ -41,6 +41,10 @@ public class StelselRekenVak extends LayoutPanel  {
 	int headerHoogte = 23;
 	int marge = 3;
 	
+	int scrollHoogte = 0;
+	int scrollWidth = 0;
+	int contentHoogte = 0;
+	
 	StelselAntwoordVak antwoordVak;
 	
 	ScrollPanel scrollPane;
@@ -53,13 +57,15 @@ public class StelselRekenVak extends LayoutPanel  {
 	public StelselRekenVak(StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		int hoogte = antwoordVak.hoogte - (antwoordVak.oplossingenRegelZichtbaar?27:0);
+		scrollHoogte = hoogte - headerHoogte - marge;
+		scrollWidth = antwoordVak.breedte - 2;
+		contentHoogte = scrollHoogte;
 		this.setPixelSize(antwoordVak.breedte, hoogte);
 		contentPanel = new LayoutPanel();
 		contentPanel.getElement().getStyle().setBackgroundColor("white");
-//contentPanel.getElement().getStyle().setBackgroundColor("red");
-		contentPanel.setPixelSize(antwoordVak.breedte - 2, hoogte - headerHoogte - marge); // wordt aangepast zodra hoogte hoofdEditor wordt aangepast.
+		contentPanel.setPixelSize(scrollWidth - 3, contentHoogte); // wordt aangepast zodra hoogte hoofdEditor wordt aangepast.
 		scrollPane = new ScrollPanel();
-		scrollPane.setPixelSize(antwoordVak.breedte - 2, hoogte - headerHoogte - marge);
+		scrollPane.setPixelSize(scrollWidth, scrollHoogte);
 		scrollPane.getElement().getStyle().setOverflow(Overflow.AUTO);
 		scrollPane.getElement().getStyle().setFloat(Style.Float.LEFT);
 		scrollPane.setWidget(contentPanel);
@@ -82,7 +88,7 @@ public class StelselRekenVak extends LayoutPanel  {
 		setWidgetLeftRight(headerPanel, 0, Style.Unit.PX, 2, Style.Unit.PX);
 		setWidgetTopHeight(headerPanel, 0, Style.Unit.PX, headerHoogte, Style.Unit.PX);
 		setWidgetLeftRight(scrollPane, 0, Style.Unit.PX, 2, Style.Unit.PX);
-		setWidgetTopBottom(scrollPane, headerHoogte + marge, Style.Unit.PX, 0, Style.Unit.PX);
+		setWidgetTopHeight(scrollPane, headerHoogte + marge, Style.Unit.PX, scrollHoogte, Style.Unit.PX);
 		
 		if(launchState != null)
 			init(launchState, randomVarNamen, randomVarWaarden);
@@ -122,11 +128,12 @@ public class StelselRekenVak extends LayoutPanel  {
 	public void setHeight(int h)
 	{
 		super.setHeight(h + "px");
-		scrollPane.setPixelSize(antwoordVak.breedte - 2, h - headerHoogte - marge);
-		if(contentPanel.getOffsetHeight() > scrollPane.getOffsetHeight())
-			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 20, contentPanel.getOffsetHeight());
+		scrollHoogte = h - headerHoogte - marge;
+		scrollPane.setPixelSize(scrollWidth, scrollHoogte);
+		if(contentHoogte > scrollHoogte)
+			contentPanel.setPixelSize(scrollWidth - 20, contentHoogte);
 		else
-			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 3, contentPanel.getOffsetHeight());
+			contentPanel.setPixelSize(scrollWidth - 3, contentHoogte);
 		
 		scrollPane.scrollToBottom();
 	}
@@ -134,12 +141,12 @@ public class StelselRekenVak extends LayoutPanel  {
 	public void zetVolledigeBreedte(int b)
 	{
 		super.setWidth(b + "px");
-		int scrollPaneWidth = b - 2;
-		scrollPane.setPixelSize(scrollPaneWidth, scrollPane.getOffsetHeight());
-		if(contentPanel.getOffsetHeight() > scrollPane.getOffsetHeight())
-			contentPanel.setPixelSize(scrollPaneWidth - 20, contentPanel.getOffsetHeight());
+		scrollWidth = b - 2;
+		scrollPane.setPixelSize(scrollWidth, scrollHoogte);
+		if(contentHoogte > scrollHoogte)
+			contentPanel.setPixelSize(scrollWidth - 20, contentHoogte);
 		else
-			contentPanel.setPixelSize(scrollPaneWidth - 3, contentPanel.getOffsetHeight());
+			contentPanel.setPixelSize(scrollWidth - 3, contentHoogte);
 	}
 	
 	public HashMap<String, Object> getState()
@@ -167,10 +174,15 @@ public class StelselRekenVak extends LayoutPanel  {
 		if(hoofdEditor.heeftKinderen())
 			hoofdEditor.setLocations();
 		int h = hoofdEditor.geefHoogteEditorEnKinderen();
-		if(h > scrollPane.getOffsetHeight())
-			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 20, h);
+		if(h > scrollHoogte)
+		{	contentHoogte = h;
+			contentPanel.setPixelSize(scrollWidth - 20, contentHoogte);
+		}
 		else
-			contentPanel.setPixelSize(scrollPane.getOffsetWidth() - 3, scrollPane.getOffsetHeight());
+		{	contentHoogte = scrollHoogte;
+			contentPanel.setPixelSize(scrollWidth - 3, contentHoogte);
+		
+		}
 		contentPanel.setWidgetTopHeight(hoofdEditor, 0, Style.Unit.PX, hoofdEditor.geefHoogte(), Style.Unit.PX);
 		scrollPane.scrollToBottom();
 	}

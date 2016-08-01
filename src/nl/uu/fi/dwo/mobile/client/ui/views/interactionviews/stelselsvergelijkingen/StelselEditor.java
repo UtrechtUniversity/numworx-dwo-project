@@ -62,13 +62,9 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	private int score = 0;
 	private int scoreMax = 0; 
 	
-	//private FormuleEditor editor;
-	
 	private boolean heeftFocus = false;
 	public static TextConstants rb = Text.constants;
 	
-	//private FormuleButton feedbackButton; //TODO: in later stadium feedback toevoegen. 
-	//Met feedbackpopups zoals in formuleEditorWithAnswer? Of met feedbackregel zoals in FormuleEditorWithSteps?
 	
 	private StelselPijl[] pijlen = null;
 	
@@ -76,14 +72,11 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	public StelselEditor(StelselRekenVak hoofdPanel, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
 	{
 		super(h, true, randomVarNamen, randomVarWaarden, avChecker);
-		setHeader(false);
 		zetStandaardOpties();
 		heeftFocus = true;
 		this.hoofdPanel = hoofdPanel;
 		stapH = 15;
 		hoogte = hoofdPanel.getOffsetHeight();
-		//this.getAsPanel().getElement().getStyle().setBackgroundColor("red");
-		
 	}
 	
 	public StelselEditor(StelselEditor parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, AntwoordVakChecker avChecker)
@@ -91,7 +84,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		super(h, true, randomVarNamen, randomVarWaarden, avChecker);
 		this.parent = parent;
 		this.varNamen = parent.geefVarNamen();
-		setHeader(false);
 		zetStandaardOpties();
 		zetCheck(parent.getCheck());
 		setCommunicationRoot(parent.getCommunicationRoot());
@@ -99,26 +91,17 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		stapH = 15;
 		hoogte = 40;
 		scoreMax = parent.scoreMax;
-		//this.getAsPanel().getElement().getStyle().setBackgroundColor("blue");
-		//oplossingenGevonden en oplossingen instellen. 
 	}
 	
 	public void zetStandaardOpties()
 	{
+		setHeader(false);
 		zetPijl(false);
 		
 		zetScrollOptie(false);
 		zetMetRand(false);
 		zetLinkerRand();
 		
-		/* TODO: nog maken? 
-		feedbackButton = new FormuleButton("?");
-		feedbackButton.addActionListener(this);
-		feedbackButton.setBackground(new Color(215,215,215));
-		feedbackButton.setSize(15, 15);
-		feedbackButton.setVisible(false);
-		add(feedbackButton);
-		*/
 	}
 	
 	public void zetScoreMax(int scoreMax)
@@ -226,46 +209,31 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			pijlen[i] = new StelselPijl(xBegin, stelselEditor.editor.getWidth()/3); //wat hier op de tweede plek staat maakt niets uit, dat regel je nog in plaatsEditors.
 			hoofdPanel.contentPanel.add(pijlen[i].getCanvas()); //stond nog in: ,0)
 		}
-		kinderen[0].requestFocus();
 		hoofdPanel.plaatsEditors();
+		kinderen[0].editor.setCurrent(0, 0); //om te zorgen dat cursor ook getekend wordt.
+		kinderen[0].requestFocus();
+		
 		
 	}
 	
 	public void requestFocus()
 	{
-		//wat doe je hier precies??
-//		if(isHoofdEditor())
-//			this.formuleVak = geefLaatsteFormuleVak();
-//		else
-//			hoofdPanel.geefHoofdEditor().formuleVak = this.formuleVak;
-		//this.formuleVak.setEditable(true);
 		hoofdPanel.geefHoofdEditor().zetFocusFalse();
 		heeftFocus = true;
-		this.editor.requestFocus();
+		editor.requestFocus();
 	}
 	
 	public HashMap<String, Object> getState()
 	{
-		//Hashtable h = super.getState();
-		
-		//boolean[] takEindes = geefTakEindes();
 		int[] aantalKinderen = geefAantalKinderen();
 		Vector<Integer> stapNrsVector = geefStapNrsEditorEnKinderen();
 		int[] stapNrs = new int[stapNrsVector.size()];
 		for(int i = 0; i < stapNrs.length; i++)
 			stapNrs[i] = stapNrsVector.get(i);
 		Vector<String> formuleVakInhoudenVector = geefFormuleVakInhouden();
-		//String[] formuleVakInhouden;
-//		if(formuleVakInhoudenVector.size() > 0)
-//		{	
-			String [] formuleVakInhouden = new String[formuleVakInhoudenVector.size()];
-			for(int i = 0; i < formuleVakInhouden.length; i++)
-				formuleVakInhouden[i] = formuleVakInhoudenVector.get(i);
-//		}
-//		else
-//		{	formuleVakInhouden = new String[1];
-//				formuleVakInhouden[0] = "$f@";
-//		}
+		String [] formuleVakInhouden = new String[formuleVakInhoudenVector.size()];
+		for(int i = 0; i < formuleVakInhouden.length; i++)
+			formuleVakInhouden[i] = formuleVakInhoudenVector.get(i);
 		Vector<boolean[][]> eindOplExactVector = geefEindOplExactEditorEnKinderen();
 		Vector<boolean[][]> eindOplGevondenVector = geefEindOplGevondenEditorEnKinderen();
 		Vector<boolean[][]> eindOplStelselVector = geefEindOplStelselEditorEnKinderen();
@@ -279,7 +247,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			eindOplossingStelselGevondenArrays[i] = eindOplStelselVector.get(i);
 		}
 		
-		
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("aantalKinderen", aantalKinderen);
 		h.put("stapNrs", stapNrs);
@@ -289,7 +256,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		h.put("eindOplossingStelselGevondenArrays", eindOplossingStelselGevondenArrays);
 		h.put("ingevuld", new Boolean(ingevuld));
 		h.put("nagekeken", new Boolean(nagekeken));
-		
 		
 		return h;
 	}
@@ -343,7 +309,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		eindOplossingGevonden = oplossingArrays[editorTeller];
 		eindOplossingStelselGevonden = stelselArrays[editorTeller];
 		
-		//kijken of hier nog meer in moet, zoals ingevuld en nagekeken. Dan misschien toch beter h doorgeven.
 		String antwoordString = formuleVakInhoudenEditor[formuleVakInhoudenEditor.length - 1];
 		ingevuld = !antwoordString.equals("$f@");
 		h.put("stapNr", new Integer(stapNr));
@@ -352,6 +317,13 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		h.put("nagekeken", new Boolean(nagekeken));
 		h.put("antwoordString", antwoordString);
 		super.setState(h);
+		//in setState wordt geen maakNakijkenAf meer gedaan. Daarom mis je het weghalen van het eennalaatste oranje vinkje.
+		if(editor == null && viewers.size() > 1)
+		{	FormuleViewer viewer = viewers.get(viewers.size() - 2);
+			viewer.showResult(FormuleViewer.NONE);
+		}
+		else if(latest_answer_viewer != null && !editor.toString().equals(""))
+			latest_answer_viewer.showResult(FormuleViewer.NONE);
 		
 		formuleTeller += stapNrs[editorTeller] + 1;
 		editorTeller++;
@@ -395,8 +367,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		for(int i = 0; i < getStapNr() + 1; i++)
 		{
 			if(viewers.size() > i && viewers.get(i) != null && (i == 0 || !viewers.get(i).toString().equals("$f@"))) 
-			//	v.add("$f@");
-			//else 
 				v.add(viewers.get(i).toString());
 			else if(editor != null)
 				v.add(editor.toString());
@@ -493,11 +463,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		return kinderen != null;
 	}
 	
-	public StelselEditor[] geefKinderen()
-	{
-		return kinderen;
-	}
-	
 	public int geefHoogte()
 	{
 		return hoogte;
@@ -592,7 +557,10 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	public void focusEersteVrijeKind()
 	{
 		if(kinderen == null)
+		{	editor.setCurrent(0, 0); //om cursor daadwerkelijk te tekenen.
 			requestFocus();
+		
+		}
 		else 
 		{
 			for(int i = 0; i < kinderen.length; i++)
@@ -670,13 +638,13 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		FormuleEditor hulpEditor = new FormuleEditor();
 		for(int i = 0; i < kinderen.length; i++)
 		{	hoofdPanel.contentPanel.setWidgetLeftWidth(kinderen[i], x, Style.Unit.PX, kinderen[i].getWidth(), Style.Unit.PX);
-			//als editor geen kinderen heeft, door laten lopen tot onderkant scrollpanel.
+			//als editor geen kinderen heeft, door laten lopen tot onderkant contentpanel.
 			if(kinderen[i].heeftKinderen())
 				hoofdPanel.contentPanel.setWidgetTopHeight(kinderen[i], y, Style.Unit.PX, kinderen[i].getHeight(), Style.Unit.PX);
 			else
 			{	//kinderen[i].setHeight(hoofdPanel.hoofdEditor.geefHoogteEditorEnKinderen() - y);
-				if(kinderen[i].getHeight() < hoofdPanel.scrollPane.getOffsetHeight() - y)
-					kinderen[i].setHeight(hoofdPanel.scrollPane.getOffsetHeight() - y);
+				if(kinderen[i].getHeight() < hoofdPanel.contentPanel.getOffsetHeight() - y)
+					kinderen[i].setHeight(hoofdPanel.contentPanel.getOffsetHeight() - y);
 				hoofdPanel.contentPanel.setWidgetTopBottom(kinderen[i], y, Style.Unit.PX, 0, Style.Unit.PX);
 			}
 			//kinderen[i].scrollRectToVisible(new Rectangle(0, 0, 1, 1));
@@ -701,84 +669,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		}
 	}
 	
-	public void checkAntwoord()
-	{
-		ingevuld = false;
-		
-		//TODO: bevatVoldoetNiet bepalen (??).
-		VergelijkingMeerv antwoord = null;
-		
-		String formuleVakString = editor.toString();
-		
-		VergelijkingMeerv antwoordIngevuld = FormuleParser.parseVergelijking(formuleVakString);
-		
-		antwoord = antwoordIngevuld;
-		
-		if (antwoord != null)
-		{ 	ingevuld = true;
-			
-			String diffVar = "x";
-			for(int i = 0; i < antwoord.geefAantal(); i++)
-			{	String diffVar2 = antwoord.geefVergelijking(i).geefVarNaam();
-				if(diffVar2 != null && !diffVar2.equals(""))
-				{	diffVar = diffVar2;
-					break;
-				}
-			}
-
-			boolean isGelijkwaardigEind = antwoord.isStelselOplossing(oplossingen, varNamen);
-			isGelijkwaardig = isGelijkwaardigEind;
-			isEindOplossing = true;
-			isEindOplossingExact = true;
-			isEindOplossingStelsel = true;
-			
-			for(int i = 0; i < oplossingen.length; i++)
-			{
-				for(int j = 0; j < varNamen.length; j++)
-				{	if(!eindOplossingGevonden[i][j])
-					{	eindOplossingGevonden[i][j] = isGelijkwaardigEind && antwoord.isEindOplossing(oplossingen[i][j], varNamen[j], "=");
-						if(!eindOplossingGevonden[i][j])
-							isEindOplossing = false;
-					}
-					if(!eindOplossingStelselGevonden[i][j]) //TODO: kijken of hier ook nog als argument de oplossing moet worden meegegeven en zoja hoe.
-					{	eindOplossingStelselGevonden[i][j] = isGelijkwaardigEind && antwoord.isStelselEindOplossing(varNamen[j], varNamen);
-						if(!eindOplossingStelselGevonden[i][j])
-							isEindOplossingStelsel = false;
-					}
-					if(!eindOplossingExactGevonden[i][j])
-					{	eindOplossingExactGevonden[i][j] = isGelijkwaardigEind && antwoord.isEindOplossingExact(oplossingen[i], varNamen[j], "=");
-						if(!eindOplossingExactGevonden[i][j])
-							isEindOplossingExact = false;
-					}
-				}
-			}
-			
-			isDeelOplossing = antwoord.isStelselDeelOplossing(oplossingen, varNamen);
-			bevatFouteOplossing = antwoord.bevatFouteStelselOplossing(oplossingen, varNamen);
-		}
-		else
-		{
-			isGelijkwaardig = false;
-			isEindOplossing = false;
-			isEindOplossingExact = false;
-			isEindOplossingStelsel = false;
-			if (editor.toString().indexOf("|") > -1)
-			{ 	setFeedback(rb.feedbackTekst08());//, false);
-				addFeedbackComponent();
-			}
-			else if (editor.toString().length() > 3)
-			{ 	if (mode == 2 || mode == 3)
-					ingevuld = true;
-				setFeedback(rb.feedbackTekst09());//, false);
-				addFeedbackComponent();
-			}
-		}
-		Algebra.setDefaultTestValues();
-	}
-	
-
-	
-	public Boolean isCorrect()
+		public Boolean isCorrect()
 	{
 		return correct;
 	}
@@ -847,8 +738,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	public int bepaalHoogte()
 	{
 		int hoogte = super.bepaalHoogte();
-		//if(getFeedbackComponent() == null || !getFeedbackComponent().isShowing())
-		//	hoogte += 20;
 		return hoogte;
 	}
 	
@@ -864,7 +753,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			checkimg.removeFromParent();
 			if(editor != null)
 				editor.clearAll();
-			//formuleVak.vulVak("$f@");
 			if(this.getStapNr() == 0 && !isHoofdEditor())
 			{
 				//focus in meest linker kolom
@@ -873,7 +761,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 					{	hoofdPanel.contentPanel.remove(parent.kinderen[i]); 
 						hoofdPanel.contentPanel.remove(parent.pijlen[i].getCanvas());
 					}
-					//Component huidigIC = parent.getHuidigIC();
 					hoofdPanel.contentPanel.remove(checkimg);
 					parent.kinderen = null;
 					parent.pijlen = null;
@@ -881,7 +768,6 @@ public class StelselEditor extends FormuleEditorWithSteps {
 					hoofdPanel.plaatsEditors();
 					parent.vervangViewerDoorEditor(setState);
 					parent.requestFocus();
-					
 				}
 				else
 				{
@@ -932,58 +818,9 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	public void zetFocusOplossingenRegel()
 	{
 		zetFocusFalse();
-		//editor = hoofdPanel.geefAntwoordVak().oplossingenVak.geefFormuleVak();
 	}
 	
-	public void addFeedbackComponent()
-	{
-//		Component c = getFeedbackComponent();
-//		hoofdPanel.contentPanel.add(c, 0);
-//		c.setLocation(Math.min(this.getX(), hoofdPanel.getWidth() - 200), 
-//				Math.min(this.getY() + this.geefLaatsteFormuleVak().getY() + this.geefLaatsteFormuleVak().getHeight() + 5, hoofdPanel.getHeight() - c.getHeight()));
-	}
-
-//	public void actionPerformed(ActionEvent e) 
-//	{
-//		if(e.getSource()==feedbackButton)
-//		{	addFeedbackComponent();
-//			
-//			feedbackButton.setVisible(false);
-//		}
-//		else if(e.getActionCommand().equals("closeFeedback"))
-//		{	feedbackButton.setVisible(true);
-//			hoofdPanel.contentPanel.remove(getFeedbackComponent());
-//			hoofdPanel.repaint();
-////			if(feedbackPanel.getParent()!=null)
-////			{	Container c = feedbackPanel.getParent();
-////				c.remove(feedbackPanel);
-////				c.repaint();
-////			}
-////			return;
-//		}
-//		else
-//		{
-//			if(e.getActionCommand().equals("focus"))
-//			{
-//				if(isHoofdEditor())
-//					this.formuleVak = geefLaatsteFormuleVak();
-//				else
-//					hoofdPanel.geefHoofdEditor().formuleVak = this.formuleVak;
-//				this.formuleVak.setEditable(true);
-//				hoofdPanel.geefHoofdEditor().zetFocusFalse();
-//				heeftFocus = true;
-//			}
-//			if(e.getActionCommand().equals("formChanged"))
-//			{	feedbackButton.setVisible(false);
-//				hoofdPanel.contentPanel.remove(getFeedbackComponent());
-//				if(hoofdPanel.ic != null)
-//				{	hoofdPanel.contentPanel.remove(hoofdPanel.ic);
-//				}
-//				hoofdPanel.repaint();
-//			}
-//			super.actionPerformed(e);
-//		}
-//	}
+	
 	
 	
 	
