@@ -474,7 +474,7 @@ public class PublicUserManager {
             String smtpEmail = servletContext.getInitParameter("fi.dwo.server.rest.smtp.email");//from address.
             Properties props = new Properties();
             props.put("mail.transport.protocol", "smtp");
-            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.starttls.enable", smtpTLS);
             props.put("mail.smtp.host", smtpServer);
             props.put("mail.smtp.port", smtpPort);
             props.put("mail.smtp.auth", "true");
