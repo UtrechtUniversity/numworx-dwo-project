@@ -41,7 +41,7 @@ public enum Dwo2ExceptionCode {
     Rest_Registration_UserName_Invalid, //Invalid characters
     Rest_Submitted_SchoolClass_exists,//A school
     Rest_Registration_Password_Invalid, 
-    Rest_User_Has_No_Active_SchoolClass, //schoolclassid in hasRole is null!
+    Rest_Active_SchoolClass_Not_Set, //schoolclassid in hasRole is null!
     //GUI
     GUI_NoUserIsSignedIn,
     GUI_AnIncorrectPasswordWasGiven
