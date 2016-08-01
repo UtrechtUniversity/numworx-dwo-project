@@ -59,8 +59,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-import static java.lang.Thread.sleep;
 import java.util.Random;
+import static java.lang.Thread.sleep;
 
 /**
  * Handles the public registration of new users.
