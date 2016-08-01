@@ -42,7 +42,7 @@ public class PersistentLoginContext implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "loginID", nullable = false)
-    private Long id;    @Id
+    private Long id;
     @Basic(optional = false)
     @Column(name = "userID", nullable = false)
     private Long userID;
@@ -61,7 +61,7 @@ public class PersistentLoginContext implements Serializable {
 //  `lastLoginTimeStamp` bigint(20) DEFAULT NULL,
 //  PRIMARY KEY (`loginID`),
 //  UNIQUE KEY `AK_ID_LOGIN_USER`  (`userID`),
-//  UNIQUE KEY `AK_ID_LOGIN_TIMESTAMP` (`lastLoginTimeStamp`)
+//  `AK_ID_LOGIN_TIMESTAMP` (`lastLoginTimeStamp`)
 //) ENGINE=InnoDB DEFAULT CHARSET=latin1
     /**
      * @return the id
