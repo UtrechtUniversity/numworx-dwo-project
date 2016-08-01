@@ -5,6 +5,7 @@ import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureStudentSchoolClassManager;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,15 +26,17 @@ public class SchoolClassManagementStudentProperties {
         try {
             scList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();
             activeSchoolClass = SecureStudentSchoolClassManager.getActiveSchoolClass();
-        }
-        catch (Dwo2Exception ex) {
-
-            LOG.log(Level.SEVERE, ex.getMessage());
-            if (scList == null) {
-                scList = new ArrayList<DomSchoolClass>();
+        } catch (Dwo2Exception ex) {
+            if (ex.getDwo2Code().equals(Dwo2ExceptionCode.Rest_User_Has_No_Active_SchoolClass)) {
+                LOG.log(Level.FINE, ex.getMessage());
+            } else {
+                LOG.log(Level.SEVERE, ex.getMessage());
+                if (scList == null) {
+                    scList = new ArrayList<DomSchoolClass>();
+                }
+                activeSchoolClass = null;
+                throw ex;
             }
-            activeSchoolClass = null;
-            throw ex;
         }
     }
 
