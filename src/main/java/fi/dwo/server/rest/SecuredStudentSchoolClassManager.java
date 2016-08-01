@@ -64,7 +64,7 @@ public class SecuredStudentSchoolClassManager {
         }
 
         if (phr.getClassID() == null) {
-            return null;
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_User_Has_No_Active_SchoolClass, "Non-fatal. You have no active schoolclass selected.");
         }
 
         //fetch schoolclass from hasRole
