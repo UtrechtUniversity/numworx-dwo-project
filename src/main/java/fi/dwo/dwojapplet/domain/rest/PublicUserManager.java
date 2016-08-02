@@ -8,6 +8,7 @@ import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomNewUser;
 import fi.dwo.rest.dom.entities.DomSamlUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -111,7 +112,7 @@ public class PublicUserManager {
 //    }
 
     public static DomUserFull samlLogin(String user_id, String org_id, String authToken) throws Dwo2Exception {
-        DomUserFull user;
+        DomUserFullwLoginContext user;
         RestSamlUser samlRestUser = new RestSamlUser();
         DomSamlUser samlUser = new DomSamlUser();
         samlUser.setSamlUserId(user_id);
@@ -153,11 +154,12 @@ public class PublicUserManager {
             //decode JSON
             //genson = new Genson();
 
-            user = genson.deserialize(json.toString(), DomUserFull.class);
-            String authString = user.getUserName() + ":" + user.getPassword();
+            user = genson.deserialize(json.toString(), DomUserFullwLoginContext.class);
+            String authString = user.getDomUserFull().getUserName() + ":" + user.getDomUserFull().getPassword();
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             StoredRestManager.setBasicAuthString(authString);
-            return user;
+            DwoHelper.setCurrentLoginContext(user.getDomLoginContext());
+            return user.getDomUserFull();
         } catch (MalformedURLException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
 
