@@ -13,6 +13,8 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -20,6 +22,7 @@ import java.awt.MediaTracker;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -113,10 +116,12 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                 }
             } else if (value == removeImage) {
                 /* Delete the school */
-                if (JOptionPane.showConfirmDialog(SchoolDwoAdminPanel.this, TextMapper.getText(TextMapper.GUIS_MSG_DELETE_SCHOOL)
-                        + "?", TextMapper.getText(TextMapper.GUIS_DELETE_SCHOOL), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     int row = tableModel.getSelectedRow();
                     DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(row, 5);
+                    String msg = MessageFormat.format(
+                            Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), 
+                                    Dwo2ExceptionCode.User_ConfirmSchoolDelete),school.getSchoolLogin());
+                if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
                     try {
                         prop.deleteSchool(school);
                         tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage);
