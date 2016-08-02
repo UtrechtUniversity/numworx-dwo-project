@@ -20,6 +20,7 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -187,7 +188,8 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 }
             } else if (value == removeImage) {
                 try {
-                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
+                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_TEACHER_BY_NAME), domUser.getUniqueDisplayName());                    
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
                         DomSchoolClass domSchoolClass = (DomSchoolClass) tableModel.getValueAt(tableModel.getSelectedRow(), tableModel.getColumnCount());
                         prop.removeUserFromSchoolClass(domUser, userType, domSchoolClass);
                         addSchoolClassBox.setSelectedIndex(-1);
