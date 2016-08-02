@@ -159,7 +159,7 @@ public class SecuredUserAccountManager {
 		GwtRestVars.instance().setCurrentUser(null);
 		RestSamlUser samlRestUser = new RestSamlUser();
 		samlRestUser.setDomSamlUser(domSamlUser);
-		MethodCallback<DomUserFull> restcallback = new MethodCallback<DomUserFull>() {
+		MethodCallback<DomUserFullwLoginContext> restcallback = new MethodCallback<DomUserFullwLoginContext>() {
 
 			@Override
 			public void onFailure(Method method, Throwable exception) {
@@ -167,10 +167,9 @@ public class SecuredUserAccountManager {
 			}
 
 			@Override
-			public void onSuccess(Method method, DomUserFull response) {
-				String username = response.getUserName();
-				GwtRestVars.instance().setCurrentUser(response);
-				getDomUserFullwLoginContext(username, userCallback);
+			public void onSuccess(Method method, DomUserFullwLoginContext response) {
+				GwtRestVars.instance().setCurrentUser(response.getDomUserFull());
+				userCallback.onSuccess(response);;
 			}
 		};
 		service.getSamlUser(samlRestUser, restcallback);
