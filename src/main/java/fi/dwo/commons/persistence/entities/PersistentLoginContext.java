@@ -133,7 +133,7 @@ public class PersistentLoginContext implements Serializable {
         }
             loginContext.setLastLoginTimeStamp(lastLoginTimeStamp);
             loginContext.setRegisterTimeStamp(registerTimeStamp);
-        loginContext.setUserId(MySQLPersistenceId.createPersistenceId(userID.longValue(), PersistenceClassType.PersistentLoginContext));
+        loginContext.setUserId(MySQLPersistenceId.createPersistenceId(userID.longValue(), PersistenceClassType.PersistentUser));
     }
     
 }
