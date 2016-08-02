@@ -20,21 +20,27 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
 import javax.swing.AbstractCellEditor;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -136,7 +142,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
             this.fireEditingStopped();
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == delImage) {
-                tableModel.deleteSelectedRow(tableModel.getSelectedRow());
+                tableModel.deleteSelectedRow(row);
 
             }
         }
@@ -170,16 +176,140 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtable.setColumnSelectionAllowed(false);
         jtable.setCellSelectionEnabled(false);
-        TableUtil.setDefaults(jtable, true, new NewTeacherSchoolAdminPanel.ImageRenderer(), new NewTeacherSchoolAdminPanel.ImageButtonEditor());
+
+        InputMap im = jtable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        KeyStroke tab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0);
+        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+        KeyStroke cursorRight = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0);
+        Action tabAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTable t = (JTable) e.getSource();
+                int column = t.getSelectedColumn();
+                int row = t.getSelectedRow();
+                //t.getCellEditor().stopCellEditing();
+
+                do {
+                    if (row == -1) {
+//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+//                            //shift pressed
+//                            row = t.getRowCount() - 1;
+//                        } else {
+                        row = 0;//handle no selection                            
+//                        }
+                    }
+                    if (column == -1) {
+//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+//                            //shift pressed
+//                            column = t.getColumnCount() - 2;
+//                        } else {
+                        column = 0;
+//                        }//ditto
+                    }
+
+                    if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+                        //shift pressed
+                        column--;
+                    } else {
+                        column++;
+                    }
+
+                    if (column == -1) {
+                        column = t.getColumnCount() - 2;
+                        row--;
+                        if (row == -1) {
+                            row = t.getRowCount() - 1;
+                        }
+                    } else if (column == t.getColumnCount() - 1) {
+                        column = 0;
+                        row++;
+                        if (row == t.getRowCount()) {
+                            row = 0;
+                        }
+                    }
+                } while (t.isCellEditable(row, column) == false);
+                if (row == t.getRowCount() - 1) {
+                    NewTeacherSchoolAdminPanelTableModel model = (NewTeacherSchoolAdminPanelTableModel) t.getModel();
+                    model.getData().add(new DomUserFull());
+                    model.setSelectedColumn(column + 1);
+                    model.setSelectedRow(model.getData().size() - 1);
+                    model.fireTableDataChanged();
+                }
+//                else {
+//                    model.setSelectedColumn(column);
+//                    model.setSelectedRow(row);
+//                    model.fireTableDataChanged();
+//                }
+
+                t.changeSelection(row, column, false, false);
+                t.editCellAt(row, column);
+            }
+        };
+        jtable.getActionMap()
+                .put(im.get(tab), tabAction);
+        jtable.getActionMap()
+                .put(im.get(enter), tabAction);
+
+        Action cursorAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTable t = (JTable) e.getSource();
+                int column = t.getSelectedColumn();
+                int row = t.getSelectedRow();
+                //t.getCellEditor().stopCellEditing();
+
+                do {
+                    if (row == -1) {
+//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+//                            //shift pressed
+//                            row = t.getRowCount() - 1;
+//                        } else {
+                        row = 0;//handle no selection                            
+//                        }
+                    }
+                    if (column == -1) {
+//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+//                            //shift pressed
+//                            column = t.getColumnCount() - 2;
+//                        } else {
+                        column = 0;
+//                        }//ditto
+                    }
+
+                    column++;
+
+                    if (column == t.getColumnCount() - 1) {
+                        column = t.getColumnCount() - 2;
+                    }
+                } while (t.isCellEditable(row, column) == false);
+                t.changeSelection(row, column, false, false);
+                t.editCellAt(row, column);
+            }
+        };
+
+        jtable.getActionMap()
+                .put(im.get(cursorRight), cursorAction);
+
+        jtable.putClientProperty(
+                "terminateEditOnFocusLost", Boolean.TRUE);
+        TableUtil.setDefaults(jtable,
+                true, new NewTeacherSchoolAdminPanel.ImageRenderer(), new NewTeacherSchoolAdminPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
 //        TableUtil.setBorder(jtable);
         //Override default settings for spreadsheet like border.
+
         jtable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         jtable.setGridColor(Color.LIGHT_GRAY);
-        jtable.setShowGrid(true);
-        jtbl.setVisible(false);
+
+        jtable.setShowGrid(
+                true);
+        jtbl.setVisible(
+                false);
+
         this.add(jtbl);
-        jtbl.setVisible(true);
+
+        jtbl.setVisible(
+                true);
     }
 
 //    public NewTeacherSchoolAdminPanel(NewTeacherSchoolAdminPanel.UserType type) throws Dwo2Exception {
@@ -303,7 +433,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
 //                return;
 //            }
             try {
-                List<DomUserFull> submitList = tableModel.getSubmitList();
+                List<DomUserFull> submitList = tableModel.getData();
                 List<DomUserFull> resultList = new ArrayList<DomUserFull>();
                 boolean failFlag = false;
                 boolean fatalFlag = false;

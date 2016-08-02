@@ -137,13 +137,6 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object value, int row, int col) {
         //don't change any setting, but update selected values.
-        if (emptyRow == row) {
-            emptyRow = data.size();
-            data.add(new DomUserFull());
-            this.fireTableStructureChanged();
-        }
-        setSelectedRow(row);
-        setSelectedColumn(col);
 //        TextMapper.getText(TextMapper.GUIR_FIRSTNAME),
 //        TextMapper.getText(TextMapper.GUIR_MIDDLENAME),
 //        TextMapper.getText(TextMapper.GUIR_LASTNAME),
@@ -174,6 +167,9 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
         }
     }
 
+    public List<DomUserFull> getData(){
+        return data;
+    }
     /**
      * @return the selectedRow
      */
@@ -206,8 +202,8 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
         if (row != data.size() - 1) {
             emptyRow--;
             data.remove(row);
-//            this.fireTableDataChanged();
-            this.fireTableStructureChanged();
+            this.fireTableDataChanged();
+//            this.fireTableStructureChanged();
         }
     }
 
@@ -219,12 +215,8 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
         }
         data.add(temp);
         emptyRow = data.size() - 1;
-//        this.fireTableDataChanged();
-        this.fireTableStructureChanged();
+        this.fireTableDataChanged();
+//        this.fireTableStructureChanged();
 
-    }
-
-    List<DomUserFull> getSubmitList() {
-        return data;
     }
 }

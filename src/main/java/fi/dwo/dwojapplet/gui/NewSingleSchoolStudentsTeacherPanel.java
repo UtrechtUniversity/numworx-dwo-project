@@ -1,7 +1,3 @@
-/*
- * Created on Mar 24, 2005
- *
- */
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.MD5;
@@ -12,6 +8,7 @@ import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.rest.dom.entities.DomUserFull;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -22,21 +19,27 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
 import javax.swing.AbstractCellEditor;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -175,6 +178,123 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtable.setColumnSelectionAllowed(false);
         jtable.setCellSelectionEnabled(false);
+        
+        InputMap im = jtable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        KeyStroke tab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0);
+        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+        KeyStroke cursorRight = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0);
+        Action tabAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTable t = (JTable) e.getSource();
+                int column = t.getSelectedColumn();
+                int row = t.getSelectedRow();
+                //t.getCellEditor().stopCellEditing();
+
+                do {
+                    if (row == -1) {
+//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+//                            //shift pressed
+//                            row = t.getRowCount() - 1;
+//                        } else {
+                        row = 0;//handle no selection                            
+//                        }
+                    }
+                    if (column == -1) {
+//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+//                            //shift pressed
+//                            column = t.getColumnCount() - 2;
+//                        } else {
+                        column = 0;
+//                        }//ditto
+                    }
+
+                    if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+                        //shift pressed
+                        column--;
+                    } else {
+                        column++;
+                    }
+
+                    if (column == -1) {
+                        column = t.getColumnCount() - 2;
+                        row--;
+                        if (row == -1) {
+                            row = t.getRowCount() - 1;
+                        }
+                    } else if (column == t.getColumnCount() - 1) {
+                        column = 0;
+                        row++;
+                        if (row == t.getRowCount()) {
+                            row = 0;
+                        }
+                    }
+                } while (t.isCellEditable(row, column) == false);
+                if (row == t.getRowCount() - 1) {
+                    NewSingleSchoolStudentsTeacherPanelTableModel model = (NewSingleSchoolStudentsTeacherPanelTableModel) t.getModel();
+                    model.getData().add(new DomSingleSchoolStudent());
+                    model.setSelectedColumn(column + 1);
+                    model.setSelectedRow(model.getData().size() - 1);
+                    model.fireTableDataChanged();
+                }
+//                else {
+//                    model.setSelectedColumn(column);
+//                    model.setSelectedRow(row);
+//                    model.fireTableDataChanged();
+//                }
+
+                t.changeSelection(row, column, false, false);
+                t.editCellAt(row, column);
+            }
+        };
+        jtable.getActionMap()
+                .put(im.get(tab), tabAction);
+        jtable.getActionMap()
+                .put(im.get(enter), tabAction);
+
+        Action cursorAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTable t = (JTable) e.getSource();
+                int column = t.getSelectedColumn();
+                int row = t.getSelectedRow();
+                //t.getCellEditor().stopCellEditing();
+
+                do {
+                    if (row == -1) {
+//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+//                            //shift pressed
+//                            row = t.getRowCount() - 1;
+//                        } else {
+                        row = 0;//handle no selection                            
+//                        }
+                    }
+                    if (column == -1) {
+//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
+//                            //shift pressed
+//                            column = t.getColumnCount() - 2;
+//                        } else {
+                        column = 0;
+//                        }//ditto
+                    }
+
+                    column++;
+
+                    if (column == t.getColumnCount() - 1) {
+                        column = t.getColumnCount() - 2;
+                    }
+                } while (t.isCellEditable(row, column) == false);
+                t.changeSelection(row, column, false, false);
+                t.editCellAt(row, column);
+            }
+        };
+
+        jtable.getActionMap()
+                .put(im.get(cursorRight), cursorAction);
+
+        jtable.putClientProperty(
+                "terminateEditOnFocusLost", Boolean.TRUE);
+        
         TableUtil.setDefaults(jtable, true, new NewSingleSchoolStudentsTeacherPanel.ImageRenderer(), new NewSingleSchoolStudentsTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
 //        TableUtil.setBorder(jtable);
@@ -223,13 +343,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         tr.addImage(delImage, 0);
         try {
             tr.waitForAll();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
         try {
             systemClipboard = getToolkit().getSystemClipboard();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             systemClipboard = null;
         }
 
@@ -323,12 +441,12 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 //                return;
 //            }
             try {
-                List<DomSingleSchoolStudent> submitList = tableModel.getSubmitList();
+                List<DomSingleSchoolStudent> submitList = tableModel.getData();
                 List<DomSingleSchoolStudent> resultList = new ArrayList<DomSingleSchoolStudent>();
                 boolean failFlag = false;
                 boolean fatalFlag = false;
                 String tmpPassword = null;
-                int cnt=0;
+                int cnt = 0;
                 for (DomSingleSchoolStudent submit : submitList) {
                     if (NewSingleSchoolStudentsTeacherPanelProperties.IsValidUserDataInput(submit)) {
                         cnt++;
@@ -346,8 +464,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                                     NewSingleSchoolStudentsSchoolAdminPanelProperties.submitSingleSchoolStudent(student);
                                     break;
                             }
-                        }
-                        catch (Dwo2Exception ex) {
+                        } catch (Dwo2Exception ex) {
                             resultList.add(submit);
                             if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
                                 LOG.log(Level.FINE, "", ex);
@@ -359,7 +476,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                         }
                     }
                 }
-                if(cnt==0){
+                if (cnt == 0) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
                 }
                 tableModel.init(prop, columnNames, resultList, delImage);
@@ -373,16 +490,15 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 if (fatalFlag == false && failFlag == false) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
                 }
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
         } else if (e.getSource() == importButton) {
             pasteFromSystemClipboard();
         } else if (e.getSource() == backButton) {
-            if(tableModel.getRowCount()>1){
-                if(GuiCreator.instance().ShowConfirmDialog(center,TextMapper.getText(TextMapper.DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS))!=JOptionPane.OK_OPTION){
+            if (tableModel.getRowCount() > 1) {
+                if (GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS)) != JOptionPane.OK_OPTION) {
                     return;
                 }
             }
@@ -394,8 +510,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                     StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
                     center.loadCenter(panel);
                 }
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(this, ex);
             }
@@ -449,8 +564,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 }
                 tableModel.addRows(newUserList);
                 return true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.SEVERE, "", e);
                 return false;
             }

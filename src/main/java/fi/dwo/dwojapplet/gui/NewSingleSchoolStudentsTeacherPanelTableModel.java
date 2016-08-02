@@ -136,20 +136,8 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
      */
     @Override
     public void setValueAt(Object value, int row, int col) {
-        //don't change any setting, but update selected values.
-        if (emptyRow == row) {
-            emptyRow = data.size();
-            data.add(new DomSingleSchoolStudent());
-            this.fireTableStructureChanged();
-        }
         setSelectedRow(row);
         setSelectedColumn(col);
-//        TextMapper.getText(TextMapper.GUIR_FIRSTNAME),
-//        TextMapper.getText(TextMapper.GUIR_MIDDLENAME),
-//        TextMapper.getText(TextMapper.GUIR_LASTNAME),
-//        TextMapper.getText(TextMapper.GUIR_USERNAME),
-//        TextMapper.getText(TextMapper.GUIR_PASSWORD),
-//        TextMapper.getText(TextMapper.GUIR_EMAIL)};
         switch (col) {
             case 0:
                 data.get(row).setGivenName((String) value);
@@ -224,7 +212,8 @@ class NewSingleSchoolStudentsTeacherPanelTableModel extends AbstractTableModel {
 
     }
 
-    List<DomSingleSchoolStudent> getSubmitList() {
+    List<DomSingleSchoolStudent> getData() {
         return data;
     }
+
 }
