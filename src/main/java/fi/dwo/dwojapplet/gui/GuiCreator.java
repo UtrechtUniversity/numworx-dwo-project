@@ -26,7 +26,6 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.rest.LoginManager;
-import fi.dwo.dwojapplet.domain.rest.PublicUserManager;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
@@ -39,6 +38,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 /**
  * This Class is responsible for creating some GUI elements and to communicate

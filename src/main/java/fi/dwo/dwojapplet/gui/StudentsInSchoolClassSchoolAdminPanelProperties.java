@@ -73,4 +73,14 @@ public List<DomStudent> getStudentsInSchoolNotInClass(DomSchoolClass sc) throws 
         }
         return result;
     }    
+
+    public Boolean removeSingleSchoolStudentFromSchool(DomStudent submit) throws Dwo2Exception {
+        return SecureSchoolAdminSchoolManager.removeSingleSchoolStudentFromSchool(submit);
+    }
+    
+    
+    public Boolean removeStudentFromSchool(DomStudent submit) throws Dwo2Exception {
+        return SecureSchoolAdminSchoolManager.removeStudentFromSchool(submit);
+    }
+
 }

@@ -1,7 +1,3 @@
-/*
- * Created on Mar 24, 2005
- *
- */
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
@@ -14,6 +10,7 @@ import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomUserListCellRenderer;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -38,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.PopupMenuEvent;
@@ -231,7 +229,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     int row, int column) {
                 Component comp = r.getTableCellRendererComponent(table, value, isSelected,
                         hasFocus, row, column);
-                if (comp instanceof JLabel && column ==6 ) {
+                if (comp instanceof JLabel && column == 6) {
                     JLabel label = (JLabel) comp;
                 }
                 return comp;
@@ -393,10 +391,14 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
-        deleteFromSchoolButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
+        deleteFromSchoolButton = new JButton(
+                Dwo2ExceptionTranslator.getLocalizedCodeExplanation(
+                        DwoHelper.getLocale(), Dwo2ExceptionCode.GUI_BTN_deleteFromSchool));
         deleteFromSchoolButton.setSize(deleteFromSchoolButton.getPreferredSize());
         deleteFromSchoolButton.addActionListener(this);
-        toggleSelectButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
+        toggleSelectButton = new JButton(
+                Dwo2ExceptionTranslator.getLocalizedCodeExplanation(
+                        DwoHelper.getLocale(), Dwo2ExceptionCode.GUI_BTN_toggleSelect));
         toggleSelectButton.setSize(toggleSelectButton.getPreferredSize());
         toggleSelectButton.addActionListener(this);
         Box footer = Box.createHorizontalBox();
@@ -404,8 +406,11 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         footer.setPreferredSize(header.getMinimumSize());
         footer.setBorder(BorderFactory.createEmptyBorder());//25, 25, 25, 25, Color.BLACK));
         this.add(Box.createVerticalGlue());
-        footer.add(addStudentsButton);
+        footer.add(toggleSelectButton);
+        footer.add(Box.createRigidArea(new Dimension(10, 0)));
+        footer.add(deleteFromSchoolButton);
         footer.add(Box.createHorizontalGlue());
+        footer.add(addStudentsButton);
         this.add(footer);
 //        this.add(Box.createVerticalGlue());
     }
@@ -453,22 +458,6 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             if (student != null) {
                 try {
                     prop.submitStudentToSchoolClass(schoolClass, student);
-//                    Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
-//                    Collections.sort(teacherVector, new Comparator<DomStudent>() {
-//                        public int compare(DomStudent a, DomStudent b) {
-//                            return a.getFamilyName().compareTo(b.getFamilyName());
-//                        }
-//                    });
-//
-//                    DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
-//                    studentBox.setModel(model);
-//                    if (teacherVector.isEmpty()) {
-//                        studentBox.setEnabled(false);
-//                        copyToSchoolClassButton.setEnabled(false);
-//                    } else {
-//                        studentBox.setEnabled(true);
-//                        copyToSchoolClassButton.setEnabled(true);
-//                    }
                     studentBox.setSelectedIndex(-1);
                     tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                     //confirm is overkill
@@ -495,16 +484,6 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                             prop.removeStudentFromSchoolClass(schoolClass, student);
                         }
                     }
-//                    Vector<DomStudent> teacherVector = new Vector<>(prop.getStudentsInSchoolNotInClass(schoolClass));
-//                    DefaultComboBoxModel model = new DefaultComboBoxModel(teacherVector);
-//                    studentBox.setModel(model);
-//                    if (teacherVector.isEmpty()) {
-//                        studentBox.setEnabled(false);
-//                        copyToSchoolClassButton.setEnabled(false);
-//                    } else {
-//                        studentBox.setEnabled(true);
-//                        copyToSchoolClassButton.setEnabled(true);
-//                    }
                     studentBox.setSelectedIndex(-1);
                     tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
@@ -533,6 +512,47 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(center, ex);
+            }
+        } else if (e.getSource() == toggleSelectButton && tableModel.getRowCount() > 0) {
+            boolean val = !(Boolean) tableModel.getValueAt(0, 6);
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                tableModel.setValueAt(val, i, 6);
+            }
+        } else if (e.getSource() == deleteFromSchoolButton) {
+            try {
+                int cnt = 0;
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
+                        cnt++;
+                    }
+                }
+                if (cnt == 0) {
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_STUDENTS_SELECTED));
+                } else {
+                    if (GuiCreator.instance().ShowConfirmDialog(center,
+                            Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(),
+                                    Dwo2ExceptionCode.User_ConfirmDeleteMultiUsersFromSchool))
+                            == JOptionPane.OK_OPTION) {
+                        for (int i = 0; i < tableModel.getRowCount(); i++) {
+                            if (((Boolean) tableModel.getValueAt(i, 6)).equals(true)) {
+                                DomStudent student = (DomStudent) tableModel.getValueAt(i, tableModel.getColumnCount());
+                                if (student.getSingleSchool()) {
+                                    prop.removeSingleSchoolStudentFromSchool(student);
+                                } else {
+                                    prop.removeStudentFromSchool(student);
+                                }
+                            }
+                        }
+                        studentBox.setSelectedIndex(-1);
+                        tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
+                        GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
+                        StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(schoolClass);
+                        center.loadCenter(panel);
+                    }
+                }
+            } catch (Dwo2Exception ex) {
+                LOG.log(Level.FINE, "", ex);
+                GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
             }
         }
         tableModel.fireTableDataChanged();
