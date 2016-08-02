@@ -133,7 +133,7 @@ public class Account implements EntryPoint, ClickHandler {
                         }
                     });
                 }
-            });
+            }, null);
         } else {
             LOG.log(Level.INFO, "Configured username for the UserBar is: " + user.getUserName() + ".");
         }
