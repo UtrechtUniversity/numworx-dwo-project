@@ -89,21 +89,58 @@ public class SecuredUserAccountManager {
 
     }
 
-    public void loginUser(final String name, String password, final AsyncCallback<DomUserFullwLoginContext> callback) {
+    public void loginUser(final String name, String password, final AsyncCallback<DomUserFullwLoginContext> callback, 
+    		LoginPresenter presenter) {
         final String pwmd5 = MD5.md5(password);
         GWT.log(pwmd5);
-        loginUserMD5(name, pwmd5, callback);
+        loginUserMD5(name, pwmd5, callback, presenter);
 
     }
 
 	public void loginUserMD5(final String name, final String pwmd5,
-			final AsyncCallback<DomUserFullwLoginContext> callback) {
+			final AsyncCallback<DomUserFullwLoginContext> callback, final LoginPresenter presenter) {
 		loginCheck(name, pwmd5, new AsyncCallback<Boolean>() {
 
             @Override
             public void onSuccess(Boolean result) {
                 if (Boolean.TRUE.equals(result)) {
-                    getDomUserFullwLoginContext(name, callback);
+                	if(presenter != null)
+                	{	getLoginContext(new AsyncCallback<DomLoginContext>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								callback.onFailure(caught);
+							}
+	
+							@Override
+							public void onSuccess(DomLoginContext loginContext) {
+								if (loginContext.getLastLoginTimeStamp() != null 
+									&& presenter != null)
+								{	
+			                		presenter.otherlogin(new AsyncCallback<Boolean>() {
+	
+										@Override
+										public void onFailure(Throwable caught) {
+											callback.onFailure(caught);
+										}
+	
+										@Override
+										public void onSuccess(Boolean result) {
+											if(result.booleanValue())
+												getDomUserFullwLoginContext(name, callback);
+											else
+												callback.onFailure(new RuntimeException("Cancelled"));
+										}
+									});
+			                	} else {
+			                		getDomUserFullwLoginContext(name, callback);
+			                	}
+	
+							}
+						});
+                	} else 
+                		getDomUserFullwLoginContext(name, callback);
+                	
                 } else {
                     callback.onFailure(new RuntimeException("LoginException"));
                 }
@@ -169,7 +206,7 @@ public class SecuredUserAccountManager {
 			@Override
 			public void onSuccess(Method method, DomUserFullwLoginContext response) {
 				GwtRestVars.instance().setCurrentUser(response.getDomUserFull());
-				userCallback.onSuccess(response);;
+				userCallback.onSuccess(response);
 			}
 		};
 		service.getSamlUser(samlRestUser, restcallback);
@@ -178,6 +215,10 @@ public class SecuredUserAccountManager {
 	
 	public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
 		service.logout(loginContext, new Callback<Dwo2Exception>(callback));
+	}
+	
+	public void getLoginContext(AsyncCallback<DomLoginContext> callback) {
+		service.getLoginContext(new Callback<DomLoginContext>(callback));
 	}
 
 	private void getDomUserFullwLoginContext(final String name,
