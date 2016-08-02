@@ -29,6 +29,7 @@ import com.googlecode.mgwt.ui.client.MGWTStyle;
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
+import fi.dwo.gwt.lib.rest.CallManagers.LoginPresenter;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
@@ -41,12 +42,25 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.persistence.PersistenceClassType;
 import fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class DWO2player extends DWOplayer implements EntryPoint {
 
+	final class DubbeleLogin implements LoginPresenter {
+
+		@Override
+		public void otherlogin(AsyncCallback<Boolean> callback) {
+			boolean ok = Window.confirm(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession));
+			callback.onSuccess(Boolean.valueOf(ok)); // DOORGAAN
+		}
+		
+	}
+	
+	
+	
 	final class AsyncUserCallback implements AsyncCallback<DomUserFullwLoginContext> {
 		private final SecuredUserSchoolLoginManager schoolManager;
 		Map<String,Object> profile = new HashMap<String,Object>();
@@ -84,6 +98,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 		@Override
 		public void onFailure(Throwable caught) {
+			if(caught.getMessage().contains("Cancelled"))
+				return; // Probeer het nog eens...
 			callback.onFailure(caught);
 		}
 	}
@@ -158,18 +174,19 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		String http = Window.Location.getProtocol();
 		final SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
 		final SecuredUserSchoolLoginManager schoolManager = new SecuredUserSchoolLoginManager();
+		final DubbeleLogin ontdubbel = new DubbeleLogin();
 		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwo/xmlrpc"){
 
 			public void loginMD5(final String name, final String password, final AsyncCallback<? super Map<String,Object>> callback)
 			{
 				final AsyncCallback<DomUserFullwLoginContext> userCallback = new AsyncUserCallback(schoolManager, callback);
-				accountManager.loginUserMD5(name, password, userCallback);
+				accountManager.loginUserMD5(name, password, userCallback, null);
 				
 			}
 			public void login(final String name, final String password, final AsyncCallback<? super Map<String,Object>> callback)
 			{
 				final AsyncCallback<DomUserFullwLoginContext> userCallback = new AsyncUserCallback(schoolManager, callback);
-				accountManager.loginUser(name, password, userCallback);
+				accountManager.loginUser(name, password, userCallback, ontdubbel);
 				
 			}
 
