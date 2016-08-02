@@ -15,6 +15,8 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -239,7 +241,8 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
                 try {
                     DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
 
-                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
+                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME),sc.getSchoolClassName());
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
                         //persist returned values	
                         prop.removeSchoolClass(sc);
                         tableModel.init(prop, editImage, studentsImage, teachersImage, removeImage);

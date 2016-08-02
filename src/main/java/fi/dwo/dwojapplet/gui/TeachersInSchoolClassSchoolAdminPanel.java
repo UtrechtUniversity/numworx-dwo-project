@@ -16,6 +16,7 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
@@ -140,7 +141,8 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                 try {
                     DomTeacher teacher = (DomTeacher) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
 
-                    if (teacher != null && GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
+                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_TEACHER_BY_NAME), teacher.getUniqueDisplayName());
+                    if (teacher != null && GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
                         //persist returned values	
                         prop.removeTeacherFromSchoolClass(getSchoolClass(), teacher);
                         addTeacherBox.setSelectedIndex(-1);
