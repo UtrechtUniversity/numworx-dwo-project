@@ -99,7 +99,9 @@ public abstract class TextMapper {
 	public static final String DLG_CREATETEACHERERROR = "DLG_CREATETEACHERERROR";
         public static final String DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS = "DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS";
         public static final String DLG_Q_LOSE_NEW_TEACHER_ACCOUNTS = "DLG_Q_LOSE_NEW_TEACHER_ACCOUNTS";
-
+        public static final String DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME = "DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME";
+        public static final String DLG_Q_REMOVE_TEACHER_BY_NAME = "DLG_Q_REMOVE_TEACHER_BY_NAME";
+        
 	public static final String DLG_ENTER_INPUT = "DLG_ENTER_INPUT";
 	/* Exception Messages */
 	public final static String EX_UNKNOWN_ERROR = "EX_UNKNOWN_ERROR";
