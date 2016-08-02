@@ -14,6 +14,7 @@ import org.fusesource.restygwt.client.RestService;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.entities.RestLoginCheck;
+import fi.dwo.rest.entities.RestLoginContext;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
@@ -46,7 +47,7 @@ public interface SecuredUserAccountRestCaller extends RestService {
 
     @PUT
     @Path("/secure/user/account/basicAuthLogout")
-    public void logout(DomLoginContext loginContext, MethodCallback<Dwo2Exception> callback);
+    public void logout(RestLoginContext loginContext, MethodCallback<Dwo2Exception> callback);
 
     @GET
     @Path("/secure/user/account/getLoginContext")
