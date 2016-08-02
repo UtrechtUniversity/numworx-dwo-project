@@ -19,7 +19,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
@@ -639,7 +641,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		else if(command.endsWith("getJSONLaunchData"))
 			doJSONLaunchData(req, resp);
 		else if(command.endsWith("getJSONLaunchDataBytes"))
-			doJSONLaunchData_fast(req, resp);
+			doJSONLaunchData_copy(req, resp);
 	}
 
 	void doCourseDescription(HttpServletRequest req,
@@ -686,6 +688,24 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		
 	}
 	
+	private void doJSONLaunchData_copy(HttpServletRequest req, HttpServletResponse resp)
+	{
+		String s = req.getParameter("s");
+		try {
+			URL org = new URL(getServletContext().getInitParameter("dbrest.url"));
+			org = new URL(org,"public/scoData/getJSONLaunchDataBytes?scoId=" + s);
+			URLConnection connection = org.openConnection();
+			String type = connection.getContentType();
+			resp.setContentType(type);
+			InputStream in = connection.getInputStream();
+			copy(in, resp.getOutputStream());
+			in.close();
+		} catch (Exception e) {
+			log("doJSONLaunchData_copy", e);
+		}	
+	}
+	
+	@Deprecated
 	private void doJSONLaunchData_fast(HttpServletRequest req, HttpServletResponse resp ) throws IOException {
 		String s = req.getParameter("s");
 		String encoding = req.getHeader("Accept-Encoding");		
