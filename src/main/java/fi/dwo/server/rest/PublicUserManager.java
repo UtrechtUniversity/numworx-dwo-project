@@ -492,6 +492,7 @@ public class PublicUserManager {
             String smtpServer = servletContext.getInitParameter("fi.dwo.server.rest.smtp.server");
             String smtpPort = servletContext.getInitParameter("fi.dwo.server.rest.smtp.port");
             String smtpTLS = servletContext.getInitParameter("fi.dwo.server.rest.smtp.tls");
+            String smtpAuth = servletContext.getInitParameter("fi.dwo.server.rest.smtp.auth");
             String smtpUser = servletContext.getInitParameter("fi.dwo.server.rest.smtp.user");
             String smtpPassword = servletContext.getInitParameter("fi.dwo.server.rest.smtp.password");
             String smtpEmail = servletContext.getInitParameter("fi.dwo.server.rest.smtp.email");//from address.
@@ -500,16 +501,20 @@ public class PublicUserManager {
             props.put("mail.smtp.starttls.enable", smtpTLS);
             props.put("mail.smtp.host", smtpServer);
             props.put("mail.smtp.port", smtpPort);
-            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.auth", smtpAuth);
 
-            Session session = Session.getInstance(props,
+            Session session;
+            if(smtpAuth.equals("true")){
+            session = Session.getInstance(props,
                     new javax.mail.Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(smtpUser, smtpPassword);
                 }
             });
-
+            }else{
+                session = Session.getDefaultInstance(props);
+            }
             // uncomment for debugging infos to stdout
             // mailSession.setDebug(true);
             Transport transport = session.getTransport();
