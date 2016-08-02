@@ -4,7 +4,6 @@ import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionMapper;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
-import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -40,7 +39,7 @@ public class GwtRestVars {
             instance = new GwtRestVars();
 
         } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "", ex);
             Window.alert("System error: app improperly configured.");
         }
     }
@@ -72,7 +71,7 @@ public class GwtRestVars {
             try {
                 instance = new GwtRestVars();
             } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, "", ex);
             }
         }
         return instance;
