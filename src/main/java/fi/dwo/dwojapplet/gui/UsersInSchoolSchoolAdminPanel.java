@@ -23,6 +23,7 @@ import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -190,31 +191,36 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 try {
                     if (studentRadio.isSelected()) {
                         DomStudent user = (DomStudent) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+
                         int answer;
                         if (user.getSingleSchool()) {
-                            answer = GuiCreator.instance().ShowConfirmDialog(center, Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmSingleSchoolStudentDelete));
+                            String msg = MessageFormat.format(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmSingleSchoolStudentDelete), user.getUniqueDisplayName());
+                            answer = GuiCreator.instance().ShowConfirmDialog(center, msg);
                         } else {
-                            answer = GuiCreator.instance().ShowConfirmDialog(center, Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmRegularSchoolStudentDelete));
-                        };
-                        if(answer==JOptionPane.OK_OPTION){
-                        if (user.getSingleSchool()) {
-                            prop.removeSingleSchoolStudentFromSchool(user);
-                        } else {
-                            prop.removeStudentFromSchool(user);
+                            String msg = MessageFormat.format(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmRegularSchoolStudentDelete), user.getUniqueDisplayName());
+                            answer = GuiCreator.instance().ShowConfirmDialog(center, msg);
                         }
-                        tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
+                        if (answer == JOptionPane.OK_OPTION) {
+                            if (user.getSingleSchool()) {
+                                prop.removeSingleSchoolStudentFromSchool(user);
+                            } else {
+                                prop.removeStudentFromSchool(user);
+                            }
+                            tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
                         }
                     } else if (teacherRadio.isSelected()) {
-                        if (JOptionPane.OK_OPTION 
-                                == GuiCreator.instance().ShowConfirmDialog(center, Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmTeacherFromSchoolDelete))) {
-                            DomTeacher user = (DomTeacher) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+                        DomTeacher user = (DomTeacher) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+                        String msg = MessageFormat.format(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmTeacherFromSchoolDelete), user.getUniqueDisplayName());
+                        if (JOptionPane.OK_OPTION
+                                == GuiCreator.instance().ShowConfirmDialog(center, msg)) {
                             prop.removeTeacherFromSchool(user);
                             tableModel.init(prop.getTeachersInSchool(), removeImage, studentImage, editImage, emptyImage);
                         }
                     } else if (schoolAdminRadio.isSelected()) {
-                        if (JOptionPane.OK_OPTION 
-                                == GuiCreator.instance().ShowConfirmDialog(center, Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmSchoolAdminFromSchoolDelete))) {
-                            DomSchoolAdmin user = (DomSchoolAdmin) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+                        DomSchoolAdmin user = (DomSchoolAdmin) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+                        String msg = MessageFormat.format(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmSchoolAdminFromSchoolDelete), user.getUniqueDisplayName());
+                        if (JOptionPane.OK_OPTION
+                                == GuiCreator.instance().ShowConfirmDialog(center, msg)) {
                             prop.removeSchoolAdminFromSchool(user);
                             tableModel.init(prop.getSchoolAdminsInSchool(), removeImage, studentImage, editImage, emptyImage);
                         }

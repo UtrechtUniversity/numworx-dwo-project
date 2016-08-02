@@ -20,6 +20,7 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -229,7 +230,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                     //Fetch LoginContext to see if there is already a session.
                     DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(DwoHelper.getCurrentUser().getUserName(),
                             DwoHelper.getCurrentUser().getPassword());
-                    if (loginContext!=null && !loginContext.getLastLoginTimeStamp().equals(DwoHelper.getCurrentLoginContext().getLastLoginTimeStamp())) {
+                    if (loginContext != null && !loginContext.getLastLoginTimeStamp().equals(DwoHelper.getCurrentLoginContext().getLastLoginTimeStamp())) {
                         if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
                                 Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
                         ) != JOptionPane.OK_OPTION) {
@@ -263,28 +264,31 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 
                 } else if (value == removeImage) {
                     int row = tableModel.getSelectedRow();
-                    //Check user password   
-                    switch (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
+                    DomSchoolRoleAndClass selectedSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
+                    String msg = MessageFormat.format(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmSchoolLoginDelete), selectedSrac.getSchoolName(), TextMapper.getText(selectedSrac.getRoleName()));
+                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
+                        //Check user password   
+                        switch (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
 
-                        case CANCELLED:
-                            break;
-                        case SUCCEEDED:
-                            //set prop to table setting
-                            DomSchoolRoleAndClass currSrac = prop.getActiveSchoolRoleAndClass();
-                            DomSchoolRoleAndClass selectedSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
-                            prop.RemoveSchoolRoleAndClass(selectedSrac);
+                            case CANCELLED:
+                                break;
+                            case SUCCEEDED:
+                                //set prop to table setting
+                                DomSchoolRoleAndClass currSrac = prop.getActiveSchoolRoleAndClass();
+                                prop.RemoveSchoolRoleAndClass(selectedSrac);
 
-                            if (currSrac != selectedSrac) {//always keeps current or switches to the null-school
-                                GuiCreator.instance().getMainPanel().center.loadCenter(GuiCreator.instance().getProfilePanel());
-                            } else {
+                                if (currSrac != selectedSrac) {//always keeps current or switches to the null-school
+                                    GuiCreator.instance().getMainPanel().center.loadCenter(GuiCreator.instance().getProfilePanel());
+                                } else {
+                                    switchToActiveSchoolLogin();
+                                }
                                 switchToActiveSchoolLogin();
-                            }
-                            switchToActiveSchoolLogin();
-                            break;
-                        case FAILED:
-                            // show warning
-                            GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
-                            break;
+                                break;
+                            case FAILED:
+                                // show warning
+                                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
+                                break;
+                        }
                     }
                 }
             } catch (Dwo2Exception e) {

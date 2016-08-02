@@ -18,6 +18,7 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -252,9 +253,10 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                     //switch role now
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else if (value == removeImage) {
-                    if (GuiCreator.instance().ShowConfirmDialog(null, TextMapper.getText(TextMapper.DLG_Q_REMOVE)) == JOptionPane.OK_OPTION) {
+                    DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
+                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME), schoolClass.getSchoolClassName());                    
+                    if (GuiCreator.instance().ShowConfirmDialog(null, msg) == JOptionPane.OK_OPTION) {
                         int row = tableModel.getSelectedRow();
-                        DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
                         prop.removeSchoolClass(schoolClass);
                         tableModel.init(prop, loginImage, removeImage,emptyImage);
                     }
