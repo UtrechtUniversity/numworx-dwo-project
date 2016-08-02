@@ -1,14 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.rest.locale;
 
 import com.google.gwt.core.client.GWT;
 
 /**
- *
+  * <code>Dwo2ExceptionsForGWT</code> are Typed Exceptions with localized messages
+  * explaining the exception. GUI-client-side localized texts, labels, 
+ * text fields and such are to be <code>DwoLocalesForGWT</code>.
+*
  * @author G.A.J. van der Plas
  */
 public interface Dwo2ExceptionsForGWT extends Dwo2ExceptionMessages{
