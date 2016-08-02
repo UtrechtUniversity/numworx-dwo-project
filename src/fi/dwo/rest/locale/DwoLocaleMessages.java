@@ -2,7 +2,7 @@ package fi.dwo.rest.locale;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/Users/peterboon/Documents/workspace-luna/DWO-gwt-lib/src/fi/dwo/rest/locale/DwoLocaleMessages.properties'.
+ * 	'D:/GertvanderPlas/netbeans-checkout/project.fisme.java/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/DwoLocaleMessages.properties'.
  */
 public interface DwoLocaleMessages extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
