@@ -1,7 +1,6 @@
 package fi.dwo.gwt.lib.rest.util;
 
 import org.fusesource.restygwt.client.ExceptionMapper;
-import org.fusesource.restygwt.client.FailedStatusCodeException;
 import org.fusesource.restygwt.client.Method;
 
 import com.google.gwt.http.client.Response;

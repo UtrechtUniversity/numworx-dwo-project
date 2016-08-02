@@ -2,7 +2,7 @@ package fi.dwo.rest.locale;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'D:/GertvanderPlas/netbeans-checkout/project.fisme.java/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
+ * 	'/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
  */
 public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
@@ -16,6 +16,24 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_GUI_AnIncorrectPasswordWasGiven();
 
   /**
+   * Translated "delete from school".
+   * 
+   * @return translated "delete from school"
+   */
+  @DefaultStringValue("delete from school")
+  @Key("Dwo2ExceptionCode.GUI_BTN_deleteFromSchool")
+  String Dwo2ExceptionCode_GUI_BTN_deleteFromSchool();
+
+  /**
+   * Translated "(de)select all".
+   * 
+   * @return translated "(de)select all"
+   */
+  @DefaultStringValue("(de)select all")
+  @Key("Dwo2ExceptionCode.GUI_BTN_toggleSelect")
+  String Dwo2ExceptionCode_GUI_BTN_toggleSelect();
+
+  /**
    * Translated "No user is signed in.".
    * 
    * @return translated "No user is signed in."
@@ -25,11 +43,11 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_GUI_NoUserIsSignedIn();
 
   /**
-   * Translated "You have not yet selected a schoolclass.".
+   * Translated "You have not yet selected a school class.".
    * 
-   * @return translated "You have not yet selected a schoolclass."
+   * @return translated "You have not yet selected a school class."
    */
-  @DefaultStringValue("You have not yet selected a schoolclass.")
+  @DefaultStringValue("You have not yet selected a school class.")
   @Key("Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set")
   String Dwo2ExceptionCode_Rest_Active_SchoolClass_Not_Set();
 
@@ -115,11 +133,11 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_Rest_Registration_School_authentication_failed();
 
   /**
-   * Translated "The school license has expired. You can register once it has renewed. Contact the school.".
+   * Translated "The school license has expired. You can register\n once it has renewed. Contact the school.".
    * 
-   * @return translated "The school license has expired. You can register once it has renewed. Contact the school."
+   * @return translated "The school license has expired. You can register\n once it has renewed. Contact the school."
    */
-  @DefaultStringValue("The school license has expired. You can register once it has renewed. Contact the school.")
+  @DefaultStringValue("The school license has expired. You can register\n once it has renewed. Contact the school.")
   @Key("Dwo2ExceptionCode.Rest_Registration_School_license_expired")
   String Dwo2ExceptionCode_Rest_Registration_School_license_expired();
 
@@ -169,11 +187,20 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_User_AuthenticationError();
 
   /**
-   * Translated "You did not logout in your last session. Ensure that you have closed all your other DWO-applications before continuing to prevent data corruption. Continue?".
+   * Translated "Do you want to remove the selected students and pertaining data from the school?\nSchool accounts are also deleted.".
    * 
-   * @return translated "You did not logout in your last session. Ensure that you have closed all your other DWO-applications before continuing to prevent data corruption. Continue?"
+   * @return translated "Do you want to remove the selected students and pertaining data from the school?\nSchool accounts are also deleted."
    */
-  @DefaultStringValue("You did not logout in your last session. Ensure that you have closed all your other DWO-applications before continuing to prevent data corruption. Continue?")
+  @DefaultStringValue("Do you want to remove the selected students and pertaining data from the school?\nSchool accounts are also deleted.")
+  @Key("Dwo2ExceptionCode.User_ConfirmDeleteMultiUsersFromSchool")
+  String Dwo2ExceptionCode_User_ConfirmDeleteMultiUsersFromSchool();
+
+  /**
+   * Translated "You did not logout in your last session.\nEnsure that you have closed all your other DWO-applications before\ncontinuing to prevent data corruption. Continue?".
+   * 
+   * @return translated "You did not logout in your last session.\nEnsure that you have closed all your other DWO-applications before\ncontinuing to prevent data corruption. Continue?"
+   */
+  @DefaultStringValue("You did not logout in your last session.\nEnsure that you have closed all your other DWO-applications before\ncontinuing to prevent data corruption. Continue?")
   @Key("Dwo2ExceptionCode.User_ConfirmNewLoginSession")
   String Dwo2ExceptionCode_User_ConfirmNewLoginSession();
 
@@ -196,11 +223,11 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_User_ConfirmRegularSchoolStudentDelete();
 
   /**
-   * Translated "Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?".
+   * Translated "Ensure that you have closed all your other DWO-applications\nbefore continuing to prevent data loss. Continue?".
    * 
-   * @return translated "Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?"
+   * @return translated "Ensure that you have closed all your other DWO-applications\nbefore continuing to prevent data loss. Continue?"
    */
-  @DefaultStringValue("Ensure that you have closed all your other DWO-applications before continuing to prevent data loss. Continue?")
+  @DefaultStringValue("Ensure that you have closed all your other DWO-applications\nbefore continuing to prevent data loss. Continue?")
   @Key("Dwo2ExceptionCode.User_ConfirmRoleSwitch")
   String Dwo2ExceptionCode_User_ConfirmRoleSwitch();
 
@@ -214,13 +241,31 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_User_ConfirmSchoolAdminFromSchoolDelete();
 
   /**
-   * Translated "Ensure that you have closed all your DWO-applications before continuing to prevent data loss. Continue?".
+   * Translated "Ensure that you have closed all your DWO-applications\nbefore continuing to prevent data loss. Continue?".
    * 
-   * @return translated "Ensure that you have closed all your DWO-applications before continuing to prevent data loss. Continue?"
+   * @return translated "Ensure that you have closed all your DWO-applications\nbefore continuing to prevent data loss. Continue?"
    */
-  @DefaultStringValue("Ensure that you have closed all your DWO-applications before continuing to prevent data loss. Continue?")
+  @DefaultStringValue("Ensure that you have closed all your DWO-applications\nbefore continuing to prevent data loss. Continue?")
   @Key("Dwo2ExceptionCode.User_ConfirmSchoolClassSwitch")
   String Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch();
+
+  /**
+   * Translated "Do you want to delete school {0}\nand delete all pertaining data irrevocably?".
+   * 
+   * @return translated "Do you want to delete school {0}\nand delete all pertaining data irrevocably?"
+   */
+  @DefaultStringValue("Do you want to delete school {0}\nand delete all pertaining data irrevocably?")
+  @Key("Dwo2ExceptionCode.User_ConfirmSchoolDelete")
+  String Dwo2ExceptionCode_User_ConfirmSchoolDelete();
+
+  /**
+   * Translated "Do you want to remove the school login at school {0} as {1}\n and delete all pertaining data irrevocably?".
+   * 
+   * @return translated "Do you want to remove the school login at school {0} as {1}\n and delete all pertaining data irrevocably?"
+   */
+  @DefaultStringValue("Do you want to remove the school login at school {0} as {1}\n and delete all pertaining data irrevocably?")
+  @Key("Dwo2ExceptionCode.User_ConfirmSchoolLoginDelete")
+  String Dwo2ExceptionCode_User_ConfirmSchoolLoginDelete();
 
   /**
    * Translated "Do you want to remove the student account and all his data irrevocably?".
