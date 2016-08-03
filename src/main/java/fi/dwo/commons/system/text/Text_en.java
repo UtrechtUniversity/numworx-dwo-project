@@ -14,7 +14,7 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.LBL_USERNAME, "Username" },
 			{ TextMapper.LBL_PASSWORD, "Password" },
                         { TextMapper.LBL_EMAIL, "Email"},
-                        { TextMapper.LBL_REQUEST_NEW_PASSWORD, "Enter your username and configured email as validation\n to receive an auth-code and instructions to\nchange your password."},
+                        { TextMapper.LBL_REQUEST_NEW_PASSWORD, "Enter your username and configured email as validation\n to receive an auth-code and instructions per email\nto change your password."},
                         { TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD, "Enter your auth-code and a new password to change it."},
                         { TextMapper.LBL_ILLEGAL_AUTHCODE, "The auth-code is invalid, possible it has expired."},
                         { TextMapper.LBL_UNKNOWN_COMBINATION, "This combination is unknown and your actions have been logged."},
