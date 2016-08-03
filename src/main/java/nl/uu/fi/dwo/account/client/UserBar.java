@@ -15,7 +15,7 @@ import fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class UserBar extends Composite implements Command {
 
-    private final MenuBar top = new MenuBar();;
+    private final MenuBar top = new MenuBar();
     private final MenuBar items = new MenuBar(true);
     private final ProfileCommand profileCmd = new ProfileCommand();
     private final SchoolLoginCommand schoolLoginCmd = new SchoolLoginCommand(this);
@@ -50,9 +50,7 @@ public class UserBar extends Composite implements Command {
         status = new MenuItem("this is a status", new Command(){
 
 			@Override
-			public void execute() {
-				// TODO Auto-generated method stub
-				
+			public void execute() {				
 			}});
         status.setEnabled(false); status.removeStyleDependentName("disabled");
         
