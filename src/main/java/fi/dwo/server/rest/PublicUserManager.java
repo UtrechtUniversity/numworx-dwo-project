@@ -440,9 +440,9 @@ public class PublicUserManager {
                 + "<form action=\"requestPasswordChange\" method=\"post\" >\n"
                 + "<input type='hidden' name='language' value=\"" + URLEncoder.encode(language) + "\">\n"
                 + "<table>"
-                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_USERNAME) + ": </td> <td><input type=\"text\" size=\"80\" name=\"usercode\" value=\""
+                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_USERNAME) + ": </td> <td><input type=\"text\" size=\"50\" name=\"usercode\" value=\""
                 + "\"></td></tr>"
-                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_EMAIL) + ":</td> <td><input type=\"text\" size=\"80\" name=\"email\" value=\""
+                + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_EMAIL) + ":</td> <td><input type=\"text\" size=\"50\" name=\"email\" value=\""
                 + "\"> </td></tr>"
                 + "<tr><td/><td align=\"right\"><input type=\"submit\" value=\"" + TextMapper.getText(TextMapper.BTN_OK) + "\" ></td></tr>"
                 + "<table>"
@@ -528,11 +528,14 @@ public class PublicUserManager {
             url.setLength(i + 1);
             url.append("submitNewPassword").append("?authCode=").append(authCode).append("&language=").append(language);
             MimeMessage message = new MimeMessage(session);
+// FIXME i18n         
             String content = "Your authcode is: " + authCode;
             content += "\nGo to\n";
             content += url.toString();
             message.setContent(content, "text/plain");
             message.setFrom(new InternetAddress(smtpEmail));
+// FIXME Beter subject, nu  "Nieuw wachtwoord"
+            message.setSubject(TextMapper.getText(TextMapper.GUIP_PASSWORD));
             message.addRecipient(Message.RecipientType.TO,
                     new InternetAddress(user.getEmail()));
 
@@ -540,6 +543,7 @@ public class PublicUserManager {
             transport.sendMessage(message,
                     message.getRecipients(Message.RecipientType.TO));
             transport.close();
+            result = TextMapper.getText(TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT);
         } else {
             result = TextMapper.getText(TextMapper.LBL_UNKNOWN_COMBINATION);
         }
