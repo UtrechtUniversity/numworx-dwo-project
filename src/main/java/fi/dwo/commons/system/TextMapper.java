@@ -581,6 +581,9 @@ public abstract class TextMapper {
 	 * @return Returns the language.
 	 */
 	public static String getLanguage() {
+		if (language == null) {
+			language = DEFAULT_LANGUAGE;
+		}
 		return language;
 	}
 
