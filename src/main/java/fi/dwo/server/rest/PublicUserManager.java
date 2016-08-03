@@ -430,8 +430,7 @@ public class PublicUserManager {
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/requestNewPassword")
-    public String reqPasswordChangeForm(@Context HttpServletRequest request) {
-        String language = request.getParameter("language");
+    public String reqPasswordChangeForm(@QueryParam("language") String language) {
         if (language == null) {
             language = TextMapper.getLanguage();
         }
@@ -472,10 +471,12 @@ public class PublicUserManager {
             @FormParam("language") String language,
             @Context HttpServletRequest request
     ) throws Exception {
-        String result = TextMapper.getText(TextMapper.DLG_CONFIRM);
+        String old = TextMapper.getLanguage();
         if (language == null) {
-            language = TextMapper.getLanguage();
-        }
+            language = old;
+        } else 
+        	TextMapper.setLanguage(language);
+        String result = TextMapper.getText(TextMapper.DLG_CONFIRM);
         //Check if <username,email> exists 
         PersistentUser user = null;
         user = UserManager.findByUserName(usercode);
@@ -548,6 +549,7 @@ public class PublicUserManager {
         String terug = TextMapper.getText(TextMapper.BTN_BACK);
         result = "<HTML><BODY>" + result + "<P><A HREF=\"requestNewPassword?language="
                 + URLEncoder.encode(language) + "\">" + terug + "</A></BODY></HTML>";
+        TextMapper.setLanguage(old);
         return result;
     }
 
