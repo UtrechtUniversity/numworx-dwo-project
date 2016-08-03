@@ -34,10 +34,14 @@ public class LoginViewImpl extends Composite implements LoginView
 	public LoginViewImpl()
 	{
 		
-		// loadview using LoginViewImpl.ui.xml
-		// style and layout defined in this file
-		initWidget(uiBinder.createAndBindUi(this));
+		initWidget(createAndBindUi());
 		
+	}
+
+	// loadview using LoginViewImpl.ui.xml
+	// style and layout defined in this file
+	Widget createAndBindUi() {
+		return uiBinder.createAndBindUi(this);
 	}
 
 	

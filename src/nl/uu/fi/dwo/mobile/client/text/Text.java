@@ -56,4 +56,9 @@ public interface Text extends Constants {
 	@DefaultStringValue("Help")
 	String authELOhelp();
 	
+	@DefaultStringValue("nl")
+	String locale();
+	
+	@DefaultStringValue("Wachtwoord vergeten?")
+	String vergeten();
 }

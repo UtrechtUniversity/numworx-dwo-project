@@ -20,6 +20,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -35,6 +36,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
 import fi.wiskopdr.text.TextConstants;
 
@@ -79,13 +81,15 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView,
 	@UiField (provided=true) CellList<SelectModuleItem> list;
 	@UiField (provided=true) TextConstants rb;
 	@UiField HeaderButton backbutton;
+	private HeaderButton logoutbutton;
 	private List<SelectModuleItem> items;
 	@UiField HeaderPanel header;
 	@UiField SimplePanel description;
 	@UiField ScrollPanel outer;
+	private HasTapHandlers taphandler;
 
 	public HasTapHandlers getBackBtn() {
-		return backbutton;
+		return taphandler;
 	}
 	
 	private static SelectModuleViewImplUiBinder uiBinder = GWT
@@ -103,6 +107,7 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView,
 // fix height for android, header is 50 pixels + 2 px bottom margin FIXME compile time?
 		if(MGWT.getOsDetection().isAndroid())
 			outer.getElement().getStyle().setTop(52, Unit.PX);
+		taphandler = backbutton;
 	}
 
 	HandlerRegistration back,sel;
@@ -159,14 +164,24 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView,
 
 	}
 
+	boolean logout;
 	@Override
 	public void setLogout(boolean b) {
+		logout = b;
 		if(b) {
 			//backbutton.setText(Text.constants.login());
-			backbutton.getElement().setInnerHTML("<span class='fa fa-2x fa-power-off' ></span>");
+			if (logoutbutton == null) 
+			{
+				logoutbutton = new HeaderButton();
+				logoutbutton.getElement().setInnerHTML("<span class='fa fa-2x fa-power-off' ></span>");
+			}
+			//backbutton.getElement().setInnerHTML("<span class='fa fa-2x fa-power-off' ></span>");
+			header.setLeftWidget(logoutbutton);
+			taphandler = logoutbutton;
+		} else {
+			header.setLeftWidget(backbutton);
+			taphandler = backbutton;
 		}
-
-		
 	}
 
 	private CellSelectedHandler gotoHandler;

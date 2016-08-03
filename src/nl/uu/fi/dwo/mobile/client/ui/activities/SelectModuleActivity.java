@@ -48,6 +48,7 @@ public class SelectModuleActivity extends MGWTAbstractActivity
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		final SelectModuleView view = clientFactory.getHomeView();
+		view.setLogout(false);
 		if(true)
 			view.setMenuWidget(clientFactory.getMenuWidget());
 

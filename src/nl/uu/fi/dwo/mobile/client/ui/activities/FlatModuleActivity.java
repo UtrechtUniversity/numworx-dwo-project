@@ -5,6 +5,7 @@ import java.util.List;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
@@ -35,7 +36,7 @@ public class FlatModuleActivity extends MGWTAbstractActivity {
 		final SelectModuleView view = clientFactory.getHomeView();
 		if(true)
 			view.setMenuWidget(clientFactory.getMenuWidget());
-
+		view.setLogout(true);
 		currentModel = SelectModuleItemHolder.getItems();
 		if(item == null || item == SelectModuleItem.ROOT)
 		{
@@ -54,7 +55,8 @@ public class FlatModuleActivity extends MGWTAbstractActivity {
 			@Override
 			public void onTap(TapEvent event)
 			{
-				History.back(); // FIXME na Relogin
+				//History.back(); // FIXME na Relogin
+				clientFactory.getPlaceController().goTo(new LoginPlace());
 			}
 		}));
 		addHandlerRegistration(view.getList().addCellSelectedHandler(new CellSelectedHandler()

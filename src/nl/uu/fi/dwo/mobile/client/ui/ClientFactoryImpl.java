@@ -39,7 +39,7 @@ public class ClientFactoryImpl implements ClientFactory
 	private final PlaceController placeController = new PlaceController(eventBus);
 	private ViewModuleView entryView;
 	private SelectModuleView selectModuleView;
-	private LoginViewImpl loginView;
+	protected LoginViewImpl loginView;
 	private ProfileView profileView;
 	private TreeModuleView treeModuleView;
 	private RPCHandler handler;

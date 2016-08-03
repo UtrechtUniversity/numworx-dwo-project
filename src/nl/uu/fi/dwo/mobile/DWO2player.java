@@ -13,6 +13,9 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.Login2ViewImpl;
+import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
+import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
@@ -148,10 +151,21 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			}
 
 			@Override
+			public LoginView getLoginView()
+			{
+				if (loginView == null)
+					loginView = new Login2ViewImpl();
+				return loginView;
+			}
+
+			@Override
 			public void logout() {
 				super.logout();
 				menuWidget = null;
-				getRPCHandler().logout();
+				if(profiledata != null)
+				{
+					getRPCHandler().logout();
+				}
 			}
 
 			public SCORM_guest setupAPI(final Map<String, Object> profiledata) {
@@ -163,7 +177,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					Object userID = profiledata.get("userID");
 					Object sgID = profiledata.get("schoolGroupID");
 					api = new SCORM_DWO2(userID, sgID);
-					//getUserBar().setProfile(profiledata);
 					menuWidget = getUserBar();
 				}
 				return api;
