@@ -35,7 +35,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 	private boolean gelijkwaardig;
 		
 	private String[] varNamen;
-	private Expressie[][] juisteOplossingen;
+	//private Expressie[][] juisteOplossingen;
 	    
     private List<Map<String,Object>> answerModels;
     private String[] randomVarNamen = null;
@@ -100,7 +100,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 		hasFeedback = avChecker.hasFeedback;
 		scoreMax = avChecker.scoreMax;
 		varNamen = avChecker.varNamen;
-		juisteOplossingen = avChecker.juisteOplossingen;
+		oplossingen = avChecker.oplossingen;
 	}
 	
 	//gebruiken voor antwoorden uit StelselOplossingenVak
@@ -234,18 +234,18 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 		Expressie[][] oplossingen = bepaalOplossingen(answer);
 		if(oplossingen == null)
 			return false;
-		boolean[] oplossingenCorrect = new boolean[juisteOplossingen.length];
+		boolean[] oplossingenCorrect = new boolean[oplossingen.length];
 		for(int i = 0; i < oplossingenCorrect.length; i++)
 			oplossingenCorrect[i] = false;
 		for(int i = 0; i < oplossingen.length; i++)
 		{
 			Expressie[] leerlingOpl = oplossingen[i];
-			for(int j = 0; j < juisteOplossingen.length; j++)
+			for(int j = 0; j < oplossingen.length; j++)
 			{
 				boolean gelijk = true;
 				for(int k = 0; k < varNamen.length; k++)
 				{
-					if(!Algebra.isGelijkwaardig(leerlingOpl[k], juisteOplossingen[j][k]))
+					if(!Algebra.isGelijkwaardig(leerlingOpl[k], oplossingen[j][k]))
 					{
 						gelijk = false;
 						break;
@@ -299,9 +299,9 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 		varNamen = namen;
 	}
 	
-	public void zetJuisteOplossingen(Expressie[][] oplossingen)
+	public void zetOplossingen(Expressie[][] oplossingen)
 	{
-		juisteOplossingen = oplossingen;
+		this.oplossingen = oplossingen;
 	}
 	
 	public void initialiseerAnswerModels()

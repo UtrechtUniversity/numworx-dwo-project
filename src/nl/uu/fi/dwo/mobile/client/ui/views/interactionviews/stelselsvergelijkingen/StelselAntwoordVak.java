@@ -49,8 +49,8 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	int ashoogte = 12;
 	
 	FlowPanel mainPanel;
-	StelselRekenVak rekenVak;
-	StelselOplossingenVak oplossingenVak;
+	private StelselRekenVak rekenVak;
+	private StelselOplossingenVak oplossingenVak;
 	TekstVak oplossingenLabelVak;
 	LayoutPanel oplossingenRegel;
 	
@@ -222,19 +222,23 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		
 		
 		//rekenVak initialiseren
-		HashMap<String, Object> rekenVakMap = new HashMap<String, Object>();
-		rekenVakMap.put("breedte", breedte);
-		int h = 0;
-		if(rekenVakZichtbaar && oplossingenRegelZichtbaar)
-			h = hoogte - 30;
-		else if(rekenVakZichtbaar)
-			h = hoogte;
-		rekenVakMap.put("hoogte", h);
-		rekenVakMap.put("volledigeBreedte", volledigeBreedte);
-		rekenVakMap.put("interactiePanelLaunchState", launchState);
-		rekenVak = new StelselRekenVak(this, rekenVakMap, randomVarNamen, randomVarWaarden);
-		rekenVak.zetVarNamen(varNamen);
-		rekenVak.zetJuisteOplossingen(oplossingen);
+		if(rekenVakZichtbaar)
+		{
+			HashMap<String, Object> rekenVakMap = new HashMap<String, Object>();
+			rekenVakMap.put("breedte", breedte);
+			int h = 0;
+			if(rekenVakZichtbaar && oplossingenRegelZichtbaar)
+				h = hoogte - 30;
+			else if(rekenVakZichtbaar)
+				h = hoogte;
+			rekenVakMap.put("hoogte", h);
+			rekenVakMap.put("volledigeBreedte", volledigeBreedte);
+			rekenVakMap.put("interactiePanelLaunchState", launchState);
+			rekenVak = new StelselRekenVak(this, rekenVakMap, randomVarNamen, randomVarWaarden);
+			rekenVak.zetVarNamen(varNamen);
+			rekenVak.zetJuisteOplossingen(oplossingen);
+			mainPanel.add(rekenVak);
+		}
 		
 		//oplossingenVak en oplossingenRegel initialiseren
 		if(oplossingenRegelZichtbaar)
@@ -252,12 +256,8 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 			oplossingenLabelVak.resize();
 			
 			resize();
-		}
-		
-		if(rekenVakZichtbaar)
-			mainPanel.add(rekenVak);
-		if(oplossingenRegelZichtbaar)
 			mainPanel.add(oplossingenRegel);
+		}
 	}
 	
 	//resize wordt aangeroepen als de oplossingenregel van hoogte verandert.
@@ -266,7 +266,6 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		int hoogteRegel = Math.max(oplossingenLabelVak.getHeight(), oplossingenVak.getHeight());
 		if(hoogteRegel == oplossingenRegel.getOffsetHeight())
 			return;
-		System.out.println("voorbij return resize StelselAntwoordVak");
 		oplossingenRegel.setPixelSize(breedte - 2, hoogteRegel);
 		oplossingenRegel.clear();
 		for(int i = 0; i < hoogteRegel/2 + 1; i++)
@@ -282,7 +281,15 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		oplossingenRegel.add(oplossingenVak.asWidget());
 		oplossingenRegel.setWidgetLeftRight(oplossingenVak.asWidget(), 2 + oplossingenLabelVak.getInhoudBreedte() + 5, Style.Unit.PX, 3, Style.Unit.PX);
 		oplossingenRegel.setWidgetTopHeight(oplossingenVak.asWidget(), 2 + Math.max(oplossingenLabelVak.getAsHoogte() - oplossingenVak.geefAsHoogte(), 0), Style.Unit.PX, Math.max(oplossingenLabelVak.getHeight(), oplossingenVak.getHeight()), Style.Unit.PX);
-		rekenVak.setHeight(hoogte - hoogteRegel - 4);
+		if(rekenVakZichtbaar)
+			rekenVak.setHeight(hoogte - hoogteRegel - 4);
+	}
+	
+	public void focusNaarOplossingenVak()
+	{
+		if(oplossingenRegelZichtbaar)
+			oplossingenVak.requestFocus();
+		
 	}
 	
 	@Override

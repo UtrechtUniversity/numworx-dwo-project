@@ -36,6 +36,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.SymboolPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselAntwoordVak;
 //binnenkort: import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselAntwoordVak;
 
 /**
@@ -500,11 +501,11 @@ public class TekstBuffer
 			result = new GetallenlijnSprongPanel(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		//binnenkort
-//		else if (soortVak == 53)
-//		{
-//			result = new StelselAntwoordVak(currentVakGegevens, randomVarNamen, randomVarWaarden);
-//			//result = "";
-//		}
+		else if (soortVak == 53)
+		{
+			result = new StelselAntwoordVak(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//result = "";
+		}
 		else if (soortVak == 55)
 		{
 			result = new SymboolPanel(currentVakGegevens, randomVarNamen, randomVarWaarden);

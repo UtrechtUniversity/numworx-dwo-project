@@ -57,7 +57,7 @@ public class StelselRekenVak extends LayoutPanel  {
 	public StelselRekenVak(StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		int hoogte = antwoordVak.hoogte - (antwoordVak.oplossingenRegelZichtbaar?27:0);
-		scrollHoogte = hoogte - headerHoogte - marge;
+		scrollHoogte = hoogte - headerHoogte - marge - 2;
 		scrollWidth = antwoordVak.breedte - 2;
 		contentHoogte = scrollHoogte;
 		this.setPixelSize(antwoordVak.breedte, hoogte);
@@ -128,7 +128,8 @@ public class StelselRekenVak extends LayoutPanel  {
 	public void setHeight(int h)
 	{
 		super.setHeight(h + "px");
-		scrollHoogte = h - headerHoogte - marge;
+		scrollHoogte = h - headerHoogte - marge - 2;
+		contentHoogte = Math.max(scrollHoogte, hoofdEditor.geefHoogteEditorEnKinderen());
 		scrollPane.setPixelSize(scrollWidth, scrollHoogte);
 		if(contentHoogte > scrollHoogte)
 			contentPanel.setPixelSize(scrollWidth - 20, contentHoogte);
@@ -172,7 +173,7 @@ public class StelselRekenVak extends LayoutPanel  {
 		int kolomBreedte = contentPanel.getOffsetWidth()/aantalKolommen;
 		hoofdEditor.setSizes(kolomBreedte);
 		if(hoofdEditor.heeftKinderen())
-			hoofdEditor.setLocations();
+			hoofdEditor.setLocations(-1, 0);
 		int h = hoofdEditor.geefHoogteEditorEnKinderen();
 		if(h > scrollHoogte)
 		{	contentHoogte = h;

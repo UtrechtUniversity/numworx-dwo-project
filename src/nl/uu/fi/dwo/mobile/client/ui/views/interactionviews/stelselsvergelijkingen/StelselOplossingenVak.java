@@ -113,7 +113,7 @@ public class StelselOplossingenVak
 		}
 		
 		avChecker = new AntwoordStelselVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
-		avChecker.zetJuisteOplossingen(juisteOplossingen);
+		avChecker.zetOplossingen(juisteOplossingen);
 		avChecker.zetVarNamen(varNamen);
 		
 		editor = new FormuleEditorWithAnswer(h, false, null, randomVarNamen, randomVarWaarden, avChecker);
@@ -210,7 +210,7 @@ public class StelselOplossingenVak
 	public void zetJuisteOplossingen(Expressie[][] oplossingen)
 	{
 		juisteOplossingen = oplossingen;
-		avChecker.zetJuisteOplossingen(oplossingen);
+		avChecker.zetOplossingen(oplossingen);
 	}
 	
 	public void zetVolledigeBreedte(int b)

@@ -117,6 +117,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	protected FlowPanel headerPanel = null;
 	private OpdrNavIF comRoot;
 	protected int mode;
+	String feedback = "";
 	
 	private PijlVak pijlVak;
 	private boolean pijl = false;
@@ -1035,6 +1036,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 	public void setFeedback(String feedback)
 	{
+		this.feedback = feedback;
 		hasFeedback = !"".equals(feedback.trim());
 		TekstBuffer b = new TekstBuffer();
 		//Ik denk dat randomvariabelen bij initialisatie feedback al zijn ingevuld. 
@@ -1048,6 +1050,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		feedbackPanel.setObjects(feedbackList);
 		feedbackPanel.resize();
 		feedbackPanelHeight = feedbackPanel.getHeight();
+	}
+	
+	public String getFeedback()
+	{
+		return feedback;
 	}
 
 	public void setAndAddFeedback(String feedback)
