@@ -640,7 +640,7 @@ public final class DwoHelper {
 //    }
     public static RoleType[] getRoles() {
         RoleType[] list = new RoleType[5];
-        list[0] = RoleType.NULLSCHOOL;
+        list[0] = RoleType.ANONYMOUS;
         list[1] = RoleType.STUDENT;
         list[2] = RoleType.TEACHER;
         list[3] = RoleType.SCHOOLADMIN;
