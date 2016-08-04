@@ -490,7 +490,8 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <configuration>
+                        <configuration> <!--  Alleen jar-with-dependencies wordt getekend. -->
+                        	<processMainArtifact>false</processMainArtifact>
                             <keystore>${dwoKeyStore}</keystore>
                             <alias>${dwoCertKeyAlias}</alias>
                             <storepass>${dwoCertKeyStorePassword}</storepass>
