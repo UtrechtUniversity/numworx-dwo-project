@@ -781,7 +781,15 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 //		}
 //		out.close();
 //	}
-	
+/* relay
+		launchData = http +"//"
+				+ host
+				+ "/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
+		courseDescription = http + "//"
+				+ host
+				+ "/dwo/rest/public/course/getCourseDescription?courseId=";		
+
+*/	
 	@SuppressWarnings("rawtypes")
 	void getJSONLaunchData(int sco, Writer out) throws IOException {
 		Map map;
