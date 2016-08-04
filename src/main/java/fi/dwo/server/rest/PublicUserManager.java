@@ -44,6 +44,7 @@ import fi.dwo.server.persistence.DwoEmfFactory;
 import javax.mail.*;
 import javax.mail.internet.*;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Properties;
@@ -69,6 +70,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.util.Random;
 
 import static java.lang.Thread.sleep;
+
 import javax.ws.rs.QueryParam;
 
 /**
@@ -430,15 +432,17 @@ public class PublicUserManager {
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/requestNewPassword")
-    public String reqPasswordChangeForm(@QueryParam("language") String language) {
+    public String reqPasswordChangeForm(@QueryParam("language") String language, @QueryParam("back") String back) {
         if (language == null) {
             language = TextMapper.getLanguage();
         }
+        if (back == null) back = "";
         String old = TextMapper.getLanguage();
         TextMapper.setLanguage(language);
         String r = "<HTML><BODY><p> " + TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD)
                 + "<form action=\"requestPasswordChange\" method=\"post\" >\n"
-                + "<input type='hidden' name='language' value=\"" + URLEncoder.encode(language) + "\">\n"
+                + "<input type='hidden' name='language' value=\"" + urlEncode(language) + "\">\n"
+                + "<input type='hidden' name='back' value=\"" + urlEncode(back) + "\">\n"
                 + "<table>"
                 + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_USERNAME) + ": </td> <td><input type=\"text\" size=\"50\" name=\"usercode\" value=\""
                 + "\"></td></tr>"
@@ -451,6 +455,14 @@ public class PublicUserManager {
         TextMapper.setLanguage(old);
         return r;
     }
+
+	private String urlEncode(String string) {
+		try {
+			return URLEncoder.encode(string, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return URLEncoder.encode(string);
+		}
+	}
 
     /**
      * Registers a new user.
@@ -469,6 +481,7 @@ public class PublicUserManager {
             @FormParam("usercode") String usercode,
             @FormParam("email") String email,
             @FormParam("language") String language,
+            @FormParam("back") String back,
             @Context HttpServletRequest request
     ) throws Exception {
         String old = TextMapper.getLanguage();
@@ -550,9 +563,11 @@ public class PublicUserManager {
         //Always wait 30 seconds before response.        
         sleep(3000); //shorter for debugging
         //return response (ok or logging).
+        if(back == null || back.isEmpty())
+        	back = "requestNewPassword?language=" + urlEncode(language);
         String terug = TextMapper.getText(TextMapper.BTN_BACK);
-        result = "<HTML><BODY>" + result + "<P><A HREF=\"requestNewPassword?language="
-                + URLEncoder.encode(language) + "\">" + terug + "</A></BODY></HTML>";
+        result = "<HTML><BODY>" + result + "<P><A HREF=\"" 
+                + urlEncode(back) + "\">" + terug + "</A></BODY></HTML>";
         TextMapper.setLanguage(old);
         return result;
     }
