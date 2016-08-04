@@ -303,7 +303,13 @@ public class DataSourceAccessServlet extends Servlet {
             throws ServletException, IOException {
         resp.setContentType("text/plain");
         PrintWriter out = resp.getWriter();
-        out.println(this);
+		out.println("OKAY");
+		if(! "all" .equals( req.getParameter("status"))) 
+		{
+			return;
+		}
+
+		out.println(this);
         out.println(getHandler());
         out.println(ds);
 
