@@ -104,17 +104,18 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         }
 
         void open(URI uri) {
-            if (Desktop.isDesktopSupported()) {
+            if (DwoHelper.isApplication() && Desktop.isDesktopSupported()) {
                 try {
                     Desktop.getDesktop().browse(uri);
                 } catch (IOException e) {
-                    /* TODO: error handling */ }
+                    LOG.log(Level.SEVERE, "", e);
+                }
             } else {
                 try {
                     DwoHelper.getApplet().getAppletContext().showDocument(uri.toURL(), "_blank");
                     /* TODO: error handling */
                 } catch (MalformedURLException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
+                    LOG.log(Level.SEVERE, "", ex);
                 }
             }
         }
