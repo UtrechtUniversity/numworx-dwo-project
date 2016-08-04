@@ -36,24 +36,23 @@ public class TestDatabaseManagerIT {
 
 // DISABLED SO THE RUNNING OF THIS TESTCLASS FILLS THE DATABASE WITH THE TESTDATA
 // FOR DEVELOPEMENT PURPOSES.
-//    /**
-//     * Test of ClearDatabase method, of class DatabaseManager.
-//     */
-//    @Test
-//    public void testClearDatabase() {
-//        System.out.println("ClearDatabase");
-//        DatabaseManager instance = new DatabaseManager(resourceString);
-//        instance.ClearDatabase();
-//        // TODO review the generated test code and remove the default call to fail.
-////        fail("The test case is a prototype.");
-//    }
-//
+    /**
+     * Test of ClearDatabase method, of class DatabaseManager.
+     */
+    @Test
+    public void testClearDatabase() {
+        System.out.println("ClearDatabase");
+        DatabaseManager instance = new DatabaseManager();
+        instance.ClearDatabase();
+        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+    }
+
 //    @Test
 //    public void testProfiler(){
 //     for(int i=0;i<1000;i++){
 //     testIntializeDatabase();
 //     }
-//
 //    }
     /**
      * Test of IntializeTestDatabase method, of class DatabaseManager.
