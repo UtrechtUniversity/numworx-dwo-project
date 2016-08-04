@@ -13,6 +13,7 @@ import fi.dwo.rest.dom.entities.DomLoginContext;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Image;
@@ -21,9 +22,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Map;
+import java.util.Optional;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +40,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 /**
  * This class represents the panel that is been showed when you start the
@@ -44,6 +50,8 @@ import javax.swing.JTextField;
  *
  */
 public class WelcomePanel extends ContentPanel implements ActionListener {
+
+    private static final Logger LOG = Logger.getLogger(WelcomePanel.class.getName());
 
     private JTextField loginname;
 
@@ -80,6 +88,36 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             dialog.setLocation(width / 2 - dialog.getWidth() / 2, dialog.getY());
         }
 
+    }
+
+    private class OpenUrlAction implements ActionListener {
+
+        URI uri;
+
+        public OpenUrlAction(URI anUri) {
+            uri = anUri;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            open(uri);
+        }
+
+        void open(URI uri) {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().browse(uri);
+                } catch (IOException e) {
+                    /* TODO: error handling */ }
+            } else {
+                try {
+                    DwoHelper.getApplet().getAppletContext().showDocument(uri.toURL(), "_blank");
+                    /* TODO: error handling */
+                } catch (MalformedURLException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
     /**
@@ -193,7 +231,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         //p.setBorderColor(new Color(52,90,126));
-        p.setBounds(dialog.getWidth() / 2 - 175, 110, 350, 115);
+        p.setBounds(dialog.getWidth() / 2 - 175, 110, 340, 155);
         dialog.add(p);
 
         /* Inlogdata label */
@@ -258,6 +296,39 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         loginButton.addActionListener(this);
 
+        /* Register label */
+        JButton button = new JButton();
+        button.setText("<HTML><p color=\"red\"> <FONT color=\"#000099\"><U>" + Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(),
+                Dwo2ExceptionCode.User_Q_ForgotPassword) + "</U></FONT></HTML>");
+        button.setHorizontalAlignment(SwingConstants.LEFT);
+        button.setBorderPainted(false);
+        button.setOpaque(false);
+        button.setBackground(Color.WHITE);
+        URI uri;
+        try {
+            try {
+                //button.setToolTipText(uri.toString());
+                uri = (new URL(DwoHelper.getServerUrlPath(), "rest/public/user/requestNewPassword" + "?language=" + TextMapper.getLanguage())).toURI();
+                button.addActionListener(new OpenUrlAction(uri));
+                button.setToolTipText(uri.toString());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(WelcomePanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (URISyntaxException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+        button.setLocation(10, 5);
+        button.setSize(button.getPreferredSize());
+        button.setBounds(p.getSize().width / 2 - button.getWidth() / 2, p.getHeight() - 70, button.getWidth(), fm.getHeight());
+        p.add(button);
+//        l = new JLabel(TextMapper.getText("<html>The rain in <a href=\"action.spain\">Spain</a> falls mainly in the <a href=\"action.plain\">plain</a>."));
+//        l.setForeground(GuiConstants.RED_COLOR);
+//        l.setFont(GuiConstants.RED_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setBounds(10
+//                - (l.getSize().width / 2), p.getHeight() - 70, fm.stringWidth(l.getText()), fm.getHeight());
+//        p.add(l);
+
         if (loginOnly) {
             return;
         }
@@ -265,7 +336,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 175, 235 + h, 350, 85);
+        p.setBounds(dialog.getWidth() / 2 - 175, 275 + h, 340, 85);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
@@ -293,11 +364,12 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
         p.add(l);
 
+
         /* Add Register-panel */
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 175, 330 + h, 350, 65);
+        p.setBounds(dialog.getWidth() / 2 - 175, 370 + h, 340, 65);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
@@ -315,7 +387,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         registerNewUserButton.setSize(registerNewUserButton.getPreferredSize());
         registerNewUserButton.setLocation((p.getSize().width / 2)
                 - (registerNewUserButton.getPreferredSize().width / 2), 27);
-        p.setBounds(dialog.getWidth() / 2 - 175, 330 + h, 350, 65);
+//        p.setBounds(dialog.getWidth() / 2 - 175, 350 , 340, 35);
         p.add(registerNewUserButton);
 
 //        /* Register button */
@@ -337,7 +409,6 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         loginButton.requestFocus();
 
     }
-    private static final Logger LOG = Logger.getLogger(WelcomePanel.class.getName());
 
     /**
      * Invoked when an action occurs.
@@ -353,7 +424,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             try {
                 //Fetch LoginContext to see if there is already a session.
                 DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(loginname.getText(), MD5.getHashString(String.valueOf(password.getPassword())));
-                if (loginContext!=null && loginContext.getLastLoginTimeStamp() != null) {
+                if (loginContext != null && loginContext.getLastLoginTimeStamp() != null) {
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
                             Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
                     ) != JOptionPane.OK_OPTION) {
@@ -373,7 +444,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             } catch (Dwo2Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), null, JOptionPane.ERROR_MESSAGE);
-                Logger.getLogger(WelcomePanel.class.getName()).log(Level.SEVERE, "", ex);
+                LOG.log(Level.SEVERE, "", ex);
             }
         } else if (src == guestButton) {
             try {

@@ -8,7 +8,6 @@ import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.rest.dom.entities.DomUserFull;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
