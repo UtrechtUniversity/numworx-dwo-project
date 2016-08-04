@@ -10,10 +10,10 @@ package fi.dwo.rest.dom.entities;
  */
 public enum RoleType
 {
-	NONE,
-        STUDENT,
+	NONE, //init value
+        STUDENT, 
         TEACHER,
         ADMIN,
-        NULLSCHOOL,
+        ANONYMOUS, //for further use.
         SCHOOLADMIN//order is fixed, cardinality is fixed.
 }
