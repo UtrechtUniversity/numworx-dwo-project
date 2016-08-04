@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomLoginCheck;
@@ -16,6 +17,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestNewUser;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
@@ -42,6 +44,7 @@ public class PublicUserManagerIT {
     static DatabaseManager instance = null;
     
     public PublicUserManagerIT() {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
     
     @BeforeClass

@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.server.testutil.TestSecurityContext;
 import fi.dwo.rest.exceptions.Dwo2RestException;
@@ -10,6 +11,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.rest.entities.RestUserFull;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -33,6 +35,7 @@ public class SecuredUserAccountManagerIT {
     static DatabaseManager instance = null;
 
     public SecuredUserAccountManagerIT() {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
 
     @BeforeClass

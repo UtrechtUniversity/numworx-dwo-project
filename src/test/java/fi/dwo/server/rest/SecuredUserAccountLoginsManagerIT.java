@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
@@ -16,6 +17,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.rest.entities.RestNewSchoolLogin;
 import fi.dwo.rest.entities.RestSchoolRoleAndClass;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
@@ -40,6 +42,7 @@ public class SecuredUserAccountLoginsManagerIT {
     static DatabaseManager dbinstance = null;
 
     public SecuredUserAccountLoginsManagerIT() {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
 
     @BeforeClass

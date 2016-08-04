@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -25,6 +26,7 @@ import fi.dwo.rest.entities.RestSchoolAdmin;
 import fi.dwo.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.rest.entities.RestStudent;
 import fi.dwo.rest.entities.RestTeacher;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -57,6 +59,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
     static DatabaseManager dbInstance = null;
     
     public SecuredSchoolAdminSchoolManagerIT() {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
     
     @BeforeClass
