@@ -441,8 +441,8 @@ public class PublicUserManager {
         TextMapper.setLanguage(language);
         String r = "<HTML><BODY><p> " + TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD)
                 + "<form action=\"requestPasswordChange\" method=\"post\" >\n"
-                + "<input type='hidden' name='language' value=\"" + urlEncode(language) + "\">\n"
-                + "<input type='hidden' name='back' value=\"" + urlEncode(back) + "\">\n"
+                + "<input type='hidden' name='language' value=\"" + htmlEncode(language) + "\">\n"
+                + "<input type='hidden' name='back' value=\"" + htmlEncode(back) + "\">\n"
                 + "<table>"
                 + "<tr><td align=\"right\">" + TextMapper.getText(TextMapper.LBL_USERNAME) + ": </td> <td><input type=\"text\" size=\"50\" name=\"usercode\" value=\""
                 + "\"></td></tr>"
@@ -464,6 +464,15 @@ public class PublicUserManager {
 		}
 	}
 
+	private String htmlEncode(String string) {
+		string = string.replace("&", "&amp;");
+		string = string.replace("\"", "&quot;");
+		string = string.replace("<", "&lt;");
+		string = string.replace(">", "&gt;");
+		string = string.replace("'", "&apos;");
+		return string;
+	}
+	
     /**
      * Registers a new user.
      *
@@ -567,7 +576,7 @@ public class PublicUserManager {
         	back = "requestNewPassword?language=" + urlEncode(language);
         String terug = TextMapper.getText(TextMapper.BTN_BACK);
         result = "<HTML><BODY>" + result + "<P><A HREF=\"" 
-                + urlEncode(back) + "\">" + terug + "</A></BODY></HTML>";
+                + htmlEncode(back) + "\">" + terug + "</A></BODY></HTML>";
         TextMapper.setLanguage(old);
         return result;
     }
