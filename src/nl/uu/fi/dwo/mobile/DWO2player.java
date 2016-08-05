@@ -116,6 +116,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
         	
 			@Override
 			public void execute() {
+				toProfile(DwoGlobalVars.instance().getCurrentUser(), profiledata); // refresh profiledata esp. password
 				clientfactory.getPlaceController().goTo(place);
 			}
         	
