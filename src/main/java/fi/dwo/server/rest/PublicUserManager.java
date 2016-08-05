@@ -117,7 +117,8 @@ public class PublicUserManager {
         PersistentSchoolGroup sg;
         PersistentSchool school = null;
         //set null school values if appropiate.
-        if (newUserReg.getDomNewUser().getSchoolLogin() == null && newUserReg.getDomNewUser().getSchoolCode() == null) {
+        if (newUserReg.getDomNewUser().getSchoolLogin() == null && newUserReg.getDomNewUser().getSchoolCode() == null
+                && newUserReg.getDomNewUser().getRole().equals(RoleType.STUDENT)) {
             newUserReg.getDomNewUser().setSchoolLogin("null"); //TODO retrieve the null school login and code from the DwoSystemParameters.
             newUserReg.getDomNewUser().setSchoolCode("null");
         }
@@ -198,18 +199,24 @@ public class PublicUserManager {
         //success
 
         //building hasRole for null school
+        if(!newUserReg.getDomNewUser().getSchoolLogin().equals("null") 
+                || !newUserReg.getDomNewUser().getSchoolCode().endsWith("null") 
+                || !newUserReg.getDomNewUser().getRole().equals(RoleType.STUDENT)){
         PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
         Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
         pk.setSchoolGroupID(schoolGroupId);
         pk.setUserID(user.getId());
         hasRole.setPersistentHasRolePK(pk);
 
+        
         hasRole.setClassID(null);
         hasRole.setLastLogin(now); //considering an account creation a first login as there is a password
         hasRole.setRegisterDate(now);
         hasRole.setRights("_"); //TODO make a rights manager
         HasRoleManager.create(hasRole);
         LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), newUserReg.getDomNewUser().getRole().name()});
+        }
+        
         return true;
     }
 
