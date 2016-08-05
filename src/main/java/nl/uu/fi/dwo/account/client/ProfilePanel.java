@@ -123,10 +123,12 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             if (MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) {
                 if (newPassword.getText().equals("") && newPassword.getText().equals(newPasswordAgain.getText())) {
                     user.setPassword(control.getCurrentUser().getPassword());
-                } else if (!newPassword.getText().equals("") && newPassword.getText().equals(newPasswordAgain.getText())) {
-                            if(Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch())==false){
-                                return;
-                            }
+                } else 
+// FIXME alleen als getContext verandert is. Nu uitgezet
+                	if (!newPassword.getText().equals("") && newPassword.getText().equals(newPasswordAgain.getText())) {
+//                            if(Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch())==false){
+//                                return;
+//                            }
                     user.setPassword(MD5.md5(newPassword.getText()));
                 } else {
                     //do warning

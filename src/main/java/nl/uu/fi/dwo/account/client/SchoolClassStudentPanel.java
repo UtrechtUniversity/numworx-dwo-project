@@ -65,6 +65,12 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
     }
 
+    private boolean isCurrentSchoolClass(DomSchoolClass object) {
+		return DwoGlobalVars.getInstance().getCurrentSchoolClass() != null &&
+			object != null &&
+			object.getId().equals(DwoGlobalVars.getInstance().getCurrentSchoolClass().getId());
+	}
+
     public void init(DomUserFull user) {
         //this.setSize("400", "500");
 
@@ -105,8 +111,11 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
             @Override
             public ImageResource getValue(DomSchoolClass object) {
+            	if(isCurrentSchoolClass(object))
+            		return null;
                 return AccountImageBundle.instance.student();
             }
+
         };
         Column<DomSchoolClass, ImageResource> deleteColumn
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
@@ -142,10 +151,13 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                     //LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
                     switch (columnIndex) {
-                        case 1: //relogin with schoolclass set...
-                            if (Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch()) == false) {
-                                return;
-                            }
+                        case 1:
+                        	if( isCurrentSchoolClass(sc)) return;
+                        	
+                        	//relogin with schoolclass set... FIXME alleen bij getContext
+//                            if (Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch()) == false) {
+//                                return;
+//                            }
                             control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
                                 @Override
                                 public void onFailure(Throwable t) {
