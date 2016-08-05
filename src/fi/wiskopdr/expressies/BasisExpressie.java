@@ -149,7 +149,7 @@ public class BasisExpressie extends Expressie
 
 	public Expressie substitueer(Expressie subst, String var)
 	{
-		if (toString().equals(var))
+		if (basisString.equals(var))
 		{
 			return subst;
 		}
