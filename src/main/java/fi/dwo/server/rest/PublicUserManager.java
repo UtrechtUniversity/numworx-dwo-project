@@ -199,24 +199,23 @@ public class PublicUserManager {
         //success
 
         //building hasRole for null school
-        if(!newUserReg.getDomNewUser().getSchoolLogin().equals("null") 
-                || !newUserReg.getDomNewUser().getSchoolCode().endsWith("null") 
-                || !newUserReg.getDomNewUser().getRole().equals(RoleType.STUDENT)){
-        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
-        Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
-        pk.setSchoolGroupID(schoolGroupId);
-        pk.setUserID(user.getId());
-        hasRole.setPersistentHasRolePK(pk);
+        if (!newUserReg.getDomNewUser().getSchoolLogin().equals("null")
+                || !newUserReg.getDomNewUser().getSchoolCode().endsWith("null")
+                || !newUserReg.getDomNewUser().getRole().equals(RoleType.STUDENT)) {
+            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+            Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
+            pk.setSchoolGroupID(schoolGroupId);
+            pk.setUserID(user.getId());
+            hasRole.setPersistentHasRolePK(pk);
 
-        
-        hasRole.setClassID(null);
-        hasRole.setLastLogin(now); //considering an account creation a first login as there is a password
-        hasRole.setRegisterDate(now);
-        hasRole.setRights("_"); //TODO make a rights manager
-        HasRoleManager.create(hasRole);
-        LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), newUserReg.getDomNewUser().getRole().name()});
+            hasRole.setClassID(null);
+            hasRole.setLastLogin(now); //considering an account creation a first login as there is a password
+            hasRole.setRegisterDate(now);
+            hasRole.setRights("_"); //TODO make a rights manager
+            HasRoleManager.create(hasRole);
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), newUserReg.getDomNewUser().getRole().name()});
         }
-        
+
         return true;
     }
 
@@ -443,7 +442,9 @@ public class PublicUserManager {
         if (language == null) {
             language = TextMapper.getLanguage();
         }
-        if (back == null) back = "";
+        if (back == null) {
+            back = "";
+        }
         String old = TextMapper.getLanguage();
         TextMapper.setLanguage(language);
         String r = "<HTML><BODY><p> " + TextMapper.getText(TextMapper.LBL_REQUEST_NEW_PASSWORD)
@@ -463,23 +464,24 @@ public class PublicUserManager {
         return r;
     }
 
-	private String urlEncode(String string) {
-		try {
-			return URLEncoder.encode(string, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return URLEncoder.encode(string);
-		}
-	}
+    private String urlEncode(String string) {
+        try {
+            return URLEncoder.encode(string, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e) {
+            return URLEncoder.encode(string);
+        }
+    }
 
-	private String htmlEncode(String string) {
-		string = string.replace("&", "&amp;");
-		string = string.replace("\"", "&quot;");
-		string = string.replace("<", "&lt;");
-		string = string.replace(">", "&gt;");
-		string = string.replace("'", "&apos;");
-		return string;
-	}
-	
+    private String htmlEncode(String string) {
+        string = string.replace("&", "&amp;");
+        string = string.replace("\"", "&quot;");
+        string = string.replace("<", "&lt;");
+        string = string.replace(">", "&gt;");
+        string = string.replace("'", "&apos;");
+        return string;
+    }
+
     /**
      * Registers a new user.
      *
@@ -503,8 +505,9 @@ public class PublicUserManager {
         String old = TextMapper.getLanguage();
         if (language == null) {
             language = old;
-        } else 
-        	TextMapper.setLanguage(language);
+        } else {
+            TextMapper.setLanguage(language);
+        }
         String result = TextMapper.getText(TextMapper.DLG_CONFIRM);
         //Check if <username,email> exists 
         PersistentUser user = null;
@@ -579,10 +582,11 @@ public class PublicUserManager {
         //Always wait 30 seconds before response.        
         sleep(3000); //shorter for debugging
         //return response (ok or logging).
-        if(back == null || back.isEmpty())
-        	back = "requestNewPassword?language=" + urlEncode(language);
+        if (back == null || back.isEmpty()) {
+            back = "requestNewPassword?language=" + urlEncode(language);
+        }
         String terug = TextMapper.getText(TextMapper.BTN_BACK);
-        result = "<HTML><BODY>" + result + "<P><A HREF=\"" 
+        result = "<HTML><BODY>" + result + "<P><A HREF=\""
                 + htmlEncode(back) + "\">" + terug + "</A></BODY></HTML>";
         TextMapper.setLanguage(old);
         return result;
