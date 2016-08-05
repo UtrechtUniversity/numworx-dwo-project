@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context aliases="/apps=/opt/dwo/webapps/war-shared/apps" antiJARLocking="true" crossContext="false" path="/dwo">
+<!--<Context aliases="/apps=/opt/dwo/webapps/war-shared/apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
 <!--<Context aliases="/apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
 <!-- paths for jars and resources have moved. Jars and resources are configured in the DWO.properties file. Apps are in a different path. For example:
 # htttpAuthentication = {BASIC, DIGEST}, BASIC currently required.
@@ -13,7 +13,7 @@ serverUrlPath=http://127.0.0.1:8080/dwo/
 resourceUrlPath=FILE:resources
 jarUrlPath=FILE:jars    
         -->
-<!--<Context aliases="/jars=/opt/dwo/webapps/war-shared/jars,/resources=/opt/dwo/webapps/war-shared/resources, /apps=/opt/dwo/webapps/war-shared/apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
+<Context aliases="/jars=/opt/dwo/webapps/war-shared/jars,/resources=/opt/dwo/webapps/war-shared/resources, /apps=/opt/dwo/webapps/war-shared/apps" antiJARLocking="true" crossContext="false" path="/dwo">
 <!--<Context aliases="/jars=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\jars, /resources=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\resources, /apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
   <!-- maxActive: Maximum number of database connections in pool. Make sure you
     configure your mysqld max_connections large enough to handle
@@ -40,10 +40,11 @@ jarUrlPath=FILE:jars
     <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
   </Realm>
   <!-- may be configured in server.xml of tomcat -->
-  <Parameter name="fi.dwo.server.rest.smtp.server" override="true" value="email-smtp.eu-west-1.amazonaws.com"/>
-  <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="465"/>
-  <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="yes"/>
+  <Parameter name="fi.dwo.server.rest.smtp.server" override="true" value="localhost"/>
+  <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="25"/>
+  <Parameter name="fi.dwo.server.rest.smtp.auth" override="true" value="false"/>
+  <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="no"/>
   <Parameter name="fi.dwo.server.rest.smtp.user" override="true" value="me"/>
   <Parameter name="fi.dwo.server.rest.smtp.password" override="true" value="mySecret"/>
-  <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="noreply@dwo.nl"/>
+  <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="wisweb@fi.uu.nl"/>
 </Context>
