@@ -20,7 +20,7 @@ import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONStreamAware;
 
-import fi.beans.base64code.StringCodeObject;
+import fi.beans.private_base64code.StringCodeObject;
 
 public class JSONEncoder {
 

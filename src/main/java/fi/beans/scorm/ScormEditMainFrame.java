@@ -7,7 +7,7 @@ import java.util.*;
 import java.awt.event.*;
 
 import fi.beans.mainframe.*;
-import fi.beans.base64code.*;
+import fi.beans.private_base64code.*;
 
 public class ScormEditMainFrame extends MainFrame implements ActionListener {
 

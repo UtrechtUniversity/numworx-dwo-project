@@ -1,4 +1,4 @@
-package fi.beans.base64code;
+package fi.beans.private_base64code;
 
 import java.io.*;
 import java.util.zip.*;
@@ -17,7 +17,8 @@ public class StringCodeObject {
             object = invoer.readObject();
             codeString = s;
         }
-        catch (Exception io) {	//System.out.println(io.toString());
+        catch (Exception io) {	
+        	System.out.println(io.toString());
         }
     }
 
@@ -47,7 +48,8 @@ public class StringCodeObject {
             ObjectInputStream invoer = new ObjectInputStream(zis);
             o = invoer.readObject();
         }
-        catch (Exception io) {	//System.out.println(io.toString());
+        catch (Exception io) {	//
+        	System.out.println(io.toString());
         }
         return o;
     }

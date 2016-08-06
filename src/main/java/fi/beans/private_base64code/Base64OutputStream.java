@@ -1,4 +1,4 @@
-package fi.beans.base64code;
+package fi.beans.private_base64code;
 
 import java.io.*;
 

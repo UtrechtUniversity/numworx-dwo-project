@@ -13,19 +13,19 @@ public class ScormMainFrame extends MainFrame implements SCORM12APIInterface {
     // implementatie van de SCORM12APIInterface methoden
     @Override
     public String LMSInitialize(String parameter) {
-        return null;
+        return "true";
     }
 
     @Override
     public String LMSFinish(String parameter) {
-        return null;
+        return "true";
     }
 
     @Override
     public String LMSGetValue(String parameter) {
         String directory = System.getProperty("user.dir", ".");
         String naam = parameter;
-        String s = null;
+        String s = "";
         try {
             BufferedReader in = new BufferedReader(new FileReader(new File(directory, naam)));
             s = in.readLine();
@@ -47,33 +47,33 @@ public class ScormMainFrame extends MainFrame implements SCORM12APIInterface {
         }
         catch (IOException ie) {
             System.out.println(ie.toString());
-            return null;
+            return "false";
         }
-        return null;
+        return "true";
     }
 
     @Override
     public String LMSCommit(String parameter) {
-        return null;
+        return "true";
     }
 
     public String LMSGetLastError(String parameter) {
-        return null;
+        return "0";
     }
 
     @Override
     public String LMSGetLastError() {
-        return null;
+        return "0";
     }
 
     @Override
     public String LMSGetErrorString(String errornumber) {
-        return null;
+        return "";
     }
 
     @Override
     public String LMSGetDiagnostic(String parameter) {
-        return null;
+        return "";
     }
 
 }
