@@ -1,8 +1,8 @@
 package fi.dwo.dwojapplet.gui.action;
 
 import fi.beans.appletutil.AppletUtil;
-import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -11,6 +11,7 @@ import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScormChooser;
 import fi.dwo.dwojapplet.gui.ScormParameters;
+
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,6 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import javax.swing.JFileChooser;
 
 public class Save2004Action extends GuiAction {

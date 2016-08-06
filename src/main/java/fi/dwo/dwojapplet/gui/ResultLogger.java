@@ -1,8 +1,8 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.beans.base64code.StringCodeObject;
 import fi.beans.mathkit.JMathPane;
 import fi.beans.mathkit.JMathToolTip;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.beans.stringutils.StringUtils;

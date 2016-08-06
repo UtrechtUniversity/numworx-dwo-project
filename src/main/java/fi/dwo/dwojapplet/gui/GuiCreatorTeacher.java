@@ -4,7 +4,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.beans.base64code.StringCodeObject;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
@@ -19,11 +19,13 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;

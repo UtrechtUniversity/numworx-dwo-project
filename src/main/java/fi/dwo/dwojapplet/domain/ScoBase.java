@@ -1,11 +1,12 @@
 package fi.dwo.dwojapplet.domain;
 
-import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm.ScormAdapter;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;

@@ -1,6 +1,6 @@
 package fi.dwo.dwojapplet.persistence;
 
-import fi.beans.base64code.StringCodeObject;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;

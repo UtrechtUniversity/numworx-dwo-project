@@ -3,11 +3,12 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.beans.base64code.StringCodeObject;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

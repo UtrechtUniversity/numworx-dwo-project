@@ -1,10 +1,11 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import fi.beans.base64code.StringCodeObject;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
+
 import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;

@@ -1,9 +1,9 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.beans.appletutil.AppletUtil;
-import fi.beans.base64code.StringCodeObject;
 import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.mainframe.MainFrame;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.scorm.SCORM2004APIInterface;
 import fi.dwo.commons.exceptions.ClassException;
