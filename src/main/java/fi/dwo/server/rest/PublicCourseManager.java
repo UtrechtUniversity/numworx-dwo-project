@@ -1,13 +1,15 @@
 package fi.dwo.server.rest;
 
 
-import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+
 import java.io.StringWriter;
 import java.util.Hashtable;
 import java.util.logging.Logger;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
