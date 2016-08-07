@@ -71,9 +71,9 @@ public class PublicScoDataManager {
             }
 // The slow conversion, if bytes are missing.     
             try {
-                Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(scoData.getLaunchdata());
+                Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(scoData.getLaunchdata(), null);
                 StringWriter writer = new StringWriter();
-    			JSONEncoder.encode(map, writer);
+    			JSONEncoder.encode(map, writer, null); // FIXME zie DWOmAccess voor loader with wiskopdr.jar
     	        return writer.toString();
             } catch(Exception ex) {
             	LOG.log(Level.SEVERE, "Error while decoding launchdata with scoid " + scoId + ".", ex);

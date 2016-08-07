@@ -39,9 +39,9 @@ public class PublicCourseManager {
     public String getCourseDescription(@QueryParam("courseId") int courseId) {
         try {
             PersistentCourse course = CourseManager.findEntity(Long.valueOf(courseId));
-            Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(course.getDescription());
+            Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(course.getDescription(), null); // FIXM load wiskopdr.jar
             StringWriter writer = new StringWriter();
-			JSONEncoder.encode(map, writer);
+			JSONEncoder.encode(map, writer, null); // FIXME, load wiskopdr.jar
 	        return writer.toString();
 		} catch (Exception e) {
 			LOG.fine("getCourseDescription "  + courseId + " " + e.toString());
