@@ -434,7 +434,7 @@ class WrapSco extends Sco {
         StringWriter bos = new StringWriter();
         try {
             Writer out = bos;
-            JSONEncoder.encode(ld, out);
+            delegate.jsonEncode(ld, out);
             out.close();
         } catch (UnsupportedEncodingException e) {
         } catch (IOException e) {

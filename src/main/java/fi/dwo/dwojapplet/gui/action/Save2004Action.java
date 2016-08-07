@@ -144,7 +144,7 @@ public class Save2004Action extends GuiAction {
             out.putNextEntry(new ZipEntry(id + ".xml"));
             Map ld = new HashMap(runner.getLaunchData());
             OutputStreamWriter wr = new OutputStreamWriter(out, ScormParameters.UTF8);
-            JSONEncoder.encode(ld, wr);
+            sco.jsonEncode(ld, wr);
             wr.flush();
             out.closeEntry();
 // copies.....

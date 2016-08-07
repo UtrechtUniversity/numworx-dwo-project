@@ -13,6 +13,7 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.ScoBase;
 import static fi.dwo.dwojapplet.domain.ScoBase.REVIEW;
 import fi.dwo.dwojapplet.domain.User;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -32,9 +33,12 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.AbstractAction;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -98,7 +102,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     public static class API extends ScoBase implements SCORM12APIInterface {
 
         private String creditStatus;
-
+        private Sco sco;
+        
         public API(Sco sco, User u) {
             super(false);
             this.features = sco.features;
@@ -106,6 +111,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
             this.dwo = sco.dwo;
             setLaunchdata(sco.getLaunchdata());
             setScoID(sco.getScoID());
+            this.sco = sco;
             setUser(u);
             setLessonMode(REVIEW);
         }
@@ -148,6 +154,11 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         public String LMSSetValue(String key, String value) {
             return super.LMSSetValue(key, value);
         }
+
+		@Override
+		protected void jsonEncode(Map ld, Writer out) throws IOException {
+			sco.jsonEncode(ld, out);			
+		}
 
     }
 

@@ -446,13 +446,20 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
         try {
             OutputStream zip = new GZIPOutputStream(bos);
             Writer out = new OutputStreamWriter(zip, "UTF-8");
-            JSONEncoder.encode(ld, out);
+            jsonEncode(ld, out);
             out.close();
         } catch (UnsupportedEncodingException e) {
         } catch (IOException e) {
         }
         return bos.toByteArray();
     }
+
+	protected abstract void jsonEncode(Map ld, Writer out) throws IOException;
+//	
+//	
+//	{
+//		JSONEncoder.encode(ld, out);
+//	}
 
     /**
      * Sets the launchdata for the sco.
@@ -471,7 +478,7 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
     }
 
     public void setLaunchdataString(String ld) {
-        setLaunchdata((Hashtable) StringCodeObject.decodeStringToObject(ld));
+        setLaunchdata((Hashtable) StringCodeObject.decodeStringToObject(ld, null));
     }
 
     /**

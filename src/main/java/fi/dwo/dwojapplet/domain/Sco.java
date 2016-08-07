@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\Sco.java
 package fi.dwo.dwojapplet.domain;
 
+import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.dwo.commons.exceptions.PersistenceException;
@@ -10,20 +11,25 @@ import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -382,6 +388,10 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
         return applet;
     }
 
+    public void jsonEncode(Map map, Writer out) throws IOException {
+    	JSONEncoder.encode(map, out, getApplet().getClass().getClassLoader());
+    }
+    
     /**
      * Sets the applet of the sco.
      *

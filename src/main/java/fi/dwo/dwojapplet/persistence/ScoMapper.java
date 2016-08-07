@@ -82,7 +82,7 @@ class ScoMapper extends XmlRpcMapper {
 
                     String ld = (String) ht.get("launchdata");
                     if (ld != null && ld.length() > 0) {
-                        setLaunchdata((Hashtable) StringCodeObject.decodeStringToObject(ld));
+                        setLaunchdata((Hashtable) StringCodeObject.decodeStringToObject(ld, null));
                         setDataChanged(false);
                     }
                 }

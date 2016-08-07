@@ -817,7 +817,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 
 		}
 
-		Object o = StringCodeObject.decodeStringToObject(suspendData);
+		Object o = StringCodeObject.decodeStringToObject(suspendData, sco.getApplet().getClass().getClassLoader());
 		Hashtable h = (Hashtable) o;
 		Hashtable log = new Hashtable();
 		if (h != null && h.containsKey("log")) {
