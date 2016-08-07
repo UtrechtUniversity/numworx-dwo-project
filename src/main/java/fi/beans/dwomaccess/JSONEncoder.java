@@ -25,8 +25,9 @@ import fi.beans.private_base64code.StringCodeObject;
 public class JSONEncoder {
 
     @SuppressWarnings("rawtypes")
-    public static void encode(Map map, Writer out) throws IOException {
-        map = transformMap(map);
+    @Deprecated
+    private static void encode(Map map, Writer out) throws IOException {
+        map = transformMap(map, null);
         JSONObject.writeJSONString(map, out);
     }
 
@@ -43,7 +44,7 @@ public class JSONEncoder {
         return list;
     }
 
-    private static Object transformTypes(Object value) {
+    private static Object transformTypes(Object value, ClassLoader cl) {
         if (value instanceof byte[]) {
             value = ByteArray.newInstance((byte[]) value);
         }
@@ -54,12 +55,12 @@ public class JSONEncoder {
         }
 
         if (value instanceof Map) {
-            return transformMap((Map<?, ?>) value);
+            return transformMap((Map<?, ?>) value, cl);
         }
 
         if (value instanceof Object[]) {
             Object[] array = (Object[]) value;
-            return transformArray(array);
+            return transformArray(array, cl);
         }
 
         if (value == null || value instanceof Number || value instanceof Boolean || value instanceof String
@@ -120,14 +121,14 @@ public class JSONEncoder {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static Map transformMap(Map map) {
+    private static Map transformMap(Map map, ClassLoader cl) {
         Map result = map;
         Iterator iter = map.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry entry = (Map.Entry) iter.next();
             Object value = entry.getValue();
             if (value instanceof String && value.toString().startsWith("H4sIA")) {
-                value = StringCodeObject.decodeStringToObject(value.toString());
+                value = StringCodeObject.decodeStringToObject(value.toString(),cl);
                 if (value != null) {
                     if (result == map) {
                         result = new JSONObject(map);
@@ -136,7 +137,7 @@ public class JSONEncoder {
                 }
             }
 
-            Object transformed = transformTypes(value);
+            Object transformed = transformTypes(value, cl);
             if (transformed != value) {
                 if (result == map) {
                     result = new JSONObject(map);
@@ -147,11 +148,11 @@ public class JSONEncoder {
         return result;
     }
 
-    private static List<Object> transformArray(Object[] array) {
+    private static List<Object> transformArray(Object[] array, ClassLoader cl) {
         Object[] result = array;
         for (int i = 0; i < array.length; i++) {
             Object value = array[i];
-            value = transformTypes(value);
+            value = transformTypes(value, cl);
 
             if (value != array[i]) {
                 if (result == array) {
@@ -165,5 +166,10 @@ public class JSONEncoder {
         }
         return Arrays.asList(result);
     }
+
+	public static void encode(Map map, Writer out, ClassLoader cl) throws IOException {
+        map = transformMap(map, cl);
+        JSONObject.writeJSONString(map, out);
+	}
 
 }

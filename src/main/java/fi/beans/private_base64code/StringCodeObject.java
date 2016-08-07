@@ -8,18 +8,26 @@ public class StringCodeObject {
     String codeString;
     Object object;
 
-    public StringCodeObject(String s) {
+    public StringCodeObject(String s, ClassLoader cl) {
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes("ASCII"));
             Base64InputStream b64is = new Base64InputStream(bais);
             GZIPInputStream zis = new GZIPInputStream(b64is);
-            ObjectInputStream invoer = new ObjectInputStream(zis);
+            ObjectInputStream invoer = 
+            		cl == null
+            		? new ObjectInputStream(zis)
+            		: new DWOInputStream(zis, cl);
             object = invoer.readObject();
             codeString = s;
         }
         catch (Exception io) {	
         	System.out.println(io.toString());
         }
+    }
+    
+    @Deprecated
+    private StringCodeObject(String s) {
+    	this(s, null);
     }
 
     public StringCodeObject(Object o) {
@@ -39,19 +47,27 @@ public class StringCodeObject {
         }
     }
 
-    public static Object decodeStringToObject(String s) {
+    public static Object decodeStringToObject(String s, ClassLoader cl) {
         Object o = null;
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes("ASCII"));
             Base64InputStream b64is = new Base64InputStream(bais);
             GZIPInputStream zis = new GZIPInputStream(b64is);
-            ObjectInputStream invoer = new ObjectInputStream(zis);
+            ObjectInputStream invoer = 
+            		cl == null
+            		? new ObjectInputStream(zis)
+            		: new DWOInputStream(zis, cl);
             o = invoer.readObject();
         }
         catch (Exception io) {	//
         	System.out.println(io.toString());
         }
         return o;
+    }
+    
+    @Deprecated
+    private static Object decodeStringToObject(String s) {
+    	return decodeStringToObject(s, null);
     }
 
     public static String encodeObjectToString(Object o) {
