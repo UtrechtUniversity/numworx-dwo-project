@@ -148,16 +148,19 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         this.add(dialog);
 
         String version = "unknown";
+        String revisie = "unknown";
         URLClassLoader cl = (URLClassLoader) getClass().getClassLoader();
         try {
             URL url = cl.findResource("META-INF/MANIFEST.MF");
             Manifest manifest = new Manifest(url.openStream());
             // do stuff with it
             version = manifest.getMainAttributes().getValue("Implementation-Version");
+            revisie = manifest.getMainAttributes().getValue("Implementation-Build");
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "Can't read Implementation-Version from manifest.mf.");
         }
         fiButton = new FIButton("DWO", new String[]{"versie-info: " + version,
+        	"revisie: " + revisie, 
             "auteur: Peter Boon",
             "programmeur: M.J.B. Kupers,",
             "Gert van der Plas",

@@ -376,10 +376,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         dwoProfileID = 1;
         int o = 0;
 
-//        while (args != null && args.length > 1 + o
-//                && args[0].length() > 1
-//                && '-' == args[o].charAt(0)
-//                && "rlsxb".indexOf(args[0].charAt(1)) >= 0) {
+        while (args != null && args.length > 1 + o
+                && args[0].length() > 1
+                && '-' == args[o].charAt(0)
+                && "rlsxb".indexOf(args[0].charAt(1)) >= 0) {
 //            if ("-b".equals(args[o])) {
 //                Sco.setDefaultLessonMode(Sco.BROWSE);
 //                o += 1;
@@ -400,17 +400,17 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 //                }
 //                o += 2;
 //            }
-//            // allow definitie van Locale.
-//            if (args.length > 1 + o && "-l".equals(args[o])) {
-//                languageOveride = args[o + 1];
-//                o += 2;
-//            }
+            // allow definitie van Locale.
+            if (args.length > 1 + o && "-l".equals(args[o])) {
+                languageOveride = args[o + 1];
+                o += 2;
+            }
 //            if (args.length > 1 + o && "-x".equals(args[o])) {
 //                extensionOverride = args[o + 1];
 //                o += 2;
 //            }
 //
-//        }
+        }
         if (args != null && args.length > o && args[o] != null) {
             try {
                 dwoProfileID = Integer.parseInt(args[o]);
