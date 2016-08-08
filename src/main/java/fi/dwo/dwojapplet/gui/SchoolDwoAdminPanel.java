@@ -92,9 +92,10 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         public void actionPerformed(ActionEvent event) {
             fireEditingStopped();
             School oldSchool = null;
+            int lclRow=-1;
             if (value == editImage || value == removeImage || value == rightsImage) {
-                int row = tableModel.getSelectedRow();
-                DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(row, 5);
+                lclRow = rowSorter.convertRowIndexToModel(row);
+                DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(lclRow, 5);
                 long schoolid = MySQLPersistenceId.getId(school.getId());
                 try {
                     oldSchool = (School) PersistenceFacade.instance().get((int) schoolid, School.class);
@@ -108,7 +109,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                 try {
                     School s = AddSchoolDialog.editSchool(SchoolDwoAdminPanel.this.center, oldSchool);
                     if (s != null) {
-                        model.fireTableRowsUpdated(row, row);
+                        model.fireTableRowsUpdated(lclRow, lclRow);
                     }
                 }
                 catch (SchoolException e) {
@@ -116,8 +117,8 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                 }
             } else if (value == removeImage) {
                 /* Delete the school */
-                    int row = tableModel.getSelectedRow();
-                    DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(row, 5);
+                    //int row = tableModel.getSelectedRow();
+                    DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(lclRow, 5);
                     String msg = MessageFormat.format(
                             Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), 
                                     Dwo2ExceptionCode.User_ConfirmSchoolDelete),school.getSchoolLogin());
@@ -135,7 +136,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             } else if (value == rightsImage) {
                 JDialog rightsDialog;
                 try {
-                    rightsDialog = new RightsDialog((DomSchool4DwoAdmin) tableModel.getValueAt(row, 5));
+                    rightsDialog = new RightsDialog((DomSchool4DwoAdmin) tableModel.getValueAt(lclRow, 5));
                     rightsDialog.show();
                 }
                 catch (Dwo2Exception ex) {

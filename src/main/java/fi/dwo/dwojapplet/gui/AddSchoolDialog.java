@@ -96,7 +96,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 //        form.setMinimumSize(new Dimension(500,500));
         form.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.schoolName = schoolName;
-        this.schoolName = schoolLogin;
+        this.schoolLogin = schoolLogin;
         this.passwdMap = spm;
         confirmed = false;
 
@@ -115,7 +115,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         l.setVisible(true);
 
         /* schoolName field */
-        schoolNameField = new JTextField();
+        schoolNameField = new JTextField(schoolName);
 
         int w = Math.max(300, schoolNameField.getPreferredSize().width);
         schoolNameField.setBounds(150, 28, w, 20);
