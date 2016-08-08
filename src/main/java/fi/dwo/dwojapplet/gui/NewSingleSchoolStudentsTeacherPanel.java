@@ -484,7 +484,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATESTUDENTERROR));
                 }
                 if (fatalFlag == true) {
-                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATETEACHERERROR));
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATESTUDENTERROR));
                 }
                 if (fatalFlag == false && failFlag == false) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));
