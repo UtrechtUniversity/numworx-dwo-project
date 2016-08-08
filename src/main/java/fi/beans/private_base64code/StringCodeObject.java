@@ -26,7 +26,7 @@ public class StringCodeObject {
     }
     
     @Deprecated
-    private StringCodeObject(String s) {
+    public StringCodeObject(String s) {
     	this(s, null);
     }
 
@@ -66,7 +66,7 @@ public class StringCodeObject {
     }
     
     @Deprecated
-    private static Object decodeStringToObject(String s) {
+    public static Object decodeStringToObject(String s) {
     	return decodeStringToObject(s, null);
     }
 
