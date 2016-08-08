@@ -4,11 +4,14 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.system.Loader;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
 
 public class MergeAction extends GuiAction {
@@ -53,7 +56,8 @@ public class MergeAction extends GuiAction {
         instance().setWait();
         try {
             String clazz = dest.getAppletData().getClassName();
-            Class cls = Class.forName(clazz);
+            String jar   = dest.getAppletData().getJarName();
+            Class cls = Loader.create(jar).loadClass(clazz);
             Method method = cls.getMethod(MERGECMD, new Class[]{String.class, String.class});
             Object o = cls.newInstance();
             String sdata = src.getLaunchdataString();
