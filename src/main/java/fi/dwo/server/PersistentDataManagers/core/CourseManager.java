@@ -54,7 +54,6 @@ public class CourseManager {
      * Update
      *
      * @param course
-     * @throws Exception
      */
     public static void edit(PersistentCourse course) throws PersistenceException {
         EntityManager em = null;

@@ -113,6 +113,7 @@ public class SecuredTeacherSchoolClassManager {
      * Returns the school data to be displayed.
      *
      * @param sc
+     * @param schoolClass
      * @return
      */
     @PUT
@@ -654,7 +655,6 @@ public class SecuredTeacherSchoolClassManager {
      *
      * @param sc
      * @param restRemoveStudentFromSchoolClass
-     * @param restSchoolClass
      * @return true if success, false if the student does not exists to be
      * removed
      */

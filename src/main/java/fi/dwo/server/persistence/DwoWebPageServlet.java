@@ -40,6 +40,7 @@ public class DwoWebPageServlet extends HttpServlet {
     /**
      * Haal parameter html_source op.
      * Andere parameters zijn SERVLET etc...
+     * @throws javax.servlet.ServletException
      * @see #HTML_SOURCE
      * @see fi.beans.xmlrpc.Servlet#init(javax.servlet.ServletConfig)
      */

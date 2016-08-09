@@ -56,7 +56,6 @@ public class SchoolClassManager {
      * Update
      *
      * @param entity
-     * @throws Exception
      */
     public static void edit(PersistentSchoolClass entity) throws PersistenceException {
         EntityManager em = null;

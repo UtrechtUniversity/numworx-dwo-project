@@ -61,7 +61,6 @@ public class TeacherOfClassManager {
      * Update
      *
      * @param teacherOf
-     * @throws Exception
      */
     public static void edit(PersistentTeacherOfClass teacherOf) throws PersistenceException {
         EntityManager em = null;

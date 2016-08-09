@@ -56,7 +56,6 @@ public class LoginDataManager {
      * Update
      *
      * @param submit
-     * @throws Exception
      */
     public static void edit(PersistentLogData submit) throws PersistenceException {
         EntityManager em = null;

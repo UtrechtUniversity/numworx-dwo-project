@@ -61,7 +61,6 @@ public class LoginContextManager {
      * Update
      *
      * @param loginContext
-     * @throws Exception
      */
     public static void edit(PersistentLoginContext loginContext) throws PersistenceException {
         EntityManager em = null;

@@ -563,6 +563,7 @@ public class SecuredSchoolAdminSchoolClassManager {
      * Returns the school data to be displayed.
      *
      * @param sc
+     * @param restSchoolClass
      * @return
      */
     @PUT

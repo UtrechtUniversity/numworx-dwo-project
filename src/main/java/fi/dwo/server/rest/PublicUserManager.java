@@ -67,9 +67,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
-import java.util.Random;
-
 import static java.lang.Thread.sleep;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.ws.rs.QueryParam;
 
@@ -314,8 +313,7 @@ public class PublicUserManager {
 //            LOG.log(Level.SEVERE, null, ex);
 //            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "SecureRandom failed.");
 //        }
-        Random secureRandom = null;
-        secureRandom = new Random();
+        ThreadLocalRandom secureRandom = ThreadLocalRandom.current();
         LOG.log(Level.FINE, "Creating authToken.");
         Short authToken = (short) secureRandom.nextInt();
         RoleType roleType = RoleType.NONE;
@@ -433,6 +431,8 @@ public class PublicUserManager {
     /**
      * Used for manual testing.
      *
+     * @param language
+     * @param back
      * @return
      */
     @GET
@@ -488,6 +488,8 @@ public class PublicUserManager {
      * @param sc
      * @param usercode
      * @param email
+     * @param back
+     * @param request
      * @return
      * @throws java.lang.Exception
      */
@@ -595,6 +597,8 @@ public class PublicUserManager {
     /**
      * Used for manual testing.
      *
+     * @param authCode
+     * @param language
      * @return
      */
     @GET
@@ -638,6 +642,7 @@ public class PublicUserManager {
      *
      * @param authCode
      * @param newPassword
+     * @param language
      * @return
      * @throws java.lang.Exception
      */

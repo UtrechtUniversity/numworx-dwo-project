@@ -64,7 +64,6 @@ public class UserManager {
      * Update
      *
      * @param persistentUser
-     * @throws Exception
      */
     public static void edit(PersistentUser persistentUser) throws PersistenceException {
         EntityManager em = null;

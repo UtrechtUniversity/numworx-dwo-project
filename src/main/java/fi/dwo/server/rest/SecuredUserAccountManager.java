@@ -223,6 +223,7 @@ public class SecuredUserAccountManager {
      *
      * @param sc security context
      * @param user us
+     * @return 
      */
     @GET
     @Path("/loginUser/{user}")

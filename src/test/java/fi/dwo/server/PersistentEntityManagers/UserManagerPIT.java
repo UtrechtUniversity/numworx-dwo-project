@@ -104,6 +104,7 @@ public class UserManagerPIT {
 
     /**
      * Test of edit method, of class UserManager.
+     * @throws java.lang.Exception
      */
     @Test
     public void testEdit() throws Exception {

@@ -33,7 +33,6 @@ public class HasRoleManager {
      * Create.
      *
      * @param hasRole
-     * @param role
      */
     public static void create(PersistentHasRole hasRole) throws PersistenceException {
         EntityManager em = null;
@@ -58,8 +57,6 @@ public class HasRoleManager {
      * Update
      *
      * @param hasRole
-     * @param role
-     * @throws Exception
      */
     public static void edit(PersistentHasRole hasRole) throws PersistenceException {
         EntityManager em = null;

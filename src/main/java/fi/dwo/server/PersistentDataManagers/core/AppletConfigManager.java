@@ -52,7 +52,6 @@ public class AppletConfigManager {
      * Update
      *
      * @param persistentAppletConfig
-     * @throws Exception
      */
     public static void edit(PersistentAppletConfig persistentAppletConfig) throws PersistenceException {
         EntityManager em = null;

@@ -1790,7 +1790,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 
     /**
      * @param userID
-     * @param uid
      * @param schoolClassID
      * @return
      * @throws java.sql.SQLException
@@ -3862,7 +3861,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      *
      * @param userID
      * @param schoolGroupID
-     * @param schoolID
      *
      * @return
      * @throws IOException
@@ -4513,8 +4511,11 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * Returns the classes to which the student is subscribed.
      *
      * @param userID
+     * @param schoolID
      * @return
+     * @throws java.io.IOException
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+     * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
     @Override
@@ -4532,8 +4533,11 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * Returns the classes to which the student is subscribed.
      *
      * @param userID
+     * @param schoolID
      * @return
+     * @throws java.io.IOException
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+     * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
     @Override

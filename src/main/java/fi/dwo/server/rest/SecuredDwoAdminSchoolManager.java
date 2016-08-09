@@ -73,7 +73,7 @@ public class SecuredDwoAdminSchoolManager {
      * Registers a new school and only a school.
      *
      * @param sc
-     * @param school
+     * @param restSchool
      * @return
      */
     @PUT
@@ -125,7 +125,7 @@ public class SecuredDwoAdminSchoolManager {
      * Returns a school from its persistent id.
      *
      * @param sc
-     * @param pid
+     * @param school
      * @return Returns null if there was an error.
      */
     @PUT
@@ -208,7 +208,7 @@ public class SecuredDwoAdminSchoolManager {
      * updated data. Ignores any schoolID values.
      *
      * @param sc
-     * @param school
+     * @param restSchool
      * @return
      */
     @PUT
@@ -446,7 +446,7 @@ public class SecuredDwoAdminSchoolManager {
      * updated data. Ignores any schoolID values.
      *
      * @param sc
-     * @param school
+     * @param restHasRole
      * @return
      */
     @PUT

@@ -63,6 +63,9 @@ public class ScriptRunner {
 
     /**
      * Default constructor
+     * @param connection
+     * @param stopOnError
+     * @param autoCommit
      */
     public ScriptRunner(Connection connection, boolean autoCommit,
             boolean stopOnError) {
@@ -98,6 +101,8 @@ public class ScriptRunner {
      * Runs an SQL script (read in using the Reader parameter)
      *
      * @param reader - the source of the script
+     * @throws java.io.IOException
+     * @throws java.sql.SQLException
      */
     public void runScript(Reader reader) throws IOException, SQLException {
         try {
