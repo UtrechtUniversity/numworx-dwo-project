@@ -20,9 +20,9 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 	}
 
 	public String getHost() {
-		if(GWT.isProdMode()) 
+//		if(GWT.isProdMode()) 
 			return Window.Location.getHost();
-		return getDefaultHost();
+//		return getDefaultHost();
 	}
 
 	private String getDefaultHost() {
