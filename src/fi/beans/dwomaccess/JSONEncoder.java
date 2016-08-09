@@ -173,5 +173,10 @@ public class JSONEncoder {
 		return Arrays.asList(result);
 	}
 
+	
+	public static void encode(Map map, Writer out, ClassLoader cl) throws IOException {
+        map = transformMap(map);
+        JSONObject.writeJSONString(map, out);
+	}
 
 }
