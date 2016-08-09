@@ -18,7 +18,7 @@ dwoApp.config(['$routeProvider', function ($routeProvider) {
 angular.module('dwoApp')
         .factory('dataFactory', ['$http', function ($http) {
                 var authString = '';
-                var urlBase = 'http://localhost:8080/dwo/rest';
+                var urlBase = 'https://app.dwo.nl/dwo/rest';
                 var dataFactory = {};
                 dataFactory.setAuthentication = function (username, password) {
                     var md5password = MD5(password);
