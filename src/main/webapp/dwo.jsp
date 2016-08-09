@@ -55,11 +55,11 @@
 	code	= "fi.dwo.dwojapplet.domain.DWO"
 	width	= "100%"
 	height= "100%"
-	archive = "DWOJApplet.jar"
+	archive = "../DWOJApplet.jar,wiskopdr.jar"
 	mayscript
 	id="API"
 	name="DWO"
-	codebase="<%=contextPath %>/"
+	codebase="<%=contextPath %>/jars/"
 	>
 	Helaas, Java is niet geinstalleerd op uw computer.
 	Klik <a target="_blank" href="http://java.com/nl">
@@ -74,7 +74,9 @@
 	<param name="guestUser" value="<%=guestUser %>" />
 	<param name="courseViewNr" value="<%=courseViewNr%>"/>
 	<param name="scoViewNr" value="<%=scoViewNr%>" />
+<!--
 	<param name="jnlp_href" value="<%=contextPath %>/<%=profile%>/<%=language%>/dwo.jnlp" />
+-->
 	<%=extras %>
 </APPLET>
 </center>
