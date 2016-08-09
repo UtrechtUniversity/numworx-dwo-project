@@ -18,15 +18,17 @@ dwoApp.config(['$routeProvider', function ($routeProvider) {
 angular.module('dwoApp')
         .factory('dataFactory', ['$http', function ($http) {
                 var authString = '';
-                var urlBase = 'https://app.dwo.nl/dwo/rest';
+//                var urlBase = 'https://app.dwo.nl/dwo/rest';
+                var urlBase = '/dwo/rest';
                 var dataFactory = {};
                 dataFactory.setAuthentication = function (username, password) {
                     var md5password = MD5(password);
                     authString = Base64.encode("" + username + ":" + md5password);
                     $http.defaults.headers.common['Authorization'] = 'Basic ' + authString;
-                    $http.defaults.headers.common['method'] = 'GET';
+                    delete $http.defaults.headers.common['method'];
                     $http.defaults.headers.common['Accept'] = 'application/json';
-//                    $http.defaults.headers.common['Content-Type'] = 'application/json';
+                    $http.defaults.headers.common['Content-Type'] = 'application/json';
+                    $http.defaults.headers.common['Access-Control-Request-Headers'] = 'origin, content-type, authorization, x-http-method-override';
                 };
 
                 dataFactory.getStatus = function () {
@@ -38,9 +40,11 @@ angular.module('dwoApp')
                     $http.defaults.headers.common['Authorization'] = 'Basic ' + authString;//                    $http.defaults.headers.common['Authorization'] = 'Basic ' + authString;
 //                    $http.defaults.headers.common['Authorization'] = 'Basic cHJvamVjdF93aW06cGFzc3c=';// + Base64.encode($scope.credentials.username + ":" + $scope.credentials.password);
 
-                    $http.defaults.headers.common['method'] = 'GET';
+//                   $http.defaults.headers.common['method'] = 'GET';
+                    delete $http.defaults.headers.common['method'];
+
                     $http.defaults.headers.common['Accept'] = 'application/json';
-//                    $http.defaults.headers.common['Content-Type'] = 'application/json';
+                    $http.defaults.headers.common['Content-Type'] = 'application/json';
 //                    $http.defaults.headers.common['Access-Control-Allow-Origin']='*';
 //                    $http.defaults.headers.common['Access-Control-Allow-Headers']='*';
 //                    $http.defaults.headers.common['Access-Control-Allow-Credentials']='*';
@@ -53,9 +57,10 @@ angular.module('dwoApp')
                     $http.defaults.headers.common['Authorization'] = 'Basic ' + authString;//                    $http.defaults.headers.common['Authorization'] = 'Basic ' + authString;
 //                    $http.defaults.headers.common['Authorization'] = 'Basic cHJvamVjdF93aW06cGFzc3c=';// + Base64.encode($scope.credentials.username + ":" + $scope.credentials.password);
 
-                    $http.defaults.headers.common['method'] = 'PUT';
+//                    $http.defaults.headers.common['method'] = 'PUT';
+                    delete $http.defaults.headers.common['method'];
                     $http.defaults.headers.common['Accept'] = 'application/json';
-//                    $http.defaults.headers.common['Content-Type'] = 'application/json';
+                    $http.defaults.headers.common['Content-Type'] = 'application/json';
 //                    $http.defaults.headers.common['Access-Control-Allow-Origin']='*';
 //                    $http.defaults.headers.common['Access-Control-Allow-Headers']='*';
 //                    $http.defaults.headers.common['Access-Control-Allow-Credentials']='*';
@@ -123,7 +128,7 @@ angular.module('dwoApp')
                 $scope.updateProfile = function () {
                     //$scope. list = [{"id":{"idString":"MYSQL;PersistentRole;00000000000000000001","type":"PersistentRole"},"roleName":"STUDENT"},{"id":{"idString":"MYSQL;PersistentRole;00000000000000000002","type":"PersistentRole"},"roleName":"TEACHER"},{"id":{"idString":"MYSQL;PersistentRole;00000000000000000003","type":"PersistentRole"},"roleName":"ADMIN"},{"id":{"idString":"MYSQL;PersistentRole;00000000000000000004","type":"PersistentRole"},"roleName":"ANONYMOUS"},{"id":{"idString":"MYSQL;PersistentRole;00000000000000000005","type":"PersistentRole"},"roleName":"SCHOOLADMIN"}];
                     try {
-                        var dwoUserFull = {
+                        var domUserFull = {
                             displayName: $scope.list.displayName,
                             id: $scope.list.id,
                             userName: $scope.list.userName,
@@ -137,7 +142,7 @@ angular.module('dwoApp')
                         };
                         var restContext = {};
                         var restUserFull = {
-                            dwoUserFull: dwoUserFull,
+                            domUserFull: domUserFull,
                             restContext: restContext
                         };
 
