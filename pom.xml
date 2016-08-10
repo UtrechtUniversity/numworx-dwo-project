@@ -75,7 +75,7 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>   
-<!--            <plugin>
+            <plugin> <!-- attach-sources voor GWT -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
@@ -90,8 +90,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
--->            
+            </plugin>         
 <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
