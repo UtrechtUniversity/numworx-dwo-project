@@ -78,7 +78,7 @@
     <methods>;
 }
 
--keep class fi.dwo.commons.parameters.**{
+-keep class fi.dwo.dwojapplet.parameters.**{
     <methods>;
 }
 
