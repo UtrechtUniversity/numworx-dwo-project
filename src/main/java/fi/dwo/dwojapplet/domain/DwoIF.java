@@ -495,4 +495,6 @@ public interface DwoIF {
 
     public void linkViaSAML();
 
+	public boolean setExtraRights(User user);
+
 }

@@ -51,7 +51,7 @@ public abstract class TextMapper {
             }
             Locale lang = new Locale(language, "");
 
-            String className = "fi.dwo.parameters.system.text" + "."
+            String className = "fi.dwo.dwojapplet.parameters.system.text" + "."
                     + TEXT_CLASS;
 //            String className = TextMapper.class.getPackage().getName() + "."
 //                    + TEXT_CLASS;

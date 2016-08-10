@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 
 /**
  * This Class is responsible for creating some GUI elements and to communicate
@@ -150,8 +149,13 @@ public class GuiCreator {
             if (DwoHelper.getCurrentUser() != null) {
                 // TODO: remove, currently checks if licence is still valid
                 validLicenceCheck(dwo.getUser());
+                // Check if user has enough rights to continue
+                if (dwo.setExtraRights(dwo.getUser())) {
                 //configure GuiCreator to show correct Panels and options.
-                configurePanelsForUser(dwo.getUser());
+                	configurePanelsForUser(dwo.getUser());
+                } else {
+                	dwo.logoff(); 
+                }
             }
         }
         catch (Dwo2Exception e) {
