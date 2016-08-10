@@ -72,20 +72,23 @@ public class SecuredUserAccountLoginsManager {
         DomSchoolRoleAndClass curSac = new DomSchoolRoleAndClass();
 //        // retrieve the current active <school,role, class>
         try {
-            javax.persistence.Query q = em.createQuery("select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID, h.persistentHasRolePK.userID , h.schoolGroup.schoolGroupID  from PersistentHasRole h where h.persistentHasRolePK.userID = :userID and h.user.schoolGroupID = h.persistentHasRolePK.schoolGroupID");
+            javax.persistence.Query q = em.createQuery("select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID, h.persistentHasRolePK.userID , h.schoolGroup.schoolGroupID, h.rights, h.schoolGroup.school.schoolRights from PersistentHasRole h where h.persistentHasRolePK.userID = :userID and h.user.schoolGroupID = h.persistentHasRolePK.schoolGroupID");
             //Sample query
             //select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID from PersistentHasRole h where h.persistentHasRolePK.userID = 184690
             q.setParameter("userID", userId);
             List<Object[]> resultList = q.getResultList();
             LOG.log(Level.FINER, "Username {0}: resultList size: {0}.", new Object[]{scUsername, resultList.size()});
             if (resultList.size() == 1) {
-                LOG.log(Level.FINE, "Username {0}: Fetched current role tuple <schoolID, schoolName, groupID, groupname, classID, userID, groupID>: {1}, {2}, {3}, {4}, {5}, {6}, {7}.", new Object[]{scUsername, resultList.get(0)[0], resultList.get(0)[1], resultList.get(0)[2], resultList.get(0)[3], resultList.get(0)[4], resultList.get(0)[5], resultList.get(0)[6]});
-                curSac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Integer) resultList.get(0)[0]).longValue(), PersistenceClassType.PersistentSchool));
-                curSac.setSchoolName((String) resultList.get(0)[1]);
-                curSac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Integer) resultList.get(0)[2]).longValue(), PersistenceClassType.PersistentRole));
-                curSac.setRoleName((String) resultList.get(0)[3]);
-                if (resultList.get(0)[4] != null) {
-                    Long id = (Long) resultList.get(0)[4];
+                Object[] result0 = resultList.get(0);
+				LOG.log(Level.FINE, "Username {0}: Fetched current role tuple <schoolID, schoolName, groupID, groupname, classID, userID, groupID, roleRights, schoolRights>: {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}.", new Object[]{scUsername, result0[0], result0[1], result0[2], result0[3], result0[4], result0[5], result0[6], result0[7], result0[8]});
+                curSac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Integer) result0[0]).longValue(), PersistenceClassType.PersistentSchool));
+                curSac.setSchoolName((String) result0[1]);
+                curSac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId(((Integer) result0[2]).longValue(), PersistenceClassType.PersistentRole));
+                curSac.setRoleName((String) result0[3]);
+                curSac.setRoleRights( (String) result0[7]);
+                curSac.setSchoolRights( (String) result0[8]);
+                if (result0[4] != null) {
+                    Long id = (Long) result0[4];
                     curSac.setSchoolClassId( MySQLPersistenceId.createPersistenceId(id, PersistenceClassType.PersistentSchoolClass));
 // export some class parameters: name, iconizer etc
                     PersistentSchoolClass schoolClass = em.find(PersistentSchoolClass.class, id);
@@ -96,8 +99,8 @@ public class SecuredUserAccountLoginsManager {
                     curSac.setSchoolClassName(null);
                     curSac.setIconizer(null);
                 }
-                curSac.setUserId((PersistenceId) MySQLPersistenceId.createPersistenceId((Long) resultList.get(0)[5], PersistenceClassType.PersistentUser));
-                curSac.setSchoolGroupId((PersistenceId) MySQLPersistenceId.createPersistenceId((Long) resultList.get(0)[6], PersistenceClassType.PersistentSchoolGroup));
+                curSac.setUserId((PersistenceId) MySQLPersistenceId.createPersistenceId((Long) result0[5], PersistenceClassType.PersistentUser));
+                curSac.setSchoolGroupId((PersistenceId) MySQLPersistenceId.createPersistenceId((Long) result0[6], PersistenceClassType.PersistentSchoolGroup));
             }
         }
         catch (Exception e) {
@@ -140,6 +143,7 @@ public class SecuredUserAccountLoginsManager {
             //Retrieve the list of possible <School, role, class>, class can be null.
             q = em.createQuery("select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, "
                     + "h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID, h.persistentHasRolePK.userID , h.schoolGroup.schoolGroupID  "
+            		+ ", h.rights, h.schoolGroup.school.schoolRights "
                     + "from PersistentHasRole h where h.persistentHasRolePK.userID = :userID "
                     + " ");
             //Sample query
@@ -149,7 +153,7 @@ public class SecuredUserAccountLoginsManager {
             LOG.log(Level.FINE, "Username {0}: Fetched {2} HasRoles for userId {1}.", new Object[]{sc.getUserPrincipal().getName(), userId, resultList.size()});
             DomSchoolRoleAndClass sac;
             for (Object[] oList : resultList) {
-                LOG.log(Level.FINE, "Fetched hasRole tuple <schoolID, schoolName, groupID, groupname, classID, userID, schoolGroupID>: {0}, {1}, {2}, {3}, {4}, {5}, {6}.", new Object[]{oList[0], oList[1], oList[2], oList[3], oList[4], oList[5], oList[6]});
+                LOG.log(Level.FINE, "Fetched hasRole tuple <schoolID, schoolName, groupID, groupname, classID, userID, schoolGroupID, roleRights, schoolRights>: {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}.", new Object[]{oList[0], oList[1], oList[2], oList[3], oList[4], oList[5], oList[6], oList[7], oList[8]});
                 sac = new DomSchoolRoleAndClass();
                 Integer i = (Integer) oList[0];
                 sac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId(i.longValue(), PersistenceClassType.PersistentSchool));
@@ -157,6 +161,8 @@ public class SecuredUserAccountLoginsManager {
                 i = (Integer) oList[2];
                 sac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId(i.longValue(), PersistenceClassType.PersistentRole));
                 sac.setRoleName((String) oList[3]);
+                sac.setRoleRights( (String) oList[7]);
+                sac.setSchoolRights( (String) oList[8]);
                 if (oList[4] != null) {
                     Long j = (Long) oList[4];
                     try {
