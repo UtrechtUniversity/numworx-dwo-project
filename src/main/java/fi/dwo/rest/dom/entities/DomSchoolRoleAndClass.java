@@ -25,6 +25,9 @@ public class DomSchoolRoleAndClass {
     private PersistenceId userId;
     private PersistenceId schoolGroupId;
     private Boolean iconizer;
+// Rights management    
+    private String roleRights;
+    private String schoolRights;
 
     /**
      * @return the schoolId
@@ -145,5 +148,21 @@ public class DomSchoolRoleAndClass {
     public void setIconizer(Boolean iconizer) {
         this.iconizer = iconizer;
     }
+
+	public String getRoleRights() {
+		return roleRights;
+	}
+
+	public void setRoleRights(String roleRights) {
+		this.roleRights = roleRights;
+	}
+
+	public String getSchoolRights() {
+		return schoolRights;
+	}
+
+	public void setSchoolRights(String schoolRights) {
+		this.schoolRights = schoolRights;
+	}
 
 }
