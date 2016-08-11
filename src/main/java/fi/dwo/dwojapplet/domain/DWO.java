@@ -1322,7 +1322,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             } catch (MalformedURLException ex) {
                 LOG.log(Level.SEVERE, "", ex);
             }
-        }
+        } else 
+        	Loader.setPrefix(DwoHelper.getJarUrlPath().toExternalForm());
 
 //        //intialize the proper connection but without any credentials.
 //        Client client = ClientBuilder.newClient();

@@ -5,10 +5,13 @@ import fi.beans.scorm.PartialScoreIF;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletData;
 import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.Sco;
 import static fi.dwo.dwojapplet.domain.ScoBase.LAUNCH_DATA;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.system.Loader;
 
 import java.applet.Applet;
@@ -293,6 +296,7 @@ class WrapSco extends Sco {
     @Override
     public void setUser(User u) {
         super.setUser(u);
+        delegate.setUser(u);
     }
 	/**
 	 * @param lessonMode
@@ -326,7 +330,13 @@ class WrapSco extends Sco {
     	}
 		return super.GetValue(iDataModelElement);
 	}
-    /**
+    @Override
+	public ScoPanel getScoPanel(DwoIF dwo, User user) {
+    	delegate.dwo = dwo;
+    	return super.getScoPanel(dwo, user);
+	}
+
+	/**
      * @return @see fi.dwo.client.domain.ScoBase#getAppletData()
      */
     @Override
@@ -538,7 +548,10 @@ class WrapSco extends Sco {
         if ("url".equals(name)) {
             String language = TextMapper.getLanguage();
             language = "?locale=" + language;
-            return GuiConstants.PLAYER + language + "#cmi.launch_data:" + getScoID(); // FIXME correct url.
+            URL path = DwoHelper.getServerUrlPath();
+			String serverBase = path.getProtocol() + "://" + path.getHost();
+            return  serverBase + 
+            		GuiConstants.PLAYER + language + "#cmi.launch_data:" + getScoID(); // FIXME correct url.
         }
         if ("debug".equals(name)) {
             return null;
