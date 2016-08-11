@@ -663,8 +663,16 @@ class WrapSco extends Sco {
         Applet applet;
         Class<Applet> clazz;
         try {
-        	ClassLoader loader = Loader.create("popupurlapplet.jar");
-            clazz = (Class<Applet>) loader.loadClass("fi.popupurlapplet.PopUpURLApplet");
+        	String jar, className;
+        	if(DwoHelper.isApplication()) {
+        		jar = "previewhtml.jar";
+        		className = "fi.previewhtml.PreviewHTML";
+        	} else {
+        		jar = "popupurlapplet.jar";
+        		className = "fi.popupurlapplet.PopUpURLApplet";
+        	}    	
+        	ClassLoader loader = Loader.create(jar);
+            clazz = (Class<Applet>) loader.loadClass(className);
             applet = clazz.newInstance();
         } catch (Exception e) {
             LOG.log(Level.SEVERE,null,e);
