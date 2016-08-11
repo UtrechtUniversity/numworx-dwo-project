@@ -16,6 +16,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.rest.entities.RestGetSingleSchoolStudent;
@@ -24,12 +25,10 @@ import fi.dwo.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.rest.entities.RestStudent;
 import fi.dwo.rest.entities.RestTeacher;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import fi.dwo.rest.entities.RestUserFull;
-import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
-import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
-import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
@@ -244,7 +243,7 @@ public class SecuredSchoolAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submitSingleSchoolStudent")
-    public Boolean SubmitSingleSchoolStudent(@Context SecurityContext sc, RestSingleSchoolStudent nssStudent) {
+    public Boolean SubmitSingleSchoolStudent(@Context SecurityContext sc, RestNewSingleSchoolStudent nssStudent) {
         if(nssStudent==null){
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
@@ -265,18 +264,26 @@ public class SecuredSchoolAdminSchoolManager {
         if (sg != null) {
             Date now = DwoDateUtilities.getCurrentDwoDate();
             PersistentUser user = new PersistentUser();
-            user.setEmail(nssStudent.getDomSingleSchoolStudent().getEmail());
-            user.setGivenName(nssStudent.getDomSingleSchoolStudent().getGivenName());
-            user.setInsertion(nssStudent.getDomSingleSchoolStudent().getInsertion());
-            user.setLastname(nssStudent.getDomSingleSchoolStudent().getFamilyName());
-            user.setPassword(nssStudent.getDomSingleSchoolStudent().getPassword());
+            user.setEmail(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getEmail());
+            user.setGivenName(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getGivenName());
+            user.setInsertion(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getInsertion());
+            user.setLastname(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getFamilyName());
+            user.setPassword(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getPassword());
             user.setRegisterDate(now);
-            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUserName());
+            user.setUsername(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName());
             user.setSchoolGroupId(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
 
             try {
-                SchoolUtilManager.addSingleSchoolStudentAccount(user, school);
+                PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()));                
+                SchoolUtilManager.addSingleSchoolStudentAccount(user, school,schoolClass);
+                //add to schoolClass
+                PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
+                toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(user.getId(), schoolClass.getClassID(), user.getSchoolGroupId()));
+                java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
+                toSoc.setRegisterDate(d);
+                StudentOfClassManager.create(toSoc);
+                
             }
             catch (Dwo2Exception ex) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
