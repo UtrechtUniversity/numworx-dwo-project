@@ -1853,7 +1853,14 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         // Configure the applet
         DWO.ReadLoggingProperties();
         //Put applet in a frame.
-        MainFrame mf = new MainFrame(dwo, width, height);
+        MainFrame mf = new MainFrame(dwo, width, height) {
+
+			@Override
+			public URL getCodeBase() {
+				return DwoHelper.getURL("");
+			}
+        	
+        };
         mf.setTitle("DWO");
         mf.pack();
         // Start applet.
