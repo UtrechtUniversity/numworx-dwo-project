@@ -436,9 +436,9 @@ public class SecuredSchoolAdminSchoolClassManager {
             user.setSchoolGroupId(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
             try {
-                SchoolUtilManager.addSingleSchoolStudentAccount(user, school);
                 //add to schoolClass
                 PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()));
+                SchoolUtilManager.addSingleSchoolStudentAccount(user, school, schoolClass);
                 PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
                 toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(user.getId(), schoolClass.getClassID(), user.getSchoolGroupId()));
                 java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
