@@ -22,6 +22,8 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
+import fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import fi.dwo.rest.entities.RestSchoolAdmin;
 import fi.dwo.rest.entities.RestSingleSchoolStudent;
 import fi.dwo.rest.entities.RestStudent;
@@ -206,9 +208,10 @@ public class SecuredSchoolAdminSchoolManagerIT {
     public void testSubmitSingleSchoolStudent() {
         System.out.println("SubmitSingleSchoolStudent");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
-        RestSingleSchoolStudent rssStudent = new RestSingleSchoolStudent();
+        RestNewSingleSchoolStudent rssStudent = new RestNewSingleSchoolStudent();
+        DomNewSingleSchoolStudent nssStudent = new DomNewSingleSchoolStudent();
         DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
-        rssStudent.setDomSingleSchoolStudent(dssStudent);
+        rssStudent.setDomNewSingleSchoolStudent(nssStudent);
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         System.out.println("submitNewUser");
         dssStudent.setUserName("testuser01");
@@ -217,6 +220,9 @@ public class SecuredSchoolAdminSchoolManagerIT {
         dssStudent.setFamilyName("c");
         dssStudent.setEmail("a@b.c");
         dssStudent.setPassword("pwd");
+        nssStudent.setDomSingleSchoolStudent(dssStudent);
+        nssStudent.setDomSchoolClass(null);
+        
         
         try {
             Boolean result = instance.SubmitSingleSchoolStudent(sc, rssStudent);
