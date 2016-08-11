@@ -428,7 +428,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             try {
                 //Fetch LoginContext to see if there is already a session.
                 DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(loginname.getText(), MD5.getHashString(String.valueOf(password.getPassword())));
-                if (loginContext != null && loginContext.getLastLoginTimeStamp() != null) {
+// XXX uitgezet, te verwarrend
+                if (loginContext != null && loginContext.getLastLoginTimeStamp() != null && false) {
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
                             Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
                     ) != JOptionPane.OK_OPTION) {
