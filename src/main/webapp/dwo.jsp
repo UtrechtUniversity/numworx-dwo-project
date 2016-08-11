@@ -70,6 +70,7 @@
 	<param name="cookies" value="<%=cookies %>" />
 	<param name="java_arguments" value="-Djava.net.preferIPv4Stack=true -Xmx1024m -Dhttps.protocols=TLSv1"/>
 	<param name="codebase_lookup" value="false">
+	<param name="classloader_cache" value="false">
 	<param name="IDEAS" value="<%=IDEAS %>" />
 	<param name="guestUser" value="<%=guestUser %>" />
 	<param name="courseViewNr" value="<%=courseViewNr%>"/>
