@@ -52,15 +52,15 @@ import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class DWO2player extends DWOplayer implements EntryPoint {
 
-	final class DubbeleLogin implements LoginPresenter {
-
-		@Override
-		public void otherlogin(AsyncCallback<Boolean> callback) {
-			boolean ok = Window.confirm(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession));
-			callback.onSuccess(Boolean.valueOf(ok)); // DOORGAAN
-		}
-		
-	}
+//	final class DubbeleLogin implements LoginPresenter {
+//
+//		@Override
+//		public void otherlogin(AsyncCallback<Boolean> callback) {
+//			boolean ok = Window.confirm(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession));
+//			callback.onSuccess(Boolean.valueOf(ok)); // DOORGAAN
+//		}
+//		
+//	}
 	
 	
 	
@@ -188,7 +188,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		String http = Window.Location.getProtocol();
 		final SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
 		final SecuredUserSchoolLoginManager schoolManager = new SecuredUserSchoolLoginManager();
-		final DubbeleLogin ontdubbel = new DubbeleLogin();
+		final LoginPresenter ontdubbel = null; // new DubbeleLogin();
 		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwo/xmlrpc"){
 
 			public void loginMD5(final String name, final String password, final AsyncCallback<? super Map<String,Object>> callback)
