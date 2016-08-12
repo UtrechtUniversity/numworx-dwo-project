@@ -86,6 +86,8 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
     private JPanel jtbl;
     private TableRowSorter rowSorter;
 
+	private JTable jtable;
+
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
         private ImageIcon icon = new ImageIcon();
@@ -243,7 +245,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         jtbl = new JPanel();
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.PAGE_AXIS));
 
-        JTable jtable = new JTable();
+        jtable = new JTable();
         jtable.getTableHeader().setReorderingAllowed(false);
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.setFillsViewportHeight(true);
@@ -330,29 +332,19 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         studentRadio = new JRadioButton(TextMapper.getText(TextMapper.LBL_STUDENTS));
         studentRadio.setMnemonic(KeyEvent.VK_S);
         studentRadio.setActionCommand("students");
-        if (type == UserType.STUDENT) {
-            studentRadio.setSelected(true);
-        } else {
-            studentRadio.setSelected(false);
-        }
+        studentRadio.setSelected(type == UserType.STUDENT);
         studentRadio.addActionListener(this);
+
         teacherRadio = new JRadioButton(TextMapper.getText(TextMapper.LBL_TEACHERS));
         teacherRadio.setActionCommand("teachers");
-        studentRadio.setMnemonic(KeyEvent.VK_T);
-        if (type == UserType.TEACHER) {
-            teacherRadio.setSelected(true);
-        } else {
-            teacherRadio.setSelected(false);
-        }
+        teacherRadio.setMnemonic(KeyEvent.VK_T);
+        teacherRadio.setSelected(type == UserType.TEACHER);
         teacherRadio.addActionListener(this);
+
         schoolAdminRadio = new JRadioButton(TextMapper.getText(TextMapper.LBL_SCHOOLADMINS));
         schoolAdminRadio.setActionCommand("schooladmins");
-        studentRadio.setMnemonic(KeyEvent.VK_A);
-        if (type == UserType.SCHOOLADMIN) {
-            schoolAdminRadio.setSelected(true);
-        } else {
-            schoolAdminRadio.setSelected(false);
-        }
+        schoolAdminRadio.setMnemonic(KeyEvent.VK_A);
+        schoolAdminRadio.setSelected(type == UserType.SCHOOLADMIN);
         schoolAdminRadio.addActionListener(this);
 
         //Group the radio buttons.
@@ -467,6 +459,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 tableModel.init(userList, removeImage, studentImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
                 addTeachersButton.setVisible(false);
+                TableUtil.setJTableSizes(jtable);
 //                addStudentsButton.setVisible(true);
 
             } catch (Dwo2Exception ex) {
@@ -480,6 +473,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 tableModel.init(userList, removeImage, teacherImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
                 addTeachersButton.setVisible(true);
+                TableUtil.setJTableSizes(jtable);
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);
             }
@@ -491,6 +485,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                 tableModel.init(userList, removeImage, teacherImage, editImage, emptyImage);
                 tableModel.fireTableDataChanged();
                 addTeachersButton.setVisible(false);
+                TableUtil.setJTableSizes(jtable);
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);
             }

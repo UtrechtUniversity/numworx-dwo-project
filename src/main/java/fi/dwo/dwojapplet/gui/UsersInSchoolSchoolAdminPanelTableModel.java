@@ -43,10 +43,11 @@ class UsersInSchoolSchoolAdminPanelTableModel extends AbstractTableModel {
             userList = new ArrayList<T>();
         }
 
-        for (T u : userList) {
-            rows++; // one for each item in List
-        }
-
+//        for (T u : userList) {
+//            rows++; // one for each item in List
+//        }
+        rows = userList.size();
+        
         data = new Object[rows][8];
         int j = 0;
         for (T u : userList) {
