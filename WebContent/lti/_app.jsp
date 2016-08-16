@@ -128,7 +128,7 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
   String info = request.getPathInfo();
   if(info != null) {
   	if(info.startsWith("/sco/")) sconr = "#LoginPlace:s/" + info.substring(5);
-  	else if(info.startsWith("/course")) sconr = "#LoginPlace:c/" + info.substring(8);
+  	else if(info.startsWith("/course/")) sconr = "#LoginPlace:c/" + info.substring(8);
   }
 	String language = request.getParameter("launch_presentation_locale");
 	if(language != null) {
