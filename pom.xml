@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fi.servlet</groupId>
     <artifactId>DWOmAccess</artifactId>
-    <version>0.0.5.dwo2</version>
+    <version>0.0.6.dwo2</version>
     <packaging>war</packaging>
     <name>DWOmAccess</name>
     <description>HTML5 access to dwo-server</description>
@@ -180,12 +180,12 @@
         <repository>
             <id>release</id>
             <name>libs-release-local</name>
-            <url>http://ws-dev.fisme.science.uu.nl/artifactory/libs-release-local</url>
+            <url>https://repos.dwo.nl/artifactory/libs-release-local</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
             <name>libs-snapshot-local</name>
-            <url>http://ws-dev.fisme.science.uu.nl/artifactory/libs-snapshot-local</url>
+            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
         </snapshotRepository>
     </distributionManagement>
     <profiles>

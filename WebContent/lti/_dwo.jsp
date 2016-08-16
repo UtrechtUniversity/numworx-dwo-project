@@ -63,6 +63,13 @@
 	}
 %>
 <%
+	String pathInfo = request.getPathInfo();
+	if(pathInfo != null && pathInfo.endsWith("DWO.properties"))
+	{
+	  	response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	 	return;
+	}
+
 /* * /
   Enumeration en = request.getParameterNames();
   while (en.hasMoreElements()) {
@@ -125,10 +132,10 @@
   	getDbAccess().setCookie(request, response);
 %>
 <applet
-	code="fi.dwo.client.domain.DWO"
+	code="fi.dwo.dwojapplet.domain.DWO"
 	width="<%=width %>"
 	height="<%=height %>"
-	archive="dwo.jar"
+	archive="../DWOJApplet.jar"
 	mayscript
 	id="API"
 	name="API"
@@ -142,7 +149,6 @@
 	<param name="profile" value="<%= profile %>" >
 	<param name='cookies' value='false' >
 	<param name='logoutURL' value="<%=logoutURL %>" >
-	<param name="SERVLET" value="<%=servlet %>" >
 	<param name="IDEAS" value="<%=ideas %>">
 	<param name="jnlp_href" value="/dwo/<%=profile%>/<%=language%>/dwo.jnlp" />
 	<param name="codebase_lookup" value="false">	
