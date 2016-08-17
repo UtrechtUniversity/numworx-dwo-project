@@ -9,9 +9,18 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class RegisterPanel extends Composite implements HasText {
+import fi.dwo.gwt.lib.rest.CallManagers.MD5;
+import fi.dwo.rest.dom.entities.DomContext;
+import fi.dwo.rest.dom.entities.DomNewUser;
+import fi.dwo.rest.dom.entities.RoleType;
+import fi.dwo.rest.entities.RestNewUser;
+import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
+import fi.dwo.rest.locale.DwoLocalesForGWT;
+
+public class RegisterPanel extends Composite {
 
 	private static RegisterPanelUiBinder uiBinder = GWT
 			.create(RegisterPanelUiBinder.class);
@@ -21,27 +30,59 @@ public class RegisterPanel extends Composite implements HasText {
 
 	public RegisterPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
+		controller = new RegisterController();
 	}
+
+	private RegisterController controller;
+	
+	@UiField
+	DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
 
 	@UiField
-	Button button;
+	Button cancel, register;
+	@UiField
+	TextBox username, password, givenName, insertion, familyName, email, passwordAgain, schoolCode, schoolLogin;
 
-	public RegisterPanel(String firstName) {
-		initWidget(uiBinder.createAndBindUi(this));
-		button.setText(firstName);
+	@UiHandler("cancel")
+	void onCancel(ClickEvent e) {
+		Window.alert("cancel " + username.getText());
 	}
 
-	@UiHandler("button")
-	void onClick(ClickEvent e) {
-		Window.alert("Hello!");
+	@UiHandler("register")
+	void onRegister(ClickEvent e) {
+		DomNewUser domUser = new DomNewUser();
+		
+		domUser.setEmail(email.getText());
+		domUser.setFamilyName(familyName.getText());
+		domUser.setGivenName(givenName.getText());
+		domUser.setInsertion(insertion.getText());
+		
+		String p1 = password.getText();
+		String p2 = passwordAgain.getText();
+		if (!p1.equals( p2)) {
+			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_NewPasswordsDoNotMatch());
+			return;
+		}
+
+		domUser.setPassword(MD5.md5(password.getText()));
+		
+		domUser.setRole(RoleType.STUDENT);
+		String sLogin = schoolLogin.getText();
+		String sCode = schoolCode.getText();
+		if(sLogin.isEmpty()) {
+			sLogin = sCode = null;
+		}
+		domUser.setSchoolCode(sCode);
+		domUser.setSchoolLogin(sLogin);		
+		domUser.setUsername(username.getText());
+		
+		controller.register(domUser);
+		
 	}
 
-	public void setText(String text) {
-		button.setText(text);
+	public RegisterController getController() {
+		return controller;
 	}
-
-	public String getText() {
-		return button.getText();
-	}
+	
 
 }
