@@ -21,16 +21,21 @@ public class MainFrame extends Frame implements WindowListener, AppletStub, Appl
             try {
                 // Generate and register the OSXAdapter, passing it a hash of all the methods we wish to
                 // use as delegates for various com.apple.eawt.ApplicationListener methods
-                OSXAdapter.setQuitHandler(this, getClass().getDeclaredMethod("quit", (Class[]) null));
+                OSXAdapter.setQuitHandler(this, MainFrame.class.getDeclaredMethod("quit0", (Class[]) null));
                 // OSXAdapter.setAboutHandler(this, getClass().getDeclaredMethod("about", (Class[])null));
                 // OSXAdapter.setPreferencesHandler(this, getClass().getDeclaredMethod("preferences", (Class[])null));
                 // OSXAdapter.setFileHandler(this, getClass().getDeclaredMethod("loadImageFile", new Class[] { String.class }));
             }
             catch (Exception e) {
+            	e.printStackTrace();
             }
         }
     }
-
+    
+    final void quit0() {
+    	quit();
+    }
+    
     private Applet applet;
 
     public MainFrame(Applet applet, int width, int height) {
@@ -51,7 +56,8 @@ public class MainFrame extends Frame implements WindowListener, AppletStub, Appl
         quit();
     }
 
-    void quit() {
+    protected void quit() {
+    	System.err.println("quitting...");
         applet.stop();
         applet.destroy();
         dispose();
