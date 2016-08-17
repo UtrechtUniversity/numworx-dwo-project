@@ -1,0 +1,88 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the    -->
+<!-- browser's rendering engine into               -->
+<!-- "Standards Mode". Replacing this declaration  -->
+<!-- with a "Quirks Mode" doctype may lead to some -->
+<!-- differences in layout.                        -->
+
+<html>
+ <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=0, initial-scale=1"/>
+    <meta name="gwt:property" content="locale=nl" >
+    <!--                                                               -->
+    <!-- Consider inlining CSS to reduce the number of requested files -->
+    <!--                                                               -->
+  
+   
+    <!--                                           -->
+    <!-- Any title is fine                         -->
+    <!--                                           -->
+    <title>GeoGebra to JavaScript port</title>
+    
+    <!--                                           -->
+    <!-- This script loads your compiled module.   -->
+    <!-- If you add any GWT meta tags, they must   -->
+    <!-- be added before this line.                -->
+    <!--                                           -->
+  </head>
+
+  <!--                                           -->
+  <!-- The body can have arbitrary html, or      -->
+  <!-- you can leave the body empty if you want  -->
+  <!-- to create a completely dynamic UI.        -->
+  <!--                                           -->
+  <body style="margin: 0; overflow: hidden" >
+<script type='text/javascript' language='javascript' src='https://app.dwo.nl/apps/geogebra/4.4/web/web.nocache.js' ></script>	  
+<script type="text/javascript">
+
+	function ggbLog(cmd, from, to) {
+		console.log("GGB: " + cmd + " in:" + from + " out:" + to);
+	}
+
+
+	function addListener(obj)    {ggblog("add", obj, obj)}
+	function removeListener(obj) {ggbLog("remove", obj, obj)}
+	function clearListener()  {ggbLog("clear", null, null)}
+	function renameListener(from,to) {ggbLog("rename", from, to)}
+    function updateListener(obj) {ggbLog("update", obj, obj)}
+	//function updateObjectListener(obj) {ggbLog("updateObject", obj, obj)}
+
+
+	function ggbOnInit() {
+		//===Js code starts here===//
+		var applet = document.ggbApplet;		
+		window.ggbApplet = applet;
+		try { 
+			window.install(applet, window.viewer)
+			applet.registerAddListener("addListener");
+			applet.registerRemoveListener("removeListener");
+			applet.registerUpdateListener("updateListener");
+			applet.registerClearListener("clearListener");
+			applet.registerRenameListener("renameListener")
+		} catch(err) {
+			console.log(err);
+		}
+	}
+	
+	function writeGGB() {
+		if( window.install ) 
+		{
+			article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: 0px;' "
+			article_post = "></article>"	
+			result = window.install(null, window.viewer)
+			document.getElementById('hiero').innerHTML =  ( article_pre + result + article_post );
+			web.succeeded = web()
+		} else {
+			console.log("window.install not defined")
+			window.setTimeout("writeGGB()",50);
+		}
+	}
+	window.setTimeout("writeGGB()",50);
+</script>
+<div id='hiero'>
+<article class='geogebraweb' style='border: 1px solid black; display:inline-block;' data-param-language='nl' data-param-ggbbase64=''></article>
+</div>
+
+ </body>
+</html>
