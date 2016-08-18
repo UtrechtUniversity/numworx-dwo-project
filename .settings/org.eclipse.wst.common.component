@@ -5,8 +5,8 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <property name="java-output-path" value="/Register/target/classes"/>
-        <property name="context-root" value="register"/>
         <property name="component.inclusion.patterns" value="*.css,*gwt/**,Register.html"/>
         <property name="component.exclusion.patterns" value="*gwt/"/>
+        <property name="context-root" value="dwo#register"/>
     </wb-module>
 </project-modules>

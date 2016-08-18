@@ -35,36 +35,33 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>register</finalName>
+    <finalName>dwo#register</finalName>
     <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
-    <plugins>
-    	 <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warSourceDirectory>src/main/webapp</warSourceDirectory>
-                </configuration>
-            </plugin>
-    	            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <version>${gwtVersion}</version>
-                <configuration>
-                    <module>nl.uu.fi.dwo.register.Register</module>
-                    <runTarget>${project.artifactId}.html</runTarget>
-                    <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
- 
-    
-    
-    </plugins>
+	<plugins>
+		<plugin>
+			<artifactId>maven-war-plugin</artifactId>
+			<configuration>
+				<warSourceDirectory>src/main/webapp</warSourceDirectory>
+			</configuration>
+		</plugin>
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>gwt-maven-plugin</artifactId>
+			<version>${gwtVersion}</version>
+			<configuration>
+				<module>nl.uu.fi.dwo.register.Register</module>
+				<runTarget>${project.artifactId}.html</runTarget>
+				<extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
+			</configuration>
+			<executions>
+				<execution>
+					<goals>
+						<goal>compile</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+	</plugins>
   </build>
   <parent>
   	<groupId>fi.parentgwt</groupId>
