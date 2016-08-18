@@ -36,12 +36,19 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		}
 
 	}
+	
+	private native void setupConsole() /*-{
+		window.console = $wnd.console;
+	}-*/;
+	
 	private static final String LAUNCH_DATA = "cmi.launch_data";
 	private static Logger logger = Logger.getLogger("WiskOpdrPlayer");
 	protected ViewModuleViewImpl view;
 
 	@Override
 	public void onModuleLoad() {
+		setupConsole();  // neem console op
+		
 //		VerticalPanel customLogArea = null;
 //		if( LogConfiguration.loggingIsEnabled())	
 //		{
