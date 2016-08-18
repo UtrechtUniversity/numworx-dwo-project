@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -135,6 +136,11 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 		super.blur();
 		resizeScrollPanel(0);
 	}
+	
+	private void softBlur() {
+		setVisible(false);
+		resizeScrollPanel(0);
+	}
 
 	private boolean upper;
 	
@@ -172,5 +178,19 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 		switchGreek();
 	}
 	
+	private EnterType type = EnterType.APPLY;
+
+	@Override
+	public void setEnterType(EnterType type) {
+		EnterType old = this.type;
+		this.type = type;
+		if ( old != type ) {
+			// actie
+			switch(type) {
+			case APPLY: switch123(); focus(); break;
+			case ENTER: softBlur(); break;
+			}
+		}
+	}
 	
 }

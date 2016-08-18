@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -195,6 +196,21 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	@Override
 	public void setWriteMathSet(int nr) {
 		pen.setWriteMathSet(nr);
+	}
+
+	private EnterType type = EnterType.APPLY;
+
+	@Override
+	public void setEnterType(EnterType type) {
+		EnterType old = this.type;
+		this.type = type;
+		if ( old != type ) {
+			// actie
+			switch(type) {
+			case APPLY: switch123(); break;
+			case ENTER: switchABC(); break;
+			}
+		}
 	}
 
 }
