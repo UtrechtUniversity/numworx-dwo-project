@@ -60,7 +60,7 @@ public class StudentsInSchoolClassSchoolAdminPanelProperties {
 public List<DomStudent> getStudentsInSchoolNotInClass(DomSchoolClass sc) throws Dwo2Exception {
         List<DomStudent> classStudents = SecureSchoolAdminSchoolClassManager.getStudentsInSchoolClass(sc);
         List<DomStudent> schoolStudents = SecureSchoolAdminSchoolClassManager.getStudentsInSchool();
-        List<DomStudent> result = new ArrayList<>(Math.max(0,schoolStudents.size() - classStudents.size()));
+        List<DomStudent> result = new ArrayList<DomStudent>(Math.max(0,schoolStudents.size() - classStudents.size()));
         for (DomStudent t : schoolStudents) {
             Boolean flag = true; //add student to result list
             for (DomStudent c : classStudents) {

@@ -59,7 +59,7 @@ public class UsersSchoolClassesSchoolAdminPanelProperties {
             default:
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Switch statement failed to cover UserTypes.");
         }
-        List<DomSchoolClass> result = new ArrayList<>();
+        List<DomSchoolClass> result = new ArrayList<DomSchoolClass>();
         for (DomSchoolClass t : scList) {
             boolean flag = true;
             for (DomSchoolClass c : classesList) {

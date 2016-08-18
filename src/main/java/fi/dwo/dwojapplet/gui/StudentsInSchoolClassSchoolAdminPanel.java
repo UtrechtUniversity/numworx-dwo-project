@@ -290,7 +290,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
      * Creates a new ClassPanel which shows a list of classes.
      *
      */
-    public StudentsInSchoolClassSchoolAdminPanel(DomSchoolClass sc) throws Dwo2Exception {
+    public StudentsInSchoolClassSchoolAdminPanel(final DomSchoolClass sc) throws Dwo2Exception {
         super(null);
         this.schoolClass = sc;
         this.setSize(480, 500);

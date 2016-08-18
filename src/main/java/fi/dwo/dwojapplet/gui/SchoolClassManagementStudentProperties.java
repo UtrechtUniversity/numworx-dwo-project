@@ -84,7 +84,7 @@ public class SchoolClassManagementStudentProperties {
     public List<DomSchoolClass> getUnregisteredSchoolClasses() throws Dwo2Exception {
         List<DomSchoolClass> schoolsClasses = getSchoolsClasses();
         List<DomSchoolClass> studentsClasses = getStudentsSchoolClasses();
-        List<DomSchoolClass> result = new ArrayList<>(schoolsClasses.size() - studentsClasses.size());
+        List<DomSchoolClass> result = new ArrayList<DomSchoolClass>(schoolsClasses.size() - studentsClasses.size());
         for (DomSchoolClass c : schoolsClasses) {
             Boolean flag = true; //add teacher to result list
             for (DomSchoolClass sc : studentsClasses) {

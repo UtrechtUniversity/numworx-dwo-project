@@ -248,7 +248,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
      * @param type
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
-    public UsersSchoolClassesSchoolAdminPanel(DomUser user, UserType type) throws Dwo2Exception {
+    public UsersSchoolClassesSchoolAdminPanel(final DomUser user, UserType type) throws Dwo2Exception {
         super(null);
         this.setDomUserAndType(user, type);
         this.setSize(480, 500);

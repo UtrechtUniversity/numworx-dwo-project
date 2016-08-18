@@ -52,7 +52,7 @@ public class SimpleDigestHttpClient {
             //opaque="5AF4D59F74F810FC2644FDD72C1FCFE8"
             String digestField = conn.getHeaderField("WWW-Authenticate");
             String[] digestFields = digestField.split(",");
-            HashMap<String, String> digestMap = new HashMap<>();
+            HashMap<String, String> digestMap = new HashMap<String,String>();
             for (String field : digestFields) {
                 String[] duple = new String[2];
                 duple = field.split("=");

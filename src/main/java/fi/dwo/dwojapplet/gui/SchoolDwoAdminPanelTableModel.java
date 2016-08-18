@@ -34,7 +34,7 @@ class SchoolDwoAdminPanelTableModel extends AbstractTableModel {
         List<DomSchool4DwoAdmin> sList = prop.getSchoolList();
         int rows = 0;
         if (sList == null) {
-            sList = new ArrayList<>();
+            sList = new ArrayList<DomSchool4DwoAdmin>();
         }
 
         for (DomSchool4DwoAdmin s : sList) {

@@ -27,7 +27,7 @@ class UsersSchoolClassesSchoolAdminPanelTableModel extends AbstractTableModel {
 
         int rows = 0;
         if (classList == null) {
-            classList = new ArrayList<>();
+            classList = new ArrayList<DomSchoolClass>();
         }
 
         for (DomSchoolClass u : classList) {

@@ -200,7 +200,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
      * Creates a new ClassPanel which shows a list of classes.
      *
      */
-    public TeachersInSchoolClassTeacherPanel(DomSchoolClass sc) throws Dwo2Exception {
+    public TeachersInSchoolClassTeacherPanel(final DomSchoolClass sc) throws Dwo2Exception {
         super(null);
         this.schoolClass = sc;
         this.setSize(480, 500);

@@ -1523,9 +1523,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 } catch (Exception e) {
                 }
             }
-            JVMChecker jvmChecker = new JVMChecker(this);
-            jvmChecker.check();
         }
+        JVMChecker jvmChecker = new JVMChecker(this);
+        jvmChecker.check();
 
         try {
             dwoProfile = (DwoProfile) PersistenceFacade.instance().get(dwoProfileID, DwoProfile.class);
