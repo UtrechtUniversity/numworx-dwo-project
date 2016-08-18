@@ -62,8 +62,8 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                     <executable>${jdk}/bin/javac</executable>
                     <fork>false</fork>
                     <encoding>${project.build.sourceEncoding}</encoding>

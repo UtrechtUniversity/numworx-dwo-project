@@ -5,13 +5,18 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
 
-public class JVMChecker extends Frame implements WindowListener, ActionListener {
+import javax.swing.JOptionPane;
+
+import fi.beans.stringutils.StringUtils;
+
+public class JVMChecker extends Dialog implements WindowListener, ActionListener {
 
     private TekstPanel tp;
     private Button downloadKnop;
     private Applet applet;
 
     public JVMChecker(Applet ap) {
+    	super(JOptionPane.getFrameForComponent(ap), true);
         applet = ap;
         setBounds(300, 200, 300, 300);
         setBackground(new Color(255, 200, 200));
@@ -44,14 +49,28 @@ public class JVMChecker extends Frame implements WindowListener, ActionListener 
 
     public void check() {
         boolean jvmOK = true;
-        if (System.getProperty("java.vendor").equals("Microsoft Corp.")) {
+        final String vendor = System.getProperty("java.vendor");
+        final String version = System.getProperty("java.specification.version");
+        
+		if (vendor.equals("Microsoft Corp.")) {
             jvmOK = false;
-        } else if (System.getProperty("java.vendor").equals("Sun Microsystems Inc.")
-                && System.getProperty("java.specification.version").equals("1.1")) {
-            jvmOK = false;
-        } else if (System.getProperty("java.vendor").equals("Sun Microsystems Inc.")
-                && System.getProperty("java.specification.version").equals("1.2")) {
-            jvmOK = false;
+        } else {
+        	// format a.b.c.
+        	String[] numbers = StringUtils.split(version, ".");
+        	try {
+        		int major = Integer.parseInt(numbers[0]);
+        		if(major < 1) 
+        			jvmOK = false;
+        		else if(major > 1)
+        			jvmOK = true;
+        		else {
+        			int minor = Integer.parseInt(numbers[1]);
+        			jvmOK = minor >= 8;
+        		}
+        	
+        	} catch(Exception _ignore) {
+        		jvmOK = false;
+        	}
         }
         if (!jvmOK) {
             this.show();
@@ -92,7 +111,7 @@ public class JVMChecker extends Frame implements WindowListener, ActionListener 
     }
 
     public void windowDeactivated(WindowEvent e) {
-        dispose();
+        
     }
 
 }

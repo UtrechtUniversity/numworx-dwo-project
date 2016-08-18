@@ -29,7 +29,7 @@ public class Dwo2ExceptionJavaTranslator implements DWO2ExceptionTranslatorInter
     @Override
     public String encodeJSON(Dwo2ExceptionCode code, String message) {
         Genson genson = new Genson();
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("Dwo2ExceptionCode", code.name());
         map.put("msg", message);
         String json = genson.serialize(map);
