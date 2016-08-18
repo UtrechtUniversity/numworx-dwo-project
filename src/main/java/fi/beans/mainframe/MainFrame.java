@@ -27,7 +27,6 @@ public class MainFrame extends Frame implements WindowListener, AppletStub, Appl
                 // OSXAdapter.setFileHandler(this, getClass().getDeclaredMethod("loadImageFile", new Class[] { String.class }));
             }
             catch (Exception e) {
-            	e.printStackTrace();
             }
         }
     }
@@ -57,7 +56,6 @@ public class MainFrame extends Frame implements WindowListener, AppletStub, Appl
     }
 
     protected void quit() {
-    	System.err.println("quitting...");
         applet.stop();
         applet.destroy();
         dispose();
