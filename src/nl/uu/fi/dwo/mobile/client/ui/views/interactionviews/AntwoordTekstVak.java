@@ -48,6 +48,11 @@ import java.util.Vector;
 
 
 
+
+
+
+
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -61,6 +66,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.FacetAware.Type;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -84,6 +90,8 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -108,7 +116,7 @@ import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.repr.ContentMathML;
 
 
-public class AntwoordTekstVak implements InteractionView, FacetAware, TekstElementWithFont {
+public class AntwoordTekstVak implements InteractionView, FacetAware, TekstElementWithFont, CBookEventListener {
 
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
@@ -116,7 +124,8 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 
 	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
 	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
-	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
+	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2);
+	private static final String TEXT = "text"; 
 
 	private Map<String, Object> launchState; 
 	OpdrNavIF comRoot;
@@ -328,6 +337,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) 
 		    	{	kijkNa();
 		    		setAttempt();
+		    		fireText();
 		    	}
 			}
 		});
@@ -339,7 +349,12 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				comRoot.getKeyboard().setEditor(null);
 				
 			}});
-		
+		antwoordTF.addBlurHandler(new BlurHandler() {
+
+			@Override
+			public void onBlur(BlurEvent event) {
+				fireText();
+			}});
 		
 		//antwoordTF.setBorder(BorderFactory.createLineBorder(new Color(153, 153, 153)));
 		//antwoordTF.setBounds(0, 0, 80, 21);
@@ -349,6 +364,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 
 			@Override
 			public void enter() {
+				fireText();
 				if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
 				{
 					return; 
@@ -429,13 +445,17 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				goedKrulHalfImage.setVisible(false);
 				foutKruisImage.setVisible(false);
 				feedbackLabel.setVisible(false);
-				feedbackPanel.hide();
-				
+				feedbackPanel.hide();			
 			}
-			
-			
-			
-			
+
+			/* (non-Javadoc)
+			 * @see nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor#setCurrentElementRepaint()
+			 */
+			@Override
+			public void setCurrentElementRepaint() {
+				super.setCurrentElementRepaint();
+				fireText();
+			}
 		} ;
 		//hier toetsenbord aan vastmaken. WIM??
 		formuleVak.setFormuleToolBijFocus(formuleToolBijFocus);
@@ -575,6 +595,24 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		
 	}
 	
+	
+	public String getText() {
+		return formuleMode ? ("$f" + formuleVak.toString() + "@") : antwoordTF.getText();
+	}
+	
+	
+	private void fireText() {
+		if(comRoot.hasListeners(TEXT))
+		{	Map<String, String> parameters = new HashMap<String,String>();
+			parameters.put("content", getText());
+			if(logID != null)
+				parameters.put("logID", logID);
+			CBookEvent event = new CBookEvent(this, TEXT, parameters);
+			comRoot.fireEvent(event);
+		}
+	}
+
+
 	public void voegFeedbackSluitKnopToe()
 	{
 		feedbackTekst.add(feedbackSluitKnop);
@@ -660,10 +698,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		ingevuld = this.ingevuld;
 		nagekeken = this.nagekeken;
 		isVeranderdNaNakijken = this.isVeranderdNaNakijken;
-		if (formuleMode)
-			antwoord = "$f" + formuleVak.toString() + "@"; // Wiskopdr heeft $f ... @
-		else
-			antwoord = antwoordTF.getText();
+		antwoord = getText();
 		attempts = this.attempts;
 		attemptsCount = this.attemptsCount;
 		errorCount = this.errorCount;
@@ -674,7 +709,9 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 
 			String logString = "";
 			if (formuleMode)
+			{
 				logString = formuleVak.toString();
+			}
 			else
 				logString = antwoordTF.getText();
 
@@ -733,17 +770,23 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		this.attemptsCount = attemptsCount;
 		this.errorCount = errorCount;
 
+		setText(antwoord);
+
+		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
+			kijkNa(true, false);
+	}
+
+
+	public void setText(String antwoord) {
 		if (formuleMode)
 		{
 			if(antwoord.startsWith("$f") && antwoord.endsWith("@")) // vanaf nu altijd!
 				antwoord = antwoord.substring(2, antwoord.length()-1);
+			formuleVak.clearAll();
 			formuleVak.insert(antwoord);
 		}
 		else
 			antwoordTF.setText(antwoord);
-
-		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
-			kijkNa(true, false);
 	}
 	
 	public void setAttempt()
@@ -1087,6 +1130,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		this.comRoot = comRoot;
 		mode = comRoot.getMode();
 		if(logging != null) logging.setCommunicationRoot(comRoot);
+		comRoot.addCBookEventListener(TEXT, this);
 	}
 
 
@@ -1194,6 +1238,18 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	@Override
 	public void setFontStyle(int font_style) {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if(TEXT.equals(event.getCommand())) 
+		{
+			String content = (String) event.getParameter("content");
+			if(content == null) content = "";
+			setText(content);
+		}
 		
 	}
 	
