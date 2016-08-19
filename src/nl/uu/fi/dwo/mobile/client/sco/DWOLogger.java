@@ -177,4 +177,8 @@ public class DWOLogger implements Logging {
 	} // put objects into state
 
 	public void setStateHook(Map<String,Object> state) {} // get objects from state (if global logging on)
+
+	public Logging getLogger() {
+		return delegate == null ? this : delegate;
+	}
 }

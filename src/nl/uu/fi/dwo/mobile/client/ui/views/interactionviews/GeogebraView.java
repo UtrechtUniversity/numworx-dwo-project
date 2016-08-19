@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
@@ -93,8 +94,24 @@ public class GeogebraView implements InteractionView, LoadHandler
 		return ggb;
 	}
 
+	private void ggbLog(String action, String name, String definition,
+			String value, String type) {
+		if (dwologger != null) {
+			Map<String, String> result = new HashMap<String, String>();
+			result.put("action", action);
+			result.put("label", name);
+			result.put("definition", definition);
+			result.put("value", value);
+			result.put("type", type);
+			dwologger.getLogger().log(result);
+		}
+	}	
+	
 	public static native Object getApplet(Object wnd, GeogebraView view) /*-{
 		wnd.viewer = view;
+		wnd.ggbLog  = function (viewer, action,name, definition, value, type) {
+			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView::ggbLog(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(action,name, definition, value, type)
+		}
 		wnd.install = function(o, viewer) {
 			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView::install(Ljava/lang/Object;)(o)
 		}
@@ -153,7 +170,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if(ggbMap.containsKey("scoreMax")) 
 			scoreMax = ggbMap.getInt("scoreMax");
 				
-		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
+		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebraMC2.html?locale=" + StubView.getLocale());
 		frame.setStylePrimaryName(".gwt-StubView");
 		frame.addStyleDependentName("borderless");
 		
