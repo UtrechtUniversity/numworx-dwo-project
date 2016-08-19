@@ -702,7 +702,53 @@ public class FormuleParser
 				}
 			}
 		}
-
+		
+		String[] fMetMaalBasis 	= {
+		 		"s*q*r*t*", 
+				"r*n*d*", 
+				"r*n*s*", 
+				"s*g*f*", 
+				"r*n*q*", 
+				"a*b*s*", 
+				"c*o*n*j*u*g*", 
+				"b*i*n*o*m*c*d*f*",
+				"b*i*n*o*m*p*d*f*",
+				"p*o*i*s*s*o*n*c*d*f*",
+				"p*o*i*s*s*o*n*p*d*f*",
+				"b*i*n*",
+				"d*i*f*p*a*r*",
+				"d*i*f*f*e*r*e*n*t*i*a*a*l*",
+				"d*i*f*",
+				"d*i*f*",
+				"p*r*m*",
+				"s*i*g*",
+				"l*i*m*",
+				"i*n*t*",
+				"g*c*d*",
+				"m*i*n*",
+				"m*a*x*",
+				"n*o*r*m*a*l*c*d*f*",
+				"i*n*v*N*o*r*m*",
+				"i*n*v*n*o*r*m*",
+				"p*r*v*",
+				"a*r*c*s*i*n*",
+				"a*r*c*s*i*n",
+				"a*r*c*c*o*s*",
+				"a*r*c*c*o*s",
+				"a*r*c*t*a*n*",
+				"a*r*c*t*a*n",
+				"s*i*n*",
+				"s*i*n",
+				"c*o*s*",
+				"c*o*s",
+				"t*a*n*",
+				"t*a*n",
+				"l*o*g*",
+				"l*o*g",
+				"l*n*",
+				"l*n"
+				};
+/*
 		index = 0;
 		while (index > -1)
 		{
@@ -991,9 +1037,16 @@ public class FormuleParser
 			if (index > -1)
 				s = s.substring(0, index) + "ln" + s.substring(index + 3);
 		}
-		
+*/		
 		String[] fMetMaalFunctie = FunctieMV.getFunctieMVDefSet().geefFunctieMVNamenSubst();
+		String[] fMetMaal = new String[fMetMaalBasis.length + fMetMaalFunctie.length];
+		for(int i=0 ; i<fMetMaalBasis.length ; i++)
+		{	fMetMaal[i] = fMetMaalBasis[i];
+		}
 		for(int i=0 ; i<fMetMaalFunctie.length ; i++)
+		{	fMetMaal[i+fMetMaalBasis.length] = fMetMaalFunctie[i];
+		}
+		/*for(int i=0 ; i<fMetMaalFunctie.length ; i++)
 		{	int fLength = fMetMaalFunctie[i].length();
 			String fZonderMaal = fMetMaalFunctie[i].replace("*", "");
 			index = 0;
@@ -1001,8 +1054,23 @@ public class FormuleParser
 			{	index = s.indexOf(fMetMaalFunctie[i]);
 				if(index >-1)s = s.substring(0,index) + fZonderMaal + s.substring(index+fLength);
 			}
+		}*/
+		for(int i=0 ; i<fMetMaal.length ; i++)
+		{	
+			int fLength = fMetMaal[i].length();
+			String fZonderMaal = fMetMaal[i].replace("*", "");
+			index = 0;
+			while(index >-1)
+			{	index = s.indexOf(fMetMaal[i]);
+				if(index >-1)s = s.substring(0,index) + fZonderMaal + s.substring(index+fLength);
+			}
 		}
-		
+		index = 0;
+		while(index >-1)
+		{	
+			index = s.indexOf("invnorm");
+			if(index >-1)s = s.substring(0,index) + "invNorm" + s.substring(index+7);
+		}
 		index = 0;
 		while (index > -1)
 		{
@@ -1017,7 +1085,35 @@ public class FormuleParser
 			if (index > -1)
 				s = s.substring(0, index) + "-" + s.substring(index + 2);
 		}
-
+		
+		String[] gfs = {"sin","cos","tan","log","ln"};
+		for(int j=0 ; j<gfs.length ; j++)
+		{
+			index = 0;
+			while(index >-1)
+			{	int lf = gfs[j].length()+2;
+				index = s.indexOf(gfs[j]+"^(", index);
+				if(index==-1) break;
+				boolean scheidingGepaseerd = false;			
+				int niv = 1;
+				for(int i=index+lf ; i<s.length() ; i++)
+				{	
+					if(s.charAt(i)=='(')
+					{	niv++;
+					}
+					else if(s.charAt(i)==')')
+					{	niv--;
+					}
+					if(niv==0 && s.charAt(i)==')' && scheidingGepaseerd)
+					{	s = s.substring(0,index) + "(" + s.substring(index,i+1) + ")" + s.substring(i+1);
+						//System.out.println("correctie");
+						break;
+					}
+					if(!scheidingGepaseerd)scheidingGepaseerd = (s.length()>i+3 && niv==0 && s.substring(i, i+3).equals(")*("));
+				}
+				if(index>-1)index = index+lf;
+			}/**/	
+		}
 		return s;
 	}
 
@@ -1370,6 +1466,18 @@ public class FormuleParser
 				}
 				//else return exp;
 			}
+			
+			String[] maalFnct = {
+					"*sin",
+					"*cos",
+					"*tan",
+					"*arcsin",
+					"*arccos",
+					"*arctan",
+					"*log",
+					"*ln"
+					};
+			/*
 			niv = 0;
 			if (s.length() > 4)
 			{
@@ -1572,7 +1680,28 @@ public class FormuleParser
 					//else return exp;
 				}
 			}
-
+*/
+			for(int j=0 ; j<maalFnct.length ; j++)
+			{	int maalFnctLength = maalFnct[j].length();
+				niv = 0;
+				if(s.length()>maalFnctLength)
+				{	for(int i=s.length()-1 ; i>-1 ; i--)
+					{	if(s.charAt(i)==')')
+						{	niv++;
+						}
+						else if(s.charAt(i)=='(')
+						{	niv--;
+						}
+						else if(i<s.length()-maalFnctLength && s.substring(i,i+maalFnctLength).equals(maalFnct[j]) && niv==0)
+						{	Expressie e1 = parse(s.substring(0,i));
+							Expressie e2 = parse(s.substring(i+1));
+							if(e1==null || e2==null)return null;
+							return new Vermenigvuldiging(e1,e2);
+						}
+					}
+				}
+			}
+			
 			niv = 0;
 			if (s.length() > 4 && s.substring(0, 4).equals("sin^"))
 			{
@@ -1952,13 +2081,6 @@ public class FormuleParser
 					return null;
 				return new Wortel(e);
 			}
-			else if (s.length() > 3 && s.substring(0, 3).equals("abs"))
-			{
-				Expressie e = parse(s.substring(3, s.length()));
-				if (e == null)
-					return null;
-				return new Abs(e);
-			}
 			else if (s.length() > 6 && s.substring(0, 6).equals("conjug"))
 			{
 				Expressie e = parse(s.substring(6, s.length()));
@@ -2063,6 +2185,12 @@ public class FormuleParser
 				Expressie[] expressies = splitExpressieParameters(string,'_',2);
 				if(expressies==null) return null;
 				return new DiffPartial(expressies[0],expressies[1]);
+			}
+			else if(s.length()>13 && s.substring(0,13).equals("differentiaal"))
+			{	
+				Expressie e = parse(s.substring(13,s.length()));
+	            if(e==null)return null;
+	            return new Differentiaal(e);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("dif"))
 			{
@@ -2417,6 +2545,11 @@ public class FormuleParser
 				return new Ln(e);
 			}/**/
 
+			else if(s.length()>3 && s.substring(0,3).equals("abs"))
+			{	Expressie e = parse(s.substring(3,s.length()));
+				if(e==null)return null;
+				return new Abs(e);
+			}
 			//is het een ln
 			else if (s.length() > 0 && s.charAt(s.length() - 1) == ('!'))
 			{
