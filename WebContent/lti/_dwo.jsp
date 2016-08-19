@@ -135,7 +135,7 @@
 	code="fi.dwo.dwojapplet.domain.DWO"
 	width="<%=width %>"
 	height="<%=height %>"
-	archive="../DWOJApplet.jar"
+	archive="../DWOJApplet.jar, wiskopdr.jar"
 	mayscript
 	id="API"
 	name="API"
@@ -150,8 +150,10 @@
 	<param name='cookies' value='false' >
 	<param name='logoutURL' value="<%=logoutURL %>" >
 	<param name="IDEAS" value="<%=ideas %>">
-	<param name="jnlp_href" value="/dwo/<%=profile%>/<%=language%>/dwo.jnlp" />
-	<param name="codebase_lookup" value="false">	
+<%-- 	<param name="jnlp_href" value="/dwo/<%=profile%>/<%=language%>/dwo.jnlp" /> --%>
+	<param name="codebase_lookup" value="false">
+	<param name="classloader_cache" value="false">
+		
 	<%= getDbAccess().getDeepLink(request.getPathInfo()) %>
 </applet>
 </body>

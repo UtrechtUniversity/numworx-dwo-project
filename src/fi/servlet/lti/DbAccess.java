@@ -100,6 +100,9 @@ public class DbAccess {
 		String role = "STUDENT";
 		if(roles != null && roles.toLowerCase().contains("instructor"))
 			role = "TEACHER";
+// teaching assistant
+		if(roles != null && roles.toLowerCase().contains("teaching"))
+			role = "TEACHER";
 		
 		String authTokenStr;
 		try {
