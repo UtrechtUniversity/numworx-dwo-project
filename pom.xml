@@ -263,7 +263,12 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>        
-        
+        <dependency>
+    		<groupId>netscape.javascript</groupId>
+    		<artifactId>mayscript</artifactId>
+    		<version>1.0.0</version>
+    		<scope>provided</scope>
+		</dependency>
     </dependencies>
     
     <distributionManagement>
