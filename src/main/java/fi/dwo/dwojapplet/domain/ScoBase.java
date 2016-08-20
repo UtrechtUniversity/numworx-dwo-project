@@ -278,6 +278,15 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
             iDataModelElement = iDataModelElement.substring(4); // skip cmi.
             return ok(to2004Time(from1_2Time(dwo.LMSGetValue(this, user, iDataModelElement))));
         }
+// MC2 feature
+        if(iDataModelElement.startsWith("dme."))
+        {
+        	if("dme.team".equals(iDataModelElement))
+        	{	if(user.getInClass() != null)
+        		return ok(user.getInClass().getName());
+        	}
+        	return ko("");
+        }
         return ok(dwo.LMSGetValue(this, user, iDataModelElement));  // null -> 101 else ok()
     }
 
