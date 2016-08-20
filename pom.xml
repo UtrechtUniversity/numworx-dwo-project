@@ -369,11 +369,12 @@
                             <Caller-Allowable-Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Caller-Allowable-Codebase>
                             <Application-Name>DWO v2</Application-Name>
                             <Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>                       		
+                            <Bundle-Name>DWO v2</Bundle-Name>
             				<Bundle-SymbolicName>fi.dwo.dwojapplet.domain.DWO</Bundle-SymbolicName>
             				<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-            				<Fragment-Host>fi.dwo.dwojapplet</Fragment-Host>
+<!--             				<Fragment-Host>fi.dwo.dwojapplet</Fragment-Host> -->
 							<Import-Package>com.apple.eawt;resolution:=optional,javax.swing,javax.swing.border,javax.swing.event,javax.swing.filechooser,javax.swing.plaf,javax.swing.plaf.basic,javax.swing.plaf.metal,javax.swing.table,javax.swing.text,javax.swing.text.html,javax.swing.tree</Import-Package>
-							<Export-Package>fi.beans.scorm,fi.beans.copyright</Export-Package>
+							<Export-Package>fi.beans.scorm,fi.beans.xmlrpc,fi.dwo.dwojapplet.domain,fi.beans.mainframe,fi.dwo.dwojapplet.system</Export-Package>
                         </manifestEntries>
                     </archive>
                     <descriptorRefs>

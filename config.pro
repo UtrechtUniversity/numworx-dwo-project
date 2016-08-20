@@ -190,7 +190,11 @@
 }
 
 # Keep - Applets. Keep all extensions of java.applet.Applet.
--keep public class * extends java.applet.Applet
+-keep public class * extends java.applet.Applet {
+	<init>();
+	<init>(java.lang.String[]);
+}
+
 
 
 

@@ -14,7 +14,7 @@ public class Loader extends URLClassLoader {
 
     private static final Logger LOG = Logger.getLogger(Loader.class.getName());
 
-    static URL urlPrefix;
+    private static URL urlPrefix;
 
     static {
         // set default directory for jars
@@ -39,8 +39,12 @@ public class Loader extends URLClassLoader {
         super(array, parent);
     }
 
-    static class LoaderCreator {
-    	ClassLoader create(String jar) {
+    public static class LoaderCreator {
+    	protected URL getPrefix() {
+    		return urlPrefix;
+    	}
+    	
+    	protected ClassLoader create(String jar) {
             URL u = null;
             try {
                 u = new URL(urlPrefix, jar);
@@ -55,7 +59,7 @@ public class Loader extends URLClassLoader {
         }
     }
     
-    static LoaderCreator instance = new LoaderCreator();
+    public static LoaderCreator instance = new LoaderCreator();
 
     public static ClassLoader create(String jar) {
         return instance.create(jar);
