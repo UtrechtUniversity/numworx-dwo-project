@@ -32,12 +32,7 @@
     <methods>;
 }
 
--keep class fi.dwo.dwojapplet.system.text.* {
-    <fields>;
-    <methods>;
-}
-
--keep class fi.shaded.wiskopdr2.text.* {
+-keep class fi.dwo.dwojapplet.system.* {
     <fields>;
     <methods>;
 }

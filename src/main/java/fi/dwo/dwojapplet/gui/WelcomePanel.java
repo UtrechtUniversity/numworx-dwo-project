@@ -7,11 +7,13 @@ import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.BUILD;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.rest.dom.entities.DomLoginContext;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Font;
@@ -26,12 +28,11 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Map;
-import java.util.Optional;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -147,18 +148,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         dialog.setBounds(getWidth() / 2 - 350, 0, 700, getHeight());
         this.add(dialog);
 
-        String version = "unknown";
-        String revisie = "unknown";
-        URLClassLoader cl = (URLClassLoader) getClass().getClassLoader();
-        try {
-            URL url = cl.findResource("META-INF/MANIFEST.MF");
-            Manifest manifest = new Manifest(url.openStream());
-            // do stuff with it
-            version = manifest.getMainAttributes().getValue("Implementation-Version");
-            revisie = manifest.getMainAttributes().getValue("Implementation-Build");
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, "Can't read Implementation-Version from manifest.mf.");
-        }
+        String version = BUILD.version;
+        String revisie = BUILD.buildNumber;
         fiButton = new FIButton("DWO", new String[]{"versie-info: " + version,
         	"revisie: " + revisie, 
             "auteur: Peter Boon",

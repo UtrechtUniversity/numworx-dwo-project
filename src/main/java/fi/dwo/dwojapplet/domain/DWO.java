@@ -16,6 +16,7 @@ import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.BUILD;
 import fi.dwo.dwojapplet.domain.rest.PublicUserManager;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
@@ -52,7 +53,6 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -1340,36 +1340,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 //        StoredRestManager.setWebTargetAndCredentials(target);
         // TODO make it configurable in the servlet via a attribute in the jsp
         // initialized via the tomcat context.xml
-        // Read the versioning from the MANIFEST
-        URLClassLoader cl = (URLClassLoader) DWO.class.getClassLoader();
-        if (cl == null) {
-            cl = (URLClassLoader) getClass().getClassLoader();
-        }
-        try {
-            // TODO FIX Broken Manifest reading in Application mode and perhaps
-            // Applet mode.
-            URL url = cl.findResource("META-INF/MANIFEST.MF");
-            Manifest manifest = new Manifest(url.openStream());
-            // code picks the manifest of the first jar loaded.
-            // It works only correct if started as stand-alone application.
-            //
-            String mainClass = manifest.getMainAttributes().getValue("Main-Class");
-            if (mainClass != null && mainClass.matches("fi.dwo.dwojapplet.domain.DWO")) {
-                String softwareVersion = manifest.getMainAttributes().getValue("DWOJApplet-Implementation-Version");
-                String svnRevision = manifest.getMainAttributes().getValue("DWOJApplet-Implementation-Build");
+                String softwareVersion = BUILD.version;
+                String svnRevision = BUILD.buildNumber;
                 LOG.log(Level.INFO, "Software version {0},  subversion revision {1}",
                         new Object[]{softwareVersion, svnRevision});
-            } else {
-                if (mainClass == null) {
-                    mainClass = "";
-                }
-                LOG.log(Level.INFO,
-                        "No version numbering available. Possible running from IDE. Wrong 'Main-Class' value in MANIFEST-MF: '{0}'.",
-                        new Object[]{mainClass});
-            }
-        } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "Can't open /META-INF/MANIFEST.MF", ex);
-        }
         DwoHelper.setAu(new AppletUtil(this));
         delegate = getFocusTraversalPolicy();
         if (delegate != null) {
