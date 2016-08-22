@@ -206,7 +206,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
 
         JTable jtable = new JTable();
         jtable.getTableHeader().setReorderingAllowed(false);
-        jtable.setMinimumSize(new Dimension(400, 300));
+        //jtable.setMinimumSize(new Dimension(400, 300));
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         jtbl.add(jtable);
@@ -293,8 +293,8 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
     public StudentsInSchoolClassSchoolAdminPanel(final DomSchoolClass sc) throws Dwo2Exception {
         super(null);
         this.schoolClass = sc;
-        this.setSize(480, 500);
-        this.setPreferredSize(new Dimension(300, 300));
+        //this.setSize(480, 500);
+        //this.setPreferredSize(new Dimension(300, 300));
 
         //fetch user details.
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
