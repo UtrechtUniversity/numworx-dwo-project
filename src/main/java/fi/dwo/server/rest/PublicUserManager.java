@@ -23,6 +23,7 @@ import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.rest.dom.entities.DomNewUser;
 import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.rest.exceptions.Dwo2Exception;
@@ -68,6 +69,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 import static java.lang.Thread.sleep;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.ws.rs.QueryParam;
@@ -96,9 +98,14 @@ public class PublicUserManager {
     @Path("/submit")
     public Boolean submitNewUser(RestNewUser newUserReg) {
         EntityManager em = DwoEmfFactory.getEntityManager();
-        if (newUserReg == null) {
+        if (newUserReg == null || newUserReg.getDomNewUser() == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
+        DomNewUser n = newUserReg.getDomNewUser();
+        if ( ! ValidUserFieldsChecker.isEmptyOrNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), n.getPassword()))
+        	throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Required_Fields, "Required fields empty or null");
+        
+        
         if (!ValidUserFieldsChecker.isValidEmail(newUserReg.getDomNewUser().getEmail())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
         }
