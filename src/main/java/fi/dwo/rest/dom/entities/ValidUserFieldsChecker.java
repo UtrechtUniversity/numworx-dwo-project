@@ -13,6 +13,24 @@ public final class ValidUserFieldsChecker {
         return true;
     }
     
+    
+    /**
+     * Verify required fields are filled.
+     * @param fields
+     * @return
+     */
+    
+    public static boolean isEmptyOrNull(String... fields) {
+    	for (int i = 0; i < fields.length; i++) {
+			String field = fields[i];
+			if (field == null || field.trim().isEmpty())
+				return false;
+		}  	
+    	return true;
+    }
+    
+    
+    
     /**
      *  Tests for RFC 5322 addresses, but not RFC 6530.
      * 
