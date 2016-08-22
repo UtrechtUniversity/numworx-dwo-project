@@ -330,6 +330,11 @@ public final class DwoHelper {
         }
 
         URL url = getURL(image);
+        if(image.startsWith("resources/"))
+			try {
+				url = new URL (getResourceUrlPath(), image);
+			} catch (MalformedURLException e) {
+			}
         if (url == null) {
             return null;
         }
