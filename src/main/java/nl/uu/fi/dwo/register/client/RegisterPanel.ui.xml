@@ -15,14 +15,15 @@
 		</mgwt:HeaderPanel>
 		<!-- Main interaction Area -->
 	  	<g:HTMLPanel>
-			<div style="width: 600px; height: 470px; display: block; margin: 20px auto; border: solid black 1px">
+			<div style="width: 400px; height: 470px; display: block; margin: 20px auto; border: solid black 1px">
+	    	    <div style="padding: 10px" >
 	    	    <table>
 	    	       <tr>
-	    	       	<td><ui:text from='{rb.GUI_Username}' /></td>
+	    	       	<td><ui:text from='{rb.GUI_Username}' />*</td>
 	    	       	<td><g:TextBox  ui:field="username" /></td>
 	    	       </tr>
 	    	       <tr>
-	    	        <td><ui:text from='{rb.GUI_GivenName}' /></td>
+	    	        <td><ui:text from='{rb.GUI_GivenName}' />*</td>
 	    	       	<td><g:TextBox  ui:field="givenName" /></td>
 	    	       </tr>
 	    	       <tr>
@@ -30,19 +31,19 @@
 	    	       	<td><g:TextBox  ui:field="insertion" /></td>
 	    	       </tr>
 	    	       <tr>
-	    	       	<td><ui:text from='{rb.GUI_FamilyName}' /></td>
+	    	       	<td><ui:text from='{rb.GUI_FamilyName}' />*</td>
 	    	       	<td><g:TextBox  ui:field="familyName" /></td>
 	    	       </tr>
 	    	       <tr>
-	    	       	<td><ui:text from='{rb.GUI_Email}' /></td>
+	    	       	<td><ui:text from='{rb.GUI_Email}' />*</td>
 	    	       	<td><g:TextBox  ui:field="email" /></td>
 	    	       </tr>	    	       
 	    	       <tr>
-	    	       	<td><ui:text from="{rb.GUI_Password}" /></td>
+	    	       	<td><ui:text from="{rb.GUI_Password}" />*</td>
 	    	        <td><g:PasswordTextBox  ui:field="password" /></td>
 	    	       </tr>
 	    	       <tr>
-	    	       	<td><ui:text from="{rb.GUI_NewPasswordAgain}" /></td>
+	    	       	<td><ui:text from="{rb.GUI_NewPasswordAgain}" />*</td>
 	    	        <td><g:PasswordTextBox  ui:field="passwordAgain" /></td>
 	    	       </tr>
 	    	       <tr>
@@ -64,10 +65,11 @@
 	    	       </tr>
 	    	       
 	    	       <tr>
-	    	       	<td><g:Button ui:field="register" text="{rb.GUI_Button_Ok}" /></td>
-	    	       	<td><g:Button ui:field="cancel" text="{rb.GUI_Button_Cancel}" /></td>
+	    	       	<td><mgwt:Button ui:field="register" text="{rb.GUI_Button_Ok}" /></td>
+	    	       	<td><mgwt:Button ui:field="cancel" text="{rb.GUI_Button_Cancel}" /></td>
 	    	       </tr>
 	    	    </table>
+	    	   </div>
 	    	</div>	 
 	    </g:HTMLPanel>    
 	</mgwt:LayoutPanel>

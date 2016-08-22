@@ -41,7 +41,7 @@ public class RegisterController {
 				{	 Dwo2ExceptionCode code = ((Dwo2Exception) caught).getDwo2Code();
 					 message = Dwo2ExceptionTranslator.getLocalizedCodeExplanation(null, code);
 				} else
-					message = caught.getMessage();
+					message = caught.toString();
 				Window.alert(message);
 			}
 

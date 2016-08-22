@@ -11,7 +11,7 @@ import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 public class Register implements EntryPoint, Command {
 	
 	private RegisterPanel content;
-	private String newURL = "about:blank";
+	private String newURL = "http://www.dwo.nl/leerling/";
 	
 
 	public void onModuleLoad() {

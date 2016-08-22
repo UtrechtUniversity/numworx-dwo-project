@@ -2,21 +2,26 @@ package nl.uu.fi.dwo.register.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.ui.client.widget.Button;
 
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomNewUser;
 import fi.dwo.rest.dom.entities.RoleType;
+import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.rest.entities.RestNewUser;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import fi.dwo.rest.locale.DwoLocalesForGWT;
 
@@ -41,15 +46,15 @@ public class RegisterPanel extends Composite {
 	@UiField
 	Button cancel, register;
 	@UiField
-	TextBox username, password, givenName, insertion, familyName, email, passwordAgain, schoolCode, schoolLogin;
+	HasText username, password, givenName, insertion, familyName, email, passwordAgain, schoolCode, schoolLogin;
 
 	@UiHandler("cancel")
-	void onCancel(ClickEvent e) {
+	void onCancel(TapEvent e) {
 		Window.alert("cancel " + username.getText());
 	}
 
 	@UiHandler("register")
-	void onRegister(ClickEvent e) {
+	void onRegister(TapEvent e) {
 		DomNewUser domUser = new DomNewUser();
 		
 		domUser.setEmail(email.getText());
@@ -64,6 +69,14 @@ public class RegisterPanel extends Composite {
 			return;
 		}
 
+//		DomNewUser n = domUser; FIXME java.util.regex niet in GWT
+//        if ( ! ValidUserFieldsChecker.isEmptyOrNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), n.getPassword()))
+//        {
+//        	Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Required_Fields());
+//        	return;
+//        }
+		
+		
 		domUser.setPassword(MD5.md5(password.getText()));
 		
 		domUser.setRole(RoleType.STUDENT);
