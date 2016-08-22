@@ -2,7 +2,7 @@ package fi.dwo.rest.locale;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
+ * 	'/Users/peterboon/Documents/workspace-luna/DWO-rest-lib/target/classes/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
  */
 public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
@@ -124,6 +124,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_Rest_Registration_Password_Invalid();
 
   /**
+   * Translated "Required fields are empty".
+   * 
+   * @return translated "Required fields are empty"
+   */
+  @DefaultStringValue("Required fields are empty")
+  @Key("Dwo2ExceptionCode.Rest_Registration_Required_Fields")
+  String Dwo2ExceptionCode_Rest_Registration_Required_Fields();
+
+  /**
    * Translated "School authentication is incorrect.".
    * 
    * @return translated "School authentication is incorrect."
@@ -187,11 +196,11 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_User_AuthenticationError();
 
   /**
-   * Translated "Do you want to remove the selected students and pertaining data from the school?\nSchool accounts are also deleted.".
+   * Translated "Do you want to remove the selected students and pertaining data from the school?\nStudent accounts are also deleted.".
    * 
-   * @return translated "Do you want to remove the selected students and pertaining data from the school?\nSchool accounts are also deleted."
+   * @return translated "Do you want to remove the selected students and pertaining data from the school?\nStudent accounts are also deleted."
    */
-  @DefaultStringValue("Do you want to remove the selected students and pertaining data from the school?\nSchool accounts are also deleted.")
+  @DefaultStringValue("Do you want to remove the selected students and pertaining data from the school?\nStudent accounts are also deleted.")
   @Key("Dwo2ExceptionCode.User_ConfirmDeleteMultiUsersFromSchool")
   String Dwo2ExceptionCode_User_ConfirmDeleteMultiUsersFromSchool();
 
@@ -214,11 +223,11 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_User_ConfirmPasswordSwitch();
 
   /**
-   * Translated "Do you want to remove the student and all his data irrevocably from the school?".
+   * Translated "Do you want to remove access for account {0}\n from the school and delete all school-related data irrevocably?".
    * 
-   * @return translated "Do you want to remove the student and all his data irrevocably from the school?"
+   * @return translated "Do you want to remove access for account {0}\n from the school and delete all school-related data irrevocably?"
    */
-  @DefaultStringValue("Do you want to remove the student and all his data irrevocably from the school?")
+  @DefaultStringValue("Do you want to remove access for account {0}\n from the school and delete all school-related data irrevocably?")
   @Key("Dwo2ExceptionCode.User_ConfirmRegularSchoolStudentDelete")
   String Dwo2ExceptionCode_User_ConfirmRegularSchoolStudentDelete();
 
@@ -232,11 +241,11 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_User_ConfirmRoleSwitch();
 
   /**
-   * Translated "Do you want to remove the schooladmin and his results irrevocably from the school?".
+   * Translated "Do you want to remove schooladmin {0}\n and pertaining data irrevocably from the school?".
    * 
-   * @return translated "Do you want to remove the schooladmin and his results irrevocably from the school?"
+   * @return translated "Do you want to remove schooladmin {0}\n and pertaining data irrevocably from the school?"
    */
-  @DefaultStringValue("Do you want to remove the schooladmin and his results irrevocably from the school?")
+  @DefaultStringValue("Do you want to remove schooladmin {0}\n and pertaining data irrevocably from the school?")
   @Key("Dwo2ExceptionCode.User_ConfirmSchoolAdminFromSchoolDelete")
   String Dwo2ExceptionCode_User_ConfirmSchoolAdminFromSchoolDelete();
 
@@ -250,11 +259,11 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch();
 
   /**
-   * Translated "Do you want to delete school {0}\nand delete all pertaining data irrevocably?".
+   * Translated "Do you want to delete school with schoollogin \"{0}\" \nand delete all pertaining data irrevocably?".
    * 
-   * @return translated "Do you want to delete school {0}\nand delete all pertaining data irrevocably?"
+   * @return translated "Do you want to delete school with schoollogin \"{0}\" \nand delete all pertaining data irrevocably?"
    */
-  @DefaultStringValue("Do you want to delete school {0}\nand delete all pertaining data irrevocably?")
+  @DefaultStringValue("Do you want to delete school with schoollogin \"{0}\" \nand delete all pertaining data irrevocably?")
   @Key("Dwo2ExceptionCode.User_ConfirmSchoolDelete")
   String Dwo2ExceptionCode_User_ConfirmSchoolDelete();
 
@@ -268,20 +277,20 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_User_ConfirmSchoolLoginDelete();
 
   /**
-   * Translated "Do you want to remove the student account and all his data irrevocably?".
+   * Translated "Do you want to delete the student account {0}\n and all its data irrevocably?".
    * 
-   * @return translated "Do you want to remove the student account and all his data irrevocably?"
+   * @return translated "Do you want to delete the student account {0}\n and all its data irrevocably?"
    */
-  @DefaultStringValue("Do you want to remove the student account and all his data irrevocably?")
+  @DefaultStringValue("Do you want to delete the student account {0}\n and all its data irrevocably?")
   @Key("Dwo2ExceptionCode.User_ConfirmSingleSchoolStudentDelete")
   String Dwo2ExceptionCode_User_ConfirmSingleSchoolStudentDelete();
 
   /**
-   * Translated "Do you want to remove the teacher and his results irrevocably from the school?".
+   * Translated "Do you want to remove teacher {0}\n and delete all pertaining data from the school?".
    * 
-   * @return translated "Do you want to remove the teacher and his results irrevocably from the school?"
+   * @return translated "Do you want to remove teacher {0}\n and delete all pertaining data from the school?"
    */
-  @DefaultStringValue("Do you want to remove the teacher and his results irrevocably from the school?")
+  @DefaultStringValue("Do you want to remove teacher {0}\n and delete all pertaining data from the school?")
   @Key("Dwo2ExceptionCode.User_ConfirmTeacherFromSchoolDelete")
   String Dwo2ExceptionCode_User_ConfirmTeacherFromSchoolDelete();
 
@@ -302,4 +311,13 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   @DefaultStringValue("New passwords do not match.")
   @Key("Dwo2ExceptionCode.User_NewPasswordsDoNotMatch")
   String Dwo2ExceptionCode_User_NewPasswordsDoNotMatch();
+
+  /**
+   * Translated "forgot password?".
+   * 
+   * @return translated "forgot password?"
+   */
+  @DefaultStringValue("forgot password?")
+  @Key("Dwo2ExceptionCode.User_Q_ForgotPassword")
+  String Dwo2ExceptionCode_User_Q_ForgotPassword();
 }
