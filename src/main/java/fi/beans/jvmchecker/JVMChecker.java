@@ -29,8 +29,8 @@ public class JVMChecker extends Dialog implements WindowListener, ActionListener
         {
             tp.setText(0, "Uw browser werkt momenteel met een ");
             tp.setText(1, "verouderde versie van Java.");
-            tp.setText(2, "We kunnen daarom niet garanderen dat");
-            tp.setText(3, "de applicatie probleemloos zal werken. ");
+            tp.setText(2, "De huidige DWO heeft minimaal Java 8");
+            tp.setText(3, "nodig om te functioneren ");
             tp.setText(4, "");
             tp.setText(5, "Met behulp van de knop hieronder gaat ");
             tp.setText(6, "u naar http://java.com/nl");
