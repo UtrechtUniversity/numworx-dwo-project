@@ -176,6 +176,8 @@ public class SchoolGroupManager {
             PersistentSchoolGroup result = (PersistentSchoolGroup) q.getSingleResult();
             LOG.log(Level.FINE, "SchoolGroup-manager retrieved PersistentSchoolGroup of schoolid {0} with schoolgroupid {1} for RoleType {2}", new Object[]{school.getSchoolID(), result.getSchoolGroupID(), roleType.name()});
             return result;
+        } catch (NoResultException noResult) {
+        	return null; // FIXME or rethrow exception
         }
         finally {
             em.close();

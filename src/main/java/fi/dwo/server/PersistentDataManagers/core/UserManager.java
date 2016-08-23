@@ -225,7 +225,10 @@ public class UserManager {
                 return null;
             }
             LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
-        } finally {
+        } catch (NoResultException noresult) {
+        	return null;
+        }
+        finally {
             em.close();
         }
         return user;
