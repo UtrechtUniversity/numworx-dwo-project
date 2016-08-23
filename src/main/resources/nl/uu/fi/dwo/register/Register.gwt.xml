@@ -9,6 +9,10 @@
 	
 	<source path="client" />
 	<entry-point class="nl.uu.fi.dwo.register.client.Register"></entry-point>
+
+    <replace-with class="nl.uu.fi.dwo.register.client.DwoConstants_impl">
+    	<when-type-is class="fi.dwo.gwt.lib.rest.DwoConstants" />
+    </replace-with>
 	
 	<!-- local settings -->
 	<extend-property name="locale" values="nl"/>
