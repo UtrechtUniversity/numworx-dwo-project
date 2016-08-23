@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import com.owlike.genson.Genson;
+
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -12,6 +13,7 @@ import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +52,7 @@ public class PublicUserManager {
             URLConnection conn = url.openConnection();
             conn.setRequestProperty("Accept-Charset", "UTF-8");
             BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
+                    (conn.getInputStream()), StandardCharsets.UTF_8));
 
             String output;
             StringBuilder json = new StringBuilder();
@@ -86,7 +89,7 @@ public class PublicUserManager {
 //            }
 //
 //            BufferedReader br = new BufferedReader(new InputStreamReader(
-//                    (conn.getInputStream())));
+//                    (conn.getInputStream()), StandardCharsets.UTF_8));
 //
 //            String output;
 //            StringBuilder json = new StringBuilder();
@@ -142,7 +145,7 @@ public class PublicUserManager {
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
+                    (conn.getInputStream()), StandardCharsets.UTF_8));
 
             String output;
             StringBuilder json = new StringBuilder();

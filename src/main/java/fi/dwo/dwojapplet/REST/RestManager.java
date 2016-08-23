@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.REST;
 
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
+
 import static fi.dwo.dwojapplet.REST.RestManager.getBasicAuthString;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.rest.dom.entities.DomRole;
@@ -19,6 +20,7 @@ import fi.dwo.rest.RestListClassTypes;
 import static fi.dwo.rest.RestListClassTypes.DomSchool4DwoAdmin;
 import fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -26,6 +28,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -100,7 +103,7 @@ class RestManager {
                 Dwo2Exception e;
                 if (conn.getResponseCode() == 400) {//Dwo2Exception
                     BufferedReader br = new BufferedReader(new InputStreamReader(
-                            (conn.getErrorStream())));
+                            (conn.getErrorStream()), StandardCharsets.UTF_8));
 
                     String output;
                     StringBuilder json = new StringBuilder();
@@ -118,7 +121,7 @@ class RestManager {
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
+                    (conn.getInputStream()), StandardCharsets.UTF_8)); // XXX force UTF-8 encoding
 
             String output;
             StringBuilder json = new StringBuilder();
@@ -170,7 +173,7 @@ class RestManager {
                 Dwo2Exception e;
                 if (conn.getResponseCode() == 400) {//Dwo2Exception
                     BufferedReader br = new BufferedReader(new InputStreamReader(
-                            (conn.getErrorStream())));
+                            (conn.getErrorStream()), StandardCharsets.UTF_8));
 
                     String output;
                     StringBuilder json = new StringBuilder();
@@ -188,7 +191,7 @@ class RestManager {
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
+                    (conn.getInputStream()), StandardCharsets.UTF_8));
 
             String output;
             StringBuilder json = new StringBuilder();
@@ -277,7 +280,7 @@ class RestManager {
                 if (conn.getResponseCode() == 400) {//Dwo2Exception
 //                    String json = conn.getResponseMessage();
                     BufferedReader br = new BufferedReader(new InputStreamReader(
-                            (conn.getErrorStream())));
+                            (conn.getErrorStream()), StandardCharsets.UTF_8));
 
                     String output;
                     StringBuilder json = new StringBuilder();
@@ -295,7 +298,7 @@ class RestManager {
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
+                    (conn.getInputStream()), StandardCharsets.UTF_8));
 
             String output;
             StringBuilder json = new StringBuilder();
@@ -355,7 +358,7 @@ class RestManager {
                 Dwo2Exception e;
                 if (conn.getResponseCode() == 400) {//Dwo2Exception
                     BufferedReader br = new BufferedReader(new InputStreamReader(
-                            (conn.getErrorStream())));
+                            (conn.getErrorStream()), StandardCharsets.UTF_8));
 
                     String output;
                     StringBuilder json = new StringBuilder();
@@ -373,7 +376,7 @@ class RestManager {
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
+                    (conn.getInputStream()), StandardCharsets.UTF_8));
 
             String output;
             StringBuilder json = new StringBuilder();
