@@ -709,7 +709,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		FormuleParser p = new FormuleParser();
 		for (int i = 0; i < antwoordStrings.length; i++) {
 			String antwoordStr = "$f" + antwoordStrings[i] + "@";
-			juisteVormen[i] = p.parseVergelijking(antwoordStr);//TODO, functieMVDefSet);
+			juisteVormen[i] = p.parseVergelijking(antwoordStr, functieMVDefSet);
 		}
 		
 	}
