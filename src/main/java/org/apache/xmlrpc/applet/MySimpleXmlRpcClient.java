@@ -169,7 +169,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
         MinML parser = new MinML();
         parser.setDocumentHandler(this);
         parser.setErrorHandler(this);
-        Reader ir = new InputStreamReader(is, "ISO-8859-1");
+        Reader ir = new InputStreamReader(is, "UTF-8");
         parser.parse(new InputSource(ir));
 
         if (debug) {
