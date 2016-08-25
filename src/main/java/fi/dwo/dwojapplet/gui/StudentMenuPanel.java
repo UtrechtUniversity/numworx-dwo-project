@@ -105,7 +105,7 @@ public class StudentMenuPanel extends UserMenuPanel {
             } catch (Dwo2Exception ex) {
                 Logger.getLogger(StudentMenuPanel.class.getName()).log(Level.SEVERE, "", ex);
             }
-
+            boolean isSelected = false; // student in a class?
             if ((scList != null) && (scList.size() > 0)) {
                 l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_IN_CLASS)
                         + ":");
@@ -122,7 +122,7 @@ public class StudentMenuPanel extends UserMenuPanel {
                     if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null
                             && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId() != null
                             && scList.get(i).getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId())) {
-                        cll.setFont(GuiConstants.RED_TEXT);
+                        cll.setFont(GuiConstants.RED_TEXT); isSelected = true;
                         cll.setBorder(CLASS_BORDER);
 //                        cll.setBorder(BorderFactory.createLineBorder(Color.RED));
                     } else {
@@ -134,6 +134,50 @@ public class StudentMenuPanel extends UserMenuPanel {
                     classBox.add(cll);
                 }
             }
+            
+            if (!isSelected)
+            {	
+            	// 10 pixels margin.
+            	Border border = BorderFactory.createEmptyBorder(0, 10, 0, 0);
+            	l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_0));
+           		l.setOpaque(false);
+                l.setFont(GuiConstants.RED_TEXT);
+                l.setForeground(Color.red);
+                l.setBorder(border);
+                classBox.add(l);
+
+                l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_1));
+                l.setOpaque(false);
+                l.setFont(GuiConstants.RED_TEXT);
+                l.setForeground(Color.red);
+                l.setBorder(border);
+                classBox.add(l);
+                
+                l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_2));
+                l.setOpaque(false);
+                l.setFont(GuiConstants.RED_TEXT);
+                l.setForeground(Color.red);
+                l.setBorder(border);
+                classBox.add(l);
+                
+                l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_3));
+                l.setOpaque(false);
+                l.setFont(GuiConstants.RED_TEXT);
+                l.setForeground(Color.red);
+                l.setBorder(border);
+                classBox.add(l);
+                
+                l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_4));
+                l.setOpaque(false);
+                l.setFont(GuiConstants.RED_TEXT);
+                l.setForeground(Color.red);
+                l.setBorder(border);
+                classBox.add(l);
+                add(classBox);
+            }
+
+            
+            
             classPanel.setVisible(false);
             this.add(classPanel);
             classPanel.setVisible(true);

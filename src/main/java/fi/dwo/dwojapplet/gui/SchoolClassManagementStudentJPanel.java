@@ -61,12 +61,12 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
     /**
      * Creates a new ProfilePanel for the current user. The account of the
      * current user can be changed.
+     * @param classStudentPanel 
      *
      */
     public SchoolClassManagementStudentJPanel() {
         super(null);
         this.setSize(480, 500);
-
         //fetch user details.
         try {
             prop.init();
@@ -253,12 +253,14 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                     //switch role now
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else if (value == removeImage) {
+                    int row = tableModel.getSelectedRow();
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
                     String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME), schoolClass.getSchoolClassName());                    
                     if (GuiCreator.instance().ShowConfirmDialog(null, msg) == JOptionPane.OK_OPTION) {
-                        int row = tableModel.getSelectedRow();
                         prop.removeSchoolClass(schoolClass);
                         tableModel.init(prop, loginImage, removeImage,emptyImage);
+                        GuiCreator.instance().getMainPanel().center.loadMenu(); // fix
+                        
                     }
 //                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
                 } else {
@@ -349,8 +351,10 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             tableModel.init(prop, loginImage, removeImage,emptyImage);
             tableModel.fireTableDataChanged();
             CenterSubPanel cp = GuiCreator.instance().getClassPanel();
-            GuiCreator.instance().getMainPanel().center.reset();
-            GuiCreator.instance().getMainPanel().center.loadCenter(cp);
+            final CenterPanel center = GuiCreator.instance().getMainPanel().center;
+			center.reset();
+            center.loadCenter(cp);
+            center.loadMenu();
 
         }
 //        else if (e.getSource() == removeImage) {
