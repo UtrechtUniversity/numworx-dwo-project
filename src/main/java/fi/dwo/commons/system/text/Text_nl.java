@@ -180,7 +180,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_0, "Je bent nog niet " },
 			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_1, "aangemeld bij een  " },
 			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_2, "klas. Ga naar" },
-			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_3, "\"Mijn account\" en" },
+			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_3, "\"Mijn klassen\" en" },
 			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_4, "kies een klas." },
 			{ TextMapper.GUIMNU_CLASS_RESULTS, "Resultaten van klas" },
 			{ TextMapper.GUIMNU_RESULTS, "Resultaten bekijken" },

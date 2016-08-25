@@ -181,7 +181,7 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_0, "You are not yet " },
 			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_1, "member of a class.  " },
 			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_2, "Go to" },
-			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_3, "\"My profile\" and " },
+			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_3, "\"My classes\" and " },
 			{ TextMapper.GUIMNU_STUDENT_NO_CLASS_4, "choose a class." },
 			{ TextMapper.GUIMNU_CLASS_RESULTS, "Results of class" },
 			{ TextMapper.GUIMNU_RESULTS, "Look at results" },
