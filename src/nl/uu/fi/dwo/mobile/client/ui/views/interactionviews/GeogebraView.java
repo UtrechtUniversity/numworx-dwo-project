@@ -170,7 +170,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if(ggbMap.containsKey("scoreMax")) 
 			scoreMax = ggbMap.getInt("scoreMax");
 				
-		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebraMC2.html?locale=" + StubView.getLocale());
+		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
 		frame.setStylePrimaryName(".gwt-StubView");
 		frame.addStyleDependentName("borderless");
 		
