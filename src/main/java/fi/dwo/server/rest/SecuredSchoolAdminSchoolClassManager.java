@@ -28,18 +28,18 @@ import fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
-import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
@@ -58,9 +58,7 @@ import javax.ws.rs.core.SecurityContext;
  */
 @PermitAll
 @Path("/secure/schooladmin/schoolclass")
-public class SecuredSchoolAdminSchoolClassManager {
-
-    private static final Logger LOG = Logger.getLogger(SecuredSchoolAdminSchoolClassManager.class.getName());
+public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassManager {
 
     /**
      * Returns the school data to be displayed.
@@ -538,28 +536,11 @@ public class SecuredSchoolAdminSchoolClassManager {
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domSchoolClass.getId()));
 
-        if (student != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-            try {
-                PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID());
-                if (shr.getClassID()!=null && shr.getClassID().equals(socId.getClassID())) {
-                    shr.setClassID(null);
-                    HasRoleManager.edit(shr);
-                }
-                StudentOfClassManager.destroy(socId);
-
-            }
-            catch (PersistenceException e) {
-                return false;
-            }
-        } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a student from a schoolclass id {1} one or both do not exists or are not in the school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the school class.");
-        }
-
-        return true;
+        return removeStudentFromSchoolHelper(sc, school, student, shr,
+				schoolClass);
     }
 
-    /**
+	/**
      * Returns the school data to be displayed.
      *
      * @param sc
@@ -687,7 +668,12 @@ public class SecuredSchoolAdminSchoolClassManager {
                 List<PersistentStudentOfClass> studentList = StudentOfClassManager.findEntities(schoolClass);
                 for (PersistentStudentOfClass t : studentList) {
                     //remove students
-                    StudentOfClassManager.destroy(t.getPersistentStudentOfClassPK());
+                    //StudentOfClassManager.destroy(t.getPersistentStudentOfClassPK());
+                	
+                	Long id = t.getPersistentStudentOfClassPK().getUserID();
+					PersistentUser student = UserManager.findEntity(id);
+					PersistentHasRole shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+					removeStudentFromSchoolHelper(sc, school, student, shr, schoolClass);
                 }
 
                 //Loop teachers in class
@@ -698,7 +684,11 @@ public class SecuredSchoolAdminSchoolClassManager {
                 }
                 SchoolClassManager.destroy(schoolClass.getClassID());
             }
-            catch (PersistenceException e) {
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, "", ex);
+                throw new Dwo2RestException(ex);
+            }
+           catch (PersistenceException e) {
                 return false;
             }
         } else {

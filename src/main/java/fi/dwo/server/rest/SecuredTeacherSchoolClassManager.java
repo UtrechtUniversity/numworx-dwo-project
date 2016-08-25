@@ -38,11 +38,13 @@ import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
@@ -61,7 +63,7 @@ import javax.ws.rs.core.SecurityContext;
  */
 @PermitAll
 @Path("/secure/teacher/schoolclass")
-public class SecuredTeacherSchoolClassManager {
+public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredTeacherSchoolClassManager.class.getName());
 
@@ -464,13 +466,19 @@ public class SecuredTeacherSchoolClassManager {
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
-        if (schoolClass.getSchoolID().equals(school.getSchoolID()) && toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
+        if (schoolClass.getSchoolID().equals(school.getSchoolID()) 
+        		&& toc != null // XXX if findEntity cannot find it
+        		&& toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
             try {
                 //Loop students in class
                 List<PersistentStudentOfClass> studentList = StudentOfClassManager.findEntities(schoolClass);
                 for (PersistentStudentOfClass t : studentList) {
                     //remove students
-                    StudentOfClassManager.destroy(t.getPersistentStudentOfClassPK());
+                    //StudentOfClassManager.destroy(t.getPersistentStudentOfClassPK());
+                	Long id = t.getPersistentStudentOfClassPK().getUserID();
+					PersistentUser student = UserManager.findEntity(id);
+					PersistentHasRole shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+					removeStudentFromSchoolHelper(sc, school, student, shr, schoolClass);
                 }
 
                 //Loop teachers in class
@@ -480,6 +488,10 @@ public class SecuredTeacherSchoolClassManager {
                     TeacherOfClassManager.destroy(t.getPersistentTeacherOfClassPK());
                 }
                 SchoolClassManager.destroy(schoolClass.getClassID());
+            }
+            catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, "", ex);
+                throw new Dwo2RestException(ex);
             }
             catch (PersistenceException e) {
                 return false;
@@ -687,23 +699,26 @@ public class SecuredTeacherSchoolClassManager {
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         PersistentStudentOfClass soc = StudentOfClassManager.findEntity(new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
 
-        if (toc != null && student != null && soc != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-            try {
-                if (shr.getClassID()!=null && shr.getClassID().equals(soc.getPersistentStudentOfClassPK().getClassID())) {
-                    shr.setClassID(null);
-                    HasRoleManager.edit(shr);
-                }
-                StudentOfClassManager.destroy(soc.getPersistentStudentOfClassPK());
-            }
-            catch (PersistenceException e) {
-                return false;
-            }
-        } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a student from a schoolclass id {1} one or both do not exists or are not in the school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the school class.");
-        }
+        return 	removeStudentFromSchoolHelper(sc, school, student, shr, schoolClass);
 
-        return true;
+        
+//        if (toc != null && student != null && soc != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
+//            try {
+//                if (shr.getClassID()!=null && shr.getClassID().equals(soc.getPersistentStudentOfClassPK().getClassID())) {
+//                    shr.setClassID(null);
+//                    HasRoleManager.edit(shr);
+//                }
+//                StudentOfClassManager.destroy(soc.getPersistentStudentOfClassPK());
+//            }
+//            catch (PersistenceException e) {
+//                return false;
+//            }
+//        } else {
+//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a student from a schoolclass id {1} one or both do not exists or are not in the school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
+//            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the school class.");
+//        }
+//
+//        return true;
     }
 
     /**

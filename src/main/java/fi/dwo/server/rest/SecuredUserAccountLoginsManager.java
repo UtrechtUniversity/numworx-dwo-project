@@ -89,11 +89,18 @@ public class SecuredUserAccountLoginsManager {
                 curSac.setSchoolRights( (String) result0[8]);
                 if (result0[4] != null) {
                     Long id = (Long) result0[4];
-                    curSac.setSchoolClassId( MySQLPersistenceId.createPersistenceId(id, PersistenceClassType.PersistentSchoolClass));
 // export some class parameters: name, iconizer etc
                     PersistentSchoolClass schoolClass = em.find(PersistentSchoolClass.class, id);
-                    curSac.setSchoolClassName(schoolClass.getClass1());
-                    curSac.setIconizer(schoolClass.getIconizer());
+                    if(schoolClass != null) {
+                        curSac.setSchoolClassId( MySQLPersistenceId.createPersistenceId(id, PersistenceClassType.PersistentSchoolClass));
+                    	curSac.setSchoolClassName(schoolClass.getClass1());
+                    	curSac.setIconizer(schoolClass.getIconizer());
+                    } else { // XXX failsafe: no schoolclass, constraint error
+                    	LOG.log(Level.SEVERE, "Username {}, stale classID {1}", new Object[] { scUsername, id });
+                        curSac.setSchoolClassId(null);
+                        curSac.setSchoolClassName(null);
+                        curSac.setIconizer(null);
+                    }
                 } else {
                     curSac.setSchoolClassId(null);
                     curSac.setSchoolClassName(null);
