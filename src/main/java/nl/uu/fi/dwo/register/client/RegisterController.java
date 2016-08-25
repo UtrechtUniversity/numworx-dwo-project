@@ -52,6 +52,9 @@ public class RegisterController {
 
 					if(next != null)
 						next.execute();
+				} else {
+					Window.alert("De gebruiker is niet aangemeld.");
+					
 				}
 				
 			}
