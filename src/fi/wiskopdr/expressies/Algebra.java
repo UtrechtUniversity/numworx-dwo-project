@@ -3596,6 +3596,7 @@ public class Algebra
 			return eval(new BasisExpressie(e.geefWaarde()));
 		if (e instanceof Max)
 			return eval(new BasisExpressie(e.geefWaarde()));
+		if(e instanceof Abs)return eval(new BasisExpressie(e.geefWaarde()));
 		if (e instanceof BasisExpressie && !Double.isNaN(e.geefWaarde()))
 		{
 			if (Math.rint(e.geefWaarde()) - e.geefWaarde() != 0)
