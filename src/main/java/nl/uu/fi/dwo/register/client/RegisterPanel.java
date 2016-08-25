@@ -50,7 +50,7 @@ public class RegisterPanel extends Composite {
 
 	@UiHandler("cancel")
 	void onCancel(TapEvent e) {
-		Window.alert("cancel " + username.getText());
+		getController().getNext().execute();
 	}
 
 	@UiHandler("register")
