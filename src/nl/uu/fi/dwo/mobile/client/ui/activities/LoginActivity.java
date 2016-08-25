@@ -8,15 +8,10 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.EventBus;
@@ -30,6 +25,9 @@ import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
+//import fi.dwo.rest.exceptions.Dwo2Exception;
+//import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+
 public class LoginActivity extends MGWTAbstractActivity
 {
 	private final AsyncCallback<Map<String, Object>> LOGIN_CALLBACK = new AsyncCallback<Map<String, Object>>()
@@ -39,6 +37,10 @@ public class LoginActivity extends MGWTAbstractActivity
 		public void onFailure(Throwable caught)
 		{
 			GWT.log("login failure", caught);
+//			if (caught instanceof Dwo2Exception) {
+//				Window.alert( Dwo2ExceptionTranslator.getLocalizedCodeExplanation(null, ((Dwo2Exception) caught).getDwo2Code()));
+//			} else
+
 			if (caught.getMessage().contains("LoginException"))
 				Window.alert(Text.constants.EXR_WRONG_USERNAME_PASSWORD());
 			else
