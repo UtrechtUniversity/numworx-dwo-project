@@ -11,6 +11,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomUserListCellRenderer;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -22,6 +23,7 @@ import java.util.Comparator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -40,6 +42,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
@@ -70,6 +74,8 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
 
     private JPanel jtbl;
     private TableRowSorter rowSorter;
+
+	private JTable jtable;
 
     /**
      * @return the schoolClass
@@ -204,7 +210,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         }
         jtbl = new JPanel();
 
-        JTable jtable = new JTable();
+        jtable = new JTable();
         jtable.getTableHeader().setReorderingAllowed(false);
         //jtable.setMinimumSize(new Dimension(400, 300));
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
@@ -215,6 +221,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         tableModel = new StudentsInSchoolClassTeacherPanelTableModel();
 
         tableModel.init(prop.getStudentsInSchoolClass(schoolClass), loginImage, editImage, emptyImage);
+        
         jtable.setModel(tableModel);
 
         /**
@@ -556,6 +563,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             }
         }
         tableModel.fireTableDataChanged();
+        TableUtil.setJTableSizes(jtable);
     }
 
     /**
