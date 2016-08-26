@@ -61,4 +61,7 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("Wachtwoord vergeten?")
 	String vergeten();
+	
+	@DefaultStringValue("Aanmelden")
+	String aanmelden();
 }

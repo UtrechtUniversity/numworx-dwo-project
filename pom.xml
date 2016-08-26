@@ -66,12 +66,6 @@
   		<version>0.0.1</version>
   	</dependency>
   	<dependency>
-  		<groupId>fi.wiskopdrgwt</groupId>
-  		<artifactId>WiskOpdrGWT</artifactId>
-  		<version>0.0.1</version>
-  		<scope>provided</scope>
-  	</dependency>
-  	<dependency>
   		<groupId>com.googlecode.mgwt</groupId>
   		<artifactId>MGWT</artifactId>
    		<scope>provided</scope>
@@ -80,13 +74,17 @@
   		<groupId>nl.uu.fi.dwo.mobile</groupId>
   		<artifactId>formule</artifactId>
   		<version>0.0.1</version>
-  		<scope>provided</scope>
+  		<exclusions>
+  			<exclusion>
+  				<artifactId>WiskOpdrGWT</artifactId>
+  				<groupId>fi.wiskopdrgwt</groupId>
+  			</exclusion>
+  		</exclusions>
   	</dependency>
   	<dependency>
   		<groupId>nl.uu.fi.dwo.keyboard</groupId>
   		<artifactId>KeyboardGWT</artifactId>
   		<version>0.0.1</version>
-  		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>com.fredhat.gwt.xmlrpc</groupId>
@@ -99,7 +97,12 @@
   		<artifactId>GraphToolGWT</artifactId>
   		<version>0.0.1</version>
   		<classifier>classes</classifier>
-  		<scope>provided</scope>
+  		<exclusions>
+  			<exclusion>
+  				<artifactId>WiskOpdrGWT</artifactId>
+  				<groupId>fi.wiskopdrgwt</groupId>
+  			</exclusion>
+  		</exclusions>
   	</dependency>
   	<dependency>
   		<groupId>junit</groupId>
