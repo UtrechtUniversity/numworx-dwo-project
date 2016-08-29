@@ -870,6 +870,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (fe != null) // fe: onderdeel van formuleeditorwithsteps
 			fe.zetIngevuld(ingevuld);
 		
+		if (fe != null && fe.getEigenOpdr() && fe.getLatestAnswer() == null)
+		{
+			// eerste stap bij eigen opdracht is altijd goed
+			avChecker.zetJuisteAntwoord(useranswer);
+			goedHalfFout = AntwoordVakChecker.DOOR;
+			if (!"$f@".equals(useranswer)) // eerste stap is leeg, dan niet verder nakijken
+			{
+				fe.maakNakijkenAf(backStep, show, setState);
+			}
+			return;
+		}
+		
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
 		if (fe != null)
 			checkResults = avChecker.checkAnswer(useranswer, fe.getLatestAnswer(), fe.getSubstitutie(), fe.getGebruikersSubstituties());
