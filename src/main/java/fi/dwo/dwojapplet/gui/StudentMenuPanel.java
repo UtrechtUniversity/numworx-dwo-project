@@ -98,14 +98,23 @@ public class StudentMenuPanel extends UserMenuPanel {
         classPanel.setBorder(null);
         /* Add class-info */
         DomUserFull t = (DomUserFull) DwoHelper.getCurrentUser();
-        if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.STUDENT.name())) {
+        if (
+        		DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null 
+        		&& DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.STUDENT.name())
+
+        	) {
             List<DomSchoolClass> scList = null;
             try {
                 scList = SecureStudentSchoolClassManager.getStudentsSchoolClasses();
             } catch (Dwo2Exception ex) {
                 Logger.getLogger(StudentMenuPanel.class.getName()).log(Level.SEVERE, "", ex);
             }
-            boolean isSelected = false; // student in a class?
+
+// true if nullschool, false in all other cases.
+            boolean isSelected = DwoHelper.getSchoolLogins().getNullSchool().getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolId()); // student in a class?
+// no classmanagement if nullschool, looks funny.
+            classManagementButton.setVisible(!isSelected);
+            
             if ((scList != null) && (scList.size() > 0)) {
                 l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_IN_CLASS)
                         + ":");
@@ -121,7 +130,8 @@ public class StudentMenuPanel extends UserMenuPanel {
                     cll = new DomSchoolClassLinkedLabel(scList.get(i));
                     if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null
                             && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId() != null
-                            && scList.get(i).getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId())) {
+                            && scList.get(i).getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId())
+                    		) {
                         cll.setFont(GuiConstants.RED_TEXT); isSelected = true;
                         cll.setBorder(CLASS_BORDER);
 //                        cll.setBorder(BorderFactory.createLineBorder(Color.RED));
