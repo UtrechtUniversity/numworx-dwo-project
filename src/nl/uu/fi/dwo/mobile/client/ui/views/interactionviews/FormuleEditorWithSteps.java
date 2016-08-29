@@ -98,6 +98,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	boolean hasStartString = false;
 	boolean boxMetRand = true;
 	private Boolean exact = false;
+	private boolean eigenOpdr = false;
 	protected int breedte = 600;
 	protected int hoogte = 250;
 	private boolean volledigeBreedte = false;
@@ -226,6 +227,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				startString = launchStateMap.getString("startString");
 			if (launchState.get("exact") != null)
 				exact = (Boolean) launchState.get("exact");
+			if (launchState.get("eigenOpdr") != null)
+				eigenOpdr = (Boolean) launchState.get("eigenOpdr");
 			if (launchState.get("boxMetRand") != null)
 				boxMetRand = (Boolean) launchState.get("boxMetRand");
 			if (launchStateMap.containsKey("antwoordString"))
@@ -670,7 +673,16 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 
 		FormuleViewer fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + useranswer.substring(2, useranswer.length() - 1));
 		fv.setFont(font);
-		fv.showResult(FormuleViewer.CORRECT);
+		
+		if (!eigenOpdr || stapNr > 0)
+		{
+			fv.showResult(FormuleViewer.CORRECT);
+		}
+		else
+		{
+			fv.showResult(FormuleViewer.NONE);
+		}
+		
 		if (latest_answer_viewer != null && !(isToets() && show && !stepsForLinKwad))
 		{
 			latest_answer_viewer.showResult(FormuleViewer.NONE);
@@ -1084,9 +1096,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		return mainPanel;
 	}
 
-	public Boolean getExact()
+	public Boolean getEigenOpdr()
 	{
-		return exact;
+		return eigenOpdr;
 	}
 	
 	public void zetEditorTerug()
@@ -2059,7 +2071,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		
 		scrollToBottom();
 	}
-
+	
 	/**
 	 * Checkt of formuleVakInhoud de gegeven antwoordstring bevat.
 	 * 
@@ -2812,8 +2824,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		fv.setFont(font);
 		fv.setSelection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
 		
-		if (show && !substitutieVak) 
-			fv.showResult(FormuleViewer.ALMOSTCORRECT); // waarom? Voor bordjesmethode kom ik hier met een goed antwoord...
+		if (show && !substitutieVak)
+			if (!eigenOpdr || stapNr > 0) // eigenopdracht niet tonen voor stapNr 0
+			{
+				fv.showResult(FormuleViewer.ALMOSTCORRECT); // waarom? Voor bordjesmethode kom ik hier met een goed antwoord...
+			}
 		else if (!isToets())
 			fv.showResult(FormuleViewer.NONE);
 		
