@@ -103,7 +103,7 @@ class UsersInSchoolSchoolAdminPanelTableModel extends AbstractTableModel {
      */
     @Override
     public Class getColumnClass(int c) {
-    	if( getRowCount() > 0)
+    	if( getRowCount() > 0 && getValueAt(0, c) != null)
     		return getValueAt(0, c).getClass();
     	return super.getColumnClass(c);
     }
