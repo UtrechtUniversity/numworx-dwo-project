@@ -22,6 +22,8 @@ import com.google.gwt.view.client.ListDataProvider;
 
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import fi.dwo.rest.locale.DwoLocalesForGWT;
 
@@ -192,6 +194,14 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                                     control.getActiveSchoolClass(new AsyncCallback<DomSchoolClass>() {
                                         @Override
                                         public void onFailure(Throwable t) {
+                                        	if(t instanceof Dwo2Exception) {
+                                        		Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+                                        		if (code == Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set)
+                                        		{
+                                        			onSuccess(null);
+                                        			return;
+                                        		}
+                                        	}
                                             //fail and reset all the data.
                                             Window.alert(t.getMessage());
                                         }
