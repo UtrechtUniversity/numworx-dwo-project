@@ -22,5 +22,5 @@ public interface AntwoordVakChecker {
 	
 	public FunctieMVDefSet getFunctieMVDefSet();
 	
-	
+	public void zetJuisteAntwoord(String answer);
 }
