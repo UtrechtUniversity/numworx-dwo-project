@@ -1354,7 +1354,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         // TODO dit ook testen in een applet omgeving!
         UIDefaults defaults;
         defaults = UIManager.getDefaults();
-        defaults.addResourceBundle("fi/dwo/client/gui/resources/swing");
+        defaults.addResourceBundle("fi/dwo/dwojapplet/gui/resources/swing");
         // standaard Tooltip geel
         UIManager.put("ToolTip.background", new ColorUIResource(255, 247, 200));
 
