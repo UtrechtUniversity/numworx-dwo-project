@@ -554,4 +554,11 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void zetJuisteAntwoord(String answer)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }
