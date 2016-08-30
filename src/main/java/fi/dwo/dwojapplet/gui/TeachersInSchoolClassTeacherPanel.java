@@ -147,6 +147,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                         addTeacherBox.setSelectedItem(-1);
                         addTeacherBox.removeAllItems();
                         tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
+                        GuiCreator.instance().getMainPanel().center.loadMenu(); // XXX fix list of classes
                     }
                 } catch (Dwo2Exception ex) {
                     Logger.getLogger(TeachersInSchoolClassTeacherPanel.class.getName()).log(Level.FINE, "", ex);

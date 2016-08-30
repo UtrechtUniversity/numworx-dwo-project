@@ -230,7 +230,9 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 } while (t.isCellEditable(row, column) == false);
                 if (row == t.getRowCount() - 1) {
                     NewTeacherSchoolAdminPanelTableModel model = (NewTeacherSchoolAdminPanelTableModel) t.getModel();
-                    model.getData().add(new DomUserFull());
+                    final DomUserFull teacher = new DomUserFull();
+                    teacher.clearSettings();teacher.setSingleSchool(null); // XXX initialisatie Teacher
+					model.getData().add(teacher);
                     model.setSelectedColumn(column + 1);
                     model.setSelectedRow(model.getData().size() - 1);
                     model.fireTableDataChanged();
@@ -457,6 +459,8 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                                 LOG.log(Level.SEVERE, "", ex);
                             }
                         }
+                    } else {
+                    	resultList.add(submit);
                     }
                 }
                 tableModel.init(prop, columnNames, resultList, delImage);
