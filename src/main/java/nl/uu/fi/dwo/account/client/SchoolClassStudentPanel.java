@@ -4,6 +4,8 @@ import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -286,6 +288,18 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 //                }
 //            });
             popup.center();
+            
+// If current school class is empty, and we have available classes, relogin            
+            if( DwoGlobalVars.instance().getCurrentSchoolClass() == null) {
+            	popup.addCloseHandler(new CloseHandler<PopupPanel>() {
+					
+					@Override
+					public void onClose(CloseEvent<PopupPanel> event) {
+						if( table.getRowCount() > 0 )
+							resetLogin.execute();
+					}
+				});
+            }          
             popup.show();
         } else if (event.getSource()
                 == closeBtn) {

@@ -13,13 +13,17 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+
 import java.util.logging.Level;
 
 public class Account implements EntryPoint, ClickHandler {
@@ -95,7 +99,7 @@ public class Account implements EntryPoint, ClickHandler {
                 @Override
                 public void onFailure(Throwable t) {
                     loginStatusPanel.setStatus("", false);
-                    LOG.log(Level.INFO, t.getStackTrace().toString());
+                    LOG.log(Level.INFO, "failure", t);
                     header.setRightWidget(null);
                 }
 
@@ -113,7 +117,16 @@ public class Account implements EntryPoint, ClickHandler {
                     manager.getActiveSchoolClass(new AsyncCallback<DomSchoolClass>() {
                         @Override
                         public void onFailure(Throwable t) {
-                            LOG.log(Level.INFO, t.getStackTrace().toString());
+                        	if(t instanceof Dwo2RestException)
+                        	{ 
+                        		Dwo2ExceptionCode code = ((Dwo2RestException) t).getDwo2Code();
+                        	    if (code == Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set)
+                        	    {
+                        		   onSuccess(null);
+                        		   return;
+                        	    }
+                        	}
+                            LOG.log(Level.INFO, t.toString(), t);
                             header.setRightWidget(null);
                         }
 
