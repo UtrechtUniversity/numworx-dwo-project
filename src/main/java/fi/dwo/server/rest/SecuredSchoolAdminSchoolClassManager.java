@@ -6,6 +6,7 @@ import fi.dwo.rest.dom.entities.DomStudent;
 import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -263,18 +264,20 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-            //Fetch TeacherOfClass
+            //Fetch StudentOfClass
             List<PersistentStudentOfClass> studentsList = StudentOfClassManager.findEntities(schoolClass);
             if (studentsList == null) {
                 studentsList = new ArrayList<PersistentStudentOfClass>();
             }
-            LOG.log(Level.FINER, "Fetched all {0} teachers. ", new Object[]{studentsList.size()});
+            LOG.log(Level.FINER, "Fetched all {0} students. ", new Object[]{studentsList.size()});
             List<DomStudent> domStudents;
             try {
                 domStudents = new ArrayList<DomStudent>(studentsList.size());
                 for (PersistentStudentOfClass t : studentsList) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentStudentOfClassPK().getUserID());
-                    domStudents.add(u.buildDomStudent());
+                    if (u != null) { // if not found,  no constraint of foreign key.
+                    	domStudents.add(u.buildDomStudent());
+                    }
                 }
             }
             catch (Exception e) {
@@ -489,15 +492,15 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domSchoolClass.getId()));
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-            PersistentStudentOfClass toc = new PersistentStudentOfClass();
-            toc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getId(), schoolClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
-            toc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
-            StudentOfClassManager.create(toc);
+//            PersistentStudentOfClass toc = new PersistentStudentOfClass();
+//            toc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getId(), schoolClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
+//            toc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
+//            StudentOfClassManager.create(toc);
+        	return SchoolClassUtilManager.registerStudentForSchoolClass(shr, schoolClass);
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to add a student to a school class in a different school or is a schoolClass with id {1} that does not exist.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to add the school class.");
         }
-        return true;
     }
 
     /**

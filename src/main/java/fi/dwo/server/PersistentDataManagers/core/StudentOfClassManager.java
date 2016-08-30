@@ -10,9 +10,11 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
@@ -41,6 +43,11 @@ public class StudentOfClassManager {
      */
     public static void create(PersistentStudentOfClass studentOf) throws PersistenceException {
         EntityManager em = null;
+// assert userid not nul(l)     
+        final Long userID = studentOf.getPersistentStudentOfClassPK().getUserID();
+		if (userID == null || userID.longValue() == 0) {
+			throw new PersistenceException("StudentOfClass.userid=" + userID);
+		}
         try {
             em = getEntityManager();
             em.getTransaction().begin();

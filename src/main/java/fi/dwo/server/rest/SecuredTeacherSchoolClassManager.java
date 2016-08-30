@@ -7,6 +7,7 @@ import fi.dwo.rest.dom.entities.DomStudent;
 import fi.dwo.rest.dom.entities.DomTeacher;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -597,12 +598,13 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), fromClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
 
         if (toc != null && fromClass.getSchoolID().equals(school.getSchoolID()) && toClass.getSchoolID().equals(school.getSchoolID())) {
-            PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
-            toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getId(), toClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
-            java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
-            toSoc.setRegisterDate(d);
-            StudentOfClassManager.create(toSoc);
-            return true;
+//            PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
+//            toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getId(), toClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
+//            java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
+//            toSoc.setRegisterDate(d);
+//            StudentOfClassManager.create(toSoc);
+//            return true;
+        	return SchoolClassUtilManager.registerStudentForSchoolClass(shr, toClass);
         } else {
             return false;
         }
@@ -699,26 +701,12 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         PersistentStudentOfClass soc = StudentOfClassManager.findEntity(new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
 
-        return 	removeStudentFromSchoolHelper(sc, school, student, shr, schoolClass);
-
-        
-//        if (toc != null && student != null && soc != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-//            try {
-//                if (shr.getClassID()!=null && shr.getClassID().equals(soc.getPersistentStudentOfClassPK().getClassID())) {
-//                    shr.setClassID(null);
-//                    HasRoleManager.edit(shr);
-//                }
-//                StudentOfClassManager.destroy(soc.getPersistentStudentOfClassPK());
-//            }
-//            catch (PersistenceException e) {
-//                return false;
-//            }
-//        } else {
-//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a student from a schoolclass id {1} one or both do not exists or are not in the school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
-//            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the school class.");
-//        }
-//
-//        return true;
+        if (toc != null && student != null && soc != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
+        	return 	removeStudentFromSchoolHelper(sc, school, student, shr, schoolClass);
+        } else {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a student from a schoolclass id {1} one or both do not exists or are not in the school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the school class.");
+        }
     }
 
     /**

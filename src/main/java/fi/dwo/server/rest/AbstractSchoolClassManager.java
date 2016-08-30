@@ -15,6 +15,7 @@ import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 
 
 /**
@@ -28,24 +29,11 @@ abstract class AbstractSchoolClassManager {
 	protected Boolean removeStudentFromSchoolHelper(SecurityContext sc, PersistentSchool school,
 			PersistentUser student, PersistentHasRole shr, PersistentSchoolClass schoolClass) {
 				if (student != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-			        try {
-			            PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID());
-			            if (shr.getClassID()!=null && shr.getClassID().equals(socId.getClassID())) {
-			                shr.setClassID(null);
-			                HasRoleManager.edit(shr);
-			            }
-			            StudentOfClassManager.destroy(socId);
-			
-			        }
-			        catch (PersistenceException e) {
-			            return false;
-			        }
+					return SchoolClassUtilManager.removeStudentFromSchoolClass(shr, schoolClass);					
 			    } else {
 			        LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a student from a schoolclass id {1} one or both do not exists or are not in the school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
 			        throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the school class.");
 			    }
-			
-			    return true;
 			}
 
 

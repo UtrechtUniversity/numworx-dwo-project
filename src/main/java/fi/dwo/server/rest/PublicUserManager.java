@@ -410,15 +410,13 @@ public class PublicUserManager {
                     PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socPK);
                     if (soc == null) {
                         soc = new PersistentStudentOfClass();
-                        soc.setPersistentStudentOfClassPK(
-                                new PersistentStudentOfClassPK(hr.getPersistentHasRolePK().getId(),
-                                        schoolClass.getClassID(), hr.getPersistentHasRolePK().getSchoolGroupID()));
+                        soc.setPersistentStudentOfClassPK(socPK);
                         soc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
                         try {
                             StudentOfClassManager.create(soc);
                         }
                         catch (PersistenceException e) {
-                            LOG.log(Level.SEVERE, null, e);
+                            LOG.log(Level.SEVERE, "create " + soc, e);
 //                            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                         }
                     }

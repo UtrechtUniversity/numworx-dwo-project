@@ -336,6 +336,15 @@
                   <overWrite>true</overWrite>
                   <destFileName>DWOJApplet.jar</destFileName>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>              
+                  <artifactId>DWOJApplet</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>jar-with-dependencies</classifier>
+                  <type>jar.pack.gz</type>
+                  <overWrite>true</overWrite>
+                  <destFileName>DWOJApplet.jar.pack.gz</destFileName>
+                </artifactItem>
               </artifactItems>
               <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
               <overWriteReleases>false</overWriteReleases>

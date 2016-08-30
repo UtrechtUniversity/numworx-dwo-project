@@ -4,6 +4,7 @@ import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -20,10 +21,16 @@ import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
@@ -154,24 +161,14 @@ public class SecuredStudentSchoolClassManager {
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
 
         if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-            try {
-                PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
-                if (phr.getClassID() != null && socId != null && phr.getClassID().equals(socId.getClassID())) {
-                    phr.setClassID(null);
-                    HasRoleManager.edit(phr);
-                }
-                StudentOfClassManager.destroy(socId);
-            }
-            catch (PersistenceException e) {
-                return false;
-            }
+            return SchoolClassUtilManager.removeStudentFromSchoolClass(phr, schoolClass);
+            
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove self from a schoolclass id {1} while one or both do not exists or are not in the same school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove yourself from the school class.");
         }
-
-        return true;
     }
+
 
     /**
      * Removes a student from a school class and returns true if the remove
@@ -208,23 +205,13 @@ public class SecuredStudentSchoolClassManager {
                     || schoolClass.getRegistrationKey().equals(restSchoolClass.getDomNewSchoolClass4Student().getRegistrationKey()))) {
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Invalid_schoolclass_registration_key, "Incorrect password to add yourself to this school class.");
             }
-            try {
-                PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID());
-                PersistentStudentOfClass soc = new PersistentStudentOfClass();
-                soc.setPersistentStudentOfClassPK(socId);
-                soc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
-                StudentOfClassManager.create(soc);
-            }
-            catch (PersistenceException e) {
-                return false;
-            }
+            return SchoolClassUtilManager.registerStudentForSchoolClass(phr, schoolClass);
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove self from a schoolclass id {1} while one or both do not exists or are not in the same school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to submit yourself to this school class.");
         }
-
-        return true;
     }
+
 
     /**
      * Returns the school data to be displayed.

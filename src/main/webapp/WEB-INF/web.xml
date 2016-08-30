@@ -212,7 +212,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>download</servlet-name>
-        <url-pattern>/jars/*</url-pattern>
+        <url-pattern>*.jar</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>download</servlet-name>
