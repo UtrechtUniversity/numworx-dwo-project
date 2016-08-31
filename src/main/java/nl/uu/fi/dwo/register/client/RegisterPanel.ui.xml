@@ -6,7 +6,7 @@
 	<ui:style>
 	</ui:style>
 	<g:HTMLPanel>
-	<mgwt:LayoutPanel height="100%" width="100%" >
+	<mgwt:LayoutPanel height="800px" width="100%" >
 		<!-- Topbar Navigation Area -->
 		<mgwt:HeaderPanel >
 			<mgwt:center>
