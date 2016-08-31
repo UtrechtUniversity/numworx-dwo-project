@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -51,6 +52,8 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
     ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
     Command resetLogin;
+
+	private HandlerRegistration registration;
 
     public PopupPanel getPopup() {
         return popup;
@@ -100,7 +103,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 //        this.clear();
 //        this.add(g);
 //
-        CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
+        table = new CellTable<DomSchoolClass>();
         // Create name column.
         TextColumn<DomSchoolClass> schoolClassColumn = new TextColumn<DomSchoolClass>() {
             @Override
@@ -157,7 +160,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                     switch (columnIndex) {
                         case 1:
                         	if( isCurrentSchoolClass(sc)) return;
-                        	
+                        	deregister(); // remove popup, select currentclass by hand
                         	//relogin with schoolclass set... FIXME alleen bij getContext
 //                            if (Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch()) == false) {
 //                                return;
@@ -215,6 +218,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                                                     && (result == null
                                                     || current == null
                                                     || !result.getId().equals(current.getId()))) {
+                                            	deregister();
                                                 popup.hide();
                                                 resetLogin.execute();
                                                 // no need to update schoolclassses.
@@ -290,11 +294,13 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
             popup.center();
             
 // If current school class is empty, and we have available classes, relogin            
-            if( DwoGlobalVars.instance().getCurrentSchoolClass() == null) {
-            	popup.addCloseHandler(new CloseHandler<PopupPanel>() {
+            if( DwoGlobalVars.instance().getCurrentSchoolClass() == null && registration == null) {
+            	registration = this.popup.addCloseHandler(new CloseHandler<PopupPanel>() {
 					
 					@Override
 					public void onClose(CloseEvent<PopupPanel> event) {
+						registration.removeHandler();
+						registration = null;
 						if( table.getRowCount() > 0 )
 							resetLogin.execute();
 					}
@@ -320,4 +326,10 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
             list.add(schoolClass);
         }
     }
+
+	private void deregister() {
+		if(registration != null)
+			registration.removeHandler();
+		registration = null;
+	}
 }
