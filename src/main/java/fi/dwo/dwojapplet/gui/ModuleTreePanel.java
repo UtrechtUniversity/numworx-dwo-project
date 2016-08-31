@@ -661,7 +661,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		if(courses == null || courses.length <= 1)
 			return;
 		//System.err.println(Arrays.asList(courses));
-		
+		int count = 1000;
 		do { again = false;
 		     progress = false;
 			more:
@@ -704,7 +704,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 					}
 				}
 			}
-		} while(again && progress);
+		} while(again && progress && count-- > 0);
 		//System.err.println(Arrays.asList(courses));
 	}
 	
