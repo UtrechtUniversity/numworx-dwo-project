@@ -4,7 +4,6 @@ package fi.dwo.rest.exceptions;
 import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.logging.Logger;
-import javax.xml.ws.Response;
 
 /**
  * A Dwo2Exception for handling application errors. See

@@ -1,15 +1,14 @@
 package fi.dwo.rest.exceptions;
 
-import fi.dwo.rest.DwoLocale;
-import fi.dwo.rest.util.Dwo2ExceptionTranslator;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import fi.dwo.rest.DwoLocale;
+import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
  * A Dwo2 exception for handling rest errors. See 
