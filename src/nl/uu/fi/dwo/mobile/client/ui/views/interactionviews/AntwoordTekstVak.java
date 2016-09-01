@@ -703,28 +703,9 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		attemptsCount = this.attemptsCount;
 		errorCount = this.errorCount;
 
-		if (logOption)
-		{
-			HashMap logMap = new HashMap();
-
-			String logString = "";
-			if (formuleMode)
-			{
-				logString = formuleVak.toString();
-			}
-			else
-				logString = antwoordTF.getText();
-
-			logMap.put("logAnswer", logString);
-			logMap.put("logScore", new Integer(score));
-			logMap.put("logMaxScore", new Integer(scoreMax));
-			logMap.put("logErrorCount", new Integer(errorCount));
-			logMap.put("logAttemptsCount", new Integer(attemptsCount));
-			logMap.put("logAttempts", attempts);
-
-			//WiskOpdr.setLog(logID, logMap);
+		if(logging instanceof DWOLogger) {
+			((DWOLogger) logging).updateLog(buildLogParameters());
 		}
-
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("ingevuld", new Boolean(ingevuld));
 		h.put("nagekeken", new Boolean(nagekeken));
@@ -797,18 +778,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	public void setAttempt(boolean start)
 	{
 		if(logOption) {
-			Map<String, Object> log = new HashMap<String, Object>();
-			if(goedKrulImage.isVisible())
-				log.put("success", Boolean.TRUE);
-			else if(foutKruisImage.isVisible())
-				log.put("success", Boolean.FALSE);
-			String response = "";
-			if(formuleMode) {
-				response = formuleVak.getMainRegel().toMathML();
-			} else
-				response = antwoordTF.getText();
-			log.put("response", response);
-			log.put("score", Collections.singletonMap("raw", score));
+			Map<String, Object> log = buildLogParameters();
 // TODO feedback		
 			logging.log(log);
 		}
@@ -853,6 +823,23 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 //
 //		attempts.addElement(s);
 //		System.out.println(s);
+	}
+
+
+	private Map<String, Object> buildLogParameters() {
+		Map<String, Object> log = new HashMap<String, Object>();
+		if(goedKrulImage.isVisible())
+			log.put("success", Boolean.TRUE);
+		else if(foutKruisImage.isVisible())
+			log.put("success", Boolean.FALSE);
+		String response = "";
+		if(formuleMode) {
+			response = formuleVak.getMainRegel().toMathML();
+		} else
+			response = antwoordTF.getText();
+		log.put("response", response);
+		log.put("score", Collections.singletonMap("raw", score));
+		return log;
 	}
 	
 	public void wis()

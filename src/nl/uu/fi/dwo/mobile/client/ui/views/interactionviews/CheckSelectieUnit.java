@@ -308,23 +308,9 @@ public class CheckSelectieUnit implements InteractionStub
 	    errorCount = this.errorCount;
 
 	    kijkNa(false);
-		if(logOption)
-		{	
-	    	HashMap logMap = new HashMap<String, Object>();
-			
-	    	String logString = "";
-			String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
-			for(int i=0 ; i<ipList.length ; i++)
-	        {   if(ipList[i].isIpSelected() && i<options.length) logString = logString + options[i];
-	        }
-			logMap.put("logAnswer", logString);
-			logMap.put("logScore", new Integer(score));
-			logMap.put("logMaxScore", new Integer(scoreMax));
-			logMap.put("logErrorCount", new Integer(errorCount));
-			logMap.put("logAttemptsCount", new Integer(attemptsCount));
-			logMap.put("logAttempts", attempts);
-			
-			//WiskOpdr.setLog(logID, logMap);
+		if(dwologger != null) {
+			Map<String, Object> map = buildLogParameters();
+			dwologger.updateLog(map);
 		}
          
 	    HashMap<String, Object> h = new HashMap<String, Object>();
@@ -406,46 +392,51 @@ public class CheckSelectieUnit implements InteractionStub
 	
 	public void setAttempt()
 	{
-		String logString = "";
-		String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
-		for(int i=0 ; i<ipList.length ; i++)
-        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
-            if(ipList[i] != null && ipList[i].isIpSelected() && i<options.length) 
-            	logString = logString + options[i];
-        }
 		if(dwologger != null) {
-			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("response", logString);
-			map.put("score", Collections.singletonMap("raw", score));
-			if(goedKrulImage.isVisible())
-				map.put("success", Boolean.TRUE);
-			if(foutKruisImage.isVisible())
-				map.put("success", Boolean.FALSE);
+			Map<String, Object> map = buildLogParameters();
 			dwologger.log(map);
 		}
 
 		
 		
-		String goedFout = "";
-		if(goedKrulImage.isVisible())
-			goedFout = "goed";
-		//else if(goedKrulHalfImage.isVisible())
-		//	goedFout = "half";
-		else if(foutKruisImage.isVisible())
-			goedFout = "fout";
-		
-		
-		String s = logString;
-		s = s + "   ;   ";
-		s = s + goedFout;
-		s = s + "   ;   ";
-		s = s + "score = " + score;
-		s = s + "   ;   ";
-		s = s + new Date().toString();
-		
+//		String goedFout = "";
+//		if(goedKrulImage.isVisible())
+//			goedFout = "goed";
+//		//else if(goedKrulHalfImage.isVisible())
+//		//	goedFout = "half";
+//		else if(foutKruisImage.isVisible())
+//			goedFout = "fout";
+//		
+//		
+//		String s = logString;
+//		s = s + "   ;   ";
+//		s = s + goedFout;
+//		s = s + "   ;   ";
+//		s = s + "score = " + score;
+//		s = s + "   ;   ";
+//		s = s + new Date().toString();
+//		
+//
+//		attempts.addElement(s);
+//		System.out.println(s);
+	}
 
-		attempts.addElement(s);
-		System.out.println(s);
+	private Map<String, Object> buildLogParameters() {
+		String logString = "";
+		String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
+		for(int i=0 ; i<ipList.length ; i++)
+		{   //ipList[i] = parent.zoekTekstVakPanel(i+1);
+			if(ipList[i] != null && ipList[i].isIpSelected() && i<options.length) 
+				logString = logString + options[i];
+		}
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("response", logString);
+		map.put("score", Collections.singletonMap("raw", score));
+		if(goedKrulImage.isVisible())
+			map.put("success", Boolean.TRUE);
+		if(foutKruisImage.isVisible())
+			map.put("success", Boolean.FALSE);
+		return map;
 	}
 	
 	public void wis()

@@ -188,18 +188,9 @@ public class CheckSleepUnit implements InteractionStub{
 
 	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
 	   	kijkNa(false);
-		if(logOption)
-		{	
-	    	HashMap logMap = new HashMap<String, Object>();
-			
-	    	String logString = answer;
-			logMap.put("logAnswer", logString);
-			logMap.put("logScore", new Integer(score));
-			logMap.put("logMaxScore", new Integer(scoreMax));
-			logMap.put("logErrorCount", new Integer(errorCount));
-			logMap.put("logAttemptsCount", new Integer(attemptsCount));
-			logMap.put("logAttempts", attempts);
-			
+		if(dwologger != null) {
+			Map<String, Object> map = buildLogParameters();
+			dwologger.updateLog(map);
 		}
          
 	    HashMap<String, Object> h = new HashMap<String, Object>();
@@ -281,13 +272,7 @@ public class CheckSleepUnit implements InteractionStub{
 	public void setAttempt()
 	{
 		if(dwologger != null) {
-			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("response", answer);
-			map.put("score", Collections.singletonMap("raw", score));
-			if(goedKrulImage.isVisible())
-				map.put("success", Boolean.TRUE);
-			if(foutKruisImage.isVisible())
-				map.put("success", Boolean.FALSE);
+			Map<String, Object> map = buildLogParameters();
 			dwologger.log(map);
 		}
 // Wim: wordt niet gebruikt, en in een andere volgorde als het VergelijkingVak.		
@@ -309,6 +294,17 @@ public class CheckSleepUnit implements InteractionStub{
 		
 
 		attempts.addElement(s);
+	}
+
+	private Map<String, Object> buildLogParameters() {
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("response", answer);
+		map.put("score", Collections.singletonMap("raw", score));
+		if(goedKrulImage.isVisible())
+			map.put("success", Boolean.TRUE);
+		if(foutKruisImage.isVisible())
+			map.put("success", Boolean.FALSE);
+		return map;
 	}
 	
 	public void wis()

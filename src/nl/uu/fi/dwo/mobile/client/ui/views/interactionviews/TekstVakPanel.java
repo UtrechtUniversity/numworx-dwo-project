@@ -1057,6 +1057,9 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		{	h.put("locationX", new Integer(locationX));
 			h.put("locationY", new Integer(locationY));
 		}
+		if (dwologger != null) {
+			dwologger.updateLog(buildLogParameters());
+		}
 		
 		return h;
 	}
@@ -2638,11 +2641,16 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	
 	private void setAttempt() {
 		if(dwologger != null) {
-			Map<String,Object> parameters = new HashMap<String,Object>();
-			parameters.put("response", fi.wiskopdr.text.Text.constants.jaTekst());
-			parameters.put("score", Collections.singletonMap("raw", -this.puntenAftrekPopup));
+			Map<String, Object> parameters = buildLogParameters();
 			dwologger.log(parameters);
 		}
+	}
+
+	private Map<String, Object> buildLogParameters() {
+		Map<String,Object> parameters = new HashMap<String,Object>();
+		parameters.put("response", fi.wiskopdr.text.Text.constants.jaTekst());
+		parameters.put("score", Collections.singletonMap("raw", -this.puntenAftrekPopup));
+		return parameters;
 	}
 
 	@Override

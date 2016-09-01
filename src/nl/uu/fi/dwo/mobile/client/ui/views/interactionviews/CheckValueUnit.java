@@ -364,21 +364,11 @@ public class CheckValueUnit implements InteractionStub{
 
 	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
 	    kijkNa(false);
-		if(logOption)
-		{	
-	    	HashMap<String, Object> logMap = new HashMap<String, Object>();
-			
-	    	String logString = answer;
-			logMap.put("logAnswer", logString);
-			logMap.put("logScore", new Integer(score));
-			logMap.put("logMaxScore", new Integer(scoreMax));
-			logMap.put("logErrorCount", new Integer(errorCount));
-			logMap.put("logAttemptsCount", new Integer(attemptsCount));
-			logMap.put("logAttempts", attempts);
-			
-			//WiskOpdr.setLog(logID, logMap);
+		if(dwologger != null) {
+			Map<String, Object> map = buildLogParameters();
+			dwologger.updateLog(map);
 		}
-         
+        
 	    HashMap<String, Object> h = new HashMap<String, Object>();
         h.put("ingevuld", new Boolean(ingevuld));
         h.put("nagekeken", new Boolean(nagekeken));
@@ -393,40 +383,52 @@ public class CheckValueUnit implements InteractionStub{
 	public void setAttempt()
 	{
 		if(dwologger != null) {
-			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("response", answer);
-			map.put("score", Collections.singletonMap("raw", score));
-			if(goedKrulImage.isVisible())
-				map.put("success", Boolean.TRUE);
-			if(foutKruisImage.isVisible())
-				map.put("success", Boolean.FALSE);
+			Map<String, Object> map = buildLogParameters();
 			dwologger.log(map);
 		}
 		
-		String goedFout = "";
-		if(goedKrulImage.isVisible())
-			goedFout = "goed";
-		if(foutKruisImage.isVisible())
-			goedFout = "fout";
-		
-		String logString = "";
-		//String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
-		//for(int i=0 ; i<ipList.length ; i++)
-		// {   ipList[i] = ((TekstInteractiePanelVak)getParent()).zoekInteractiePanel(i+1);
-        //    if(((TekstVakPanel)ipList[i]).isIpSelected() && i<options.length) logString = logString + options[i];
-        //}
-		
-		String s = logString;
-		s = s + "   ;   ";
-		s = s + goedFout;
-		s = s + "   ;   ";
-		s = s + "score = " + score;
-		s = s + "   ;   ";
-		s = s + new Date().toString();
-		
+//		String goedFout = "";
+//		if(goedKrulImage.isVisible())
+//			goedFout = "goed";
+//		if(foutKruisImage.isVisible())
+//			goedFout = "fout";
+//		
+//		String logString = "";
+//		//String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
+//		//for(int i=0 ; i<ipList.length ; i++)
+//		// {   ipList[i] = ((TekstInteractiePanelVak)getParent()).zoekInteractiePanel(i+1);
+//        //    if(((TekstVakPanel)ipList[i]).isIpSelected() && i<options.length) logString = logString + options[i];
+//        //}
+//		
+//		String s = logString;
+//		s = s + "   ;   ";
+//		s = s + goedFout;
+//		s = s + "   ;   ";
+//		s = s + "score = " + score;
+//		s = s + "   ;   ";
+//		s = s + new Date().toString();
+//		
+//
+//		attempts.addElement(s);
+//		System.out.println(s);
+	}
 
-		attempts.addElement(s);
-		System.out.println(s);
+	private Map<String, Object> buildLogParameters() {
+//		String logString = "";
+//		String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
+//		for(int i=0 ; i<ipList.length ; i++)
+//	    {   ipList[i] = ((TekstInteractiePanelVak)getParent()).zoekInteractiePanel(i+1);
+//            if(((TekstVakPanel)ipList[i]).isIpSelected() && i<options.length) logString = logString + options[i];
+//        }
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("response", answer);
+		map.put("score", Collections.singletonMap("raw", score));
+		if(goedKrulImage.isVisible())
+			map.put("success", Boolean.TRUE);
+		if(foutKruisImage.isVisible())
+			map.put("success", Boolean.FALSE);
+		return map;
 	}
 	
 	public void wis()

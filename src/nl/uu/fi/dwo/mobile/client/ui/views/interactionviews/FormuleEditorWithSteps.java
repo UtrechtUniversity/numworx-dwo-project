@@ -194,8 +194,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	{
 		font = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
 		
-		this.randomVarNamen = randomVarNamen;
-		this.randomVarWaarden = randomVarWaarden;
+		FormuleEditorWithSteps.randomVarNamen = randomVarNamen;
+		FormuleEditorWithSteps.randomVarWaarden = randomVarWaarden;
 		this.isVergelijkingVak = isVergelijkingVak;
 		this.h = h;
 		
@@ -1536,6 +1536,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		// checks vooraf....
 		if(editor != null) {
 			String formule0 = editor.toString();
+			if(formule0.isEmpty() && latest_answer_viewer != null)
+			{
+				formule0= latest_answer_viewer.toString();
+			}
 // Strip = at end
 			if(formule0.endsWith("=")||formule0.endsWith("\u2248"))
 				formule0 = formule0.substring(0, formule0.length()-1);
@@ -1558,7 +1562,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 					if(isAfgerond) {
 						formule0 += '\u2248';
 					}
-					voegRegelToe("$f" + formule0 +"@", check && !isToets(), false);
+					if(!editor.toString().isEmpty())
+						voegRegelToe("$f" + formule0 +"@", check && !isToets(), false);
 					editor.insert(formule1);
 				}
 				
@@ -1696,7 +1701,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		h.put("gebruikersSubStrings", gebruikersSubStrings);
 		
 		if (dwologger!= null) 
+		{
+			Map<String,?> m = editor.buildLoggingMap();
+			dwologger.updateLog(m);
 			dwologger.getStateHook(h);
+		}
 		return h;
 	}
 

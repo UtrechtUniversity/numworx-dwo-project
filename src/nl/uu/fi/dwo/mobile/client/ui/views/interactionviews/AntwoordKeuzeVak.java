@@ -677,6 +677,11 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 //
 //		}
 
+		if(logging instanceof DWOLogger) {
+			((DWOLogger) logging).updateLog(buildLogParameters());
+		}
+		
+		
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("ingevuld", new Boolean(ingevuld));
 		h.put("nagekeken", new Boolean(nagekeken));
@@ -692,18 +697,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	public void setAttempt()
 	{
 		if(logOption) {
-			Map<String, Object> log  = new HashMap<String, Object>();
-			if(goedKrulImage.isVisible())
-				log.put("success", Boolean.TRUE);
-			if(foutKruisImage.isVisible())
-				log.put("success", Boolean.FALSE);
-			String formule = "";
-			if(selectedIndex > 0) {
-				formule = keuzeMogelijkheden[selectedIndex - 1];
-			}
-			log.put("response", formule.trim());
-			log.put("score", Collections.singletonMap("raw", score));
-			log.put("step", "");
+			Map<String, Object> log = buildLogParameters();
 // TODO feedback
 			logging.log(log);
 		}
@@ -744,6 +738,22 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 //
 //		attempts.addElement(s);
 //		//System.out.println(s);
+	}
+
+	private Map<String, Object> buildLogParameters() {
+		Map<String, Object> log  = new HashMap<String, Object>();
+		if(goedKrulImage.isVisible())
+			log.put("success", Boolean.TRUE);
+		if(foutKruisImage.isVisible())
+			log.put("success", Boolean.FALSE);
+		String formule = "";
+		if(selectedIndex > 0) {
+			formule = keuzeMogelijkheden[selectedIndex - 1];
+		}
+		log.put("response", formule.trim());
+		log.put("score", Collections.singletonMap("raw", score));
+		log.put("step", "");
+		return log;
 	}
 
 	public void setState(HashMap<String, Object> h)

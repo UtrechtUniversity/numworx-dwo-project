@@ -776,22 +776,27 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		if (logging != null)
 		{
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("response",
-				"<math xmlns='http://www.w3.org/1998/Math/MathML'>"
-					+ getMainRegel().toMathML() + "</math>");
-			map.put("score", Collections.singletonMap("raw", getScore()));
-			if (correct != null)
-			{
-				map.put("success", correct);
-			}
-			map.put("formula", getMainRegel().toString());
-			map.put("step", getStep());
-			String feedback = getFeedback();
-			if (feedback != null && !feedback.isEmpty())
-				map.put("feedback", feedback);
+			Map<String, Object> map = buildLoggingMap();
 			logging.log(map);
 		}
+	}
+
+	Map<String, Object> buildLoggingMap() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("response",
+			"<math xmlns='http://www.w3.org/1998/Math/MathML'>"
+				+ getMainRegel().toMathML() + "</math>");
+		map.put("score", Collections.singletonMap("raw", getScore()));
+		if (correct != null)
+		{
+			map.put("success", correct);
+		}
+		map.put("formula", getMainRegel().toString());
+		map.put("step", getStep());
+		String feedback = getFeedback();
+		if (feedback != null && !feedback.isEmpty())
+			map.put("feedback", feedback);
+		return map;
 	}
 	
 	private Object getStep() 
@@ -1232,6 +1237,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
 			h.put("errorCount", new Integer(errorCount));
 			
+		}
+
+		if(logging instanceof DWOLogger) {
+			Map<String, Object> map = buildLoggingMap();
+			((DWOLogger) logging).updateLog(map);
 		}
 		return h;
 	}

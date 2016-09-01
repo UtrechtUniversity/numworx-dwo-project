@@ -61,7 +61,7 @@
 	    	    <mgwt:MPasswordTextBox ui:field="passwd" addStyleNames="{style.login_text_field}"> </mgwt:MPasswordTextBox>	
 	    	    <mgwt:Button ui:field="submitbutton" addStyleNames="{style.login_button}" text="{rb.login}"></mgwt:Button>
 	    	    <mgwt:Button ui:field="gastbutton" addStyleNames="{style.login_button}" text="{rb.loginAlsGast}"></mgwt:Button>
-	    	    <div style="clear: both; width: 300px; margin: 10px auto;"><a href="/dwo/rest/public/user/requestNewPassword?language={rb.locale}&amp;back={back}"><ui:text from='{rb.vergeten}'/></a>,
+	    	    <div style="clear: both; width: 300px; margin: 10px auto;"><a href="/dwo/rest/public/user/requestNewPassword?language={rb.locale}&amp;back={back}"><ui:text from='{rb.vergeten}'/></a> 
 	    	     <br/> <a href="/dwo/register?locale={rb.locale}&amp;next={back}"><ui:text from='{rb.aanmelden}'/></a>
 	    	    </div>
 	    	   	

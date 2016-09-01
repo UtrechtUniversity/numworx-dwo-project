@@ -74,9 +74,31 @@ public class DWOLogger implements Logging {
 		if(delegate != null) {
 			delegate.log(parameters);
 		}
-		
 	}
 
+	/** Save last answer. No attempt
+	 * 
+	 * @param parameters
+	 */
+	public void updateLog(Map<String, ?> parameters) {
+		String formula = (String)parameters.get("response");
+		map.put(LOGKEY_ANSWER, new JSONString(formula));
+		JSONNumber score = getScore(parameters);
+		if (score != null)
+			map.put(LOGKEY_SCORE, score);
+		if(maxScore != null)
+			map.put(LOGKEY_MAXSCORE, maxScore);
+		if(logIDLabel != null)
+			map.put("logIDLabel", logIDLabel);
+		map.put(LOG_ERROR_COUNT, new JSONNumber(errorCount));
+		map.put(LOG_ATTEMPTS_COUNT, new JSONNumber(attemptsCount));
+		if(logIDLabel != null)
+			map.put("logIDLabel", logIDLabel);
+	}
+	
+	
+	
+	
 	private JSONNumber getScore(Map<String, ?> parameters) {
 		Map map = (Map) parameters.get("score");
 		if(map == null) return null;
