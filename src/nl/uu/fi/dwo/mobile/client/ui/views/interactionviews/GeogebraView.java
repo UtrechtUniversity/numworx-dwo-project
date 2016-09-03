@@ -97,11 +97,14 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private void ggbLog(String action, String name, String definition,
 			String value, String type) {
 		if (dwologger != null) {
-			Map<String, String> result = new HashMap<String, String>();
-			result.put("action", action);
-			result.put("label", name);
-			result.put("definition", definition);
-			result.put("value", value);
+			Map<String, Object> result = new HashMap<String, Object>();
+			result.put("event", action);
+			result.put("id", name);
+			Map<String,String> state = new HashMap<String,String>();
+			state.put("definition", definition);
+			state.put("value", value);
+			state.put("position", "");
+			result.put("state", state);
 			result.put("type", type);
 			dwologger.getLogger().log(result);
 		}
