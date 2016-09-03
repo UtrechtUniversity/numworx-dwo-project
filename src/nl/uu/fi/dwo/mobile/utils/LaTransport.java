@@ -25,12 +25,23 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 
 public class LaTransport implements Logging {
+	
+	private static native void installLacon(LaconSender lacon)
+	/*-{ (function (lacon) { 
+			$wnd.laconSender = function (obj) {
+				lacon.@nl.uu.fi.dwo.mobile.utils.LaTransport.LaconSender::send00(Lcom/google/gwt/core/client/JavaScriptObject;)(obj)
+			}
+		})(lacon)
+	}-*/
+	;
+	
 
 	public static Logging newInstance() { 
 		return new LaTransport(new PairSender(new LaconSender(), new LogSender()));		
 	}
 
 	public static Logging newJSInstance() {
+		installLacon(new LaconSender());
 		return new LaTransport(new PairSender(new JSSender(), new LogSender()));
 	}
 	
@@ -59,6 +70,9 @@ public class LaTransport implements Logging {
 			}
 		}
 
+		void send00 (JavaScriptObject jso) {
+			send0(new JSONObject(jso));
+		}
 		@Override
 		public void onResponseReceived(Request request, Response res) {		
 			lg.info( "Lacon returned "+
