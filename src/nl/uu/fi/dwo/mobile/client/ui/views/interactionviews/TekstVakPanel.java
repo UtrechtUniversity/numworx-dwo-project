@@ -1,9 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -93,6 +95,8 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	
 	private static final CBookEvent KLAPUIT_EVENT = new CBookEvent(TVP_KLAPUIT); 
 	private static final CBookEvent KLAPIN_EVENT = new CBookEvent(TVP_KLAPIN); 
+	
+	public static Map<String,Map<String,Object>> styles;
 	
 	private boolean hoofdPanel;
 	
@@ -240,6 +244,8 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 	private boolean nagekeken;
 	private boolean bgColorZichtbaar;
 	
+	private String styleString;
+	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
 		ObjectMap colorMap = map != null && map.containsKey(key) ? map.getObjectMap(key) : null ;
@@ -383,63 +389,136 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			dwologger.setClassName("fi.wiskopdr.TekstVakPanel");			
 		}
 		
-		
-		if (launchState.containsKey("cellSpaceColumn") )
-			cellSpaceColumn = launchState.getInt("cellSpaceColumn");
-		if (launchState.containsKey("cellSpaceRow") )
-			cellSpaceRow = launchState.getInt("cellSpaceRow");
-		if (launchState.containsKey("cellMarge"))
-			cellMarge = launchState.getInt("cellMarge");
-		if (launchState.containsKey("interlinie"))
-			interlinie = launchState.getInt("interlinie");
-		if (launchState.containsKey("bovenMarge") )
-			bovenMarge = launchState.getInt("bovenMarge");
-		if (launchState.containsKey("ronding"))
-			ronding = launchState.getInt("ronding");
-		if (launchState.containsKey("hoek"))
-			hoek = launchState.getInt("hoek");
-		if (launchState.containsKey("bgColorZichtbaar") )
-			bgColorZichtbaar = launchState.getBoolean("bgColorZichtbaar");
-		if (launchState.containsKey("bgColor_red") )
-			bgColor_red = launchState.getInt("bgColor_red");
-		if (launchState.containsKey("bgColor_green"))
-			bgColor_green = launchState.getInt("bgColor_green");
-		if (launchState.containsKey("bgColor_blue"))
-			bgColor_blue = launchState.getInt("bgColor_blue");
-		if (launchState.containsKey("fgColor_red"))
-			fgColor_red = launchState.getInt("fgColor_red");
-		if (launchState.containsKey("fgColor_green"))
-			fgColor_green = launchState.getInt("fgColor_green");
-		if (launchState.containsKey("fgColor_blue"))
-			fgColor_blue = launchState.getInt("fgColor_blue");
-		if (launchState.containsKey("randZichtbaar"))
-			randZichtbaar = launchState.getBoolean("randZichtbaar");
-		if (launchState.containsKey("randColor_red"))
-			randColor_red = launchState.getInt("randColor_red");
-		if (launchState.containsKey("randColor_green"))
-			randColor_green = launchState.getInt("randColor_green");
-		if (launchState.containsKey("randColor_blue"))
-			randColor_blue = launchState.getInt("randColor_blue");
-		if (launchState.containsKey("randDikte"))
-			randDikte = launchState.getInt("randDikte");
-		if (launchState.containsKey("font_size"))
-			font_size = launchState.getInt("font_size");
-		if (launchState.containsKey("font_style"))
-			font_style = launchState.getInt("font_style");
-		if (launchState.containsKey("font_name"))
-			font_name = launchState.getString("font_name");
-		if(launchState.containsKey("font")) {
-			ObjectMap m = launchState.getObjectMap("font");
-			font_size = m.getInt("size");
-			font_style = m.getInt("style");
-			font_name = m.getString("family");
-			if(font_name.equals("SansSerif"))
-				font_name = "sans-serif";
-			if(font_name.equals("Dialog"))
-				font_name = "Arial";
+		ObjectMap style = null;
+		if(launchState.containsKey("styleString")) 
+			styleString = (String)launchState.getString("styleString");
+		if(TekstVakPanel.styles!=null && styleString!=null)
+		{	if(TekstVakPanel.styles.containsKey(styleString)) 
+				style = (ObjectMap)(TekstVakPanel.styles.get(styleString));
+		}	
+		System.out.println("Style: "+ (style!=null ? style.toString() : "null"));
+		if(style!=null)	
+		{	if(style.containsKey("randZichtbaar")) randZichtbaar = style.getBoolean("randZichtbaar");
+			if(style.containsKey("bgColorZichtbaar")) bgColorZichtbaar = style.getBoolean("bgColorZichtbaar");
+			if (style.containsKey("bgColor_red") ) bgColor_red = style.getInt("bgColor_red");
+			if (style.containsKey("bgColor_green"))	bgColor_green = style.getInt("bgColor_green");
+			if (style.containsKey("bgColor_blue")) bgColor_blue = style.getInt("bgColor_blue");
+			if (style.containsKey("fgColor_red")) fgColor_red = style.getInt("fgColor_red");
+			if (style.containsKey("fgColor_green")) fgColor_green = style.getInt("fgColor_green");
+			if (style.containsKey("fgColor_blue")) fgColor_blue = style.getInt("fgColor_blue");
+			if (style.containsKey("randColor_red")) randColor_red = style.getInt("randColor_red");
+			if (style.containsKey("randColor_green")) randColor_green = style.getInt("randColor_green");
+			if (style.containsKey("randColor_blue")) randColor_blue = style.getInt("randColor_blue");
+			if(style.containsKey("tableBorders")) tableBorders = style.getBoolean("tableBorders");
+			if(style.containsKey("cellMarge")) cellMarge = style.getInt("cellMarge");
+			if(style.containsKey("bovenMarge")) bovenMarge = style.getInt("bovenMarge");
+		    if(style.containsKey("ronding")) ronding = style.getInt("ronding");
+		    if (style.containsKey("anderFont"))	anderFont =  style.getBoolean("anderFont");
+		    if (style.containsKey("font_size")) font_size = style.getInt("font_size");
+			if (style.containsKey("font_style")) font_style = style.getInt("font_style");
+			if (style.containsKey("font_name")) font_name = style.getString("font_name");
+			if(style.containsKey("font")) {
+				ObjectMap m = style.getObjectMap("font");
+				font_size = m.getInt("size");
+				font_style = m.getInt("style");
+				font_name = m.getString("family");
+				if(font_name.equals("SansSerif"))
+					font_name = "sans-serif";
+				if(font_name.equals("Dialog"))
+					font_name = "Arial";
+			}	
+		    
+			if(style.containsKey("hoek")) hoek = style.getInt("hoek");
+			if(style.containsKey("interlinie")) interlinie = style.getInt("interlinie");
+			if(style.containsKey("cellSpaceColumn")) cellSpaceColumn =style.getInt("cellSpaceColumn");
+			if(style.containsKey("cellSpaceRow")) cellSpaceRow = style.getInt("cellSpaceRow");
+			if(style.containsKey("randDikte")) randDikte = style.getInt("randDikte");
+			
+			bgColor = getColor(style, "bgColor", bgColor_red, bgColor_green, bgColor_blue);
+			if(anderFont)
+			{	fgColor = getColor(style, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
+			
+			}
+			randColor = getColor(style, "randColor",randColor_red, randColor_green, randColor_blue);
+			
+			tableBorders = style.getBoolean("tableBorders",tableBorders);
+			centerV = style.getBoolean("centerV",centerV);
+			centerH = style.getBoolean("centerH",centerH);
+			pasAanH = style.getBoolean("pasAanH",pasAanH);
+			pasAanB = style.getBoolean("pasAanB",pasAanB);
 		}
-		if(launchState.containsKey("anderFont"))
-			anderFont = launchState.getBoolean("anderFont");
+		else 
+		{
+			if (launchState.containsKey("cellSpaceColumn") )
+				cellSpaceColumn = launchState.getInt("cellSpaceColumn");
+			if (launchState.containsKey("cellSpaceRow") )
+				cellSpaceRow = launchState.getInt("cellSpaceRow");
+			if (launchState.containsKey("cellMarge"))
+				cellMarge = launchState.getInt("cellMarge");
+			if (launchState.containsKey("interlinie"))
+				interlinie = launchState.getInt("interlinie");
+			if (launchState.containsKey("bovenMarge") )
+				bovenMarge = launchState.getInt("bovenMarge");
+			if (launchState.containsKey("ronding"))
+				ronding = launchState.getInt("ronding");
+			if (launchState.containsKey("hoek"))
+				hoek = launchState.getInt("hoek");
+			if (launchState.containsKey("bgColorZichtbaar") )
+				bgColorZichtbaar = launchState.getBoolean("bgColorZichtbaar");
+			if (launchState.containsKey("bgColor_red") )
+				bgColor_red = launchState.getInt("bgColor_red");
+			if (launchState.containsKey("bgColor_green"))
+				bgColor_green = launchState.getInt("bgColor_green");
+			if (launchState.containsKey("bgColor_blue"))
+				bgColor_blue = launchState.getInt("bgColor_blue");
+			if (launchState.containsKey("fgColor_red"))
+				fgColor_red = launchState.getInt("fgColor_red");
+			if (launchState.containsKey("fgColor_green"))
+				fgColor_green = launchState.getInt("fgColor_green");
+			if (launchState.containsKey("fgColor_blue"))
+				fgColor_blue = launchState.getInt("fgColor_blue");
+			if (launchState.containsKey("randZichtbaar"))
+				randZichtbaar = launchState.getBoolean("randZichtbaar");
+			if (launchState.containsKey("randColor_red"))
+				randColor_red = launchState.getInt("randColor_red");
+			if (launchState.containsKey("randColor_green"))
+				randColor_green = launchState.getInt("randColor_green");
+			if (launchState.containsKey("randColor_blue"))
+				randColor_blue = launchState.getInt("randColor_blue");
+			if (launchState.containsKey("randDikte"))
+				randDikte = launchState.getInt("randDikte");
+			if (launchState.containsKey("font_size"))
+				font_size = launchState.getInt("font_size");
+			if (launchState.containsKey("font_style"))
+				font_style = launchState.getInt("font_style");
+			if (launchState.containsKey("font_name"))
+				font_name = launchState.getString("font_name");
+			if(launchState.containsKey("font")) {
+				ObjectMap m = launchState.getObjectMap("font");
+				font_size = m.getInt("size");
+				font_style = m.getInt("style");
+				font_name = m.getString("family");
+				if(font_name.equals("SansSerif"))
+					font_name = "sans-serif";
+				if(font_name.equals("Dialog"))
+					font_name = "Arial";
+			}
+			if(launchState.containsKey("anderFont"))
+				anderFont = launchState.getBoolean("anderFont");
+			
+			bgColor = getColor(launchState, "bgColor", bgColor_red, bgColor_green, bgColor_blue);
+			if(anderFont)
+			{	fgColor = getColor(launchState, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
+			
+			}
+			randColor = getColor(launchState, "randColor",randColor_red, randColor_green, randColor_blue);
+			
+			tableBorders = launchState.getBoolean("tableBorders",tableBorders);
+			centerV = launchState.getBoolean("centerV",centerV);
+			centerH = launchState.getBoolean("centerH",centerH);
+			pasAanH = launchState.getBoolean("pasAanH",pasAanH);
+			pasAanB = launchState.getBoolean("pasAanB",pasAanB);
+		}
 		
 		selectable = launchState.getBoolean("selectable",selectable); 
 		sleepbaar = launchState.getBoolean("sleepbaar", sleepbaar);
@@ -467,9 +546,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		if (launchState.containsKey("ipId"))
 			ipId = launchState.getInt("ipId");
 		colorSelection = launchState.getBoolean("colorSelection",colorSelection);
-		tableBorders = launchState.getBoolean("tableBorders",tableBorders);
-		centerV = launchState.getBoolean("centerV",centerV);
-		centerH = launchState.getBoolean("centerH",centerH);
+		
 		zwevend = launchState.getBoolean("zwevend",zwevend);
 		if (launchState.containsKey("locationX"))
 			locationX = launchState.getInt("locationX");
@@ -490,8 +567,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		if( launchState.containsKey("knopImageString2"))
 			knopImageView2 = new ImageView(launchState.getString("knopImageString2"));
 // launchState never null!
-		pasAanH = launchState.getBoolean("pasAanH",pasAanH);
-		pasAanB = launchState.getBoolean("pasAanB",pasAanB);
+		
 		
 		vulHoogte = launchState.getBoolean("vulHoogte", vulHoogte);
 		
@@ -526,12 +602,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 //			}
 //		}
 		
-		bgColor = getColor(launchState, "bgColor", bgColor_red, bgColor_green, bgColor_blue);
-		if(anderFont)
-		{	fgColor = getColor(launchState, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
 		
-		}
-		randColor = getColor(launchState, "randColor",randColor_red, randColor_green, randColor_blue);
 		randDikte = randZichtbaar ? randDikte : 0; 
 
 		mainPanel2 = new LayoutPanel(); 
