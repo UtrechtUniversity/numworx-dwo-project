@@ -100,6 +100,8 @@ public abstract class XMLView {
 	boolean objectivesAanwezig;
 	boolean globalParam;
 	
+	private Map styles;
+	
 	
 	TekstVakPanel hoofdPanel;
 	protected FlowPanel contentPanel = null;
@@ -224,6 +226,12 @@ public abstract class XMLView {
 			OpdrNav.setMccCategorieString(mccCategorieString);
 
 			globalParam = wrap.getBoolean("globalParam", false);
+			
+			if(wrap.containsKey("TekstVakPanelStyles"))
+				styles = wrap.getMap("TekstVakPanelStyles");
+			if(styles!=null)
+				TekstVakPanel.styles = styles;
+			
 		}
 		
 	}
