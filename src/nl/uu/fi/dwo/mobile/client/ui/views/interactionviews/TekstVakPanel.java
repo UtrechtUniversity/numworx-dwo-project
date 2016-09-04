@@ -396,7 +396,7 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 		{	if(TekstVakPanel.styles.containsKey(styleString)) 
 				style = (ObjectMap)(TekstVakPanel.styles.get(styleString));
 		}	
-		System.out.println("Style: "+ (style!=null ? style.toString() : "null"));
+		//System.out.println("Style: "+ (style!=null ? style.toString() : "null"));
 		if(style!=null)	
 		{	if(style.containsKey("randZichtbaar")) randZichtbaar = style.getBoolean("randZichtbaar");
 			if(style.containsKey("bgColorZichtbaar")) bgColorZichtbaar = style.getBoolean("bgColorZichtbaar");
