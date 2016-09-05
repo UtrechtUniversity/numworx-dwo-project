@@ -464,6 +464,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                                     break;
                             }
                         } catch (Dwo2Exception ex) {
+                            submit.setPassword(tmpPassword);
                             resultList.add(submit);
                             if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
                                 LOG.log(Level.FINE, "", ex);
