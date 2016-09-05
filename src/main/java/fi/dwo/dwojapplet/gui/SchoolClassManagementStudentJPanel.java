@@ -100,18 +100,17 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
 
         //FontMetrics fm;
         /* registerinfo label */
-        JLabel l = new JLabel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + ":");
-        l.setAlignmentX(LEFT_ALIGNMENT);
-        l.setAlignmentY(TOP_ALIGNMENT);
-        l.setForeground(GuiConstants.RED_COLOR);
-        l.setFont(GuiConstants.RED_TEXT);
-        FontMetrics fm = l.getFontMetrics(l.getFont());
-        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-        Box b = Box.createHorizontalBox();
-        b.add(l);
-        b.add(Box.createHorizontalGlue());
-        this.add(b);
-        this.add(Box.createVerticalStrut(15));
+//        JLabel l = new JLabel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + ":");
+//        l.setAlignmentX(LEFT_ALIGNMENT);
+//        l.setAlignmentY(TOP_ALIGNMENT);
+//        l.setForeground(GuiConstants.RED_COLOR);
+//        l.setFont(GuiConstants.RED_TEXT);
+//        FontMetrics fm = l.getFontMetrics(l.getFont());
+//        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
+//        Box b = Box.createHorizontalBox();
+//        b.add(l);
+//        b.add(Box.createHorizontalGlue());
+////        this.add(Box.createVerticalStrut(15));
         registerSchoolClass = new JButton(TextMapper.getText(TextMapper.GUIC_REGISTER_FOR_CLASS));
         registerSchoolClass.setSize(registerSchoolClass.getPreferredSize());
         registerSchoolClass.setAlignmentX(Component.RIGHT_ALIGNMENT);

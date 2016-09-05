@@ -63,7 +63,7 @@ public class ClassStudentPanel extends JPanel implements CenterSubPanel, ActionL
      */
     @Override
     public Component getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIP_MY_PROFILE));
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT));
     }
 
     /**
