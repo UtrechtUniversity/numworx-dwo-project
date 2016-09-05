@@ -20,4 +20,10 @@ public class DomSingleSchoolStudent extends DomUserFull {
         super(user);
     }
 
+    @Override
+    public DomSingleSchoolStudent duplicate() {
+        DomSingleSchoolStudent user = new DomSingleSchoolStudent();
+        super.fill(user);
+        return user;
+    }
 }
