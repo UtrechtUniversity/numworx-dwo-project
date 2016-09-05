@@ -300,6 +300,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				{
 					teltMee = launchState.getBoolean("teltMee");
 				}
+				if(launchState.containsKey("logObjectives"))
+				{	ObjectList logObjectivesList = ( launchState.getObjectList("logObjectives") );
+					logObjectives = new boolean[logObjectivesList.size()][];
+					for(int i = 0; i < logObjectivesList.size(); i++)
+					{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
+					}
+				}
 				if(launchState.getBoolean("logOption", false)) {
 					if(fe != null) 
 					{
@@ -317,6 +324,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						logging.setLogID( launchState.getString("logID"));
 						String Formule = isVergelijkingVak ? "Vergelijking" : "Formule";
 						logging.setClassName("fi.wiskOpdr.SimpelAntwoord"+Formule+"Vak");
+						dwoLogger.setLogObjectives(logObjectives);
+						
+						
+						
 					}
 				}
 				
@@ -345,13 +356,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				if(launchState.containsKey("hasFeedback"))
 				{	hasFeedback = launchState.getBoolean("hasFeedback");
 				}
-				if(launchState.containsKey("logObjectives"))
-				{	ObjectList logObjectivesList = ( launchState.getObjectList("logObjectives") );
-					logObjectives = new boolean[logObjectivesList.size()][];
-					for(int i = 0; i < logObjectivesList.size(); i++)
-					{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
-					}
-				}
+				
 				
 			}
 		

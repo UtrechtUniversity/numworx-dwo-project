@@ -264,7 +264,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		scoreNav.setNextPrevHandler(this);
 		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig()
-			&& mode != OpdrNav.EINDTOETS);
+			&& mode != OpdrNav.EINDTOETS && !pilotObjectives);
 		scoreNav.setViewMisconceptionsKnop(on.zijnMisconceptionsAanwezig() 
 			&& mode != OpdrNav.EINDTOETS);
 		scoreNav.setObjectivesHandler(this);
@@ -1025,6 +1025,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		return correct;
 	}
+	
+	public boolean isPilotObjectives()
+	{
+		return pilotObjectives;
+	}
 
 
 	public OpdrNavIF getOpdrNav()
@@ -1500,7 +1505,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	@Override
 	public void openObjectivesPanel(ScoreNavIF source) {
-		on.openObjectivesPanel();
+		on.openObjectivesPanel(pilotObjectives);
 	}
 	
 	@Override

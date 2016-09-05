@@ -261,19 +261,6 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				formuleToolBijFocus = map.getBoolean("formuleToolBijFocus");
 				
 			}
-			if (map.containsKey("logOption"))
-				logOption = map.getBoolean("logOption");
-			if (map.containsKey("logID"))
-				logID = map.getString("logID");
-			if(logOption) {
-				DWOLogger dwologger = new DWOLogger();
-				dwologger.setMaxScore(scoreMax);
-				dwologger.setClassName("fi.wiskopdr.AntwoordTekstVak");
-				dwologger.setLogID(logID);
-				logging = dwologger;
-			}
-			if (map.containsKey("boxMetRand"))
-				boxMetRand = map.getBoolean("boxMetRand");
 			if (map.containsKey("logObjectives"))
 			{	
 				//logObjectives = (boolean[][]) map.get("logObjectives"); 
@@ -283,6 +270,21 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 					logObjectives[i]  = list.getBooleanArray(i);
 				}
 			}
+			if (map.containsKey("logOption"))
+				logOption = map.getBoolean("logOption");
+			if (map.containsKey("logID"))
+				logID = map.getString("logID");
+			if(logOption) {
+				DWOLogger dwologger = new DWOLogger();
+				dwologger.setMaxScore(scoreMax);
+				dwologger.setClassName("fi.wiskopdr.AntwoordTekstVak");
+				dwologger.setLogID(logID);
+				dwologger.setLogObjectives(logObjectives);
+				logging = dwologger;
+			}
+			if (map.containsKey("boxMetRand"))
+				boxMetRand = map.getBoolean("boxMetRand");
+			
 		}
 		
 		

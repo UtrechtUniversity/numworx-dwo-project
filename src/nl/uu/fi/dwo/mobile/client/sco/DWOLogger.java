@@ -10,6 +10,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -22,7 +23,7 @@ public class DWOLogger implements Logging {
 	private static final String START = "0";
 	private static final String SEPARATOR = "  ;  ";
 	private static final String LOG_ERROR_COUNT = "logErrorCount";
-	private static final String LOG_ATTEMPTS = "logAttempts";
+	public static final String LOG_ATTEMPTS = "logAttempts";
 	private static final String LOG_ATTEMPTS_COUNT = "logAttemptsCount";
 	private static final String LOGKEY_SCORE = "logScore";
 	private String logID;
@@ -32,6 +33,7 @@ public class DWOLogger implements Logging {
 	private JSONArray  attempts;
 	private JSONNumber maxScore;
 	private JSONString logIDLabel;
+	private boolean[][] logObjectives;
 	private int errorCount, attemptsCount;
 
 	public DWOLogger() {
@@ -184,6 +186,12 @@ public class DWOLogger implements Logging {
 
 	public void setMaxScore(int max) {
 		maxScore = new JSONNumber(max);
+	}
+	
+	public void setLogObjectives(boolean[][] logObjectives) {
+		this.logObjectives = logObjectives;
+		if(logObjectives != null)
+			map.put("logObjectives", JSONUtilities.toJSONArray(logObjectives));
 	}
 	
 	public void setLogIDLabel(String label) {

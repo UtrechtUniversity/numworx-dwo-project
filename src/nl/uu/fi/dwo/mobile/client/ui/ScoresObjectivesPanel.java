@@ -1,38 +1,57 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 
+
 import java.util.HashMap;
 import java.util.Map;
+
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
+
+import fi.wiskopdr.text.Text;
 
 public class ScoresObjectivesPanel extends LayoutPanel{
 
 	private String[][] objectives;
 	private String[] categorieString;
-	
+	private String scoreText = Text.constants.scoreKopLabel();
+	private String categorieText = Text.constants.categorieLabel(); 
+
 	private String[][] objectivesForDiagram;
 	private String[] categorieStringForDiagram;
-	private int[][] totaalScoresForDiagram;
-	private int[][] totaalMaxForDiagram;
+	private double[][] totaalScoresForDiagram;
+	private double[][] totaalMaxForDiagram;
+	private boolean[] categorieUitgeklapt;
 	
+	boolean pilot = false;
 	int aantalDiagrammen;
 	
 	int straal = 100;
-	int marge = 5;
+	//int marge = 5;
 	int[] mpX;
 	int[] mpY;
+	//tbv nieuwe weergave:
+	int tekstKolomBreedte, marge, regelHoogte, indent;
 	
-	int[][] totaalScoreObjectives;
-	int[][] totaalMaxObjectives;
+	double[][] totaalScoreObjectives;
+	double[][] totaalMaxObjectives;
+	double[] categorieScoreObjectives;
+	double[] categorieMaxObjectives;
 	double[][] scoresPercObjectives;
+	double[] categorieScoresPercObjectives;
 	int[] totaalMax;
 	double[][] hoek, cumHoek, labelHoek; 
 	//double[][] hoekGraden, cumHoekGraden;
@@ -40,18 +59,23 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	int[][] straalRij;
 	
 	TextArea[][] objectivesTextAreas;
+	Label[] categorieLabels;
 	
 	Canvas canvas;
 	Context2d ctx;
+	String fontString = "12px Arial";
+	String boldFontString = "bold 12px Arial";
 //	Font theFont;
 //	FontMetrics theFM;
 //	Font theBoldFont;
 //	FontMetrics theBoldFM;
 	
 	CssColor[][] kleurRij;
+	CssColor[] categorieKleurRij;
 	
-	public ScoresObjectivesPanel(HashMap<String, Object> map)
+	public ScoresObjectivesPanel(HashMap<String, Object> map, boolean pilot)
 	{
+		this.pilot = pilot;
 		canvas = Canvas.createIfSupported();
 		ctx = canvas.getContext2d();
 		//setLayout(null);
@@ -61,16 +85,30 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 //		theBoldFont = new Font("Dialog", Font.BOLD, 12);
 //		theBoldFM = getFontMetrics(theBoldFont);
 		
-		objectives = (String[][]) map.get("objectives");
-		totaalScoreObjectives = (int[][]) map.get("totaalScoreObjectives");
-		totaalMaxObjectives = (int[][]) map.get("totaalMaxObjectives");
-		categorieString = (String[]) map.get("categorieString");
+		ObjectMap h = JSONUtilities.wrapMap(map);
+		ObjectList objectivesList = h.getObjectList("objectives");
+		objectives = new String[objectivesList.size()][];
+		for(int i = 0; i < objectivesList.size(); i++)
+			objectives[i] = objectivesList.getStringArray(i);
+		ObjectList totaalScoreList = h.getObjectList("totaalScoreObjectives");
+		totaalScoreObjectives = new double[totaalScoreList.size()][];
+		for(int i = 0; i < totaalScoreList.size(); i++)
+			totaalScoreObjectives[i] = totaalScoreList.getDoubleArray(i);
+		ObjectList totaalMaxList = h.getObjectList("totaalMaxObjectives");
+		totaalMaxObjectives = new double[totaalMaxList.size()][];
+		for(int i = 0; i < totaalMaxList.size(); i++)
+			totaalMaxObjectives[i] = totaalMaxList.getDoubleArray(i);
+		categorieString = h.getStringArray("categorieString");
+		if(pilot)
+		{
+			categorieScoreObjectives = h.getDoubleArray("categorieScoreObjectives");
+			categorieMaxObjectives = h.getDoubleArray("categorieMaxObjectives");
+		}
 		
-		/* Makkelijk voor testen (deel hierboven afschermen)
-		objectives = new String[] {"Procenten/ verhoudingen", "Meten/ meetkunde", "Verbanden", "Getallen"};
-		totaalScoreObjectives = new int[] {60, 40, 80, 10};;
-		totaalMaxObjectives = new int[] {110, 70, 90, 15};
-		*/
+//		objectives = (String[][]) map.get("objectives");
+//		totaalScoreObjectives = (double[][]) map.get("totaalScoreObjectives");
+//		totaalMaxObjectives = (int[][]) map.get("totaalMaxObjectives");
+//		categorieString = (String[]) map.get("categorieString");
 		
 		totaalMax = new int[objectives.length];
 		for(int j = 0; j<objectives.length; j++)
@@ -87,8 +125,9 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		
 		objectivesForDiagram = new String[aantalDiagrammen][];
 		categorieStringForDiagram = new String[aantalDiagrammen];
-		totaalScoresForDiagram = new int[aantalDiagrammen][];
-		totaalMaxForDiagram = new int[aantalDiagrammen][];
+		totaalScoresForDiagram = new double[aantalDiagrammen][];
+		totaalMaxForDiagram = new double[aantalDiagrammen][];
+		categorieUitgeklapt = new boolean[aantalDiagrammen];
 		
 		aantalDiagrammen = 0;
 		for(int j = 0; j < objectives.length; j++)
@@ -98,10 +137,12 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				totaalScoresForDiagram[aantalDiagrammen] = totaalScoreObjectives[j];
 				totaalMaxForDiagram[aantalDiagrammen] = totaalMaxObjectives[j];
 				totaalMax[aantalDiagrammen] = totaalMax[j];
+				categorieUitgeklapt[aantalDiagrammen] = false;
 				aantalDiagrammen++;
 			}
 		
 		scoresPercObjectives = new double[aantalDiagrammen][];
+		categorieScoresPercObjectives = new double[aantalDiagrammen];
 		hoek = new double[aantalDiagrammen][];
 		cumHoek = new double[aantalDiagrammen][];
 		//hoekGraden = new double[aantalDiagrammen][];
@@ -163,89 +204,26 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				labelEindPuntX[j][i] = (int) ((straal + marge) * Math.sin(labelHoek[j][i]) + mpX[j]);
 				labelEindPuntY[j][i] = (int) (- (straal + marge) * Math.cos(labelHoek[j][i]) + mpY[j]);
 			}
+			int somScoresPerc = 0;
 			for(int k=0 ; k<objectivesForDiagram[j].length; k++)
 		   	{	if(totaalMaxForDiagram[j][k]==0) scoresPercObjectives[j][k] = 0;
 		   		else scoresPercObjectives[j][k] = Math.round(100.0*totaalScoresForDiagram[j][k]/totaalMaxForDiagram[j][k]);
+		   		somScoresPerc += scoresPercObjectives[j][k];
 		   	}
-		}
-		
-		straalRij = new int[aantalDiagrammen][];
-		objectivesTextAreas = new TextArea[aantalDiagrammen][];
-		
-		for(int j = 0; j<aantalDiagrammen; j++)
-		{	straalRij[j] = new int[objectivesForDiagram[j].length];
-			objectivesTextAreas[j] = new TextArea[objectivesForDiagram[j].length];
-			for(int i = 0; i<objectivesForDiagram[j].length; i++)
-				straalRij[j][i] = (int) Math.round(straal * scoresPercObjectives[j][i]/100);
-			for(int i = 0; i < objectivesForDiagram[j].length; i++)
-			{	objectivesTextAreas[j][i] = new TextArea();
-				objectivesTextAreas[j][i].setWidth(breedteLabel(i,j) + "px");
-				objectivesTextAreas[j][i].getElement().getStyle().setFontSize(12, Unit.PX);
-				//objectivesTextAreas[j][i].setReadOnly(true);
-				objectivesTextAreas[j][i].getElement().getStyle().setBorderStyle(BorderStyle.NONE);
-				objectivesTextAreas[j][i].getElement().getStyle().setMargin(0, Unit.PX);
-				objectivesTextAreas[j][i].getElement().getStyle().setPadding(0, Unit.PX);
-							
-				double links = 0; 
-				double top = 0;
-				ctx.setFont("12 px Arial");
-				
-				if(labelEindPuntX[j][i] >= mpX[j]) //label staat 'rechts' van cirkel
-				{	if(labelEindPuntY[j][i] > mpY[j] + straal)
-					{	links = labelEindPuntX[j][i] - breedteLabel(i,j)/2;
-						top = labelEindPuntY[j][i];
-					}
-					else if(labelEindPuntY[j][i] >= mpY[j])
-					{
-						links = labelEindPuntX[j][i];
-						top = labelEindPuntY[j][i];
-					}
-					else if(labelEindPuntY[j][i] <= mpY[j] - straal)
-					{
-						links = labelEindPuntX[j][i] - breedteLabel(i,j)/2;
-						top = labelEindPuntY[j][i] - hoogteLabel(i,j);
-					}
-					else
-					{
-						links = labelEindPuntX[j][i];
-						top = labelEindPuntY[j][i] - hoogteLabel(i, j);
-					}
-				}
-				else //label staat 'links' van cirkel
-				{	if(labelEindPuntY[j][i] > mpY[j] + straal)
-					{
-						links = labelEindPuntX[j][i] - breedteLabel(i,j)/2;
-						top = labelEindPuntY[j][i];
-					}
-					else if(labelEindPuntY[j][i] >= mpY[j])
-					{
-						links = labelEindPuntX[j][i] - breedteLabel(i,j);
-						top = labelEindPuntY[j][i];
-					}
-					else if(labelEindPuntY[j][i] <= mpY[j] - straal)
-					{
-						links = labelEindPuntX[j][i] - breedteLabel(i,j)/2;
-						top = labelEindPuntY[j][i] - hoogteLabel(i,j);
-					}
-					else
-					{
-						links = labelEindPuntX[j][i] - breedteLabel(i,j);
-						top =  labelEindPuntY[j][i] - hoogteLabel(i,j);
-					}
-				}	
-				objectivesTextAreas[j][i].setText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i]+"%");
-				this.add(objectivesTextAreas[j][i]);
-				setWidgetLeftWidth(objectivesTextAreas[j][i], links, Unit.PX, breedteLabel(i, j), Unit.PX);
-				setWidgetTopHeight(objectivesTextAreas[j][i], top, Unit.PX, hoogteLabel(i, j), Unit.PX);
-			}
+			if(pilot)
+				categorieScoresPercObjectives[j] = Math.round(100.0 * categorieScoreObjectives[j]/categorieMaxObjectives[j]);
+			else
+				categorieScoresPercObjectives[j] = Math.round(somScoresPerc/objectivesForDiagram[j].length);
 		}
 		
 		
-//        	scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
-//        else 
-//        	scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
 		int canvasWidth = 1200;
 		int canvasHeight = 700;
+		if(pilot)
+		{
+			canvasWidth = 400;
+			canvasHeight = 600; // TODO: zinvollere breedte en hoogte geven
+		}
 		if(aantalDiagrammen < 4)
 		{	
 			canvasWidth = 400 * aantalDiagrammen;
@@ -261,6 +239,133 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		this.add(canvas);
 		setWidgetLeftWidth(canvas, 0, Unit.PX, canvasWidth, Unit.PX);
 		setWidgetTopHeight(canvas, 0, Unit.PX, canvasHeight, Unit.PX);
+		
+		
+		
+		//tbv nieuwe weergave
+		if(pilot)
+		{
+			categorieLabels = new Label[objectivesForDiagram.length];
+			marge = 10;
+			
+			
+			//int categorieX = marge + 5;
+			//int categorieY = regelHoogte + 5;
+			for(int j = 0; j < objectivesForDiagram.length; j++)
+			{
+				//categorieY += regelHoogte;
+				categorieLabels[j] = new Label(categorieStringForDiagram[j]);
+				categorieLabels[j].getElement().getStyle().setFontSize(12, Unit.PX);
+				
+				//categorieLabels[j].setFont(theFont);
+				//maatzetting pas regelen in paint.
+				//this.setWidgetLeftWidth(categorieLabels[j], categorieX, Unit.PX, tekstKolomBreedte, Unit.PX);
+				//this.setWidgetTopHeight(categorieLabels[j], categorieY, Unit.PX, regelHoogte, Unit.PX);
+				add(categorieLabels[j]);
+				
+				categorieLabels[j].addClickHandler(new ClickHandler(){
+					
+					@Override
+					public void onClick(ClickEvent e) 
+					{
+						e.stopPropagation();
+						e.preventDefault();
+						for(int j = 0; j < objectivesForDiagram.length; j++)
+						{
+							if(e.getSource() == categorieLabels[j])
+							{
+								categorieUitgeklapt[j] = !categorieUitgeklapt[j];
+								paint();
+								break;
+							}
+						}
+					}
+				});
+				
+			}
+		}
+		// einde nieuwe weergave
+		
+		else
+		{
+			straalRij = new int[aantalDiagrammen][];
+			objectivesTextAreas = new TextArea[aantalDiagrammen][];
+			
+			for(int j = 0; j<aantalDiagrammen; j++)
+			{	straalRij[j] = new int[objectivesForDiagram[j].length];
+				objectivesTextAreas[j] = new TextArea[objectivesForDiagram[j].length];
+				for(int i = 0; i<objectivesForDiagram[j].length; i++)
+					straalRij[j][i] = (int) Math.round(straal * scoresPercObjectives[j][i]/100);
+				for(int i = 0; i < objectivesForDiagram[j].length; i++)
+				{	objectivesTextAreas[j][i] = new TextArea();
+					objectivesTextAreas[j][i].setWidth(breedteLabel(i,j) + "px");
+					objectivesTextAreas[j][i].getElement().getStyle().setFontSize(12, Unit.PX);
+					//objectivesTextAreas[j][i].setReadOnly(true);
+					objectivesTextAreas[j][i].getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+					objectivesTextAreas[j][i].getElement().getStyle().setMargin(0, Unit.PX);
+					objectivesTextAreas[j][i].getElement().getStyle().setPadding(0, Unit.PX);
+								
+					double links = 0; 
+					double top = 0;
+					ctx.setFont("12 px Arial");
+					
+					if(labelEindPuntX[j][i] >= mpX[j]) //label staat 'rechts' van cirkel
+					{	if(labelEindPuntY[j][i] > mpY[j] + straal)
+						{	links = labelEindPuntX[j][i] - breedteLabel(i,j)/2;
+							top = labelEindPuntY[j][i];
+						}
+						else if(labelEindPuntY[j][i] >= mpY[j])
+						{
+							links = labelEindPuntX[j][i];
+							top = labelEindPuntY[j][i];
+						}
+						else if(labelEindPuntY[j][i] <= mpY[j] - straal)
+						{
+							links = labelEindPuntX[j][i] - breedteLabel(i,j)/2;
+							top = labelEindPuntY[j][i] - hoogteLabel(i,j);
+						}
+						else
+						{
+							links = labelEindPuntX[j][i];
+							top = labelEindPuntY[j][i] - hoogteLabel(i, j);
+						}
+					}
+					else //label staat 'links' van cirkel
+					{	if(labelEindPuntY[j][i] > mpY[j] + straal)
+						{
+							links = labelEindPuntX[j][i] - breedteLabel(i,j)/2;
+							top = labelEindPuntY[j][i];
+						}
+						else if(labelEindPuntY[j][i] >= mpY[j])
+						{
+							links = labelEindPuntX[j][i] - breedteLabel(i,j);
+							top = labelEindPuntY[j][i];
+						}
+						else if(labelEindPuntY[j][i] <= mpY[j] - straal)
+						{
+							links = labelEindPuntX[j][i] - breedteLabel(i,j)/2;
+							top = labelEindPuntY[j][i] - hoogteLabel(i,j);
+						}
+						else
+						{
+							links = labelEindPuntX[j][i] - breedteLabel(i,j);
+							top =  labelEindPuntY[j][i] - hoogteLabel(i,j);
+						}
+					}	
+					objectivesTextAreas[j][i].setText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i]+"%");
+					this.add(objectivesTextAreas[j][i]);
+					setWidgetLeftWidth(objectivesTextAreas[j][i], links, Unit.PX, breedteLabel(i, j), Unit.PX);
+					setWidgetTopHeight(objectivesTextAreas[j][i], top, Unit.PX, hoogteLabel(i, j), Unit.PX);
+				}
+			}
+		}
+		
+		
+		
+//        	scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
+//        else 
+//        	scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
+		
 		paint();
 	}
 	
@@ -283,12 +388,21 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	}
 	
 	public void zetKleuren()
-	{	kleurRij = new CssColor[aantalDiagrammen][];
+	{	categorieKleurRij = new CssColor[objectivesForDiagram.length];
+		kleurRij = new CssColor[aantalDiagrammen][];
 		for(int j = 0; j < aantalDiagrammen; j++)
-		{	kleurRij[j] = new CssColor[objectivesForDiagram[j].length];
+		{	int red = 255; 
+			int green = 255;
+			if(categorieScoresPercObjectives[j] < 50)
+				green = (int) (green * categorieScoresPercObjectives[j] / 50);
+			else 
+				red -= (int) (red * (categorieScoresPercObjectives[j] - 50)/50);
+			categorieKleurRij[j] = CssColor.make(red, green, 0);
+		
+			kleurRij[j] = new CssColor[objectivesForDiagram[j].length];
 			for(int i = 0; i < objectivesForDiagram[j].length; i++)
-			{	int red = 255; 
-				int green = 255;
+			{	red = 255; 
+				green = 255;
 				if(scoresPercObjectives[j][i] < 50)
 					green = (int) (green * scoresPercObjectives[j][i] / 50);
 				else 
@@ -298,8 +412,169 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		}
 	}
 	
+	public void paintPilot()
+	{
+		ctx.setFillStyle("white");
+		ctx.fillRect(0, 0, canvas.getOffsetWidth(), canvas.getOffsetHeight());
+		zetKleuren();
+		ctx.setFont(fontString);
+		ctx.setFillStyle("black");
+		ctx.setStrokeStyle("black");
+		int scoreBreedte = (int) ctx.measureText(scoreText).getWidth() + marge;
+		
+		//iets met ctx doen zodat ik mooie scherpe lijnen krijg... maar setLineWidth alleen helpt niet genoeg; ergens heb ik hiervoor iets slims gedaan. 
+		
+		regelHoogte = 15 + marge; //TODO nog iets zinvollers van 15 maken; meten mbv canvas?
+		tekstKolomBreedte = 0;
+		indent = 20;
+		for(int j = 0; j < objectivesForDiagram.length; j++)
+		{
+			tekstKolomBreedte = Math.max((int) ctx.measureText(categorieStringForDiagram[j]).getWidth() + marge, tekstKolomBreedte);
+			for(int i = 0; i < objectivesForDiagram[j].length; i++ )
+			{
+				tekstKolomBreedte = Math.max((int) ctx.measureText(objectivesForDiagram[j][i]).getWidth() + marge + indent, tekstKolomBreedte);
+			}
+			
+		}
+		
+		if(aantalDiagrammen == 1)
+		{
+			int labelX = marge + 5;
+			int scoreX = labelX + tekstKolomBreedte;
+			int kleurX = marge + tekstKolomBreedte;
+			int kleurY = marge;
+			int tekstY = regelHoogte + 2;
+			
+			ctx.setFont(boldFontString);
+			ctx.fillText(categorieStringForDiagram[0], labelX, tekstY);
+			ctx.fillText(scoreText, scoreX, tekstY);
+			ctx.setFont(fontString);
+			
+			for(int i = 0; i < objectivesForDiagram[0].length; i++)
+			{
+				tekstY += regelHoogte;
+				kleurY += regelHoogte;
+				ctx.setFillStyle(kleurRij[0][i]);
+				ctx.fillRect(kleurX, kleurY, scoreBreedte, regelHoogte);
+				ctx.setFillStyle("black");
+				ctx.fillText(objectivesForDiagram[0][i], labelX, tekstY);
+				ctx.fillText((int) scoresPercObjectives[0][i]+"%", scoreX, tekstY);
+			}
+			int lijnHoogte = marge;
+			for(int i = 0; i < objectivesForDiagram[0].length + 2; i++)
+			{	ctx.beginPath();
+				ctx.moveTo(marge, lijnHoogte);
+				ctx.lineTo(tekstKolomBreedte + scoreBreedte + marge, lijnHoogte);
+				ctx.closePath();
+				ctx.stroke();
+				lijnHoogte += regelHoogte;
+			}
+			lijnHoogte -= regelHoogte;
+			ctx.beginPath();
+			ctx.moveTo(marge, marge);
+			ctx.lineTo(marge, lijnHoogte);
+			ctx.moveTo(marge + tekstKolomBreedte, marge);
+			ctx.lineTo(marge + tekstKolomBreedte, lijnHoogte);
+			ctx.moveTo(marge + tekstKolomBreedte + scoreBreedte, marge);
+			ctx.lineTo(marge + tekstKolomBreedte + scoreBreedte, lijnHoogte);
+			ctx.closePath();
+			ctx.stroke();
+			
+		}
+		else
+		{
+			int categorieX = marge + 5;
+			int labelX = marge + indent + 5;
+			int scoreX = categorieX + tekstKolomBreedte;
+			int kleurX = marge + tekstKolomBreedte;
+			int lijnHoogte = marge;
+			
+			//int tekstY = regelHoogte + 2;
+			int tekstVerschil = regelHoogte - marge + 2;
+			int tussenRuimte = 5;
+			ctx.setFont(boldFontString);
+			ctx.fillText(categorieText, categorieX, lijnHoogte + tekstVerschil);
+			ctx.fillText(scoreText, scoreX, lijnHoogte + tekstVerschil);
+			ctx.setFont(fontString);
+			tekstVerschil += 3;
+			ctx.beginPath();
+			ctx.moveTo(marge, lijnHoogte);
+			ctx.lineTo(tekstKolomBreedte + scoreBreedte + marge, lijnHoogte);
+			ctx.closePath();
+			ctx.stroke();
+			lijnHoogte += regelHoogte;			
+			
+			for(int j = 0; j < objectivesForDiagram.length; j++)
+			{
+				//dubbel lijntje boven elke categorie.
+				ctx.beginPath();
+				ctx.moveTo(marge, lijnHoogte);
+				ctx.lineTo(tekstKolomBreedte + scoreBreedte + marge, lijnHoogte);
+				ctx.closePath();
+				ctx.stroke();
+				lijnHoogte += tussenRuimte;
+				ctx.setFillStyle(categorieKleurRij[j]);
+				ctx.fillRect(kleurX, lijnHoogte, scoreBreedte, regelHoogte);
+				ctx.beginPath();
+				ctx.moveTo(marge, lijnHoogte);
+				ctx.lineTo(tekstKolomBreedte + scoreBreedte + marge, lijnHoogte);
+				ctx.closePath();
+				ctx.stroke();
+				
+				//categorienaam en score invullen
+				tekstVerschil += 12 - regelHoogte;
+				ctx.setFillStyle("black");
+				this.setWidgetLeftWidth(categorieLabels[j], categorieX, Unit.PX, tekstKolomBreedte, Unit.PX);
+				this.setWidgetTopHeight(categorieLabels[j], lijnHoogte + tekstVerschil, Unit.PX, regelHoogte, Unit.PX);
+				
+				tekstVerschil += regelHoogte - 15;  //label-location en drawString hebben verschillende y nodig.
+				ctx.fillText((int) categorieScoresPercObjectives[j]+"%", scoreX, lijnHoogte + tekstVerschil);
+			
+				if(categorieUitgeklapt[j])
+				{
+					for(int i = 0; i < objectivesForDiagram[j].length; i++)
+					{
+						lijnHoogte += regelHoogte;
+						ctx.setFillStyle(kleurRij[j][i]);
+						ctx.fillRect(kleurX, lijnHoogte, scoreBreedte, regelHoogte);
+						ctx.setFillStyle("black");
+						ctx.fillText(objectivesForDiagram[j][i], labelX, lijnHoogte + tekstVerschil);
+						ctx.fillText((int) scoresPercObjectives[j][i]+"%", scoreX, lijnHoogte + tekstVerschil);
+						ctx.beginPath();
+						ctx.moveTo(marge, lijnHoogte);
+						ctx.lineTo(tekstKolomBreedte + scoreBreedte + marge, lijnHoogte);
+						ctx.closePath();
+						ctx.stroke();
+					}
+				}
+				tekstVerschil += 3;
+				lijnHoogte += regelHoogte;
+			}
+			ctx.beginPath();
+			ctx.moveTo(marge, lijnHoogte);
+			ctx.lineTo(tekstKolomBreedte + scoreBreedte + marge, lijnHoogte);
+			
+			//tabellijnen tekenen
+			ctx.moveTo(marge, marge);
+			ctx.lineTo(marge, lijnHoogte);
+			ctx.moveTo(marge + tekstKolomBreedte, marge);
+			ctx.lineTo(marge + tekstKolomBreedte, lijnHoogte);
+			ctx.moveTo(marge + tekstKolomBreedte + scoreBreedte, marge);
+			ctx.lineTo(marge + tekstKolomBreedte + scoreBreedte, lijnHoogte);
+			
+			ctx.closePath();
+			ctx.stroke();
+			
+		}
+	}
+	
 	public void paint()
 	{	
+
+		if(pilot)
+		{	paintPilot();
+			return;
+		}
 		//super.paintComponent(g);
 		ctx.setFillStyle("white");
 		ctx.fillRect(0, 0, canvas.getOffsetWidth(), canvas.getOffsetHeight());

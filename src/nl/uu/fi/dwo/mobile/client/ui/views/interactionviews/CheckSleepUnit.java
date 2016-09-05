@@ -690,6 +690,7 @@ public class CheckSleepUnit implements InteractionStub{
 				dwologger.setClassName("fi.wiskopdr.CheckSleepUnitPanel");
 				dwologger.setLogID(logID);
 				dwologger.setMaxScore(scoreMax);
+				dwologger.setLogObjectives(logObjectives);
 			}
 		}
 	}

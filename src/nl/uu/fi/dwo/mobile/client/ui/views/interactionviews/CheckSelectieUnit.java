@@ -480,7 +480,7 @@ public class CheckSelectieUnit implements InteractionStub
 			}
 		return scoreObjectives;
 	}
-
+	
 	public int getScoreMax()
 	{
 		if (!teltMee)
@@ -622,6 +622,7 @@ public class CheckSelectieUnit implements InteractionStub
 			dwologger.setClassName("fi.wiskopdr.CheckUnitPanel");
 			dwologger.setLogID(logID);
 			dwologger.setMaxScore(scoreMax);
+			dwologger.setLogObjectives(logObjectives);
 		}
 
 		

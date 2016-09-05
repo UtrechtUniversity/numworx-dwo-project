@@ -264,6 +264,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 				if(launchStateMap.containsKey("logIDLabel"))
 					dwologger.setLogIDLabel(launchStateMap.getString("logIDLabel"));
 				dwologger.setMaxScore(scoreMax);
+				dwologger.setLogObjectives(logObjectives);
 			}
 			
 			rmknop = !isVergelijkingVak && launchStateMap.getBoolean("rmKnop");

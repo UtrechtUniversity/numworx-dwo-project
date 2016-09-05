@@ -95,6 +95,7 @@ public abstract class XMLView {
 	public static String[][] objectives;
 	private String[] categorieString;
 	private int[][][][] scoresMaxObjectives;
+	protected boolean pilotObjectives = false;
 	public static String[][] misconceptions;
 	private String[] mccCategorieString;
 	boolean objectivesAanwezig;
@@ -205,6 +206,8 @@ public abstract class XMLView {
 			}
 			if(wrap.containsKey("categorieString"))
 				categorieString = wrap.getStringArray("categorieString");
+			if(wrap.containsKey("pilotObjectives"))
+				pilotObjectives = wrap.getBoolean("pilotObjectives");
 			if (wrap.containsKey("misconceptions"))
 			{	
 				ObjectList misconceptionsList = wrap.getObjectList("misconceptions");

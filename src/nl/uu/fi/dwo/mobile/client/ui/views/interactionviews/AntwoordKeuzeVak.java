@@ -185,6 +185,13 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			}
 			if(map.containsKey("hasFeedback") )
 				hasFeedback = map.getBoolean("hasFeedback");
+			if(map.containsKey("logObjectives"))
+			{	ObjectList logObjectivesList = ( map.getObjectList("logObjectives") );
+				logObjectives = new boolean[logObjectivesList.size()][];
+				for(int i = 0; i < logObjectivesList.size(); i++)
+				{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
+				}
+			}
 			if(map.containsKey("logID")) 
 				logID = map.getString("logID");
 		    if(map.containsKey("logOption")) 
@@ -195,19 +202,13 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		    	dwologger.setMaxScore(scoreMax);
 		    	dwologger.setClassName("fi.wiskopdr.AntwoordKeuzeVak");
 		    	dwologger.setLogID(logID);
+		    	dwologger.setLogObjectives(logObjectives);
 		    	logging = dwologger;
 		    }
 			if(map.containsKey("check")) 
 				check = map.getBoolean("check");
 			if(map.containsKey("teltMee")) 
 				teltMee = map.getBoolean("teltMee");
-			if(map.containsKey("logObjectives"))
-			{	ObjectList logObjectivesList = ( map.getObjectList("logObjectives") );
-				logObjectives = new boolean[logObjectivesList.size()][];
-				for(int i = 0; i < logObjectivesList.size(); i++)
-				{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
-				}
-			}
 			if(map.containsKey("checkExternal"))
 				checkExternal = map.getBoolean("checkExternal");	
 		}

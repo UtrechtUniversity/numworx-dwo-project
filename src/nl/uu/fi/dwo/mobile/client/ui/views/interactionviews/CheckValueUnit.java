@@ -175,6 +175,7 @@ public class CheckValueUnit implements InteractionStub{
 				dwologger.setClassName("fi.wiskopdr.CheckValueUnitPanel");
 				dwologger.setLogID(logID);
 				dwologger.setMaxScore(scoreMax);
+				dwologger.setLogObjectives(logObjectives);
 			}
 
 		}

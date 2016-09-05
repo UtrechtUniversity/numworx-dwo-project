@@ -43,6 +43,10 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String objectivesKnopLabel();
 	@DefaultStringValue("Analyse")
 	String viewMisconceptionsKnopLabel();
+	@DefaultStringValue("Categorie")
+	String categorieLabel();
+	@DefaultStringValue("Score")
+	String scoreKopLabel();
 
 
 	

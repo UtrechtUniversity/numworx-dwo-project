@@ -282,6 +282,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		return obj;
 	}
 	
+	public JSONObject getLogState() {
+		return logState;
+	}
+	
 	public void setLogState(String logID, JSONObject value) {
 		if(logState == null) 
 		{

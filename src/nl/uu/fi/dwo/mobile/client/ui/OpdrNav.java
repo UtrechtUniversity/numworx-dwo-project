@@ -2,10 +2,14 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -15,6 +19,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -34,6 +39,8 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -979,6 +986,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
 		else
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
+		if(entry.isPilotObjectives())
+		{
+			if(currentOpdracht == states[currentActiviteit].length - 1 && entry.isPilotObjectives())
+				entry.scoreNav.setScoresObjectivesKnop(zijnObjectivesAanwezig());
+			else
+				entry.scoreNav.setScoresObjectivesKnop(false);
+				
+		}
+		
+		
 	}
 	
 	public int getCurrentOpdracht() { 
@@ -1047,7 +1064,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return misconceptions != null;
 	}
 	
-	public void openObjectivesPanel()
+	public void openObjectivesPanel(boolean pilot)
 	{
 		/**
 		 * Maakt panel met deelscores zichtbaar mbv een popup-venster
@@ -1071,8 +1088,19 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	        //scoresObjectivesDialog = new DialogBox(true);
 	        scoresObjectivesDialog.setText(Text.constants.objectivesKnopLabel()); 
 	       // scoresObjectivesDialog = new DialogBox(this,"deelscores", true);
-	        scoresObjectivesPanel = new ScoresObjectivesPanel(getScoresObjectivesForDiagram());
-//	        if(aantalDiagrammen < 4)
+	        
+	        /*pilot doet nu:
+	        - Weergave niet lijst (met uitklapbare onderwerpen) in plaats van cirkeldiagrammen
+	        - Berekening scores op basis van attempts en niet alleen laatste status
+			- Zichtbaarheid knop: alleen op laatste pagina
+			- Berekening en weergave categorie-score
+			*/ 
+	        if(pilot)
+	        	scoresObjectivesPanel = new ScoresObjectivesPanel(getScoresObjectivesForDiagramFromLogs(), pilot);
+	        else
+	        	scoresObjectivesPanel = new ScoresObjectivesPanel(getScoresObjectivesForDiagram(), pilot);
+	        
+	        //	        if(aantalDiagrammen < 4)
 //	        	scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
 //	        else 
 //	        	scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
@@ -1102,7 +1130,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	        //scoresObjectivesDialog = new DialogBox(true);
 	        viewMisconceptionsDialog.setText(Text.constants.viewMisconceptionsKnopLabel()); 
 	       // scoresObjectivesDialog = new DialogBox(this,"deelscores", true);
-	        viewMisconceptionsPanel = new ScoresObjectivesPanel(getMisconceptionsForDiagram());
+	        viewMisconceptionsPanel = new ScoresObjectivesPanel(getMisconceptionsForDiagram(), false);
 //	        if(aantalDiagrammen < 4)
 //	        	scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
 //	        else 
@@ -1126,6 +1154,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	/**
 	 * Verzamelt de maximale scores per leerdoel, de gerealiseerde scores per
 	 * leerdoel en de leerdoelen zelf en geeft deze terug tbv het diagram.
+	 * Gebruikt als input de huidige score bij elke opgave
 	 */
 	public HashMap<String, Object> getScoresObjectivesForDiagram()
 	{
@@ -1133,18 +1162,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if (objectives == null)
 			return h;
 		
-		int[][] totaalScoreObjectives = null;
-		int[][] totaalMaxObjectives = null;
+		double[][] totaalScoreObjectives = null;
+		double[][] totaalMaxObjectives = null;
 		double[][] scoresPercObjectives = null;
 
-		totaalScoreObjectives = new int[objectives.length][];
-		totaalMaxObjectives = new int[objectives.length][];
+		totaalScoreObjectives = new double[objectives.length][];
+		totaalMaxObjectives = new double[objectives.length][];
 		scoresPercObjectives = new double[objectives.length][];
 
 		for (int i = 0; i < objectives.length; i++)
 		{
-			totaalScoreObjectives[i] = new int[objectives[i].length];
-			totaalMaxObjectives[i] = new int[objectives[i].length];
+			totaalScoreObjectives[i] = new double[objectives[i].length];
+			totaalMaxObjectives[i] = new double[objectives[i].length];
 			scoresPercObjectives[i] = new double[objectives[i].length];
 		}
 
@@ -1178,6 +1207,86 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		return h;
 	}
+	
+	
+	/**
+	 * Verzamelt de maximale scores per leerdoel, de gerealiseerde scores per
+	 * leerdoel en de leerdoelen zelf en geeft deze terug tbv het diagram.
+	 * Gebruikt als input de logfiles per opgave (dus attempts).
+	 */
+	public HashMap<String, Object> getScoresObjectivesForDiagramFromLogs()
+	{
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		if (objectives == null)
+			return h;
+		
+		double[][] totaalScoreObjectives = null;
+		double[][] totaalMaxObjectives = null;
+		double[] categorieScoreObjectives = null;
+		double[] categorieMaxObjectives = null;
+		
+		totaalScoreObjectives = new double[objectives.length][];
+		totaalMaxObjectives = new double[objectives.length][];
+		categorieScoreObjectives = new double[objectives.length];
+		categorieMaxObjectives = new double[objectives.length];
+		
+		for (int i = 0; i < objectives.length; i++)
+		{
+			totaalScoreObjectives[i] = new double[objectives[i].length];
+			totaalMaxObjectives[i] = new double[objectives[i].length];
+		}
+		
+		JSONObject logState = memento.getLogState();
+		Set<String> keys = logState.keySet();
+		
+		for(String key : keys ) {
+			JSONArray attempts = logState.get(key).isObject().get(DWOLogger.LOG_ATTEMPTS).isArray();
+			JSONArray logObjectives = logState.get(key).isObject().get("logObjectives").isArray();
+			
+			//score berekenen op basis van attempts
+			double score = 0;
+			for ( int i = 0; i < attempts.size(); i++) 
+			{
+				String attempt = attempts.get(i).isString().stringValue();
+				String[] attemptSplit = attempt.split(";");
+				if(attemptSplit.length > 1 && attemptSplit[1].trim().equals("goed"))
+					score += 1;
+				else if(attemptSplit.length > 1 && attemptSplit[1].trim().equals("half"))
+					score += 0.5;
+			}
+			if(attempts.size() > 0)
+				score = score / attempts.size();
+			
+			//voor elk aan deze opdracht gekoppelde leerdoel score optellen en maxscore ophogen. 
+			for (int i = 0; i < objectives.length; i++)
+			{	for (int j = 0; j < objectives[i].length; j++)
+				{	boolean categorieGescoord = false;
+					if(logObjectives.get(i).isArray().get(j).isBoolean().booleanValue())
+					{
+						totaalScoreObjectives[i][j] += score;
+						totaalMaxObjectives[i][j]++;
+						if(!categorieGescoord)
+						{
+							categorieScoreObjectives[i] += score;
+							categorieMaxObjectives[i]++;
+							categorieGescoord = true;
+						}
+					}
+					
+				}
+			}	
+		}
+
+		h.put("objectives", objectives);
+		h.put("totaalScoreObjectives", totaalScoreObjectives);
+		h.put("totaalMaxObjectives", totaalMaxObjectives);
+		h.put("categorieString", categorieString);
+		h.put("categorieScoreObjectives", categorieScoreObjectives);
+		h.put("categorieMaxObjectives", categorieMaxObjectives);
+
+		return h;
+	}
+	
 	
 	/**
 	 * Verzamelt de maximale scores per leerdoel, de gerealiseerde scores per
