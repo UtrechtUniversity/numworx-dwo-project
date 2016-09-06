@@ -539,7 +539,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domSchoolClass.getId()));
 
-        return removeStudentFromSchoolHelper(sc, school, student, shr,
+        return removeStudentFromSchoolClass(sc, school, student, shr,
 				schoolClass);
     }
 
@@ -676,7 +676,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
                 	Long id = t.getPersistentStudentOfClassPK().getUserID();
 					PersistentUser student = UserManager.findEntity(id);
 					PersistentHasRole shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
-					removeStudentFromSchoolHelper(sc, school, student, shr, schoolClass);
+					removeStudentFromSchoolClass(sc, school, student, shr, schoolClass);
                 }
 
                 //Loop teachers in class

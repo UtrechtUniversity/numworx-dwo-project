@@ -211,9 +211,9 @@ public class SecuredSchoolAdminSchoolManagerIT {
         RestNewSingleSchoolStudent rssStudent = new RestNewSingleSchoolStudent();
         DomNewSingleSchoolStudent nssStudent = new DomNewSingleSchoolStudent();
         DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
+        rssStudent.setRestContext(new DomContext());
         rssStudent.setDomNewSingleSchoolStudent(nssStudent);
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
-        System.out.println("submitNewUser");
         dssStudent.setUserName("testuser01");
         dssStudent.setGivenName("a");
         dssStudent.setInsertion("b");
@@ -224,6 +224,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         nssStudent.setDomSchoolClass(null);
         
         
+        System.out.println("submitNewUser");
         try {
             Boolean result = instance.SubmitSingleSchoolStudent(sc, rssStudent);
             assertEquals(true, result);

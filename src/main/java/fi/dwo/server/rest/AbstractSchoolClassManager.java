@@ -3,18 +3,14 @@ package fi.dwo.server.rest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.PersistenceException;
 import javax.ws.rs.core.SecurityContext;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
-import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
-import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
-import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 
 
@@ -26,7 +22,7 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 abstract class AbstractSchoolClassManager {
 	public final Logger LOG = Logger.getLogger(getClass().getName());
 
-	protected Boolean removeStudentFromSchoolHelper(SecurityContext sc, PersistentSchool school,
+	protected Boolean removeStudentFromSchoolClass(SecurityContext sc, PersistentSchool school,
 			PersistentUser student, PersistentHasRole shr, PersistentSchoolClass schoolClass) {
 				if (student != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
 					return SchoolClassUtilManager.removeStudentFromSchoolClass(shr, schoolClass);					

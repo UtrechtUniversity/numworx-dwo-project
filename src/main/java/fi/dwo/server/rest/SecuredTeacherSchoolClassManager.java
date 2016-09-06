@@ -479,7 +479,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 	Long id = t.getPersistentStudentOfClassPK().getUserID();
 					PersistentUser student = UserManager.findEntity(id);
 					PersistentHasRole shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
-					removeStudentFromSchoolHelper(sc, school, student, shr, schoolClass);
+					removeStudentFromSchoolClass(sc, school, student, shr, schoolClass);
                 }
 
                 //Loop teachers in class
@@ -702,7 +702,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         PersistentStudentOfClass soc = StudentOfClassManager.findEntity(new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
 
         if (toc != null && student != null && soc != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
-        	return 	removeStudentFromSchoolHelper(sc, school, student, shr, schoolClass);
+        	return 	removeStudentFromSchoolClass(sc, school, student, shr, schoolClass);
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a student from a schoolclass id {1} one or both do not exists or are not in the school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the school class.");

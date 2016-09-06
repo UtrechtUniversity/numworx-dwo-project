@@ -517,10 +517,10 @@
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-project-info-reports-plugin</artifactId>
                             <version>2.2</version>
-                            <!--          <reports>
-                              <report>cim</report>
-                              <report>issue-tracking</report>
-                            </reports>-->
+                            <reports>
+                                <report>cim</report>
+                                <report>issue-tracking</report>
+                            </reports>
                         </plugin>
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
@@ -530,7 +530,6 @@
                     </reportPlugins>
                 </configuration>
             </plugin>
- 
         </plugins>
     </reporting>
     <!-- profile for running junittests -->

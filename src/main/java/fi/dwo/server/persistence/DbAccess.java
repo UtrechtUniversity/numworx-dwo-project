@@ -4798,6 +4798,7 @@ class CmiConvert extends ScormAdapter {
 
 /**
  * Sorting courses by sequencenr
+ * @param <T>
 */
 class CourseSorter<T extends Map<?,?>> implements Comparator<T> {
 

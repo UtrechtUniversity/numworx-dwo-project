@@ -27,20 +27,16 @@ public class SchoolClassUtilManager {
 		    	phr.setClassID(null);
 // Strategy: take last/newest
 		    	List<PersistentStudentOfClass> candidates = StudentOfClassManager.findEntities(phr.getPersistentHasRolePK());
-		    	candidates = new ArrayList<PersistentStudentOfClass>(candidates);
-		    	candidates.sort( new Comparator<PersistentStudentOfClass>() {
-
-					@Override
-					public int compare(PersistentStudentOfClass o1,
-							PersistentStudentOfClass o2) {
-						java.util.Date d1 = o1.getRegisterDate();
-						java.util.Date d2 = o2.getRegisterDate();
-						int c = d1.compareTo(d2);
-						if(c == 0)
-							o1.getPersistentStudentOfClassPK().getClassID().compareTo(o2.getPersistentStudentOfClassPK().getClassID());
-						return 0;
-					}
-				});
+		    	candidates = new ArrayList<>(candidates);
+		    	candidates.sort((PersistentStudentOfClass o1, PersistentStudentOfClass o2) -> {
+                            java.util.Date d1 = o1.getRegisterDate();
+                            java.util.Date d2 = o2.getRegisterDate();
+                            int c = d1.compareTo(d2);
+                            if(c == 0) {
+                                o1.getPersistentStudentOfClassPK().getClassID().compareTo(o2.getPersistentStudentOfClassPK().getClassID());
+                            }
+                            return 0;
+                            });
 		    	ListIterator<PersistentStudentOfClass> iterator = candidates.listIterator(candidates.size());
 		    	while(iterator.hasPrevious()) {
 		    		PersistentStudentOfClass last = iterator.previous();
@@ -74,7 +70,7 @@ public class SchoolClassUtilManager {
 		    
 		    if(phr.getClassID() == null) {
 		    	phr.setClassID(schoolClass.getClassID());
-		    	HasRoleManager.edit(phr); // TODO met of zonder try/catch?
+		    	HasRoleManager.edit(phr); // TODO met try/catch?
 		    }
 		
 		}
