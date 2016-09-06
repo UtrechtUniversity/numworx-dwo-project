@@ -162,6 +162,7 @@ public class PersistentSchoolClass implements Serializable {
         if (this.classID != null) {
             schoolClass.setId(MySQLPersistenceId.createPersistentId(this));
         }
+        schoolClass.setIconizer(iconizer);
         schoolClass.setHasRegKey(this.registrationKey!=null);
     }
 
@@ -173,7 +174,6 @@ public class PersistentSchoolClass implements Serializable {
 
     private void buildDomSchoolClassFull(DomSchoolClassFull schoolClass) {
         buildDomSchoolClass(schoolClass);
-        schoolClass.setIconizer(iconizer);
         schoolClass.setRegistrationKey(registrationKey);
     }
 
