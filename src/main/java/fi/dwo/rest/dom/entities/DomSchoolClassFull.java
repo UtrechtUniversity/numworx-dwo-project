@@ -16,26 +16,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomSchoolClassFull extends DomSchoolClass {
     
     private String registrationKey = null;
-    private Boolean iconizer = Boolean.FALSE;
     
     public DomSchoolClassFull() {
         
     }
     
-    /**
-     * @return the iconizer
-     */
-    public Boolean getIconizer() {
-        return iconizer;
-    }
-
-    /**
-     * @param iconizer the iconizer to set
-     */
-    public void setIconizer(Boolean iconizer) {
-        this.iconizer = iconizer;
-    }
-
     /**
      * @return the registrationKey
      */

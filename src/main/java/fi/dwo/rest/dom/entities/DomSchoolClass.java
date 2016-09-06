@@ -4,7 +4,6 @@
 package fi.dwo.rest.dom.entities;
 
 import fi.dwo.rest.persistence.PersistenceId;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,6 +18,7 @@ public class DomSchoolClass implements Cloneable {
     private PersistenceId id;
     private String schoolClassName;
     private Boolean hasRegKey;
+    private Boolean iconizer = Boolean.FALSE;
 
     public DomSchoolClass() {
 
@@ -82,6 +82,20 @@ public class DomSchoolClass implements Cloneable {
         this.hasRegKey = hasRegKey;
     }
 
+    /**
+     * @return the iconizer
+     */
+    public Boolean getIconizer() {
+        return iconizer;
+    }
+
+    /**
+     * @param iconizer the iconizer to set
+     */
+    public void setIconizer(Boolean iconizer) {
+        this.iconizer = iconizer;
+    }
+    
     void clearSettings() {
         id = null;
         schoolClassName = "";

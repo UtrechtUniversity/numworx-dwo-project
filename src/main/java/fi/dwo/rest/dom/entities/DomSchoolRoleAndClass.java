@@ -16,18 +16,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomSchoolRoleAndClass {
 
+    //school
     private PersistenceId schoolId;
     private String schoolName;
-    private PersistenceId roleId;
-    private String roleName;
-    private PersistenceId schoolClassId;
-    private String schoolClassName;
+    private String schoolRights;
+
+    //hasRole
     private PersistenceId userId;
     private PersistenceId schoolGroupId;
-    private Boolean iconizer;
-// Rights management    
     private String roleRights;
-    private String schoolRights;
+   
+    //role
+    private PersistenceId roleId;
+    private String roleName;
+ 
+    //schoolclass
+    private PersistenceId schoolClassId;
+    private String schoolClassName;
+    private Boolean iconizer;
 
     /**
      * @return the schoolId
