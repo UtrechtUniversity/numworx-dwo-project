@@ -2,5 +2,228 @@ DwoServer pre-2.0 uses a MySQL database in the Dwo v1.4 format. Below are the in
 upgrade and change from an v1.2 database to a Dwo v1.4 database. Knowledge about MySQL and 
 Linux/Unix is assumed.
 
+See our wiki!
 
-SEE TRAC!
+
+FROM 1.2 TO 1.4.1
+===
+ALTER TABLE tblapplet ENGINE=InnoDB;
+ALTER TABLE tblappletconfig ENGINE=InnoDB;
+ALTER TABLE tblclass ENGINE=InnoDB;
+ALTER TABLE tblclasscourse ENGINE=InnoDB;
+ALTER TABLE tblcourse ENGINE=InnoDB;
+ALTER TABLE tblcoursesequence ENGINE=InnoDB;
+ALTER TABLE tbldwoprofile ENGINE=InnoDB;
+ALTER TABLE tbldwosystemparameters ENGINE=InnoDB;
+ALTER TABLE tblfromto ENGINE=InnoDB;
+ALTER TABLE tblgroup ENGINE=InnoDB;
+ALTER TABLE tblimage ENGINE=InnoDB;
+ALTER TABLE tbljars ENGINE=InnoDB;
+ALTER TABLE tblsamluser ENGINE=InnoDB;
+ALTER TABLE tblscocontext ENGINE=InnoDB;
+ALTER TABLE tblschool ENGINE=InnoDB;
+ALTER TABLE tblschoolgroup ENGINE=InnoDB;
+ALTER TABLE tblscodata ENGINE=InnoDB;
+ALTER TABLE tblstudentscocontext ENGINE=InnoDB;
+ALTER TABLE tblstudentscodata ENGINE=InnoDB;
+ALTER TABLE tbluser ENGINE=InnoDB;
+===
+
+De InnoDB vereist foreign key-constraints om een fail-over modelsafe te maken 
+wegens zwakke incremental indices en om software aanpassingen te voorkomen. De 
+essentiële entities in de database waar niet foutief naar mag worden verwezen 
+zijn die van de school, user en schoolgroup. Bij deze kunnen rechten tussen 
+scholen en gebruikers worden verwisselt. De andere entities zijn natuurlijk 
+ook relevant en fouten zullen verkeerde referenties kunnen creëren, maar de 
+security impact hiervan is minder en de kans op die fouten al heel erg klein.
+
+Voor de foreign key constraints moeten een aantal aanpassingen aan dbAccess 
+worden gedaan. Er is een dwo versie die de juiste delete order van objecten 
+respecteert.Verder moet het database model op orde worden gebracht.
+
+tblFromTo, tblCourseSequence en tblClass bevatten errors voor foreign key 
+constraints. tblFromTo en tblCourseSequence entries moeten verwijderd kunnen worden:
+
+====
+delete from tblCourse where schoolid not in (select schoolid from tblSchool);
+delete from tblCourseSequence where schoolid not in (select schoolid from tblSchool);
+delete from tblFromTo where schoolfrom not in (select schoolid from tblSchool);
+delete from tblFromTo where schoolto not in (select schoolid from tblSchool);
+delete from tblstudentScoContext where userid not in (select userid from tbluser);
+delete from tblstudentScoData where studentsco not in (select studentsco from tblstudentscocontext);
+
+alter table tblclass modify userid int(11) NULL DEFAULT '0';
+update tblclass set userid = NULL where userid not in (select userid from tbluser);
+
+alter table tblfromto modify schoolTo int(11) NULL DEFAULT '0';
+update tblfromto set schoolto = NULL where schoolto=-1;
+
+ALTER TABLE tblsamluser ADD FOREIGN KEY (userid) REFERENCES tbluser(userid);
+ALTER TABLE tblclass ADD FOREIGN KEY (userid) REFERENCES tbluser(userid) ON DELETE SET NULL;
+ALTER TABLE tblstudentscocontext ADD FOREIGN KEY (userid) REFERENCES tbluser(userid);
+ALTER TABLE tblclass ADD FOREIGN KEY (schoolid) REFERENCES tblschool(schoolid);
+ALTER TABLE tblcourse ADD FOREIGN KEY (schoolid) REFERENCES tblschool(schoolid);
+ALTER TABLE tblfromto ADD FOREIGN KEY (schoolfrom) REFERENCES tblschool(schoolid) ON DELETE CASCADE;
+<!-- ALTER TABLE tblfromto ADD FOREIGN KEY (schoolto) REFERENCES tblschool(schoolid) ON DELETE CASCADE; Breekt modules delen -->
+ALTER TABLE tblcoursesequence ADD FOREIGN KEY (schoolid) REFERENCES tblschool(schoolid) ON DELETE CASCADE;
+
+ALTER TABLE tbluser ADD FOREIGN KEY (schoolgroupid) REFERENCES tblschoolgroup(schoolgroupid);
+
+ALTER TABLE tblstudentScoData ADD FOREIGN KEY (studentsco) REFERENCES tblstudentscocontext(studentsco) ON DELETE CASCADE;
+===
+
+Om aanpassingen aan de dBAccess.java te voorkomen en uitgebreidere softwaretests 
+zijn de cascade delete on toegevoegd. Als een foreign key constraint een error 
+geeft kan deze gevonden worden en de betreffende referentie worden verwijdert. 
+Bijvoorbeeld
+
+===
+select * from tblclass where userid not in (select userid from tbluser);
+Conversie van databaseformaat v1.2.0 naar v1.2.1
+
+ALTER TABLE `tblstudentscocontext` 
+ADD COLUMN `createTime` TIME NULL COMMENT '' AFTER `score`,
+ADD COLUMN `completionStatus` VARCHAR(20) NULL COMMENT '' AFTER `createTime`;
+
+ALTER TABLE `tblstudentscocontext`
+ADD COLUMN `location` VARCHAR(20) NULL COMMENT '' AFTER `completionStatus`;
+
+ALTER TABLE `tbluser`
+ADD COLUMN `lastLoginTime` TIME NULL COMMENT '' AFTER `lastLogin`;
+
+UPDATE `tbldwosystemparameters` SET `value`='1' WHERE `name`='DBVersion Revision';
+Conversie van databaseformaat v1.2.1 naar v1.4.1
+
+INSERT INTO `dwo_productie_v1_2`.`tblschool` (`schoolName`, `schoollogin`, `export`, `schoolRights`) VALUES ('DWO free school', 'null', '0', '_');
+insert into tblDWOSystemParameters (name,value) VALUES ("DwoSchoolIndex","");
+insert into tblSchool (schoolName, schoollogin, export, schoolRights, image, expire) values ("NULL", "null", false, "_", null, null); 
+insert into tblDWOSystemParameters (name,value) VALUES ("NullSchoolIndex","1269");
+insert into tblDWOSystemParameters (name,value) VALUES ("NullSchoolLogin","null");
+insert tblschoolgroup (groupid, schoolid, passwd) values (1,1269,"null");
+
+CREATE TABLE tblTeacherOf(
+        userID INT(11),
+        schoolGroupID INT(11),
+        classID INT(11),
+        `registerDate` date NOT NULL DEFAULT '1753-01-01',
+
+        PRIMARY KEY(userID, classID,schoolGroupID),
+
+        KEY (classID),
+        KEY (userID),
+
+        UNIQUE KEY `AK_TeacherUniquePerClass` (`classID`, `userID`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+        CREATE TABLE tblStudentOf(
+        userID INT(11),
+        schoolGroupID INT(11),
+        classID INT(11),
+        `registerDate` date NOT NULL DEFAULT '1753-01-01',
+
+        PRIMARY KEY(userID, classID, schoolGroupID),
+
+        KEY (classID),
+        KEY (userID),
+
+        UNIQUE KEY `AK_StudentUniquePerClass` (`classID`, `userID`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+        CREATE TABLE tblHasRole(
+        userID INT(11),
+        classID INT(11),
+        schoolGroupID INT(11),
+        `registerDate` date NOT NULL DEFAULT '1753-01-01',
+        `rights` varchar(100) DEFAULT '_',
+        `lastLogin` date DEFAULT NULL,
+
+        PRIMARY KEY(userID, schoolGroupID),
+
+        KEY (userID),
+        KEY (schoolGroupID),
+
+        UNIQUE KEY `AK_UserSchoolGroupIdIsUnique` (`schoolGroupID`, `userID`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+        ALTER TABLE tblStudentScoContext ADD schoolGroupID INT(11);
+
+        ALTER TABLE tblclass ADD COLUMN registrationKey VARCHAR(100) DEFAULT NULL AFTER class;
+
+        ALTER TABLE tblCourse ADD COLUMN sequencenr INT(11) DEFAULT NULL AFTER notVisible;
+        ALTER TABLE tbluser ADD COLUMN singleschool tinyint(1) DEFAULT 0 AFTER lastlogin;
+        UPDATE tbluser SET singleschool = 1 WHERE schoolgroupid in (select schoolgroupid FROM tblschoolgroup WHERE groupid = 1);
+
+/* put all teachers into tblTeacherOf, this includes schooladmins */
+        insert into tblTeacherOf (userID, schoolGroupID, classID,registerDate) select
+        userID, schoolGroupID, c.classID, curdate() from tblClass c join tblUser u using (userID) 
+        where userID is not NULL;
+/* change the schoolgroupid of schooladmins in teacherof into teachers schoolgroupid */
+        update tblteacherof join (select admingid, teachsgid from tblteacherof toc join (select  a.schoolgroupid as teachsgid, b.schoolgroupid as admingid from tblschoolgroup a join tblschoolgroup b using (schoolid) where a.groupid=2 and b.groupid =5) mapit on (mapit.admingid=toc.schoolgroupid)) i on i.admingid=tblteacherof.schoolgroupid  set schoolgroupid=i.teachsgid;
+/* change the schoolgroupid of dwoadmins in teacherof into teachers schoolgroupid */
+        update tblteacherof join (select admingid, teachsgid from tblteacherof toc join (select  a.schoolgroupid as teachsgid, b.schoolgroupid as admingid from tblschoolgroup a join tblschoolgroup b using (schoolid) where a.groupid=2 and b.groupid =3) mapit on (mapit.admingid=toc.schoolgroupid)) i on i.admingid=tblteacherof.schoolgroupid  set schoolgroupid=i.teachsgid;
+
+
+        insert into tblStudentOf (userID, schoolGroupID, classID, registerDate) select
+        userID, schoolGroupID, classID,curdate() from tblUser where classID is not NULL;
+
+        insert into tblHasRole (userID, classID, schoolGroupID, rights, lastLogin) select
+        userID, classID, schoolGroupID, rights, lastLogin from tblUser where 
+        schoolGroupID is not NULL;
+
+        insert ignore into tblHasRole (userID, classID, schoolGroupID, rights, lastLogin,registerDate) select sa.userID, sa.classID, st.schoolGroupID, sa.rights, sa
+.lastLogin, sa.registerDate  from (select * from tblschoolgroup sg join tblhasRole hr using (schoolgroupid) where sg.groupid = 5) sa join (select * from tblschoolgroup where groupid = 2) st using (schoolid);
+        insert ignore into tblHasRole (userID, classID, schoolGroupID, rights, lastLogin,registerDate) select sa.userID, sa.classID, st.schoolGroupID, sa.rights, sa
+.lastLogin, sa.registerDate  from (select * from tblschoolgroup sg join tblhasRole hr using (schoolgroupid) where sg.groupid = 3) sa join (select * from tblschoolgroup where groupid = 2) st using (schoolid);
+
+        insert ignore into tblhasrole (userid, classid, schoolgroupid, registerDate, rights, lastLogin)select userid, null, 1269, '2016-03-30', '_', '2016-03-30' from tbluser where singleschool = 0;
+
+        update tblStudentScoContext, tblUser set tblStudentScoContext.schoolGroupId=tblUser.schoolGroupID 
+          where tblUser.userId = tblStudentScoContext.userId;
+
+        update tblDwoSystemParameters set value = 4 where name = 'DBVersion Minor' ;
+
+update tblhasrole set registerDate = '1753-01-01'  where registerDate = '0000-00-00';
+alter TABLE `tblhasrole` alter column `registerDate` set DEFAULT '1753-01-01';
+update tblTeacherOf set registerDate = '1753-01-01'  where registerDate = '0000-00-00';
+alter TABLE `tblTeacherOf` alter column `registerDate` set DEFAULT '1753-01-01';
+update tblStudentOf set registerDate = '1753-01-01'  where registerDate = '0000-00-00';
+alter TABLE `tblStudentOf` alter column `registerDate` set DEFAULT '1753-01-01';
+
+        ALTER TABLE tblClass drop foreign key tblclass_ibfk_1;
+        ALTER TABLE tblClass drop column userID;
+        ALTER TABLE tblUser drop column classID;
+        ALTER TABLE tblUser drop column rights;
+        ALTER TABLE tblSchool drop column passwordSchool;
+
+UPDATE tbldwosystemparameters SET value='1' WHERE name='DBVersion Revision';
+
+drop view tblsco; 
+create view `tblsco` AS select `tblscocontext`.`scoID` AS `scoID`,`tblscocontext`.`courseID` AS `courseID`,`tblscocontext`.`appletID` AS `appletID`,`tblscocontext`.`sconame` AS `sconame`,`tblscocontext`.`showscore` AS `showscore`,`tblscocontext`.`sequencenr` AS `sequencenr`,`tblscodata`.`description` AS `description`,`tblscodata`.`launchdata` AS `launchdata`,`tblscodata`.`launchdatabytes` AS `launchdatabytes` from (`tblscocontext` join `tblscodata` on((`tblscocontext`.`scoID` = `tblscodata`.`scoID`)));
+drop view tblscoview;
+create view `tblscoview` AS select `tblscocontext`.`scoID` AS `scoID`,`tblscocontext`.`courseID` AS `courseID`,`tblscocontext`.`appletID` AS `appletID`,`tblscocontext`.`sconame` AS `sconame`,`tblscocontext`.`showscore` AS `showscore`,`tblscocontext`.`sequencenr` AS `sequencenr`,`tblscodata`.`description` AS `description`,`tblscodata`.`launchdata` AS `launchdata`,`tblscodata`.`launchdatabytes` AS `launchdatabytes` from (`tblscocontext` join `tblscodata` on((`tblscocontext`.`scoID` = `tblscodata`.`scoID`)));
+
+CREATE VIEW tomcat_user_view AS SELECT username, passwd FROM tblUser;
+CREATE VIEW tomcat_roles_view AS select u.username, g.groupname from tblUser u  join tblhasrole h using (userid) join tblschoolgroup sg on (h.schoolGroupID =  sg.schoolGroupID) join tblgroup g using (groupID);
+
+Alter TABLE `tblsamluser` add COLUMN `authtoken` VARCHAR(16) DEFAULT NULL;
+Alter TABLE `tblsamluser` add COLUMN `timestampauthtoken` BIGINT(20) NOT NULL DEFAULT '0' ;
+
+update  tbluser set passwd = MD5(LEFT(UUID(), 8)) where passwd is null or passwd like "";
+update tblclasscourse set notAfter =  '1970-01-01 00:00:01.000000' where  notAfter=  '0000-00-00 00:00:00.000000';
+update tblclasscourse set notBefore =  '1970-01-01 00:00:01.000000' where  notBefore =  '0000-00-00 00:00:00.000000';
+alter TABLE `tblclasscourse` alter column `notBefore` set DEFAULT '1970-01-01 00:00:01.000000', alter column
+  `notAfter` set DEFAULT '1970-01-01 00:00:01.000000';
+
+/* login context stuff */
+
+CREATE TABLE `tbllogincontext` (
+  `loginid` int(11) NOT NULL AUTO_INCREMENT,
+  `userID` int(11) NOT NULL,
+  `registerTimeStamp` bigint(20) DEFAULT NULL,
+  `lastLoginTimeStamp` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`loginID`),
+  UNIQUE KEY `AK_ID_LOGIN_USER`  (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+===
+
+Warning worden gegooid by de inserts in de tblStudentOf en tblTeacherOf. Dit zijn insert skips voor de cases waar een classid bestaat maar geen schoolgroupid. Kennelijk is de database vervuild.
