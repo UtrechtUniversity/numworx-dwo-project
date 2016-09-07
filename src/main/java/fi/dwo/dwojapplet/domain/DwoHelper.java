@@ -41,6 +41,9 @@ import netscape.javascript.JSObject;
  * method must be called which retrieves configuration of the application server
  * and initializes the class. Information can only be considered correct in the
  * DwoHelper after initialization has finished.
+ * 
+ * DwoHelper is expected to be accessed by multiple threads. Synchronization is there
+ * for mandatory. Note that reference changes are atomic, primitives however not always. 
  */
 public final class DwoHelper {
 
@@ -64,39 +67,31 @@ public final class DwoHelper {
     private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
 
     /**
-     * DWO boot property attributes, set before calling init in DWO.main()
+     * DWO boot property attributes, set before calling init() in DWO.main()
      */
-    //TODO fix locale to be set within DWO_main.
     private static DwoLocale locale = new DwoLocale("nl-NL"); //runtime property for locale.
 
     private static String defaultUsername = "";
     private static String defaultPassword = "";
-    private static URL serverUrlPath = null;
-    private static URL resourceUrlPath = null; // required null if to use the default
-    private static URL appUrlPath = null;
+    private static URL serverUrlPath;
+    private static URL resourceUrlPath; // required null if to use the default
+    private static URL appUrlPath;
     private static URL jarUrlPath;
-    private static HttpAuthenticationType httpAuthentication;
-
-    //depending on application or applet start.
-    private static SchoolClass schoolClass;
-    private static School school;
+    private static HttpAuthenticationType httpAuthenticationType;
+    private static DomSchool nullSchool;
 
     /**
-     * Boot properties that need to be set before calling init()
+     * Properties set on DwoHelper.init()
+     */
+   private static DomSchoolsRolesAndClasses schoolLogins;
+    
+    /**
+     * Properties that are set on user login.
      */
     private static DomUserFull currentUser; // null if none available.
-    private static DomSchool nullSchool;
     private static DomLoginContext currentLoginContext;
-//    private static RoleType currentRole; // null if none available.
-
-    /**
-     * Init properties set by init() *
-     */
-    private static DomSchoolsRolesAndClasses schoolLogins;
-    //      
-    /**
-     * ********deprecated attributes **********
-     */
+ 
+    // ********deprecated attributes **********
     private static User currentFacadeUser;
     private static String plainPassword;
 
@@ -472,8 +467,8 @@ public final class DwoHelper {
     }
 
     /**
-     * Returns the url path to the resource location where the resources are
-     * stored.
+     * Returns the url path of the resource location where the resources are
+     * stored. Changes must be synchronized.
      *
      * @return the resourceUrlPathString
      */
@@ -482,8 +477,8 @@ public final class DwoHelper {
     }
 
     /**
-     * Sets the url path to the resource location where the resources are
-     * stored.
+     * Sets the url path of the resource location where the resources are
+     * stored. Changes must be synchronized.
      *
      * @param aGetResourceURLPath
      */
@@ -492,8 +487,8 @@ public final class DwoHelper {
     }
 
     /**
-     * Sets the url path to the resource location where the resources are
-     * stored.
+     * Sets the url path of the jars location where the resources are
+     * stored. Changes must be synchronized.
      *
      * @param aJarURLPath
      */
@@ -502,8 +497,8 @@ public final class DwoHelper {
     }
 
     /**
-     * Returns the url path to the resource location where the resources are
-     * stored.
+     * Returns the url path for the jars location where the resources are
+     * stored. Changes must be synchronized.
      *
      * @return
      */
@@ -511,22 +506,24 @@ public final class DwoHelper {
         return jarUrlPath;
     }
 
+    /**
+     * Sets the url path of the server. Changes must be synchronized.
+     * 
+     * @param aServerUrlPath
+     */
     public static void setServerUrlPath(URL aServerUrlPath) {
         serverUrlPath = aServerUrlPath;
     }
 
-    public static URL getServerUrlPath() {
+   /**
+     * Returns the url of the server. Changes must be synchronized.
+     *
+     * @return
+     */    public static URL getServerUrlPath() {
         return serverUrlPath;
     }
-//
-//    /**
-//     * @return the schoolClass
-//     */
-//    public static SchoolClass getSchoolClass() {
-//        return currentFacadeUser.getInClass();
-//    }
 
-    /**
+     /**
      * Assisting function for hybrid code between old and new.
      *
      * @return
@@ -547,27 +544,6 @@ public final class DwoHelper {
     public static int getActiveSchoolId() {
         return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchoolId());
     }
-//    
-//    /**
-//     * @param aSchoolClass the schoolClass to set
-//     */
-//    public static void setSchoolClass(SchoolClass aSchoolClass) {
-//        currentFacadeUser.setInClass(schoolClass);
-//    }
-//
-//    /**
-//     * @return the school
-//     */
-//    public static School getSchool() {
-//        return currentFacadeUser.getSchool();
-//    }
-//
-//    /**
-//     * @param aSchool the school to set
-//     */
-//    public static void setSchool(School aSchool) {
-//        currentFacadeUser.setSchool(aSchool);
-//    }
 
     /**
      * @return the current User
@@ -668,17 +644,17 @@ public final class DwoHelper {
     }
 
     /**
-     * @return the httpAuthentication
+     * @return the httpAuthenticationTYPE
      */
     public static HttpAuthenticationType getHttpAuthentication() {
-        return httpAuthentication;
+        return httpAuthenticationType;
     }
 
     /**
-     * @param aHttpAuthentication the httpAuthentication to set
+     * @param aHttpAuthentication the httpAuthenticationTYPE to set
      */
     public static void setHttpAuthentication(HttpAuthenticationType aHttpAuthentication) {
-        httpAuthentication = aHttpAuthentication;
+        httpAuthenticationType = aHttpAuthentication;
     }
 
     /**
@@ -703,7 +679,7 @@ public final class DwoHelper {
     }
 
     /**
-     * @param aDefaultUsername the defaultUsername to set
+     * @param aDefaultPassword
      */
     public static void setDefaultPassword(String aDefaultPassword) {
         defaultPassword = aDefaultPassword;

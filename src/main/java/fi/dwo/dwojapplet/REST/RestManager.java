@@ -36,13 +36,13 @@ import java.util.logging.Logger;
 
 /**
  * This is the plain and direct restManager. Please use the
- * {@Link StoredRestManager} to minimize memory use.
+ * {@Link StoredRestManager} to minimize memory use. Note this class
+ * methods may be called asynchronous. Therefor methods from DWOHelper and
+ * others should be handle async calls too.
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
 class RestManager {
-//TODO Reduce code by implementing an WebException handler
-//TODO Handle  non exception 400 errors gracefully using Dwo2Exception.
 
     private static final Logger LOG = Logger.getLogger(RestManager.class.getName());
 

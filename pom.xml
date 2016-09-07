@@ -30,7 +30,6 @@
             <organization>Freudenthal Institute</organization>
             <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
             <roles>
-                <role>Administrator</role>
                 <role>Java Developer</role>
             </roles>
         </developer>
