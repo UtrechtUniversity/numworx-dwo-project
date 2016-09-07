@@ -11,4 +11,11 @@ The jdbc-resource string is set in the test-package fi.dwo.server.testutil.Param
 
 jdbc:mysql://localhost:3306/dwojunittest?user=test&password=test
 
+In order to run in a servlet-engine tomcat we require:
+
+mysql-connector-java-5.1.34-bin.jar or compatible
+jamon-2.80.jar
+
+in the appropriate lib folder to be provided.
+
 
