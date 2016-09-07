@@ -44,10 +44,10 @@ class RestManager {
 //TODO Reduce code by implementing an WebException handler
 //TODO Handle  non exception 400 errors gracefully using Dwo2Exception.
 
-    protected static final Logger LOG = Logger.getLogger(RestManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(RestManager.class.getName());
 
-    protected static final RestManager instance = new RestManager();
-    protected static String basicAuthString;
+    private static final RestManager instance = new RestManager();
+    private static String basicAuthString;
 
     /**
      * @return the instance
@@ -67,6 +67,7 @@ class RestManager {
      * @param data
      */
     public synchronized static void setBasicAuthString(String data) {
+        // note that reference changes in Java are atomic.
         basicAuthString = data;
     }
 
@@ -76,6 +77,7 @@ class RestManager {
      */
     public synchronized static void setBasicAuthString(String username, String password) {
         String authString = username + ":" + password;
+        // note that reference changes in Java are atomic.
         basicAuthString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
     }
 
