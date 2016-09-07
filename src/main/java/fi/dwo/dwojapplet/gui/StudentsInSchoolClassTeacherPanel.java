@@ -301,6 +301,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 //        });
         targetSchoolClassBox = new JComboBox();
         targetSchoolClassBox.addPopupMenuListener(new PopupMenuListener() {
+            @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 //                JComboBox comboBox = (JComboBox) e.getSource();
                 Vector<DomSchoolClass> schoolClassVector;

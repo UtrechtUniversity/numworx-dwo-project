@@ -13,7 +13,6 @@ import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
@@ -23,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;

@@ -1,17 +1,12 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
-import fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Color;
 
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.MediaTracker;
