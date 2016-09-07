@@ -85,7 +85,7 @@ public class Text_en extends ListResourceBundle {
                         
                         { TextMapper.DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS, "You still have unregistered student accounts in the list. Continue?" },                        
                         { TextMapper.DLG_Q_LOSE_NEW_TEACHER_ACCOUNTS, "You still have unregistered teacher accounts in the list. Continue?" },                        
-                        {TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME, "Do you want to delete school class \"{0}\"."},
+                        {TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME, "Do you want to deregister for school class \"{0}\"."},
                         {TextMapper.DLG_Q_REMOVE_TEACHER_BY_NAME, "Do you want to remove teacher \"{0}\" from the school class."},
 			{TextMapper.DLG_CREATESTUDENTERROR,
 					"The remaining students can not be added, likely their usernames are not unqiue." },
