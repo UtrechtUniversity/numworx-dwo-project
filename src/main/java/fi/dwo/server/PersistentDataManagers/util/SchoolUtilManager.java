@@ -33,24 +33,25 @@ public class SchoolUtilManager {
 
     private static final Logger LOG = Logger.getLogger(SchoolUtilManager.class.getName());
 
-    /**
-     * Returns the students in a school to be displayed.
-     *
-     * @param school
-     * @param role
-     * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
-     */
-    public static List<PersistentUser> getUsersInRoleInSchool(PersistentSchool school, RoleType role) throws Dwo2Exception {
-        List<PersistentUser> users = null;
-
-        List<PersistentHasRole> hrList;
-        hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, role);
-        for (PersistentHasRole hr : hrList) {
-            users.add(UserManager.findEntity(hr.getPersistentHasRolePK().getUserID()));
-        }
-        return users;
-    }
+//Slow use code in UserUtilManager.    
+//    /**
+//     * Returns the students in a school to be displayed.
+//     *
+//     * @param school
+//     * @param role
+//     * @return
+//     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+//     */
+//    public static List<PersistentUser> getUsersInRoleInSchool(PersistentSchool school, RoleType role) throws Dwo2Exception {
+//        List<PersistentUser> users = null;
+//
+//        List<PersistentHasRole> hrList;
+//        hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, role);
+//        for (PersistentHasRole hr : hrList) {
+//            users.add(UserManager.findEntity(hr.getPersistentHasRolePK().getUserID()));
+//        }
+//        return users;
+//    }
 
    /**
      * Adds the user to the database and places him in the school. User is
