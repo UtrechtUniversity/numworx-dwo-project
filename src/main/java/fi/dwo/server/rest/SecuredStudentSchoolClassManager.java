@@ -17,17 +17,12 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.rest.entities.RestNewSchoolClass4Student;
 import fi.dwo.rest.entities.RestSchoolClass;
-import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

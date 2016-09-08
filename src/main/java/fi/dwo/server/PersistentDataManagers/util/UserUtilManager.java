@@ -81,7 +81,7 @@ public class UserUtilManager {
      * @return
      * @throws Dwo2Exception 
      */
-        public static List<PersistentUser> getUsersInSchoolwithRole(PersistentSchool school, RoleType role) throws Dwo2Exception {
+        public static List<PersistentUser> getUsersInRoleInSchool(PersistentSchool school, RoleType role) throws Dwo2Exception {
         EntityManager em = DwoEmfFactory.getEntityManager();
         if (school == null || role==null) {
             LOG.log(Level.SEVERE, "user or school is invalid.");
@@ -90,7 +90,7 @@ public class UserUtilManager {
         PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(school, role);
         try {
             //           school = SchoolManager.findBySchoolLogin(newUserReg.getSchoolLogin());
-            javax.persistence.Query q = em.createQuery(" select u from PersistentUser u join PersistentHasRole h on h.persistentHasRolePK.userID=u.userID where hr.schoolGroupID = :schoolGroupId");
+            javax.persistence.Query q = em.createQuery(" select u from PersistentUser u join PersistentHasRole h on h.persistentHasRolePK.userID=u.userID where h.persistentHasRolePK.schoolGroupID = :schoolGroupId");
             q.setParameter("schoolGroupId", sg.getSchoolGroupID());
             List<PersistentUser> userList =  q.getResultList();
             LOG.log(Level.FINE, "School-manager retrieved {0} users in school {1} with role {2}.", new Object[]{userList.size(), school.getSchoolID(), role.name()});
@@ -99,7 +99,7 @@ public class UserUtilManager {
         catch (Exception ex) {
             String msg = MessageFormat.format("Failed retrieving users in school {0} with role {1}.", new Object[]{school.getSchoolID(), role.name()});
             LOG.log(Level.WARNING, msg, ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_authentication_failed, msg);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
         }
         finally {
             em.close();

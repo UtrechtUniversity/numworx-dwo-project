@@ -35,6 +35,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -120,24 +121,20 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+            throw new Dwo2RestException(ex);
         }
-        List<PersistentHasRole> hrList;
         try {
-            hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
-            domTeachers = new ArrayList<DomTeacher>(hrList.size());
-            for (PersistentHasRole hr : hrList) {
-                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
-                domTeachers.add(user.buildDomTeacher());
+            List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.TEACHER);
+            domTeachers = new ArrayList<>(userList.size());
+            for (PersistentUser u : userList) {
+                domTeachers.add(u.buildDomTeacher());
             }
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
-
         return domTeachers;
     }
 
@@ -160,18 +157,22 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+            throw new Dwo2RestException(ex);
         }
-        List<PersistentHasRole> hrList;
+//        List<PersistentHasRole> hrList;
         try {
-            hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.STUDENT);
-            domStudents = new ArrayList<>(hrList.size());
-            for (PersistentHasRole hr : hrList) {
-                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
-                domStudents.add(user.buildDomStudent());
+            List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
+            domStudents = new ArrayList<DomStudent>(userList.size());
+            for(PersistentUser u:userList){
+                domStudents.add(u.buildDomStudent());
             }
+//            hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.STUDENT);
+//            domStudents = new ArrayList<DomStudent>(hrList.size());
+//            for (PersistentHasRole hr : hrList) {
+//                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
+//                domStudents.add(user.buildDomStudent());
+//            }
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
