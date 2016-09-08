@@ -484,9 +484,9 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <processMainArtifact>true</processMainArtifact>
+                            <processMainArtifact>false</processMainArtifact>
                             <includeClassifiers>
-                                <includeClassifier>all-in-one</includeClassifier>
+                                <includeClassifier>jar-with-dependencies</includeClassifier>
                             </includeClassifiers>
                         </configuration>                
                         <dependencies>
