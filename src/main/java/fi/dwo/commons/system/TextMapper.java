@@ -54,6 +54,10 @@ public abstract class TextMapper {
 	public static final String LBL_STUDENTS = "LBL_STUDENTS";
 	public static final String LBL_TEACHERS = "LBL_TEACHERS";
 	public static final String LBL_SCHOOLADMINS = "LBL_SCHOOLADMINS";
+	public static final String LBL_CLICK_TO_SELECT_A_STUDENT = "LBL_CLICK_TO_SELECT_A_STUDENT";
+	public static final String LBL_CLICK_TO_SELECT_A_TEACHER= "LBL_CLICK_TO_SELECT_A_TEACHER";
+	public static final String LBL_CLICK_TO_SELECT_A_SCHOOLADMIN= "LBL_CLICK_TO_SELECT_A_SCHOOLADMIN";
+	public static final String LBL_CLICK_TO_SELECT_A_SCHOOLCLASS = "LBL_CLICK_TO_SELECT_A_SCHOOLCLASS";
 
 	/* header panel headers */
 	public static final String HDR_NEW_STUDENTS = "HDR_NEW_STUDENTS";
@@ -94,6 +98,7 @@ public abstract class TextMapper {
 
 	public static final String DLG_MESSAGE = "DLG_MESSAGE";
 	public static final String DLG_ERROR = "DLG_ERROR";
+        public static final String DLG_LOADING = "DLG_LOADING";
         public static final String DLG_SERVER_OUT = "DLG_SERVER_OUT";
 	public static final String DLG_CREATESTUDENTERROR = "DLG_CREATESTUDENTERROR";
 	public static final String DLG_CREATETEACHERERROR = "DLG_CREATETEACHERERROR";

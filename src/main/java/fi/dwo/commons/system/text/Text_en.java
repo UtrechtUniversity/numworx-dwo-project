@@ -19,7 +19,11 @@ public class Text_en extends ListResourceBundle {
                         { TextMapper.LBL_ILLEGAL_AUTHCODE, "The auth-code is invalid, possible it has expired."},
                         { TextMapper.LBL_UNKNOWN_COMBINATION, "This combination is unknown and your actions have been logged."},
                         { TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT, "An email with the auth-code has been sent to you."},
-			/* General button constants */
+			{ TextMapper.LBL_CLICK_TO_SELECT_A_STUDENT, "Click to select a student." },
+			{ TextMapper.LBL_CLICK_TO_SELECT_A_TEACHER, "Click to select a teacher." },
+			{ TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLADMIN, "Click to select a schooladmin." },
+			{ TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLCLASS, "Click to select a school class." },
+                        /* General button constants */
 			{ TextMapper.BTN_LOGIN, "Login" },
 			{ TextMapper.BTN_CANCEL, "Cancel" },
 			{ TextMapper.BTN_NO, "No" },
@@ -78,6 +82,7 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.DLG_ENTER_INPUT, "Enter input" },
 			{ TextMapper.DLG_MESSAGE, "Message" },
 			{ TextMapper.DLG_ERROR, "Error" },
+                        { TextMapper.DLG_LOADING, "Loading" },
                         { TextMapper.DLG_SERVER_OUT, "Server can not be reached, please close this application and inform the application manager."},
 			{ TextMapper.DLG_DONE_MSG, "Requested task completed." },
                         { TextMapper.DLG_NO_STUDENTS_SELECTED, "Please select one or more students first"},

@@ -19,6 +19,11 @@ public class Text_nl extends ListResourceBundle {
                         { TextMapper.LBL_ILLEGAL_AUTHCODE, "De auth-code is ongeldig, mogelijk is de geldigheidsduur overschreden. Vraag in dat geval een nieuwe aan."},
                         { TextMapper.LBL_UNKNOWN_COMBINATION, "Deze combinatie is onbekend en uw acties zijn gelogd."},
                         { TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT, "Een email met de auth-code en instructies is verstuurd naar u."},
+			{ TextMapper.LBL_CLICK_TO_SELECT_A_STUDENT, "Click to select a student." },
+			{ TextMapper.LBL_CLICK_TO_SELECT_A_TEACHER, "Click to select a teacher." },
+			{ TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLADMIN, "Click to select a schooladmin." },
+			{ TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLCLASS, "Click to select a school class." },
+                        
 			/* General button constants */
 			{ TextMapper.BTN_LOGIN, "Login" },
 			{ TextMapper.BTN_CANCEL, "Annuleren" },
@@ -74,6 +79,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.DLG_ENTER_INPUT, "Voer in" },
 			{ TextMapper.DLG_MESSAGE, "Bericht" },
 			{ TextMapper.DLG_ERROR, "Error" },
+			{ TextMapper.DLG_LOADING, "Loading" },
                         { TextMapper.DLG_SERVER_OUT, "Server kan niet worden bereikt, sluit deze applicatie en meld dit bij de beheerder."},
 			{ TextMapper.DLG_DONE_MSG, "Verzochte taak uitgevoerd." },
                         { TextMapper.DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS, "U heeft nog ongeregistreerde leerlingen in uw lijst. Doorgaan?" },                        
