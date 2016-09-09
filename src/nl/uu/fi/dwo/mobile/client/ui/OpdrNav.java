@@ -1108,7 +1108,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	        //scoresObjectivesDialog.setSize(scoresObjectivesPanel.getSize());
 	        int width = 1200;
 			int height = 730;
-			if(aantalDiagrammen < 4)
+			if(pilot)
+			{
+				width = 500;
+				height = 730;
+			}
+			else if(aantalDiagrammen < 4)
 			{	
 				width = 400 * aantalDiagrammen;
 				height = 380;
@@ -1240,41 +1245,45 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		Set<String> keys = logState.keySet();
 		
 		for(String key : keys ) {
-			JSONArray attempts = logState.get(key).isObject().get(DWOLogger.LOG_ATTEMPTS).isArray();
-			JSONArray logObjectives = logState.get(key).isObject().get("logObjectives").isArray();
+			try{
+				JSONArray attempts = logState.get(key).isObject().get(DWOLogger.LOG_ATTEMPTS).isArray();
+				JSONArray logObjectives = logState.get(key).isObject().get("logObjectives").isArray();
 			
-			//score berekenen op basis van attempts
-			double score = 0;
-			for ( int i = 0; i < attempts.size(); i++) 
-			{
-				String attempt = attempts.get(i).isString().stringValue();
-				String[] attemptSplit = attempt.split(";");
-				if(attemptSplit.length > 1 && attemptSplit[1].trim().equals("goed"))
-					score += 1;
-				else if(attemptSplit.length > 1 && attemptSplit[1].trim().equals("half"))
-					score += 0.5;
-			}
-			if(attempts.size() > 0)
-				score = score / attempts.size();
-			
-			//voor elk aan deze opdracht gekoppelde leerdoel score optellen en maxscore ophogen. 
-			for (int i = 0; i < objectives.length; i++)
-			{	for (int j = 0; j < objectives[i].length; j++)
-				{	boolean categorieGescoord = false;
-					if(logObjectives.get(i).isArray().get(j).isBoolean().booleanValue())
-					{
-						totaalScoreObjectives[i][j] += score;
-						totaalMaxObjectives[i][j]++;
-						if(!categorieGescoord)
-						{
-							categorieScoreObjectives[i] += score;
-							categorieMaxObjectives[i]++;
-							categorieGescoord = true;
-						}
-					}
-					
+				//score berekenen op basis van attempts
+				double score = 0;
+				for ( int i = 0; i < attempts.size(); i++) 
+				{
+					String attempt = attempts.get(i).isString().stringValue();
+					String[] attemptSplit = attempt.split(";");
+					if(attemptSplit.length > 1 && attemptSplit[1].trim().equals("goed"))
+						score += 1;
+					else if(attemptSplit.length > 1 && attemptSplit[1].trim().equals("half"))
+						score += 0.5;
 				}
-			}	
+				if(attempts.size() > 0)
+					score = score / attempts.size();
+				
+				//voor elk aan deze opdracht gekoppelde leerdoel score optellen en maxscore ophogen. 
+				for (int i = 0; i < objectives.length; i++)
+				{	for (int j = 0; j < objectives[i].length; j++)
+					{	boolean categorieGescoord = false;
+						if(logObjectives.get(i).isArray().get(j).isBoolean().booleanValue())
+						{
+							totaalScoreObjectives[i][j] += score;
+							totaalMaxObjectives[i][j]++;
+							if(!categorieGescoord)
+							{
+								categorieScoreObjectives[i] += score;
+								categorieMaxObjectives[i]++;
+								categorieGescoord = true;
+							}
+						}
+						
+					}
+				}	
+			}
+			catch(Exception e)
+			{}
 		}
 
 		h.put("objectives", objectives);

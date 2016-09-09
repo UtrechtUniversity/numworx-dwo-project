@@ -221,8 +221,8 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		int canvasHeight = 700;
 		if(pilot)
 		{
-			canvasWidth = 400;
-			canvasHeight = 600; // TODO: zinvollere breedte en hoogte geven
+			canvasWidth = 500;
+			canvasHeight = 700; // TODO: zinvollere breedte en hoogte geven
 		}
 		if(aantalDiagrammen < 4)
 		{	
@@ -479,7 +479,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			ctx.lineTo(marge + tekstKolomBreedte + scoreBreedte, lijnHoogte);
 			ctx.closePath();
 			ctx.stroke();
-			
+			schrijfPilotText(lijnHoogte + regelHoogte);
 		}
 		else
 		{
@@ -564,8 +564,20 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			
 			ctx.closePath();
 			ctx.stroke();
-			
+			schrijfPilotText(lijnHoogte + regelHoogte);
 		}
+		
+	}
+	
+	public void schrijfPilotText(int y)
+	{
+		ctx.fillText("Klik op een hoofdonderwep om ook de scores voor de ", marge, y);
+		y += regelHoogte - marge;
+		ctx.fillText("gedetailleerde onderwerpen te bekijken.", marge, y);
+		y += regelHoogte - marge;
+		ctx.fillText("Je kunt dit overzicht sluiten door ergens buiten het", marge, y);
+		y += regelHoogte - marge;
+		ctx.fillText("venster te klikken.", marge, y);
 	}
 	
 	public void paint()
