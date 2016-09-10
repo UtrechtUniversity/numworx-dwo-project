@@ -1703,8 +1703,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 		
 		if (dwologger!= null) 
 		{
-			Map<String,?> m = editor.buildLoggingMap();
-			dwologger.updateLog(m);
+			if(editor != null) // NPE if null
+			dwologger.updateLog(editor.buildLoggingMap());
 			dwologger.getStateHook(h);
 		}
 		return h;
