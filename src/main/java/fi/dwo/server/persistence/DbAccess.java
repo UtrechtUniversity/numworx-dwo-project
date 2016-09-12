@@ -2384,9 +2384,9 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @see fi.dwo.client.persistence.DbAccessIF#getResults(int[])
      */
     /**
-     *
+     * get results of classes from teacher/courses
      * @param courses
-     * @param userID
+     * @param userID current hasrole = teacher
      * @return
      * @throws IOException
      * @throws XmlRpcException
@@ -2481,7 +2481,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      *
      * @param courses
      * @param classID
-     * @param teacherID
+     * @param teacherID (dummy)
      * @return
      * @throws SQLException
      */
@@ -2531,10 +2531,10 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @see fi.dwo.client.persistence.DbAccessIF#getResults(int, int)
      */
     /**
-     *
+     * get results from students in a class/course
      * @param courseID
      * @param classID
-     * @param userID
+     * @param userID current hasrole = teacher (dummy)
      * @return
      * @throws IOException
      * @throws XmlRpcException
@@ -2583,9 +2583,9 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @see fi.dwo.client.persistence.DbAccessIF#getResults(int)
      */
     /**
-     *
+     * get results of scos of course/all classes of teacher.
      * @param courseID
-     * @param userID
+     * @param userID current hasrole = teacher
      * @return
      * @throws IOException
      * @throws XmlRpcException
