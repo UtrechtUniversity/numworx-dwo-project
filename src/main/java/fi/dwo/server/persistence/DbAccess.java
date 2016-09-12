@@ -514,7 +514,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             = "SELECT tblTeacherOf.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
             + "FROM (tblTeacherOf, tblCourse) join  tblStudentOf on tblStudentOf.classId =  tblTeacherOf.classId "
             + "left join tblScoContext  on tblScoContext.courseId =  tblCourse.courseId "
-            + "left join  tblStudentScoContext on tblStudentScoContext.userid =   tblStudentOf.userId and tblStudentScoContext.scoId =   tblScoContext.scoId "
+            + "left join  (tblStudentScoContext on tblStudentScoContext.userid = tblStudentOf.userID and tblStudentOf.schoolGroupID = tblStudentScoContext.schoolGroupID) and tblStudentScoContext.scoId =   tblScoContext.scoId "
             + "where (tblCourse.courseID in ({0} )) "
             + "and (tblTeacherOf.userID = ?) "
             + "group by tblTeacherOf.classID, tblCourse.courseID "
@@ -583,7 +583,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblStudentOf.userID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
             + "FROM (tblStudentOf, tblScoContext)  join tblTeacherOf on tblTeacherOf.classID = tblStudentOf.classID "
             + "join tblCourse on tblScoContext.courseID = tblCourse.courseID "
-            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblStudentOf.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
+            + "left join tblStudentScoContext on (tblStudentScoContext.userID = tblStudentOf.userID and tblStudentScoContext.schoolGroupID = tblStudentOf.schoolGroupID) and tblStudentScoContext.scoId = tblScoContext.scoId "
             + "where (tblStudentOf.classID = ?) " // student tblUser.classID =>tblStudentOf.classID 
             + "and (tblCourse.courseID = ?) " //course
             + "and   (tblTeacherOf.userID = ?) " //teacher tblClass.userID =>tblTeacherOf.userID 
@@ -595,7 +595,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     //TODO V1_4 fix for many school/role options 
     private static String QRY_RESULTS_SINGLE_STUDENT_COURSE
             = "SELECT tblUser.userID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
-            + "FROM ( tblScoContext, tblUser ) left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoID = tblScoContext.scoID "
+            + "FROM ( tblScoContext, tblUser ) left join tblStudentScoContext on (tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.schoolGroupID = tblUser.schoolGroupID) and tblStudentScoContext.scoID = tblScoContext.scoID "
             + "where tblUser.userID = ? and tblScoContext.courseID = ? "
             + "order by tblScoContext.sequencenr";
 
