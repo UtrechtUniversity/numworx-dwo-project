@@ -129,11 +129,11 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 
 //TODO V1_3 DONE adjust lastLogin, registerDate, rights to be in hasRole    
     private final static String QRY_SELECT_CLASSSTUDENTS_OF_CLASS = "SELECT u.userID, "
-            + "u.schoolGroupID, u.firstname, u.middlename, u.lastname, u.username, "
+            + "t.schoolGroupID, u.firstname, u.middlename, u.lastname, u.username, "
             + "u.email, r.registerDate, r.rights, r.lastLogin, t.classID " // skipping u.password
             + "FROM tblStudentOf t "
-            + "join tblUser u using (userID) "
-            + "join tblHasRole r on (u.schoolGroupID=r.schoolgroupID and u.userID = r.userID) "
+            + "join tblHasRole r on (t.schoolGroupID=r.schoolgroupID and t.userID = r.userID) "
+            + "join tblUser u on (u.userID=t.userID) "
             + "WHERE t.classID = ? ";
 
 //TODO V1_3 DONE Adjust for just one school.
