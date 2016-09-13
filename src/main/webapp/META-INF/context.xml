@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" crossContext="false" path="/dwo">
+<!--<Context antiJARLocking="true" crossContext="false" path="/dwo">-->
 <!--<Context aliases="/apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
 <!--     beans for CORS suppor in JAX-RS 
     <beans>
@@ -30,7 +30,7 @@ serverUrlPath=http://127.0.0.1:8080/dwo/
 resourceUrlPath=FILE:resources
 jarUrlPath=FILE:jars    
         -->
-<!--<Context aliases="/jars=/opt/dwo/webapps/war-shared/jars,/resources=/opt/dwo/webapps/war-shared/resources, /apps=/opt/dwo/webapps/war-shared/apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
+<Context aliases="/jars=/opt/dwo/webapps/war-shared/jars,/resources=/opt/dwo/webapps/war-shared/resources, /apps=/opt/dwo/webapps/war-shared/apps" antiJARLocking="true" crossContext="false" path="/dwo">
 <!--<Context aliases="/jars=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\jars, /resources=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\resources, /apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
   <!-- maxActive: Maximum number of database connections in pool. Make sure you
     configure your mysqld max_connections large enough to handle
