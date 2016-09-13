@@ -34,10 +34,11 @@ import org.eclipse.persistence.annotations.CacheType;
     @NamedQuery(name = "PersistentRole.findAll", query = "SELECT p FROM PersistentRole p"),
     @NamedQuery(name = "PersistentRole.findByGroupID", query = "SELECT p FROM PersistentRole p WHERE p.groupID = :groupID"),
     @NamedQuery(name = "PersistentRole.findByGroupname", query = "SELECT p FROM PersistentRole p WHERE p.groupname = :groupname")})
-@Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
-        size=10, // Use 64,000 as the initial cache size. 
-        expiry=36000000 // 10 minutes 
-)public class PersistentRole implements Serializable {
+//@Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
+//        size=10, // Use 64,000 as the initial cache size. 
+//        expiry=36000000 // 10 minutes 
+//)
+public class PersistentRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id

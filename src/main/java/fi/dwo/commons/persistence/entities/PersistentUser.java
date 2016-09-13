@@ -57,10 +57,10 @@ import org.eclipse.persistence.annotations.CacheType;
  * - See more at:
  * http://www.eclipse.org/eclipselink/documentation/2.5/jpa/extensions/a_cache.htm#sthash.jkf8vpLB.dpuf
  */
-@Cache(type = CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
-        size = 10000, // Use 64,000 as the initial cache size. 
-        expiry = 36000000 // 10 minutes 
-)
+//@Cache(type = CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
+//        size = 10000, // Use 64,000 as the initial cache size. 
+//        expiry = 36000000 // 10 minutes 
+//)
 public class PersistentUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
