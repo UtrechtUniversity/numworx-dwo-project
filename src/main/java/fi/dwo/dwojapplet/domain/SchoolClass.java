@@ -120,7 +120,10 @@ public class SchoolClass implements UserGroup, Comparable {
         User[] users = null;
         try {
             users = (User[]) PersistenceFacade.instance().get(User.class, this);
+// TODO            create method
+//            users = (User[]) PersistenceFacade.instance().getUsersInSchoolClass(this);
         } catch (PersistenceException e) {
+            
         }
         return users;
     }

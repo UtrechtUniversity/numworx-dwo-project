@@ -393,6 +393,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 	public void requestLog() {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		try {
+                        //TODO ensure that leerlingen are properly fixed.
 			leerlingen = schoolClass.getStudents();
 			Arrays.sort(leerlingen);
 			model.setRowCount(leerlingen.length + 1);

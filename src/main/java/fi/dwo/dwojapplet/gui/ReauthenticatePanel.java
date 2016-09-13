@@ -76,6 +76,7 @@ public class ReauthenticatePanel extends JPanel implements ActionListener {
         panel.messageLabel.setText(msg);
 
         panel.usernameField.setText(DwoHelper.getCurrentUser().getUserName());
+//        panel.usernameField.addAncestorListener( new RequestFocusListener() );
         String[] options = new String[]{TextMapper.getText(BTN_OK), TextMapper.getText(BTN_CANCEL)};
         int option = JOptionPane.showOptionDialog(null, panel, "",
                 JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
