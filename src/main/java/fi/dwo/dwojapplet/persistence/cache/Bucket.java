@@ -55,6 +55,9 @@ public class Bucket {
         if (uid != other.uid) {
             return false;
         }
+        if(sgid !=other.sgid) {
+            return false;
+        }
         return true;
     }
 
