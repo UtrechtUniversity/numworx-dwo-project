@@ -26,11 +26,11 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 class UserMapper extends XmlRpcMapper {
 
     private static final Logger LOG = Logger.getLogger(UserMapper.class.getName());
-    
+
     private static final String TABLENAME = "tblUser left join tblSchoolGroup on tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID left join tblGroup on tblSchoolGroup.groupID = tblGroup.groupID left join tblSchool on tblSchoolGroup.schoolID = tblSchool.schoolID";
     //private static final String TABLENAME = "tbluser";
     private static final String IDCOL = "userID";
-    
+
     private static final String ORDERCOL = "lastname";
     private static final Object NUL = 0;
 
@@ -38,7 +38,7 @@ class UserMapper extends XmlRpcMapper {
      *
      */
     public UserMapper() {
-        
+
     }
 
     /**
@@ -72,6 +72,12 @@ class UserMapper extends XmlRpcMapper {
         } else if (objects.containsKey(data.get("userID"))) { // Did we know the
             // user?
             u = (User) objects.get(data.get("userID"));
+            //TODO NOW
+            if (u.getSchoolGroupID() != ((Integer) (data.get("schoolGroupID"))).intValue()) {
+                u = new User();
+                u = (User) update(u, data);
+                return u;
+            }
         } else {
             /* Is the user a teacher? */
             Object groupName = data.get("groupname");
@@ -90,7 +96,7 @@ class UserMapper extends XmlRpcMapper {
                 }
             }
         }
-        
+
         if (u == null) {
             u = new User();
         }
@@ -126,8 +132,7 @@ class UserMapper extends XmlRpcMapper {
             try {
                 int schoolClassID = sc.getID();
                 vList = dbAccess.getStudentsOfClass(schoolClassID);
-            }
-            catch (DwoXmlRpcException ex) {
+            } catch (DwoXmlRpcException ex) {
                 Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
             }
             return getObjectFromReturn(vList);
@@ -178,7 +183,7 @@ class UserMapper extends XmlRpcMapper {
         u.setUserID(((Integer) data.get("userID")).intValue());
         u.setUsername((String) data.get("username"));
         u.setRights((String) data.get("rights"));
-        u.setSchoolGroupID(((Integer)data.get("schoolGroupID")));
+        u.setSchoolGroupID(((Integer) data.get("schoolGroupID")));
         /* Maybe we've got some information about the school */
         School s = (School) MapperCreator.instance(School.class)
                 .getObjectFromReturn(data);
@@ -192,30 +197,28 @@ class UserMapper extends XmlRpcMapper {
         String lastLogin = (String) data.get("timestamp"); // lastLogin is al in gebruik, maar dan een Date
         try {
             u.setLastLogin(Long.parseLong(lastLogin));
+        } catch (Exception e) {
         }
-        catch (Exception e) {
-        }
-        
+
         Object classID = data.get("classID");
-        if (classID!=null && !classID.equals("") && !NUL.equals(classID)) {
+        if (classID != null && !classID.equals("") && !NUL.equals(classID)) {
             try {
                 SchoolClass c = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(((Integer) data.get("classID")).intValue());
                 if (c != null) {
                     u.setInClass(c);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.err.println("User: " + data);
                 LOG.log(Level.SEVERE, null, e);
             }
         }
-        
+
         if (u instanceof Teacher) {
             Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
-            if(o!=null){
-            	SchoolClass[] slist = (SchoolClass[]) o;
-            	((Teacher) u).setClasses(slist);
-            }else{
+            if (o != null) {
+                SchoolClass[] slist = (SchoolClass[]) o;
+                ((Teacher) u).setClasses(slist);
+            } else {
                 ((Teacher) u).setClasses(null);
             }
         }
@@ -223,7 +226,7 @@ class UserMapper extends XmlRpcMapper {
          Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
          ((Admin) u).setClasses((SchoolClass[]) o);
          }*/
-        
+
         return u;
     }
 

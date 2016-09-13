@@ -125,7 +125,10 @@ public class UserResultListMapper extends XmlRpcMapper {
         if (data.containsKey("classID")) {
             ug = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(((Integer) data.get("classID")).intValue());
         } else if (data.containsKey("userID")) {
-            ug = (User) MapperCreator.instance(User.class).get(((Integer) data.get("userID")).intValue());
+            User u = (User) MapperCreator.instance(User.class).get(((Integer) data.get("userID")).intValue());
+            //TODO NOW User u = (User) MapperCreator.instance(User.class).get(((Integer) data.get("userID")).intValue(), (Integer) data.get("schoolGroupID")).intValue());
+            //TODO NOW set schoolgroup!!!
+            ug=u;
         }
 
         if (data.containsKey("courseID")) {

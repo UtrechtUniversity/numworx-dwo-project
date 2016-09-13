@@ -41,6 +41,7 @@ import javax.swing.SwingUtilities;
  *
  */
 public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
+
     private static final Logger LOG = Logger.getLogger(Sco.class.getName());
 
     private ScoEditor editor = this;
@@ -127,25 +128,27 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      */
     public ScoPanel getScoPanel(DwoIF dwo, User user) {
         this.dwo = dwo;
-        User lastUser = this.user;
+//        User lastUser = this.user;
         setUser(user);
-        if (lastUser != this.user || user == null) {
-            applet = null;
-            //MapperCreator.instance(Applet.class).removeAllObjects();
-            sc = null;
-        }
+//        if (lastUser != this.user || user == null) {
+        applet = null;
+        //MapperCreator.instance(Applet.class).removeAllObjects();
+        sc = null;
+//        }
         loadApplet();
         if (applet == null) { //something was wrong with creating the applet
             return null;
         }
-        if (sc == null) {
-            sc = new ScoPanel(this);
-            sc.init();
-        } else if (lastUser != this.user || user == null) { //if the user is the same as last time, we don't need to refresh the applet 
-            sc.init();
-        } else { //if(applet.getClass().getName().equals("fi.popupurlapplet.PopUpURLApplet")) {
-            sc.init();
-        }
+//        if (sc == null) {
+//            sc = new ScoPanel(this);
+//            sc.init();
+//        } else if (lastUser != this.user || user == null) { //if the user is the same as last time, we don't need to refresh the applet 
+//            sc.init();
+//        } else { //if(applet.getClass().getName().equals("fi.popupurlapplet.PopUpURLApplet")) {
+//            sc.init();
+//        }
+        sc = new ScoPanel(this);
+        sc.init();
         return sc;
     }
 
@@ -299,7 +302,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                     SetValue(TOTAL_TIME, result.toString());
                     System.err.println("sum = [" + result + "]");
                 } catch (Exception e) {
-                    LOG.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE, null, e);
                 }
             }
             return ok("true");
@@ -318,49 +321,55 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
     static public String gotoSco(String iValue, Object current, Course course, final Component sc) throws NumberFormatException {
         Sco[] list = course.getScoList();
         int sconr = list.length;
-		String pagenr = null;
-		int index = iValue.lastIndexOf('.');
-		if(index >= 0) {
-			try {
-				pagenr = iValue.substring(index+1);
-				pagenr = String.valueOf(-1 + Integer.parseInt(pagenr)); // make 0 based strings
-			} catch (Exception e) {  }
-			iValue = iValue.substring(0, index);
-		}
-		final String PAGE_NR = pagenr;
-		
+        String pagenr = null;
+        int index = iValue.lastIndexOf('.');
+        if (index >= 0) {
+            try {
+                pagenr = iValue.substring(index + 1);
+                pagenr = String.valueOf(-1 + Integer.parseInt(pagenr)); // make 0 based strings
+            } catch (Exception e) {
+            }
+            iValue = iValue.substring(0, index);
+        }
+        final String PAGE_NR = pagenr;
+
 // XXX Sietske wil eerst op nummer daarna pas op titel
-		try { 
-			sconr = Integer.parseInt(iValue)-1;
-		} catch(Exception e) {}
-		if(sconr <= -1 || sconr >= list.length)
-		for(sconr = 0; sconr < list.length; sconr++ ) {
-			if(list[sconr].getScoName().startsWith(iValue)) {
-				break; // found by prefix ? equals? 
-			}
-		}
-		if(sconr == list.length) // not found, try numeric
-			sconr = Integer.parseInt(iValue)-1; // 1..length
-		final Object sco = sconr < 0 ? (Object)course : (Object)(course.getScoList()[sconr]); // array out of bounce?
-		if(sco == current)
-			return "false"; // no jump, no stop/start.
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				if(sc.isShowing()) {
-					// setlessonmode nodig? TODO uitzoeken
-					if(PAGE_NR != null && sco instanceof Sco) {
-						
-						Sco sco2 = (Sco) sco;
-						sco2.dwo = GuiCreator.instance().getDWO();
-						sco2.user = GuiCreator.instance().getUser();
-						sco2.SetValue(LESSON_LOCATION, PAGE_NR);
-					}
-					GuiCreator.instance().getMainPanel().getCenter().select(sco);
-				}
-			}
-		});
-		return "true";
-	}
+        try {
+            sconr = Integer.parseInt(iValue) - 1;
+        } catch (Exception e) {
+        }
+        if (sconr <= -1 || sconr >= list.length) {
+            for (sconr = 0; sconr < list.length; sconr++) {
+                if (list[sconr].getScoName().startsWith(iValue)) {
+                    break; // found by prefix ? equals? 
+                }
+            }
+        }
+        if (sconr == list.length) // not found, try numeric
+        {
+            sconr = Integer.parseInt(iValue) - 1; // 1..length
+        }
+        final Object sco = sconr < 0 ? (Object) course : (Object) (course.getScoList()[sconr]); // array out of bounce?
+        if (sco == current) {
+            return "false"; // no jump, no stop/start.
+        }
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                if (sc.isShowing()) {
+                    // setlessonmode nodig? TODO uitzoeken
+                    if (PAGE_NR != null && sco instanceof Sco) {
+
+                        Sco sco2 = (Sco) sco;
+                        sco2.dwo = GuiCreator.instance().getDWO();
+                        sco2.user = GuiCreator.instance().getUser();
+                        sco2.SetValue(LESSON_LOCATION, PAGE_NR);
+                    }
+                    GuiCreator.instance().getMainPanel().getCenter().select(sco);
+                }
+            }
+        });
+        return "true";
+    }
 
     public boolean isMergable(Sco other) {
         if (other.getAppletID() != getAppletID()) {
@@ -389,9 +398,9 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
     }
 
     public void jsonEncode(Map map, Writer out) throws IOException {
-    	JSONEncoder.encode(map, out, getApplet().getClass().getClassLoader());
+        JSONEncoder.encode(map, out, getApplet().getClass().getClassLoader());
     }
-    
+
     /**
      * Sets the applet of the sco.
      *
@@ -605,7 +614,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
             } catch (RuntimeException e) {
                 //TODO Wim: Dialog: interne fout, sco niet goed afgesloten, mogelijk verlies van gegevens.
                 JOptionPane.showMessageDialog(applet, e.getMessage());
-                LOG.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE, null, e);
                 try {
 
                     User localUser = user;
@@ -616,9 +625,9 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                     StringWriter w = new StringWriter();
                     PrintWriter pw = new PrintWriter(w);
                     e.printStackTrace(pw);
-                    LOG.log(Level.FINE,w.toString());
+                    LOG.log(Level.FINE, w.toString());
                 } catch (RuntimeException e1) {
-                    LOG.log(Level.SEVERE,null,e1);
+                    LOG.log(Level.SEVERE, null, e1);
                 }
             }
             applet = null;
@@ -633,7 +642,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                 applet.stop(); // dit bepaalt wel of niet saven van sco's 
                 applet.destroy();
             } catch (RuntimeException e) {
-                LOG.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE, null, e);
             }
             applet = null;
             sc = null;

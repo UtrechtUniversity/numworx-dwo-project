@@ -2410,6 +2410,7 @@ public class PersistenceFacade {
     public Vector getResults(Course course, SchoolClass schoolClass,
             Teacher teacher) throws PersistenceException {
         try {
+            //TODO NOW add schoolgroupid to query
             Vector v = DbAccessCreator.instance().getResults(course.getID(),
                     schoolClass.getID(), teacher.getUserID());
             MapperIF mapper = MapperCreator.instance(UserResultList.class);
