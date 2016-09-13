@@ -53,7 +53,7 @@ jarUrlPath=FILE:jars
     of the tomcat -->
   <ResourceLink global="jdbc/dwodb" name="jdbc/dwodb" type="javax.sql.DataSource"/>
   <!-- LockOut Realm configured 5 minute time-out after 5 password failures in DWOServer.war. cacheSize-limited for a low DOS sensitivity-->
-  <Realm cacheRemovalWarningTime="360" cacheSize="100" className="org.apache.catalina.realm.LockOutRealm" failureCount="5" lockOutTime="300">
+  <Realm cacheRemovalWarningTime="360" cacheSize="100" className="org.apache.catalina.realm.LockOutRealm" failureCount="500" lockOutTime="300">
     <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
   </Realm>
   <!-- may be configured in server.xml of tomcat -->
