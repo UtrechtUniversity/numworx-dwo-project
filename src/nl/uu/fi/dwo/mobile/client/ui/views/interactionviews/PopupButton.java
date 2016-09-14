@@ -422,7 +422,11 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 
 	public boolean popupShowing() {
 		if(view == null) return true; // use delegate all the time.
-		if(box != null) return box.isShowing(); // use delegate only if visible
+		return boxShowing();
+	}
+
+	public boolean boxShowing() {
+		if(box != null) return box.isShowing();
 		return false;
 	}
 	

@@ -297,7 +297,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	}
 
 	public boolean hasState() {
-		return popupBtn != null && !popupBtn.popupShowing();
+		return popupBtn != null && !popupBtn.boxShowing();
 	}
 
 	public PopupListener getPopupListener() {

@@ -101,6 +101,7 @@ public class MC2View extends SimplePanel implements InteractionView {
 		
 	}
 	
+	
 	private static native JavaScriptObject getIframe(JavaScriptObject o) /*-{
 		return o.getIframe();
 	}-*/;
@@ -113,7 +114,7 @@ public class MC2View extends SimplePanel implements InteractionView {
 	
 	private void onBootstrap() {
 		onLoadApplet();
-		if(innerView == null) {
+		if(innerView == null && iframecounter -- > 0) {
 			LOGGER.info("waiting for iframe");
 			Timer t = new Timer() {
 
@@ -178,12 +179,12 @@ public class MC2View extends SimplePanel implements InteractionView {
 			super(Element.as(node));
 		}
 	}
-	
+	private int iframecounter;
 	private void initFrame() {
 		container = createIframe(id, width, height, locale, relay);
 		JavaScriptObject node = getIframe(container);
 		frame = new IFrame( node );
-
+		iframecounter = 25; // 5 seconds;
 		Timer t = new Timer()
 		{
 			@Override
