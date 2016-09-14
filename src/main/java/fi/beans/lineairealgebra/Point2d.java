@@ -40,6 +40,14 @@ public class Point2d {
 		return this.y;
 	}
 	
+	public void setX(double newX) { 
+		x = newX;
+	}
+	
+	public void setY(double newY) {
+		y = newY;
+	}
+	
 	public Point2d clone() {
 		Point2d cloneP = new Point2d(this.x, this.y);
 		return cloneP;
