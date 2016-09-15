@@ -523,7 +523,7 @@ public interface DbAccessIF extends DbAccessLogin {
 
     public Hashtable getFidentitySchools() throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
-    public Vector getUserResults(int courseID, int userID) throws IOException, XmlRpcException, SQLException;
+    public Vector getUserResults(int courseID, int userID, int schoolGroupID) throws IOException, XmlRpcException, SQLException;
 
     public Vector getUserResults(Vector courses, int i) throws SQLException, IOException, XmlRpcException;
 
@@ -644,4 +644,6 @@ public interface DbAccessIF extends DbAccessLogin {
     public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
     public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+
+    public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException;
 }
