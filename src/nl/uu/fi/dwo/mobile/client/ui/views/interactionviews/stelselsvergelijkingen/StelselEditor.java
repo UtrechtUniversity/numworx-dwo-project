@@ -211,17 +211,20 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		}
 		hoofdPanel.plaatsEditors();
 		kinderen[0].editor.setCurrent(0, 0); //om te zorgen dat cursor ook getekend wordt.
-		kinderen[0].requestFocus();
+		kinderen[0].requestFocus(false);
 		
 		
 	}
 	
-	public void requestFocus()
+	public void requestFocus(boolean fromEditor)
 	{
-		System.out.println("requestFocus");
-		hoofdPanel.geefHoofdEditor().zetFocusFalse();
-		heeftFocus = true;
-		editor.requestFocus();
+		if(!heeftFocus)
+		{
+			hoofdPanel.geefHoofdEditor().zetFocusFalse();
+			heeftFocus = true;
+		}
+		if(!fromEditor)
+			editor.requestFocus();
 	}
 	
 	public HashMap<String, Object> getState()
@@ -520,7 +523,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			while(se != null)
 			{
 				if(se.kinderen == null)
-				{	se.requestFocus();
+				{	se.requestFocus(false);
 					return;
 				}
 				for(int i = 0; i < se.kinderen.length; i++)
@@ -558,7 +561,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	{
 		if(kinderen == null)
 		{	editor.setCurrent(0, 0); //om cursor daadwerkelijk te tekenen.
-			requestFocus();
+			requestFocus(false);
 		
 		}
 		else 
@@ -763,7 +766,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 					parent.hoogte = parent.bepaalHoogte();
 					hoofdPanel.plaatsEditors();
 					parent.vervangViewerDoorEditor(setState);
-					parent.requestFocus();
+					parent.requestFocus(false);
 				}
 				else
 				{
@@ -771,7 +774,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 					{
 						if(parent.kinderen[i].heeftFocus)
 						{	parent.kinderen[i-1].vervangViewerDoorEditor(setState);
-							parent.kinderen[i-1].requestFocus();
+							parent.kinderen[i-1].requestFocus(false);
 							break;
 						}
 					}

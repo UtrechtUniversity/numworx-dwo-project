@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselEditor;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselOplossingenVak;
 import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
@@ -1390,6 +1391,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public boolean isVeranderdNaNakijken()
 	{
 		return isVeranderdNaNakijken;
+	}
+	
+	public void requestFocus()
+	{
+		super.requestFocus();
+		if(fe != null && fe instanceof StelselEditor)
+			((StelselEditor) fe).requestFocus(true);
 	}
 
 	@Override
