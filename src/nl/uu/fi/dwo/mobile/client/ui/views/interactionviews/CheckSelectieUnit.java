@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -610,6 +611,11 @@ public class CheckSelectieUnit implements InteractionStub
 			
 			if (map.containsKey("formuleStrings")) {
 				formuleStrings = map.getStringArray("formuleStrings");
+				if("en".equals(LocaleInfo.getCurrentLocale().getLocaleName()))
+				{	for(int i = 0; i < formuleStrings.length; i++)
+						formuleStrings[i] = formuleStrings[i].replaceAll("of", "or");
+				}
+				
 			}
 			if(map.containsKey("logObjectives"))
 			{	ObjectList logObjectivesList = ( map.getObjectList("logObjectives") );

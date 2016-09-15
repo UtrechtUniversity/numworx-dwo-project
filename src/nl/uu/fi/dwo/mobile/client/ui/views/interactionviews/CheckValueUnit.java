@@ -28,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -158,6 +159,10 @@ public class CheckValueUnit implements InteractionStub{
 			
 			if(launchData.get("formuleStrings") != null)
 			{	formuleStrings = JSONUtilities.toStringArray(launchData.get("formuleStrings"));
+				if("en".equals(LocaleInfo.getCurrentLocale().getLocaleName()))
+				{	for(int i = 0; i < formuleStrings.length; i++)
+						formuleStrings[i] = formuleStrings[i].replaceAll("of", "or");
+				}
 			}
 			if(launchData.get("logObjectives") != null)
 			{	List<Object> logObjectivesList = JSONUtilities.toArrayList( launchData.get("logObjectives") );
