@@ -90,6 +90,7 @@ public abstract class XMLView {
 	
 	protected boolean allesCorrectNodig = false;
 	public boolean zelftoetsGeenCorr = false;
+	public boolean eerderGeenCorr = false;
 	
 	private int[][][][] scoresObjectives;
 	public static String[][] objectives;
@@ -192,6 +193,8 @@ public abstract class XMLView {
 				allesCorrectNodig = wrap.getBoolean("allesCorrectNodig");
 			if(wrap.containsKey("zelftoetsGeenCorr"))
 				zelftoetsGeenCorr = wrap.getBoolean("zelftoetsGeenCorr");
+			if (wrap.containsKey("eerderGeenCorr"))
+				eerderGeenCorr = wrap.getBoolean("eerderGeenCorr");
 			if (wrap.containsKey("objectives"))
 			{	
 				ObjectList objectivesList = wrap.getObjectList("objectives");
