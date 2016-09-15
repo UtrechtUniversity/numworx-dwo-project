@@ -165,7 +165,13 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 					break;
 				}
 			}
-
+			String[] varNamen = new String[this.varNamen.length];
+			for(int i = 0; i < this.varNamen.length; i++)
+			{	Expressie e = FormuleParser.geefExpressie("$f" + this.varNamen[i] + "@");
+				if(e.isVar())
+					varNamen[i] = e.geefVarNaam();
+			}
+			
 			boolean isGelijkwaardigEind = antwoord.isStelselOplossing(oplossingen, varNamen);
 			gelijkwaardig = isGelijkwaardigEind;
 			isEindOplossing = true;
