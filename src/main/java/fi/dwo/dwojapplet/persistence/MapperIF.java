@@ -34,6 +34,17 @@ public interface MapperIF {
     public Object get(int oid) throws IOException, XmlRpcException,
             SQLException;
 
+    /** only supported for users
+     * @param uid
+     * @param sgid
+     * @return 
+     * @throws java.io.IOException
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException 
+     */
+    public Object get(int uid, Integer sgid) throws IOException, XmlRpcException,
+            SQLException;
+    
     /**
      * This method saves an object in the database.<br>
      * NOT IMPLEMENTED!!
@@ -111,4 +122,5 @@ public interface MapperIF {
      *
      */
     public void removeAllObjects();
+
 }

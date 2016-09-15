@@ -581,10 +581,11 @@ class DbAccessClient extends Client implements DbAccessIF {
     }
 
     @Override
-    public java.util.Vector getUserResults(int a, int b) throws IOException, XmlRpcException {
+    public java.util.Vector getUserResults(int a, int b, int c) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
         vv.addElement(new Integer(b));
+        vv.addElement(new Integer(c));
         Object object = invoke("getUserResults", vv);
         return (java.util.Vector) object;
     }
@@ -929,5 +930,14 @@ class DbAccessClient extends Client implements DbAccessIF {
         Object object = invoke("getToSchoolsFrom", vv);
         return (java.util.Vector) object;
     }
+
+    @Override
+    public Vector<Object> getHasRoleUser(int uid, int sgid) throws  IOException, XmlRpcException, SQLException{
+        Vector vv = new Vector(2);
+        vv.addElement(new Integer(uid));
+        vv.addElement(new Integer(sgid));
+        Object object = invoke("getHasRoleUser", vv);
+        return (java.util.Vector) object;
+    }    
 
 }

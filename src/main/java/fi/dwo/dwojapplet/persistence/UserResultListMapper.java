@@ -124,11 +124,15 @@ public class UserResultListMapper extends XmlRpcMapper {
 
         if (data.containsKey("classID")) {
             ug = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(((Integer) data.get("classID")).intValue());
-        } else if (data.containsKey("userID")) {
-            User u = (User) MapperCreator.instance(User.class).get(((Integer) data.get("userID")).intValue());
-            //TODO NOW User u = (User) MapperCreator.instance(User.class).get(((Integer) data.get("userID")).intValue(), (Integer) data.get("schoolGroupID")).intValue());
+        } else if (data.containsKey("userID") && data.containsKey("schoolGroupID")) {
+            //User u = (User) MapperCreator.instance(User.class).get(((Integer) data.get("userID")).intValue());
+            //hasRole sensitive caching
+            User u = (User) MapperCreator.instance(User.class).get(((Integer) data.get("userID")).intValue(), ((Integer) data.get("schoolGroupID")).intValue());
             //TODO NOW set schoolgroup!!!
             ug=u;
+        }else if (data.containsKey("userID") ) {
+            //Legacy return for non-hasRole return stuff.
+            return (User) MapperCreator.instance(User.class).get(((Integer) data.get("userID")).intValue());
         }
 
         if (data.containsKey("courseID")) {
@@ -251,4 +255,9 @@ public class UserResultListMapper extends XmlRpcMapper {
         this.resultsModule = resultsModule;
         removeAllObjects();
 }
+
+    @Override
+    public Object get(int uid, Integer sgid) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

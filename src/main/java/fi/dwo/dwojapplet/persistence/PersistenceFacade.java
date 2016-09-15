@@ -2441,7 +2441,7 @@ public class PersistenceFacade {
         StoreCreator.instance().commit(user.getUserID(), 0, "");
         try {
             Vector v = DbAccessCreator.instance().getUserResults(course.getID(),
-                    user.getUserID());
+                    user.getUserID(), user.getSchoolGroupID());
             MapperIF mapper = MapperCreator.instance(UserResultList.class);
             return (Vector) (mapper.getObjectFromReturn(v)[0]);
         }

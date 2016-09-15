@@ -153,4 +153,9 @@ class CourseSequenceMapper extends XmlRpcMapper {
         System.err.println("CourseSequenceMapper.put() Not yet implemented!");
     }
 
+    @Override
+    public Object get(int uid, Integer sgid) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

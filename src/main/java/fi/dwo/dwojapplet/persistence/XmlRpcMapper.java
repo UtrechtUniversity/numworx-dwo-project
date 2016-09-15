@@ -84,6 +84,12 @@ abstract class XmlRpcMapper implements MapperIF {
         }
     }
 
+    public Object get(int uid, int sgid) throws IOException, XmlRpcException,
+            SQLException {
+        System.err.println("UserMapper.put() Not yet implemented!");
+        return null;
+    }
+
     /**
      *
      */
@@ -118,6 +124,7 @@ abstract class XmlRpcMapper implements MapperIF {
      * @return the column name, that is default to sort the results.
      */
     protected abstract String getOrderbyCol();
+
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.MapperIF#getObjectFromReturn(java.util.Vector)
      */

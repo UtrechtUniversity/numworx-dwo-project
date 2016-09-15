@@ -16,6 +16,11 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 class SchoolMapper extends XmlRpcMapper {
     private static final Logger LOG = Logger.getLogger(SchoolMapper.class.getName());
 
+    @Override
+    public Object get(int uid, Integer sgid) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 	// lazy evaluation.
     // DIT STAAT NU AAN!
     static class LazySchool extends School {
