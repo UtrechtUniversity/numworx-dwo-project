@@ -282,12 +282,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij setchanged testen op  buttons.get() != null
 		
 		// initializeer bezocht		
-		{	boolean[][] bezocht;
+		{	
+			boolean[][] bezocht;
 			bezocht = new boolean[getAantalActiviteiten()][];
 			for(int j = 0; j < getAantalActiviteiten(); j++)
 			{	bezocht[j] = new boolean[getAantalOpdrachten(j)]; // all false
 			}
-			bezocht[0][0] = true;
+			//bezocht[0][0] = true; // eerste niet standaard bezocht zetten, anders kun je nooit checken of hij al eerder bezocht is
 			entry.bezocht = bezocht;
 		}
 		
@@ -404,7 +405,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
 		}
 		saveCurrentState();
-		entry.stelNavigatieIn();
+		//entry.stelNavigatieIn(); gebeurt al op een andere plek; niet hier anders gaat oefenen met geen correctie eerdere pagina's mis na kijkNa()
 	}
 		
 	private void setOpdrachten(int index)
@@ -1372,12 +1373,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			//reset totaalscore en keer nagekeken
 			entry.scoreNav.setTotaalScoreLabel(getTotaalScore());
 			entry.scoreNav.setKeerNagekekenLabel(getKeerNagekeken());
+			
+			// reset bezocht
+			resetBezocht();
 		} 
 		else
 		{	
 			randomize = false; // TODO moet wel, tenzij er nu geen enkele state meer is. Peter vragen?
 			clearState(opdracht,source);
 			setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
+			
+			resetBezocht(currentActiviteit, opdracht);
 		}
 		source.setBeantwoord(getAantalBeantwoord());
 		source.setTotaalScore((int) getScore()); 
@@ -1399,6 +1405,30 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		
 		if(DWOplayer.PARAMETERS.isNavTitle())
 			entry.setTitle("Vraag " + (getCurrentOpdracht()+1) + " van " + getAantalOpdrachten());
+	}
+
+	/**
+	 * Reset bezocht
+	 */
+	public void resetBezocht()
+	{
+		boolean[][] bezocht = new boolean[getAantalActiviteiten()][];
+		for(int j = 0; j < getAantalActiviteiten(); j++)
+		{	
+			bezocht[j] = new boolean[getAantalOpdrachten(j)]; // all false
+		}
+		entry.bezocht = bezocht;
+	}
+
+	/**
+	 * Reset bezocht voor de huidige activiteit en de gegeven opdracht.
+	 * 
+	 * @param currentActiviteit
+	 * @param opdracht
+	 */
+	public void resetBezocht(int currentActiviteit, int opdracht)
+	{
+		entry.bezocht[currentActiviteit][opdracht] = false;
 	}
 
 	public void clearState(int opdracht, ScoreNavIF source) {
