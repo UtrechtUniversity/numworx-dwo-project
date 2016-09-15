@@ -20,27 +20,26 @@ import java.util.logging.Level;
 public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAccessIF, DbAccessJS {
 //TODO this class should use reflection to delegate stuff going to be purely serverside.
 //
+
     protected abstract DbAccessIF createDelegate();
-	
-	ThreadLocal<DbAccessIF> delegate = new ThreadLocal<DbAccessIF>() {
-		protected DbAccessIF initialValue() {
-			return createDelegate();
-		}
-		
-	};
-	
-	
-	public void close() {
-		DbConnectIF connector = (DbConnectIF) delegate.get();
-		connector.close();
-		delegate.remove();
-	}
 
-	protected DbAccessIF getDelegate() {
-		DbAccessIF local = delegate.get();
-		return local;
-	}
+    ThreadLocal<DbAccessIF> delegate = new ThreadLocal<DbAccessIF>() {
+        protected DbAccessIF initialValue() {
+            return createDelegate();
+        }
 
+    };
+
+    public void close() {
+        DbConnectIF connector = (DbConnectIF) delegate.get();
+        connector.close();
+        delegate.remove();
+    }
+
+    protected DbAccessIF getDelegate() {
+        DbAccessIF local = delegate.get();
+        return local;
+    }
 
     @Override
     public Vector getCoursesForClass(int classID) throws IOException,
@@ -316,7 +315,6 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //            XmlRpcException, SQLException {
 //        return getDelegate().selectJar(key, jar);
 //    }
-
     @Override
     public boolean log(String s) throws IOException, XmlRpcException {
         return getDelegate().log(s);
@@ -324,9 +322,9 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 
     @Override
     public boolean log(Level level, String s) throws IOException, XmlRpcException {
-        return getDelegate().log(level,s);
+        return getDelegate().log(level, s);
     }
-    
+
     @Override
     public int addCourse(int schoolID, String name, String description,
             int dwoProfile) throws DwoXmlRpcException, IOException,
@@ -444,9 +442,9 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     }
 
     @Override
-    public Vector getUserResults(int courseID, int userID) throws IOException,
+    public Vector getUserResults(int courseID, int userID, int schoolGroupID) throws IOException,
             XmlRpcException, SQLException {
-        return getDelegate().getUserResults(courseID, userID);
+        return getDelegate().getUserResults(courseID, userID, schoolGroupID);
     }
 
     @Override
@@ -638,22 +636,22 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         return getDelegate().isInStudentRole(userID, schoolID);
     }
-    
+
     @Override
     public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().getClassesOfStudent(userID,schoolID);
+        return getDelegate().getClassesOfStudent(userID, schoolID);
     }
 
     @Override
     public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-    return getDelegate().removeStudentFromClass(classID, studentID);
+        return getDelegate().removeStudentFromClass(classID, studentID);
     }
-    
+
     @Override
     public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         return getDelegate().removeStudentFromClass(classID, studentID);
     }
-    
+
     @Override
     public boolean removeTeacherFromClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         return getDelegate().removeTeacherFromClass(classID, teacherID);
@@ -664,60 +662,66 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().addTeacherToClass(classID, teacherID);
     }
 
-	@Override
-	public boolean Commit(int userID, int schoolGroupID, int scoID,
-			Hashtable map) throws Exception {
-		return getScormAccess().Commit(userID, schoolGroupID, scoID, map);
-	}
-// TODO Need a super interface: DBConnectIF, DBAccessIF, ScormAccessIF
-	private ScormAccessIF getScormAccess() {
-		return (ScormAccessIF) getDelegate();
-	}
-
-	@Override
-	public Hashtable Initialize(int userID, int schoolGroupID, int scoID)
-			throws Exception {
-		return getScormAccess().Initialize(userID, schoolGroupID, scoID);
-	}
-
-	@Override
-	public Hashtable Initialize(int userID, int schoolGroupID, int scoID,
-			Vector keys) throws Exception {
-		return getScormAccess().Initialize(userID, schoolGroupID, scoID, keys);
-	}
-    
-    private DbAccessJS getDbAccessJS() {
-    	return (DbAccessJS) getDelegate();
+    @Override
+    public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException {
+        return getDelegate().getHasRoleUser(uid, sgid);
     }
 
-	@Override
-	public Vector getCoursesJS(int profileValue) throws IOException,
-			XmlRpcException, SQLException {
-		return getDbAccessJS().getCoursesJS(profileValue);
-	}
+    @Override
+    public boolean Commit(int userID, int schoolGroupID, int scoID,
+            Hashtable map) throws Exception {
+        return getScormAccess().Commit(userID, schoolGroupID, scoID, map);
+    }
+// TODO Need a super interface: DBConnectIF, DBAccessIF, ScormAccessIF
 
-	@Override
-	public Vector getCoursesForClassJS(int classID) throws IOException,
-			XmlRpcException, SQLException {
-		return getDbAccessJS().getCoursesForClassJS(classID);
-	}
+    private ScormAccessIF getScormAccess() {
+        return (ScormAccessIF) getDelegate();
+    }
 
-	@Override
-	public Vector getEditableCoursesJS(int schoolID) throws IOException,
-			XmlRpcException, SQLException {
-		return getDbAccessJS().getEditableCoursesJS(schoolID);
-	}
+    @Override
+    public Hashtable Initialize(int userID, int schoolGroupID, int scoID)
+            throws Exception {
+        return getScormAccess().Initialize(userID, schoolGroupID, scoID);
+    }
 
-	@Override
-	public Vector getEditableCoursesAdminJS() throws IOException,
-			XmlRpcException, SQLException {
-		return getDbAccessJS().getEditableCoursesAdminJS();
-	}
+    @Override
+    public Hashtable Initialize(int userID, int schoolGroupID, int scoID,
+            Vector keys) throws Exception {
+        return getScormAccess().Initialize(userID, schoolGroupID, scoID, keys);
+    }
 
-	@Override
-	public Vector getTableJS(String table, Hashtable wheredef, String orderby)
-			throws IOException, XmlRpcException, SQLException {
-		return getDbAccessJS().getTableJS(table, wheredef, orderby);
-	}
-    
+    private DbAccessJS getDbAccessJS() {
+        return (DbAccessJS) getDelegate();
+    }
+
+    @Override
+    public Vector getCoursesJS(int profileValue) throws IOException,
+            XmlRpcException, SQLException {
+        return getDbAccessJS().getCoursesJS(profileValue);
+    }
+
+    @Override
+    public Vector getCoursesForClassJS(int classID) throws IOException,
+            XmlRpcException, SQLException {
+        return getDbAccessJS().getCoursesForClassJS(classID);
+    }
+
+    @Override
+    public Vector getEditableCoursesJS(int schoolID) throws IOException,
+            XmlRpcException, SQLException {
+        return getDbAccessJS().getEditableCoursesJS(schoolID);
+    }
+
+    @Override
+    public Vector getEditableCoursesAdminJS() throws IOException,
+            XmlRpcException, SQLException {
+        return getDbAccessJS().getEditableCoursesAdminJS();
+    }
+
+    @Override
+    public Vector getTableJS(String table, Hashtable wheredef, String orderby)
+            throws IOException, XmlRpcException, SQLException {
+        return getDbAccessJS().getTableJS(table, wheredef, orderby);
+    }
+
 }

@@ -36,6 +36,7 @@ import java.util.HashMap;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * Supplies doGet for database status info and database-operations via doPost

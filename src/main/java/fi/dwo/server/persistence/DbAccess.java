@@ -37,21 +37,7 @@ import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.SchoolGroupIndices;
 import fi.dwo.commons.persistence.ScormAccessIF;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import fi.dwo.commons.system.MD5;
-
 
 //import fi.dwo.client.persistence.PersistenceFacade;
 import java.util.HashMap;
@@ -107,11 +93,16 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     private final static String QRY_DEFAULT_SELECT_TABLE_WHERE = "SELECT * "
             + "FROM {0} " + "WHERE (1=1) ";
 
+    private final static String QRY_SELECT_HASROLE_USER = "SELECT h.userID, "
+            + "h.schoolGroupID, u.firstname, u.middlename, u.lastname, u.username, "
+            + "u.email, h.registerDate, h.rights, u.lastLogin "
+            + "FROM tblHasRole h left join tblUser u on (h.userID = u.userID) where h.userID = ? and h.schoolGroupID = ? ";
+    
 //    private final static String QRY_DEFAULT_SELECT_CLASS_STUDENT = "SELECT userID "
 //            + "FROM tblTeacherOf " + "WHERE (classID={0} and userID={1}) ";
     private final static String QRY_SELECT_CLASS_TEACHER = "SELECT userID "
-            + "FROM tblTeacherOf " + "WHERE (classID={0} and userID={1}) ";
-
+           + "FROM tblTeacherOf " + "WHERE (classID={0} and userID={1}) ";
+    
     private final static String QRY_SELECT_CLASS_STUDENT = "SELECT userID "
             + "FROM tblStudentOf " + "WHERE (classID={0} and userID={1}) ";
 
@@ -255,7 +246,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 
     private final static String QRY_ADD_EMPTY_STUDENT_SCO_DATA = "INSERT INTO tblStudentScoData(studentSco,suspendData) "
             + "VALUES(?, '') ";
-    
+
     private final static String QRY_UPDATE_STUDENT_SCO = "UPDATE tblStudentScoContext, tblStudentScoData "
             + "SET `{0}` = ?, createDate = CURDATE() "
             + "WHERE (scoID = ?) "
@@ -514,7 +505,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             = "SELECT tblTeacherOf.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
             + "FROM (tblTeacherOf, tblCourse) join  tblStudentOf on tblStudentOf.classId =  tblTeacherOf.classId "
             + "left join tblScoContext  on tblScoContext.courseId =  tblCourse.courseId "
-            + "left join  (tblStudentScoContext on tblStudentScoContext.userid = tblStudentOf.userID and tblStudentOf.schoolGroupID = tblStudentScoContext.schoolGroupID) and tblStudentScoContext.scoId =   tblScoContext.scoId "
+            + "left join  tblStudentScoContext on (tblStudentScoContext.userid = tblStudentOf.userID and tblStudentOf.schoolGroupID = tblStudentScoContext.schoolGroupID and tblStudentScoContext.scoId =   tblScoContext.scoId) "
             + "where (tblCourse.courseID in ({0} )) "
             + "and (tblTeacherOf.userID = ?) "
             + "group by tblTeacherOf.classID, tblCourse.courseID "
@@ -545,7 +536,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //            + "left join tblStudentSco on tblStudentSco.userID = tblStudentOf.userID and tblStudentSco.scoId = tblSco.scoId "
 //            + "where (tblTeacherOf.classID = ? and tblTeacherOf.userID = ?) and (tblCourse.courseID = ?) "
 //            + "group by tblStudentOf.userID, tblCourse.courseID ORDER BY tblStudentOf.userID";
-    private final static String QRY_RESULTS_CLASS_COURSE = "SELECT tblStudentOf.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
+    private final static String QRY_RESULTS_CLASS_COURSE = "SELECT tblStudentOf.userID, tblStudentOf.schoolGroupID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
             + "FROM (tblStudentOf, tblCourse) "
             + "join tblTeacherOf on tblTeacherOf.classID = tblStudentOf.classID "
             + "join tblScoContext on tblScoContext.courseID = tblCourse.courseID "
@@ -580,7 +571,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "WHERE stu.classID=? and  c.dwoProfileID = ? group by courseid";
 
     // TODO DONE V1_3
-    private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblStudentOf.userID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
+    private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblStudentOf.userID, tblStudentOf.schoolGroupID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
             + "FROM (tblStudentOf, tblScoContext)  join tblTeacherOf on tblTeacherOf.classID = tblStudentOf.classID "
             + "join tblCourse on tblScoContext.courseID = tblCourse.courseID "
             + "left join tblStudentScoContext on (tblStudentScoContext.userID = tblStudentOf.userID and tblStudentScoContext.schoolGroupID = tblStudentOf.schoolGroupID and tblStudentScoContext.scoId = tblScoContext.scoId) "
@@ -593,11 +584,23 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * Select the SCO scores of one student.
      */
     //TODO V1_4 fix for many school/role options 
+//    private static String QRY_RESULTS_SINGLE_STUDENT_COURSE
+//            = "SELECT t.userID, t.schoolGroupID, s.scoID, s.sequencenr,  if(score=0,-1,score) as score, total_time "
+//            + "FROM tblStudentScoContext as t right join tblScoContext as s on (s.scoID=t.scoID and t.userID = ? and t.schoolGroupID = ?)  where "
+//            + "s.courseID = ? "
+//            + "order by s.sequencenr";
     private static String QRY_RESULTS_SINGLE_STUDENT_COURSE
-            = "SELECT tblUser.userID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
-            + "FROM ( tblScoContext, tblUser ) left join tblStudentScoContext on (tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.schoolGroupID = tblUser.schoolGroupID and tblStudentScoContext.scoID = tblScoContext.scoID) "
-            + "where tblUser.userID = ? and tblScoContext.courseID = ? "
-            + "order by tblScoContext.sequencenr";
+            = "SELECT {0} as userID, {1} as schoolGroupID, s.scoID, s.sequencenr,  if(score=0,-1,score) as score, total_time "
+            + "FROM tblStudentScoContext as t right join tblScoContext as s on (s.scoID=t.scoID and t.userID = {0} and t.schoolGroupID = {1})  where "
+            + "s.courseID = {2} "
+            + "order by s.sequencenr";
+
+// old     
+//    private static String QRY_RESULTS_SINGLE_STUDENT_COURSE
+//            = "SELECT tblUser.userID, tblUser.schoolGroupID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
+//            + "FROM ( tblScoContext, tblUser ) left join tblStudentScoContext on (tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.schoolGroupID = tblUser.schoolGroupID and tblStudentScoContext.scoID = tblScoContext.scoID) "
+//            + "where tblUser.userID = ? and tblScoContext.courseID = ? "
+//            + "order by tblScoContext.sequencenr";
 
     // TODO V1_3 DONE merge:
 //        private final static String QRY_RESULTS_COURSE = "SELECT tblTeacherOf.classID, tblSco.scoID, tblSco.sequencenr, "
@@ -736,7 +739,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
                 hashMap.put(rs.getString("name"), rs.getString("value"));
             }
 
-            if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("4")&& hashMap.get("DBVersion Revision").matches("1")) {
+            if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("4") && hashMap.get("DBVersion Revision").matches("1")) {
                 LOG.log(Level.INFO, "We are compatible with the database model version: {0}.{1}.{2}",
                         new Object[]{hashMap.get("DBVersion Major"),
                             hashMap.get("DBVersion Minor"),
@@ -1129,7 +1132,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     public Hashtable login(String username, String password)
             throws SQLException, DwoXmlRpcException {
         close(); //for lazy connection
-        boolean noPw = password.equals("");        
+        boolean noPw = password.equals("");
         PreparedStatement ps = getStatement(noPw ? QRY_USER_LOGIN_NO_PASSWD : QRY_USER_LOGIN);
         ps.setString(1, username);
         if (!noPw) {
@@ -1138,18 +1141,18 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return login_tail(ps);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	private Hashtable login_tail(PreparedStatement ps) throws SQLException,
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private Hashtable login_tail(PreparedStatement ps) throws SQLException,
             DwoXmlRpcException {
         Hashtable result = executeQueryWithRecord(ps);
 
         if (result == null || result.isEmpty()) {
             throw new DwoXmlRpcException(DwoXmlRpcException.EXC_UNKNOWN_USER);
         } else {
-        	Map logResult = new HashMap(result);
-        	Collection keys = Arrays.asList("username", "userID", "classID", "schoolGroupID", "lastLogin", "lastLoginTime");
-        	logResult.keySet().retainAll(keys);
-        	LOG.log(Level.INFO,"login: " + logResult);
+            Map logResult = new HashMap(result);
+            Collection keys = Arrays.asList("username", "userID", "classID", "schoolGroupID", "lastLogin", "lastLoginTime");
+            logResult.keySet().retainAll(keys);
+            LOG.log(Level.INFO, "login: " + logResult);
             Object tmp = result.get("schoolGroupID");
             ps.close();
 
@@ -1199,10 +1202,10 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 
     /**
      * Checks for the user or the user/password combination.
-     * 
+     *
      * @param userID
      * @param password
-     * @return True if user exists and password is correct or true if the user 
+     * @return True if user exists and password is correct or true if the user
      * exists and password is empty. False Otherwise.
      * @throws java.sql.SQLException
      *
@@ -1957,8 +1960,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         }
         ps.setInt(1, classID);
         return executeQueryWithResult(ps);
-        }
-        
+    }
+
     /**
      *
      */
@@ -2117,100 +2120,108 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     @Override
     public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement)
             throws IOException, XmlRpcException, SQLException {
-    	try {
-        	iDataModelElement = fixDataModel(iDataModelElement);
-    // FIX COCD  
-        	if(iDataModelElement.equals("cocd")) {
-        		Hashtable ht = getCOCDMap(scoID, userID);
-        		Object xmlStr = ht.get("cocd");
-    // moved to own column
-        		Object status = ht.get("completionStatus");
+        try {
+            iDataModelElement = fixDataModel(iDataModelElement);
+            // FIX COCD  
+            if (iDataModelElement.equals("cocd")) {
+                Hashtable ht = getCOCDMap(scoID, userID);
+                Object xmlStr = ht.get("cocd");
+                // moved to own column
+                Object status = ht.get("completionStatus");
                 Object location = ht.get("location");
                 Scorm2Xml xml = new Scorm2Xml(String.valueOf(xmlStr));
-                if(status != null) xml.LMSSetValue("cmi.completion_status", String.valueOf(status));
-                if(location != null) xml.SetValue("cmi.location", String.valueOf(location));
-                return xml.toString();
-        	}
-    // legacy
-        	if(wasCOCD(iDataModelElement)) {
-        		Hashtable ht = getCOCDMap(scoID, userID);
-        		if(ht.isEmpty()) return "";
-        		String o = (String) ht.get(iDataModelElement);
-        		if("".equals(o)) // geen onderscheid tussen "" en null
-        		{
-        	        Scorm2Xml xml = new Scorm2Xml(String.valueOf(ht.get("cocd")));
-        	        o = xml.GetValue("cmi." + iDataModelElement);
-        		}
-        		return o.toString();
-        	}
-        if (iDataModelElement.startsWith("cmi.")) {
-            // botte interface naar Xml2Scorm, no caching 
-            String xmlStr = LMSGetValue(scoID, userID, schoolGroupID, "cocd");
-            Scorm2Xml xml = new Scorm2Xml(String.valueOf(xmlStr));
-            return xml.getValue(iDataModelElement);
-        }
-
-        String[] arguments = {iDataModelElement};
-        String query = MessageFormat.format(QRY_GET_STUDENT_SCO, arguments);
-
-        PreparedStatement ps = getStatement(query);
-        ps.setInt(1, scoID);
-        ps.setInt(2, userID);
-        ps.setInt(3, schoolGroupID);
-
-        Hashtable ht = executeQueryWithRecord(ps);
-
-        ps.close();
-        if (ht == null) {
-            if ("total_time".equals(iDataModelElement)) {
-                return "0000:00:00.00";
-            }
-            return "";
-        } else {
-            Object o = ht.get(iDataModelElement);
-            if (o == null) {
-                return "";
-            }
-            if (iDataModelElement.equals("score") && o instanceof Number) {
-                Number number = ((Number) o);
-                if (number.doubleValue() == number.longValue()) {
-                    return String.valueOf(number.longValue());
+                if (status != null) {
+                    xml.LMSSetValue("cmi.completion_status", String.valueOf(status));
                 }
+                if (location != null) {
+                    xml.SetValue("cmi.location", String.valueOf(location));
+                }
+                return xml.toString();
             }
-            return String.valueOf(o);
+            // legacy
+            if (wasCOCD(iDataModelElement)) {
+                Hashtable ht = getCOCDMap(scoID, userID);
+                if (ht.isEmpty()) {
+                    return "";
+                }
+                String o = (String) ht.get(iDataModelElement);
+                if ("".equals(o)) // geen onderscheid tussen "" en null
+                {
+                    Scorm2Xml xml = new Scorm2Xml(String.valueOf(ht.get("cocd")));
+                    o = xml.GetValue("cmi." + iDataModelElement);
+                }
+                return o.toString();
+            }
+            if (iDataModelElement.startsWith("cmi.")) {
+                // botte interface naar Xml2Scorm, no caching 
+                String xmlStr = LMSGetValue(scoID, userID, schoolGroupID, "cocd");
+                Scorm2Xml xml = new Scorm2Xml(String.valueOf(xmlStr));
+                return xml.getValue(iDataModelElement);
+            }
+
+            String[] arguments = {iDataModelElement};
+            String query = MessageFormat.format(QRY_GET_STUDENT_SCO, arguments);
+
+            PreparedStatement ps = getStatement(query);
+            ps.setInt(1, scoID);
+            ps.setInt(2, userID);
+            ps.setInt(3, schoolGroupID);
+
+            Hashtable ht = executeQueryWithRecord(ps);
+
+            ps.close();
+            if (ht == null) {
+                if ("total_time".equals(iDataModelElement)) {
+                    return "0000:00:00.00";
+                }
+                return "";
+            } else {
+                Object o = ht.get(iDataModelElement);
+                if (o == null) {
+                    return "";
+                }
+                if (iDataModelElement.equals("score") && o instanceof Number) {
+                    Number number = ((Number) o);
+                    if (number.doubleValue() == number.longValue()) {
+                        return String.valueOf(number.longValue());
+                    }
+                }
+                return String.valueOf(o);
+            }
+        } catch (RuntimeException e) {
+            log(Level.SEVERE, "getValue " + iDataModelElement, e);
+            throw e;
         }
-    	} catch(RuntimeException e) {
-    		log(Level.SEVERE, "getValue " + iDataModelElement, e);
-    		throw e;
-    	}
     }
 
-    private boolean wasCOCD(String iDataModelElement) {	
-		return "location".equals(iDataModelElement)||"completionStatus".equals(iDataModelElement);
-	}
+    private boolean wasCOCD(String iDataModelElement) {
+        return "location".equals(iDataModelElement) || "completionStatus".equals(iDataModelElement);
+    }
 
-/**
- * Retrieve items of the COCD. The COCD xml string and other columns.
- * @param scoID
- * @param userID
- * @return hastable with all COCD elements
- * @throws SQLException
- */
+    /**
+     * Retrieve items of the COCD. The COCD xml string and other columns.
+     *
+     * @param scoID
+     * @param userID
+     * @return hastable with all COCD elements
+     * @throws SQLException
+     */
 // FIXME NEED schoolGroupID parameter
-	private Hashtable getCOCDMap(int scoID, int userID) throws SQLException {
-		String sql = "SELECT cocd, completionStatus, location "
-		        + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) "
-		        + "WHERE (scoID = ?) "
-		        + "AND   (userID = ?)";
-		PreparedStatement ps = getStatement(sql);
-		ps.setInt(1, scoID);
-		ps.setInt(2, userID);
-		Hashtable ht = executeQueryWithRecord(ps);
-		ps.close();
-		return ht;
-	}
+    private Hashtable getCOCDMap(int scoID, int userID) throws SQLException {
+        String sql = "SELECT cocd, completionStatus, location "
+                + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) "
+                + "WHERE (scoID = ?) "
+                + "AND   (userID = ?)";
+        PreparedStatement ps = getStatement(sql);
+        ps.setInt(1, scoID);
+        ps.setInt(2, userID);
+        Hashtable ht = executeQueryWithRecord(ps);
+        ps.close();
+        return ht;
+    }
 
     private Date currentTime = new Date();
+
     /*
      * (non-Javadoc)
      * 
@@ -2234,12 +2245,12 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
             String iValue) throws SQLException, IOException, XmlRpcException {
 
-    	log( "LMSSetValue("
-		        + scoID + ", " + userID + ", " + iDataModelElement + ", "
-		        + shrink(iValue)
-		        + ")");
+        log("LMSSetValue("
+                + scoID + ", " + userID + ", " + iDataModelElement + ", "
+                + shrink(iValue)
+                + ")");
 
-		iDataModelElement = fixDataModel(iDataModelElement);
+        iDataModelElement = fixDataModel(iDataModelElement);
 
         if (iDataModelElement.startsWith("cmi.")) {
             // eerste botte implementatie
@@ -2257,7 +2268,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             PreparedStatement ps = getStatement(query);
             ps.setInt(1, scoID);
             ps.setInt(2, userID);
-            ps.setInt(3,schoolGroupID);
+            ps.setInt(3, schoolGroupID);
             Hashtable ht = executeQueryWithRecord(ps); // Never returns null, emtpy instead!
             log(Level.FINE, "LMSSetValue("
                     + scoID + ", " + userID + ", " + iDataModelElement + ", "
@@ -2290,10 +2301,9 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
                 }
                 c.commit();
             }
-            if("completed".equals(ht.get("completionStatus")) && isReadOnly(iDataModelElement))
-            {
-            	log(Level.SEVERE, "Someone is doing something nasty", null);
-            	return "";
+            if ("completed".equals(ht.get("completionStatus")) && isReadOnly(iDataModelElement)) {
+                log(Level.SEVERE, "Someone is doing something nasty", null);
+                return "";
             }
 
             Connection c = getConnection();
@@ -2307,7 +2317,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             ps.setObject(1, iValue);
             ps.setInt(2, scoID);
             ps.setInt(3, userID);
-            ps.setInt(4,schoolGroupID);
+            ps.setInt(4, schoolGroupID);
 
             ps.execute();
             int count = ps.getUpdateCount();
@@ -2331,32 +2341,36 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         }
 
     }
-    private Set<String> readonlyKeys = new HashSet<String>(); {
-    	readonlyKeys.add("suspendData");
-    	readonlyKeys.add("score");
-    	readonlyKeys.add("total_time");
-    }
-    
-    private boolean isReadOnly(String key) {
-		return readonlyKeys.contains(key);
-	}
+    private Set<String> readonlyKeys = new HashSet<String>();
 
-	private Properties fixProperties = new Properties();
     {
-    	fixProperties.put("cmi.completion_status", "completionStatus");
-    	fixProperties.put("cmi.location",  "location");
-    	fixProperties.put("cmi.core.lesson_location", "location");
+        readonlyKeys.add("suspendData");
+        readonlyKeys.add("score");
+        readonlyKeys.add("total_time");
     }
-    
-	private String fixDataModel(String iDataModelElement) {
-			return fixProperties.getProperty(iDataModelElement, iDataModelElement);
-	}
+
+    private boolean isReadOnly(String key) {
+        return readonlyKeys.contains(key);
+    }
+
+    private Properties fixProperties = new Properties();
+
+    {
+        fixProperties.put("cmi.completion_status", "completionStatus");
+        fixProperties.put("cmi.location", "location");
+        fixProperties.put("cmi.core.lesson_location", "location");
+    }
+
+    private String fixDataModel(String iDataModelElement) {
+        return fixProperties.getProperty(iDataModelElement, iDataModelElement);
+    }
 
     private String shrink(String iValue) {
-		if(iValue == null || iValue.length() < 20)
-			return iValue;
-		return "MD5(" + iValue.length() + "," + MD5.getHashString(iValue) +")";
-	}
+        if (iValue == null || iValue.length() < 20) {
+            return iValue;
+        }
+        return "MD5(" + iValue.length() + "," + MD5.getHashString(iValue) + ")";
+    }
 
     /**
      *
@@ -2385,6 +2399,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      */
     /**
      * get results of classes from teacher/courses
+     *
      * @param courses
      * @param userID current hasrole = teacher
      * @return
@@ -2532,6 +2547,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      */
     /**
      * get results from students in a class/course
+     *
      * @param courseID
      * @param classID
      * @param userID current hasrole = teacher (dummy)
@@ -2565,11 +2581,14 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
     @Override
-    public Vector getUserResults(int courseID, int userID)
+    public Vector getUserResults(int courseID, int userID, int schoolGroupID)
             throws IOException, XmlRpcException, SQLException {
-        PreparedStatement ps = getStatement(QRY_RESULTS_SINGLE_STUDENT_COURSE);
-        ps.setInt(2, courseID);
-        ps.setInt(1, userID);
+        //MessageFormat.
+        MessageFormat qry = new MessageFormat(QRY_RESULTS_SINGLE_STUDENT_COURSE);
+        PreparedStatement ps = getStatement(qry.format(new Object[]{Integer.toString(userID),Integer.toString(schoolGroupID) , Integer.toString(courseID)}));
+//        ps.setInt(1, userID);
+//        ps.setInt(2, schoolGroupID);
+//        ps.setInt(3, courseID);
 
         Vector v = executeQueryWithResult(ps);
         LOG.log(Level.FINE, "Got {0} results for <course, student> = <{1},{2}> combination.", new Object[]{v.size(), courseID, userID});
@@ -2584,6 +2603,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      */
     /**
      * get results of scos of course/all classes of teacher.
+     *
      * @param courseID
      * @param userID current hasrole = teacher
      * @return
@@ -3126,7 +3146,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             ps.setInt(1, scoID);
             ps.execute();
             ps.close();
-            log("deleteCourse(scoID="+scoID +")");
+            log("deleteCourse(scoID=" + scoID + ")");
         }
 
         /* Delete Sco's of the course */
@@ -3192,13 +3212,14 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         int scoID = addSco(courseID, name, description, appletID, launchdata,
                 sequencenr);
         try {
-			Object launchdatabytes = data.get("launchdatabytes"); 
-			if( launchdatabytes instanceof byte[])
-				changeLaunchDataBytes(scoID, (byte[]) launchdatabytes);
-		} catch (Exception e) {
-			log(Level.SEVERE, "changeLaunchDataBytes", e);
-		}
- 
+            Object launchdatabytes = data.get("launchdatabytes");
+            if (launchdatabytes instanceof byte[]) {
+                changeLaunchDataBytes(scoID, (byte[]) launchdatabytes);
+            }
+        } catch (Exception e) {
+            log(Level.SEVERE, "changeLaunchDataBytes", e);
+        }
+
         return scoID;
     }
 
@@ -3465,7 +3486,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             ps.setInt(1, scoID);
             ps.execute();
             ps.close();
-            log( "deleteSuspendData("+scoID+")");
+            log("deleteSuspendData(" + scoID + ")");
         }
     }
 
@@ -3493,15 +3514,15 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return true;
     }
 
-	/**
-	 * @param scoID
-	 * @param launchdata
-	 * @throws SQLException
-	 * @throws DwoXmlRpcException
-	 */
-	private void changeLaunchDataBytes(int scoID, byte[] launchdata)
-			throws SQLException, DwoXmlRpcException {
-		PreparedStatement ps;
+    /**
+     * @param scoID
+     * @param launchdata
+     * @throws SQLException
+     * @throws DwoXmlRpcException
+     */
+    private void changeLaunchDataBytes(int scoID, byte[] launchdata)
+            throws SQLException, DwoXmlRpcException {
+        PreparedStatement ps;
         // TODO tblSco done
         String query = "UPDATE tblScoData "
                 + "SET "
@@ -3523,7 +3544,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         }
 
         ps.close();
-	}
+    }
 
     static private final String QRY_UPDATE_SCO_SEQUENCENR
             = "UPDATE tblScoContext SET sequencenr = ? WHERE (scoID = ?) ";
@@ -3634,7 +3655,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         ps.setInt(1, schoolID);
         ps.executeUpdate();
         LOG.log(Level.FINE, "Deleted {0} students from class.", new Object[]{ps.getUpdateCount()});
-
 
 // 2) delete teachers from class which is in the school.
         ps = getStatement(QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL);
@@ -3747,8 +3767,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     }
 
     /**
-     * Images die bij courses horen. Linked naar Courses. 
-     * 
+     * Images die bij courses horen. Linked naar Courses.
+     *
      * @param id
      * @param image
      * @return
@@ -4123,6 +4143,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         }
         return true;
     }
+
     /*
      * TODO eventueel een nieuwe naam meegeven, ivm clashes. 
      * (non-Javadoc)
@@ -4582,251 +4603,270 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     }
 
 // This part is GWT only, bulk set/get value    
-	static private String[] KEYS = { 
-		"cmi.suspend_data",
-		"cmi.score.raw",
-		"cmi.total_time",
-		"cmi.location",
-		"cmi.completion_status"
-	};
+    static private String[] KEYS = {
+        "cmi.suspend_data",
+        "cmi.score.raw",
+        "cmi.total_time",
+        "cmi.location",
+        "cmi.completion_status"
+    };
 
-	static private final Properties CONVERT = new Properties();
-	static private final CmiConvert CMI = new CmiConvert(); // utility class
+    static private final Properties CONVERT = new Properties();
+    static private final CmiConvert CMI = new CmiConvert(); // utility class
 
-	private static final String SESSION_TIME = "session_time";
-	private static final String CMI_SESSION_TIME = "cmi." + SESSION_TIME;
-	private static final String TOTAL_TIME = "total_time";
-	private static final String CMI_TOTAL_TIME = "cmi." + TOTAL_TIME;
-	private static final String SUSPEND_DATA = "suspendData";
+    private static final String SESSION_TIME = "session_time";
+    private static final String CMI_SESSION_TIME = "cmi." + SESSION_TIME;
+    private static final String TOTAL_TIME = "total_time";
+    private static final String CMI_TOTAL_TIME = "cmi." + TOTAL_TIME;
+    private static final String SUSPEND_DATA = "suspendData";
 
-	static {
-		CONVERT.put("cmi.suspend_data", SUSPEND_DATA);
-		CONVERT.put("cmi.score.raw", "score");
-		CONVERT.put(CMI_SESSION_TIME, SESSION_TIME);
-		CONVERT.put(CMI_TOTAL_TIME, TOTAL_TIME);
-	}
+    static {
+        CONVERT.put("cmi.suspend_data", SUSPEND_DATA);
+        CONVERT.put("cmi.score.raw", "score");
+        CONVERT.put(CMI_SESSION_TIME, SESSION_TIME);
+        CONVERT.put(CMI_TOTAL_TIME, TOTAL_TIME);
+    }
 
-	static private String c(String key) {
-		return CONVERT.getProperty(key, key);
-	}
+    static private String c(String key) {
+        return CONVERT.getProperty(key, key);
+    }
 
-	// replace chars > 100 with \ u escapes
-	
-	static private String convertUEsc(String s) {
-		char[] charArray = s.toCharArray();
-		int length = charArray.length;
-		int start = 0;
-		for ( ; start < length; start ++) {
-			if (needEscape(charArray[start])) break;
-		}
-		if( start == length ) return s;
-		StringBuilder b = new StringBuilder();
-		if( start > 0)
-			b.append(charArray, 0, start);	
-		for( ; start < length; start ++ ){
-			char c = charArray[start];
-		    if( needEscape(c)  ){
-		        b.append( "\\u" ).append( toHexString(c) );
-		    }else{
-		        b.append( c );
-		    }
-		}
-		return b.toString();
-	}
+    // replace chars > 100 with \ u escapes
+    static private String convertUEsc(String s) {
+        char[] charArray = s.toCharArray();
+        int length = charArray.length;
+        int start = 0;
+        for (; start < length; start++) {
+            if (needEscape(charArray[start])) {
+                break;
+            }
+        }
+        if (start == length) {
+            return s;
+        }
+        StringBuilder b = new StringBuilder();
+        if (start > 0) {
+            b.append(charArray, 0, start);
+        }
+        for (; start < length; start++) {
+            char c = charArray[start];
+            if (needEscape(c)) {
+                b.append("\\u").append(toHexString(c));
+            } else {
+                b.append(c);
+            }
+        }
+        return b.toString();
+    }
 
-	private static String toHexString(char c) {
-		String r = Integer.toHexString(c);
-		while( r.length() < 4) r = '0' + r;
-		return r;
-	}
+    private static String toHexString(char c) {
+        String r = Integer.toHexString(c);
+        while (r.length() < 4) {
+            r = '0' + r;
+        }
+        return r;
+    }
 
-	private static boolean needEscape(char c) {
-		return c > '\u00FF' // || c < ' '
-		;
-	}
+    private static boolean needEscape(char c) {
+        return c > '\u00FF' // || c < ' '
+                ;
+    }
 
-	
-	@Override
-	public boolean Commit(int userID, int schoolGroupID, int scoID,
-			Hashtable map) throws Exception {
-		Set<Map.Entry<String,String>> entries = map.entrySet();
-		for (Map.Entry<String, String> entry : entries) {
-			String iDataModelElement = c(entry.getKey());
-			String iValue = entry.getValue();
-			if(SESSION_TIME.equals(iDataModelElement) || TOTAL_TIME.equals(iDataModelElement))
-			{
-				iValue = CMI.to1_2Timex(CMI.from2004Time(iValue)); // sessiontime in 1.2 format.
-			}
-			if(iDataModelElement.equals(SUSPEND_DATA))
-			{
-				iValue = convertUEsc(iValue);
-			}		
-			LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
-		}
-		return true;
-	}
+    @Override
+    public boolean Commit(int userID, int schoolGroupID, int scoID,
+            Hashtable map) throws Exception {
+        Set<Map.Entry<String, String>> entries = map.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            String iDataModelElement = c(entry.getKey());
+            String iValue = entry.getValue();
+            if (SESSION_TIME.equals(iDataModelElement) || TOTAL_TIME.equals(iDataModelElement)) {
+                iValue = CMI.to1_2Timex(CMI.from2004Time(iValue)); // sessiontime in 1.2 format.
+            }
+            if (iDataModelElement.equals(SUSPEND_DATA)) {
+                iValue = convertUEsc(iValue);
+            }
+            LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
+        }
+        return true;
+    }
 
-	@Override
-	public Hashtable Initialize(int userID, int schoolGroupID, int scoID)
-			throws Exception {
-		return Initialize(userID, schoolGroupID, scoID, KEYS);
-	}
+    @Override
+    public Hashtable Initialize(int userID, int schoolGroupID, int scoID)
+            throws Exception {
+        return Initialize(userID, schoolGroupID, scoID, KEYS);
+    }
 
-	@Override
-	public Hashtable Initialize(int userID, int schoolGroupID, int scoID,
-			Vector keys) throws Exception {
-		String[] strings = (String[]) keys.toArray(new String[keys.size()]);
-		return Initialize(userID, schoolGroupID, scoID, strings);
-	}
+    @Override
+    public Hashtable Initialize(int userID, int schoolGroupID, int scoID,
+            Vector keys) throws Exception {
+        String[] strings = (String[]) keys.toArray(new String[keys.size()]);
+        return Initialize(userID, schoolGroupID, scoID, strings);
+    }
 
-	private Hashtable Initialize(int userID, int schoolGroupID, int scoID,
-			String[] strings) throws IOException, XmlRpcException, SQLException {
-		Hashtable result = new Hashtable();
-		for (int i = 0; i < strings.length; i++) {
-			String key = strings[i];
-			String value = LMSGetValue(scoID, userID, schoolGroupID, c(key));
-			if(CMI_TOTAL_TIME.equals(key))
-				value = CMI.to2004Timex(CMI.from1_2Timex(value));
-			if(value.length()>0)
-				result.put(key, value);
-		}
-		return result;
-	}
+    private Hashtable Initialize(int userID, int schoolGroupID, int scoID,
+            String[] strings) throws IOException, XmlRpcException, SQLException {
+        Hashtable result = new Hashtable();
+        for (int i = 0; i < strings.length; i++) {
+            String key = strings[i];
+            String value = LMSGetValue(scoID, userID, schoolGroupID, c(key));
+            if (CMI_TOTAL_TIME.equals(key)) {
+                value = CMI.to2004Timex(CMI.from1_2Timex(value));
+            }
+            if (value.length() > 0) {
+                result.put(key, value);
+            }
+        }
+        return result;
+    }
 
-	Vector fixSequence(Vector unordered) {
-		List sequences = getSequences(unordered);
-		Comparator sorter = new CourseSorter(sequences);
-		Collections.sort(unordered, sorter);
-		return unordered; // not any more....
-	}
+    Vector fixSequence(Vector unordered) {
+        List sequences = getSequences(unordered);
+        Comparator sorter = new CourseSorter(sequences);
+        Collections.sort(unordered, sorter);
+        return unordered; // not any more....
+    }
 
-	Vector fixModules(Vector modules) {
-		for (Iterator iterator = modules.iterator(); iterator.hasNext();) {
-			Map object = (Map) iterator.next();
-			object.remove("imageData");
-		}
-		return modules;
-	}
-	
-	private List<Map<String,Object>> getSequences(Vector<Map<String,Object>> unordered) {
-		if(unordered.isEmpty())
-			return unordered;
-		Map<String,Object> first = unordered.firstElement();
-		Set<Object> parents = new HashSet<Object>();
-		for (Map<String, Object> map : unordered) {
-			Object parent = map.get("parentID");
-			parents.add(parent);
-		}
-		Hashtable<String,Object> wheredef = new Hashtable<String,Object>();
-		Object schoolID = first.get("schoolID"); 
-		wheredef.put("classID", 0);
-		if(schoolID == null) schoolID = Integer.valueOf(0);
-		wheredef.put("schoolID", schoolID);
-		wheredef.put("profileID", first.get("dwoProfileID"));
-		if(parents.size()==1) {
-			wheredef.put("parent", parents.iterator().next());
-		}
-		try {
-			return getTable( "tblCourseSequence", wheredef, "sequencenr" );
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return Collections.emptyList(); // unsorted.
-	}
+    Vector fixModules(Vector modules) {
+        for (Iterator iterator = modules.iterator(); iterator.hasNext();) {
+            Map object = (Map) iterator.next();
+            object.remove("imageData");
+        }
+        return modules;
+    }
+
+    private List<Map<String, Object>> getSequences(Vector<Map<String, Object>> unordered) {
+        if (unordered.isEmpty()) {
+            return unordered;
+        }
+        Map<String, Object> first = unordered.firstElement();
+        Set<Object> parents = new HashSet<Object>();
+        for (Map<String, Object> map : unordered) {
+            Object parent = map.get("parentID");
+            parents.add(parent);
+        }
+        Hashtable<String, Object> wheredef = new Hashtable<String, Object>();
+        Object schoolID = first.get("schoolID");
+        wheredef.put("classID", 0);
+        if (schoolID == null) {
+            schoolID = Integer.valueOf(0);
+        }
+        wheredef.put("schoolID", schoolID);
+        wheredef.put("profileID", first.get("dwoProfileID"));
+        if (parents.size() == 1) {
+            wheredef.put("parent", parents.iterator().next());
+        }
+        try {
+            return getTable("tblCourseSequence", wheredef, "sequencenr");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList(); // unsorted.
+    }
 
 // For JavaScript	
-	public Vector getTableJS(String table, Hashtable wheredef, String orderby)
-			throws IOException, XmlRpcException, SQLException {
-		if("tblCourse".equals(table) && "name".equals(orderby))
-		{
-			return fixModules(fixSequence(getTable(table,wheredef)));
-		}
-		return getTable(table, wheredef, orderby);
-	}
+    public Vector getTableJS(String table, Hashtable wheredef, String orderby)
+            throws IOException, XmlRpcException, SQLException {
+        if ("tblCourse".equals(table) && "name".equals(orderby)) {
+            return fixModules(fixSequence(getTable(table, wheredef)));
+        }
+        return getTable(table, wheredef, orderby);
+    }
 
-	public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
-	SQLException {
-		return fixModules(fixSequence(getCourses(profileValue)));
-	}
+    public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
+            SQLException {
+        return fixModules(fixSequence(getCourses(profileValue)));
+    }
 
-	//Alleen sorteren binnen één parent.	
-	public Vector getCoursesForClassJS(int classID) throws IOException,
-		XmlRpcException, SQLException {
-	return fixModules(/*fixSequence*/(getCoursesForClass(classID)));
-	}
-	
-	public Vector getEditableCoursesJS(int schoolID) throws IOException,
-		XmlRpcException, SQLException {
-	return fixModules(fixSequence(getEditableCourses(schoolID)));
-	}
-	
-	public Vector getEditableCoursesAdminJS() throws IOException,
-		XmlRpcException, SQLException {
-	return fixModules(fixSequence(getEditableCoursesAdmin()));
-	}
+    //Alleen sorteren binnen één parent.	
+    public Vector getCoursesForClassJS(int classID) throws IOException,
+            XmlRpcException, SQLException {
+        return fixModules(/*fixSequence*/(getCoursesForClass(classID)));
+    }
 
+    public Vector getEditableCoursesJS(int schoolID) throws IOException,
+            XmlRpcException, SQLException {
+        return fixModules(fixSequence(getEditableCourses(schoolID)));
+    }
+
+    public Vector getEditableCoursesAdminJS() throws IOException,
+            XmlRpcException, SQLException {
+        return fixModules(fixSequence(getEditableCoursesAdmin()));
+    }
+
+    public Vector<Object> getHasRoleUser(int uid, int sgid) throws SQLException {
+        PreparedStatement ps = getStatement(QRY_SELECT_HASROLE_USER);
+        ps.setInt(1, uid);
+        ps.setInt(2, sgid);
+        Vector v = executeQueryWithResult(ps);
+        LOG.log(Level.FINE, "Testing if hasroleUser with uid {0} and sgid {1} exists with result: {2}", new Object[]{uid, sgid, v});
+        return v;
+    }
 }
 
 class CmiConvert extends ScormAdapter {
 
-	protected CmiConvert() {
-		super(true);
-	}
+    protected CmiConvert() {
+        super(true);
+    }
 
-	@Override
-	public String GetValue(String cmiElement) {
-		return null;
-	}
+    @Override
+    public String GetValue(String cmiElement) {
+        return null;
+    }
 
-	@Override
-	public String SetValue(String key, String value) {
-		return null;
-	}
+    @Override
+    public String SetValue(String key, String value) {
+        return null;
+    }
 
-	protected long from1_2Timex(String str) {
-		return super.from1_2Time(str);
-	}
+    protected long from1_2Timex(String str) {
+        return super.from1_2Time(str);
+    }
 
-	protected String to1_2Timex(long time) {
-		return super.to1_2Time(time);
-	}
+    protected String to1_2Timex(long time) {
+        return super.to1_2Time(time);
+    }
 
-	protected String to2004Timex(long time) {
-		return super.to2004Time(time);
-	}
+    protected String to2004Timex(long time) {
+        return super.to2004Time(time);
+    }
 }
 
 /**
  * Sorting courses by sequencenr
+ *
  * @param <T>
-*/
-class CourseSorter<T extends Map<?,?>> implements Comparator<T> {
+ */
+class CourseSorter<T extends Map<?, ?>> implements Comparator<T> {
 
-	private Map<Object, Integer> ranking;
-	
-	CourseSorter(List<Map<String,Object>> sequences) {
-		ranking = new Hashtable<Object, Integer>();
-		for (Iterator<Map<String, Object>> iterator = sequences.iterator(); iterator.hasNext();) {
-			Map<String, Object> map = iterator.next();
-			Object id = map.get("courseID");
-			Number n  = (Number) map.get("sequencenr");
-			ranking.put(id, n.intValue());
-		}
-	}
+    private Map<Object, Integer> ranking;
 
-	public int compare(T o1, T o2) {
-		Object i1 = o1.get("courseID");
-		Object i2 = o2.get("courseID");
-		Integer r1 = ranking.get(i1);
-		Integer r2 = ranking.get(i2);
-		if(r1 == null && r2 == null) 
-		{
-			Comparable n1 = (Comparable) o1.get("name");
-			Object n2 = o2.get("name");			
-			return n1.compareTo(n2); // fall back: by name.
-		}
-		if(r1 == null) return +1;
-		if(r2 == null) return -1;
-		return r1.compareTo(r2);
-	}
+    CourseSorter(List<Map<String, Object>> sequences) {
+        ranking = new Hashtable<Object, Integer>();
+        for (Iterator<Map<String, Object>> iterator = sequences.iterator(); iterator.hasNext();) {
+            Map<String, Object> map = iterator.next();
+            Object id = map.get("courseID");
+            Number n = (Number) map.get("sequencenr");
+            ranking.put(id, n.intValue());
+        }
+    }
+
+    public int compare(T o1, T o2) {
+        Object i1 = o1.get("courseID");
+        Object i2 = o2.get("courseID");
+        Integer r1 = ranking.get(i1);
+        Integer r2 = ranking.get(i2);
+        if (r1 == null && r2 == null) {
+            Comparable n1 = (Comparable) o1.get("name");
+            Object n2 = o2.get("name");
+            return n1.compareTo(n2); // fall back: by name.
+        }
+        if (r1 == null) {
+            return +1;
+        }
+        if (r2 == null) {
+            return -1;
+        }
+        return r1.compareTo(r2);
+    }
 }
