@@ -461,7 +461,11 @@ public class CheckSleepUnit implements InteractionStub{
     	        		}
     	        	}
         			
-        			stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
+        			try {
+						stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
+					} catch (RestartException e) {
+						stapJuist = false;
+					}
         			juist = juist && stapJuist;
         			if(!juist && !hasLocationStrings) 
         			{	break;
@@ -488,7 +492,11 @@ public class CheckSleepUnit implements InteractionStub{
 	        			break;
 	        		}
 		        }
-	        	juist = v.isOplossing(new BasisExpressie(1.212131415),"q");
+	        	try {
+					juist = v.isOplossing(new BasisExpressie(1.212131415),"q");
+				} catch (RestartException e) {
+					juist = false;
+				}
 	        	
         	}
         	// construeer antwoord (brxxx)

@@ -199,7 +199,11 @@ public class CheckSelectieUnit implements InteractionStub
         	        	ingevuld = ingevuld || ipList[i].isIpSelected();
         	        }
         			
-        			stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
+        			try {
+						stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
+					} catch (RestartException e) {
+						stapJuist = false; // eigenlijk "weet niet"
+					}
         			juist = juist && stapJuist;
         			if(!juist) break;
 		        }

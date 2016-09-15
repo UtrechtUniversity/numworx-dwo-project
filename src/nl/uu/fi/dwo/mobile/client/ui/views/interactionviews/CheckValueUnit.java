@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
@@ -653,8 +654,12 @@ public class CheckValueUnit implements InteractionStub{
             					}
             				}
                 				
-            			}
-            			else stappenJuist[k] = v[h].geefVergelijking(k).isOplossing(new BasisExpressie(1.212131415),"q");
+            			} else
+							try {
+								stappenJuist[k] = v[h].geefVergelijking(k).isOplossing(new BasisExpressie(1.212131415),"q");
+							} catch (RestartException e) {
+								stappenJuist[k] = false; // eigenlijk "weet niet"
+							}
         				
         				if (k==0)
         					stapJuist = stappenJuist[k];
@@ -704,7 +709,11 @@ public class CheckValueUnit implements InteractionStub{
 	        			break;
 	        		}
 		        }
-	        	juist = v.isOplossing(new BasisExpressie(1.212131415),"q");
+	        	try {
+					juist = v.isOplossing(new BasisExpressie(1.212131415),"q");
+				} catch (RestartException e) {
+					juist = false; // Weet Niet
+				}
 	        }
         }
         else

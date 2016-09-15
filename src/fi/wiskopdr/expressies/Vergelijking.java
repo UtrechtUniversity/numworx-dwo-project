@@ -187,19 +187,17 @@ public class Vergelijking
 		return false;
 	}
 
-	private Expressie evalCAS(Expressie e)
+	private Expressie evalCAS(Expressie e) throws RestartException
 	{
-		/*
+
 		boolean casNodig = e.toString().indexOf("$i") > -1 || e.toString().indexOf("$d") > -1 || e.toString().indexOf("$T") > -1 || e.toString().indexOf("$P") > -1;
 		if (casNodig)
 			return Expressie.evalWithCAS(e);
 		else
-		*/
 		return e;
-
 	}
 
-	public boolean isOplossing(Expressie subst, String var)
+	public boolean isOplossing(Expressie subst, String var) throws RestartException
 	{
 
 		// herleidMild om de afgeleiden eruit te halen
@@ -246,7 +244,7 @@ public class Vergelijking
 
 	}
 	
-	public boolean isOplossing(Expressie[] subst, String[] vars)
+	public boolean isOplossing(Expressie[] subst, String[] vars) throws RestartException
 	{	
 		// herleidMild om de afgeleiden eruit te halen
 		
@@ -284,7 +282,7 @@ public class Vergelijking
 		
 	}
 
-	public boolean isOplossing(Expressie subst, String var, String vergTeken)
+	public boolean isOplossing(Expressie subst, String var, String vergTeken) throws RestartException
 	{
 		boolean grensKlopt = isOplossing(subst, var);
 		if (vergTeken.equals("=") && vergelijkingsTeken.equals("="))
@@ -325,7 +323,7 @@ public class Vergelijking
 		return grensKlopt && verTekenKlopt && juisteKant;
 	}
 
-	public boolean bevatOplossing(Expressie[] subst, String var)
+	public boolean bevatOplossing(Expressie[] subst, String var) throws RestartException
 	{
 		for (int i = 0; i < subst.length; i++)
 		{
@@ -337,7 +335,7 @@ public class Vergelijking
 		return false;
 	}
 
-	public boolean bevatOplossing(Expressie[] subst, String var, String vergTeken[])
+	public boolean bevatOplossing(Expressie[] subst, String var, String vergTeken[]) throws RestartException
 	{
 		for (int i = 0; i < subst.length; i++)
 		{
@@ -349,7 +347,7 @@ public class Vergelijking
 		return false;
 	}
 
-	public boolean bevatOplossing(Expressie[][] subst, String var, String vergTeken[])
+	public boolean bevatOplossing(Expressie[][] subst, String var, String vergTeken[]) throws RestartException
 	{
 		for (int i = 0; i < subst.length; i++)
 		{
@@ -361,7 +359,7 @@ public class Vergelijking
 		return false;
 	}
 	
-	public boolean bevatStelselOplossing(Expressie[][] subst, String[] vars)
+	public boolean bevatStelselOplossing(Expressie[][] subst, String[] vars) throws RestartException
 	{
 		for(int i = 0; i < subst.length; i++)
 		{	if(isOplossing(subst[i], vars))
@@ -372,7 +370,7 @@ public class Vergelijking
 		
 	}
 
-	public boolean bevatOplossingP(Expressie[] subst, String var, String vergTeken)
+	public boolean bevatOplossingP(Expressie[] subst, String var, String vergTeken) throws RestartException
 	{
 		if (subst == null)
 			return false;

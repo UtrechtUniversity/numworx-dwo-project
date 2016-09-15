@@ -174,8 +174,12 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			int teller = 0;
 			for(int j = 0; j < oplossingen.length; j++)
 			{
-				if(vergelijking.isOplossing(oplossingen[j], varNamen))
-					teller++;
+				try {
+					if(vergelijking.isOplossing(oplossingen[j], varNamen))
+						teller++;
+				} catch (RestartException e) {
+					// Hier is de oplossing onbekend.
+				}
 			}
 			Expressie[][] oplossingenKind = new Expressie[teller][varNamen.length];
 			boolean[][] eindOplossingen = new boolean[teller][varNamen.length];
@@ -184,7 +188,13 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			teller = 0;
 			for(int j = 0; j < oplossingen.length; j++)
 			{	
-				if(vergelijking.isOplossing(oplossingen[j], varNamen))
+				boolean oplossing;
+				try {
+					oplossing = vergelijking.isOplossing(oplossingen[j], varNamen);
+				} catch (RestartException e) {
+					oplossing = false; // Weet niet
+				}
+				if(oplossing)
 				{	
 					oplossingenKind[teller] = oplossingen[j];
 					for(int n = 0; n < varNamen.length; n++)
