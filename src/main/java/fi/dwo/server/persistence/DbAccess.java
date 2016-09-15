@@ -624,7 +624,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "avg(score) as score, count(score) as totaal "
             + "FROM (tblTeacherOf, tblScoContext) "
             + "join tblStudentOf on tblTeacherOf.classID = tblStudentOf.classID "
-            + "left join tblStudentScoContext on (tblStudentScoContext.userID = tblStudentOf.userID and tblStudentScoContext.schoolGroupID = tblUser.schoolGroupID and tblStudentScoContext.scoID = tblScoContext.scoID) "
+            + "left join tblStudentScoContext on (tblStudentScoContext.userID = tblStudentOf.userID and tblStudentScoContext.schoolGroupID = tblStudentOf.schoolGroupID and tblStudentScoContext.scoID = tblScoContext.scoID) "
             + "where  (tblScoContext.courseID = ?) "
             + "and   (tblTeacherOf.userID = ?) "
             + "group by tblTeacherOf.classID, tblScoContext.scoID "
