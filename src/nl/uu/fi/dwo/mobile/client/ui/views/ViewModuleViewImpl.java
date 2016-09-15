@@ -96,8 +96,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
 	
-	//private boolean zelftoetsGeenCorr = false;
-	
 	public boolean zelftoetsNagekeken = false;
 	
 	
@@ -105,7 +103,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private HeaderButton hb;
 	private HeaderPanel hp;
 	private WaitScreen waitscreen = WaitScreen.instance();
-	Label disableScreen = new Label();
+	Label disableScreen = new Label("Test");
 	
 	private Widget next, prev, end;
 	
@@ -240,7 +238,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		int mode = on.getMode();
 		if (mode == OpdrNav.ZELFTOETS)
 		{
-			scoreNav.setKijkNaEnabled(on.getAantalOpdrachten() == 1);
+			// kijk na-knop enabled als er maar 1 opdracht is of als al eerder is nagekeken
+			scoreNav.setKijkNaEnabled(on.getAantalOpdrachten() == 1 || on.getKeerNagekeken() > 0);
+			
 			sb.addKnop(scoreNav.getKijkNaButton(), false);
 			scoreNav.setKijkNa(new ScoreNavIF.Checker()
 			{
@@ -269,7 +269,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			&& mode != OpdrNav.EINDTOETS);
 		scoreNav.setObjectivesHandler(this);
 		scoreNav.setMisconceptionsHandler(this);
-		stelNavigatieIn();
+		//stelNavigatieIn(); // kan weg; gebeurt al in zetOpdracht(); i.v.m. bijhouden bezocht[]
 
 		if (mode == OpdrNav.ZELFTOETS)
 		{
@@ -593,17 +593,32 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		int opdrNr = on.getCurrentOpdracht();
 		int actNr = on.getCurrentActiviteit();
 		
-		try{
-			if(bezocht!=null && opdrNr > 0 && opdrNr < bezocht[actNr].length)
+		if(eerderGeenCorr && bezocht[actNr][opdrNr])
+		{
+			zetAfdekPanel(true);
+		}
+		else
+		{
+			zetAfdekPanel(false);
+		}
+
+		try
+		{
+			if(bezocht!=null && opdrNr >= 0 && opdrNr < bezocht[actNr].length) // ook voor pagina 0!
+			{
 				bezocht[actNr][opdrNr] = true;
 			}
-			catch(Exception e){}
+		} 
+		catch(Exception e) {}
 		
 		//bolletje zelf moet altijd enabled zijn, als het al een keer is bezocht.
-		try{	
+		try
+		{	
 			if(bezocht[actNr][opdrNr])
+			{
 				scoreNav.setButtonEnabled(opdrNr,true);
 				//or[actNr].setEnabled(true, opdrNr + 1);
+			}
 		}
 		catch(Exception e){}
 		
@@ -885,6 +900,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		if (b)
 		{
+			contentScrollPanel.remove(disableScreen);
 			contentScrollPanel.add(disableScreen);
 		}
 		else
@@ -1546,7 +1562,4 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		return Double.valueOf(on.getScore());
 	}
 
-	
-	
-	
 }
