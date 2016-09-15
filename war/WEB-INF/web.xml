@@ -46,6 +46,18 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
       <param-value>true</param-value>
     </init-param>
 </servlet>
+  <servlet>
+    <servlet-name>appideas</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>http://app.dwo.nl/ideas</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+</servlet>
 <!-- TODO: Add <servlet-mapping> tags for each <servlet> here. -->
   <servlet-mapping>
 	<servlet-name>image.png</servlet-name>
@@ -90,6 +102,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
    <servlet-mapping>
    	  <servlet-name>appdwo</servlet-name>
    	  <url-pattern>/dwo/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+   	  <servlet-name>appideas</servlet-name>
+   	  <url-pattern>/ideas/*</url-pattern>
    </servlet-mapping>
 
 <!-- TODO: Optionally add a <welcome-file-list> tag to display a welcome file. -->
