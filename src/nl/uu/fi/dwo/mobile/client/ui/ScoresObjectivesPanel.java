@@ -73,6 +73,9 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	CssColor[][] kleurRij;
 	CssColor[] categorieKleurRij;
 	
+	private boolean kleurNeutraal;
+	private CssColor cssColorNeutraal = CssColor.make(202, 222, 255);
+	
 	public ScoresObjectivesPanel(HashMap<String, Object> map, boolean pilot)
 	{
 		this.pilot = pilot;
@@ -359,9 +362,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				}
 			}
 		}
-		
-		
-		
+	
 //        	scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
 //        else 
 //        	scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
@@ -386,6 +387,14 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		
 		return hoogte;
 	}
+	
+	public void zetKleurNeutraal()
+	{
+		kleurNeutraal = true;
+		paint();
+	}
+	
+	
 	
 	public void zetKleuren()
 	{	categorieKleurRij = new CssColor[objectivesForDiagram.length];
@@ -601,7 +610,10 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		zetKleuren();
 		ctx.setStrokeStyle("black");
 		for(int j = 0; j < aantalDiagrammen; j++)
-		{	ctx.setFillStyle(kleurRij[j][0]);
+		{	if(!kleurNeutraal)
+				ctx.setFillStyle(kleurRij[j][0]);
+			else
+				ctx.setFillStyle(cssColorNeutraal);
 			ctx.beginPath();
 			ctx.moveTo(mpX[j], mpY[j]);
 			//ctx.lineTo(mpX[j], mpY[j] - straalRij[j][0]);
@@ -617,7 +629,10 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			
 			for(int i = 1; i < objectivesForDiagram[j].length; i++)
 			{
-				ctx.setFillStyle(kleurRij[j][i]);
+				if(!kleurNeutraal)
+					ctx.setFillStyle(kleurRij[j][i]);
+				else
+					ctx.setFillStyle(cssColorNeutraal);
 				ctx.beginPath();
 				ctx.moveTo(mpX[j], mpY[j]);
 //				ctx.lineTo(mpX[j], mpY[j] - straalRij[j][i]);

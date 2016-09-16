@@ -13,7 +13,7 @@ import com.google.gwt.user.client.Window;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
-
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 //import fi.beans.ideas.IdeasIF;
 //import fi.beans.ideas.RuleIF;
 //import fi.beans.stringutils.StringUtils;
@@ -47,6 +47,9 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	private boolean fout;
 	private boolean stapOk;
 	
+	private int[][] possibleMisconceptions;
+	private int[][] measuredMisconceptions;
+		
 	private Expressie[] juisteAntwoorden;
 	private double[] absPrecisions;
 	private Expressie[] juisteVormen;
@@ -179,6 +182,18 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		this.puntenSignificant = puntenSignificant;
 		this.puntenExact = puntenExact;
 	
+		if(OpdrNav.misconceptions != null && OpdrNav.misconceptions.length>0)
+	     {	 possibleMisconceptions = new int[OpdrNav.misconceptions.length][];
+	     	 measuredMisconceptions = new int[OpdrNav.misconceptions.length][];
+		     for(int i=0 ; i<OpdrNav.misconceptions.length ; i++)
+		     {	 possibleMisconceptions[i] = new int[OpdrNav.misconceptions[i].length];
+		     	 measuredMisconceptions[i] = new int[OpdrNav.misconceptions[i].length];
+		    	 for(int j=0 ; j<OpdrNav.misconceptions[i].length ; j++)
+			     {  possibleMisconceptions[i][j] = 0;
+			     	measuredMisconceptions[i][j] = 0;
+			     }
+		     }
+	     }
 		
 		if (antwoordFuncStrings != null) {
 			
@@ -248,7 +263,35 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		{	this.answerModels.add(answerModels.get(i));
 		}
 		initialiseerAnswerModels();
-        this.hasFeedback = hasFeedback;
+		
+		if (answerModels!=null)
+        {
+        	boolean[][] logMisconceptions = null;
+        	for (int i = 0; i < answerModels.size(); i++)
+        	{	
+        		if (answerModels.get(i) != null && answerModels.get(i).containsKey("logMisconceptions"))
+        		{	ObjectMap wrap = JSONUtilities.wrapMap(answerModels.get(i));
+        			ObjectList misconceptionsList = wrap.getObjectList("logMisconceptions");
+					logMisconceptions = new boolean[misconceptionsList.size()][];
+					for(int j = 0; j < logMisconceptions.length; j++)
+					{	try{
+						logMisconceptions[j] = misconceptionsList.getBooleanArray(j);
+						}
+						catch(Exception e)
+						{}
+					}
+        			for (int j = 0; j < logMisconceptions.length && j < possibleMisconceptions.length; j++)
+        			{	
+        				for (int k = 0; k < logMisconceptions[j].length && k < possibleMisconceptions[j].length; k++)
+            			{	
+        					if (logMisconceptions[j][k])
+        						possibleMisconceptions[j][k] = 1;
+            			}
+        			}
+        		}
+        	}
+        }
+		this.hasFeedback = hasFeedback;
         
         this.eqTestValueMin = eqTestValueMin;
         this.eqTestValueMax = eqTestValueMax;
@@ -975,6 +1018,30 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 				//if(juisteAntwoorden[0].toString().equals("else"))answerModelFits = true;
 				if(answerModelFits) 
 				{	// feedback van dit tabblad wordt gebruikt
+					
+					if(answerModels!=null)
+			        {
+			        	boolean[][] logMisconceptions = null;
+			        	if(answerModels.get(h).containsKey("logMisconceptions"))
+			        	{	ObjectMap wrap = JSONUtilities.wrapMap(answerModels.get(h));
+	        				ObjectList misconceptionsList = wrap.getObjectList("logMisconceptions");
+	        				logMisconceptions = new boolean[misconceptionsList.size()][];
+	        				for(int j = 0; j < logMisconceptions.length; j++)
+	        				{	try{
+	        					logMisconceptions[j] = misconceptionsList.getBooleanArray(j);
+								}
+								catch(Exception e)
+								{}
+	        				}	        			
+			        		
+			        		for( int j=0 ; j<logMisconceptions.length && j<measuredMisconceptions.length ; j++)
+			        		{	for( int k=0 ; k<logMisconceptions[j].length && k<measuredMisconceptions[j].length; k++)
+			            		{	if(logMisconceptions[j][k])
+			        				measuredMisconceptions[j][k] = 1;
+			            		}
+			        		}
+			        	}
+			        }
 					break;
 				}
 			}
@@ -1060,5 +1127,15 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	@Override
 	public FunctieMVDefSet getFunctieMVDefSet() {
 		return functieMVDefSet;
+	}
+	
+	public int[][] getPossibleMisconceptions()
+	{
+		return possibleMisconceptions;
+	}
+	
+	public int[][] getMeasuredMisconceptions()
+	{
+		return measuredMisconceptions;
 	}
 }

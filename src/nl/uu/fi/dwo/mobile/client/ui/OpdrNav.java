@@ -69,7 +69,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	private static String[][] objectives;
 	private static String[] categorieString;
-	private static String[][] misconceptions;
+	public static String[][] misconceptions;
 	private static String[] mccCategorieString;
 	private boolean objectivesAanwezig = false;
 	
@@ -1131,12 +1131,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		 * Maakt panel met analyse van misconcepties zichtbaar mbv een popup-venster
 		 */
 		    int aantalDiagrammen = misconceptions.length;
-	        viewMisconceptionsDialog = new DialogBox(true); //evt argument true meegeven voor autohide.
+		    viewMisconceptionsDialog = new DialogBox(true); //evt argument true meegeven voor autohide.
 	        //Misschien geen dialogbox maar een popup. Moet in elk geval ook weer te sluiten zijn.
 	        //scoresObjectivesDialog = new DialogBox(true);
 	        viewMisconceptionsDialog.setText(Text.constants.viewMisconceptionsKnopLabel()); 
 	       // scoresObjectivesDialog = new DialogBox(this,"deelscores", true);
 	        viewMisconceptionsPanel = new ScoresObjectivesPanel(getMisconceptionsForDiagram(), false);
+	        viewMisconceptionsPanel.zetKleurNeutraal();
+	        
 //	        if(aantalDiagrammen < 4)
 //	        	scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
 //	        else 
@@ -1308,18 +1310,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if (misconceptions == null)
 			return h;
 		
-		int[][] totaalMeasuredMisconceptions = null;
-		int[][] totaalPossibleMisconceptions = null;
+		double[][] totaalMeasuredMisconceptions = null;
+		double[][] totaalPossibleMisconceptions = null;
 		//double[][] scoresPercObjectives = null;
 
-		totaalMeasuredMisconceptions = new int[misconceptions.length][];
-		totaalPossibleMisconceptions = new int[misconceptions.length][];
+		totaalMeasuredMisconceptions = new double[misconceptions.length][];
+		totaalPossibleMisconceptions = new double[misconceptions.length][];
 		//scoresPercObjectives = new double[objectives.length][];
 
 		for (int i = 0; i < misconceptions.length; i++)
 		{
-			totaalMeasuredMisconceptions[i] = new int[misconceptions[i].length];
-			totaalPossibleMisconceptions[i] = new int[misconceptions[i].length];
+			totaalMeasuredMisconceptions[i] = new double[misconceptions[i].length];
+			totaalPossibleMisconceptions[i] = new double[misconceptions[i].length];
 			//scoresPercObjectives[i] = new double[objectives[i].length];
 		}
 

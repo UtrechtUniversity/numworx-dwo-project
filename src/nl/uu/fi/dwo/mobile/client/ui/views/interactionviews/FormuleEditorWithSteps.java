@@ -74,7 +74,7 @@ import fi.wiskopdr.text.Text;
  * @author Evertson Croes
  * 
  */
-public class FormuleEditorWithSteps implements InteractionView, FacetAware, TekstElementWithFont
+public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions, FacetAware, TekstElementWithFont
 {
 	private final static Logger logger = Logger.getLogger("FormuleEditorWithSteps");
 
@@ -3319,5 +3319,20 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware, Teks
 	public FlowPanel getHeaderPanel()
 	{
 		return headerPanel;
+	}
+	
+	@Override
+	public int[][] getMeasuredMisconceptions() {
+		if(avChecker != null)
+			return avChecker.getMeasuredMisconceptions();
+		return null;
+					
+	}
+
+	@Override
+	public int[][] getPossibleMisconceptions() {
+		if(avChecker != null)
+			return avChecker.getPossibleMisconceptions();
+		return null;
 	}
 }

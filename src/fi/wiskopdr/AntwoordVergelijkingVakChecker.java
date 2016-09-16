@@ -1435,4 +1435,16 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		return text;
 	}
 	*/
+
+	@Override
+	public int[][] getMeasuredMisconceptions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int[][] getPossibleMisconceptions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

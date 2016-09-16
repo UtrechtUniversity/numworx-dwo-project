@@ -88,7 +88,7 @@ import fi.wiskopdr.expressies.Optelling;
 
 
 
-public class TekstVakPanel implements InteractionView, FacetAware, PopupListener, CBookEventListener
+public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAware, PopupListener, CBookEventListener
 {
 	public static final String TVP_KLAPUIT = "action.unfold";
 	public static final String TVP_KLAPIN = "action.fold";
@@ -1260,15 +1260,60 @@ public class TekstVakPanel implements InteractionView, FacetAware, PopupListener
 			Object currentObject = interactionViewObjects.get(i);
 			int[][] scoreObj = ((InteractionView) currentObject).getScoreObjectives();
 			for (int j = 0; scoreObj != null && j < XMLView.objectives.length && j < scoreObj.length; j++)
-				for (int k = 0; scoreObj[j] != null && k < XMLView.objectives[j].length && k < scoreObj[j].length; k++)
+			{	for (int k = 0; scoreObj[j] != null && k < XMLView.objectives[j].length && k < scoreObj[j].length; k++)
 				{
 					scoreObjectives[j][k] += scoreObj[j][k];
 					//terug als aftrek voor popup geimplementeerd:
 					if (aftrekPopup && popupUsed)
 						scoreObjectives[j][k] -= puntenAftrekPopup;
 				}
+			}
 		}
 		return scoreObjectives;
+	}
+	
+	public int[][] getPossibleMisconceptions()
+	{
+		int[][] totalPossibleMisconceptions = new int[XMLView.misconceptions.length][];
+		for(int i = 0; i < XMLView.misconceptions.length; i++)
+			totalPossibleMisconceptions[i] = new int[XMLView.misconceptions[i].length];
+		for(int i = 0; i < interactionViewObjects.size(); i++)
+		{
+			Object currentObject = interactionViewObjects.get(i);
+			if(currentObject instanceof InteractionViewWithMisconceptions)
+			{
+				int[][] possibleMisconceptions = ((InteractionViewWithMisconceptions) currentObject).getPossibleMisconceptions();
+				for (int j = 0; possibleMisconceptions != null && j < XMLView.misconceptions.length && j < possibleMisconceptions.length; j++)
+				{	for (int k = 0; possibleMisconceptions[j] != null && k < XMLView.misconceptions[j].length && k < possibleMisconceptions[j].length; k++)
+					{
+						totalPossibleMisconceptions[j][k] += possibleMisconceptions[j][k];
+					}
+				}
+			}
+		}
+		return totalPossibleMisconceptions;
+	}
+	
+	public int[][] getMeasuredMisconceptions()
+	{
+		int[][] totalMeasuredMisconceptions = new int[XMLView.misconceptions.length][];
+		for(int i = 0; i < XMLView.misconceptions.length; i++)
+			totalMeasuredMisconceptions[i] = new int[XMLView.misconceptions[i].length];
+		for(int i = 0; i < interactionViewObjects.size(); i++)
+		{
+			Object currentObject = interactionViewObjects.get(i);
+			if(currentObject instanceof InteractionViewWithMisconceptions)
+			{
+				int[][] measuredMisconceptions = ((InteractionViewWithMisconceptions) currentObject).getMeasuredMisconceptions();
+				for (int j = 0; measuredMisconceptions != null && j < XMLView.misconceptions.length && j < measuredMisconceptions.length; j++)
+				{	for (int k = 0; measuredMisconceptions[j] != null && k < XMLView.misconceptions[j].length && k < measuredMisconceptions[j].length; k++)
+					{
+						totalMeasuredMisconceptions[j][k] += measuredMisconceptions[j][k];
+					}
+				}
+			}
+		}
+		return totalMeasuredMisconceptions;
 	}
 
 	

@@ -43,6 +43,7 @@ import com.googlecode.mgwt.ui.client.widget.RoundPanel;
 
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.RestartException;
+import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
@@ -60,8 +61,9 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 
-public class CheckSelectieUnit implements InteractionStub
+public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMisconceptions
 {
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
@@ -129,6 +131,9 @@ public class CheckSelectieUnit implements InteractionStub
 	private String logID;
 	
 	private boolean[][] logObjectives;
+	private boolean[][][] logMisconceptions;
+	private int[][] possibleMisconceptions;
+	private int[][] measuredMisconceptions;
 	
 	private boolean check = true;
 	private boolean teltMee = true;
@@ -216,7 +221,15 @@ public class CheckSelectieUnit implements InteractionStub
         {   for(int i=0 ; i<ipList.length ; i++)
 	        {   if(ipList[i] != null)
 	            {	juist = juist && ipList[i].isIpSelected() == juisteSelecties[i];
-	            	ingevuld = ingevuld || ipList[i].isIpSelected();
+		            if(measuredMisconceptions!=null && logMisconceptions!=null && ((TekstVakPanel)ipList[i]).isIpSelected())
+		            {	for( int j=0 ; logMisconceptions[i]!=null && j<logMisconceptions[i].length && j<measuredMisconceptions.length ; j++)
+		        		{	for( int k=0 ; logMisconceptions[i][j]!=null && k<logMisconceptions[i][j].length && k<measuredMisconceptions[j].length; k++)
+		            		{	if(logMisconceptions[i][j][k])
+		        					measuredMisconceptions[j][k] = 1;
+		            		}
+		        		}
+		            }	
+		            ingevuld = ingevuld || ipList[i].isIpSelected();
 	            }
 	        }
         }
@@ -624,6 +637,24 @@ public class CheckSelectieUnit implements InteractionStub
 				{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
 				}
 			}
+			if(map.containsKey("logMisconceptions"))
+			{
+				ObjectList logMisconceptionsList = ( map.getObjectList("logMisconceptions"));
+				logMisconceptions = new boolean[logMisconceptionsList.size()][][];
+				for(int i = 0; i < logMisconceptionsList.size(); i++)
+				{
+					ObjectList logMisconceptionsList2 = logMisconceptionsList.getObjectList(i);
+					try{
+					logMisconceptions[i] = new boolean[logMisconceptionsList2.size()][];
+					for(int j = 0; j < logMisconceptionsList2.size(); j++)
+					{	logMisconceptions[i][j] = logMisconceptionsList2.getBooleanArray(j);
+					}
+					}
+					catch(Exception e)
+					{
+					}
+				}
+			}
 			if(map.containsKey("knopImageString")) 
 				knopImageString = map.getString("knopImageString");
 		}
@@ -728,6 +759,32 @@ public class CheckSelectieUnit implements InteractionStub
 	    	catch(Exception e){	}
         }
 		
+		if(XMLView.misconceptions != null && XMLView.misconceptions.length>0)
+	     {	 possibleMisconceptions = new int[XMLView.misconceptions.length][];
+	     	 measuredMisconceptions = new int[XMLView.misconceptions.length][];
+		     for(int i=0 ; i<XMLView.misconceptions.length ; i++)
+		     {	 possibleMisconceptions[i] = new int[XMLView.misconceptions[i].length];
+		     	 measuredMisconceptions[i] = new int[XMLView.misconceptions[i].length];
+		    	 for(int j=0 ; j<XMLView.misconceptions[i].length ; j++)
+			     {  possibleMisconceptions[i][j] = 0;
+			     	measuredMisconceptions[i][j] = 0;
+			     }
+		     }
+	     }
+		
+		if(possibleMisconceptions != null && logMisconceptions!=null)
+        {
+        	for(int i=0 ; i<logMisconceptions.length ; i++)
+        	{	for( int j=0 ; logMisconceptions[i]!=null && j<logMisconceptions[i].length && j<possibleMisconceptions.length ; j++)
+        		{	for( int k=0 ; k<logMisconceptions[i][j].length && k<possibleMisconceptions[j].length; k++)
+            		{	if(logMisconceptions[i][j][k])
+	        				possibleMisconceptions[j][k] = 1;
+            		}
+        		}
+        	}
+        }
+        
+		
 	}
 	
 	public void zetSelectieObjecten(TekstVakPanel[] selectieObjecten)
@@ -825,6 +882,16 @@ public class CheckSelectieUnit implements InteractionStub
 	@Override
 	public void setAsHoogte(int ashoogte) {
 		this.ashoogte = ashoogte;
+	}
+
+	@Override
+	public int[][] getMeasuredMisconceptions() {
+		return measuredMisconceptions;
+	}
+
+	@Override
+	public int[][] getPossibleMisconceptions() {
+		return possibleMisconceptions;
 	}
 
 }

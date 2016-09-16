@@ -63,6 +63,7 @@ import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.RestartException;
+import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.repr.ContentMathML;
@@ -73,7 +74,7 @@ import fi.wiskopdr.expressies.repr.ContentMathML;
  * @author Danny Hendrix, Evertson Croes
  * 
  */
-public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView, CBookEventListener, FacetAware, TekstElementWithFont, PopupListener
+public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionViewWithMisconceptions, CBookEventListener, FacetAware, TekstElementWithFont, PopupListener
 {
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
@@ -562,6 +563,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//this.getMainRegel().getCanvas().getElement().getStyle().setBackgroundColor("blue");
 			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 			lastanswer = "$f" + toString() + "@"; // initialize lastanswer voor kijkna not sending
+		
 		}
 	}
 
@@ -1602,5 +1604,20 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		// na setState() is het goede antwoord in FEWA gezet
 		comRoot.setChanged(false);
+	}
+
+	@Override
+	public int[][] getMeasuredMisconceptions() {
+		if(avChecker != null)
+			return avChecker.getMeasuredMisconceptions();
+		return null;
+					
+	}
+
+	@Override
+	public int[][] getPossibleMisconceptions() {
+		if(avChecker != null)
+			return avChecker.getPossibleMisconceptions();
+		return null;
 	}
 }

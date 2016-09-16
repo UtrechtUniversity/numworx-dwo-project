@@ -32,6 +32,7 @@ import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithMisconceptions;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
@@ -971,17 +972,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		for (int i = 0; i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
-//			if (currentObject instanceof InteractionView)
-//			{
-//				int[][] possibleMisconceptions = ((InteractionView) currentObject).getPossibleMisconceptions();
-//				for (int j = 0; possibleMisconceptions != null && j < misconceptions.length && j < possibleMisconceptions.length; j++)
-//				{
-//					for (int k = 0; possibleMisconceptions[j] != null && k < misconceptions[j].length && k < possibleMisconceptions[j].length; k++)
-//						try{	totalPossibleMisconceptions[j][k] += possibleMisconceptions[j][k];
-//						}
-//						catch(Exception e){}
-//				}
-//			}
+			if (currentObject instanceof InteractionViewWithMisconceptions)
+			{
+				int[][] possibleMisconceptions = ((InteractionViewWithMisconceptions) currentObject).getPossibleMisconceptions();
+				for (int j = 0; possibleMisconceptions != null && j < misconceptions.length && j < possibleMisconceptions.length; j++)
+				{
+					for (int k = 0; possibleMisconceptions[j] != null && k < misconceptions[j].length && k < possibleMisconceptions[j].length; k++)
+						try{	totalPossibleMisconceptions[j][k] += possibleMisconceptions[j][k];
+						}
+						catch(Exception e){}
+				}
+			}
 		}
 		return totalPossibleMisconceptions;
 	}
@@ -996,17 +997,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		for (int i = 0; i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
-//			if (currentObject instanceof InteractionView)
-//			{
-//				int[][] measuredMisconceptions = ((InteractionView) currentObject).getMeasuredMisconceptions();
-//				for (int j = 0; measuredMisconceptions != null && j < misconceptions.length && j < measuredMisconceptions.length; j++)
-//				{
-//					for (int k = 0; measuredMisconceptions[j] != null && k < misconceptions[j].length && k < measuredMisconceptions[j].length; k++)
-//						try{	totalMeasuredMisconceptions[j][k] += measuredMisconceptions[j][k];
-//						}
-//						catch(Exception e){}
-//				}
-//			}
+			if (currentObject instanceof InteractionViewWithMisconceptions)
+			{
+				int[][] measuredMisconceptions = ((InteractionViewWithMisconceptions) currentObject).getMeasuredMisconceptions();
+				for (int j = 0; measuredMisconceptions != null && j < misconceptions.length && j < measuredMisconceptions.length; j++)
+				{
+					for (int k = 0; measuredMisconceptions[j] != null && k < misconceptions[j].length && k < measuredMisconceptions[j].length; k++)
+						try{	totalMeasuredMisconceptions[j][k] += measuredMisconceptions[j][k];
+						}
+						catch(Exception e){}
+				}
+			}
 		}
 		return totalMeasuredMisconceptions;
 	}
