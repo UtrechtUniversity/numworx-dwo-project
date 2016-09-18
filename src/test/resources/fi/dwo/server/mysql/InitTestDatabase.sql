@@ -203,12 +203,12 @@ DROP TABLE IF EXISTS `tblgroup`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblgroup` (
-  `groupID` int(11) NOT NULL AUTO_INCREMENT,
+  `groupID` int(11) NOT NULL,
   `groupname` varchar(20) NOT NULL DEFAULT '',
   `description` text NOT NULL,
   PRIMARY KEY (`groupID`),
   UNIQUE KEY `AK_IDENTIFIER_1` (`groupname`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

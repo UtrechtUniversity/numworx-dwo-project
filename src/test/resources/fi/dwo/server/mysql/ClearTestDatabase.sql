@@ -15,16 +15,16 @@ DROP TABLE IF EXISTS `tbllogincontext`;
 DROP TABLE IF EXISTS `tblmonitorlog`;
 DROP TABLE IF EXISTS `tblsamluser`;
 DROP TABLE IF EXISTS `tblschool`;
-DROP TABLE IF EXISTS `tblschoolgroup`;
 DROP TABLE IF EXISTS `tblsco`;
 DROP TABLE IF EXISTS `tblscocontext`;
 DROP TABLE IF EXISTS `tblscodata`;
 DROP TABLE IF EXISTS `tblscoview`;
 DROP TABLE IF EXISTS `tblstudentof`;
-DROP TABLE IF EXISTS `tblstudentscocontext`;
 DROP TABLE IF EXISTS `tblstudentscodata`;
+DROP TABLE IF EXISTS `tblstudentscocontext`;
 DROP TABLE IF EXISTS `tblteacherof`;
 DROP TABLE IF EXISTS `tbluser`;
+DROP TABLE IF EXISTS `tblschoolgroup`;
 DROP TABLE IF EXISTS `tomcat_roles_view`;
 DROP TABLE IF EXISTS `tomcat_user_view`;
 
