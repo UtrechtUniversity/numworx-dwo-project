@@ -2,6 +2,7 @@
 package fi.dwo.commons.persistence.entities;
 
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.rest.dom.entities.DomDwoProfile;
 
 /**
  *
@@ -129,5 +133,19 @@ public class PersistentDwoProfile implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentDwoProfile[ dwoProfileID=" + dwoProfileID + " ]";
     }
+
+	public DomDwoProfile createDomDwoProfile() {
+		DomDwoProfile profile = new DomDwoProfile();
+		buildDomDwoProfile(profile);
+		return profile;
+	}
+
+	private void buildDomDwoProfile(DomDwoProfile profile) {
+		profile.setDwoProfileDescription(getDwoProfileDescription());
+		profile.setDwoProfileName(getDwoProfileName());
+		profile.setDwoProfileRights(getDwoProfileRights());
+		profile.setDwoProfileText(getDwoProfileText());
+		profile.setId(MySQLPersistenceId.createPersistentId(this));
+	}
 
 }

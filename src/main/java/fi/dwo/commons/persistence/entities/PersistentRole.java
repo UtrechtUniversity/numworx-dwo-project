@@ -42,7 +42,7 @@ public class PersistentRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY) NO WAY, groupID = ordinal of RoleType
     @Basic(optional = false)
     @Column(name = "groupID", nullable = false)
     private Long groupID;
