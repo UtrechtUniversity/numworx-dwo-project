@@ -14,7 +14,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.LBL_USERNAME, "Gebruikersnaam" },
 			{ TextMapper.LBL_PASSWORD, "Wachtwoord" },
                         { TextMapper.LBL_EMAIL, "Email"},
-                        { TextMapper.LBL_REQUEST_NEW_PASSWORD, "Vul je gebruikersnaam en e-mailadres dat je gebruikt voor de DWO in ter validatie\nom een auth-code en instructies per email te ontvangen\n waarmee jij je wachtwoord kunt wijzigen."},
+                        { TextMapper.LBL_REQUEST_NEW_PASSWORD, "Vul je gebruikersnaam en e-mailadres dat je gebruikt voor de DWO in ter validatie.\n Indien correct, ontvang je per email een auth-code en instructies\n waarmee jij je wachtwoord kunt wijzigen."},
                         { TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD, "Vul je auth-code en je nieuwe wachtwoord in om je wachtwoord te wijzigen."},
                         { TextMapper.LBL_ILLEGAL_AUTHCODE, "De auth-code is ongeldig, mogelijk is de geldigheidsduur overschreden. Vraag in dat geval een nieuwe aan."},
                         { TextMapper.LBL_UNKNOWN_COMBINATION, "Deze combinatie is onbekend en uw acties zijn gelogd."},
