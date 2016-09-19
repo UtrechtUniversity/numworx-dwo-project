@@ -13,23 +13,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
-import org.eclipse.persistence.oxm.platform.DOMPlatform;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.rest.dom.entities.DomDwoProfile;
-import fi.dwo.rest.dom.entities.DomSchoolFull;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.rest.entities.RestDwoProfile;
-import fi.dwo.rest.entities.RestSchoolFull;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
-import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 
 
