@@ -7,7 +7,6 @@ package fi.dwo.rest.dom.entities;
 
 import com.owlike.genson.annotation.JsonIgnore;
 import fi.dwo.rest.persistence.PersistenceId;
-import java.util.Optional;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
