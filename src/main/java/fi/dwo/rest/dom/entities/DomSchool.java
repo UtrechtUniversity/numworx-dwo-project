@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomSchool {
     private PersistenceId id;
     private String schoolName;
+    private String schoolRights;
 
     public DomSchool(){
         
@@ -46,5 +47,19 @@ public class DomSchool {
      */
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
+    }
+
+    /**
+     * @return the schoolRights
+     */
+    public String getSchoolRights() {
+        return schoolRights;
+    }
+
+    /**
+     * @param schoolRights the schoolRights to set. 
+     */
+    public void setSchoolRights(String schoolRights) {
+        this.schoolRights = schoolRights;
     }
 }

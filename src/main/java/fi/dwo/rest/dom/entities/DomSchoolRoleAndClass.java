@@ -5,7 +5,9 @@
  */
 package fi.dwo.rest.dom.entities;
 
+import com.owlike.genson.annotation.JsonIgnore;
 import fi.dwo.rest.persistence.PersistenceId;
+import java.util.Optional;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -17,158 +19,262 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomSchoolRoleAndClass {
 
     //school
-    private PersistenceId schoolId;
-    private String schoolName;
-    private String schoolRights;
+    private DomSchool school;
+// Legacy way.    
+//    private PersistenceId schoolId;
+//    private String schoolName;
+//    private String schoolRights;
 
     //hasRole
-    private PersistenceId userId;
-    private PersistenceId schoolGroupId;
-    private String roleRights;
-   
+    private DomHasRole hasRole;
+//    private PersistenceId userId;
+//    private PersistenceId schoolGroupId;
+//    private String roleRights;
+
     //role
-    private PersistenceId roleId;
-    private String roleName;
- 
+    private DomRole role;
+//    private PersistenceId roleId;
+//    private String roleName;
+
     //schoolclass
-    private PersistenceId schoolClassId;
-    private String schoolClassName;
-    private Boolean iconizer;
+    private DomSchoolClass schoolClass;
+//    private PersistenceId schoolClassId;
+//    private String schoolClassName;
+//    private Boolean iconizer;
 
     /**
      * @return the schoolId
      */
+    @Deprecated
+    @JsonIgnore
     public PersistenceId getSchoolId() {
-        return schoolId;
+        return getSchool().getId();
     }
 
     /**
      * @param schoolId the schoolId to set
      */
+    @Deprecated
+    @JsonIgnore
     public void setSchoolId(PersistenceId schoolId) {
-        this.schoolId = schoolId;
+        getSchool().setId(schoolId);
     }
 
     /**
      * @return the schoolName
      */
+    @Deprecated
+    @JsonIgnore
     public String getSchoolName() {
-        return schoolName;
+        return getSchool().getSchoolName();
     }
 
     /**
      * @param schoolName the schoolName to set
      */
+    @Deprecated
+    @JsonIgnore
     public void setSchoolName(String schoolName) {
-        this.schoolName = schoolName;
+        getSchool().setSchoolName(schoolName);
     }
 
     /**
      * @return the roleId
      */
+    @Deprecated
+    @JsonIgnore
     public PersistenceId getRoleId() {
-        return roleId;
+        return role.getId();
     }
 
     /**
      * @param roleId the roleId to set
      */
+    @Deprecated
+    @JsonIgnore
     public void setRoleId(PersistenceId roleId) {
-        this.roleId = roleId;
+        role.setId(roleId);
     }
 
     /**
      * @return the roleName
      */
+    @Deprecated
+    @JsonIgnore
     public String getRoleName() {
-        return roleName;
+        return role.getRoleName();
     }
 
     /**
      * @param roleName the roleName to set
      */
+    @Deprecated
+    @JsonIgnore
     public void setRoleName(String roleName) {
-        this.roleName = roleName;
+        role.setRoleName(roleName);
     }
 
     /**
      * @return the schoolClassId
      */
+    @Deprecated
+    @JsonIgnore
     public PersistenceId getSchoolClassId() {
-        return schoolClassId;
+        return (schoolClass != null) ? schoolClass.getId() : null;
     }
 
     /**
      * @param schoolClassId the schoolClassId to set
      */
+    @Deprecated
+    @JsonIgnore
     public void setSchoolClassId(PersistenceId schoolClassId) {
-        this.schoolClassId = schoolClassId;
+        schoolClass.setId(schoolClassId);
     }
 
     /**
      * @return the schoolClassName
      */
+    @Deprecated
+    @JsonIgnore
     public String getSchoolClassName() {
-        return schoolClassName;
+        return (schoolClass != null) ? schoolClass.getSchoolClassName() : null;
     }
 
     /**
      * @param schoolClassName the schoolClassName to set
      */
+    @Deprecated
+    @JsonIgnore
     public void setSchoolClassName(String schoolClassName) {
-        this.schoolClassName = schoolClassName;
+        schoolClass.setSchoolClassName(schoolClassName);
     }
 
     /**
      * @return the userId
      */
+    @Deprecated
+    @JsonIgnore
     public PersistenceId getUserId() {
-        return userId;
+        return hasRole.getId();
     }
 
     /**
      * @param userId the userId to set
      */
+    @Deprecated
+    @JsonIgnore
     public void setUserId(PersistenceId userId) {
-        this.userId = userId;
+        hasRole.setId(userId);
     }
 
     /**
      * @return the groupId
      */
+    @Deprecated
+    @JsonIgnore
     public PersistenceId getSchoolGroupId() {
-        return schoolGroupId;
+        return (hasRole != null) ? hasRole.getSchoolGroupId() : null;
     }
 
     /**
      * @param schoolGroupId
      */
+    @Deprecated
+    @JsonIgnore
     public void setSchoolGroupId(PersistenceId schoolGroupId) {
-        this.schoolGroupId = schoolGroupId;
+        hasRole.setSchoolGroupId(schoolGroupId);
     }
 
+    @Deprecated
+    @JsonIgnore
     public Boolean getIconizer() {
-        return iconizer;
+        return (schoolClass != null) ? schoolClass.getIconizer() : null;
     }
 
+    @Deprecated
+    @JsonIgnore
     public void setIconizer(Boolean iconizer) {
-        this.iconizer = iconizer;
+        schoolClass.setIconizer(iconizer);
     }
 
-	public String getRoleRights() {
-		return roleRights;
-	}
+    @Deprecated
+    @JsonIgnore
+    public String getRoleRights() {
+        return (hasRole != null) ? hasRole.getRights() : null;
+    }
 
-	public void setRoleRights(String roleRights) {
-		this.roleRights = roleRights;
-	}
+    @Deprecated
+    @JsonIgnore
+    public void setRoleRights(String roleRights) {
+        hasRole.setRights(roleRights);
+    }
 
-	public String getSchoolRights() {
-		return schoolRights;
-	}
+    @Deprecated
+    public String getSchoolRights() {
+        return (school != null) ? school.getSchoolRights(): null;
+    }
 
-	public void setSchoolRights(String schoolRights) {
-		this.schoolRights = schoolRights;
-	}
+    @Deprecated
+    @JsonIgnore
+    public void setSchoolRights(String schoolRights) {
+        getSchool().setSchoolRights(schoolRights);
+    }
+
+    /**
+     * @return the school
+     */
+    public DomSchool getSchool() {
+        return school;
+    }
+
+    /**
+     * @param school the school to set
+     */
+    public void setSchool(DomSchool school) {
+        this.school = school;
+    }
+
+    /**
+     * @return the hasRole
+     */
+    public DomHasRole getHasRole() {
+        return hasRole;
+    }
+
+    /**
+     * @param hasRole the hasRole to set
+     */
+    public void setHasRole(DomHasRole hasRole) {
+        this.hasRole = hasRole;
+    }
+
+    /**
+     * @return the role
+     */
+    public DomRole getRole() {
+        return role;
+    }
+
+    /**
+     * @param role the role to set
+     */
+    public void setRole(DomRole role) {
+        this.role = role;
+    }
+
+    /**
+     * @return the schoolClass
+     */
+    public DomSchoolClass getSchoolClass() {
+        return schoolClass;
+    }
+
+    /**
+     * @param schoolClass the schoolClass to set
+     */
+    public void setSchoolClass(DomSchoolClass schoolClass) {
+        this.schoolClass = schoolClass;
+    }
 
 }
