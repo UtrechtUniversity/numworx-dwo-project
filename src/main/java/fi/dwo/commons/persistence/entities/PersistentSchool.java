@@ -222,6 +222,8 @@ public class PersistentSchool implements Serializable {
             school.setId(MySQLPersistenceId.createPersistentId(this));
         }
         school.setSchoolName(this.schoolName);
+        //TODO One should filter the rights depending on the security level
+        school.setSchoolRights(schoolRights);
     }
 
     public DomSchool4DwoAdmin createDomSchool4DwoAdmin() {
@@ -246,7 +248,8 @@ public class PersistentSchool implements Serializable {
         school.setSchoolLogin(schoolLogin);
         school.setExport(export);
         school.setImage(image);
-        school.setSchoolRights(schoolRights);
+        //seeing schoolRights moved to DomSchool
+        //school.setSchoolRights(schoolRights);
         school.setExpire(expire);
     }
 }
