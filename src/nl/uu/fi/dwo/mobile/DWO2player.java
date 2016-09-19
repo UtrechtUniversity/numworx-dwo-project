@@ -203,7 +203,16 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				accountManager.loginUser(name, password, userCallback, ontdubbel);
 				
 			}
-
+			
+			@Override
+			public <T> void getUserResults(Object courseID, Object userID,
+					AsyncCallback<T> getUserResultsCallback) {
+				Object schoolGroupID = DWOplayer.profiledata.get("schoolGroupID");
+				Object[] params = { courseID, userID, schoolGroupID };
+				XmlRpcClient client = getClient();
+				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, "getUserResults", params, getUserResultsCallback);
+				request.execute();
+			}
 			public <T> void getCourses(Map<String, Object> userData,
 					AsyncCallback<T> getCoursesCallback) {
 				

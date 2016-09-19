@@ -189,7 +189,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if("true".equals(geogebraParams.get("showToolBar")))
 			barHeight += 9; //57;
 		if("true".equals(geogebraParams.get("showAlgebraInput")))
-			barHeight += 25;
+			barHeight += 25 + 8 /*mac*/;
 		width = 400;
 		if (json.containsKey("breedte"))
 			width = json.getInt("breedte");
