@@ -104,7 +104,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private HeaderButton hb;
 	private HeaderPanel hp;
 	private WaitScreen waitscreen = WaitScreen.instance();
-	Label disableScreen = new Label("Test");
+	Label disableScreen = new Label("");
 	
 	private Widget next, prev, end;
 	
