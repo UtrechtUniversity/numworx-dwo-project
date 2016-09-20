@@ -128,14 +128,14 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
         };
         table.addCellPreviewHandler(cellPreviewHandler);
 		selectionModel = new SingleSelectionModel<DomSchoolClass>();
-//		selectionModel.addSelectionChangeHandler(new Handler());// {
+		selectionModel.addSelectionChangeHandler(new Handler(){
 
-//			@Override
-//			public void onSelectionChange(SelectionChangeEvent event) {
-//				LOG.info("selection event " + selectionModel.getSelectedObject());
-//				selectedClass = selectionModel.getSelectedObject();
-//			}              
-//                }); 
+			@Override
+			public void onSelectionChange(SelectionChangeEvent event) {
+				LOG.info("selection event " + selectionModel.getSelectedObject());
+				selectedClass = selectionModel.getSelectedObject();
+			}              
+                }); 
 		table.setSelectionModel(selectionModel);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
 
