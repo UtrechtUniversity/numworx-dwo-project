@@ -1179,6 +1179,62 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		return s;
 	}
 	
+	/**
+	 * Removes the codes marking a formula, 
+	 * i.e., "$f" at the start of the string 
+	 * and "@" at the end of the string.
+	 * If the given string contains no codes, the original string is returned.
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public String removeFormulaCodes(String s)
+	{
+		String formulaStartString = "$f"; 
+		String formulaEndString = "@";
+		
+		if (s.startsWith(formulaStartString))
+		{
+			s = s.substring(2); // trim "$f"
+		}
+		
+		if (s.endsWith(formulaEndString))
+		{
+			int lastIndex = s.length() - 1;
+			s = s.substring(0, lastIndex); // trim "@"
+		}
+		
+		return s;
+	}
+	
+	/**
+	 * Adds the codes marking a formula, 
+	 * i.e., "$f" at the start of the string 
+	 * and "@" at the end of the string.
+	 * If the given string already contains the codes, 
+	 * the original string is returned.
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public String addFormulaCodes(String s)
+	{
+		String formulaStartString = "$f"; 
+		String formulaEndString = "@";
+		
+		if (!s.startsWith(formulaStartString))
+		{
+			s = formulaStartString + s;
+		}
+		
+		if (!s.endsWith(formulaEndString))
+		{
+			s = s + formulaEndString;
+		}
+		
+		return s;
+	}
+	
 	public void setParentRegel(TekstRegel parentRegel) {
 		setFont(parentRegel);
 	}
@@ -2810,7 +2866,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		checkimg.setVisible(false);
 		
 		if (hasPrefix)
+		{
 			current.remove(prefixViewer.getAsPanel());
+			
+			// antwoord ook ontdoen van prefix
+			antwoord = removeFormulaCodes(antwoord);
+			antwoord = removePrefix(antwoord);
+			antwoord = addFormulaCodes(antwoord);
+		}
 		
 		// antwoord eindigt op = of ≈ 
 		if (!isVergelijkingVak && !hasPrefix && 
@@ -2867,7 +2930,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			score = scoreMax;
 			if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 				score = Math.max(0, scoreMax - errorCount * foutStraf);
-			if (!setState)
+			if (!setState) // voor een zelftoets die al is nagekeken, wordt hierdoor het antwoord goed getoond met groene bol
 				comRoot.setChanged(false);
 		}
 		
