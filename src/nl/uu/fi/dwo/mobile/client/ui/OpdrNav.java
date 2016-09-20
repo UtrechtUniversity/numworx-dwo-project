@@ -401,13 +401,19 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 //		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
 //			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
 		if (buttons != null && buttons.size() > currentOpdracht)
-		{	//logger.fine("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
-			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
+		{	
+			//logger.fine("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
+			
+			// niet voor toets!
+			if (scoresVisible())
+			{
+				setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
+			}
 		}
 		saveCurrentState();
 		//entry.stelNavigatieIn(); gebeurt al op een andere plek; niet hier anders gaat oefenen met geen correctie eerdere pagina's mis na kijkNa()
 	}
-		
+
 	private void setOpdrachten(int index)
 	{
 		if (fp_opdrachten != null)
