@@ -120,19 +120,22 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                     LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
                     DomSchoolClass sc = dataProvider.getList().get(rowIndex);
                     selectedClass = sc;
+                    selectionModel.setSelected(sc, true);
                     AddSchoolClassStudentPanel.this.table.setKeyboardSelectedRow(rowIndex);
+                    
                 }
             }
         };
-       // table.addCellPreviewHandler(cellPreviewHandler);
+        table.addCellPreviewHandler(cellPreviewHandler);
 		selectionModel = new SingleSelectionModel<DomSchoolClass>();
-		selectionModel.addSelectionChangeHandler(new Handler() {
+//		selectionModel.addSelectionChangeHandler(new Handler());// {
 
-			@Override
-			public void onSelectionChange(SelectionChangeEvent event) {
-				LOG.info("selection event " + selectionModel.getSelectedObject());
-				selectedClass = selectionModel.getSelectedObject();
-			}}); 
+//			@Override
+//			public void onSelectionChange(SelectionChangeEvent event) {
+//				LOG.info("selection event " + selectionModel.getSelectedObject());
+//				selectedClass = selectionModel.getSelectedObject();
+//			}              
+//                }); 
 		table.setSelectionModel(selectionModel);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
 
@@ -218,6 +221,8 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
         Collections.sort(list, classComparator);
         LOG.info("list size = " + list.size());
         dataProvider.refresh();
+//        selectionModel.setSelected(schoolClasses.get(0), true);
+        
         table.redraw();
     }
 }
