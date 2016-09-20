@@ -244,7 +244,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         dss.setGivenName("a");
         dss.setInsertion("b");
         dss.setFamilyName("c");
-        dss.setEmail("a@b.c");
+        dss.setEmail("a@b.cd");
         dss.setPassword("pwd");
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);

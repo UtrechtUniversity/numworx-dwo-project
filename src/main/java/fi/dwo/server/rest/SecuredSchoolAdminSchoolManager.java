@@ -78,8 +78,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -89,8 +88,7 @@ public class SecuredSchoolAdminSchoolManager {
             for (PersistentUser u : userList) {
                 domTeachers.add(u.buildDomTeacher());
             }
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -114,8 +112,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -123,7 +120,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
             domStudents = new ArrayList<DomStudent>(userList.size());
-            for(PersistentUser u:userList){
+            for (PersistentUser u : userList) {
                 domStudents.add(u.buildDomStudent());
             }
 //            hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.STUDENT);
@@ -132,8 +129,7 @@ public class SecuredSchoolAdminSchoolManager {
 //                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
 //                domStudents.add(user.buildDomStudent());
 //            }
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -158,8 +154,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -170,8 +165,7 @@ public class SecuredSchoolAdminSchoolManager {
             for (PersistentUser u : userList) {
                 domSchoolAdminList.add(u.buildDomSchoolAdmin());
             }
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -191,7 +185,7 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/removeSingleSchoolStudentFromSchool")
     public Boolean removeSingleSchoolStudentFromSchool(@Context SecurityContext sc, RestStudent restStudent) {
-        if(restStudent==null){
+        if (restStudent == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole phr = null;
@@ -210,8 +204,7 @@ public class SecuredSchoolAdminSchoolManager {
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
             shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -219,8 +212,7 @@ public class SecuredSchoolAdminSchoolManager {
 
         try {
             HasRoleUtilManager.removeHasRoleAndItsData(shr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -228,8 +220,7 @@ public class SecuredSchoolAdminSchoolManager {
 
         try {
             UserManager.destroy(student.getId());
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             return false;
         }
 
@@ -247,7 +238,7 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/submitSingleSchoolStudent")
     public Boolean SubmitSingleSchoolStudent(@Context SecurityContext sc, RestNewSingleSchoolStudent nssStudent) {
-        if(nssStudent==null){
+        if (nssStudent == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole phr = null;
@@ -257,8 +248,7 @@ public class SecuredSchoolAdminSchoolManager {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             sg = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -276,19 +266,24 @@ public class SecuredSchoolAdminSchoolManager {
             user.setUsername(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName());
             user.setSchoolGroupId(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
-
             try {
-                PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()));                
-                SchoolUtilManager.addSingleSchoolStudentAccount(user, school,schoolClass);
-                //add to schoolClass
-                PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
-                toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(user.getId(), schoolClass.getClassID(), user.getSchoolGroupId()));
-                java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
-                toSoc.setRegisterDate(d);
-                StudentOfClassManager.create(toSoc);
-                
-            }
-            catch (Dwo2Exception ex) {
+                PersistentSchoolClass schoolClass = null;
+                if (nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass() != null) {
+                    SchoolClassManager.findEntity(MySQLPersistenceId.getId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()));
+                }
+                //add student with default schoolclass with schoolclass possible for null
+                SchoolUtilManager.addSingleSchoolStudentAccount(user, school, schoolClass);
+
+                if (schoolClass != null) {
+                    //add to schoolClass
+                    PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
+                    toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(user.getId(), schoolClass.getClassID(), user.getSchoolGroupId()));
+                    java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
+                    toSoc.setRegisterDate(d);
+                    StudentOfClassManager.create(toSoc);
+                }
+
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
                 LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -298,7 +293,6 @@ public class SecuredSchoolAdminSchoolManager {
         }
         return true;
     }
-
 
     /**
      * Registers a new user and make him/her a teacher in the school.
@@ -311,7 +305,7 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/submitTeacher")
     public Boolean submitTeacher(@Context SecurityContext sc, RestUserFull teacher) {
-        if(teacher==null){
+        if (teacher == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole phr = null;
@@ -321,39 +315,37 @@ public class SecuredSchoolAdminSchoolManager {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
 //            sg = SchoolGroupManager.findBySchoolAndRole(school, RoleType.TEACHER);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
 //        if (sg != null) {
-            Date now = DwoDateUtilities.getCurrentDwoDate();
-            PersistentUser user = new PersistentUser();
-            user.setEmail(teacher.getDomUserFull().getEmail());
-            user.setGivenName(teacher.getDomUserFull().getGivenName());
-            user.setInsertion(teacher.getDomUserFull().getInsertion());
-            user.setLastname(teacher.getDomUserFull().getFamilyName());
-            user.setPassword(teacher.getDomUserFull().getPassword());
-            user.setRegisterDate(now);
-            user.setUsername(teacher.getDomUserFull().getUserName());
-  //          user.setSchoolGroupId(sg.getSchoolGroupID());
-            user.setSingleSchoolAccount(false);
-            try {
-                SchoolUtilManager.addAccountAsTeacherInSchool(user, school);
-            }
-            catch (Dwo2Exception ex) {
-                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-                LOG.log(Level.SEVERE, "", ex);
-                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-            }
+        Date now = DwoDateUtilities.getCurrentDwoDate();
+        PersistentUser user = new PersistentUser();
+        user.setEmail(teacher.getDomUserFull().getEmail());
+        user.setGivenName(teacher.getDomUserFull().getGivenName());
+        user.setInsertion(teacher.getDomUserFull().getInsertion());
+        user.setLastname(teacher.getDomUserFull().getFamilyName());
+        user.setPassword(teacher.getDomUserFull().getPassword());
+        user.setRegisterDate(now);
+        user.setUsername(teacher.getDomUserFull().getUserName());
+        //          user.setSchoolGroupId(sg.getSchoolGroupID());
+        user.setSingleSchoolAccount(false);
+        try {
+            SchoolUtilManager.addAccountAsTeacherInSchool(user, school);
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.SEVERE, "", ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
 //        } else {
 //            return false;
 //        }
         return true;
     }
-    
+
     /**
      * Edits a singleSchoolStudent.
      *
@@ -365,7 +357,7 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/updateSingleSchoolStudent")
     public Boolean updateSingleSchoolStudent(@Context SecurityContext sc, RestSingleSchoolStudent nssStudent) {
-        if(nssStudent==null){
+        if (nssStudent == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole phr = null;
@@ -375,8 +367,7 @@ public class SecuredSchoolAdminSchoolManager {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             sg = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -400,8 +391,7 @@ public class SecuredSchoolAdminSchoolManager {
             user.setPassword(nssStudent.getDomSingleSchoolStudent().getPassword());
             try {
                 UserManager.edit(user);
-            }
-            catch (PersistenceException ex) {
+            } catch (PersistenceException ex) {
                 LOG.log(Level.WARNING, "User {0} could not update user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getUserName()});
                 LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user " + sc.getUserPrincipal().getName() + ".");
@@ -428,8 +418,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -444,8 +433,7 @@ public class SecuredSchoolAdminSchoolManager {
             for (PersistentSchoolClass s : schoolClasses) {
                 domSchoolClasses.add(s.createDomSchoolClass());
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.WARNING, "Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
         }
@@ -464,7 +452,7 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/removeTeacher")
     public Boolean removeTeacherFromSchool(@Context SecurityContext sc, RestTeacher restTeacher) {
-        if(restTeacher==null){
+        if (restTeacher == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole phr = null;
@@ -479,8 +467,7 @@ public class SecuredSchoolAdminSchoolManager {
                 return false;
             }
             thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -488,8 +475,7 @@ public class SecuredSchoolAdminSchoolManager {
 
         try {
             HasRoleUtilManager.removeHasRoleAndItsData(thr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -510,7 +496,7 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/removeStudent")
     public Boolean removeStudentFromSchool(@Context SecurityContext sc, RestStudent restStudent) {
-        if(restStudent==null){
+        if (restStudent == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole phr = null;
@@ -525,8 +511,7 @@ public class SecuredSchoolAdminSchoolManager {
                 return false;
             }
             shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -538,8 +523,7 @@ public class SecuredSchoolAdminSchoolManager {
 
         try {
             HasRoleUtilManager.removeHasRoleAndItsData(shr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -562,7 +546,7 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/removeSchoolAdmin")
     public Boolean removeSchoolAdminFromSchool(@Context SecurityContext sc, RestSchoolAdmin restSchoolAdmin) {
-        if(restSchoolAdmin==null){
+        if (restSchoolAdmin == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole phr = null;
@@ -577,8 +561,7 @@ public class SecuredSchoolAdminSchoolManager {
                 return false;
             }
             shr = HasRoleUtilManager.getHasRoleInSchool(schoolAdmin, school, RoleType.SCHOOLADMIN);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -586,8 +569,7 @@ public class SecuredSchoolAdminSchoolManager {
 
         try {
             HasRoleUtilManager.removeHasRoleAndItsData(shr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -607,7 +589,7 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/getSingleSchoolStudent")
     public DomSingleSchoolStudent getSingleSchoolStudent(@Context SecurityContext sc, RestGetSingleSchoolStudent submit) {
-        if(submit==null){
+        if (submit == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
 
@@ -619,8 +601,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -630,8 +611,7 @@ public class SecuredSchoolAdminSchoolManager {
 
         try {
             shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -649,7 +629,7 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/getTeachersSchoolClassList")
     public List<DomSchoolClass> getTeachersSchoolClasses(@Context SecurityContext sc, RestTeacher restTeacher) {
-        if(restTeacher==null){
+        if (restTeacher == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole phr = null;
@@ -661,8 +641,7 @@ public class SecuredSchoolAdminSchoolManager {
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             PersistentUser teacher = UserManager.findByUserName(restTeacher.getDomTeacher().getUserName());
             thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -677,8 +656,7 @@ public class SecuredSchoolAdminSchoolManager {
                     domSchoolClasses.add(s.createDomSchoolClass());
                 }
                 LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1} for user {2}. ", new Object[]{domSchoolClasses.size(), thr.getPersistentHasRolePK().getUserID(), phr.getPersistentHasRolePK().getUserID()});
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
             }
@@ -693,7 +671,7 @@ public class SecuredSchoolAdminSchoolManager {
     @Produces({"application/json"})
     @Path("/getStudentsSchoolClassList")
     public List<DomSchoolClass> getStudentsSchoolClasses(@Context SecurityContext sc, RestStudent restStudent) {
-        if(restStudent==null){
+        if (restStudent == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole phr = null;
@@ -705,8 +683,7 @@ public class SecuredSchoolAdminSchoolManager {
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             PersistentUser student = UserManager.findByUserName(restStudent.getDomStudent().getUserName());
             thr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -721,8 +698,7 @@ public class SecuredSchoolAdminSchoolManager {
                     domSchoolClasses.add(s.createDomSchoolClass());
                 }
                 LOG.log(Level.FINER, "Fetched all {0} schoolClasses of student {1} for user {2}. ", new Object[]{domSchoolClasses.size(), thr.getPersistentHasRolePK().getUserID(), phr.getPersistentHasRolePK().getUserID()});
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
             }
