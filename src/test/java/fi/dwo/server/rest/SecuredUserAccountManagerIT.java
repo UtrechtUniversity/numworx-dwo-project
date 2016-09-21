@@ -99,7 +99,7 @@ public class SecuredUserAccountManagerIT {
         user.getDomUserFull().setGivenName("a");
         user.getDomUserFull().setInsertion("b");
         user.getDomUserFull().setFamilyName("c");
-        user.getDomUserFull().setEmail("d");
+        user.getDomUserFull().setEmail("x@xy.zz");
         user.getDomUserFull().setPassword("e");
 
         DomUserFull result = instance.updateCurrentUser(sc, user);

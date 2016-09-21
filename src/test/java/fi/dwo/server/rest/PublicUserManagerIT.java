@@ -84,7 +84,7 @@ public class PublicUserManagerIT {
         domNewUser.setGivenName("a");
         domNewUser.setInsertion("b");
         domNewUser.setFamilyName("c");
-        domNewUser.setEmail("a@b.c");
+        domNewUser.setEmail("a@b.cd");
         domNewUser.setPassword("pwd");
         domNewUser.setRole(RoleType.TEACHER);
         domNewUser.setSchoolLogin("school01");

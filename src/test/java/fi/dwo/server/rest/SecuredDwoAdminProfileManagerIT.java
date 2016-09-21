@@ -83,7 +83,7 @@ public class SecuredDwoAdminProfileManagerIT {
         
         PersistentUser user = new PersistentUser();
         user.setUsername("dwoadmin");
-        user.setEmail("a@b"); user.setGivenName("dwo"); user.setInsertion(""); user.setPassword("no password");
+        user.setEmail("a@b.cd"); user.setGivenName("dwo"); user.setInsertion(""); user.setPassword("no password");
         user.setLastname("admin"); user.setSingleSchoolAccount(Boolean.FALSE);
         user.setSchoolGroupId(group.getSchoolGroupID());  
         user.setRegisterDate(new Date(0));

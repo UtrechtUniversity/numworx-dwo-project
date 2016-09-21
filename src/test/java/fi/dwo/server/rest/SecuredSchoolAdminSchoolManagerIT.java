@@ -248,8 +248,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
         System.out.println("submitNewUser with a schoolclass");
         dssStudent.setUserName("testuser02");
-        DomSchoolClass schoolClass = new DomSchoolClass();
-        SchoolClassManager.findEntity(1L);//SchoolClass01        
+        DomSchoolClass schoolClass = SchoolClassManager.findEntity(1L).createDomSchoolClass();//SchoolClass01        
         nssStudent.setDomSchoolClass(schoolClass);
 
         try {

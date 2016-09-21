@@ -12,6 +12,8 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.rest.persistence.PersistenceClassType;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.rest.dom.entities.DomNewSchool;
+import fi.dwo.rest.entities.RestNewSchool;
 import fi.dwo.rest.entities.RestSchool4DwoAdmin;
 import fi.dwo.rest.entities.RestSchoolFull;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -20,6 +22,7 @@ import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
@@ -67,7 +70,7 @@ public class SecuredDwoAdminSchoolManagerIT {
 
     /**
      * Test of submitSchool method, of class SecuredDwoAdminSchoolManager.
-     * 
+     *
      * Tests whether a new school can be submitted.
      */
     @Test
@@ -81,10 +84,17 @@ public class SecuredDwoAdminSchoolManagerIT {
         school.setExpire(null);
         school.setSchoolRights("_");
         school.setImage(null);
-        RestSchoolFull restSchool = new RestSchoolFull();
+        
+        RestNewSchool restSchool = new RestNewSchool();
         restSchool.setRestContext(new DomContext());
-        restSchool.setDomSchoolFull(school.createDomSchoolFull());
-
+        DomNewSchool newSchool = new DomNewSchool();
+        newSchool.setDomSchoolFull(school.createDomSchoolFull());
+        Set<RoleType> keySet = newSchool.getRoleTypePasswords().keySet();
+        for (RoleType roleType : keySet) {
+            newSchool.getRoleTypePasswords().put(roleType, "passw" + roleType.name());
+        }
+        restSchool.setDomNewSchool(newSchool);
+        
         SecuredDwoAdminSchoolManager lclInstance = new SecuredDwoAdminSchoolManager();
         lclInstance.submitSchool(sc, restSchool);
         PersistentSchool pSchool = SchoolManager.findBySchoolLogin("dummyLogin");
@@ -100,7 +110,7 @@ public class SecuredDwoAdminSchoolManagerIT {
     }
 
     /**
-     * Test of getSchool method, of class SecuredDwoAdminSchoolManager. Tests if 
+     * Test of getSchool method, of class SecuredDwoAdminSchoolManager. Tests if
      * a known school can be retrieved.
      */
     @Test
@@ -177,13 +187,12 @@ public class SecuredDwoAdminSchoolManagerIT {
         school.setSchoolID(1L);
         restSchool.setDomSchoolFull(school.createDomSchoolFull());
         try {
-            result = instance.updateSchool(sc,restSchool);
+            result = instance.updateSchool(sc, restSchool);
             pSchool = SchoolManager.findBySchoolLogin("school01");
             if (school.getSchoolID().equals(pSchool.getSchoolID())) {
                 fail("School id updated in persistent store to value:" + pSchool.getSchoolID() + ".");
             }
-        }
-        catch (Dwo2RestException e) {
+        } catch (Dwo2RestException e) {
             //all is well
         }
     }
@@ -209,8 +218,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         try {
             Boolean b = instance.removeSchool(sc, restSchool);
             assertEquals("School failed to delete.", b, true);
-        }
-        catch (Dwo2RestException e) {
+        } catch (Dwo2RestException e) {
             fail("School failed to delete.");
         }
         PersistentSchool result = SchoolManager.findEntity(3L);

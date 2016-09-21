@@ -523,7 +523,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         dss.setGivenName("a");
         dss.setInsertion("b");
         dss.setFamilyName("c");
-        dss.setEmail("a@b.c");
+        dss.setEmail("a@b.cd");
         dss.setPassword("pwd");
         dss.setSingleSchool(true);
         

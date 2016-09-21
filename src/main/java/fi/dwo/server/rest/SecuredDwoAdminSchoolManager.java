@@ -25,7 +25,9 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.rest.dom.entities.DomNewSchool;
 import fi.dwo.rest.entities.RestHasRole;
+import fi.dwo.rest.entities.RestNewSchool;
 import fi.dwo.rest.entities.RestSchool4DwoAdmin;
 import fi.dwo.rest.entities.RestSchoolFull;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
@@ -44,11 +46,14 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -70,7 +75,11 @@ public class SecuredDwoAdminSchoolManager {
     private static final Logger LOG = Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName());
 
     /**
-     * Registers a new school and only a school.
+     * Registers a new school and only a school. This operation is
+     * semi-idempotent. School and SchoolGroup objects are only created if they
+     * do not exists. Failed creations are logged but are non-fatal for the
+     * execution. This allows to recreate a school if the creation process was
+     * aborted during execution. I.e. some SchoolGroup objects are missing.
      *
      * @param sc
      * @param restSchool
@@ -79,16 +88,15 @@ public class SecuredDwoAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Boolean submitSchool(@Context SecurityContext sc, RestSchoolFull restSchool) {
-        if(restSchool==null){
+    public Boolean submitSchool(@Context SecurityContext sc, RestNewSchool restSchool) {
+        if (restSchool == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
-        DomSchoolFull school = restSchool.getDomSchoolFull();
+        DomNewSchool newSchool = restSchool.getDomNewSchool();
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -96,29 +104,43 @@ public class SecuredDwoAdminSchoolManager {
         if (hr != null) {
             // allowed user role
             PersistentSchool s = new PersistentSchool();
-            s.setExpire(school.getExpire());
-            s.setExport(school.getExport());
-            s.setImage(school.getImage());
-            s.setSchoolLogin(school.getSchoolLogin());
-            s.setSchoolName(school.getSchoolName());
-            s.setSchoolRights(school.getSchoolRights());
+            s.setExpire(newSchool.getDomSchoolFull().getExpire());
+            s.setExport(newSchool.getDomSchoolFull().getExport());
+            s.setImage(newSchool.getDomSchoolFull().getImage());
+            s.setSchoolLogin(newSchool.getDomSchoolFull().getSchoolLogin());
+            s.setSchoolName(newSchool.getDomSchoolFull().getSchoolName());
+            s.setSchoolRights(newSchool.getDomSchoolFull().getSchoolRights());
             try {
                 SchoolManager.create(s);
-                s = SchoolManager.findBySchoolLogin(school.getSchoolLogin());
+                s = SchoolManager.findBySchoolLogin(newSchool.getDomSchoolFull().getSchoolLogin());
                 LOG.log(Level.INFO, "Username {0}: created school with schoollogin {1} and id {2}.", new Object[]{sc.getUserPrincipal().getName(), s.getSchoolLogin(), s.getSchoolID()});
                 //add user roles
-                PersistentSchoolGroup newSg = new PersistentSchoolGroup();
-                newSg.getSchoolID();
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Method incomplete.");
-//                return true;
+            } catch (PersistenceException e) {
+                //non-fatal for semi-idempotent operation
+                LOG.log(Level.INFO, "A Persistence exception occured while creating school with schoollogin {0}.", s.getSchoolLogin());
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while creating school " + newSchool.getDomSchoolFull().getSchoolLogin() + ".");
             }
-            catch (Exception e) {
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while creating school " + school.getSchoolName() + ".");
+            for (Map.Entry<RoleType, String> entry : newSchool.getRoleTypePasswords().entrySet()) {
+                PersistentSchoolGroup newSg = new PersistentSchoolGroup();
+                newSg.setSchoolID(s.getSchoolID().intValue());
+                newSg.setGroupID(entry.getKey().ordinal());
+                newSg.setPasswd(entry.getValue());
+                try {
+                    SchoolGroupManager.create(newSg);
+                } catch (PersistenceException e) {
+                    //non-fatal for idempotent operation
+                    String msg = MessageFormat.format("A Persistence exception occured while creating schoolgroup for school "
+                            + "with logincode {0} and RoleType {1} (with groupid {2}).",
+                            new Object[]{s.getSchoolLogin(), entry.getKey().name(), newSg.getGroupID()});
+                    LOG.log(Level.INFO, msg);
+                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+                }
             }
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
+        return true;
     }
 
     /**
@@ -131,15 +153,15 @@ public class SecuredDwoAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/get")
-    public DomSchoolFull getSchool(@Context SecurityContext sc, RestSchool4DwoAdmin school) {
-        if(school==null){
+    public DomSchoolFull getSchool(@Context SecurityContext sc, RestSchool4DwoAdmin school
+    ) {
+        if (school == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -149,8 +171,7 @@ public class SecuredDwoAdminSchoolManager {
                 s = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(school.getDomSchool4DwoAdmin().getId()));
                 LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
                 return s.createDomSchoolFull();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.WARNING, "School " + school.getDomSchool4DwoAdmin().getId() + "Could not be found.", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the school.");
 
@@ -163,21 +184,21 @@ public class SecuredDwoAdminSchoolManager {
 
     ;
 
-/**
-     * Returns the school data to be displayed.
-     *
-     * @param sc
-     * @return 
-     */
-    @GET
+        /**
+         * Returns the school data to be displayed.
+         *
+         * @param sc
+         * @return
+         */
+        @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public List<DomSchool4DwoAdmin> getSchools(@Context SecurityContext sc) {
+    public List<DomSchool4DwoAdmin> getSchools(@Context SecurityContext sc
+    ) {
         PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -191,8 +212,7 @@ public class SecuredDwoAdminSchoolManager {
                 for (PersistentSchool s : schools) {
                     domSchools.add(s.createDomSchool4DwoAdmin());
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schools.");
             }
@@ -214,16 +234,16 @@ public class SecuredDwoAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/update")
-    public Boolean updateSchool(@Context SecurityContext sc, RestSchoolFull restSchool) {
-        if(restSchool==null){
+    public Boolean updateSchool(@Context SecurityContext sc, RestSchoolFull restSchool
+    ) {
+        if (restSchool == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
         DomSchoolFull school = restSchool.getDomSchoolFull();
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -239,8 +259,7 @@ public class SecuredDwoAdminSchoolManager {
                 editSchool.setSchoolRights(school.getSchoolRights());
                 SchoolManager.edit(editSchool);
                 return true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update school with login " + school.getSchoolLogin() + " .");
             }
@@ -260,8 +279,9 @@ public class SecuredDwoAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/remove")
-    public Boolean removeSchool(@Context SecurityContext sc, RestSchool4DwoAdmin restSchool) {
-        if(restSchool==null){
+    public Boolean removeSchool(@Context SecurityContext sc, RestSchool4DwoAdmin restSchool
+    ) {
+        if (restSchool == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         //unwrap persistentid
@@ -270,8 +290,7 @@ public class SecuredDwoAdminSchoolManager {
         PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -378,8 +397,7 @@ public class SecuredDwoAdminSchoolManager {
                     CourseManager.destroy(c.getCourseID());
                 }
                 SchoolManager.destroy(school.getSchoolID());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to remove school with id " + school.getSchoolID() + " .");
             }
@@ -401,8 +419,9 @@ public class SecuredDwoAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getTeachersAndHasRoleInSchool")
-    public List<DomTeacherAndHasRole> getTeachersAndHasRoleInSchool(@Context SecurityContext sc, RestSchool4DwoAdmin restSchool) {
-        if(restSchool==null){
+    public List<DomTeacherAndHasRole> getTeachersAndHasRoleInSchool(@Context SecurityContext sc, RestSchool4DwoAdmin restSchool
+    ) {
+        if (restSchool == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole phr = null;
@@ -411,8 +430,7 @@ public class SecuredDwoAdminSchoolManager {
 
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -433,8 +451,7 @@ public class SecuredDwoAdminSchoolManager {
                 domTAHR.setHasRole(hr.buildDomHasRole());
                 resultList.add(domTAHR);
             }
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -452,16 +469,16 @@ public class SecuredDwoAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/updateHasRoleRights")
-    public Boolean updateHasRoleRights(@Context SecurityContext sc, RestHasRole restHasRole) {
-        if(restHasRole==null){
+    public Boolean updateHasRoleRights(@Context SecurityContext sc, RestHasRole restHasRole
+    ) {
+        if (restHasRole == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
         DomHasRole domHasRole = restHasRole.getDomHasRole();
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -474,13 +491,12 @@ public class SecuredDwoAdminSchoolManager {
                 pHasRole.setRights(domHasRole.getRights());
                 HasRoleManager.editRights(pHasRole);
                 return true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "User with hasRole " + hr.getPersistentHasRolePK() + " failed to update rights of hasrole " + domHasRole.getId() + " to rightsString " + domHasRole.getRights() + " .");
             }
         } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the hasRole {0} with user login {1}.", new Object[]{domHasRole.getId(),sc.getUserPrincipal().getName()});
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the hasRole {0} with user login {1}.", new Object[]{domHasRole.getId(), sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update the school data.");
         }
     }
