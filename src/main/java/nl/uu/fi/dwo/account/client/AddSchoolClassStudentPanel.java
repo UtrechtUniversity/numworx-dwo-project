@@ -126,7 +126,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                 }
             }
         };
-        table.addCellPreviewHandler(cellPreviewHandler);
+        //table.addCellPreviewHandler(cellPreviewHandler);
 		selectionModel = new SingleSelectionModel<DomSchoolClass>();
 		selectionModel.addSelectionChangeHandler(new Handler(){
 
@@ -136,7 +136,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 				selectedClass = selectionModel.getSelectedObject();
 			}              
                 }); 
-		table.setSelectionModel(selectionModel);
+		table.setSelectionModel(selectionModel, cellPreviewHandler);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
 
         // Add the columns.
@@ -183,7 +183,7 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
                 panel.setControl(control);
                 popup.add(panel);
                 popup.center();
-            } else {
+            } else if (selectedClass != null) {
                 DomNewSchoolClass4Student nsc = new DomNewSchoolClass4Student(selectedClass);
                 control.registerStudentForSchoolClass(nsc, new AsyncCallback<Boolean>() {
                     @Override
