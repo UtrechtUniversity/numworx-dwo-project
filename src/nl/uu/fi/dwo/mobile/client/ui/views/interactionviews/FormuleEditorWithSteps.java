@@ -3074,7 +3074,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				
 				if (!isToets() && linStrategieVersie)
 				{
-					nagekeken = true; // niet voor toets! uberhaupt niet? voor linStrategieVersie gaat het nu mis bij oefenen
+					nagekeken = true; // niet voor toets! uberhaupt niet? voor linStrategieVersie wel bij oefenen
 				}
 				
 				correct = Boolean.TRUE;
