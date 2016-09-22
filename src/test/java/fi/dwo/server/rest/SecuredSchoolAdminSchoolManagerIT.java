@@ -217,7 +217,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         dssStudent.setGivenName("a");
         dssStudent.setInsertion("b");
         dssStudent.setFamilyName("c");
-        dssStudent.setEmail("a@b.c");
+        dssStudent.setEmail("a@b.cd");
         dssStudent.setPassword("pwd");
         nssStudent.setDomSingleSchoolStudent(dssStudent);
         nssStudent.setDomSchoolClass(null);
