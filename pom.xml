@@ -12,7 +12,7 @@
     <artifactId>DWO-gwt-lib</artifactId>
     <version>2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>DWO-gwt-lib trunk</name>
+    <name>DWO-gwt-lib</name>
     <build>
         <finalName>${project.artifactId}</finalName>
         <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
