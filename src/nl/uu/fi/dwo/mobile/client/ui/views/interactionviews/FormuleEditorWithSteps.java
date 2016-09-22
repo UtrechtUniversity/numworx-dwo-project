@@ -14,7 +14,6 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleButton;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
-import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
@@ -46,10 +45,7 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
@@ -503,9 +499,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		feedbackPanel.setCentering(false, true);
 		feedbackPanel.setPasHoogteBreedteAan(true, false);
 		feedbackPanel.getElement().getStyle().setBackgroundColor("#FFFFDD");
-		
+
+		// checkimg wordt in zetGoedFoutEditor() aan de parent van de betreffende editor toegevoegd
 		checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-		contentPanel.add(checkimg);
 		checkimg.setVisible(false);
 		
 		sp.setWidget(contentPanel);
@@ -2351,11 +2347,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		else if (uitslag == AntwoordVakChecker.GOED)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		
+		checkimg.removeFromParent();
+		LayoutPanel parent = (LayoutPanel) editor.getAsPanel().getParent();
+		parent.add(checkimg);
 		checkimg.setVisible(true);
-		contentPanel.setWidgetLeftWidth(checkimg, 3, Style.Unit.PX, 20, Style.Unit.PX);
-		contentPanel.setWidgetTopHeight(checkimg, editor.getAsPanel().getAbsoluteTop() - contentPanel.getAbsoluteTop() + editor.getAsHoogte() - 15, Style.Unit.PX, 20, Style.Unit.PX);
-		
-		
+		parent.setWidgetLeftWidth(checkimg, 0, Style.Unit.PX, 20, Style.Unit.PX);
+		parent.setWidgetTopHeight(checkimg, 0, Style.Unit.PX, 20, Style.Unit.PX);
 	}
 
 	/**
@@ -2930,7 +2927,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			score = scoreMax;
 			if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 				score = Math.max(0, scoreMax - errorCount * foutStraf);
-			if (!setState) // voor een zelftoets die al is nagekeken, wordt hierdoor het antwoord goed getoond met groene bol
+			if (!setState) // voor een zelftoets die al is nagekeken, wordt hierdoor het antwoord goed getoond met groene bol -> gefixt in OpdrNav.setChanged()
 				comRoot.setChanged(false);
 		}
 		
