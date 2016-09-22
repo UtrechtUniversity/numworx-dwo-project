@@ -16,6 +16,7 @@
         <configurations>
             <configuration id="dwo-obfuscate-pack-sign" profiles="dwo-obfuscate dwo-pack-sign"/>
             <configuration id="home-profile" profiles=""/>
+            <configuration id="ubuntu" profiles=""/>
         </configurations>
     </config-data>
 </project-shared-configuration>
