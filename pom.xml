@@ -7,7 +7,7 @@
         <groupId>fi.dwo</groupId>
         <artifactId>DWO2</artifactId>
         <version>2.0-SNAPSHOT</version>
-        <relativePath>../../DWO2/trunk/pom.xml</relativePath>
+        <relativePath>../DWO2/pom.xml</relativePath>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
     <artifactId>DWOJApplet</artifactId>
@@ -87,7 +87,7 @@
                     <artifactId>junit</artifactId>
                 </exclusion>
             </exclusions>            
-        </dependency>        
+        </dependency>                
         <!-- Jcalendar spinoff with time-zone support -->
         <dependency>
             <groupId>com.toedter</groupId>
@@ -304,19 +304,19 @@
                     </revisiononscmfailure>
                 </configuration>
             </plugin>    
-         	<plugin>
-        		<groupId>org.codehaus.mojo</groupId>
-        		<artifactId>templating-maven-plugin</artifactId>
-        		<version>1.0.0</version>
-        		<executions>
-         			 <execution>
-            			<id>filter-src</id>
-            			<goals>
-              				<goal>filter-sources</goal>
-            			</goals>
-          			</execution>
-        		</executions>
-       		</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>templating-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <id>filter-src</id>
+                        <goals>
+                            <goal>filter-sources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             
             <!-- put the build number in the manifest -->
             <plugin>
@@ -369,9 +369,9 @@
                             <Application-Name>DWO v2</Application-Name>
                             <Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>                       		
                             <Bundle-Name>DWO v2</Bundle-Name>
-            				<Bundle-SymbolicName>fi.dwo.dwojapplet.domain.DWO</Bundle-SymbolicName>
-            				<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-            				<Fragment-Host>fi.dwo.dwojapplet</Fragment-Host>
+                            <Bundle-SymbolicName>fi.dwo.dwojapplet.domain.DWO</Bundle-SymbolicName>
+                            <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                            <Fragment-Host>fi.dwo.dwojapplet</Fragment-Host>
                         </manifestEntries>
                     </archive>
                     <descriptorRefs>
@@ -518,7 +518,7 @@
                             </execution>
                         </executions>
                         <configuration> <!--  Alleen jar-with-dependencies wordt getekend. -->
-                        	<processMainArtifact>false</processMainArtifact>
+                            <processMainArtifact>false</processMainArtifact>
                             <keystore>${dwoKeyStore}</keystore>
                             <alias>${dwoCertKeyAlias}</alias>
                             <storepass>${dwoCertKeyStorePassword}</storepass>
