@@ -3071,7 +3071,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				}
 				//"De vergelijking is correct opgelost."
 				stapOk = false;
-				//nagekeken = true; // niet voor toets! uberhaupt niet?
+				
+				if (!isToets() && linStrategieVersie)
+				{
+					nagekeken = true; // niet voor toets! uberhaupt niet? voor linStrategieVersie gaat het nu mis bij oefenen
+				}
+				
 				correct = Boolean.TRUE;
 				score = scoreMax;
 				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
