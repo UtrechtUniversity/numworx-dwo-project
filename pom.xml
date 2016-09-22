@@ -66,7 +66,7 @@
                     <i18nConstantsWithLookupBundles>
                         <i18nConstantsWithLookupBundle>fi.dwo.rest.locale.Dwo2Exceptions</i18nConstantsWithLookupBundle>                          
                     </i18nConstantsWithLookupBundles>
-<!-- generate in generated sources, why not? -->
+                    <!-- generate in generated sources, why not? -->
                     <generateDirectory>${basedir}/src/main/java</generateDirectory> 
                 </configuration>
                 <executions>
@@ -88,9 +88,9 @@
                     <password>${tomcat.local.deploy.password}</password>
                     <url>${tomcat.local.deploy.url}</url>
                     <path>/Account</path>
-                   <warSourceDirectory>target/${project.build.finalName}</warSourceDirectory>
-<!--                    <warFile>target/${project.artifactId}-${project.version}.war</warFile>-->
-<!--                   <archiveClasses>true</archiveClasses>                    -->
+                    <warSourceDirectory>target/${project.build.finalName}</warSourceDirectory>
+                    <!--                    <warFile>target/${project.artifactId}-${project.version}.war</warFile>-->
+                    <!--                   <archiveClasses>true</archiveClasses>                    -->
                 </configuration>
             </plugin>            
             <!--            <plugin>
@@ -131,6 +131,13 @@
             <version>2.0-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
+        <dependency>
+            <groupId>com.owlike</groupId>
+            <artifactId>genson</artifactId>
+            <version>1.3</version>
+            <scope>provided</scope>
+        </dependency> 
+
         <!--        <dependency>
             <groupId>org.fusesource.restygwt</groupId>
             <artifactId>restygwt</artifactId>
@@ -163,11 +170,11 @@
             <version>2.6.0</version>
             <scope>test</scope>
         </dependency>    -->
-<!--         <dependency> -->
-<!--             <groupId>com.google.gwt</groupId> -->
-<!--             <artifactId>gwt-codeserver</artifactId> -->
-<!--             <version>2.6.0</version> -->
-<!--         </dependency>     -->
+        <!--         <dependency> -->
+        <!--             <groupId>com.google.gwt</groupId> -->
+        <!--             <artifactId>gwt-codeserver</artifactId> -->
+        <!--             <version>2.6.0</version> -->
+        <!--         </dependency>     -->
     </dependencies>
     <description>Gebruiker: profiel en klas panels</description>
     <parent>
