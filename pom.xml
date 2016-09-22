@@ -30,12 +30,13 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <version>${gwtVersion}</version>
-         <configuration>
+        <configuration>
               <module>${gwtModule}</module>
               <runTarget>${runTarget}</runTarget>
         	  <warSourceDirectory>war</warSourceDirectory>
-        	  <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>        
-             </configuration>
+        	  <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
+        	  <webXml>war/WEB-INF/web.xml</webXml>
+        </configuration>
         <executions>
           <execution>
             <goals>
@@ -135,6 +136,11 @@
   	  		<version>0.0.1-SNAPSHOT</version>
   	  		<classifier>sources</classifier>
   	  	</dependency>
+  	  	<dependency>
+  			<groupId>nl.uu.fi.dwo.ideas</groupId>
+  			<artifactId>IdeasGWT</artifactId>
+  			<version>0.0.1</version>
+		</dependency>
   </dependencies>
   <parent>
   	<groupId>fi.parentgwt</groupId>
@@ -144,10 +150,11 @@
   </parent>
   <properties>
   	<maven.test.skip>true</maven.test.skip>
-  	<gwtModule>${project.groupId}.${project.artifactId}</gwtModule>
+  	<gwtModule>${project.groupId}.DWO2player</gwtModule>
   	<finalName>${project.artifactId}</finalName>
   	<runTarget>${project.artifactId}.html</runTarget>
   	<warClassifier />
+  	<gwt.copyWebapp>true</gwt.copyWebapp>
   </properties>
   <profiles>
   	<profile>
@@ -191,17 +198,15 @@
   		<properties>
   			<finalName>DWO2player</finalName>
   			<gwtModule>${project.groupId}.DWO2player</gwtModule>
-  			<runTarget>DWOplayer.html</runTarget>
   			<warClassifier>dwo2</warClassifier>
   			<maven.war.webxml>war/WEB-INF/web-dwo2.xml</maven.war.webxml>
+  			<gwt.copyWebapp>false</gwt.copyWebapp>
   		</properties>
   	</profile> 
   	<profile> <!--  gebruik deze voor gwt:run -->
   		<id>DWO2player-run</id>
   		<properties>
-  			<finalName>DWO2player</finalName>
-  			<gwtModule>${project.groupId}.DWO2player</gwtModule>
-  			<runTarget>DWO2player.html</runTarget>
+  			<gwt.copyWebapp>true</gwt.copyWebapp>
   		</properties>
   	</profile>
   	<profile>
