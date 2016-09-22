@@ -104,6 +104,6 @@ public class UserUtilManager {
         finally {
             em.close();
         }
-    }
-
+    }       
+                
 }

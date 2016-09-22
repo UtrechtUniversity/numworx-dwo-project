@@ -1,8 +1,6 @@
 package fi.dwo.server.rest;
 
 import com.digitalmolehill.crypto.SymmetricCryptor;
-
-import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.dom.entities.DomLoginCheck;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
@@ -23,6 +21,7 @@ import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.dom.entities.DomNewUser;
 import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
@@ -41,12 +40,11 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
-
-import javax.mail.*;
-import javax.mail.internet.*;
-
 import java.io.UnsupportedEncodingException;
+import static java.lang.Thread.sleep;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
+
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -56,23 +54,26 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
-import static java.lang.Thread.sleep;
-
 import java.util.concurrent.ThreadLocalRandom;
-
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Handles the public registration of new users.
@@ -102,10 +103,10 @@ public class PublicUserManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         DomNewUser n = newUserReg.getDomNewUser();
-        if ( ! ValidUserFieldsChecker.isEmptyOrNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), n.getPassword()))
-        	throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Required_Fields, "Required fields empty or null");
-        
-        
+        if (!ValidUserFieldsChecker.isEmptyOrNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), n.getPassword())) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Required_Fields, "Required fields empty or null");
+        }
+
         if (!ValidUserFieldsChecker.isValidEmail(newUserReg.getDomNewUser().getEmail())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
         }
@@ -145,12 +146,10 @@ public class PublicUserManager {
             }
             //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
             LOG.log(Level.FINE, "School-manager retrieved school {0} from school login and school code for usercode {3}.", new Object[]{school.getSchoolName(), newUserReg.getDomNewUser().getSchoolLogin(), newUserReg.getDomNewUser().getSchoolCode(), newUserReg.getDomNewUser().getUsername()});
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             LOG.log(Level.WARNING, "School registration authentication failed.", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_authentication_failed, "School registration authentication failed, please try again.");
-        }
-        finally {
+        } finally {
             em.close();
         }
 
@@ -176,11 +175,9 @@ public class PublicUserManager {
         //add user
         try {
             UserManager.create(user);
-        }
-        catch (EntityExistsException e) {
+        } catch (EntityExistsException e) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_exists, "Username exists");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error.");
         }
 
@@ -273,8 +270,7 @@ public class PublicUserManager {
                 result.setDomLoginContext(loginContext.createDomLoginContext());
                 result.setDomUserFull(user.buildDomUserFull());
                 return result;
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The LoginContext failed to be handled for this user.");
             }
@@ -285,7 +281,6 @@ public class PublicUserManager {
         }
     }
 
-// Traditional FORM, KISS principe!!!
     @POST
     @Produces({"text/plain"})
     @Consumes({"application/x-www-form-urlencoded"})
@@ -303,6 +298,7 @@ public class PublicUserManager {
             @FormParam("classname") String schoolClassName
     /*... more? ...*/
     ) {
+        //Student moet singleSchool False worden. En missing hasRole voor schooladmin en teacher en student moet worden gemaakt indien user bestaat. Wim test, na implementatie.
         LOG.log(Level.FINE, "Starting registerSAML(usercode, samlUserId, samlOrgId: {0},{1},{2}", new Object[]{userIdent, samlUserId, samlOrgId});
 
         PersistentSchool school = SchoolManager.findEntity(schoolID);
@@ -326,8 +322,7 @@ public class PublicUserManager {
         RoleType roleType = RoleType.NONE;
         try {
             roleType = RoleType.valueOf(role);
-        }
-        catch (Exception e1) {
+        } catch (Exception e1) {
             LOG.log(Level.SEVERE, "unknown RoleType " + role, e1);
         }
         PersistentUser pUser;
@@ -362,8 +357,7 @@ public class PublicUserManager {
                         soc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
                         try {
                             StudentOfClassManager.create(soc);
-                        }
-                        catch (PersistenceException e) {
+                        } catch (PersistenceException e) {
                             LOG.log(Level.SEVERE, null, e);
                             //throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                         }
@@ -377,8 +371,7 @@ public class PublicUserManager {
                         //teacher do not earn free class access!
                         break;
                 }
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, registration failed.");
             }
@@ -392,8 +385,7 @@ public class PublicUserManager {
             try {
                 SamlUserManager.create(sUser);
                 LOG.log(Level.FINE, "Created new  samluser.");
-            }
-            catch (PersistenceException e) {
+            } catch (PersistenceException e) {
                 LOG.log(Level.SEVERE, "User exits probably.", e);
             }
         } else {
@@ -414,8 +406,7 @@ public class PublicUserManager {
                         soc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
                         try {
                             StudentOfClassManager.create(soc);
-                        }
-                        catch (PersistenceException e) {
+                        } catch (PersistenceException e) {
                             LOG.log(Level.SEVERE, "create " + soc, e);
 //                            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                         }
@@ -424,11 +415,169 @@ public class PublicUserManager {
                     HasRoleManager.edit(hr);
                 }
                 LOG.log(Level.FINE, "Set class and update samluser.");
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, login failed.");
             }
+        }
+        return authToken.toString();
+    }
+
+    /**
+     * 
+     * @param sc
+     * @param userIdent
+     * @param samlUserId
+     * @param samlOrgId
+     * @param givenName
+     * @param insertion
+     * @param familyName
+     * @param email
+     * @param role Only STUDENT, TEACHER or SCHOOLADMIN are allowed
+     * @param schoolID
+     * @param schoolClassName
+     * @return 
+     */
+    @POST
+    @Produces({"text/plain"})
+    @Consumes({"application/x-www-form-urlencoded"})
+    @Path("/registerSAMLV2")
+    public String registerSAMLV2(@Context SecurityContext sc,
+            @FormParam("userident") String userIdent,
+            @FormParam("samluserid") String samlUserId,
+            @FormParam("samlorgid") String samlOrgId,
+            @FormParam("gn") String givenName,
+            @FormParam("prefix") String insertion,
+            @FormParam("fn") String familyName,
+            @FormParam("email") String email,
+            @FormParam("role") String role, // STUDENT/TEACHER
+            @FormParam("schoolID") long schoolID,//Are dead, very dead. Send schoologin name.
+            @FormParam("classname") String schoolClassName
+    /*... more? ...*/
+    ) {
+        //En missing hasRole voor schooladmin en teacher en student moet worden 
+        //gemaakt indien user bestaat. Wim test, na implementatie.
+
+        LOG.log(Level.FINE, "Starting registerSAML(usercode, samlUserId, samlOrgId: {0},{1},{2}", new Object[]{userIdent, samlUserId, samlOrgId});
+
+        PersistentSchool school = SchoolManager.findEntity(schoolID);
+        if (school == null) {
+            LOG.log(Level.SEVERE, "SchoolID given in form does not exists!");
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Illegal form values, this will be logged!");
+        }
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(schoolClassName, school);
+        LOG.log(Level.FINE, "starting secureRandom.");
+//        SecureRandom secureRandom = null;
+//        try {
+//            secureRandom = SecureRandom.getInstanceStrong();
+//        }
+//        catch (NoSuchAlgorithmException ex) {
+//            LOG.log(Level.SEVERE, null, ex);
+//            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "SecureRandom failed.");
+//        }
+        ThreadLocalRandom secureRandom = ThreadLocalRandom.current();
+        LOG.log(Level.FINE, "Creating authToken.");
+        Short authToken = (short) secureRandom.nextInt();
+        RoleType roleType = RoleType.NONE;
+        try {
+            roleType = RoleType.valueOf(role);
+        } catch (Exception e1) {
+            LOG.log(Level.SEVERE, "unknown RoleType " + role, e1);
+        }
+        if(roleType!=RoleType.STUDENT || roleType!=RoleType.TEACHER || roleType!=RoleType.SCHOOLADMIN){
+            String msg = MessageFormat.format("Illegal RoleType {0} requested.", new Object[]{roleType.name()});
+            LOG.log(Level.SEVERE, msg);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);            
+        }
+        PersistentUser pUser = null;
+        //DONE check if username + domain exists, in tblsamluser
+        LOG.log(Level.FINE, "Checking samluser.");
+        PersistentSamlUser samlUser = SamlUserManager.findEntity(samlUserId, samlOrgId);
+        //add user if not exists
+        if (samlUser == null) {
+            //generate new persistentUser
+            pUser = new PersistentUser();
+            pUser.setEmail(email);
+            pUser.setGivenName(givenName);
+            pUser.setInsertion(insertion);
+            pUser.setLastname(familyName);
+            pUser.setPassword(Long.toHexString(secureRandom.nextLong()));
+            pUser.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
+            pUser.setUsername(userIdent + '@' + school.getSchoolLogin());
+            pUser.setSchoolGroupId(SchoolGroupManager.findBySchoolAndRole(school, roleType).getSchoolGroupID());
+            //must be multi-school 
+            pUser.setSingleSchoolAccount(false);
+            try {
+                UserManager.create(pUser);
+            } catch (PersistenceException e) {
+                LOG.log(Level.SEVERE, null, e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error. Can't create userlogin" + pUser.getUsername());
+            }
+        } else {
+            //TODO put randstring in tblsamluser (add column to database)
+            samlUser.setAuthTokenTimestamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+            samlUser.setAuthToken(authToken.toString());
+            try {
+                SamlUserManager.edit(samlUser);
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, null, e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error. Can't update samluser with id:" + samlUser.getId() + ".");
+            }
+        }
+
+        try {
+            //add hasRole if not exists
+            HasRoleUtilManager.getOrCreateHasRoleInSchool(pUser, school, roleType);
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Illegal form values, this will be logged!");
+        }
+
+        //add to SchoolClass if not a member
+        try {
+            switch (roleType) {
+                case STUDENT:
+                    if (schoolClass == null) {
+                        break;
+                    }
+                    PersistentStudentOfClass soc = new PersistentStudentOfClass();
+                    soc.setPersistentStudentOfClassPK(
+                            new PersistentStudentOfClassPK(pUser.getId(),
+                                    schoolClass.getClassID(), pUser.getSchoolGroupId()));
+                    soc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
+                    try {
+                        StudentOfClassManager.create(soc);
+                    } catch (PersistenceException e) {
+                        LOG.log(Level.SEVERE, null, e);
+                        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
+                    }
+                    PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(pUser, school, roleType);
+                    hr.setClassID(schoolClass.getClassID());
+                    HasRoleManager.edit(hr);
+                    break;
+//                case TEACHER:
+//                    if (schoolClass == null) {
+//                        break;
+//                    }
+//                    PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
+//                    toc.setPersistentTeacherOfClassPK(
+//                            new PersistentTeacherOfClassPK(pUser.getId(),
+//                                    schoolClass.getClassID(), pUser.getSchoolGroupId()));
+//                    toc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
+//                    try {
+//                        TeacherOfClassManager.create(toc);
+//                    } catch (PersistenceException e) {
+//                        LOG.log(Level.SEVERE, null, e);
+//                        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
+//                    }
+//                    hr = HasRoleUtilManager.getHasRoleInSchool(pUser, school, roleType);
+//                    hr.setClassID(schoolClass.getClassID());
+//                    HasRoleManager.edit(hr);
+//                    break;
+            }
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, "", ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, registration failed.");
         }
         return authToken.toString();
     }
@@ -472,8 +621,7 @@ public class PublicUserManager {
     private String urlEncode(String string) {
         try {
             return URLEncoder.encode(string, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             return URLEncoder.encode(string);
         }
     }
@@ -679,8 +827,7 @@ public class PublicUserManager {
                 if (data.startsWith("dwoAuthCode:")) {
                     break;
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 //illegal code
             }
             timeslot = timeslot - 1;
