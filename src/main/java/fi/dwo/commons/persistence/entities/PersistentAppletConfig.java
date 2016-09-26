@@ -16,6 +16,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.rest.dom.entities.DomAppletConfig;
+
 /**
  *
  * @author G.A.J. van der Plas
@@ -135,4 +138,17 @@ public class PersistentAppletConfig implements Serializable {
         return "fi.dwo.server.persistence.PersistentAppletConfig[ appletConfigID=" + appletConfigID + " ]";
     }
 
+    public DomAppletConfig createDomAppletConfig() {
+    	DomAppletConfig copy = new DomAppletConfig();
+    	buildDomAppletConfig(copy);
+    	return copy;
+    }
+
+	private void buildDomAppletConfig(DomAppletConfig copy) {
+		copy.setAppletID(getAppletID());
+		copy.setLanguage(getLanguage());
+		copy.setLaunchdata(getLaunchdata());
+		copy.setName(getName());
+		copy.setId(MySQLPersistenceId.createPersistentId(this));	
+	}
 }
