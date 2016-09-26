@@ -62,39 +62,39 @@ public class SecuredDwoAdminProfileManagerIT {
 	public void setUp() throws Exception {
         instance.IntializeTestDatabase();
 
-        PersistentSchool school = new PersistentSchool();
-        school.setSchoolName("testSchool");
-        school.setSchoolLogin("testSchool");
-        SchoolManager.create(school);
+//        PersistentSchool school = new PersistentSchool();
+//        school.setSchoolName("testSchool");
+//        school.setSchoolLogin("testSchool");
+//        SchoolManager.create(school);
         
-        PersistentRole role = new PersistentRole();
-        role.setDescription("The DWO Admin");
-        role.setGroupID((long) RoleType.ADMIN.ordinal());
-        role.setGroupname(RoleType.ADMIN.name());
-        RoleManager.create(role);
+//        PersistentRole role = new PersistentRole();
+//        role.setDescription("The DWO Admin");
+//        role.setGroupID((long) RoleType.ADMIN.ordinal());
+//        role.setGroupname(RoleType.ADMIN.name());
+//        RoleManager.create(role);
         
-        PersistentSchoolGroup group = new PersistentSchoolGroup();
-        group.setSchoolID(school.getSchoolID().intValue());
-        group.setPasswd("no password");
-        group.setRole(role);
-        group.setGroupID(role.getGroupID().intValue());
+//        PersistentSchoolGroup group = new PersistentSchoolGroup();
+//        group.setSchoolID(school.getSchoolID().intValue());
+//        group.setPasswd("no password");
+//        group.setRole(role);
+//        group.setGroupID(role.getGroupID().intValue());
         
-        SchoolGroupManager.create(group);
+//        SchoolGroupManager.create(group);
         
-        PersistentUser user = new PersistentUser();
-        user.setUsername("dwoadmin");
-        user.setEmail("a@b.cd"); user.setGivenName("dwo"); user.setInsertion(""); user.setPassword("no password");
-        user.setLastname("admin"); user.setSingleSchoolAccount(Boolean.FALSE);
-        user.setSchoolGroupId(group.getSchoolGroupID());  
-        user.setRegisterDate(new Date(0));
-        UserManager.create(user);
-        
-        PersistentHasRole hasRole = new PersistentHasRole();
-        PersistentHasRolePK persistentHasRolePK = new PersistentHasRolePK(user.getId(), group.getSchoolGroupID());
-		hasRole.setPersistentHasRolePK(persistentHasRolePK);
-		hasRole.setRegisterDate(new Date(0));
-		HasRoleManager.create(hasRole);
-        
+//        PersistentUser user = new PersistentUser();
+//        user.setUsername("dwoadmin");
+//        user.setEmail("a@b.cd"); user.setGivenName("dwo"); user.setInsertion(""); user.setPassword("no password");
+//        user.setLastname("admin"); user.setSingleSchoolAccount(Boolean.FALSE);
+//        user.setSchoolGroupId(group.getSchoolGroupID());  
+//        user.setRegisterDate(new Date(0));
+//        UserManager.create(user);
+//        
+//        PersistentHasRole hasRole = new PersistentHasRole();
+//        PersistentHasRolePK persistentHasRolePK = new PersistentHasRolePK(user.getId(), group.getSchoolGroupID());
+//		hasRole.setPersistentHasRolePK(persistentHasRolePK);
+//		hasRole.setRegisterDate(new Date(0));
+//		HasRoleManager.create(hasRole);
+//        
         PersistentDwoProfile profile = new PersistentDwoProfile();
         profile.setDwoProfileDescription("default");
         profile.setDwoProfileName("default");
