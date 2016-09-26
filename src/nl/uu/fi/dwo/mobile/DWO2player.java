@@ -76,13 +76,13 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 		@Override
 		public void onSuccess(DomUserFullwLoginContext result) {
-				DomUserFull user = result.getDomUserFull();
-				DomLoginContext context = result.getDomLoginContext();
-				DwoGlobalVars.getInstance().setCurrentUser(user);
-				DwoGlobalVars.getInstance().setCurrentLoginContext(context);
-				
-				toProfile(user, profile);
-				schoolManager.getSchoolLogins(new AsyncCallback<DomSchoolsRolesAndClasses>() {
+			DomLoginContext context = result.getDomLoginContext();
+			timezone =  context.getLastLoginTimeStamp().longValue() - System.currentTimeMillis();
+			DomUserFull user = result.getDomUserFull();
+			DwoGlobalVars.getInstance().setCurrentUser(user);
+			DwoGlobalVars.getInstance().setCurrentLoginContext(context);
+			toProfile(user, profile);
+			schoolManager.getSchoolLogins(new AsyncCallback<DomSchoolsRolesAndClasses>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -331,6 +331,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		profile.put("password",result.getPassword());
 		
 		getUserBar().setSingleSchool(result.getSingleSchool());
+		
 	}
 
 	

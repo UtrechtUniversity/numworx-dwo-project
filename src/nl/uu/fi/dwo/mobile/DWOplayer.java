@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -347,21 +348,59 @@ public class DWOplayer implements EntryPoint
 		
 	}
 
+	public static long timezone = 0L;
+	
 	/**
 	 * @param result
 	 */
 	public static void insertFlat(List<Map<String, Object>> result) {
+		long now = System.currentTimeMillis() + timezone;
 		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
 			Map<String, Object> map = iterator.next();
-			SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
+			Object o = map.get("notBefore");
+            if (o instanceof Date) {
+                if (now < ((Date) o).getTime()) {
+                    continue;
+                }
+            }
+            o = map.get("notAfter");
+            if (o instanceof Date) {
+                if (now > ((Date) o).getTime()) {
+                    continue;
+                }
+            }
+
+            SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
 			SelectModuleItemHolder.insert(item);
 		}
 	}
 
 	private static void insertTree(List<Map<String,Object>> result) {
+		long now = System.currentTimeMillis() + timezone;
 		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
 			Map<String, Object> map = iterator.next();
+			
+			Object o = map.get("notBefore");
+            if (o instanceof Date) {
+                if (now < ((Date) o).getTime()) {
+                    continue;
+                }
+            }
+            o = map.get("notAfter");
+            if (o instanceof Date) {
+                if (now > ((Date) o).getTime()) {
+                    continue;
+                }
+            }
+						
 			SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
+			if (Boolean.TRUE.equals (map.get("withChildren")))
+			{
+				List<SelectModuleItem> children = item.getChildren();
+				if(children == null)
+					item.setChildren(children = new ArrayList<SelectModuleItem>());
+			}
+				
 			Integer parentID = (Integer) map.get("parentID"); // FIXME voor MC Squared type parentID?
 			if(parentID != null && parentID.intValue()> 0 )
 			{
