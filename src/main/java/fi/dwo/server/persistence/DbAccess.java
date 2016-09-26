@@ -4118,6 +4118,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         try {
             c.setAutoCommit(false);
             PreparedStatement ps;
+            //TODO set in tblCourse sequencenr = NULL
             ps = getStatement("DELETE FROM tblCourseSequence WHERE schoolID=? AND classID=? AND parent=? and profileID=?");
             ps.setInt(1, schoolID);
             ps.setInt(2, classID);
@@ -4125,6 +4126,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             ps.setInt(4, profileID);
             ps.executeUpdate();
             ps.close();
+            //TODO set in tblCourse sequencenr = to value
             ps = getStatement("INSERT INTO tblCourseSequence(courseID, schoolID, classID, parent, profileID, sequencenr) VALUES(?,?,?,?,?,?)");
             int len = vector.size();
             for (int i = 0; i < len; i++) {
