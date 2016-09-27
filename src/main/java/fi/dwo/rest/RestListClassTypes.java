@@ -42,7 +42,9 @@ public enum RestListClassTypes {
         DomTeacherOfClass,
         DomUser,
         DomSchoolRoleAndClass,
+        DomSchoolRoleAndClassV2,
         DomSchoolsRolesAndClasses,
+        DomSchoolsRolesAndClassesV2,
         //Non-persistent classes
         PersistenceId
     }
