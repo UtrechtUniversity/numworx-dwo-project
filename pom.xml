@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- Adjust artifact, name and description for new projects -->
     <parent>
-        <groupId>fi.dwo</groupId>
-        <artifactId>DWO2</artifactId>
+        <groupId>nl.fi.dwo</groupId>
+        <artifactId>DWO</artifactId>
         <version>2.0-SNAPSHOT</version>
-        <relativePath>../DWO2/pom.xml</relativePath>
+        <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <artifactId>DWOServer</artifactId>
 <!--    <version>2.0-SNAPSHOT</version>-->
@@ -330,7 +330,7 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>              
-                  <artifactId>DWOJApplet</artifactId>
+                  <artifactId>DWOJClient</artifactId>
                   <version>${project.version}</version>
                   <classifier>jar-with-dependencies</classifier>
                   <overWrite>true</overWrite>
@@ -338,7 +338,7 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>              
-                  <artifactId>DWOJApplet</artifactId>
+                  <artifactId>DWOJClient</artifactId>
                   <version>${project.version}</version>
                   <classifier>jar-with-dependencies</classifier>
                   <type>jar.pack.gz</type>
