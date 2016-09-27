@@ -2,10 +2,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>fi.dwo</groupId>
-        <artifactId>DWO2</artifactId>
+        <groupId>nl.fi.dwo</groupId>
+        <artifactId>DWO</artifactId>
         <version>2.0-SNAPSHOT</version>
-        <relativePath>../../../DWO2/branches/working-gert/pom.xml</relativePath>
+        <relativePath>../DWO/pom.xml</relativePath>
     </parent>
 
     <groupId>fi.dwo.gwt.lib.rest</groupId>
