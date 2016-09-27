@@ -1,7 +1,10 @@
 package fi.dwo.rest.dom.entities;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import fi.dwo.rest.persistence.PersistenceId;
 
+@XmlRootElement
 public class DomAppletConfig {
 
 	private Integer appletID;
