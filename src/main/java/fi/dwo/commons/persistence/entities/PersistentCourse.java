@@ -79,6 +79,20 @@ public class PersistentCourse implements Serializable {
     @NotNull
     @Column(name = "notVisible", nullable = false)
     private short notVisible;
+    @Basic(optional = false)
+    //update tblcourse set sequenceNr=0 where sequenceNr is null
+    //alter table tblcourse alter column sequenceNr set DEFAULT '0';
+    @NotNull
+    @Column(name = "sequencenr", nullable = false)
+    private Long sequenceNr;
+    @Size(max = 250)
+    @Column(name = "indexstring", length = 250)
+    private String treeIndex;
+    @Basic(optional = false)
+    @Column(name = "lastLoginTimeStamp", nullable = true)
+//    @Temporal(TemporalType.DATE)
+    private Long  lastChangeTimeStamp;
+    
 
     public PersistentCourse() {
     }
@@ -207,6 +221,48 @@ public class PersistentCourse implements Serializable {
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentCourse[ courseID=" + courseID + " ]";
+    }
+
+    /**
+     * @return the sequenceNr
+     */
+    public Long getSequencenr() {
+        return sequenceNr;
+    }
+
+    /**
+     * @param sequencenr the sequenceNr to set
+     */
+    public void setSequencenr(Long sequencenr) {
+        this.sequenceNr = sequencenr;
+    }
+
+    /**
+     * @return the treeIndex
+     */
+    public String getTreeIndex() {
+        return treeIndex;
+    }
+
+    /**
+     * @param treeIndex the treeIndex to set
+     */
+    public void setTreeIndex(String treeIndex) {
+        this.treeIndex = treeIndex;
+    }
+
+    /**
+     * @return the lastChangeTimeStamp
+     */
+    public Long getLastChangeTimeStamp() {
+        return lastChangeTimeStamp;
+    }
+
+    /**
+     * @param lastChangeTimeStamp the lastChangeTimeStamp to set
+     */
+    public void setLastChangeTimeStamp(Long lastChangeTimeStamp) {
+        this.lastChangeTimeStamp = lastChangeTimeStamp;
     }
 
 }
