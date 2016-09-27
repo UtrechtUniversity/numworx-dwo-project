@@ -89,7 +89,7 @@ public class PersistentCourse implements Serializable {
     @Column(name = "treepath", length = 250)
     private String treePath;
     @Basic(optional = false)
-    @Column(name = "lastLoginTimeStamp", nullable = true)
+    @Column(name = "lastChangeTimeStamp", nullable = true)
 //    @Temporal(TemporalType.DATE)
     private Long  lastChangeTimeStamp;
     
