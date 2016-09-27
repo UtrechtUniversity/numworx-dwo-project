@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import fi.dwo.commons.persistence.LogType;
 import javax.persistence.EmbeddedId;
+import javax.persistence.Lob;
 
 /**
  * PersistentLogData contains data for statistical analysis.
@@ -40,6 +41,11 @@ public class PersistentLogData {
     @Column(name = "message", nullable = false, length = 512)
     private String message;
     @Basic(optional = false)
+//    @NotNull
+//    @Lob
+//    @Column(name = "data", columnDefinition="MEDIUMTEXT", nullable = false, length = 65535) //for 64MB textblobs
+//    private String data;
+//    @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "userip", nullable = false, length = 128)
