@@ -44,7 +44,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWO-commons-lib/trunk</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-commons-lib/trunk</developerConnection>
         <tag>HEAD</tag>
     </scm>
   
