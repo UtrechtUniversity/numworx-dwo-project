@@ -86,8 +86,8 @@ public class PersistentCourse implements Serializable {
     @Column(name = "sequencenr", nullable = false)
     private Long sequenceNr;
     @Size(max = 250)
-    @Column(name = "indexstring", length = 250)
-    private String treeIndex;
+    @Column(name = "treepath", length = 250)
+    private String treePath;
     @Basic(optional = false)
     @Column(name = "lastLoginTimeStamp", nullable = true)
 //    @Temporal(TemporalType.DATE)
@@ -238,17 +238,17 @@ public class PersistentCourse implements Serializable {
     }
 
     /**
-     * @return the treeIndex
+     * @return the treePath
      */
     public String getTreeIndex() {
-        return treeIndex;
+        return treePath;
     }
 
     /**
-     * @param treeIndex the treeIndex to set
+     * @param treeIndex the treePath to set
      */
     public void setTreeIndex(String treeIndex) {
-        this.treeIndex = treeIndex;
+        this.treePath = treeIndex;
     }
 
     /**
