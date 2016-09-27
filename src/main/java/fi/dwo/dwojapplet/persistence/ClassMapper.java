@@ -95,7 +95,7 @@ class ClassMapper extends XmlRpcMapper {
             DbAccessIF dbAccess = DbAccessCreator.instance();
             Vector<Object> vList = null;
             try {
-                long schoolId = MySQLPersistenceId.getId(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolId());
+                long schoolId = MySQLPersistenceId.getId(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getId());
                 vList = dbAccess.getClassesOfTeacher(t.getUserID(), (int) schoolId);
             }
             catch (DwoXmlRpcException ex) {

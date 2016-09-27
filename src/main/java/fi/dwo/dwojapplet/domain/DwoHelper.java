@@ -8,7 +8,6 @@ import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomSchool;
-import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -20,6 +19,7 @@ import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.rest.DwoLocale;
 import fi.dwo.rest.dom.entities.DomLoginContext;
+import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
@@ -83,7 +83,7 @@ public final class DwoHelper {
     /**
      * Properties set on DwoHelper.init()
      */
-   private static DomSchoolsRolesAndClasses schoolLogins;
+   private static DomSchoolsRolesAndClassesV2 schoolLogins;
     
     /**
      * Properties that are set on user login.
@@ -531,7 +531,7 @@ public final class DwoHelper {
      */
     @Deprecated
     public static int getActiveSchoolClassId() {
-        return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchoolClassId());
+        return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchool().getId());
     }
 
     /**
@@ -542,7 +542,7 @@ public final class DwoHelper {
      */
     @Deprecated
     public static int getActiveSchoolId() {
-        return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchoolId());
+        return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchool().getId());
     }
 
     /**
@@ -632,14 +632,14 @@ public final class DwoHelper {
     /**
      * @return the srcs
      */
-    public static DomSchoolsRolesAndClasses getSchoolLogins() {
+    public static DomSchoolsRolesAndClassesV2 getSchoolLogins() {
         return schoolLogins;
     }
 
     /**
      * @param aSchoolLogins
      */
-    public static void setSchoolLogins(DomSchoolsRolesAndClasses aSchoolLogins) {
+    public static void setSchoolLogins(DomSchoolsRolesAndClassesV2 aSchoolLogins) {
         schoolLogins = aSchoolLogins;
     }
 

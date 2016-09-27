@@ -6,6 +6,8 @@ import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
 import fi.dwo.rest.dom.entities.DomSchool;
+import fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,9 +19,9 @@ import java.util.logging.Logger;
 public class AccountSchoolsRolesProperties {
 
     private static final Logger LOG = Logger.getLogger(AccountSchoolsRolesProperties.class.getName());
-    private DomSchoolRoleAndClass selectedSrc;
+    private DomSchoolRoleAndClassV2 selectedSrc;
     private DomSchool nullSchool;
-    private DomSchoolsRolesAndClasses srcs;
+    private DomSchoolsRolesAndClassesV2 srcs;
 
     public void init() throws Dwo2Exception {
         try {
@@ -30,7 +32,7 @@ public class AccountSchoolsRolesProperties {
         catch (Dwo2Exception ex) {
 
             LOG.log(Level.SEVERE, ex.getMessage());
-            srcs = new DomSchoolsRolesAndClasses();
+            srcs = new DomSchoolsRolesAndClassesV2();
             selectedSrc = null;
             throw ex;
         }
@@ -39,7 +41,7 @@ public class AccountSchoolsRolesProperties {
     /**
      * @return the user
      */
-    public DomSchoolsRolesAndClasses getSchoolsRolesAndClasses() {
+    public DomSchoolsRolesAndClassesV2 getSchoolsRolesAndClasses() {
         return srcs;
     }
 
@@ -48,32 +50,32 @@ public class AccountSchoolsRolesProperties {
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
     public void setActiveSchoolRoleAndClass() throws Dwo2Exception {
-            DomSchoolRoleAndClass src = SecureUserAccountLoginsManager.switchToSchoolLogin(getSelectedSchoolRoleAndClass());
+            DomSchoolRoleAndClassV2 src = SecureUserAccountLoginsManager.switchToSchoolLogin(getSelectedSchoolRoleAndClass());
             srcs.setActiveSchoolRoleAndClass(src);
     }
 
     /**
      * @return
      */
-    public DomSchoolRoleAndClass getActiveSchoolRoleAndClass() {
+    public DomSchoolRoleAndClassV2 getActiveSchoolRoleAndClass() {
         return srcs.getActiveSchoolRoleAndClass();
     }
 
     /**
      * @return the selectedSrc
      */
-    public DomSchoolRoleAndClass getSelectedSchoolRoleAndClass() {
+    public DomSchoolRoleAndClassV2 getSelectedSchoolRoleAndClass() {
         return selectedSrc;
     }
 
     /**
      * @param selectedSrc the selectedSrc to set
      */
-    public void setSelectedSchoolRoleAndClass(DomSchoolRoleAndClass selectedSrc) {
+    public void setSelectedSchoolRoleAndClass(DomSchoolRoleAndClassV2 selectedSrc) {
         this.selectedSrc = selectedSrc;
     }
 
-    public Boolean RemoveSchoolRoleAndClass(DomSchoolRoleAndClass selectedSrac) throws Dwo2Exception {
+    public Boolean RemoveSchoolRoleAndClass(DomSchoolRoleAndClassV2 selectedSrac) throws Dwo2Exception {
         Boolean result;
         result = SecureUserAccountLoginsManager.removeASchoolLogin(selectedSrac);
         init();

@@ -18,6 +18,7 @@ import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.RestListClassTypes;
 import static fi.dwo.rest.RestListClassTypes.DomSchool4DwoAdmin;
+import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -228,6 +229,9 @@ class RestManager {
                     });
                 case DomSchoolsRolesAndClasses:
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClasses>>() {
+                    });
+                case DomSchoolsRolesAndClassesV2:
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClassesV2>>() {
                     });
                 default:
                     String msg = "Programming error, trying to get an unsupported dataType.";

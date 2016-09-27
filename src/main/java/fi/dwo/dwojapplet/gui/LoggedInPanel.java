@@ -68,7 +68,7 @@ public class LoggedInPanel extends Box {
         JLabel username = null;
         if (!gast) {
             if (GuiConstants.GUI_IMAGE_BG) {
-                loggedin.setText(TextMapper.getText(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName())+" "+user.getName());
+                loggedin.setText(TextMapper.getText(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName())+" "+user.getName());
                 loggedin.setHorizontalAlignment(SwingConstants.RIGHT);
             } else {
                 username = new JLabel(user.getName());

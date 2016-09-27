@@ -1,9 +1,8 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import fi.dwo.rest.dom.entities.RoleType;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -31,43 +30,43 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
     public void init(AccountSchoolsRolesProperties props, Image loginImage, Image removeImage, Image emptyImage) {
 
         prop = props;
-        List<DomSchoolRoleAndClass> srcList = prop.getSchoolsRolesAndClasses().getSchoolsRolesAndClassesList();
+        List<DomSchoolRoleAndClassV2> srcList = prop.getSchoolsRolesAndClasses().getSchoolsRolesAndClassesList();
         int rows = 0;
         if (srcList == null) {
             srcList = new ArrayList();
         }
-        for (DomSchoolRoleAndClass src : srcList) {
+        for (DomSchoolRoleAndClassV2 src : srcList) {
             rows++; // one for each item in List
         }
         //subtract 1 if null school is not to be displayed.
-        if(prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.TEACHER.name()) 
-                        || prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.SCHOOLADMIN.name())){
+        if(prop.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name()) 
+                        || prop.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.SCHOOLADMIN.name())){
           rows--;
         }
         data = new Object[rows][5];
         int j = 0;
-        for (DomSchoolRoleAndClass src : srcList) {
+        for (DomSchoolRoleAndClassV2 src : srcList) {
             //skip src if null school for teacher or schooladmin
-            if (!(src.getSchoolId().equals(prop.getNullSchool().getId()) 
-                    && (prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.TEACHER.name()) 
-                        || prop.getActiveSchoolRoleAndClass().getRoleName().matches(RoleType.SCHOOLADMIN.name()) ))) {
-                if (!src.getSchoolId().equals(prop.getNullSchool().getId())) {
-                    data[j][0] = src.getSchoolName();
+            if (!(src.getSchool().getId().equals(prop.getNullSchool().getId()) 
+                    && (prop.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name()) 
+                        || prop.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.SCHOOLADMIN.name()) ))) {
+                if (!src.getSchool().getId().equals(prop.getNullSchool().getId())) {
+                    data[j][0] = src.getSchool().getSchoolName();
                 } else {
                     data[j][0] = TextMapper.getText(TextMapper.GUIR_OPT_NULLSCHOOL);
                 }
-                data[j][1] = TextMapper.getText(src.getRoleName());
+                data[j][1] = TextMapper.getText(src.getRole().getRoleName());
                 if (prop.getActiveSchoolRoleAndClass() != null
-                        && prop.getActiveSchoolRoleAndClass().getSchoolId().equals(src.getSchoolId())
-                        && prop.getActiveSchoolRoleAndClass().getRoleId().equals(src.getRoleId())
-                        && prop.getActiveSchoolRoleAndClass().getUserId().equals(src.getUserId())
-                        && ((src.getSchoolClassId() == null && prop.getActiveSchoolRoleAndClass().getSchoolClassId() == null)
-                        || prop.getActiveSchoolRoleAndClass().getSchoolClassId().equals(src.getSchoolClassId()))) {
+                        && prop.getActiveSchoolRoleAndClass().getSchool().getId().equals(src.getSchool().getId())
+                        && prop.getActiveSchoolRoleAndClass().getRole().getId().equals(src.getRole().getId())
+                        && prop.getActiveSchoolRoleAndClass().getHasRole().getUserId().equals(src.getHasRole().getUserId())
+                        && ((src.getSchoolClass().getId()== null && prop.getActiveSchoolRoleAndClass().getSchoolClass().getId() == null)
+                        || prop.getActiveSchoolRoleAndClass().getSchoolClass().getId().equals(src.getSchoolClass().getId()))) {
                     data[j][2] = emptyImage;
                 } else {
                     data[j][2] = loginImage;
                 }
-                if (!src.getSchoolId().equals(prop.getNullSchool().getId())) {
+                if (!src.getSchool().getId().equals(prop.getNullSchool().getId())) {
                     data[j][3] = removeImage; // delete 
                 } else {
                     data[j][3] = emptyImage;

@@ -100,7 +100,7 @@ public class StudentMenuPanel extends UserMenuPanel {
         DomUserFull t = (DomUserFull) DwoHelper.getCurrentUser();
         if (
         		DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null 
-        		&& DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.STUDENT.name())
+        		&& DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.STUDENT.name())
 
         	) {
             List<DomSchoolClass> scList = null;
@@ -111,7 +111,7 @@ public class StudentMenuPanel extends UserMenuPanel {
             }
 
 // true if nullschool, false in all other cases.
-            boolean isSelected = DwoHelper.getSchoolLogins().getNullSchool().getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolId()); // student in a class?
+            boolean isSelected = DwoHelper.getSchoolLogins().getNullSchool().getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getId()); // student in a class?
 // no classmanagement if nullschool, looks funny.
             classManagementButton.setVisible(!isSelected);
             
@@ -129,8 +129,8 @@ public class StudentMenuPanel extends UserMenuPanel {
                 for (int i = 0; i < scList.size(); i++) {
                     cll = new DomSchoolClassLinkedLabel(scList.get(i));
                     if (DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null
-                            && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId() != null
-                            && scList.get(i).getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClassId())
+                            && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClass().getId() != null
+                            && scList.get(i).getId().equals(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClass().getId())
                     		) {
                         cll.setFont(GuiConstants.RED_TEXT); isSelected = true;
                         cll.setBorder(CLASS_BORDER);

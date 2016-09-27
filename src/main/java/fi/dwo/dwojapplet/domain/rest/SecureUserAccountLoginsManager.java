@@ -1,14 +1,14 @@
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.rest.entities.RestSchoolRoleAndClass;
 import fi.dwo.rest.entities.RestNewSchoolLogin;
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomNewSchoolLogin;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
-import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
 import java.util.logging.Logger;
 
 /**
@@ -29,9 +29,9 @@ public class SecureUserAccountLoginsManager {
      * @return
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
-    public static DomSchoolsRolesAndClasses getSchoolLogins() throws Dwo2Exception {
-        DomSchoolsRolesAndClasses src;
-        src = StoredRestManager.getInstance().get("rest/secure/user/account/logins/getList", DomSchoolsRolesAndClasses.class);
+    public static DomSchoolsRolesAndClassesV2 getSchoolLogins() throws Dwo2Exception {
+        DomSchoolsRolesAndClassesV2 src;
+        src = StoredRestManager.getInstance().get("rest/secure/user/account/loginsV2/getList", DomSchoolsRolesAndClassesV2.class);
         //update local copy
         DwoHelper.setSchoolLogins(src);        
         return src;
@@ -44,11 +44,11 @@ public class SecureUserAccountLoginsManager {
      * @return
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
-    public static DomSchoolRoleAndClass switchToSchoolLogin(DomSchoolRoleAndClass src) throws Dwo2Exception {
-        RestSchoolRoleAndClass rsrc = new RestSchoolRoleAndClass();
+    public static DomSchoolRoleAndClassV2 switchToSchoolLogin(DomSchoolRoleAndClassV2 src) throws Dwo2Exception {
+        RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(src);
-        DomSchoolRoleAndClass result = StoredRestManager.getInstance().put("rest/secure/user/account/logins/select", DomSchoolRoleAndClass.class, rsrc);
+        DomSchoolRoleAndClassV2 result = StoredRestManager.getInstance().put("rest/secure/user/account/loginsV2/select", DomSchoolRoleAndClassV2.class, rsrc);
         //update local copy
         DwoHelper.getSchoolLogins().setActiveSchoolRoleAndClass(src);
         return result;
@@ -65,7 +65,7 @@ public class SecureUserAccountLoginsManager {
         RestNewSchoolLogin rnl = new RestNewSchoolLogin();
         rnl.setRestContext(new DomContext());
         rnl.setDomNewSchoolLogin(newSchoolLogin);
-        r = StoredRestManager.getInstance().put("rest/secure/user/account/logins/submit", Boolean.class, rnl);
+        r = StoredRestManager.getInstance().put("rest/secure/user/account/loginsV2/submit", Boolean.class, rnl);
         DwoHelper.setSchoolLogins(getSchoolLogins());        
         return r;
     }
@@ -76,12 +76,12 @@ public class SecureUserAccountLoginsManager {
      * @return
      * @throws fi.dwo.rest.exceptions.Dwo2Exception
      */
-    public static boolean removeASchoolLogin(DomSchoolRoleAndClass toRemoveSchoolLogin) throws Dwo2Exception {
-        RestSchoolRoleAndClass rsrc = new RestSchoolRoleAndClass();
+    public static boolean removeASchoolLogin(DomSchoolRoleAndClassV2 toRemoveSchoolLogin) throws Dwo2Exception {
+        RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(toRemoveSchoolLogin);
         boolean r;
-        r = StoredRestManager.getInstance().put("rest/secure/user/account/logins/remove", Boolean.class, rsrc);
+        r = StoredRestManager.getInstance().put("rest/secure/user/account/loginsV2/remove", Boolean.class, rsrc);
         DwoHelper.setSchoolLogins(getSchoolLogins());        
         return r;
 

@@ -4,12 +4,12 @@ import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.system.MD5;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.rest.dom.entities.DomLoginContext;
+import fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -240,32 +240,32 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                     int row = tableModel.getSelectedRow();
 
                     //set prop to table setting
-                    DomSchoolRoleAndClass currSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
-                    if (!prop.getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.SCHOOLADMIN.name())
-                            && !prop.getActiveSchoolRoleAndClass().getRoleName().equals(RoleType.ADMIN.name())
-                            && (currSrac.getRoleName().equals(RoleType.SCHOOLADMIN.name()) || currSrac.getRoleName().equals(RoleType.ADMIN.name()))) {
+                    DomSchoolRoleAndClassV2 currSrac = (DomSchoolRoleAndClassV2) tableModel.getValueAt(row, 4);
+                    if (!prop.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.SCHOOLADMIN.name())
+                            && !prop.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.ADMIN.name())
+                            && (currSrac.getRole().getRoleName().equals(RoleType.SCHOOLADMIN.name()) || currSrac.getRole().getRoleName().equals(RoleType.ADMIN.name()))) {
                         switch (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD))) {
                             case FAILED:
                                 // show warning
                                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
                                 break;
                             case SUCCEEDED:
-                                prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                                prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClassV2) tableModel.getValueAt(row, 4));
                                 prop.setActiveSchoolRoleAndClass();
                                 switchToActiveSchoolLogin();
                                 break;
                             default:
                         }
                     } else {
-                        prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                        prop.setSelectedSchoolRoleAndClass((DomSchoolRoleAndClassV2) tableModel.getValueAt(row, 4));
                         prop.setActiveSchoolRoleAndClass();
                         switchToActiveSchoolLogin();
                     }
 
                 } else if (value == removeImage) {
                     int row = tableModel.getSelectedRow();
-                    DomSchoolRoleAndClass selectedSrac = (DomSchoolRoleAndClass) tableModel.getValueAt(row, 4);
-                    String msg = MessageFormat.format(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmSchoolLoginDelete), selectedSrac.getSchoolName(), TextMapper.getText(selectedSrac.getRoleName()));
+                    DomSchoolRoleAndClassV2 selectedSrac = (DomSchoolRoleAndClassV2) tableModel.getValueAt(row, 4);
+                    String msg = MessageFormat.format(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmSchoolLoginDelete), selectedSrac.getSchool().getSchoolName(), TextMapper.getText(selectedSrac.getRole().getRoleName()));
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
                         //Check user password   
                         switch (ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE))) {
@@ -274,7 +274,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
                                 break;
                             case SUCCEEDED:
                                 //set prop to table setting
-                                DomSchoolRoleAndClass currSrac = prop.getActiveSchoolRoleAndClass();
+                                DomSchoolRoleAndClassV2 currSrac = prop.getActiveSchoolRoleAndClass();
                                 prop.RemoveSchoolRoleAndClass(selectedSrac);
 
                                 if (currSrac != selectedSrac) {//always keeps current or switches to the null-school
