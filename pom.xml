@@ -4,7 +4,7 @@
  
     <!-- Adjust artifact, name and description for new projects -->
     <parent>
-        <groupId>nl.fi.dwo</groupId>
+        <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
         <version>2.0-SNAPSHOT</version>
         <relativePath>../DWO/pom.xml</relativePath>
@@ -54,7 +54,7 @@
     <!-- dependencies -->
     <dependencies>   
         <dependency>
-            <groupId>fi.dwo</groupId>
+            <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-commons-lib</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
@@ -66,7 +66,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>fi.dwo.rest</groupId>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
             <artifactId>DWO-rest-lib</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
