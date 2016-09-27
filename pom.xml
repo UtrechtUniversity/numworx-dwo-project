@@ -4,15 +4,15 @@
  
     <!-- Adjust artifact, name and description for new projects -->
     <parent>
-        <groupId>fi.dwo</groupId>
-        <artifactId>DWO2</artifactId>
+        <groupId>nl.fi.dwo</groupId>
+        <artifactId>DWO</artifactId>
         <version>2.0-SNAPSHOT</version>
-        <relativePath>../DWO2/pom.xml</relativePath>
+        <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
-    <artifactId>DWOJApplet</artifactId>
+    <artifactId>DWOJClient</artifactId>
 <!--    <version>2.0-SNAPSHOT</version>-->
-    <name>DWOJApplet - trunk</name>
+    <name>DWOJClient - trunk</name>
     <url>http://www.dwo.nl</url>
     <packaging>jar</packaging>
     <!-- Update year to current when starting a new project -->
