@@ -60,8 +60,7 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
                         && prop.getActiveSchoolRoleAndClass().getSchool().getId().equals(src.getSchool().getId())
                         && prop.getActiveSchoolRoleAndClass().getRole().getId().equals(src.getRole().getId())
                         && prop.getActiveSchoolRoleAndClass().getHasRole().getUserId().equals(src.getHasRole().getUserId())
-                        && ((src.getSchoolClass().getId()== null && prop.getActiveSchoolRoleAndClass().getSchoolClass().getId() == null)
-                        || prop.getActiveSchoolRoleAndClass().getSchoolClass().getId().equals(src.getSchoolClass().getId()))) {
+                        ) {
                     data[j][2] = emptyImage;
                 } else {
                     data[j][2] = loginImage;
