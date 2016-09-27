@@ -44,8 +44,33 @@
                <archive>${project.build.directory}/${project.artifactId}.jar</archive>
             </configuration>            
         </plugin>  
-   
+            <plugin> <!-- attach-sources voor GWT -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
    </plugins>
   
   </build>
+      <distributionManagement>
+	<repository>
+	   <id>release</id>
+	   <name>libs-release-local</name>
+	   <url>http://repos.dwo.nl/artifactory/libs-release-local</url>
+	</repository>
+	<snapshotRepository>
+	   <id>snapshots</id>
+	   <name>libs-snapshot-local</name>
+	   <url>http://repos.dwo.nl/artifactory/libs-snapshot-local</url>
+	</snapshotRepository>
+  </distributionManagement>
+  
 </project>
