@@ -16,6 +16,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
+
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -23,11 +24,19 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.plaf.ButtonUI;
 
 public class VButton extends JButton {
 
     @Override
+	public void setBorder(Border border) {
+		// TODO Auto-generated method stub
+		super.setBorder(border);
+	}
+    
+	@Override
     public int getHeight() {
         return hor ? super.getWidth() : super.getHeight();
     }
@@ -231,7 +240,7 @@ public class VButton extends JButton {
         }
 
         protected void installDefaults(AbstractButton b) {
-
+  
             b.setHorizontalTextPosition(SwingConstants.LEADING);
             //b.setForeground(UIFOREGROUND);
             //b.setDoubleBuffered(false);
@@ -298,8 +307,16 @@ public class VButton extends JButton {
 
     @Override
     public void updateUI() {
-        super.updateUI();
-        setUI(new UI(getUI()));
+        ButtonUI ui = (ButtonUI) UIManager.getUI(this);
+        setUI(ui); // install all defaults
+        Border b = getBorder(); // KEEP BORDER
+        setUI(new UI(ui)); // override new
+        setBorder(b);
+        setHorizontalTextPosition(SwingConstants.LEADING);
+        //b.setForeground(UIFOREGROUND);
+        //b.setDoubleBuffered(false);
+        setIconTextGap(15);
+        setFocusPainted(false);
     }
 
     public static class V implements Icon {
@@ -349,7 +366,44 @@ public class VButton extends JButton {
         super(text, icon);
     }
 
-    /**
+    @Override
+	protected void paintBorder(Graphics g) {
+    	super.paintBorder(g);
+	}
+
+//	@Override
+//	protected void paintComponent(Graphics g) {
+//        boolean h = this.hor;//c.setSize(swap(c.getSize()));
+//        if (h) {
+//            ui.paint(g, this);
+//            return;
+//        }
+//        this.hor = true;
+//        Image img = createImage(getWidth(), getHeight());
+//        Graphics graphics = img.getGraphics();
+//        graphics.setFont(getFont());
+//        ui.paint(graphics, this);
+//        this.hor = h; // c.setSize(swap(c.getSize()));
+//        ImageProducer producer = new FilteredImageSource(
+//                img.getSource(),
+//                filter);
+//        img = createImage(producer);
+//        g.drawImage(img, 0, 0, null);
+//	}
+
+	@Override
+	protected void paintChildren(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paintChildren(g);
+	}
+
+	@Override
+	public void paint(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paint(g);
+	}
+
+	/**
      * @param args
      */
     public static void main(String[] args) {
@@ -363,6 +417,22 @@ public class VButton extends JButton {
             }
         });
         frame.getContentPane().add(button);
+        JButton comp = new JButton("Knoppen") {
+
+			@Override
+			public void setBorder(Border border) {
+				// TODO Auto-generated method stub
+				super.setBorder(border);
+			}
+
+			@Override
+			public void paint(Graphics g) {
+				// TODO Auto-generated method stub
+				super.paint(g);
+			}};
+			comp.        setFocusPainted(false);
+
+		frame.getContentPane().add(comp);
         frame.getContentPane().setLayout(new FlowLayout());
         frame.pack();
         frame.show();

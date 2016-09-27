@@ -5,6 +5,9 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -19,12 +22,19 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminProfileManager;
+import fi.dwo.rest.dom.entities.DomDwoProfile;
+import fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.rest.persistence.PersistenceId;
 
 public class DwoProfilePanel extends JPanel implements ActionListener,
 		CenterSubPanel {
+
+    private static final Logger LOG = Logger.getLogger(DwoProfilePanel.class.getName());
 
 	private CenterPanel centerPanel;
 	private Image removeImage;
@@ -34,9 +44,9 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 	
 	class DwoProfileModel extends AbstractTableModel {
 
-		private DwoProfile[] profiles;
+		private DomDwoProfile[] profiles;
 		
-		public DwoProfileModel(DwoProfile[] profiles) {
+		public DwoProfileModel(DomDwoProfile[] profiles) {
 			super();
 			this.profiles = profiles;
 		}
@@ -53,13 +63,13 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 
 		@Override
 		public Object getValueAt(int row, int col) {
-			DwoProfile current = profiles[row];
+			DomDwoProfile current = profiles[row];
 			switch(col) {
-			case 0:	return current.getID();
-			case 1: return current.getName();
-			case 2: return current.getHeader();
-			case 3: return current.getText();
-			case 4: return current.getRights(); // FIXME static? Why?
+			case 0:	return MySQLPersistenceId.getId(current.getId());
+			case 1: return current.getDwoProfileName();
+			case 2: return current.getDwoProfileDescription();
+			case 3: return current.getDwoProfileText();
+			case 4: return current.getDwoProfileRights();
 			case 5: return editImage;
 			case 6: return removeImage;
 			}
@@ -128,19 +138,20 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 	    	}
 
 	    	public void actionPerformed(ActionEvent event) {
-	            DwoProfile sc = model.profiles[row];
+	            DomDwoProfile sc = model.profiles[row];
 	    		final GuiCreator instance = GuiCreator.instance();
 				if (value == editImage) {
 
 						// JOptionPane .....
 					boolean ok = false;
 					String newHeader, newName, newText;
-					newHeader = sc.getHeader();
-					newName = sc.getName();
-					newText = sc.getText();
+					newHeader = sc.getDwoProfileDescription();
+					newName = sc.getDwoProfileName();
+					newText = sc.getDwoProfileText();
 
-					if ( ok  && 
-	                		instance.renameProfile(sc, newName, newHeader, newText) )
+					if ( ok // && 
+	                		//instance.renameProfile(sc, newName, newHeader, newText) 
+					   )
 	                {
 	                    model.fireTableCellUpdated(row, 0);
 	                }                
@@ -149,7 +160,9 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 	                /* Delete the course */
 	                if (JOptionPane.showConfirmDialog(DwoProfilePanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)
 	                        + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-	                    if (instance.deleteProfile(sc)) {
+	                    if (	true 
+	                    		///instance.deleteProfile(sc)
+	                        ) {
 	        	            model.removeRow(row);
 	                    }
 	                }
@@ -178,17 +191,25 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 
 	private JComponent buildJTable() {
 // TODO build model
-		DwoProfile[] profiles;
-		profiles = new DwoProfile[1];
-		profiles[0] = GuiCreator.instance().getDWO().getDwoProfile();
-	
+		DomDwoProfile[] profiles;
+		profiles = new DomDwoProfile[0];
+		try {
+			Collection<DomDwoProfile> list;
+			list = SecureDwoAdminProfileManager.getProfiles();
+			profiles = list.toArray(profiles);
+		} catch (Dwo2Exception e) {
+			LOG.log(Level.SEVERE, "getProfiles", e);
+		}
+		
 		DwoProfileModel model = new DwoProfileModel(profiles);
 // build table
 		
 		JTable table = new JTable(model);
 		
     	TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
-        TableUtil.setJTableSizes(table);
+        table.setRowMargin(0);
+
+        ///TableUtil.setJTableSizes(table);
 
 		return new JScrollPane(table);
 	}

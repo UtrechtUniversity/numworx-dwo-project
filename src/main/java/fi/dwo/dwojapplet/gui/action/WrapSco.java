@@ -123,7 +123,13 @@ class WrapSco extends Sco {
     @Override
     public String LMSGetValue(String key) {
         System.out.println("GetValue " + key);
-        return super.LMSGetValue(key);
+        try {
+			return super.LMSGetValue(key);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
     }
 
     /**

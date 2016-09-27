@@ -6,6 +6,8 @@ import com.owlike.genson.Genson;
 
 import static fi.dwo.dwojapplet.REST.RestManager.getBasicAuthString;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.rest.dom.entities.DomAppletConfig;
+import fi.dwo.rest.dom.entities.DomDwoProfile;
 import fi.dwo.rest.dom.entities.DomRole;
 import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -230,9 +232,15 @@ class RestManager {
                 case DomSchoolsRolesAndClasses:
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClasses>>() {
                     });
+                case DomDwoProfile:
+                	return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomDwoProfile>>() {
+                	});
                 case DomSchoolsRolesAndClassesV2:
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClassesV2>>() {
                     });
+                case DomAppletConfig:
+                	return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomAppletConfig>>() {
+                	});
                 default:
                     String msg = "Programming error, trying to get an unsupported dataType.";
                     LOG.log(Level.SEVERE, msg);

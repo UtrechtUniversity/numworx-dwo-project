@@ -656,21 +656,21 @@ public class ResultLogger extends JPanel implements ActionListener,
 								out.print(TAB);
 
 								value = model.getValueAt(i, j);
-								if (value != null && value instanceof Hashtable) {
+								if (value != null && value instanceof Map) {
 
-									String answer = (String) ((Hashtable) value)
+									String answer = (String) ((Map) value)
 											.get(LOGKEY_ANSWER);
 									if (answer == null)
 										answer = "";
 									out.print(answer);
 									out.print(TAB);
 
-									Integer score = (Integer) ((Hashtable) value)
+									Number score = (Number) ((Map) value)
 											.get(LOGKEY_SCORE);
 									if (score == null)
 										score = new Integer(0);
 
-									Integer maxScore = (Integer) ((Hashtable) value)
+									Number maxScore = (Number) ((Map) value)
 											.get(LOGKEY_MAXSCORE);
 									if (maxScore == null)
 										maxScore = new Integer(0);
@@ -681,7 +681,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 									out.print(correct);
 									out.print(TAB);
 
-									Integer errors = (Integer) ((Hashtable) value)
+									Number errors = (Number) ((Map) value)
 											.get(LOGKEY_ERRORCOUNT);
 									if (errors == null)
 										errors = new Integer(0);
@@ -689,12 +689,12 @@ public class ResultLogger extends JPanel implements ActionListener,
 									out.print(TAB);
 								}
 
-								if (value != null && value instanceof Hashtable) {
-									value = ((Hashtable) value).get(logModeKey);
+								if (value != null && value instanceof Map) {
+									value = ((Map) value).get(logModeKey);
 								}
 								if (value == null)
 									value = new Vector();
-								Vector v = (Vector) value;
+								List v = (List) value;
 								for (int k = 0; k < v.size(); k++) {
 									String s = (String) v.get(k);
 									s = s.replace('\n', ' ');
