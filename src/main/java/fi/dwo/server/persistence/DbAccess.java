@@ -4138,6 +4138,16 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
                 ps.setInt(6, i);
                 ps.executeUpdate();
             }
+            ps = getStatement("UPDATE tblCourse set sequencenr=? WHERE courseID=? AND schoolID=? AND parentID =? AND dwoProfileID=?");
+            len = vector.size();
+            for (int i = 0; i < len; i++) {
+                ps.setInt(1, i);
+                ps.setObject(2, vector.get(i));//courseid
+                ps.setInt(3, schoolID);
+                ps.setInt(4, parent);
+                ps.setInt(5, profileID);
+                ps.executeUpdate();
+            }
             c.commit();
         } finally {
             c.rollback();
