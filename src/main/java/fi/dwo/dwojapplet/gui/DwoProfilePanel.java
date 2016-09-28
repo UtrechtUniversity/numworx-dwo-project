@@ -25,11 +25,9 @@ import javax.swing.table.TableCellEditor;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminProfileManager;
 import fi.dwo.rest.dom.entities.DomDwoProfile;
 import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.persistence.PersistenceId;
 
 public class DwoProfilePanel extends JPanel implements ActionListener,
 		CenterSubPanel {
@@ -139,22 +137,18 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 
 	    	public void actionPerformed(ActionEvent event) {
 	            DomDwoProfile sc = model.profiles[row];
-	    		final GuiCreator instance = GuiCreator.instance();
-				if (value == editImage) {
-
-						// JOptionPane .....
-					boolean ok = false;
-					String newHeader, newName, newText;
-					newHeader = sc.getDwoProfileDescription();
-					newName = sc.getDwoProfileName();
-					newText = sc.getDwoProfileText();
-
-					if ( ok // && 
-	                		//instance.renameProfile(sc, newName, newHeader, newText) 
-					   )
-	                {
+	    		if (value == editImage) {
+					sc = AddProfileDwoAdminJPanel.editDialog(jtbl, sc.duplicate());
+					if ( sc != null) {
+	                	try {
+							if (SecureDwoAdminProfileManager.updateProfile(sc));
+								model.profiles[row] = sc;
+						} catch (Dwo2Exception e) {
+							LOG.log(Level.SEVERE, "edit profile", e);
+							GuiCreator.instance().ShowErrorDialog(DwoProfilePanel.this, e);
+						}
 	                    model.fireTableCellUpdated(row, 0);
-	                }                
+					}                
 
 	    		} else if (value == removeImage) {
 	                /* Delete the course */
@@ -238,7 +232,20 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// add profile
+		DomDwoProfile nieuw = AddProfileDwoAdminJPanel.addDialog(jtbl);
+		if(nieuw != null) {
+			try {
+				if (SecureDwoAdminProfileManager.submitProfile(nieuw))
+				{
+					remove(jtbl);
+					jtbl = buildJTable();
+					add(jtbl, BorderLayout.CENTER);
+				}
+			} catch (Dwo2Exception e) {
+				LOG.log(Level.SEVERE, "add profile", e);
+				GuiCreator.instance().ShowErrorDialog(jtbl, e);
+			}
+		}
 		
 
 	}

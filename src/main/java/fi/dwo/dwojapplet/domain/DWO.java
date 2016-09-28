@@ -256,7 +256,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         String appURLPathProperty = properties.getProperty("appUrlPath", "http://www.fisme.science.uu.nl/dwo/apps/");
         DwoHelper.setAppURLPath(new URL(base, appURLPathProperty));
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"appUrlPath",
-            DwoHelper.getJarUrlPath()});
+            DwoHelper.getAppURLPath()});
 
         HttpAuthenticationType httpAuthentication = (System.getProperty("httpAuthentication") == null) 
                 ? HttpAuthenticationType.valueOf(properties.getProperty("httpAuthentication", "DIGEST"))
