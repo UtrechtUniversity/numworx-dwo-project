@@ -327,5 +327,10 @@ public class GuiCreatorAdmin extends GuiCreator {
 		return panel;
 	}
 
+	@Override
+	public CenterSubPanel getAppletConfigPanel() {
+		AppletConfigPanel panel = new AppletConfigPanel();
+		return panel;
+	}
 	
 }

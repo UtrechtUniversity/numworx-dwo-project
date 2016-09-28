@@ -1030,4 +1030,8 @@ public class GuiCreator {
 		return null;
 	}
 
+	public CenterSubPanel getAppletConfigPanel() {
+		return null;
+	}
+
 }

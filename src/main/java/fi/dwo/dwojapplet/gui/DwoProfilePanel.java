@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
@@ -204,7 +206,34 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
         table.setRowMargin(0);
 
         ///TableUtil.setJTableSizes(table);
-
+        int w = new JLabel("0000").getPreferredSize().width;
+// ID column
+        TableColumn column = table.getColumnModel().getColumn(0);
+		column.setPreferredWidth(w);
+        column.setMaxWidth(w);
+// Names column       
+        w = new JLabel("xxxxxxxxxxxxxx").getPreferredSize().width;
+        column = table.getColumnModel().getColumn(1);
+		column.setPreferredWidth(w);
+        column.setMaxWidth(w);
+// Rights column       
+        w = new JLabel("rights ").getPreferredSize().width;
+        column = table.getColumnModel().getColumn(4);
+		column.setPreferredWidth(w);
+        column.setMaxWidth(w);
+// icons
+        w = 32;
+        column = table.getColumnModel().getColumn(5);
+		column.setPreferredWidth(w);
+        column.setMaxWidth(w);
+        column = table.getColumnModel().getColumn(6);
+		column.setPreferredWidth(w);
+        column.setMaxWidth(w);
+        
+        
+        
+        
+        
 		return new JScrollPane(table);
 	}
 

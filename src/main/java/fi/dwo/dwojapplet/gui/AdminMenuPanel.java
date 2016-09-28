@@ -3,6 +3,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.gui.action.AppletConfigAction;
 import fi.dwo.dwojapplet.gui.action.DwoProfileAction;
 
 import java.awt.event.ActionEvent;
@@ -43,6 +44,7 @@ public class AdminMenuPanel extends UserMenuPanel {
         createGap();
         profileManagementButton  = new MenuPanelButton(new DwoProfileAction());
         this.add(profileManagementButton);
+        this.add(new MenuPanelButton(new AppletConfigAction()));
         createGap();
         
         /* Add CourseManagement Button */
