@@ -19,11 +19,19 @@ import fi.dwo.rest.dom.entities.DomLoginContext;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
@@ -200,6 +208,31 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     }
                     SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
                     GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
+
+// HTML5
+                    String student_player = GuiConstants.STUDENT_PLAYER;
+                    if(student_player != null) {
+                    	URL url = DwoHelper.getServerUrlPath();
+                    	try {
+// Hoe zit dit met de security? FIXME Gert?
+                    		String a = "1\f" + System.currentTimeMillis() + "\f" + user.getUserName() +"\f"+ user.getPassword();
+                    	    a = Base64.getUrlEncoder().encodeToString(a.getBytes(StandardCharsets.UTF_8));
+                    		student_player = student_player + "?a=" + a; 
+							url = new URL(url, student_player);
+							if(DwoHelper.isApplication())
+							{
+								Desktop.getDesktop().browse(url.toURI());
+								System.exit(0);
+							} else {
+								DwoHelper.getApplet().getAppletContext().showDocument(url, "_parent");
+							}
+						} catch (Exception e) {
+							LOG.log(Level.SEVERE, "Login as Student", e);
+						}
+                    }
+                  
+                    
+                    
                 } catch (LoginException ex) {
                     Dwo2Exception err = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
                     LOG.log(Level.SEVERE, "", ex);

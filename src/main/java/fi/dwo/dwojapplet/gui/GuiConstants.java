@@ -127,7 +127,7 @@ public abstract class GuiConstants {
     public static String DEPLOY_VARIANT = "";
     public static boolean DEEP_LINK;
 
-    public static String PLAYER;
+    public static String PLAYER, STUDENT_PLAYER;
 
     public static int getDwoProfile() {
         return dwoProfile;
@@ -171,16 +171,8 @@ public abstract class GuiConstants {
         GUI_SCOUPDATE_UNSAFE = getBoolean(prop, "scoupdate_unsafe");
         DEPLOY_VARIANT = getString(prop, "deployVariant");
         PLAYER = getString(prop, "player");
+        STUDENT_PLAYER = getString(prop, "student_player");
 // TODO deze code opnemen in profile.properties:
-// 51, 27
-        if ((profile == 51 || profile == 27)) {
-            DEPLOY_VARIANT = "MW";
-        }
-// 57, 65, 64
-        if ((profile == 57 || profile == 65 || profile == 64)) {
-            DEPLOY_VARIANT = "GR";
-        }
-
         dwoProfile = profile;
         if (profile == 5 || profile == 56) {
             MAIN_BACKGROUND = new Color(255, 255, 255);

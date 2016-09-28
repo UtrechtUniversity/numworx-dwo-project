@@ -11,11 +11,16 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -126,6 +131,9 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
                     //MapperCreator.instance(User.class).removeObject(u.getID()); // not good enough, need fresh copy.
                     PersistenceFacade.instance().clearObjectInMapperCache(User.class,u.getID());
                     GuiCreator.instance().logoff(u.getUsername());
+                    
+                    
+                    
 //                } catch (LoginException e) {
 //                    LOG.log(Level.SEVERE, null, e);
 //                }
