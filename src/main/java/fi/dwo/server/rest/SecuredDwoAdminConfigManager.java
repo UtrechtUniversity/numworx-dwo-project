@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -13,25 +14,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
-
-
-
-
-
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentAppletConfig;
-import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.rest.dom.entities.DomAppletConfig;
-import fi.dwo.rest.dom.entities.DomDwoProfile;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.rest.entities.RestAppletConfig;
-import fi.dwo.rest.entities.RestDwoProfile;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.server.PersistentDataManagers.core.AppletConfigManager;
-import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 
 
@@ -84,18 +76,18 @@ public class SecuredDwoAdminConfigManager {
      * Registers a new DwoProfile.
      *
      * @param sc
-     * @param restDwoProfile
+     * @param restConfig
      * @return
      */
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Boolean submitAppletConfig(@Context SecurityContext sc, RestAppletConfig restDwoProfile) {
-        if(restDwoProfile==null){
+    public Boolean submitAppletConfig(@Context SecurityContext sc, RestAppletConfig restConfig) {
+        if(restConfig==null){
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
-        DomAppletConfig profile = restDwoProfile.getDomAppletConfig() ;
+        DomAppletConfig config = restConfig.getDomAppletConfig() ;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
@@ -107,17 +99,17 @@ public class SecuredDwoAdminConfigManager {
         if (hr != null) {
             // allowed user role
             PersistentAppletConfig p = new PersistentAppletConfig();
-            p.setAppletID(profile.getAppletID());
-            p.setLanguage(profile.getLanguage());
-            p.setLaunchdata(profile.getLaunchdata());
-            p.setName(profile.getName());
+            p.setAppletID(config.getAppletID());
+            p.setLanguage(config.getLanguage());
+            p.setLaunchdata(config.getLaunchdata());
+            p.setName(config.getName());
             
             try {
                 AppletConfigManager.create(p);
                 return Boolean.TRUE;
             }
             catch (Exception e) {
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while creating appletConfig " + profile.getName() + ".");
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while creating appletConfig " + config.getName() + ".");
             }
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -129,18 +121,18 @@ public class SecuredDwoAdminConfigManager {
      * Updates the DwoProfile.
      *
      * @param sc
-     * @param restDwoProfile
+     * @param restConfig
      * @return
      */
     @PUT
     @Produces({"application/json"})
     @Path("/update")
-    public Boolean updateConfig(@Context SecurityContext sc, RestAppletConfig restProfile) {
-        if(restProfile==null){
+    public Boolean updateConfig(@Context SecurityContext sc, RestAppletConfig restConfig) {
+        if(restConfig==null){
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
-        DomAppletConfig profile = restProfile.getDomAppletConfig();
+        DomAppletConfig config = restConfig.getDomAppletConfig();
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
@@ -150,24 +142,61 @@ public class SecuredDwoAdminConfigManager {
         }
         if (hr != null) {
             try {
-                long id = MySQLPersistenceId.getId(profile.getId());
-				PersistentAppletConfig editProfile = AppletConfigManager.findEntity(id);
-                //Profile to update.
-                editProfile.setAppletID(profile.getAppletID());
-                editProfile.setLanguage(profile.getLanguage());
-                editProfile.setLaunchdata(profile.getLaunchdata());
-                editProfile.setName(profile.getName());
-                AppletConfigManager.edit(editProfile);
+                long id = MySQLPersistenceId.getId(config.getId());
+				PersistentAppletConfig editConfig = AppletConfigManager.findEntity(id);
+                // AppletConfig to update.
+                editConfig.setAppletID(config.getAppletID());
+                editConfig.setLanguage(config.getLanguage());
+                editConfig.setLaunchdata(config.getLaunchdata());
+                editConfig.setName(config.getName());
+                AppletConfigManager.edit(editConfig);
                 return Boolean.TRUE;
             }
             catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update profile with name " + profile.getName() + " .");
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update profile with name " + config.getName() + " .");
             }
         } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the appletconfig with name {1}.", new Object[]{sc.getUserPrincipal().getName(), profile.getName()});
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the appletconfig with name {1}.", new Object[]{sc.getUserPrincipal().getName(), config.getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update the appletconfig data.");
         }
     }
 
+    /** 
+     * remove applet config
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/remove")
+    public Boolean removeConfig(@Context SecurityContext sc, RestAppletConfig restConfig) {
+        if(restConfig==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
+        PersistentHasRole hr = null;
+        DomAppletConfig config = restConfig.getDomAppletConfig();
+        try {
+            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
+            throw new Dwo2RestException(ex);
+        }
+        if (hr != null) {
+            try {
+                long id = MySQLPersistenceId.getId(config.getId());
+                AppletConfigManager.destroy(id);
+                return Boolean.TRUE;
+            }
+            catch (PersistenceException pe) {
+            	return Boolean.FALSE;
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to remove config with name " + config.getName() + " .");
+            }
+        } else {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove the appletconfig with name {1}.", new Object[]{sc.getUserPrincipal().getName(), config.getName()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the appletconfig data.");
+        }
+    }
 }
