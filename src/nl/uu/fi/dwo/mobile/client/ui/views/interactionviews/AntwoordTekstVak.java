@@ -316,7 +316,13 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		//basisPanel.getElement().getStyle().setProperty("border", "1px solid gray");
 		
 		antwoordTF = new TextBox();
-		antwoordTF.getElement().getStyle().setProperty("border", "1px solid gray");
+		if(boxMetRand)
+			antwoordTF.getElement().getStyle().setProperty("border", "1px solid gray");
+		else 
+		{	antwoordTF.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+			antwoordTF.getElement().setAttribute("placeholder", "...");
+		}
+		
 		antwoordTF.setWidth((breedte - 4) + "px");
 		
 		//antwoordTF.setHeight((hoogte - 5) + "px");
@@ -465,6 +471,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		formuleVak.getMainRegel().setMinimumWidth(breedte - 18);
 		formuleVak.getMainRegel().setMinimumHeight(hoogte - 8);
 		
+		formuleVak.getMainRegel().zetStippels(!boxMetRand);
 		//formuleVak.setFont(formuleVakFont);
 		//formuleVak.setBorder(false);
 		//formuleVak.addActionListener(this);
@@ -474,8 +481,13 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		if (formuleMode) 
 		{	//basisPanel.setSize(Math.max(minBreedte, formuleVak.getSize().width + 24), formuleVak.getSize().height + 8);
 			achtergrondPanel = new TouchPanel();
-			achtergrondPanel.getElement().getStyle().setBackgroundColor("white");
-			achtergrondPanel.getElement().getStyle().setProperty("border", "1px solid gray");
+			if(boxMetRand) {
+				achtergrondPanel.getElement().getStyle().setBackgroundColor("white");
+				achtergrondPanel.getElement().getStyle().setProperty("border", "1px solid gray");
+			} else {
+				achtergrondPanel.getElement().getStyle().setBackgroundColor("transparant");
+				achtergrondPanel.getElement().getStyle().setProperty("border", "none");
+			}
 			basisPanel.add(achtergrondPanel);
 			basisPanel.setWidgetLeftRight(achtergrondPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			basisPanel.setWidgetTopBottom(achtergrondPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);

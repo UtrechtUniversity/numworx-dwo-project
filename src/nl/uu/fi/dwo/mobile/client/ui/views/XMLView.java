@@ -336,9 +336,13 @@ public abstract class XMLView {
 		opdrachtObjects.add(hoofdPanel);
 		//marges vanuit instellingen meenemen:
 		Style style = hoofdPanel.asWidget().getElement().getStyle();
-		style.setMarginBottom( instellingen.getInt("margeOnder"), Style.Unit.PX);
+		if(instellingen.containsKey("margeOnder"))
+			style.setMarginBottom( instellingen.getInt("margeOnder"), Style.Unit.PX);
+		if(instellingen.containsKey("margeBoven"))
 		style.setMarginTop(instellingen.getInt("margeBoven"), Style.Unit.PX);
+		if(instellingen.containsKey("margeLinks"))
 		style.setMarginLeft(instellingen.getInt("margeLinks"), Style.Unit.PX);
+		if(instellingen.containsKey("margeRechts"))
 		style.setMarginRight(instellingen.getInt("margeRechts"), Style.Unit.PX);	
 	}
 
