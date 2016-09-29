@@ -3,6 +3,7 @@
  */
 package fi.dwo.dwojapplet.gui.domutils;
 
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.rest.dom.entities.DomSchoolClass;
 import java.awt.Component;
 import javax.swing.JLabel;
@@ -58,7 +59,7 @@ public class DomSchoolClassListCellRenderer extends JLabel
             setText(sc.getSchoolClassName());
             setFont(list.getFont());
         } else if (value == null) {
-            setText(getEmptyText());
+            setText(emptyText);
         } else {
             setText("Object of unsupported type");
         }

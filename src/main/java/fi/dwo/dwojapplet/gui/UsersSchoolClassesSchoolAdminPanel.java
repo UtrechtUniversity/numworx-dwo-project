@@ -312,7 +312,8 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
             }
         });
 
-        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
+        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer(TextMapper.getText(TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLCLASS));
+        addSchoolClassBox.setPrototypeDisplayValue(TextMapper.getText(TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLCLASS));
 //        if (userVector.size() > 0) {
 //            addSchoolClassBox.setSelectedIndex(0);
 //        }
