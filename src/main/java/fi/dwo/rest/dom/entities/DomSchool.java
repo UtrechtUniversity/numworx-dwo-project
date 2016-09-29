@@ -62,4 +62,8 @@ public class DomSchool {
     public void setSchoolRights(String schoolRights) {
         this.schoolRights = schoolRights;
     }
+    
+    public Boolean StudentsCanRegisterForSchoolClasses(){
+        return schoolRights.contains("c");
+    }
 }
