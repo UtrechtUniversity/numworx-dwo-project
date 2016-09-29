@@ -60,4 +60,7 @@ public class AppletData {
         this.features = features;
     }
 
+    public String toString() {
+    	return  getAppletName() + " (" + getId() + ")";
+    }
 }
