@@ -20,6 +20,7 @@ import fi.dwo.rest.entities.RestSchoolClass;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import java.text.MessageFormat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +60,7 @@ public class SecuredStudentSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
@@ -103,8 +103,7 @@ public class SecuredStudentSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
@@ -115,8 +114,7 @@ public class SecuredStudentSchoolClassManager {
             try {
                 phr.setClassID(schoolClass.getClassID());
                 HasRoleManager.edit(phr);
-            }
-            catch (PersistenceException e) {
+            } catch (PersistenceException e) {
                 LOG.log(Level.WARNING, "Unexpected persistence exception", e);
             }
             return true;
@@ -147,8 +145,7 @@ public class SecuredStudentSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
@@ -157,13 +154,12 @@ public class SecuredStudentSchoolClassManager {
 
         if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             return SchoolClassUtilManager.removeStudentFromSchoolClass(phr, schoolClass);
-            
+
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove self from a schoolclass id {1} while one or both do not exists or are not in the same school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove yourself from the school class.");
         }
     }
-
 
     /**
      * Removes a student from a school class and returns true if the remove
@@ -186,11 +182,17 @@ public class SecuredStudentSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
+
+        if (!school.studentsCanRegisterForSchoolClasses()) {
+            String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Students are not allowed to subscribe to schoolclasses in school with login {0} for student {1}.", new Object[]{school.getSchoolName(), sc.getUserPrincipal().getName()});
+            LOG.log(Level.WARNING, msg);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
+        }
+
         DomNewSchoolClass4Student q = restSchoolClass.getDomNewSchoolClass4Student();
         PersistenceId id = q.getId();
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(id));
@@ -206,7 +208,6 @@ public class SecuredStudentSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to submit yourself to this school class.");
         }
     }
-
 
     /**
      * Returns the school data to be displayed.
@@ -224,8 +225,7 @@ public class SecuredStudentSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -240,8 +240,7 @@ public class SecuredStudentSchoolClassManager {
                     domSchoolClasses.add(s.createDomSchoolClass());
                 }
                 LOG.log(Level.FINER, "Fetched all {0} schoolClasses of student {1]. ", new Object[]{domSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
             }
@@ -268,8 +267,7 @@ public class SecuredStudentSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
@@ -284,8 +282,7 @@ public class SecuredStudentSchoolClassManager {
                 for (PersistentSchoolClass schoolClass : scList) {
                     domList.add(schoolClass.createDomSchoolClass());
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
             }
