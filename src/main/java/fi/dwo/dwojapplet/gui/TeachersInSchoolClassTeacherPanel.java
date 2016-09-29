@@ -263,7 +263,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
             }
         });
 
-        DomUserListCellRenderer renderer = new DomUserListCellRenderer();
+        DomUserListCellRenderer renderer = new DomUserListCellRenderer(TextMapper.getText(TextMapper.LBL_CLICK_TO_SELECT_A_TEACHER));
 //        if (teacherVector.size() > 0) {
 //            addTeacherBox.setSelectedIndex(0);
 //        }

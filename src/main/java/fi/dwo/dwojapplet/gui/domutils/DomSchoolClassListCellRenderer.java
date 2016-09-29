@@ -17,6 +17,7 @@ import static javax.swing.SwingConstants.CENTER;
  */
 public class DomSchoolClassListCellRenderer extends JLabel
         implements ListCellRenderer {
+    private String emptyText="";
 
     public DomSchoolClassListCellRenderer() {
         setOpaque(true);
@@ -24,6 +25,13 @@ public class DomSchoolClassListCellRenderer extends JLabel
         setVerticalAlignment(CENTER);
     }
 
+    public DomSchoolClassListCellRenderer(String aEmptyText) {
+        setOpaque(true);
+        setHorizontalAlignment(LEFT);
+        setVerticalAlignment(CENTER);
+        emptyText = aEmptyText;
+    }
+    
     /*
          * This method finds the image and text corresponding
          * to the selected value and returns the label, set up
@@ -50,12 +58,26 @@ public class DomSchoolClassListCellRenderer extends JLabel
             setText(sc.getSchoolClassName());
             setFont(list.getFont());
         } else if (value == null) {
-            setText("");
+            setText(getEmptyText());
         } else {
             setText("Object of unsupported type");
         }
 
         return this;
+    }
+
+    /**
+     * @return the emptyText
+     */
+    public String getEmptyText() {
+        return emptyText;
+    }
+
+    /**
+     * @param emptyText the emptyText to set
+     */
+    public void setEmptyText(String emptyText) {
+        this.emptyText = emptyText;
     }
 
 }

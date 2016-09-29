@@ -360,7 +360,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
             }
         });
 
-        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
+        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer(TextMapper.getText(TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLCLASS));
 //        if (schoolClassVector.size() > 0) {
 //            targetSchoolClassBox.setSelectedIndex(0);
 //            targetSchoolClassBox.setEnabled(true);

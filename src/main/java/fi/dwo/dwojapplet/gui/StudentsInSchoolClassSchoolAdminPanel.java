@@ -364,7 +364,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             }
         });
 
-        DomUserListCellRenderer renderer = new DomUserListCellRenderer();
+        DomUserListCellRenderer renderer = new DomUserListCellRenderer(TextMapper.getText(TextMapper.LBL_CLICK_TO_SELECT_A_STUDENT));
 //        if (schoolClassVector.size() > 0) {
 //            studentBox.setSelectedIndex(0);
 //        } else {
