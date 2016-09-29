@@ -211,7 +211,7 @@ public class PersistentSchool implements Serializable {
         return false;
     }
 
-    public Boolean studentsCanRegisterForSchoolClasses(){
+    public boolean studentsCanRegisterForSchoolClasses(){
         return schoolRights.contains("c");
     }
     
