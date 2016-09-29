@@ -118,7 +118,12 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         buildJTable();
 
         registerSchoolClass.addActionListener(this);
-        registerSchoolClass.setVisible(true);
+        if(!DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().StudentsCanRegisterForSchoolClasses()){
+            registerSchoolClass.setVisible(false);
+        }else{
+            registerSchoolClass.setVisible(true);
+        }
+        
 //        switchSchoolClass.addActionListener(this);
 //        switchSchoolClass.setVisible(true);
 //        addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));

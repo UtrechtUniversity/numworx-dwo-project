@@ -56,9 +56,9 @@ public class ClassStudentPanel extends JPanel implements CenterSubPanel, ActionL
 
 
     /**
-     * Returns a Panel that can functionate as a header panel.
+     * Returns a Panel that can function as a header panel.
      *
-     * @return A panel that can functionate as a header panel.
+     * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
