@@ -63,7 +63,7 @@ public class DomSchool {
         this.schoolRights = schoolRights;
     }
     
-    public Boolean StudentsCanRegisterForSchoolClasses(){
+    public boolean studentsCanRegisterForSchoolClasses(){
         return schoolRights.contains("c");
     }
 }
