@@ -13,6 +13,17 @@ public class DomAppletConfig {
 	private String name;
 	private PersistenceId id;
 
+	public DomAppletConfig(DomAppletConfig domAppletConfig) {
+		appletID = domAppletConfig.appletID;
+		language = domAppletConfig.language;
+		launchdata = domAppletConfig.launchdata;
+		name = domAppletConfig.name;
+		id   = domAppletConfig.id.duplicate();
+	}
+
+	public DomAppletConfig() {
+	}
+	
 	public Integer getAppletID() {
 		return appletID;
 	}
@@ -42,6 +53,10 @@ public class DomAppletConfig {
 	}
 	public void setId(PersistenceId id) {
 		this.id = id;
+	}
+
+	public DomAppletConfig duplicate() {
+		return new DomAppletConfig(this);
 	}
 
 }
