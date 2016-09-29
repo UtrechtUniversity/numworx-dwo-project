@@ -115,7 +115,7 @@ public class UserManager {
             }
         }
     }
-
+  
     public static List<PersistentUser> findEntities() {
         return findEntities(true, -1, -1);
     }
@@ -124,6 +124,7 @@ public class UserManager {
         return findEntities(false, maxResults, firstResult);
     }
 
+    //assuming that new users have higher natural ordered indices.
     private static List<PersistentUser> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
