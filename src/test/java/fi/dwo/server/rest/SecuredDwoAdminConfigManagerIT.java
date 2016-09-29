@@ -114,27 +114,49 @@ public class SecuredDwoAdminConfigManagerIT {
 	@Test
 	public void testUpdateAppletConfig() {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
-		RestAppletConfig restDwoProfile;
-		DomAppletConfig  profile;
-		profile = new DomAppletConfig();
-		profile.setId( manager.getConfigurations(sc).get(0).getId());
-		profile.setAppletID(1);
-		profile.setName("other name");
-		profile.setLanguage("ot");
-		profile.setLaunchdata("other data");
-		restDwoProfile = new RestAppletConfig();
-		restDwoProfile.setRestContext(new DomContext());
-		restDwoProfile.setDomAppletConfig(profile);
-		Boolean result = manager.updateConfig(sc, restDwoProfile);
-		assertTrue("submit profile", result.booleanValue());
+		RestAppletConfig restConfig;
+		DomAppletConfig  config;
+		config = new DomAppletConfig();
+		config.setId( manager.getConfigurations(sc).get(0).getId());
+		config.setAppletID(1);
+		config.setName("other name");
+		config.setLanguage("ot");
+		config.setLaunchdata("other data");
+		restConfig = new RestAppletConfig();
+		restConfig.setRestContext(new DomContext());
+		restConfig.setDomAppletConfig(config);
+		Boolean result = manager.updateConfig(sc, restConfig);
+		assertTrue("update profile", result.booleanValue());
 		List<DomAppletConfig> list = manager.getConfigurations(sc);
 		assertEquals("getProfiles listsize", 1, list.size());
 		DomAppletConfig other = list.get(0);
-		assertEquals("get from database", profile.getAppletID(), other.getAppletID());
-		assertEquals("get from database", profile.getLaunchdata(), other.getLaunchdata());
-		assertEquals("get from database", profile.getLanguage(), other.getLanguage());
-		assertEquals("get from database", profile.getName(), other.getName());
-		assertEquals("get from database", profile.getId().getIdString(), other.getId().getIdString());
+		assertEquals("get from database", config.getAppletID(), other.getAppletID());
+		assertEquals("get from database", config.getLaunchdata(), other.getLaunchdata());
+		assertEquals("get from database", config.getLanguage(), other.getLanguage());
+		assertEquals("get from database", config.getName(), other.getName());
+		assertEquals("get from database", config.getId().getIdString(), other.getId().getIdString());
 	}
 
+	@Test
+	public void testRemoveAppletConfig() {
+        SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
+		RestAppletConfig restConfig;
+		DomAppletConfig  config;
+		config = new DomAppletConfig();
+		config.setId( manager.getConfigurations(sc).get(0).getId());
+		config.setAppletID(1);
+		config.setName("other name");
+		config.setLanguage("ot");
+		config.setLaunchdata("other data");
+		restConfig = new RestAppletConfig();
+		restConfig.setRestContext(new DomContext());
+		restConfig.setDomAppletConfig(config);
+		Boolean result = manager.removeConfig(sc, restConfig);
+		assertTrue("remove config", result.booleanValue());
+		List<DomAppletConfig> list = manager.getConfigurations(sc);
+		assertEquals("getProfiles listsize", 0, list.size());
+		result = manager.removeConfig(sc, restConfig);
+		assertFalse("remove twice", result.booleanValue());		
+	}
+	
 }

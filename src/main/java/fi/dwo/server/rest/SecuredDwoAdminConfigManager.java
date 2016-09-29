@@ -1,6 +1,7 @@
 package fi.dwo.server.rest;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,6 +11,7 @@ import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
@@ -33,7 +35,7 @@ public class SecuredDwoAdminConfigManager {
     private static final Logger LOG = Logger.getLogger(SecuredDwoAdminConfigManager.class.getName());
 
     /**
-     * Returns the school data to be displayed.
+     * Returns the applet configs to be displayed.
      *
      * @param sc
      * @return 
@@ -70,6 +72,19 @@ public class SecuredDwoAdminConfigManager {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
+    }
+  
+    @GET
+    @Produces({"application/json"})
+    @Path("/getList/{language}")
+    public List<DomAppletConfig> getConfigurations(@Context SecurityContext sc, @PathParam("language") String language) {
+    	List<DomAppletConfig> list = getConfigurations(sc);
+    	Iterator<DomAppletConfig> it = list.iterator();
+    	while (it.hasNext()) {
+    		DomAppletConfig type = it.next();
+			if(! type.getLanguage().equals(language)) it.remove();
+		}
+    	return list;
     }
     
     /**
