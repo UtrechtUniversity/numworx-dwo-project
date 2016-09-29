@@ -211,6 +211,10 @@ public class PersistentSchool implements Serializable {
         return false;
     }
 
+    public Boolean studentsCanRegisterForSchoolClasses(){
+        return schoolRights.contains("c");
+    }
+    
     public DomSchool createDomSchool() {
         DomSchool school = new DomSchool();
         buildDomSchool(school);
