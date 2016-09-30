@@ -72,7 +72,7 @@
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>2.6.0</version>
                 <configuration>
-                    <module>${project.groupId}.${project.artifactId}</module>
+                    <module>fi.dwo.gwt.lib.rest.${project.artifactId}</module>
                     <runTarget>${project.artifactId}.html</runTarget>
 <!--                    <warSourceDirectory>war</warSourceDirectory>        -->
                     <compileSourcesArtifacts> 
@@ -81,8 +81,8 @@
                     </compileSourcesArtifacts> 
 
                         <i18nConstantsWithLookupBundles>
-                        <i18nConstantsWithLookupBundle>nl.uu.fi.dwo.rest.locale.Dwo2ExceptionMessages</i18nConstantsWithLookupBundle>
-                        <i18nConstantsWithLookupBundle>nl.uu.fi.dwo.rest.locale.DwoLocaleMessages</i18nConstantsWithLookupBundle>
+                        <i18nConstantsWithLookupBundle>fi.dwo.rest.locale.Dwo2ExceptionMessages</i18nConstantsWithLookupBundle>
+                        <i18nConstantsWithLookupBundle>fi.dwo.rest.locale.DwoLocaleMessages</i18nConstantsWithLookupBundle>
                         </i18nConstantsWithLookupBundles>
                     <!-- And the generated sources should be generated in our src dir -->
                     <generateDirectory>${basedir}/src</generateDirectory>
