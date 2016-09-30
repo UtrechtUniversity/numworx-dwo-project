@@ -6,6 +6,7 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>fi.dwo.commons.persistence.entities.PersistentHasRole</class>
     <class>fi.dwo.commons.persistence.entities.PersistentUser</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentLoginContext</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentScoContext</class>
     <class>fi.dwo.commons.persistence.entities.PersistentScoData</class>
     <class>fi.dwo.commons.persistence.entities.PersistentAppletConfig</class>

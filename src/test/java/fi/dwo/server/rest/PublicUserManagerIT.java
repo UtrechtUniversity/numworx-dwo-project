@@ -7,12 +7,14 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.rest.dom.entities.DomContext;
 import fi.dwo.rest.dom.entities.DomLoginCheck;
 import fi.dwo.rest.dom.entities.DomNewUser;
+import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.rest.entities.RestAuthToken;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestNewUser;
 import fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -22,14 +24,20 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.ws.rs.core.SecurityContext;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -158,5 +166,40 @@ public class PublicUserManagerIT {
         result = instance.getLoginCheck(restLoginCheck);
         assertEquals(false, result);
     }        
-        
+    
+    /**
+     * Test getAuthToken format '1'
+     */
+    @Test
+    public void testGetAuthTokenUser() throws Exception {
+// Basic test
+    		PublicUserManager instance = new PublicUserManager();
+    		PersistentUser user = UserManager.findByUserName("user01");
+// Build correct token
+    		String authToken = 
+    			"1\f" + System.currentTimeMillis() + "\f" + user.getUsername() + "\f" + user.getPassword();
+    		authToken = Base64.getUrlEncoder().encodeToString(authToken.getBytes(StandardCharsets.UTF_8));
+    		RestAuthToken rest = new RestAuthToken();
+    		rest.setAuthToken(authToken);
+    		
+    		DomUserFullwLoginContext result = instance.getAuthTokenUser(rest);
+    		
+    		assertEquals( "user01", result.getDomUserFull().getUserName());
+// Too Old test
+    		authToken = 
+			"1\f" + 0L + "\f" + user.getUsername() + "\f" + user.getPassword();
+		authToken = Base64.getUrlEncoder().encodeToString(authToken.getBytes(StandardCharsets.UTF_8));
+		rest = new RestAuthToken();
+		rest.setAuthToken(authToken);
+		
+		try {
+			result = instance.getAuthTokenUser(rest);
+			fail("Too old " + result);
+		} catch (Dwo2RestException e) {
+			System.out.println(e.getMessage());
+		}
+// TODO wrong format/version/user not found tests...
+		
+    }
+    
 }

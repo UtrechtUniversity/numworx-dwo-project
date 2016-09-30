@@ -149,7 +149,11 @@ public class SecuredUserAccountManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
         }
 
-        //al ready retrieved and cached in getCurrentUser
+        return createUserFullwLoginContext(u);
+    }
+
+	public static DomUserFullwLoginContext createUserFullwLoginContext(PersistentUser u) {
+		//al ready retrieved and cached in getCurrentUser
         try {//LoginData may fail, but login should succeed.
             //register login action
             PersistentLogData loginData = new PersistentLogData();
@@ -200,7 +204,7 @@ public class SecuredUserAccountManager {
         result.setDomLoginContext(domLoginContext);
         result.setDomUserFull(u.buildDomUserFull());
         return result;
-    }
+	}
 
     @PUT
     @Produces({"application/json"})
