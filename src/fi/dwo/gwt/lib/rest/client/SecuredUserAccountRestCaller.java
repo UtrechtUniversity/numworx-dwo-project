@@ -13,6 +13,7 @@ import org.fusesource.restygwt.client.RestService;
 
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import fi.dwo.rest.entities.RestAuthToken;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestLoginContext;
 import fi.dwo.rest.entities.RestSamlUser;
@@ -52,5 +53,10 @@ public interface SecuredUserAccountRestCaller extends RestService {
     @GET
     @Path("/secure/user/account/getLoginContext")
     public void getLoginContext(MethodCallback<DomLoginContext> callback);
+
+    @PUT
+    @Path("/public/user/authToken")
+	public void getAuthTokenUser(RestAuthToken restToken,
+			MethodCallback<DomUserFullwLoginContext> restcallback);
     
 }

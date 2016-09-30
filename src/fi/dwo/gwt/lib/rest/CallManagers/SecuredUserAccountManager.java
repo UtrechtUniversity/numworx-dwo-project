@@ -16,6 +16,7 @@ import fi.dwo.rest.dom.entities.DomLoginContext;
 import fi.dwo.rest.dom.entities.DomSamlUser;
 import fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import fi.dwo.rest.entities.RestAuthToken;
 import fi.dwo.rest.entities.RestLoginCheck;
 import fi.dwo.rest.entities.RestLoginContext;
 import fi.dwo.rest.entities.RestSamlUser;
@@ -212,7 +213,27 @@ public class SecuredUserAccountManager {
 		};
 		service.getSamlUser(samlRestUser, restcallback);
 	}
+	public void getAuthTokenUser(String authToken,final AsyncCallback<DomUserFullwLoginContext> userCallback) {
+		RestAuthToken restToken = new RestAuthToken();
+		restToken.setAuthToken(authToken);
+		restToken.setRestContext(new DomContext());
+		MethodCallback<DomUserFullwLoginContext> restcallback = new MethodCallback<DomUserFullwLoginContext>() {
 
+			@Override
+			public void onFailure(Method method, Throwable exception) {
+				userCallback.onFailure(exception);
+			}
+
+			@Override
+			public void onSuccess(Method method, DomUserFullwLoginContext response) {
+				GwtRestVars.instance().setCurrentUser(response.getDomUserFull());
+				userCallback.onSuccess(response);
+			}
+		};
+		service.getAuthTokenUser(restToken, restcallback);
+
+	}
+	
 	
 	public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
 		RestLoginContext restcontext = new RestLoginContext();
