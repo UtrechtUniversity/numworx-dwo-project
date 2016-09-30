@@ -63,6 +63,13 @@ public class RPCHandler {
 		XmlRpcRequest request = new XmlRpcRequest(client, method, params, callback);
 		request.execute();
 	}
+	
+	public void getAuthTokenUser(String authToken, AsyncCallback<? super Map<String,Object>> callback)
+	{
+		Throwable caught = new RuntimeException("");
+		callback.onFailure(caught);
+	}
+	
 
 	private XmlRpcClient xmlRpcClient;
 	

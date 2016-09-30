@@ -105,6 +105,12 @@ public class LoginActivity extends MGWTAbstractActivity
 			clientFactory.getRPCHandler().samlLogin(user_id, org_id, LOGIN_CALLBACK);
 			return;		
 		}
+
+		String authToken = Window.Location.getParameter("a");
+		if(authToken != null)
+		{
+			clientFactory.getRPCHandler().getAuthTokenUser(authToken, LOGIN_CALLBACK);
+		}
 		
 		addHandlerRegistration(view.getLoginBtn().addTapHandler(new TapHandler()
 		{

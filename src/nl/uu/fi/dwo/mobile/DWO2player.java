@@ -269,6 +269,15 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				accountManager.samlLogin(name, org, authToken, userCallback);
 			}
 
+			/* (non-Javadoc)
+			 * @see nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler#getAuthTokenUser(java.lang.String, com.google.gwt.user.client.rpc.AsyncCallback)
+			 */
+			@Override
+			public void getAuthTokenUser(String authToken,
+					AsyncCallback<? super Map<String, Object>> callback) {
+				final AsyncUserCallback userCallback = new AsyncUserCallback(schoolManager, callback);
+				accountManager.getAuthTokenUser(authToken, userCallback);
+			}
 			@Override
 			public void logout() {
 				super.logout();
