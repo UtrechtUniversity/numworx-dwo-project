@@ -1,13 +1,12 @@
-<%@page contentType="text/javascript" pageEncoding="UTF-8"%>
 /**
- * script en css loader
+ * cdplogica script en css loader
  */
 
-var deploy = "//cdn.dwo.nl/apps/"
+var cdplogica = "http://cdplogica.toegang.nu/noordhoff/vo/fi/dwo/2014_v1_0/"
 	
 function script(name) {
 	var elem = document.createElement('script');
-	elem.src = deploy + name;
+	elem.src = cdplogica + name;
 	elem.async = false;
 	document.head.appendChild(elem);
 }
@@ -16,6 +15,6 @@ function css(name) {
 	var elem = document.createElement('link');
 	elem.type='text/css';
 	elem.rel = 'stylesheet';
-	elem.href = deploy + name;
+	elem.href = cdplogica + name;
 	document.head.appendChild(elem);
 }
