@@ -1220,12 +1220,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if (!s.startsWith(formulaStartString))
 		{
-			s = formulaStartString + s;
-		}
-		
-		if (!s.endsWith(formulaEndString))
-		{
-			s = s + formulaEndString;
+			s = formulaStartString + s + formulaEndString;
 		}
 		
 		return s;
@@ -2101,7 +2096,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				viewers.remove(fv);
 				stepPanel.remove(fv.getAsPanel());
 				editor = addNewEditor(stepPanel);
-				editor.insert(latest_answer_viewer.toString());
+				String answer;
+				if (hasPrefix) // in case of a prefix, een prefixviewer is shown and the editor shows the answer without prefix
+					answer = removePrefix(latest_answer_viewer.toString());
+				else
+					answer = latest_answer_viewer.toString();
+				//editor.insert(latest_answer_viewer.toString());
+				editor.insert(answer);
 			}
 			
 		} // for loop over alle stappen 
