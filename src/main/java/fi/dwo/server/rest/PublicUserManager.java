@@ -295,8 +295,8 @@ public class PublicUserManager {
 
     @PUT
     @Produces({"application/json"})
-    @Path("/authToken")
-    public DomUserFullwLoginContext getAuthTokenUser(RestAuthToken restAuthToken) throws Dwo2RestException
+    @Path("/getUserFromAuthToken")
+    public DomUserFullwLoginContext getUserFromAuthToken(RestAuthToken restAuthToken) throws Dwo2RestException
     {
     	String authToken = restAuthToken.getAuthToken();
     	authToken = new String(

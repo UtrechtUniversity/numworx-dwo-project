@@ -182,7 +182,7 @@ public class PublicUserManagerIT {
     		RestAuthToken rest = new RestAuthToken();
     		rest.setAuthToken(authToken);
     		
-    		DomUserFullwLoginContext result = instance.getAuthTokenUser(rest);
+    		DomUserFullwLoginContext result = instance.getUserFromAuthToken(rest);
     		
     		assertEquals( "user01", result.getDomUserFull().getUserName());
 // Too Old test
@@ -193,7 +193,7 @@ public class PublicUserManagerIT {
 		rest.setAuthToken(authToken);
 		
 		try {
-			result = instance.getAuthTokenUser(rest);
+			result = instance.getUserFromAuthToken(rest);
 			fail("Too old " + result);
 		} catch (Dwo2RestException e) {
 			System.out.println(e.getMessage());
