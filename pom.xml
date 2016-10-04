@@ -396,6 +396,7 @@
             <activation>
                 <property>
                     <name>profile.dwo-obfuscate-pack-sign</name>
+                    <value>true</value>
                 </property>
             </activation>            
             <build>
@@ -452,6 +453,7 @@
             <activation>
                 <property>
                     <name>profile.dwo-obfuscate-pack-sign</name>
+                    <value>true</value>
                 </property>
             </activation>              
             <build>
