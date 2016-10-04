@@ -19,15 +19,21 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 				+ "/dwo/rest/public/course/getCourseDescription?courseId=";		
 	}
 
+	@Override
+	public String getResource(String resource) {
+		String base = GWT.getModuleBaseURL() + "../" + resource;
+		return base;
+	}
+
 	public String getHost() {
 //		if(GWT.isProdMode()) 
 			return Window.Location.getHost();
 //		return getDefaultHost();
 	}
 
-	private String getDefaultHost() {
-		return "dummytwo.dwo.nl";
-	}
+//	private String getDefaultHost() {
+//		return "dummytwo.dwo.nl";
+//	}
 
 	@Override
 	public String server() {

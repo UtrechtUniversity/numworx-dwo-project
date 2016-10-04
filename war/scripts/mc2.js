@@ -10,4 +10,5 @@ var mc2 = {
 		"flwidget.FLWidget": "http://hansen.dcs.bbk.ac.uk/fl_DME/public_html/host.php",
 		"ewcbook.EpsilonChatWidget": "http://www.epsilonwriter.com/GWT/EpsilonChat.php",
 		"ewcbook.EpsilonWriterWidget" : "http://www.epsilonwriter.com/GWT/EpsiWriter.php",
+		"susx.susxWidget" : "http://talent.gr/malt/susx/index.php",
 }

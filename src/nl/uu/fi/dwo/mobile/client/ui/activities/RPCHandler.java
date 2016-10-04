@@ -64,7 +64,7 @@ public class RPCHandler {
 		request.execute();
 	}
 	
-	public void getAuthTokenUser(String authToken, AsyncCallback<? super Map<String,Object>> callback)
+	public void getUserFromAuthToken(String authToken, AsyncCallback<? super Map<String,Object>> callback)
 	{
 		Throwable caught = new RuntimeException("");
 		callback.onFailure(caught);

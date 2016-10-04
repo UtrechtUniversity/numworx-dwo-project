@@ -15,6 +15,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
@@ -107,9 +108,18 @@ public class LoginActivity extends MGWTAbstractActivity
 		}
 
 		String authToken = Window.Location.getParameter("a");
-		if(authToken != null)
+		if(authToken != null && ! authToken.isEmpty())
 		{
-			clientFactory.getRPCHandler().getAuthTokenUser(authToken, LOGIN_CALLBACK);
+			if (!logout)
+				clientFactory.getRPCHandler().getUserFromAuthToken(authToken, LOGIN_CALLBACK);
+			else {
+				// redirect to zonder ?a=
+				UrlBuilder builder = Window.Location.createUrlBuilder();
+				builder.removeParameter("a");
+				String buildString = builder.buildString();
+				Window.Location.assign(buildString);
+				return;
+			}
 		}
 		
 		addHandlerRegistration(view.getLoginBtn().addTapHandler(new TapHandler()
