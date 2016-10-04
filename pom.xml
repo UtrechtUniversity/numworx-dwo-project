@@ -76,7 +76,7 @@
                     <runTarget>${project.artifactId}.html</runTarget>
 <!--                    <warSourceDirectory>war</warSourceDirectory>        -->
                     <compileSourcesArtifacts> 
-                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact>
+<!--                         <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact> -->
                         <!--                        <compileSourcesArtifact>fi.dwo.rest:DWO-gwt-lib</compileSourcesArtifact> -->
                     </compileSourcesArtifacts> 
 

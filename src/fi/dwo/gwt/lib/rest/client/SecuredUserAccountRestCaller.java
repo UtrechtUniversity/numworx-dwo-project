@@ -55,8 +55,8 @@ public interface SecuredUserAccountRestCaller extends RestService {
     public void getLoginContext(MethodCallback<DomLoginContext> callback);
 
     @PUT
-    @Path("/public/user/authToken")
-	public void getAuthTokenUser(RestAuthToken restToken,
+    @Path("/public/user/getUserFromAuthToken")
+	public void getUserFromAuthToken(RestAuthToken restToken,
 			MethodCallback<DomUserFullwLoginContext> restcallback);
     
 }

@@ -213,7 +213,7 @@ public class SecuredUserAccountManager {
 		};
 		service.getSamlUser(samlRestUser, restcallback);
 	}
-	public void getAuthTokenUser(String authToken,final AsyncCallback<DomUserFullwLoginContext> userCallback) {
+	public void getUserFromAuthToken(String authToken,final AsyncCallback<DomUserFullwLoginContext> userCallback) {
 		RestAuthToken restToken = new RestAuthToken();
 		restToken.setAuthToken(authToken);
 		restToken.setRestContext(new DomContext());
@@ -230,7 +230,7 @@ public class SecuredUserAccountManager {
 				userCallback.onSuccess(response);
 			}
 		};
-		service.getAuthTokenUser(restToken, restcallback);
+		service.getUserFromAuthToken(restToken, restcallback);
 
 	}
 	
