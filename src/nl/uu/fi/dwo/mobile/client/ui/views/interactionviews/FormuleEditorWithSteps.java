@@ -798,7 +798,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if(editor != null && editor.getAsPanel().getParent() == current)
 		{	if(current.getParent() == contentPanel) // FIXME why? 
 				contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
-			current.setWidgetTopHeight(editor.getAsPanel(), hasPrefix?Math.max(prefixViewer.getAsHoogte() - editor.getAsHoogte(), 0):0, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
+			current.setWidgetTopHeight(editor.getAsPanel(), hasPrefix?Math.max(prefixViewer.getAsHoogte() - editor.getMainRegel().getAsHoogte(), 0):0, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 			current.setWidgetLeftWidth(editor.getAsPanel(), hasPrefix?prefixViewer.getWidth() + 23:23, Style.Unit.PX, editor.getMainRegel().getWidth(), Style.Unit.PX);
 			if(hasPrefix)
 			{	current.setWidgetTopHeight(prefixViewer.getAsPanel(), Math.max(editor.getMainRegel().getAsHoogte() - prefixViewer.getMainRegel().getAsHoogte(), 0), Style.Unit.PX, prefixViewer.getHeight(), Style.Unit.PX);
