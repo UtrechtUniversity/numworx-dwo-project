@@ -14,7 +14,6 @@ import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FacetHelper;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
-import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
@@ -49,6 +48,7 @@ import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -63,7 +63,6 @@ import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.RestartException;
-import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.repr.ContentMathML;
@@ -83,6 +82,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
 	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
 	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
+
+	private static final String DECIMAL = LocaleInfo.getCurrentLocale().getNumberConstants().decimalSeparator();
+	private static final char PERIOD = '.';
 
 	private int extraWidth = 23 ; // of 43; breedte voor nakijkplaatje en als nodig voor knop voor uitklappen.
 	
@@ -776,6 +778,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (comRoot != null) // alleen niet null als fewa een toplevel is.
 		{
 			comRoot.fireEvent(new CBookEvent(this, "input", toString()));
+			if (isDouble(toString()))
+			{
+				// zorgt dat voor locale met ','-separator de double waarde ook goed wordt doorgegeven
+				// anders volgt NumberFormatException aan de kant van de double-ontvanger
+				comRoot.fireEvent(new CBookEvent(this, "double", getDoubleValue(toString()).toString()));
+			}
 		}
 		else if (fe != null)
 		{
@@ -787,6 +795,89 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			Map<String, Object> map = buildLoggingMap();
 			logging.log(map);
 		}
+	}
+
+	/**
+	 * Deze methode checkt of de betreffende string een double bevat,
+	 * eerst met het locale scheidingsteken daarna eventueel nog met ".".
+	 * 
+	 * @param string
+	 * @return
+	 */
+	private boolean isDouble(String string)
+	{
+		boolean isDouble = false;
+		String doubleString = string;
+		
+		final String DECIMAL = LocaleInfo.getCurrentLocale().getNumberConstants().decimalSeparator();
+
+		if (doubleString.contains(DECIMAL))
+		{
+			doubleString = doubleString.replace(DECIMAL.charAt(0), '.'); // replace with default decimal separator 
+		}
+		
+		try
+		{
+			Double.parseDouble(doubleString);
+			isDouble = true;
+		}
+		catch (NumberFormatException e)
+		{
+			isDouble = false;
+		}
+		
+		return isDouble;
+	}
+	
+	/**
+	 * Get the double value in the given string using first the 
+	 * locale decimal separator or else the default
+	 * separator '.'. 
+	 * 
+	 * For example, if the local decimal separator is ','
+	 * and the given string is "4,5", the double 4.5 is returned.
+	 * If the local decimal separator is ',' and the given string
+	 * is "4.5", the double 4.5 is returned.
+	 * 
+	 * @param s
+	 * @return
+	 */
+	private Double getDoubleValue(String s)
+	{
+		double d;
+		
+		String doubleString = s;
+		
+		final String DECIMAL = LocaleInfo.getCurrentLocale().getNumberConstants().decimalSeparator();
+
+		if (doubleString.contains(DECIMAL))
+		{
+			doubleString = doubleString.replace(DECIMAL.charAt(0), '.'); // replace with default decimal separator 
+		}
+
+		try
+		{
+			d = Double.parseDouble(doubleString);
+		}
+		catch (NumberFormatException e)
+		{
+			return null;
+		}
+		
+		return d;
+	}
+	
+	/**
+	 * Replace the default '.' decimal separator with the local separator.
+	 * 
+	 * @param s
+	 * @return
+	 */
+	private String replaceWithLocalDecimalSeparator(String s)
+	{
+		String replacedString = s.replace(PERIOD, DECIMAL.charAt(0));
+		
+		return replacedString;
 	}
 
 	Map<String, Object> buildLoggingMap() {
@@ -1412,6 +1503,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		comRoot.addCBookEventListener("input", this);
 		comRoot.addCBookEventListener("index", this);
+		comRoot.addCBookEventListener("double", this);
 		if(logging != null) 
 			logging.setCommunicationRoot(comRoot);
 	}
@@ -1476,8 +1568,37 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if ("balansvergelijking".equals(event.getCommand()))
 		{
 			message = event.getParameter("balansvergelijking").toString();
-		} else
+		}
+		else if ("double".equals(event.getCommand()))
+		{
+			Map map = (Map) event.getParameters();
+
+			if (map != null) // message staat er altijd in dus nooit null...
+			{
+				String name = (String) map.get("name");
+				
+				if (name != null)
+				{
+					double waarde = ((Double) map.get("value")).doubleValue();
+					message = String.valueOf(waarde);
+				}
+				else
+				{
+					message = event.getMessage();
+				}
+			}
+			else
+			{
+				message = event.getMessage();
+			}
+			
+			message = replaceWithLocalDecimalSeparator(message); // show the local decimal separator
+		}
+		else
+		{
 		    message = event.getMessage();
+		}
+		
 		message = strip$f(message);
 		clearMain();
 		insert(message); // Of zo iets.Strip $F en @
