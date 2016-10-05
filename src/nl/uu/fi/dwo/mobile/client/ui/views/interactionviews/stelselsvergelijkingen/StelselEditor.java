@@ -292,16 +292,61 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		if(map.containsKey("formuleVakInhouden"))
 			formuleVakInhouden = map.getStringArray("formuleVakInhouden");
 		if(map.containsKey("eindOplossingExactGevondenArrays"))
-			//TODO: deze arrays netter uit map halen
-			eindOplossingExactGevondenArrays = (boolean[][][]) h.get("eindOplossingExactGevondenArrays");
+		{
+			ObjectList list = ( map.getObjectList("eindOplossingExactGevondenArrays"));
+			eindOplossingExactGevondenArrays = new boolean[list.size()][][];
+			for(int i = 0; i < list.size(); i++)
+			{
+				ObjectList list2 = list.getObjectList(i);
+				try{
+					eindOplossingExactGevondenArrays[i] = new boolean[list2.size()][];
+					for(int j = 0; j < list2.size(); j++)
+					{	eindOplossingExactGevondenArrays[i][j] = list2.getBooleanArray(j);
+					}
+				}
+				catch(Exception e)
+				{
+				}
+			}
+		}
 		if(map.containsKey("eindOplossingGevondenArrays"))
-			eindOplossingGevondenArrays = (boolean[][][]) h.get("eindOplossingGevondenArrays");
+		{	ObjectList list = ( map.getObjectList("eindOplossingGevondenArrays"));
+			eindOplossingGevondenArrays = new boolean[list.size()][][];
+			for(int i = 0; i < list.size(); i++)
+			{
+				ObjectList list2 = list.getObjectList(i);
+				try{
+					eindOplossingGevondenArrays[i] = new boolean[list2.size()][];
+					for(int j = 0; j < list2.size(); j++)
+					{	eindOplossingGevondenArrays[i][j] = list2.getBooleanArray(j);
+					}
+				}
+				catch(Exception e)
+				{
+				}
+			}
+		}
 		if(map.containsKey("eindOplossingStelselGevondenArrays"))
-			eindOplossingStelselGevondenArrays = (boolean[][][]) h.get("eindOplossingStelselGevondenArrays");
+		{	ObjectList list = ( map.getObjectList("eindOplossingStelselGevondenArrays"));
+			eindOplossingStelselGevondenArrays = new boolean[list.size()][][];
+			for(int i = 0; i < list.size(); i++)
+			{
+				ObjectList list2 = list.getObjectList(i);
+				try{
+					eindOplossingStelselGevondenArrays[i] = new boolean[list2.size()][];
+					for(int j = 0; j < list2.size(); j++)
+					{	eindOplossingStelselGevondenArrays[i][j] = list2.getBooleanArray(j);
+					}
+				}
+				catch(Exception e)
+				{
+				}
+			}
+		}
 		if(map.containsKey("ingevuld"))
-			ingevuld = ((Boolean) map.get("ingevuld")).booleanValue();
+			ingevuld = map.getBoolean("ingevuld");
 		if(map.containsKey("nagekeken"))
-			nagekeken = ((Boolean) map.get("nagekeken")).booleanValue();
+			nagekeken = map.getBoolean("nagekeken");
 		
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
