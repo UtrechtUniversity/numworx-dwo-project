@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
@@ -62,7 +63,7 @@ public class ImportScorm extends GuiAction {
 		}
 	}
 		
-	private void readZip(String zipName, Sco sco)
+	public static  void readZip(String zipName, Sco sco)
 	{	try 
 		{	ZipFile zipFile = new ZipFile(zipName);
 			ZipEntry entry = zipFile.getEntry("sco/Sco.htm");
@@ -106,6 +107,13 @@ public class ImportScorm extends GuiAction {
 					string = string.substring(end+2);
 					start = string.indexOf("<PARAM");
 					end = string.indexOf("/>");
+				}
+				if(params.containsKey("launchData"))
+				{
+					// unwrap launchData
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					params = (Hashtable)
+							StringCodeObject.decodeStringToObject(params.get("launchData").toString(), cl);
 				}
 				sco.setEditLaunchdata(params);
 		    }
