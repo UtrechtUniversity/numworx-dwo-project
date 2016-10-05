@@ -92,13 +92,14 @@ public abstract class XMLView {
 	public boolean zelftoetsGeenCorr = false;
 	public boolean eerderGeenCorr = false;
 	
-	private int[][][][] scoresObjectives;
+	//private int[][][][] scoresObjectives;
 	public static String[][] objectives;
 	private String[] categorieString;
-	private int[][][][] scoresMaxObjectives;
+	//private int[][][][] scoresMaxObjectives;
 	protected boolean pilotObjectives = false;
 	public static String[][] misconceptions;
 	private String[] mccCategorieString;
+	public int[][][][] measuredMisconceptions;
 	boolean objectivesAanwezig;
 	boolean globalParam;
 	

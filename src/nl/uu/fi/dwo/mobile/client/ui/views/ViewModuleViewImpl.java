@@ -107,12 +107,14 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	Label disableScreen = new Label("");
 	
 	private Widget next, prev, end;
-	
+	private int[][][] beginStateMeasuredMisconceptions;
 
 	private Scorm2004IF api;
 
 	public ViewModuleViewImpl(boolean b) {
 		standalone = b;
+		
+		
 		
 	}
 	
@@ -218,6 +220,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 // authELO
 			scoreNav.setAuthELOcheck(wrap.getBoolean("authELOcheck", false));
 			scoreNav.setAuthELOhelp(wrap.getBoolean("authELOhelp", false));
+			
 		}
 		catch (Exception e)
 		{
@@ -582,6 +585,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		
 		setState(state);
+		
 		if(on.isEindtoetsVerzegeld()) {
 			zetNagekeken(true);
 			kijkNa();
@@ -816,6 +820,30 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentPanel.add(fews.getAsPanel());
 	}
 
+	public void setMeasuredMisconceptions(int[][][][] mm)
+	{
+		if(mm == null)
+			return;
+		measuredMisconceptions = new int[mm.length][][][];
+		for(int i = 0; i < mm.length; i++)
+		{	measuredMisconceptions[i] = new int[mm[i].length][][];
+			for(int j = 0; j < measuredMisconceptions[i].length; j++)
+			{
+				measuredMisconceptions[i][j] = new int[mm[i][j].length][];
+				for(int k = 0; k < measuredMisconceptions[i][j].length; k++)
+				{	measuredMisconceptions[i][j][k] = new int[mm[i][j][k].length];
+					for(int l = 0; l < measuredMisconceptions[i][j][k].length; l++)
+						measuredMisconceptions[i][j][k][l] = mm[i][j][k][l];
+				}
+			}
+		}
+	}
+	
+	public void setMeasuredMisconceptions(int actNr, int opdrNr, int[][] mm)
+	{
+		
+	}
+	
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.on = (OpdrNav) comRoot;
@@ -868,7 +896,18 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		on.unpause(old);
 		stelNavigatieIn();
-
+		if(misconceptions != null)
+		{
+			beginStateMeasuredMisconceptions = new int[opdrachtObjects.size()][][];
+			for (int i = 0; i < opdrachtObjects.size(); i++)
+			{
+				Object currentObject = opdrachtObjects.get(i);
+				if (currentObject instanceof InteractionViewWithMisconceptions)
+				{
+					beginStateMeasuredMisconceptions[i] = ((InteractionViewWithMisconceptions) currentObject).getMeasuredMisconceptions();
+				}
+			}
+		}
 	}
 	
 	public void kijkNa()
@@ -992,20 +1031,26 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if (misconceptions == null)
 			return null;
 		int[][] totalMeasuredMisconceptions = new int[misconceptions.length][];
-		for (int i = 0; i < misconceptions.length; i++)
-			totalMeasuredMisconceptions[i] = new int[misconceptions[i].length];
+		for(int i = 0; i < misconceptions.length; i++)
+		{	totalMeasuredMisconceptions[i] = new int[misconceptions[i].length];
+			for(int j = 0; j < misconceptions[i].length; j++)
+				totalMeasuredMisconceptions[i][j] += measuredMisconceptions[on.getCurrentActiviteit()][on.getCurrentOpdracht()][i][j]; 
+		}
 		for (int i = 0; i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
 			if (currentObject instanceof InteractionViewWithMisconceptions)
 			{
-				int[][] measuredMisconceptions = ((InteractionViewWithMisconceptions) currentObject).getMeasuredMisconceptions();
-				for (int j = 0; measuredMisconceptions != null && j < misconceptions.length && j < measuredMisconceptions.length; j++)
+				int[][] opdrMeasuredMisconceptions = ((InteractionViewWithMisconceptions) currentObject).getMeasuredMisconceptions();
+				for (int j = 0; opdrMeasuredMisconceptions != null && j < misconceptions.length && j < opdrMeasuredMisconceptions.length; j++)
 				{
-					for (int k = 0; measuredMisconceptions[j] != null && k < misconceptions[j].length && k < measuredMisconceptions[j].length; k++)
-						try{	totalMeasuredMisconceptions[j][k] += measuredMisconceptions[j][k];
+					for (int k = 0; opdrMeasuredMisconceptions[j] != null && k < misconceptions[j].length && k < opdrMeasuredMisconceptions[j].length; k++)
+					{	if(beginStateMeasuredMisconceptions == null || beginStateMeasuredMisconceptions[i][j][k] == 0)
+						{	try{	totalMeasuredMisconceptions[j][k] += opdrMeasuredMisconceptions[j][k];
+							}
+							catch(Exception e){}
 						}
-						catch(Exception e){}
+					}
 				}
 			}
 		}

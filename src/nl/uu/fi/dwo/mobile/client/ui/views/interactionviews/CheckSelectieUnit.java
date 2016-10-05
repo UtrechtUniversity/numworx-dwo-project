@@ -233,6 +233,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	            }
 	        }
         }
+        boolean changedTemp = changed;
         
         if(juist)
         {   //goedKrulImage.setVisible(true);
@@ -247,11 +248,11 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
             correct = false;
             fout = true;
             verhoogErrorCount();
-        	score = 0;
+            score = 0;
         }
         
         if(show && check)
-        {	if (ingevuld && changed)
+        {	if (ingevuld && changedTemp)
     			comRoot.setChanged(teltMee && !juist);
         	nakijkAchtergrond.setVisible(true);
         	if(correct)

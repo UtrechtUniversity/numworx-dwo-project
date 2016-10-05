@@ -275,6 +275,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		memento.getStrafpunten(strafpunten);
 		memento.getOrGoedFout(isCorrect);
 		memento.getScores(scores);
+		if(objectives != null)
+			memento.getScoresObjectives(scoresObjectives);
+		if(misconceptions != null)
+		{
+			memento.getPossibleMisconceptions(possibleMisconceptions);
+			memento.getMeasuredMisconceptions(measuredMisconceptions);
+			entry.setMeasuredMisconceptions(measuredMisconceptions); 
+		}
 		
 		contentPanel = new FlowPanel();
 		contentPanel.getElement().getStyle().setMargin(5, Unit.PX);
@@ -812,7 +820,6 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	private void saveCurrentState0() {	
 		saveCurrentState_stap1();		
-		
 		memento.setCurrentActiviteit(currentActiviteit);
 		memento.setCurrentOpdracht(currentOpdracht);
 		memento.setOrGoedFout(isCorrect);
@@ -820,6 +827,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 // THIS ORDER!!!!!
 		memento.setScore(score);
 		memento.setScores(scores);
+		if(misconceptions != null)
+		{
+			memento.setPossibleMisconceptions(possibleMisconceptions);
+			memento.setMeasuredMisconceptions(measuredMisconceptions);
+		}
+		if(objectives != null)
+			memento.setScoresObjectives(scoresObjectives);
 		memento.setBezocht(entry.bezocht);
 		memento.setZelftoetsNagekeken(entry.zelftoetsNagekeken);
 		memento.setAantalNakijken(aantalNakijken);
@@ -860,7 +874,6 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	private void fetchScores() {
 		int scoreCorrected = entry.getScore();
-		
 		scores[currentActiviteit][currentOpdracht] = scoreCorrected;
 		isCorrect[currentActiviteit][currentOpdracht] = Boolean.TRUE == entry.isCorrect();
 		if (objectives != null)
@@ -870,7 +883,6 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			possibleMisconceptions[currentActiviteit][currentOpdracht] = entry.getPossibleMisconceptions();
 			measuredMisconceptions[currentActiviteit][currentOpdracht] = entry.getMeasuredMisconceptions();
 		}
-
 	}	
 	
 	public void kijkToetsNa()
@@ -992,7 +1004,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if (states[currentActiviteit][currentOpdracht] == null)
 			entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
 		else
-			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
+		{	entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
+			if(misconceptions != null)
+				entry.setMeasuredMisconceptions(measuredMisconceptions);
+		}
 		if(entry.isPilotObjectives())
 		{
 			if(currentOpdracht == states[currentActiviteit].length - 1 && entry.isPilotObjectives())
@@ -1443,6 +1458,21 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		isCorrect[currentActiviteit][opdracht] = false;
 		scores[currentActiviteit][opdracht] = 0;
 		states[currentActiviteit][opdracht] = null;
+		if(objectives != null)
+		{
+			for (int i = 0; i < objectives.length; i++)
+			{
+				scoresObjectives[currentActiviteit][opdracht][i] = new int[objectives[i].length];
+			}
+		}
+		if(misconceptions != null)
+		{
+			for (int i = 0; i < misconceptions.length; i++)
+			{
+				possibleMisconceptions[currentActiviteit][opdracht][i] = new int[misconceptions[i].length];
+				measuredMisconceptions[currentActiviteit][opdracht][i] = new int[misconceptions[i].length];
+			}
+		}
 		if(strafpunten != null) 
 			strafpunten[currentActiviteit][opdracht] = 0;
 		source.setItemScore(opdracht, 0);

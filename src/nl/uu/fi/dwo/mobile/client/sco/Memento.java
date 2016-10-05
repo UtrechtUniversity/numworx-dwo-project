@@ -328,6 +328,58 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 	}
 	
+	public void getScoresObjectives(int[][][][] o)
+	{
+		getIntArrayArrayArrayArray(o, (JSONArray) onsState.get("scoresObjectives"));
+	}
+	
+	public void getPossibleMisconceptions(int[][][][] o)
+	{
+		getIntArrayArrayArrayArray(o, (JSONArray) onsState.get("possibleMisconceptions"));
+	}
+	
+	public void getMeasuredMisconceptions(int[][][][] o)
+	{
+		getIntArrayArrayArrayArray(o, (JSONArray) onsState.get("measuredMisconceptions"));
+	}
+	
+	
+	private void getIntArrayArrayArrayArray(int[][][][] o, JSONArray source) {
+		
+		if(o == null) return;
+		if(source == null) {
+			for(int i = 0; i < o.length; i++){
+				int[][][] oi = o[i];
+				for(int j = 0; j < oi.length; j++){
+					int[][] oij = oi[j];
+					for(int k = 0; k < oij.length; k++){
+						int[] oijk = oij[k];
+						for(int l = 0; l < oijk.length; l++){
+							oijk[l] = 0;
+						}
+					}
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < o.length; i++) {
+				JSONArray array1 = getArray(i, source);
+				int[][][] oi = o[i];
+				for(int j = 0; j < oi.length; j++){
+					JSONArray array2 = getArray(j, array1);
+					int[][] oij = oi[j];
+					for(int k = 0; k < oij.length; k++){
+						JSONArray array3 = getArray(k, array2);
+						int[] oijk = oij[k];
+						for(int l = 0; l < oijk.length; l++){
+							oijk[l] = getInt(array3, l);
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	public void getOrGoedFout(boolean[][] o) {
 		if(o == null) return;
 		if(opdrGoedFout == null) {
@@ -658,7 +710,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			}
 		}
 	}
-
+	
 	public void setBezocht(boolean[][] bezocht) {
 		if(bezocht == null) return;
 		for (int i = 0; i < bezocht.length; i++) {
@@ -747,4 +799,20 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		shareMap = obj;
 		onsState.put(SHARE_MAP, obj);
 	}
+
+	public void setPossibleMisconceptions(int[][][][] possibleMisconceptions) {
+		JSONValue result = JSONUtilities.toJSONValue(possibleMisconceptions);
+		onsState.put("possibleMisconceptions", result);
+	}
+
+	public void setMeasuredMisconceptions(int[][][][] measuredMisconceptions) {
+		JSONValue result = JSONUtilities.toJSONValue(measuredMisconceptions);
+		onsState.put("measuredMisconceptions", result);
+	}
+
+	public void setScoresObjectives(int[][][][] scoresObjectives) {
+		JSONValue result = JSONUtilities.toJSONValue(scoresObjectives);
+		onsState.put("scoresObjectives", result);
+	}
+
 }
