@@ -8,7 +8,7 @@
 %>
 	<meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link type="text/css" rel="stylesheet" href="/dwo/apps/DWOplayer.css">
+    <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
     <meta name="gwt:property" content="locale=nl" >
         <script>
     	function logout() {
