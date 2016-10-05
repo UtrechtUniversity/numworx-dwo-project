@@ -407,6 +407,7 @@
                     <path>/dwo</path>
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                     <contextFile>src/test/tomcat/context.xml</contextFile>
+                    <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
                 </configuration>
                 <dependencies>
                 	<dependency>

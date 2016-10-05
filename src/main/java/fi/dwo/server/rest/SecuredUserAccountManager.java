@@ -39,7 +39,9 @@ import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -222,6 +224,21 @@ public class SecuredUserAccountManager {
     }
 
     /**
+     * Returns the DomUserFull if the form parameter equals the security context
+     * user name otherwise a 401.
+     * Necessary for stubborn browsers that keep authorization to long in cache.
+     * POST to relax jamon resources.
+     * @param sc security context
+     * @param user us
+     * @return 
+     */
+    @POST
+    @Path("/loginUser")
+    public Response loginUserWithPOST(@Context SecurityContext sc, @FormParam("user") String user) {
+    	return loginUser(sc, user);
+    }
+    
+    /**
      * Returns the DomUserFull if the path parameter equals the security context
      * user name otherwise a 401.
      *
@@ -229,6 +246,7 @@ public class SecuredUserAccountManager {
      * @param user us
      * @return 
      */
+    @Deprecated
     @GET
     @Path("/loginUser/{user}")
     public Response loginUser(@Context SecurityContext sc, @PathParam("user") String user) {
@@ -246,19 +264,6 @@ public class SecuredUserAccountManager {
                     build();
         }
         return result;
-//      //original code that does no longer matches Account.
-//        DomUserFull domUser = loginUser(sc).getDomUserFull();
-//        String domUserName = domUser.getUserName();
-//        if (domUserName.equals(user)) {
-//            result = Response.ok().
-//                    type(MediaType.APPLICATION_JSON_TYPE).
-//                    entity(domUser).build();
-//        } else {
-//            result = Response.status(Response.Status.UNAUTHORIZED).
-//                    header("WWW-Authenticate", "Basic realm=\"DWO.nl\"").
-//                    build();
-//        }
-//        return result;
     }
 
     /**
