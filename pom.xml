@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fi.servlet</groupId>
     <artifactId>DWOmAccess</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>DWOmAccess</name>
     <description>HTML5 access to dwo-server</description>
@@ -233,12 +233,12 @@
         </profile>
     </profiles>
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOmAccess/tags/DWOmAccess-0.0.7</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOmAccess/branches/dwo2</developerConnection>
     </scm>
     <parent>
     	<groupId>nl.uu.fi.dwo</groupId>
     	<artifactId>DWO</artifactId>
-    	<version>2.1.2</version>
+    	<version>2.0-SNAPSHOT</version>
     	<relativePath>../DWO</relativePath>
     </parent>
 </project>
