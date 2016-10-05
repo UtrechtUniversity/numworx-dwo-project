@@ -208,8 +208,12 @@ public abstract class XMLView {
 					{}
 				}
 			}
+			else
+				objectives = null;
 			if(wrap.containsKey("categorieString"))
 				categorieString = wrap.getStringArray("categorieString");
+			else
+				categorieString = null;
 			if(wrap.containsKey("pilotObjectives"))
 				pilotObjectives = wrap.getBoolean("pilotObjectives");
 			if (wrap.containsKey("misconceptions"))
@@ -224,9 +228,12 @@ public abstract class XMLView {
 					{}
 				}
 			}
+			else
+				misconceptions = null;
 			if(wrap.containsKey("mccCategorieString"))
 				mccCategorieString = wrap.getStringArray("mccCategorieString");
-
+			else
+				mccCategorieString = null;
 			OpdrNav.setObjectives(objectives);
 			OpdrNav.setCategorieString(categorieString);
 			OpdrNav.setMisconceptions(misconceptions);
