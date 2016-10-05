@@ -27,6 +27,8 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -61,6 +63,9 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private String pendingState;
 	private ObjectMap randomVars;
 	private ImageTextButton checkBtn;
+	private HTML checkLbl;
+	private String kijkNa = KIJK_NA;
+	private HasHTML checkWidget;
 	private int aantalExistingObjects;
 	private boolean nakijkenGemaakteObjecten;
 	private String[] geogebraCheckObjects;
@@ -263,6 +268,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 				public void onClick(ClickEvent event) {
 					onCheck();
 				}} );
+			checkWidget = checkBtn;
+			checkLbl = new HTML("\u00A0");
 			checkBtn.getElement().getStyle().setPaddingBottom(0, Unit.PX);
 			checkBtn.getElement().getStyle().setPaddingTop(0,Unit.PX);
 			AbsolutePanel hp = new AbsolutePanel();
@@ -272,8 +279,14 @@ public class GeogebraView implements InteractionView, LoadHandler
 			vp.setPixelSize(this.width, KIJK_NA_HEIGHT);
 			vp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 			vp.add(checkBtn);
-			if(nakijken && comRoot != null && comRoot.getMode() > 1) 
-				checkBtn.setVisible(false);
+			vp.add(checkLbl); checkLbl.setVisible(false);
+			if(comRoot != null && comRoot.getMode() > 1) 
+			{
+				checkBtn.removeFromParent();
+				checkWidget = checkLbl;
+				checkLbl.setVisible(true);
+				kijkNa = "\u00A0";
+			} 
 			hp.add(vp, 0, this.height-KIJK_NA_HEIGHT);
 			mainPanel.setWidget(hp);
 		}
@@ -309,10 +322,10 @@ public class GeogebraView implements InteractionView, LoadHandler
 	 * Kijk na button met en zonder rood kruisje/groen vinke
 	 */
 	private void setCheckImg() {
-		if(checkBtn == null) return;
+		if(checkWidget == null) return;
 		
 		if(Boolean.TRUE.equals(correct))
-			checkBtn.setHTML(KIJK_NA +
+			checkWidget.setHTML(kijkNa +
 					"<img style='vertical-align: top' src='" +
 				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri().asString() +
 				"' >"
@@ -320,7 +333,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 					
 					);
 		else if(Boolean.FALSE.equals(correct))
-			checkBtn.setHTML(KIJK_NA +
+			checkWidget.setHTML(kijkNa +
 					"<img style='vertical-align: top' src='" +
 				FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri().asString() +
 				"' >"
@@ -328,7 +341,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 					);
 		else if(nagekeken)
 		{
-			checkBtn.setHTML(KIJK_NA +
+			checkWidget.setHTML(kijkNa +
 					"<img style='vertical-align: top' src='" +
 				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri().asString() +
 				"' >"
@@ -336,7 +349,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 					);
 		
 		} else
-			checkBtn.setHTML(KIJK_NA);
+			checkWidget.setHTML(kijkNa);
 	}
 
 	@Override
@@ -516,8 +529,11 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if(dir != null) dir = dir.replace('-', '/')+'/'; else dir ="";
 		int mode = comRoot.getMode();
 		if(nakijken & mode > 1 && checkBtn != null) {
-			// FIXME haal checkbutton weg.
-			checkBtn.setVisible(false);
+			// haal checkbutton weg, insert een label
+			checkBtn.removeFromParent();
+			checkWidget = checkLbl;
+			checkLbl.setVisible(true);
+			kijkNa = "\u00A0";
 		}
 		if(bigdata) {
 			createGgbParams();
