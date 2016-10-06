@@ -40,7 +40,7 @@
   <inherits name="com.google.gwt.http.HTTP"/> 
   <inherits name="fi.wiskopdr.WiskOpdr"/>
   <inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
-  <inherits name="fi.dwo.rest.DWO-rest-lib"/>
+  <inherits name="nl.uu.fi.dwo.rest.DWO-rest-lib"/>
   <inherits name="nl.uu.fi.dwo.account.Account-DWO" />
   
 <!-- Only run test on safari, this speeds up the unit testing, should not be included in release-trunk -->

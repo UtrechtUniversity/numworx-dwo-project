@@ -28,27 +28,22 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.MGWTStyle;
-import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
-
-import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.CallManagers.LoginPresenter;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
-import fi.dwo.rest.dom.entities.DomLoginContext;
-import fi.dwo.rest.dom.entities.DomSchoolClass;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
-import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
-import fi.dwo.rest.dom.entities.RoleType;
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.persistence.PersistenceClassType;
-import fi.dwo.rest.persistence.PersistenceId;
-import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class DWO2player extends DWOplayer implements EntryPoint {
 
