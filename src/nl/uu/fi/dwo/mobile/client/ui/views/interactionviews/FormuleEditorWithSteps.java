@@ -2898,7 +2898,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (show && !substitutieVak)
 			if (!eigenOpdr || stapNr > 0) // eigenopdracht niet tonen voor stapNr 0
 			{
-				fv.showResult(FormuleViewer.ALMOSTCORRECT); // waarom? Voor bordjesmethode kom ik hier met een goed antwoord...
+				if (bordjesMethode && correct != null && isCorrect() && !isToets())
+					fv.showResult(FormuleViewer.CORRECT);
+				else
+					fv.showResult(FormuleViewer.ALMOSTCORRECT); // waarom? Niet altijd. Voor bordjesmethode kom ik hier met een goed antwoord...
 			}
 		else if (!isToets())
 			fv.showResult(FormuleViewer.NONE);
@@ -2916,16 +2919,19 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		latest_answer_viewer = fv;
 		viewers.add(fv);
 
-		if (bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar()))
-		{	
-			fv.showResult(FormuleViewer.CORRECT);
-			if (isToets() && nagekeken && !isVeranderdNaNakijken)
-				setAndAddFeedback(Text.constants.feedbackTekst04());
-			//"De vergelijking is correct opgelost."
-			stapOk = false;
-			//nagekeken = true; // niet voor een toets. Waarom uberhaupt?
-			correct = Boolean.TRUE;
-			score = scoreMax;
+		//if (bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar())) // isEindOplossing() rekent alles goed in de eindvorm "x=..."
+		if (bordjesMethode && correct != null && isCorrect())
+		{
+			// wat voegt dit eigenlijk toe? -> voor bordjesmethode oefenen moet de bol groen worden bij een correct antwoord
+			
+//			fv.showResult(FormuleViewer.CORRECT);
+//			if (isToets() && nagekeken && !isVeranderdNaNakijken)
+//				setAndAddFeedback(Text.constants.feedbackTekst04());
+//			//"De vergelijking is correct opgelost."
+//			stapOk = false;
+//			//nagekeken = true; // niet voor een toets. Waarom uberhaupt?
+//			correct = Boolean.TRUE; // waarom eigenlijk? Nu wordt ieder antwoord in de eindvorm goed gerekend...
+//			score = scoreMax;
 			if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 				score = Math.max(0, scoreMax - errorCount * foutStraf);
 			if (!setState) // voor een zelftoets die al is nagekeken, wordt hierdoor het antwoord goed getoond met groene bol -> gefixt in OpdrNav.setChanged()
@@ -3400,5 +3406,25 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if(avChecker != null)
 			return avChecker.getPossibleMisconceptions();
 		return null;
+	}
+
+	/**
+	 * Methode om correct te laten zetten door FormuleEditorWithAnswer.
+	 * 
+	 * @param b
+	 */
+	public void setCorrect(Boolean b)
+	{
+		this.correct = b;
+	}
+
+	/**
+	 * Methode om score te laten zetten door FormuleEditorWithAnswer.
+	 * 
+	 * @param s
+	 */
+	public void setScore(int s)
+	{
+		this.score = s;
 	}
 }
