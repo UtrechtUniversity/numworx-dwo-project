@@ -4,11 +4,11 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolManager;
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 import java.util.logging.Logger;
 

@@ -6,11 +6,11 @@ import java.util.logging.Logger;
 
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.rest.RestListClassTypes;
-import fi.dwo.rest.dom.entities.DomContext;
-import fi.dwo.rest.dom.entities.DomDwoProfile;
-import fi.dwo.rest.entities.RestDwoProfile;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.RestListClassTypes;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class SecureDwoAdminProfileManager {
     private static final Logger LOG = Logger.getLogger(SecureDwoAdminProfileManager.class.getName());

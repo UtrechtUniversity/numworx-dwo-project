@@ -11,7 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 
 @SuppressWarnings("serial")
 class AddProfileDwoAdminJPanel extends JPanel {

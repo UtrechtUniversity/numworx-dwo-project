@@ -2,17 +2,17 @@ package fi.dwo.dwojapplet.domain.rest;
 
 import com.owlike.genson.Genson;
 
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.rest.dom.entities.DomContext;
-import fi.dwo.rest.dom.entities.DomNewUser;
-import fi.dwo.rest.dom.entities.DomSamlUser;
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
-import fi.dwo.rest.entities.RestNewUser;
-import fi.dwo.rest.entities.RestSamlUser;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestNewUser;
+import nl.uu.fi.dwo.rest.entities.RestSamlUser;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

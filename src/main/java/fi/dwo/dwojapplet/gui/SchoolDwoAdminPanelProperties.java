@@ -3,8 +3,8 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminSchoolManager;
 import java.util.List;
 import java.util.logging.Logger;

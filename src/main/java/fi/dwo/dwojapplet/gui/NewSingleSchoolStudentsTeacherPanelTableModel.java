@@ -1,7 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.Image;
 import java.util.ArrayList;

@@ -4,7 +4,7 @@
 package fi.dwo.dwojapplet.gui.domutils;
 
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;

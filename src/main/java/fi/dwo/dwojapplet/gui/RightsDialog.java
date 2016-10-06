@@ -1,9 +1,9 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomHasRole;
-import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
-import fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminSchoolManager;
 import java.awt.BorderLayout;

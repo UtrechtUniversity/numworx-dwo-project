@@ -2,8 +2,8 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
-import fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;

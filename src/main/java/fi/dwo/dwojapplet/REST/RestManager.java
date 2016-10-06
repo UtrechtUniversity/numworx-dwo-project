@@ -6,23 +6,23 @@ import com.owlike.genson.Genson;
 
 import static fi.dwo.dwojapplet.REST.RestManager.getBasicAuthString;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.rest.dom.entities.DomAppletConfig;
-import fi.dwo.rest.dom.entities.DomDwoProfile;
-import fi.dwo.rest.dom.entities.DomRole;
-import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
-import fi.dwo.rest.dom.entities.DomSchoolClass;
-import fi.dwo.rest.dom.entities.DomSchoolAdmin;
-import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
-import fi.dwo.rest.dom.entities.DomStudent;
-import fi.dwo.rest.dom.entities.DomUser;
-import fi.dwo.rest.dom.entities.DomTeacher;
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.RestListClassTypes;
-import static fi.dwo.rest.RestListClassTypes.DomSchool4DwoAdmin;
-import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
-import fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
-import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.RestListClassTypes;
+import static nl.uu.fi.dwo.rest.RestListClassTypes.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -91,7 +91,7 @@ class RestManager {
      * @param path sub context path servlet.
      * @param c Class type to return.
      * @return A list of class c objects.
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public <T> T get(String path, Class<T> c) throws Dwo2Exception {
         try {
@@ -159,7 +159,7 @@ class RestManager {
      * @param path sub context path servlet.
      * @param type
      * @return A list of Class c.
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public <T> List<T> getList(String path, RestListClassTypes type) throws Dwo2Exception {
         try {
@@ -265,7 +265,7 @@ class RestManager {
      * @param c Class type to return.
      * @param o object of Class type c being send.
      * @return A list of class c objects.
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public <T> T put(String path, Class<T> c, Object o) throws Dwo2Exception { //due to genson now c is superflous
         try {
@@ -345,7 +345,7 @@ class RestManager {
      * @param type
      * @param o
      * @return A list of Class c.
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public <T> List<T> getPutList(String path, RestListClassTypes type, Object o) throws Dwo2Exception {
         try {

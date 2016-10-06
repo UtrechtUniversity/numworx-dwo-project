@@ -2,15 +2,15 @@ package fi.dwo.dwojapplet.domain.rest;
 
 import com.owlike.genson.Genson;
 
-import fi.dwo.rest.dom.entities.DomContext;
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.entities.RestUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.rest.dom.entities.DomLoginContext;
-import fi.dwo.rest.entities.RestLoginContext;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestLoginContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class SecureUserAccountManager {
      * DwoHelper.
      *
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static DomUserFull getAccountData() throws Dwo2Exception {
         DomUserFull user;
@@ -120,7 +120,7 @@ public class SecureUserAccountManager {
      * recommended to be used.
      *
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static Boolean logoutUser(DomLoginContext domLoginContext) throws Dwo2Exception {
         Boolean result;
@@ -140,7 +140,7 @@ public class SecureUserAccountManager {
      * and clears the session server-side.
      *
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static Boolean basicAuthLogout(DomLoginContext domLoginContext) throws Dwo2Exception {
         Boolean result;
@@ -163,7 +163,7 @@ public class SecureUserAccountManager {
      *
      * @param user
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static DomUserFull updateAccountData(DomUserFull user) throws Dwo2Exception {
         RestUserFull restUser = new RestUserFull();
@@ -187,7 +187,7 @@ public class SecureUserAccountManager {
      * Fields updated are email, password and the full name of the user. The
      * full name exists out of the first, insertion and family name.
      *
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static Boolean removeAccountData() throws Dwo2Exception {
         Boolean b;

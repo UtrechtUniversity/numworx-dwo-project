@@ -1,17 +1,17 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
-import fi.dwo.rest.dom.entities.DomLoginContext;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.awt.Component;
 import java.awt.Dialog;

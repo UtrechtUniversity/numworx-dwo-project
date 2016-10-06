@@ -5,7 +5,7 @@
 package fi.beans.appletutil;
 
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.rest.DwoLocale;
+import nl.uu.fi.dwo.rest.DwoLocale;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Image;

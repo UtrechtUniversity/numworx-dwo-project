@@ -4,8 +4,8 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -13,8 +13,8 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;

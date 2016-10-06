@@ -3,12 +3,12 @@ package fi.dwo.dwojapplet.domain.rest;
 
 import com.owlike.genson.Genson;
 
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -28,8 +28,8 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminProfileManager;
-import fi.dwo.rest.dom.entities.DomDwoProfile;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class DwoProfilePanel extends JPanel implements ActionListener,
 		CenterSubPanel {

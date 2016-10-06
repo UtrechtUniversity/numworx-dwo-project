@@ -1,14 +1,14 @@
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.rest.entities.RestNewSchoolLogin;
-import fi.dwo.rest.dom.entities.DomContext;
-import fi.dwo.rest.dom.entities.DomNewSchoolLogin;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
-import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
-import fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
 import java.util.logging.Logger;
 
 /**
@@ -27,7 +27,7 @@ public class SecureUserAccountLoginsManager {
      * DwoHelper.
      *
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static DomSchoolsRolesAndClassesV2 getSchoolLogins() throws Dwo2Exception {
         DomSchoolsRolesAndClassesV2 src;
@@ -42,7 +42,7 @@ public class SecureUserAccountLoginsManager {
      *
      * @param src
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static DomSchoolRoleAndClassV2 switchToSchoolLogin(DomSchoolRoleAndClassV2 src) throws Dwo2Exception {
         RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
@@ -58,7 +58,7 @@ public class SecureUserAccountLoginsManager {
      *
      * @param newSchoolLogin
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static boolean addASchoolLogin(DomNewSchoolLogin newSchoolLogin) throws Dwo2Exception {
         boolean r;
@@ -74,7 +74,7 @@ public class SecureUserAccountLoginsManager {
      *
      * @param toRemoveSchoolLogin
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static boolean removeASchoolLogin(DomSchoolRoleAndClassV2 toRemoveSchoolLogin) throws Dwo2Exception {
         RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();

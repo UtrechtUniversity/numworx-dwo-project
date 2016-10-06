@@ -4,13 +4,13 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomSchoolClass;
-import fi.dwo.rest.dom.entities.DomSchoolClassFull;
-import fi.dwo.rest.dom.entities.DomStudent;
-import fi.dwo.rest.dom.entities.DomTeacher;
-import fi.dwo.rest.dom.entities.DomUser;
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
@@ -188,7 +188,15 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                 }
             } else if (value == removeImage) {
                 try {
-                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_TEACHER_BY_NAME), domUser.getUniqueDisplayName());                    
+                    String msg=null;
+                    switch(userType){
+                        case TEACHER:
+                             msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_TEACHER_BY_NAME), domUser.getUniqueDisplayName());                    
+                            break;
+                        case STUDENT:
+                            msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_STUDENT_BY_NAME), domUser.getUniqueDisplayName());                    
+                            break;
+                    }
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
                         DomSchoolClass domSchoolClass = (DomSchoolClass) tableModel.getValueAt(tableModel.getSelectedRow(), tableModel.getColumnCount());
                         prop.removeUserFromSchoolClass(domUser, userType, domSchoolClass);
@@ -246,7 +254,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
      *
      * @param user
      * @param type
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public UsersSchoolClassesSchoolAdminPanel(final DomUser user, UserType type) throws Dwo2Exception {
         super(null);

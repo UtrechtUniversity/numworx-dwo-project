@@ -6,7 +6,7 @@ import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Guest;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class RefreshAction extends GuiAction {
 

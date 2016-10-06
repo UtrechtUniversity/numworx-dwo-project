@@ -28,7 +28,7 @@ import fi.dwo.dwojapplet.domain.AppletData;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.action.ImportScorm;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 
 class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 

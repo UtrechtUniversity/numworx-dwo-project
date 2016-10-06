@@ -1,8 +1,8 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomSchoolClass;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.Image;
 import java.util.ArrayList;

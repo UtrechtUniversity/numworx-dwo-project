@@ -1,10 +1,10 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomNewSchoolLogin;
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.rest.entities.RestNewSchoolLogin;
+import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;

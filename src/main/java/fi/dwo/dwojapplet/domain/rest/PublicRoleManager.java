@@ -1,9 +1,9 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.rest.dom.entities.DomRole;
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.RestListClassTypes;
+import nl.uu.fi.dwo.rest.dom.entities.DomRole;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.RestListClassTypes;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import java.util.List;
 import java.util.logging.Logger;
@@ -26,7 +26,7 @@ public class PublicRoleManager {
      * from the security context.
      *
      * @return Returns null if there was an error.
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static List<DomRole> getRoles() throws Dwo2Exception {
         //login to rest service

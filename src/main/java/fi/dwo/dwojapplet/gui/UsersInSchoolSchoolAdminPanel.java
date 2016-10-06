@@ -3,16 +3,16 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
-import fi.dwo.rest.dom.entities.DomSchoolAdmin;
-import fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
-import fi.dwo.rest.dom.entities.DomStudent;
-import fi.dwo.rest.dom.entities.DomTeacher;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.awt.Color;
 import java.awt.Component;
 import static java.awt.Component.LEFT_ALIGNMENT;

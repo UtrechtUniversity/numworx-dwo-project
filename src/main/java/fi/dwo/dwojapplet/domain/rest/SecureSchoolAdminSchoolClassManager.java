@@ -1,24 +1,24 @@
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.rest.dom.entities.DomContext;
-import fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
-import fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
-import fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
-import fi.dwo.rest.dom.entities.DomSchoolClass;
-import fi.dwo.rest.dom.entities.DomSchoolClassFull;
-import fi.dwo.rest.dom.entities.DomStudent;
-import fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
-import fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
-import fi.dwo.rest.dom.entities.DomTeacher;
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.RestListClassTypes;
-import fi.dwo.rest.entities.RestNewSingleSchoolStudent;
-import fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
-import fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
-import fi.dwo.rest.entities.RestSchoolClass;
-import fi.dwo.rest.entities.RestSchoolClassFull;
-import fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
-import fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.RestListClassTypes;
+import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
+import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.List;
@@ -41,7 +41,7 @@ public class SecureSchoolAdminSchoolClassManager {
      * DwoHelper.
      *
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static List<DomSchoolClass> getSchoolClasses() throws Dwo2Exception {
         List<DomSchoolClass> src;
