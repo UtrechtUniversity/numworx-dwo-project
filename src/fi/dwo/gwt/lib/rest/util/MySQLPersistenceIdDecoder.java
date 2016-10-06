@@ -1,7 +1,7 @@
 package fi.dwo.gwt.lib.rest.util;
 
-import fi.dwo.rest.persistence.PersistenceClassType;
-import fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 class MySQLPersistenceIdDecoder implements PersistenceIdDecoderInterface {
 	

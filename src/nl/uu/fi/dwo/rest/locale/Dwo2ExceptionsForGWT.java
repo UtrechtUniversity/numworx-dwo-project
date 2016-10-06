@@ -1,5 +1,6 @@
-package fi.dwo.rest.locale;
+package nl.uu.fi.dwo.rest.locale;
 
+import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionMessages;
 import com.google.gwt.core.client.GWT;
 
 /**

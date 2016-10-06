@@ -1,7 +1,7 @@
 package fi.dwo.gwt.lib.rest.client;
 
 import fi.dwo.gwt.lib.rest.CallManagers.Callback;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -9,9 +9,9 @@ import javax.ws.rs.Path;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
-import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
-import fi.dwo.rest.entities.RestNewSchoolLogin;
-import fi.dwo.rest.entities.RestSchoolRoleAndClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
+import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClass;
 
 public interface SecuredUserSchoolLoginRestCaller extends RestService {
     @GET

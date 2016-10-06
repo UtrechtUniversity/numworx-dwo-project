@@ -5,7 +5,7 @@
  */
 package fi.dwo.gwt.lib.rest.client;
 
-import fi.dwo.rest.dom.SecuredUserAccountManagerInterface;
+import nl.uu.fi.dwo.rest.dom.SecuredUserAccountManagerInterface;
 
 /**
  * SecuredUserAccountManager uses Call

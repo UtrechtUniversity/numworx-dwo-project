@@ -10,12 +10,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.client.SecuredUserSchoolLoginRestCaller;
-import fi.dwo.rest.dom.entities.DomContext;
-import fi.dwo.rest.dom.entities.DomNewSchoolLogin;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
-import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
-import fi.dwo.rest.entities.RestNewSchoolLogin;
-import fi.dwo.rest.entities.RestSchoolRoleAndClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
+import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClass;
 
 import java.util.logging.Logger;
 

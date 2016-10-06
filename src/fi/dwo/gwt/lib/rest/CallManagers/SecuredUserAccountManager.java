@@ -10,21 +10,21 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.SecuredUserAccountRestCaller;
-import fi.dwo.rest.dom.entities.DomContext;
-import fi.dwo.rest.dom.entities.DomLoginCheck;
-import fi.dwo.rest.dom.entities.DomLoginContext;
-import fi.dwo.rest.dom.entities.DomSamlUser;
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
-import fi.dwo.rest.entities.RestAuthToken;
-import fi.dwo.rest.entities.RestLoginCheck;
-import fi.dwo.rest.entities.RestLoginContext;
-import fi.dwo.rest.entities.RestSamlUser;
-import fi.dwo.rest.entities.RestUserFull;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
+import nl.uu.fi.dwo.rest.entities.RestLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestSamlUser;
+import nl.uu.fi.dwo.rest.entities.RestUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.entities.RestAuthToken;
 
 public class SecuredUserAccountManager {
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountManager.class.getName());

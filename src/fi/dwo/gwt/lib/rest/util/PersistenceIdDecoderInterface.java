@@ -2,8 +2,8 @@ package fi.dwo.gwt.lib.rest.util;
 
 import com.google.gwt.core.client.GWT;
 
-import fi.dwo.rest.persistence.PersistenceClassType;
-import fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 
 // legacy conversion

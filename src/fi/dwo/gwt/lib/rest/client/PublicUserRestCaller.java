@@ -6,7 +6,7 @@ import javax.ws.rs.Path;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
-import fi.dwo.rest.entities.RestNewUser;
+import nl.uu.fi.dwo.rest.entities.RestNewUser;
 
 public interface PublicUserRestCaller extends RestService {
 

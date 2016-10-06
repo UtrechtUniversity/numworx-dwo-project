@@ -1,8 +1,8 @@
-package fi.dwo.rest.locale;
+package nl.uu.fi.dwo.rest.locale;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/Users/peterboon/Documents/workspace-neon/DWO-gwt-lib/src/fi/dwo/rest/locale/DwoLocaleMessages.properties'.
+ * 	'/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/DwoLocaleMessages.properties'.
  */
 public interface DwoLocaleMessages extends com.google.gwt.i18n.client.ConstantsWithLookup {
   

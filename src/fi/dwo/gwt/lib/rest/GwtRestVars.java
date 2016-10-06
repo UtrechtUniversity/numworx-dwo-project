@@ -4,8 +4,8 @@ import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionMapper;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

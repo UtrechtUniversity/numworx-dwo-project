@@ -5,7 +5,7 @@
  */
 package fi.dwo.gwt.lib.rest.util;
 
-import fi.dwo.rest.DwoLocale;
+import nl.uu.fi.dwo.rest.DwoLocale;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
@@ -13,10 +13,10 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
-import fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
+import nl.uu.fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
 
 import java.util.MissingResourceException;
 import java.util.logging.Level;

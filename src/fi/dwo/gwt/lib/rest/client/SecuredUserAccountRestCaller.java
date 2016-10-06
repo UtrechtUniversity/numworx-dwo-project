@@ -1,7 +1,7 @@
 package fi.dwo.gwt.lib.rest.client;
 
 import fi.dwo.gwt.lib.rest.CallManagers.Callback;
-import fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -11,14 +11,14 @@ import javax.ws.rs.PathParam;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
-import fi.dwo.rest.entities.RestAuthToken;
-import fi.dwo.rest.entities.RestLoginCheck;
-import fi.dwo.rest.entities.RestLoginContext;
-import fi.dwo.rest.entities.RestSamlUser;
-import fi.dwo.rest.entities.RestUserFull;
-import fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestAuthToken;
+import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
+import nl.uu.fi.dwo.rest.entities.RestLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestSamlUser;
+import nl.uu.fi.dwo.rest.entities.RestUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public interface SecuredUserAccountRestCaller extends RestService {
 

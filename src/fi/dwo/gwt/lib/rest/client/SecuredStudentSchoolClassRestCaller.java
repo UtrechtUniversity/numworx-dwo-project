@@ -1,14 +1,14 @@
 package fi.dwo.gwt.lib.rest.client;
 
 import fi.dwo.gwt.lib.rest.CallManagers.Callback;
-import fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
 import org.fusesource.restygwt.client.RestService;
 
-import fi.dwo.rest.entities.RestNewSchoolClass4Student;
-import fi.dwo.rest.entities.RestSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestNewSchoolClass4Student;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import java.util.List;
 import javax.ws.rs.GET;
 

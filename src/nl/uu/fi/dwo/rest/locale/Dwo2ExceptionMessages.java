@@ -1,8 +1,8 @@
-package fi.dwo.rest.locale;
+package nl.uu.fi.dwo.rest.locale;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/Users/peterboon/Documents/workspace-neon/DWO-rest-lib/target/classes/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
+ * 	'/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/Dwo2ExceptionMessages.properties'.
  */
 public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
