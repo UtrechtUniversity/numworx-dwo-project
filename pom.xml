@@ -16,36 +16,61 @@
    			<artifactId>maven-compiler-plugin</artifactId>
    			<version>3.1</version>
    		</plugin>
-       	<plugin>
-        	<groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jarsigner-plugin</artifactId>
-            <version>1.4</version>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>sign</goal>
-                    </goals>
-                </execution>
-                <execution>
-                    <id>verify</id>
-                    <goals>
-                        <goal>verify</goal>
-                    </goals>
-                </execution>
-            </executions>
-            <configuration>
-                <keystore>${dwoKeyStore}</keystore>
-                <alias>${dwoCertKeyAlias}</alias>
-                <storepass>${dwoCertKeyStorePassword}</storepass>
-                <keypass>${dwoCertKeyPassword}</keypass>
-                <sigfile>UU</sigfile>
-                <tsa>https://timestamp.geotrust.com/tsa</tsa>
-               <archive>${project.build.directory}/${project.artifactId}.jar</archive>
-            </configuration>            
-        </plugin>  
-   
+<!--        	<plugin> -->
+<!--         	<groupId>org.apache.maven.plugins</groupId> -->
+<!--             <artifactId>maven-jarsigner-plugin</artifactId> -->
+<!--             <version>1.4</version> -->
+<!--             <executions> -->
+<!--                 <execution> -->
+<!--                     <phase>package</phase> -->
+<!--                     <goals> -->
+<!--                         <goal>sign</goal> -->
+<!--                     </goals> -->
+<!--                 </execution> -->
+<!--                 <execution> -->
+<!--                     <id>verify</id> -->
+<!--                     <goals> -->
+<!--                         <goal>verify</goal> -->
+<!--                     </goals> -->
+<!--                 </execution> -->
+<!--             </executions> -->
+<!--             <configuration> -->
+<!--                 <keystore>${dwoKeyStore}</keystore> -->
+<!--                 <alias>${dwoCertKeyAlias}</alias> -->
+<!--                 <storepass>${dwoCertKeyStorePassword}</storepass> -->
+<!--                 <keypass>${dwoCertKeyPassword}</keypass> -->
+<!--                 <sigfile>UU</sigfile> -->
+<!--                 <tsa>https://timestamp.geotrust.com/tsa</tsa> -->
+<!--                <archive>${project.build.directory}/${project.artifactId}.jar</archive> -->
+<!--             </configuration>             -->
+<!--         </plugin>   -->
+            <plugin> <!-- attach-sources voor GWT -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
    </plugins>
   
   </build>
+      <distributionManagement>
+	<repository>
+	   <id>release</id>
+	   <name>libs-release-local</name>
+	   <url>http://repos.dwo.nl/artifactory/libs-release-local</url>
+	</repository>
+	<snapshotRepository>
+	   <id>snapshots</id>
+	   <name>libs-snapshot-local</name>
+	   <url>http://repos.dwo.nl/artifactory/libs-snapshot-local</url>
+	</snapshotRepository>
+  </distributionManagement>
+  
 </project>
