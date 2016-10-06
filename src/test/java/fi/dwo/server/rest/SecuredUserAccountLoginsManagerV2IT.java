@@ -4,19 +4,19 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
-import fi.dwo.rest.dom.entities.DomNewSchoolLogin;
-import fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.server.testutil.TestSecurityContext;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
-import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
-import fi.dwo.rest.entities.RestNewSchoolLogin;
-import fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
-import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
+import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.RoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;

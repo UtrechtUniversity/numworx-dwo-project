@@ -5,8 +5,8 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.rest.dom.entities.RoleType;
-import fi.dwo.rest.entities.RestNewSchoolLogin;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -16,13 +16,13 @@ import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.*;
 import fi.dwo.commons.util.DwoDateUtilities;
-import fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
-import fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.RoleManager;

@@ -1,9 +1,9 @@
 
 package fi.dwo.server.rest;
 
-import fi.dwo.rest.dom.entities.DomRole;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.dom.entities.DomRole;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.server.PersistentDataManagers.core.RoleManager;
 import java.util.ArrayList;

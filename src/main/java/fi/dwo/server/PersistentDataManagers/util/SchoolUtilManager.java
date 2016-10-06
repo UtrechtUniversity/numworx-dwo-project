@@ -3,10 +3,10 @@
  */
 package fi.dwo.server.PersistentDataManagers.util;
 
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.exceptions.Dwo2RestException;
-import fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -134,7 +134,7 @@ public class SchoolUtilManager {
      * @param user
      * @param school
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static Boolean addSingleSchoolStudentAccount(PersistentUser user, PersistentSchool school) throws Dwo2Exception {
     
@@ -153,7 +153,7 @@ public class SchoolUtilManager {
      * @param user
      * @param school
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static Boolean addAccountAsTeacherInSchool(PersistentUser user, PersistentSchool school) throws Dwo2Exception {
         if (user == null || school == null) {
@@ -238,7 +238,7 @@ public class SchoolUtilManager {
      * @param user
      * @param school
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static Boolean addAccountAsStudentInSchool(PersistentUser user, PersistentSchool school) throws Dwo2Exception {
         if (user == null || school == null) {
@@ -320,7 +320,7 @@ public class SchoolUtilManager {
      * @param user
      * @param school
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static Boolean addAccountInSchool(PersistentUser user, PersistentSchool school, RoleType role) throws Dwo2Exception {
         if (user == null || school == null) {

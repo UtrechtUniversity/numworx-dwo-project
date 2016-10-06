@@ -1,6 +1,6 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
-import fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.server.persistence.DwoEmfFactory;

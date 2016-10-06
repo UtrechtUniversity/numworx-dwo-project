@@ -2,8 +2,8 @@ package fi.dwo.server.rest;
 
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 

@@ -3,9 +3,9 @@
  */
 package fi.dwo.server.PersistentDataManagers.util;
 
-import fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -15,7 +15,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
-import fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -47,7 +47,7 @@ public class HasRoleUtilManager {
      * @param usercode Mostly the principal username from the REST-interface.
      * @param r
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static PersistentHasRole getCurrentHasRole(String usercode, RoleType r) throws Dwo2Exception {
         PersistentUser u = (PersistentUser) UserManager.findByUserName(usercode);
@@ -81,7 +81,7 @@ public class HasRoleUtilManager {
      *
      * @param hr
      * @return
-     * @throws fi.dwo.rest.exceptions.Dwo2Exception
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static PersistentSchool getSchoolforHasRole(PersistentHasRole hr) throws Dwo2Exception {
         if (hr == null || hr.getPersistentHasRolePK() == null) {

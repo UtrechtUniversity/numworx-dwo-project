@@ -3,7 +3,7 @@
  */
 package fi.dwo.server.testutil;
 
-import fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import java.security.Identity;
 import java.security.Principal;
 import javax.ws.rs.core.SecurityContext;
