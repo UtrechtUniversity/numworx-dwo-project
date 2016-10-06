@@ -21,10 +21,10 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 import com.google.gwt.view.client.SingleSelectionModel;
 
-import fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
-import fi.dwo.rest.dom.entities.DomSchoolClass;
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 import java.util.Collections;
 import java.util.Comparator;

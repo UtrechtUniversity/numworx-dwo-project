@@ -8,7 +8,7 @@ package nl.uu.fi.dwo.account.client;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
+import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 
 /**
  *

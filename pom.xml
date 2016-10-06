@@ -59,8 +59,8 @@
                     <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>  
                     <compileSourcesArtifacts> 
-                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact>
-                        <!--                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-gwt-lib</compileSourcesArtifact> -->
+<!--                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact> -->
+<!--                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-gwt-lib</compileSourcesArtifact> -->
                     </compileSourcesArtifacts> 
                     <i18nConstantsWithLookupBundles>
                         <i18nConstantsWithLookupBundle>nl.uu.fi.dwo.rest.locale.Dwo2Exceptions</i18nConstantsWithLookupBundle>                          

@@ -6,8 +6,8 @@
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.Window;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
  * Creates or shows dynamic GUI components.

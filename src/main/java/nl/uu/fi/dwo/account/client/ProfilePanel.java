@@ -10,12 +10,12 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
-import fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * Allows user update.

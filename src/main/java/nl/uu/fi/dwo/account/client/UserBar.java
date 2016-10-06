@@ -5,13 +5,11 @@ import java.util.MissingResourceException;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 
-import fi.dwo.rest.dom.entities.DomUser;
-import fi.dwo.rest.dom.entities.RoleType;
-import fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class UserBar extends Composite implements Command {
 
