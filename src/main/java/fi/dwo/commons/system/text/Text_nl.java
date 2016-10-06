@@ -86,6 +86,7 @@ public class Text_nl extends ListResourceBundle {
                         { TextMapper.DLG_Q_LOSE_NEW_TEACHER_ACCOUNTS, "U heeft nog ongeregistreerde docenten in uw lijst. Doorgaan?" },                        
                         {TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME, "Wilt u zich uitschrijven voor klas \"{0}\"."},
                         {TextMapper.DLG_Q_REMOVE_TEACHER_BY_NAME, "Wilt U docent \"{0}\" van de klas afhalen."},
+                        {TextMapper.DLG_Q_REMOVE_STUDENT_BY_NAME, "Wilt U student \"{0}\" van de klas afhalen."},
                         { TextMapper.DLG_NO_STUDENTS_SELECTED, "U moet eerst een of meer leerlingen aanvinken."},
                         { TextMapper.DLG_NO_TEACHERS_SELECTED, "U moet eest een of meer docenten aanvinken."},
 			{

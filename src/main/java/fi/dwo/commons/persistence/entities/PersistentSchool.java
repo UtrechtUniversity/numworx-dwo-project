@@ -1,9 +1,9 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.rest.dom.entities.DomSchool;
-import fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
-import fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.util.DwoDateUtilities;
 import java.io.Serializable;

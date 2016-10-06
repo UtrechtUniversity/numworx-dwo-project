@@ -4,9 +4,9 @@
 package fi.dwo.commons.persistence;
 
 import com.owlike.genson.Genson;
-import fi.dwo.rest.DwoLocale;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
+import nl.uu.fi.dwo.rest.DwoLocale;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;

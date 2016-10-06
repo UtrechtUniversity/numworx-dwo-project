@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 
 /**
  *

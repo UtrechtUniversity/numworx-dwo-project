@@ -4,8 +4,8 @@
 package fi.dwo.commons.persistence.entities;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.rest.dom.entities.DomLoginContext;
-import fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;

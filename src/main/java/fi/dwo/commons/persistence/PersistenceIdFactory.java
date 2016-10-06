@@ -1,6 +1,6 @@
 package fi.dwo.commons.persistence;
 
-import fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
