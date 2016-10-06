@@ -1000,10 +1000,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR)
 			correct = null;
 		this.score = (Integer) checkResults.get("score");
-//		if(fe != null) { // waarom werkt dit überhaupt? normaal gebeurt dit in 'maakNakijkenAf'
-//			fe.correct = this.correct; // update correct van parent fe
-//			fe.score = this.score;     // update score van parent fe
-//		}
+		if (fe != null) 
+		{ 
+			// waarom werkt dit überhaupt? normaal gebeurt dit in 'maakNakijkenAf'
+			// Maar voor oefenen bordjesmethode met goede eindoplossing weet fe niet dat het antwoord correct is
+			fe.setCorrect(this.correct); // update correct van parent fe
+			fe.setScore(this.score);     // update score van parent fe
+		}
 		this.scoreZonderAftrek = (Integer) checkResults.get("score");
 		if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
 			score = Math.max(0, score - errorCount * foutStraf);
