@@ -250,18 +250,26 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			{
 
 				@Override
-				public void checkOpdracht(ScoreNavIF source)
-				{
-					on.saveCurrentState(); // de wijzigingen van het huidige bolletje moeten wel verwerkt worden
-//					zetToetsNagekeken(source);
-//					on.kijkToetsNa();
+				public void checkOpdracht(final ScoreNavIF source)
+				{	p();
+					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
-					// omgedraaid: keerNagekeken moet wel verhoogd zijn voor zetToetsNagekeken()
-					zelftoetsNagekeken = true;
-					on.kijkToetsNa();
-					zetToetsNagekeken(source);
+						@Override
+						public void execute() {
 
-					on.saveCurrentState(); // op speciaal verzoek
+					
+							on.saveCurrentState(); // de wijzigingen van het huidige bolletje moeten wel verwerkt worden
+			//					zetToetsNagekeken(source);
+			//					on.kijkToetsNa();
+			
+							// omgedraaid: keerNagekeken moet wel verhoogd zijn voor zetToetsNagekeken()
+							zelftoetsNagekeken = true;
+							on.kijkToetsNa();
+							zetToetsNagekeken(source);
+			
+							on.saveCurrentState(); // op speciaal verzoek
+							v();
+						}});
 				}
 
 			});
