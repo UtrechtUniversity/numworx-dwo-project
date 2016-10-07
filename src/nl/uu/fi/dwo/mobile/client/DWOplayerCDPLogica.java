@@ -17,4 +17,12 @@ public class DWOplayerCDPLogica extends DWOplayerNoordhoff {
 			return "";
 	}
 
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.mobile.client.DWOplayerNoordhoff#getLaunchData()
+	 */
+	@Override
+	public String getLaunchData() {
+		return null;
+	}
+
 }

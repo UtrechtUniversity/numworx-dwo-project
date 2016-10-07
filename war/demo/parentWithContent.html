@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Parent with Content IFrame</title>
+	<style>
+		html, body {
+			width: 100%;
+			height: 100%;
+			display: block;
+		}
+		iframe, #log {
+			width: 48%;
+			height: 90%;
+			float: left;
+		}
+	</style>
+</head>
+<body>
+	<h2>Parent with Content IFrame</h2>
+	<iframe id="ContentFrame"></iframe>
+	<h2>Statements from content</h2>
+	<div id="log"></div>
+	<script>
+		var contentFrame = document.getElementById('ContentFrame');
+
+		contentFrame.src = 'contentFrame.html#' + encodeURIComponent(document.location.protocol + '//' + document.location.host);
+
+		function logMessage(message) {
+			var log = document.getElementById('log');
+			var pre = document.createElement('pre');
+			pre.textContent = JSON.stringify(message, null, 2).replace('\r', '<br />');
+
+			var entry = document.createElement('div');
+			var header = document.createElement('h4');
+			header.textContent = 'Message from content ' + new Date().toGMTString();
+			entry.appendChild(header);
+			entry.appendChild(pre);
+			log.insertBefore(entry, log.firstElementChild);
+		}
+
+		// Simplified version of Lms_Api.js, used to display statements on the page
+		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		var eventer = window[eventMethod];
+		var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+		eventer(messageEvent, handleMessage, false);
+
+		function handleMessage(msg) {
+			logMessage(JSON.parse(msg.data));
+		}
+
+	</script>
+</body>
+</html>

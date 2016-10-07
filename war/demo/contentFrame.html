@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ContentFrame with TinCan.js and Content_Api.js</title>
+</head>
+<body>
+	<h2>ContentFrame with TinCan.js and Content_Api.js</h2>
+
+	<button onclick="sendNavigateStatement()">Send a navigate statement</button> 
+	<button onclick="sendSkippedStatement()">Send a skipped statement</button>
+	<button onclick="sendAnsweredStatement()">Send a answered statement</button>
+	<script src="../scripts/tincan-min.js"></script>
+	<script src="../scripts/Content_Api-0.2.9.js"></script>
+	
+	<script>
+		function sendNavigateStatement() {
+			tincan.sendStatements([Bao.buildNavigateByIdentifierStatement("SomeUniqueIdForTheApplication")]);
+		}
+
+		function sendSkippedStatement() {
+			tincan.sendStatements([Bao.buildSkippedStatement("http://example.com/courses/interaction/myIdForInteractionNumber4")]);
+		}
+
+		function sendAnsweredStatement() {
+			var answer = Bao.buildAnswer('http://example.com/courses/interaction/aa-bb-cc-dd', 400, true, 'PT3M15S', { "raw": 4, "max": 10 }, 'fill-in', '400', { "http://bao.mijnklas.nl/xapi/extensions/attempts": 1, "http://bao.mijnklas.nl/xapi/extensions/interactionType": "fill-in" }, undefined, true);
+			var statement = Bao.buildAnsweredStatement(answer);
+
+			tincan.sendStatements([statement]);
+
+			var answer2 = new Bao.Answer();
+			
+			answer2.id = 'http://example.com/courses/interaction/zz-yy-xx-ww';
+			answer2.response = 300;
+			answer2.success = true;
+			answer2.duration = 'PT2M31S';
+			answer2.score = new TinCan.Score({ "raw": 5, "max": 10 });
+			answer2.interactionType = 'fill-in';
+			answer2.expected = '300';
+			answer2.resultExtensions = { "http://bao.mijnklas.nl/xapi/extensions/attempts": 1, "http://bao.mijnklas.nl/xapi/extensions/interactionType": "fill-in" };			
+			answer2.completion = true;
+
+			var statement2 = Bao.buildAnsweredStatement(answer2);
+
+			tincan.sendStatements([statement2]);
+		}
+		// Initialization & Configuration of TinCan.js and Content_Api.js
+		//TinCan.enableDebug();
+		var lrs = new ContentApiLrs();
+	</script>
+</body>
+</html>

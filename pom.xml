@@ -178,6 +178,13 @@
   			<finalName>CDPLogicaPlayer</finalName>
   		</properties>
   	</profile>
+  	<profile>
+  		<id>TinCanPlayer</id>
+  		<properties>
+  			<gwtModule>${project.groupId}.TinCanPlayer</gwtModule>
+  			<finalName>TinCanPlayer</finalName>
+  		</properties>
+  	</profile>
   <!-- MC Squared profiles -->
    	<profile>
   		<id>MC2Player</id>
