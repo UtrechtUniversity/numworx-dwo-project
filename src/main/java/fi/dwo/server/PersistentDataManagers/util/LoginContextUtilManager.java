@@ -43,8 +43,7 @@ public class LoginContextUtilManager {
                     break;
                 default:
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't get or set a LoginContext for a user", e);
             Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Can't set a LoginContextSession for a user");
             throw ex;
@@ -53,11 +52,12 @@ public class LoginContextUtilManager {
     }
 
     /**
-     * return a valid LoginContext when a new session is set, returns null if one exists.
-     * 
+     * return a valid LoginContext when a new session is set, returns null if
+     * one exists.
+     *
      * @param user
      * @return
-     * @throws Dwo2Exception 
+     * @throws Dwo2Exception
      */
     public static PersistentLoginContext reqLoginContextSession(PersistentUser user) throws Dwo2Exception {
         PersistentLoginContext loginContext = null;
@@ -76,7 +76,7 @@ public class LoginContextUtilManager {
                 case 1:
                     //update if exists
                     loginContext = loginContextList.get(0);
-                    if (loginContext.getLastLogin() == null) {
+                    if (loginContext.getLastLogin() != null) {
                         return null;
                     }
                     loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
@@ -84,8 +84,7 @@ public class LoginContextUtilManager {
                     break;
                 default:
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't get or set a LoginContextSession for a User", e);
             Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Can't set a LoginContextSession for a User");
             throw ex;
@@ -93,4 +92,41 @@ public class LoginContextUtilManager {
         return loginContext;
     }
 
+   /**
+     * return a valid LoginContext, if one exists its values are overwritten and
+     * a new session is started.
+     *
+     * @param user
+     * @return
+     * @throws Dwo2Exception
+     */
+    public static PersistentLoginContext forceNewLoginContextSession(PersistentUser user) throws Dwo2Exception {
+        PersistentLoginContext loginContext = null;
+        try {
+            List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(user.getId());
+            loginContext = new PersistentLoginContext();
+            switch (loginContextList.size()) {
+                case 0:
+                    //none yet
+                    loginContext.setUserId(user.getId());
+                    loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+                    loginContext.setRegisterTimeStamp(user.getRegisterDate().getTime());
+                    //loginContextList.add(loginContext);
+                    LoginContextManager.create(loginContext);
+                    break;
+                case 1:
+                    //update if exists
+                    loginContext = loginContextList.get(0);
+                    loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+                    LoginContextManager.edit(loginContext);
+                    break;
+                default:
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Can't get or set a LoginContextSession for a User", e);
+            Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Can't set a LoginContextSession for a User");
+            throw ex;
+        }
+        return loginContext;
+    }    
 }

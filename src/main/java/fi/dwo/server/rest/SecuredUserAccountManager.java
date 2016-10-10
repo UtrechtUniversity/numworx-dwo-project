@@ -30,6 +30,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
 import java.util.List;
@@ -50,6 +51,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * Operations for the GUI Component that manages the User Profile.
@@ -150,12 +152,7 @@ public class SecuredUserAccountManager {
             LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
         }
-
-        return createUserFullwLoginContext(u);
-    }
-
-	public static DomUserFullwLoginContext createUserFullwLoginContext(PersistentUser u) {
-		//al ready retrieved and cached in getCurrentUser
+        
         try {//LoginData may fail, but login should succeed.
             //register login action
             PersistentLogData loginData = new PersistentLogData();
@@ -174,39 +171,54 @@ public class SecuredUserAccountManager {
             LOG.log(Level.SEVERE, null, e);
         }
 
-        //setting PersistentLoginContext
-        DomLoginContext domLoginContext = null;
-        try {
-            List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
-            PersistentLoginContext loginContext = new PersistentLoginContext();
-            switch (loginContextList.size()) {
-                case 0:
-                    //none yet
-                    loginContext.setUserId(u.getId());
-                    loginContext.setLastLogin(null);
-                    loginContext.setRegisterTimeStamp(u.getRegisterDate().getTime());
-                    loginContextList.add(loginContext);
-                    LoginContextManager.create(loginContext);
-                    break;
-                case 1:
-                    //update if exists
-                    loginContext = loginContextList.get(0);
-                    loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-                    LoginContextManager.edit(loginContext);
-                    break;
-                default:
+            try {
+//                return u.buildDomUserFullwLoginContext(LoginContextUtilManager.reqLoginContextSession(u));
+                //loginDataUtilManager should use the returndata to log any statistical stuff needed for OLAP Warehousing.
+                return u.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(u));
+            } catch (Dwo2Exception ex) {
+                Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "Invalid software state, this should not have happened.", ex);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Invalid software state. This should not have happened.");
             }
-            //add or update
-            domLoginContext = loginContext.buildDomLoginContext();
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, null, e);
-        }
-        DomUserFullwLoginContext result = new DomUserFullwLoginContext();
-        result.setDomLoginContext(domLoginContext);
-        result.setDomUserFull(u.buildDomUserFull());
-        return result;
-	}
+        
+    }
+
+//	public static DomUserFullwLoginContext createUserFullwLoginContext(PersistentUser u) {
+//		//al ready retrieved and cached in getCurrentUser
+//        
+//
+//        //setting PersistentLoginContext
+//        DomLoginContext domLoginContext = null;
+//        try {
+//            List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
+//            PersistentLoginContext loginContext = new PersistentLoginContext();
+//            switch (loginContextList.size()) {
+//                case 0:
+//                    //none yet
+//                    loginContext.setUserId(u.getId());
+//                    loginContext.setLastLogin(null);
+//                    loginContext.setRegisterTimeStamp(u.getRegisterDate().getTime());
+//                    loginContextList.add(loginContext);
+//                    LoginContextManager.create(loginContext);
+//                    break;
+//                case 1:
+//                    //update if exists
+//                    loginContext = loginContextList.get(0);
+//                    loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+//                    LoginContextManager.edit(loginContext);
+//                    break;
+//                default:
+//            }
+//            //add or update
+//            domLoginContext = loginContext.buildDomLoginContext();
+//        }
+//        catch (Exception e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        DomUserFullwLoginContext result = new DomUserFullwLoginContext();
+//        result.setDomLoginContext(domLoginContext);
+//        result.setDomUserFull(u.buildDomUserFull());
+//        return result;
+//	}
 
     @PUT
     @Produces({"application/json"})
