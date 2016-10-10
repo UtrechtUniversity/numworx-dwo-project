@@ -121,13 +121,13 @@ public class PersistentLoginContext implements Serializable {
     }
 
 
-    public DomLoginContext createDomLoginContext(){
+    public DomLoginContext buildDomLoginContext(){
         DomLoginContext loginContext = new DomLoginContext();
-        buildDomLoginContext(loginContext);
+        fillDomLoginContext(loginContext);
         return loginContext;
     }
     
-    private void buildDomLoginContext(DomLoginContext loginContext) {
+    private void fillDomLoginContext(DomLoginContext loginContext) {
         if (this.id != null) {
             loginContext.setId(MySQLPersistenceId.createPersistentId(this));
         }

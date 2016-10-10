@@ -27,8 +27,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.CacheType;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 /**
  * PersistentUser.
@@ -301,6 +300,15 @@ public class PersistentUser implements Serializable {
         return user;
     }
 
+    public DomUserFullwLoginContext buildDomUserFullwLoginContext(PersistentLoginContext loginContext) {
+        DomUserFullwLoginContext result = new DomUserFullwLoginContext();
+        DomUserFull user = new DomUserFull();
+        fillDomUserFull(user);
+        result.setDomUserFull(user);
+        result.setDomLoginContext(loginContext.buildDomLoginContext());
+        return result;
+    }
+    
     public DomStudent buildDomStudent() {
         DomStudent user = new DomStudent();
         fillDomUser(user);
