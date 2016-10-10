@@ -126,7 +126,7 @@ public class SecuredUserAccountManager {
             LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
         }
-        return loginContext.createDomLoginContext();
+        return loginContext.buildDomLoginContext();
     }
 
     /**
@@ -197,7 +197,7 @@ public class SecuredUserAccountManager {
                 default:
             }
             //add or update
-            domLoginContext = loginContext.createDomLoginContext();
+            domLoginContext = loginContext.buildDomLoginContext();
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);

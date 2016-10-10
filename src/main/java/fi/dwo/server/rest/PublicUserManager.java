@@ -81,6 +81,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import static java.lang.Thread.sleep;
 
 /**
  * Handles the public registration of new users.
@@ -269,79 +270,81 @@ public class PublicUserManager {
             LOG.log(Level.SEVERE, "equal {0}, tokenValid {1} {2} time={3}", new Object[]{samlUser.getAuthToken().equals(samlRestUser.getDomSamlUser().getAuthToken()), samlUser.tokenIsValid(20000), samlUser, System.currentTimeMillis()});
 
             PersistentUser user = UserManager.findEntity(samlUser.getUserID());
-            return createUserFullwLoginContext(user);
-
+            try {
+                return user.buildDomUserFullwLoginContext(LoginContextUtilManager.reqLoginContextSession(user));
+            } catch (Dwo2Exception ex) {
+                Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "Invalid software state, this should not have happened.", ex);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Invalid software state. This should not have happened.");
+            }
         } else {
             LOG.log(Level.SEVERE, "Incorrect saml-authentication event for samlOrg {0} samlUser {1} and authToken {2}: {3}", new Object[]{samlRestUser.getDomSamlUser().getSamlOrgId(), samlRestUser.getDomSamlUser().getSamlUserId(), samlRestUser.getDomSamlUser().getAuthToken(), samlUser});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The authentication is invalid, this event is logged.");
         }
     }
-
-	public static DomUserFullwLoginContext createUserFullwLoginContext(
-			PersistentUser user) {
-		try {
-		    PersistentLoginContext loginContext = LoginContextUtilManager.getLoginContext(user);
-		    loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-		    LoginContextManager.edit(loginContext);
-		    DomUserFullwLoginContext result = new DomUserFullwLoginContext();
-		    result.setDomLoginContext(loginContext.createDomLoginContext());
-		    result.setDomUserFull(user.buildDomUserFull());
-		    return result;
-		} catch (Dwo2Exception ex) {
-		    Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "", ex);
-		    throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The LoginContext failed to be handled for this user.");
-		}
-	}
+//
+//    public static DomUserFullwLoginContext createUserFullwLoginContext(
+//            PersistentUser user) {
+//        try {
+//            PersistentLoginContext loginContext = LoginContextUtilManager.getLoginContext(user);
+//            loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+//            LoginContextManager.edit(loginContext);
+//            DomUserFullwLoginContext result = user.buildDomUserFullwLoginContext(loginContext);
+//            return result;
+//        } catch (Dwo2Exception ex) {
+//            Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "", ex);
+//            throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The LoginContext failed to be handled for this user.");
+//        }
+//    }
 
     @PUT
     @Produces({"application/json"})
     @Path("/getUserFromAuthToken")
-    public DomUserFullwLoginContext getUserFromAuthToken(RestAuthToken restAuthToken) throws Dwo2RestException
-    {
-    	String authToken = restAuthToken.getAuthToken();
-    	authToken = new String(
-    					Base64.getUrlDecoder().decode(authToken),
-    					StandardCharsets.UTF_8
-    				);
-    	char version = authToken.charAt(0);
-    	switch (version) {
-    	default:
-            LOG.log(Level.SEVERE, "Unsupported AuthToken {0}, version", restAuthToken.getAuthToken());
-            break;
-    	case '1': // Weak token, only for proof of concept, 5 minutes timeout
-    		String[] split = authToken.split("\f");
-    		if(split.length != 4) {
-    			LOG.log(Level.SEVERE, "Illegal authToken {0}, wrong format", restAuthToken.getAuthToken());
-    			break;
-    		}
-    		long time = 0L;
-    		try {
-				time = Long.valueOf(split[1]);
-			} catch (NumberFormatException e) {
-    			LOG.log(Level.SEVERE, "Illegal authToken {0}, no timestamp", restAuthToken.getAuthToken());
-    			break;
-				
-			}
-    		String username = split[2];
-    		String md5hash  = split[3];
-    		if(time < System.currentTimeMillis() - 5*60*1000L) {
-                LOG.log(Level.SEVERE, "AuthToken {0}, too old", restAuthToken.getAuthToken());
-    			break;
-    		}
-            PersistentUser user = UserManager.login(username, md5hash);
-            if(user == null) {
-    			LOG.log(Level.SEVERE, "Illegal authToken {0}, no user", restAuthToken.getAuthToken());
-            	break;
-            }
-            return createUserFullwLoginContext(user);
-    	}
+    public DomUserFullwLoginContext getUserFromAuthToken(RestAuthToken restAuthToken) throws Dwo2RestException {
+        String authToken = restAuthToken.getAuthToken();
+        authToken = new String(
+                Base64.getUrlDecoder().decode(authToken),
+                StandardCharsets.UTF_8
+        );
+        char version = authToken.charAt(0);
+        switch (version) {
+            default:
+                LOG.log(Level.SEVERE, "Unsupported AuthToken {0}, version", restAuthToken.getAuthToken());
+                break;
+            case '1': // Weak token, only for proof of concept, 5 minutes timeout
+                String[] split = authToken.split("\f");
+                if (split.length != 4) {
+                    LOG.log(Level.SEVERE, "Illegal authToken {0}, wrong format", restAuthToken.getAuthToken());
+                    break;
+                }
+                long time = 0L;
+                try {
+                    time = Long.valueOf(split[1]);
+                } catch (NumberFormatException e) {
+                    LOG.log(Level.SEVERE, "Illegal authToken {0}, no timestamp", restAuthToken.getAuthToken());
+                    break;
+
+                }
+                String username = split[2];
+                String md5hash = split[3];
+                if (time < System.currentTimeMillis() - 5 * 60 * 1000L) {
+                    LOG.log(Level.SEVERE, "AuthToken {0}, too old", restAuthToken.getAuthToken());
+                    break;
+                }
+                PersistentUser user = UserManager.login(username, md5hash);
+                if (user == null) {
+                    LOG.log(Level.SEVERE, "Illegal authToken {0}, no user", restAuthToken.getAuthToken());
+                    break;
+                }
+                try {
+                    return user.buildDomUserFullwLoginContext(LoginContextUtilManager.reqLoginContextSession(user));
+                } catch (Dwo2Exception ex) {
+                    Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "Invalid software state, this should not have happened.", ex);
+                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Invalid software state. This should not have happened.");
+                }
+        }
         throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The authentication is invalid, this event is logged.");
     }
-    
-    
-    
-    
-    
+
     @POST
     @Produces({"text/plain"})
     @Consumes({"application/x-www-form-urlencoded"})
@@ -486,7 +489,7 @@ public class PublicUserManager {
     }
 
     /**
-     * 
+     *
      * @param sc
      * @param userIdent
      * @param samlUserId
@@ -498,7 +501,7 @@ public class PublicUserManager {
      * @param role Only STUDENT, TEACHER or SCHOOLADMIN are allowed
      * @param schoolID
      * @param schoolClassName
-     * @return 
+     * @return
      */
     @POST
     @Produces({"text/plain"})
@@ -546,10 +549,10 @@ public class PublicUserManager {
         } catch (Exception e1) {
             LOG.log(Level.SEVERE, "unknown RoleType " + role, e1);
         }
-        if(roleType!=RoleType.STUDENT || roleType!=RoleType.TEACHER || roleType!=RoleType.SCHOOLADMIN){
+        if (roleType != RoleType.STUDENT || roleType != RoleType.TEACHER || roleType != RoleType.SCHOOLADMIN) {
             String msg = MessageFormat.format("Illegal RoleType {0} requested.", new Object[]{roleType.name()});
             LOG.log(Level.SEVERE, msg);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);            
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
         }
         PersistentUser pUser = null;
         //DONE check if username + domain exists, in tblsamluser
@@ -636,7 +639,7 @@ public class PublicUserManager {
 //                    hr.setClassID(schoolClass.getClassID());
 //                    HasRoleManager.edit(hr);
 //                    break;
-                    default:
+                default:
             }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
@@ -682,7 +685,7 @@ public class PublicUserManager {
     }
 
     @SuppressWarnings("deprecation")
-	private String urlEncode(String string) {
+    private String urlEncode(String string) {
         try {
             return URLEncoder.encode(string, "UTF-8");
         } catch (UnsupportedEncodingException e) {

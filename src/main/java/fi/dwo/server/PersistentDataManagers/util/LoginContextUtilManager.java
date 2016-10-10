@@ -54,6 +54,7 @@ public class LoginContextUtilManager {
 
     /**
      * return a valid LoginContext when a new session is set, returns null if one exists.
+     * 
      * @param user
      * @return
      * @throws Dwo2Exception 
@@ -69,7 +70,7 @@ public class LoginContextUtilManager {
                     loginContext.setUserId(user.getId());
                     loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     loginContext.setRegisterTimeStamp(user.getRegisterDate().getTime());
-                    loginContextList.add(loginContext);
+                    //loginContextList.add(loginContext);
                     LoginContextManager.create(loginContext);
                     break;
                 case 1:
