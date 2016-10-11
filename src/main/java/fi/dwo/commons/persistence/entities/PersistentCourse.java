@@ -86,7 +86,7 @@ public class PersistentCourse implements Serializable {
     @Column(name = "sequencenr", nullable = false)
     private Long sequenceNr;
     @Size(max = 250)
-    @Column(name = "treepath", length = 250)
+    @Column(name = "treeIndex", length = 250)
     private String treePath;
     @Basic(optional = false)
     @Column(name = "lastChangeTimeStamp", nullable = true)
