@@ -9,6 +9,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+
 /**
  *
  * @author Gert van der Plas
@@ -50,13 +52,18 @@ public class SchoolLoginController {
     public void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClasses> callBack) {
         manager.getSchoolLogins(callBack);
     }
-
-    public void switchToSchoolLogin(DomSchoolRoleAndClass reqSrac, AsyncCallback<DomSchoolRoleAndClass> callBack)  {
-        manager.switchToSchoolLogin(reqSrac, callBack);
+    
+    public Promise<DomSchoolRoleAndClass> switchToSchoolLogin(DomSchoolRoleAndClass sc) {
+    	PromiseCallback<DomSchoolRoleAndClass> cb = new PromiseCallback<DomSchoolRoleAndClass>();
+    	manager.switchToSchoolLogin(sc, cb);
+    	return cb.getPromise();
+    	
     }
 
-    public void removeASchoolLogin(DomSchoolRoleAndClass reqSrac, AsyncCallback<Boolean> callBack) {
-        manager.removeASchoolLogin(reqSrac, callBack);
+    public Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClass reqSrac) {
+    	PromiseCallback<Boolean> cb = new PromiseCallback<Boolean>();
+        manager.removeASchoolLogin(reqSrac, cb);
+        return cb.getPromise();
     }
 
     public void addASchoolLogin(DomNewSchoolLogin reqSrac, AsyncCallback<Boolean> callBack){

@@ -112,6 +112,7 @@ public class Account implements EntryPoint, ClickHandler {
                     LOG.log(Level.INFO, "Fetched a test user with username:" + result.getDomUserFull().getUserName()+ ".");
                     user = ((DomUserFullwLoginContext) result).getDomUserFull();
                     loginStatusPanel.setStatus(user.getUserName(), true);
+                    userBar.setSingleSchool(user.getSingleSchool());
                     DwoGlobalVars.instance().setCurrentUser(user);
                     SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
                     manager.getActiveSchoolClass(new AsyncCallback<DomSchoolClass>() {

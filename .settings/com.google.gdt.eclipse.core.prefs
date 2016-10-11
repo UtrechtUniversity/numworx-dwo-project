@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
 jarsExcludedFromWebInfLib=
+lastWarOutDir=/Users/peterboon/Documents/workspace-neon/Account/target/Account-0.0.1-SNAPSHOT
 warSrcDir=war
-warSrcDirIsOutput=true
+warSrcDirIsOutput=false

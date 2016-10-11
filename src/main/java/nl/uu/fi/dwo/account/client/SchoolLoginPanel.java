@@ -29,6 +29,10 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
+
 import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
 
 /**
@@ -37,7 +41,27 @@ import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
  */
 public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
 
-    Logger LOG = Logger.getLogger("SchoolLoginPanel");
+    private final class HideAndReset<T> implements Success<T, Void> {
+		@Override
+		public Promise<Void> call(Promise<T> notused) throws Exception {
+			popup.hide();
+			resetLogin.execute();;
+			return null;
+		}
+	}
+
+    private final class RestFailure implements Failure {
+
+		@Override
+		public void fail(Promise<?> resolved) throws Exception {
+			Throwable t = resolved.getFailure();
+            Window.alert(t.getMessage()); // FIXME betere foutmelding
+            LOG.log(Level.WARNING, "failure", t);
+		}
+    	
+    }
+    
+	Logger LOG = Logger.getLogger("SchoolLoginPanel");
 
     SchoolLoginController control;
     PopupPanel popup;
@@ -99,6 +123,10 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
             }
         };                
 
+        
+        
+        
+        
         CellPreviewEvent.Handler<DomSchoolRoleAndClass> cellPreviewHandler = new CellPreviewEvent.Handler<DomSchoolRoleAndClass>() {
             @Override
             public void onCellPreview(CellPreviewEvent<DomSchoolRoleAndClass> event) {
@@ -113,48 +141,15 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
                     DomSchoolRoleAndClass sc = dataProvider.getList().get(rowIndex);
                     switch (rowIndex) {
                         case 2: //relogin with schoolclass set...
-                            control.switchToSchoolLogin(sc, new AsyncCallback<DomSchoolRoleAndClass>() {
-                                @Override
-                                public void onFailure(Throwable t) {
-                                    //fail and reset all the data.
-                                    Window.alert(t.getMessage());
-                                    //TODO Wim
-                                    Window.alert("wim handles error here.");
-                                }
-
-                                @Override
-                                public void onSuccess(DomSchoolRoleAndClass result) {
-                                	popup.hide();
-                                	resetLogin.execute();;
-                                }
-                            });
-                            break;
-                        case 3:     //remove schoolclass and relogin if it was the active schoolclass.
+                        	control.switchToSchoolLogin(sc)
+                        		.then(new HideAndReset<DomSchoolRoleAndClass>(), new RestFailure());
+                        	
+                              break;
+                        case 3:     //remove school and relogin if it was the active schoolclass.
 //                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {
-                            control.removeASchoolLogin(sc, new AsyncCallback<Boolean>() {
-                                @Override
-                                public void onFailure(Throwable t) {
-                                    //fail and reset all the data.
-                                    Window.alert(t.getMessage());
-                                    //TODO Wim
-                                    Window.alert("wim handles error here.");
-                                }
-
-                                @Override
-                                public void onSuccess(Boolean result) {
-                                    //TODO update table.
-                                    
-                                    //TODO Wim
-                                	//TODO if( currentschoolclass is removed )
-                                	if(true)
-                                	{
-                                		popup.hide();
-                                		resetLogin.execute();
-                                	}
-                                    
-                                }
-                            });
-                            break;
+                            control.removeASchoolLogin(sc)
+                    			.then(new HideAndReset<Boolean>(), new RestFailure());
+                          break;
                         default:
                     }
                 }
@@ -176,12 +171,10 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     @Override
     public void onClick(ClickEvent event) {
         //logger.log(Level.INFO, "object {0}", new Object[]{event.getSource()});
-        Window.alert(event.getSource().toString());
         if (event.getSource() == this.closeBtn) {
-            Window.alert("CANCEL!");
             popup.hide();
         } else if (event.getSource() == this.addBtn) {
-            Window.alert("OK!");
+            Window.alert("ADD!");
             popup.hide();
         }
     }
