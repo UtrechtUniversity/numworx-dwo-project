@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.rest.locale;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/Users/gert/NetBeansProjects/UU/DWO-gwt-lib/trunk/src/fi/dwo/rest/locale/DwoLocaleMessages.properties'.
+ * 	'/Users/peterboon/Documents/workspace-neon/DWO-rest-lib/target/classes/nl/uu/fi/dwo/rest/locale/DwoLocaleMessages.properties'.
  */
 public interface DwoLocaleMessages extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
@@ -221,6 +221,15 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.ConstantsW
   @DefaultStringValue("username")
   @Key("GUI.Username")
   String GUI_Username();
+
+  /**
+   * Translated "Data provided by the school".
+   * 
+   * @return translated "Data provided by the school"
+   */
+  @DefaultStringValue("Data provided by the school")
+  @Key("GUIR_MSG_PROVIDED_SCHOOL")
+  String GUIR_MSG_PROVIDED_SCHOOL();
 
   /**
    * Translated "schoolclass key".
