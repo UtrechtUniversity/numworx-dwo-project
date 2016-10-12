@@ -1,29 +1,21 @@
 package nl.uu.fi.dwo.register.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.ui.client.widget.Button;
 
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
-import fi.dwo.rest.dom.entities.DomContext;
-import fi.dwo.rest.dom.entities.DomNewUser;
-import fi.dwo.rest.dom.entities.RoleType;
-import fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
-import fi.dwo.rest.entities.RestNewUser;
-import fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import fi.dwo.rest.exceptions.Dwo2RestException;
-import fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
-import fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class RegisterPanel extends Composite {
 

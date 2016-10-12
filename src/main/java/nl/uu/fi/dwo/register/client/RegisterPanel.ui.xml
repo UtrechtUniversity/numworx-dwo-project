@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
     xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:with type="fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
+	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
 	<ui:style>
 	</ui:style>
 	<g:HTMLPanel>
@@ -50,7 +50,7 @@
 	    	       		<td>&#x00a0;</td>
 	    	       </tr>
 	    	       <tr>
-	    	       		<td colspan="2" >Gegevens verstrekt door de school</td>
+	    	       		<td colspan="2" ><ui:text from="{rb.GUIR_MSG_PROVIDED_SCHOOL}" /></td>
 	    	       </tr>
 	    	       <tr>
 	    	       	<td><ui:text from="{rb.GUI_SchoolLogin}" /></td>

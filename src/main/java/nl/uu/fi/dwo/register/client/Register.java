@@ -6,7 +6,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
-import fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class Register implements EntryPoint, Command {
 	
