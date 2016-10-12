@@ -33,7 +33,7 @@ public class Expressie
 	//public static DecimalFormat df3;
 	//public static FontMetrics fm;
 
-	private static final HashMap casEvalStrings = new HashMap();
+	private static final HashMap<String,Expressie> casEvalStrings = new HashMap<String,Expressie>();
 	private static final Expressie FAILED = new Expressie();
 
 	static boolean hoekGraden;
@@ -168,10 +168,23 @@ public class Expressie
 			*/
 		}
 	
+		public static Expressie decideWithCas(VergelijkingMeerv e) throws RestartException
+		{
+			return decideWithIdeas(e.toStringStrikt());
+		}
+		
 		private static class Restart implements RestartHandler, RuleCallback {
 
 			private String message;
 			private Runnable run;
+			private String command;
+			
+			Restart(String command) {
+				this.command = command;
+			}
+			Restart() {
+				this(IdeasIF.EVAL);
+			}
 			
 			@Override
 			public void onFailure(Throwable caught) {
@@ -199,7 +212,7 @@ public class Expressie
 			public void restart(String message, Runnable run) {
 				this.run = run;
 				this.message = message;
-				WiskOpdr.ideas.interpret(message, this);
+				WiskOpdr.ideas.interpret(command, message, this);
 			}
 
 		}
@@ -207,7 +220,7 @@ public class Expressie
 		private static Logger logger = Logger.getLogger("Expressie");
 		private static Expressie evalWithIdeas(String evalCommand) throws RestartException
 		{
-			Expressie expr = (Expressie) casEvalStrings.get(evalCommand);
+			Expressie expr = casEvalStrings.get(evalCommand);
 			if (expr == FAILED)
 				return null;
 			if (expr != null)
@@ -218,6 +231,17 @@ public class Expressie
 			throw new RestartException(evalCommand, new Restart());		
 		}
 
+		private static Expressie decideWithIdeas(String decideCommand) throws RestartException
+		{
+			Expressie expr = casEvalStrings.get(decideCommand);
+			if (expr == FAILED) 
+				return null;
+			if (expr != null)
+				return expr;
+			logger.fine("throw restart " + decideCommand);
+			throw new RestartException(decideCommand, new Restart(IdeasIF.DECIDE));		
+		}
+		
 		/**
 		 * Bereken de (double) waarde van een Expressie via een CAS.
 		 * 

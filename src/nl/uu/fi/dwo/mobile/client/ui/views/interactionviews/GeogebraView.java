@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,7 +22,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Frame;
@@ -101,6 +100,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 
 	private void ggbLog(String action, String name, String definition,
 			String value, String type) {
+		// nagekeken = false; // FIXME haal vinkje weg als er iets verandert?
 		if (dwologger != null) {
 			Map<String, Object> result = new HashMap<String, Object>();
 			result.put("event", action);
@@ -212,8 +212,6 @@ public class GeogebraView implements InteractionView, LoadHandler
 			dwologger.setMaxScore(scoreMax);
 			dwologger.setLogID(ggbMap.getString("logID"));
 		}
-		
-		
 		return this;
 
 	}
@@ -295,8 +293,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 	}
 
 	protected void onCheck() {
-		kijkNa();
-		setCheckImg();
+		kijkNa(true);  // Feedback in view
+		setCheckImg(); // FeedBack on button
 		attemptsCount ++;
 		if(Boolean.FALSE.equals(correct))
 			errorCount++;
@@ -306,6 +304,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	}
 
 	private DWOLogger dwologger;
+	private int mode;
 	private void setAttempt() {
 		if(dwologger != null) {
 			Map<String,Object> parameters = new HashMap<String,Object>();
@@ -355,10 +354,19 @@ public class GeogebraView implements InteractionView, LoadHandler
 	@Override
 	public HashMap<String, Object> getState()
 	{
-		if(facade.hasState())
-			return facade.getState();
-		kijkNa();
-		HashMap map = new HashMap();
+		if(facade.hasState()) {
+			HashMap<String, Object> state = facade.getState();
+			state.put("nagekeken", Boolean.valueOf(nagekeken));	// deze kan veranderen als de popup dicht is
+			return state;
+		}
+		boolean feedback;
+// bij zelftoets nooit feedback, bij oefenen altijd en bij  eindtoets alleen als nagekeken.		
+		feedback = 
+				mode == OpdrNavIF.OEFENEN ||
+				mode == OpdrNavIF.OEFENEN_STRAFPUNTEN ||
+				( mode == OpdrNavIF.EINDTOETS && nagekeken);
+		kijkNa(feedback);
+		HashMap<String,Object> map = new HashMap<String,Object>();
 		if(bewaarOptie && pendingState != null)
 			map.put("state", pendingState);
 		if(bewaarOptie && ggbApplet != null) {
@@ -417,10 +425,25 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if(wrap.containsKey("attempsCount")) attemptsCount = wrap.getInt("attemptsCount");
 		if(wrap.containsKey("errorCount")) errorCount = wrap.getInt("errorCount");
 		
-		setCheckImg(); // geen Kijkna nodig, want we hebben alle variabelen hersteld.
+		boolean feedback = 
+				mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || nagekeken;
+		if (feedback)
+			setCheckImg(); // geen Kijkna nodig, want we hebben alle variabelen hersteld, behalve de groene elementen.
+		else if (checkWidget != null)
+			checkWidget.setHTML(kijkNa); // clear feedback
 	}
 
-	public void kijkNa()
+	/**
+	 * wordt aangeroepen bij zelftoets.
+	 */
+	public void kijkNa() {
+		 
+		kijkNa(true); 
+		nagekeken = true;
+		setCheckImg(); // set feedback. inclusief vinkje.
+	}
+	
+	private void kijkNa(boolean feedback) // getState/kijkna
 	{
 		if(nakijken && ggbApplet != null)
 		{
@@ -456,7 +479,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 							match = 1.0 == getValue(ggbApplet, "checkDWO");
 						}
 						if(match) {
-							setColor(ggbApplet, objectName, 0, 180, 0); // FIXME feedback alleen in oefenen of (toets + nagekeken).
+							if(feedback)
+								setColor(ggbApplet, objectName, 0, 180, 0); // feedback alleen in oefenen of (toets + nagekeken).
 							score += geogebraCheckScores[j];
 							checkObjects[j] = null; // used!
 							matches ++;
@@ -468,7 +492,9 @@ public class GeogebraView implements InteractionView, LoadHandler
 					}
 				}
 				if(matches > 0 && matches < checkObjects.length)
+				{
 					setCorrect(null);
+				}
 				else
 					setCorrect(matches != 0);
 			
@@ -483,7 +509,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 
 	private void setCorrect(Boolean b) {
 		if(b == null)
-		{	score = 0;
+		{	// score = 0; // score is gezet door KijkNa(boolean)
 			correct = null;
 		}
 		else if( b)
@@ -517,7 +543,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	}
 	
 	public void zetNagekeken(boolean b) {
-		if (ingevuld)
+		//if (ingevuld)
 			nagekeken = b;
 	}
 
@@ -527,7 +553,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		this.comRoot = comRoot;
 		dir = comRoot.getUUID();
 		if(dir != null) dir = dir.replace('-', '/')+'/'; else dir ="";
-		int mode = comRoot.getMode();
+		mode = comRoot.getMode();
 		if(nakijken & mode > 1 && checkBtn != null) {
 			// haal checkbutton weg, insert een label
 			checkBtn.removeFromParent();
@@ -568,7 +594,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 
 	private void setPendingState() {
 		if(pendingState != null && ggbApplet != null) {
-			setXML(ggbApplet, pendingState);
+			setXML(ggbApplet, pendingState); // TODO kan je hier een "kijkna(true)" doen?
 			pendingState = null;
 		}
 	}

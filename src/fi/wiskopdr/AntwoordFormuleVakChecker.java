@@ -886,8 +886,8 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			}
 		}
 	}
-	/*
-	public void checkCasStatement(String expAntwoordString)	
+	
+	public void checkCasStatement(String expAntwoordString) throws RestartException	
 	{
 		String checkString = casString;
 		for(int j=checkString.length()-1 ; j>-1; j--)
@@ -895,19 +895,20 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			{	int index1 = checkString.substring(0,j).lastIndexOf("{");
 				String parseString = checkString.substring(index1+1,j);
 				if(parseString.equals("ANS"))
-				{	parseString = (FormuleParser.geefExpressie(expAntwoordString)).toStringCAS();
+				{	parseString = (FormuleParser.geefExpressie(expAntwoordString)).toStringStrikt();
 				}
 				checkString = ""+checkString.substring(0,index1)+parseString+checkString.substring(j+1);
 				j=index1;
 			}	
 		}
-		Expressie e = Expressie.evalWithCAS(checkString);
-		String casResultString = "False";
-		if(e!=null) casResultString = e.toString();
-		casResult = "True".equals(casResultString);
+		VergelijkingMeerv v = FormuleParser.parseVergelijking("$f" + checkString +"@");
+		Expressie e = Expressie.decideWithCas(v);
+		casResult = e.geefWaarde() == 1.0;
+		
+		
 		
 	}
-	*/
+	
 	public String verwijderIsTeken(String inputStr){
 		if(inputStr.charAt(inputStr.length()-2)=='=' || inputStr.charAt(inputStr.length()-2)=='\u2248')
 		{	int isIndex = inputStr.length()-2;
@@ -986,12 +987,12 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 				boolean pastSignificant = false;
 				
 				if(casCheck)
-				{	/*checkCasStatement(expAntwoordString);	
+				{	checkCasStatement(expAntwoordString);	
 					if(casResult)
 					{	pastGelijkwaardig = true;
 						pastHerleid = true;
 						pastExact = true;
-					}*/
+					}
 				}
 				else
 				{	for(int i=0 ; i<juisteAntwoorden.length ; i++)
