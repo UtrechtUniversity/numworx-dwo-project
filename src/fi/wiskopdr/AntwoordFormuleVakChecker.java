@@ -903,10 +903,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		}
 		VergelijkingMeerv v = FormuleParser.parseVergelijking("$f" + checkString +"@");
 		Expressie e = Expressie.decideWithCas(v);
-		casResult = e.geefWaarde() == 1.0;
-		
-		
-		
+		casResult = e != null && e.geefWaarde() == 1.0;
 	}
 	
 	public String verwijderIsTeken(String inputStr){
