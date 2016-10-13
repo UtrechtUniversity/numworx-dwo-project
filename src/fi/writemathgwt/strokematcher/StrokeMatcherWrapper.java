@@ -4,16 +4,15 @@ import java.util.ArrayList;
 
 import fi.beans.lineairealgebra.Point2d;
 import fi.writemath.engine.core.Stroke;
-import fi.writemath.engine.strokematching.StrokeMatcherFactory.MatchMethodId;
-import fi.writemath.engine.strokematching.StrokeMatcherFactory.MatchMetricId;
-import fi.writemath.engine.strokematching.StrokeMatcherFactory.MatchResultsId;
-//import fi.writemathgwt.client.Point;
+import fi.writemath.engine.strokematching.StrokeMatcher;
+import fi.writemath.engine.strokematching.StrokeMatcherFactory;
 import fi.writemath.engine.strokematching.results.MatchResult;
 import fi.writemath.engine.strokematching.strokesampleset.StrokeSampleSetFactory;
+import fi.writemathgwt.client.DoublePoint;
 
 
 public class StrokeMatcherWrapper {
-	DoublePoint doublePoint;
+//	DoublePoint doublePoint;
 	private StrokeMatcher strokeMatcher;
 	
 	public StrokeMatcherWrapper() {
@@ -55,7 +54,7 @@ public class StrokeMatcherWrapper {
 		Stroke convertedStroke = new Stroke();
 		for (int i=0; i<doublePoints.size(); i++) {
 			DoublePoint currentPoint = doublePoints.get(i);
-			convertedStroke.addPoint(new Point2d(currentPoint.x, currentPoint.y));
+			convertedStroke.addPoint(new Point2d(currentPoint.getX(), currentPoint.getY()));
 		}
 		return convertedStroke;
 	}

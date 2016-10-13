@@ -203,26 +203,26 @@ public class WriteObject
 			if (".".equals(teken))
 			{
 				g.setFillStyle(CssColor.make(0, 0, 0));
-				g.fillRect(doublePoints.get(0).x, doublePoints.get(0).y, 3, 3);
+				g.fillRect(doublePoints.get(0).getX(), doublePoints.get(0).getY(), 3, 3);
 				g.setFillStyle(CssColor.make(255, 255, 255));
 				return;
 			}
 			
 			boolean drawContinuous = "-".equals(teken) || "sqrt".equals(teken);			
 			g.beginPath();
-			g.moveTo(doublePoints.get(0).x, doublePoints.get(0).y);
+			g.moveTo(doublePoints.get(0).getX(), doublePoints.get(0).getY());
 			
 			for (int j = 1; j <doublePoints.size(); j++) 
 			{	if (drawContinuous)
 				{
-					g.lineTo(doublePoints.get(j).x, doublePoints.get(j).y);
+					g.lineTo(doublePoints.get(j).getX(), doublePoints.get(j).getY());
 				}
 				else // skip gaps for two-strokes
 				{	
 					if (distance(doublePoints.get(j-1), doublePoints.get(j)) < 3 * getStandardLength(doublePoints))
-						g.lineTo(doublePoints.get(j).x, doublePoints.get(j).y);
+						g.lineTo(doublePoints.get(j).getX(), doublePoints.get(j).getY());
 					else 
-						g.moveTo(doublePoints.get(j).x, doublePoints.get(j).y);
+						g.moveTo(doublePoints.get(j).getX(), doublePoints.get(j).getY());
 				}
 			}
 			g.stroke();
@@ -251,7 +251,7 @@ public class WriteObject
 		ArrayList<DoublePoint> deepCopy = new ArrayList<DoublePoint>();
 		for (int j = 0; j < toCopy.size(); j++)
 		{
-			deepCopy.add(new DoublePoint(toCopy.get(j).x, toCopy.get(j).y));
+			deepCopy.add(new DoublePoint(toCopy.get(j).getX(), toCopy.get(j).getY()));
 		}
 		return deepCopy;
 	}
@@ -289,7 +289,7 @@ public class WriteObject
 	//OK
 	private double distance(DoublePoint p1, DoublePoint p2) 
 	{
-		return Math.sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y));
+		return Math.sqrt((p1.getX()-p2.getX())*(p1.getX()-p2.getX()) + (p1.getY()-p2.getY())*(p1.getY()-p2.getY()));
 	}
 	
 	//OK
@@ -333,7 +333,7 @@ public class WriteObject
 			{	// interpolate
 				DoublePoint beginPoint = doublePoints.get(i);
 				DoublePoint endPoint = doublePoints.get(i+1);
-				pointsNew.add(new DoublePoint((beginPoint.x + endPoint.x) / 2, (beginPoint.y + endPoint.y) / 2));
+				pointsNew.add(new DoublePoint((beginPoint.getX() + endPoint.getX()) / 2, (beginPoint.getY() + endPoint.getY()) / 2));
 			}	
 		}
 		pointsNew.add(doublePoints.get(doublePoints.size() - 1));
@@ -360,16 +360,16 @@ public class WriteObject
 			
 			if (s < lengthOld + lengthRest) 
 			{
-				double xNew = pOld0.x + (s-lengthRest)/lengthOld*(pOld1.x-pOld0.x);
-				double yNew = pOld0.y + (s-lengthRest)/lengthOld*(pOld1.y-pOld0.y);
+				double xNew = pOld0.getX() + (s-lengthRest)/lengthOld*(pOld1.getX()-pOld0.getX());
+				double yNew = pOld0.getY() + (s-lengthRest)/lengthOld*(pOld1.getY()-pOld0.getY());
 				DoublePoint pointNew = new DoublePoint(xNew, yNew);
 				pointsNew.add(pointNew);
 				lengthRest = distance(pointNew,pOld1);
 				int teller = 0;
 				while (s < lengthRest - 0.0000001) 
 				{
-					xNew = pointNew.x + s/lengthRest*(pOld1.x-pointNew.x);
-					yNew = pointNew.y + s/lengthRest*(pOld1.y-pointNew.y);
+					xNew = pointNew.getX() + s/lengthRest*(pOld1.getX()-pointNew.getX());
+					yNew = pointNew.getY() + s/lengthRest*(pOld1.getY()-pointNew.getY());
 					pointNew = new DoublePoint(xNew, yNew);
 					pointsNew.add(pointNew);
 					lengthRest = distance(pointNew,pOld1);
@@ -429,16 +429,16 @@ public class WriteObject
 				DoublePoint p0 = new DoublePoint(sample[2*i-2], sample[2*i-1]);
 				DoublePoint p1 = new DoublePoint(sample[2*i], sample[2*i+1]);
 				DoublePoint p2 = new DoublePoint(sample[2*i+2], sample[2*i+3]);
-				DoublePoint p01 = new DoublePoint(p1.x-p0.x, p1.y-p0.y);
-				DoublePoint p12 = new DoublePoint(p2.x-p1.x, p2.y-p1.y);
-				double detSample = (p01.x*p12.y-p01.y*p12.x)/(distance(p0,p1)*distance(p1,p2));
+				DoublePoint p01 = new DoublePoint(p1.getX()-p0.getX(), p1.getY()-p0.getY());
+				DoublePoint p12 = new DoublePoint(p2.getX()-p1.getX(), p2.getY()-p1.getY());
+				double detSample = (p01.getX()*p12.getY()-p01.getY()*p12.getX())/(distance(p0,p1)*distance(p1,p2));
 				
 				DoublePoint q0 = doublePoints.get(i-1);
 				DoublePoint q1 = doublePoints.get(i);
 				DoublePoint q2 = doublePoints.get(i+1);
-				DoublePoint q01 = new DoublePoint(q1.x-q0.x, q1.y-q0.y);
-				DoublePoint q12 = new DoublePoint(q2.x-q1.x, q2.y-q1.y);
-				double detStroke = (q01.x*q12.y-q01.y*q12.x)/(distance(q0,q1)*distance(q1,q2));
+				DoublePoint q01 = new DoublePoint(q1.getX()-q0.getX(), q1.getY()-q0.getY());
+				DoublePoint q12 = new DoublePoint(q2.getX()-q1.getX(), q2.getY()-q1.getY());
+				double detStroke = (q01.getX()*q12.getY()-q01.getY()*q12.getX())/(distance(q0,q1)*distance(q1,q2));
 				
 				distance +=  Math.abs(detSample - detStroke);
 			}
@@ -464,8 +464,8 @@ public class WriteObject
 		for(int i = 0 ; i < doublePoints.size() ; i++) 
 		{
 			DoublePoint p = doublePoints.get(i);
-			double xNew = scaleX*(p.x-startX);
-			double yNew = scaleY*(p.y-startY);
+			double xNew = scaleX*(p.getX()-startX);
+			double yNew = scaleY*(p.getY()-startY);
 			pointsNew.add(new DoublePoint(xNew,yNew));
 			
 //			System.out.print(""+pointsNew.get(i).getPoint().x + "," + pointsNew.get(i).getPoint().y + ",");
@@ -529,11 +529,11 @@ public class WriteObject
 	
 			if (i < parsePoints.size() - 1)
 			{	//System.out.print("" + (int) Math.round(p.x) + "," + (int) Math.round(p.y) + ",");
-				result += (int) Math.round(p.x) + "," + (int) Math.round(p.y) + ",";
+				result += (int) Math.round(p.getX()) + "," + (int) Math.round(p.getY()) + ",";
 			
 			}
 			else
-			{	result += (int) Math.round(p.x) + "," + (int) Math.round(p.y) + "};";
+			{	result += (int) Math.round(p.getX()) + "," + (int) Math.round(p.getY()) + "};";
 				//System.out.print("" + (int) Math.round(p.x) + "," + (int) Math.round(p.y) + "};");
 			
 			}
