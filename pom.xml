@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.uu.fi.dwo.register</groupId>
   <artifactId>Register</artifactId>
   <packaging>war</packaging>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <name>Register Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -78,6 +77,6 @@
   	<dwoVersion>2.1.2</dwoVersion>
   </properties>
   <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Register/trunk</developerConnection>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Register/tags/Register-0.0.1</developerConnection>
   </scm>
 </project>
