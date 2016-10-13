@@ -3,7 +3,7 @@
   <groupId>nl.uu.fi.dwo.register</groupId>
   <artifactId>Register</artifactId>
   <packaging>war</packaging>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>Register Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -77,6 +77,6 @@
   	<dwoVersion>2.1.2</dwoVersion>
   </properties>
   <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Register/tags/Register-0.0.1</developerConnection>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Register/trunk</developerConnection>
   </scm>
 </project>
