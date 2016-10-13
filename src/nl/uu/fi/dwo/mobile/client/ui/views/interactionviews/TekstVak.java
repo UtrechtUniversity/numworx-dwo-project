@@ -285,64 +285,63 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		Canvas canvas = Canvas.createIfSupported();
 		Context2d ctx = canvas.getContext2d();
 		String fontTypeString = "";
-		if(font_style == 1)
+		if (font_style == 1)
 			fontTypeString = "bold";
-		else if(font_style == 2)
+		else if (font_style == 2)
 			fontTypeString = "italic";
-		else if(font_style == 3)
+		else if (font_style == 3)
 			fontTypeString = "bold italic";
-		if(fontTypeString.equals(""))
+		
+		if (fontTypeString.equals(""))
 			ctx.setFont(font_size + "px " + font_name);
 		else
 			ctx.setFont(fontTypeString + " " + font_size + "px " + font_name);
+		
 		double spatieBreedte = ctx.measureText(" ").getWidth();
 				
 		//Voor alle objecten bepalen op welke regel ze terechtkomen, door breedtes te meten.
-		for(int i = 0; i < opdrachtObjects.size(); i++)
+		for (int i = 0; i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
-			if(currentObject instanceof String)
+			if (currentObject instanceof String)
 			{
 				String s = (String) currentObject;
-				// het gaat mis als een string na een formuleviewer niet begint met een spatie
-				if (!s.startsWith(" "))
-				{
-					s = " " + s;
-				}
 				
 				String sInRegel = "";
 				double width = 0;
 				//int stringBreedte = 0;
-				if(i > 0 && opdrachtObjects.get(i - 1) instanceof String && s.length() > 0 && s.startsWith(" "))
+				if (i > 0 && opdrachtObjects.get(i - 1) instanceof String && s.length() > 0 && s.startsWith(" "))
 				{
 					s = s.substring(1);
 				}
 				//s = s.replaceAll("  ", " &nbsp;");
 				//s = s.replaceAll("&nbsp; ", "&nbsp;&nbsp;");
-				while(s.contains(" "))
-				{	String sub = s.substring(0, s.indexOf(" ") + 1); 
+				while (s.contains(" "))
+				{	
+					String sub = s.substring(0, s.indexOf(" ") + 1); 
 					s = s.substring(s.indexOf(" ") + 1); 
 					//int width = (int) Math.round(ctx.measureText(sub.substring(0, sub.length() - 1)).getWidth());
 					String substring = sub.substring(0, sub.length() - 1);
 					//double width = ctx.measureText(substring).getWidth();
 					width = ctx.measureText(sInRegel + substring).getWidth();
-					if(regelBreedte == 0)
+					if (regelBreedte == 0)
 					{
 						regelBreedte = 2;
 					}
-					if(regelBreedte < 2 || sInRegel.length() == 0 || regelBreedte + width  <= tekstVakBreedte || pasAanB)
+					
+					if (regelBreedte < 2 || regelBreedte + width  <= tekstVakBreedte || pasAanB)
 					{
 						regelVakken[aantalRegels - 1].addObject(substring);
 						sInRegel = sInRegel + substring;
 						//regelBreedte += width; regelBreedte = measureText van wat er nu in staat. Maar rekening houden met mogelijke ander vakjes..
-						if(regelBreedte + width <= 2 || regelBreedte + width + spatieBreedte <= tekstVakBreedte || pasAanB)
+						if (regelBreedte + width <= 2 || regelBreedte + width + spatieBreedte <= tekstVakBreedte || pasAanB)
 						{
 							regelVakken[aantalRegels - 1].addObject(" ");
 							//regelBreedte += spatieBreedte;
 							sInRegel = sInRegel + " ";
 							width = ctx.measureText(sInRegel).getWidth();
 						}
-						else if(s.length() > 0)
+						else if (s.length() > 0)
 						{
 							voegRegelToe();
 							regelBreedte = 0;
@@ -359,14 +358,14 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 						width = ctx.measureText(substring).getWidth();
 						//regelBreedte = width + 2;
 						regelBreedte = 2;
-						if(regelBreedte + width <= 2 || regelBreedte + width + spatieBreedte <= tekstVakBreedte)
+						if (regelBreedte + width <= 2 || regelBreedte + width + spatieBreedte <= tekstVakBreedte)
 						{
 							regelVakken[aantalRegels - 1].addObject(" ");
 							//regelBreedte += spatieBreedte;
 							sInRegel = sInRegel + " ";
 							width = ctx.measureText(sInRegel).getWidth();
 						}
-						else if(s.length() > 0)
+						else if (s.length() > 0)
 						{
 							voegRegelToe();
 							regelBreedte = 0;
@@ -375,12 +374,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 						}
 					}
 				}
-				if(s.length() > 0)//nu zitten er in s geen spaties meer. De rest nog proberen te plaatsen.
+				if (s.length() > 0)//nu zitten er in s geen spaties meer. De rest nog proberen te plaatsen.
 				{
 					//double width = ctx.measureText(s).getWidth();
 					width = ctx.measureText(sInRegel + s).getWidth();
 /// XXX if regelbreedte=0 then +2 hier niet?
-					if(regelBreedte < 2 || sInRegel.length() == 0 || regelBreedte + width  <= tekstVakBreedte || pasAanB)
+					if (regelBreedte < 2 || sInRegel.length() == 0 || regelBreedte + width  <= tekstVakBreedte || pasAanB)
 					{
 						regelVakken[aantalRegels - 1].addObject(s);
 						//regelBreedte += width;
@@ -411,10 +410,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				
 				}
 			}
-			else if(currentObject instanceof InteractionView)
+			else if (currentObject instanceof InteractionView)
 				((InteractionView) currentObject).zetVolledigeBreedte((int) tekstVakBreedte);
 
-			if(currentObject instanceof TekstElementWithFont) {
+			if (currentObject instanceof TekstElementWithFont) {
 				TekstElementWithFont tmf = (TekstElementWithFont) currentObject;
 				tmf.setFontSize(font_size);
 				tmf.setFontName(font_name);
@@ -422,7 +421,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				regelBreedte = setupTekstElement(regelBreedte, tmf, false);
 				tmf.setParentRegel(regelVakken[aantalRegels-1]);
 				
-			} else
+			} 
 // TekstElementWithFont	(no ashoogte)					
 //			if(currentObject instanceof AntwoordTekstVak)
 //			{
@@ -476,10 +475,11 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 //				}
 //			}
 //			else 
-			if (currentObject instanceof FormuleViewer)
-			{	FormuleFont f = FormuleFont.createFromFontSize(font_size);
+			else if (currentObject instanceof FormuleViewer)
+			{	
+				FormuleFont f = FormuleFont.createFromFontSize(font_size);
 				f.setBold(font_style == 1 || font_style == 3);
-				if(!FormuleFont.formTimes)
+				if (!FormuleFont.formTimes)
 					f.setFont(font_name);
 				FormuleViewer formuleViewer = (FormuleViewer) currentObject;
 				formuleViewer.setFont(f);
@@ -499,11 +499,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 			else if (currentObject instanceof InteractionView)
 			{	
-				if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
+				if (currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
 				{	zwevendeTekstVakken.add((TekstVakPanel) currentObject);
 				}
 				else
-				{	regelBreedte = setupTekstElement(regelBreedte, (InteractionView) currentObject, false);
+				{	
+					regelBreedte = setupTekstElement(regelBreedte, (InteractionView) currentObject, false);
 //					if(regelBreedte == 0 || regelBreedte + ((InteractionView) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
 //					{	regelVakken[aantalRegels - 1].addObject(currentObject);
 //						regelBreedte += ((InteractionView) currentObject).getWidth();
@@ -561,11 +562,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		}
 		
 		//regelvakken vullen. Zo krijgen ze ook de juiste maten.
-		for(int i = 0; i < aantalRegels; i++)
+		for (int i = 0; i < aantalRegels; i++)
 		{
 			regelVakken[i].bepaalAshoogte();
 			regelVakken[i].vulRegel();
 		}
+		
 		this.ashoogte = regelVakken[0].getAsHoogte();
 		plaatsRegels(false);
 	}
