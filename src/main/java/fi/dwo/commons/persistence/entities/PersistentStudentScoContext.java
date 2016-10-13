@@ -5,6 +5,7 @@
  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
@@ -22,6 +23,9 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContextFull;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 /**
  * StudentScoContext manager. Known issues are that is does not provide a way to
@@ -216,6 +220,38 @@ public class PersistentStudentScoContext implements Serializable {
      */
     public void setSchoolGroupID(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
+    }
+
+    public DomStudentScoContext buildDomStudentScoContext() {
+        DomStudentScoContext studentSco = new DomStudentScoContext();
+        fillDomStudentScoContext(studentSco);
+        return studentSco;
+    }
+
+    public DomStudentScoContextFull buildDomStudentScoContextFull() {
+        DomStudentScoContextFull studentSco = new DomStudentScoContextFull();
+        fillDomStudentScoContextFull(studentSco);
+        return studentSco;
+    }
+
+    public void fillDomStudentScoContext(DomStudentScoContext studentSco) {
+        if (this.studentSco != null) {
+            studentSco.setId(MySQLPersistenceId.createPersistenceId(this.studentSco.intValue(), PersistenceClassType.PersistentStudentScoContext));
+        } else {
+            this.studentSco = null;
+        }
+        studentSco.setSchoolGroupID(MySQLPersistenceId.createPersistenceId(this.schoolGroupID.intValue(), PersistenceClassType.PersistentStudentScoContext));
+        studentSco.setUserID(MySQLPersistenceId.createPersistenceId(this.userID.intValue(), PersistenceClassType.PersistentUser));
+        studentSco.setScore(score);
+        studentSco.setScoID(MySQLPersistenceId.createPersistenceId(this.scoID.intValue(), PersistenceClassType.PersistentScoContext));
+    }
+
+    public void fillDomStudentScoContextFull(DomStudentScoContextFull studentSco) {
+        fillDomStudentScoContext(studentSco);
+        studentSco.setCompletionStatus(completionStatus);
+        studentSco.setCreateDate(createDate);
+        studentSco.setCreateTime(createTime);
+        studentSco.setLocation(location);
     }
 
 }
