@@ -12,7 +12,6 @@
   <inherits name="com.googlecode.mgwt.MGWTMin"/>
   <inherits name="nl.uu.fi.dwo.rest.DWO-rest-lib"/>
   <inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
-  <inherits name="nl.uu.fi.dwo.mobile.promise.Promise" />
   
   <set-property name="gwt.logging.popupHandler" value="DISABLED"/>  
   <set-property name="gwt.logging.enabled" value="TRUE"/>
