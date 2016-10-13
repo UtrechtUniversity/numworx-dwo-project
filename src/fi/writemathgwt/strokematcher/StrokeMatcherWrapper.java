@@ -1,4 +1,4 @@
-package fi.writemath.engine.strokematching;
+package fi.writemathgwt.strokematcher;
 
 import java.util.ArrayList;
 
