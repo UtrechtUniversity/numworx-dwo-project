@@ -8,9 +8,12 @@ import java.util.Set;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 
+import fi.writemathgwt.strokematcher.StrokeMatcherWrapper;
+
 
 public class WriteObject 
 {
+	private final static boolean cNewStrokmatcher = false;
 	public static HashMap<String, int[]>  samples;
  	
 	//OK
@@ -45,11 +48,14 @@ public class WriteObject
 	String teken2 = "null";
 	String teken3 = "null";
 	String teken4 = "null";
-
+	
+	StrokeMatcherWrapper newStrokeMatcher;
 	
 	//OK
 	public WriteObject(ArrayList<Point> points)
 	{
+		newStrokeMatcher = new StrokeMatcherWrapper();
+		
 		doublePoints = new ArrayList<DoublePoint>();
 		double size = 0;
 		for(int i = 0 ; i < points.size() ; i++) 
@@ -65,18 +71,20 @@ public class WriteObject
 			return;
 		}
 		
-		// try to standarize
-		if (doublePoints.size() >= 20)
-		{	ArrayList<DoublePoint> tempDoublePoints = standardize(doublePoints);
-			if (tempDoublePoints.size() >= 20)
-				doublePoints = tempDoublePoints;
-		}
+		if (!cNewStrokmatcher) {
+			// try to standarize
+			if (doublePoints.size() >= 20)
+			{	ArrayList<DoublePoint> tempDoublePoints = standardize(doublePoints);
+				if (tempDoublePoints.size() >= 20)
+					doublePoints = tempDoublePoints;
+			}
 		
-		int dpSize = doublePoints.size();
-		while (dpSize < 20)
-		{	
-			doublePoints = insertPoint(doublePoints);
-			dpSize = doublePoints.size();
+			int dpSize = doublePoints.size();
+			while (dpSize < 20)
+			{	
+				doublePoints = insertPoint(doublePoints);
+				dpSize = doublePoints.size();
+			}
 		}
 		
 		teken = parse(doublePoints);
@@ -269,15 +277,24 @@ public class WriteObject
 	//OK
 	private String parse(ArrayList<DoublePoint> doublePoints) 
 	{
-		if (doublePoints.size() > 1) 
-		{
-			doublePoints = scaleToSquare(doublePoints);
-// hier nog een smoother?			
-			doublePoints = standardizeToLength(doublePoints);
-		}
-		parsePoints = deepCopy(doublePoints);
+		if (cNewStrokmatcher) {
+			String gevondenTeken = newStrokeMatcher.findTeken(doublePoints);
+			teken1 = newStrokeMatcher.getTeken1();
+			teken2 = newStrokeMatcher.getTeken2();
+			teken3 = newStrokeMatcher.getTeken3();
+			teken4 = newStrokeMatcher.getTeken4();
+			
+			return gevondenTeken;
+		} else {
+			if (doublePoints.size() > 1) {
+				doublePoints = scaleToSquare(doublePoints);
+				// hier nog een smoother?			
+				doublePoints = standardizeToLength(doublePoints);
+			}
+			parsePoints = deepCopy(doublePoints);
 		
-		return findTeken(doublePoints);
+			return findTeken(doublePoints);
+		}
 	}
 	
 	//OK
