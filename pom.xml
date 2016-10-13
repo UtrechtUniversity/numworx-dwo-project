@@ -61,6 +61,11 @@
 				</execution>
 			</executions>
 		</plugin>
+			<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-release-plugin</artifactId>
+        		<version>2.5.3</version>
+        	</plugin>
 	</plugins>
   </build>
   <parent>
@@ -72,4 +77,7 @@
   <properties>
   	<dwoVersion>2.1.2</dwoVersion>
   </properties>
+  <scm>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Register/trunk</developerConnection>
+  </scm>
 </project>
