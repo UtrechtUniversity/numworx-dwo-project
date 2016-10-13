@@ -304,6 +304,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			if(currentObject instanceof String)
 			{
 				String s = (String) currentObject;
+				// het gaat mis als een string na een formuleviewer niet begint met een spatie
+				if (!s.startsWith(" "))
+				{
+					s = " " + s;
+				}
+				
 				String sInRegel = "";
 				double width = 0;
 				//int stringBreedte = 0;
