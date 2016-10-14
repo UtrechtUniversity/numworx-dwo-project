@@ -11,58 +11,62 @@ var xapi = function(msg) {
 
 function handleMessage(message) {
 	var msg = JSON.parse(message.data);
-	xapi(msg);
+	var isArray = msg.constructor == Array;
+	if ( !isArray ) 
+		xapi(msg)
+	else 
+	{
+		var arrayLength = msg.length;
+		for (var i = 0; i < arrayLength; i++) {
+		    xapi(msg[i]);
+		}
+	}
 }
 
-function createAnsweredStatement {
-	var success = true;
-	var duration  = 'PT3M15S'
-	var score = { "scaled": 0.4 };
-	var completion = false;
+function decompressFromBase64(state) {
+	if(state.length > 0)
+		state = LZString.decompressFromBase64(state);
+	return state;
+}
 
-	var answer = Bao.buildAnswer(null, null, success, duration, score, null, null, null, null, completion);
+
+function createAnsweredStatement(success, duration, scoreScaled, completion) {
+	//var success = true;
+	//var duration  = 'PT3M15S'
+	var score = { "scaled": scoreScaled };
+	//var completion = false;
+	var id = window.location.toString()
+	var answer = Bao.buildAnswer(id, null, success, duration, score, null, null, null, null, completion);
 	var statement = Bao.buildAnsweredStatement(answer);
 	return statement;
 }
 
-function sendAnsweredStatement() {
-	var statement = createAnsweredStatement()
+function sendAnsweredStatement(succes, duration, scoreScaled, completion) {
+	var statement = createAnsweredStatement(succes, duration, scoreScaled, completion)
 	tincan.sendStatement(statement);
 }
 
 function sendModuleDataRequest() {
-	var statement = new TinCan.Statement();
-
-    statement.verb = new TinCan.Verb({ "id": "http://bao.mijnklas.nl/xapi/verbs/moduleData" });
-    _targetUri = "*";
+	var statement = Bao.buildGetModuleDataRequestStatement()
     tincan.sendStatement(statement);
 }
 
-function createModuleDataStatement() {
-	json = "mijn module data";
-	var statement = new TinCan.Statement();
-    statement.verb = new TinCan.Verb({ "id": "http://bao.mijnklas.nl/xapi/verbs/moduleData" });
-    statement.object = 
-    	{
-    		"id": "http://bao.mijnklas.nl/xapi/activities/set-moduledata-request",
-    		"objectType": "Activity",
-    		"definition": {
-    			"extensions": {
-    				"http://bao.mijnklas.nl/xapi/extensions/objectType": "json",
-    				"http://bao.mijnklas.nl/xapi/extensions/json":  json
-    			}
-    		}
-    	}
+function createModuleDataStatement(moduledata) {
+	var json = moduledata;
+	json = LZString.compressToBase64(moduledata);
+	var statement = Bao.buildSetModuleDataRequestStatement(json)
     return statement;
 }
 
-function sendModuleDataStatement() {
-	var statement = createModuleDataStatement()
+function sendModuleDataStatement(moduledata) {
+	var statement = createModuleDataStatement(moduledata)
 	tincan.sendStatement(statement)
 }
 
-function sendAnswerAndModuleDataStatements() {
-	var statements = [ createModuleDataStatement(), createAnsweredStatement() ]
+function sendAnswerAndModuleDataStatements(succes, duration, scoreScaled, completion, moduledata) {
+	var statements = [ createModuleDataStatement(moduledata), createAnsweredStatement(succes, duration, scoreScaled, completion) ]
 	tincan.sendStatements(statements);
 }
  
+
+var lrs = new ContentApiLrs();

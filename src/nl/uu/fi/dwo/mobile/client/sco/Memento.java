@@ -489,7 +489,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		logger.info("memento flush");
 		try
 		{
-			api.Commit();
+			if(this == _instance) // API break?
+				api.Commit();
+			else 
+				logger.warning("No commit, since we are closing, terminate should follow!");
 		}
 		catch (Exception e)
 		{

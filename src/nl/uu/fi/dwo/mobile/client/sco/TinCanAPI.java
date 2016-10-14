@@ -9,11 +9,16 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
+	
+	private static final String MODULEDATA_RESPONSE = "http://bao.mijnklas.nl/xapi/activities/get-moduledata-response";
+	private static final String NAVIGATE_VERB = "http://bao.mijnklas.nl/xapi/verbs/navigate";
+	private static final String MODULEDATA_VERB = "http://bao.mijnklas.nl/xapi/verbs/moduleData";
 	private static final Logger LOG = Logger.getLogger("TinCanAPI");
 	private AsyncCallback<Void> callback;
 	private String moduleData = "";
-	private String scoreScaled = "0.0";
+	private float scoreScaled = 0.0f;
 	private boolean completion = false;
+	private boolean success = false;
 	private long    startTime;
 	private String duration;
 	/**
@@ -34,26 +39,32 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	 * @param moduleData the moduleData to set
 	 */
 	public void setModuleData(String moduleData) {
+		if (null == moduleData) moduleData = "";
 		this.moduleData = moduleData;
 	}
 
 	/**
 	 * @return the scoreScaled
 	 */
-	public String getScoreScaled() {
+	public float getScoreScaled() {
 		return scoreScaled;
 	}
 	/**
 	 * @param scoreScaled the scoreScaled to set
 	 */
-	public void setScoreScaled(String scoreScaled) {
+	public void setScoreScaled(double scoreScaled) {
+		this.scoreScaled = (float) scoreScaled;
+	}
+	
+	public void setScoreScaled(float scoreScaled) {
 		this.scoreScaled = scoreScaled;
 	}
 
 	
 	@Override
 	public String Commit() {
-		
+		success = scoreScaled > 0.99f;
+		sendAnswerAndModuleDataStatements(success, getDuration(), scoreScaled, completion, moduleData);
 		return super.Commit();
 	}
 
@@ -92,7 +103,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 					setCompletion(equals);
 			}
 			else
-				return "false";
+				return "false"; // not recognized
 		} catch (Exception e) {
 			LOG.severe("setValue " + name + " :" + e);
 			return "false";
@@ -102,36 +113,49 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 
 	@Override
 	public String Terminate() {
-		Commit();
+		sendModuleDataStatement(moduleData);
 		return super.Terminate();
 	}
 
-	private static native void sendAnsweredStatement() /*-{
-		$wnd.sendAnsweredStatement()
+	private static native void sendAnsweredStatement(boolean succes, String duration, double scoreScaled, boolean completion) /*-{
+		$wnd.sendAnsweredStatement(succes, duration, scoreScaled, completion)
 	}-*/; 
 
-	private static native void sendModuleDataStatement() /*-{
-		$wnd.sendModuleDataStatement()
+	private static native void sendModuleDataStatement(String moduledata) /*-{
+		$wnd.sendModuleDataStatement(moduledata)
 	}-*/; 
 
-	private static native void sendAnswerAndModuleDataStatements() /*-{
-		$wnd.sendAnswerAndModuleDataStatements()
+	private static native void sendAnswerAndModuleDataStatements(boolean succes, String duration, double scoreScaled, boolean completion, String moduledata) /*-{
+		$wnd.sendAnswerAndModuleDataStatements(succes, duration, scoreScaled, completion, moduledata)
 	}-*/; 
+	
+	private static native String decompressFromBase64(String data) /*-{
+		return $wnd.decompressFromBase64(data)
+	}-*/;
+	
 	
 // Dit kan in GWT zelf?	
 	private static native void Initialize0(TinCanAPI api) /*-{
-		$wnd.xapi = function (msg) { 
-			api.@nl.uu.fi.dwo.mobile.client.sco.TinCanAPI::onMessage(Lcom/google/gwt/core/client/JavaScriptObject;)(msg)
-		} 
-		$wnd.sendModuleDataRequest(); 
-		
+		( function(api) {
+			$wnd.xapi = function (msg) { 
+				api.@nl.uu.fi.dwo.mobile.client.sco.TinCanAPI::onMessage(Lcom/google/gwt/core/client/JavaScriptObject;)(msg)
+			} 	
+			$wnd.sendModuleDataRequest(); 
+		})(api)
 	}-*/;
 	
-	static class Statement extends JavaScriptObject {
-		String getJson() {
-			return "";
+	public final static class Statement extends JavaScriptObject {
+		protected Statement() {
 		}
 
+		native String getResponseJson() /*-{
+			return this.result.extensions["http://bao.mijnklas.nl/xapi/extensions/json"];
+		}-*/;
+
+		native String getObjectId() /*-{
+			return this.object.id;
+		}-*/;
+		
 		native String getVerb() /*-{
 			return this.verb.id;
 		}-*/;
@@ -140,11 +164,38 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	
 	void onMessage(JavaScriptObject obj) {
 		Statement s = obj.cast();
-		setModuleData(s.getJson());
-		startTime = System.currentTimeMillis();
-		callback.onSuccess(null);callback = null;
+		String verb = s.getVerb();
+		String id   = s.getObjectId();
+		LOG.info("verb = " + verb + ", object.id =" + id);
+		// if ( something equals verb) 
+		if(  MODULEDATA_VERB.equals(verb)
+			 //&&	MODULEDATA_RESPONSE.equals( id ) 
+			&& callback != null
+		  ) {
+			setModuleData(getResponseJson(s));
+			startTime = System.currentTimeMillis();
+			callback.onSuccess(null);
+			callback = null;
+		} else if (NAVIGATE_VERB.equals(verb)) {
+			Memento.unload();
+		}
 	}
 	
+	/**
+	 * Get suspend_data from Tincan statement.
+	 * Decompression is needed. Cannot be done by the xapi.js routines.
+	 * @param s statement
+	 * @return suspend_data
+	 */
+	private static String getResponseJson(Statement s) {
+		try {
+			return decompressFromBase64(s.getResponseJson());
+		} catch (Exception e) {
+			LOG.severe("ResponseJSON " + e);
+			return "";
+		}
+	}
+
 	@Override
 	public String Initialize() {
 		return super.Initialize();
@@ -153,7 +204,13 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	@Override
 	public void Initialize(AsyncCallback<Void> callback) {
 		this.callback = callback;
-		Initialize0(this);
+		if(true)
+			Initialize0(this);
+		else {
+			Initialize0(this);
+			startTime = System.currentTimeMillis();
+			callback.onSuccess(null);
+		}
 	}
 
 	@Override
@@ -161,9 +218,9 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 		return super.getRole();
 	}
 
-	private String toScore(String value) {
-		double raw = Double.parseDouble(value);
-		return String.valueOf(raw/100.0);
+	private float toScore(String value) {
+		float raw = Float.parseFloat(value);
+		return (raw/100.0f);
 	}
 
 	private String format(long millis)

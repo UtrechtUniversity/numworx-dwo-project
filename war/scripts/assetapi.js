@@ -80,3 +80,7 @@ function SetCompleted(GUID, Completed)
 {	//alert("SetCompleted "+Completed);
 	return assetAPI.SetCompleted(GUID,Completed);
 }
+
+function IsAssetAPI() {
+	return assetAPI != parent.assetAPI
+}
