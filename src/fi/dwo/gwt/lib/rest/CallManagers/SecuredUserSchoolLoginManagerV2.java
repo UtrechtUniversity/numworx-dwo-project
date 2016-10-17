@@ -37,7 +37,13 @@ public class SecuredUserSchoolLoginManagerV2 {
     public void getSchoolLoginsV2(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack)  {
         service.getSchoolLogins(new Callback<DomSchoolsRolesAndClassesV2> (callBack));
     }
-        
+
+//    public Promise<DomSchoolsRolesAndClassesV2> getSchoolLoginsV2()  {
+//        PromiseCallback<DomSchoolsRolesAndClassesV2> callback = new PromiseCallback<DomSchoolsRolesAndClassesV2>();
+//        service.getSchoolLogins(new Callback<DomSchoolsRolesAndClassesV2> (callback));
+//        return callback.getPromise();
+//    }
+//        
     public void switchToSchoolLogin(DomSchoolRoleAndClassV2 reqSrac, AsyncCallback<DomSchoolRoleAndClassV2> callBack){
         RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
         rsrc.setRestContext(new DomContext());
