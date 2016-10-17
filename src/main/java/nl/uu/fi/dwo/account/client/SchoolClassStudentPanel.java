@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 /**
  *
@@ -252,6 +253,28 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         closeBtn.addClickHandler(this);
 //        TODO need to resolve unknown class id in hasRole first
         addBtn = new Button("Add");
+//
+//        addBtn.setVisible(false);
+//                            control.getCurrentSchoolRoleAndClass(new AsyncCallback<DomSchoolsRolesAndClassesV2>() {
+//                                @Override
+//                                public void onFailure(Throwable t) {
+//                                    //fail and reset all the data.
+//                                    Window.alert(t.getMessage());
+//                                    //TODO Wim
+//                                    //Window.alert("wim handles error here.");
+//                                }
+//
+//                                @Override
+//                                public void onSuccess(DomSchoolsRolesAndClassesV2 result) {
+//                                    if(result.getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()){
+//                                        addBtn.setVisible(true);
+//                                    }
+//                                    popup.hide();
+//                                    resetLogin.execute();
+//                                }
+//                            });
+//
+
         addBtn.addClickHandler(this);
         addBtn.addStyleName("paddedHorizontalPanel");
         hPanel.add(addBtn);

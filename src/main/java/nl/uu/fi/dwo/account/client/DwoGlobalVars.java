@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
@@ -11,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
@@ -29,6 +31,8 @@ public class DwoGlobalVars {
     private DomSchoolClass currentSchoolClass=null;
     private DomUserFull currentUser;
     private DomLoginContext currentLoginContext;
+    private static DomSchoolsRolesAndClassesV2 schoolLogins;
+   
     
 
     public static DwoGlobalVars getInstance() {
@@ -38,7 +42,7 @@ public class DwoGlobalVars {
     public static void setInstance(DwoGlobalVars instance) {
         DwoGlobalVars.instance = instance;
     }
-
+    
     public DomSchoolClass getCurrentSchoolClass() {
         return currentSchoolClass;
     }
@@ -119,6 +123,22 @@ public class DwoGlobalVars {
 
     private void initVars() throws Dwo2Exception {
         //TODO fill DwoSystemParameters and more into the instance.
+//            schoolLogins = SecureUserAccountLoginsManager.getSchoolLogins();
+//            control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
+//                                @Override
+//                                public void onFailure(Throwable t) {
+//                                    //fail and reset all the data.
+//                                    Window.alert(t.getMessage());
+//                                    //TODO Wim
+//                                    //Window.alert("wim handles error here.");
+//                                }
+//
+//                                @Override
+//                                public void onSuccess(Boolean result) {
+//                                    popup.hide();
+//                                    resetLogin.execute();
+//                                }
+//                            });
     }
 
     /**
@@ -167,4 +187,5 @@ public class DwoGlobalVars {
         this.currentLoginContext = currentLoginContext;
     }
 
+    
 }

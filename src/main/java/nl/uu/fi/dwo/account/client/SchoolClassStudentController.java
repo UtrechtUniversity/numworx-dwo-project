@@ -2,15 +2,16 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 /**
  *
@@ -24,6 +25,7 @@ class SchoolClassStudentController {
     private DomUserFull currentUser;
     private List<DomSchoolClass> schoolClasses = new ArrayList<DomSchoolClass>();
     private SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
+    private SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
     private AddSchoolClassStudentPanel addSchoolClassView;
 
     SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user) {
@@ -38,6 +40,9 @@ class SchoolClassStudentController {
 
     }
 
+    public void getCurrentSchoolRoleAndClass(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack) {
+        loginManager.getSchoolLoginsV2(callBack);
+    };
     /**
      * @return the currentUser
      */
