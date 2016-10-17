@@ -49,12 +49,11 @@ public class WriteObject
 	String teken3 = "null";
 	String teken4 = "null";
 	
-	StrokeMatcherWrapper newStrokeMatcher;
+//	StrokeMatcherWrapper newStrokeMatcher;
 	
 	//OK
-	public WriteObject(ArrayList<Point> points)
-	{
-		newStrokeMatcher = new StrokeMatcherWrapper();
+	public WriteObject(ArrayList<Point> points) {
+//		newStrokeMatcher = new StrokeMatcherWrapper();
 		
 		doublePoints = new ArrayList<DoublePoint>();
 		double size = 0;
@@ -278,11 +277,12 @@ public class WriteObject
 	private String parse(ArrayList<DoublePoint> doublePoints) 
 	{
 		if (cNewStrokmatcher) {
-			String gevondenTeken = newStrokeMatcher.findTeken(doublePoints);
-			teken1 = newStrokeMatcher.getTeken1();
-			teken2 = newStrokeMatcher.getTeken2();
-			teken3 = newStrokeMatcher.getTeken3();
-			teken4 = newStrokeMatcher.getTeken4();
+			String gevondenTeken = "";
+//			String gevondenTeken = newStrokeMatcher.findTeken(doublePoints);
+//			teken1 = newStrokeMatcher.getTeken1();
+//			teken2 = newStrokeMatcher.getTeken2();
+//			teken3 = newStrokeMatcher.getTeken3();
+//			teken4 = newStrokeMatcher.getTeken4();
 			
 			return gevondenTeken;
 		} else {
