@@ -11,7 +11,7 @@
     <groupId>nl.uu.fi.dwo.gwt</groupId>
     <artifactId>DWO-gwt-lib</artifactId>
     <packaging>jar</packaging>
-    <name>DWO-gwt-lib</name>
+    <name>DWO-gwt-lib - trunk</name>
     <build>
         <finalName>${project.artifactId}</finalName>
         <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
