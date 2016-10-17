@@ -401,9 +401,9 @@
 -->                
                 <configuration>
                     <server>TomcatServer</server>
-                <username>${tomcat.local.deploy.username}</username>
+<!--                <username>${tomcat.local.deploy.username}</username>
                 <password>${tomcat.local.deploy.password}</password>
-                    <url>${tomcat.local.deploy.url}</url>
+                    <url>${tomcat.local.deploy.url}</url>-->
                     <path>/dwo</path>
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                     <contextFile>src/test/tomcat/context.xml</contextFile>

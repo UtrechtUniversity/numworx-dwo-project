@@ -150,8 +150,14 @@ public class SecuredStudentSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
+        if (!school.studentsCanManageTheirSchoolClasses()) {
+            String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Students are not allowed to remove themselves from schoolclasses in school with login {0} for student {1}.", new Object[]{school.getSchoolName(), sc.getUserPrincipal().getName()});
+            LOG.log(Level.WARNING, msg);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
+        }
+        
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
-
+        
         if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             return SchoolClassUtilManager.removeStudentFromSchoolClass(phr, schoolClass);
 
@@ -187,7 +193,7 @@ public class SecuredStudentSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        if (!school.studentsCanRegisterForSchoolClasses()) {
+        if (!school.studentsCanManageTheirSchoolClasses()) {
             String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Students are not allowed to subscribe to schoolclasses in school with login {0} for student {1}.", new Object[]{school.getSchoolName(), sc.getUserPrincipal().getName()});
             LOG.log(Level.WARNING, msg);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
