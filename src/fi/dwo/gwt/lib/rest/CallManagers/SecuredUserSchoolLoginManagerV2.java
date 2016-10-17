@@ -3,25 +3,25 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import fi.dwo.gwt.lib.rest.client.SecuredUserSchoolLoginRestCallerV2;
 
-import fi.dwo.gwt.lib.rest.client.SecuredUserSchoolLoginRestCaller;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
-import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClass;
 
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
 
 /**
  *
  * @author Gert van der Plas
  */
-public class SecuredUserSchoolLoginManager {
+public class SecuredUserSchoolLoginManagerV2 {
 
-    private SecuredUserSchoolLoginRestCaller service = GWT.create(SecuredUserSchoolLoginRestCaller.class);
-    private static final Logger LOG = Logger.getLogger(SecuredUserSchoolLoginManager.class.getName());
+    private SecuredUserSchoolLoginRestCallerV2 service = GWT.create(SecuredUserSchoolLoginRestCallerV2.class);
+    private static final Logger LOG = Logger.getLogger(SecuredUserSchoolLoginManagerV2.class.getName());
 
 //    public void updateAccountData(DomUserFull updateUser, AsyncCallback<DomUserFull> callBack) {
 //        RestUserFull user = new RestUserFull();
@@ -30,19 +30,23 @@ public class SecuredUserSchoolLoginManager {
 //        service.updateAccountData(user, new Callback<DomUserFull>(callBack));
 //    }
 
-    public void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClasses> callBack)  {
-        service.getSchoolLogins(new Callback<DomSchoolsRolesAndClasses> (callBack));
+    public SecuredUserSchoolLoginManagerV2(){
+        service = (SecuredUserSchoolLoginRestCallerV2) GWT.create(SecuredUserSchoolLoginRestCallerV2.class);
     }
 
-    public void switchToSchoolLogin(DomSchoolRoleAndClass reqSrac, AsyncCallback<DomSchoolRoleAndClass> callBack){
-        RestSchoolRoleAndClass rsrc = new RestSchoolRoleAndClass();
+    public void getSchoolLoginsV2(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack)  {
+        service.getSchoolLogins(new Callback<DomSchoolsRolesAndClassesV2> (callBack));
+    }
+        
+    public void switchToSchoolLogin(DomSchoolRoleAndClassV2 reqSrac, AsyncCallback<DomSchoolRoleAndClassV2> callBack){
+        RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(reqSrac);
-        service.switchToSchoolLogin(rsrc,new Callback<DomSchoolRoleAndClass> (callBack));
+        service.switchToSchoolLogin(rsrc,new Callback<DomSchoolRoleAndClassV2> (callBack));
     }
 
-    public void removeASchoolLogin(DomSchoolRoleAndClass reqSrac, AsyncCallback<Boolean> callBack){
-        RestSchoolRoleAndClass rsrc = new RestSchoolRoleAndClass();
+    public void removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac, AsyncCallback<Boolean> callBack){
+        RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(reqSrac);
         service.removeASchoolLogin(rsrc,new Callback<Boolean> (callBack));
