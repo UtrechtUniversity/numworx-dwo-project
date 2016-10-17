@@ -1,20 +1,22 @@
 package nl.uu.fi.dwo.account.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
+
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
-import org.fusesource.restygwt.client.Defaults;
-import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 /**
  * Stores global variables The class is state is initialized by calls in
