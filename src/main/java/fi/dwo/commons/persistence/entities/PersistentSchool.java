@@ -211,7 +211,12 @@ public class PersistentSchool implements Serializable {
         return false;
     }
 
+    @Deprecated //Per next version
     public boolean studentsCanRegisterForSchoolClasses(){
+        return studentsCanManageTheirSchoolClasses();
+    }
+    
+    public boolean studentsCanManageTheirSchoolClasses(){
         return schoolRights.contains("c");
     }
     
