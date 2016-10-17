@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;

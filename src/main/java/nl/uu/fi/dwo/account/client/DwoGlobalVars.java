@@ -31,7 +31,7 @@ public class DwoGlobalVars {
     private DomSchoolClass currentSchoolClass=null;
     private DomUserFull currentUser;
     private DomLoginContext currentLoginContext;
-    private static DomSchoolsRolesAndClassesV2 schoolLogins;
+    private DomSchoolsRolesAndClassesV2 schoolLogins;
    
     
 
@@ -185,6 +185,20 @@ public class DwoGlobalVars {
      */
     public void setCurrentLoginContext(DomLoginContext currentLoginContext) {
         this.currentLoginContext = currentLoginContext;
+    }
+
+    /**
+     * @return the schoolLogins
+     */
+    public DomSchoolsRolesAndClassesV2 getSchoolLogins() {
+        return schoolLogins;
+    }
+
+    /**
+     * @param schoolLogins the schoolLogins to set
+     */
+    public void setSchoolLogins(DomSchoolsRolesAndClassesV2 schoolLogins) {
+        this.schoolLogins = schoolLogins;
     }
 
     

@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -25,6 +26,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.util.logging.Level;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 public class Account implements EntryPoint, ClickHandler {
 
@@ -109,24 +111,24 @@ public class Account implements EntryPoint, ClickHandler {
                     //TODO Wim wat te doen indien niet ingelogd als student?
                     loginPanel.setVisible(false);
                     loginButton.setVisible(false);
-                    LOG.log(Level.INFO, "Fetched a test user with username:" + result.getDomUserFull().getUserName()+ ".");
+                    LOG.log(Level.INFO, "Fetched a test user with username:" + result.getDomUserFull().getUserName() + ".");
                     user = ((DomUserFullwLoginContext) result).getDomUserFull();
                     loginStatusPanel.setStatus(user.getUserName(), true);
                     userBar.setSingleSchool(user.getSingleSchool());
                     DwoGlobalVars.instance().setCurrentUser(user);
                     SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
+                    final SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
+
                     manager.getActiveSchoolClass(new AsyncCallback<DomSchoolClass>() {
                         @Override
                         public void onFailure(Throwable t) {
-                        	if(t instanceof Dwo2Exception)
-                        	{ 
-                        		Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
-                        	    if (code == Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set)
-                        	    {
-                        		   onSuccess(null);
-                        		   return;
-                        	    }
-                        	}
+                            if (t instanceof Dwo2Exception) {
+                                Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+                                if (code == Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set) {
+                                    onSuccess(null);
+                                    return;
+                                }
+                            }
                             LOG.log(Level.INFO, t.toString(), t);
                             header.setRightWidget(null);
                         }
@@ -136,14 +138,33 @@ public class Account implements EntryPoint, ClickHandler {
                         public void onSuccess(DomSchoolClass result) {
                             DwoGlobalVars.instance()
                                     .setCurrentSchoolClass(result);
-                            if(result!=null){
-                            loginStatusPanel.setSchoolClass(result.getSchoolClassName());
-                            }else{
+                            if (result != null) {
+                                loginStatusPanel.setSchoolClass(result.getSchoolClassName());
+                            } else {
                                 loginStatusPanel.setSchoolClass("");
                             }
-                            header.setRightWidget(userBar);
-                            LOG.log(Level.INFO,
-                                    "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");
+                            //Fill DWOGlobalVars with DomSchoolsRolesAndClasses
+
+                            loginManager.getSchoolLoginsV2(new AsyncCallback<DomSchoolsRolesAndClassesV2>() {
+                                @Override
+                                public void onFailure(Throwable t) {
+                                    if (t instanceof Dwo2Exception) {
+                                        Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+                                    }
+                                    LOG.log(Level.INFO, t.toString(), t);
+                                    header.setRightWidget(null);
+                                }
+                                //Process getActiveSchoolClass results (Only works for student?)
+
+                                @Override
+                                public void onSuccess(DomSchoolsRolesAndClassesV2 result) {
+                                    DwoGlobalVars.getInstance().setSchoolLogins(result);
+                                    header.setRightWidget(userBar);
+                                    LOG.log(Level.INFO,
+                                            "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");
+                                }
+                            });
+
                         }
                     });
                 }

@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-        <dwoVersion>2.1.2</dwoVersion>
+        <dwoVersion>2.0-SNAPSHOT</dwoVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
     </properties>
     <build>
@@ -84,13 +84,11 @@
                 <version>2.2</version>
                 <configuration>
                     <server>TomcatServer</server>
-                    <username>${tomcat.local.deploy.username}</username>
-                    <password>${tomcat.local.deploy.password}</password>
-                    <url>${tomcat.local.deploy.url}</url>
                     <path>/Account</path>
+                    <warFile>target/${project.artifactId}-${project.version}.war</warFile>
+                    <!--<tomcat.local.deploy.url>http://127.0.0.1:8080/manager/text</tomcat.local.deploy.url>--> 
                     <warSourceDirectory>target/${project.build.finalName}</warSourceDirectory>
-                    <!--                    <warFile>target/${project.artifactId}-${project.version}.war</warFile>-->
-                    <!--                   <archiveClasses>true</archiveClasses>                    -->
+                                       <archiveClasses>true</archiveClasses>                    
                 </configuration>
             </plugin>            
 			<plugin>
@@ -133,17 +131,6 @@
         <dependency>
             <groupId>com.googlecode.mgwt</groupId>
             <artifactId>MGWT</artifactId>
-        </dependency>
-       <dependency>
-        	<groupId>nl.uu.fi.dwo.mobile</groupId>
-        	<artifactId>promise-api</artifactId>
-        	<version>0.0.1</version>
-        </dependency>
-        <dependency>
-        	<groupId>nl.uu.fi.dwo.mobile</groupId>
-        	<artifactId>promise-api</artifactId>
-        	<version>0.0.1</version>
-        	<classifier>sources</classifier>
         </dependency>
     </dependencies>
     <description>Gebruiker: profiel en klas panels</description>
