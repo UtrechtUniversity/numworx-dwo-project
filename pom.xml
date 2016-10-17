@@ -385,43 +385,33 @@
                     </webResources>
                 </configuration>
             </plugin>  
-        <plugin>
+<!--        <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
-<!-- Add a profile to your maven settings file (.n2/settings.xml) and configure it to talk to your local tomcat
-        <profile>
-            <id>localTomcat</id> 
-            <properties>
-                <tomcat.local.deploy.username>me</tomcat.local.deploy.username>
-                <tomcat.local.deploy.password>bla</tomcat.local.deploy.password>
-                <tomcat.local.deploy.url>http://localhost:8080/manager/text</tomcat.local.deploy.url> 
-            </properties>
-        </profile>
--->                
-                <configuration>
-                    <server>TomcatServer</server>
-<!--                <username>${tomcat.local.deploy.username}</username>
-                <password>${tomcat.local.deploy.password}</password>
-                    <url>${tomcat.local.deploy.url}</url>-->
-                    <path>/dwo</path>
-                    <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                    <contextFile>src/test/tomcat/context.xml</contextFile>
-                    <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
-                </configuration>
-                <dependencies>
-                	<dependency>
-                		<groupId>mysql</groupId>
-                		<artifactId>mysql-connector-java</artifactId>
-                		<version>5.1.34</version>
-                	</dependency>
-					<dependency>
-						<groupId>com.jamonapi</groupId>
-						<artifactId>jamon</artifactId>
-						<version>2.80</version>
-					</dependency>        
-				</dependencies>
-            </plugin> 
+                    <configuration>
+                        <server>TomcatServer</server>
+                                        <username>${tomcat.local.deploy.username}</username>
+                    <password>${tomcat.local.deploy.password}</password>
+                        <url>${tomcat.local.deploy.url}</url>
+                        <path>/dwo</path>
+                        <warFile>target/${project.artifactId}-${project.version}.war</warFile>
+                        <contextFile>src/test/tomcat/context.xml</contextFile>
+                        <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>5.1.34</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>com.jamonapi</groupId>
+                            <artifactId>jamon</artifactId>
+                            <version>2.80</version>
+                        </dependency>        
+                    </dependencies>
+            </plugin> -->
             
                 <!--
                     By default, the Surefire Plugin will automatically include all test classes with the following wildcard patterns:
@@ -554,6 +544,49 @@
             <properties>
                 <junit.test>false</junit.test>
             </properties>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <property>
+                    <name>environment</name>
+                    <value>test</value>
+                </property>                
+            </activation>
+            <properties>
+                <dev>false</dev>
+                <junit.test>true</junit.test>
+            <properties>
+            </properties>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <version>2.2</version>
+                        <configuration>
+                            <server>TomcatServer</server>
+                            <path>/dwo</path>
+                            <warFile>target/${project.artifactId}-${project.version}.war</warFile>
+                            <contextFile>src/test/tomcat/context.xml</contextFile>
+                            <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>mysql</groupId>
+                                <artifactId>mysql-connector-java</artifactId>
+                                <version>5.1.34</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.jamonapi</groupId>
+                                <artifactId>jamon</artifactId>
+                                <version>2.80</version>
+                            </dependency>        
+                        </dependencies>
+                    </plugin>                 
+                </plugins>
+            </build>
         </profile>
     </profiles> 
 </project>

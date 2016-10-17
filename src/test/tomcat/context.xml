@@ -34,5 +34,4 @@
     maxIdle="4"
   />
   <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
-  <Parameter name="fi.dwo.dwojapplet.web.appletName" override="true" value="DWOJApplet-1.0.1-r9269.jar"/>
 </Context>
