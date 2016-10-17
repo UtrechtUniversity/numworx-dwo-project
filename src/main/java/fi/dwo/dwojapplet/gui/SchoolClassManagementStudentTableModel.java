@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,12 @@ class SchoolClassManagementStudentTableModel extends AbstractTableModel {
             } else {
                 data[j][1] = loginImage;
             }
+        if(!DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()){
+            data[j][2] = emptyImage;
+        }else{
             data[j][2] = removeImage;
+        }
+            
             data[j][3] = sc;
             j++;
         }

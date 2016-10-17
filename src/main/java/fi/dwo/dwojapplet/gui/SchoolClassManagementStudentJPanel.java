@@ -265,6 +265,8 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                         
                     }
 //                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
+                }else if(value==emptyImage){
+                    //do nothing
                 } else {
                     // show warning
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
