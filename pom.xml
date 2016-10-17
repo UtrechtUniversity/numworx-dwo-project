@@ -3,7 +3,7 @@
 
     <groupId>nl.uu.fi.dwo.account</groupId>
     <artifactId>Account</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>Account</name>
@@ -141,6 +141,6 @@
         <relativePath>../ParentGWT</relativePath>
     </parent>
     <scm>
-    	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Account/tags/Account-0.0.2</developerConnection>
+    	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Account/trunk</developerConnection>
     </scm>
 </project>
