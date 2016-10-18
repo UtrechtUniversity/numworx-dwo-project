@@ -25,6 +25,7 @@
 
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
+  <source path='strokematcher'/>
  
 	<replace-with class="fi.writemathgwt.client.DummyFormuleViewer">
     <when-type-is class="fi.writemathgwt.client.IFormuleViewer"/>

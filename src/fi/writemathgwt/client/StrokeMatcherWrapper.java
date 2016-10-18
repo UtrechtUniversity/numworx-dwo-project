@@ -1,4 +1,4 @@
-package fi.writemathgwt.strokematcher;
+package fi.writemathgwt.client;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,6 @@ import fi.writemath.engine.strokematching.StrokeMatcher;
 import fi.writemath.engine.strokematching.StrokeMatcherFactory;
 import fi.writemath.engine.strokematching.results.MatchResult;
 import fi.writemath.engine.strokematching.strokesampleset.StrokeSampleSetFactory;
-import fi.writemathgwt.client.DoublePoint;
 
 
 public class StrokeMatcherWrapper {

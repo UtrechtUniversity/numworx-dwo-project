@@ -8,8 +8,6 @@ import java.util.Set;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 
-import fi.writemathgwt.strokematcher.StrokeMatcherWrapper;
-
 
 public class WriteObject 
 {
