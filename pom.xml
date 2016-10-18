@@ -8,12 +8,36 @@
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
 
-    <groupId>nl.uu.fi.dwo.gwt</groupId>
+    <!--<groupId>nl.uu.fi.dwo.gwt</groupId>-->
     <artifactId>DWO-gwt-lib</artifactId>
+    <name>${project.build.finalName}</name>
+    
     <packaging>jar</packaging>
-    <name>DWO-gwt-lib - trunk</name>
+   <developers>
+        <developer>
+            <id>Gert van der Plas</id>
+            <name>plas0006</name>
+            <email>g.a.j.vanderplas@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>Wim van Velthoven</id>
+            <name>velth101</name>
+            <email>w.p.g.vanvelthoven@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+    </developers>
+        
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
         <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
