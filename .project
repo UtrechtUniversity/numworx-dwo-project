@@ -3,6 +3,7 @@
 	<name>WriteMathGWT</name>
 	<comment></comment>
 	<projects>
+		<project>WriteMath-Engine</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
