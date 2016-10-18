@@ -6,7 +6,7 @@
     <version>0.0.3-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>Account</name>
+    <name>${project.build.finalName}</name>
     <url>http://www.dwo.nl</url>
 
     <properties>
