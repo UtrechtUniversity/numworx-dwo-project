@@ -144,13 +144,13 @@
     <methods>;
 }
 
--keep  class  fi.dwo.rest.exceptions.** { *; } 
--keep  class  fi.dwo.rest.util.** { *; } 
+-keep  class  nl.uu.fi.dwo.rest.exceptions.** { *; } 
+-keep  class  nl.uu.fi.dwo.rest.util.** { *; } 
 #-keep  class fi.dwo.commons.persistence.** { *; } 
 -keep  class fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator { *; } 
 -keep  class fi.dwo.commons.persistence.MySQLPersistenceId { *; } 
--keep  class  fi.dwo.rest.dom.entities.** { *; } 
--keep  class fi.dwo.rest.entities.** { *; } 
+-keep  class  nl.uu.fi.dwo.rest.dom.entities.** { *; } 
+-keep  class nl.uu.fi.dwo.rest.entities.** { *; } 
 -keepattributes Signature
 -keepattributes *Annotation*
 #keep stuff for Genson
@@ -165,8 +165,8 @@
 
 #-keep class org.**
 #-keep class com.**
--keep class java.***
--keep class fi.dwo.rest.**
+#-keep class java.***
+-keep class nl.uu.fi.dwo.rest.**
 -keepattributes *Annotation*
 -keepclassmembernames class * {
     java.lang.Class class$(java.lang.String);
