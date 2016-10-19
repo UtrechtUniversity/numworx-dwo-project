@@ -7,8 +7,7 @@
     <relativePath>../ParentGWT</relativePath>
   </parent>
   <groupId>fi.writemathgwt</groupId>
-  <artifactId>WriteMathGWT-matcherUpdate</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>WriteMathGWT</artifactId>
   <name>WriteMath</name>
   <dependencies>
   	<dependency>
@@ -44,4 +43,5 @@
   	<sourceDirectory>src</sourceDirectory>
   </build>
   <description>Recognize handwritten mathematics.</description>
+  <version>1.1.0</version>
 </project>
