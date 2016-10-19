@@ -11,7 +11,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 
 public class WriteObject 
 {
-	private final static boolean cNewStrokmatcher = false;
+	private final static boolean cNewStrokmatcher = true;
 	public static HashMap<String, int[]>  samples;
  	
 	//OK
