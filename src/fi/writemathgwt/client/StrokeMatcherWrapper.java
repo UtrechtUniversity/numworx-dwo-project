@@ -9,7 +9,6 @@ import fi.writemath.engine.strokematching.StrokeMatcherFactory;
 import fi.writemath.engine.strokematching.results.MatchResult;
 import fi.writemath.engine.strokematching.strokesampleset.StrokeSampleSetFactory;
 
-
 public class StrokeMatcherWrapper {
 //	DoublePoint doublePoint;
 	private StrokeMatcher strokeMatcher;
