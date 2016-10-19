@@ -4,7 +4,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.system.Loader;
+import fi.beans.loader.Loader;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

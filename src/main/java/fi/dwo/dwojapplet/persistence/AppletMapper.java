@@ -4,7 +4,7 @@
  */
 package fi.dwo.dwojapplet.persistence;
 
-import fi.dwo.dwojapplet.system.Loader;
+import fi.beans.loader.Loader;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.io.IOException;
 import java.sql.SQLException;

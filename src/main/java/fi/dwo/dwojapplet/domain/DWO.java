@@ -30,7 +30,7 @@ import fi.dwo.dwojapplet.gui.WelcomePanel;
 import fi.dwo.dwojapplet.gui.action.Clipboard;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
-import fi.dwo.dwojapplet.system.Loader;
+import fi.beans.loader.Loader;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.awt.Color;

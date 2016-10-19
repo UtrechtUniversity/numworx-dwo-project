@@ -9,8 +9,7 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.system.Loader;
+import fi.beans.loader.Loader;
 
 public class WiskOpdrEditPanel extends JPanel {
 
@@ -24,14 +23,13 @@ public class WiskOpdrEditPanel extends JPanel {
 		super(new BorderLayout());
 		this.text = text;
 		try {
-            if(DwoHelper.getJarUrlPath()!=null) Loader.setPrefix(DwoHelper.getJarUrlPath().toString());
 			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
 			Method m = wiskopdr.getMethod("getWiskOpdrEditPanel", String.class);
 			component = (Component) m.invoke(null, text);
 			add(component, BorderLayout.CENTER);
 			return;
 		} catch (Exception e) {
-			LOG.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, "WiskOpdrEditPanel", e);
 			add(new JLabel("not implemented: " + e));
 		}
 	}

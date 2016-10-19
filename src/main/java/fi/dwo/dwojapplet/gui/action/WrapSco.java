@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.scorm.PartialScoreIF;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletData;
@@ -8,11 +7,10 @@ import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.Sco;
-import static fi.dwo.dwojapplet.domain.ScoBase.LAUNCH_DATA;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.ScoPanel;
-import fi.dwo.dwojapplet.system.Loader;
+import fi.beans.loader.Loader;
 
 import java.applet.Applet;
 import java.applet.AppletContext;

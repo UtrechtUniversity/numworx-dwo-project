@@ -12,8 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.system.Loader;
+import fi.beans.loader.Loader;
 
 public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 
@@ -29,7 +28,6 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 		this.text = s;
 		
 		try {
-            if(DwoHelper.getJarUrlPath()!=null) Loader.setPrefix(DwoHelper.getJarUrlPath().toString());
 			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
 			Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class, Locale.class);
 			component = (Component) m.invoke(null, s, locale);
@@ -37,7 +35,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 			setSize(component.getSize());
 			return;
 		} catch (Exception e) {
-			LOG.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, "WiskOpdrPanel", e);
 			add(new JLabel("not implemented: " + e));
 		}
 		setSize(getPreferredSize());
@@ -61,7 +59,6 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
-		LOG.log(Level.SEVERE, "." +  method, args);
 		String name = method.getName();
 		if("getJSObject".equals(name))
 			return link.getJSObject();
