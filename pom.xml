@@ -32,6 +32,18 @@
 		<artifactId>engine</artifactId>
 		<version>1.10</version>
   	</dependency>  	
+	<dependency>
+		<groupId>fi.beans</groupId>
+		<artifactId>lineairealgebra</artifactId>
+		<version>0.0.1</version>
+		<classifier>sources</classifier>			
+	</dependency>
+  	<dependency>
+		<groupId>nl.uu.fi.dwo.writemath</groupId>
+		<artifactId>engine</artifactId>
+		<version>1.10</version>
+		<classifier>sources</classifier>
+  	</dependency>  	
   </dependencies>
   <build>
   	<finalName>writemath</finalName>
