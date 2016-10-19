@@ -7,7 +7,8 @@
     <relativePath>../ParentGWT</relativePath>
   </parent>
   <groupId>fi.writemathgwt</groupId>
-  <artifactId>WriteMathGWT</artifactId>
+  <artifactId>WriteMathGWT-matcherUpdate</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
   <name>WriteMath</name>
   <dependencies>
   	<dependency>
@@ -22,7 +23,16 @@
   		<groupId>nl.uu.fi.dwo.mobile</groupId>
   		<artifactId>interaction</artifactId>
   	</dependency>
-  	
+	<dependency>
+		<groupId>fi.beans</groupId>
+		<artifactId>lineairealgebra</artifactId>
+		<version>0.0.1</version>			
+	</dependency>
+  	<dependency>
+		<groupId>nl.uu.fi.dwo.writemath</groupId>
+		<artifactId>engine</artifactId>
+		<version>1.10</version>
+  	</dependency>  	
   </dependencies>
   <build>
   	<finalName>writemath</finalName>

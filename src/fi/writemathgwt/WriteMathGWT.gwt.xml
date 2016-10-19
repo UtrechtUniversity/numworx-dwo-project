@@ -19,7 +19,8 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
-
+  <inherits name="fi.writemath.engine.Engine"/>
+  <inherits name="fi.beans.lineairealgebra.LineaireAlgebra" />
   <!-- Specify the app entry point class.                         -->
   <entry-point class='fi.writemathgwt.client.WriteMathGWT'/>
 
@@ -29,4 +30,7 @@
 	<replace-with class="fi.writemathgwt.client.DummyFormuleViewer">
     <when-type-is class="fi.writemathgwt.client.IFormuleViewer"/>
     </replace-with>
+    
+   <add-linker name='xsiframe' />
+    
 </module>
