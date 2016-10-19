@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * Client side class, not meant to be transported.
@@ -13,6 +16,25 @@ package nl.uu.fi.dwo.rest.dom.entities;
  * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
  */
 public class DomResultTree {
-    DomResultTreeRoot root;
+    DomResultTeacher root;
+
+    public DomResultTree(DomResultsPerTeacher resultData){
+        buildResultTree(resultData);
+        calculateResults();
+    }
     
+    private void buildResultTree(DomResultsPerTeacher resultData){
+            //build tree from results collection
+            root = new DomResultTeacher(resultData.getTeacher());
+            List<DomResultSchoolClass> schoolClasses = new ArrayList<DomResultSchoolClass>(resultData.getSchoolClasses().size());
+            root.setChildren(schoolClasses);
+            //insert courses that are linked through classcourses
+            //recursively build the courses.
+            //add sco's
+            //add studentScoResults
+    }
+    
+    public final void calculateResults(){
+        //
+    }
 }
