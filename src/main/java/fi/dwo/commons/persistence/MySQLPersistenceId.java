@@ -10,6 +10,7 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
@@ -25,6 +26,8 @@ import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 /**
  * PersistenceId for the MySQL database.
@@ -284,5 +287,15 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
 
     public static MySQLPersistenceId createPersistentId(PersistentUser o) {
         return new MySQLPersistenceId(o.getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
-    }
+    }    
+
+    public static PersistentHasRolePK extractHasRoleKey(PersistenceId aId) throws Dwo2Exception {
+         MySQLPersistenceId id = new MySQLPersistenceId(aId);
+         if(id.getType()==PersistenceClassType.PersistentHasRole){
+             return new PersistentHasRolePK(id.getId());
+         }else{
+             //illegal type
+             throw new Dwo2Exception(Dwo2ExceptionCode.PersistentId_ConversionError,"Given PersistenceId is not of HasRolePK type.");
+         }
+    }    
 }

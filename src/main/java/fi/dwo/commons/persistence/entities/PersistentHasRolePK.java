@@ -35,8 +35,23 @@ public class PersistentHasRolePK implements Serializable {
         return (id);
     }
 
+    public void setId(long aId) {
+        long uId = aId & 0xFFFFFFFF;
+        long sgId = aId >>32;
+        userID = uId;
+        schoolGroupID = sgId;
+    }
+    
     public PersistentHasRolePK() {
     }
+
+    /**
+     * Create a PersistenHasRolePK from a non-negative 64-bit long.
+     */
+    public PersistentHasRolePK(long aId) {
+        setId(aId);
+    }
+
 
     public PersistentHasRolePK(Long userID, Long schoolGroupID) {
         this.userID = userID;
