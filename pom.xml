@@ -179,15 +179,7 @@
     <version>4.1.1</version>
 </dependency>-->
 
-    </dependencies>
-    
-    <distributionManagement>
-        <repository>
-            <id>snapshots</id>
-            <!--<name>libs-snapshot</name>-->
-            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
-        </repository>
-    </distributionManagement>       
+    </dependencies>      
 
     <build>
         <!-- order is relevant -->
