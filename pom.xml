@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
- 
+ <!--
+ POM now defaults obfuscates and signes. In order to disable this enable a 'dev' profile
+ -->
     <!-- Adjust artifact, name and description for new projects -->
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
@@ -392,8 +394,15 @@
     </build>
     <profiles>
         <profile>
-            <id>dwo-obfuscate</id> 
+            <id>dev</id>
+            <properties>
+                <dev>true</dev>
+            </properties>
+        </profile>
+        <profile>
+            <id>dwo-pack-sign-obfuscate</id>
             <activation>
+                <activeByDefault>!dev</activeByDefault>
                 <property>
                     <name>profile.dwo-obfuscate-pack-sign</name>
                     <value>true</value>
@@ -445,19 +454,6 @@
                             </dependency>
                         </dependencies>
                     </plugin>
-                </plugins>      
-            </build>
-        </profile>
-        <profile>
-            <id>dwo-pack-sign</id> 
-            <activation>
-                <property>
-                    <name>profile.dwo-obfuscate-pack-sign</name>
-                    <value>true</value>
-                </property>
-            </activation>              
-            <build>
-                <plugins>
                     <!-- repack as pack200 -->
                     <plugin>
                         <groupId>com.github.batkinson.plugins</groupId>
@@ -500,7 +496,7 @@
                             </dependency>
                         </dependencies>                
                     </plugin>        
-                    <!-- jar signing TODO -->
+                    <!-- jar signing -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jarsigner-plugin</artifactId>
@@ -530,8 +526,149 @@
                         </configuration>            
                     </plugin>  
                 </plugins>      
+            </build>        
+        </profile>
+<!--        <profile>
+            <id>dwo-obfuscate</id> 
+            <activation>
+                <property>
+                    <name>profile.dwo-obfuscate-pack-sign</name>
+                    <value>true</value>
+                </property>
+            </activation>            
+            <build>
+                <plugins>
+                     proguard obfuscation             
+                    <plugin>
+                        <groupId>com.github.wvengen</groupId>
+                        <artifactId>proguard-maven-plugin</artifactId>
+                        <version>2.0.8</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>proguard</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <proguardVersion>5.2</proguardVersion>
+                            <options>
+                                <option>-verbose</option>
+                                <option>-dontwarn</option> 
+                                <option>-printconfiguration mapping.txt</option>
+                            </options>
+                            <obfuscate>true</obfuscate>                    
+                            <inputDirectory>${project.build.directory}</inputDirectory>
+                            <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+                             uncomment to change the output file 
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <outjar>${project.build.finalName}.jar</outjar>
+                            
+                            <proguardInclude>config.pro</proguardInclude>
+                            <libs>
+                                <lib>${java.home}/lib/rt.jar</lib>
+                                <lib>${java.home}/lib/jsse.jar</lib>
+                                                               <lib>${java.home}/lib/jfxrt.jar</lib>                       
+                            </libs>
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sf.proguard</groupId>
+                                <artifactId>proguard-base</artifactId>
+                                <version>5.2</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>      
             </build>
         </profile>
+        <profile>
+            <id>dwo-pack-sign</id> 
+            <activation>
+                <property>
+                    <name>profile.dwo-obfuscate-pack-sign</name>
+                    <value>true</value>
+                </property>
+            </activation>              
+            <build>
+                <plugins>
+                     repack as pack200 
+                    <plugin>
+                        <groupId>com.github.batkinson.plugins</groupId>
+                        <artifactId>maven-pack200-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>normalize-jars</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>pack</goal>
+                                </goals>
+                                <configuration>
+                                    <normalizeOnly>true</normalizeOnly>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>pack-jars</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>pack</goal>
+                                </goals>
+                                <configuration>
+                                    <normalizeOnly>false</normalizeOnly>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <processMainArtifact>false</processMainArtifact>
+                            <includeClassifiers>
+                                <includeClassifier>jar-with-dependencies</includeClassifier>
+                            </includeClassifiers>
+                        </configuration>                
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.github.batkinson.plugins</groupId>
+                                <artifactId>maven-pack200-plugin</artifactId>
+                                <version>1.0.1</version>
+                                <type>maven-plugin</type>
+                            </dependency>
+                        </dependencies>                
+                    </plugin>        
+                     jar signing TODO 
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>   Alleen jar-with-dependencies wordt getekend. 
+                            <processMainArtifact>false</processMainArtifact>
+                            <keystore>${dwoKeyStore}</keystore>
+                            <alias>${dwoCertKeyAlias}</alias>
+                            <storepass>${dwoCertKeyStorePassword}</storepass>
+                            <keypass>${dwoCertKeyPassword}</keypass>
+                            <sigfile>UU</sigfile>
+                            <tsa>https://timestamp.geotrust.com/tsa</tsa>
+                        </configuration>            
+                    </plugin>  
+                </plugins>      
+            </build>
+        </profile>-->
     </profiles>
     <reporting>
         <plugins>
