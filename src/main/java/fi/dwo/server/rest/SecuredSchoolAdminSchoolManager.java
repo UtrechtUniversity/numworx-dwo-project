@@ -32,6 +32,7 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import java.util.ArrayList;
@@ -649,18 +650,17 @@ public class SecuredSchoolAdminSchoolManager {
         if (thr != null && school != null) {
             List<DomSchoolClass> domSchoolClasses;
             try {
-                List<PersistentTeacherOfClass> tocList = TeacherOfClassManager.findEntities(thr.getPersistentHasRolePK());
-                domSchoolClasses = new ArrayList<>(tocList.size());
-                for (PersistentTeacherOfClass toc : tocList) {
-                    PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentTeacherOfClassPK().getClassID());
+                List<PersistentSchoolClass> schoolClasses = SchoolClassUtilManager.getSchoolClassesOfTeacher(thr);
+                domSchoolClasses = new ArrayList<>(schoolClasses.size());
+                schoolClasses.stream().forEach((s) -> {
                     domSchoolClasses.add(s.createDomSchoolClass());
-                }
-                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1} for user {2}. ", new Object[]{domSchoolClasses.size(), thr.getPersistentHasRolePK().getUserID(), phr.getPersistentHasRolePK().getUserID()});
+                });
+                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1] for user {2}. ", new Object[]{domSchoolClasses.size(), thr.getPersistentHasRolePK().getUserID(),sc.getUserPrincipal().getName()});
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
             }
-            return domSchoolClasses;
+            return domSchoolClasses;        
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");

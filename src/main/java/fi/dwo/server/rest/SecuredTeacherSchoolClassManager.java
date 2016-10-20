@@ -93,12 +93,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         if (phr != null && school != null) {
             List<DomSchoolClass> domSchoolClasses;
             try {
-                List<PersistentTeacherOfClass> tocList = TeacherOfClassManager.findEntities(phr.getPersistentHasRolePK());
-                domSchoolClasses = new ArrayList<DomSchoolClass>(tocList.size());
-                for (PersistentTeacherOfClass toc : tocList) {
-                    PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentTeacherOfClassPK().getClassID());
+                List<PersistentSchoolClass> schoolClasses = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
+                domSchoolClasses = new ArrayList<>(schoolClasses.size());
+                schoolClasses.stream().forEach((s) -> {
                     domSchoolClasses.add(s.createDomSchoolClass());
-                }
+                });
                 LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1]. ", new Object[]{domSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
