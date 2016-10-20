@@ -28,6 +28,9 @@ public enum Dwo2ExceptionCode {
     User_ConfirmDeleteMultiUsersFromSchool,
     User_Q_ForgotPassword,
 
+    //PersistentId errors
+    PersistentId_ConversionError,
+    
     //REST interface errors
     Rest_InternalError, //Internal software error, a stack trace should be acquired.
     Rest_InterfaceError, // Error due to an improper REST-interface.
