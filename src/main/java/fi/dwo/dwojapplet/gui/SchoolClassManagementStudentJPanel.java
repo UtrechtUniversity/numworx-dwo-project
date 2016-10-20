@@ -33,6 +33,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -59,7 +60,8 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
     /**
      * Creates a new ProfilePanel for the current user. The account of the
      * current user can be changed.
-     * @param classStudentPanel 
+     *
+     * @param classStudentPanel
      *
      */
     public SchoolClassManagementStudentJPanel() {
@@ -68,8 +70,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         //fetch user details.
         try {
             prop.init();
-        }
-        catch (Dwo2Exception e) {
+        } catch (Dwo2Exception e) {
             //Also trigggered in no active school exists.
 //            LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
 //            GuiCreator.instance().ShowMessageDialog(this, e.getLocalizedCodeExplanation(DwoHelper.getLocale()), "", JOptionPane.ERROR_MESSAGE);
@@ -92,8 +93,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         tr.addImage(emptyImage, 1);
         try {
             tr.waitForAll();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
 
         //FontMetrics fm;
@@ -118,12 +118,12 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         buildJTable();
 
         registerSchoolClass.addActionListener(this);
-        if(!DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()){
+        if (!DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
             registerSchoolClass.setVisible(false);
-        }else{
+        } else {
             registerSchoolClass.setVisible(true);
         }
-        
+
 //        switchSchoolClass.addActionListener(this);
 //        switchSchoolClass.setVisible(true);
 //        addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
@@ -200,12 +200,10 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
 //                //switch role now
                 LOG.log(Level.INFO, "switching schoolclass now");
                 GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
-            }
-            catch (LoginException ex) {
+            } catch (LoginException ex) {
                 LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
-            }
-            catch (Dwo2Exception ex) {
+            } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowErrorDialog(null, ex);
             }
@@ -237,7 +235,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                 if (value == loginImage) {
                     DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(DwoHelper.getCurrentUser().getUserName(),
                             DwoHelper.getCurrentUser().getPassword());
-                    if (loginContext!=null && loginContext.getLastLoginTimeStamp() != null && !loginContext.getLastLoginTimeStamp().equals(DwoHelper.getCurrentLoginContext().getLastLoginTimeStamp())) {
+                    if (loginContext != null && loginContext.getLastLoginTimeStamp() != null && !loginContext.getLastLoginTimeStamp().equals(DwoHelper.getCurrentLoginContext().getLastLoginTimeStamp())) {
                         if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
                                 Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
                         ) != JOptionPane.OK_OPTION) {
@@ -257,27 +255,25 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                 } else if (value == removeImage) {
                     int row = tableModel.getSelectedRow();
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
-                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME), schoolClass.getSchoolClassName());                    
+                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME), schoolClass.getSchoolClassName());
                     if (GuiCreator.instance().ShowConfirmDialog(null, msg) == JOptionPane.OK_OPTION) {
                         prop.removeSchoolClass(schoolClass);
-                        tableModel.init(prop, loginImage, removeImage,emptyImage);
+                        tableModel.init(prop, loginImage, removeImage, emptyImage);
                         GuiCreator.instance().getMainPanel().center.loadMenu(); // fix
-                        
+
                     }
 //                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
-                }else if(value==emptyImage){
+                } else if (value == emptyImage) {
                     //do nothing
                 } else {
                     // show warning
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
                     return;
                 }
-            }
-            catch (Dwo2Exception e) {
+            } catch (Dwo2Exception e) {
                 LOG.log(Level.SEVERE, "", e);
                 GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), e);
-            }
-            catch (LoginException ex) {
+            } catch (LoginException ex) {
                 LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
             }
@@ -313,6 +309,10 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new ImageRenderer(), new ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
+        if (!DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
+            TableColumn tcol = jtable.getColumnModel().getColumn(2);
+            jtable.getColumnModel().removeColumn(tcol);
+        }
 
 // TODO shrink to fit heeft 520 als breedte
 //        Dimension size = table.getPreferredSize();
@@ -352,11 +352,11 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 //            dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
-            tableModel.init(prop, loginImage, removeImage,emptyImage);
+            tableModel.init(prop, loginImage, removeImage, emptyImage);
             tableModel.fireTableDataChanged();
             CenterSubPanel cp = GuiCreator.instance().getClassPanel();
             final CenterPanel center = GuiCreator.instance().getMainPanel().center;
-			center.reset();
+            center.reset();
             center.loadCenter(cp);
             center.loadMenu();
 
