@@ -247,7 +247,9 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         // Add the columns.
         table.addColumn(schoolClassColumn, DwoLocalesForGWT.instance.GUI_SchoolclassName());
         table.addColumn(loginColumn, DwoLocalesForGWT.instance.GUI_Login());
+        if (DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
         table.addColumn(deleteColumn, DwoLocalesForGWT.instance.GUI_Delete());
+        }
         dataProvider.addDataDisplay(table);
 
         VerticalPanel vPanel = new VerticalPanel();
