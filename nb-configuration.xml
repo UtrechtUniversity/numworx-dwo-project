@@ -12,12 +12,4 @@
         <netbeans.checkstyle.format>true</netbeans.checkstyle.format>
         <org-netbeans-modules-javascript2-requirejs.enabled>true</org-netbeans-modules-javascript2-requirejs.enabled>
     </properties>
-    <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
-        <configurations>
-            <configuration id="dwo-obfuscate-pack-sign" profiles="dwo-obfuscate dwo-pack-sign"/>
-            <configuration id="home-profile" profiles=""/>
-            <configuration id="ubuntu" profiles=""/>
-            <configuration id="app.dwo.nl-profile" profiles=""/>
-        </configurations>
-    </config-data>
 </project-shared-configuration>
