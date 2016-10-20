@@ -336,7 +336,7 @@
                   <overWrite>true</overWrite>
                   <destFileName>DWOJApplet.jar</destFileName>
                 </artifactItem>
-                <artifactItem>
+<!--                <artifactItem>
                   <groupId>${project.groupId}</groupId>              
                   <artifactId>DWOJClient</artifactId>
                   <version>${project.version}</version>
@@ -344,7 +344,7 @@
                   <type>jar.pack.gz</type>
                   <overWrite>true</overWrite>
                   <destFileName>DWOJApplet.jar.pack.gz</destFileName>
-                </artifactItem>
+                </artifactItem>-->
               </artifactItems>
               <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
               <overWriteReleases>false</overWriteReleases>

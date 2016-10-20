@@ -28,7 +28,7 @@
             <properties>
                 <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
                 <netbeans.deploy>true</netbeans.deploy>
-                <netbeans.deploy.clientUrlPart>rest/public/roles/getList</netbeans.deploy.clientUrlPart>
+                <netbeans.deploy.clientUrlPart>http://localhost:8080/dwo/rest/public/roles/getList</netbeans.deploy.clientUrlPart>
             </properties>
         </action>
         <action>
