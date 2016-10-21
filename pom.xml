@@ -132,6 +132,11 @@
             <groupId>com.googlecode.mgwt</groupId>
             <artifactId>MGWT</artifactId>
         </dependency>
+        <dependency>
+        	<groupId>com.fredhat.gwt.xmlrpc</groupId>
+        	<artifactId>XmlRpcGWT</artifactId>
+        	<version>1.1.1</version>
+        </dependency>
     </dependencies>
     <description>Gebruiker: profiel en klas panels</description>
     <parent>
