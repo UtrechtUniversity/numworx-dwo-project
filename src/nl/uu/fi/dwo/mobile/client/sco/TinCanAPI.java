@@ -10,6 +10,16 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	
+	private native static void script(String item) /*-{
+		$wnd.script(item)	
+	}-*/;
+	
+	static {
+		script("scripts/tincan-1.0.1.js"); 
+		script("scripts/Content_Api-0.2.13.js");
+		script("scripts/xapi.js");
+	}
+	
 	private static final String MODULEDATA_RESPONSE = "http://bao.mijnklas.nl/xapi/activities/get-moduledata-response";
 	private static final String NAVIGATE_VERB = "http://bao.mijnklas.nl/xapi/verbs/navigate";
 	private static final String MODULEDATA_VERB = "http://bao.mijnklas.nl/xapi/verbs/moduleData";
