@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 import java.util.Date;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * The class defines which DomSchoolClass has which DomCourse.
@@ -14,38 +15,38 @@ public class DomClassCourse {
 
     private static final Logger LOG = Logger.getLogger(DomClassCourse.class.getName());
     
-    private Long id;
-    private int classId;
+    private PersistenceId id;
+    private PersistenceId classId;
     private Integer type;
     private Date notBefore;
     private Date notAfter;
-    private int courseId;
+    private PersistenceId courseId;
 
     /**
      * @return the id
      */
-    public Long getId() {
+    public PersistenceId getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(Long id) {
+    public void setId(PersistenceId id) {
         this.id = id;
     }
 
     /**
      * @return the classId
      */
-    public int getClassId() {
+    public PersistenceId getClassId() {
         return classId;
     }
 
     /**
      * @param classId the classId to set
      */
-    public void setClassId(int classId) {
+    public void setClassId(PersistenceId classId) {
         this.classId = classId;
     }
 
@@ -94,15 +95,14 @@ public class DomClassCourse {
     /**
      * @return the courseId
      */
-    public int getCourseId() {
+    public PersistenceId getCourseId() {
         return courseId;
     }
 
     /**
      * @param courseId the courseId to set
      */
-    public void setCourseId(int courseId) {
+    public void setCourseId(PersistenceId courseId) {
         this.courseId = courseId;
     }
-    
 }
