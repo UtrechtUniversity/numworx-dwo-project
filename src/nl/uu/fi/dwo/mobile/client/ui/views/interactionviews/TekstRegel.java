@@ -346,6 +346,10 @@ public class TekstRegel extends LayoutPanel
 		tekstVak.resize();
 	}
 	
+	public TekstVak getTekstVak()
+	{
+		return tekstVak;
+	}
 	
 	public void hervulRegel()
 	{

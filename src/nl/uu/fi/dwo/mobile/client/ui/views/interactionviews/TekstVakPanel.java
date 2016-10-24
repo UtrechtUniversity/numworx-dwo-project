@@ -1684,6 +1684,80 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				
 	}
 	
+	public boolean tabFocus(TekstVak source, boolean up)
+	{
+		int startRij = 0;
+		int startKolom = 0;
+		boolean focusVerlegd = false; 
+		boolean laatsteVak = false;
+		//if source outside TekstVakPanel: start searching at 0.
+		//if source inside TekstVakPanel: start searching at next TekstVak
+		//Volgorde: hele rij doorzoeken, dan pas naar volgende rij. 
+		if(up)
+		{
+			for(int i = 0; i < tekstVakken.length; i++)
+			{
+				for(int j = 0; j < tekstVakken[i].length; j++)
+				if(tekstVakken[i][j].equals(source))
+				{	if(j < tekstVakken[i].length - 1)
+					{	startRij = i;
+						startKolom = j + 1;
+					}
+					else if(i < tekstVakken.length - 1)
+					{
+						startRij = i + 1;
+					}
+					else 	//laatste tekstVak van het tekstVakPanel, dus meteen door naar omvattende tekstVak van het tekstVakPanel
+					{
+						laatsteVak = true;
+					}
+					break;
+				}
+			}
+		}
+		
+		if(!laatsteVak)
+		{
+			//binnen tekstVakPanel verder zoeken.
+			//startRij apart behandelen, omdat je daar in startKolom begint en niet in kolom 0. 
+			for(int j = startKolom; j < tekstVakken[startRij].length; j++)
+			{
+				focusVerlegd = tekstVakken[startRij][j].tabFocus(this, false);
+				if(focusVerlegd)
+					return true;
+			}
+			if(startRij < tekstVakken.length - 1)
+			{	for(int i = startRij + 1; i < tekstVakken.length; i++)
+				{
+					for(int j = 0; j < tekstVakken[i].length; j++)
+					{
+						focusVerlegd = tekstVakken[i][j].tabFocus(this, false);
+						if(focusVerlegd)
+							return true;
+					}
+				}
+			}
+		}
+		
+		//als omliggende tekstvak bestaat: doorgeven naar omliggende tekstvak
+		if(parent != null)
+			return parent.tabFocus(this, up);
+		else
+		{	for(int i = 0; i < tekstVakken.length; i++)
+			{
+				for(int j = 0; j < tekstVakken[i].length; j++)
+				{
+					focusVerlegd = tekstVakken[i][j].tabFocus(this, false);
+					if(focusVerlegd)
+						return true;
+				}
+			}
+			return false;
+		}
+		
+		
+	}
+	
 	public void corrigeerOpvulHoogtes()
 	{
 		for(int i = 0; i < hoogtes.size(); i++)

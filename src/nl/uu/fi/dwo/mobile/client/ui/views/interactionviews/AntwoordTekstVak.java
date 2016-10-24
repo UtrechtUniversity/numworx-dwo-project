@@ -347,6 +347,11 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		    		setAttempt();
 		    		fireText();
 		    	}
+				if(event.getNativeKeyCode() == KeyCodes.KEY_TAB)
+				{
+					event.preventDefault();
+					tab();
+				}
 			}
 		});
 		
@@ -432,6 +437,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				return false;
 			}
 			
+				
 			public void resize()
 			{
 				if(!formuleMode)
@@ -694,6 +700,14 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		juisteAntwoorden = StringUtils.split(s, "::");
 	}
 	
+	public void requestFocus()
+	{
+		if(formuleMode)
+			formuleVak.requestFocus();
+		else
+			antwoordTF.setFocus(true);
+	}
+	
 	public HashMap<String, Object> getState()
 	{
 		boolean ingevuld = false;
@@ -868,6 +882,15 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		ingevuld = false;
 
 		attempts = new Vector();
+	}
+	
+	public void tab()
+	{
+		System.out.println("tab in antwoordtekstvak");
+		if(parentRegel != null)
+		{
+			parentRegel.getTekstVak().tabFocus(this, true);
+		}
 	}
 	
 	private void zetGoedFout(int uitslag)

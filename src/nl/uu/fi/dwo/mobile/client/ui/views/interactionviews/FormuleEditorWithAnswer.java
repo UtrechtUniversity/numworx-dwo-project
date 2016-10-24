@@ -747,6 +747,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		else
 			processAntwoord(); // gewone geval 
 	}
+	
+	public void tab()
+	{
+		if(parentRegel != null)
+		{
+			parentRegel.getTekstVak().tabFocus(this, true);
+		}
+	}
 
 	private void transferToFEWS() {
 		//doen alsof het in de laatste regel van de fews is ingevuld; dan komt het automatisch terug naar de fewa.

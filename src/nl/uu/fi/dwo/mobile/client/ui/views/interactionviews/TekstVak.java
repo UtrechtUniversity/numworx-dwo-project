@@ -741,6 +741,55 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	}
 	
 	
+	/*
+	 * Verplaats focus naar eerstvolgende antwoordvak (FormuleEditorWithAnswer of AntwoordTekstVak)
+	 * Geeft true als de focus is verplaatst naar een antwoordvak in dit tekstvak en false anders.
+	 * Source is de zender van het tabcommando, up is true als de source zich binnen dit tekstvak bevindt en false anders. 
+	 */
+	public boolean tabFocus(InteractionView source, boolean up)
+	{
+		int start = 0;
+		boolean focusVerlegd = false;
+		//if source outside TekstVak: start searching at 0.
+		//if source inside TekstVak: start searching at next OpdrachtObject
+		if(up)
+		{
+			for(int i = 0; i < opdrachtObjects.size(); i++)
+			{
+				if(((Object)opdrachtObjects.get(i)).equals(source))
+				{	start = i + 1;
+					break;
+				}
+			}
+		}
+		
+		
+		for(int i = start; i < opdrachtObjects.size(); i++)
+		{
+			Object object = opdrachtObjects.get(i);
+			if(object instanceof FormuleEditorWithAnswer)
+			{
+				((FormuleEditorWithAnswer) object).requestFocus();
+				return true;
+			}
+			else if(object instanceof AntwoordTekstVak)
+			{
+				((AntwoordTekstVak) object).requestFocus();
+				return true;
+			}
+			else if(object instanceof TekstVakPanel)
+			{
+				focusVerlegd = ((TekstVakPanel) object).tabFocus(this, false);
+				if(focusVerlegd)
+					return true;
+			}
+		}
+		
+		//hier gekomen heb je alles binnen het TekstVak bekeken en niets gevonden, dus naar volgende tekstvak binnen tekstvakpanel.
+		return parent.tabFocus(this, true);
+			
+	}
+	
 	
 	public void resize()
 	{
