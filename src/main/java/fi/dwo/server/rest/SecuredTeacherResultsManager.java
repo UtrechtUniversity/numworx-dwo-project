@@ -100,9 +100,9 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 });
             });
             List<DomClassCourse> domClassCourses = new ArrayList<>(classCourses.size());
-//            classCourses.entrySet().forEach(classCourse)->{
-//                domClassCourses.add(classCourse.);
-//            });
+            classCourses.entrySet().forEach((classCourse)->{
+                domClassCourses.add(classCourse.createClassCourse());
+            });
             
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError,"Under development.");
             
