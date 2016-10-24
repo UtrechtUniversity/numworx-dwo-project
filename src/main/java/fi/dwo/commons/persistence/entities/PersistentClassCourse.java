@@ -1,6 +1,7 @@
 /* Copyrighted 2015. */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -17,6 +18,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 /**
  *
@@ -41,11 +44,11 @@ public class PersistentClassCourse implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ClassCourseID", nullable = false)
-    private Long classCourseID;
+    private long classCourseID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "ClassID", nullable = false)
-    private int classID;
+    private long classID;
     @Column(name = "type")
     private Integer type;
     @Column(name = "notBefore")
@@ -57,34 +60,34 @@ public class PersistentClassCourse implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "CourseID", nullable = false)
-    private int courseID;
+    private long courseID;
 
     public PersistentClassCourse() {
     }
 
-    public PersistentClassCourse(Long classCourseID) {
+    public PersistentClassCourse(long classCourseID) {
         this.classCourseID = classCourseID;
     }
 
-    public PersistentClassCourse(Long classCourseID, int classID, int courseID) {
+    public PersistentClassCourse(long classCourseID, long classID, long courseID) {
         this.classCourseID = classCourseID;
         this.classID = classID;
         this.courseID = courseID;
     }
 
-    public Long getClassCourseID() {
+    public long getClassCourseID() {
         return classCourseID;
     }
 
-    public void setClassCourseID(Long classCourseID) {
+    public void setClassCourseID(long classCourseID) {
         this.classCourseID = classCourseID;
     }
 
-    public int getClassID() {
+    public long getClassID() {
         return classID;
     }
 
-    public void setClassID(int classID) {
+    public void setClassID(long classID) {
         this.classID = classID;
     }
 
@@ -112,18 +115,18 @@ public class PersistentClassCourse implements Serializable {
         this.notAfter = notAfter;
     }
 
-    public int getCourseID() {
+    public Long getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(int courseID) {
+    public void setCourseID(long courseID) {
         this.courseID = courseID;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (classCourseID != null ? classCourseID.hashCode() : 0);
+        hash += Long.hashCode(classCourseID);
         return hash;
     }
 
@@ -134,7 +137,7 @@ public class PersistentClassCourse implements Serializable {
             return false;
         }
         PersistentClassCourse other = (PersistentClassCourse) object;
-        if ((this.classCourseID == null && other.classCourseID != null) || (this.classCourseID != null && !this.classCourseID.equals(other.classCourseID))) {
+        if ((this.classCourseID == other.classCourseID)) {
             return false;
         }
         return true;
@@ -143,6 +146,21 @@ public class PersistentClassCourse implements Serializable {
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentClassCourse[ classCourseID=" + classCourseID + " ]";
+    }
+
+    public DomClassCourse createDomClassCourse() {
+        DomClassCourse classCourse = new DomClassCourse();
+        buildDomClassCourse(classCourse);
+        return classCourse;
+    }
+
+    private void buildDomClassCourse(DomClassCourse classCourse) {
+        classCourse.setId(MySQLPersistenceId.createPersistentId(this));
+        classCourse.setClassId(MySQLPersistenceId.createPersistenceId(this.classID, PersistenceClassType.PersistentSchoolClass));
+        classCourse.setCourseId(MySQLPersistenceId.createPersistenceId(this.courseID, PersistenceClassType.PersistentCourse));
+        classCourse.setNotAfter(this.notAfter);
+        classCourse.setNotBefore(this.notBefore);
+        classCourse.setType(this.type);
     }
 
 }
