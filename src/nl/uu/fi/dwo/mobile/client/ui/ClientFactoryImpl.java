@@ -2,10 +2,10 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.Map;
 
+import nl.uu.fi.dwo.account.client.RPCHandlerV1;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
-import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
@@ -119,7 +119,7 @@ public class ClientFactoryImpl implements ClientFactory
 	@Override
 	public RPCHandler getRPCHandler() {
 		if(this.handler == null)
-			this.handler = new RPCHandler();
+			this.handler = new nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler();
 		return this.handler;
 	}
 

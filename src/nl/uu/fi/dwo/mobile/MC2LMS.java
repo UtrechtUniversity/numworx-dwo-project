@@ -5,46 +5,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.mobile.client.DWOplayerClientBundle;
-import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
+import nl.uu.fi.dwo.account.client.RPCHandlerV1;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_MC2mAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
-import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
-import nl.uu.fi.dwo.mobile.client.ui.TabletAnimationMapper;
-import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
-import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceHistoryHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.googlecode.mgwt.mvp.client.AnimatableDisplay;
-import com.googlecode.mgwt.mvp.client.AnimatingActivityManager;
-import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.MGWTSettings;
-import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
-import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
-
-import fi.wiskopdr.text.Text_nl;
 
 /**
  * Main class (entry point) Sets up the DWO player.
@@ -55,6 +29,65 @@ import fi.wiskopdr.text.Text_nl;
 public class MC2LMS extends DWOplayer implements EntryPoint
 {
 		
+	private final class MC2RPCHandler extends RPCHandlerV1 implements nl.uu.fi.dwo.mobile.client.ui.RPCHandler {
+		private MC2RPCHandler(String server, int profile) {
+			super(server, profile);
+		}
+
+		public void getCourses(Map<String, Object> userData,
+				AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+			
+			String method = "getCoursesJS"; // sort sequencenr
+			int profileID = PROFILE_ID;
+			int guestID = PROFILE_OFFSET - profileID;
+			
+			XmlRpcClient client = getClient();
+
+			Object[] params = { guestID };
+
+			XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
+
+			request.execute();
+		}
+
+		public void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+			HashMap<String, Object> g = new HashMap<String,Object>();
+			g.put("parentID", id);
+			String method = "getTableJS";
+			Object[] params = {"tblCourse", g, "name" };
+			XmlRpcClient client = getClient();
+			XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
+			request.execute();
+		}
+
+		public void getCoursesSchool(Map<String, Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+			String method = "getTableJS";
+			HashMap<String,Object> g = new HashMap<String,Object>();
+			g.put("parentID", 0);
+			Object schoolID = userData.get("schoolID");
+			g.put("schoolID", schoolID);
+			g.put("dwoProfileID", PROFILE_ID);
+			Object[] params = {"tblCourse", g, "name" };
+			XmlRpcClient client = getClient();
+			XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
+			request.execute();
+		}
+
+		public void getCoursesClass(Map<String,Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+			String method = "getCoursesForClassJS";
+			Object classid = userData.get("classID");
+			Object[] params = { classid };
+			XmlRpcClient client = getClient();
+			XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, filterProfile(getCoursesCallback));
+			request.execute();
+		}
+
+		@Override
+		protected Object objectToKey(Object courseID) {
+			return courseID.toString();
+		}
+	}
+
 	public MC2LMS() {
 		super();
 		PROFILE_ID = 78;
@@ -83,60 +116,7 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 		String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
 
-		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwoapp") {
-
-			public <T> void getCourses(Map<String, Object> userData,
-					AsyncCallback<T> getCoursesCallback) {
-				
-				String method = "getCoursesJS"; // sort sequencenr
-				int profileID = PROFILE_ID;
-				int guestID = PROFILE_OFFSET - profileID;
-				
-				XmlRpcClient client = getClient();
-
-				Object[] params = { guestID };
-
-				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
-
-				request.execute();
-			}
-
-			public <T> void getCourses(Object id, AsyncCallback<T> getCoursesCallback) {
-				HashMap<String, Object> g = new HashMap<String,Object>();
-				g.put("parentID", id);
-				String method = "getTableJS";
-				Object[] params = {"tblCourse", g, "name" };
-				XmlRpcClient client = getClient();
-				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
-				request.execute();
-			}
-
-			public <T> void getCoursesSchool(Map<String, Object> userData, AsyncCallback<T> getCoursesCallback) {
-				String method = "getTableJS";
-				HashMap<String,Object> g = new HashMap<String,Object>();
-				g.put("parentID", 0);
-				Object schoolID = userData.get("schoolID");
-				g.put("schoolID", schoolID);
-				g.put("dwoProfileID", PROFILE_ID);
-				Object[] params = {"tblCourse", g, "name" };
-				XmlRpcClient client = getClient();
-				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
-				request.execute();
-			}
-
-			public <T> void getCoursesClass(Map<String,Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
-				String method = "getCoursesForClassJS";
-				Object classid = userData.get("classID");
-				Object[] params = { classid };
-				XmlRpcClient client = getClient();
-				XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, filterProfile(getCoursesCallback));
-				request.execute();
-			}
-
-			@Override
-			protected Object objectToKey(Object courseID) {
-				return courseID.toString();
-			} } );
+		factory.setRPCHandler(new MC2RPCHandler(http + "//" + host + "/dwoapp", PROFILE_ID) );
 		return factory;
 	}
 

@@ -4,13 +4,16 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -31,13 +34,16 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 public class LoginActivity extends MGWTAbstractActivity
 {
+	
+	static final Logger LOG = Logger.getLogger(LoginActivity.class.getName()); 
+	
 	private final AsyncCallback<Map<String, Object>> LOGIN_CALLBACK = new AsyncCallback<Map<String, Object>>()
 	{
 
 		@Override
 		public void onFailure(Throwable caught)
 		{
-			GWT.log("login failure", caught);
+			LOG.log(Level.WARNING, "login failure", caught);
 //			if (caught instanceof Dwo2Exception) {
 //				Window.alert( Dwo2ExceptionTranslator.getLocalizedCodeExplanation(null, ((Dwo2Exception) caught).getDwo2Code()));
 //			} else
@@ -52,6 +58,17 @@ public class LoginActivity extends MGWTAbstractActivity
 		@Override
 		public void onSuccess(Map<String, Object> result)
 		{
+			if(DWOplayer.dwoProfile.isDone() && result == null)
+			{
+				String r = DWOplayer.dwoProfile.getValue().getDwoProfileRights();
+				if(r.indexOf('l') >= 0)
+				{
+					Window.alert("Geen toegang voor deze site" );
+					return;
+				}
+			}
+			
+			
 			DWOplayer.profiledata = result;
 			if(next == null)
 				DWOplayer.gotoCourses();
@@ -90,7 +107,17 @@ public class LoginActivity extends MGWTAbstractActivity
 		String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
 		DWOplayer.profiledata = null;
 		view = clientFactory.getLoginView();
+		DWOplayer.dwoProfile.then(new Success<DomDwoProfile, Void>() {
 
+			@Override
+			public Promise<Void> call(Promise<DomDwoProfile> promise)
+					throws Exception {
+				String rights = promise.getValue().getDwoProfileRights();
+				view.allowGuest(rights.indexOf('l') < 0);
+				return null;
+			}
+			
+		});
 // TESTING		
 //		user_id = "292832126";
 //		org_id = "\"lti:385\"";

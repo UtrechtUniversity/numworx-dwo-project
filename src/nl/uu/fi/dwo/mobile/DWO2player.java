@@ -5,45 +5,41 @@ import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.account.client.RPCHandlerV2;
 import nl.uu.fi.dwo.account.client.UserBar;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO2;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
-import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
-import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.Login2ViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
-import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
-import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
-import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.mgwt.ui.client.MGWT;
-import fi.dwo.gwt.lib.rest.CallManagers.LoginPresenter;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
+
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
-import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
-import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class DWO2player extends DWOplayer implements EntryPoint {
 
@@ -57,14 +53,57 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 //		
 //	}
 	
-	
-	
+	private final class DWO2RPCHandler extends RPCHandlerV2 implements RPCHandler{
+		private DWO2RPCHandler(String server, int profile) {
+			super(server, profile);
+		}
+
+		@Override
+		public void loginMD5(final String name, final String password, final AsyncCallback<Map<String,Object>> callback)
+		{
+			final AsyncCallback<DomUserFullwLoginContext> userCallback = new AsyncUserCallback(schoolManager, callback);
+			loginMD5Helper(name, password, userCallback);	
+		}
+
+		@Override
+		public void login(final String name, final String password, final AsyncCallback<Map<String,Object>> callback)
+		{
+			final AsyncCallback<DomUserFullwLoginContext> userCallback = new AsyncUserCallback(schoolManager, callback);
+			loginHelper(name, password, userCallback);
+			
+		}
+
+		@Override
+		public void getUserResults(Object courseID, Object userID,
+				AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
+			Object schoolGroupID = DWOplayer.profiledata.get("schoolGroupID");
+			getUserResultsHelper(courseID, userID, schoolGroupID, getUserResultsCallback);
+		}
+
+		@Override
+		public void samlLogin(String name, String org,
+				AsyncCallback<Map<String, Object>> callback) {
+			final AsyncUserCallback userCallback = new AsyncUserCallback(schoolManager, callback);
+			samlLoginHelper(name, org, userCallback);
+		}
+
+		/* (non-Javadoc)
+		 * @see nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler#getAuthTokenUser(java.lang.String, com.google.gwt.user.client.rpc.AsyncCallback)
+		 */
+		@Override
+		public void getUserFromAuthToken(String authToken,
+				AsyncCallback<Map<String, Object>> callback) {
+			final AsyncUserCallback userCallback = new AsyncUserCallback(schoolManager, callback);
+			getUserFromAuthTokenHelper(authToken, userCallback);
+		}
+	}
+
 	final class AsyncUserCallback implements AsyncCallback<DomUserFullwLoginContext> {
-		private final SecuredUserSchoolLoginManager schoolManager;
+		private final SecuredUserSchoolLoginManagerV2 schoolManager;
 		Map<String,Object> profile = new HashMap<String,Object>();
 		AsyncCallback<? super Map<String,Object>> callback;
 
-		AsyncUserCallback(SecuredUserSchoolLoginManager schoolManager, AsyncCallback<? super Map<String,Object>> callback) {
+		AsyncUserCallback(SecuredUserSchoolLoginManagerV2 schoolManager, AsyncCallback<? super Map<String,Object>> callback) {
 			this.schoolManager = schoolManager;
 			this.callback = callback;
 		}
@@ -77,7 +116,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			DwoGlobalVars.getInstance().setCurrentUser(user);
 			DwoGlobalVars.getInstance().setCurrentLoginContext(context);
 			toProfile(user, profile);
-			schoolManager.getSchoolLogins(new AsyncCallback<DomSchoolsRolesAndClasses>() {
+			schoolManager.getSchoolLoginsV2(new AsyncCallback<DomSchoolsRolesAndClassesV2>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -85,7 +124,12 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					}
 
 					@Override
-					public void onSuccess(DomSchoolsRolesAndClasses result) {
+					public void onSuccess(DomSchoolsRolesAndClassesV2 result) {
+						DwoGlobalVars.instance().setSchoolLogins(result);
+						DomSchoolRoleAndClassV2 active = result.getActiveSchoolRoleAndClass();
+						DomSchoolClass schoolClass = active != null ? active.getSchoolClass() : null;
+						DwoGlobalVars.instance().setCurrentSchoolClass(schoolClass);
+
 						toProfile(result, profile);
 						callback.onSuccess(profile);
 					}
@@ -129,7 +173,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	}
 
 
-	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 	private UserBar userBar = new UserBar();
 
 	protected UserBar getUserBar() {
@@ -181,149 +224,39 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		};
 		String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
-		final SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
-		final SecuredUserSchoolLoginManager schoolManager = new SecuredUserSchoolLoginManager();
-		final LoginPresenter ontdubbel = null; // new DubbeleLogin();
-		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwo/xmlrpc"){
-
-			public void loginMD5(final String name, final String password, final AsyncCallback<? super Map<String,Object>> callback)
-			{
-				final AsyncCallback<DomUserFullwLoginContext> userCallback = new AsyncUserCallback(schoolManager, callback);
-				accountManager.loginUserMD5(name, password, userCallback, null);
-				
-			}
-			public void login(final String name, final String password, final AsyncCallback<? super Map<String,Object>> callback)
-			{
-				final AsyncCallback<DomUserFullwLoginContext> userCallback = new AsyncUserCallback(schoolManager, callback);
-				accountManager.loginUser(name, password, userCallback, ontdubbel);
-				
-			}
-			
-			@Override
-			public <T> void getUserResults(Object courseID, Object userID,
-					AsyncCallback<T> getUserResultsCallback) {
-				Object schoolGroupID = DWOplayer.profiledata.get("schoolGroupID");
-				Object[] params = { courseID, userID, schoolGroupID };
-				XmlRpcClient client = getClient();
-				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, "getUserResults", params, getUserResultsCallback);
-				request.execute();
-			}
-			public <T> void getCourses(Map<String, Object> userData,
-					AsyncCallback<T> getCoursesCallback) {
-				
-				String method = "getCoursesJS"; // sort sequencenr
-				int profileID = PROFILE_ID;
-				int guestID = PROFILE_OFFSET - profileID;
-				
-				XmlRpcClient client = getClient();
-
-				Object[] params = { guestID };
-
-				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
-
-				request.execute();
-			}
-
-			public <T> void getCourses(Object id, AsyncCallback<T> getCoursesCallback) {
-				HashMap<String, Object> g = new HashMap<String,Object>();
-				g.put("parentID", id);
-				String method = "getTableJS";
-				Object[] params = {"tblCourse", g, "name" };
-				XmlRpcClient client = getClient();
-				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
-				request.execute();
-			}
-
-			public <T> void getCoursesSchool(Map<String, Object> userData, AsyncCallback<T> getCoursesCallback) {
-				String method = "getTableJS";
-				HashMap<String,Object> g = new HashMap<String,Object>();
-				g.put("parentID", 0);
-				Object schoolID = userData.get("schoolID");
-				g.put("schoolID", schoolID);
-				g.put("dwoProfileID", PROFILE_ID);
-				Object[] params = {"tblCourse", g, "name" };
-				XmlRpcClient client = getClient();
-				XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
-				request.execute();
-			}
-
-			public <T> void getCoursesClass(Map<String,Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
-				String method = "getCoursesForClassJS";
-				Object classid = userData.get("classID");
-				Object[] params = { classid };
-				XmlRpcClient client = getClient();
-				XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, filterProfile(getCoursesCallback));
-				request.execute();
-			}
-
-			@Override
-			public void samlLogin(String name, String org,
-					AsyncCallback<? super Map<String, Object>> callback) {
-				String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
-				final AsyncUserCallback userCallback = new AsyncUserCallback(schoolManager, callback);
-				accountManager.samlLogin(name, org, authToken, userCallback);
-			}
-
-			/* (non-Javadoc)
-			 * @see nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler#getAuthTokenUser(java.lang.String, com.google.gwt.user.client.rpc.AsyncCallback)
-			 */
-			@Override
-			public void getUserFromAuthToken(String authToken,
-					AsyncCallback<? super Map<String, Object>> callback) {
-				final AsyncUserCallback userCallback = new AsyncUserCallback(schoolManager, callback);
-				accountManager.getUserFromAuthToken(authToken, userCallback);
-			}
-			@Override
-			public void logout() {
-				super.logout();
-				if(DwoGlobalVars.instance().getCurrentUser() != null)
-					accountManager.logout(DwoGlobalVars.instance().getCurrentLoginContext(), new AsyncCallback<Dwo2Exception>() {
-	
-						@Override
-						public void onFailure(Throwable caught) {
-						}
-	
-						@Override
-						public void onSuccess(Dwo2Exception result) {
-							Window.alert(String.valueOf(result));						
-						}});
-			}
-
-		});
+		factory.setRPCHandler(new DWO2RPCHandler(http + "//" + host + "/dwo/xmlrpc", PROFILE_ID));
 		return factory;
 	}
 
 // From RestRpcHandler
-	void toProfile(DomSchoolsRolesAndClasses result, Map<String, Object> profile) {
-		DomSchoolRoleAndClass active = result.getActiveSchoolRoleAndClass();
-		PersistenceId userId = active.getUserId();
-		PersistenceId classId = active.getSchoolClassId();
-		PersistenceId schoolId = active.getSchoolId();
-		PersistenceId sgId = active.getSchoolGroupId();
-
+	void toProfile(DomSchoolsRolesAndClassesV2 result, Map<String, Object> profile) {
 		PersistenceIdDecoderInterface instance = PersistenceIdDecoderInterface.instance;
-		profile.put("userID", instance.idOf(userId, PersistenceClassType.PersistentUser));
-		profile.put("iconizer", active.getIconizer());
+		DomSchoolRoleAndClassV2 active = result.getActiveSchoolRoleAndClass();
+		DomSchoolClass schoolClass;
+		DomSchool      school;
+		DomHasRole     hasRole;
+		DomRole        role;
+		schoolClass = active.getSchoolClass();
+		school = active.getSchool();
+		hasRole = active.getHasRole();
+		role  = active.getRole();
+		PersistenceId classId = schoolClass != null ? schoolClass.getId() : null;
+		PersistenceId schoolId = school != null ? school.getId() : null;
+		PersistenceId sgId = hasRole != null ? hasRole.getSchoolGroupId() : null;
+
+		profile.put("iconizer", schoolClass != null ? schoolClass.getIconizer() : Boolean.FALSE);
 		profile.put("classID", classId == null ? "" :
 				instance.idOf(classId, PersistenceClassType.PersistentSchoolClass));
 		profile.put("schoolID", schoolId == null ? "" :
 				instance.idOf(schoolId, PersistenceClassType.PersistentSchool));
-		profile.put("schoolName", active.getSchoolName());
-		profile.put("groupname",  active.getRoleName());
-		profile.put("class", active.getSchoolClassName());
-		profile.put("groupID", instance.idOf(active.getRoleId(), PersistenceClassType.PersistentRole));
+		profile.put("schoolName", school.getSchoolName());
+		profile.put("groupname",  role.getRoleName());
+		profile.put("class", schoolClass == null ? "" :schoolClass.getSchoolClassName());
+		profile.put("groupID", instance.idOf(role.getId(), PersistenceClassType.PersistentRole));
 		profile.put("schoolGroupID", instance.idOf(sgId, PersistenceClassType.PersistentSchoolGroup));
-		DomSchoolClass schoolClass = null;
-		if(classId != null) {
-			schoolClass = new DomSchoolClass();
-			schoolClass.setId(classId);
-			schoolClass.setSchoolClassName(active.getSchoolClassName());
-			schoolClass.setHasRegKey(Boolean.TRUE); // unknown?
-		}
-		DwoGlobalVars.instance().setCurrentSchoolClass(schoolClass);
-		RoleType role = RoleType.NONE;
-		try { role = RoleType.valueOf(active.getRoleName()); } catch(Exception ignore) {}
-		getUserBar().setRole(role);
+		RoleType roleType = RoleType.NONE;
+		try { roleType = RoleType.valueOf(role.getRoleName()); } catch(Exception ignore) {}
+		getUserBar().setRole(roleType);
 	}
 
 	void toProfile(DomUserFull result, Map<String, Object> profile) {
@@ -333,7 +266,10 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		profile.put("userID", PersistenceIdDecoderInterface.instance.idOf(result.getId(), PersistenceClassType.PersistentUser));
 		profile.put("username", result.getUserName());
 		profile.put("password",result.getPassword());
-		
+		PersistenceId userId = result.getId();
+		PersistenceIdDecoderInterface instance = PersistenceIdDecoderInterface.instance;
+		profile.put("userID", instance.idOf(userId, PersistenceClassType.PersistentUser));
+
 		getUserBar().setSingleSchool(result.getSingleSchool());
 		
 	}

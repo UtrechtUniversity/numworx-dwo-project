@@ -8,6 +8,7 @@ public interface LoginView extends IsWidget
 {
 	String getUsername();
 	String getPassword();
+	void allowGuest(boolean allow);
 	void setupModule();
 	
 	HasTapHandlers getLoginBtn();

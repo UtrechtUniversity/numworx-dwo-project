@@ -79,4 +79,9 @@ public class LoginViewImpl extends Composite implements LoginView
 		return focusPanel;
 		
 	}
+
+	@Override
+	public void allowGuest(boolean allow) {
+		gastbutton.setVisible(allow);
+	}
 }

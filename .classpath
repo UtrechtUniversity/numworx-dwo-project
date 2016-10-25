@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="java-templates"/>
 	<classpathentry kind="lib" path="lib/mgwt.jar"/>
 	<classpathentry kind="lib" path="lib/ideas.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/DWOmAccess-0.0.3-classes.jar"/>
@@ -10,16 +11,18 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/oauth-provider-20100601.jar"/>
 	<classpathentry kind="lib" path="lib/restygwt-2.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/javax.ws.rs-api-2.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/Account-0.0.1-SNAPSHOT-classes.jar"/>
-	<classpathentry kind="lib" path="lib/DWO-gwt-lib.jar"/>
-	<classpathentry kind="lib" path="lib/DWO-rest-lib-2.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/WriteMathGWT-0.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/DWO-rest-lib-2.1.3-sources.jar"/>
+	<classpathentry kind="lib" path="lib/DWO-rest-lib-2.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/Account-0.0.3-SNAPSHOT-classes.jar"/>
+	<classpathentry kind="lib" path="lib/Account-0.0.3-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="lib" path="lib/DWO-gwt-lib-sources.jar"/>
-	<classpathentry kind="lib" path="lib/Account-0.0.1-SNAPSHOT-sources.jar"/>
-	<classpathentry kind="lib" path="lib/DWO-rest-lib-2.0-SNAPSHOT-sources.jar"/>
+	<classpathentry kind="lib" path="lib/DWO-gwt-lib.jar"/>
+	<classpathentry kind="lib" path="lib/promise-api-0.0.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/promise-api-0.0.1.jar"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/WriteMathGWT"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GraphToolGWT"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/KeyboardGWT"/>

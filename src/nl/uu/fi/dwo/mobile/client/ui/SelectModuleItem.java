@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,8 @@ public class SelectModuleItem
 	private Type type = Type.ROOT;
 	private List<SelectModuleItem> children;
 	private SelectModuleItem parent;
+	private Date notBefore, notAfter;
+	private Number toetsType;
 
 	public SelectModuleItem(Object id, String name, String file)
 	{
@@ -75,6 +78,10 @@ public class SelectModuleItem
 			   this.fromSchool = schoolID != null && ! "".equals(schoolID);
 			}
 			this.showScore = false;
+// Alleen als de "classcourse" data ge-piggybacked is.
+			this.notAfter = (Date)map.get("notAfter");
+			this.notBefore = (Date)map.get("notBefore");
+			this.toetsType = (Number) map.get("type");
 			break;
 		case SCO:
 			this.type = type;
@@ -84,6 +91,15 @@ public class SelectModuleItem
 			this.file = PREFIX + this.id;
 			this.showScore = !Boolean.TRUE.equals(map.get("showscore")); // reverse logica
 			this.sequencenr = ((Number) map.get("sequencenr")).intValue();
+			parentID = map.get("courseID");
+			if(parentID != null) {
+				this.parent = SelectModuleItemHolder.getItemByID(parentID);
+				if(parent != null) {
+					this.notAfter = parent.notAfter;
+					this.notBefore = parent.notBefore;
+					this.toetsType = parent.toetsType;
+				}
+			}
 			break;
 		case SEPARATOR:
 			this.type = type;

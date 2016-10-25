@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
+
 import nl.uu.fi.dwo.mobile.client.DWOplayerClientBundle;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
@@ -25,6 +29,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -205,7 +210,11 @@ public class DWOplayer implements EntryPoint
 	//public static Locale language = new Locale ("nl", "");
 	public static Text_nl rb = new Text_nl();
 
+	@Deprecated
 	public static Map<String, Object> profiledata = null;
+	
+	private static Deferred<DomDwoProfile> deferredProfile;
+	public static Promise<DomDwoProfile> dwoProfile; // NEVER NULL
 	public static ClientFactory clientfactory;
 	public static SCORM_guest api;
 
@@ -214,27 +223,28 @@ public class DWOplayer implements EntryPoint
 	 */
 	public void start()
 	{
+		Logger.getLogger("DWOplayer").log(Level.WARNING, "Version " + BUILD.version + ", build " + BUILD.buildNumber);
+		deferredProfile = new Deferred<DomDwoProfile>();
+		dwoProfile = deferredProfile.getPromise();
 		setupResources();
 		setupDWOPlayer();
 		initProfile();
 	}
 
 	protected void initProfile() {
-		AsyncCallback<Map<String,Object>> getProfileCallback = new AsyncCallback<Map<String,Object>>() {
+		Success<DomDwoProfile, Void> getProfileCallback = new Success<DomDwoProfile, Void>() {
 
 			@Override
-			public void onFailure(Throwable caught) {
-				
-			}
-
-			@Override
-			public void onSuccess(Map<String, Object> result) {
+			public Promise<Void> call(Promise<DomDwoProfile> promise)
+					throws Exception {
 				SelectModuleItem r = SelectModuleItem.ROOT;
-				r.setName(result.get("dwoProfileDescription").toString());
-				r.setDescription(result.get("dwoProfileText").toString());
-				
+				DomDwoProfile p = promise.getValue();
+				r.setName(p.getDwoProfileDescription());
+				r.setDescription(p.getDwoProfileText());
+				return null;
 			}};
-		clientfactory.getRPCHandler().getDwoProfile(getProfileCallback );
+		dwoProfile.then(getProfileCallback);
+		deferredProfile.resolveWith(clientfactory.getRPCHandler().getDwoProfile());
 		
 	}
 
