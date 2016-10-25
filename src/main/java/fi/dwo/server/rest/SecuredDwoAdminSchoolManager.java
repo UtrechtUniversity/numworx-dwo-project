@@ -170,7 +170,7 @@ public class SecuredDwoAdminSchoolManager {
             try {
                 s = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(school.getDomSchool4DwoAdmin().getId()));
                 LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
-                return s.createDomSchoolFull();
+                return s.buildDomSchoolFull();
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "School " + school.getDomSchool4DwoAdmin().getId() + "Could not be found.", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the school.");
@@ -210,7 +210,7 @@ public class SecuredDwoAdminSchoolManager {
                 LOG.log(Level.FINER, "Fetched all {0} schools. ", new Object[]{schools.size()});
                 domSchools = new ArrayList<>(schools.size());
                 for (PersistentSchool s : schools) {
-                    domSchools.add(s.createDomSchool4DwoAdmin());
+                    domSchools.add(s.buildDomSchool4DwoAdmin());
                 }
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);

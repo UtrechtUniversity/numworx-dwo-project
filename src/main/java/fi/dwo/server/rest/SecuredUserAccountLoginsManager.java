@@ -204,7 +204,7 @@ public class SecuredUserAccountLoginsManager {
         sacs.setActiveSchoolRoleAndClass(curSac);
         sacs.setSchoolsRolesAndClassesList(sacList);
         PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
-        sacs.setNullSchool(nullSchool.createDomSchool());
+        sacs.setNullSchool(nullSchool.buildDomSchool());
         return sacs;
     }
 

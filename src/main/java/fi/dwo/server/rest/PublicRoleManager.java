@@ -44,7 +44,7 @@ private static final Logger LOG = Logger.getLogger(PublicRoleManager.class.getNa
             domRoles = new ArrayList<DomRole>(roles.size());
             LOG.log(Level.FINER, "Fetched all {0} user roles. ", new Object[]{roles.size()});
             for(PersistentRole r: roles){
-                domRoles.add(r.createDomRole());
+                domRoles.add(r.buildDomRole());
             }
         } catch(Exception e){
             LOG.log(Level.WARNING,"Unexpected exception", e);

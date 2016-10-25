@@ -103,9 +103,9 @@ public class SecuredUserAccountLoginsManagerV2IT {
         RestSchoolRoleAndClassV2 sarc = new RestSchoolRoleAndClassV2();
         DomSchoolRoleAndClassV2 darc = new DomSchoolRoleAndClassV2();
         sarc.setDomSchoolRoleAndClass(darc);
-        darc.setRole(RoleManager.findEntity(5L).createDomRole());
-        darc.setSchool(SchoolManager.findEntity(3L).createDomSchool());
-        darc.setSchoolClass(SchoolClassManager.findEntity(3L).createDomSchoolClass());
+        darc.setRole(RoleManager.findEntity(5L).buildDomRole());
+        darc.setSchool(SchoolManager.findEntity(3L).buildDomSchool());
+        darc.setSchoolClass(SchoolClassManager.findEntity(3L).buildDomSchoolClass());
         darc.setHasRole(HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(),7L)).buildDomHasRole());
 //        darc.setUserId(MySQLPersistenceId.createPersistenceId(user.getId(), PersistenceClassType.PersistentUser));
 //        darc.setSchoolId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));
@@ -173,9 +173,9 @@ public class SecuredUserAccountLoginsManagerV2IT {
         RestSchoolRoleAndClassV2 sarc = new RestSchoolRoleAndClassV2();
         DomSchoolRoleAndClassV2 darc = new DomSchoolRoleAndClassV2();
         sarc.setDomSchoolRoleAndClass(darc);
-        darc.setRole(RoleManager.findEntity(1L).createDomRole());
-        darc.setSchool(SchoolManager.findEntity(3L).createDomSchool());
-        darc.setSchoolClass(SchoolClassManager.findEntity(2L).createDomSchoolClass());
+        darc.setRole(RoleManager.findEntity(1L).buildDomRole());
+        darc.setSchool(SchoolManager.findEntity(3L).buildDomSchool());
+        darc.setSchoolClass(SchoolClassManager.findEntity(2L).buildDomSchoolClass());
         darc.setHasRole(HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(),5L)).buildDomHasRole());
 
 //        darc.setUserId(MySQLPersistenceId.createPersistenceId(user.getId(), PersistenceClassType.PersistentUser));

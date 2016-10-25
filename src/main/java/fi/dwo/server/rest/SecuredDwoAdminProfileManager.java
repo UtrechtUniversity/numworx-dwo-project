@@ -58,7 +58,7 @@ public class SecuredDwoAdminProfileManager {
                 LOG.log(Level.FINER, "Fetched all {0} profiles. ", new Object[]{profiles.size()});
                 domProfiles = new ArrayList<>(profiles.size());
                 for (PersistentDwoProfile p : profiles) {
-                	domProfiles.add(p.createDomDwoProfile());
+                	domProfiles.add(p.buildDomDwoProfile());
                 }
             }
             catch (Exception e) {

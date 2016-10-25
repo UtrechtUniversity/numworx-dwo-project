@@ -529,7 +529,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         
 //        PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);
-        nss.setDomSchoolClass(schoolClass.createDomSchoolClass());
+        nss.setDomSchoolClass(schoolClass.buildDomSchoolClass());
 
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean result = instance.SubmitSingleSchoolStudent(sc, rss);

@@ -6,6 +6,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -135,6 +136,20 @@ public class StudentScoContextManager {
         }
     }
 
+    public static List<PersistentStudentScoContext> findEntities(PersistentScoContext scoContext) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentStudentScoContext.findByScoID");
+            q.setParameter("scoID", scoContext.getScoID());
+            List<PersistentStudentScoContext> list = q.getResultList();
+            LOG.log(Level.FINE, "StudentScoContextManager-manager retrieved {0} PersistentStudentScoContext with scoId {1}", new Object[]{list.size(), scoContext.getScoID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
+    
     public static List<PersistentStudentScoContext> findEntities(PersistentHasRolePK key) {
         EntityManager em = getEntityManager();
         try {
@@ -142,7 +157,7 @@ public class StudentScoContextManager {
             q.setParameter("userID", key.getUserID());
             q.setParameter("schoolGroupID", key.getSchoolGroupID());
             List<PersistentStudentScoContext> list = q.getResultList();
-            LOG.log(Level.FINE, "PersistentHasRole-manager retrieved {0} PersistentStudentScoContext with userid {1}", new Object[]{list.size(), key});
+            LOG.log(Level.FINE, "StudentScoContextManager-manager retrieved {0} PersistentStudentScoContext with key {1}", new Object[]{list.size(), key.toString()});
             return list;
         }
         finally {

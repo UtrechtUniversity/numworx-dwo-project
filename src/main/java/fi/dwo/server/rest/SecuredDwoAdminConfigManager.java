@@ -60,7 +60,7 @@ public class SecuredDwoAdminConfigManager {
                 LOG.log(Level.FINER, "Fetched all {0} profiles. ", new Object[]{profiles.size()});
                 domProfiles = new ArrayList<>(profiles.size());
                 for (PersistentAppletConfig p : profiles) {
-                	domProfiles.add(p.createDomAppletConfig());
+                	domProfiles.add(p.buildDomAppletConfig());
                 }
             }
             catch (Exception e) {

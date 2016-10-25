@@ -248,7 +248,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         dss.setPassword("pwd");
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);
-        nss.setDomSchoolClass(schoolClass.createDomSchoolClass());
+        nss.setDomSchoolClass(schoolClass.buildDomSchoolClass());
         rss.setDomNewSingleSchoolStudent(nss);
         
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();

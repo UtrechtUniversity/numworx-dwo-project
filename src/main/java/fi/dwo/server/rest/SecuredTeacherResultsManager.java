@@ -11,16 +11,19 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.CourseUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +43,12 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Operations for the GUI Component that manages the school classes.
@@ -91,18 +97,21 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 
         if (phr != null && school != null) {
             DomResultsPerTeacher results = new DomResultsPerTeacher();
-            // DomResultsPerTeacher
-            // requires teacher, schoolclasses, students, courses, scocontext's, studentscocontext's and a timestamp
+            // DomResultsPerTeacher requires teacher, schoolclasses, students, 
+            // courses, scocontext's, studentscocontext's and a timestamp
 
             //Fetch Teacher
             DomTeacher teacher = UserManager.findEntity(phr.getPersistentHasRolePK().getUserID()).buildDomTeacher();
             results.setTeacher(teacher);
             //Fetch SchoolClasses and students
             List<PersistentSchoolClass> schoolClasses = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
-            List<DomSchoolClass> domSchoolClasses = new ArrayList<DomSchoolClass>(schoolClasses.size());
+            Map<PersistenceId,DomSchoolClass> domSchoolClasses = new HashMap<>(schoolClasses.size());
             HashMap<Long, PersistentUser> studentMap = new HashMap<>();
-            for (PersistentSchoolClass schoolClass : schoolClasses) {
-                domSchoolClasses.add(schoolClass.createDomSchoolClass());
+            schoolClasses.stream().map((schoolClass) -> {
+                DomSchoolClass s = schoolClass.buildDomSchoolClass();
+                domSchoolClasses.put(s.getId(), s);
+                return schoolClass;
+            }).forEach((schoolClass) -> {
                 try {
                     //TODO optimize: remove the multiple user fetches.
                     for (PersistentUser user : UserUtilManager.getUsersforStudentsInSchoolClass(schoolClass)) {
@@ -110,12 +119,14 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                     }
                 } catch (Dwo2Exception ex) {
                     Logger.getLogger(SecuredTeacherResultsManager.class.getName()).log(Level.SEVERE, null, ex);
-                };
-            }
+                }
+            });
+            results.setSchoolClasses(domSchoolClasses);
             //convert studentMap and set in result
-            List<DomStudent> domStudents = new ArrayList<>(studentMap.size());
+            Map<PersistenceId,DomStudent> domStudents = new HashMap<>(studentMap.size());
             studentMap.entrySet().stream().forEach((keyValuePair) -> {
-                domStudents.add(keyValuePair.getValue().buildDomStudent());
+                DomStudent s = keyValuePair.getValue().buildDomStudent();
+                domStudents.put(s.getId(),s);
             });
             results.setStudents(domStudents);
 
@@ -134,58 +145,62 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             });
 
             //fill DomClassCourse List
-            List<DomClassCourse> domClassCourses = new ArrayList<>(classCoursesMap.size());
+            Map<PersistenceId,DomClassCourse> domClassCourses = new HashMap<>(classCoursesMap.size());
             classCoursesMap.entrySet().forEach((keyValuePair) -> {
-                domClassCourses.add(keyValuePair.getValue().createDomClassCourse());
+                DomClassCourse c = keyValuePair.getValue().buildDomClassCourse();
+                domClassCourses.put(c.getId(),c);
             });
+            results.setClassCourses(domClassCourses);
 
+            Map<PersistenceId,DomCourse> domCourses = new HashMap<>();
             Queue<PersistentCourse> courseQueue = new LinkedList<>();
+            List<PersistentCourse> leaves = new LinkedList<>();
             courseQueue.addAll(coursesMap.values());
-            
-            //pop and push course map until no kids.
-//            HashMap<Long, PersistentCourse> courseMap = new HashMap<>();
+            while (!courseQueue.isEmpty()) {
+                PersistentCourse course = courseQueue.poll();
+                if (course.getWithChildren()) {
+                    List<PersistentCourse> childrenCourses = CourseUtilManager.getChildCourses(course);
+                    courseQueue.addAll(childrenCourses);
+                } else {//leave
+                    leaves.add(course);
+                }
+                DomCourse c = course.createDomCourse();
+                domCourses.put(c.getId(),c);
+            }
+            results.setCourses(domCourses);
 
+            //process leaves and fill hashmap scoContext
+            HashMap<Long, PersistentScoContext> scosMap = new HashMap<>();
+            leaves.forEach((leave) -> {
+                List<PersistentScoContext> scoContexts = ScoContextManager.findEntities(leave);
+                scoContexts.forEach((scoContext) -> {
+                    scosMap.putIfAbsent(scoContext.getScoID(), scoContext);
+                });
+            });
+            Map<PersistenceId,DomScoContext> domScoContexts = new HashMap<>(scosMap.size());
+            scosMap.entrySet().stream().forEach((keyValuePair) -> {
+                DomScoContext s = keyValuePair.getValue().buildDomScoContext();
+                domScoContexts.put(s.getId(),s);
+            });
+            results.setScoContexts(domScoContexts);
+            
+            //fill hashmap studenSco
+            HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
+            scosMap.entrySet().forEach((sco) -> {
+                List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findEntities(sco.getValue());
+                studentScos.forEach((studentSco) -> {
+                    studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
+                });
+            });
+            Map<PersistenceId,DomStudentScoContext> domStudentScoContexts = new HashMap<>(studentScosMap.size());
+            studentScosMap.entrySet().stream().forEach((keyValuePair) -> {
+                DomStudentScoContext s = keyValuePair.getValue().buildDomStudentScoContext();
+                domStudentScoContexts.put(s.getId(),s);
+            });
+            results.setStudentScoContexts(domStudentScoContexts);
+
+            return results;
             // recurse here using Java queue
-
-//    for (Iterator<HashMap.Entry<Long, PersistentCourse>> iterator = courseMap.entrySet().iterator(); iterator.hasNext();) {
-//        PersistentCourse tmpCourse = iterator.next().getValue();
-        
-//    if (course is leave) {
-            // add sco to scomap, add course to comcourses, remove.
-//        // Remove the current element from the iterator and the list.
-//        iterator.remove();
-//    }else{
-// add children to coursemap
-//    }            
-              
-            //Convert course map to course list
-//            List<DomCourse> domCourses = new ArrayList<>(courseMap.size());
-//            courseMap.entrySet().forEach((keyValuePair)->{
-//                domClassCourses.add(keyValuePair.getValue().createDomCourse());
-//            });
-            
-            //Convert sco map to course list and fetch studentsco's and add to studentsco list
-            
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Under development.");
-
-                //ScoContext's
-                //StudentScoContext's
-//            results.
-                // fetch DomResultsPerTeacher data
-//            List<DomSchoolClass> domSchoolClasses;
-//            try {
-//                List<PersistentTeacherOfClass> tocList = TeacherOfClassManager.findEntities(phr.getPersistentHasRolePK());
-//                domSchoolClasses = new ArrayList<DomSchoolClass>(tocList.size());
-//                for (PersistentTeacherOfClass toc : tocList) {
-//                    PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentTeacherOfClassPK().getClassID());
-//                    domSchoolClasses.add(s.createDomSchoolClass());
-//                }
-//                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1]. ", new Object[]{domSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
-//            } catch (Exception e) {
-//                LOG.log(Level.WARNING, "Unexpected exception", e);
-//                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
-//            }
-//            return domSchoolClasses;
             } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");

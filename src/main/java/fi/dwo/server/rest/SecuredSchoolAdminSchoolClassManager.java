@@ -92,7 +92,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             LOG.log(Level.FINER, "Fetched all {0} schoolClasses. ", new Object[]{schoolClasses.size()});
             restSchoolClasses = new ArrayList<DomSchoolClass>(schoolClasses.size());
             for (PersistentSchoolClass s : schoolClasses) {
-                restSchoolClasses.add(s.createDomSchoolClass());
+                restSchoolClasses.add(s.buildDomSchoolClass());
             }
         }
         catch (Exception e) {
@@ -582,7 +582,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
             }
-            return persistentSchoolClass.createDomSchoolClassFull();
+            return persistentSchoolClass.buildDomSchoolClassFull();
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");

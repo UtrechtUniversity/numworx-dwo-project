@@ -96,7 +96,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 List<PersistentSchoolClass> schoolClasses = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
                 domSchoolClasses = new ArrayList<>(schoolClasses.size());
                 schoolClasses.stream().forEach((s) -> {
-                    domSchoolClasses.add(s.createDomSchoolClass());
+                    domSchoolClasses.add(s.buildDomSchoolClass());
                 });
                 LOG.log(Level.FINER, "Fetched all {0} schoolClasses of teacher {1]. ", new Object[]{domSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
             } catch (Exception e) {
@@ -146,7 +146,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
             }
-            return persistentSchoolClass.createDomSchoolClassFull();
+            return persistentSchoolClass.buildDomSchoolClassFull();
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");

@@ -82,15 +82,15 @@ public class SecuredUserAccountLoginsManagerV2 {
                 Object[] result0 = resultList.get(0);
                 LOG.log(Level.FINE, "Username {0}: Fetched current role tuple <schoolID, schoolName, groupID, groupname, classID, userID, groupID, roleRights, schoolRights>: {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}.", new Object[]{scUsername, result0[0], result0[1], result0[2], result0[3], result0[4], result0[5], result0[6], result0[7], result0[8]});
                 Integer i = (Integer) result0[0];//school id
-                curSac.setSchool(SchoolManager.findEntity(i.longValue()).createDomSchool());
+                curSac.setSchool(SchoolManager.findEntity(i.longValue()).buildDomSchool());
                 i = (Integer) result0[2];//RoleId
-                curSac.setRole(RoleManager.findEntity(i.longValue()).createDomRole());
+                curSac.setRole(RoleManager.findEntity(i.longValue()).buildDomRole());
                 if (result0[4] != null) {
                     Long j = (Long) result0[4];
                     try {
                         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(j.longValue());
                         if (schoolClass != null) {
-                            curSac.setSchoolClass(schoolClass.createDomSchoolClass());
+                            curSac.setSchoolClass(schoolClass.buildDomSchoolClass());
 //                        sac.setSchoolClassId(MySQLPersistenceId.createPersistenceId(j.longValue(),PersistenceClassType.PersistentSchoolClass));
 //                        sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", j.longValue()).getSingleResult());
                         } else {
@@ -161,16 +161,16 @@ public class SecuredUserAccountLoginsManagerV2 {
                 LOG.log(Level.FINE, "Fetched hasRole tuple <schoolID, schoolName, groupID, groupname, classID, userID, schoolGroupID, roleRights, schoolRights>: {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}.", new Object[]{oList[0], oList[1], oList[2], oList[3], oList[4], oList[5], oList[6], oList[7], oList[8]});
                 sac = new DomSchoolRoleAndClassV2();
                 Integer i = (Integer) oList[0];//school id
-                sac.setSchool(SchoolManager.findEntity(i.longValue()).createDomSchool());
+                sac.setSchool(SchoolManager.findEntity(i.longValue()).buildDomSchool());
                 i = (Integer) oList[2];//RoleId
-                sac.setRole(RoleManager.findEntity(i.longValue()).createDomRole());
+                sac.setRole(RoleManager.findEntity(i.longValue()).buildDomRole());
 //                sac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId(i.longValue(), PersistenceClassType.PersistentRole));
 //                sac.setRoleName((String) oList[3]);
 //                sac.setRoleRights( (String) oList[7]);
                 if (oList[4] != null) {
                     Long j = (Long) oList[4];
                     try {
-                        sac.setSchoolClass(SchoolClassManager.findEntity(j.longValue()).createDomSchoolClass());
+                        sac.setSchoolClass(SchoolClassManager.findEntity(j.longValue()).buildDomSchoolClass());
 //                        sac.setSchoolClassId(MySQLPersistenceId.createPersistenceId(j.longValue(),PersistenceClassType.PersistentSchoolClass));
 //                        sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", j.longValue()).getSingleResult());
                     } catch (NoResultException e) {
@@ -201,7 +201,7 @@ public class SecuredUserAccountLoginsManagerV2 {
         sacs.setActiveSchoolRoleAndClass(curSac);
         sacs.setSchoolsRolesAndClassesList(sacList);
         PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
-        sacs.setNullSchool(nullSchool.createDomSchool());
+        sacs.setNullSchool(nullSchool.buildDomSchool());
         return sacs;
     }
 

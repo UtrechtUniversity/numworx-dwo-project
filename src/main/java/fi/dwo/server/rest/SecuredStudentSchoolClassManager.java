@@ -87,7 +87,7 @@ public class SecuredStudentSchoolClassManager {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Active schoolClass {2} from a different school that registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), schoolClass.getClassID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-        return schoolClass.createDomSchoolClass();
+        return schoolClass.buildDomSchoolClass();
     }
 
     @PUT
@@ -243,7 +243,7 @@ public class SecuredStudentSchoolClassManager {
                 domSchoolClasses = new ArrayList<DomSchoolClass>(tocList.size());
                 for (PersistentStudentOfClass toc : tocList) {
                     PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentStudentOfClassPK().getClassID());
-                    domSchoolClasses.add(s.createDomSchoolClass());
+                    domSchoolClasses.add(s.buildDomSchoolClass());
                 }
                 LOG.log(Level.FINER, "Fetched all {0} schoolClasses of student {1]. ", new Object[]{domSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
             } catch (Exception e) {
@@ -286,7 +286,7 @@ public class SecuredStudentSchoolClassManager {
                 LOG.log(Level.FINER, "Fetched all {0} schoolClasses of school {1]. ", new Object[]{scList.size(), school.getSchoolID()});
                 domList = new ArrayList<DomSchoolClass>(scList.size());
                 for (PersistentSchoolClass schoolClass : scList) {
-                    domList.add(schoolClass.createDomSchoolClass());
+                    domList.add(schoolClass.buildDomSchoolClass());
                 }
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
