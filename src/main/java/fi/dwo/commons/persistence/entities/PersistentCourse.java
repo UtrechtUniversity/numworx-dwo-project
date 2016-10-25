@@ -1,6 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -16,6 +17,9 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 /**
  *
@@ -264,5 +268,38 @@ public class PersistentCourse implements Serializable {
     public void setLastChangeTimeStamp(Long lastChangeTimeStamp) {
         this.lastChangeTimeStamp = lastChangeTimeStamp;
     }
+
+    public DomCourse createDomCourse() {
+        DomCourse course = new DomCourse();
+        buildDomCourse(course);
+        return course;
+    }
+
+    private void buildDomCourse(DomCourse course) {
+        course.setId(MySQLPersistenceId.createPersistentId(this));
+        course.setSchoolId(MySQLPersistenceId.createPersistenceId(this.schoolID, PersistenceClassType.PersistentSchool));
+        course.setParentID(MySQLPersistenceId.createPersistenceId(this.parentID, PersistenceClassType.PersistentCourse));        
+        course.setSequenceNr(sequenceNr);
+        course.setTreeIndex(treePath);
+        course.setWithChildren(withChildren);
+        course.setImage(image);
+        course.setImageData(imageData);
+        course.setNotVisible(notVisible);
+        course.setLastChangeTimeStamp(lastChangeTimeStamp);
+    }
+
+    public DomCourse createDomCourseFull() {
+        DomCourseFull course = new DomCourseFull();
+        buildDomCourseFull(course);
+        return course;
+    }
+    
+    private void buildDomCourseFull(DomCourseFull course) {
+        buildDomCourse(course);
+        course.setDwoProfileId(MySQLPersistenceId.createPersistenceId(this.dwoProfileID, PersistenceClassType.PersistentDwoProfile));
+        course.setDescription(description);
+        course.setExport(export);
+    }
+
 
 }

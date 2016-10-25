@@ -1,6 +1,7 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -15,6 +16,9 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 /**
  *
@@ -148,4 +152,19 @@ public class PersistentScoContext implements Serializable {
         return "fi.dwo.server.persistence.PerisistentScoContext[ scoID=" + scoID + " ]";
     }
 
+    public DomScoContext buildDomScoContext() {
+        DomScoContext scoContext = new DomScoContext();
+        fillDomScoContext(scoContext);
+        return scoContext;
+    }
+
+    private void fillDomScoContext(DomScoContext scoContext) {
+        scoContext.setId(MySQLPersistenceId.createPersistentId(this));
+        scoContext.setAppletId(MySQLPersistenceId.createPersistenceId(this.appletID, PersistenceClassType.PersistentApplet));
+        scoContext.setCourseId(MySQLPersistenceId.createPersistenceId(this.courseID, PersistenceClassType.PersistentCourse));
+        scoContext.setScoName(sconame);
+        scoContext.setSequencenr(sequencenr);
+        scoContext.setShowScore(showscore);
+    }
+    
 }

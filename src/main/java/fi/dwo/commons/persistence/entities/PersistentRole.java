@@ -125,13 +125,13 @@ public class PersistentRole implements Serializable {
         return "fi.dwo.server.persistence.PersistentRole[ groupID=" + groupID + " ]";
     }
 
-    public DomRole createDomRole() {
+    public DomRole buildDomRole() {
         DomRole role = new DomRole();
-        buildDomRole(role);
+        PersistentRole.this.fillDomRole(role);
         return role;
     }
 
-    private void buildDomRole(DomRole role) {
+    private void fillDomRole(DomRole role) {
         if (this.groupID != null) {
             role.setId(MySQLPersistenceId.createPersistentId(this));
         }

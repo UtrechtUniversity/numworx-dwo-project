@@ -151,13 +151,13 @@ public class PersistentSchoolClass implements Serializable {
         return "fi.dwo.server.persistence.PersistentSchoolClass[ classID=" + classID + " ]";
     }
 
-    public DomSchoolClass createDomSchoolClass() {
+    public DomSchoolClass buildDomSchoolClass() {
         DomSchoolClass schoolClass = new DomSchoolClass();
-        buildDomSchoolClass(schoolClass);
+        fillDomSchoolClass(schoolClass);
         return schoolClass;
     }
 
-    private void buildDomSchoolClass(DomSchoolClass schoolClass) {
+    private void fillDomSchoolClass(DomSchoolClass schoolClass) {
         schoolClass.setSchoolClassName(class1);
         if (this.classID != null) {
             schoolClass.setId(MySQLPersistenceId.createPersistentId(this));
@@ -166,25 +166,25 @@ public class PersistentSchoolClass implements Serializable {
         schoolClass.setHasRegKey(this.registrationKey!=null);
     }
 
-    public DomSchoolClassFull createDomSchoolClassFull() {
+    public DomSchoolClassFull buildDomSchoolClassFull() {
         DomSchoolClassFull schoolClass = new DomSchoolClassFull();
-        buildDomSchoolClassFull(schoolClass);
+        PersistentSchoolClass.this.fillDomSchoolClassFull(schoolClass);
         return schoolClass;
     }
 
-    private void buildDomSchoolClassFull(DomSchoolClassFull schoolClass) {
-        buildDomSchoolClass(schoolClass);
+    private void fillDomSchoolClassFull(DomSchoolClassFull schoolClass) {
+        fillDomSchoolClass(schoolClass);
         schoolClass.setRegistrationKey(registrationKey);
     }
 
-    public DomNewSchoolClass4Student createDomNewSchoolClass4Student() {
+    public DomNewSchoolClass4Student buildDomNewSchoolClass4Student() {
         DomNewSchoolClass4Student schoolClass = new DomNewSchoolClass4Student();
-        buildDomNewSchoolClass4Student(schoolClass);
+        PersistentSchoolClass.this.fillDomNewSchoolClass4Student(schoolClass);
         return schoolClass;
     }
 
-    private void buildDomNewSchoolClass4Student(DomNewSchoolClass4Student schoolClass) {
-        buildDomSchoolClass(schoolClass);
+    private void fillDomNewSchoolClass4Student(DomNewSchoolClass4Student schoolClass) {
+        fillDomSchoolClass(schoolClass);
 //        schoolClass.setRegistrationKey(registrationKey); // clearly this info should neve be passed to a student
     }
 

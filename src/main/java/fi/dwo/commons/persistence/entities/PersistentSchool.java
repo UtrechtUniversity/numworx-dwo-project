@@ -220,13 +220,13 @@ public class PersistentSchool implements Serializable {
         return schoolRights.contains("c");
     }
     
-    public DomSchool createDomSchool() {
+    public DomSchool buildDomSchool() {
         DomSchool school = new DomSchool();
-        buildDomSchool(school);
+        PersistentSchool.this.fillDomSchool(school);
         return school;
     }
 
-    private void buildDomSchool(DomSchool school) {
+    private void fillDomSchool(DomSchool school) {
         if (this.schoolID != null) {
             school.setId(MySQLPersistenceId.createPersistentId(this));
         }
@@ -235,25 +235,25 @@ public class PersistentSchool implements Serializable {
         school.setSchoolRights(schoolRights);
     }
 
-    public DomSchool4DwoAdmin createDomSchool4DwoAdmin() {
+    public DomSchool4DwoAdmin buildDomSchool4DwoAdmin() {
         DomSchool4DwoAdmin school = new DomSchool4DwoAdmin();
-        buildDomSchool4DwoAdmin(school);
+        PersistentSchool.this.fillDomSchool4DwoAdmin(school);
         return school;
     }
 
-    private void buildDomSchool4DwoAdmin(DomSchool4DwoAdmin school) {
-        buildDomSchool(school);
+    private void fillDomSchool4DwoAdmin(DomSchool4DwoAdmin school) {
+        PersistentSchool.this.fillDomSchool(school);
         school.setSchoolLogin(this.schoolLogin);
     }
 
-    public DomSchoolFull createDomSchoolFull() {
+    public DomSchoolFull buildDomSchoolFull() {
         DomSchoolFull school = new DomSchoolFull();
-        buildDomSchoolFull(school);
+        PersistentSchool.this.fillDomSchoolFull(school);
         return school;
     }
 
-    private void buildDomSchoolFull(DomSchoolFull school) {
-        buildDomSchool(school);
+    private void fillDomSchoolFull(DomSchoolFull school) {
+        PersistentSchool.this.fillDomSchool(school);
         school.setSchoolLogin(schoolLogin);
         school.setExport(export);
         school.setImage(image);

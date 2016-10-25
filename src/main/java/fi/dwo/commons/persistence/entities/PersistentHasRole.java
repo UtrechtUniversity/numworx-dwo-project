@@ -19,8 +19,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.CacheType;
 
 /**
  *

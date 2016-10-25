@@ -134,18 +134,18 @@ public class PersistentDwoProfile implements Serializable {
         return "fi.dwo.server.persistence.PersistentDwoProfile[ dwoProfileID=" + dwoProfileID + " ]";
     }
 
-	public DomDwoProfile createDomDwoProfile() {
-		DomDwoProfile profile = new DomDwoProfile();
-		buildDomDwoProfile(profile);
-		return profile;
-	}
+    public DomDwoProfile buildDomDwoProfile() {
+        DomDwoProfile profile = new DomDwoProfile();
+        PersistentDwoProfile.this.fillDomDwoProfile(profile);
+        return profile;
+    }
 
-	private void buildDomDwoProfile(DomDwoProfile profile) {
-		profile.setDwoProfileDescription(getDwoProfileDescription());
-		profile.setDwoProfileName(getDwoProfileName());
-		profile.setDwoProfileRights(getDwoProfileRights());
-		profile.setDwoProfileText(getDwoProfileText());
-		profile.setId(MySQLPersistenceId.createPersistentId(this));
-	}
+    private void fillDomDwoProfile(DomDwoProfile profile) {
+        profile.setDwoProfileDescription(getDwoProfileDescription());
+        profile.setDwoProfileName(getDwoProfileName());
+        profile.setDwoProfileRights(getDwoProfileRights());
+        profile.setDwoProfileText(getDwoProfileText());
+        profile.setId(MySQLPersistenceId.createPersistentId(this));
+    }
 
 }

@@ -138,17 +138,17 @@ public class PersistentAppletConfig implements Serializable {
         return "fi.dwo.server.persistence.PersistentAppletConfig[ appletConfigID=" + appletConfigID + " ]";
     }
 
-    public DomAppletConfig createDomAppletConfig() {
-    	DomAppletConfig copy = new DomAppletConfig();
-    	buildDomAppletConfig(copy);
-    	return copy;
+    public DomAppletConfig buildDomAppletConfig() {
+        DomAppletConfig copy = new DomAppletConfig();
+        fillDomAppletConfig(copy);
+        return copy;
     }
 
-	private void buildDomAppletConfig(DomAppletConfig copy) {
-		copy.setAppletID(getAppletID());
-		copy.setLanguage(getLanguage());
-		copy.setLaunchdata(getLaunchdata());
-		copy.setName(getName());
-		copy.setId(MySQLPersistenceId.createPersistentId(this));	
-	}
+    private void fillDomAppletConfig(DomAppletConfig copy) {
+        copy.setAppletID(getAppletID());
+        copy.setLanguage(getLanguage());
+        copy.setLaunchdata(getLaunchdata());
+        copy.setName(getName());
+        copy.setId(MySQLPersistenceId.createPersistentId(this));
+    }
 }

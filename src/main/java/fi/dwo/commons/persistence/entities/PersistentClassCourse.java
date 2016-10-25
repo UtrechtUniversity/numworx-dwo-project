@@ -148,13 +148,13 @@ public class PersistentClassCourse implements Serializable {
         return "fi.dwo.server.persistence.PersistentClassCourse[ classCourseID=" + classCourseID + " ]";
     }
 
-    public DomClassCourse createDomClassCourse() {
+    public DomClassCourse buildDomClassCourse() {
         DomClassCourse classCourse = new DomClassCourse();
-        buildDomClassCourse(classCourse);
+        PersistentClassCourse.this.fillDomClassCourse(classCourse);
         return classCourse;
     }
 
-    private void buildDomClassCourse(DomClassCourse classCourse) {
+    private void fillDomClassCourse(DomClassCourse classCourse) {
         classCourse.setId(MySQLPersistenceId.createPersistentId(this));
         classCourse.setClassId(MySQLPersistenceId.createPersistenceId(this.classID, PersistenceClassType.PersistentSchoolClass));
         classCourse.setCourseId(MySQLPersistenceId.createPersistenceId(this.courseID, PersistenceClassType.PersistentCourse));

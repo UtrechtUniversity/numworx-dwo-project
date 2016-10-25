@@ -248,5 +248,4 @@ public class PersistentStudentScoContext implements Serializable {
         studentSco.setCreateTime(createTime);
         studentSco.setLocation(location);
     }
-
 }
