@@ -22,7 +22,8 @@ public class DomResultsPerTeacher {
     
     private DomTeacher teacher;
     private Long fetchTimeStamp;   
-    private Map<PersistenceId,DomStudent> students;
+    private Map<PersistenceId,DomStudent> students; 
+    private Map<PersistenceId,DomStudentOfClass> studentOfClass;
     private Map<PersistenceId,DomSchoolClass> schoolClasses;
     private Map<PersistenceId,DomClassCourse> classCourses;
     private Map<PersistenceId,DomCourse> courses;
@@ -37,6 +38,8 @@ public class DomResultsPerTeacher {
     }
 
     /**
+     * Teacher whose class results are collected.
+     * 
      * @param teacher the teacher to set
      */
     public void setTeacher(DomTeacher teacher) {
@@ -44,6 +47,9 @@ public class DomResultsPerTeacher {
     }
 
     /**
+     * The timestamp defining when the result collection were started 
+     * on the server.
+     * 
      * @return the fetchTimeStamp
      */
     public Long getFetchTimeStamp() {
@@ -58,6 +64,10 @@ public class DomResultsPerTeacher {
     }
 
     /**
+     * Returns a map of all the students of the teacher. The hash is the PersistenceId
+     * of a student. A student of the teacher is a student that is registered to
+     * in one or more of his classes.
+     * 
      * @return the students
      */
     public Map<PersistenceId,DomStudent> getStudents() {
@@ -72,6 +82,10 @@ public class DomResultsPerTeacher {
     }
 
     /**
+     * Returns all the classes to which the teacher is registered as a member in 
+     * his school. The hash is the PersistenceId
+     * of a school class. 
+     * 
      * @return the schoolClasses
      */
     public Map<PersistenceId,DomSchoolClass> getSchoolClasses() {
@@ -86,6 +100,10 @@ public class DomResultsPerTeacher {
     }
 
     /**
+     * Returns the scoContext data of which any course used by any school class 
+     * of the teacher in his school.The hash is the PersistenceId
+     * of a scoId. 
+     * 
      * @return the scoContexts
      */
     public Map<PersistenceId,DomScoContext> getScoContexts() {
@@ -100,6 +118,9 @@ public class DomResultsPerTeacher {
     }
 
     /**
+     * Returns the studentSco data belonging to any course assigned to any school class 
+     * of the teacher in his school.
+     * 
      * @return the studentScoContexts
      */
     public Map<PersistenceId,DomStudentScoContext> getStudentScoContexts() {
@@ -114,6 +135,9 @@ public class DomResultsPerTeacher {
     }
 
     /**
+     * Returns the course data assigned to any school class of the teacher in 
+     * his school.
+     * 
      * @return the courses
      */
     public Map<PersistenceId,DomCourse> getCourses() {
@@ -128,6 +152,9 @@ public class DomResultsPerTeacher {
     }
 
     /**
+     * Returns the ClassCourses that bind course subtrees to a school class 
+     * of the teacher in his school.
+     * 
      * @return the classCourses
      */
     public Map<PersistenceId,DomClassCourse> getClassCourses() {
@@ -139,6 +166,23 @@ public class DomResultsPerTeacher {
      */
     public void setClassCourses(Map<PersistenceId,DomClassCourse> classCourses) {
         this.classCourses = classCourses;
+    }
+
+    /**
+     * Returns the StudentOfClass data that tells which student links to which 
+     * school class. 
+     * 
+     * @return the studentOfClass
+     */
+    public Map<PersistenceId,DomStudentOfClass> getStudentOfClass() {
+        return studentOfClass;
+    }
+
+    /**
+     * @param studentOfClass the studentOfClass to set
+     */
+    public void setStudentOfClass(Map<PersistenceId,DomStudentOfClass> studentOfClass) {
+        this.studentOfClass = studentOfClass;
     }
     
 }
