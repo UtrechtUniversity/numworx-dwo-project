@@ -79,6 +79,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
 
 /**
  * Handles the public registration of new users.
@@ -282,7 +283,7 @@ public class PublicUserManager {
 //    public static DomUserFullwLoginContext createUserFullwLoginContext(
 //            PersistentUser user) {
 //        try {
-//            PersistentLoginContext loginContext = LoginContextUtilManager.getLoginContext(user);
+//            PersistentLoginContext loginContext = LoginContextUtilManager.getCurrentLoginContext(user);
 //            loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
 //            LoginContextManager.edit(loginContext);
 //            DomUserFullwLoginContext result = user.buildDomUserFullwLoginContext(loginContext);
@@ -333,7 +334,7 @@ public class PublicUserManager {
                     break;
                 }
                 try {
-                    return user.buildDomUserFullwLoginContext(LoginContextUtilManager.reqLoginContextSession(user));
+                    return user.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(user));
                 } catch (Dwo2Exception ex) {
                     Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "Invalid software state, this should not have happened.", ex);
                     throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Invalid software state. This should not have happened.");
