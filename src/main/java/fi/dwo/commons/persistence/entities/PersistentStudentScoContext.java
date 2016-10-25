@@ -39,7 +39,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
     @NamedQuery(name = "PersistentStudentScoContext.findBySessionTime", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.sessionTime = :sessionTime"),
     @NamedQuery(name = "PersistentStudentScoContext.findByStudentSco", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.studentSco = :studentSco"),
     @NamedQuery(name = "PersistentStudentScoContext.findByScoID", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.scoID = :scoID"),
-    @NamedQuery(name = "PersistentStudentScoContext.findByHasRolePK", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.userID = :userID and p.schoolGroupID= :schoolGroupID"),
+    @NamedQuery(name = "PersistentStudentScoContext.findByHasRolePK", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.persistentHasRolePK = :keyID"),
     @NamedQuery(name = "PersistentStudentScoContext.findByCreateDate", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.createDate = :createDate"),
     @NamedQuery(name = "PersistentStudentScoContext.findByScore", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.score = :score")})
 public class PersistentStudentScoContext implements Serializable {
@@ -60,7 +60,6 @@ public class PersistentStudentScoContext implements Serializable {
     @NotNull
     @Column(name = "scoID", nullable = false)
     private Long scoID;
-    @EmbeddedId
     protected PersistentHasRolePK persistentHasRolePK;
 //   @Basic(optional = false)
 //    @NotNull
