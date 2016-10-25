@@ -268,7 +268,7 @@ public class PublicUserManager {
 
             PersistentUser user = UserManager.findEntity(samlUser.getUserID());
             try {
-                return user.buildDomUserFullwLoginContext(LoginContextUtilManager.reqLoginContextSession(user));
+                return user.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(user));
             } catch (Dwo2Exception ex) {
                 Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "Invalid software state, this should not have happened.", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Invalid software state. This should not have happened.");
