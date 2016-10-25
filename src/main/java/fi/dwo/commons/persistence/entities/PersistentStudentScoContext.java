@@ -6,6 +6,7 @@ import java.sql.Time;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -59,15 +60,17 @@ public class PersistentStudentScoContext implements Serializable {
     @NotNull
     @Column(name = "scoID", nullable = false)
     private Long scoID;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "userID", nullable = false)
-    private Long userID;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "schoolGroupID", nullable = false)
-    private Long schoolGroupID;
-    @Basic(optional = false)
+    @EmbeddedId
+    protected PersistentHasRolePK persistentHasRolePK;
+//   @Basic(optional = false)
+//    @NotNull
+//    @Column(name = "userID", nullable = false)
+//    private Long userID;
+//    @Basic(optional = false)
+//    @NotNull
+//    @Column(name = "schoolGroupID", nullable = false)
+//    private Long schoolGroupID;
+//    @Basic(optional = false)
     @NotNull
     @Column(name = "createDate", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -90,13 +93,14 @@ public class PersistentStudentScoContext implements Serializable {
         this.studentSco = studentSco;
     }
 
-    public PersistentStudentScoContext(Long studentSco, Long scoID, Long userID, Date createDate, float score) {
-        this.studentSco = studentSco;
-        this.scoID = scoID;
-        this.userID = userID;
-        this.createDate = createDate;
-        this.score = score;
-    }
+//    incomplete    
+//    public PersistentStudentScoContext(Long studentSco, Long scoID, PersistentHasRolePK hasRoleKey, Date createDate, float score) {
+//        this.studentSco = studentSco;
+//        this.scoID = scoID;
+//        this.persistentHasRolePK = hasRoleKey;
+//        this.createDate = createDate;
+//        this.score = score;
+//    }
 
     public String getTotalTime() {
         return totalTime;
@@ -130,13 +134,13 @@ public class PersistentStudentScoContext implements Serializable {
         this.scoID = scoID;
     }
 
-    public Long getUserID() {
-        return userID;
-    }
-
-    public void setUserID(Long userID) {
-        this.userID = userID;
-    }
+//    public Long getUserID() {
+//        return userID;
+//    }
+//
+//    public void setUserID(Long userID) {
+//        this.userID = userID;
+//    }
 
     public Date getCreateDate() {
         return createDate;
@@ -203,19 +207,19 @@ public class PersistentStudentScoContext implements Serializable {
         return "fi.dwo.server.persistence.PersistentStudentScoContext[ studentSco=" + studentSco + " ]";
     }
 
-    /**
-     * @return the schoolGroupID
-     */
-    public Long getSchoolGroupID() {
-        return schoolGroupID;
-    }
-
-    /**
-     * @param schoolGroupID the schoolGroupID to set
-     */
-    public void setSchoolGroupID(Long schoolGroupID) {
-        this.schoolGroupID = schoolGroupID;
-    }
+//    /**
+//     * @return the schoolGroupID
+//     */
+//    public Long getSchoolGroupID() {
+//        return schoolGroupID;
+//    }
+//
+//    /**
+//     * @param schoolGroupID the schoolGroupID to set
+//     */
+//    public void setSchoolGroupID(Long schoolGroupID) {
+//        this.schoolGroupID = schoolGroupID;
+//    }
 
     public DomStudentScoContext buildDomStudentScoContext() {
         DomStudentScoContext studentSco = new DomStudentScoContext();
@@ -235,8 +239,8 @@ public class PersistentStudentScoContext implements Serializable {
         } else {
             this.studentSco = null;
         }
-        studentSco.setSchoolGroupID(MySQLPersistenceId.createPersistenceId(this.schoolGroupID.intValue(), PersistenceClassType.PersistentStudentScoContext));
-        studentSco.setUserID(MySQLPersistenceId.createPersistenceId(this.userID.intValue(), PersistenceClassType.PersistentUser));
+        studentSco.setSchoolGroupID(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getSchoolGroupID().intValue(), PersistenceClassType.PersistentStudentScoContext));
+        studentSco.setUserID(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getUserID().intValue(), PersistenceClassType.PersistentUser));
         studentSco.setScore(score);
         studentSco.setScoID(MySQLPersistenceId.createPersistenceId(this.scoID.intValue(), PersistenceClassType.PersistentScoContext));
     }
