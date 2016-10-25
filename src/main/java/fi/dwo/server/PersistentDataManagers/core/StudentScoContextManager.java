@@ -154,8 +154,7 @@ public class StudentScoContextManager {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentStudentScoContext.findByHasRolePK");
-            q.setParameter("userID", key.getUserID());
-            q.setParameter("schoolGroupID", key.getSchoolGroupID());
+            q.setParameter("keyID", key);
             List<PersistentStudentScoContext> list = q.getResultList();
             LOG.log(Level.FINE, "StudentScoContextManager-manager retrieved {0} PersistentStudentScoContext with key {1}", new Object[]{list.size(), key.toString()});
             return list;

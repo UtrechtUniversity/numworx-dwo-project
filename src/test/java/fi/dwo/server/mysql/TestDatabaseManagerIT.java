@@ -37,15 +37,14 @@ public class TestDatabaseManagerIT {
 // DISABLED SO THE RUNNING OF THIS TESTCLASS FILLS THE DATABASE WITH THE TESTDATA
 // FOR DEVELOPEMENT PURPOSES.
     /**
-     * Test of ClearDatabase method, of class DatabaseManager.
+     * Test of ClearDatabase method, of class DatabaseManager. Running a focused
+     * junit test on this method can clear the junittestdatabase.
      */
     @Test
     public void testClearDatabase() {
         System.out.println("ClearDatabase");
         DatabaseManager instance = new DatabaseManager();
         instance.ClearDatabase();
-        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
     }
 
 //    @Test
@@ -55,7 +54,8 @@ public class TestDatabaseManagerIT {
 //     }
 //    }
     /**
-     * Test of IntializeTestDatabase method, of class DatabaseManager.
+     * Test of IntializeTestDatabase method, of class DatabaseManager. Running a
+     * focussed junit test on this will fill the junittestdatabase for manipulation.
      */
     @Test
     public void testIntializeDatabase() {

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.persistence;
 
 import java.util.logging.Logger;
@@ -11,7 +6,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 /**
- * Read the configured datasource from the web.xml and configures the
+ * Read the configured data-source from the web.xml and configures the
  * {@Link EntityManagerFactory EntityManagerFactory} to use it.
  *
  * @author G.A.J. van der Plas
