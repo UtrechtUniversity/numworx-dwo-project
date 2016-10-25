@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.osgi.util.function.Function;
-import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
@@ -20,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 
 /**
  * equivalent van de PersistenceFacade voor DWO v1.0
+ * 
  * @author velth101
  *
  */
