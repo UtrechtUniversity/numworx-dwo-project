@@ -49,7 +49,7 @@ public class PersistentClassCourse implements Serializable {
     @NotNull
     @Column(name = "ClassID", nullable = false)
     private long classID;
-    @Column(name = "type")
+    @Column(name = "type") //enum afschermd, normaal, todo beveiligd (safeexamebrowser), chrome
     private Integer type;
     @Column(name = "notBefore")
     @Temporal(TemporalType.TIMESTAMP)

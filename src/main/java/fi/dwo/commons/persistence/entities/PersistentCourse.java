@@ -79,10 +79,10 @@ public class PersistentCourse implements Serializable {
     @NotNull
     @Column(name = "parentID", nullable = false)
     private int parentID;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "notVisible", nullable = false)
-    private short notVisible;
+//    @Basic(optional = false)
+//    @NotNull
+//    @Column(name = "notVisible", nullable = false)
+//    private short notVisible; //not used deprecated. T
     @Basic(optional = false)
     //update tblcourse set sequenceNr=0 where sequenceNr is null
     //alter table tblcourse alter column sequenceNr set DEFAULT '0';
@@ -105,14 +105,14 @@ public class PersistentCourse implements Serializable {
         this.courseID = courseID;
     }
 
-    public PersistentCourse(Long courseID, String name, String description, int dwoProfileID, int parentID, short notVisible) {
-        this.courseID = courseID;
-        this.name = name;
-        this.description = description;
-        this.dwoProfileID = dwoProfileID;
-        this.parentID = parentID;
-        this.notVisible = notVisible;
-    }
+//    public PersistentCourse(Long courseID, String name, String description, int dwoProfileID, int parentID, short notVisible) {
+//        this.courseID = courseID;
+//        this.name = name;
+//        this.description = description;
+//        this.dwoProfileID = dwoProfileID;
+//        this.parentID = parentID;
+//        this.notVisible = notVisible;
+//    }
 
     public Long getCourseID() {
         return courseID;
@@ -193,15 +193,15 @@ public class PersistentCourse implements Serializable {
     public void setParentID(int parentID) {
         this.parentID = parentID;
     }
-
-    public short getNotVisible() {
-        return notVisible;
-    }
-
-    public void setNotVisible(short notVisible) {
-        this.notVisible = notVisible;
-    }
-
+//
+//    public short getNotVisible() {
+//        return notVisible;
+//    }
+//
+//    public void setNotVisible(short notVisible) {
+//        this.notVisible = notVisible;
+//    }
+//
     @Override
     public int hashCode() {
         int hash = 0;
@@ -284,7 +284,7 @@ public class PersistentCourse implements Serializable {
         course.setWithChildren(withChildren);
         course.setImage(image);
         course.setImageData(imageData);
-        course.setNotVisible(notVisible);
+//        course.setNotVisible(notVisible);
         course.setLastChangeTimeStamp(lastChangeTimeStamp);
     }
 
