@@ -37,6 +37,11 @@ public enum Dwo2ExceptionCode {
     Rest_InterfaceError, // Error due to an improper REST-interface.
     Rest_FormatError, // Usually rror in the object data send in the message body 
     Rest_UnsupportedFunction,
+
+    // REST LoginContext errors
+    Rest_LoginContext_exists,
+    Rest_No_LoginContext_exists,
+
     // REST Registration errors
     Rest_Registration_UserName_exists, //User exists already, can't register.
     Rest_Registration_Invalid_school_role_credentials, //Illegal combination of school login and passcode.
