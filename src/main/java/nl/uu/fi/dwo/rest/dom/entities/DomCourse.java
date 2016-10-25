@@ -11,18 +11,15 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 @XmlRootElement
 public class DomCourse {
-    private static Logger LOG = Logger.getLogger(DomSchoolClass.class.getName());
+    private static Logger LOG = Logger.getLogger(DomCourse.class.getName());
 
     private PersistenceId id;
     private PersistenceId schoolId;
-    private PersistenceId dwoProfileId;
     private String name;
-    private String description;
     private String image;
     private byte[] imageData;
-    private Boolean export;
     private Boolean withChildren;
-    private int parentID;
+    private PersistenceId parentID;
     private short notVisible;
     private Long sequenceNr;
     private String treeIndex;
@@ -57,20 +54,6 @@ public class DomCourse {
     }
 
     /**
-     * @return the dwoProfileId
-     */
-    public PersistenceId getDwoProfileId() {
-        return dwoProfileId;
-    }
-
-    /**
-     * @param dwoProfileId the dwoProfileId to set
-     */
-    public void setDwoProfileId(PersistenceId dwoProfileId) {
-        this.dwoProfileId = dwoProfileId;
-    }
-
-    /**
      * @return the name
      */
     public String getName() {
@@ -82,20 +65,6 @@ public class DomCourse {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     /**
@@ -127,20 +96,6 @@ public class DomCourse {
     }
 
     /**
-     * @return the export
-     */
-    public Boolean getExport() {
-        return export;
-    }
-
-    /**
-     * @param export the export to set
-     */
-    public void setExport(Boolean export) {
-        this.export = export;
-    }
-
-    /**
      * @return the withChildren
      */
     public Boolean getWithChildren() {
@@ -157,14 +112,14 @@ public class DomCourse {
     /**
      * @return the parentID
      */
-    public int getParentID() {
+    public PersistenceId getParentID() {
         return parentID;
     }
 
     /**
      * @param parentID the parentID to set
      */
-    public void setParentID(int parentID) {
+    public void setParentID(PersistenceId parentID) {
         this.parentID = parentID;
     }
 

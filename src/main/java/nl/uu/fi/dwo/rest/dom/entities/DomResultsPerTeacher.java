@@ -1,8 +1,9 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Collected sparse results of Students that are in one or more SchoolClasses of a Teacher.
@@ -21,12 +22,12 @@ public class DomResultsPerTeacher {
     
     private DomTeacher teacher;
     private Long fetchTimeStamp;   
-    private List<DomStudent> students;
-    private List<DomSchoolClass> schoolClasses;
-    private List<DomClassCourse> classCourses;
-    private List<DomCourse> courses;
-    private List<DomScoContext> scoContexts;
-    private List<DomStudentScoContext> studentScoContext;    
+    private Map<PersistenceId,DomStudent> students;
+    private Map<PersistenceId,DomSchoolClass> schoolClasses;
+    private Map<PersistenceId,DomClassCourse> classCourses;
+    private Map<PersistenceId,DomCourse> courses;
+    private Map<PersistenceId,DomScoContext> scoContexts;
+    private Map<PersistenceId,DomStudentScoContext> studentScoContexts;    
 
     /**
      * @return the teacher
@@ -59,84 +60,84 @@ public class DomResultsPerTeacher {
     /**
      * @return the students
      */
-    public List<DomStudent> getStudents() {
+    public Map<PersistenceId,DomStudent> getStudents() {
         return students;
     }
 
     /**
      * @param students the students to set
      */
-    public void setStudents(List<DomStudent> students) {
+    public void setStudents(Map<PersistenceId,DomStudent> students) {
         this.students = students;
     }
 
     /**
      * @return the schoolClasses
      */
-    public List<DomSchoolClass> getSchoolClasses() {
+    public Map<PersistenceId,DomSchoolClass> getSchoolClasses() {
         return schoolClasses;
     }
 
     /**
      * @param schoolClasses the schoolClasses to set
      */
-    public void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
+    public void setSchoolClasses(Map<PersistenceId,DomSchoolClass> schoolClasses) {
         this.schoolClasses = schoolClasses;
     }
 
     /**
      * @return the scoContexts
      */
-    public List<DomScoContext> getScoContexts() {
+    public Map<PersistenceId,DomScoContext> getScoContexts() {
         return scoContexts;
     }
 
     /**
      * @param scoContexts the scoContexts to set
      */
-    public void setScoContexts(List<DomScoContext> scoContexts) {
+    public void setScoContexts(Map<PersistenceId,DomScoContext> scoContexts) {
         this.scoContexts = scoContexts;
     }
 
     /**
-     * @return the studentScoContext
+     * @return the studentScoContexts
      */
-    public List<DomStudentScoContext> getStudentScoContext() {
-        return studentScoContext;
+    public Map<PersistenceId,DomStudentScoContext> getStudentScoContexts() {
+        return studentScoContexts;
     }
 
     /**
-     * @param studentScoContext the studentScoContext to set
+     * @param studentScoContexts the studentScoContexts to set
      */
-    public void setStudentScoContext(List<DomStudentScoContext> studentScoContext) {
-        this.studentScoContext = studentScoContext;
+    public void setStudentScoContexts(Map<PersistenceId,DomStudentScoContext> studentScoContexts) {
+        this.studentScoContexts = studentScoContexts;
     }
 
     /**
      * @return the courses
      */
-    public List<DomCourse> getCourses() {
+    public Map<PersistenceId,DomCourse> getCourses() {
         return courses;
     }
 
     /**
      * @param courses the courses to set
      */
-    public void setCourses(List<DomCourse> courses) {
+    public void setCourses(Map<PersistenceId,DomCourse> courses) {
         this.courses = courses;
     }
 
     /**
      * @return the classCourses
      */
-    public List<DomClassCourse> getClassCourses() {
+    public Map<PersistenceId,DomClassCourse> getClassCourses() {
         return classCourses;
     }
 
     /**
      * @param classCourses the classCourses to set
      */
-    public void setClassCourses(List<DomClassCourse> classCourses) {
+    public void setClassCourses(Map<PersistenceId,DomClassCourse> classCourses) {
         this.classCourses = classCourses;
     }
     

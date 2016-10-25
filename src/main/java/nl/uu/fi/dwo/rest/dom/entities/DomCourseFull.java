@@ -1,0 +1,62 @@
+package nl.uu.fi.dwo.rest.dom.entities;
+
+import java.util.logging.Logger;
+import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
+/**
+ * DomCourse. 
+ * 
+ * @author G.A.J. van der Plas
+ */
+@XmlRootElement
+public class DomCourseFull extends DomCourse{
+    private static Logger LOG = Logger.getLogger(DomCourse.class.getName());
+    private PersistenceId dwoProfileId;
+    private String description;
+    private Boolean export;
+//    private short notVisible;
+
+    /**
+     * @return the dwoProfileId
+     */
+    public PersistenceId getDwoProfileId() {
+        return dwoProfileId;
+    }
+
+    /**
+     * @param dwoProfileId the dwoProfileId to set
+     */
+    public void setDwoProfileId(PersistenceId dwoProfileId) {
+        this.dwoProfileId = dwoProfileId;
+    }
+    
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the export
+     */
+    public Boolean getExport() {
+        return export;
+    }
+
+    /**
+     * @param export the export to set
+     */
+    public void setExport(Boolean export) {
+        this.export = export;
+    }
+
+}
