@@ -12,12 +12,15 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.CourseUtilManager;
@@ -103,16 +106,23 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             //Fetch Teacher
             DomTeacher teacher = UserManager.findEntity(phr.getPersistentHasRolePK().getUserID()).buildDomTeacher();
             results.setTeacher(teacher);
+            
             //Fetch SchoolClasses and students
             List<PersistentSchoolClass> schoolClasses = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
-            Map<PersistenceId,DomSchoolClass> domSchoolClasses = new HashMap<>(schoolClasses.size());
+            Map<PersistenceId, DomSchoolClass> domSchoolClasses = new HashMap<>(schoolClasses.size());
+            HashMap<PersistentStudentOfClassPK, PersistentStudentOfClass> socMap = new HashMap<>();
             HashMap<Long, PersistentUser> studentMap = new HashMap<>();
             schoolClasses.stream().map((schoolClass) -> {
                 DomSchoolClass s = schoolClass.buildDomSchoolClass();
-                domSchoolClasses.put(s.getId(), s);
+                domSchoolClasses.putIfAbsent(s.getId(), s);
                 return schoolClass;
             }).forEach((schoolClass) -> {
                 try {
+                    for (PersistentStudentOfClass soc : StudentOfClassManager.findEntities(schoolClass)) {
+                        socMap.putIfAbsent(soc.getPersistentStudentOfClassPK(), soc);
+                        PersistentUser user = UserManager.findEntity(soc.getPersistentStudentOfClassPK());
+                        studentMap.putIfAbsent(user.getId(), user);
+                    }
                     //TODO optimize: remove the multiple user fetches.
                     for (PersistentUser user : UserUtilManager.getUsersforStudentsInSchoolClass(schoolClass)) {
                         studentMap.putIfAbsent(user.getId(), user);
@@ -122,15 +132,17 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 }
             });
             results.setSchoolClasses(domSchoolClasses);
+            
             //convert studentMap and set in result
-            Map<PersistenceId,DomStudent> domStudents = new HashMap<>(studentMap.size());
+            Map<PersistenceId, DomStudent> domStudents = new HashMap<>(studentMap.size());
             studentMap.entrySet().stream().forEach((keyValuePair) -> {
                 DomStudent s = keyValuePair.getValue().buildDomStudent();
-                domStudents.put(s.getId(),s);
+                domStudents.put(s.getId(), s);
             });
             results.setStudents(domStudents);
 
-            //Fetch courses for all classes ClassCourses, note course are not always leaves and all subcourses are not indexed.
+            //Fetch courses for all classes ClassCourses, note course are not 
+            //always leaves and all subcourses are not indexed.
             //create a Courses Map to recurse until Sco leaves
             HashMap<Long, PersistentClassCourse> classCoursesMap = new HashMap<>();
             HashMap<Long, PersistentCourse> coursesMap = new HashMap<>();
@@ -145,14 +157,14 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             });
 
             //fill DomClassCourse List
-            Map<PersistenceId,DomClassCourse> domClassCourses = new HashMap<>(classCoursesMap.size());
+            Map<PersistenceId, DomClassCourse> domClassCourses = new HashMap<>(classCoursesMap.size());
             classCoursesMap.entrySet().forEach((keyValuePair) -> {
                 DomClassCourse c = keyValuePair.getValue().buildDomClassCourse();
-                domClassCourses.put(c.getId(),c);
+                domClassCourses.put(c.getId(), c);
             });
             results.setClassCourses(domClassCourses);
 
-            Map<PersistenceId,DomCourse> domCourses = new HashMap<>();
+            Map<PersistenceId, DomCourse> domCourses = new HashMap<>();
             Queue<PersistentCourse> courseQueue = new LinkedList<>();
             List<PersistentCourse> leaves = new LinkedList<>();
             courseQueue.addAll(coursesMap.values());
@@ -165,7 +177,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                     leaves.add(course);
                 }
                 DomCourse c = course.createDomCourse();
-                domCourses.put(c.getId(),c);
+                domCourses.put(c.getId(), c);
             }
             results.setCourses(domCourses);
 
@@ -177,13 +189,13 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                     scosMap.putIfAbsent(scoContext.getScoID(), scoContext);
                 });
             });
-            Map<PersistenceId,DomScoContext> domScoContexts = new HashMap<>(scosMap.size());
+            Map<PersistenceId, DomScoContext> domScoContexts = new HashMap<>(scosMap.size());
             scosMap.entrySet().stream().forEach((keyValuePair) -> {
                 DomScoContext s = keyValuePair.getValue().buildDomScoContext();
-                domScoContexts.put(s.getId(),s);
+                domScoContexts.put(s.getId(), s);
             });
             results.setScoContexts(domScoContexts);
-            
+
             //fill hashmap studenSco
             HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
             scosMap.entrySet().forEach((sco) -> {
@@ -192,19 +204,19 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                     studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
                 });
             });
-            Map<PersistenceId,DomStudentScoContext> domStudentScoContexts = new HashMap<>(studentScosMap.size());
+            Map<PersistenceId, DomStudentScoContext> domStudentScoContexts = new HashMap<>(studentScosMap.size());
             studentScosMap.entrySet().stream().forEach((keyValuePair) -> {
                 DomStudentScoContext s = keyValuePair.getValue().buildDomStudentScoContext();
-                domStudentScoContexts.put(s.getId(),s);
+                domStudentScoContexts.put(s.getId(), s);
             });
             results.setStudentScoContexts(domStudentScoContexts);
 
             return results;
             // recurse here using Java queue
-            } else {
+        } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-        }
-
     }
+
+}

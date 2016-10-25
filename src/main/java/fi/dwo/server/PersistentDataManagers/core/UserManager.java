@@ -5,7 +5,9 @@
  */
 package fi.dwo.server.PersistentDataManagers.core;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -171,6 +173,15 @@ public class UserManager {
         }
     }
 
+    public static PersistentUser findEntity(PersistentHasRolePK key) {
+        return findEntity(key.getUserID());
+    }
+    
+    
+    public static PersistentUser findEntity(PersistentStudentOfClassPK key) {
+        return findEntity(key.getUserID());
+    }
+    
     public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
