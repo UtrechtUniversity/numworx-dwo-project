@@ -79,8 +79,8 @@ public class SelectModuleItem
 			}
 			this.showScore = false;
 // Alleen als de "classcourse" data ge-piggybacked is.
-			this.notAfter = (Date)map.get("notAfter");
-			this.notBefore = (Date)map.get("notBefore");
+			this.notAfter = toDate(map.get("notAfter"));
+			this.notBefore = toDate(map.get("notBefore"));
 			this.toetsType = (Number) map.get("type");
 			break;
 		case SCO:
@@ -110,6 +110,13 @@ public class SelectModuleItem
 		}
 	}
 	
+	private Date toDate(Object object)
+	{
+		if(object instanceof Date)
+			return (Date) object;
+		return null;
+	}
+
 	public boolean isFromSchool() {
 		return fromSchool;
 	}
