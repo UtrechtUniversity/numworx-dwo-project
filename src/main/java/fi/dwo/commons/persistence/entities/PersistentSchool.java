@@ -25,8 +25,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.CacheType;
 
 /**
  *
@@ -45,10 +43,10 @@ import org.eclipse.persistence.annotations.CacheType;
     @NamedQuery(name = "PersistentSchool.findBySchoolRights", query = "SELECT p FROM PersistentSchool p WHERE p.schoolRights = :schoolRights"),
     @NamedQuery(name = "PersistentSchool.findByImage", query = "SELECT p FROM PersistentSchool p WHERE p.image = :image"),
     @NamedQuery(name = "PersistentSchool.findByExpire", query = "SELECT p FROM PersistentSchool p WHERE p.expire = :expire")})
-@Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
-        size=10000, // Use 64,000 as the initial cache size. 
-        expiry=36000000 // 10 minutes 
-)
+//@Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
+//        size=10000, // Use 64,000 as the initial cache size. 
+//        expiry=36000000 // 10 minutes 
+//)
 public class PersistentSchool implements Serializable {
 
     private static final long serialVersionUID = 1L;
