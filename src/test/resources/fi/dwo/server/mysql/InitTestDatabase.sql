@@ -1,10 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `dwojunittest` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE  IF NOT EXISTS `dwojunittest` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 USE `dwojunittest`;
--- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
--- Host: 127.0.0.1    Database: dwojunittest
+-- Host: localhost    Database: dwojunittest
 -- ------------------------------------------------------
--- Server version	5.6.27
+-- Server version	5.5.42
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -153,6 +153,9 @@ CREATE TABLE `tblcourse` (
   `parentID` int(11) NOT NULL DEFAULT '0',
   `notVisible` tinyint(11) NOT NULL DEFAULT '0',
   `sequencenr` int(11) DEFAULT NULL,
+  `optlock` int(11) DEFAULT '0',
+  `treeIndex` varchar(250) DEFAULT NULL,
+  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   PRIMARY KEY (`courseID`),
   UNIQUE KEY `AK_IDENTIFIER_1` (`name`,`schoolID`,`dwoProfileID`,`parentID`),
   KEY `SCHOOL_COURSE_FK` (`schoolID`),
@@ -398,6 +401,15 @@ CREATE TABLE `tbllogincontext` (
   UNIQUE KEY `AK_ID_LOGIN_USER` (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbllogincontext`
+--
+
+LOCK TABLES `tbllogincontext` WRITE;
+/*!40000 ALTER TABLE `tbllogincontext` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbllogincontext` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblmonitorlog`
@@ -728,41 +740,6 @@ LOCK TABLES `tbluser` WRITE;
 INSERT INTO `tbluser` VALUES (1,NULL,1,'John',NULL,'Doe','dwoadmin','d55b2dbcb757e1dc1725798bccda75cd','dwoadmin@dwo.nl','2015-10-13','_',NULL,NULL,0),(8,NULL,8,'FirstName01',NULL,'FamiliyName01','user01','user01','user01@dwo.nl','2015-10-13','_',NULL,NULL,0),(9,NULL,2,'FirstName02',NULL,'FamiliyName02','user02','user02','user02@dwo.nl','2015-10-13','_',NULL,NULL,0),(10,NULL,5,'FirstName03',NULL,'FamiliyName03','user03','user03','user03@dwo.nl','2015-10-13','_',NULL,NULL,0),(11,NULL,2,'FirstName04',NULL,'FamiliyName04','user04','user04','user04@dwo.nl','2015-10-13','_',NULL,NULL,1),(12,NULL,5,'FirstName05',NULL,'FamiliyName05','user05','user05','user05@dwo.nl','2015-10-13','_',NULL,NULL,1),(13,NULL,4,'FirstName06',NULL,'FamiliyName06','user06','user06','user06@dwo.nl','2015-10-13','_',NULL,NULL,1),(14,NULL,3,'FirstName07',NULL,'FamiliyName07','user07','user07','user07@dwo.nl','2015-10-13','_',NULL,NULL,0);
 /*!40000 ALTER TABLE `tbluser` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Temporary view structure for view `tomcat_roles_view`
---
-
-DROP TABLE IF EXISTS `tomcat_roles_view`;
-/*!50001 DROP VIEW IF EXISTS `tomcat_roles_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tomcat_roles_view` AS SELECT 
- 1 AS `username`,
- 1 AS `groupname`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping routines for database 'dwojunittest'
---
-
---
--- Final view structure for view `tomcat_roles_view`
---
-
-/*!50001 DROP VIEW IF EXISTS `tomcat_roles_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tomcat_roles_view` AS select `u`.`username` AS `username`,`g`.`groupname` AS `groupname` from (((`tbluser` `u` join `tblhasrole` `h` on((`u`.`userID` = `h`.`userID`))) join `tblschoolgroup` `sg` on((`h`.`schoolGroupID` = `sg`.`schoolGroupID`))) join `tblgroup` `g` on((`sg`.`groupID` = `g`.`groupID`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -773,4 +750,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-04 10:18:57
+-- Dump completed on 2016-10-26 12:22:48
