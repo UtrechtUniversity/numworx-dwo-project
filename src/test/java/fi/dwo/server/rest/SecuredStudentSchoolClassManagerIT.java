@@ -13,8 +13,12 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -122,16 +126,43 @@ public class SecuredStudentSchoolClassManagerIT {
     @Test
     public void testRemoveStudentFromSchoolClass() {
         System.out.println("removeStudentFromSchoolClass");
-        SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);
+        SecurityContext sc = new TestSecurityContext("user05", RoleType.STUDENT);
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        DomSchoolClass domSchoolClass;
+        PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school02");
+        PersistentSchoolClass pSchoolClass = SchoolClassManager.findEntity("SchoolClass03", pSchool);
+        domSchoolClass = pSchoolClass.buildDomSchoolClass();
         restSchoolClass.setDomSchoolClass(domSchoolClass);
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
-        domSchoolClass.setSchoolClassName("SchoolClass02");
+
+        //test school with student rights to register a schoolclass    
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         Boolean result = instance.removeStudentFromSchoolClass(sc, restSchoolClass);
         assertEquals("Removing the student from the schoolclass failed.", true, result);
         PersistentStudentOfClassPK socKey = new PersistentStudentOfClassPK();
+        socKey.setClassID(3L);
+        socKey.setSchoolGroupID(5L);
+        socKey.setUserID(12L);
+        try {
+            PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socKey);
+            if (soc == null) {
+                return;
+            }
+            fail("StudentOfClass was not removed!");
+        }
+        catch (Exception ex) {
+            // success
+        }
+
+        //test school with no student rights to register a schoolclass
+        sc = new TestSecurityContext("user02", RoleType.STUDENT);
+        pSchool = SchoolManager.findBySchoolLogin("school01");
+        pSchoolClass = SchoolClassManager.findEntity("SchoolClass02", pSchool);
+        domSchoolClass = pSchoolClass.buildDomSchoolClass();
+        restSchoolClass.setDomSchoolClass(domSchoolClass);
+
+        result = instance.removeStudentFromSchoolClass(sc, restSchoolClass);
+        assertEquals("Removing the student from the schoolclass failed.", true, result);
+        socKey = new PersistentStudentOfClassPK();
         socKey.setClassID(1L);
         socKey.setSchoolGroupID(2L);
         socKey.setUserID(9L);
@@ -140,11 +171,11 @@ public class SecuredStudentSchoolClassManagerIT {
             if (soc == null) {
                 return;
             }
+            fail("StudentOfClass was not removed!");
         }
         catch (Exception ex) {
-            return;
+            // success
         }
-        fail("StudentOfClass was not removed!");
     }
 
     /**
@@ -161,6 +192,8 @@ public class SecuredStudentSchoolClassManagerIT {
         domSchoolClass.setSchoolClassName("SchoolClass04");
         domSchoolClass.setRegistrationKey("key");
         restSchoolClass.setDomNewSchoolClass4Student(domSchoolClass);
+        
+        //test school with student rights to register a schoolclass
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         try {
             Boolean result = instance.registerStudentForSchoolClass(sc, restSchoolClass);
@@ -182,6 +215,33 @@ public class SecuredStudentSchoolClassManagerIT {
         catch (Exception ex) {
             fail("StudentOfClass not registered!, exception:" + ex.getMessage());
         }
+        //test school with no student rights to register a schoolclas
+        sc = new TestSecurityContext("user02", RoleType.STUDENT);
+        domSchoolClass.setId((PersistenceId) MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setSchoolClassName("SchoolClass02");
+        domSchoolClass.setRegistrationKey("key");
+        restSchoolClass.setDomNewSchoolClass4Student(domSchoolClass);
+        try {
+            Boolean result = instance.registerStudentForSchoolClass(sc, restSchoolClass);
+            assertEquals("StudentOfClass registered, should fail!",false, result);
+        }
+        catch (Dwo2RestException e) {
+            //success
+        }
+        socKey.setClassID(2L);
+        socKey.setSchoolGroupID(5L);
+        socKey.setUserID(9L);
+        try {
+            PersistentStudentOfClass soc = StudentOfClassManager.findEntity(socKey);
+            if (soc!= null) {
+                // success
+                fail("StudentOfClass registered, should fail!");
+            }
+        }
+        catch (Exception ex) {
+            //success
+        }
+        
     }
 
     /**

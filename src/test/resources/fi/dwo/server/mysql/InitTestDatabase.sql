@@ -481,7 +481,7 @@ CREATE TABLE `tblschool` (
 
 LOCK TABLES `tblschool` WRITE;
 /*!40000 ALTER TABLE `tblschool` DISABLE KEYS */;
-INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',0,'_',NULL,NULL),(1,'NULL','null','',0,'_',NULL,NULL),(3,'School01','school01','',0,'_',NULL,NULL),(4,'School02','school02','',0,'_',NULL,NULL);
+INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',0,'_',NULL,NULL),(1,'NULL','null','',0,'_',NULL,NULL),(3,'School01','school01','',0,'_',NULL,NULL),(4,'School02','school02','',0,'_c',NULL,NULL);
 /*!40000 ALTER TABLE `tblschool` ENABLE KEYS */;
 UNLOCK TABLES;
 
