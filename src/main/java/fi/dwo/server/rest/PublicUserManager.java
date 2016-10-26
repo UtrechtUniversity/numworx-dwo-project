@@ -42,6 +42,7 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
 import java.io.UnsupportedEncodingException;
+import static java.lang.Thread.sleep;
 
 
 import java.net.URLEncoder;
@@ -78,8 +79,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import static java.lang.Thread.sleep;
-import static java.lang.Thread.sleep;
 
 /**
  * Handles the public registration of new users.
