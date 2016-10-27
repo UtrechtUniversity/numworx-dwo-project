@@ -752,4 +752,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+CREATE VIEW tomcat_user_view AS SELECT username, passwd FROM tblUser;
+CREATE VIEW tomcat_roles_view AS select u.username, g.groupname from tblUser u  join tblhasrole h using (userid) join tblschoolgroup sg on (h.schoolGroupID =  sg.schoolGroupID) join tblgroup g using (groupID);
+
 -- Dump completed on 2016-10-27 16:07:55
