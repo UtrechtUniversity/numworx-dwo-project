@@ -385,18 +385,18 @@
                     </webResources>
                 </configuration>
             </plugin>  
-<!--        <plugin>
+        <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                     <configuration>
                         <server>TomcatServer</server>
-                                        <username>${tomcat.local.deploy.username}</username>
-                    <password>${tomcat.local.deploy.password}</password>
-                        <url>${tomcat.local.deploy.url}</url>
+<!--                        <username>${tomcat.local.deploy.username}</username>
+                        <password>${tomcat.local.deploy.password}</password>
+                        <url>${tomcat.local.deploy.url}</url>-->
                         <path>/dwo</path>
                         <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                        <contextFile>src/test/tomcat/context.xml</contextFile>
+                        <contextFile>src/test/tomcat/junittest-context.xml</contextFile>
                         <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
                     </configuration>
                     <dependencies>
@@ -411,7 +411,7 @@
                             <version>2.80</version>
                         </dependency>        
                     </dependencies>
-            </plugin> -->
+            </plugin> 
             
                 <!--
                     By default, the Surefire Plugin will automatically include all test classes with the following wildcard patterns:
@@ -556,8 +556,8 @@
             <properties>
                 <dev>false</dev>
                 <junit.test>true</junit.test>
-            <properties>
-            </properties>
+                <properties>
+                </properties>
             </properties>
             <build>
                 <plugins>
