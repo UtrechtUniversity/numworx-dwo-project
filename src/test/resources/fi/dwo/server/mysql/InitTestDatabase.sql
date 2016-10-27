@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `dwojunittest` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 USE `dwojunittest`;
--- MySQL dump 10.13  Distrib 5.7.16, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
 --
 -- Host: localhost    Database: dwojunittest
 -- ------------------------------------------------------
--- Server version	5.7.16-0ubuntu0.16.04.1
+-- Server version	5.5.42
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -162,7 +162,7 @@ CREATE TABLE `tblcourse` (
   KEY `AK_DWOPROFILE` (`dwoProfileID`),
   KEY `AK_PARENTID` (`parentID`),
   CONSTRAINT `tblcourse_ibfk_1` FOREIGN KEY (`schoolID`) REFERENCES `tblschool` (`schoolID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,6 +171,7 @@ CREATE TABLE `tblcourse` (
 
 LOCK TABLES `tblcourse` WRITE;
 /*!40000 ALTER TABLE `tblcourse` DISABLE KEYS */;
+INSERT INTO `tblcourse` VALUES (1,3,'course01','Course01 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(2,3,'course02','Course02 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(3,3,'course03','Course03 Description',NULL,1,NULL,0,0,1,0,NULL,0,NULL,0),(4,3,'course04','Course04 Description',NULL,1,NULL,0,0,1,0,NULL,0,NULL,0),(5,3,'course05','Course05',NULL,1,NULL,0,0,2,0,NULL,0,NULL,0),(6,3,'course06','Course06 Description',NULL,1,NULL,0,0,2,0,NULL,0,NULL,0),(7,3,'course11','Course11 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(8,3,'course12','Course12 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(9,3,'course13','Course13 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0),(10,3,'course14','Course14 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0),(11,3,'course15','Course15',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0),(12,3,'course16','Course16 Description',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0);
 /*!40000 ALTER TABLE `tblcourse` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -751,4 +752,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-27 15:05:36
+-- Dump completed on 2016-10-27 16:07:55
