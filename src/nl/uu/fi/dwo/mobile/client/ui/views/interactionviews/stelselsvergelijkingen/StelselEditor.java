@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkin
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -297,7 +298,9 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			eindOplossingExactGevondenArrays = new boolean[list.size()][][];
 			for(int i = 0; i < list.size(); i++)
 			{
-				ObjectList list2 = list.getObjectList(i);
+				// ObjectList list2 = list.getObjectList(i);
+				List listx = JSONUtilities.toArrayList(list.get(i));
+				ObjectList list2 = JSONUtilities.wrapList(listx);
 				try{
 					eindOplossingExactGevondenArrays[i] = new boolean[list2.size()][];
 					for(int j = 0; j < list2.size(); j++)
@@ -314,7 +317,10 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			eindOplossingGevondenArrays = new boolean[list.size()][][];
 			for(int i = 0; i < list.size(); i++)
 			{
-				ObjectList list2 = list.getObjectList(i);
+				//ObjectList list2 = list.getObjectList(i);
+				List listx = JSONUtilities.toArrayList(list.get(i));
+				ObjectList list2 = JSONUtilities.wrapList(listx);
+				
 				try{
 					eindOplossingGevondenArrays[i] = new boolean[list2.size()][];
 					for(int j = 0; j < list2.size(); j++)
@@ -331,7 +337,10 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			eindOplossingStelselGevondenArrays = new boolean[list.size()][][];
 			for(int i = 0; i < list.size(); i++)
 			{
-				ObjectList list2 = list.getObjectList(i);
+				//ObjectList list2 = list.getObjectList(i);
+				List listx = JSONUtilities.toArrayList(list.get(i));
+				ObjectList list2 = JSONUtilities.wrapList(listx);
+				
 				try{
 					eindOplossingStelselGevondenArrays[i] = new boolean[list2.size()][];
 					for(int j = 0; j < list2.size(); j++)
