@@ -24,12 +24,13 @@ public class ShareFacade implements InteractionView, TekstElementWithFont {
 
 	public static final String SHARE_KEY = "shareKey";
 	private static JSONObject stateMap = new JSONObject();
-	
+	private Memento memento;
 	public ShareFacade(String key, InteractionView view,
 			TekstElementWithFont withfont) {
 		delegate = view;
 		shareKey = key;
 		this.withfont = withfont;
+		memento = Memento.instance(); // NON NULL!!!!
 	}
 
 	public InteractionView unwrap() {
@@ -83,7 +84,7 @@ public class ShareFacade implements InteractionView, TekstElementWithFont {
 		HashMap<String, Object> state = delegate.getState();
 		JSONValue stateobject = JSONUtilities.toJSONObject(state);
 		stateMap.put(shareKey, stateobject);
-		Memento.instance().setShareMap(stateMap);
+		memento.setShareMap(stateMap); // Na close Memento.instance() null
 		return state;
 	}
 
