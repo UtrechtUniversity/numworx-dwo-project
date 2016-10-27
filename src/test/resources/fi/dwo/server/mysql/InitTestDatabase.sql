@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `dwojunittest` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 USE `dwojunittest`;
--- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
+-- MySQL dump 10.13  Distrib 5.7.16, for Linux (x86_64)
 --
 -- Host: localhost    Database: dwojunittest
 -- ------------------------------------------------------
--- Server version	5.5.42
+-- Server version	5.7.16-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -218,7 +218,7 @@ CREATE TABLE `tbldwoprofile` (
   `dwoProfileRights` varchar(100) DEFAULT '_',
   `dwoProfileDescription` varchar(100) DEFAULT '',
   PRIMARY KEY (`dwoProfileID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,6 +227,7 @@ CREATE TABLE `tbldwoprofile` (
 
 LOCK TABLES `tbldwoprofile` WRITE;
 /*!40000 ALTER TABLE `tbldwoprofile` DISABLE KEYS */;
+INSERT INTO `tbldwoprofile` VALUES (1,'testprofile01','Test dwoProfileText01','_','Test dwoProfileDescription02'),(2,'testprofile02','Test dwoProfileText02','r','Test dwoProfileDescription02');
 /*!40000 ALTER TABLE `tbldwoprofile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -750,4 +751,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-26 12:22:48
+-- Dump completed on 2016-10-27 15:05:36
