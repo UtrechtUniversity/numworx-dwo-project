@@ -2,7 +2,6 @@ package fi.dwo.server.rest;
 
 import static org.junit.Assert.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -16,23 +15,12 @@ import org.junit.Test;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
-import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
-import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
-import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
-import fi.dwo.server.PersistentDataManagers.core.RoleManager;
-import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
-import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
-import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
@@ -95,13 +83,12 @@ public class SecuredDwoAdminProfileManagerIT {
 //		hasRole.setRegisterDate(new Date(0));
 //		HasRoleManager.create(hasRole);
 //        
-        PersistentDwoProfile profile = new PersistentDwoProfile();
-        profile.setDwoProfileDescription("default");
-        profile.setDwoProfileName("default");
-        profile.setDwoProfileRights("_");
-        profile.setDwoProfileText("default");
-        DwoProfileManager.create(profile);
-        
+//        PersistentDwoProfile profile = new PersistentDwoProfile();
+//        profile.setDwoProfileDescription("default");
+//        profile.setDwoProfileName("default");
+//        profile.setDwoProfileRights("_");
+//        profile.setDwoProfileText("default");
+//        DwoProfileManager.create(profile);        
         manager = new SecuredDwoAdminProfileManager();
 	}
 
@@ -114,7 +101,7 @@ public class SecuredDwoAdminProfileManagerIT {
 	public void testGetProfiles() {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
 		List<DomDwoProfile> list = manager.getProfiles(sc);
-		assertEquals("getProfiles listsize", 1, list.size());
+		assertEquals("getProfiles listsize", 2, list.size());
 	}
 
 	@Test
@@ -130,11 +117,12 @@ public class SecuredDwoAdminProfileManagerIT {
 		restDwoProfile = new RestDwoProfile();
 		restDwoProfile.setRestContext(new DomContext());
 		restDwoProfile.setDomDwoProfile(profile);
+                int size = manager.getProfiles(sc).size();
 		Boolean result = manager.submitProfile(sc, restDwoProfile);
 		assertTrue("submit profile", result.booleanValue());
 		List<DomDwoProfile> list = manager.getProfiles(sc);
-		assertEquals("getProfiles listsize", 2, list.size());
-		DomDwoProfile other = list.get(1);
+		assertEquals("getProfiles listsize", size+1, list.size());
+		DomDwoProfile other = list.get(size);
 		assertEquals("get from database", profile.getDwoProfileDescription(), other.getDwoProfileDescription());
 		assertEquals("get from database", profile.getDwoProfileName(), other.getDwoProfileName());
 		assertEquals("get from database", profile.getDwoProfileRights(), other.getDwoProfileRights());
@@ -153,13 +141,14 @@ public class SecuredDwoAdminProfileManagerIT {
 		profile.setDwoProfileName("other name");
 		profile.setDwoProfileRights("other rights");
 		profile.setDwoProfileText("other text");
+                int size = manager.getProfiles(sc).size();
 		restDwoProfile = new RestDwoProfile();
 		restDwoProfile.setRestContext(new DomContext());
 		restDwoProfile.setDomDwoProfile(profile);
 		Boolean result = manager.updateProfile(sc, restDwoProfile);
 		assertTrue("submit profile", result.booleanValue());
 		List<DomDwoProfile> list = manager.getProfiles(sc);
-		assertEquals("getProfiles listsize", 1, list.size());
+		assertEquals("getProfiles listsize", size, list.size());
 		DomDwoProfile other = list.get(0);
 		assertEquals("get from database", profile.getDwoProfileDescription(), other.getDwoProfileDescription());
 		assertEquals("get from database", profile.getDwoProfileName(), other.getDwoProfileName());
