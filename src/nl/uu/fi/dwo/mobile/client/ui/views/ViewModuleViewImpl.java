@@ -44,6 +44,7 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -52,6 +53,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -217,10 +219,19 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			scoreNav.setItemScores(on.getItemScores());
 			scoreNav.setTotaalScore((int) on.getScore());
 			scoreNav.setGotoOpdracht(on);
-// authELO
-			scoreNav.setAuthELOcheck(wrap.getBoolean("authELOcheck", false));
-			scoreNav.setAuthELOhelp(wrap.getBoolean("authELOhelp", false));
-			
+// FIXME authELO
+	if(false) {
+			boolean authELOcheck = wrap.getBoolean("authELOcheck", false);
+			scoreNav.setAuthELOcheck(authELOcheck);
+			boolean authELOhelp = wrap.getBoolean("authELOhelp", false);
+			scoreNav.setAuthELOhelp(authELOhelp);
+			if(authELOcheck || authELOhelp) {
+				HTML w = new HTML("<img id=\"helper\" data-toggle=\"popover\" title=\"Feedback\" data-placement=\"auto\" data-trigger=\"focus\" data-content=\"I have nothing to tell you right now\"  src=\"http://hansen.dcs.bbk.ac.uk/authELO/public_html/img/glasses_owl.png\" alt=\"Helper\" />");
+				w.getElement().getStyle().setPosition(Position.ABSOLUTE);
+				w.getElement().getStyle().setTop(0, Unit.PX);
+				fp.add(w);
+			}
+	}		
 		}
 		catch (Exception e)
 		{
@@ -1198,7 +1209,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public ViewModuleViewImpl initialize()
 	{
 		api = GWT.create(Scorm2004IF.class);
-		FlowPanel fp = new FlowPanel(); 
+		fp = new FlowPanel(); 
 		mainPanel = FocusOnTouch.wrap(fp, true);
 		
 		
@@ -1585,6 +1596,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	// WaitScreen management: p(); .....; v();
 	private int sema;
+	private FlowPanel fp;
 	public void p() {
 		if( sema++ == 0) {
 			waitscreen.w();
