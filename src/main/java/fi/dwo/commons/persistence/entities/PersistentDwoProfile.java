@@ -28,7 +28,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 @Table(name = "tbldwoprofile", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PersistentDwoProfile.findAll", query = "SELECT p FROM PersistentDwoProfile p"),
+    //Profiles are to ordered for the junit test. Though this is usually the case.
+    @NamedQuery(name = "PersistentDwoProfile.findAll", query = "SELECT p FROM PersistentDwoProfile p order by p.dwoProfileID"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileID", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileID = :dwoProfileID"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileName", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileName = :dwoProfileName"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileRights", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileRights = :dwoProfileRights"),
