@@ -266,6 +266,7 @@
 				<warClassifier>dwo2</warClassifier>
 				<maven.war.webxml>war/WEB-INF/web-dwo2.xml</maven.war.webxml>
 				<gwt.copyWebapp>false</gwt.copyWebapp>
+<!-- 				<gwt.style>PRETTY</gwt.style>				 -->
 			</properties>
 		</profile>
 		<profile> <!-- gebruik deze voor gwt:run -->

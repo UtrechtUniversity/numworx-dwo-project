@@ -3,6 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 	xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
 	<ui:with type="nl.uu.fi.dwo.mobile.client.text.Text" field="rb" />
+	<ui:with type="java.lang.String" field="build" />
 	<ui:with type="java.lang.String" field="back" />
 	<ui:style>
 	
@@ -49,7 +50,7 @@
 		<!-- Main interaction Area -->
 	  	<g:HTMLPanel>
 			<div style="width: 600px; height: 600px; display: block; margin: 20px auto;">
-	    	    <img src="images/resources/filogo.png" style="float: left;" />
+	    	    <img src="images/resources/filogo.png" style="float: left;"  title="{build}"/>
 	    	        <div style="float: left; margin:20px;">
 	    	      		<h1><ui:text from='{rb.dwo}'/></h1>
 	    	      		<h4><ui:text from='{rb.fi}'/></h4>

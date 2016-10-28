@@ -283,6 +283,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 			oplossingen = new Expressie[oplossingenStrings.length][varNamen.length];
 			for(int i = 0; i < oplossingenStrings.length; i++)
 			{
+				if(oplossingenStrings[i].length() < 2) return null;
 				//haakjes verwijderen:
 				String opl = oplossingenStrings[i].substring(1, oplossingenStrings[i].length() - 1);
 				String[] varWaardes;

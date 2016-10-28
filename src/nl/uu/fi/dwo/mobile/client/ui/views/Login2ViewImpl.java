@@ -7,12 +7,15 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
+import nl.uu.fi.dwo.mobile.BUILD;
+
 public class Login2ViewImpl extends LoginViewImpl {
 	private static Login2ViewImplUiBinder uiBinder = GWT
 			.create(Login2ViewImplUiBinder.class);
 
 	@UiField(provided=true) String back;
-	
+	@UiField(provided=true) String build;
+
 	interface Login2ViewImplUiBinder extends
 			UiBinder<Widget, Login2ViewImpl> {
 	}
@@ -21,6 +24,7 @@ public class Login2ViewImpl extends LoginViewImpl {
 	// style and layout defined in this file
 	Widget createAndBindUi() {
 		back = URL.encodePathSegment(Window.Location.getHref());
+		build = "Version " + BUILD.version + "." + BUILD.buildNumber;
 		return uiBinder.createAndBindUi(this);
 	}
 
