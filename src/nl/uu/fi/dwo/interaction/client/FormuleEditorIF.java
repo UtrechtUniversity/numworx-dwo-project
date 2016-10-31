@@ -82,5 +82,6 @@ public interface FormuleEditorIF {
 	
 	void stelsel();
 	
-	
+	void tab();
+	void shiftTab();
 }

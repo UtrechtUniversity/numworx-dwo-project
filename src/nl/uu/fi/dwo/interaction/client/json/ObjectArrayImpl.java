@@ -2,24 +2,25 @@ package nl.uu.fi.dwo.interaction.client.json;
 
 import java.util.List;
 import java.util.Map;
+
 import static nl.uu.fi.dwo.interaction.client.JSONUtilities.*;
 
-public class ObjectListImpl implements ObjectList {
+public class ObjectArrayImpl implements ObjectList {
+
+	Object[] objects;
 	
-	private List<?> list;
-	
-	public ObjectListImpl(List<?> list) {
-		this.list = list;
+	public ObjectArrayImpl(Object[] object) {
+		objects = object;
 	}
 
 	@Override
 	public int size() {
-		return list.size();
+		return objects.length;
 	}
 
 	@Override
 	public Object get(int i) {
-		return list.get(i);
+		return objects[i];
 	}
 
 	@Override
@@ -29,8 +30,7 @@ public class ObjectListImpl implements ObjectList {
 
 	@Override
 	public double getDouble(int key) {
-		ObjectMapImpl.toDouble(get(key));
-		return 0;
+		return ObjectMapImpl.toDouble(get(key));
 	}
 
 	@Override
@@ -60,13 +60,7 @@ public class ObjectListImpl implements ObjectList {
 
 	@Override
 	public ObjectList getObjectList(int key) {
-		return wrapList(get(key));
-	}
-
-	static  ObjectList wrapList(Object object) {
-		if(object instanceof Object[])
-			return new ObjectArrayImpl( (Object[]) object);
-		return new ObjectListImpl( (List<Object>) object);
+		return ObjectListImpl.wrapList(get(key));
 	}
 
 	@Override
@@ -77,7 +71,7 @@ public class ObjectListImpl implements ObjectList {
 
 	@Override
 	public List<Integer> getIntegerList(int key) {
-		List list = getList(key);
+		List<?> list = getList(key);
 		return ObjectMapImpl.toIntegerList(list);
 	}
 

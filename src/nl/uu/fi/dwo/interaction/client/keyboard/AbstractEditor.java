@@ -175,4 +175,12 @@ public class AbstractEditor implements FormuleEditorIF {
 	public void stelsel() {
 	}
 
+	@Override
+	public void tab() {
+	}
+
+	@Override
+	public void shiftTab() {
+	}
+
 }

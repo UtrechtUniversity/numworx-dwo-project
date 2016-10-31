@@ -29,11 +29,17 @@
   		<artifactId>MGWT</artifactId>
   		<optional>true</optional>
   	</dependency>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.11</version>
+  		<scope>test</scope>
+  	</dependency>
   </dependencies>
   <parent>
   	<groupId>fi.parentgwt</groupId>
   	<artifactId>ParentGWT</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
   	<relativePath>../ParentGWT</relativePath>
   </parent>
   <groupId>nl.uu.fi.dwo.mobile</groupId>

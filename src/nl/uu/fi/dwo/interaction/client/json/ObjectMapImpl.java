@@ -238,7 +238,11 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 
 	@Override
 	public ObjectList getObjectList(String key) {
-		return wrapList(getList(key));
+		Object o = get(key);
+		if(o instanceof Object[]) {
+			return new ObjectArrayImpl((Object[]) o);
+		}
+		return wrapList(toArrayList(o));
 	}
 	
 	

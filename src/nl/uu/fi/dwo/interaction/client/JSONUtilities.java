@@ -10,6 +10,7 @@ import java.util.Set;
 
 import nl.uu.fi.dwo.interaction.client.json.JSONObjectListImpl;
 import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
+import nl.uu.fi.dwo.interaction.client.json.ObjectArrayImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectListImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -252,6 +253,11 @@ public class JSONUtilities {
 		if(innerMap instanceof ObjectMapImpl) 
 			return toJSONObject( ((ObjectMapImpl) innerMap).unwrap() );
 		return JSONNull.getInstance();
+	}
+
+
+	public static ObjectList wrapList(Object[] arr) {
+		return new ObjectArrayImpl(arr);
 	}
 	
 	
