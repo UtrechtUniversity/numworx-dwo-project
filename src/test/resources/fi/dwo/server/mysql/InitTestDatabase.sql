@@ -171,7 +171,7 @@ CREATE TABLE `tblcourse` (
 
 LOCK TABLES `tblcourse` WRITE;
 /*!40000 ALTER TABLE `tblcourse` DISABLE KEYS */;
-INSERT INTO `tblcourse` VALUES (1,3,'course01','Course01 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(2,3,'course02','Course02 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(3,3,'course03','Course03 Description',NULL,1,NULL,0,0,1,0,NULL,0,NULL,0),(4,3,'course04','Course04 Description',NULL,1,NULL,0,0,1,0,NULL,0,NULL,0),(5,3,'course05','Course05',NULL,1,NULL,0,0,2,0,NULL,0,NULL,0),(6,3,'course06','Course06 Description',NULL,1,NULL,0,0,2,0,NULL,0,NULL,0),(7,3,'course11','Course11 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(8,3,'course12','Course12 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(9,3,'course13','Course13 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0),(10,3,'course14','Course14 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0),(11,3,'course15','Course15',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0),(12,3,'course16','Course16 Description',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0);
+INSERT INTO `tblcourse` VALUES (1,3,'course01','Course01 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(2,3,'course02','Course02 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(3,3,'course03','Course03 Description',NULL,1,NULL,0,0,1,0,NULL,0,NULL,0),(4,3,'course04','Course04 Description',NULL,1,NULL,0,0,1,0,NULL,0,NULL,0),(5,3,'course05','Course05 Description',NULL,1,NULL,0,0,2,0,NULL,0,NULL,0),(6,3,'course06','Course06 Description',NULL,1,NULL,0,0,2,0,NULL,0,NULL,0),(7,3,'course11','Course11 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(8,3,'course12','Course12 Description',NULL,1,NULL,0,1,0,0,NULL,0,NULL,0),(9,3,'course13','Course13 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0),(10,3,'course14','Course14 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0),(11,3,'course15','Course15 Description',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0),(12,3,'course16','Course16 Description',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0);
 /*!40000 ALTER TABLE `tblcourse` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -754,5 +754,6 @@ UNLOCK TABLES;
 
 CREATE VIEW tomcat_user_view AS SELECT username, passwd FROM tblUser;
 CREATE VIEW tomcat_roles_view AS select u.username, g.groupname from tblUser u  join tblhasrole h using (userid) join tblschoolgroup sg on (h.schoolGroupID =  sg.schoolGroupID) join tblgroup g using (groupID);
+CREATE VIEW tblScoView AS SELECT * FROM tblScoContext join tblScoData using (scoId);
 
 -- Dump completed on 2016-10-27 16:07:55
