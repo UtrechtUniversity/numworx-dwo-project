@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
-import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -72,7 +72,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
      * @param sc
      * @return
      */
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/getTeachersResults")
     public DomResultsPerTeacher getTeachersResults(@Context SecurityContext sc, RestContext aContext) {
