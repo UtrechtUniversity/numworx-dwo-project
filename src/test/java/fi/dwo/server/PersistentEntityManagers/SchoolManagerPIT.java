@@ -3,12 +3,15 @@
  */
 package fi.dwo.server.PersistentEntityManagers;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
 import java.util.List;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -28,18 +31,22 @@ public class SchoolManagerPIT {
     PersistentSchool schoolA = new PersistentSchool();
     PersistentSchool schoolB = new PersistentSchool();
 
+    static DatabaseManager instance = null;
+    
     public SchoolManagerPIT() {
-        DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
-
+    
     @BeforeClass
     public static void setUpClass() {
-//        DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
+        DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
+        instance = new DatabaseManager();
     }
 
     @AfterClass
     public static void tearDownClass() {
-//        DwoEmfFactory.setDefaultEntityManagerFactory();
+        DwoEmfFactory.setDefaultEntityManagerFactory();
+        instance = null;
     }
 
     @Before
@@ -59,13 +66,14 @@ public class SchoolManagerPIT {
         schoolB.setExport(false);
         schoolB.setSchoolRights("_");
         schoolB.setSchoolLogin("JunitTestSchoolB");
+        instance.IntializeTestDatabase();
     }
 
     @After
     public void tearDown() {
+        instance.ClearDatabase();
     }
-
-    
+   
     /**
      * Light testing CRUD and more of class SchoolManager.
      */

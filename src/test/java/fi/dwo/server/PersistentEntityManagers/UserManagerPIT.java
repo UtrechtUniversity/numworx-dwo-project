@@ -3,12 +3,16 @@
  */
 package fi.dwo.server.PersistentEntityManagers;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import static fi.dwo.server.PersistentEntityManagers.SchoolManagerPIT.instance;
+import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
 import java.util.List;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -21,21 +25,28 @@ import static org.junit.Assert.*;
  * @author Gert van der Plas
  */
 public class UserManagerPIT {
+
     PersistentUser userA = new PersistentUser();
     PersistentUser userB = new PersistentUser();
 
+    static DatabaseManager instance = null;
+
     public UserManagerPIT() {
-        DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
     
     @BeforeClass
     public static void setUpClass() {
+        DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
+        instance = new DatabaseManager();
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
+        DwoEmfFactory.setDefaultEntityManagerFactory();
+        instance = null;
     }
-    
+
     @Before
     public void setUp() {
         userA.setGivenName("Hamlet");
@@ -57,11 +68,14 @@ public class UserManagerPIT {
         userB.setPassword("bladiebla");
         userB.setUsername("JunitTestUserB");
         userB.setEmail("yorick@denmark.dk");
+        instance.IntializeTestDatabase();
     }
-    
+
     @After
     public void tearDown() {
+        instance.ClearDatabase();
     }
+   
 
     /**
      * Test of create method, of class UserManager.
@@ -78,8 +92,7 @@ public class UserManagerPIT {
             if ((!userA.similar(userOne)) || (!userB.similar(userTwo))) {
                 fail("User created is different.");
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             fail("Exception during create.");
         }
         //recreate
@@ -87,8 +100,7 @@ public class UserManagerPIT {
             UserManager.create(userA);
             UserManager.create(userB);
             fail("Creating double copy should not work.");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //works!
         }
 
@@ -96,14 +108,14 @@ public class UserManagerPIT {
         try {
             UserManager.destroy(UserManager.findByUserName(userA.getUsername()).getId());
             UserManager.destroy(UserManager.findByUserName(userB.getUsername()).getId());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             fail("Exception during destroy.");
         }
     }
 
     /**
      * Test of edit method, of class UserManager.
+     *
      * @throws java.lang.Exception
      */
     @Test
@@ -124,8 +136,7 @@ public class UserManagerPIT {
             if (!user.similar(userA)) {
                 fail("UserManager.edit() failed.");
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             fail("UserManager.edit() failed.");
         }
 
@@ -139,8 +150,7 @@ public class UserManagerPIT {
             if (user == null) {
                 fail("UserManager.edit() failed. School disappeared.");
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // works!
         }
 
@@ -148,8 +158,7 @@ public class UserManagerPIT {
         try {
             UserManager.destroy(UserManager.findByUserName(userA.getUsername()).getId());
             UserManager.destroy(UserManager.findByUserName(userB.getUsername()).getId());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             fail("Exception during destroy.");
         }
     }
@@ -170,12 +179,10 @@ public class UserManagerPIT {
                 if (user != null) {
                     fail("User not destroyed.");
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 //works
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             fail("Exception during destroy.");
         }
     }
@@ -247,8 +254,7 @@ public class UserManagerPIT {
                 fail("Found different user as created.");
             }
             UserManager.destroy(result.getId());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             fail("Exception during find.");
         }
     }
