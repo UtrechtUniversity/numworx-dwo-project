@@ -86,6 +86,10 @@ public class PersistentCourse implements Serializable {
     @Basic(optional = false)
     //update tblcourse set sequenceNr=0 where sequenceNr is null
     //alter table tblcourse alter column sequenceNr set DEFAULT '0';
+    //
+//UPDATE tblcourse as c INNER JOIN tblcoursesequence as s on (c.courseID=s.courseID
+//and c.schoolID=s.schoolID and c.parentID=s.parent and c.dwoProfileID=s.profileID)
+//SET c.sequencenr = s.sequencenr    
     @NotNull
     @Column(name = "sequencenr", nullable = false)
     private Long sequenceNr;
