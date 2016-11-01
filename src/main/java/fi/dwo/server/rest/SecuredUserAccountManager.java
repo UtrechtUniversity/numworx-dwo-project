@@ -161,6 +161,7 @@ public class SecuredUserAccountManager {
             ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
             PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
             PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
+            LOG.log(Level.INFO, "Username {0}: Login User with username {1}: uid, sgid {2}, {3}", new Object[]{sc.getUserPrincipal().getName(), u.getUsername(),u.getId(),sg.getSchoolGroupID()});
 
             loginData.setRole(g.getGroupname());
             loginData.setMessage(LogType.Login);
