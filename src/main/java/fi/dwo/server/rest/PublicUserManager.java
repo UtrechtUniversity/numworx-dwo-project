@@ -79,6 +79,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import static java.lang.Thread.sleep;
 
 /**
  * Handles the public registration of new users.
@@ -422,7 +423,7 @@ public class PublicUserManager {
                             LOG.log(Level.SEVERE, null, e);
                             //throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                         }
-                        PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(pUser, school, roleType);
+                        PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, school, roleType);
                         hr.setClassID(schoolClass.getClassID());
                         HasRoleManager.edit(hr);
                         break;
@@ -457,7 +458,7 @@ public class PublicUserManager {
                 samlUser.setAuthToken(authToken.toString());
                 SamlUserManager.edit(samlUser);
                 if (schoolClass != null && roleType == RoleType.STUDENT) {
-                    PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(UserManager.findEntity(samlUser.getUserID()), school, roleType);
+                    PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(UserManager.findEntity(samlUser.getUserID()), school, roleType);
                     //TODO hr == null? aanmaken of overslaan? nu fatal DWO2 exception
                     PersistentStudentOfClassPK socPK = new PersistentStudentOfClassPK(hr.getPersistentHasRolePK().getUserID(),
                             schoolClass.getClassID(), hr.getPersistentHasRolePK().getSchoolGroupID());
@@ -613,7 +614,7 @@ public class PublicUserManager {
                         LOG.log(Level.SEVERE, null, e);
                         throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                     }
-                    PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(pUser, school, roleType);
+                    PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, school, roleType);
                     hr.setClassID(schoolClass.getClassID());
                     HasRoleManager.edit(hr);
                     break;
@@ -632,7 +633,7 @@ public class PublicUserManager {
 //                        LOG.log(Level.SEVERE, null, e);
 //                        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
 //                    }
-//                    hr = HasRoleUtilManager.getHasRoleInSchool(pUser, school, roleType);
+//                    hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, school, roleType);
 //                    hr.setClassID(schoolClass.getClassID());
 //                    HasRoleManager.edit(hr);
 //                    break;

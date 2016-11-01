@@ -204,7 +204,7 @@ public class SecuredSchoolAdminSchoolManager {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by schooladmin {0}.", new Object[]{sc.getUserPrincipal().getName(), student.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
-            shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
@@ -467,7 +467,7 @@ public class SecuredSchoolAdminSchoolManager {
             if (teacher == null) {
                 return false;
             }
-            thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
+            thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
@@ -511,7 +511,7 @@ public class SecuredSchoolAdminSchoolManager {
             if (student == null) {
                 return false;
             }
-            shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
@@ -561,7 +561,7 @@ public class SecuredSchoolAdminSchoolManager {
             if (schoolAdmin == null) {
                 return false;
             }
-            shr = HasRoleUtilManager.getHasRoleInSchool(schoolAdmin, school, RoleType.SCHOOLADMIN);
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(schoolAdmin, school, RoleType.SCHOOLADMIN);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
@@ -611,7 +611,7 @@ public class SecuredSchoolAdminSchoolManager {
         student = UserManager.findEntity(MySQLPersistenceId.getId(submit.getDomGetSingleSchoolStudent().getDomStudent().getId()));
 
         try {
-            shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
@@ -641,7 +641,7 @@ public class SecuredSchoolAdminSchoolManager {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             PersistentUser teacher = UserManager.findByUserName(restTeacher.getDomTeacher().getUserName());
-            thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
+            thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
@@ -682,7 +682,7 @@ public class SecuredSchoolAdminSchoolManager {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             PersistentUser student = UserManager.findByUserName(restStudent.getDomStudent().getUserName());
-            thr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+            thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);

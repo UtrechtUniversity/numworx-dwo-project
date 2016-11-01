@@ -167,7 +167,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         //fetch hasrole
         PersistentHasRole hr = null;
         try {
-            hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
+            hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             fail("Student did not have a hasRole in the test database. He should.");
         }
@@ -182,7 +182,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("Student was not removed.");
         }
         try {
-            HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
+            HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
             fail("HasRole was not removed.");
         } catch (Dwo2Exception ex) {
             //success
@@ -240,7 +240,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
         try {
             //check for hasRole
-            PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(user, SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
+            PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);
             fail("Could not find created user's hasRole");
@@ -269,7 +269,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         PersistentHasRole hr = null;
         try {
             //check for hasRole
-            hr = HasRoleUtilManager.getHasRoleInSchool(user, SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
+            hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);
             fail("Could not find created user's hasRole");
@@ -387,7 +387,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         //fetch hasrole
         PersistentHasRole hr = null;
         try {
-            hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.TEACHER);
+            hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.TEACHER);
         } catch (Dwo2Exception ex) {
             fail("Teacher did not have a hasRole in the test database. He should.");
         }
@@ -400,7 +400,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("User was removed, while it should remain.");
         }
         try {
-            HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.TEACHER);
+            HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.TEACHER);
             fail("HasRole was not removed.");
         } catch (Dwo2Exception ex) {
             //success
@@ -448,7 +448,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         //fetch hasrole
         PersistentHasRole hr = null;
         try {
-            hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
+            hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             fail("Student did not have a hasRole in the test database. He should.");
         }
@@ -463,7 +463,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("User was removed,while it should remain.");
         }
         try {
-            HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
+            HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.STUDENT);
             fail("HasRole was not removed.");
         } catch (Dwo2Exception ex) {
             //success
@@ -514,7 +514,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         //fetch hasrole
         PersistentHasRole hr = null;
         try {
-            hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.SCHOOLADMIN);
+            hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.SCHOOLADMIN);
         } catch (Dwo2Exception ex) {
             fail("SchoolAdmin did not have a hasRole in the test database. He should.");
         }
@@ -527,7 +527,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("User was removed, while it should remain.");
         }
         try {
-            HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.SCHOOLADMIN);
+            HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findBySchoolLogin("school01"), RoleType.SCHOOLADMIN);
             fail("HasRole was not removed.");
         } catch (Dwo2Exception ex) {
             //success

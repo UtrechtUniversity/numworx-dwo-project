@@ -15,7 +15,6 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -102,8 +101,18 @@ public class HasRoleUtilManager {
         }
         return s;
     }
-
-    public static PersistentHasRole getHasRoleInSchool(PersistentUser user, PersistentSchool school, RoleType roleType) throws Dwo2Exception {
+/**
+ * Returns a PersistentHasRole if one exists for the user in the school for the 
+ * roleType. A {@Link Dwo2ExceptionCode.Rest_InternalError} is thrown if it is 
+ * does not exists or the method fails.
+ * 
+ * @param user
+ * @param school
+ * @param roleType
+ * @return
+ * @throws Dwo2Exception 
+ */
+    public static PersistentHasRole getUsersHasRoleInSchoolAndRole(PersistentUser user, PersistentSchool school, RoleType roleType) throws Dwo2Exception {
         if (user == null || school == null || roleType == null) {
             LOG.log(Level.SEVERE, "School, user or  roleType parameters are invalid.");
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
@@ -190,7 +199,7 @@ public class HasRoleUtilManager {
      * @throws Dwo2Exception
      */
     public static PersistentHasRole getOrCreateHasRoleInSchool(PersistentUser user, PersistentSchool school, RoleType roleType) throws Dwo2Exception {
-        //More efficient than calling method getHasRoleInSchool
+        //More efficient than calling method getUsersHasRoleInSchoolAndRole
         if (user == null || school == null || roleType == null) {
             LOG.log(Level.SEVERE, "School, user or  roleType parameters are invalid.");
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");

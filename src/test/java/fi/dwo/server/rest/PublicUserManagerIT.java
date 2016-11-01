@@ -117,7 +117,7 @@ public class PublicUserManagerIT {
         
         try {
             //check for hasRole
-            PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(user, SchoolManager.findBySchoolLogin(domNewUser.getSchoolLogin()), RoleType.TEACHER);
+            PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, SchoolManager.findBySchoolLogin(domNewUser.getSchoolLogin()), RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);

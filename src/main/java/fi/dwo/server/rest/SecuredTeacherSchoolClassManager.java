@@ -462,7 +462,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     //StudentOfClassManager.destroy(t.getPersistentStudentOfClassPK());
                     Long id = t.getPersistentStudentOfClassPK().getUserID();
                     PersistentUser student = UserManager.findEntity(id);
-                    PersistentHasRole shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+                    PersistentHasRole shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
                     removeStudentFromSchoolClass(sc, school, student, shr, schoolClass);
                 }
 
@@ -513,7 +513,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             if (teacher == null) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find teacher to add.");
             }
-            thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
+            thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
 
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
@@ -562,7 +562,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             if (student == null) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find teacher to add.");
             }
-            shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
@@ -616,7 +616,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(domTeacher.getId()));
-            thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
+            thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
@@ -667,7 +667,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             student = UserManager.findEntity((Long) MySQLPersistenceId.getId(domStudent.getId()));
-            shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
@@ -768,7 +768,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(submit.getDomGetSingleSchoolStudent().getDomSchoolClass().getId()));
 
         try {
-            shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);

@@ -545,7 +545,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         assertEquals("Did not creat a single schoolstudent.", user.isSingleSchoolAccount(), true);
         try {
             //check for hasRole
-            PersistentHasRole hr = HasRoleUtilManager.getHasRoleInSchool(user, (PersistentSchool) SchoolManager.findEntity(3L), RoleType.STUDENT);
+            PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findEntity(3L), RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);

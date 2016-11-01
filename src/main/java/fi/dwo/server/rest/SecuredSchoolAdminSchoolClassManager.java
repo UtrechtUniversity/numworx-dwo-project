@@ -317,7 +317,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(domTeacher.getId()));
-            thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
+            thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -364,7 +364,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(domTeacher.getId()));
-            thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
+            thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -483,7 +483,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             student = UserManager.findEntity((Long) MySQLPersistenceId.getId(domStudent.getId()));
-            shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -530,7 +530,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             student = UserManager.findEntity((Long) MySQLPersistenceId.getId(domStudent.getId()));
-            shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -676,7 +676,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
                 	
                 	Long id = t.getPersistentStudentOfClassPK().getUserID();
 					PersistentUser student = UserManager.findEntity(id);
-					PersistentHasRole shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+					PersistentHasRole shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
 					removeStudentFromSchoolClass(sc, school, student, shr, schoolClass);
                 }
 
