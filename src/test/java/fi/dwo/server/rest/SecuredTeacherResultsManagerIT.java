@@ -95,7 +95,7 @@ public class SecuredTeacherResultsManagerIT {
         
         DomResultsPerTeacher result = instance.getTeachersResults(sc,restContext);
         
-        assertEquals(2, result.getClassCourses().size());
+        assertEquals(1, result.getClassCourses().size());
 
     }
 }

@@ -168,10 +168,12 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             Queue<PersistentCourse> courseQueue = new LinkedList<>();
             List<PersistentCourse> leaves = new LinkedList<>();
             courseQueue.addAll(coursesMap.values());
+            //Danger Will Robinson, circular reference will kill stuff
             while (!courseQueue.isEmpty()) {
-                PersistentCourse course = courseQueue.poll();
+                PersistentCourse course = courseQueue.remove();
                 if (course.getWithChildren()) {
-                    List<PersistentCourse> childrenCourses = CourseUtilManager.getChildCourses(course);
+                    List<PersistentCourse> childrenCourses = CourseManager.findChildrenOf(course);
+//                    CourseManager.findEntities(school);
                     courseQueue.addAll(childrenCourses);
                 } else {//leave
                     leaves.add(course);
