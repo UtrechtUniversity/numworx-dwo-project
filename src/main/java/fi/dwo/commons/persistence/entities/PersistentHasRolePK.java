@@ -31,12 +31,12 @@ public class PersistentHasRolePK implements Serializable {
     public long getId() {
         long id = schoolGroupID;
         id = id << 32;
-        id = id & userID;
+        id = id | userID;
         return (id);
     }
 
     public void setId(long aId) {
-        long uId = aId & 0xFFFFFFFF;
+        long uId = aId & 0xFFFF;
         long sgId = aId >>32;
         userID = uId;
         schoolGroupID = sgId;
