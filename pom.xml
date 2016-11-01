@@ -385,19 +385,25 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
     <profiles>
+<!--        <profile>
+            <id>release</id>
+            <properties>
+                <profile.dev>false</profile.dev>
+            </properties>
+        </profile>-->
         <profile>
             <id>dev</id>
-            <properties>
-                <dev>true</dev>
-            </properties>
+            <activation>
+                <property>
+                    <name>!dev</name>
+                </property>
+            </activation>
         </profile>
         <profile>
             <id>dwo-pack-sign-obfuscate</id>
             <activation>
-                <activeByDefault>!dev</activeByDefault>
                 <property>
-                    <name>profile.dwo-obfuscate-pack-sign</name>
-                    <value>true</value>
+                    <name>!dev</name>
                 </property>
             </activation>            
             <build>
