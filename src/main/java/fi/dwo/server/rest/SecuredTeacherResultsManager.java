@@ -168,7 +168,13 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             Queue<PersistentCourse> courseQueue = new LinkedList<>();
             List<PersistentCourse> leaves = new LinkedList<>();
             courseQueue.addAll(coursesMap.values());
-            //Danger Will Robinson, circular reference will kill stuff
+            //Danger Will Robinson, circular reference will hang thread forever.
+            //TODO Loop items in the map to determine the distance to the rootnode.
+            //Set the treeindex depth and commit all that are found
+            //if the child depth less or equal to the parent then there is an issue.
+            //if child depth empty set it.
+            
+            //ensure sequence is always set.
             while (!courseQueue.isEmpty()) {
                 PersistentCourse course = courseQueue.remove();
                 if (course.getWithChildren()) {
