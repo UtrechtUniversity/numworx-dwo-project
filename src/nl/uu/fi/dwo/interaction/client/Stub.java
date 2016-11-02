@@ -36,7 +36,6 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return String.valueOf(view.isCorrect());
 	}
 	
-	
 	private void setState(String jso) {
 		JSONObject js = JSONParser.parseLenient(jso).isObject();
 		HashMap<String,Object> result = JSONUtilities.wrapMap(js);
@@ -111,6 +110,13 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 			},
 			backspace: function() {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::backspace()();
+			},
+
+			tab: function() {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::tab()();
+			},
+			shiftTab: function() {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::shiftTab()();
 			},
 			
 			
@@ -239,6 +245,14 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		editor.insert(text);
 	}
 
+	public void tab() {
+		editor.tab();
+	}
+	
+	public void shiftTab() {
+		editor.shiftTab();
+	}
+	
 	public void insert(char charAt) {
 		editor.insert(charAt);
 	}
@@ -327,7 +341,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 
 	@Override
 	public void functionKey(int minF) {
-		// TODO Auto-generated method stub
+		// TODO F1 -- F12 to editor functions
 	}
 
 	@Override
@@ -345,7 +359,6 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

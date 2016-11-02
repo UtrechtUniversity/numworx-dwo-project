@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.Letter;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -157,7 +158,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		case '^': // expliciet macht verheffen..
 			return true;
 		default:
-			return Character.isLetterOrDigit(ch);
+			return Character.isLetterOrDigit(ch)||Letter.isLetter(ch);
 		}
 	}
 
@@ -233,6 +234,14 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			{
 			case 8: // firefox
 				backspace(event);
+				break;
+			case 9: // tab/shifttab
+				if(event.isShiftKeyDown())
+					editor.shiftTab();
+				else 
+					editor.tab();
+				event.stopPropagation();
+				event.preventDefault();
 				break;
 			case KeyCodes.KEY_DELETE: // firefox
 				delete(event);
