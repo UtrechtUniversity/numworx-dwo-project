@@ -1027,5 +1027,17 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		font = regel.getFont();
 	}
 
+	@Override
+	public void tab() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void shiftTab() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

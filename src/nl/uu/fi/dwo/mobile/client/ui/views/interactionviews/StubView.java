@@ -780,5 +780,25 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(comRoot == this) return false;
 		return comRoot.hasListeners(command);
 	}
+
+	@Override
+	public void tab() {
+		try {
+			tab(innerView);
+		} catch(Exception not_implemented) {	
+		}
+		
+	}
+
+	private static native void tab(Object innerView)/*-{ innerView.tab() }-*/;
+	private static native void shiftTab(Object innerView)/*-{ innerView.shiftTab() }-*/;
+
+	@Override
+	public void shiftTab() {
+		try {
+			shiftTab(innerView);
+		} catch(Exception not_implemented) {	
+		}
+	}
 	
 }
