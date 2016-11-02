@@ -13,13 +13,23 @@ public class StrokeMatcherWrapper {
 //	DoublePoint doublePoint;
 	private StrokeMatcher strokeMatcher;
 	
-	public StrokeMatcherWrapper() {
-		strokeMatcher = StrokeMatcherFactory.createStrokeMatcher(
-				StrokeSampleSetFactory.SampleSetId.BASICMATH,
-				StrokeMatcherFactory.MatchResultsId.UNIQUESORTED4, 
-				StrokeMatcherFactory.MatchMethodId.SIMILARITY, 
-				StrokeMatcherFactory.MatchMetricId.P2PDISTANCE
-				);
+	public StrokeMatcherWrapper(int tekenSet) {
+		if (tekenSet == 2) {
+			strokeMatcher = StrokeMatcherFactory.createStrokeMatcher(
+					StrokeSampleSetFactory.SampleSetId.BASICMATH,
+					StrokeMatcherFactory.MatchResultsId.UNIQUESORTED4, 
+					StrokeMatcherFactory.MatchMethodId.SIMILARITY, 
+					StrokeMatcherFactory.MatchMetricId.P2PDISTANCE
+					);
+		} else {
+			// Minimal set = default
+			strokeMatcher = StrokeMatcherFactory.createStrokeMatcher(
+					StrokeSampleSetFactory.SampleSetId.BASICMATHMINIMAL,
+					StrokeMatcherFactory.MatchResultsId.UNIQUESORTED4, 
+					StrokeMatcherFactory.MatchMethodId.SIMILARITY, 
+					StrokeMatcherFactory.MatchMetricId.P2PDISTANCE
+					);
+		}
 	}
 	
 	public String findTeken(ArrayList<DoublePoint> doublePoints) {

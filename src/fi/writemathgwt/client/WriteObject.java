@@ -12,11 +12,12 @@ import com.google.gwt.canvas.dom.client.CssColor;
 public class WriteObject 
 {
 	private final static boolean cNewStrokmatcher = true;
+	static int newTekenSet = 0;
 	public static HashMap<String, int[]>  samples;
  	
 	//OK
-	public static void initSamples(int tekenSet) 
-	{
+	public static void initSamples(int tekenSet) {
+		newTekenSet = tekenSet;
 		samples = Samples20.init(tekenSet);
 	}
 	
@@ -51,7 +52,9 @@ public class WriteObject
 	
 	//OK
 	public WriteObject(ArrayList<Point> points) {
-		newStrokeMatcher = new StrokeMatcherWrapper();
+		if ( cNewStrokmatcher ) {
+			newStrokeMatcher = new StrokeMatcherWrapper(newTekenSet);
+		}
 		
 		doublePoints = new ArrayList<DoublePoint>();
 		double size = 0;
@@ -68,23 +71,28 @@ public class WriteObject
 			return;
 		}
 		
-		if (!cNewStrokmatcher) {
-			// try to standarize
-			if (doublePoints.size() >= 20)
-			{	ArrayList<DoublePoint> tempDoublePoints = standardize(doublePoints);
-				if (tempDoublePoints.size() >= 20)
-					doublePoints = tempDoublePoints;
-			}
-		
-			int dpSize = doublePoints.size();
-			while (dpSize < 20)
-			{	
-				doublePoints = insertPoint(doublePoints);
-				dpSize = doublePoints.size();
-			}
+		if (cNewStrokmatcher) { // if new parse before standardize
+			teken = parse(doublePoints);
+		} 
+			
+		// try to standarize
+		if (doublePoints.size() >= 20) {	
+			ArrayList<DoublePoint> tempDoublePoints = standardize(doublePoints);
+			if (tempDoublePoints.size() >= 20)
+				doublePoints = tempDoublePoints;
 		}
 		
-		teken = parse(doublePoints);
+		int dpSize = doublePoints.size();
+		while (dpSize < 20)
+		{	
+			doublePoints = insertPoint(doublePoints);
+			dpSize = doublePoints.size();
+		}
+			
+		if (!cNewStrokmatcher) { // if old parse after standardize
+			teken = parse(doublePoints);
+		} 
+				
 		
 //System.out.println("WriteObject: " + teken);
 	}
@@ -272,27 +280,28 @@ public class WriteObject
 	} 
 
 	//OK
-	private String parse(ArrayList<DoublePoint> doublePoints) 
-	{
+	private String parse(ArrayList<DoublePoint> doublePoints) {
+		String gevondenTeken = "";
+
 		if (cNewStrokmatcher) {
-//			String gevondenTeken = "";
-			String gevondenTeken = newStrokeMatcher.findTeken(doublePoints);
+			gevondenTeken = newStrokeMatcher.findTeken(doublePoints);
 			teken1 = newStrokeMatcher.getTeken1();
 			teken2 = newStrokeMatcher.getTeken2();
 			teken3 = newStrokeMatcher.getTeken3();
 			teken4 = newStrokeMatcher.getTeken4();
+		} 
 			
-			return gevondenTeken;
-		} else {
-			if (doublePoints.size() > 1) {
-				doublePoints = scaleToSquare(doublePoints);
-				// hier nog een smoother?			
-				doublePoints = standardizeToLength(doublePoints);
-			}
-			parsePoints = deepCopy(doublePoints);
-		
-			return findTeken(doublePoints);
+		if (doublePoints.size() > 1) {
+			doublePoints = scaleToSquare(doublePoints);
+			// hier nog een smoother?			
+			doublePoints = standardizeToLength(doublePoints);
 		}
+		parsePoints = deepCopy(doublePoints);
+		
+		if (!cNewStrokmatcher) {
+			gevondenTeken = findTeken(doublePoints);
+		}
+		return gevondenTeken;
 	}
 	
 	//OK
