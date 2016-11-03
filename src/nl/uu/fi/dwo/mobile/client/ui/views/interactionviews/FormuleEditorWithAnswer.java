@@ -150,29 +150,60 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 
 		@Override
-		public void acceptCBookEvent(CBookEvent event) {
-			if(TekstVakPanel.TVP_KLAPUIT == event.getCommand())
+		public void acceptCBookEvent(CBookEvent event) 
+		{
+			if (TekstVakPanel.TVP_KLAPUIT == event.getCommand())
 			{
 				FormuleEditor other = FormuleEditorWithAnswer.this;
 				String useranswer = other.toString();
 // transfer 
-				if(getEditor() == null || getEditor().toString().equals(""))
+//				if (getEditor() == null || getEditor().toString().equals("")) // dit gaat mis als useranswer al de laatste stap bevat, bijv. bij oefenen en goed eindantwoord, dan is editor null
+				if (getEditor() != null && getEditor().toString().equals(""))
+				{
 					backStep(false);
-				getEditor().clearMain();
-				getEditor().insert(useranswer);
+				}
 				
+				if (getEditor() != null)
+				{
+					getEditor().clearMain();
+					getEditor().insert(useranswer);
+					
+					getEditor().requestFocus();
+				}
 				
-				getEditor().requestFocus();
+				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
+				fews.setUitgeklapt(true);
+				fews.setIsBoss(true);
 			}
-			if(TekstVakPanel.TVP_KLAPIN == event.getCommand())
+			
+			if (TekstVakPanel.TVP_KLAPIN == event.getCommand())
 			{
 				FormuleEditorWithAnswer other = FormuleEditorWithAnswer.this;
-				String useranswer = getEditor().toString();
+				String useranswer = other.toString();
+				
+				// als getEditor() er is, dan halen we het antwoord uit deze editor
+				if (getEditor() != null)
+				{
+					useranswer = getEditor().toString();
+					
+					if ("".equals(useranswer))
+					{
+						backStep(false);
+						useranswer = getEditor().toString();
+					}
+				}
+				else
+				{
+					System.out.println("acceptCBookEvent(): klapin, getEditor() == null");
+				}
+				
 				other.clearMain();
 				other.insert(useranswer);
 				boolean show = mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN;
 				other.kijkNa(false, show, false);
 			
+				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
+				fews.setUitgeklapt(false);
 			}
 		}
 
@@ -759,7 +790,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private void transferToFEWS() {
 		//doen alsof het in de laatste regel van de fews is ingevuld; dan komt het automatisch terug naar de fewa.
 		if(fews.getEditor() == null || fews.getEditor().toString().equals(""))
+		{
 			fews.backStep(false);
+		}
 		fews.getEditor().clearAll();
 		fews.getEditor().insert(this.toString());
 	}
@@ -803,6 +836,40 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			Map<String, Object> map = buildLoggingMap();
 			logging.log(map);
 		}
+	}
+
+	/**
+	 * Bepaal de score van de FormuleEditorWithAnswer. Wordt door
+	 * FormuleEditorWithSteps.bepaalVoortgangsScore() gebruikt
+	 * om de voortgangsscore te berekenen over alle stappen.
+	 */
+	void bepaalScoreEnCorrect() {
+		new Runnable() {
+			public void run() {
+				try {
+					bepaalScoreEnCorrect0();
+				} catch(RestartException e) {
+					e.restart(this);
+				}
+			}
+		}.run();
+	}
+	
+	/**
+	 * Bepaal de score en correct van de FormuleEditorWithAnswer. Wordt door
+	 * FormuleEditorWithSteps.bepaalVoortgangsScore() gebruikt
+	 * om de voortgangsscore te berekenen over alle stappen
+	 * en de correctheid van de eindstap.
+	 */
+	private void bepaalScoreEnCorrect0() throws RestartException
+	{
+		String useranswer = "$f" + this.toString() + "@";
+		
+		HashMap<String, Object> checkResults = new HashMap<String, Object>();
+		checkResults = avChecker.checkAnswer(useranswer);
+
+		this.score = (Integer) checkResults.get("score");
+		this.correct = (Boolean) checkResults.get("correct");
 	}
 
 	/**
@@ -995,7 +1062,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
-		if (fe != null)
+		if (fe != null && !(fe.isToets() && hasFeedback())) // voor toets met feedback willen we nakijken obv de correctheid van de huidige invoerregel
 			checkResults = avChecker.checkAnswer(useranswer, fe.getLatestAnswer(), fe.getSubstitutie(), fe.getGebruikersSubstituties());
 		else	
 			checkResults = avChecker.checkAnswer(useranswer);
@@ -1008,7 +1075,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR)
 			correct = null;
 		this.score = (Integer) checkResults.get("score");
-		if (fe != null) 
+		if ((fe != null) && (fe.isBordjesMethode()))
 		{ 
 			// waarom werkt dit überhaupt? normaal gebeurt dit in 'maakNakijkenAf'
 			// Maar voor oefenen bordjesmethode met goede eindoplossing weet fe niet dat het antwoord correct is
@@ -1087,6 +1154,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		// in maakNakijkenAf wordt voor setState = false comRoot.setChanged(false) gedaan;
 		// als fe == null dus niet...
+		
+		if (fews != null && fews.isToets() && hasFeedback())
+		{
+			// er is een popup in een toets met feedback/tabbladen, dus nemen we de voortgangsscore van fews
+			score = fews.getScore();
+		}
 		
 		if (goedHalfFout == AntwoordVakChecker.GOED)
 			fireEvent(EVENT_CORRECT);
@@ -1292,7 +1365,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					antwoord = fews.removeIsTeken(antwoord);
 					//this.insert(antwoord);// dit haalt ook het vinkje weg...
 					setCurrentElementRepaint();
-					lastanswer = "$f" + toString() + "@";
+					
+					if (!"".equals(toString()))
+					{
+						lastanswer = "$f" + toString() + "@";
+					}
+					else
+					{
+						// als this.toString() leeg is en er is een antwoord, zet dat er dan in
+						lastanswer = antwoord;
+						this.insert(antwoord);
+						// hoe zat dit...? Hier moet iets als je de pagina verlaat en niet op enter hebt gedrukt...
+					}
 				}
 			}
 			else
@@ -1321,7 +1405,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 			
 			kijkNa(false, false, false);
-		}			
+
+			// als fews een hogere voortgangsscore heeft, neem deze dan over
+			if (fews.getScore() > this.getScore())
+			{
+				this.score = fews.getScore();
+			}
+		}		
 		else	
 		{
 			//kijkNa moet gebeuren om bijvoorbeeld bolletje groen te maken als alles op de pagina correct is. 
@@ -1734,6 +1824,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		fews.setUitgeklapt(false);
 		popupBtn.state = state; // XXX ???
 		
+		// voor toets met feedback (deelscores) moet de voortgangsscore van fews genomen worden
+		if (fews.getScore() > this.getScore())
+		{
+			this.score = fews.getScore();
+		}
+		
 		// na setState() is het goede antwoord in FEWA gezet
 		comRoot.setChanged(false);
 	}
@@ -1751,5 +1847,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(avChecker != null)
 			return avChecker.getPossibleMisconceptions();
 		return null;
+	}
+	
+	/**
+	 * Methode om in FEWS te achterhalen of er sprake is van feedback met 'tabbladen'.
+	 * 
+	 * @return
+	 */
+	public boolean hasFeedback()
+	{
+		return hasFeedback;
 	}
 }
