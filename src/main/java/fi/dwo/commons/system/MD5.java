@@ -26,6 +26,10 @@ import java.io.*;
  * http://ostermiller.org/contact.pl?regarding=Java+Utilities
  * @since ostermillerutils 1.00.00
  */
+
+/* A built-in method exists in java.security.MessageDigest. Call 
+getInstance("MD5") to get an MD5 message digest you can use. */
+@Deprecated 
 public class MD5 {
 
     /**

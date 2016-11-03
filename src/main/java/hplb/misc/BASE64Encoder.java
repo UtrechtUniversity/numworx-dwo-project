@@ -17,6 +17,7 @@ import java.io.*;
  *
  * @author Anders Kristensen
  */
+@Deprecated //java has a built-in MD5 method since Java 8.
 public class BASE64Encoder extends CharacterEncoder {
 
     private static byte[] alphabet = getBytes(

@@ -22,7 +22,23 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 /**
+ * JPA/EclipseLink entity for the Courses.
  *
+ * <p>
+ * A set of Courses that contains a set of multi-tree of learning modules. Each
+ * multi-tree is a one-directional graph without any cycles or references to
+ * another tree in the Courses set. Each course entity describes a tree-node,
+ * best described by the tuple of:
+ * <p>
+ * &lt; courseId, parentId, schoolId, dwoProfileId, hasChildren, courseData &gt;
+ * <p>
+ * <b>courseId</b> : Unique, non-negative and not null<br>
+ * <b>parentId</b> : 0 if no parent exists.<br>
+ * <b>schoolId</b> : The schoolId of the school that owns it and may execute
+ * CRUD operations on it, NULL if it is visible to all schools.<br>
+ * <b>dwoProfileId</b>: The dwoProfileId in which a school must be to access and
+ * see the course.
+ * <p>
  * @author G.A.J. van der Plas
  */
 @Entity
@@ -42,6 +58,21 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 //    @NamedQuery(name = "PersistentCourse.findByNotVisible", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = :notVisible")})
 public class PersistentCourse implements Serializable {
 
+    public enum CourseType {
+        NORMAL(0),
+        ASSESSMENT(1);
+        
+        private final int value;
+
+        private CourseType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,20 +108,21 @@ public class PersistentCourse implements Serializable {
     private Boolean withChildren;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "parentID", nullable = false)
+    @Column(name = "parentID", nullable = false) //0 means no parent.
     private int parentID;
 //    @Basic(optional = false)
 //    @NotNull
 //    @Column(name = "notVisible", nullable = false)
-//    private short notVisible; //not used deprecated. T
+//    private short notVisible; //not used deprecated. 
+
     @Basic(optional = false)
+    @NotNull
     //update tblcourse set sequenceNr=0 where sequenceNr is null
     //alter table tblcourse alter column sequenceNr set DEFAULT '0';
     //
 //UPDATE tblcourse as c INNER JOIN tblcoursesequence as s on (c.courseID=s.courseID
 //and c.schoolID=s.schoolID and c.parentID=s.parent and c.dwoProfileID=s.profileID)
 //SET c.sequencenr = s.sequencenr    
-    @NotNull
     @Column(name = "sequencenr", nullable = false)
     private Long sequenceNr;
     @Size(max = 250)
@@ -98,10 +130,12 @@ public class PersistentCourse implements Serializable {
     private String treePath;
     @Basic(optional = false)
     @Column(name = "lastChangeTimeStamp", nullable = true)
-//    @Temporal(TemporalType.DATE)
-    private Long  lastChangeTimeStamp;
-    
+    private Long lastChangeTimeStamp;
 
+//    For future use in case of optimistic locking.    
+//    @Version
+//    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+//    private long version = 0L;
     public PersistentCourse() {
     }
 
@@ -117,7 +151,6 @@ public class PersistentCourse implements Serializable {
 //        this.parentID = parentID;
 //        this.notVisible = notVisible;
 //    }
-
     public Long getCourseID() {
         return courseID;
     }
@@ -206,6 +239,7 @@ public class PersistentCourse implements Serializable {
 //        this.notVisible = notVisible;
 //    }
 //
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -281,8 +315,15 @@ public class PersistentCourse implements Serializable {
 
     private void buildDomCourse(DomCourse course) {
         course.setId(MySQLPersistenceId.createPersistentId(this));
-        course.setSchoolId(MySQLPersistenceId.createPersistenceId(this.schoolID, PersistenceClassType.PersistentSchool));
-        course.setParentID(MySQLPersistenceId.createPersistenceId(this.parentID, PersistenceClassType.PersistentCourse));        
+        if (this.schoolID != null) {
+            course.setSchoolId(MySQLPersistenceId.createPersistenceId(this.schoolID, PersistenceClassType.PersistentSchool));
+        }
+        //note that parent 0 means there is no parent!
+        if (this.parentID != 0) {
+            course.setParentID(MySQLPersistenceId.createPersistenceId(this.parentID, PersistenceClassType.PersistentCourse));
+        } else {
+            course.setParentID(null);
+        }
         course.setSequenceNr(sequenceNr);
         course.setTreeIndex(treePath);
         course.setWithChildren(withChildren);
@@ -297,13 +338,12 @@ public class PersistentCourse implements Serializable {
         buildDomCourseFull(course);
         return course;
     }
-    
+
     private void buildDomCourseFull(DomCourseFull course) {
         buildDomCourse(course);
         course.setDwoProfileId(MySQLPersistenceId.createPersistenceId(this.dwoProfileID, PersistenceClassType.PersistentDwoProfile));
         course.setDescription(description);
         course.setExport(export);
     }
-
 
 }

@@ -22,7 +22,20 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 /**
- *
+ * JPA/EclipseLink entity for the ClassCourses.
+ * <p>
+ * ClassCourses. Each classCourse links a class to a tree or sub tree in the 
+ * Courses data set.
+ * <p>
+ * &lt; courseId, classId, type, notBefore, notAfter &gt;
+ * <p>
+ * <b>classCourseId</b> : Unique, non-negative and not null<br>
+ * <b>courseId</b> : Unique, non-negative and not null.<br>
+ * <b>classId</b> : Unique, non-negative and not null.<br>
+ * <b>type</b> : Declares under which conditions a school may access it.<br>
+ * <b>notBefore</b> : The referenced course module tree is not visible before notBefore. <br>
+ * <b>notAfter</b> : The referenced course module tree is not visible after notAfter.<br>
+ * <p>
  * @author G.A.J. van der Plas
  */
 @Entity

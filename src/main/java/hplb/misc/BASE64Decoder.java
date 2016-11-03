@@ -17,6 +17,7 @@ import java.io.*;
  *
  * @author Anders Kristensen
  */
+@Deprecated //java has a built-in method since Java 8.
 public class BASE64Decoder extends CharacterDecoder {
     // ASCII values: '+'=43, '/'= 47, 0-9=48-57, A-Z=65-90, a-z=97-122
     // BASE64 values: A-Z=0-25, a-z=26-51; 0-9=52-61; '+'=62, '/'=63

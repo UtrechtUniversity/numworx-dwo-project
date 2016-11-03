@@ -18,7 +18,10 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * 
+ * 
+ * 
+ * 
  * @author G.A.J. van der Plas
  */
 @Entity
