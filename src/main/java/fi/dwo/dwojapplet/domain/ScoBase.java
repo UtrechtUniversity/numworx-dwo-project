@@ -299,7 +299,7 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
         Course c = getCourse();
         if (c != null) {
             ClassCourse link = c.link;
-            if (link != null && link.getType() == ClassCourse.ASSESMENT) {
+            if (link != null && link.getType() == ClassCourse.ASSESSMENT) {
                 return CREDIT;
             }
         }

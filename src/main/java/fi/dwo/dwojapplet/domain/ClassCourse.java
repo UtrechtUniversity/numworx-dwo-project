@@ -9,7 +9,7 @@ public class ClassCourse {
     private static final Logger LOG = Logger.getLogger(ClassCourse.class.getName());
 
     public static final int NORMAL = 0;
-    public static final int ASSESMENT = 1;
+    public static final int ASSESSMENT = 1;
     private int classCourseID;
     private int classID;
     private int courseID;
