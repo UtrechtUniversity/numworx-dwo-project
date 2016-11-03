@@ -589,7 +589,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				LayoutPanel stepPanelNew = maakNieuwStapPanel();
 				editor = addNewEditor(stepPanelNew);
 				contentPanel.setWidgetTopHeight(stepPanelNew, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
-				stapOk = false;
+				setStapOk(false);
 			}
 		}
 		else
@@ -757,7 +757,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 	public void sluitRegelAf(String useranswer, boolean show, boolean setState)
 	{
-		stapOk = false;
+		setStapOk(false);
 		nagekeken = false;
 		correct = Boolean.FALSE;//moet correct hier niet null zijn?
 		contentPanel.remove(feedbackPanel);
@@ -850,7 +850,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 		if (correct != Boolean.TRUE || isToets())
 		{
-			if (stapOk || isToets() || substitutieVak)
+			if (isStapOk() || isToets() || substitutieVak)
 			{	
 				String userAnswer = "";
 				if (editor == null)
@@ -875,7 +875,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	 * 
 	 * @return
 	 */
-	private boolean isToets() 
+	boolean isToets() 
 	{
 		return mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS;
 	}
@@ -977,7 +977,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 			if(stapNr > 0)
 				stapNr--;
-			stapOk = false;
+			setStapOk(false);
 			
 			if(stapNr == 0 && hasStartString)
 				terugButton.getElement().getStyle().setVisibility(Visibility.HIDDEN);
@@ -990,7 +990,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			else
 			{
 				hasFeedback = false;
-				stapOk = true;
+				setStapOk(true);
 				if(bordjesMethode)
 					viewers.get(viewers.size() - 1).setSelectable(true);
 			}
@@ -998,7 +998,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		else 
 		{
 			haalPijlVakWeg();
-			stapOk = true;
+			setStapOk(true);
 		}
 	}
 
@@ -1683,8 +1683,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if ((editor != null && isToets())// && !editor.toString().isEmpty()) // ook berekenen als editor leeg!
 			|| editor == null) // als editor null dan wordt in getState() geen kijkNa() gedaan en wordt correct ten onrechte false
 		{
-			// bepaal score en correct
-			bepaalScoreEnCorrect();
+			if (isToets() && (editor != null && editor.hasFeedback()))
+			{
+				bepaalVoortgangsScoreEnCorrect();
+			}
+			else
+			{
+				bepaalScoreEnCorrect();
+			}
 		}
 		
 		stapNr = this.stapNr;
@@ -2000,7 +2006,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 						fv.showResult(FormuleViewer.CORRECT);
 						setAndAddFeedback(Text.constants.feedbackTekst04());
 						//"De vergelijking is correct opgelost."
-						stapOk = false;
+						setStapOk(false);
 					}
 					else if (editor != null)//doel: laatste antwoord nogmaals nakijken, om juiste feedback te genereren.
 					{
@@ -2115,7 +2121,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 			else
 			{	
-				bepaalScoreEnCorrect();
+				if (editor != null && editor.hasFeedback())
+				{
+					bepaalVoortgangsScoreEnCorrect();
+				}
+				else
+				{
+					bepaalScoreEnCorrect();
+				}
 				
 				for (int i = 0; i < viewers.size(); i++)
 				{
@@ -2162,7 +2175,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	/**
 	 * Bepaal score en correct zonder iets aan het beeld te doen.
 	 */
-	private void bepaalScoreEnCorrect() {
+	private void bepaalScoreEnCorrect() 
+	{
 		
 		final String formule;
 		final String formuleMin1;
@@ -2212,6 +2226,74 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				}
 			});
 		}
+	}
+	
+	/**
+	 * Bepaal de voortgangsscore van FormuleEditorWithSteps,
+	 * d.w.z. de hoogst behaalde score over alle stappen.
+	 * Wordt gebruikt voor een zelftoets of eindtoets met
+	 * feedback (deelscores).
+	 */
+	private void bepaalVoortgangsScoreEnCorrect()
+	{
+		try
+		{
+			bepaalVoortgangsScoreEnCorrect0();
+		}
+		catch (RestartException r)
+		{
+			r.restart(new Runnable()
+			{
+				public void run()
+				{
+					try
+					{
+						bepaalVoortgangsScoreEnCorrect0();
+					}
+					catch (RestartException e)
+					{
+						e.restart(this);
+					}
+				}
+			});
+		}
+	}
+	
+	/**
+	 * Bepaal de voortgangsscore van FormuleEditorWithSteps,
+	 * d.w.z. de hoogst behaalde score over alle stappen.
+	 * Wordt gebruikt voor een zelftoets of eindtoets met
+	 * feedback (deelscores).
+	 * @throws RestartException 
+	 */
+	private void bepaalVoortgangsScoreEnCorrect0() throws RestartException 
+	{
+		int start = 0;
+		int voortgangsScore = 0;
+		
+		if (hasStartString)
+			start = 1;
+		
+		for (int i = start; i < viewers.size(); i++)
+		{
+			FormuleEditorWithAnswer editor = editorInstance();
+			editor.zetMode(mode); // mode eindtoets zorgt ervoor dat er geen vinkjes worden getoond
+			editor.insert(viewers.get(i).toString());
+			editor.bepaalScoreEnCorrect();
+
+			voortgangsScore = Math.max(voortgangsScore, editor.getScore());
+		}
+		
+//		if (stapNr > viewers.size() && editor != null)
+		if (stapNr + start > viewers.size() && editor != null)
+		{
+			// verwerk het antwoord in de editor 
+			editor.bepaalScoreEnCorrect();
+			voortgangsScore = Math.max(voortgangsScore, editor.getScore());
+			this.correct = editor.isCorrect();
+		}
+		
+		this.score = voortgangsScore;
 	}
 	
 	/**
@@ -2414,13 +2496,17 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	}
 	
 	/**
-	 * Kijk een toets na.
+	 * Kijk een toets na. Houdt rekening met voortgangsscore als er
+	 * feedback is met deelscores.
+	 * 
 	 * @param setState
 	 * @param show altijd <b>true</b>
 	 */
 	public void kijkToetsNa(boolean setState, boolean show)
 	{
 		int start = 0;
+		int voortgangsScore = 0;
+
 		if (hasStartString)
 			start = 1;
 		
@@ -2479,8 +2565,15 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				checkStap(i - 1, FormuleParser.parseVergelijking("$f" + viewersInhouden[i-1] + "@"), FormuleParser.parseVergelijking("$f" + viewersInhouden[i] + "@"));
 			}
 			
-			editor.kijkNa(setState);
+			editor.kijkNa(setState); // dit evalueert voor een toets met feedback per stap met het eindantwoord.
+			
+			if (editor.hasFeedback())
+				voortgangsScore = Math.max(voortgangsScore,score);
 		}
+		
+		if (editor.hasFeedback())
+			score = voortgangsScore;
+
 		if (editor != null)
 			zetGoedFoutEditor(editor.getGoedHalfFout());
 
@@ -2541,21 +2634,27 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		//stapOk juiste waarde geven.
 		if (goedHalfFout == AntwoordVakChecker.GOED)
 		{	
-			stapOk = false;
+			setStapOk(false);
 			if (!pijl)
-				stapOk = true;
+				setStapOk(true);
 			//correct = true; -- dit gebeurt in lastStep nog (en anders gebeurt lastStep niet!)
 			//score = editor.getScore();
 		}
 		else if(goedHalfFout == AntwoordVakChecker.DOOR)
 		{	
-			stapOk = true;
+			setStapOk(true);
+			//score = editor.getScore();
+			
+		}
+		else if(goedHalfFout == AntwoordVakChecker.HALF)
+		{	
+			setStapOk(true);
 			//score = editor.getScore();
 			
 		}
 		else 
 		{	
-			stapOk = false;
+			setStapOk(false);
 			nagekeken = true;
 			//score = editor.getScore();
 		}
@@ -2568,7 +2667,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		}
 		
 		if (bordjesMethode)
-		{	if (stapOk || goedHalfFout == AntwoordVakChecker.GOED)
+		{	if (isStapOk() || goedHalfFout == AntwoordVakChecker.GOED)
 			{	
 				vervangEditorDoorViewer("$f" + editor.toString() + "@", show, setState);
 			}
@@ -2754,9 +2853,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		nagekeken = false;
 		if (stapNr == 0 && editor != null && editor.toString().equals("")) 
 			return;
-		if (!stapOk && editor != null && !editor.toString().equals(""))
+		if (!isStapOk() && editor != null && !editor.toString().equals(""))
 			return;
-		else if(!stapOk && latest_answer_viewer.getResult() == FormuleViewer.CORRECT)
+		else if(!isStapOk() && latest_answer_viewer.getResult() == FormuleViewer.CORRECT)
 		{
 			return;
 			//Deze return zorgt dat je niet nog een stap kunt doen nadat je in de lineaire strategie-versie de juiste oplossing hebt gevonden.
@@ -2776,13 +2875,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				{	contentPanel.remove(pijlVak);
 					pijlVakken.remove(pijlVakken.size() - 1);
 				}
-				stapOk = false;
+				setStapOk(false);
 			}
 			//Er staat al een pijl naar de volgende regel en daar staat ook al een vak klaar. De pijl en het bijbehorende vak moeten worden veranderd.
 			//Dit gebeurt bijvoorbeeld als er een gewone pijl staat, die wordt veranderd in een bewerkingspijl (plus, bijvoorbeeld).
 			else if (stepPanels.size() > pijlVakken.size() 
 				&& (stapNr < stepPanels.size() - 1 || editor != null && editor.toString().equals("")) 
-				&& pijlVakken.size() > 0 && !stapOk)//ik denk dat pijlVakken.size() hier weer weg kan.
+				&& pijlVakken.size() > 0 && !isStapOk())//ik denk dat pijlVakken.size() hier weer weg kan.
 			{
 				LayoutPanel current = stepPanels.get(stepPanels.size() - 1);
 				stepPanelY -= stapH + latest_answer_viewer.getHeight();
@@ -3031,7 +3130,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 			//if (!verg.toString().equals(vergNieuw.toString()) || linStrategieVersie)
 			requestFocus();
-			stapOk = false;	
+			setStapOk(false);	
 			
 		}
 		else //if(linStrategieVersie || bordjesMethode)
@@ -3077,7 +3176,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					setAndAddFeedback(Text.constants.feedbackTekst04());
 				}
 				//"De vergelijking is correct opgelost."
-				stapOk = false;
+				setStapOk(false);
 				
 				if (!isToets() && linStrategieVersie)
 				{
@@ -3093,17 +3192,17 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			else if (vergNieuw != null && linStrategieVersie)
 			{	
 				fv.showResult(FormuleViewer.NONE);
-				stapOk = true;
+				setStapOk(true);
 			}
 			else if (vergNieuw != null && !substitutieVak)
 			{
 				fv.showResult(FormuleViewer.ALMOSTCORRECT);
-				stapOk = true;
+				setStapOk(true);
 			}
 			else
 			{
 				fv.showResult(FormuleViewer.NONE);
-				stapOk = false;
+				setStapOk(false);
 			}
 
 			Panel p = fv.getAsPanel();
@@ -3118,12 +3217,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				stepPanel.remove(p);
 				viewers.remove(fv);
 				addStep("$f" + fv.toString() + "@", !isToets(), false); 
-				stapOk = false;
+				setStapOk(false);
 			}
 			else if (!bordjesMethode && !linStrategieVersie)
 			{
 				addStep("$f" + fv.toString() + "@", !isToets(), false);
-				stapOk = false;
+				setStapOk(false);
 			}
 			scrollToBottom();
 		}
@@ -3426,5 +3525,24 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	public void setScore(int s)
 	{
 		this.score = s;
+	}
+	
+	/**
+	 * Methode om te checken of er sprake is van de bordjesmethode in FormuleEditorWithAnswer. 
+	 * @return
+	 */
+	public boolean isBordjesMethode()
+	{
+		return bordjesMethode;
+	}
+
+	public boolean isStapOk()
+	{
+		return stapOk;
+	}
+
+	public void setStapOk(boolean stapOk)
+	{
+		this.stapOk = stapOk;
 	}
 }
