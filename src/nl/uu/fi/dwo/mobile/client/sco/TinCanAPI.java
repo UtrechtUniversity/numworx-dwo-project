@@ -147,10 +147,20 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 // Dit kan in GWT zelf?	
 	private static native void Initialize0(TinCanAPI api) /*-{
 		( function(api) {
-			$wnd.xapi = function (msg) { 
-				api.@nl.uu.fi.dwo.mobile.client.sco.TinCanAPI::onMessage(Lcom/google/gwt/core/client/JavaScriptObject;)(msg)
-			} 	
-			$wnd.sendModuleDataRequest(); 
+			
+			function waitForXapi() {
+				if ( $wnd.sendModuleDataRequest ) 
+			    {			
+					$wnd.xapi = function (msg) { 
+						api.@nl.uu.fi.dwo.mobile.client.sco.TinCanAPI::onMessage(Lcom/google/gwt/core/client/JavaScriptObject;)(msg)
+					}
+					$wnd.sendModuleDataRequest();
+			    } else {
+			    	console.log("wait for sendModuleDataRequest")
+			    	setTimeout(waitForXapi, 100)
+			    }
+			}			
+			setTimeout(waitForXapi, 10)
 		})(api)
 	}-*/;
 	
@@ -163,7 +173,9 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 		}-*/;
 
 		native String getObjectId() /*-{
-			return this.object.id;
+			if(this.object)
+				return this.object.id;
+			return null
 		}-*/;
 		
 		native String getVerb() /*-{
