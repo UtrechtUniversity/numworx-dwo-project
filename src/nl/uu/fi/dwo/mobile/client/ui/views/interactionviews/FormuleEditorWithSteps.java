@@ -2531,7 +2531,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			stepPanels.get(i).remove(viewers.get(i).getAsPanel());
 			if (i > start)
 			{	
-				stepPanelY -= stapH + viewers.get(i).getHeight();
+				stepPanelY -= stapH + viewers.get(i - 1).getHeight();
 				stepPanels.remove(i);
 				haalPijlVakWeg();
 			}
