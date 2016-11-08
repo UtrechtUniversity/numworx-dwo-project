@@ -29,8 +29,7 @@ public class ObjectListImpl implements ObjectList {
 
 	@Override
 	public double getDouble(int key) {
-		ObjectMapImpl.toDouble(get(key));
-		return 0;
+		return ObjectMapImpl.toDouble(get(key));
 	}
 
 	@Override
