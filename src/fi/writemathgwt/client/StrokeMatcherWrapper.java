@@ -1,6 +1,7 @@
 package fi.writemathgwt.client;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import fi.beans.lineairealgebra.Point2d;
 import fi.writemath.engine.core.Stroke;
@@ -10,7 +11,8 @@ import fi.writemath.engine.strokematching.results.MatchResult;
 import fi.writemath.engine.strokematching.strokesampleset.StrokeSampleSetFactory;
 
 public class StrokeMatcherWrapper {
-//	DoublePoint doublePoint;
+//	private static Logger logger = Logger.getLogger("StrokeMatcherWrapper");
+
 	private StrokeMatcher strokeMatcher;
 	
 	public StrokeMatcherWrapper(int tekenSet) {
@@ -38,6 +40,15 @@ public class StrokeMatcherWrapper {
 		
 		// apply StrokeMatcher
 		strokeMatcher.matchStroke(inputStroke);
+		
+		/* TEMP TEST PART START */
+//		logger.info( "*********** NEW RESULTS **********");
+//		for (int i=0; i<4; i++) {
+//			MatchResult matchResult = strokeMatcher.getResult(i);
+//			logger.info( "Result "+ i + " = " + matchResult);
+//		}
+		/* TEMP TEST PART START */
+
 		return getTeken1();
 	}
 	

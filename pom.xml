@@ -30,7 +30,7 @@
   	<dependency>
 		<groupId>nl.uu.fi.dwo.writemath</groupId>
 		<artifactId>engine</artifactId>
-		<version>1.10</version>
+		<version>1.10.2</version>
   	</dependency>  	
 	<dependency>
 		<groupId>fi.beans</groupId>
@@ -55,5 +55,5 @@
   	<sourceDirectory>src</sourceDirectory>
   </build>
   <description>Recognize handwritten mathematics.</description>
-  <version>1.1.0</version>
+  <version>1.1.2</version>
 </project>

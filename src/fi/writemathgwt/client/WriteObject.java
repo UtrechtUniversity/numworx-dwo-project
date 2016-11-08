@@ -1,6 +1,8 @@
 package fi.writemathgwt.client;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -9,14 +11,16 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 
-public class WriteObject 
-{
+public class WriteObject {
+//	private static Logger logger = Logger.getLogger("WriteObject");
+
 	private final static boolean cNewStrokmatcher = true;
 	static int newTekenSet = 0;
 	public static HashMap<String, int[]>  samples;
  	
 	//OK
 	public static void initSamples(int tekenSet) {
+//		logger.info("tekenSet = "+tekenSet);		
 		newTekenSet = tekenSet;
 		samples = Samples20.init(tekenSet);
 	}
