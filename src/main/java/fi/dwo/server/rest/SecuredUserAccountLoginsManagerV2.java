@@ -16,6 +16,7 @@ import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -88,16 +89,10 @@ public class SecuredUserAccountLoginsManagerV2 {
                 if (result0[4] != null) {
                     Long j = (Long) result0[4];
                     try {
-                        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(j.longValue());
-                        if (schoolClass != null) {
-                            curSac.setSchoolClass(schoolClass.buildDomSchoolClass());
+                        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(j);
+                        curSac.setSchoolClass(buildDomSchoolClass(schoolClass));
 //                        sac.setSchoolClassId(MySQLPersistenceId.createPersistenceId(j.longValue(),PersistenceClassType.PersistentSchoolClass));
 //                        sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", j.longValue()).getSingleResult());
-                        } else {
-                            curSac.setSchoolClass(null);
-//                    sac.setSchoolClassId(null);
-//                    sac.setSchoolClassName(null);
-                        }
                     } catch (NoResultException e) {
                         curSac.setSchoolClass(null);
                         //occurs when hasrole refers to out of sync data
@@ -106,7 +101,7 @@ public class SecuredUserAccountLoginsManagerV2 {
                     curSac.setSchoolClass(null);
                 };
                 Long j = (Long) result0[5];
-                curSac.setHasRole(HasRoleManager.findEntity(new PersistentHasRolePK(j.longValue(), (Long) result0[6])).buildDomHasRole());
+                curSac.setHasRole(HasRoleManager.findEntity(new PersistentHasRolePK(j, (Long) result0[6])).buildDomHasRole());
 
             }
         } catch (Exception e) {
@@ -170,7 +165,7 @@ public class SecuredUserAccountLoginsManagerV2 {
                 if (oList[4] != null) {
                     Long j = (Long) oList[4];
                     try {
-                        sac.setSchoolClass(SchoolClassManager.findEntity(j.longValue()).buildDomSchoolClass());
+                        sac.setSchoolClass(buildDomSchoolClass(SchoolClassManager.findEntity(j)));
 //                        sac.setSchoolClassId(MySQLPersistenceId.createPersistenceId(j.longValue(),PersistenceClassType.PersistentSchoolClass));
 //                        sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", j.longValue()).getSingleResult());
                     } catch (NoResultException e) {
@@ -206,6 +201,17 @@ public class SecuredUserAccountLoginsManagerV2 {
     }
 
     /**
+     * protect against NPE
+     * @param findEntity PersistentSchoolClass or null
+     * @return DomSchoolClass
+     */
+    private DomSchoolClass buildDomSchoolClass(PersistentSchoolClass findEntity) {
+		if(findEntity != null)
+			return findEntity.buildDomSchoolClass();
+		return null;
+	}
+
+	/**
      * Updates the User data of the current user and returns a copy of the
      * updated data.
      *
