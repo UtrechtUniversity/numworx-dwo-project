@@ -2,13 +2,9 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkin
 
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Visibility;
-
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -19,7 +15,6 @@ import fi.wiskopdr.AntwoordStelselVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.RestartException;
-import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
@@ -298,9 +293,9 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			eindOplossingExactGevondenArrays = new boolean[list.size()][][];
 			for(int i = 0; i < list.size(); i++)
 			{
-				// ObjectList list2 = list.getObjectList(i);
-				List listx = JSONUtilities.toArrayList(list.get(i));
-				ObjectList list2 = JSONUtilities.wrapList(listx);
+				ObjectList list2 = list.getObjectList(i);
+				//List listx = JSONUtilities.toArrayList(list.get(i));
+				//ObjectList list2 = JSONUtilities.wrapList(listx);
 				try{
 					eindOplossingExactGevondenArrays[i] = new boolean[list2.size()][];
 					for(int j = 0; j < list2.size(); j++)
@@ -317,9 +312,9 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			eindOplossingGevondenArrays = new boolean[list.size()][][];
 			for(int i = 0; i < list.size(); i++)
 			{
-				//ObjectList list2 = list.getObjectList(i);
-				List listx = JSONUtilities.toArrayList(list.get(i));
-				ObjectList list2 = JSONUtilities.wrapList(listx);
+				ObjectList list2 = list.getObjectList(i);
+				//List listx = JSONUtilities.toArrayList(list.get(i));
+				//ObjectList list2 = JSONUtilities.wrapList(listx);
 				
 				try{
 					eindOplossingGevondenArrays[i] = new boolean[list2.size()][];
@@ -337,9 +332,9 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			eindOplossingStelselGevondenArrays = new boolean[list.size()][][];
 			for(int i = 0; i < list.size(); i++)
 			{
-				//ObjectList list2 = list.getObjectList(i);
-				List listx = JSONUtilities.toArrayList(list.get(i));
-				ObjectList list2 = JSONUtilities.wrapList(listx);
+				ObjectList list2 = list.getObjectList(i);
+				//List listx = JSONUtilities.toArrayList(list.get(i));
+				//ObjectList list2 = JSONUtilities.wrapList(listx);
 				
 				try{
 					eindOplossingStelselGevondenArrays[i] = new boolean[list2.size()][];
