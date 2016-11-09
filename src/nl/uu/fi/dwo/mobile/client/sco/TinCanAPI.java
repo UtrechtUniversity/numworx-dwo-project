@@ -156,11 +156,11 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 					}
 					$wnd.sendModuleDataRequest();
 			    } else {
-			    	LOG.info("wait for sendModuleDataRequest")
+			    	console.log("wait for sendModuleDataRequest")
 			    	setTimeout(waitForXapi, 100)
 			    }
 			}			
-			setTimeout(waitForXapi, 10)
+			setTimeout(waitForXapi, 20)
 		})(api)
 	}-*/;
 	
