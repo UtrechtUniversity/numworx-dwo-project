@@ -35,7 +35,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext {
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
-		DWOplayer.api = clientFactory.setupAPI(DWOplayer.profiledata);
+		DWOplayer.api = clientFactory.setupAPI();
 		view = clientFactory.getEntryView();
 		defaultContext = view.getAnchorContext();
 		view.setApi(DWOplayer.api);

@@ -203,15 +203,15 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
 		count = 1;
 		AsyncCallback<List<Map<String, Object>>> callback = GETCOURSES_CALLBACK;
-		if(profiledata == null)
-			api = clientfactory.setupAPI(profiledata);
+		if(!withUser())
+			api = clientfactory.setupAPI();
 		else
 		{
 //			String userID = ((String) profiledata.get("userID"));
 //			String username = (String) profiledata.get("username");
 //			String fullname = profiledata.get("middlename") + " " + profiledata.get("lastname") + ", " + profiledata.get("firstname");
 //			fullname = fullname.trim();
-			api = clientfactory.setupAPI(profiledata);
+			api = clientfactory.setupAPI();
 			//api = new SCORM_MC2mAccess(userID, username, fullname);
 			if(!"".equals(profiledata.get("classID")))
 			{

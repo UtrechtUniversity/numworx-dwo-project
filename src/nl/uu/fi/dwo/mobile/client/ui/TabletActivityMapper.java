@@ -90,14 +90,14 @@ public class TabletActivityMapper implements ActivityMapper
 			return new LoginActivity(clientFactory, ((LoginPlace) place).getPlace());
 		if (place instanceof ReloginPlace)
 		{
-			if(DWOplayer.profiledata != null)
+			if(DWOplayer.withUser())
 				return new ReloginActivity(clientFactory, ((ReloginPlace) place).getPlace());
 			else
 				return new LoginActivity(clientFactory, ((ReloginPlace) place).getPlace());
 		}
 		if (place instanceof ProfilePlace)
 		{
-			if(DWOplayer.profiledata == null)
+			if(!DWOplayer.withUser())
 				return new LoginActivity(clientFactory);
 			return new ProfileActivity(clientFactory);
 		}

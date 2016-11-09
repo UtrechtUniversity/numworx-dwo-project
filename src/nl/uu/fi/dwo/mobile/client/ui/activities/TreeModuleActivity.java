@@ -41,7 +41,7 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 		if(true)
 			view.setMenuWidget(clientFactory.getMenuWidget());
 		boolean select = true;
-		if(item.getType() == Type.MODULE && DWOplayer.profiledata != null) {
+		if(item.getType() == Type.MODULE && DWOplayer.withUser()) {
 			Object userID = DWOplayer.profiledata.get("userID");
 		if(userID != null) {	
 			Map<Object, Number> scoreMap;

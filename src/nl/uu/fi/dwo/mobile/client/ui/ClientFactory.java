@@ -48,7 +48,7 @@ public interface ClientFactory
 	@Deprecated
 	void setEntryView(ViewModuleView view);
 	
-	public SCORM_guest setupAPI(final Map<String, Object> profiledata);
+	public SCORM_guest setupAPI();
 
 	void logout();
 	

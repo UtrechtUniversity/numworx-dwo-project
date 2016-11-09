@@ -129,17 +129,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>nl.uu.fi.dwo.mobile</groupId>
-			<artifactId>formule</artifactId>
-			<version>0.0.1</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>WiskOpdrGWT</artifactId>
-					<groupId>fi.wiskopdrgwt</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>nl.uu.fi.dwo.keyboard</groupId>
 			<artifactId>KeyboardGWT</artifactId>
 			<version>0.0.1</version>

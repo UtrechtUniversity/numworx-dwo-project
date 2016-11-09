@@ -60,7 +60,7 @@ public class SelectModuleActivity extends MGWTAbstractActivity
 		}
 		else
 		{
-			if(item.getType() == Type.MODULE && DWOplayer.profiledata != null) {
+			if(item.getType() == Type.MODULE && DWOplayer.withUser()) {
 				Object userID = DWOplayer.profiledata.get("userID");
 			if(userID != null && item.getScoreMap() == null) {	
 				Object courseID = item.getID();

@@ -213,6 +213,15 @@ public class DWOplayer implements EntryPoint
 	@Deprecated
 	public static Map<String, Object> profiledata = null;
 	
+	public static boolean withUser() {
+		return instance.withUserImpl();
+	}
+
+	protected boolean withUserImpl() {
+		return profiledata != null;
+	}
+	
+	
 	private static Deferred<DomDwoProfile> deferredProfile;
 	public static Promise<DomDwoProfile> dwoProfile; // NEVER NULL
 	public static ClientFactory clientfactory;
@@ -324,11 +333,11 @@ public class DWOplayer implements EntryPoint
 		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
 		count = 1;
 		AsyncCallback<List<Map<String, Object>>> callback = GETCOURSES_CALLBACK;
-		if(profiledata == null)
-			/*clientfactory.getEntryView().setApi()*/api = clientfactory.setupAPI(null);
+		if(!DWOplayer.withUser())
+			/*clientfactory.getEntryView().setApi()*/api = clientfactory.setupAPI();
 		else
 		{	
-			api = clientfactory.setupAPI(profiledata);
+			api = clientfactory.setupAPI();
 			if(!"".equals(profiledata.get("classID")))
 			{
 				boolean iconizer = Boolean.TRUE.equals(profiledata.get("iconizer"));

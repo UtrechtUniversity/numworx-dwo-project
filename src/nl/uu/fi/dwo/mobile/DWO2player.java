@@ -201,7 +201,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			public void logout() {
 				super.logout();
 				menuWidget = null;
-				if(profiledata != null)
+				if(DWOplayer.withUser())
 				{
 					getRPCHandler().logout();
 				}

@@ -71,7 +71,7 @@ public class DummyClientFactory implements ClientFactory {
 	}
 
 	@Override
-	public SCORM_guest setupAPI(Map<String, Object> profiledata) {
+	public SCORM_guest setupAPI() {
 		return DWOplayer.api;
 	}
 

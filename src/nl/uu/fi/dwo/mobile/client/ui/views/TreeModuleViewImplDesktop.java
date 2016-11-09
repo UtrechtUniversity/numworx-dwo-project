@@ -421,7 +421,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 		schoolModel = new ArrayList(model.size());
 		standardModel = new ArrayList(model.size());
 		Object schoolName = "school";
-		if(DWOplayer.profiledata != null )
+		if(DWOplayer.withUser() )
 			schoolName = DWOplayer.profiledata.get("schoolName");
 		SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
 		schoolMap = new TreeItem(TEMPLATE.content(SCHOOL_MODULES, "fa-folder"));

@@ -143,6 +143,9 @@ public class ClientFactoryImpl implements ClientFactory
 		return api;
 	}
 
+	public SCORM_guest setupAPI() {
+		return setupAPI(DWOplayer.profiledata);
+	}
 	
 	@Override
 	public IsWidget getMenuWidget() {

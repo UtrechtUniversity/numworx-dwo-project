@@ -99,7 +99,7 @@ public class LoginActivity extends MGWTAbstractActivity
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
-		boolean logout = DWOplayer.profiledata != null;
+		boolean logout = DWOplayer.withUser();
 		clientFactory.logout();
 		
 		SelectModuleItemHolder.destroy();
