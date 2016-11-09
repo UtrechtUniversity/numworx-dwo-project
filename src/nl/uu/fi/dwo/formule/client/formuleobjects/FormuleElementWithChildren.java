@@ -5,8 +5,6 @@ import java.util.Vector;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 import fi.wiskopdr.Letter;
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 /**

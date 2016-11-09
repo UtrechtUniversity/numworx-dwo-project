@@ -1,16 +1,6 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.util.Vector;
-
-
-
-
-
-
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;

@@ -17,8 +17,6 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 
-import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
-
 /**
  * 
  * @author Evertson Croes

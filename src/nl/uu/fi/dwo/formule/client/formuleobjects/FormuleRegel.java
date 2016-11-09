@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects;
 
-import java.awt.event.KeyEvent;
 import java.util.Vector;
 import java.util.logging.Logger;
 
