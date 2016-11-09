@@ -173,6 +173,12 @@ public interface DbAccessIF extends DbAccessLogin {
             XmlRpcException, SQLException;
 
     /**
+     * Special getTable for sorted courses
+     */
+    public Vector getTableJS(String tableName, Hashtable wheredef, String orderBy) throws IOException,
+    XmlRpcException, SQLException;
+
+    /**
      * Returns specified records of the specified table with the specified
      * restrictions ordered by the specified column.
      *
@@ -646,4 +652,18 @@ public interface DbAccessIF extends DbAccessLogin {
     public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
     public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException;
+
+	public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
+	SQLException;
+
+	//Alleen sorteren binnen één parent.	
+	public Vector getCoursesForClassJS(int classID) throws IOException,
+		XmlRpcException, SQLException;
+	
+	public Vector getEditableCoursesJS(int schoolID) throws IOException,
+		XmlRpcException, SQLException;
+	
+	public Vector getEditableCoursesAdminJS() throws IOException,
+		XmlRpcException, SQLException;
+
 }
