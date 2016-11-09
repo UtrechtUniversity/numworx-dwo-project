@@ -5,7 +5,6 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 import com.google.gwt.canvas.dom.client.Context2d.TextAlign;
-import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.TextMetrics;
 
@@ -28,6 +27,7 @@ public class FormuleTeken extends FormuleElement
 	private boolean selected = false;
 	private boolean functieTeken = false;
 	private static boolean maalteken = false;
+	private static boolean diffOperatoren = false;
 
 	public FormuleTeken(FormuleElement holder, String tktk)
 	{
@@ -128,6 +128,15 @@ public class FormuleTeken extends FormuleElement
 		maalteken = b;
 	}
 	
+	public static void zetDiffOperatoren(boolean b)
+	{
+		diffOperatoren = b;
+	}
+	
+	public static boolean isDiffOperator()
+	{
+		return diffOperatoren;
+	}
 
 	public int getCorrItalic()
 	{

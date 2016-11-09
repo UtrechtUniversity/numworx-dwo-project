@@ -1,15 +1,11 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
-import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
-
 import fi.wiskopdr.Letter;
-import fi.wiskopdr.expressies.BasisExpressie;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
-import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
 public class DiffVak extends FormuleElementWithChildren
 

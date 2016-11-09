@@ -459,4 +459,12 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	public void stelsel() {
 		
 	}
+
+	@Override
+	public void tab() {
+	}
+
+	@Override
+	public void shiftTab() {
+	}
 }

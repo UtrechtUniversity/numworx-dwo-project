@@ -4,16 +4,18 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.user.client.Event;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 //import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 
 
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
-
-import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 /**
  * 
@@ -26,6 +28,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	final HashMap<String, Double> dif = new HashMap<String, Double>();
 	int x,y;
 	boolean soft;
+	Element capture;
 	
 	public FormuleEditorTouchHandler(FormuleHolder editor)
 	{
@@ -42,6 +45,13 @@ public class FormuleEditorTouchHandler implements TouchHandler
 		{
 			event.preventDefault();
 			event.stopPropagation();
+		} else {
+			EventTarget target = event.getNativeEvent().getEventTarget();
+			boolean when = Element.is(target) && (Element.as(target) == editor.getCanvas().getElement());
+			if(when) {
+				capture = getElement(event);
+				Event.setCapture(capture);
+			}
 		}
 		
 		try
@@ -107,7 +117,8 @@ public class FormuleEditorTouchHandler implements TouchHandler
 		{
 			event.preventDefault();
 			event.stopPropagation();
-		}	
+		}
+		release();
 		try
 		{
 			int x = event.getChangedTouches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
@@ -122,10 +133,22 @@ public class FormuleEditorTouchHandler implements TouchHandler
 		
 	}
 
+	private Element getElement(TouchEvent event) {
+		EventTarget target = event.getNativeEvent().getCurrentEventTarget();
+		return Element.as(target);
+	}
+
 	@Override
 	public void onTouchCanceled(TouchCancelEvent event)
 	{
-		
+		release();
+	}
+
+	private void release() {
+		if(capture != null)
+		{	Event.releaseCapture(capture);
+			capture = null;
+		}
 	}
 
 }

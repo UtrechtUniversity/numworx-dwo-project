@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects;
 
-import java.awt.event.KeyEvent;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -372,7 +371,11 @@ public class FormuleRegel extends FormuleElement
 		this.drawline(ctx, selectioncords[0], selectioncords[1], selectioncords[2], selectioncords[3]);
 		
 		if(children.size() == 0 && stippels)
+		{	String font = ctx.getFont();
+			ctx.setFont(fm.getFontStyle());
 			ctx.fillText("...", 0, getAsHoogte());
+			ctx.setFont(font);
+		}
 	}
 
 
@@ -972,7 +975,7 @@ public class FormuleRegel extends FormuleElement
 		cm3 = fe;//editor.getCurrentRegel().getElementAt(nr - 1);//this.getComponent(nr - 1);
 		//we already checked if fe is a formuleteken so we can cast it here
 		ft3 = (FormuleTeken) cm3;
-		if (ft3.geefChar() == 'e')
+		if (ft3.geefChar() == 'e'|| ft3.geefChar()=='d' && FormuleTeken.isDiffOperator())
 		{
 			ft3.zetFunctieTeken(true);
 		}
@@ -1270,21 +1273,34 @@ public class FormuleRegel extends FormuleElement
 
 	public String getSelectionString()
 	{
+//		String s = "";
+//		System.out.println("FormuleRegel getSelectionString selectionStart: " + this.selectionStart + " en currentPosition: " + this.currentPosition);
+//		if(this.selectionStart <= this.currentPosition)
+//		{	int start = this.selectionStart;
+//			if (start < 0)
+//			start = 0;
+//			for (int i = start; i <= this.currentPosition; i++)
+//				s += ((FormuleElement) this.children.get(i)).toString();
+//		}
+//		else
+//		{	int start = currentPosition + 1;
+//			for(int i = start; i <= this.selectionStart; i++)
+//				s += ((FormuleElement) this.children.get(i)).toString();
+//		}
 		String s = "";
-		
-		if(this.selectionStart <= this.currentPosition)
-		{	int start = this.selectionStart;
-			if (start < 0)
-			start = 0;
-			for (int i = start; i <= this.currentPosition; i++)
-				s += ((FormuleElement) this.children.get(i)).toString();
-		}
+		if(this.isSelected())
+			return this.toString();
 		else
-		{	int start = currentPosition + 1;
-			for(int i = start; i <= this.selectionStart; i++)
-				s += ((FormuleElement) this.children.get(i)).toString();
-		}
+			for(int i = 0; i < children.size(); i++)
+			{
+				FormuleElement fe = children.get(i);
+				if(fe instanceof FormuleElementWithChildren)
+					s += ((FormuleElementWithChildren) fe).getSelectionString();
+				else if(fe.isSelected())
+					s += fe.toString();
+			}
 		return s;
+		
 	}
 	
 	public int getSelectionStart()
@@ -1349,9 +1365,12 @@ public class FormuleRegel extends FormuleElement
 		int i;
 		for (i = this.currentPosition; i >= this.selectionStart; i--)
 		{
-			if (this.children.elementAt(i).isNumber() == false)
-				removeNonNumberChild();
-			this.children.remove(i);
+			if (!this.children.isEmpty())
+			{
+				if (this.children.elementAt(i).isNumber() == false)
+					removeNonNumberChild();
+				this.children.remove(i);
+			}
 		}
 		//clear selection
 		this.selectionStart = -1;

@@ -5,8 +5,6 @@ import java.util.Vector;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 import fi.wiskopdr.Letter;
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 /**
@@ -209,5 +207,25 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 				return regel.selection(selectionStartX - regel.x, selectionStartY - regel.y, selectionEndX - regel.x, selectionEndY - regel.y);
 		}
 		return null;
+	}
+	
+	public String getSelectionString()
+	{
+		String s = "";
+		if(this.isSelected())
+			return this.toString();
+		else
+		{	for(int i = 0; i < children.size(); i++)
+			{
+				FormuleElement fe = children.get(i);
+				if(fe instanceof FormuleElementWithChildren)
+				{
+					s += ((FormuleElementWithChildren) fe).getSelectionString();
+				}
+				else if(fe.isSelected())
+					s += fe.toString();
+			}
+		}
+		return s;
 	}
 }
