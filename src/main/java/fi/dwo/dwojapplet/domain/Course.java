@@ -48,7 +48,9 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     private boolean notVisible;
 
     public ClassCourse link; // optional backlink to classCourse, not unique!
-
+    public Integer sequencenr; // optional sequencenr
+    
+    
     public boolean parentChanged() {
         return newParent;
     }

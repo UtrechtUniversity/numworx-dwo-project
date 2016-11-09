@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
+@Deprecated
 class CourseSequenceMapper extends XmlRpcMapper {
 
     private static final String IDCOL = "coursesequenceID";

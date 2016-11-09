@@ -216,7 +216,7 @@ class CourseMapper extends XmlRpcMapper {
 // get all courses from a school
                 v = (Vector) cachemap.get(ht);
                 if (v == null) {
-                    v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
+                    v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
                     cachemap.put(ht, v);
                 }
 // v is all courses from school, filter parent = 0, fill cachemap with parent != 0
@@ -226,11 +226,11 @@ class CourseMapper extends XmlRpcMapper {
             } else {
 // not from cache, get with parent from database.
                 ht.put("parentID", parent);
-                v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
+                v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
             }
         } else // not in cache, no parent, use database
         {
-            v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
+            v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
         }
 
 //System.out.println("put " + v.size() + " for  " + ht);
@@ -315,6 +315,13 @@ class CourseMapper extends XmlRpcMapper {
         c.setDwoProfile(((Integer) data.get("dwoProfileID")).intValue());
         c.setNotVisible(EEN.equals(data.get("notVisible")));
         c.setNotVisible(c.isNotVisible() && !(DwoHelper.getCurrentFacadeUser() instanceof Teacher));
+// fill sequencenr
+        Object sequencenr = data.get("sequencenr");
+        if(sequencenr instanceof Integer)
+        	c.sequencenr = (Integer) sequencenr;
+        else
+        	c.sequencenr = null;
+ // end fill       
         try {
             c.setSchoolID(((Integer) data.get("schoolID")).intValue());
         } catch (Exception e) {

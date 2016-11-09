@@ -983,6 +983,69 @@ public class PersistenceFacade {
 
     }
 
+    
+    /**
+     * 
+     * @param user
+     * @return a server-sorted array of courses.
+     * @throws PersistenceException
+     */
+    public Course[] getCoursesJS(User user) throws PersistenceException {
+        try {
+            MapperIF mapper = MapperCreator.instance(Course.class);
+            Vector v;
+            int profileId = getDwoProfileID();
+            int guestID = PROFILEOFFSET - profileId;
+            if (user == null) {
+                v = DbAccessCreator.instance().getCoursesJS(guestID);
+            } else {
+                if (user instanceof Teacher) {
+                    //              v = DbAccessCreator.instance().getCourses(user.getUserID());
+                    Object[] schoolCourses = mapper.get(user.getSchool());
+                    Object[] dwoCourses = mapper.getObjectFromReturn(DbAccessCreator.instance().getCoursesJS(guestID));
+                    // caching side effect. UNDO, we doen nu lazy....
+                    //MapperCreator.instance(Sco.class).get(new Object[] { user.getSchool(), ((DwoIF) DwoHelper.getApplet()).getDwoProfile()} );
+                    return (Course[]) combine_(dwoCourses, schoolCourses);
+                } else {
+                    SchoolClass schoolClass = user.getInClass();
+                    if (schoolClass == null) {
+                        v = DbAccessCreator.instance().getCoursesJS(guestID);
+                    } else {
+                        v = DbAccessCreator.instance().getCoursesForClassJS(
+                                schoolClass.getID());
+                        if(v.size()==0) return new Course[0];
+// FIXME aanzetten als clipBeforeAfter weer in gebruik wordt genomen.
+// Het XML-RPC protocol doet niet aan TIMEZONES 
+// dat betekent dat date(0) niet werkt voor 'notAfter'
+                        v = clipBeforeAfter(v);
+                        Course[] courses = (Course[]) mapper.getObjectFromReturn(v);
+// FIXME hier maken we de caching effecten ongedaan.
+                        undoCachingEffect(courses);
+                        return courses;
+                    }
+                }
+            }
+            return (Course[]) mapper.getObjectFromReturn(v);
+        }
+        catch (IOException e) {
+            LOG.log(Level.SEVERE, null, e);
+            throw new PersistenceException(PersistenceException.EX_IO, e);
+        }
+        catch (XmlRpcException e) {
+            LOG.log(Level.SEVERE, null, e);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        }
+        catch (SQLException e) {
+            LOG.log(Level.SEVERE, null, e);
+            throw new PersistenceException(PersistenceException.EX_DB, e);
+        }
+
+   	
+    }
+    
+    
+    
+    
     /**
      * Returns all the courses for the specified user. A teacher could select
      * some courses for a schoolclass. A student sees active selected courses
@@ -2685,7 +2748,8 @@ public class PersistenceFacade {
      * =============================================================================
      * COURSESEQUENCE FUNCTIONALITY
      * =============================================================================
-     * @return 
+     * @return null
+     * @deprecated
      */
     public CourseSequence[] getCourseSequence(User currentUser) {
         School school = currentUser.getSchool();
@@ -2710,7 +2774,9 @@ public class PersistenceFacade {
         }
         Vector vector = new Vector(courses.length);
         for (int i = 0; i < courses.length; i++) {
-            vector.add(new Integer(((Course) courses[i]).getID()));
+            Course course = (Course) courses[i];
+			vector.add(new Integer(course.getID()));
+			course.sequencenr = i; // install sequencenr
         }
         int schoolID = 0;
         int classID = 0;
@@ -2769,8 +2835,9 @@ public class PersistenceFacade {
 
     }
 
+    @Deprecated
     public Course[] sequence(Course[] courses) {
-        if (!DWO.SEQUENCE) {
+        if (!DWO.SEQUENCE || true) { // NO SORTING HERE 
             return courses;
         }
         return sequence(courses, DwoHelper.getCurrentFacadeUser());

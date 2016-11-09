@@ -5,7 +5,7 @@ package fi.dwo.dwojapplet.domain;
  * TODO voor een map: parent is CourseMap interface.
  *
  * @author wim
- *
+ * @deprecated use Course.sequencenr
  */
 public class CourseSequence implements Comparable {
 

@@ -860,13 +860,15 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * Returns all the courses available for the user. If some courses are
      * available for the users school, they are also returned.
      *
-     * @return An array of all the courses for the current user.
+     * @return An sorted array of all the courses for the current user.
      *
      */
     @Override
     public Course[] getCourses() {
         try {
-            courseList = PersistenceFacade.instance().getCourses(DwoHelper.getCurrentFacadeUser());
+            courseList = PersistenceFacade.instance().getCoursesJS(DwoHelper.getCurrentFacadeUser()); // was getCourses
+            if(true)
+            	return selectDwoProfileCourses(courseList); // Sorted by server
             return PersistenceFacade.instance().sequence(selectDwoProfileCourses(courseList));
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());

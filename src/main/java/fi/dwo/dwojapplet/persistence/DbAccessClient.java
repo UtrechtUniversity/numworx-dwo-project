@@ -26,6 +26,14 @@ class DbAccessClient extends Client implements DbAccessIF {
     }
 
     @Override
+    public java.util.Vector getCoursesForClassJS(int a) throws IOException, XmlRpcException {
+        Vector vv = new Vector(1);
+        vv.addElement(new Integer(a));
+        Object object = invoke("getCoursesForClassJS", vv);
+        return (java.util.Vector) object;
+    }
+
+    @Override
     public boolean selectCoursesForClass(int a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -50,11 +58,24 @@ class DbAccessClient extends Client implements DbAccessIF {
         Object object = invoke("getCourses", vv);
         return (java.util.Vector) object;
     }
+    @Override
+    public java.util.Vector getCoursesJS(int a) throws IOException, XmlRpcException {
+        Vector vv = new Vector(1);
+        vv.addElement(new Integer(a));
+        Object object = invoke("getCoursesJS", vv);
+        return (java.util.Vector) object;
+    }
 
     @Override
     public java.util.Vector getEditableCoursesAdmin() throws IOException, XmlRpcException {
         Vector vv = new Vector(0);
         Object object = invoke("getEditableCoursesAdmin", vv);
+        return (java.util.Vector) object;
+    }
+    @Override
+    public java.util.Vector getEditableCoursesAdminJS() throws IOException, XmlRpcException {
+        Vector vv = new Vector(0);
+        Object object = invoke("getEditableCoursesAdminJS", vv);
         return (java.util.Vector) object;
     }
 
@@ -63,6 +84,13 @@ class DbAccessClient extends Client implements DbAccessIF {
         Vector vv = new Vector(1);
         vv.addElement(new Integer(a));
         Object object = invoke("getEditableCourses", vv);
+        return (java.util.Vector) object;
+    }
+    @Override
+    public java.util.Vector getEditableCoursesJS(int a) throws IOException, XmlRpcException {
+        Vector vv = new Vector(1);
+        vv.addElement(new Integer(a));
+        Object object = invoke("getEditableCoursesJS", vv);
         return (java.util.Vector) object;
     }
 
@@ -109,6 +137,15 @@ class DbAccessClient extends Client implements DbAccessIF {
         vv.addElement(b);
         vv.addElement(c);
         Object object = invoke("getTable", vv);
+        return (java.util.Vector) object;
+    }
+    @Override
+    public java.util.Vector getTableJS(java.lang.String a, java.util.Hashtable b, java.lang.String c) throws IOException, XmlRpcException {
+        Vector vv = new Vector(3);
+        vv.addElement(a);
+        vv.addElement(b);
+        vv.addElement(c);
+        Object object = invoke("getTableJS", vv);
         return (java.util.Vector) object;
     }
 
