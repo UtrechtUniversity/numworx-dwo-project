@@ -21,7 +21,7 @@ public class StringCodeObject {
             codeString = s;
         }
         catch (Exception io) {	
-        	System.out.println(io.toString());
+        	//System.out.println(io.toString());
         }
     }
     
@@ -60,7 +60,7 @@ public class StringCodeObject {
             o = invoer.readObject();
         }
         catch (Exception io) {	//
-        	System.out.println(io.toString());
+        	//System.out.println(io.toString());
         }
         return o;
     }
