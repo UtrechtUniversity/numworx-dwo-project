@@ -668,7 +668,7 @@ class WrapSco extends Sco {
         Class<Applet> clazz;
         try {
         	String jar, className;
-        	if(DwoHelper.isApplication()) {
+        	if(DwoHelper.isApplication() || DwoHelper.getJSObject() == null ) {
         		jar = "previewhtml.jar";
         		className = "fi.previewhtml.PreviewHTML";
         	} else {
