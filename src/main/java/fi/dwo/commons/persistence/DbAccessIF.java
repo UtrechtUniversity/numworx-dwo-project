@@ -533,6 +533,8 @@ public interface DbAccessIF extends DbAccessLogin {
 
     public Vector getUserResults(Vector courses, int i) throws SQLException, IOException, XmlRpcException;
 
+    public Vector getUserResults(Vector courses, int i, int j) throws SQLException, IOException, XmlRpcException;
+
     public boolean setLogo(int id, byte[] image) throws SQLException, IOException, XmlRpcException;
 
     /**
