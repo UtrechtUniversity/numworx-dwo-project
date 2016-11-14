@@ -210,17 +210,12 @@ public class DWOplayer implements EntryPoint
 	//public static Locale language = new Locale ("nl", "");
 	public static Text_nl rb = new Text_nl();
 
-	@Deprecated
+	@Deprecated /* moves to clientfactory dwov1, removed in dwov2 */
 	public static Map<String, Object> profiledata = null;
 	
 	public static boolean withUser() {
-		return instance.withUserImpl();
-	}
-
-	protected boolean withUserImpl() {
-		return profiledata != null;
-	}
-	
+		return clientfactory.withUser();
+	}	
 	
 	private static Deferred<DomDwoProfile> deferredProfile;
 	public static Promise<DomDwoProfile> dwoProfile; // NEVER NULL

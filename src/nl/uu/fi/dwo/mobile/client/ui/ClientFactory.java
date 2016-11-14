@@ -52,4 +52,6 @@ public interface ClientFactory
 
 	void logout();
 	
+	boolean withUser();
+	
 }

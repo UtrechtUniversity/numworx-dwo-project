@@ -132,19 +132,15 @@ public class ClientFactoryImpl implements ClientFactory
 		entryView = view;
 	}
 	
-	public SCORM_guest setupAPI(final Map<String, Object> profiledata) {
+	public SCORM_guest setupAPI() {
 		SCORM_guest api;
-		if(profiledata == null) {
+		if(!withUser()) {
 			api = new SCORM_guest();
 		} else {
-			Integer userID = (Integer) profiledata.get("userID");
+			Integer userID = (Integer) DWOplayer.profiledata.get("userID");
 			api = new SCORM_DWOmAccess(userID.intValue());
 		}
 		return api;
-	}
-
-	public SCORM_guest setupAPI() {
-		return setupAPI(DWOplayer.profiledata);
 	}
 	
 	@Override
@@ -162,7 +158,11 @@ public class ClientFactoryImpl implements ClientFactory
 	
 	@Override
 	public void logout() {
+		DWOplayer.profiledata = null;
 	}
 
+	public boolean withUser() {
+		return DWOplayer.profiledata != null;
+	}
 	
 }

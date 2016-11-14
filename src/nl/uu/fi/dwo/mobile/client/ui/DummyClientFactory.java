@@ -77,7 +77,6 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public IsWidget getMenuWidget() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -95,4 +94,7 @@ public class DummyClientFactory implements ClientFactory {
 	public void logout() {
 	}
 
+	public boolean withUser() {
+		return false;
+	}
 }

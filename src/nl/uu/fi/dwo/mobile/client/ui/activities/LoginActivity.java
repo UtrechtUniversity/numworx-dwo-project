@@ -105,7 +105,6 @@ public class LoginActivity extends MGWTAbstractActivity
 		SelectModuleItemHolder.destroy();
 		String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
 		String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
-		DWOplayer.profiledata = null;
 		view = clientFactory.getLoginView();
 		DWOplayer.dwoProfile.then(new Success<DomDwoProfile, Void>() {
 
@@ -164,7 +163,7 @@ public class LoginActivity extends MGWTAbstractActivity
 			@Override
 			public void onTap(TapEvent event)
 			{
-				DWOplayer.profiledata = null;
+				if(clientFactory.withUser()) clientFactory.logout(); // fail safe?
 				if(next == null)
 					DWOplayer.gotoCourses();
 				else

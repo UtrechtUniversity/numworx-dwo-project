@@ -60,7 +60,7 @@ public class ReloginActivity extends MGWTAbstractActivity {
 		SelectModuleItemHolder.destroy();
 		password = DWOplayer.profiledata.get("password").toString();
 		username = DWOplayer.profiledata.get("username").toString();
-		DWOplayer.profiledata = null;
+		clientFactory.logout();
 		panel.setWidget(new Label());
 		clientFactory.getRPCHandler().loginMD5(getUsername(), getPassword(), LOGIN_CALLBACK);
 	}

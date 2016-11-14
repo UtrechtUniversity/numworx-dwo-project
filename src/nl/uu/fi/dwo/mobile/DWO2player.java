@@ -199,17 +199,17 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 			@Override
 			public void logout() {
-				super.logout();
 				menuWidget = null;
-				if(DWOplayer.withUser())
+				if(withUser())
 				{
 					getRPCHandler().logout();
 				}
+				super.logout();
 			}
 
-			public SCORM_guest setupAPI(final Map<String, Object> profiledata) {
+			public SCORM_guest setupAPI() {
 				SCORM_guest api;
-				if(profiledata == null) {
+				if(!withUser()) {
 					api = new SCORM_guest();
 					menuWidget = null;
 				} else {

@@ -52,7 +52,7 @@ public class ProfileActivity extends MGWTAbstractActivity
 
 
 	private void logout() {
-		DWOplayer.profiledata = null;
+		clientFactory.logout();
 		clientFactory.getPlaceController().goTo(new LoginPlace());
 	}
 
