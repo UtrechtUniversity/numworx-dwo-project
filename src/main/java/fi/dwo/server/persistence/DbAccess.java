@@ -501,17 +501,30 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //            + "group by tblClass.classID, tblCourse.courseID "
 //            + "having tblClass.classID is not null "
 //            + "ORDER BY tblClass.classID";
+    //buggy query
+//    private final static String QRY_RESULTS_ALL
+//            = "SELECT tblTeacherOf.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
+//            + "FROM (tblTeacherOf, tblCourse) join  tblStudentOf on tblStudentOf.classId =  tblTeacherOf.classId "
+//            + "left join tblScoContext  on tblScoContext.courseId =  tblCourse.courseId "
+//            + "left join  tblStudentScoContext on (tblStudentScoContext.userid = tblStudentOf.userID and tblStudentOf.schoolGroupID = tblStudentScoContext.schoolGroupID and tblStudentScoContext.scoId =   tblScoContext.scoId) "
+//            + "where (tblCourse.courseID in ({0} )) "
+//            + "and (tblTeacherOf.userID = ?) "
+//            + "group by tblTeacherOf.classID, tblCourse.courseID "
+//            + "having tblTeacherOf.classID is not null "
+//            + "ORDER BY tblTeacherOf.classID";
     private final static String QRY_RESULTS_ALL
             = "SELECT tblTeacherOf.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
             + "FROM (tblTeacherOf, tblCourse) join  tblStudentOf on tblStudentOf.classId =  tblTeacherOf.classId "
             + "left join tblScoContext  on tblScoContext.courseId =  tblCourse.courseId "
             + "left join  tblStudentScoContext on (tblStudentScoContext.userid = tblStudentOf.userID and tblStudentOf.schoolGroupID = tblStudentScoContext.schoolGroupID and tblStudentScoContext.scoId =   tblScoContext.scoId) "
+            + "join tbluser on (tblTeacherOf.userID = tblUser.userID and tblUser.schoolGroupID =tblTeacherOf.schoolGroupID) "
             + "where (tblCourse.courseID in ({0} )) "
-            + "and (tblTeacherOf.userID = ?) "
+            + "and (tblUser.userID = ?) "
             + "group by tblTeacherOf.classID, tblCourse.courseID "
             + "having tblTeacherOf.classID is not null "
             + "ORDER BY tblTeacherOf.classID";
 
+    
     /**
      * results of selected courses from a single user.
      */
@@ -541,7 +554,10 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "join tblTeacherOf on tblTeacherOf.classID = tblStudentOf.classID "
             + "join tblScoContext on tblScoContext.courseID = tblCourse.courseID "
             + "left join tblStudentScoContext on (tblStudentScoContext.userID = tblStudentOf.userID and tblStudentOf.schoolGroupID = tblStudentScoContext.schoolGroupID and tblStudentScoContext.scoId = tblScoContext.scoId) "
-            + "where (tblTeacherOf.classID = ? and tblTeacherOf.userID = ?) and (tblCourse.courseID = ?) "
+            + "join tbluser on (tblTeacherOf.userID = tblUser.userID and tblUser.schoolGroupID =tblTeacherOf.schoolGroupID) "
+            + "where (tblTeacherOf.classID = ?) "
+            + "and (tblUser.userID = ?) "
+            + "and (tblCourse.courseID = ?) "
             + "group by tblStudentOf.userID, tblCourse.courseID ORDER BY tblStudentOf.userID";
 
 //    private final static String QRY_RESULTS_CLASS_COURSE = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
@@ -575,9 +591,11 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "FROM (tblStudentOf, tblScoContext)  join tblTeacherOf on tblTeacherOf.classID = tblStudentOf.classID "
             + "join tblCourse on tblScoContext.courseID = tblCourse.courseID "
             + "left join tblStudentScoContext on (tblStudentScoContext.userID = tblStudentOf.userID and tblStudentScoContext.schoolGroupID = tblStudentOf.schoolGroupID and tblStudentScoContext.scoId = tblScoContext.scoId) "
+            + "join tbluser on (tblTeacherOf.userID = tblUser.userID and tblUser.schoolGroupID =tblTeacherOf.schoolGroupID) "
             + "where (tblStudentOf.classID = ?) " // student tblUser.classID =>tblStudentOf.classID 
             + "and (tblCourse.courseID = ?) " //course
-            + "and   (tblTeacherOf.userID = ?) " //teacher tblClass.userID =>tblTeacherOf.userID 
+            + "and (tblUser.userID = ?) "
+//            + "and   (tblTeacherOf.userID = ?) " //teacher tblClass.userID =>tblTeacherOf.userID 
             + "ORDER BY tblStudentOf.userID, tblScoContext.sequencenr";
 
     /**
@@ -625,8 +643,10 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "FROM (tblTeacherOf, tblScoContext) "
             + "join tblStudentOf on tblTeacherOf.classID = tblStudentOf.classID "
             + "left join tblStudentScoContext on (tblStudentScoContext.userID = tblStudentOf.userID and tblStudentScoContext.schoolGroupID = tblStudentOf.schoolGroupID and tblStudentScoContext.scoID = tblScoContext.scoID) "
+            + "join tbluser on (tblTeacherOf.userID = tblUser.userID and tblUser.schoolGroupID =tblTeacherOf.schoolGroupID) "
             + "where  (tblScoContext.courseID = ?) "
-            + "and   (tblTeacherOf.userID = ?) "
+            + "and (tblUser.userID = ?) "
+//            + "and   (tblTeacherOf.userID = ?) "
             + "group by tblTeacherOf.classID, tblScoContext.scoID "
             + "ORDER BY tblTeacherOf.classID, tblScoContext.sequencenr";
 
