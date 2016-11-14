@@ -85,11 +85,10 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 		request.execute();
 	}
 
-	public void getCoursesSchool(Map<String, Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+	public void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		String method = "getTableJS";
 		HashMap<String,Object> g = new HashMap<String,Object>();
 		g.put("parentID", 0);
-		Object schoolID = userData.get("schoolID");
 		g.put("schoolID", schoolID);
 		g.put("dwoProfileID", getProfile());
 		Object[] params = {"tblCourse", g, "name" };

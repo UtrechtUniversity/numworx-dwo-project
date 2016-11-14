@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,8 +15,13 @@ import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 /**
  * equivalent van de PersistenceFacade voor DWO v1.0
@@ -91,6 +97,33 @@ public class RPCHandlerV1 {
 		}
 	};
 	
+	private static final Function<Map<String,Object>, DomCourseFull> TO_DOMCOURSE = new Function<Map<String,Object>, DomCourseFull>() {
+
+		@Override
+		public DomCourseFull apply(Map<String, Object> t) {
+			DomCourseFull course = new DomCourseFull();
+			// FIXME .....
+			return course;
+		}
+		
+	};
+
+	private static final Function<List<Map<String,Object>>, List<DomCourseFull>> TO_DOMCOURSELIST = 
+		new Function<List<Map<String,Object>>, List<DomCourseFull>>() {
+
+		@Override
+		public List<DomCourseFull> apply(List<Map<String, Object>> t) {
+			List<DomCourseFull> courseList = new ArrayList<DomCourseFull>();
+			for( Map<String,Object> item: t) {
+				courseList.add(TO_DOMCOURSE.apply(item));
+			}
+			return courseList;
+		}
+		
+	};
+	
+	
+	
 	public XmlRpcClient getClient() {
 		if( xmlRpcClient == null)
 		{
@@ -116,11 +149,10 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	public void getCoursesSchool(Map<String, Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+	public void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		String method = "getTable";
 		HashMap<String,Object> g = new HashMap<String,Object>();
 		g.put("parentID", 0);
-		Object schoolID = userData.get("schoolID");
 		g.put("schoolID", schoolID);
 		g.put("dwoProfileID", getProfile());
 		Object[] params = {"tblCourse", g, "name" };
@@ -128,6 +160,14 @@ public class RPCHandlerV1 {
 		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
 		request.execute();
 	}
+	
+	public Promise<List<DomCourseFull>> getCoursesSchool(DomSchool school) {
+		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+		Object id = PersistenceIdDecoderInterface.instance.idOf(school.getId(), PersistenceClassType.PersistentSchool);
+		getCoursesSchool(id, defer);
+		return defer.getPromise().map(TO_DOMCOURSELIST);
+	}
+	
 	
 	public void getCoursesClass(Map<String,Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		String method = "getCoursesForClass";
