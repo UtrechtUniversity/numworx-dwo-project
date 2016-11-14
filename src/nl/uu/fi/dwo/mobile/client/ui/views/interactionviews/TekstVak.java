@@ -763,13 +763,16 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 		}
 		
-		
 		for(int i = start; i < opdrachtObjects.size(); i++)
 		{
 			Object object = opdrachtObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
 			{
 				((FormuleEditorWithAnswer) object).requestFocus();
+				//om te zorgen dat cursor ook getekend wordt:
+				if(((FormuleEditorWithAnswer) object).getCurrentElement() == null)
+				{	((FormuleEditorWithAnswer) object).setCurrentElementRepaint(((FormuleEditorWithAnswer) object).getMainRegel());
+				}
 				return true;
 			}
 			else if(object instanceof AntwoordTekstVak)
@@ -790,6 +793,58 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			
 	}
 	
+	
+	/*
+	 * Verplaats focus naar laatste antwoordvak (FormuleEditorWithAnswer of AntwoordTekstVak) voor dit vak. 
+	 * Geeft true als de focus is verplaatst naar een antwoordvak in dit tekstvak en false anders.
+	 * Source is de zender van het tabcommando, up is true als de source zich binnen dit tekstvak bevindt en false anders. 
+	 */
+	public boolean shiftTabFocus(InteractionView source, boolean up)
+	{
+		int start = opdrachtObjects.size() - 1;
+		boolean focusVerlegd = false;
+		//if source outside TekstVak: start searching at 0.
+		//if source inside TekstVak: start searching at next OpdrachtObject
+		if(up)
+		{
+			for(int i = opdrachtObjects.size() - 1; i >= 0; i--)
+			{
+				if(((Object)opdrachtObjects.get(i)).equals(source))
+				{	start = i - 1;
+					break;
+				}
+			}
+		}
+		
+		for(int i = start; i >= 0; i--)
+		{
+			Object object = opdrachtObjects.get(i);
+			if(object instanceof FormuleEditorWithAnswer)
+			{
+				((FormuleEditorWithAnswer) object).requestFocus();
+				//om te zorgen dat cursor ook getekend wordt:
+				if(((FormuleEditorWithAnswer) object).getCurrentElement() == null)
+				{	((FormuleEditorWithAnswer) object).setCurrentElementRepaint(((FormuleEditorWithAnswer) object).getMainRegel());
+				}
+				return true;
+			}
+			else if(object instanceof AntwoordTekstVak)
+			{
+				((AntwoordTekstVak) object).requestFocus();
+				return true;
+			}
+			else if(object instanceof TekstVakPanel)
+			{
+				focusVerlegd = ((TekstVakPanel) object).shiftTabFocus(this, false);
+				if(focusVerlegd)
+					return true;
+			}
+		}
+		
+		//hier gekomen heb je alles binnen het TekstVak bekeken en niets gevonden, dus naar vorige tekstvak binnen tekstvakpanel.
+		return parent.shiftTabFocus(this, true);
+			
+	}
 	
 	public void resize()
 	{

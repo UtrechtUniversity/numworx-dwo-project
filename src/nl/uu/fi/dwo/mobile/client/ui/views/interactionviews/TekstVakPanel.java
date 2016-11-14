@@ -1742,12 +1742,89 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		//als omliggende tekstvak bestaat: doorgeven naar omliggende tekstvak
 		if(parent != null)
 			return parent.tabFocus(this, up);
+		//Anders: helemaal aan het begin van dit tekstvak verder zoeken. 
 		else
 		{	for(int i = 0; i < tekstVakken.length; i++)
 			{
 				for(int j = 0; j < tekstVakken[i].length; j++)
 				{
 					focusVerlegd = tekstVakken[i][j].tabFocus(this, false);
+					if(focusVerlegd)
+						return true;
+				}
+			}
+			return false;
+		}
+	}
+	
+	public boolean shiftTabFocus(TekstVak source, boolean up)
+	{
+		int startRij = tekstVakken.length - 1;
+		int startKolom = 0;
+		if(tekstVakken.length > 0)
+			startKolom = tekstVakken[tekstVakken.length - 1].length - 1;
+		boolean focusVerlegd = false; 
+		boolean eersteVak = false;
+		//if source outside TekstVakPanel: start searching at size.
+		//if source inside TekstVakPanel: start searching at previous TekstVak
+		//Volgorde: hele rij doorzoeken van rechts naar links (hoog kolomnr naar laagkolomnr), 
+		//dan pas naar vorige rij. 
+		if(up)
+		{
+			for(int i = tekstVakken.length - 1; i >= 0; i--)
+			{
+				for(int j = tekstVakken[i].length - 1; j >= 0; j--)
+				if(tekstVakken[i][j].equals(source))
+				{	if(j > 0)
+					{	startRij = i;
+						startKolom = j - 1;
+					}
+					else if(i > 0)
+					{
+						startRij = i - 1;
+					}
+					else 	//laatste tekstVak van het tekstVakPanel, dus meteen door naar omvattende tekstVak van het tekstVakPanel
+					{
+						eersteVak = true;
+					}
+					break;
+				}
+			}
+		}
+		
+		if(!eersteVak)
+		{
+			//binnen tekstVakPanel verder zoeken.
+			//startRij apart behandelen, omdat je daar in startKolom begint en niet in laatste kolom. 
+			for(int j = startKolom; j >= 0; j--)
+			{
+				focusVerlegd = tekstVakken[startRij][j].shiftTabFocus(this, false);
+				if(focusVerlegd)
+					return true;
+			}
+			if(startRij > 0)
+			{	for(int i = startRij - 1; i >= 0; i--)
+				{
+					for(int j = tekstVakken[i].length - 1; j >= 0; j--)
+					{
+						focusVerlegd = tekstVakken[i][j].shiftTabFocus(this, false);
+						if(focusVerlegd)
+							return true;
+					}
+				}
+			}
+		}
+		
+		//als omliggende tekstvak bestaat: doorgeven naar omliggende tekstvak
+		if(parent != null)
+			return parent.shiftTabFocus(this, up);
+		//anders: helemaal aan het eind van dit tekstvak verder zoeken. 
+		else
+		{	for(int i = tekstVakken.length - 1; i >= 0; i--)
+			{
+				for(int j = tekstVakken[i].length - 1; j >= 0; j--)
+				{
+					focusVerlegd = tekstVakken[i][j].shiftTabFocus(this, false);
 					if(focusVerlegd)
 						return true;
 				}

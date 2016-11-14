@@ -349,8 +349,12 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		    	}
 				if(event.getNativeKeyCode() == KeyCodes.KEY_TAB)
 				{
+					event.stopPropagation();
 					event.preventDefault();
-					tab();
+					if(event.isShiftKeyDown())
+						shiftTab();
+					else
+						tab();
 				}
 			}
 		});
@@ -886,10 +890,18 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	
 	public void tab()
 	{
-		System.out.println("tab in antwoordtekstvak");
 		if(parentRegel != null)
 		{
 			parentRegel.getTekstVak().tabFocus(this, true);
+		}
+	}
+	
+	public void shiftTab()
+	{
+		
+		if(parentRegel != null)
+		{
+			parentRegel.getTekstVak().shiftTabFocus(this, true);
 		}
 	}
 	
