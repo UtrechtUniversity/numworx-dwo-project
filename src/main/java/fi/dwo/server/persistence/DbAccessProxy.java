@@ -454,6 +454,12 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     }
 
     @Override
+    public Vector getUserResults(Vector courses, int i, int j) throws SQLException,
+            IOException, XmlRpcException {
+        return getDelegate().getUserResults(courses, i, j);
+    }
+    
+    @Override
     public boolean setLogo(int id, byte[] image) throws SQLException,
             IOException, XmlRpcException {
         return getDelegate().setLogo(id, image);

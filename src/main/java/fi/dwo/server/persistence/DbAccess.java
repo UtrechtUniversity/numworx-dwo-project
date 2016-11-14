@@ -523,7 +523,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "group by tblTeacherOf.classID, tblCourse.courseID "
             + "having tblTeacherOf.classID is not null "
             + "ORDER BY tblTeacherOf.classID";
-
     
     /**
      * results of selected courses from a single user.
@@ -538,6 +537,20 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "and   (tblStudentScoContext.userID = ?) "
             + "group by tblCourse.courseID ";
 
+    /**
+     * results of selected courses from a single user.
+     */
+    //TODO V1_4 fix for many school/role options 
+    private final static String QRY_RESULTS_SINGLE2 = "SELECT tblStudentScoContext.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
+            + "FROM tblUser  "
+            //            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID "
+            + "right join tblScoContext on tblStudentScoContext.scoID = tblScoContext.scoID "
+            + "left join tblCourse on tblScoContext.courseID = tblCourse.courseID "
+            + "where (tblCourse.courseID in ({0})) "
+            + "and   (tblStudentScoContext.userID = ?) "
+            + "and   (tblStudentScoContext.schoolGroupID = ?) "
+            + "group by tblCourse.courseID ";
+    
     /**
      * Returns the results for a <course[], class, teacher> combination.
      */
@@ -3753,12 +3766,15 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     }
 
     /**
-     *
+     * Broken function in DWO 2.0 and datamodel after 1.2. Replaced by
+     * {@Link #getUserResults(Vector, int, int) getUserResults}.
+     * 
      * @param courses
      * @param userID
      * @return
      * @throws SQLException
      */
+    @Deprecated
     @Override
     public Vector getUserResults(Vector courses, int userID) throws SQLException {
         int i;
@@ -3786,6 +3802,42 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         }
     }
 
+   /**
+     * New function for DWO 2.0 data-model. Replaces {@Link #getUserResults(Vector, int) getUserResults}.
+     * 
+     * @param courses
+     * @param userID
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public Vector getUserResults(Vector courses, int userID, int schoolGroupID) throws SQLException {
+        int i;
+        StringBuilder courseString = new StringBuilder();
+        if (courses.size() > 0) {
+            for (i = 0; i < courses.size(); i++) {
+                if (i != 0) {
+                    courseString.append(',');
+                }
+                // beware of source code injection here....
+                // assert courses.get(i) instanceof Integer
+                courseString.append(courses.get(i));
+            }
+            String[] arguments = {courseString.toString()};
+            String query = MessageFormat.format(QRY_RESULTS_SINGLE2, (Object[]) arguments);
+            PreparedStatement ps = getStatement(query);
+            ps.setInt(1, userID);
+            ps.setInt(2, schoolGroupID);
+            LOG.log(Level.FINE, "Going to query: {0}.", new Object[]{ps.toString()});
+            Vector v = executeQueryWithResult(ps);
+            return v;
+        } else {
+            /* No Courses, no result */
+            LOG.log(Level.FINE, "Submitted 0 courses, returning empty Vector.");
+            return courses; // an empty vector
+        }
+    }
+    
     /**
      * Images die bij courses horen. Linked naar Courses.
      *
