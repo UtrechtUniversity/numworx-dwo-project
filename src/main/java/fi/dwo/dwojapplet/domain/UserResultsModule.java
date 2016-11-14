@@ -98,6 +98,11 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         return dwo.getCourses();
     }
 
+    /**
+     * 
+     * 
+     * @return 
+     */
     @Override
     public Vector getResults() {
         if (currentlyZoomedLesson != null) {

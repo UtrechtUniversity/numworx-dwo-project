@@ -2384,10 +2384,10 @@ public class PersistenceFacade {
      */
     /**
      * Returns all the results for the specified courses and the classes of the
-     * specified teacher.
+     * specified current teacher.
      *
      * @param courses The courses wherefrom the result must be returned.
-     * @param teacher The teacher wherefrom the results of the schoolclasses
+     * @param teacher The teacher wherefrom the results of the school classes
      * must be returned.
      * @return The results for the specified courses and the classes of the
      * specified teacher.
@@ -2556,7 +2556,7 @@ public class PersistenceFacade {
         }
         try {
             Vector v = DbAccessCreator.instance().getUserResults(courseIDs,
-                    user.getUserID());
+                    user.getUserID(),user.getSchoolGroupID());
             MapperIF mapper = MapperCreator.instance(UserResultList.class);
             Object[] oa = mapper.getObjectFromReturn(v);
             if (oa.length > 0) {
