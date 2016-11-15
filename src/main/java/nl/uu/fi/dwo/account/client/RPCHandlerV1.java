@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
@@ -21,6 +22,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 /**
@@ -48,6 +52,19 @@ public class RPCHandlerV1 {
 		loginMD5(name, pwmd5, callback);
 	}
 
+	public Promise<DomUserFullwLoginContext> login(String name, String password)
+	{
+		return Promises.failed(new Error());
+	}
+	
+	public Promise<DomUserFullwLoginContext> loginMD5(String name, String password) {
+		return Promises.failed(new Error());
+	}
+	
+	public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
+		return Promises.failed(new Error());
+	}
+	
 	public void loginMD5(String name, String pwmd5,
 			AsyncCallback<Map<String, Object>> callback) {
 		XmlRpcClient client = getClient();
@@ -71,12 +88,20 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
+	
+	public Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id) {
+		return Promises.failed(new Error());
+	}
+
 	public void getUserFromAuthToken(String authToken, AsyncCallback<Map<String,Object>> callback)
 	{
 		Throwable caught = new RuntimeException("");
 		callback.onFailure(caught);
 	}
 	
+	public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
+		return Promises.failed(new RuntimeException(""));
+	}
 
 	private XmlRpcClient xmlRpcClient;
 
@@ -133,7 +158,7 @@ public class RPCHandlerV1 {
 		return xmlRpcClient;
 	}
 
-	public void getCourses(Map<String, Object> userData,
+	public void getCourses(
 			AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		
 		String method = "getCourses";
@@ -147,6 +172,12 @@ public class RPCHandlerV1 {
 		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
 
 		request.execute();
+	}
+	
+	public Promise<List<DomCourseFull>> getCourses() {
+		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+		getCourses(defer);
+		return defer.getPromise().map(TO_DOMCOURSELIST);
 	}
 	
 	public void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
@@ -167,17 +198,22 @@ public class RPCHandlerV1 {
 		getCoursesSchool(id, defer);
 		return defer.getPromise().map(TO_DOMCOURSELIST);
 	}
-	
-	
-	public void getCoursesClass(Map<String,Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+		
+	public void getCoursesClass(Object classid, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		String method = "getCoursesForClass";
-		Object classid = userData.get("classID");
 		Object[] params = { classid };
 		XmlRpcClient client = getClient();
 		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, filterProfile(getCoursesCallback));
 		request.execute();
 	}
 
+	public Promise<List<DomCourseFull>> getCoursesClass(DomSchoolClass schoolclass) {
+		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+		Object id = PersistenceIdDecoderInterface.instance.idOf(schoolclass.getId(), PersistenceClassType.PersistentSchoolClass);
+		getCoursesClass(id, defer);
+		return defer.getPromise().map(TO_DOMCOURSELIST);
+	}
+	
 	
 	protected  AsyncCallback<List<Map<String,Object>>> filterProfile(final AsyncCallback<List<Map<String,Object>>> callback) {
 		return new AsyncCallback<List<Map<String,Object>>>() {
