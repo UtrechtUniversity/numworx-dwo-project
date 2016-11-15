@@ -8,8 +8,6 @@ import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
-import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
-import nl.uu.fi.dwo.mobile.client.ui.views.ProfileViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -18,6 +16,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
@@ -40,7 +39,6 @@ public class ClientFactoryImpl implements ClientFactory
 	private ViewModuleView entryView;
 	private SelectModuleView selectModuleView;
 	protected LoginViewImpl loginView;
-	private ProfileView profileView;
 	private TreeModuleView treeModuleView;
 	private RPCHandler handler;
 	private IsWidget logoutWidget;
@@ -92,14 +90,6 @@ public class ClientFactoryImpl implements ClientFactory
 	}
 
 	@Override
-	public ProfileView getProfileView()
-	{
-		if (profileView == null)
-			profileView = new ProfileViewImpl();
-		return profileView;
-	}
-
-	@Override
 	public TreeModuleView getTreeModuleView()
 	{
 		if (treeModuleView == null){
@@ -137,7 +127,7 @@ public class ClientFactoryImpl implements ClientFactory
 		if(!withUser()) {
 			api = new SCORM_guest();
 		} else {
-			Integer userID = (Integer) DWOplayer.profiledata.get("userID");
+			Integer userID = (Integer) getUserID();
 			api = new SCORM_DWOmAccess(userID.intValue());
 		}
 		return api;
@@ -163,6 +153,41 @@ public class ClientFactoryImpl implements ClientFactory
 
 	public boolean withUser() {
 		return DWOplayer.profiledata != null;
+	}
+	
+	// NOT NULL, "" als null
+	@SuppressWarnings("deprecation")
+	public Object getSchoolID() {
+		return DWOplayer.profiledata.get("schoolID");
+	}
+
+	@Override
+	public Object getClassID() {
+		return DWOplayer.profiledata.get("classID");
+	}
+
+	@Override
+	public boolean isIconizer() {
+		return Boolean.TRUE.equals(DWOplayer.profiledata.get("iconizer"));
+	}
+
+	@Override
+	public RoleType getRoleType() {
+		try {
+			return RoleType.valueOf((String)DWOplayer.profiledata.get("groupname"));
+		} catch (Exception e) {
+			return RoleType.NONE;
+		}
+	}
+
+	@Override
+	public Object getUserID() {
+		return DWOplayer.profiledata.get("userID");
+	}
+
+	@Override
+	public Object getSchoolName() {
+		return DWOplayer.profiledata.get("schoolName");
 	}
 	
 }

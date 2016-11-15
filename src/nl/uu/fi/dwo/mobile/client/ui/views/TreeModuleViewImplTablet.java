@@ -519,7 +519,7 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 
 				Object schoolName = "school";
 				if(DWOplayer.withUser() )
-					schoolName = DWOplayer.profiledata.get("schoolName");
+					schoolName = DWOplayer.clientfactory.getSchoolName();
 				String SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
 
 				separator.setName(SCHOOL_MODULES);

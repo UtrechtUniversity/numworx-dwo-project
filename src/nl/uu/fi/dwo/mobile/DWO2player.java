@@ -76,7 +76,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		@Override
 		public void getUserResults(Object courseID, Object userID,
 				AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
-			Object schoolGroupID = DWOplayer.profiledata.get("schoolGroupID");
+			Object schoolGroupID = getSchoolGroupID();
 			getUserResultsHelper(courseID, userID, schoolGroupID, getUserResultsCallback);
 		}
 
@@ -146,6 +146,16 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		}
 	}
 
+	private Object getSchoolGroupID() {
+		Object sgID;
+		try {
+			sgID = PersistenceIdDecoderInterface.instance.idOf(
+					DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole().getSchoolGroupId(),
+					PersistenceClassType.PersistentSchoolGroup);
+		} catch (Exception ignore) {/*NPE*/ sgID = null;}
+		return sgID;
+	}
+
 	public DWO2player() {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
@@ -213,13 +223,19 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					api = new SCORM_guest();
 					menuWidget = null;
 				} else {
-					Object userID = profiledata.get("userID");
-					Object sgID = profiledata.get("schoolGroupID");
+					Object userID = 
+							PersistenceIdDecoderInterface.instance.idOf(
+							DwoGlobalVars.getInstance().getCurrentUser().getId(), 
+							PersistenceClassType.PersistentUser);
+					Object sgID;
+					sgID = getSchoolGroupID();
+					
 					api = new SCORM_DWO2(userID, sgID);
 					menuWidget = getUserBar();
 				}
 				return api;
 			}
+
 
 		};
 		String host = PARAMETERS.getHost();

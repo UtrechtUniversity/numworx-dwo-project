@@ -3,7 +3,10 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import java.util.List;
 import java.util.Map;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 
 import org.osgi.util.promise.Promise;
 
@@ -16,15 +19,18 @@ public interface RPCHandler {
 
 	Promise<DomDwoProfile> getDwoProfile();
 
-	void getCoursesClass(Map<String, Object> profiledata,
+	void getCoursesClass(Object classid,
 			AsyncCallback<List<Map<String, Object>>> callback);
-
-	void getCoursesSchool(Map<String, Object> profiledata,
+	Promise<List<DomCourseFull>> getCoursesClass(DomSchoolClass schoolClass);
+	
+	void getCoursesSchool(Object schoolID,
 			AsyncCallback<List<Map<String, Object>>> callback);
-
-	void getCourses(Map<String, Object> profiledata,
+	Promise<List<DomCourseFull>> getCoursesSchool(DomSchool school);
+	
+	void getCourses(
 			AsyncCallback<List<Map<String, Object>>> callback_final);
-
+	Promise<List<DomCourseFull>> getCourses();
+	
 	XmlRpcClient getClient();
 
 	void getCourse(Object id,

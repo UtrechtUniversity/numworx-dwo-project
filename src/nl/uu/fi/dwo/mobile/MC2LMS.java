@@ -60,11 +60,10 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 			request.execute();
 		}
 
-		public void getCoursesSchool(Map<String, Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+		public void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 			String method = "getTableJS";
 			HashMap<String,Object> g = new HashMap<String,Object>();
 			g.put("parentID", 0);
-			Object schoolID = userData.get("schoolID");
 			g.put("schoolID", schoolID);
 			g.put("dwoProfileID", PROFILE_ID);
 			Object[] params = {"tblCourse", g, "name" };
@@ -98,12 +97,12 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 	protected ClientFactory createClientFactory() {
 		ClientFactoryImpl factory = new ClientFactoryImpl() { 
 			
-			public SCORM_guest setupAPI(final Map<String, Object> profiledata) {
+			public SCORM_guest setupAPI() {
 				SCORM_guest api;
-				if(profiledata == null) {
+				if(!withUser()) {
 					api = new SCORM_guest();
 				} else {
-					String userID = (String) profiledata.get("userID");
+					String userID = (String) getUserID();
 					String username = (String) profiledata.get("username");
 					String fullname = profiledata.get("middlename") + " " + profiledata.get("lastname") + ", " + profiledata.get("firstname");
 					fullname = fullname.trim();
@@ -207,32 +206,27 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 			api = clientfactory.setupAPI();
 		else
 		{
-//			String userID = ((String) profiledata.get("userID"));
-//			String username = (String) profiledata.get("username");
-//			String fullname = profiledata.get("middlename") + " " + profiledata.get("lastname") + ", " + profiledata.get("firstname");
-//			fullname = fullname.trim();
 			api = clientfactory.setupAPI();
-			//api = new SCORM_MC2mAccess(userID, username, fullname);
-			if(!"".equals(profiledata.get("classID")))
+			if(!"".equals(clientfactory.getClassID()))
 			{
-				boolean iconizer = Boolean.TRUE.equals(profiledata.get("iconizer"));
+				boolean iconizer = clientfactory.isIconizer();
 				if(iconizer)
 					callback = GETCOURSES_CALLBACK_CLASS_TREE;
 				else
 					callback = GETCOURSES_CALLBACK_CLASS_FLAT;
-				clientfactory.getRPCHandler().getCoursesClass(profiledata, callback);
+				clientfactory.getRPCHandler().getCoursesClass(clientfactory.getClassID(), callback);
 				return;
 			}
-			if(!"".equals(profiledata.get("schoolID")))
+			if(!"".equals(clientfactory.getSchoolID()))
 			{
 				count = 2;
-				clientfactory.getRPCHandler().getCoursesSchool(profiledata, callback);
+				clientfactory.getRPCHandler().getCoursesSchool(clientfactory.getSchoolID(), callback);
 			}
 		
 		}
 		
 		
-		clientfactory.getRPCHandler().getCourses(profiledata, callback);
+		clientfactory.getRPCHandler().getCourses(callback);
 		
 	}
 

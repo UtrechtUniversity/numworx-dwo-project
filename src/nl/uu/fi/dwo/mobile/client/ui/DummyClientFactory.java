@@ -7,10 +7,10 @@ import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
-import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -48,11 +48,6 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public LoginView getLoginView() {
-		return null;
-	}
-
-	@Override
-	public ProfileView getProfileView() {
 		return null;
 	}
 
@@ -96,5 +91,34 @@ public class DummyClientFactory implements ClientFactory {
 
 	public boolean withUser() {
 		return false;
+	}
+	
+	public Object getSchoolID() {
+		return "";
+	}
+
+	@Override
+	public Object getClassID() {
+		return "";
+	}
+
+	@Override
+	public boolean isIconizer() {
+		return true;
+	}
+
+	@Override
+	public RoleType getRoleType() {
+		return RoleType.ANONYMOUS;
+	}
+
+	@Override
+	public Object getUserID() {
+		return null;
+	}
+
+	@Override
+	public Object getSchoolName() {
+		return "";
 	}
 }

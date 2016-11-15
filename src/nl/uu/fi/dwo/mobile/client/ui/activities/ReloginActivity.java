@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.Map;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -58,8 +59,10 @@ public class ReloginActivity extends MGWTAbstractActivity {
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		SelectModuleItemHolder.destroy();
-		password = DWOplayer.profiledata.get("password").toString();
-		username = DWOplayer.profiledata.get("username").toString();
+		password = //DWOplayer.profiledata.get("password").toString();
+				DwoGlobalVars.getInstance().getCurrentUser().getPassword();
+		username = //DWOplayer.profiledata.get("username").toString();
+				DwoGlobalVars.getInstance().getCurrentUser().getUserName();
 		clientFactory.logout();
 		panel.setWidget(new Label());
 		clientFactory.getRPCHandler().loginMD5(getUsername(), getPassword(), LOGIN_CALLBACK);

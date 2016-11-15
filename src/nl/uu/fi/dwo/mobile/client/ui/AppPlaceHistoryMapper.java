@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
@@ -20,7 +19,7 @@ import com.google.gwt.place.shared.WithTokenizers;
  * 
  */
 @WithTokenizers(
-{ SelectModulePlace.Tokenizer.class, ViewModulePlace.Tokenizer.class, LoginPlace.Tokenizer.class, ReloginPlace.Tokenizer.class, ProfilePlace.Tokenizer.class, TreeModulePlace.Tokenizer.class, FlatModulePlace.Tokenizer.class, c.Tokenizer.class, s.Tokenizer.class })
+{ SelectModulePlace.Tokenizer.class, ViewModulePlace.Tokenizer.class, LoginPlace.Tokenizer.class, ReloginPlace.Tokenizer.class, TreeModulePlace.Tokenizer.class, FlatModulePlace.Tokenizer.class, c.Tokenizer.class, s.Tokenizer.class })
 public interface AppPlaceHistoryMapper extends PlaceHistoryMapper
 {
 

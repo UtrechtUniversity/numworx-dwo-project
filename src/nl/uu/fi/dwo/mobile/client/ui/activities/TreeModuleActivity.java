@@ -42,7 +42,7 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 			view.setMenuWidget(clientFactory.getMenuWidget());
 		boolean select = true;
 		if(item.getType() == Type.MODULE && DWOplayer.withUser()) {
-			Object userID = DWOplayer.profiledata.get("userID");
+			Object userID = DWOplayer.clientfactory.getUserID();
 		if(userID != null) {	
 			Map<Object, Number> scoreMap;
 			scoreMap = item.getScoreMap();

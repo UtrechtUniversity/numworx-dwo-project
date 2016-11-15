@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -329,36 +330,33 @@ public class DWOplayer implements EntryPoint
 		count = 1;
 		AsyncCallback<List<Map<String, Object>>> callback = GETCOURSES_CALLBACK;
 		if(!DWOplayer.withUser())
-			/*clientfactory.getEntryView().setApi()*/api = clientfactory.setupAPI();
+			api = clientfactory.setupAPI();
 		else
 		{	
 			api = clientfactory.setupAPI();
-			if(!"".equals(profiledata.get("classID")))
+			if(!"".equals(clientfactory.getClassID()))
 			{
-				boolean iconizer = Boolean.TRUE.equals(profiledata.get("iconizer"));
+				boolean iconizer = clientfactory.isIconizer(); 
+						
 				if(iconizer)
 					callback = GETCOURSES_CALLBACK_CLASS_TREE;
 				else
 					callback = GETCOURSES_CALLBACK_CLASS_FLAT;
-				clientfactory.getRPCHandler().getCoursesClass(profiledata, callback);
+				clientfactory.getRPCHandler().getCoursesClass(clientfactory.getClassID(), callback);
 				return;
 			}
 // DONE als je wel student bent, maar niet in een klas zit, krijg je ook dit te zien!!!! FIXME voor MC2
-			if(!"".equals(profiledata.get("schoolID")) && !"STUDENT".equals(profiledata.get("groupname")))
+			if(!"".equals(clientfactory.getSchoolID()) 
+					&&  RoleType.STUDENT != clientfactory.getRoleType() )
 			{
 				count = 2;
-				clientfactory.getRPCHandler().getCoursesSchool(profiledata, callback);
+				clientfactory.getRPCHandler().getCoursesSchool(clientfactory.getSchoolID(), callback);
 			}
 		
 		}
 
 		final AsyncCallback<List<Map<String, Object>>> callback_final = callback;
-//		clientfactory.getRPCHandler().getCourseSequence(schoolID, 
-//		new Runnable() {
-//			public void run() {
-				clientfactory.getRPCHandler().getCourses(profiledata, callback_final);
-//			}
-//		});
+				clientfactory.getRPCHandler().getCourses(callback_final);
 		
 	}
 
