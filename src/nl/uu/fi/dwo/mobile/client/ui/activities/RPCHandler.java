@@ -2,6 +2,9 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import nl.uu.fi.dwo.account.client.RPCHandlerV1;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+
+import org.osgi.util.promise.Promise;
 
 import com.google.gwt.user.client.Window;
 
@@ -15,5 +18,6 @@ public class RPCHandler extends RPCHandlerV1 implements nl.uu.fi.dwo.mobile.clie
 	public RPCHandler() {
 		super(Window.Location.getProtocol() +  "//" + DWOplayer.PARAMETERS.getHost() + "/DWOmAccess/dbaccess", DWOplayer.PROFILE_ID);
 	}
+
 	
 }

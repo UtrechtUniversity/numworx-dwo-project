@@ -236,6 +236,53 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				return api;
 			}
 
+			@Override
+			public boolean withUser() {
+				return DwoGlobalVars.getInstance().getCurrentUser() != null;
+			}
+
+			@Override
+			public Object getSchoolID() {
+				try {
+					PersistenceId id = DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getId();
+					return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentSchool);
+				} catch (Exception e) {
+					return "";
+				}
+			}
+
+			@Override
+			public Object getClassID() {
+				try {
+					PersistenceId id = DwoGlobalVars.getInstance().getCurrentSchoolClass().getId();
+					return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentSchoolClass);
+				} catch (Exception e) {
+					return "";
+				}
+			}
+
+			@Override
+			public boolean isIconizer() {
+				return DwoGlobalVars.getInstance().getCurrentSchoolClass().getIconizer().booleanValue();
+			}
+
+			@Override
+			public RoleType getRoleType() {
+				String roleName = DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName();
+				return RoleType.valueOf(roleName);
+			}
+
+			@Override
+			public Object getUserID() {
+				PersistenceId id = DwoGlobalVars.getInstance().getCurrentUser().getId();
+				return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
+			}
+
+			@Override
+			public Object getSchoolName() {
+				return DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getSchoolName();
+			}
+
 
 		};
 		String host = PARAMETERS.getHost();

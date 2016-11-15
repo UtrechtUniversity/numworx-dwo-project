@@ -2,6 +2,9 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.Map;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
+
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -47,6 +50,10 @@ public class ReloginActivity extends MGWTAbstractActivity {
 				}
 
 			};
+			
+			
+			
+			
 	private String username;
 	private String password;
 
@@ -54,6 +61,19 @@ public class ReloginActivity extends MGWTAbstractActivity {
 		this.clientFactory = clientFactory;
 		this.next = next;
 	}
+
+	private final Success<Void, Void> LOGIN_STAP3 = new Success<Void, Void>() {
+
+		@Override
+		public Promise<Void> call(Promise<Void> resolved) throws Exception {
+			if(next == null)
+				DWOplayer.gotoCourses();
+			else
+				clientFactory.getPlaceController().goTo(next);
+			return null;
+
+		}
+	};
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
@@ -65,7 +85,10 @@ public class ReloginActivity extends MGWTAbstractActivity {
 				DwoGlobalVars.getInstance().getCurrentUser().getUserName();
 		clientFactory.logout();
 		panel.setWidget(new Label());
-		clientFactory.getRPCHandler().loginMD5(getUsername(), getPassword(), LOGIN_CALLBACK);
+		clientFactory.getRPCHandler().loginMD5(getUsername(), getPassword())
+			.then(LoginActivity.LOGIN_STAP1)
+			.then(LoginActivity.LOGIN_STAP2, LoginActivity.FAILURE1)
+			.then(LOGIN_STAP3);
 	}
 
 	private String getUsername() {

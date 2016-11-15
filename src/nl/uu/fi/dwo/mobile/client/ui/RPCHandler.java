@@ -7,6 +7,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 import org.osgi.util.promise.Promise;
 
@@ -56,6 +58,13 @@ public interface RPCHandler {
 	void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback);
 
 	void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
+
+	Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins();
+
+	Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id);
+	Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken);
+	Promise<DomUserFullwLoginContext> login(String username, String password);
+	Promise<DomUserFullwLoginContext> loginMD5(String username, String password);
 
 
 }
