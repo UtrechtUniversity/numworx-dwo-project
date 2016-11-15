@@ -232,6 +232,9 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					
 					api = new SCORM_DWO2(userID, sgID);
 					menuWidget = getUserBar();
+					
+					userBar.setRole(clientfactory.getRoleType());
+
 				}
 				return api;
 			}
