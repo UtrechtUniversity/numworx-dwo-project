@@ -166,7 +166,7 @@ public class SecuredUserAccountManager {
      * @param callBack 
      */
     public void loginUser(String username, AsyncCallback<DomUserFullwLoginContext> callBack) {
-        service.loginUser(username, new Callback<DomUserFullwLoginContext>(callBack));
+        service.loginUserWithPOST(username, new Callback<DomUserFullwLoginContext>(callBack));
     }
 
     /**
