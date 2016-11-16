@@ -233,7 +233,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					api = new SCORM_DWO2(userID, sgID);
 					menuWidget = getUserBar();
 					
-					userBar.setRole(clientfactory.getRoleType());
+					userBar.setRole(getRoleType());
 
 				}
 				return api;
@@ -266,13 +266,21 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 			@Override
 			public boolean isIconizer() {
-				return DwoGlobalVars.getInstance().getCurrentSchoolClass().getIconizer().booleanValue();
+				try {
+					return DwoGlobalVars.getInstance().getCurrentSchoolClass().getIconizer().booleanValue();
+				} catch (Exception e) {
+					return true;
+				}
 			}
 
 			@Override
 			public RoleType getRoleType() {
-				String roleName = DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName();
-				return RoleType.valueOf(roleName);
+				try {
+					String roleName = DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName();
+					return RoleType.valueOf(roleName);
+				} catch (Exception e) {
+					return RoleType.ANONYMOUS;
+				}
 			}
 
 			@Override
@@ -283,7 +291,11 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 			@Override
 			public Object getSchoolName() {
-				return DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getSchoolName();
+				try {
+					return DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getSchoolName();
+				} catch (Exception e) {
+					return "school";
+				}
 			}
 
 

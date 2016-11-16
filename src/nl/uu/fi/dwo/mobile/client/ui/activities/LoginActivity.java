@@ -117,7 +117,7 @@ public class LoginActivity extends MGWTAbstractActivity
 					if(value == null) {
 						instance.setCurrentLoginContext(null);
 						instance.setCurrentUser(null);
-						return Promises.resolved(null);
+						return null;
 					} else {
 						instance.setCurrentLoginContext(value.getDomLoginContext());
 						instance.setCurrentUser(value.getDomUserFull());

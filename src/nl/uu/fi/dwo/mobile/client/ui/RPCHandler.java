@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import java.util.List;
 import java.util.Map;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
@@ -23,7 +24,7 @@ public interface RPCHandler {
 
 	void getCoursesClass(Object classid,
 			AsyncCallback<List<Map<String, Object>>> callback);
-	Promise<List<DomCourseFull>> getCoursesClass(DomSchoolClass schoolClass);
+	Promise<List<DomClassCourse>> getCoursesClass(DomSchoolClass schoolClass);
 	
 	void getCoursesSchool(Object schoolID,
 			AsyncCallback<List<Map<String, Object>>> callback);
