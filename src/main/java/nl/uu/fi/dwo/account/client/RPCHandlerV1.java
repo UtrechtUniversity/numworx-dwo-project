@@ -18,6 +18,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -34,6 +35,24 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
  *
  */
 public class RPCHandlerV1 {
+
+	private static final class ListFunction<D> implements Function<List<Map<String,Object>>, List<D>> {
+		private Function<Map<String, Object>, D> function;
+
+		public ListFunction(Function<Map<String, Object>, D> function) {
+			this.function = function;
+		}
+
+		@Override
+		public List<D> apply(List<Map<String,Object>> t) {
+			List<D> courseList = new ArrayList<D>();
+			for( Map<String,Object> item: t) {
+				courseList.add(function.apply(item));
+			}
+			return courseList;
+		}
+	}
+
 
 	private static final List<String> SCO_KEYS = Arrays.asList("scoID", "appletID", "sconame", "description", "showscore", "sequencenr", "courseID" );
 	private String server;
@@ -134,18 +153,9 @@ public class RPCHandlerV1 {
 	};
 
 	private static final Function<List<Map<String,Object>>, List<DomCourseFull>> TO_DOMCOURSELIST = 
-		new Function<List<Map<String,Object>>, List<DomCourseFull>>() {
-
-		@Override
-		public List<DomCourseFull> apply(List<Map<String, Object>> t) {
-			List<DomCourseFull> courseList = new ArrayList<DomCourseFull>();
-			for( Map<String,Object> item: t) {
-				courseList.add(TO_DOMCOURSE.apply(item));
-			}
-			return courseList;
-		}
-		
-	};
+		new ListFunction<DomCourseFull>(TO_DOMCOURSE);
+	
+	private static final Function<Map<String,Object>,DomClassCourse> TO_DOMCLASSCOURSE = null;
 	
 	
 	
@@ -207,11 +217,11 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 
-	public Promise<List<DomCourseFull>> getCoursesClass(DomSchoolClass schoolclass) {
+	public Promise<List<DomClassCourse>> getCoursesClass(DomSchoolClass schoolclass) {
 		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
 		Object id = PersistenceIdDecoderInterface.instance.idOf(schoolclass.getId(), PersistenceClassType.PersistentSchoolClass);
 		getCoursesClass(id, defer);
-		return defer.getPromise().map(TO_DOMCOURSELIST);
+		return defer.getPromise().map(new ListFunction<DomClassCourse>(TO_DOMCLASSCOURSE));
 	}
 	
 	
