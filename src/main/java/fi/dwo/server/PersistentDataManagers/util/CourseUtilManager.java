@@ -6,6 +6,7 @@ public class CourseUtilManager {
 
     private static final Logger LOG = Logger.getLogger(CourseUtilManager.class.getName());
 
+// For much later. This requires a full update of the tree management software.
 //    public static List<PersistentCourse> getChildCoursesAndSetTreeIndex(Queue<PersistentCourse> courseQueue) {
 //            List<PersistentCourse> courses;
 //            

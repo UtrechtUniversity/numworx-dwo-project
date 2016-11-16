@@ -23,7 +23,6 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
-import fi.dwo.server.PersistentDataManagers.util.CourseUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import java.util.HashMap;
@@ -80,6 +79,9 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
         DomContext context = aContext.getRestContext();
         DomHasRole domHasRole = context.getDomHasRole();
 
+        if(domHasRole==null){
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "User "+sc.getUserPrincipal().getName() + "didn't submit a hasRole in his RestContext.");
+        }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
 
@@ -141,9 +143,11 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             });
             results.setStudents(domStudents);
 
-            //Fetch courses for all classes ClassCourses, note course are not 
-            //always leaves and all subcourses are not indexed.
-            //create a Courses Map to recurse until Sco leaves
+            //Fetch courses for all classes ClassCourses. No filtering occurs on
+            //CourseType, notBefore and notAfter for results.
+            //
+            //Note that course are not always leaves and all subcourses are not
+            //indexed. Create a Courses Map to recurse until Sco leaves
             HashMap<Long, PersistentClassCourse> classCoursesMap = new HashMap<>();
             HashMap<Long, PersistentCourse> coursesMap = new HashMap<>();
             schoolClasses.stream().forEach((schoolClass) -> {
