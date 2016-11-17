@@ -13,9 +13,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class DomCourseFull extends DomCourseStudent{
     private static Logger LOG = Logger.getLogger(DomCourse.class.getName());
     private PersistenceId dwoProfileId;
-    private String description;
     private Boolean export;
-//    private short notVisible;
 
     /**
      * @return the dwoProfileId
