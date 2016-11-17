@@ -163,7 +163,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					backStep(false);
 				}
 				
-				if (getEditor() != null)
+				if (getEditor() != null && !useranswer.equals(getEditor().toString()))
 				{
 					getEditor().clearMain();
 					getEditor().insert(useranswer);
@@ -184,23 +184,36 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				// als getEditor() er is, dan halen we het antwoord uit deze editor
 				if (getEditor() != null)
 				{
-					useranswer = getEditor().toString();
-					
-					if ("".equals(useranswer))
+					if (!useranswer.equals(getEditor().toString()))
 					{
-						backStep(false);
 						useranswer = getEditor().toString();
+						
+						if ("".equals(useranswer))
+						{
+							backStep(false);
+							useranswer = getEditor().toString();
+						}
+						
+						other.clearMain();
+						other.insert(useranswer);
 					}
+					// else answer is already there
 				}
 				else
 				{
 					System.out.println("acceptCBookEvent(): klapin, getEditor() == null");
 				}
 				
-				other.clearMain();
-				other.insert(useranswer);
-				boolean show = mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN;
-				other.kijkNa(false, show, false);
+				boolean show = 
+					mode == OpdrNavIF.OEFENEN 
+					|| mode == OpdrNavIF.OEFENEN_STRAFPUNTEN
+					|| (mode == OpdrNavIF.ZELFTOETS && isNagekeken() && !isVeranderdNaNakijken());
+
+				// helemaal niet nakijken voor eindtoets?
+				if (!(mode == OpdrNav.EINDTOETS))
+				{
+					other.kijkNa(false, show, false);
+				}
 			
 				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
 				fews.setUitgeklapt(false);
@@ -989,7 +1002,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	public void haalAntwoordOp() 
 	{
-		if (fews != null && fews.getEditor() != null && !fews.getEditor().toString().equals(""))
+		if (fews != null && fews.getEditor() != null 
+			&& (!fews.getEditor().toString().equals("") || fews.getStapNr() == 0)) // als fews.editor leeg en er zijn geen andere stappen, dan moet dit lege antwoord erin
 		{
 			clearMain();
 			insert(fews.getEditor().toString());
@@ -1358,20 +1372,19 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				int laatste = formuleVakInhouden.length - 1;
 				String antwoord = formuleVakInhouden[laatste];
 				String leegAntwoord = "$f@";
+				
 				if ((antwoord == leegAntwoord) && (laatste > 0)) // als leeg en er is een vorige
 				{
 					antwoord = formuleVakInhouden[laatste - 1];
 				}
 				
-				if (antwoord != null && !"".equals(antwoord.trim()))
+				// trim "$f" + antwoord + "@"
+				antwoord = fews.removeFormulaCodes(antwoord);
+
+				if (antwoord != null && !"".equals(antwoord.trim()) && !antwoord.equals(this.toString()))
 				{
 					this.clearMain();
-					// trim "$f" + toString() + "@"
-					antwoord = antwoord.substring(2); // trim "$f"
-					int lastIndex = antwoord.length() - 1;
-					antwoord = antwoord.substring(0, lastIndex); // trim "@"
 					antwoord = fews.removeIsTeken(antwoord);
-					//this.insert(antwoord);// dit haalt ook het vinkje weg...
 					setCurrentElementRepaint();
 					
 					if (!"".equals(toString()))
@@ -1419,7 +1432,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			{
 				this.score = fews.getScore();
 			}
-		}		
+		} // fews != null	
 		else	
 		{
 			//kijkNa moet gebeuren om bijvoorbeeld bolletje groen te maken als alles op de pagina correct is. 
