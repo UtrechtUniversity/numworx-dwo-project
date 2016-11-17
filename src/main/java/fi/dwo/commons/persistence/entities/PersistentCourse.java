@@ -57,21 +57,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
     @NamedQuery(name = "PersistentCourse.findByParentID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID")})
 //    @NamedQuery(name = "PersistentCourse.findByNotVisible", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = :notVisible")})
 public class PersistentCourse implements Serializable {
-
-    public enum CourseType {
-        NORMAL(0),
-        ASSESSMENT(1);
-        
-        private final int value;
-
-        private CourseType(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
     
     private static final long serialVersionUID = 1L;
     @Id

@@ -52,6 +52,21 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
     @NamedQuery(name = "PersistentClassCourse.findByCourseID", query = "SELECT p FROM PersistentClassCourse p WHERE p.courseID = :courseID")})
 public class PersistentClassCourse implements Serializable {
 
+    public enum CourseType {
+        NORMAL(0),
+        ASSESSMENT(1);
+        
+        private final int value;
+
+        private CourseType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

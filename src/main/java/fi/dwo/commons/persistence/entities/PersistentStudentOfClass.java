@@ -5,6 +5,7 @@
  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -19,6 +20,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 /**
  *
@@ -100,6 +103,16 @@ public class PersistentStudentOfClass implements Serializable {
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentStudentOfClass[ persistentStudentOfClassPK=" + persistentStudentOfClassPK + " ]";
+    }
+    
+    public DomStudentOfClass buildDomStudentOfClass() {
+        DomStudentOfClass result = new DomStudentOfClass();
+        if (this.getPersistentStudentOfClassPK() != null) {
+            result.setId(MySQLPersistenceId.createPersistentId((PersistentStudentOfClass) this));
+        }
+        result.setStudentId(MySQLPersistenceId.createPersistenceId(this.persistentStudentOfClassPK.getUserID().longValue(), PersistenceClassType.PersistentUser));
+        result.setClassId(MySQLPersistenceId.createPersistenceId(this.persistentStudentOfClassPK.getClassID().longValue(), PersistenceClassType.PersistentSchoolClass));
+        return result;
     }
 
 }
