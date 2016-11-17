@@ -17,7 +17,7 @@ import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.CourseSequence;
+//import fi.dwo.dwojapplet.domain.CourseSequence;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
@@ -2744,29 +2744,29 @@ public class PersistenceFacade {
 
     }
 
-    /**
-     * =============================================================================
-     * COURSESEQUENCE FUNCTIONALITY
-     * =============================================================================
-     * @return null
-     * @deprecated
-     */
-    public CourseSequence[] getCourseSequence(User currentUser) {
-        School school = currentUser.getSchool();
-        MapperIF instance = MapperCreator.instance(CourseSequence.class);
-        try {
-            CourseSequence[] standaard = (CourseSequence[]) instance.get(null);
-            if (school != null) {
-                return (CourseSequence[]) combine_(standaard, instance.get(school));
-            }
-            return standaard;
-        }
-        catch (Exception e) {
-            // TODO Auto-generated catch block
-            LOG.log(Level.SEVERE, null, e);
-            return new CourseSequence[0];
-        }
-    }
+//    /**
+//     * =============================================================================
+//     * COURSESEQUENCE FUNCTIONALITY
+//     * =============================================================================
+//     * @return null
+//     * @deprecated
+//     */
+//    public CourseSequence[] getCourseSequence(User currentUser) {
+//        School school = currentUser.getSchool();
+//        MapperIF instance = MapperCreator.instance(CourseSequence.class);
+//        try {
+//            CourseSequence[] standaard = (CourseSequence[]) instance.get(null);
+//            if (school != null) {
+//                return (CourseSequence[]) combine_(standaard, instance.get(school));
+//            }
+//            return standaard;
+//        }
+//        catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            LOG.log(Level.SEVERE, null, e);
+//            return new CourseSequence[0];
+//        }
+//    }
 
     public void setCourseSequence(CourseMap[] courses, School school) throws PersistenceException {
         if (courses.length == 0) {
@@ -2824,8 +2824,8 @@ public class PersistenceFacade {
         if (school != null) {
             schoolID = school.getSchoolID();
         }
-        MapperIF instance = MapperCreator.instance(CourseSequence.class);
-        instance.removeAllObjects();
+//        MapperIF instance = MapperCreator.instance(CourseSequence.class);
+//        instance.removeAllObjects();
         try {
             access.setCourseSequence(vector, schoolID, classID, parent, profileID);
         }
@@ -2837,35 +2837,37 @@ public class PersistenceFacade {
 
     @Deprecated
     public Course[] sequence(Course[] courses) {
-        if (!DWO.SEQUENCE || true) { // NO SORTING HERE 
+//        if (!DWO.SEQUENCE || true) { // NO SORTING HERE 
             return courses;
-        }
-        return sequence(courses, DwoHelper.getCurrentFacadeUser());
+//        }
+//        return sequence(courses, DwoHelper.getCurrentFacadeUser());
     }
 
-    public Course[] sequence(Course[] courses, User currentUser) {
-        CourseSequence[] css = getCourseSequence(currentUser);
-        return sequence(courses, css);
-    }
-
-    public Course[] sequence(Course[] courses, CourseSequence[] css) {
-        int start = 0;
-        if (css != null) {
-            for (int i = 0; i < css.length; i++) {
-                int c = css[i].getCourseID();
-                for (int j = start; j < courses.length; j++) {
-                    if (courses[j].getID() == c) {
-                        Course tmp = courses[start];
-                        courses[start] = courses[j];
-                        courses[j] = tmp;
-                        start++;
-                        break;
-                    }
-                }
-            }
-        }
-        return courses;
-    }
+//    @Deprecated
+//    private Course[] sequence(Course[] courses, User currentUser) {
+//        CourseSequence[] css = getCourseSequence(currentUser);
+//        return sequence(courses, css);
+//    }
+//
+//    @Deprecated
+//    private Course[] sequence(Course[] courses, CourseSequence[] css) {
+//        int start = 0;
+//        if (css != null) {
+//            for (int i = 0; i < css.length; i++) {
+//                int c = css[i].getCourseID();
+//                for (int j = start; j < courses.length; j++) {
+//                    if (courses[j].getID() == c) {
+//                        Course tmp = courses[start];
+//                        courses[start] = courses[j];
+//                        courses[j] = tmp;
+//                        start++;
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        return courses;
+//    }
 
     /**
      * =============================================================================
