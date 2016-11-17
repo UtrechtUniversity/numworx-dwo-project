@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 /**
@@ -292,13 +293,13 @@ public class PersistentCourse implements Serializable {
         this.lastChangeTimeStamp = lastChangeTimeStamp;
     }
 
-    public DomCourse createDomCourse() {
+    public DomCourse buildDomCourse() {
         DomCourse course = new DomCourse();
-        buildDomCourse(course);
+        fillDomCourse(course);
         return course;
     }
 
-    private void buildDomCourse(DomCourse course) {
+    private void fillDomCourse(DomCourse course) {
         course.setId(MySQLPersistenceId.createPersistentId(this));
         if (this.schoolID != null) {
             course.setSchoolId(MySQLPersistenceId.createPersistenceId(this.schoolID, PersistenceClassType.PersistentSchool));
@@ -312,22 +313,32 @@ public class PersistentCourse implements Serializable {
         course.setSequenceNr(sequenceNr);
         course.setTreeIndex(treePath);
         course.setWithChildren(withChildren);
-        course.setImage(image);
-        course.setImageData(imageData);
 //        course.setNotVisible(notVisible);
         course.setLastChangeTimeStamp(lastChangeTimeStamp);
     }
 
-    public DomCourse createDomCourseFull() {
+    public DomCourseStudent buildDomCourseStudent() {
         DomCourseFull course = new DomCourseFull();
-        buildDomCourseFull(course);
+        fillDomCourseFull(course);
+        return course;
+    }
+    
+    private void fillDomCourseStudent(DomCourseStudent course) {
+        fillDomCourse(course);
+        course.setImage(image);
+        course.setImageData(imageData);
+        course.setDescription(description);
+    }
+    
+    public DomCourseFull buildDomCourseFull() {
+        DomCourseFull course = new DomCourseFull();
+        fillDomCourseFull(course);
         return course;
     }
 
-    private void buildDomCourseFull(DomCourseFull course) {
-        buildDomCourse(course);
+    private void fillDomCourseFull(DomCourseFull course) {
+        PersistentCourse.this.fillDomCourseStudent(course);
         course.setDwoProfileId(MySQLPersistenceId.createPersistenceId(this.dwoProfileID, PersistenceClassType.PersistentDwoProfile));
-        course.setDescription(description);
         course.setExport(export);
     }
 
