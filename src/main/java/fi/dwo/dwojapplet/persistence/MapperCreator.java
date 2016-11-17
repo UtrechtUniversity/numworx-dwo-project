@@ -36,7 +36,7 @@ public class MapperCreator {
         {"AppletConfig", "AppletConfigMapper"},
         {"DwoProfile", "DwoProfileMapper"},
         {"AppletData", "AppletDataMapper"},
-        {"CourseSequence", "CourseSequenceMapper"},
+ //       {"CourseSequence", "CourseSequenceMapper"},
         {"ClassCourse", "ClassCourseMapper"}};
 
     /**
