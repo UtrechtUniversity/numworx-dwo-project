@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 
 /**
  *
@@ -135,6 +136,7 @@ public class PersistentDwoProfile implements Serializable {
         return "fi.dwo.server.persistence.PersistentDwoProfile[ dwoProfileID=" + dwoProfileID + " ]";
     }
 
+
     public DomDwoProfile buildDomDwoProfile() {
         DomDwoProfile profile = new DomDwoProfile();
         PersistentDwoProfile.this.fillDomDwoProfile(profile);
@@ -142,11 +144,22 @@ public class PersistentDwoProfile implements Serializable {
     }
 
     private void fillDomDwoProfile(DomDwoProfile profile) {
-        profile.setDwoProfileDescription(getDwoProfileDescription());
+        profile.setId(MySQLPersistenceId.createPersistentId(this));
         profile.setDwoProfileName(getDwoProfileName());
         profile.setDwoProfileRights(getDwoProfileRights());
+    }
+    
+    
+    public DomDwoProfileFull buildDomDwoProfileFull() {
+        DomDwoProfileFull profile = new DomDwoProfileFull();
+        PersistentDwoProfile.this.fillDomDwoProfileFull(profile);
+        return profile;
+    }
+
+    private void fillDomDwoProfileFull(DomDwoProfileFull profile) {
+        fillDomDwoProfile(profile);
+        profile.setDwoProfileDescription(getDwoProfileDescription());
         profile.setDwoProfileText(getDwoProfileText());
-        profile.setId(MySQLPersistenceId.createPersistentId(this));
     }
 
 }
