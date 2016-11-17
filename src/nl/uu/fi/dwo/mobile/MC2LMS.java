@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.osgi.util.function.Function;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import nl.uu.fi.dwo.account.client.RPCHandlerV1;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_MC2mAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
@@ -13,12 +17,16 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 
 /**
  * Main class (entry point) Sets up the DWO player.
@@ -34,7 +42,7 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 			super(server, profile);
 		}
 
-		public void getCourses(Map<String, Object> userData,
+		public void getCourses(
 				AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 			
 			String method = "getCoursesJS"; // sort sequencenr
@@ -85,6 +93,22 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 		protected Object objectToKey(Object courseID) {
 			return courseID.toString();
 		}
+
+		@Override
+		public Promise<DomUserFullwLoginContext> login(String name, String password) {
+			PromiseCallback<Map<String, Object>> defer = new PromiseCallback<>();
+			login(name, password, defer);
+			return defer.getPromise().map(new Function<Map<String, Object>, DomUserFullwLoginContext>() {
+
+				@Override
+				public DomUserFullwLoginContext apply(Map<String, Object> t) {
+					DWOplayer.profiledata = t;
+					return null;
+				}
+			});
+			
+		}
+		
 	}
 
 	public MC2LMS() {

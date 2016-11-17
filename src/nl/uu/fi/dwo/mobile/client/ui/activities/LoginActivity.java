@@ -1,25 +1,23 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.function.Predicate;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.account.client.UserBar;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
@@ -31,7 +29,6 @@ import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
@@ -42,57 +39,20 @@ public class LoginActivity extends MGWTAbstractActivity
 {
 	
 	static final Logger LOG = Logger.getLogger(LoginActivity.class.getName()); 
-	
-	private final AsyncCallback<Map<String, Object>> LOGIN_CALLBACK = new AsyncCallback<Map<String, Object>>()
-	{
 
-		@Override
-		public void onFailure(Throwable caught)
-		{
-			LOG.log(Level.WARNING, "login failure", caught);
-
-			if (caught.getMessage().contains("LoginException"))
-				Window.alert(Text.constants.EXR_WRONG_USERNAME_PASSWORD());
-			else
-				Window.alert("Unable to login");
-
-		}
-
-		@Override
-		public void onSuccess(Map<String, Object> result)
-		{
-			if(DWOplayer.dwoProfile.isDone() && result == null)
-			{
-				String r = DWOplayer.dwoProfile.getValue().getDwoProfileRights();
-				if(r.indexOf('l') >= 0)
-				{
-					Window.alert("Geen toegang voor deze site" );
-					return;
-				}
-			}
-			
-			
-			DWOplayer.profiledata = result;
-			if(next == null)
-				DWOplayer.gotoCourses();
-			else
-				clientFactory.getPlaceController().goTo(next);
-		}
-
-	};
-	
-	
 	public static final Failure FAILURE1 = new Failure() {
 		
 		@Override
 		public void fail(Promise<?> promise) throws Exception {
 			Throwable caught = promise.getFailure();
-			LOG.log(Level.WARNING, "login failure", caught);
-
+			LOG.log(Level.WARNING, "login failure ", caught);
+			if (caught instanceof NoSuchElementException)
+				Window.alert("Geen toegang voor deze site"); // Rekenwise limited
+			else
 			if (caught.getMessage().contains("LoginException"))
 				Window.alert(Text.constants.EXR_WRONG_USERNAME_PASSWORD());
 			else
-				Window.alert("Unable to login");
+				Window.alert("Unable to login"); // if exception is DWO2exception?
 		}
 	};
 
@@ -100,12 +60,15 @@ public class LoginActivity extends MGWTAbstractActivity
 
 		@Override
 		public void fail(Promise<?> resolved) throws Exception {
+			Throwable caught = resolved.getFailure();
+			LOG.log(Level.SEVERE, "login failure2 ", caught);
+			if(clientFactory.withUser())
+				clientFactory.logout();
 			defer = new Deferred<>();
 			rearm(defer.getPromise());
 		}		
 	};
-	
-	
+
 	public static final Success<DomUserFullwLoginContext, DomSchoolsRolesAndClassesV2> LOGIN_STAP1 =
 			
 			new Success<DomUserFullwLoginContext, DomSchoolsRolesAndClassesV2>() {
@@ -126,6 +89,22 @@ public class LoginActivity extends MGWTAbstractActivity
 				}
 			};
 
+	public static final Predicate<DomSchoolsRolesAndClassesV2> LOGIN_LIMITED = new Predicate<DomSchoolsRolesAndClassesV2>() {
+
+		@Override
+		public boolean test(DomSchoolsRolesAndClassesV2 t) {
+			if(DWOplayer.dwoProfile.isDone() && t == null)
+			{
+				String r = DWOplayer.dwoProfile.getValue().getDwoProfileRights();
+				return (r.indexOf('l') < 0);
+			}
+			// else test if current school in limited-schools
+			return true;
+		}
+	};		
+			
+			
+			
 	public static final Success<DomSchoolsRolesAndClassesV2, Void> LOGIN_STAP2 = 
 			 new Success<DomSchoolsRolesAndClassesV2, Void>() {
 
@@ -211,7 +190,6 @@ public class LoginActivity extends MGWTAbstractActivity
 				return;
 			}
 			panel.setWidget(new Label());
-			//clientFactory.getRPCHandler().samlLogin(user_id, org_id, LOGIN_CALLBACK);
 			promise = clientFactory.getRPCHandler().samlLogin(user_id, org_id);
 		} else {
 
@@ -228,11 +206,10 @@ public class LoginActivity extends MGWTAbstractActivity
 				Window.Location.assign(buildString);
 				return;
 			}
+		} else {
+			defer = new Deferred<>();
+			promise = defer.getPromise();
 		}
-		
-		defer = new Deferred<>();
-		promise = defer.getPromise();
-		
 		addHandlerRegistration(view.getLoginBtn().addTapHandler(new TapHandler()
 		{
 
@@ -249,7 +226,12 @@ public class LoginActivity extends MGWTAbstractActivity
 			public void onTap(TapEvent event)
 			{
 				if(clientFactory.withUser()) clientFactory.logout(); // fail safe?
-				defer.resolve(null);
+				if (defer != null)
+					DWOplayer.dwoProfile.onResolve(new Runnable() {
+					public void run() {
+						defer.resolve(null);
+					}
+				});
 			}
 		}));
 		
@@ -274,12 +256,26 @@ public class LoginActivity extends MGWTAbstractActivity
 	}
 
 	private void rearm(Promise<DomUserFullwLoginContext> promise) {
-		promise.then(LOGIN_STAP1).then(LOGIN_STAP2, FAILURE1).then(LOGIN_STAP3, FAILURE2);
+		promise
+		.then(LOGIN_STAP1)
+		.filter(LOGIN_LIMITED)
+		.then(LOGIN_STAP2, FAILURE1)
+		.then(LOGIN_STAP3, FAILURE2);
 	}
 
-	private Promise<Void> resolve() {
-		Promise<DomUserFullwLoginContext> login = clientFactory.getRPCHandler().login(view.getUsername(), view.getPassword());
-		return defer.resolveWith(login/*.fallbackTo((defer = new Deferred<DomUserFullwLoginContext>()).getPromise())*/);
+	private void resolve() {
+		if (defer == null) return;
+		final Promise<DomUserFullwLoginContext> login = clientFactory.getRPCHandler().login(view.getUsername(),
+				view.getPassword());
+		DWOplayer.dwoProfile.onResolve(
+		new Runnable() {
+			public void run() {
+				defer.resolveWith(login);
+			}
+		});
+		return ;
+
+				
 	}
 
 	private native static void logout()/*-{

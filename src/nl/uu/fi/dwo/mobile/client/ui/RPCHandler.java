@@ -39,17 +39,17 @@ public interface RPCHandler {
 	void getCourse(Object id,
 			AsyncCallback<Map<String, Object>> getCoursesCallback);
 
-	void samlLogin(String user_id, String org_id,
-			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
-
-	void getUserFromAuthToken(String authToken,
-			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
-
-	void login(String username, String password,
-			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
-
-	void loginMD5(String username, String password,
-			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
+//	void samlLogin(String user_id, String org_id,
+//			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
+//
+//	void getUserFromAuthToken(String authToken,
+//			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
+//
+//	void login(String username, String password,
+//			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
+//
+//	void loginMD5(String username, String password,
+//			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
 
 	void getSco(Object id, AsyncCallback<Map<String, Object>> callback);
 
