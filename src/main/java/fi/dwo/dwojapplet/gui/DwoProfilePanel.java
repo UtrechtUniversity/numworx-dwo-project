@@ -28,7 +28,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminProfileManager;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class DwoProfilePanel extends JPanel implements ActionListener,
@@ -44,9 +44,9 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 	
 	class DwoProfileModel extends AbstractTableModel {
 
-		private DomDwoProfile[] profiles;
+		private DomDwoProfileFull[] profiles;
 		
-		public DwoProfileModel(DomDwoProfile[] profiles) {
+		public DwoProfileModel(DomDwoProfileFull[] profiles) {
 			super();
 			this.profiles = profiles;
 		}
@@ -63,7 +63,7 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 
 		@Override
 		public Object getValueAt(int row, int col) {
-			DomDwoProfile current = profiles[row];
+			DomDwoProfileFull current = profiles[row];
 			switch(col) {
 			case 0:	return MySQLPersistenceId.getId(current.getId());
 			case 1: return current.getDwoProfileName();
@@ -138,7 +138,7 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 	    	}
 
 	    	public void actionPerformed(ActionEvent event) {
-	            DomDwoProfile sc = model.profiles[row];
+	            DomDwoProfileFull sc = model.profiles[row];
 	    		if (value == editImage) {
 					sc = AddProfileDwoAdminJPanel.editDialog(jtbl, sc.duplicate());
 					if ( sc != null) {
@@ -187,10 +187,10 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 
 	private JComponent buildJTable() {
 // TODO build model
-		DomDwoProfile[] profiles;
-		profiles = new DomDwoProfile[0];
+		DomDwoProfileFull[] profiles;
+		profiles = new DomDwoProfileFull[0];
 		try {
-			Collection<DomDwoProfile> list;
+			Collection<DomDwoProfileFull> list;
 			list = SecureDwoAdminProfileManager.getProfiles();
 			profiles = list.toArray(profiles);
 		} catch (Dwo2Exception e) {
@@ -261,7 +261,7 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		DomDwoProfile nieuw = AddProfileDwoAdminJPanel.addDialog(jtbl);
+		DomDwoProfileFull nieuw = AddProfileDwoAdminJPanel.addDialog(jtbl);
 		if(nieuw != null) {
 			try {
 				if (SecureDwoAdminProfileManager.submitProfile(nieuw))

@@ -7,7 +7,7 @@ import com.owlike.genson.Genson;
 import static fi.dwo.dwojapplet.REST.RestManager.getBasicAuthString;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -233,7 +233,7 @@ class RestManager {
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClasses>>() {
                     });
                 case DomDwoProfile:
-                	return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomDwoProfile>>() {
+                	return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomDwoProfileFull>>() {
                 	});
                 case DomSchoolsRolesAndClassesV2:
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClassesV2>>() {

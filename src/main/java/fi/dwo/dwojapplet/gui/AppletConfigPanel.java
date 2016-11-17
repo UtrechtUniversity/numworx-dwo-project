@@ -32,7 +32,7 @@ import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminProfileManager;
 import fi.dwo.dwojapplet.gui.DwoProfilePanel.DwoProfileModel;
 import fi.dwo.dwojapplet.gui.DwoProfilePanel.ImageButtonEditor;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener {

@@ -11,19 +11,19 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 
 @SuppressWarnings("serial")
 class AddProfileDwoAdminJPanel extends JPanel {
 
-	private DomDwoProfile profile;
+	private DomDwoProfileFull profile;
 	private JTextField nameField;
 	private JTextArea textField;
 	private JTextField descField;
 	private JLabel idField;
 	private JTextField rightsField;
 		
-	private AddProfileDwoAdminJPanel(DomDwoProfile profile) {
+	private AddProfileDwoAdminJPanel(DomDwoProfileFull profile) {
 		super(new SpringLayout());
 		this.profile = profile;
 		
@@ -51,7 +51,7 @@ class AddProfileDwoAdminJPanel extends JPanel {
 
 	}
 
-	DomDwoProfile edit() { 
+	DomDwoProfileFull edit() { 
 		profile.setDwoProfileDescription(descField.getText());
 		profile.setDwoProfileName(nameField.getText());
 		profile.setDwoProfileRights(rightsField.getText());
@@ -59,7 +59,7 @@ class AddProfileDwoAdminJPanel extends JPanel {
 		return profile;
 	}
 	
-	static DomDwoProfile editDialog(Component parent, DomDwoProfile edit) {
+	static DomDwoProfileFull editDialog(Component parent, DomDwoProfileFull edit) {
 		AddProfileDwoAdminJPanel panel = new AddProfileDwoAdminJPanel(edit);
 		int ok = JOptionPane.showConfirmDialog(parent, panel, "Edit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 		if(ok == JOptionPane.OK_OPTION)
@@ -67,8 +67,8 @@ class AddProfileDwoAdminJPanel extends JPanel {
 		return null;
 	}
 	
-	static DomDwoProfile addDialog(Component parent) {
-		DomDwoProfile edit = new DomDwoProfile();
+	static DomDwoProfileFull addDialog(Component parent) {
+		DomDwoProfileFull edit = new DomDwoProfileFull();
 		// set reasonable defaults..
 		edit.setDwoProfileRights("_");
 		edit.setDwoProfileDescription("");

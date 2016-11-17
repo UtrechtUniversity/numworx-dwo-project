@@ -1,4 +1,3 @@
-// Generated code, do not edit
 package fi.dwo.dwojapplet.persistence;
 
 import fi.beans.xmlrpc.Client;

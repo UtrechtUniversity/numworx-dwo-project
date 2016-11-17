@@ -8,32 +8,32 @@ import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
-import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class SecureDwoAdminProfileManager {
     private static final Logger LOG = Logger.getLogger(SecureDwoAdminProfileManager.class.getName());
 
-    public static List<DomDwoProfile> getProfiles() throws Dwo2Exception {
-        List<DomDwoProfile> src;
+    public static List<DomDwoProfileFull> getProfiles() throws Dwo2Exception {
+        List<DomDwoProfileFull> src;
         src = StoredRestManager.getInstance().getList("rest/secure/dwoadmin/profile/getList", RestListClassTypes.DomDwoProfile);
         LOG.log(Level.FINE, "Retrieved list of profiles for the dwoadmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId()});
         return src;
     }
 
-    public static Boolean updateProfile(DomDwoProfile profile) throws Dwo2Exception {
+    public static Boolean updateProfile(DomDwoProfileFull profile) throws Dwo2Exception {
     	Boolean result = Boolean.FALSE;
-    	RestDwoProfile restProfile = new RestDwoProfile();
+    	RestDwoProfileFull restProfile = new RestDwoProfileFull();
     	restProfile.setDomDwoProfile(profile);
     	restProfile.setRestContext(new DomContext());
     	result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/profile/update", Boolean.class, restProfile);
     	return result;
     }
     
-    public static Boolean submitProfile(DomDwoProfile profile) throws Dwo2Exception {
+    public static Boolean submitProfile(DomDwoProfileFull profile) throws Dwo2Exception {
     	Boolean result = Boolean.FALSE;
-    	RestDwoProfile restProfile = new RestDwoProfile();
+    	RestDwoProfileFull restProfile = new RestDwoProfileFull();
     	restProfile.setDomDwoProfile(profile);
     	restProfile.setRestContext(new DomContext());
     	result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/profile/submit", Boolean.class, restProfile);
