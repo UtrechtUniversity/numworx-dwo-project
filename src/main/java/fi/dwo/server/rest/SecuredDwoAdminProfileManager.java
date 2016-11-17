@@ -17,9 +17,9 @@ import javax.ws.rs.core.SecurityContext;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -41,7 +41,7 @@ public class SecuredDwoAdminProfileManager {
     @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public List<DomDwoProfile> getProfiles(@Context SecurityContext sc) {
+    public List<DomDwoProfileFull> getProfiles(@Context SecurityContext sc) {
         PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
@@ -52,13 +52,13 @@ public class SecuredDwoAdminProfileManager {
         }
         if (hr != null) {
             List<PersistentDwoProfile> profiles = null;
-            List<DomDwoProfile> domProfiles;
+            List<DomDwoProfileFull> domProfiles;
             try {
             	profiles = DwoProfileManager.findEntities();
                 LOG.log(Level.FINER, "Fetched all {0} profiles. ", new Object[]{profiles.size()});
                 domProfiles = new ArrayList<>(profiles.size());
                 for (PersistentDwoProfile p : profiles) {
-                	domProfiles.add(p.buildDomDwoProfile());
+                	domProfiles.add(p.buildDomDwoProfileFull());
                 }
             }
             catch (Exception e) {
@@ -82,12 +82,12 @@ public class SecuredDwoAdminProfileManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Boolean submitProfile(@Context SecurityContext sc, RestDwoProfile restDwoProfile) {
+    public Boolean submitProfile(@Context SecurityContext sc, RestDwoProfileFull restDwoProfile) {
         if(restDwoProfile==null){
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
-        DomDwoProfile profile = restDwoProfile.getDomDwoProfile() ;
+        DomDwoProfileFull profile = restDwoProfile.getDomDwoProfile() ;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
@@ -127,12 +127,12 @@ public class SecuredDwoAdminProfileManager {
     @PUT
     @Produces({"application/json"})
     @Path("/update")
-    public Boolean updateProfile(@Context SecurityContext sc, RestDwoProfile restProfile) {
+    public Boolean updateProfile(@Context SecurityContext sc, RestDwoProfileFull restProfile) {
         if(restProfile==null){
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         PersistentHasRole hr = null;
-        DomDwoProfile profile = restProfile.getDomDwoProfile();
+        DomDwoProfileFull profile = restProfile.getDomDwoProfile();
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }

@@ -4,6 +4,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -19,9 +20,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -76,8 +79,21 @@ public class SecuredTeacherResultsManagerIT {
         System.out.println("testGetTeachersResults");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         SecuredTeacherResultsManager instance = new SecuredTeacherResultsManager();
-        RestContext restContext = new RestContext();
-        DomContext domContext = new DomContext();
+        RestDwoProfile restProfile = new RestDwoProfile();
+        DomDwoProfile domProfile;
+        
+        PersistentDwoProfile pProfile = new PersistentDwoProfile();
+        pProfile.setDwoProfileID(1L);
+        pProfile.setDwoProfileName("testprofile01");
+        pProfile.setDwoProfileRights("_");
+        pProfile.setDwoProfileDescription("Test dwoProfileDescription02iption");
+        pProfile.setDwoProfileText("Test dwoProfileText01");
+        domProfile = pProfile.buildDomDwoProfileFull();
+        
+        DomContext restContext = new DomContext();
+        restProfile.setRestContext(restContext);
+        restProfile.setDomDwoProfile(domProfile);
+        
         DomHasRole domHasRole = null;
         PersistentUser pUser = UserManager.findByUserName("user07");
         PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");
@@ -90,10 +106,9 @@ public class SecuredTeacherResultsManagerIT {
             fail("Could not find teacher's hasRole");
         }
         
-        domContext.setDomHasRole(domHasRole);
-        restContext.setRestContext(domContext);
+        restContext.setDomHasRole(domHasRole);
         
-        DomResultsPerTeacher result = instance.getTeachersResults(sc,restContext);
+        DomResultsPerTeacher result = instance.getTeachersResults(sc,restProfile);
         
         assertEquals(result.getTeacher().getId().getIdString(),"MYSQL;PersistentUser;00000000000000000014");
         assertEquals(3, result.getStudents().size());

@@ -42,6 +42,7 @@ import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -50,7 +51,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
-import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -67,7 +68,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     private static final Logger LOG = Logger.getLogger(SecuredTeacherResultsManager.class.getName());
 
     /**
-     * Returns the school data to be displayed.
+     * Returns the school data to be displayed. note
      *
      * @param sc
      * @return
@@ -75,11 +76,13 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getTeachersResults")
-    public DomResultsPerTeacher getTeachersResults(@Context SecurityContext sc, RestContext aContext) {
+    public DomResultsPerTeacher getTeachersResults(@Context SecurityContext sc, RestDwoProfile aProfile) {
 
-        DomContext context = aContext.getRestContext();
+        DomDwoProfile profile = aProfile.getDomDwoProfile();
+        DomContext context = aProfile.getRestContext();
         DomHasRole domHasRole = context.getDomHasRole();
 
+        //check given role in RestContext
         if (domHasRole == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "User " + sc.getUserPrincipal().getName() + "didn't submit a hasRole in his RestContext.");
         }
@@ -89,6 +92,11 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
         try {
             PersistentHasRolePK hasRoleKey = MySQLPersistenceId.extractHasRoleKey(domHasRole.getId());
             phr = HasRoleManager.findEntity(hasRoleKey);
+            PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            if (!user.getId().equals(phr.getPersistentHasRolePK().getId())) {
+                LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using uid {1} in HasRole differs from user principal name {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+                throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "User id mismatched.");
+            }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Trying to hack the persistentId.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -101,6 +109,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
+        //fetch Profile
         if (phr != null && school != null) {
             DomResultsPerTeacher results = new DomResultsPerTeacher();
             // DomResultsPerTeacher requires teacher, schoolclasses, students, 
@@ -152,7 +161,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             results.setStudentOfClass(domSocs);
 
             //Fetch courses for all classes ClassCourses. No filtering occurs on
-            //CourseType, notBefore and notAfter for results.
+            //CourseType, notBefore and notAfter for results. Filtering of Courses
             //
             //Note that course are not always leaves and all subcourses are not
             //indexed. Create a Courses Map to recurse until Sco leaves
@@ -196,7 +205,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 } else {//leave
                     leaves.add(course);
                 }
-                DomCourse c = course.createDomCourse();
+                DomCourse c = course.buildDomCourse();
                 domCourses.put(c.getId(), c);
             }
             results.setCourses(domCourses);
