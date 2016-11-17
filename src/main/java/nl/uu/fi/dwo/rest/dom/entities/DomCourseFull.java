@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class DomCourseFull extends DomCourse{
+public class DomCourseFull extends DomCourseStudent{
     private static Logger LOG = Logger.getLogger(DomCourse.class.getName());
     private PersistenceId dwoProfileId;
     private String description;
@@ -31,20 +31,6 @@ public class DomCourseFull extends DomCourse{
         this.dwoProfileId = dwoProfileId;
     }
     
-    /**
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     /**
      * @return the export
      */

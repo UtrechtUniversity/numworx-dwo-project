@@ -16,11 +16,8 @@ public class DomCourse {
     private PersistenceId id;
     private PersistenceId schoolId;
     private String name;
-    private String image;
-    private byte[] imageData;
     private Boolean withChildren;
     private PersistenceId parentID;
-    private short notVisible;
     private Long sequenceNr;
     private String treeIndex;
     private Long  lastChangeTimeStamp;    
@@ -67,33 +64,6 @@ public class DomCourse {
         this.name = name;
     }
 
-    /**
-     * @return the image
-     */
-    public String getImage() {
-        return image;
-    }
-
-    /**
-     * @param image the image to set
-     */
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    /**
-     * @return the imageData
-     */
-    public byte[] getImageData() {
-        return imageData;
-    }
-
-    /**
-     * @param imageData the imageData to set
-     */
-    public void setImageData(byte[] imageData) {
-        this.imageData = imageData;
-    }
 
     /**
      * @return the withChildren
@@ -121,20 +91,6 @@ public class DomCourse {
      */
     public void setParentID(PersistenceId parentID) {
         this.parentID = parentID;
-    }
-
-    /**
-     * @return the notVisible
-     */
-    public short getNotVisible() {
-        return notVisible;
-    }
-
-    /**
-     * @param notVisible the notVisible to set
-     */
-    public void setNotVisible(short notVisible) {
-        this.notVisible = notVisible;
     }
 
     /**
