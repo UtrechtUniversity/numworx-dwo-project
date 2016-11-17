@@ -47,6 +47,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
@@ -79,8 +80,8 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
         DomContext context = aContext.getRestContext();
         DomHasRole domHasRole = context.getDomHasRole();
 
-        if(domHasRole==null){
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "User "+sc.getUserPrincipal().getName() + "didn't submit a hasRole in his RestContext.");
+        if (domHasRole == null) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "User " + sc.getUserPrincipal().getName() + "didn't submit a hasRole in his RestContext.");
         }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -108,7 +109,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             //Fetch Teacher
             DomTeacher teacher = UserManager.findEntity(phr.getPersistentHasRolePK().getUserID()).buildDomTeacher();
             results.setTeacher(teacher);
-            
+
             //Fetch SchoolClasses and students
             List<PersistentSchoolClass> schoolClasses = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
             Map<PersistenceId, DomSchoolClass> domSchoolClasses = new HashMap<>(schoolClasses.size());
@@ -134,7 +135,6 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 }
             });
             results.setSchoolClasses(domSchoolClasses);
-            
             //convert studentMap and set in result
             Map<PersistenceId, DomStudent> domStudents = new HashMap<>(studentMap.size());
             studentMap.entrySet().stream().forEach((keyValuePair) -> {
@@ -142,6 +142,14 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 domStudents.put(s.getId(), s);
             });
             results.setStudents(domStudents);
+            //convert StudentOfClass map (socMap) and set in result
+            Map<PersistenceId, DomStudentOfClass> domSocs = new HashMap<>(socMap.size());
+            socMap.entrySet().stream().forEach((keyValuePair) -> {
+                DomStudentOfClass s = keyValuePair.getValue().buildDomStudentOfClass();
+                domSocs.put(s.getId(), s);
+            });
+            //TODO broken need a  getId for a tripple key
+            results.setStudentOfClass(domSocs);
 
             //Fetch courses for all classes ClassCourses. No filtering occurs on
             //CourseType, notBefore and notAfter for results.
@@ -177,7 +185,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             //Set the treeindex depth and commit all that are found
             //if the child depth less or equal to the parent then there is an issue.
             //if child depth empty set it.
-            
+
             //ensure sequence is always set.
             while (!courseQueue.isEmpty()) {
                 PersistentCourse course = courseQueue.remove();
