@@ -174,6 +174,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
 				fews.setUitgeklapt(true);
 				fews.setIsBoss(true);
+
+				// state zetten opdat de bol-kleur zich zonodig kan aanpassen; vgl. onHide() sluiten popup
+				HashMap<String, Object> state;
+				state = this.getState();
+				this.setState(state);
+				
+				// na setState() is het goede antwoord in FEWA gezet
+				comRoot.setChanged(false);
 			}
 			
 			if (TekstVakPanel.TVP_KLAPIN == event.getCommand())
@@ -217,6 +225,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			
 				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
 				fews.setUitgeklapt(false);
+				
+				// state zetten opdat de bol-kleur zich zonodig kan aanpassen; vgl. onHide() sluiten popup
+				HashMap<String, Object> state;
+				state = this.getState();
+				this.setState(state);
+				
+				// na setState() is het goede antwoord in FEWA gezet
+				comRoot.setChanged(false);
 			}
 		}
 
@@ -1836,15 +1852,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	 */
 	@Override
 	public void onHide() {
-		HashMap<String, Object> state;
 		this.haalAntwoordOp();
-		state = this.getState();
-		this.setState(state);
 		this.setEnabled(true);
 // zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
 		fews.setUitgeklapt(false);
-		popupBtn.state = state; // XXX ???
 		
+		HashMap<String, Object> state;
+		state = this.getState();
+		this.setState(state);
+		popupBtn.state = state; // XXX ???
+
 		// voor toets met feedback (deelscores) moet de voortgangsscore van fews genomen worden
 		if (fews.getScore() > this.getScore())
 		{
