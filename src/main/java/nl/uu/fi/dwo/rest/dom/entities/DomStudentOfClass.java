@@ -13,11 +13,53 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @XmlRootElement
 public class DomStudentOfClass {
-    PersistenceId classId;
-    PersistenceId studentId;
+    private PersistenceId id;
+    private PersistenceId classId;
+    private PersistenceId studentId;
 
     public DomStudentOfClass(){
-        super();
+    }
+
+    /**
+     * @return the id
+     */
+    public PersistenceId getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(PersistenceId id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the classId
+     */
+    public PersistenceId getClassId() {
+        return classId;
+    }
+
+    /**
+     * @param classId the classId to set
+     */
+    public void setClassId(PersistenceId classId) {
+        this.classId = classId;
+    }
+
+    /**
+     * @return the studentId
+     */
+    public PersistenceId getStudentId() {
+        return studentId;
+    }
+
+    /**
+     * @param studentId the studentId to set
+     */
+    public void setStudentId(PersistenceId studentId) {
+        this.studentId = studentId;
     }
        
 }
