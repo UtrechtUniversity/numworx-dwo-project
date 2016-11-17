@@ -14,18 +14,14 @@ public class DomDwoProfile implements Cloneable {
     private PersistenceId id;
 
     private String dwoProfileName;
-    private String dwoProfileText;
     private String dwoProfileRights;
-    private String dwoProfileDescription;
     
     public DomDwoProfile() {}
     
     public DomDwoProfile(DomDwoProfile p) {
     	id = p.id.duplicate();
     	dwoProfileName = p.dwoProfileName;
-    	dwoProfileText = p.dwoProfileText;
     	dwoProfileRights = p.dwoProfileRights;
-    	dwoProfileDescription = p.dwoProfileDescription;
     }
 
     public DomDwoProfile duplicate() {
@@ -48,28 +44,12 @@ public class DomDwoProfile implements Cloneable {
 		this.dwoProfileName = dwoProfileName;
 	}
 
-	public String getDwoProfileText() {
-		return dwoProfileText;
-	}
-
-	public void setDwoProfileText(String dwoProfileText) {
-		this.dwoProfileText = dwoProfileText;
-	}
-
 	public String getDwoProfileRights() {
 		return dwoProfileRights;
 	}
 
 	public void setDwoProfileRights(String dwoProfileRights) {
 		this.dwoProfileRights = dwoProfileRights;
-	}
-
-	public String getDwoProfileDescription() {
-		return dwoProfileDescription;
-	}
-
-	public void setDwoProfileDescription(String dwoProfileDescription) {
-		this.dwoProfileDescription = dwoProfileDescription;
 	}
     
 }
