@@ -408,6 +408,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		//boolean fout is ook niet meer nodig.
 //		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
 //			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
+
+		// save current state voor het zetten van de buttons, want hierin wordt de score gezet 
+		// (ging bijv. mis voor geval je het goede antw weghaalt in uitklapvak/popup en daarna vak/popup sluit; button werd weer rood, maar score bleef staan)
+		saveCurrentState();
+		
 		if (buttons != null && buttons.size() > currentOpdracht)
 		{	
 			//logger.fine("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
@@ -418,7 +423,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
 			}
 		}
-		saveCurrentState();
+//		saveCurrentState(); // naar hierboven verplaatst, want er wordt score gezet
 		//entry.stelNavigatieIn(); gebeurt al op een andere plek; niet hier anders gaat oefenen met geen correctie eerdere pagina's mis na kijkNa()
 	}
 
