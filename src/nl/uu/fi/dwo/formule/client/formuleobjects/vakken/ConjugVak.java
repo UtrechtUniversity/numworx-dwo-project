@@ -10,7 +10,7 @@ public class ConjugVak extends FormuleElementWithChildren
 	public ConjugVak(FormuleElement holder)
 	{
 		super(holder, 1);
-		getChild().setPosition(0, 2);
+		getChild().setPosition(0, 0);
 		this.setChanged(true);
 	}
 	
@@ -20,7 +20,7 @@ public class ConjugVak extends FormuleElementWithChildren
 		this.getChild().paint();
 
 		width =  getChild().width;
-		height = getChild().height+2;
+		height = getChild().height;
 
 		this.setSize(width, height);
 
@@ -32,11 +32,12 @@ public class ConjugVak extends FormuleElementWithChildren
 
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
-		ctx.setLineWidth(fm.getStrokeWidth());
+		
+		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
 
 		ctx.beginPath();
-		ctx.moveTo(1, 0);
-		ctx.lineTo(width - 2, 0);
+		ctx.moveTo(2, 1);
+		ctx.lineTo(width - 1, 1);
 		ctx.stroke();
 
 		this.getChild().draw(ctx);
