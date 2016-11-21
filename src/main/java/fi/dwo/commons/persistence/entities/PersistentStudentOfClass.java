@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.commons.persistence.entities;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -104,14 +99,22 @@ public class PersistentStudentOfClass implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentStudentOfClass[ persistentStudentOfClassPK=" + persistentStudentOfClassPK + " ]";
     }
-    
+
     public DomStudentOfClass buildDomStudentOfClass() {
         DomStudentOfClass result = new DomStudentOfClass();
+        return fillDomStudentOfClass(result);
+    }
+
+    private DomStudentOfClass fillDomStudentOfClass(DomStudentOfClass result) {
         if (this.getPersistentStudentOfClassPK() != null) {
             result.setId(MySQLPersistenceId.createPersistentId((PersistentStudentOfClass) this));
+            result.setStudentId(MySQLPersistenceId.createPersistenceId(
+                    this.persistentStudentOfClassPK.getUserID().longValue(), 
+                    PersistenceClassType.PersistentUser));
+            result.setClassId(MySQLPersistenceId.createPersistenceId(
+                    this.persistentStudentOfClassPK.getClassID().longValue(), 
+                    PersistenceClassType.PersistentSchoolClass));
         }
-        result.setStudentId(MySQLPersistenceId.createPersistenceId(this.persistentStudentOfClassPK.getUserID().longValue(), PersistenceClassType.PersistentUser));
-        result.setClassId(MySQLPersistenceId.createPersistenceId(this.persistentStudentOfClassPK.getClassID().longValue(), PersistenceClassType.PersistentSchoolClass));
         return result;
     }
 
