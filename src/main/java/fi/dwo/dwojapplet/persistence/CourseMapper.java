@@ -32,7 +32,7 @@ class CourseMapper extends XmlRpcMapper {
 
     private static final String IDCOL = "courseID";
 
-    private static final String ORDERCOL = "name";
+    private static final String ORDERCOL = "sequencenr";
 
     private static Map cachemap = new HashMap(); // not weak
 

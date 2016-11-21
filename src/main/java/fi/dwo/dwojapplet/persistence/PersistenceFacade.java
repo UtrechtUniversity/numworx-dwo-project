@@ -1011,7 +1011,7 @@ public class PersistenceFacade {
                     if (schoolClass == null) {
                         v = DbAccessCreator.instance().getCoursesJS(guestID);
                     } else {
-                        v = DbAccessCreator.instance().getCoursesForClassJS(
+                        v = DbAccessCreator.instance().getCoursesForClass(
                                 schoolClass.getID());
                         if(v.size()==0) return new Course[0];
 // FIXME aanzetten als clipBeforeAfter weer in gebruik wordt genomen.
