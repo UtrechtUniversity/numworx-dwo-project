@@ -105,6 +105,13 @@ public class PersistenceIdFactory {
         return null;
     }
 
+    // needs a way to extract a persistentObject key for the Object.
+    //getPersistentAppletId(PersistenceId id){
+    //  if(id's type is PersistentApplet){
+    //  return proper type of id
+    //  else(id's type is wrong throw error)
+    //}
+    
     public static PersistenceId createPersistentId(PersistentApplet o) {
         return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
     }
