@@ -117,7 +117,7 @@ class AppletMapper extends XmlRpcMapper {
      *      java.util.Hashtable)
      */
     @Override
-    @SuppressWarnings("UnusedAssignment")
+    @SuppressWarnings({ "unused", "rawtypes" })
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
         Class a = null;
         String jarname = (String) data.get("jarname");

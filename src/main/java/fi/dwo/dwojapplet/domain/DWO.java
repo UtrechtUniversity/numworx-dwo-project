@@ -222,12 +222,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         
         
         String defaultUsernameProperty = (System.getProperty("defaultUsername") == null) 
-                ? properties.getProperty("defaultUsername", "") : System.getProperty("defaultUsername");
+                ? properties.getProperty("defaultUsername", getParameter("userName")) : System.getProperty("defaultUsername");
         DwoHelper.setDefaultUsername(defaultUsernameProperty);
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultUsername",
             DwoHelper.getDefaultUsername()});
         String defaultPasswordProperty = (System.getProperty("defaultPassword") == null) 
-                ? properties.getProperty("defaultPassword", "") : System.getProperty("defaultPassword");
+                ? properties.getProperty("defaultPassword", getParameter("passWord")) : System.getProperty("defaultPassword");
         DwoHelper.setDefaultPassword(defaultPasswordProperty);
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"defaultPassword",
             DwoHelper.getDefaultPassword()});
@@ -457,7 +457,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         // if (user == null) {
         // throw new LoginException(LoginException.LE_UNKNOWN_USER);
         // }
-
         if (password == null) {
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
         } else {

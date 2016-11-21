@@ -13,6 +13,11 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.ScoBase;
 import static fi.dwo.dwojapplet.domain.ScoBase.REVIEW;
 import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.print.ComboBoxModelIterator;
+import fi.dwo.dwojapplet.gui.print.PrintComponent;
+import fi.dwo.dwojapplet.gui.print.PrintPanel;
+import fi.dwo.dwojapplet.gui.print.PrinterEvent;
+import fi.dwo.dwojapplet.gui.print.PrinterListener;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -20,8 +25,10 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +43,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +63,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -92,6 +101,33 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
     }
 
+    private static class SaveRestore implements PrinterListener {
+    	Object   current;
+    	String location; // TODO
+    	ClassModel model;
+    	  	
+		public SaveRestore(ClassModel model2) {
+			model = model2;
+		}
+
+
+		@Override
+		public void onPrint(PrinterEvent e) {
+			switch(e.getType()) {
+			case PrinterEvent.STARTED: 
+				current = model.getSelectedItem();
+				break;
+			case PrinterEvent.STOPPED:
+				model.setSelectedItem(current);
+			}
+			
+		}
+    	
+    	
+    }
+    
+    
+    
     /**
      * Decorator om Sco voor losse User. FIXME losse API met USER en Sco. Extra
      * class tussen Sco en ScormAdapter?
@@ -162,7 +198,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
     }
 
-    public static class ClassModel extends DefaultComboBoxModel {
+    public static class ClassModel extends DefaultComboBoxModel<User> {
 
         private Sco sco;
 
@@ -221,6 +257,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
     private JTable table;
 
+	private PrintPanel printer;
+
     /**
      * Creates a new instance of a ScoDialog. It shows the sco, made by an user.
      *
@@ -259,7 +297,9 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         Insets insets = contentPane.getInsets();
 
         contentPane.setOpaque(false);
-        contentPane.add(hbox, BorderLayout.NORTH);
+        Box hhbox = Box.createHorizontalBox();
+        hhbox.add(hbox);
+        contentPane.add(hhbox, BorderLayout.NORTH);
 
         scoPanel.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scoPanel.setVisible(false);
@@ -275,6 +315,16 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         hbox1.add(Box.createHorizontalStrut(10));
         hbox1.add(closeButton);
         hbox1.add(Box.createHorizontalStrut(10));
+        if(true) {
+// insert printer on bottom      
+        hhbox.add(Box.createHorizontalStrut(10));
+        hhbox.add(Box.createGlue());
+        printer = new PrintPanel();
+        PrintComponent component = new PrintComponent(scoPanel.getSco().getApplet(), scoPanel.getSco());
+        printer.setComponent(component);
+// into hbox1        
+        hhbox.add(printer.asComponent());hbox1.add(Box.createHorizontalStrut(20));
+        } 
         hbox1.add(globalSeal);
         hbox1.add(Box.createHorizontalStrut(10));
         hbox1.add(Box.createHorizontalGlue());
@@ -349,7 +399,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         String[] arguments = {sp.getSco().getScoName(), ""};
         String title = TextMapper.format((TextMapper.UG_RESULTS_OF_STUDENT), arguments);
         Box hbox = createTitleBox(title);
-        final JComboBox combo = new JComboBox(); // TODO wegwerken.....
+        final JComboBox<User> combo = new JComboBox<User>(); // TODO wegwerken.....
         final JLabel userLabel = new JLabel(u.getName());
         final ClassModel model = new ClassModel(s, u, sp.getSco());
         Model tableModel = new Model(model, s.getName());
@@ -398,6 +448,9 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         });
 
         sp.getSco().addPropertyChangeListener(Sco.LESSON_LOCATION, sd);
+        
+        sd.printer.setIterable(new ComboBoxModelIterator<User>(model, sd.printer.getComponent()));
+        sd.printer.addPrinterListener(new SaveRestore(model));
         final Container content = sd.getContentPane();
         final IconizedPanel panel = new IconizedPanel(TextMapper.getText(TextMapper.GUIS_STUDENTS));
         panel.setBackground(new Color(200, 227, 255));
@@ -472,9 +525,36 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     // GR: Goed: new Color(142,190,67);
     // GR: Fout: Color.white
     // GR: Noscore lightGray
+
     static class IntegerRenderer extends DefaultTableCellRenderer {
 
-        private Color noScoreColor = Color.lightGray;
+        private static final Insets INSETS = new Insets(0, 0, 0, 0);
+		private static final Color CORRECTED_COLOR = new Color(0,0,255,100);
+		private static final int SIZE = 10;
+		private static final Border CORRECTED_BORDER = new Border() {
+
+			@Override
+			public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+				g.setColor(CORRECTED_COLOR);
+				Polygon p = new Polygon();
+				x += width; y += height;
+				p.addPoint(x, y);
+				p.addPoint(x, y-SIZE);
+				p.addPoint(x-SIZE, y);
+				g.fillPolygon(p);
+			}
+
+			@Override
+			public Insets getBorderInsets(Component c) {
+				return INSETS;
+			}
+
+			@Override
+			public boolean isBorderOpaque() {
+				return false;
+			}};
+
+		private Color noScoreColor = Color.lightGray;
         private Sco sco;
 
         public IntegerRenderer(Sco sco) {
@@ -501,7 +581,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
             if (value != null && row > 0) {
                 row--;
                 Model model = (Model) table.getModel();
-                String m = (String) ((Map) model.getScoreList(row).get(column - 1)).get(PartialScoreIF.SCORE_MAX);
+                Map map = (Map) model.getScoreList(row).get(column - 1);
+				String m = (String) map.get(PartialScoreIF.SCORE_MAX);
                 if (m != null && !"".equals(m)) {
                     max = Integer.parseInt(m);
                 }
@@ -510,6 +591,12 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
                     bg = bg.darker();
                 }
                 setBackground(bg);
+// render corrected marker
+                String is = (String) map.get("isCorrected");
+                if("true".equals(is)) {
+                	setBorder(CORRECTED_BORDER);
+                } else
+                	setBorder(null);
             } else if (row > 0) {
                 Color bg = Color.lightGray; // OK of nog te donker?
                 if (!hasFocus && !isSelected) {
@@ -676,7 +763,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
                     return "max";
                 }
                 try {
-                    return new Integer(((Map) getScoreList(row).get(col - 1)).get(PartialScoreIF.SCORE_MAX).toString());
+                    return Integer.valueOf(((Map) getScoreList(row).get(col - 1)).get(PartialScoreIF.SCORE_MAX).toString());
                 } catch (Exception e) {
                     return null;
                 }
@@ -687,7 +774,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
                 return (model.getUser(row)).getName();
             }
             try {
-                return new Integer(((Map) getScoreList(row).get(col - 1)).get(PartialScoreIF.SCORE_RAW).toString());
+                return Integer.valueOf(((Map) getScoreList(row).get(col - 1)).get(PartialScoreIF.SCORE_RAW).toString());
             } catch (Exception e) {
                 return null;
             }

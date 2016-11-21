@@ -668,7 +668,9 @@ public final class DwoHelper {
      * @param aDefaultUsername the defaultUsername to set
      */
     public static void setDefaultUsername(String aDefaultUsername) {
-        defaultUsername = aDefaultUsername;
+    	if(aDefaultUsername == null)
+    		aDefaultUsername = "";
+    	defaultUsername = aDefaultUsername;
     }
 
     /**
@@ -679,10 +681,11 @@ public final class DwoHelper {
     }
 
     /**
-     * @param aDefaultPassword
+     * @param aDefaultPassword a password
      */
     public static void setDefaultPassword(String aDefaultPassword) {
-        defaultPassword = aDefaultPassword;
+    	if(aDefaultPassword == null) aDefaultPassword = "";
+    	defaultPassword = aDefaultPassword;
     }
 
     public static void setAppURLPath(URL url) {
