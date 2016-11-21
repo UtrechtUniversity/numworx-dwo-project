@@ -4804,7 +4804,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     }
 
     Vector fixSequence(Vector unordered) {
-        List sequences = getSequences(unordered);
+        List sequences = /*getSequences*/(unordered);
         Comparator sorter = new CourseSorter(sequences);
         Collections.sort(unordered, sorter);
         return unordered; // not any more....
@@ -4818,40 +4818,43 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return modules;
     }
 
-    private List<Map<String, Object>> getSequences(Vector<Map<String, Object>> unordered) {
-        if (unordered.isEmpty()) {
-            return unordered;
-        }
-        Map<String, Object> first = unordered.firstElement();
-        Set<Object> parents = new HashSet<Object>();
-        for (Map<String, Object> map : unordered) {
-            Object parent = map.get("parentID");
-            parents.add(parent);
-        }
-        Hashtable<String, Object> wheredef = new Hashtable<String, Object>();
-        Object schoolID = first.get("schoolID");
-        wheredef.put("classID", 0);
-        if (schoolID == null) {
-            schoolID = Integer.valueOf(0);
-        }
-        wheredef.put("schoolID", schoolID);
-        wheredef.put("profileID", first.get("dwoProfileID"));
-        if (parents.size() == 1) {
-            wheredef.put("parent", parents.iterator().next());
-        }
-        try {
-            return getTable("tblCourseSequence", wheredef, "sequencenr");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Collections.emptyList(); // unsorted.
-    }
+//    private List<Map<String, Object>> getSequences(Vector<Map<String, Object>> unordered) {
+//        if (unordered.isEmpty()) {
+//            return unordered;
+//        }
+//        Map<String, Object> first = unordered.firstElement();
+//        Set<Object> parents = new HashSet<Object>();
+//        for (Map<String, Object> map : unordered) {
+//            Object parent = map.get("parentID");
+//            parents.add(parent);
+//        }
+//        Hashtable<String, Object> wheredef = new Hashtable<String, Object>();
+//        Object schoolID = first.get("schoolID");
+//        wheredef.put("classID", 0);
+//        if (schoolID == null) {
+//            schoolID = Integer.valueOf(0);
+//        }
+//        wheredef.put("schoolID", schoolID);
+//        wheredef.put("profileID", first.get("dwoProfileID"));
+//        if (parents.size() == 1) {
+//            wheredef.put("parent", parents.iterator().next());
+//        }
+//        try {
+//            return getTable("tblCourseSequence", wheredef, "sequencenr");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return Collections.emptyList(); // unsorted.
+//    }
 
 // For JavaScript	
     public Vector getTableJS(String table, Hashtable wheredef, String orderby)
             throws IOException, XmlRpcException, SQLException {
         if ("tblCourse".equals(table) && "name".equals(orderby)) {
             return fixModules(fixSequence(getTable(table, wheredef)));
+        }
+        if ("tblCourse".equals(table) && "sequencenr".equals(orderby)) {
+            return fixSequence(getTable(table, wheredef));
         }
         return getTable(table, wheredef, orderby);
     }
@@ -4930,8 +4933,11 @@ class CourseSorter<T extends Map<?, ?>> implements Comparator<T> {
         for (Iterator<Map<String, Object>> iterator = sequences.iterator(); iterator.hasNext();) {
             Map<String, Object> map = iterator.next();
             Object id = map.get("courseID");
-            Number n = (Number) map.get("sequencenr");
-            ranking.put(id, n.intValue());
+            Object object = map.get("sequencenr");
+			if(object instanceof Number) {
+				Number n = (Number) object;
+				ranking.put(id, n.intValue());
+			}
         }
     }
 
