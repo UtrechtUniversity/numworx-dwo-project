@@ -97,12 +97,12 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "h.schoolGroupID, u.firstname, u.middlename, u.lastname, u.username, "
             + "u.email, h.registerDate, h.rights, u.lastLogin "
             + "FROM tblHasRole h left join tblUser u on (h.userID = u.userID) where h.userID = ? and h.schoolGroupID = ? ";
-    
+
 //    private final static String QRY_DEFAULT_SELECT_CLASS_STUDENT = "SELECT userID "
 //            + "FROM tblTeacherOf " + "WHERE (classID={0} and userID={1}) ";
     private final static String QRY_SELECT_CLASS_TEACHER = "SELECT userID "
-           + "FROM tblTeacherOf " + "WHERE (classID={0} and userID={1}) ";
-    
+            + "FROM tblTeacherOf " + "WHERE (classID={0} and userID={1}) ";
+
     private final static String QRY_SELECT_CLASS_STUDENT = "SELECT userID "
             + "FROM tblStudentOf " + "WHERE (classID={0} and userID={1}) ";
 
@@ -523,7 +523,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "group by tblTeacherOf.classID, tblCourse.courseID "
             + "having tblTeacherOf.classID is not null "
             + "ORDER BY tblTeacherOf.classID";
-    
+
     /**
      * results of selected courses from a single user.
      */
@@ -550,7 +550,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "and   (tblStudentScoContext.userID = ?) "
             + "and   (tblStudentScoContext.schoolGroupID = ?) "
             + "group by tblCourse.courseID ";
-    
+
     /**
      * Returns the results for a <course[], class, teacher> combination.
      */
@@ -608,7 +608,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "where (tblStudentOf.classID = ?) " // student tblUser.classID =>tblStudentOf.classID 
             + "and (tblCourse.courseID = ?) " //course
             + "and (tblUser.userID = ?) "
-//            + "and   (tblTeacherOf.userID = ?) " //teacher tblClass.userID =>tblTeacherOf.userID 
+            //            + "and   (tblTeacherOf.userID = ?) " //teacher tblClass.userID =>tblTeacherOf.userID 
             + "ORDER BY tblStudentOf.userID, tblScoContext.sequencenr";
 
     /**
@@ -632,7 +632,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //            + "FROM ( tblScoContext, tblUser ) left join tblStudentScoContext on (tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.schoolGroupID = tblUser.schoolGroupID and tblStudentScoContext.scoID = tblScoContext.scoID) "
 //            + "where tblUser.userID = ? and tblScoContext.courseID = ? "
 //            + "order by tblScoContext.sequencenr";
-
     // TODO V1_3 DONE merge:
 //        private final static String QRY_RESULTS_COURSE = "SELECT tblTeacherOf.classID, tblSco.scoID, tblSco.sequencenr, "
 //            + "avg(score) as score, count(score) as totaal "
@@ -659,7 +658,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "join tbluser on (tblTeacherOf.userID = tblUser.userID and tblUser.schoolGroupID =tblTeacherOf.schoolGroupID) "
             + "where  (tblScoContext.courseID = ?) "
             + "and (tblUser.userID = ?) "
-//            + "and   (tblTeacherOf.userID = ?) "
+            //            + "and   (tblTeacherOf.userID = ?) "
             + "group by tblTeacherOf.classID, tblScoContext.scoID "
             + "ORDER BY tblTeacherOf.classID, tblScoContext.sequencenr";
 
@@ -2261,7 +2260,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @see fi.dwo.client.persistence.DbAccessIF#LMSSetValue(java.lang.String,
      *      java.lang.String)
      */
-
     /**
      *
      * @param scoID
@@ -2618,7 +2616,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             throws IOException, XmlRpcException, SQLException {
         //MessageFormat.
         MessageFormat qry = new MessageFormat(QRY_RESULTS_SINGLE_STUDENT_COURSE);
-        PreparedStatement ps = getStatement(qry.format(new Object[]{Integer.toString(userID),Integer.toString(schoolGroupID) , Integer.toString(courseID)}));
+        PreparedStatement ps = getStatement(qry.format(new Object[]{Integer.toString(userID), Integer.toString(schoolGroupID), Integer.toString(courseID)}));
 //        ps.setInt(1, userID);
 //        ps.setInt(2, schoolGroupID);
 //        ps.setInt(3, courseID);
@@ -3768,7 +3766,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     /**
      * Broken function in DWO 2.0 and datamodel after 1.2. Replaced by
      * {@Link #getUserResults(Vector, int, int) getUserResults}.
-     * 
+     *
      * @param courses
      * @param userID
      * @return
@@ -3802,9 +3800,10 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         }
     }
 
-   /**
-     * New function for DWO 2.0 data-model. Replaces {@Link #getUserResults(Vector, int) getUserResults}.
-     * 
+    /**
+     * New function for DWO 2.0 data-model. Replaces
+     * {@Link #getUserResults(Vector, int) getUserResults}.
+     *
      * @param courses
      * @param userID
      * @return
@@ -3837,7 +3836,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             return courses; // an empty vector
         }
     }
-    
+
     /**
      * Images die bij courses horen. Linked naar Courses.
      *
@@ -4187,29 +4186,29 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             int parent, int profileID) throws SQLException {
         Connection c = getConnection();
         boolean auto = c.getAutoCommit();
+        int len = vector.size();
         try {
             c.setAutoCommit(false);
             PreparedStatement ps;
-            //TODO set in tblCourse sequencenr = NULL
-            ps = getStatement("DELETE FROM tblCourseSequence WHERE schoolID=? AND classID=? AND parent=? and profileID=?");
-            ps.setInt(1, schoolID);
-            ps.setInt(2, classID);
-            ps.setInt(3, parent);
-            ps.setInt(4, profileID);
-            ps.executeUpdate();
-            ps.close();
-            //TODO set in tblCourse sequencenr = to value
-            ps = getStatement("INSERT INTO tblCourseSequence(courseID, schoolID, classID, parent, profileID, sequencenr) VALUES(?,?,?,?,?,?)");
-            int len = vector.size();
-            for (int i = 0; i < len; i++) {
-                ps.setObject(1, vector.get(i));
-                ps.setInt(2, schoolID);
-                ps.setInt(3, classID);
-                ps.setInt(4, parent);
-                ps.setInt(5, profileID);
-                ps.setInt(6, i);
-                ps.executeUpdate();
-            }
+//            //TODO set in tblCourse sequencenr = NULL
+//            ps = getStatement("DELETE FROM tblCourseSequence WHERE schoolID=? AND classID=? AND parent=? and profileID=?");
+//            ps.setInt(1, schoolID);
+//            ps.setInt(2, classID);
+//            ps.setInt(3, parent);
+//            ps.setInt(4, profileID);
+//            ps.executeUpdate();
+//            ps.close();
+//            //TODO set in tblCourse sequencenr = to value
+//            ps = getStatement("INSERT INTO tblCourseSequence(courseID, schoolID, classID, parent, profileID, sequencenr) VALUES(?,?,?,?,?,?)");
+//            for (int i = 0; i < len; i++) {
+//                ps.setObject(1, vector.get(i));
+//                ps.setInt(2, schoolID);
+//                ps.setInt(3, classID);
+//                ps.setInt(4, parent);
+//                ps.setInt(5, profileID);
+//                ps.setInt(6, i);
+//                ps.executeUpdate();
+//            }
             ps = getStatement("UPDATE tblCourse set sequencenr=? WHERE courseID=? AND schoolID=? AND parentID =? AND dwoProfileID=?");
             len = vector.size();
             for (int i = 0; i < len; i++) {
@@ -4233,7 +4232,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * (non-Javadoc)
      * @see fi.dwo.client.persistence.DbAccessIF#moveSco(int, int, int, String)
      */
-
     /**
      *
      * @param scoID
@@ -4804,7 +4802,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     }
 
     Vector fixSequence(Vector unordered) {
-        List sequences = /*getSequences*/(unordered);
+        List sequences = /*getSequences*/ (unordered);
         Comparator sorter = new CourseSorter(sequences);
         Collections.sort(unordered, sorter);
         return unordered; // not any more....
@@ -4846,7 +4844,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //        }
 //        return Collections.emptyList(); // unsorted.
 //    }
-
 // For JavaScript	
     public Vector getTableJS(String table, Hashtable wheredef, String orderby)
             throws IOException, XmlRpcException, SQLException {
@@ -4934,10 +4931,10 @@ class CourseSorter<T extends Map<?, ?>> implements Comparator<T> {
             Map<String, Object> map = iterator.next();
             Object id = map.get("courseID");
             Object object = map.get("sequencenr");
-			if(object instanceof Number) {
-				Number n = (Number) object;
-				ranking.put(id, n.intValue());
-			}
+            if (object instanceof Number) {
+                Number n = (Number) object;
+                ranking.put(id, n.intValue());
+            }
         }
     }
 
