@@ -154,6 +154,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			if (TekstVakPanel.TVP_KLAPUIT == event.getCommand())
 			{
+				// het KLAPUIT-event wordt getriggerd als het vak door de gebruiker wordt uitgeklapt, 
+				// maar ook in TekstVakPanel.setState()
+				
 				FormuleEditor other = FormuleEditorWithAnswer.this;
 				String useranswer = other.toString();
 // transfer 
@@ -174,18 +177,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
 				fews.setUitgeklapt(true);
 				fews.setIsBoss(true);
-
-				// state zetten opdat de bol-kleur zich zonodig kan aanpassen; vgl. onHide() sluiten popup
-				HashMap<String, Object> state;
-				state = this.getState();
-				this.setState(state);
-				
-				// na setState() is het goede antwoord in FEWA gezet
-				comRoot.setChanged(false);
 			}
 			
 			if (TekstVakPanel.TVP_KLAPIN == event.getCommand())
 			{
+				// het KLAPIN-event wordt getriggerd als het vak door de gebruiker wordt uitgeklapt, 
+				// maar ook in TekstVakPanel.setState()
+				
 				FormuleEditorWithAnswer other = FormuleEditorWithAnswer.this;
 				String useranswer = other.toString();
 				
@@ -225,14 +223,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			
 				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
 				fews.setUitgeklapt(false);
-				
-				// state zetten opdat de bol-kleur zich zonodig kan aanpassen; vgl. onHide() sluiten popup
-				HashMap<String, Object> state;
-				state = this.getState();
-				this.setState(state);
-				
-				// na setState() is het goede antwoord in FEWA gezet
-				comRoot.setChanged(false);
 			}
 		}
 
