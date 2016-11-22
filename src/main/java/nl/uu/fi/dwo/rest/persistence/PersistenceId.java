@@ -40,6 +40,8 @@ public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
      */
     public void setIdString(String id) {
         stringId = id;
+        String[] strList = id.split(";");
+        type = PersistenceClassType.valueOf(strList[1]);
     }
 
     ;
@@ -53,20 +55,28 @@ public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
         return type;
     }
 
-    ;
-
+//    ;
+//
+//    /**
+//     * Sets the persistence class type. Only meant for serialization.
+//     * 
+//     * @param aType 
+//     */
+//    public void setType(PersistenceClassType aType) {
+//        String[] strList = stringId.split(";");
+//        strList[1] = aType.toString();
+//        StringBuilder builder = new StringBuilder();
+//
+//        for (String string : strList) {
+//            if (builder.length() > 0) {
+//                builder.append(";");
+//            }
+//            builder.append(string);
+//        }
+//         stringId = builder.toString();
+//    }
+//};
     /**
-     * Sets the persistence class type. Only meant for serialization.
-     * 
-     * @param aType 
-     */
-    public void setType(PersistenceClassType aType) {
-        type = aType;
-    }
-
-    ;
-    
-     /**
      * Compare ordered state.
      *
      * @param aId
@@ -108,14 +118,15 @@ public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
         return !((this.stringId == null) ? (other.stringId != null) : !this.stringId.equals(other.stringId));
     }
 
-    /** Clones a PersistenceId 
-     * 
-     * @return 
+    /**
+     * Clones a PersistenceId
+     *
+     * @return
      */
     public PersistenceId duplicate() {
         PersistenceId id = new PersistenceId();
         id.setIdString(this.stringId);
-        id.setType(this.type);
+//        id.setType(this.type);
         return id;
     }
 
