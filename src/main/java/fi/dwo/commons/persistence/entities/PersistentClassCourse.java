@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * JPA/EclipseLink entity for the ClassCourses.
@@ -183,12 +184,32 @@ public class PersistentClassCourse implements Serializable {
     }
 
     private void fillDomClassCourse(DomClassCourse classCourse) {
-        classCourse.setId(MySQLPersistenceId.createPersistentId(this));
-        classCourse.setClassId(MySQLPersistenceId.createPersistenceId(this.classID, PersistenceClassType.PersistentSchoolClass));
-        classCourse.setCourseId(MySQLPersistenceId.createPersistenceId(this.courseID, PersistenceClassType.PersistentCourse));
+        classCourse.setId(buildPersistenceId());
+        classCourse.setClassId(PersistentSchoolClass.buildPersistenceId(this.classID));
+        classCourse.setClassId(PersistentCourse.buildPersistenceId(this.courseID));
         classCourse.setNotAfter(this.notAfter);
         classCourse.setNotBefore(this.notBefore);
         classCourse.setType(this.type);
     }
+    
+       /** Builds a PersistenceId using this object's data.
+     * 
+     * @return 
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(classCourseID);
+    }
 
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aClassCourseId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aClassCourseId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentClassCourse.name(), aClassCourseId));
+        return id;
+    }
 }

@@ -16,6 +16,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * 
@@ -150,4 +152,24 @@ public class PersistentApplet implements PersistentUpdate<PersistentApplet>, Ser
         return "fi.dwo.server.persistence.PersistentApplet[ appletID=" + appletID + " ]";
     }
 
+    /** Builds a PersistenceId using this object's data.
+     * 
+     * @return 
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(appletID);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param anAppletId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long anAppletId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentApplet.name(), anAppletId));
+        return id;
+    }
 }

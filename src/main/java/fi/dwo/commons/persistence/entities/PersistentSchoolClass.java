@@ -19,6 +19,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -160,7 +162,7 @@ public class PersistentSchoolClass implements Serializable {
     private void fillDomSchoolClass(DomSchoolClass schoolClass) {
         schoolClass.setSchoolClassName(class1);
         if (this.classID != null) {
-            schoolClass.setId(MySQLPersistenceId.createPersistentId(this));
+            schoolClass.setId(buildPersistenceId());
         }
         schoolClass.setIconizer(iconizer);
         schoolClass.setHasRegKey(this.registrationKey!=null);
@@ -188,4 +190,24 @@ public class PersistentSchoolClass implements Serializable {
 //        schoolClass.setRegistrationKey(registrationKey); // clearly this info should neve be passed to a student
     }
 
+       /** Builds a PersistenceId using this object's data.
+     * 
+     * @return 
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(classID);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aSchoolClassId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aSchoolClassId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentSchoolClass.name(), aSchoolClassId));
+        return id;
+    }
 }

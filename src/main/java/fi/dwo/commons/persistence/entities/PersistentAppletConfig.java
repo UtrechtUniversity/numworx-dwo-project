@@ -18,6 +18,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -149,6 +151,27 @@ public class PersistentAppletConfig implements Serializable {
         copy.setLanguage(getLanguage());
         copy.setLaunchdata(getLaunchdata());
         copy.setName(getName());
-        copy.setId(MySQLPersistenceId.createPersistentId(this));
+        copy.setId(buildPersistenceId());
+    }
+
+    /** Builds a PersistenceId using this object's data.
+     * 
+     * @return 
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(appletConfigID);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param classCourseId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long classCourseId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentAppletConfig.name(), classCourseId));
+        return id;
     }
 }

@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * JPA/EclipseLink entity for the Courses.
@@ -300,13 +301,13 @@ public class PersistentCourse implements Serializable {
     }
 
     private void fillDomCourse(DomCourse course) {
-        course.setId(MySQLPersistenceId.createPersistentId(this));
+        course.setId(buildPersistenceId());
         if (this.schoolID != null) {
-            course.setSchoolId(MySQLPersistenceId.createPersistenceId(this.schoolID, PersistenceClassType.PersistentSchool));
+            course.setSchoolId(PersistentSchool.buildPersistenceId(this.schoolID);
         }
         //note that parent 0 means there is no parent!
         if (this.parentID != 0) {
-            course.setParentID(MySQLPersistenceId.createPersistenceId(this.parentID, PersistenceClassType.PersistentCourse));
+            course.setParentID(buildPersistenceId(this.parentID);
         } else {
             course.setParentID(null);
         }
@@ -338,8 +339,28 @@ public class PersistentCourse implements Serializable {
 
     private void fillDomCourseFull(DomCourseFull course) {
         PersistentCourse.this.fillDomCourseStudent(course);
-        course.setDwoProfileId(MySQLPersistenceId.createPersistenceId(this.dwoProfileID, PersistenceClassType.PersistentDwoProfile));
+        course.setDwoProfileId(PersistentDwoProfile.buildPersistenceId(this.dwoProfileID));
         course.setExport(export);
     }
 
+       /** Builds a PersistenceId using this object's data.
+     * 
+     * @return 
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(courseID);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aCourseId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aCourseId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentCourse.name(), aCourseId));
+        return id;
+    }
 }

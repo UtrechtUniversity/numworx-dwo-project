@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -136,7 +138,6 @@ public class PersistentDwoProfile implements Serializable {
         return "fi.dwo.server.persistence.PersistentDwoProfile[ dwoProfileID=" + dwoProfileID + " ]";
     }
 
-
     public DomDwoProfile buildDomDwoProfile() {
         DomDwoProfile profile = new DomDwoProfile();
         PersistentDwoProfile.this.fillDomDwoProfile(profile);
@@ -148,8 +149,7 @@ public class PersistentDwoProfile implements Serializable {
         profile.setDwoProfileName(getDwoProfileName());
         profile.setDwoProfileRights(getDwoProfileRights());
     }
-    
-    
+
     public DomDwoProfileFull buildDomDwoProfileFull() {
         DomDwoProfileFull profile = new DomDwoProfileFull();
         PersistentDwoProfile.this.fillDomDwoProfileFull(profile);
@@ -162,4 +162,25 @@ public class PersistentDwoProfile implements Serializable {
         profile.setDwoProfileText(getDwoProfileText());
     }
 
+    /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(dwoProfileID);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aProfileId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aProfileId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentDwoProfile.name(), aProfileId));
+        return id;
+    }
 }

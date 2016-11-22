@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -176,12 +177,33 @@ public class PersistentHasRole implements Serializable {
     public DomHasRole buildDomHasRole() {
         DomHasRole hr = new DomHasRole();
         if (this.persistentHasRolePK != null) {
-            hr.setId(MySQLPersistenceId.createPersistentId((PersistentHasRole) this));
-            hr.setSchoolGroupId(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getSchoolGroupID().longValue(), PersistenceClassType.PersistentSchoolGroup));
+            hr.setId(buildPersistenceId());
+            hr.setSchoolGroupId(this.persistentHasRolePK.getSchoolGroupID().longValue(), PersistenceClassType.PersistentSchoolGroup));
             hr.setUserId(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getUserID().longValue(), PersistenceClassType.PersistentUser));
         }
         hr.setRights(this.getRights());
         return hr;
     }
 
+    /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(persistentHasRolePK);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param hasRoleKey
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(PersistentHasRolePK hasRoleKey) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d;%020d",
+                PersistenceClassType.PersistentHasRole.name(), hasRoleKey.getUserID(),hasRoleKey.getSchoolGroupID()));
+        return id;
+    }
 }
