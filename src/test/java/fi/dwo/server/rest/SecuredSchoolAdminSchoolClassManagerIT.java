@@ -151,7 +151,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(1L));
         domSchoolClass.setSchoolClassName("SchoolClass01");
         DomTeacher domTeacher = new DomTeacher();
-        domTeacher.setId(PersistentSchoolClass.buildPersistenceId(10L));
+        domTeacher.setId(PersistentUser.buildPersistenceId(10L));
         domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
