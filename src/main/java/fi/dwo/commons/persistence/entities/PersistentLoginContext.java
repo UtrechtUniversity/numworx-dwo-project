@@ -153,7 +153,7 @@ public class PersistentLoginContext implements Serializable {
     public static PersistenceId buildPersistenceId(Long aId) {
         PersistenceId tmpId = new PersistenceId();
         tmpId.setIdString(String.format("MYSQL;%s;%020d",
-                PersistenceClassType.PersistentLoginContext.name(), tmpId));
+                PersistenceClassType.PersistentLoginContext.name(), aId));
         return tmpId;
     }
 }
