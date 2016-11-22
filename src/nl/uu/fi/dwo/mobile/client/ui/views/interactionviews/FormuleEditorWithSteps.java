@@ -2574,7 +2574,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				voortgangsScore = Math.max(voortgangsScore,score);
 		}
 		
-		if (editor.hasFeedback())
+		if (editor != null && editor.hasFeedback())
 			score = voortgangsScore;
 
 		if (editor != null)
