@@ -36,7 +36,7 @@ public class StoreManager {
      * @return 
      */
     public synchronized static <T> T insertOrUpdate(T o) {
-        PersistenceId key = PersistenceIdFactory.createPersistenceId((Object) o);
+        PersistenceId key  = PersistenceIdFactory.createPersistenceId((Object) o);
         if (store.containsKey(key)) {
             T cached = (T) store.get(key);
             if (o == cached) {
