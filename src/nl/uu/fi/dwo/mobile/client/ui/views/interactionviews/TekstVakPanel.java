@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
@@ -29,7 +26,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
-import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -39,8 +36,6 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
-import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -75,7 +70,6 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -101,7 +95,16 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	public static Map<String,Map<String,Object>> styles;
 	
 	private boolean hoofdPanel;
-	
+
+	// call out fields; moet nog verder geimplementeerd worden
+	private boolean callOut = false;
+	private boolean callOutDrag = false;
+	int callOutMargeX0 = 15;
+	int callOutMargeY0 = 15;
+	int callOutMargeX1 = 5;
+	int callOutMargeY1 = 5;
+	int callOutPointX = 0;
+	int callOutPointY = 0;
 	
 	/**
 	 * @return the hoofdPanel
@@ -151,7 +154,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	HashMap<String, Number> randomVarWaarden = null;
 	
 	private TekstVak parent = null;
-	private int mode = 0;
+	private int mode = OpdrNav.OEFENEN;
 	
 	private ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
 
@@ -2540,6 +2543,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		return minHeight;
 	}
 	
+	/**
+	 * Deze methode wordt aangeroepen na klik van gebruiker om vak uit te klappen 
+	 * en vanuit setState().
+	 */
 	void klapUitAction() {
 		
 		int delta;
@@ -2724,7 +2731,16 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				
 					
 				}
-				klapUitAction();				
+				klapUitAction();
+				
+				// t.b.v. updaten kleur bol
+				HashMap<String, Object> state;
+				state = getState();
+				setState(state);
+
+				// na setState() is het goede antwoord in FEWA gezet
+				comRoot.setChanged(false);
+
 			}});
 		
 		klapUitButton.setStylePrimaryName("inklapButton");
@@ -2823,7 +2839,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			Object object = interactionViewObjects.get(i);
 			if(object instanceof InteractionView)
 			{
-				if(mode == 0 || mode == 1)
+				if(mode == OpdrNav.OEFENEN || mode == OpdrNav.OEFENEN_STRAFPUNTEN)
 					((InteractionView) object).kijkNa();
 				if(((InteractionView) object).isCorrect() == null)
 					vakinhoudCorrect = false;
