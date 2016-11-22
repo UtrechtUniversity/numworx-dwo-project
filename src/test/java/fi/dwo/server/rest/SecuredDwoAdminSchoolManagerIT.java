@@ -212,7 +212,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         RestSchool4DwoAdmin restSchool = new RestSchool4DwoAdmin();
         DomSchool4DwoAdmin domSchool = expResult.buildDomSchool4DwoAdmin();
         restSchool.setDomSchool4DwoAdmin(domSchool);
-        domSchool.setId(MySQLPersistenceId.createPersistenceId(expResult.getSchoolID(), PersistenceClassType.PersistentSchool));
+        domSchool.setId(expResult.buildPersistenceId());
         domSchool.setSchoolLogin("school01");
         domSchool.setSchoolName("Trivial");
         try {

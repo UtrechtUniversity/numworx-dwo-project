@@ -157,7 +157,7 @@ public class SecuredDwoAdminConfigManager {
         }
         if (hr != null) {
             try {
-                long id = MySQLPersistenceId.getId(config.getId());
+                long id = MySQLPersistenceId.getNativeId(config);
 				PersistentAppletConfig editConfig = AppletConfigManager.findEntity(id);
                 // AppletConfig to update.
                 editConfig.setAppletID(config.getAppletID());
@@ -198,7 +198,7 @@ public class SecuredDwoAdminConfigManager {
         }
         if (hr != null) {
             try {
-                long id = MySQLPersistenceId.getId(config.getId());
+                long id = MySQLPersistenceId.getNativeId(config);
                 AppletConfigManager.destroy(id);
                 return Boolean.TRUE;
             }

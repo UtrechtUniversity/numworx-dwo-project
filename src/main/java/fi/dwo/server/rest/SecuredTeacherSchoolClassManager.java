@@ -137,8 +137,9 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 
         if (phr != null && school != null) {
             PersistentSchoolClass persistentSchoolClass;
-            Long key = (Long) MySQLPersistenceId.getId(schoolClass.getDomSchoolClass().getId());
+            Long key = null;
             try {
+                key = (Long) MySQLPersistenceId.getNativeId(schoolClass.getDomSchoolClass());
                 persistentSchoolClass = SchoolClassManager.findEntity(key);
                 LOG.log(Level.FINER, "Fetched full schoolClass {0} for teacher {1]. ", new Object[]{key, phr.getPersistentHasRolePK().getUserID()});
 
@@ -298,18 +299,17 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
-
+        PersistentSchoolClass schoolClass = null;
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-
+            schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
         } catch (Dwo2Exception ex) {
 
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (school != null && schoolClass.getSchoolID().equals(school.getSchoolID()) && toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
             //Fetch TeacherOfClass
@@ -349,18 +349,16 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
-
+        PersistentSchoolClass schoolClass = null;
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-
+            schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
         } catch (Dwo2Exception ex) {
-
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (school != null && schoolClass.getSchoolID().equals(school.getSchoolID()) && toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
             //Fetch TeacherOfClass
@@ -439,17 +437,17 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
-
+        PersistentSchoolClass schoolClass = null;
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
+            schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
 
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         if (schoolClass.getSchoolID().equals(school.getSchoolID())
                 && toc != null // XXX if findEntity cannot find it
@@ -506,21 +504,21 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         PersistentSchool school = null;
         PersistentUser teacher = null;
         PersistentHasRole thr = null;
+        PersistentSchoolClass schoolClass = null;
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(restTeacher.getId()));
+            teacher = UserManager.findEntity(MySQLPersistenceId.getNativeId(restTeacher));
             if (teacher == null) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find teacher to add.");
             }
             thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
-
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass));
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         if (schoolClass.getSchoolID().equals(school.getSchoolID())) {
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
             toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getId(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
@@ -558,18 +556,18 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(domStudent.getId()));
+            student = UserManager.findEntity(MySQLPersistenceId.getNativeId(domStudent));
             if (student == null) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find teacher to add.");
             }
             shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
+            fromClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(domFromSchoolClass));
+            toClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(domToSchoolClass));
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
 
-        fromClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domFromSchoolClass.getId()));
-        toClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domToSchoolClass.getId()));
         if (fromClass == null || toClass == null) {
             LOG.log(Level.WARNING, "Username {0}: Submitted classes do not exist.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "One or both submitted schoolclasses do not exist.");
@@ -612,18 +610,19 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         PersistentSchool school = null;
         PersistentUser teacher = null;
         PersistentHasRole thr = null;
+        PersistentSchoolClass schoolClass = null;
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            teacher = UserManager.findEntity((Long) MySQLPersistenceId.getId(domTeacher.getId()));
+            teacher = UserManager.findEntity(MySQLPersistenceId.getNativeId(domTeacher));
             thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
+            schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(domSchoolClass));
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domSchoolClass.getId()));
         PersistentTeacherOfClass ptoc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(thr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
 
@@ -663,18 +662,19 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         PersistentSchool school = null;
         PersistentUser student = null;
         PersistentHasRole shr = null;
+        PersistentSchoolClass schoolClass = null;
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            student = UserManager.findEntity((Long) MySQLPersistenceId.getId(domStudent.getId()));
+            student = UserManager.findEntity(MySQLPersistenceId.getNativeId(domStudent));
             shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
+            schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(domSchoolClass));
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(domSchoolClass.getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
         PersistentStudentOfClass soc = StudentOfClassManager.findEntity(new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
 
@@ -708,13 +708,12 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClassFull()));
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-
-        schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClassFull().getId()));
 
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
@@ -758,14 +757,13 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
+            student = UserManager.findEntity(MySQLPersistenceId.getNativeId(submit.getDomGetSingleSchoolStudent().getDomStudent()));
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(submit.getDomGetSingleSchoolStudent().getDomSchoolClass()));
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-
-        student = UserManager.findEntity(MySQLPersistenceId.getId(submit.getDomGetSingleSchoolStudent().getDomStudent().getId()));
-        schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(submit.getDomGetSingleSchoolStudent().getDomSchoolClass().getId()));
 
         try {
             shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
@@ -787,7 +785,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         if (student.isSingleSchoolAccount() && teacherInSchoolClass.getPersistentTeacherOfClassPK().getClassID().equals(studentInSchoolClass.getPersistentStudentOfClassPK().getClassID())) {
             return student.buildDomSingleSchoolStudent();
         } else {
-            LOG.log(Level.SEVERE, "User {0} tried to access full userdata of user {1}.", new Object[]{phr.getPersistentHasRolePK().getId(), shr.getUser().getId()});
+            LOG.log(Level.SEVERE, "User {0} tried to access full userdata of user {1}.", new Object[]{phr.getPersistentHasRolePK().toString(), shr.getUser().getId()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
     }
@@ -822,7 +820,13 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         }
 
         if (sg != null) {
-            PersistentUser user = UserManager.findEntity((Long) MySQLPersistenceId.getId(nssStudent.getDomSingleSchoolStudent().getId()));
+            PersistentUser user;
+            try {
+                user = UserManager.findEntity(MySQLPersistenceId.getNativeId(nssStudent.getDomSingleSchoolStudent()));
+            } catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+            }
             if (user == null) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: could not find user with id to update {1}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getId()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getDomSingleSchoolStudent().getUserName() + ".");
@@ -881,7 +885,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             sg = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
-            toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), MySQLPersistenceId.getId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()), phr.getPersistentHasRolePK().getSchoolGroupID()));
+            toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), MySQLPersistenceId.getNativeId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass()), phr.getPersistentHasRolePK().getSchoolGroupID()));
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
@@ -902,7 +906,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             user.setSchoolGroupId(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
             try {
-                PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()));
+                PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass()));
                 SchoolUtilManager.addSingleSchoolStudentAccount(user, school, schoolClass);
                 //add to schoolClass
                 PersistentStudentOfClass toSoc = new PersistentStudentOfClass();

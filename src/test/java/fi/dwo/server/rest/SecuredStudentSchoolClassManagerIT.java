@@ -100,7 +100,7 @@ public class SecuredStudentSchoolClassManagerIT {
         DomSchoolClass domSchoolClass = new DomSchoolClass();
         restSchoolClass.setDomSchoolClass(domSchoolClass);
         //put in schoolgroup 5 , class 3 for user 9 (user02)
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(2L));
         domSchoolClass.setSchoolClassName("SchoolClass02");
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         Boolean result = instance.setActiveSchoolClass(sc, restSchoolClass);
@@ -188,7 +188,7 @@ public class SecuredStudentSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user05", RoleType.STUDENT);
         RestNewSchoolClass4Student restSchoolClass = new RestNewSchoolClass4Student();
         DomNewSchoolClass4Student domSchoolClass = new DomNewSchoolClass4Student();
-        domSchoolClass.setId((PersistenceId) MySQLPersistenceId.createPersistenceId(4L, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(4L));
         domSchoolClass.setSchoolClassName("SchoolClass04");
         domSchoolClass.setRegistrationKey("key");
         restSchoolClass.setDomNewSchoolClass4Student(domSchoolClass);
@@ -217,7 +217,7 @@ public class SecuredStudentSchoolClassManagerIT {
         }
         //test school with no student rights to register a schoolclas
         sc = new TestSecurityContext("user02", RoleType.STUDENT);
-        domSchoolClass.setId((PersistenceId) MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(2L));
         domSchoolClass.setSchoolClassName("SchoolClass02");
         domSchoolClass.setRegistrationKey("key");
         restSchoolClass.setDomNewSchoolClass4Student(domSchoolClass);

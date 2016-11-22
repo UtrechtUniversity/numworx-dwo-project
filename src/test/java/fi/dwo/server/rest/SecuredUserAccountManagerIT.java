@@ -15,8 +15,10 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -72,7 +74,12 @@ public class SecuredUserAccountManagerIT {
         SecurityContext sc = new TestSecurityContext("user01", RoleType.STUDENT);
         PersistentUser expResult = UserManager.findByUserName("user01");
         DomUserFull result = instance.getCurrentUser(sc);
-        assertEquals(expResult.getId().longValue(), MySQLPersistenceId.getId(result.getId()));
+        try {
+            assertEquals(expResult.getId().longValue(), MySQLPersistenceId.getNativeId(result).longValue());
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            fail(ex.getDwo2Message());
+        }
 
         // fail if non-existing user
         sc = new TestSecurityContext("userFake", RoleType.STUDENT);

@@ -168,7 +168,7 @@ public class SecuredDwoAdminSchoolManager {
         if (hr != null) {
             PersistentSchool s = null;
             try {
-                s = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(school.getDomSchool4DwoAdmin().getId()));
+                s = SchoolManager.findEntity((Long) MySQLPersistenceId.getNativeId(school.getDomSchool4DwoAdmin()));
                 LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
                 return s.buildDomSchoolFull();
             } catch (Exception e) {
@@ -285,7 +285,13 @@ public class SecuredDwoAdminSchoolManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         //unwrap persistentid
-        PersistentSchool school = SchoolManager.findEntity((Long) MySQLPersistenceId.getId(restSchool.getDomSchool4DwoAdmin().getId()));
+        PersistentSchool school;
+        try {
+            school = SchoolManager.findEntity((Long) MySQLPersistenceId.getNativeId(restSchool.getDomSchool4DwoAdmin()));
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex.getDwo2Code(), "Illegal Persistence key.");
+        }
 
         PersistentHasRole hr = null;
         try {
@@ -485,9 +491,7 @@ public class SecuredDwoAdminSchoolManager {
         if (hr != null) {
             try {
                 PersistentHasRole pHasRole = HasRoleManager.findEntity(
-                        new PersistentHasRolePK(MySQLPersistenceId.getId(domHasRole.getUserId()),
-                                MySQLPersistenceId.getId(domHasRole.getSchoolGroupId()))
-                );
+                        MySQLPersistenceId.getNativeId(domHasRole));
                 pHasRole.setRights(domHasRole.getRights());
                 HasRoleManager.editRights(pHasRole);
                 return true;

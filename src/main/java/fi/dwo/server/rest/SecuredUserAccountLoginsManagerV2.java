@@ -51,6 +51,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * Operations for the GUI Component that manages the role state data of a user.
@@ -242,20 +243,20 @@ public class SecuredUserAccountLoginsManagerV2 {
             LOG.log(Level.INFO, "Username {0}: Fetched User with username {0}", new Object[]{sc.getUserPrincipal().getName(), name});
             LOG.log(Level.INFO, "And id is {0}", new Object[]{userId});
 
-            if (userId != MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getHasRole().getUserId())) {
-                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getSchoolClass().getId())});
+            if (userId != MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getHasRole()).getUserID()) {
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), sarc.getDomSchoolRoleAndClass().getHasRole().getId()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getUsername() + ".");
             }
             //update user.
 
             PersistentUser u = UserManager.findEntity(user.getId());
             u.setSchoolGroupId(
-                    (Long) MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getHasRole().getSchoolGroupId()));
+                    MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getHasRole()).getSchoolGroupID());
             UserManager.edit(u);
 
-            PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getHasRole().getSchoolGroupId())));
+            PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getHasRole()).getSchoolGroupID()));
             if (sarc.getDomSchoolRoleAndClass().getSchoolClass().getId() != null) {
-                hr.setClassID(MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getSchoolClass().getId()));
+                hr.setClassID(MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getSchoolClass()));
             }
             HasRoleManager.edit(hr);
 
@@ -376,8 +377,14 @@ public class SecuredUserAccountLoginsManagerV2 {
         }
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
 
-        Long userId = (Long) MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getHasRole().getUserId());
-        Long schoolGroupId = (Long) MySQLPersistenceId.getId(sarc.getDomSchoolRoleAndClass().getHasRole().getSchoolGroupId());
+        Long userId=null;
+        Long schoolGroupId=null;
+        try {
+            userId = MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getHasRole()).getUserID();
+            schoolGroupId = MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getHasRole()).getSchoolGroupID();
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredUserAccountLoginsManagerV2.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
         Long sgId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();

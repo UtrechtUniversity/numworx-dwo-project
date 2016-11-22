@@ -142,7 +142,7 @@ public class SecuredDwoAdminProfileManager {
         }
         if (hr != null) {
             try {
-                long id = MySQLPersistenceId.getId(profile.getId());
+                long id = MySQLPersistenceId.getNativeId(profile);
 				PersistentDwoProfile editProfile = DwoProfileManager.findEntity(id);
                 //Profile to update.
                 editProfile.setDwoProfileDescription(profile.getDwoProfileDescription());

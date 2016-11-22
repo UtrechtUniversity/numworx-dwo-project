@@ -90,10 +90,10 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
         PersistentSchool school = null;
 
         try {
-            PersistentHasRolePK hasRoleKey = MySQLPersistenceId.extractHasRoleKey(domHasRole.getId());
+            PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
             phr = HasRoleManager.findEntity(hasRoleKey);
             PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
-            if (!user.getId().equals(phr.getPersistentHasRolePK().getId())) {
+            if (!user.getId().equals(phr.getPersistentHasRolePK().getUserID())) {
                 LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using uid {1} in HasRole differs from user principal name {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
                 throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "User id mismatched.");
             }

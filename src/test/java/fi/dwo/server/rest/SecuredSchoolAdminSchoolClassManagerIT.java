@@ -15,7 +15,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -105,8 +104,8 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
 
     /**
      * Test of getTeachersInSchool method, of class
-     * SecuredSchoolAdminSchoolClassManager. Tests for the number of teachers in a
-     * known school.
+     * SecuredSchoolAdminSchoolClassManager. Tests for the number of teachers in
+     * a known school.
      */
     @Test
     public void testGetTeachersInSchool() {
@@ -130,7 +129,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         RestSchoolClass restSchoolClass = new RestSchoolClass();
         DomSchoolClass domSchoolClass = new DomSchoolClass();
         restSchoolClass.setDomSchoolClass(domSchoolClass);
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(2L));
         domSchoolClass.setSchoolClassName("SchoolClass02");
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         List<DomTeacher> result = instance.GetTeachersInSchoolClass(sc, restSchoolClass);
@@ -140,18 +139,19 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
     /**
      * Test of SubmitTeacherToSchoolClass method, of class
      * SecuredSchoolAdminSchoolClassManager.
-     * 
-     * Tests if a known teacher can be submitted to a known class of a proper school.
+     *
+     * Tests if a known teacher can be submitted to a known class of a proper
+     * school.
      */
     @Test
     public void testSubmitTeacherToSchoolClass() {
         System.out.println("SubmitTeacherToSchoolClass");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         DomSchoolClass domSchoolClass = new DomSchoolClass();
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(1L));
         domSchoolClass.setSchoolClassName("SchoolClass01");
         DomTeacher domTeacher = new DomTeacher();
-        domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        domTeacher.setId(PersistentSchoolClass.buildPersistenceId(10L));
         domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
@@ -174,19 +174,19 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
     /**
      * Test of removeTeacherFromSchoolClass method, of class
      * SecuredSchoolAdminSchoolClassManager.
-     * 
-     * Tests if a known teacher can be removed from a school class.Tests for both
-     * legal and illegal teacher removal.
+     *
+     * Tests if a known teacher can be removed from a school class.Tests for
+     * both legal and illegal teacher removal.
      */
     @Test
     public void testRemoveTeacherFromSchoolClass() {
         System.out.println("removeTeacherFromSchoolClass");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         DomSchoolClass domSchoolClass = new DomSchoolClass();
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(2L));
         domSchoolClass.setSchoolClassName("SchoolClass02");
         DomTeacher domTeacher = new DomTeacher();
-        domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        domTeacher.setId(PersistentUser.buildPersistenceId(10L));
         domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
@@ -195,7 +195,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         msg.setDomRemoveTeacherFromSchoolClass(dmRmTeach);
         msg.getDomRemoveTeacherFromSchoolClass().setSchoolClass(domSchoolClass);
         msg.getDomRemoveTeacherFromSchoolClass().setTeacher(domTeacher);
-        
+
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean expResult = true;
         Boolean result = instance.removeTeacherFromSchoolClass(sc, msg);
@@ -208,18 +208,17 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         assertEquals("New teacher was not deleted.", newTeacher, null);
 
         //fail next
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(2L));
         domSchoolClass.setSchoolClassName("SchoolClass03");
-        domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        domTeacher.setId(PersistentUser.buildPersistenceId(10L));
         domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
-        
+
         try {
-            result = instance.removeTeacherFromSchoolClass(sc,msg);
+            result = instance.removeTeacherFromSchoolClass(sc, msg);
             assertEquals("Teacher removed while this should not occur.", false, result);
-        }
-        catch (Dwo2RestException e) {
+        } catch (Dwo2RestException e) {
             //success
         }
     }
@@ -227,7 +226,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
     /**
      * Test of SubmitSingleSchoolStudent method, of class
      * SecuredSchoolAdminSchoolClassManager. Tests if a single student student
-     * can be added. Tests only for a proper request. 
+     * can be added. Tests only for a proper request.
      */
     @Test
     public void testSubmitSingleSchoolStudent() {
@@ -236,7 +235,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
 
         RestNewSingleSchoolStudent rss = new RestNewSingleSchoolStudent();
         rss.setRestContext(new DomContext());
-        
+
         DomNewSingleSchoolStudent nss = new DomNewSingleSchoolStudent();
         DomSingleSchoolStudent dss = new DomSingleSchoolStudent();
         nss.setDomSingleSchoolStudent(dss);
@@ -250,7 +249,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);
         nss.setDomSchoolClass(schoolClass.buildDomSchoolClass());
         rss.setDomNewSingleSchoolStudent(nss);
-        
+
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean result = instance.SubmitSingleSchoolStudent(sc, rss);
         assertEquals("Operation failed to be true.", true, result);
@@ -266,15 +265,13 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         try {
             //check for hasRole
             PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findEntity(3L), RoleType.STUDENT);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);
             fail("Could not find created user's hasRole");
         }
     }
 
-
-        /**
+    /**
      * Test of getTeachersSchoolClasses method, of class
      * SecuredTeacherSchoolClassManager.
      */
@@ -284,19 +281,24 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
+        PersistenceId id = PersistentSchoolClass.buildPersistenceId(2L);
         DomSchoolClass domSchoolClass = new DomSchoolClass();
         restSchoolClass.setDomSchoolClass(domSchoolClass);
         domSchoolClass.setId(id);
         DomSchoolClassFull result = instance.getFullSchoolClass(sc, restSchoolClass);
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(domSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = null;
+        try {
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(domSchoolClass));
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredSchoolAdminSchoolClassManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getDwo2Message());
+        }
         assertEquals(schoolClass.getIconizer(), result.getIconizer());
         assertEquals(schoolClass.getClass1(), result.getSchoolClassName());
         assertEquals(schoolClass.getRegistrationKey(), result.getRegistrationKey());
     }
 
-    
- /**
+    /**
      * Test of UpdateSchoolClass method, of class
      * SecuredTeacherSchoolClassManager. Tests if the properties of a school
      * class can be updated by one of its schooladmins.
@@ -306,7 +308,7 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         System.out.println("UpdateSchoolClass");
         SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
         RestSchoolClassFull restSchoolClass = new RestSchoolClassFull();
-        PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
+        PersistenceId id = PersistentSchoolClass.buildPersistenceId(2L);
         DomSchoolClassFull domSchoolClass = new DomSchoolClassFull();
         restSchoolClass.setDomSchoolClassFull(domSchoolClass);
         domSchoolClass.setId(id);
@@ -316,9 +318,16 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         Boolean result = instance.UpdateSchoolClass(sc, restSchoolClass);
         assertEquals("Update action threw false", true, result);
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(domSchoolClass.getId()));
+        PersistentSchoolClass schoolClass = null;
+        try {
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(domSchoolClass));
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredSchoolAdminSchoolClassManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getDwo2Message());
+        }
+
         assertEquals(false, schoolClass.getIconizer());
         assertEquals("The worm wil eat you.", schoolClass.getClass1());
         assertEquals("Shaihulud", schoolClass.getRegistrationKey());
-    }    
+    }
 }

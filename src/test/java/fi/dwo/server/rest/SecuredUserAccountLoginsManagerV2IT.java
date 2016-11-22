@@ -24,8 +24,10 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -82,10 +84,15 @@ public class SecuredUserAccountLoginsManagerV2IT {
         if (result.getSchoolsRolesAndClassesList().size() != 5) {
             fail("The number of schoollogins is wrong.");
         }
-        //test default user
-        if (MySQLPersistenceId.getId(result.getActiveSchoolRoleAndClass().getHasRole().getSchoolGroupId())!=5  
-                || MySQLPersistenceId.getId(result.getActiveSchoolRoleAndClass().getHasRole().getUserId()) != 10L) {
-            fail("The retrieved selected user, group and class is wrong for the selected login.");
+        try {
+            //test default user
+            if (MySQLPersistenceId.getNativeId(result.getActiveSchoolRoleAndClass().getHasRole()).getSchoolGroupID().longValue() != 5L
+                    || MySQLPersistenceId.getNativeId(result.getActiveSchoolRoleAndClass().getHasRole()).getUserID().longValue() != 10L) {
+                fail("The retrieved selected user, group and class is wrong for the selected login.");
+            }
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            fail(ex.getDwo2Message());
         }
     }
 
@@ -106,7 +113,7 @@ public class SecuredUserAccountLoginsManagerV2IT {
         darc.setRole(RoleManager.findEntity(5L).buildDomRole());
         darc.setSchool(SchoolManager.findEntity(3L).buildDomSchool());
         darc.setSchoolClass(SchoolClassManager.findEntity(3L).buildDomSchoolClass());
-        darc.setHasRole(HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(),7L)).buildDomHasRole());
+        darc.setHasRole(HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), 7L)).buildDomHasRole());
 //        darc.setUserId(MySQLPersistenceId.createPersistenceId(user.getId(), PersistenceClassType.PersistentUser));
 //        darc.setSchoolId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));
 //        darc.setRoleId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentRole));
@@ -115,11 +122,18 @@ public class SecuredUserAccountLoginsManagerV2IT {
         SecuredUserAccountLoginsManagerV2 instance = new SecuredUserAccountLoginsManagerV2();
         DomSchoolRoleAndClassV2 result = instance.switchToSchoolLogin(sc, sarc);
 
-        long sgId = (long) MySQLPersistenceId.getId(result.getHasRole().getSchoolGroupId());
-        long scId = (long) MySQLPersistenceId.getId(result.getSchoolClass().getId());
+        long sgId=-1;
+        long scId=-1;
+        
+        try {
+            sgId = (long) MySQLPersistenceId.getNativeId(result.getHasRole()).getSchoolGroupID();
+            scId = (long) MySQLPersistenceId.getNativeId(result.getSchoolClass());
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredUserAccountLoginsManagerV2IT.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         if (sgId == oldSchoolGroup
-                || sgId != 7L ||scId!=3) {
+                || sgId != 7L || scId != 3) {
             fail("SchoolClass or SchoolGroup did not change.");
         }
     }
@@ -135,7 +149,7 @@ public class SecuredUserAccountLoginsManagerV2IT {
         PersistentUser user = UserManager.findByUserName("user03");
         RestNewSchoolLogin existingUserReg = new RestNewSchoolLogin();
         //should fail
-        DomNewSchoolLogin domUserReg  = new DomNewSchoolLogin();
+        DomNewSchoolLogin domUserReg = new DomNewSchoolLogin();
         existingUserReg.setDomNewSchoolLogin(domUserReg);
         domUserReg.setRole(RoleType.STUDENT);
         domUserReg.setSchoolLogin("school01");
@@ -144,8 +158,7 @@ public class SecuredUserAccountLoginsManagerV2IT {
         try {
             Boolean result = instance.submitASchoolLogin(sc, existingUserReg);
             assertEquals(false, result);
-        }
-        catch (Dwo2RestException e) {
+        } catch (Dwo2RestException e) {
             //success
         }
         PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(10L, 4L));
@@ -176,7 +189,7 @@ public class SecuredUserAccountLoginsManagerV2IT {
         darc.setRole(RoleManager.findEntity(1L).buildDomRole());
         darc.setSchool(SchoolManager.findEntity(3L).buildDomSchool());
         darc.setSchoolClass(SchoolClassManager.findEntity(2L).buildDomSchoolClass());
-        darc.setHasRole(HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(),5L)).buildDomHasRole());
+        darc.setHasRole(HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), 5L)).buildDomHasRole());
 
 //        darc.setUserId(MySQLPersistenceId.createPersistenceId(user.getId(), PersistenceClassType.PersistentUser));
 //        darc.setSchoolId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchool));

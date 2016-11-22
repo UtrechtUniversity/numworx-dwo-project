@@ -103,12 +103,11 @@ public class SecuredStudentSchoolClassManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-
-        schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
 
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
@@ -142,9 +141,11 @@ public class SecuredStudentSchoolClassManager {
         }
         PersistentHasRole phr = null;
         PersistentSchool school = null;
+        PersistentSchoolClass schoolClass = null;
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -155,9 +156,8 @@ public class SecuredStudentSchoolClassManager {
             LOG.log(Level.WARNING, msg);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
-        
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
-        
+
+
         if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             return SchoolClassUtilManager.removeStudentFromSchoolClass(phr, schoolClass);
 
@@ -201,7 +201,14 @@ public class SecuredStudentSchoolClassManager {
 
         DomNewSchoolClass4Student q = restSchoolClass.getDomNewSchoolClass4Student();
         PersistenceId id = q.getId();
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getId(id));
+        PersistentSchoolClass schoolClass;
+        try {
+            schoolClass = SchoolClassManager.findEntity((MySQLPersistenceId.getNativeId(q)));
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.SEVERE,null,ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
 
         if (phr != null && schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             if (!(schoolClass.getRegistrationKey() == null

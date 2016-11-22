@@ -104,12 +104,18 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
+        PersistenceId id = PersistentSchoolClass.buildPersistenceId(2L);
         DomSchoolClass domSchoolClass = new DomSchoolClass();
         restSchoolClass.setDomSchoolClass(domSchoolClass);
         domSchoolClass.setId(id);
         DomSchoolClassFull result = instance.getFullSchoolClass(sc, restSchoolClass);
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(domSchoolClass.getId()));
+        PersistentSchoolClass schoolClass=null;
+        try {
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(domSchoolClass));
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            fail(ex.getDwo2Message());
+        }
         assertEquals(schoolClass.getIconizer(), result.getIconizer());
         assertEquals(schoolClass.getClass1(), result.getSchoolClassName());
         assertEquals(schoolClass.getRegistrationKey(), result.getRegistrationKey());
@@ -180,7 +186,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         RestSchoolClass restSchoolClass = new RestSchoolClass();
         DomSchoolClass domSchoolClass = new DomSchoolClass();
          restSchoolClass.setDomSchoolClass(domSchoolClass);
-       PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
+        PersistenceId id = PersistentSchoolClass.buildPersistenceId(2L);
         domSchoolClass.setId(id);
         domSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
@@ -198,7 +204,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("GetStudentsInSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
+        PersistenceId id = PersistentSchoolClass.buildPersistenceId(2L);
         DomSchoolClass domSchoolClass = new DomSchoolClass();
         restSchoolClass.setDomSchoolClass(domSchoolClass);
         domSchoolClass.setId(id);
@@ -234,7 +240,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("removeSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        PersistenceId id = MySQLPersistenceId.createPersistenceId(2L, PersistenceClassType.PersistentSchoolClass);
+        PersistenceId id = PersistentSchoolClass.buildPersistenceId(2L);
         DomSchoolClass domSchoolClass = new DomSchoolClass();
         restSchoolClass.setDomSchoolClass(domSchoolClass);
         domSchoolClass.setId(id);
@@ -243,11 +249,17 @@ public class SecuredTeacherSchoolClassManagerIT {
         Boolean expResult = true;
         Boolean result = instance.removeSchoolClass(sc, restSchoolClass);
         assertEquals("remove returned false", expResult, result);
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
+        PersistentSchoolClass schoolClass=null;
+        try {
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            fail(ex.getDwo2Message());
+        }
         if (schoolClass != null) {
             fail("SchoolClass still exists after removal.");
         }
-        id = MySQLPersistenceId.createPersistenceId(3L, PersistenceClassType.PersistentSchoolClass);
+        id = PersistentSchoolClass.buildPersistenceId(3L);
         domSchoolClass.setId(id);
         domSchoolClass.setSchoolClassName("The worm wil eat you.");
         expResult = true;
@@ -258,7 +270,12 @@ public class SecuredTeacherSchoolClassManagerIT {
         catch (Dwo2RestException e) {
             //succes
         }
-        schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(restSchoolClass.getDomSchoolClass().getId()));
+        try {
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            fail(ex.getDwo2Message());
+        }
         if (schoolClass == null) {
             fail("Managed to delete a SchoolClass from another school.");
         }
@@ -274,10 +291,10 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("SubmitTeacherToSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         DomSchoolClass domSchoolClass = new DomSchoolClass();
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(1, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(1L));
         domSchoolClass.setSchoolClassName("SchoolClass01");
         DomTeacher domTeacher = new DomTeacher();
-        domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        domTeacher.setId(PersistentUser.buildPersistenceId(10L));
         domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
@@ -310,15 +327,15 @@ public class SecuredTeacherSchoolClassManagerIT {
         user.setSchoolGroupId(6L);
         UserManager.edit(user);
         DomStudent domStudent = new DomStudent();
-        domStudent.setId(MySQLPersistenceId.createPersistenceId(12L, PersistenceClassType.PersistentUser));
+        domStudent.setId(PersistentUser.buildPersistenceId(12L));
         domStudent.setUserName("user05");
         domStudent.setGivenName("User");
         domStudent.setFamilyName("Lastname 05");
         DomSchoolClass domFromSchoolClass = new DomSchoolClass();
-        domFromSchoolClass.setId(MySQLPersistenceId.createPersistenceId(3, PersistenceClassType.PersistentSchoolClass));
+        domFromSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(3L));
         domFromSchoolClass.setSchoolClassName("SchoolClass03");
         DomSchoolClass domToSchoolClass = new DomSchoolClass();
-        domToSchoolClass.setId(MySQLPersistenceId.createPersistenceId(4, PersistenceClassType.PersistentSchoolClass));
+        domToSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(4L));
         domToSchoolClass.setSchoolClassName("SchoolClass04");
         RestSubmitStudentToSchoolClass restSubmitStudentToSchoolClass = new RestSubmitStudentToSchoolClass();
         restSubmitStudentToSchoolClass.setDomSubmitStudentToSchoolClass(new DomSubmitStudentToSchoolClass());
@@ -350,10 +367,10 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         DomRemoveTeacherFromSchoolClass domRemoveTeacherFromSchoolClass = new DomRemoveTeacherFromSchoolClass();
         DomSchoolClass domSchoolClass = new DomSchoolClass();
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(2L));
         domSchoolClass.setSchoolClassName("SchoolClass02");
         DomTeacher domTeacher = new DomTeacher();
-        domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        domTeacher.setId(PersistentUser.buildPersistenceId(10L));
         domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
@@ -374,9 +391,9 @@ public class SecuredTeacherSchoolClassManagerIT {
         assertEquals("Teacher was not deleted.", newTeacher, null);
 
         //fail next
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(2L));
         domSchoolClass.setSchoolClassName("SchoolClass03");
-        domTeacher.setId(MySQLPersistenceId.createPersistenceId(10L, PersistenceClassType.PersistentUser));
+        domTeacher.setId(PersistentUser.buildPersistenceId(10L));
         domTeacher.setUserName("user03");
         domTeacher.setGivenName("User");
         domTeacher.setFamilyName("Lastname 03");
@@ -404,10 +421,10 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("removeStudentFromSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         DomSchoolClass domSchoolClass = new DomSchoolClass();
-        domSchoolClass.setId(MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass));
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(2L));
         domSchoolClass.setSchoolClassName("SchoolClass02");
         DomStudent domStudent = new DomStudent();
-        domStudent.setId(MySQLPersistenceId.createPersistenceId(9L, PersistenceClassType.PersistentUser));
+        domStudent.setId(PersistentUser.buildPersistenceId(9L));
         domStudent.setUserName("user02");
         domStudent.setGivenName("User");
         domStudent.setFamilyName("Lastname 02");
@@ -439,7 +456,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         System.out.println("UpdateSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSchoolClassFull restSchoolClass = new RestSchoolClassFull();
-        PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
+        PersistenceId id = PersistentSchoolClass.buildPersistenceId(2L);
         DomSchoolClassFull domSchoolClass = new DomSchoolClassFull();
         restSchoolClass.setDomSchoolClassFull(domSchoolClass);
         domSchoolClass.setId(id);
@@ -449,7 +466,13 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean result = instance.UpdateSchoolClass(sc, restSchoolClass);
         assertEquals("Update action threw false", true, result);
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getId(domSchoolClass.getId()));
+        PersistentSchoolClass schoolClass=null;
+        try {
+            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(domSchoolClass));
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            fail(ex.getDwo2Message());
+        }
         assertEquals(false, schoolClass.getIconizer());
         assertEquals("The worm wil eat you.", schoolClass.getClass1());
         assertEquals("Shaihulud", schoolClass.getRegistrationKey());
@@ -468,7 +491,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
         nssStudent.setDomSingleSchoolStudent(dssStudent);
         
-        dssStudent.setId(MySQLPersistenceId.createPersistenceId(11L, PersistenceClassType.PersistentUser));
+        dssStudent.setId(PersistentUser.buildPersistenceId(11L));
         dssStudent.setUserName("user04"); //changing is not allowed.
         dssStudent.setGivenName("User");
         dssStudent.setFamilyName("Lastname 04");

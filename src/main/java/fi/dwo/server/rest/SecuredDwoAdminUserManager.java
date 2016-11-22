@@ -92,7 +92,13 @@ public class SecuredDwoAdminUserManager {
         }
 
         if (phr != null) {
-            PersistentUser user = UserManager.findEntity((Long) MySQLPersistenceId.getId(domUser.getId()));
+            PersistentUser user;
+            try {
+                user = UserManager.findEntity(MySQLPersistenceId.getNativeId(domUser));
+            } catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+            }
 //            if (user == null) {
 //                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: could not find user with id to update {1}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getId()});
 //                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getDomSingleSchoolStudent().getUserName() + ".");

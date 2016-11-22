@@ -300,7 +300,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
         nssStudent.setDomSingleSchoolStudent(dssStudent);
 
-        dssStudent.setId(MySQLPersistenceId.createPersistenceId(11L, PersistenceClassType.PersistentUser));
+        dssStudent.setId(PersistentUser.buildPersistenceId(11L));
         dssStudent.setUserName("user04"); //changing is not allowed.
         dssStudent.setGivenName("User");
         dssStudent.setFamilyName("Lastname 04");
