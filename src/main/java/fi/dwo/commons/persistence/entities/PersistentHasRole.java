@@ -131,7 +131,6 @@ public class PersistentHasRole implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentHasRole)) {
             return false;
         }
@@ -178,8 +177,8 @@ public class PersistentHasRole implements Serializable {
         DomHasRole hr = new DomHasRole();
         if (this.persistentHasRolePK != null) {
             hr.setId(buildPersistenceId());
-            hr.setSchoolGroupId(this.persistentHasRolePK.getSchoolGroupID().longValue(), PersistenceClassType.PersistentSchoolGroup));
-            hr.setUserId(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getUserID().longValue(), PersistenceClassType.PersistentUser));
+            hr.setSchoolGroupId(PersistentSchoolGroup.buildPersistenceId(persistentHasRolePK.getSchoolGroupID()));
+            hr.setUserId(PersistentUser.buildPersistenceId(persistentHasRolePK.getUserID()));
         }
         hr.setRights(this.getRights());
         return hr;

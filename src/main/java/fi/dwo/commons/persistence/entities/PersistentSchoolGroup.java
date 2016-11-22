@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -156,4 +158,25 @@ public class PersistentSchoolGroup implements Serializable {
         this.role = role;
     }
 
+   /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(schoolGroupID);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aSchoolGroupId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aSchoolGroupId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentSchoolGroup.name(), aSchoolGroupId));
+        return id;
+    }    
 }

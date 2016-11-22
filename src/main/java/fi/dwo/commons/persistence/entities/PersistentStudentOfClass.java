@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -107,15 +108,32 @@ public class PersistentStudentOfClass implements Serializable {
 
     private DomStudentOfClass fillDomStudentOfClass(DomStudentOfClass result) {
         if (this.getPersistentStudentOfClassPK() != null) {
-            result.setId(MySQLPersistenceId.createPersistentId((PersistentStudentOfClass) this));
-            result.setStudentId(MySQLPersistenceId.createPersistenceId(
-                    this.persistentStudentOfClassPK.getUserID().longValue(), 
-                    PersistenceClassType.PersistentUser));
-            result.setClassId(MySQLPersistenceId.createPersistenceId(
-                    this.persistentStudentOfClassPK.getClassID().longValue(), 
-                    PersistenceClassType.PersistentSchoolClass));
+            result.setId(buildPersistenceId());
+            result.setStudentId(PersistentUser.buildPersistenceId(persistentStudentOfClassPK.getUserID()));
+            result.setClassId(PersistentSchoolClass.buildPersistenceId(persistentStudentOfClassPK.getClassID()));
         }
         return result;
     }
 
+   /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(persistentStudentOfClassPK);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aProfileId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(PersistentStudentOfClassPK aProfileId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d;%020d;%020d",
+                PersistenceClassType.PersistentTeacherOfClass.name(), aProfileId.getUserID(), aProfileId.getSchoolGroupID(),aProfileId.getClassID()));
+        return id;
+    }    
 }

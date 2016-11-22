@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContextFull;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * StudentScoContext manager. Known issues are that is does not provide a way to
@@ -234,14 +235,14 @@ public class PersistentStudentScoContext implements Serializable {
 
     public void fillDomStudentScoContext(DomStudentScoContext studentSco) {
         if (this.studentSco != null) {
-            studentSco.setId(MySQLPersistenceId.createPersistenceId(this.studentSco.intValue(), PersistenceClassType.PersistentStudentScoContext));
+            studentSco.setId(buildPersistenceId());
         } else {
             this.studentSco = null;
         }
-        studentSco.setSchoolGroupID(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getSchoolGroupID().intValue(), PersistenceClassType.PersistentStudentScoContext));
-        studentSco.setUserID(MySQLPersistenceId.createPersistenceId(this.persistentHasRolePK.getUserID().intValue(), PersistenceClassType.PersistentUser));
+        studentSco.setSchoolGroupID(PersistentSchoolGroup.buildPersistenceId(persistentHasRolePK.getSchoolGroupID()));
+        studentSco.setUserID(PersistentUser.buildPersistenceId(this.persistentHasRolePK.getUserID()));
         studentSco.setScore(score);
-        studentSco.setScoID(MySQLPersistenceId.createPersistenceId(this.scoID.intValue(), PersistenceClassType.PersistentScoContext));
+        studentSco.setScoID(PersistentScoContext.buildPersistenceId(this.scoID));
     }
 
     public void fillDomStudentScoContextFull(DomStudentScoContextFull studentSco) {
@@ -251,4 +252,26 @@ public class PersistentStudentScoContext implements Serializable {
         studentSco.setCreateTime(createTime);
         studentSco.setLocation(location);
     }
+    
+   /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(studentSco);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aStudentScoId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aStudentScoId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentStudentScoContext.name(), aStudentScoId));
+        return id;
+    }    
 }

@@ -5,7 +5,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
@@ -28,6 +27,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * PersistentUser.
@@ -246,7 +246,6 @@ public class PersistentUser implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentUser)) {
             return false;
         }
@@ -342,7 +341,7 @@ public class PersistentUser implements Serializable {
      */
     private void fillDomUser(DomUser user) {
         if (getId() != null) {
-            user.setId(MySQLPersistenceId.createPersistenceId(getId().intValue(), PersistenceClassType.PersistentUser));
+            user.setId(buildPersistenceId());
         } else {
             user.setId(null);
         }
@@ -360,4 +359,26 @@ public class PersistentUser implements Serializable {
 
     }
 
+
+   /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(getId());
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * aUserId aScoDataId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aUserId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentUser.name(), aUserId));
+        return id;
+    }        
 }

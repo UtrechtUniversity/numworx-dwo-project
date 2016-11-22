@@ -12,6 +12,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -74,14 +76,14 @@ public class PersistentImage implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentImage)) {
             return false;
         }
         PersistentImage other = (PersistentImage) object;
-        if (!this.courseID.equals(other.courseID)) {
+        //test for null due to constructor.
+        if ((this.courseID == null && other.courseID != null) || (this.courseID != null && !this.courseID.equals(other.courseID))) {
             return false;
-        }
+        }        
         return true;
     }
 
@@ -89,5 +91,25 @@ public class PersistentImage implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentImage[ courseID=" + courseID + " ]";
     }
+   /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(courseID);
+    }
 
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aCourseId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aCourseId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentImage.name(), aCourseId));
+        return id;
+    }
 }

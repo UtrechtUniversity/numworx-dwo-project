@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -159,12 +160,33 @@ public class PersistentScoContext implements Serializable {
     }
 
     private void fillDomScoContext(DomScoContext scoContext) {
-        scoContext.setId(MySQLPersistenceId.createPersistentId(this));
-        scoContext.setAppletId(MySQLPersistenceId.createPersistenceId(this.appletID, PersistenceClassType.PersistentApplet));
-        scoContext.setCourseId(MySQLPersistenceId.createPersistenceId(this.courseID, PersistenceClassType.PersistentCourse));
+        scoContext.setId(buildPersistenceId());
+        scoContext.setAppletId(PersistentApplet.buildPersistenceId(this.appletID));
+        scoContext.setCourseId(PersistentCourse.buildPersistenceId(this.courseID));
         scoContext.setScoName(sconame);
         scoContext.setSequencenr(sequencenr);
         scoContext.setShowScore(showscore);
     }
-    
+
+       /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(scoID);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aScoId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aScoId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentScoContext.name(), aScoId));
+        return id;
+    }
 }

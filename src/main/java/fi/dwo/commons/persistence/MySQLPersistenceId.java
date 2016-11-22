@@ -1,31 +1,19 @@
 /* Copyrighted 2015. */
 package fi.dwo.commons.persistence;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentApplet;
-import fi.dwo.commons.persistence.entities.PersistentAppletConfig;
-import fi.dwo.commons.persistence.entities.PersistentClassCourse;
-import fi.dwo.commons.persistence.entities.PersistentCourse;
-import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
-import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
-import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
-import fi.dwo.commons.persistence.entities.PersistentLoginContext;
-import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.commons.persistence.entities.PersistentSamlUser;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
-import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
-import fi.dwo.commons.persistence.entities.PersistentScoContext;
-import fi.dwo.commons.persistence.entities.PersistentScoData;
-import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
-import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
-import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
-import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
@@ -37,12 +25,11 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
  * @author G.A.J. van der Plas
  */
 public class MySQLPersistenceId extends PersistenceId implements Comparable<PersistenceId> {
-    
+
     private static final Logger LOG = Logger.getLogger(MySQLPersistenceId.class.getName());
 
     // the two variables that define the id.
     //private long id;
-    
     public MySQLPersistenceId() {
         super.setIdString(null);
 //        super.setType(PersistenceClassType.none);
@@ -79,17 +66,16 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
 //        String s = String.format("MYSQL;%s;%020d", super.getType().name(), id);
 //        super.setIdString(s);
 //    }
-    
     @Override
     public String getIdString() {
         return super.getIdString();
     }
-    
+
     @Override
     public void setIdString(String idString) {
 //        String[] strList = idString.split(";");
 //        if (strList[0].equals("MYSQL")) {
-            super.setIdString(idString);
+        super.setIdString(idString);
 //            super.setType(PersistenceClassType.valueOf(strList[1]));
 //            LOG.log(Level.FINE, "Set MySQLPersistenceId string {0} and type {1}", new Object[]{super.getIdString(), super.getType()});
 //        } else {
@@ -115,7 +101,81 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
 //    public void setId(int id) {
 //        this.id = id;
 //    }
-    
+
+    private static void checkForMSQLIdent(String id) throws Dwo2Exception {
+        if (!id.startsWith("MYSQL")) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.PersistentId_ConversionError, "Not a MySQL persistenceId string.");
+        }
+    }
+
+    private static Long getSingleNativeId(String id, PersistenceClassType type) throws Dwo2Exception {
+        checkForMSQLIdent(id);
+        String[] strList = id.split(";");
+        if (!strList[1].equals(type.name())) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.PersistentId_ConversionError, "Not a valid PersistenceClassType string.");
+        }
+        return Long.valueOf(strList[2]);
+    }
+
+//    public static Long getNativeId(DomApplet o) throws Dwo2Exception{
+//        return getSingleNativeId(o.getId().getIdString());
+//    }
+    public static Long getNativeId(DomAppletConfig o) throws Dwo2Exception {
+        return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentAppletConfig);
+    }
+
+    public static Long getNativeId(DomClassCourse o) throws Dwo2Exception {
+        return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentClassCourse);
+    }
+
+    public static Long getNativeId(DomCourse o) throws Dwo2Exception {
+        return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentCourse);
+    }
+
+    public static Long getNativeId(DomDwoProfile o) throws Dwo2Exception {
+        return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentDwoProfile);
+    }
+
+//    public static String getNativeId(DomDwoSystemParameters o) throws Dwo2Exception{
+//        checkForMSQLIdent(o.);
+//         String[] strList = id.split(";");
+//        return strList[1];
+//    }
+//
+//    public static Long getNativeId(DomFromTo o) throws Dwo2Exception{
+//        return getSingleNativeId(o.getId().getIdString());
+//    }
+    public static PersistentHasRolePK getNativeId(DomHasRole o) throws Dwo2Exception {
+        String id = o.getId().getIdString();
+        checkForMSQLIdent(id);
+        String[] strList = id.split(";");
+        if (!strList[1].equals(PersistenceClassType.PersistentHasRole.name())) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.PersistentId_ConversionError, "Not a valid PersistenceClassType string.");
+        }
+        PersistentHasRolePK result = new PersistentHasRolePK();
+        result.setUserID(Long.valueOf(strList[2]));
+        result.setSchoolGroupID(Long.valueOf(strList[3]));
+        return result;
+    }
+
+//        public static Long getNativeId(DomImage o) throws Dwo2Exception{
+//        return getSingleNativeId(o.getId().getIdString());
+//    }
+//    public static Long getNativeId(DomJars o) throws Dwo2Exception{
+//        return getSingleNativeId(o.getId().getIdString());
+//    }
+    public static Long getNativeId(DomSchoolClass o) throws Dwo2Exception {
+        return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentSchoolClass);
+    }
+
+    public static Long getNativeId(DomSchool o) throws Dwo2Exception {
+        return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentSchool);
+    }
+
+    public static Long getNativeId(DomUser o) throws Dwo2Exception {
+        return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentUser);
+    }
+
     @Override
     public PersistenceClassType getType() {
         return super.getType();

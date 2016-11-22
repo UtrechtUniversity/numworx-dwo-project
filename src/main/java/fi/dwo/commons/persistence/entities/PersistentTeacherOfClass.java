@@ -19,6 +19,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -86,7 +88,6 @@ public class PersistentTeacherOfClass implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentTeacherOfClass)) {
             return false;
         }
@@ -101,5 +102,25 @@ public class PersistentTeacherOfClass implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentTeacherOfClass[ persistentTeacherOfClassPK=" + persistentTeacherOfClassPK + " ]";
     }
+/**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(persistentTeacherOfClassPK);
+    }
 
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aProfileId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(PersistentTeacherOfClassPK aProfileId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d;%020d;%020d",
+                PersistenceClassType.PersistentTeacherOfClass.name(), aProfileId.getUserID(), aProfileId.getSchoolGroupID(),aProfileId.getClassID()));
+        return id;
+    }    
 }

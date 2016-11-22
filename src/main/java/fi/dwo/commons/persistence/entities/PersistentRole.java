@@ -19,6 +19,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.eclipse.persistence.annotations.Cache;
 import org.eclipse.persistence.annotations.CacheType;
 
@@ -133,9 +135,30 @@ public class PersistentRole implements Serializable {
 
     private void fillDomRole(DomRole role) {
         if (this.groupID != null) {
-            role.setId(MySQLPersistenceId.createPersistentId(this));
+            role.setId(buildPersistenceId());
         }
         role.setRoleName(groupname);
     }
+    
+   /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(groupID);
+    }
 
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param roleId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long roleId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentRole.name(), roleId));
+        return id;
+    }
 }

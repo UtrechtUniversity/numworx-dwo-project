@@ -15,6 +15,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -109,5 +111,25 @@ public class PersistentJars implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentJars[ key=" + key + " ]";
     }
+   /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(key);
+    }
 
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aCourseId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(String aCourseId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentJars.name(), aCourseId));
+        return id;
+    }
 }

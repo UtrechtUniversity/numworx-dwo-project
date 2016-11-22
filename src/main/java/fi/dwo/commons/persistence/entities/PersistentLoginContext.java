@@ -3,7 +3,6 @@
  */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
@@ -17,13 +16,14 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Login context data. Store time of registration and login in a UTC timestamp.
- * This replaces the more imprecise dates in the tbluser allowing session tracking and
- * time-zone aware translation. Splitting it into a separate table allows a better 
- * security and IO-performance.
- * 
+ * This replaces the more imprecise dates in the tbluser allowing session
+ * tracking and time-zone aware translation. Splitting it into a separate table
+ * allows a better security and IO-performance.
+ *
  * @author Gert van der Plas
  */
 @Entity
@@ -35,9 +35,9 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = "PersistentLoginContext.findByRegisterTimeStamp", query = "SELECT p FROM PersistentLoginContext p WHERE p.registerTimeStamp = :registerTimeStamp"),
     @NamedQuery(name = "PersistentLoginContext.findByLoginTimeStamp", query = "SELECT p FROM PersistentLoginContext p WHERE p.lastLoginTimeStamp = :lastLoginTimeStamp")})
 public class PersistentLoginContext implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -49,11 +49,11 @@ public class PersistentLoginContext implements Serializable {
     @Basic(optional = false)
     @Column(name = "registerTimeStamp", nullable = true)
 //    @Temporal(TemporalType.DATE)
-    private Long  registerTimeStamp;
+    private Long registerTimeStamp;
     @Basic(optional = false)
     @Column(name = "lastLoginTimeStamp", nullable = true)
 //    @Temporal(TemporalType.DATE)
-    private Long  lastLoginTimeStamp;
+    private Long lastLoginTimeStamp;
 //CREATE TABLE `tbllogincontext` (
 //  `loginid` int(11) NOT NULL AUTO_INCREMENT,
 //  `userID` int(11) NOT NULL,
@@ -63,6 +63,7 @@ public class PersistentLoginContext implements Serializable {
 //  UNIQUE KEY `AK_ID_LOGIN_USER`  (`userID`),
 //  `AK_ID_LOGIN_TIMESTAMP` (`lastLoginTimeStamp`)
 //) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
     /**
      * @return the id
      */
@@ -76,7 +77,6 @@ public class PersistentLoginContext implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
 
     /**
      * @return the userID
@@ -120,20 +120,40 @@ public class PersistentLoginContext implements Serializable {
         this.lastLoginTimeStamp = lastLogin;
     }
 
-
-    public DomLoginContext buildDomLoginContext(){
+    public DomLoginContext buildDomLoginContext() {
         DomLoginContext loginContext = new DomLoginContext();
         fillDomLoginContext(loginContext);
         return loginContext;
     }
-    
+
     private void fillDomLoginContext(DomLoginContext loginContext) {
         if (this.id != null) {
-            loginContext.setId(MySQLPersistenceId.createPersistentId(this));
+            loginContext.setId(buildPersistenceId());
         }
-            loginContext.setLastLoginTimeStamp(lastLoginTimeStamp);
-            loginContext.setRegisterTimeStamp(registerTimeStamp);
-        loginContext.setUserId(MySQLPersistenceId.createPersistenceId(userID.longValue(), PersistenceClassType.PersistentUser));
+        loginContext.setLastLoginTimeStamp(lastLoginTimeStamp);
+        loginContext.setRegisterTimeStamp(registerTimeStamp);
+        loginContext.setUserId(PersistentUser.buildPersistenceId(userID));
     }
-    
+
+    /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(id);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aId) {
+        PersistenceId tmpId = new PersistenceId();
+        tmpId.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentLoginContext.name(), tmpId));
+        return tmpId;
+    }
 }

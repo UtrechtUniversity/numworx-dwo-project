@@ -31,20 +31,6 @@ public class PersistentStudentOfClassPK implements Serializable {
     @Column(name = "classID", nullable = false)
     private Long classID;
 
-    public long getId() {
-        long id = schoolGroupID;
-        id = id << 32;
-        id = id | userID;
-        return (id);
-    }
-
-    public void setId(long aId) {
-        long uId = aId & 0xFFFF;
-        long sgId = aId >>32;
-        userID = uId;
-        schoolGroupID = sgId;
-    }
-
     public PersistentStudentOfClassPK() {
     }
 

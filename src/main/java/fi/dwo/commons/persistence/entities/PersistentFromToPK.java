@@ -59,15 +59,15 @@ public class PersistentFromToPK implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentFromToPK)) {
             return false;
         }
         PersistentFromToPK other = (PersistentFromToPK) object;
-        if ((long) this.schoolFrom != (long) other.schoolFrom) {
+        //test for null due to constructor.
+        if ((this.schoolFrom == null && other.schoolFrom != null) || (this.schoolFrom != null && !this.schoolFrom.equals(other.schoolFrom))) {
             return false;
         }
-        if ((long) this.schoolTo != (long) other.schoolTo) {
+        if ((this.schoolTo == null && other.schoolTo != null) || (this.schoolTo != null && !this.schoolTo.equals(other.schoolTo))) {
             return false;
         }
         return true;

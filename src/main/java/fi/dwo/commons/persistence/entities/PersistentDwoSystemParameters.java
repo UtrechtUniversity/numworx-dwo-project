@@ -10,6 +10,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * PersistentDwoSystemParameters stores database model dependent parameters.
@@ -84,7 +86,6 @@ public class PersistentDwoSystemParameters implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentDwoSystemParameters)) {
             return false;
         }
@@ -100,4 +101,26 @@ public class PersistentDwoSystemParameters implements Serializable {
         return "fi.dwo.server.persistence.DwoSystemParameters[ name=" + name + " ]";
     }
 
+
+    /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(name);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aProfileId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(String name) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%s",
+                PersistenceClassType.PersistentDwoSystemParameters.name(),name));
+        return id;
+    }    
 }

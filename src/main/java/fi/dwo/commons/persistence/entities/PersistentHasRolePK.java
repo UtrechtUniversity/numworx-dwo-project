@@ -28,30 +28,8 @@ public class PersistentHasRolePK implements Serializable {
     @Column(name = "schoolGroupID", nullable = false)
     private Long schoolGroupID;
 
-    public long getId() {
-        long id = schoolGroupID;
-        id = id << 32;
-        id = id | userID;
-        return (id);
-    }
-
-    public void setId(long aId) {
-        long uId = aId & 0xFFFF;
-        long sgId = aId >>32;
-        userID = uId;
-        schoolGroupID = sgId;
-    }
-    
     public PersistentHasRolePK() {
     }
-
-    /**
-     * Create a PersistenHasRolePK from a non-negative 64-bit long.
-     */
-    public PersistentHasRolePK(long aId) {
-        setId(aId);
-    }
-
 
     public PersistentHasRolePK(Long userID, Long schoolGroupID) {
         this.userID = userID;
@@ -84,17 +62,18 @@ public class PersistentHasRolePK implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentHasRolePK)) {
             return false;
         }
         PersistentHasRolePK other = (PersistentHasRolePK) object;
-        if ((long) this.userID != (long) other.userID) {
+        //test for null due to constructor.
+        if ((this.userID == null && other.userID != null) || (this.userID != null && !this.userID.equals(other.userID))) {
             return false;
-        }
-        if ((long) this.schoolGroupID != (long) other.schoolGroupID) {
+        }        
+        //test for null due to constructor.
+        if ((this.schoolGroupID == null && other.schoolGroupID != null) || (this.schoolGroupID != null && !this.schoolGroupID.equals(other.schoolGroupID))) {
             return false;
-        }
+        }        
         return true;
     }
 

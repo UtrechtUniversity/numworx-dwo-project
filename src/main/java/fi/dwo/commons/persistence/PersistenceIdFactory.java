@@ -3,7 +3,6 @@ package fi.dwo.commons.persistence;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
@@ -45,61 +44,58 @@ public class PersistenceIdFactory {
      */
     public static PersistenceId createPersistenceId(Object o) {
         if (o instanceof PersistentApplet) {
-            return createPersistentId((PersistentApplet) o);
+            return ((PersistentApplet) o).buildPersistenceId();
         }
         if (o instanceof PersistentAppletConfig) {
-            return createPersistentId((PersistentAppletConfig) o);
+            return ((PersistentAppletConfig) o).buildPersistenceId();
         }
         if (o instanceof PersistentClassCourse) {
-            return createPersistentId((PersistentClassCourse) o);
+            return ((PersistentClassCourse) o).buildPersistenceId();
         }
         if (o instanceof PersistentCourse) {
-            return createPersistentId((PersistentCourse) o);
-        }
-        if (o instanceof PersistentCourseSequence) {
-            return createPersistentId((PersistentCourseSequence) o);
+            return ((PersistentCourse) o).buildPersistenceId();
         }
         if (o instanceof PersistentDwoProfile) {
-            return createPersistentId((PersistentDwoProfile) o);
+            return ((PersistentDwoProfile) o).buildPersistenceId();
         }
         if (o instanceof PersistentHasRole) {
-            return createPersistentId((PersistentHasRole) o);
+            return ((PersistentHasRole) o).buildPersistenceId();
         }
         if (o instanceof PersistentRole) {
-            return createPersistentId((PersistentRole) o);
+            return ((PersistentRole) o).buildPersistenceId();
         }
         if (o instanceof PersistentSamlUser) {
-            return createPersistentId((PersistentSamlUser) o);
+            return ((PersistentSamlUser) o).buildPersistenceId();
         }
         if (o instanceof PersistentSchool) {
-            return createPersistentId((PersistentSchool) o);
+            return ((PersistentSchool) o).buildPersistenceId();
         }
         if (o instanceof PersistentSchoolClass) {
-            return createPersistentId((PersistentSchoolClass) o);
+            return ((PersistentSchoolClass) o).buildPersistenceId();
         }
         if (o instanceof PersistentSchoolGroup) {
-            return createPersistentId((PersistentSchoolGroup) o);
+            return ((PersistentSchoolGroup) o).buildPersistenceId();
         }
         if (o instanceof PersistentScoContext) {
-            return createPersistentId((PersistentScoContext) o);
+            return ((PersistentScoContext) o).buildPersistenceId();
         }
         if (o instanceof PersistentScoData) {
-            return createPersistentId((PersistentScoData) o);
+            return ((PersistentScoData) o).buildPersistenceId();
         }
         if (o instanceof PersistentStudentOfClass) {
-            return createPersistentId((PersistentStudentOfClass) o);
+            return ((PersistentStudentOfClass) o).buildPersistenceId();
         }
         if (o instanceof PersistentStudentScoContext) {
-            return createPersistentId((PersistentStudentScoContext) o);
+            return ((PersistentStudentScoContext) o).buildPersistenceId();
         }
         if (o instanceof PersistentStudentScoData) {
-            return createPersistentId((PersistentStudentScoData) o);
+            return ((PersistentStudentScoData) o).buildPersistenceId();
         }
         if (o instanceof PersistentTeacherOfClass) {
-            return createPersistentId((PersistentTeacherOfClass) o);
+            return ((PersistentTeacherOfClass) o).buildPersistenceId();
         }
         if (o instanceof PersistentUser) {
-            return createPersistentId((PersistentUser) o);
+            return ((PersistentUser) o).buildPersistenceId();
         }
         LOG.log(Level.SEVERE, "Factory was asked to create an unsupported data type.");
         return null;
@@ -111,36 +107,31 @@ public class PersistenceIdFactory {
     //  return proper type of id
     //  else(id's type is wrong throw error)
     //}
-    
     public static PersistenceId createPersistentId(PersistentApplet o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentAppletConfig o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentClassCourse o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentCourse o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
-    }
-
-    public static PersistenceId createPersistentId(PersistentCourseSequence o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentDwoProfile o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
 //    public static PersistenceId createPersistenceId(PersistentDwoSystemParameters o) {
 //        return (PersistenceId) MySQLPersistenceId.createPersistenceId(o);
 //    }
     public static PersistenceId createPersistentId(PersistentHasRole o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
 //    public static PersistenceId createPersistenceId(PersistentImage o) {
@@ -150,50 +141,50 @@ public class PersistenceIdFactory {
 //        return (PersistenceId) MySQLPersistenceId.createPersistenceId(o);
 //    }
     public static PersistenceId createPersistentId(PersistentRole o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentSamlUser o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentSchool o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentSchoolClass o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentSchoolGroup o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentScoContext o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentScoData o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentStudentOfClass o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentStudentScoContext o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentStudentScoData o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentTeacherOfClass o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 
     public static PersistenceId createPersistentId(PersistentUser o) {
-        return (PersistenceId) MySQLPersistenceId.createPersistentId(o);
+        return o.buildPersistenceId();
     }
 }

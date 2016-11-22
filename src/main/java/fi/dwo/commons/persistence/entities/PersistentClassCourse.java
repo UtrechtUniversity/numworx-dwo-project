@@ -73,7 +73,7 @@ public class PersistentClassCourse implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ClassCourseID", nullable = false)
-    private long classCourseID;
+    private Long classCourseID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "ClassID", nullable = false)
@@ -161,12 +161,11 @@ public class PersistentClassCourse implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentClassCourse)) {
             return false;
         }
         PersistentClassCourse other = (PersistentClassCourse) object;
-        if ((this.classCourseID == other.classCourseID)) {
+        if ((this.classCourseID == null && other.classCourseID != null) || (this.classCourseID != null && !this.classCourseID.equals(other.classCourseID))) {
             return false;
         }
         return true;

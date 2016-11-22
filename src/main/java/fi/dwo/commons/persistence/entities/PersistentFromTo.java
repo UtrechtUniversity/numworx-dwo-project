@@ -10,6 +10,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -56,7 +58,6 @@ public class PersistentFromTo implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentFromTo)) {
             return false;
         }
@@ -72,4 +73,25 @@ public class PersistentFromTo implements Serializable {
         return "fi.dwo.server.PersistentEntityManagers.Tblfromto[ tblfromtoPK=" + tblfromtoPK + " ]";
     }
 
+    /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(tblfromtoPK);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aProfileId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(PersistentFromToPK aProfileId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d;%020d",
+                PersistenceClassType.PersistentDwoProfile.name(), aProfileId.getSchoolFrom(), aProfileId.getSchoolTo()));
+        return id;
+    }
 }

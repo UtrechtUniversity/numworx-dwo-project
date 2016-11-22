@@ -17,6 +17,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -174,5 +176,26 @@ public class PersistentSamlUser implements Serializable {
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         return c.getTime().getTime() < (getAuthTokenTimestamp() + milliseconds);
     }
+    
+   /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(id);
+    }
 
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentSamlUser.name(), aId));
+        return id;
+    }
 }

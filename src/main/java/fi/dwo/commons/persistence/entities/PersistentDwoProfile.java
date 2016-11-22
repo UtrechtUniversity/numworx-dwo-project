@@ -122,7 +122,6 @@ public class PersistentDwoProfile implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentDwoProfile)) {
             return false;
         }
@@ -145,7 +144,7 @@ public class PersistentDwoProfile implements Serializable {
     }
 
     private void fillDomDwoProfile(DomDwoProfile profile) {
-        profile.setId(MySQLPersistenceId.createPersistentId(this));
+        profile.setId(buildPersistenceId());
         profile.setDwoProfileName(getDwoProfileName());
         profile.setDwoProfileRights(getDwoProfileRights());
     }

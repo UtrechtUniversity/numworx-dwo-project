@@ -37,7 +37,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentApplet.findByClassname", query = "SELECT p FROM PersistentApplet p WHERE p.classname = :classname"),
     @NamedQuery(name = "PersistentApplet.findByFeatures", query = "SELECT p FROM PersistentApplet p WHERE p.features = :features"),
     @NamedQuery(name = "PersistentApplet.findByJarname", query = "SELECT p FROM PersistentApplet p WHERE p.jarname = :jarname")})
-public class PersistentApplet implements PersistentUpdate<PersistentApplet>, Serializable {
+public class PersistentApplet implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -63,15 +63,6 @@ public class PersistentApplet implements PersistentUpdate<PersistentApplet>, Ser
     @Size(min = 1, max = 128)
     @Column(name = "jarname", nullable = false, length = 128)
     private String jarname;
-
-    public PersistentApplet update(PersistentApplet o) {
-        PersistentApplet a = (PersistentApplet) o;
-        appletName = a.appletName;
-        classname = a.classname;
-        features = a.features;
-        jarname = a.jarname;
-        return this;
-    }
 
     public PersistentApplet() {
     }
@@ -136,7 +127,6 @@ public class PersistentApplet implements PersistentUpdate<PersistentApplet>, Ser
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentApplet)) {
             return false;
         }

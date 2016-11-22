@@ -59,7 +59,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentCourse.findByParentID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID")})
 //    @NamedQuery(name = "PersistentCourse.findByNotVisible", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = :notVisible")})
 public class PersistentCourse implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,7 +85,7 @@ public class PersistentCourse implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "dwoProfileID", nullable = false)
-    private int dwoProfileID;
+    private Long dwoProfileID;
     @Lob
     @Column(name = "imageData")
     private byte[] imageData;
@@ -96,7 +96,7 @@ public class PersistentCourse implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "parentID", nullable = false) //0 means no parent.
-    private int parentID;
+    private Long parentID;
 //    @Basic(optional = false)
 //    @NotNull
 //    @Column(name = "notVisible", nullable = false)
@@ -178,11 +178,11 @@ public class PersistentCourse implements Serializable {
         this.image = image;
     }
 
-    public int getDwoProfileID() {
+    public long getDwoProfileID() {
         return dwoProfileID;
     }
 
-    public void setDwoProfileID(int dwoProfileID) {
+    public void setDwoProfileID(long dwoProfileID) {
         this.dwoProfileID = dwoProfileID;
     }
 
@@ -210,11 +210,11 @@ public class PersistentCourse implements Serializable {
         this.withChildren = withChildren;
     }
 
-    public int getParentID() {
+    public long getParentID() {
         return parentID;
     }
 
-    public void setParentID(int parentID) {
+    public void setParentID(long parentID) {
         this.parentID = parentID;
     }
 //
@@ -236,7 +236,6 @@ public class PersistentCourse implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PersistentCourse)) {
             return false;
         }
@@ -303,11 +302,11 @@ public class PersistentCourse implements Serializable {
     private void fillDomCourse(DomCourse course) {
         course.setId(buildPersistenceId());
         if (this.schoolID != null) {
-            course.setSchoolId(PersistentSchool.buildPersistenceId(this.schoolID);
+            course.setSchoolId(PersistentSchool.buildPersistenceId(this.schoolID));
         }
         //note that parent 0 means there is no parent!
         if (this.parentID != 0) {
-            course.setParentID(buildPersistenceId(this.parentID);
+            course.setParentID(buildPersistenceId(this.parentID));
         } else {
             course.setParentID(null);
         }
@@ -323,14 +322,14 @@ public class PersistentCourse implements Serializable {
         fillDomCourseFull(course);
         return course;
     }
-    
+
     private void fillDomCourseStudent(DomCourseStudent course) {
         fillDomCourse(course);
         course.setImage(image);
         course.setImageData(imageData);
         course.setDescription(description);
     }
-    
+
     public DomCourseFull buildDomCourseFull() {
         DomCourseFull course = new DomCourseFull();
         fillDomCourseFull(course);
@@ -339,13 +338,14 @@ public class PersistentCourse implements Serializable {
 
     private void fillDomCourseFull(DomCourseFull course) {
         PersistentCourse.this.fillDomCourseStudent(course);
-        course.setDwoProfileId(PersistentDwoProfile.buildPersistenceId(this.dwoProfileID));
+        course.setDwoProfileId(buildPersistenceId());
         course.setExport(export);
     }
 
-       /** Builds a PersistenceId using this object's data.
-     * 
-     * @return 
+    /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
      */
     public PersistenceId buildPersistenceId() {
         return buildPersistenceId(courseID);

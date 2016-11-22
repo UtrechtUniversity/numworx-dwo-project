@@ -25,6 +25,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -226,7 +228,7 @@ public class PersistentSchool implements Serializable {
 
     private void fillDomSchool(DomSchool school) {
         if (this.schoolID != null) {
-            school.setId(MySQLPersistenceId.createPersistentId(this));
+            school.setId(buildPersistenceId());
         }
         school.setSchoolName(this.schoolName);
         //TODO One should filter the rights depending on the security level
@@ -259,4 +261,26 @@ public class PersistentSchool implements Serializable {
         //school.setSchoolRights(schoolRights);
         school.setExpire(expire);
     }
+
+   /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(schoolID);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aSchoolId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aSchoolId) {
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentSchool.name(), aSchoolId));
+        return id;
+    }    
 }
