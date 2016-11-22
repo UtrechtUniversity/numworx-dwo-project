@@ -531,7 +531,12 @@ public final class DwoHelper {
      */
     @Deprecated
     public static int getActiveSchoolClassId() {
-        return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchool().getId());
+        try {
+            return MySQLPersistenceId.getNativeId(schoolLogins.getActiveSchoolRoleAndClass().getSchoolClass()).intValue();
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     /**
@@ -542,7 +547,12 @@ public final class DwoHelper {
      */
     @Deprecated
     public static int getActiveSchoolId() {
-        return (int) MySQLPersistenceId.getId(schoolLogins.getActiveSchoolRoleAndClass().getSchool().getId());
+        try {
+            return  MySQLPersistenceId.getNativeId(schoolLogins.getActiveSchoolRoleAndClass().getSchool()).intValue();
+        } catch (Dwo2Exception ex) {
+           LOG.log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     /**
@@ -577,7 +587,7 @@ public final class DwoHelper {
         userInit(aCurrentUser);
         if (aCurrentUser != null) {
             try {
-                GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(aCurrentUser.getId()));
+                GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getNativeId(aCurrentUser).intValue());
                 currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUserName());
             } catch (LoginException ex) {
                 LOG.log(Level.SEVERE, null, ex);

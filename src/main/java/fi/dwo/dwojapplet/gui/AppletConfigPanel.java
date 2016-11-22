@@ -28,11 +28,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminConfigManager;
-import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminProfileManager;
-import fi.dwo.dwojapplet.gui.DwoProfilePanel.DwoProfileModel;
-import fi.dwo.dwojapplet.gui.DwoProfilePanel.ImageButtonEditor;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener {
@@ -66,17 +62,22 @@ class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener
 
 		@Override
 		public Object getValueAt(int row, int col) {
-			DomAppletConfig current = config[row];
-			switch(col) {
-			case 0:	return MySQLPersistenceId.getId(current.getId());
-			case 1: return current.getAppletID();
-			case 2: return current.getName();
-			case 3: return current.getLanguage();
-			case 4: return current.getLaunchdata();
-			case 5: return editImage;
-			case 6: return removeImage;
-			}
-			return null;
+                    try {
+                        DomAppletConfig current = config[row];
+                        switch(col) {
+                            case 0:	return MySQLPersistenceId.getNativeId(current);
+                            case 1: return current.getAppletID();
+                            case 2: return current.getName();
+                            case 3: return current.getLanguage();
+                            case 4: return current.getLaunchdata();
+                            case 5: return editImage;
+                            case 6: return removeImage;
+                        }
+                        return null;
+                    } catch (Dwo2Exception ex) {
+                        Logger.getLogger(AppletConfigPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        return null;
+                    }
 		}
 
 		public void removeRow(int row) {

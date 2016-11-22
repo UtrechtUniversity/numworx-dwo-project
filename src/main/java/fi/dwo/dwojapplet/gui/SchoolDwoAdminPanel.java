@@ -96,9 +96,12 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             if (value == editImage || value == removeImage || value == rightsImage) {
                 lclRow = rowSorter.convertRowIndexToModel(row);
                 DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(lclRow, 5);
-                long schoolid = MySQLPersistenceId.getId(school.getId());
+                long schoolid;
                 try {
+                    schoolid = MySQLPersistenceId.getNativeId(school);
                     oldSchool = (School) PersistenceFacade.instance().get((int) schoolid, School.class);
+                } catch (Dwo2Exception ex) {
+                    Logger.getLogger(SchoolDwoAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 catch (PersistenceException ex) {
                     LOG.log(Level.SEVERE, null, ex);

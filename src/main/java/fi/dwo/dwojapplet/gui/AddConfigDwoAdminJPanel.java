@@ -106,7 +106,7 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 		this.config = config;
 		String id = "-"; 
 		try {
-			id = String.valueOf(MySQLPersistenceId.getId(config.getId()));
+			id = String.valueOf(MySQLPersistenceId.getNativeId(config));
 		} catch (Exception e) {
 		}
 		idField   = new JLabel(id);

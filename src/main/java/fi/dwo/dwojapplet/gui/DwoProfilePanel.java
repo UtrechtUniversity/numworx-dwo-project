@@ -63,17 +63,22 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 
 		@Override
 		public Object getValueAt(int row, int col) {
-			DomDwoProfileFull current = profiles[row];
-			switch(col) {
-			case 0:	return MySQLPersistenceId.getId(current.getId());
-			case 1: return current.getDwoProfileName();
-			case 2: return current.getDwoProfileDescription();
-			case 3: return current.getDwoProfileText();
-			case 4: return current.getDwoProfileRights();
-			case 5: return editImage;
-			case 6: return removeImage;
-			}
-			return null;
+                    try {
+                        DomDwoProfileFull current = profiles[row];
+                        switch(col) {
+                            case 0:	return MySQLPersistenceId.getNativeId(current);
+                            case 1: return current.getDwoProfileName();
+                            case 2: return current.getDwoProfileDescription();
+                            case 3: return current.getDwoProfileText();
+                            case 4: return current.getDwoProfileRights();
+                            case 5: return editImage;
+                            case 6: return removeImage;
+                        }
+                        return null;
+                    } catch (Dwo2Exception ex) {
+                        LOG.log(Level.SEVERE, null, ex);
+                        return null;
+                    }
 		}
 
 		public void removeRow(int row) {

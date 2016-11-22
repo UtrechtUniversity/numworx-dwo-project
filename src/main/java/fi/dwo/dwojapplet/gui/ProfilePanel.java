@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 
 /**
  * This class represents a panel for the current user to change his account.
@@ -661,10 +662,10 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
                     /* Evil trick to refresh user info */
                     if (password.getText().equals("")) {
                         // TODO this erases the canLogout flag.
-                        GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
+                        GuiCreator.instance().clearCurrentUserData(MySQLPersistenceId.getNativeId((DomUser) DwoHelper.getCurrentUser()).intValue());
                         GuiCreator.instance().login(user.getUsername(), oldpassword.getText());
                     } else {
-                        GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getId(DwoHelper.getCurrentUser().getId()));
+                        GuiCreator.instance().clearCurrentUserData(MySQLPersistenceId.getNativeId((DomUser) DwoHelper.getCurrentUser()).intValue());
                         GuiCreator.instance().login(user.getUsername(), password.getText());
                     }
                 } catch (LoginException exc) {

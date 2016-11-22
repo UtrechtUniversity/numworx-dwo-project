@@ -135,6 +135,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 //        }
 //
 //    }
+
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
         private ImageIcon icon = new ImageIcon();
@@ -220,25 +221,22 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                         prop.updateSchoolClass(fullSchoolClass);
                         tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
                         tableModel.fireTableDataChanged();
-                        
+
                         //FIXED legacy schoolclass updaten!
-                        
                         int classId = getSchoolClassID(sc);
                         try {
-							SchoolClass scold = (SchoolClass) PersistenceFacade.instance().get(classId, SchoolClass.class);
-							scold.setClassName(fullSchoolClass.getSchoolClassName());
-						} catch (PersistenceException e) {
-							LOG.log(Level.SEVERE, "should not happen!", e);
-						}
+                            SchoolClass scold = (SchoolClass) PersistenceFacade.instance().get(classId, SchoolClass.class);
+                            scold.setClassName(fullSchoolClass.getSchoolClassName());
+                        } catch (PersistenceException e) {
+                            LOG.log(Level.SEVERE, "should not happen!", e);
+                        }
                         center.loadMenu();
-                        
+
                     }
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     LOG.log(Level.FINE, "", ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                }
-                finally {
+                } finally {
                     fireEditingStopped();
                 }
 
@@ -248,21 +246,19 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 SchoolClass sc = null;
                 try {
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-                    sc = (SchoolClass) MapperCreator.instance(SchoolClass.class).get((int) MySQLPersistenceId.getId(schoolClass.getId()));
+                    sc = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(MySQLPersistenceId.getNativeId(schoolClass).intValue());
                     GuiCreator.instance().getDWO().setWait();
                     allCourses = GuiCreator.instance().getDWO().getCourses();
                     selectedSchoolCourses = sc.getSelectedSchoolCourses();
-                }
-                catch (IOException ex) {
-                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch (XmlRpcException ex) {
-                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch (SQLException ex) {
-                    Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                finally {
+                } catch (IOException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                } catch (XmlRpcException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                } catch (Dwo2Exception ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                } finally {
                     GuiCreator.instance().getDWO().setReady();
                 }
                 Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassTeacherPanel.this, allCourses, selectedSchoolCourses, sc);
@@ -270,8 +266,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     GuiCreator.instance().getDWO().setWait();
                     try {
                         sc.saveSelectedCourses(allCourses, selectedCourses);
-                    }
-                    finally {
+                    } finally {
                         GuiCreator.instance().getDWO().setReady();
                     }
                 }
@@ -282,8 +277,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     StudentsInSchoolClassTeacherPanel panel = new StudentsInSchoolClassTeacherPanel(sc);
                     center.loadCenter(panel);
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, "", ex);
                 }
                 fireEditingStopped();
@@ -292,15 +286,14 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     TeachersInSchoolClassTeacherPanel panel = new TeachersInSchoolClassTeacherPanel(sc);
                     center.loadCenter(panel);
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.SEVERE, "", ex);
                 }
                 fireEditingStopped();
             } else if (value == removeImage) {
                 try {
                     DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME), sc.getSchoolClassName());                    
+                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME), sc.getSchoolClassName());
                     if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
                         //persist returned values	
                         prop.removeSchoolClass(sc);
@@ -309,12 +302,10 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     }
                     // update legacy stuff
                     refreshSchoolClasses();
-                }
-                catch (Dwo2Exception ex) {
+                } catch (Dwo2Exception ex) {
                     Logger.getLogger(ClassTeacherPanel.class.getName()).log(Level.FINE, "", ex);
                     GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
-                }
-                finally {
+                } finally {
                     fireEditingStopped();
                 }
             }
@@ -323,8 +314,13 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
     }
 
     private int getSchoolClassID(DomSchoolClass sc) {
-		return (int) MySQLPersistenceId.getId(sc.getId());
-	}
+        try {
+            return MySQLPersistenceId.getNativeId(sc).intValue();
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
 
     private void buildJTable() throws Dwo2Exception {
         if (jtbl != null) {
@@ -343,10 +339,10 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 
         tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
         jtable.setModel(tableModel);
-        rowSorter = new TableRowSorter(tableModel);        
+        rowSorter = new TableRowSorter(tableModel);
         rowSorter.toggleSortOrder(0);//
-        jtable.setRowSorter(rowSorter);        
-        
+        jtable.setRowSorter(rowSorter);
+
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }
@@ -385,8 +381,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         //fetch user details.
         try {
             prop.init();
-        }
-        catch (Dwo2Exception e) {
+        } catch (Dwo2Exception e) {
             LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
             GuiCreator.instance().ShowErrorDialog(this, e);
         }
@@ -408,8 +403,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         tr.addImage(removeImage, 4);
         try {
             tr.waitForAll();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
 
         //FontMetrics fm;
@@ -487,10 +481,9 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     tableModel.init(prop, editImage, modulesImage, studentsImage, teachersImage, removeImage);
                     tableModel.fireTableDataChanged();
                     refreshSchoolClasses();
-                }
-                catch (Dwo2Exception ex) {
-                LOG.log(Level.FINE, "", ex);
-                GuiCreator.instance().ShowErrorDialog(center, ex);
+                } catch (Dwo2Exception ex) {
+                    LOG.log(Level.FINE, "", ex);
+                    GuiCreator.instance().ShowErrorDialog(center, ex);
                 }
             }
         }
@@ -506,20 +499,20 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
 //        }
     }
 
-	private void refreshSchoolClasses() {
-		// update schoolclass[] of teacher and school
-		try {
-			SchoolClass[] scold = (SchoolClass[]) PersistenceFacade.instance().get(SchoolClass.class, DwoHelper.getCurrentFacadeUser());
-			((Teacher) DwoHelper.getCurrentFacadeUser()).setClasses(scold);
-		    School school = DwoHelper.getCurrentFacadeUser().getSchool();
-			if (school != null) {
-		        school.setClassList((SchoolClass[]) PersistenceFacade.instance().get(SchoolClass.class, school));
-		    }
-		} catch (PersistenceException e1) {
-			LOG.log(Level.SEVERE, "should not happen!", e1); // famous last words
-		}
-		center.loadMenu();
-	}
+    private void refreshSchoolClasses() {
+        // update schoolclass[] of teacher and school
+        try {
+            SchoolClass[] scold = (SchoolClass[]) PersistenceFacade.instance().get(SchoolClass.class, DwoHelper.getCurrentFacadeUser());
+            ((Teacher) DwoHelper.getCurrentFacadeUser()).setClasses(scold);
+            School school = DwoHelper.getCurrentFacadeUser().getSchool();
+            if (school != null) {
+                school.setClassList((SchoolClass[]) PersistenceFacade.instance().get(SchoolClass.class, school));
+            }
+        } catch (PersistenceException e1) {
+            LOG.log(Level.SEVERE, "should not happen!", e1); // famous last words
+        }
+        center.loadMenu();
+    }
 
     /**
      * Returns the current object, as the object to add to a gui.

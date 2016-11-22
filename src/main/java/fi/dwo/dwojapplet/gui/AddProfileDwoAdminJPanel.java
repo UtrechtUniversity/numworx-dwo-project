@@ -32,7 +32,7 @@ class AddProfileDwoAdminJPanel extends JPanel {
 		descField = new JTextField(profile.getDwoProfileDescription());
 		String id = "-"; 
 		try {
-			id = String.valueOf(MySQLPersistenceId.getId(profile.getId()));
+			id = String.valueOf(MySQLPersistenceId.getNativeId(profile));
 		} catch (Exception e) {
 		}
 		idField   = new JLabel(id);

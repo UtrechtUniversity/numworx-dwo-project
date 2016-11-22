@@ -15,6 +15,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class ClassMapper extends XmlRpcMapper {
@@ -95,10 +96,12 @@ class ClassMapper extends XmlRpcMapper {
             DbAccessIF dbAccess = DbAccessCreator.instance();
             Vector<Object> vList = null;
             try {
-                long schoolId = MySQLPersistenceId.getId(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getId());
+                long schoolId = MySQLPersistenceId.getNativeId(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool());
                 vList = dbAccess.getClassesOfTeacher(t.getUserID(), (int) schoolId);
             }
             catch (DwoXmlRpcException ex) {
+                Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Dwo2Exception ex) {
                 Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
             }
             return getObjectFromReturn(vList);
