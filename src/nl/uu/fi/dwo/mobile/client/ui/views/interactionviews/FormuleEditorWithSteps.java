@@ -2565,7 +2565,25 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 			if (stepsForLinKwad && start > 0)
 			{
-				checkStap(i - 1, FormuleParser.parseVergelijking("$f" + viewersInhouden[i-1] + "@"), FormuleParser.parseVergelijking("$f" + viewersInhouden[i] + "@"));
+				VergelijkingMeerv verg1 = FormuleParser.parseVergelijking("$f" + viewersInhouden[i-1] + "@");
+				VergelijkingMeerv verg2 = FormuleParser.parseVergelijking("$f" + viewersInhouden[i] + "@");
+				
+				// check of er een substitutie in het spel is
+				if (substitutie != null) // er is een substitutie
+				{
+					if (isVergelijkingVak)
+					{
+						verg1 = verg1.substitueer(substitutie, "p");
+						verg2 = verg2.substitueer(substitutie, "p");
+					}
+					else
+					{
+						verg1 = verg1.substitueer(substitutie, "u");
+						verg2 = verg2.substitueer(substitutie, "u");
+					}
+				}
+
+				checkStap(i - 1, verg1, verg2);
 			}
 			
 			editor.kijkNa(setState); // dit evalueert voor een toets met feedback per stap met het eindantwoord.
