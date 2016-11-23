@@ -136,6 +136,12 @@ public class ScoContextManager {
     }
 
 
+    /**
+     * Finds ScoContexts that belong to a {@Link PersistentCourse}.
+     * 
+     * @param c
+     * @return 
+     */
     public static List<PersistentScoContext> findEntities(PersistentCourse c) {
         EntityManager em = getEntityManager();
         try {

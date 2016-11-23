@@ -144,7 +144,7 @@ public class CourseManager {
         }
     }
 
-    
+        
     public static List<PersistentCourse> findEntities(PersistentSchool s) {
         EntityManager em = getEntityManager();
         try {
