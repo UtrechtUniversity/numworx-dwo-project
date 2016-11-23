@@ -23,7 +23,7 @@ public class DomResultsPerTeacher {
     private DomTeacher teacher;
     private Long fetchTimeStamp;   
     private Map<PersistenceId,DomStudent> students; 
-    private Map<PersistenceId,DomStudentOfClass> studentOfClass;
+    private Map<PersistenceId,DomStudentOfClass> studentsOfClasses;
     private Map<PersistenceId,DomSchoolClass> schoolClasses;
     private Map<PersistenceId,DomClassCourse> classCourses;
     private Map<PersistenceId,DomCourse> courses;
@@ -47,7 +47,7 @@ public class DomResultsPerTeacher {
     }
 
     /**
-     * The timestamp defining when the result collection were started 
+     * The UT timestamp defining when the result collection was started 
      * on the server.
      * 
      * @return the fetchTimeStamp
@@ -57,6 +57,9 @@ public class DomResultsPerTeacher {
     }
 
     /**
+     * Setting UT timestamp which defines when the result collection was started 
+     * on the server.
+     * 
      * @param fetchTimeStamp the fetchTimeStamp to set
      */
     public void setFetchTimeStamp(Long fetchTimeStamp) {
@@ -172,17 +175,17 @@ public class DomResultsPerTeacher {
      * Returns the StudentOfClass data that tells which student links to which 
      * school class. 
      * 
-     * @return the studentOfClass
+     * @return the studentsOfClasses
      */
-    public Map<PersistenceId,DomStudentOfClass> getStudentOfClass() {
-        return studentOfClass;
+    public Map<PersistenceId,DomStudentOfClass> getStudentsOfClasses() {
+        return studentsOfClasses;
     }
 
     /**
-     * @param studentOfClass the studentOfClass to set
+     * @param studentsOfClasses the studentsOfClasses to set
      */
-    public void setStudentOfClass(Map<PersistenceId,DomStudentOfClass> studentOfClass) {
-        this.studentOfClass = studentOfClass;
+    public void setStudentsOfClasses(Map<PersistenceId,DomStudentOfClass> studentsOfClasses) {
+        this.studentsOfClasses = studentsOfClasses;
     }
     
 }
