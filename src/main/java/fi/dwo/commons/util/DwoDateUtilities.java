@@ -40,7 +40,7 @@ public class DwoDateUtilities {
      * @return
      */
     public static long getCurrentDwoUnixTimeStamp() {
-        return (new Date()).getTime(); //return milliseconds since 1st of January 1970.
+        return (new Date()).getTime(); //return milliseconds since 1st of January 1970 in GMT.
 
     }
 

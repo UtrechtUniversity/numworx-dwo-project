@@ -178,11 +178,11 @@ public class PersistentCourse implements Serializable {
         this.image = image;
     }
 
-    public long getDwoProfileID() {
+    public Long getDwoProfileID() {
         return dwoProfileID;
     }
 
-    public void setDwoProfileID(long dwoProfileID) {
+    public void setDwoProfileID(Long dwoProfileID) {
         this.dwoProfileID = dwoProfileID;
     }
 
@@ -202,7 +202,7 @@ public class PersistentCourse implements Serializable {
         this.export = export;
     }
 
-    public Boolean getWithChildren() {
+    public Boolean isWithChildren() {
         return withChildren;
     }
 

@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -33,6 +32,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @NamedQueries({
     //Profiles are to ordered for the junit test. Though this is usually the case.
     @NamedQuery(name = "PersistentDwoProfile.findAll", query = "SELECT p FROM PersistentDwoProfile p order by p.dwoProfileID"),
+    @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileID", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileID = :dwoProfileID"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileID", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileID = :dwoProfileID"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileName", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileName = :dwoProfileName"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileRights", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileRights = :dwoProfileRights"),
