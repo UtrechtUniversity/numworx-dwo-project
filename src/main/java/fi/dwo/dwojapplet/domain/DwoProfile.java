@@ -11,11 +11,13 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
  */
 public class DwoProfile implements Descriptor {
 
+    //options voor de rights string.
     public static char READONLY = 'r';
     public static char PREVIEW = 'p';
     // Limited is dat je niet als gast en alleen met "goedgekeurde" schoolid's er in mag.
     // Goedgekeurd is een "school.properties" bestand.
     public static char LIMITED = 'l'; // goed voor rekenwise en consorten.
+    
     private int dwoProfileID;
     private String description;
     private String text;
