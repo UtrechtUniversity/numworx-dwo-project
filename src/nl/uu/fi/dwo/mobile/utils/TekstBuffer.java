@@ -430,6 +430,10 @@ public class TekstBuffer
 			return x(map, 
 					new StubView("SliderWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
 			);
+		case 57:
+			return x(map, 
+					new StubView("GeoDefinerGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
+			);
 		}
 
 		if (soortVak == 0)
