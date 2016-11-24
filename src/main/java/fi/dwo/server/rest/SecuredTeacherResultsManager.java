@@ -214,8 +214,8 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             //Trying to get the queue empty.
             while (!courseQueue.isEmpty()) {
                 PersistentCourse course = courseQueue.remove();
-                courses.putIfAbsent(course.getCourseID(), course);
-                if (course.isWithChildren()) {
+                PersistentCourse r = courses.putIfAbsent(course.getCourseID(), course);
+                if (r==null && course.isWithChildren()) {
                     //put current course in the courseMap
                     //put kids on the queue
                     List<PersistentCourse> childrenCourses = CourseManager.findChildrenOf(course);

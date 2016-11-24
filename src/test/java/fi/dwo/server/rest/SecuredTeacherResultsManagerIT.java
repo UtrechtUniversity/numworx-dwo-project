@@ -111,10 +111,12 @@ public class SecuredTeacherResultsManagerIT {
         DomResultsPerTeacher result = instance.getTeachersResults(sc,restProfile);
         
         assertEquals(result.getTeacher().getId().getIdString(),"MYSQL;PersistentUser;00000000000000000014");
+        assertEquals(3, result.getStudentsOfClasses().size());
         assertEquals(3, result.getStudents().size());
+        assertEquals(1, result.getSchoolClasses().size());
         assertEquals(3, result.getCourses().size());
-        assertEquals(1, result.getClassCourses().size());
-        assertEquals(3, result.getScoContexts().size());
+        assertEquals(2, result.getClassCourses().size());
+        assertEquals(2, result.getScoContexts().size());
         assertEquals(3, result.getStudentScoContexts().size());
         
 
