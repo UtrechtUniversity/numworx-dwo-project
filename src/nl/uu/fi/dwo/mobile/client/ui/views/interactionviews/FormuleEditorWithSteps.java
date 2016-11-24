@@ -263,7 +263,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				dwologger.setLogObjectives(logObjectives);
 			}
 			
-			rmknop = !isVergelijkingVak && launchStateMap.getBoolean("rmKnop");
+			rmknop = !isVergelijkingVak && launchStateMap.getBoolean("rmKnop", false);
 			if(launchStateMap.containsKey("aantalDecRm"))
 				aantalDecRm = launchStateMap.getInt("aantalDecRm");
 			if (launchState.containsKey("pijl"))
