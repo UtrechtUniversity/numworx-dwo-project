@@ -4,6 +4,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -23,9 +24,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
-import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -111,14 +112,34 @@ public class SecuredTeacherResultsManagerIT {
         DomResultsPerTeacher result = instance.getTeachersResults(sc,restProfile);
         
         assertEquals(result.getTeacher().getId().getIdString(),"MYSQL;PersistentUser;00000000000000000014");
+        //requires  students with id 9,10 and 11 in class with id
         assertEquals(3, result.getStudentsOfClasses().size());
+        assertEquals(true, result.getStudentsOfClasses().containsKey((PersistenceId) new MySQLPersistenceId("MYSQL;PersistentStudentOfClass;00000000000000000009;00000000000000000002;00000000000000000002")));
+        assertEquals(true, result.getStudentsOfClasses().containsKey(new MySQLPersistenceId("MYSQL;PersistentStudentOfClass;00000000000000000010;00000000000000000002;00000000000000000002")));
+        assertEquals(true, result.getStudentsOfClasses().containsKey(new MySQLPersistenceId("MYSQL;PersistentStudentOfClass;00000000000000000011;00000000000000000002;00000000000000000002")));
         assertEquals(3, result.getStudents().size());
+        assertEquals(true, result.getStudents().containsKey(new MySQLPersistenceId("MYSQL;PersistentUser;00000000000000000009")));
+        assertEquals(true, result.getStudents().containsKey(new MySQLPersistenceId("MYSQL;PersistentUser;00000000000000000010")));
+        assertEquals(true, result.getStudents().containsKey(new MySQLPersistenceId("MYSQL;PersistentUser;00000000000000000011")));
+        //requires schoolclass with id 2
         assertEquals(1, result.getSchoolClasses().size());
+        assertEquals(true, result.getSchoolClasses().containsKey(new MySQLPersistenceId("MYSQL;PersistentSchoolClass;00000000000000000002")));
+        //requires courses with id 2,5,6
         assertEquals(3, result.getCourses().size());
+        assertEquals(true, result.getCourses().containsKey(new MySQLPersistenceId("MYSQL;PersistentCourse;00000000000000000005")));
+        assertEquals(true, result.getCourses().containsKey(new MySQLPersistenceId("MYSQL;PersistentCourse;00000000000000000006")));
+        assertEquals(true, result.getCourses().containsKey(new MySQLPersistenceId("MYSQL;PersistentCourse;00000000000000000002 ")));
+        //requires classCourses with id 2.4
         assertEquals(2, result.getClassCourses().size());
+        assertEquals(true, result.getClassCourses().containsKey(new MySQLPersistenceId("MYSQL;PersistentClassCourse;00000000000000000002 ")));
+        assertEquals(true, result.getClassCourses().containsKey(new MySQLPersistenceId("MYSQL;PersistentClassCourse;00000000000000000004")));
+        //requires scoContexts with id 2,1
         assertEquals(2, result.getScoContexts().size());
-        assertEquals(3, result.getStudentScoContexts().size());
-        
-
+        assertEquals(true, result.getScoContexts().containsKey(new MySQLPersistenceId("MYSQL;PersistentScoContext;00000000000000000002")));
+        assertEquals(true, result.getScoContexts().containsKey(new MySQLPersistenceId("MYSQL;PersistentScoContext;00000000000000000001 ")));
+        //requires studentScoContexts with id 1,2
+        assertEquals(2, result.getStudentScoContexts().size());
+        assertEquals(true, result.getStudentScoContexts().containsKey(new MySQLPersistenceId("MYSQL;PersistentStudentScoContext;00000000000000000001 ")));
+        assertEquals(true, result.getStudentScoContexts().containsKey(new MySQLPersistenceId("MYSQL;PersistentStudentScoContext;00000000000000000002")));
     }
 }
