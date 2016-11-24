@@ -34,6 +34,12 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
         super.setIdString(null);
 //        super.setType(PersistenceClassType.none);
     }
+    // the two variables that define the id.
+    //private long id;
+    public MySQLPersistenceId(String idString) {
+        super.setIdString(idString);
+//        super.setType(PersistenceClassType.none);
+    }
 
     /**
      * This constructor is only public because of jax-rs. Use a factory to

@@ -185,7 +185,7 @@ public class PersistentClassCourse implements Serializable {
     private void fillDomClassCourse(DomClassCourse classCourse) {
         classCourse.setId(buildPersistenceId());
         classCourse.setClassId(PersistentSchoolClass.buildPersistenceId(this.classID));
-        classCourse.setClassId(PersistentCourse.buildPersistenceId(this.courseID));
+        classCourse.setCourseId(PersistentCourse.buildPersistenceId(this.courseID));
         classCourse.setNotAfter(this.notAfter);
         classCourse.setNotBefore(this.notBefore);
         classCourse.setType(this.type);

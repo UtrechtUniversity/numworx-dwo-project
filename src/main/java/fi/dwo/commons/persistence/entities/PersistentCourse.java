@@ -316,19 +316,19 @@ public class PersistentCourse implements Serializable {
 //        course.setNotVisible(notVisible);
         course.setLastChangeTimeStamp(lastChangeTimeStamp);
     }
-
-    public DomCourseStudent buildDomCourseStudent() {
-        DomCourseFull course = new DomCourseFull();
-        fillDomCourseFull(course);
-        return course;
-    }
-
-    private void fillDomCourseStudent(DomCourseStudent course) {
-        fillDomCourse(course);
-        course.setImage(image);
-        course.setImageData(imageData);
-        course.setDescription(description);
-    }
+//
+//    public DomCourseStudent buildDomCourseStudent() {
+//        DomCourseFull course = new DomCourseFull();
+//        fillDomCourseFull(course);
+//        return course;
+//    }
+//
+//    private void fillDomCourseStudent(DomCourseStudent course) {
+//        fillDomCourse(course);
+//        course.setImage(image);
+//        course.setImageData(imageData);
+//        course.setDescription(description);
+//    }
 
     public DomCourseFull buildDomCourseFull() {
         DomCourseFull course = new DomCourseFull();
@@ -337,7 +337,7 @@ public class PersistentCourse implements Serializable {
     }
 
     private void fillDomCourseFull(DomCourseFull course) {
-        PersistentCourse.this.fillDomCourseStudent(course);
+        PersistentCourse.this.fillDomCourse(course);
         course.setDwoProfileId(buildPersistenceId());
         course.setExport(export);
     }

@@ -133,7 +133,7 @@ public class PersistentStudentOfClass implements Serializable {
     public static PersistenceId buildPersistenceId(PersistentStudentOfClassPK aProfileId) {
         PersistenceId id = new PersistenceId();
         id.setIdString(String.format("MYSQL;%s;%020d;%020d;%020d",
-                PersistenceClassType.PersistentTeacherOfClass.name(), aProfileId.getUserID(), aProfileId.getSchoolGroupID(),aProfileId.getClassID()));
+                PersistenceClassType.PersistentStudentOfClass.name(), aProfileId.getUserID(), aProfileId.getSchoolGroupID(),aProfileId.getClassID()));
         return id;
     }    
 }
