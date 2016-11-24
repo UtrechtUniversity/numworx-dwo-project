@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,12 +22,15 @@ import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * equivalent van de PersistenceFacade voor DWO v1.0
@@ -127,11 +131,11 @@ public class RPCHandlerV1 {
 	/**
 	 * XML RPC Mapper voor DomDwoProfiles.
 	 */
-	private static final Function<Map<String, Object>, DomDwoProfile> TO_DWOPROFILE = new Function<Map<String,Object>, DomDwoProfile>() {
+	private static final Function<Map<String, Object>, DomDwoProfileFull> TO_DWOPROFILE = new Function<Map<String,Object>, DomDwoProfileFull>() {
 		
 		@Override
-		public DomDwoProfile apply(Map<String, Object> t) {
-			DomDwoProfile result = new DomDwoProfile();
+		public DomDwoProfileFull apply(Map<String, Object> t) {
+			DomDwoProfileFull result = new DomDwoProfileFull();
 			result.setDwoProfileDescription(t.get("dwoProfileDescription").toString());
 			result.setDwoProfileRights(t.get("dwoProfileRights").toString());
 			result.setDwoProfileName(t.get("dwoProfileName").toString());
@@ -146,7 +150,22 @@ public class RPCHandlerV1 {
 		@Override
 		public DomCourseFull apply(Map<String, Object> t) {
 			DomCourseFull course = new DomCourseFull();
-			// FIXME .....
+			course.setDescription((String)t.get("description"));
+			course.setDwoProfileId(idOf(t.get("dwoProfileID"), PersistenceClassType.PersistentDwoProfile));
+			course.setExport((Boolean)t.get("export"));
+			course.setId(idOf(t.get("courseID"), PersistenceClassType.PersistentCourse));
+			course.setImage(null);
+			course.setImageData(null);
+			course.setLastChangeTimeStamp(null);
+			course.setName((String)t.get("name"));
+			course.setParentID(idOf(t.get("parentID"), PersistenceClassType.PersistentCourse));
+			course.setSchoolId(idOf(t.get("schoolID"),PersistenceClassType.PersistentSchool));
+			try {
+				course.setSequenceNr(((Number)t.get("sequencenr")).longValue());
+			} catch (Exception e) {
+			}
+			course.setTreeIndex(null);
+			course.setWithChildren((Boolean)t.get("withChildren"));
 			return course;
 		}
 		
@@ -155,7 +174,42 @@ public class RPCHandlerV1 {
 	private static final Function<List<Map<String,Object>>, List<DomCourseFull>> TO_DOMCOURSELIST = 
 		new ListFunction<DomCourseFull>(TO_DOMCOURSE);
 	
-	private static final Function<Map<String,Object>,DomClassCourse> TO_DOMCLASSCOURSE = null;
+	protected static final Function<Map<String, Object>, DomClassCourse> TO_DOMCLASSCOURSE = 
+			new Function<Map<String,Object>, DomClassCourse>() {
+
+				@Override
+				public DomClassCourse apply(Map<String, Object> t) {
+					DomClassCourse result = new DomClassCourse();
+					result.setCourseId(idOf(t.get("CourseID"),PersistenceClassType.PersistentCourse));
+					result.setId(idOf(t.get("ClassCourseID"), PersistenceClassType.PersistentClassCourse));
+					result.setClassId(idOf(t.get("ClassID"), PersistenceClassType.PersistentSchoolClass));
+					result.setNotAfter((Date)t.get("notAfter"));
+					result.setNotBefore((Date)t.get("notBefore"));
+					result.setType(((Number)t.get("type")).intValue());
+					return result;
+				}
+			};
+	
+	private static final Function<List<Map<String, Object>>, DomCoursesOfSchoolClass> TO_DOMCOURSESOFSCHOOLCLASS = 
+			new Function<List<Map<String,Object>>, DomCoursesOfSchoolClass>() {
+
+				@Override
+				public DomCoursesOfSchoolClass apply(List<Map<String, Object>> t) {
+					DomCoursesOfSchoolClass result = new DomCoursesOfSchoolClass();
+					Map<PersistenceId, DomClassCourse> classcoursemap = new HashMap<>();
+					Map<PersistenceId, DomCourse> coursemap = new HashMap<>();
+					for(Map<String,Object> item: t) {
+						DomCourse course = TO_DOMCOURSE.apply(item);
+						coursemap.put(course.getId(), course);
+						DomClassCourse classcourse = TO_DOMCLASSCOURSE.apply(item);
+						classcoursemap.put(classcourse.getCourseId(), classcourse);
+					}					
+					result.setClassCourses(classcoursemap);
+					result.setCourses(coursemap);
+					result.setFetchTimeStamp(System.currentTimeMillis());
+					return result;
+				}
+			};
 	
 	
 	
@@ -163,9 +217,17 @@ public class RPCHandlerV1 {
 		if( xmlRpcClient == null)
 		{
 			xmlRpcClient = new XmlRpcClient(server);
-			xmlRpcClient.setTimeoutMillis(1000000);
+			xmlRpcClient.setTimeoutMillis(10000000);
 		}
 		return xmlRpcClient;
+	}
+
+	protected static PersistenceId idOf(Object object, PersistenceClassType type) {
+		if(object == null || "".equals(object))
+				return null;
+		PersistenceId id = new PersistenceId();
+		id.setIdString("MYSQL;" + type + ";" + object);
+		return id;
 	}
 
 	public void getCourses(
@@ -217,11 +279,18 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 
-	public Promise<List<DomClassCourse>> getCoursesClass(DomSchoolClass schoolclass) {
+	public Promise<DomCoursesOfSchoolClass> getCoursesClass(final DomSchoolClass schoolclass) {
 		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
 		Object id = PersistenceIdDecoderInterface.instance.idOf(schoolclass.getId(), PersistenceClassType.PersistentSchoolClass);
 		getCoursesClass(id, defer);
-		return defer.getPromise().map(new ListFunction<DomClassCourse>(TO_DOMCLASSCOURSE));
+		return defer.getPromise().map(TO_DOMCOURSESOFSCHOOLCLASS).map(new Function<DomCoursesOfSchoolClass, DomCoursesOfSchoolClass>() {
+
+			@Override
+			public DomCoursesOfSchoolClass apply(DomCoursesOfSchoolClass t) {
+				t.setSchoolClass(schoolclass);
+				return t;
+			}
+		});
 	}
 	
 	
@@ -405,7 +474,7 @@ public class RPCHandlerV1 {
 	 * @return a promise for the DwoProfile.
 	 */
 	
-	public Promise<DomDwoProfile> getDwoProfile() {
+	public Promise<DomDwoProfileFull> getDwoProfile() {
 		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
 		getDwoProfile(defer);
 		return defer.getPromise().map(TO_DWOPROFILE);
