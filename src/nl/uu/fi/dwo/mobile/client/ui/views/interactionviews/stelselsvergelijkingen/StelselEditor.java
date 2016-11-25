@@ -810,7 +810,9 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			//nu: stapNr = 0, dus in eerste regel van de huidige editor. Deze regel leegmaken.
 			checkimg.removeFromParent();
 			if(editor != null)
-				editor.clearAll();
+			{	editor.clearAll();
+				editor.paint();
+			}
 			if(this.getStapNr() == 0 && !isHoofdEditor())
 			{
 				//focus in meest linker kolom

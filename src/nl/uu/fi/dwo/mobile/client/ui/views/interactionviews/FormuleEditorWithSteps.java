@@ -3102,7 +3102,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		LayoutPanel current = stepPanels.get(stepPanels.size() - 1);
 		current.remove(latest_answer_viewer.getAsPanel());
 		viewers.remove(latest_answer_viewer);
-		latest_answer_viewer = viewers.get(viewers.size() - 1);
+		if(viewers.size() > 0)
+			latest_answer_viewer = viewers.get(viewers.size() - 1);
+		else
+			latest_answer_viewer = null;
 		if (hasPrefix)
 		{	//TODO: als ook gebruikt voor plekken waar een prefix aanwezig: prefix van antwoord af halen.
 		
