@@ -114,7 +114,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	protected FlowPanel headerPanel = null;
 	private OpdrNavIF comRoot;
 	protected int mode;
-	String feedback = "";
+	private String feedback = "";
 	
 	private PijlVak pijlVak;
 	private boolean pijl = false;
@@ -760,7 +760,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		setStapOk(false);
 		nagekeken = false;
 		correct = Boolean.FALSE;//moet correct hier niet null zijn?
-		contentPanel.remove(feedbackPanel);
+		if(feedbackPanel != null)
+		{	feedbackPanel.removeFromParent();
+			//25-11-2016: feedback leeg gezet om te zorgen dat in stelselEditor de feedback niet opnieuw verschijnt. 	
+			feedback = "";
+		}
 		vervangEditorDoorViewer(useranswer, show, setState);
 		terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 	}
