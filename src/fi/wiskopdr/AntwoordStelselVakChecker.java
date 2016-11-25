@@ -129,7 +129,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 			gelijkwaardig = bepaalGelijkwaardig(answer);
 			evaluate();
 		}
-		
+		System.out.println("check: goedHalfFout = " + goedHalfFout);
 		HashMap checkResults = new HashMap();
 		if(goedHalfFout != GEEN) 
 			checkResults.put("correct", new Boolean(correct));
@@ -237,15 +237,17 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 	public boolean bepaalGelijkwaardig(String answer)
 	{
 		boolean gelijkwaardig = true;
-		Expressie[][] oplossingen = bepaalOplossingen(answer);
-		if(oplossingen == null)
+		Expressie[][] leerlingOplossingen = bepaalOplossingen(answer);
+		if(leerlingOplossingen == null)
 			return false;
 		boolean[] oplossingenCorrect = new boolean[oplossingen.length];
 		for(int i = 0; i < oplossingenCorrect.length; i++)
 			oplossingenCorrect[i] = false;
-		for(int i = 0; i < oplossingen.length; i++)
+		for(int i = 0; i < leerlingOplossingen.length; i++)
 		{
-			Expressie[] leerlingOpl = oplossingen[i];
+			Expressie[] leerlingOpl = leerlingOplossingen[i];
+			//mbv isOplossing houd je bij of deze leerlingOplossing inderdaad een oplossing is
+			boolean isOplossing = false;
 			for(int j = 0; j < oplossingen.length; j++)
 			{
 				boolean gelijk = true;
@@ -258,10 +260,14 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 					}
 				}
 				if(gelijk)
-					oplossingenCorrect[j] = true;
+				{	oplossingenCorrect[j] = true;
+					isOplossing = true;
+				}
 			}
+			if(!isOplossing)
+				return false;
 		}
-		gelijkwaardig = true;
+		//controleren of alle oplossingen gevonden zijn. 
 		for(int i = 0; i < oplossingenCorrect.length; i++)
 		{	if(!oplossingenCorrect[i])
 			{	gelijkwaardig = false;
