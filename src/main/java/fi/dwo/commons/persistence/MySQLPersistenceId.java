@@ -186,6 +186,35 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
     public PersistenceClassType getType() {
         return super.getType();
     }
+   /**
+     * Compare ordered state.
+     *
+     * @param aId
+     * @return
+     */
+    public int compareTo(MySQLPersistenceId aId) {
+        return super.getIdString().compareTo(aId.getIdString());
+    }
+
+    
+    /**
+     * Define equality of state.
+     *
+     * @param aId
+     * @return
+     */
+    public boolean equals(PersistenceId aId) {
+        return super.getIdString().equals(aId.getIdString());
+    }
+
+    /**
+     * A class that overrides equals must override hashCode for HasMaps and such
+     * to work properly.
+     */
+    @Override
+    public int hashCode() {
+        return super.getIdString().hashCode();
+    }
 
 //    /**
 //     * This functionality is only public because of jax-rs.
