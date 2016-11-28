@@ -151,7 +151,7 @@ public class PersistentDwoProfile implements Serializable {
 
     public DomDwoProfileFull buildDomDwoProfileFull() {
         DomDwoProfileFull profile = new DomDwoProfileFull();
-        PersistentDwoProfile.this.fillDomDwoProfileFull(profile);
+        fillDomDwoProfileFull(profile);
         return profile;
     }
 
