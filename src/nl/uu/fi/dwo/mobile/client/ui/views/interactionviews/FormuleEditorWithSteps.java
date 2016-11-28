@@ -924,8 +924,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			{	
 				stepPanels.remove(stapNr);
 				current = stepPanels.get(stapNr - 1);
-				stepPanelY -= stapH + viewers.get(viewers.size() - 1).getHeight();
-				latest_answer_viewer = viewers.get(viewers.size() - 1);
+				if (viewers.size() > 0)
+				{
+					stepPanelY -= stapH + viewers.get(viewers.size() - 1).getHeight();
+					latest_answer_viewer = viewers.get(viewers.size() - 1);
+				}
 			}
 			else
 				latest_answer_viewer = null; 
