@@ -562,6 +562,7 @@
             <build>
                 <plugins>
                     <plugin>
+                        <!-- tomcat target for running against a loaded junit test-database -->
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat7-maven-plugin</artifactId>
                         <version>2.2</version>
