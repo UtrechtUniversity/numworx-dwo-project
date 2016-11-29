@@ -1432,8 +1432,7 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 		}
 		// k = 1 + <
 		else if(woLast.getTeken().equals("1") && wo.getTeken().equals(" < ")) 
-		{			
-			
+		{		
 //System.out.println("try2 k");
 
 			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < averageHeight / 2 && 
