@@ -22,8 +22,8 @@ import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -197,9 +197,9 @@ public class RPCHandlerV1 {
 				public DomCoursesOfSchoolClass apply(List<Map<String, Object>> t) {
 					DomCoursesOfSchoolClass result = new DomCoursesOfSchoolClass();
 					Map<PersistenceId, DomClassCourse> classcoursemap = new HashMap<>();
-					Map<PersistenceId, DomCourse> coursemap = new HashMap<>();
+					Map<PersistenceId, DomCourseStudent> coursemap = new HashMap<>();
 					for(Map<String,Object> item: t) {
-						DomCourse course = TO_DOMCOURSE.apply(item);
+						DomCourseStudent course = TO_DOMCOURSE.apply(item);
 						coursemap.put(course.getId(), course);
 						DomClassCourse classcourse = TO_DOMCLASSCOURSE.apply(item);
 						classcoursemap.put(classcourse.getCourseId(), classcourse);
