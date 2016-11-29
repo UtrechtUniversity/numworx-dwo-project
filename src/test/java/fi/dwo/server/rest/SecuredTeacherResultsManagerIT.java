@@ -4,7 +4,6 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -106,7 +105,6 @@ public class SecuredTeacherResultsManagerIT {
             Logger.getLogger(SecuredTeacherResultsManagerIT.class.getName()).log(Level.SEVERE, null, ex);
             fail("Could not find teacher's hasRole");
         }
-        
         restContext.setDomHasRole(domHasRole);
         
         DomResultsPerTeacher result = instance.getTeachersResults(sc,restProfile);
