@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-        <dwoVersion>2.1.7</dwoVersion>
+        <dwoVersion>2.1.8-SNAPSHOT</dwoVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
     </properties>
     <build>
@@ -54,8 +54,8 @@
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>${gwtVersion}</version>
                 <configuration>
-                    <module>nl.uu.fi.dwo.account.Account</module>
-                    <runTarget>${project.artifactId}.html</runTarget>
+                    <module>nl.uu.fi.dwo.account.boot</module>
+                    <runTarget>boot.html</runTarget>
                     <warSourceDirectory>war</warSourceDirectory>
                     <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>  

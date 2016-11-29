@@ -38,6 +38,17 @@
                 <goal>gwt:i18n</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-pretty</actionName>
+            <displayName>pretty</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                <gwt.style>PRETTY</gwt.style>
+            </properties>
+        </action>
         
         
         
