@@ -19,7 +19,7 @@ public class DomCoursesOfSchoolClass {
     private Long fetchTimeStamp;   
     private DomSchoolClass schoolClass;
     private Map<PersistenceId,DomClassCourse> classCourses;
-    private Map<PersistenceId,DomCourse> courses;
+    private Map<PersistenceId, DomCourseFull> courses;
 
     /**
      * @return the fetchTimeStamp
@@ -66,14 +66,14 @@ public class DomCoursesOfSchoolClass {
     /**
      * @return the courses
      */
-    public Map<PersistenceId,DomCourse> getCourses() {
+    public Map<PersistenceId,DomCourseFull> getCourses() {
         return courses;
     }
 
     /**
      * @param courses the courses to set
      */
-    public void setCourses(Map<PersistenceId,DomCourse> courses) {
+    public void setCourses(Map<PersistenceId,DomCourseFull> courses) {
         this.courses = courses;
     }
 
