@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public class RPCHandlerV1 {
 		
 	protected static int PROFILE_OFFSET = -1234;
 	
-	public void login(String name, String password, AsyncCallback<Map<String,Object>> callback)
+	protected void login(String name, String password, AsyncCallback<Map<String,Object>> callback)
 	{
 		String pwmd5 = MD5.md5(password);
 		loginMD5(name, pwmd5, callback);
@@ -88,7 +89,7 @@ public class RPCHandlerV1 {
 		return Promises.failed(new Error());
 	}
 	
-	public void loginMD5(String name, String pwmd5,
+	private void loginMD5(String name, String pwmd5,
 			AsyncCallback<Map<String, Object>> callback) {
 		XmlRpcClient client = getClient();
 
@@ -100,27 +101,27 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 
-	public void samlLogin(String name, String org, AsyncCallback<Map<String,Object>> callback)
-	{
-		XmlRpcClient client = getClient();
-		String method = "login_saml";
-		Object[] params = { name, org };
-
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		XmlRpcRequest request = new XmlRpcRequest(client, method, params, callback);
-		request.execute();
-	}
+//	void samlLogin(String name, String org, AsyncCallback<Map<String,Object>> callback)
+//	{
+//		XmlRpcClient client = getClient();
+//		String method = "login_saml";
+//		Object[] params = { name, org };
+//
+//		@SuppressWarnings({ "unchecked", "rawtypes" })
+//		XmlRpcRequest request = new XmlRpcRequest(client, method, params, callback);
+//		request.execute();
+//	}
 	
 	
 	public Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id) {
 		return Promises.failed(new Error());
 	}
 
-	public void getUserFromAuthToken(String authToken, AsyncCallback<Map<String,Object>> callback)
-	{
-		Throwable caught = new RuntimeException("");
-		callback.onFailure(caught);
-	}
+//	void getUserFromAuthToken(String authToken, AsyncCallback<Map<String,Object>> callback)
+//	{
+//		Throwable caught = new RuntimeException("");
+//		callback.onFailure(caught);
+//	}
 	
 	public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
 		return Promises.failed(new RuntimeException(""));
@@ -145,16 +146,14 @@ public class RPCHandlerV1 {
 		}
 	};
 	
-	private static final Function<Map<String,Object>, DomCourseFull> TO_DOMCOURSE = new Function<Map<String,Object>, DomCourseFull>() {
+	private static final Function<Map<String,Object>, DomCourseStudent> TO_DOMCOURSE = new Function<Map<String,Object>, DomCourseStudent>() {
 
 		@Override
-		public DomCourseFull apply(Map<String, Object> t) {
-			DomCourseFull course = new DomCourseFull();
+		public DomCourseStudent apply(Map<String, Object> t) {
+			DomCourseStudent course = new DomCourseStudent();
 			course.setDescription((String)t.get("description"));
-			course.setDwoProfileId(idOf(t.get("dwoProfileID"), PersistenceClassType.PersistentDwoProfile));
-			course.setExport((Boolean)t.get("export"));
 			course.setId(idOf(t.get("courseID"), PersistenceClassType.PersistentCourse));
-			course.setImage(null);
+			course.setImage((String)t.get("image"));
 			course.setImageData(null);
 			course.setLastChangeTimeStamp(null);
 			course.setName((String)t.get("name"));
@@ -171,8 +170,8 @@ public class RPCHandlerV1 {
 		
 	};
 
-	private static final Function<List<Map<String,Object>>, List<DomCourseFull>> TO_DOMCOURSELIST = 
-		new ListFunction<DomCourseFull>(TO_DOMCOURSE);
+	private static final Function<List<Map<String,Object>>, List<DomCourseStudent>> TO_DOMCOURSELIST = 
+		new ListFunction<DomCourseStudent>(TO_DOMCOURSE);
 	
 	protected static final Function<Map<String, Object>, DomClassCourse> TO_DOMCLASSCOURSE = 
 			new Function<Map<String,Object>, DomClassCourse>() {
@@ -183,10 +182,20 @@ public class RPCHandlerV1 {
 					result.setCourseId(idOf(t.get("CourseID"),PersistenceClassType.PersistentCourse));
 					result.setId(idOf(t.get("ClassCourseID"), PersistenceClassType.PersistentClassCourse));
 					result.setClassId(idOf(t.get("ClassID"), PersistenceClassType.PersistentSchoolClass));
-					result.setNotAfter((Date)t.get("notAfter"));
-					result.setNotBefore((Date)t.get("notBefore"));
-					result.setType(((Number)t.get("type")).intValue());
+					result.setNotAfter(toDate(t.get("notAfter")));
+					result.setNotBefore(toDate(t.get("notBefore")));
+					result.setType(toInt(t.get("type")));
 					return result;
+				}
+
+				private Integer toInt(Object object) {
+					if (object instanceof Integer) return (Integer) object;
+					return null;
+				}
+
+				private Date toDate(Object object) {
+					if (object instanceof Date) return (Date) object;
+					return null;
 				}
 			};
 	
@@ -196,13 +205,13 @@ public class RPCHandlerV1 {
 				@Override
 				public DomCoursesOfSchoolClass apply(List<Map<String, Object>> t) {
 					DomCoursesOfSchoolClass result = new DomCoursesOfSchoolClass();
-					Map<PersistenceId, DomClassCourse> classcoursemap = new HashMap<>();
-					Map<PersistenceId, DomCourseStudent> coursemap = new HashMap<>();
+					Map<PersistenceId, DomClassCourse> classcoursemap = new LinkedHashMap<>();
+					Map<PersistenceId, DomCourseStudent> coursemap = new LinkedHashMap<>();
 					for(Map<String,Object> item: t) {
 						DomCourseStudent course = TO_DOMCOURSE.apply(item);
 						coursemap.put(course.getId(), course);
 						DomClassCourse classcourse = TO_DOMCLASSCOURSE.apply(item);
-						classcoursemap.put(classcourse.getCourseId(), classcourse);
+						classcoursemap.put(classcourse.getId(), classcourse);
 					}					
 					result.setClassCourses(classcoursemap);
 					result.setCourses(coursemap);
@@ -246,7 +255,7 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	public Promise<List<DomCourseFull>> getCourses() {
+	public Promise<List<DomCourseStudent>> getCourses() {
 		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
 		getCourses(defer);
 		return defer.getPromise().map(TO_DOMCOURSELIST);
@@ -264,7 +273,7 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	public Promise<List<DomCourseFull>> getCoursesSchool(DomSchool school) {
+	public Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school) {
 		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
 		Object id = PersistenceIdDecoderInterface.instance.idOf(school.getId(), PersistenceClassType.PersistentSchool);
 		getCoursesSchool(id, defer);
