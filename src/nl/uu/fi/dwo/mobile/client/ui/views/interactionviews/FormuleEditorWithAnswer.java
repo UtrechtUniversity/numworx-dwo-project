@@ -1189,12 +1189,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			score = fews.getScore();
 		}
 		
-		if (goedHalfFout == AntwoordVakChecker.GOED)
-			fireEvent(EVENT_CORRECT);
-		else if (goedHalfFout == AntwoordVakChecker.FOUT && errorCount > 1) 
-			fireEvent(EVENT_FALSE2);
-		else if (goedHalfFout == AntwoordVakChecker.FOUT)
-			fireEvent(EVENT_FALSE);
+		if (show) // alleen als feedback moet worden getoond
+		{
+			if (goedHalfFout == AntwoordVakChecker.GOED)
+				fireEvent(EVENT_CORRECT);
+			else if (goedHalfFout == AntwoordVakChecker.FOUT && errorCount > 1) 
+				fireEvent(EVENT_FALSE2);
+			else if (goedHalfFout == AntwoordVakChecker.FOUT)
+				fireEvent(EVENT_FALSE);
+		}
 	}
 	
 	public void zetGoedFout(int uitslag)
