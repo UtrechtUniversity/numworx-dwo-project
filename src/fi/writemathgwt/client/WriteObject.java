@@ -12,7 +12,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 
 
 public class WriteObject {
-//	private static Logger logger = Logger.getLogger("WriteObject");
+	private static Logger logger = Logger.getLogger("WriteObject");
 
 	private final static boolean cNewStrokmatcher = true;
 	static int newTekenSet = 0;
@@ -293,6 +293,10 @@ public class WriteObject {
 			teken2 = newStrokeMatcher.getTeken2();
 			teken3 = newStrokeMatcher.getTeken3();
 			teken4 = newStrokeMatcher.getTeken4();
+			logger.info("parsing :: match  = " + teken1);
+			logger.info("parsing :: teken2 = " + teken2);
+			logger.info("parsing :: teken3 = " + teken3);
+			logger.info("parsing :: teken4 = " + teken4);
 		} 
 			
 		if (doublePoints.size() > 1) {

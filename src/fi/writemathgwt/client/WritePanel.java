@@ -1308,7 +1308,9 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 				return new WriteObject("5", mergePoints(woLast.getPoints(), wo.getPoints(),true));
 		}
 		// 4 = 4H + 1
-		else if (woLast.getTeken().equals("4H") && wo.getTeken().equals("1"))
+		else if ( (woLast.getTeken().equals("4H") && wo.getTeken().equals("1")) || 
+ 				  (woLast.getTeken().equals("<") && wo.getTeken().equals("1"))
+				)
 		{
 			int diam = (boxLast.width + box.height) / 2;
 			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < diam && 
