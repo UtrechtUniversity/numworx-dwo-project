@@ -716,6 +716,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		contentPanel.setWidgetTopHeight(pijlVak, pijlVak.getAbsoluteTop() - contentPanel.getAbsoluteTop(), Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
 	}
 
+	/**
+	 * Voeg regel toe met de invoer van de gebruiker (useranswer), het pijlvak,
+	 * maar zonder de eventuele tekst bij het pijlvak. 
+	 * 
+	 * @param useranswer
+	 * @param show
+	 * @param setState
+	 */
 	public void voegRegelToe(String useranswer, boolean show, boolean setState)
 	{
 		sluitRegelAf(useranswer, show, setState);
@@ -1687,7 +1695,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if (editor != null && !isToets())
 			//Sietske: Hier wellicht ook beter editor.kijkNa(false, false, false); zie getState FormuleEditorWithAnswer.
-			editor.kijkNa();
+			editor.kijkNa(false, false, false);
 		
 		// zet score/correct als editor nog open staat en gevuld is.
 		if ((editor != null && isToets())// && !editor.toString().isEmpty()) // ook berekenen als editor leeg!
@@ -1717,8 +1725,6 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				formuleVakInhouden[i] = "$f@";
 			}
 		}
-		
-		// voor linStrategieVersie kan er een null zijn ivm met te grote stapNr
 		
 		pijlVakInhouden = new String[stapNr];
 		pijlVakOperatoren = new String[stapNr];
@@ -2535,15 +2541,16 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (viewers.size() > 0)
 			viewersInhouden[0] = viewers.get(0).toString();
 		
-		for (int i = viewers.size() - 1; i > start - 1; i--)
+		for (int i = viewers.size() - 1; i > start - 1; i--) // van achteren naar voren
 		{
 			viewersInhouden[i] = viewers.get(i).toString();
 			stepPanels.get(i).remove(viewers.get(i).getAsPanel());
+			
 			if (i > start)
 			{	
 				stepPanelY -= stapH + viewers.get(i - 1).getHeight();
 				stepPanels.remove(i);
-				haalPijlVakWeg();
+				//haalPijlVakWeg(); // in editor.kijkNa() worden ze weer toegevoegd met voegRegelToe(), maar daar moet dus de tekst bijgevoegd 
 			}
 			viewers.remove(i);
 		}
@@ -2594,10 +2601,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 			
 			editor.kijkNa(setState); // dit evalueert voor een toets met feedback per stap met het eindantwoord.
-			
+
 			if (editor.hasFeedback())
 				voortgangsScore = Math.max(voortgangsScore,score);
-		}
+		} // loop over alle stappen
 		
 		if (editor != null && editor.hasFeedback())
 			score = voortgangsScore;
@@ -2605,8 +2612,49 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (editor != null)
 			zetGoedFoutEditor(editor.getGoedHalfFout());
 
+		if (linStrategieVersie || linOefenVersie) // alleen strategie- en strategieoefenversie hebben tekst bij de pijlen
+		{
+			verschuifVinkjes();
+		}
 	}
 	
+	/**
+	 * Verschuif vinkjes achter de pijlvakken met tekst.
+	 * T.b.v. nagekeken zelftoets/eindtoets met pijlvakken & tekst.
+	 */
+	private void verschuifVinkjes()
+	{
+		if (imagesStappen != null)
+		{
+			if (linStrategieVersie || linOefenVersie) // alleen strategie- en strategieoefenversie hebben tekst bij de pijlen
+			{
+				int maxWidth = 0;
+				int right = pijlX - 40; // oorspronkelijk waarde van right in setWidgetRightWidth()
+				
+				// bepaal de maximum breedte van de pijlvakken (pijl en tekst bijv "splits" of "-3x")
+				for (int i = 0; i < pijlVakken.size(); i++)
+				{
+					maxWidth = Math.max(maxWidth, pijlVakken.get(i).getWidth());
+				}
+				
+				right = right - maxWidth + 20; // 20 voor iets minder marge tussen pijl & tekst en vinkje
+
+				for (int i = 0; i < imagesStappen.size(); i++)
+				{
+					Image stapimg = imagesStappen.get(i);
+					contentPanel.setWidgetRightWidth(stapimg, right, Style.Unit.PX, 20, Style.Unit.PX);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Waarvoor dient deze methode?
+	 * 
+	 * @param backStep
+	 * @param show
+	 * @param setState
+	 */
 	public void maakNakijkenAf(boolean backStep, boolean show, boolean setState)
 	{
 		int goedHalfFout = editor.getGoedHalfFout();
