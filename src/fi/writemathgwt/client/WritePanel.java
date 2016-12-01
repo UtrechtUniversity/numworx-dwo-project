@@ -4,10 +4,12 @@ package fi.writemathgwt.client;
 //import java.awt.event.ActionListener;
 //import java.awt.Point;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 
 //import javax.swing.JButton;
+
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -30,16 +32,14 @@ import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
-
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PushButton;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 
-public class WritePanel extends LayoutPanel //HorizontalPanel
-{
+public class WritePanel extends LayoutPanel { //HorizontalPanel
+	private static Logger logger = Logger.getLogger("WritePanel");
 
 	WritePanelHolder eigenaar;
 	ArrayList<WriteObject> writeObjects;
@@ -1262,10 +1262,11 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 		averageHeight = (writeObjects.size()*averageHeight + wo.getBox().height)/(writeObjects.size()+1);	
 	}
 	
-	private WriteObject tryTwoStroke(WriteObject woLast, WriteObject wo) 
-	{
-		if (woLast == null) 
-			return wo;
+	private WriteObject tryTwoStroke(WriteObject woLast, WriteObject wo) {
+		
+		if ( (woLast == null) || ( woLast.isTwoStrokeObject()) ) {
+			return wo; 
+		}
 		Rectangle boxLast = woLast.getBox();
 		Rectangle box = wo.getBox();
 		
@@ -1309,13 +1310,36 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 		}
 		// 4 = 4H + 1
 		else if ( (woLast.getTeken().equals("4H") && wo.getTeken().equals("1")) || 
- 				  (woLast.getTeken().equals("<") && wo.getTeken().equals("1"))
+				  (woLast.getTeken().equals("tH") && wo.getTeken().equals("1")) ||
+ 				  (woLast.getTeken().equals("<") && wo.getTeken().equals("1")) || 
+ 				  (woLast.getTeken().equals("4H") && wo.getTeken().equals("/")) || 
+				  (woLast.getTeken().equals("tH") && wo.getTeken().equals("/")) ||
+ 				  (woLast.getTeken().equals("<") && wo.getTeken().equals("/"))
 				)
 		{
 			int diam = (boxLast.width + box.height) / 2;
-			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < diam && 
-				Math.abs(boxLast.y - box.y) < diam / 2)
+			logger.info("==========");
+//			logger.info("4::crit 1 = "+ (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < diam / 3 ));
+//			logger.info("4::crit 2 = "+ (Math.abs(boxLast.y - box.y) < diam ));
+//			logger.info("4::crit 3 = "+ (Math.abs(woLast.getBoxMid().y - wo.getBoxMid().y) < diam / 3));
+//			logger.info("4::crit 2 :: boxLast.y = "+boxLast.y);
+//			logger.info("4::crit 2 :: box.y = "+box.y);
+//			logger.info("4::crit 2 :: diam = "+diam);
+//			logger.info("4::crit 2 ::Math.abs(boxLast.y - box.y) = "+Math.abs(boxLast.y - box.y));
+//			logger.info("4::crit 2 :: diam/2 = "+diam/2);
+			logger.info("4:: boxLast = [" + boxLast.x +", " + boxLast.y + ", "+ boxLast.width + ", " + boxLast.height +"]");
+			logger.info("4:: box     = [" + box.x +", " + box.y + ", "+ box.width + ", " + box.height +"]");
+
+//			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < (diam / 3)  && 
+//				Math.abs(boxLast.y - box.y) < diam ) {
+			if ( (box.x+box.width > (boxLast.x + 0.40 *boxLast.width)) && (box.x+box.width < (boxLast.x + 1.15 *boxLast.width)) &&
+ 				 (box.y > (boxLast.y - 0.05 *boxLast.height)) && (box.y < (boxLast.y + 0.95 *boxLast.height))
+			   ) {
+				logger.info("4:: crits are true ");
 				return new WriteObject("4",mergePoints(woLast.getPoints(), wo.getPoints(),true));	
+			} else {
+				logger.info("4:: crits are false ");
+			}
 		}
 		
 		// x = ) + (

@@ -25,6 +25,7 @@ public class WriteObject {
 		samples = Samples20.init(tekenSet);
 	}
 	
+	private boolean isTwoStrokeObject;
 	private ArrayList<DoublePoint> doublePoints;
 	private ArrayList<DoublePoint> parsePoints;
 	private Rectangle box;
@@ -56,6 +57,7 @@ public class WriteObject {
 	
 	//OK
 	public WriteObject(ArrayList<Point> points) {
+		isTwoStrokeObject = false;
 		if ( cNewStrokmatcher ) {
 			newStrokeMatcher = new StrokeMatcherWrapper(newTekenSet);
 		}
@@ -103,6 +105,7 @@ public class WriteObject {
 
 	//OK
 	public WriteObject(String teken, ArrayList<Point> points){
+		isTwoStrokeObject = true;
 		makeBox(points);
 		doublePoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <points.size() ; i++) {
@@ -247,6 +250,10 @@ public class WriteObject {
 		
 	}
 	
+	public boolean isTwoStrokeObject() {
+		return isTwoStrokeObject;
+	}
+	
 	//OK
 	private void makeBox(ArrayList<Point> points) 
 	{
@@ -293,10 +300,10 @@ public class WriteObject {
 			teken2 = newStrokeMatcher.getTeken2();
 			teken3 = newStrokeMatcher.getTeken3();
 			teken4 = newStrokeMatcher.getTeken4();
-			logger.info("parsing :: match  = " + teken1);
-			logger.info("parsing :: teken2 = " + teken2);
-			logger.info("parsing :: teken3 = " + teken3);
-			logger.info("parsing :: teken4 = " + teken4);
+			logger.info("parsing :: match = " + teken1 + "("+ newStrokeMatcher.getTekenId(0) + ")");
+//			logger.info("parsing :: teken2 = " + teken2);
+//			logger.info("parsing :: teken3 = " + teken3);
+//			logger.info("parsing :: teken4 = " + teken4);
 		} 
 			
 		if (doublePoints.size() > 1) {
