@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui.print;
 
 import java.awt.FlowLayout;
 import java.awt.print.Printable;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
@@ -11,6 +12,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+
+import fi.dwo.dwojapplet.domain.DwoHelper;
 
 public class PrintPanel extends Box {
 
@@ -23,9 +26,10 @@ public class PrintPanel extends Box {
 	public PrintPanel() {
 		super(BoxLayout.LINE_AXIS);
 		ResourceBundle rb = ResourceBundle.getBundle("fi.dwo.dwojapplet.gui.print.print");
-		ImageIcon student = new ImageIcon(getClass().getResource("../../domain/resources/student.png"));
-		ImageIcon schoolClass = new ImageIcon(getClass().getResource("../../domain/resources/userlist.gif"));
-		ImageIcon print = new ImageIcon(getClass().getResource("../../domain/resources/print.png"));
+// TODO GuiConstants.XXXX
+		ImageIcon student = new ImageIcon(DwoHelper.getResourceImage("resources/student.png"));
+		ImageIcon schoolClass = new ImageIcon(DwoHelper.getResourceImage("resources/userlist.gif"));
+		ImageIcon print = new ImageIcon(DwoHelper.getResourceImage("resources/print.png"));
 		setup = new SetupAction(rb.getString("setup"));
 		printStudent = new PrintStudent(rb.getString("printStudent"), student, setup);
 		printSchoolClass = new PrintStudent(rb.getString("printSchoolClass"), schoolClass, setup);
