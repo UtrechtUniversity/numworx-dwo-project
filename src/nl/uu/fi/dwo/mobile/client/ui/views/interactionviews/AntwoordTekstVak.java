@@ -1000,13 +1000,17 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		//if (ingevuld && show && mode != -1)
 		//	comRoot.setChanged();
 		
-		if (correct) 
-			fireEvent(EVENT_CORRECT);
-		if (!correct && errorCount > 1) 
-			fireEvent(EVENT_FALSE2);
-		if (!correct)
-			fireEvent(EVENT_FALSE);
-
+		// Voorkomen dat door een kijkNa() op de pagina, gevolgd door een comRoot.setChanged() en daarmee getState() van alle interactionviews op de pagina
+		// ook van andere interactionviews de crosswidget-events worden getriggerd, terwijl er nog helemaal geen antwoord is.
+		if (show) // alleen als er feedback moet worden geshowd
+		{
+			if (correct) 
+				fireEvent(EVENT_CORRECT);
+			if (!correct && errorCount > 1) 
+				fireEvent(EVENT_FALSE2);
+			if (!correct)
+				fireEvent(EVENT_FALSE);
+		}
 	}
 
 	private void fireEvent(CBookEvent event) 
