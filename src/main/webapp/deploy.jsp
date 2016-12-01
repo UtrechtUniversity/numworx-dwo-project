@@ -4,7 +4,7 @@
  */
 
 var deploy = "//cdn.dwo.nl/apps/"
-#deploy = "//test-dwo-nl.s3.amazonaws.com/apps/"	
+//deploy = "//test-dwo-nl.s3.amazonaws.com/apps/"	
 function script(name) {
 	var elem = document.createElement('script');
 	elem.src = deploy + name;
