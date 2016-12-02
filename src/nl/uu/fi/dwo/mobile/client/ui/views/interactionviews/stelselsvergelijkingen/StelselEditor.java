@@ -28,30 +28,31 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	StelselRekenVak hoofdPanel;
 	private StelselEditor[] kinderen;
 	private StelselEditor parent = null;
-	private boolean[] oplossingGevonden;
+	//private boolean[] oplossingGevonden;
 	private String[] varNamen; 
 	private Expressie[][] oplossingen; 
 	//private int hoogte;
 	
 	private boolean[][] eindOplossingGevonden;
-	private boolean[][] eindOplossingStelselGevonden;
-	private boolean[][] eindOplossingExactGevonden;
-	private boolean bevatVoldoetNiet = false;
+	private boolean[][] eindOplossingGevondenVoorSplits;
+	//private boolean[][] eindOplossingStelselGevonden;
+	//private boolean[][] eindOplossingExactGevonden;
+	//private boolean bevatVoldoetNiet = false;
 	
-	private boolean isEindOplossing = false;
-	private boolean isEindOplossingStelsel = false;
-	private boolean isEindOplossingExact = false;
+	//private boolean isEindOplossing = false;
+	//private boolean isEindOplossingStelsel = false;
+	//private boolean isEindOplossingExact = false;
 	
-	private boolean onafhankelijkNodig = false;
-	private boolean exactNodig = true;
+	//private boolean onafhankelijkNodig = false;
+	//private boolean exactNodig = true;
 	
 	private boolean ingevuld = false;
 	private boolean nagekeken = false;
 	private boolean isGelijkwaardig = false;
-	private boolean isDeelOplossing = false;
-	private boolean bevatFouteOplossing = false;
+	//private boolean isDeelOplossing = false;
+	//private boolean bevatFouteOplossing = false;
 	
-	private boolean hasFeedback = false;
+	//private boolean hasFeedback = false;
 	
 	private boolean correct = false;
 	private boolean fout = false;
@@ -115,28 +116,32 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	{
 		this.oplossingen = oplossingen;
 		eindOplossingGevonden = new boolean[oplossingen.length][varNamen.length];
-		eindOplossingStelselGevonden = new boolean[oplossingen.length][varNamen.length];
-		eindOplossingExactGevonden = new boolean[oplossingen.length][varNamen.length];
+		eindOplossingGevondenVoorSplits = new boolean[oplossingen.length][varNamen.length];
+		//eindOplossingStelselGevonden = new boolean[oplossingen.length][varNamen.length];
+		//eindOplossingExactGevonden = new boolean[oplossingen.length][varNamen.length];
 		for(int i = 0; i < oplossingen.length; i++)
 		{
 			for(int j = 0; j < varNamen.length; j++)
 			{	
 				eindOplossingGevonden[i][j] = false;
-				eindOplossingStelselGevonden[i][j] = false;
-				eindOplossingExactGevonden[i][j] = false;
+				eindOplossingGevondenVoorSplits[i][j] = false;
+				//eindOplossingStelselGevonden[i][j] = false;
+				//eindOplossingExactGevonden[i][j] = false;
 			}
 		}
-		((AntwoordStelselVakChecker) avChecker).zetOplossingen(oplossingen, eindOplossingGevonden, eindOplossingStelselGevonden, eindOplossingExactGevonden);
+		((AntwoordStelselVakChecker) avChecker).zetOplossingen(oplossingen, eindOplossingGevonden, eindOplossingGevondenVoorSplits);//eindOplossingStelselGevonden, eindOplossingExactGevonden);
 		
 	}
 	
-	public void zetOplossingen(Expressie[][] oplossingen, boolean[][] eindOplossing, boolean[][] eindOplossingStelsel, boolean[][] eindOplossingExact)
+	public void zetOplossingen(Expressie[][] oplossingen, boolean[][] eindOplossing, boolean[][] eindOplossingVoorSplits)//boolean[][] eindOplossingStelsel, boolean[][] eindOplossingExact)
 	{
 		this.oplossingen = oplossingen;
 		eindOplossingGevonden = eindOplossing;
-		eindOplossingStelselGevonden = eindOplossingStelsel;
-		eindOplossingExactGevonden = eindOplossingExact;
-		((AntwoordStelselVakChecker) avChecker).zetOplossingen(oplossingen, eindOplossingGevonden, eindOplossingStelselGevonden, eindOplossingExactGevonden);
+		eindOplossingGevondenVoorSplits = eindOplossingVoorSplits;
+		//eindOplossingStelselGevonden = eindOplossingStelsel;
+		//eindOplossingExactGevonden = eindOplossingExact;
+		
+		((AntwoordStelselVakChecker) avChecker).zetOplossingen(oplossingen, eindOplossingGevonden, eindOplossingGevondenVoorSplits);//eindOplossingStelselGevonden, eindOplossingExactGevonden);
 	}
 	
 	public String[] geefVarNamen()
@@ -149,7 +154,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		return hoofdPanel;
 	}
 	
-	public void splits()
+	public void splits() throws RestartException
 	{
 		VergelijkingMeerv vergelijkingen = FormuleParser.parseVergelijking("$f" + editor.toString() + "@");
 		hoogte = bepaalHoogte();
@@ -179,8 +184,9 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			}
 			Expressie[][] oplossingenKind = new Expressie[teller][varNamen.length];
 			boolean[][] eindOplossingen = new boolean[teller][varNamen.length];
-			boolean[][] eindOplossingenExact = new boolean[teller][varNamen.length];
-			boolean[][] eindOplossingenStelsel = new boolean[teller][varNamen.length];
+			//boolean[][] eindOplossingenExact = new boolean[teller][varNamen.length];
+			boolean[][] eindOplossingenVoorSplits = new boolean[teller][varNamen.length];
+			//boolean[][] eindOplossingenStelsel = new boolean[teller][varNamen.length];
 			teller = 0;
 			for(int j = 0; j < oplossingen.length; j++)
 			{	
@@ -195,14 +201,26 @@ public class StelselEditor extends FormuleEditorWithSteps {
 					oplossingenKind[teller] = oplossingen[j];
 					for(int n = 0; n < varNamen.length; n++)
 					{
-						eindOplossingen[teller][n] = eindOplossingGevonden[j][n];
-						eindOplossingenExact[teller][n] = eindOplossingExactGevonden[j][n];
-						eindOplossingenStelsel[teller][n] = eindOplossingStelselGevonden[j][n];
+						//voor situatie waarin in ene vergelijking de oplossing voor één variabele wordt gegeven en in andere vergelijking de oplossing voor een andere variabele
+						if(vergelijking.isOplossing(oplossingen[j][n], varNamen[n], "="))
+							eindOplossingen[teller][n] = eindOplossingGevonden[j][n];
+						else
+							eindOplossingen[teller][n] = eindOplossingGevondenVoorSplits[j][n];
+						//eindOplossingenExact[teller][n] = eindOplossingExactGevonden[j][n];
+						//eindOplossingenStelsel[teller][n] = eindOplossingStelselGevonden[j][n];
 					}
 					teller++;
 				}
 			}
-			stelselEditor.zetOplossingen(oplossingenKind, eindOplossingen, eindOplossingenStelsel, eindOplossingenExact);
+			for(int j = 0; j < eindOplossingenVoorSplits.length; j++)
+			{
+				for(int n = 0; n < eindOplossingenVoorSplits[j].length; n++)
+				{
+					eindOplossingenVoorSplits[j][n] = eindOplossingen[j][n];
+				}
+					
+			}
+			stelselEditor.zetOplossingen(oplossingenKind, eindOplossingen, eindOplossingenVoorSplits);//eindOplossingenStelsel, eindOplossingenExact);
 			
 			kinderen[i] = stelselEditor;
 			hoofdPanel.contentPanel.add(kinderen[i]);
@@ -244,26 +262,30 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		String [] formuleVakInhouden = new String[formuleVakInhoudenVector.size()];
 		for(int i = 0; i < formuleVakInhouden.length; i++)
 			formuleVakInhouden[i] = formuleVakInhoudenVector.get(i);
-		Vector<boolean[][]> eindOplExactVector = geefEindOplExactEditorEnKinderen();
+		//Vector<boolean[][]> eindOplExactVector = geefEindOplExactEditorEnKinderen();
 		Vector<boolean[][]> eindOplGevondenVector = geefEindOplGevondenEditorEnKinderen();
-		Vector<boolean[][]> eindOplStelselVector = geefEindOplStelselEditorEnKinderen();
-		boolean[][][] eindOplossingExactGevondenArrays = new boolean[eindOplExactVector.size()][][];
+		Vector<boolean[][]> eindOplGevondenVoorSplitsVector = geefEindOplGevondenVoorSplitsEditorEnKinderen();
+		//Vector<boolean[][]> eindOplStelselVector = geefEindOplStelselEditorEnKinderen();
+		//boolean[][][] eindOplossingExactGevondenArrays = new boolean[eindOplExactVector.size()][][];
 		boolean[][][] eindOplossingGevondenArrays = new boolean[eindOplGevondenVector.size()][][];
-		boolean[][][] eindOplossingStelselGevondenArrays = new boolean[eindOplStelselVector.size()][][];
-		for(int i = 0; i < eindOplExactVector.size(); i++)
+		boolean[][][] eindOplossingGevondenVoorSplitsArrays = new boolean[eindOplGevondenVoorSplitsVector.size()][][];
+		//boolean[][][] eindOplossingStelselGevondenArrays = new boolean[eindOplStelselVector.size()][][];
+		for(int i = 0; i < eindOplGevondenVector.size(); i++)
 		{
-			eindOplossingExactGevondenArrays[i] = eindOplExactVector.get(i);
+			//eindOplossingExactGevondenArrays[i] = eindOplExactVector.get(i);
 			eindOplossingGevondenArrays[i] = eindOplGevondenVector.get(i);
-			eindOplossingStelselGevondenArrays[i] = eindOplStelselVector.get(i);
+			eindOplossingGevondenVoorSplitsArrays[i] = eindOplGevondenVoorSplitsVector.get(i);
+			//eindOplossingStelselGevondenArrays[i] = eindOplStelselVector.get(i);
 		}
 		
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("aantalKinderen", aantalKinderen);
 		h.put("stapNrs", stapNrs);
 		h.put("formuleVakInhouden", formuleVakInhouden);
-		h.put("eindOplossingExactGevondenArrays", eindOplossingExactGevondenArrays);
+		//h.put("eindOplossingExactGevondenArrays", eindOplossingExactGevondenArrays);
 		h.put("eindOplossingGevondenArrays", eindOplossingGevondenArrays);
-		h.put("eindOplossingStelselGevondenArrays", eindOplossingStelselGevondenArrays);
+		h.put("eindOplossingGevondenVoorSplitsArrays", eindOplossingGevondenVoorSplitsArrays);
+		//h.put("eindOplossingStelselGevondenArrays", eindOplossingStelselGevondenArrays);
 		h.put("ingevuld", new Boolean(ingevuld));
 		h.put("nagekeken", new Boolean(nagekeken));
 		
@@ -275,9 +297,10 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		int[] aantalKinderen = null;
 		int[] stapNrs = null;
 		String[] formuleVakInhouden = null;
-		boolean[][][] eindOplossingExactGevondenArrays = null;
+		//boolean[][][] eindOplossingExactGevondenArrays = null;
 		boolean[][][] eindOplossingGevondenArrays = null;
-		boolean[][][] eindOplossingStelselGevondenArrays = null;
+		boolean[][][] eindOplossingGevondenVoorSplitsArrays = null;
+		//boolean[][][] eindOplossingStelselGevondenArrays = null;
 		boolean ingevuld = false;
 		boolean nagekeken = false;
 		ObjectMap map = JSONUtilities.wrapMap(h);
@@ -287,26 +310,26 @@ public class StelselEditor extends FormuleEditorWithSteps {
 			stapNrs = map.getIntArray("stapNrs");
 		if(map.containsKey("formuleVakInhouden"))
 			formuleVakInhouden = map.getStringArray("formuleVakInhouden");
-		if(map.containsKey("eindOplossingExactGevondenArrays"))
-		{
-			ObjectList list = ( map.getObjectList("eindOplossingExactGevondenArrays"));
-			eindOplossingExactGevondenArrays = new boolean[list.size()][][];
-			for(int i = 0; i < list.size(); i++)
-			{
-				ObjectList list2 = list.getObjectList(i);
-				//List listx = JSONUtilities.toArrayList(list.get(i));
-				//ObjectList list2 = JSONUtilities.wrapList(listx);
-				try{
-					eindOplossingExactGevondenArrays[i] = new boolean[list2.size()][];
-					for(int j = 0; j < list2.size(); j++)
-					{	eindOplossingExactGevondenArrays[i][j] = list2.getBooleanArray(j);
-					}
-				}
-				catch(Exception e)
-				{
-				}
-			}
-		}
+//		if(map.containsKey("eindOplossingExactGevondenArrays"))
+//		{
+//			ObjectList list = ( map.getObjectList("eindOplossingExactGevondenArrays"));
+//			eindOplossingExactGevondenArrays = new boolean[list.size()][][];
+//			for(int i = 0; i < list.size(); i++)
+//			{
+//				ObjectList list2 = list.getObjectList(i);
+//				//List listx = JSONUtilities.toArrayList(list.get(i));
+//				//ObjectList list2 = JSONUtilities.wrapList(listx);
+//				try{
+//					eindOplossingExactGevondenArrays[i] = new boolean[list2.size()][];
+//					for(int j = 0; j < list2.size(); j++)
+//					{	eindOplossingExactGevondenArrays[i][j] = list2.getBooleanArray(j);
+//					}
+//				}
+//				catch(Exception e)
+//				{
+//				}
+//			}
+//		}
 		if(map.containsKey("eindOplossingGevondenArrays"))
 		{	ObjectList list = ( map.getObjectList("eindOplossingGevondenArrays"));
 			eindOplossingGevondenArrays = new boolean[list.size()][][];
@@ -327,7 +350,41 @@ public class StelselEditor extends FormuleEditorWithSteps {
 				}
 			}
 		}
-		if(map.containsKey("eindOplossingStelselGevondenArrays"))
+		if(map.containsKey("eindOplossingGevondenVoorSplitsArrays"))
+		{	ObjectList list = ( map.getObjectList("eindOplossingGevondenVoorSplitsArrays"));
+			eindOplossingGevondenVoorSplitsArrays = new boolean[list.size()][][];
+			for(int i = 0; i < list.size(); i++)
+			{
+				ObjectList list2 = list.getObjectList(i);
+				//List listx = JSONUtilities.toArrayList(list.get(i));
+				//ObjectList list2 = JSONUtilities.wrapList(listx);
+				
+				try{
+					eindOplossingGevondenVoorSplitsArrays[i] = new boolean[list2.size()][];
+					for(int j = 0; j < list2.size(); j++)
+					{	eindOplossingGevondenVoorSplitsArrays[i][j] = list2.getBooleanArray(j);
+					}
+				}
+				catch(Exception e)
+				{
+				}
+			}
+		}
+		else
+		{
+			eindOplossingGevondenVoorSplitsArrays = new boolean[eindOplossingGevondenArrays.length][][];
+			for(int i = 0; i < eindOplossingGevondenArrays.length; i++)
+			{
+				eindOplossingGevondenVoorSplitsArrays[i] = new boolean[eindOplossingGevondenArrays[i].length][];
+				for(int j = 0; j < eindOplossingGevondenArrays[i].length; j++)
+				{
+					eindOplossingGevondenVoorSplitsArrays[i][j] = new boolean[eindOplossingGevondenArrays[i][j].length];
+					for(int k = 0; k < eindOplossingGevondenArrays[i][j].length; k++)
+						eindOplossingGevondenVoorSplitsArrays[i][j][k] = eindOplossingGevondenArrays[i][j][k];
+				}
+			}
+		}
+		/*if(map.containsKey("eindOplossingStelselGevondenArrays"))
 		{	ObjectList list = ( map.getObjectList("eindOplossingStelselGevondenArrays"));
 			eindOplossingStelselGevondenArrays = new boolean[list.size()][][];
 			for(int i = 0; i < list.size(); i++)
@@ -346,7 +403,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 				{
 				}
 			}
-		}
+		}*/
 		if(map.containsKey("ingevuld"))
 			ingevuld = map.getBoolean("ingevuld");
 		if(map.containsKey("nagekeken"))
@@ -355,12 +412,12 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
 		
-		setStateEditorEnKinderen(aantalKinderen, stapNrs, formuleVakInhouden, eindOplossingExactGevondenArrays, 
-				eindOplossingGevondenArrays, eindOplossingStelselGevondenArrays, 0, 0);
+		setStateEditorEnKinderen(aantalKinderen, stapNrs, formuleVakInhouden, eindOplossingGevondenArrays, 
+				eindOplossingGevondenVoorSplitsArrays, 0, 0);//eindOplossingExactGevondenArrays, eindOplossingStelselGevondenArrays, 0, 0);
 	}
 	
 	public int[] setStateEditorEnKinderen(int[] aantalKinderen, int[] stapNrs, String[] formuleVakInhouden, 
-			boolean[][][] exactArrays, boolean[][][] oplossingArrays, boolean[][][] stelselArrays, int formuleTeller, int editorTeller)
+			boolean[][][] oplossingArrays, boolean[][][] voorSplitsArrays, int formuleTeller, int editorTeller)// boolean[][][] exactArrays, boolean[][][] stelselArrays, int formuleTeller, int editorTeller)
 	{
 		//eerst: setState van deze editor. HashMap met geschikte info maken en super.setState aanroepen;
 		HashMap<String, Object> h = new HashMap<String, Object>();
@@ -368,9 +425,10 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		String[] formuleVakInhoudenEditor = new String[stapNr + 1];
 		for(int i = 0; i < stapNr + 1; i++)
 			formuleVakInhoudenEditor[i] = formuleVakInhouden[formuleTeller + i];
-		eindOplossingExactGevonden = exactArrays[editorTeller];
+		//eindOplossingExactGevonden = exactArrays[editorTeller];
 		eindOplossingGevonden = oplossingArrays[editorTeller];
-		eindOplossingStelselGevonden = stelselArrays[editorTeller];
+		eindOplossingGevondenVoorSplits = voorSplitsArrays[editorTeller];
+		//eindOplossingStelselGevonden = stelselArrays[editorTeller];
 		
 		String antwoordString = formuleVakInhoudenEditor[formuleVakInhoudenEditor.length - 1];
 		ingevuld = !antwoordString.equals("$f@");
@@ -395,7 +453,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		{
 			for(int i = 0; i < kinderen.length; i++)
 			{
-				int[] tellers = kinderen[i].setStateEditorEnKinderen(aantalKinderen, stapNrs, formuleVakInhouden, exactArrays, oplossingArrays, stelselArrays, formuleTeller, editorTeller);
+				int[] tellers = kinderen[i].setStateEditorEnKinderen(aantalKinderen, stapNrs, formuleVakInhouden, oplossingArrays, voorSplitsArrays, formuleTeller, editorTeller);//exactArrays, stelselArrays, formuleTeller, editorTeller);
 				formuleTeller = tellers[0];
 				editorTeller = tellers[1];
 			}
@@ -473,21 +531,21 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		return v;
 	}
 	
-	public Vector<boolean[][]> geefEindOplExactEditorEnKinderen()
-	{
-		Vector<boolean[][]> v = new Vector<boolean[][]>();
-		v.add(eindOplossingExactGevonden);
-		if(kinderen != null)
-		{
-			for(int i = 0; i < kinderen.length; i++)
-			{
-				Vector<boolean[][]> v2 = kinderen[i].geefEindOplExactEditorEnKinderen();
-				for(int j = 0; j < v2.size(); j++)
-					v.add(v2.get(j));
-			}
-		}
-		return v;
-	}
+//	public Vector<boolean[][]> geefEindOplExactEditorEnKinderen()
+//	{
+//		Vector<boolean[][]> v = new Vector<boolean[][]>();
+//		v.add(eindOplossingExactGevonden);
+//		if(kinderen != null)
+//		{
+//			for(int i = 0; i < kinderen.length; i++)
+//			{
+//				Vector<boolean[][]> v2 = kinderen[i].geefEindOplExactEditorEnKinderen();
+//				for(int j = 0; j < v2.size(); j++)
+//					v.add(v2.get(j));
+//			}
+//		}
+//		return v;
+//	}
 	
 	public Vector<boolean[][]> geefEindOplGevondenEditorEnKinderen()
 	{
@@ -505,21 +563,37 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		return v;
 	}
 	
-	public Vector<boolean[][]> geefEindOplStelselEditorEnKinderen()
+	public Vector<boolean[][]> geefEindOplGevondenVoorSplitsEditorEnKinderen()
 	{
 		Vector<boolean[][]> v = new Vector<boolean[][]>();
-		v.add(eindOplossingStelselGevonden);
+		v.add(eindOplossingGevondenVoorSplits);
 		if(kinderen != null)
 		{
 			for(int i = 0; i < kinderen.length; i++)
 			{
-				Vector<boolean[][]> v2 = kinderen[i].geefEindOplStelselEditorEnKinderen();
+				Vector<boolean[][]> v2 = kinderen[i].geefEindOplGevondenVoorSplitsEditorEnKinderen();
 				for(int j = 0; j < v2.size(); j++)
 					v.add(v2.get(j));
 			}
 		}
 		return v;
 	}
+	
+//	public Vector<boolean[][]> geefEindOplStelselEditorEnKinderen()
+//	{
+//		Vector<boolean[][]> v = new Vector<boolean[][]>();
+//		v.add(eindOplossingStelselGevonden);
+//		if(kinderen != null)
+//		{
+//			for(int i = 0; i < kinderen.length; i++)
+//			{
+//				Vector<boolean[][]> v2 = kinderen[i].geefEindOplStelselEditorEnKinderen();
+//				for(int j = 0; j < v2.size(); j++)
+//					v.add(v2.get(j));
+//			}
+//		}
+//		return v;
+//	}
 	
 	public boolean heeftKinderen()
 	{
@@ -635,7 +709,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		}
 	}
 	
-	public void splitsOfMaakStap(boolean backStep, boolean show, boolean setState)
+	public void splitsOfMaakStap(boolean backStep, boolean show, boolean setState) throws RestartException
 	{
 		if(FormuleParser.parseVergelijking("$f" + editor.toString() + "@") == null)
 			return;
@@ -772,7 +846,7 @@ public class StelselEditor extends FormuleEditorWithSteps {
 	}
 	
 	
-	public void maakNakijkenAf(boolean backStep, boolean show, boolean setState)
+	public void maakNakijkenAf(boolean backStep, boolean show, boolean setState) 
 	{
 		int goedHalfFout = editor.getGoedHalfFout();
 		if (goedHalfFout == AntwoordVakChecker.GEEN)
@@ -784,12 +858,18 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		else
 			isGelijkwaardig = false;
 		
+		try{
 		if(heeftFocus)
 			splitsOfMaakStap(backStep, show, setState);
 		else 
 		{
 			StelselEditor editorMetFocus = vindKindMetFocus();
 			editorMetFocus.splitsOfMaakStap(backStep, show, setState);
+		}
+		}
+		catch(RestartException e)
+		{
+			
 		}
 	}
 	

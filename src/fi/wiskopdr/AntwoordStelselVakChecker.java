@@ -51,12 +51,13 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 	
 	private Expressie[][] oplossingen; 
 	private boolean[][] eindOplossingGevonden;
-	private boolean[][] eindOplossingStelselGevonden;
-	private boolean[][] eindOplossingExactGevonden;
+	private boolean[][] eindOplossingGevondenVoorSplits;
+	//private boolean[][] eindOplossingStelselGevonden;
+	//private boolean[][] eindOplossingExactGevonden;
 	
 	boolean isEindOplossing = false;
-	boolean isEindOplossingExact = false;
-	boolean isEindOplossingStelsel = false;
+	//boolean isEindOplossingExact = false;
+	//boolean isEindOplossingStelsel = false;
 	boolean isDeelOplossing = false;
 	boolean bevatFouteOplossing = false;
 	//private boolean bevatVoldoetNiet;
@@ -175,8 +176,15 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 			boolean isGelijkwaardigEind = antwoord.isStelselOplossing(oplossingen, varNamen);
 			gelijkwaardig = isGelijkwaardigEind;
 			isEindOplossing = true;
-			isEindOplossingExact = true;
-			isEindOplossingStelsel = true;
+			//isEindOplossingExact = true;
+		//	isEindOplossingStelsel = true;
+			for(int i = 0; i < oplossingen.length; i++)
+			{
+				for(int j = 0; j < varNamen.length; j++)
+				{
+					eindOplossingGevondenVoorSplits[i][j] = eindOplossingGevonden[i][j];
+				}
+			}
 			
 			for(int i = 0; i < oplossingen.length; i++)
 			{
@@ -186,16 +194,16 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 						if(!eindOplossingGevonden[i][j])
 							isEindOplossing = false;
 					}
-					if(!eindOplossingStelselGevonden[i][j]) //TODO: kijken of hier ook nog als argument de oplossing moet worden meegegeven en zoja hoe.
-					{	eindOplossingStelselGevonden[i][j] = isGelijkwaardigEind && antwoord.isStelselEindOplossing(varNamen[j], varNamen);
-						if(!eindOplossingStelselGevonden[i][j])
-							isEindOplossingStelsel = false;
-					}
-					if(!eindOplossingExactGevonden[i][j])
-					{	eindOplossingExactGevonden[i][j] = isGelijkwaardigEind && antwoord.isEindOplossingExact(oplossingen[i], varNamen[j], "=");
-						if(!eindOplossingExactGevonden[i][j])
-							isEindOplossingExact = false;
-					}
+//					if(!eindOplossingStelselGevonden[i][j]) //TODO: kijken of hier ook nog als argument de oplossing moet worden meegegeven en zoja hoe.
+//					{	eindOplossingStelselGevonden[i][j] = isGelijkwaardigEind && antwoord.isStelselEindOplossing(varNamen[j], varNamen);
+//						if(!eindOplossingStelselGevonden[i][j])
+//							isEindOplossingStelsel = false;
+//					}
+//					if(!eindOplossingExactGevonden[i][j])
+//					{	eindOplossingExactGevonden[i][j] = isGelijkwaardigEind && antwoord.isEindOplossingExact(oplossingen[i], varNamen[j], "=");
+//						if(!eindOplossingExactGevonden[i][j])
+//							isEindOplossingExact = false;
+//					}
 				}
 			}
 			
@@ -226,12 +234,13 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 
 	}
 	
-	public void zetOplossingen(Expressie[][] oplossingen, boolean[][] eindOplossing, boolean[][] eindOplossingStelsel, boolean[][] eindOplossingExact)
+	public void zetOplossingen(Expressie[][] oplossingen, boolean[][] eindOplossing, boolean[][] eindOplossingVoorSplits)//boolean[][] eindOplossingStelsel, boolean[][] eindOplossingExact)
 	{
 		this.oplossingen = oplossingen;
 		eindOplossingGevonden = eindOplossing;
-		eindOplossingStelselGevonden = eindOplossingStelsel;
-		eindOplossingExactGevonden = eindOplossingExact;
+		eindOplossingGevondenVoorSplits = eindOplossingVoorSplits;
+		//eindOplossingStelselGevonden = eindOplossingStelsel;
+		//eindOplossingExactGevonden = eindOplossingExact;
 	}
 	
 	public boolean bepaalGelijkwaardig(String answer)
