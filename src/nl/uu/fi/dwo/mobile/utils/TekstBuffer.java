@@ -431,6 +431,7 @@ public class TekstBuffer
 					new StubView("SliderWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
 			);
 		case 57:
+			//if(true) return new nl.numworx.geodefinergwt.client.GeoDefinerGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]);
 			return x(map, 
 					new StubView("GeoDefinerGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
 			);
