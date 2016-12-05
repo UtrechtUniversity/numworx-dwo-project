@@ -39,7 +39,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 
 
 public class WritePanel extends LayoutPanel { //HorizontalPanel
-	private static Logger logger = Logger.getLogger("WritePanel");
+//	private static Logger logger = Logger.getLogger("WritePanel");
 
 	WritePanelHolder eigenaar;
 	ArrayList<WriteObject> writeObjects;
@@ -777,6 +777,13 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			String s2 = result.substring(jHIndex + 2);
 			result = s1 + s2;
 		}
+		int xHIndex = result.indexOf("xH");
+		if (xHIndex >= 0)
+		{	String s1 = result.substring(0,xHIndex);
+			String s2 = result.substring(xHIndex + 2);
+			result = s1 + s2;
+		}
+
 		
 		
 		return result;
@@ -1318,30 +1325,18 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				)
 		{
 			int diam = (boxLast.width + box.height) / 2;
-			logger.info("==========");
-//			logger.info("4::crit 1 = "+ (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < diam / 3 ));
-//			logger.info("4::crit 2 = "+ (Math.abs(boxLast.y - box.y) < diam ));
-//			logger.info("4::crit 3 = "+ (Math.abs(woLast.getBoxMid().y - wo.getBoxMid().y) < diam / 3));
-//			logger.info("4::crit 2 :: boxLast.y = "+boxLast.y);
-//			logger.info("4::crit 2 :: box.y = "+box.y);
-//			logger.info("4::crit 2 :: diam = "+diam);
-//			logger.info("4::crit 2 ::Math.abs(boxLast.y - box.y) = "+Math.abs(boxLast.y - box.y));
-//			logger.info("4::crit 2 :: diam/2 = "+diam/2);
-			logger.info("4:: boxLast = [" + boxLast.x +", " + boxLast.y + ", "+ boxLast.width + ", " + boxLast.height +"]");
-			logger.info("4:: box     = [" + box.x +", " + box.y + ", "+ box.width + ", " + box.height +"]");
 
+/* Old merge - criteria 4 */
 //			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < (diam / 3)  && 
 //				Math.abs(boxLast.y - box.y) < diam ) {
+/* end of old merge criteria 4 */			
+
 			if ( (box.x+box.width > (boxLast.x + 0.40 *boxLast.width)) && (box.x+box.width < (boxLast.x + 1.15 *boxLast.width)) &&
  				 (box.y > (boxLast.y - 0.05 *boxLast.height)) && (box.y < (boxLast.y + 0.95 *boxLast.height))
 			   ) {
-				logger.info("4:: crits are true ");
-				return new WriteObject("4",mergePoints(woLast.getPoints(), wo.getPoints(),true));	
-			} else {
-				logger.info("4:: crits are false ");
-			}
+					return new WriteObject("4",mergePoints(woLast.getPoints(), wo.getPoints(),true));	
+			} 
 		}
-		
 		// x = ) + (
 		else if(woLast.getTeken().equals(")")  && wo.getTeken().equals("(")) 
 		{
@@ -1351,16 +1346,23 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				return new WriteObject("x",mergePoints(woLast.getPoints(), wo.getPoints()));
 		}
 		// x = / + \
-		else if (woLast.getTeken().equals("/") && wo.getTeken().equals("\\")) 
-		{
+		else if ( ( woLast.getTeken().equals("/")  && wo.getTeken().equals("\\") )  || 
+				  ( woLast.getTeken().equals("/")  && wo.getTeken().equals("1") ) ||
+				  ( woLast.getTeken().equals("1")  && wo.getTeken().equals("\\") )
+				) { 
 			int diam = (boxLast.height + box.height)/2;
 			if (distance(woLast.getBoxMid(), wo.getBoxMid()) < diam / 4)
 				return new WriteObject("x", mergePoints(woLast.getPoints(), wo.getPoints()));
 		}
 		// x = \ + / of y = \ (klein) + /
-		else if(woLast.getTeken().equals("\\")  && wo.getTeken().equals("/")) 
-		{
-			if (Math.abs(boxLast.x - box.x) < averageHeight / 4 &&
+		else if ( (woLast.getTeken().equals("\\")  && wo.getTeken().equals("/")) ||
+				  (woLast.getTeken().equals("\\")  && wo.getTeken().equals("1")) ||
+				  (woLast.getTeken().equals("1")  && wo.getTeken().equals("/"))
+				) {
+//			if (Math.abs(boxLast.x - box.x) < averageHeight / 4 &&
+//					Math.abs(boxLast.y - box.y) < averageHeight / 4 &&	
+//					boxLast.height < 2 * box.height / 3)
+			if (Math.abs(boxLast.x - box.x) < box.height / 2 &&
 					Math.abs(boxLast.y - box.y) < averageHeight / 4 &&	
 					boxLast.height < 2 * box.height / 3)
 			{		return new WriteObject("y", mergePoints(woLast.getPoints(),wo.getPoints()));

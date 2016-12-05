@@ -105,6 +105,7 @@ public class WriteObject {
 
 	//OK
 	public WriteObject(String teken, ArrayList<Point> points){
+		logger.info("2-Stroke Object :: " + teken);
 		isTwoStrokeObject = true;
 		makeBox(points);
 		doublePoints = new ArrayList<DoublePoint>();
