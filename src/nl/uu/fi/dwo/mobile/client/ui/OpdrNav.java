@@ -1388,13 +1388,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		removeButtonCursor(buttons.get(currentOpdracht));
 		boolean randomize;
 		if (opdracht < 0) 
-		{	randomize = true; // Alles opnieuw, dus ook nieuwe random variabelen
+		{	
+			randomize = true; // Alles opnieuw, dus ook nieuwe random variabelen
 			currentOpdracht = 0;
+			
 			for (opdracht = 0; opdracht < aantalOpdrachten[currentActiviteit]; opdracht ++)
-			{	clearState(opdracht, source);
+			{	
+				clearState(opdracht, source);
 				setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
 			}
 			
+			entry.setZelftoetsNagekeken(false);
+
 			if (getAantalNakijken(currentActiviteit) > 0)
 				aantalNakijken[currentActiviteit] = 0;
 			
