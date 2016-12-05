@@ -259,10 +259,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			sb.addKnop(scoreNav.getKijkNaButton(), false);
 			scoreNav.setKijkNa(new ScoreNavIF.Checker()
 			{
-
 				@Override
 				public void checkOpdracht(final ScoreNavIF source)
-				{	p();
+				{	
+					p();
 					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
 						@Override
@@ -375,6 +375,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public boolean getZelftoetsNagekeken()
 	{
 		return zelftoetsNagekeken;
+	}
+	
+	public void setZelftoetsNagekeken(boolean b)
+	{
+		zelftoetsNagekeken = b;
 	}
 	
 	public void gaNaarVolgendeOpdracht()
@@ -617,7 +622,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		int opdrNr = on.getCurrentOpdracht();
 		int actNr = on.getCurrentActiviteit();
 		
-		if(eerderGeenCorr && bezocht[actNr][opdrNr])
+		if ((eerderGeenCorr && bezocht[actNr][opdrNr])
+			|| (getZelftoetsNagekeken() && zelftoetsGeenCorr))
 		{
 			zetAfdekPanel(true);
 		}
