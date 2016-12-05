@@ -2,25 +2,59 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
-  
-<g:DockLayoutPanel unit='EM'>
-  <g:north size='5'>
-    <g:HTML>Top</g:HTML>
-  </g:north>
-  <g:south size='5'>
-    <g:HTML>status panel</g:HTML>
-  </g:south>
-  <g:center>
-    <g:HTML>Body</g:HTML>
-  </g:center>
-  <g:west size='10'>
-    <g:HTML>
-      <ul>
-        <li>Sidebar</li>
-        <li>Sidebar</li>
-        <li>Sidebar</li>
-      </ul>
-    </g:HTML>
-  </g:west>
-</g:DockLayoutPanel>    
+    <ui:style>
+        .header {
+        padding: 8px;
+        /*border: 1px solid #31425c*/
+        background-color: #31425c;
+        border-radius: 5px;        
+        }	
+        .navi {
+        padding: 8px;
+        /*border: 1px solid #555555;*/
+        background-color: #d9dadf;
+        border-radius: 5px;        
+        }
+        .body {
+        padding: 8px;
+        /*border: 1px solid #555555;*/
+        background-color: #ffffff;
+        border-radius: 5px;        
+        }
+        .status {
+        padding: 8px;
+        /*border: 1px solid #555555;*/
+        background-color: #31425c;
+        border-radius: 5px;        
+        }	
+    </ui:style>  
+    <g:DockLayoutPanel unit='EM'>
+        <g:north size='5'>
+            <g:HTML addStyleNames='{style.header}'>
+                <div class='{style.header}'>Top</div>
+            </g:HTML>
+        </g:north>
+        <g:south size='5'>
+            <g:HTML addStyleNames='{style.status}'>
+                <div class='{style.status}'>status panel
+                </div>
+            </g:HTML>
+        </g:south>
+        <g:center>
+            <g:HTML addStyleNames='{style.body}'>
+                <div class='{style.body}'>Body</div>
+            </g:HTML>
+        </g:center>
+        <g:west size='10'>
+            <g:HTML addStyleNames='{style.navi}'>
+                <div class='{style.navi}'>
+                    <ul>
+                        <li>Sidebar</li>
+                        <li>Sidebar</li>
+                        <li>Sidebar</li>
+                    </ul>
+                </div>
+            </g:HTML>
+        </g:west>
+    </g:DockLayoutPanel>    
 </ui:UiBinder> 
