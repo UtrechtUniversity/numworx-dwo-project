@@ -39,7 +39,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 
 
 public class WritePanel extends LayoutPanel { //HorizontalPanel
-//	private static Logger logger = Logger.getLogger("WritePanel");
+	private static Logger logger = Logger.getLogger("WritePanel");
 
 	WritePanelHolder eigenaar;
 	ArrayList<WriteObject> writeObjects;
@@ -1271,6 +1271,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	
 	private WriteObject tryTwoStroke(WriteObject woLast, WriteObject wo) {
 		
+		logger.info("T2S :: last = "+ woLast +", this = "+ wo); 
 		if ( (woLast == null) || ( woLast.isTwoStrokeObject()) ) {
 			return wo; 
 		}
@@ -1338,13 +1339,25 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			} 
 		}
 		// x = ) + (
-		else if(woLast.getTeken().equals(")")  && wo.getTeken().equals("(")) 
-		{
+		else if ( ( woLast.getTeken().equals(")") || woLast.getTeken().equals("xH") ) && 
+				    ( wo.getTeken().equals("(") || wo.getTeken().equals("c") || wo.getTeken().equals("4H") ) 
+			    ) {
+			int avgWidth = (boxLast.width + box.width) / 2;
 			int diam = (boxLast.height + box.height) / 2;
-			if (Math.abs(woLast.getBox().x + woLast.getBox().width - wo.getBoxMid().x) < diam / 2 && 
+			logger.info("diam :: "+ diam);
+			logger.info("Crit 1 :: "+ Math.abs(woLast.getBox().x + woLast.getBox().width - wo.getBoxMid().x));
+			if (Math.abs(woLast.getBox().x + woLast.getBox().width - wo.getBox().x) < avgWidth / 4 && 
 				Math.abs(boxLast.y - box.y) < diam / 2)
-				return new WriteObject("x",mergePoints(woLast.getPoints(), wo.getPoints()));
+				return new WriteObject("x", mergePoints(woLast.getPoints(), wo.getPoints()));
 		}
+		else if ( ( woLast.getTeken().equals("(") || woLast.getTeken().equals("c") || woLast.getTeken().equals("4H") ) && 
+  				  ( wo.getTeken().equals(")")     || wo.getTeken().equals("xH") ) 
+		        ) {
+		int diam = (boxLast.height + box.height) / 2;
+		if (Math.abs(wo.getBox().x + wo.getBox().width - woLast.getBox().x) < diam / 4 && 
+			Math.abs(boxLast.y - box.y) < diam / 2)
+			return new WriteObject("x", mergePoints(woLast.getPoints(), wo.getPoints()));
+	}
 		// x = / + \
 		else if ( ( woLast.getTeken().equals("/")  && wo.getTeken().equals("\\") )  || 
 				  ( woLast.getTeken().equals("/")  && wo.getTeken().equals("1") ) ||
@@ -1501,8 +1514,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		
 		p1.add(pu1);
 		p1.add(pu2);
-		p1.add(pu3);
-		
+		p1.add(pu3);		
 		
 		return p1;
 	}
