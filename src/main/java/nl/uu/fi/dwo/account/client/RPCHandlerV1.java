@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -57,7 +58,6 @@ public class RPCHandlerV1 {
 			return courseList;
 		}
 	}
-
 
 	private static final List<String> SCO_KEYS = Arrays.asList("scoID", "appletID", "sconame", "description", "showscore", "sequencenr", "courseID" );
 	private String server;
@@ -100,28 +100,10 @@ public class RPCHandlerV1 {
 		XmlRpcRequest request = new XmlRpcRequest(client, method, params, callback);
 		request.execute();
 	}
-
-//	void samlLogin(String name, String org, AsyncCallback<Map<String,Object>> callback)
-//	{
-//		XmlRpcClient client = getClient();
-//		String method = "login_saml";
-//		Object[] params = { name, org };
-//
-//		@SuppressWarnings({ "unchecked", "rawtypes" })
-//		XmlRpcRequest request = new XmlRpcRequest(client, method, params, callback);
-//		request.execute();
-//	}
-	
 	
 	public Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id) {
 		return Promises.failed(new Error());
 	}
-
-//	void getUserFromAuthToken(String authToken, AsyncCallback<Map<String,Object>> callback)
-//	{
-//		Throwable caught = new RuntimeException("");
-//		callback.onFailure(caught);
-//	}
 	
 	public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
 		return Promises.failed(new RuntimeException(""));
@@ -172,6 +154,36 @@ public class RPCHandlerV1 {
 
 	private static final Function<List<Map<String,Object>>, List<DomCourseStudent>> TO_DOMCOURSELIST = 
 		new ListFunction<DomCourseStudent>(TO_DOMCOURSE);
+	
+
+	protected static final Function<Map<String, Object>, DomScoContext> TO_DOMSCOCONTEXT = 
+			new Function<Map<String,Object>, DomScoContext>() {
+
+				@Override
+				public DomScoContext apply(Map<String, Object> t) {
+					DomScoContext result = new DomScoContext();
+					result.setScoName((String)t.get("sconame"));
+					result.setAppletId(idOf(t.get("appletID"), PersistenceClassType.PersistentApplet));
+					result.setCourseId(idOf(t.get("courseID"), PersistenceClassType.PersistentCourse));
+					result.setId(idOf(t.get("scoID"), PersistenceClassType.PersistentScoContext));
+					result.setSequencenr(toLong(t.get("sequencenr")));
+					result.setShowScore(toBoolean( t.get("showscore")));
+					return result;
+				}
+				private Long toLong(Object object) {
+					if (object instanceof Number) return ((Number) object).longValue();
+					return null;
+				}
+				
+				private Boolean toBoolean(Object object) {
+					if (object instanceof Boolean) return (Boolean) object;
+					return null;
+				}
+		
+	};
+
+	private static final Function<List<Map<String,Object>>, List<DomScoContext>> TO_DOMSCOCONTEXTLIST = 
+			new ListFunction<DomScoContext>(TO_DOMSCOCONTEXT);
 	
 	protected static final Function<Map<String, Object>, DomClassCourse> TO_DOMCLASSCOURSE = 
 			new Function<Map<String,Object>, DomClassCourse>() {
@@ -342,6 +354,13 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 
+	public Promise<List<DomCourseStudent>> getCourses(Object id) {
+		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+		getCourses(id, defer);
+		return defer.getPromise().map(TO_DOMCOURSELIST);
+	}
+	
+	
 	public void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("courseID", id);
@@ -351,9 +370,16 @@ public class RPCHandlerV1 {
 		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getScosCallback);
 		request.execute();
 	}
-
+	
+	public Promise<List<DomScoContext>> getScos(Object id) {
+		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+		getScos(id, defer);
+		return defer.getPromise().map(TO_DOMSCOCONTEXTLIST);
+	}
+	
+	
 	@Deprecated
-	public void getDwoProfile(AsyncCallback<Map<String,Object>> getProfileCallback) {
+	void getDwoProfile(AsyncCallback<Map<String,Object>> getProfileCallback) {
 		String method = "getRecord";
 		Object[] params = { "tblDwoProfile", "dwoProfileID", getProfile() };
 		XmlRpcClient client = getClient();
@@ -411,67 +437,12 @@ public class RPCHandlerV1 {
 		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, "getUserResults", params, getUserResultsCallback);
 		request.execute();
 	}
-	
-//	private <T> void getCourseSequence0(Object schoolID, AsyncCallback<T> callback) {
-//		HashMap<String,Object> g = new HashMap<String,Object>();
-//		g.put("classID", 0);
-//		if(schoolID == null) schoolID = Integer.valueOf(0);
-//		g.put("schoolID", schoolID);
-//		g.put("profileID", getDwoProfile());
-//		String method = "getTable";
-//		Object[] params = { "tblCourseSequence", g, "sequencenr" };
-//		XmlRpcClient client = getClient();
-//		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, callback);
-//		request.execute();
-//	}
-	
-//	Map<Object, Integer> courseSortMap = new HashMap<Object,Integer>();
-	
-//	class CourseSortCallback implements AsyncCallback<List<Map<String,Object>>> {
+			
+//	public void getCourseSequence(final Object schoolID, final Runnable runner) {
 //
-//		Runnable runner;
-//		
-//		@Override
-//		public void onFailure(Throwable caught) {
 //			runner.run();
-//		}
-//
-//		@Override
-//		public void onSuccess(List<Map<String, Object>> result) {
-//			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-//				Map<String, Object> map = iterator.next();
-//				Object id = map.get("courseID");
-//				Number n  = (Number) map.get("sequencenr");
-//				courseSortMap.put(id, n.intValue());
-//			}
-//			runner.run();
-//		}
-//		
+//			return;
 //	}
-	
-	public void getCourseSequence(final Object schoolID, final Runnable runner) {
-
-//		if(!GWT.isProdMode()) {
-			runner.run();
-			return;
-//		}
-//		final CourseSortCallback csc = new CourseSortCallback();
-//		if(schoolID != null || !"".equals(schoolID)) {
-//			Runnable rnull = new Runnable() {
-//
-//				@Override
-//				public void run() {
-//					csc.runner = runner;
-//					getCourseSequence0(schoolID, csc);
-//				}
-//				
-//			};
-//			csc.runner = rnull;
-//		} else {
-//			csc.runner = runner;
-//		}
-//		getCourseSequence0(null, csc);
-	}
 
 	public void logout() {
 	}
