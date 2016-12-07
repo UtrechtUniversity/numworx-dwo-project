@@ -117,6 +117,7 @@ public class PersistenceId implements Comparable<PersistenceId>, Cloneable {
      * @return
      */
     public boolean equals(PersistenceId aId) {
+    	if(aId == null) return false;
         return stringId.equals(aId.getIdString());
     }
 
