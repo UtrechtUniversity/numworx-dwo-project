@@ -347,7 +347,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 				private Collection<DomClassCourse> sort(Collection<DomClassCourse> classcourses, DomCoursesOfSchoolClass t) {
 					boolean again;
-					if(classcourses == null || classcourses.isEmpty())
+					if(classcourses == null || classcourses.isEmpty()|| Boolean.FALSE.equals(t.getSchoolClass().getIconizer()))
 						return classcourses;
 					List<DomClassCourse> courses = new ArrayList<>(classcourses);
 					do {
@@ -394,7 +394,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					{
 						id = r.getParentID();
 //  IF ROOT, return null
-						if(id == null || PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentCourse) .equals(0))
+						if(id == null || PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentCourse) .equals(0) || ! t.getCourses().containsKey(id))
 								return null;
 						return id;
 					}
