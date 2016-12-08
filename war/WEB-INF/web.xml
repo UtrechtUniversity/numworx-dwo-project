@@ -8,6 +8,6 @@
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>Account.html</welcome-file>
+    <welcome-file>boot.html</welcome-file>
   </welcome-file-list>
 </web-app>

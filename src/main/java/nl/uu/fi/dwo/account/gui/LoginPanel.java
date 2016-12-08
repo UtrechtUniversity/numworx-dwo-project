@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.account.client.boot;
+package nl.uu.fi.dwo.account.gui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -22,6 +22,7 @@ public class LoginPanel extends Composite {
     @UiField PasswordTextBox passwordTextBox;
     public LoginPanel() {
         initWidget(uiBinder.createAndBindUi(this));
+        
     }
 
 }

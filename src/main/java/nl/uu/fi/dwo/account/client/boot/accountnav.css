@@ -1,0 +1,28 @@
+/* 
+    Created on : Dec 8, 2016, 2:20:25 PM
+    Author     : G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+*/
+        .header {
+        padding: 8px;
+        /*border: 1px solid #31425c*/
+        background-color: #91d2fc;
+        border-radius: 5px;        
+        }	
+        .navi {
+        padding: 8px;
+        /*border: 1px solid #555555;*/
+        background-color: #d9dadf;
+        border-radius: 5px;        
+        }
+        .body {
+        padding: 8px;
+        /*border: 1px solid #555555;*/
+        background-color: #ffffff;
+        border-radius: 5px;        
+        }
+        .status {
+        padding: 8px;
+        /*border: 1px solid #555555;*/
+        background-color: #91d2fc;
+        border-radius: 5px;        
+        }	

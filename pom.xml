@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-        <dwoVersion>2.1.8</dwoVersion>
+        <dwoVersion>2.1.9-SNAPSHOT</dwoVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.test.skip>true</maven.test.skip>
     </properties>
@@ -56,13 +56,15 @@
                 <version>${gwtVersion}</version>
                 <configuration>
                     <module>nl.uu.fi.dwo.account.boot</module>
+                    
                     <runTarget>boot.html</runTarget>
+                    <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <warSourceDirectory>war</warSourceDirectory>
                     <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>  
                     <compileSourcesArtifacts> 
-<!--                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact> -->
-<!--                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-gwt-lib</compileSourcesArtifact> -->
+                        <!--                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact> -->
+                        <!--                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-gwt-lib</compileSourcesArtifact> -->
                     </compileSourcesArtifacts> 
                     <i18nConstantsWithLookupBundles>
                         <i18nConstantsWithLookupBundle>nl.uu.fi.dwo.rest.locale.Dwo2Exceptions</i18nConstantsWithLookupBundle>                          
@@ -87,17 +89,38 @@
                     <server>TomcatServer</server>
                     <path>/Account</path>
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                    <!--<tomcat.local.deploy.url>http://127.0.0.1:8080/manager/text</tomcat.local.deploy.url>--> 
-                    <warSourceDirectory>target/${project.build.finalName}</warSourceDirectory>
-                                       <archiveClasses>true</archiveClasses>                    
-                </configuration>
+                    <tomcat.local.deploy.url>http://127.0.0.1:8080/manager/text</tomcat.local.deploy.url> 
+                    <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
+                    <archiveClasses>true</archiveClasses> 
+<!--                    <webapps> 
+                        <webapp> 
+                            <groupId>nl.uu.fi.dwo</groupId>
+                            <artifactId>DWOServer</artifactId>
+                            <version>2.1.8-SNAPSHOT</version>
+                            <type>war</type>
+                            <asWebapp>true</asWebapp> 
+                        </webapp> 
+                    </webapps>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>mysql</groupId>
+                                    <artifactId>mysql-connector-java</artifactId>
+                                    <version>5.1.34</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>com.jamonapi</groupId>
+                                    <artifactId>jamon</artifactId>
+                                    <version>2.80</version>
+                                </dependency>        
+                            </dependencies>                    -->
+                </configuration>                                        
             </plugin>            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
-                	<goals>deploy</goals>
+                    <goals>deploy</goals>
                 </configuration>
             </plugin>
         </plugins>
@@ -137,9 +160,9 @@
             <artifactId>MGWT</artifactId>
         </dependency>
         <dependency>
-        	<groupId>com.fredhat.gwt.xmlrpc</groupId>
-        	<artifactId>XmlRpcGWT</artifactId>
-        	<version>1.1.1</version>
+            <groupId>com.fredhat.gwt.xmlrpc</groupId>
+            <artifactId>XmlRpcGWT</artifactId>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
         	<groupId>com.google.gwt</groupId>
@@ -155,7 +178,4 @@
         <version>0.0.2</version>
         <relativePath>../ParentGWT</relativePath>
     </parent>
-    <scm>
-    	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Account/trunk</developerConnection>
-    </scm>
 </project>
