@@ -14,6 +14,7 @@
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <dwoVersion>2.1.8</dwoVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
     <build>
         <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
