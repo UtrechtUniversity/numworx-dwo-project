@@ -12,4 +12,9 @@
         <netbeans.checkstyle.format>true</netbeans.checkstyle.format>
         <org-netbeans-modules-javascript2-requirejs.enabled>true</org-netbeans-modules-javascript2-requirejs.enabled>
     </properties>
+    <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
+        <configurations>
+            <configuration id="ubuntu-dev" profiles="dev"/>
+        </configurations>
+    </config-data>
 </project-shared-configuration>
