@@ -3,12 +3,13 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import java.util.List;
 import java.util.Map;
 
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 import org.osgi.util.promise.Promise;
@@ -20,46 +21,37 @@ public interface RPCHandler {
 
 	void logout();
 
-	Promise<DomDwoProfile> getDwoProfile();
+	Promise<DomDwoProfileFull> getDwoProfile();
 
 	void getCoursesClass(Object classid,
 			AsyncCallback<List<Map<String, Object>>> callback);
-	Promise<List<DomClassCourse>> getCoursesClass(DomSchoolClass schoolClass);
+	Promise<DomCoursesOfSchoolClass> getCoursesClass(DomSchoolClass schoolClass);
 	
 	void getCoursesSchool(Object schoolID,
 			AsyncCallback<List<Map<String, Object>>> callback);
-	Promise<List<DomCourseFull>> getCoursesSchool(DomSchool school);
+	Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school);
 	
 	void getCourses(
 			AsyncCallback<List<Map<String, Object>>> callback_final);
-	Promise<List<DomCourseFull>> getCourses();
+	Promise<List<DomCourseStudent>> getCourses();
 	
 	XmlRpcClient getClient();
 
 	void getCourse(Object id,
 			AsyncCallback<Map<String, Object>> getCoursesCallback);
 
-//	void samlLogin(String user_id, String org_id,
-//			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
-//
-//	void getUserFromAuthToken(String authToken,
-//			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
-//
-//	void login(String username, String password,
-//			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
-//
-//	void loginMD5(String username, String password,
-//			AsyncCallback<Map<String, Object>> lOGIN_CALLBACK);
-
 	void getSco(Object id, AsyncCallback<Map<String, Object>> callback);
 
 	void getUserResults(Object courseID, Object userID,
 			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback);
 
+
 	void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback);
-
+	Promise<List<DomScoContext>> getScos(Object id);
+	
 	void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
-
+	Promise<List<DomCourseStudent>> getCourses(Object parentID);
+	
 	Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins();
 
 	Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id);

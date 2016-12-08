@@ -7,11 +7,22 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Node;
+
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
 /**
  * Item in selection list
@@ -44,9 +55,14 @@ public class SelectModuleItem
 	private int sequencenr;
 
 	private Type type = Type.ROOT;
-	private List<SelectModuleItem> children;
-	private SelectModuleItem parent;
+	private Promise<List<SelectModuleItem>> childrenAsync;
+	private Object parent;
 	private Date notBefore, notAfter;
+
+	public Date getNotAfter() {
+		return notAfter;
+	}
+
 	private Number toetsType;
 
 	public SelectModuleItem(Object id, String name, String file)
@@ -71,8 +87,7 @@ public class SelectModuleItem
 			this.description = (String) map.get("description");
 			Object parentID =  map.get("parentID");
 			if(parentID != null) {
-				this.parent = SelectModuleItemHolder.getItemByID(parentID);
-				if(this.parent != null && this.parent.getType() == Type.ROOT) this.parent = null; // children of root have no parent
+				this.parent = parentID;
 			} 
 			{  Object schoolID = map.get("schoolID");
 			   this.fromSchool = schoolID != null && ! "".equals(schoolID);
@@ -93,8 +108,9 @@ public class SelectModuleItem
 			this.sequencenr = ((Number) map.get("sequencenr")).intValue();
 			parentID = map.get("courseID");
 			if(parentID != null) {
-				this.parent = SelectModuleItemHolder.getItemByID(parentID);
-				if(parent != null) {
+				this.parent = parentID;
+				if(getParent() != null) {
+					SelectModuleItem parent = getParent();
 					this.notAfter = parent.notAfter;
 					this.notBefore = parent.notBefore;
 					this.toetsType = parent.toetsType;
@@ -147,6 +163,43 @@ public class SelectModuleItem
 		}
 	}
 
+	public SelectModuleItem(DomCourseStudent course, DomClassCourse domClassCourse) {
+		type = course.getWithChildren() ? Type.FOLDER : Type.MODULE;
+		description = course.getDescription();
+		fromSchool = course.getSchoolId() != null;
+		id = PersistenceIdDecoderInterface.instance.idOf(course.getId(), PersistenceClassType.PersistentCourse);
+		parent = PersistenceIdDecoderInterface.instance.idOf(course.getParentID(), PersistenceClassType.PersistentCourse);
+		name = course.getName();
+		Long sequence = course.getSequenceNr();
+		sequencenr = sequence != null ? sequence.intValue() : Integer.MAX_VALUE;
+		showScore = false;
+		if (domClassCourse!=null) {
+			notAfter = domClassCourse.getNotAfter();
+			notBefore = domClassCourse.getNotBefore();
+			toetsType = domClassCourse.getType();
+		}
+	}
+
+	public SelectModuleItem(DomScoContext sco) {
+		type = Type.SCO;
+		description = "";
+		id = PersistenceIdDecoderInterface.instance.idOf(sco.getId(), PersistenceClassType.PersistentScoContext);
+		parent = PersistenceIdDecoderInterface.instance.idOf(sco.getCourseId(), PersistenceClassType.PersistentCourse);
+		name = sco.getScoName();
+		Long sequence = sco.getSequencenr();
+		sequencenr = sequence != null ? sequence.intValue() : Integer.MAX_VALUE;
+		showScore = !Boolean.TRUE.equals(sco.getShowScore());
+		this.file = PREFIX + this.id;
+		if(parent != null) {
+			if(getParent() != null) {
+				SelectModuleItem parent = getParent();
+				this.notAfter = parent.notAfter;
+				this.notBefore = parent.notBefore;
+				this.toetsType = parent.toetsType;
+			}
+		}
+	}
+
 	public String getName()
 	{
 		return name;
@@ -187,16 +240,36 @@ public class SelectModuleItem
 		this.type = type;
 	}
 
+	/**
+	 * Niet async safe.
+	 * @return children
+	 * @deprecated gebruik getChildrenAsync()
+	 */
 	public List<SelectModuleItem> getChildren()
 	{
-		return children;
+		if(childrenAsync != null && childrenAsync.isDone())
+			return childrenAsync.getValue();
+		return null;
 	}
 
+	/**
+	 * gebruik setChildrenAsync()
+	 * @param children
+	 * @deprecated 
+	 */
 	public void setChildren(List<SelectModuleItem> children)
 	{
-		this.children = children;
+		childrenAsync = Promises.resolved(children);
 	}
-
+	
+	public void setChildrenAsync(Promise<List<SelectModuleItem>> promise) {
+		childrenAsync = promise;
+	}
+	
+	public Promise<List<SelectModuleItem>> getChildrenAsync() {
+		return childrenAsync;
+	}
+	
 	public String getDescription() {
 		return description;
 	}
@@ -206,11 +279,19 @@ public class SelectModuleItem
 	}
 
 	public SelectModuleItem getParent() {
+		if(this.parent == null) return null;
+		SelectModuleItem parent = SelectModuleItemHolder.getItemByID(this.parent);
+		if(parent == ROOT) parent = null;
 		return parent;
+	}
+	
+	public Object getParentID() {
+		return this.parent;
 	}
 
 	public void setParent(SelectModuleItem parent) {
-		this.parent = parent;
+		if(parent == null) this.parent = null;
+		else this.parent = parent.id;
 	}
 	
 	public boolean isShowScore() {
@@ -220,18 +301,18 @@ public class SelectModuleItem
 	private Map<Object, Number> scoreMap;
 
 	public Number getScore() {
-		if(parent == null) return null;
-		Map<Object,? extends Number> scoreMap = parent.scoreMap;
+		if(getParent() == null) return null;
+		Map<Object,? extends Number> scoreMap = getParent().scoreMap;
 		if(scoreMap == null) return null;
 		Number score = scoreMap.get(id);
 		return score;
 	}
 
 	public void setScore(Number number) {
-		if(parent == null) return;
-		Map<Object, Number> scoreMap = parent.scoreMap;
+		if(getParent() == null) return;
+		Map<Object, Number> scoreMap = getParent().scoreMap;
 		if(scoreMap == null)
-			parent.scoreMap = scoreMap = new HashMap<Object, Number>();
+			getParent().scoreMap = scoreMap = new HashMap<Object, Number>();
 		scoreMap.put(id, number);
 	}
 

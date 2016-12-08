@@ -2,11 +2,17 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.osgi.util.function.Function;
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -18,6 +24,10 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop.SCO_TO_MODULEITEM;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -30,6 +40,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -48,6 +59,29 @@ import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewModuleView.Loader, CellSelectedHandler 
 {
 
+	public class SCO_TO_MODULEITEM implements Function<List<DomScoContext>, List<SelectModuleItem>> {
+
+		private final SelectModuleItem parent;
+		public SCO_TO_MODULEITEM(SelectModuleItem item) {
+			this.parent = item;
+		}
+
+		@Override
+		public List<SelectModuleItem> apply(List<DomScoContext> t) {
+			List<SelectModuleItem> items = new ArrayList<SelectModuleItem>(t.size());
+			for(DomScoContext sco: t) {
+				SelectModuleItem item = new SelectModuleItem(sco);
+				item.setParent(parent);
+				items.add(item);
+				SelectModuleItemHolder.insert(item);
+			}
+			initTree(items, inverseMap.get(parent), true);
+			return items;
+		}
+
+	}
+
+
 	@UiField HeaderPanel  navigationHeaderPanel;
 	@UiField Label navigationLabel;
 	@UiField HeaderButton navigationBackButton;
@@ -57,6 +91,31 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 	@UiField HeaderButton moduleBackButton;
 	@UiField LayoutPanel modulePanel;
 	
+	private final class COURSE_TO_MODULEITEM
+			implements Function<List<DomCourseStudent>, List<SelectModuleItem>> {
+		private final SelectModuleItem item;
+		private final boolean open;
+
+		private COURSE_TO_MODULEITEM(SelectModuleItem item, boolean open) {
+			this.item = item;
+			this.open = open;
+		}
+
+		@Override
+		public List<SelectModuleItem> apply(List<DomCourseStudent> t) {
+			List<SelectModuleItem> items = new ArrayList<SelectModuleItem>(t.size());
+			for (Iterator<DomCourseStudent> iterator = t.iterator(); iterator.hasNext();) {
+				DomCourseStudent map =  iterator.next();
+				SelectModuleItem item = new SelectModuleItem(map,(DomClassCourse)null);
+				item.setParent(item);
+				SelectModuleItemHolder.insert(item);
+				items.add(item);
+			}
+			initTree(items, inverseMap.get(item),open); // FIXME tree= inverseMap.get() is null
+			return items;
+		}
+	}
+
 	class ModuleAnchorContext implements AnchorView.AnchorContext {
 
 		@Override
@@ -102,6 +161,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 	private SelectModuleItem selected;
 	private Presenter presenter;
 	private String SCHOOL_MODULES;
+	private Timer tm;
 	
 	//================================================================================
     // Constructor and UiBinder 
@@ -205,6 +265,25 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			close(); // since we set "loadedModule" to a new value.
 			selected = o;
 			container.clear();
+			Date notAfter = o.getNotAfter();
+			if(notAfter != null && notAfter.getTime() < System.currentTimeMillis() + DWOplayer.timezone)
+			{
+				place = new TreeModulePlace(o.getParent().getID());
+				WaitScreen.instance().hide();
+				break;
+			} else if (notAfter != null) {
+				long timeToGo = notAfter.getTime()-System.currentTimeMillis() - DWOplayer.timezone;
+				final TreeModulePlace gotoPlace = new TreeModulePlace(o.getParent().getID());
+				tm = new Timer() {
+
+					@Override
+					public void run() {
+						tm = null;
+						slideNavigationIn();
+						presenter.goTo(gotoPlace);
+					}};
+				tm.schedule((int)timeToGo); 
+			}
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			DWOplayer.clientfactory.setEntryView(viewModuleViewImpl);
 			viewModuleViewImpl.setAnchorContext(new TreeAnchorContext(viewModuleViewImpl.getAnchorContext()));
@@ -307,10 +386,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			module.setDescription(item);
 			if(item.getType() == SelectModuleItem.Type.FOLDER)
 			{
-				if(item.getChildren() == null)
-					loadChildren(item);
-				else
-					addChildren(item.getChildren());
+				loadChildren(item);
 			} else if(item.getType() == SelectModuleItem.Type.MODULE)
 			{	if(item.getChildren() == null)
 					loadScos(item);
@@ -438,13 +514,13 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			(item.isFromSchool() ? schoolMap : standardMap).addItem(treeItem);
 			
 			if(item.getChildren() != null)
-				initTree(item.getChildren(), treeItem);
+				initTree(item.getChildren(), treeItem, true);
 		}
 		if(standardMap.getChildCount() != 0) tree.addItem(standardMap);
 		if(schoolMap.getChildCount() != 0) tree.addItem(schoolMap);
 	}
 
-	private void initTree(List<SelectModuleItem> model, TreeItem tree) {
+	private void initTree(List<SelectModuleItem> model, TreeItem tree, boolean open) {
 //		sort(model);
 		tree.removeItems(); // the tree should be empty, but it is not always. NPE HERE, tree = null?
 		for (SelectModuleItem item : model)
@@ -454,9 +530,9 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			inverseMap.put(item, treeItem);
 			tree.addItem(treeItem);	
 			if(item.getChildren() != null)
-				initTree(item.getChildren(), treeItem);
+				initTree(item.getChildren(), treeItem, false);
 		}
-		tree.setState(true);
+		tree.setState(open);
 	}
 
 	private static final TreeItemTemplate TEMPLATE = GWT.create(TreeItemTemplate.class);
@@ -489,50 +565,101 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
     //================================================================================
 	
 	private void loadChildren(final SelectModuleItem item) {
-		GetChildrenCourses getCoursesCallback = new GetChildrenCourses(item);
-		DWOplayer.clientfactory.getRPCHandler().getCourses(item.getID(), getCoursesCallback);
+		Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
+
+		if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
+			promise = DWOplayer.clientfactory.getRPCHandler().getCourses(item.getID())
+					.map(new COURSE_TO_MODULEITEM(item, true));
+			item.setChildrenAsync(promise);
+			promise
+			.then(new Success<List<SelectModuleItem>, List<SelectModuleItem>>() {
+
+				@Override
+				public Promise<List<SelectModuleItem>> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+					for(SelectModuleItem item: resolved.getValue()) {
+						if(item.getType() == SelectModuleItem.Type.FOLDER) {
+							if(item.getChildrenAsync() == null) {
+								item.setChildrenAsync(DWOplayer.clientfactory.getRPCHandler().getCourses(item.getID())
+										.map(new COURSE_TO_MODULEITEM(item, false)));
+							}
+						}
+					}	
+					return resolved;
+				}}, new Failure() {
+					
+					@Override
+					public void fail(Promise<?> resolved) throws Exception {
+						Window.alert(resolved.getFailure().toString());
+						item.setChildrenAsync(null);
+					}
+				});
+		}
+		promise.then(new Success<List<SelectModuleItem>, Void>() {
+
+			@Override
+			public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+				addChildren(resolved.getValue());
+				return null;
+			}
+			
+		});
 	}
 	
 	private void loadScos(final SelectModuleItem item) {
-		GetChildrenScos getScosCallback = new GetChildrenScos(item);
-		DWOplayer.clientfactory.getRPCHandler().getScos(item.getID(), getScosCallback);
+		Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
+
+		if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
+			promise = DWOplayer.clientfactory.getRPCHandler().getScos(item.getID())
+					.map(new SCO_TO_MODULEITEM(item));
+			item.setChildrenAsync(promise);
+		}
+// Same as above
+		promise.then(new Success<List<SelectModuleItem>, Void>() {
+
+			@Override
+			public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+				addChildren(resolved.getValue());
+				return null;
+			}
+			
+		});
 	}
 	
-	class GetChildrenCourses implements AsyncCallback<List<Map<String,Object>>> {
-
-		private SelectModuleItem parent;
-		private TreeItem tree;
-		
-		public GetChildrenCourses(SelectModuleItem item) {
-			parent = item;
-			tree = inverseMap.get(parent);
-			if(tree == null) {
-				Logger.getLogger("TreeModuleViewImplDesktop").severe(item + " has null tree");
-				throw new NullPointerException();
-			}
-		}
-
-		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert(caught.toString());
-		}
-
-		@Override
-		public void onSuccess(List<Map<String,Object>> result) {
-			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
-			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-				Map<String, Object> map = (Map<String, Object>) iterator.next();
-				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
-				item.setParent(parent);
-				SelectModuleItemHolder.insert(item);
-				items.add(item);
-			}
-			parent.setChildren(items);
-			addChildren(items);
-			initTree(items, tree); // FIXME tree= inverseMap.get() is null
-		}
-		
-	};
+//	class GetChildrenCourses implements AsyncCallback<List<Map<String,Object>>> {
+//
+//		private SelectModuleItem parent;
+//		private TreeItem tree;
+//		
+//		public GetChildrenCourses(SelectModuleItem item) {
+//			parent = item;
+//			tree = inverseMap.get(parent);
+//			if(tree == null) {
+//				Logger.getLogger("TreeModuleViewImplDesktop").severe(item + " has null tree");
+//				throw new NullPointerException();
+//			}
+//		}
+//
+//		@Override
+//		public void onFailure(Throwable caught) {
+//			Window.alert(caught.toString());
+//		}
+//
+//		@Override
+//		public void onSuccess(List<Map<String,Object>> result) {
+//			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
+//			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+//				Map<String, Object> map = (Map<String, Object>) iterator.next();
+//				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
+//				item.setParent(parent);
+//				SelectModuleItemHolder.insert(item);
+//				items.add(item);
+//			}
+//			parent.setChildren(items);
+//			addChildren(items);
+//			initTree(items, tree, true); // FIXME tree= inverseMap.get() is null
+//		}
+//		
+//	};
 
 	class GetChildrenScos implements AsyncCallback<List<Map<String,Object>>> {
 
@@ -559,7 +686,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			}
 			parent.setChildren(items);
 			addChildren(items);
-			initTree(items, inverseMap.get(parent));
+			initTree(items, inverseMap.get(parent), true);
 		}
 		
 	};
@@ -573,8 +700,6 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 
 	@Override
 	public void viewModuleViewSetupDone() {
-		// TODO Auto-generated method stub
-		
 		// slide out the new area
 		slideNavigationOut(); 
 		WaitScreen.instance().hide();
@@ -582,6 +707,10 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 
 	@Override
 	public void close() {
+		if( tm != null) {
+			tm.cancel();
+			tm = null;
+		}
 		if(loadedModule != null) {
 			loadedModule.close();
 			selected.setScore(loadedModule.getScoreRaw());

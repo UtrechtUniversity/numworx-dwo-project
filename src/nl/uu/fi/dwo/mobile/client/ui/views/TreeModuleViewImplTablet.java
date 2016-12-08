@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +16,7 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -35,6 +37,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
@@ -85,7 +88,8 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 	private List<SelectModuleItem> cellItems;
 	private List<SelectModuleItem> model;
 	private SelectModuleItem selected;
-	private Presenter presenter; 
+	private Presenter presenter;
+	private Timer tm;
 	
 	class TreeAnchorContext implements AnchorView.AnchorContext {
 		AnchorView.AnchorContext delegate;
@@ -193,6 +197,26 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 			//load sum in the edit area
 			close();
 			selected = o;
+			Date notAfter = o.getNotAfter();
+			if(notAfter != null && notAfter.getTime() < System.currentTimeMillis() + DWOplayer.timezone)
+			{
+				place = new TreeModulePlace(o.getParentID());
+				this.loadingArea.setVisible(false);
+				break;
+			} else if (notAfter != null) {
+				long timeToGo = notAfter.getTime()-System.currentTimeMillis() - DWOplayer.timezone;
+				final TreeModulePlace gotoPlace = new TreeModulePlace(o.getParentID());
+				tm = new Timer() {
+
+					@Override
+					public void run() {
+						tm = null;
+						slideNavigationIn();
+						presenter.goTo(gotoPlace);
+					}};
+				tm.schedule((int)timeToGo); 
+			}			
+	
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			DWOplayer.clientfactory.setEntryView(viewModuleViewImpl);
 			viewModuleViewImpl.setAnchorContext(new TreeAnchorContext(viewModuleViewImpl.getAnchorContext()));
@@ -554,6 +578,10 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 
 	@Override
 	public void close() {
+		if( tm != null) {
+			tm.cancel();
+			tm = null;
+		}
 		if(loadedModule != null) {
 			loadedModule.close();
 			selected.setScore(loadedModule.getScoreRaw());

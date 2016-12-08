@@ -8,6 +8,7 @@
 	<add-linker name='xsiframe' />
 	
     <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
+  	<inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
 
 	<entry-point class='nl.uu.fi.dwo.mobile.NoordhoffPlayer'/>
 	

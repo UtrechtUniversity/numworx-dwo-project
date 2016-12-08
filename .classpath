@@ -12,14 +12,14 @@
 	<classpathentry kind="lib" path="lib/restygwt-2.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/javax.ws.rs-api-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/WriteMathGWT-0.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/Account-0.0.5-SNAPSHOT-classes.jar"/>
-	<classpathentry kind="lib" path="lib/Account-0.0.5-SNAPSHOT-sources.jar"/>
-	<classpathentry kind="lib" path="lib/DWO-gwt-lib-2.1.5-sources.jar"/>
-	<classpathentry kind="lib" path="lib/DWO-gwt-lib-2.1.5.jar"/>
-	<classpathentry kind="lib" path="lib/DWO-rest-lib-2.1.5-sources.jar"/>
-	<classpathentry kind="lib" path="lib/DWO-rest-lib-2.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/promise-api-0.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/promise-api-0.0.1.jar" sourcepath="lib/promise-api-0.0.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/Account-0.0.6-classes.jar"/>
+	<classpathentry kind="lib" path="lib/Account-0.0.6-sources.jar"/>
+	<classpathentry kind="lib" path="lib/DWO-gwt-lib-2.1.8-sources.jar"/>
+	<classpathentry kind="lib" path="lib/DWO-gwt-lib-2.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/DWO-rest-lib-2.1.8-sources.jar"/>
+	<classpathentry kind="lib" path="lib/DWO-rest-lib-2.1.8.jar"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>

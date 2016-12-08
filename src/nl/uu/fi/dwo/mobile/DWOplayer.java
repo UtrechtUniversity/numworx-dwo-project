@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -218,8 +219,8 @@ public class DWOplayer implements EntryPoint
 		return clientfactory.withUser();
 	}	
 	
-	private static Deferred<DomDwoProfile> deferredProfile;
-	public static Promise<DomDwoProfile> dwoProfile; // NEVER NULL
+	private static Deferred<DomDwoProfileFull> deferredProfile;
+	public static Promise<DomDwoProfileFull> dwoProfile; // NEVER NULL
 	public static ClientFactory clientfactory;
 	public static SCORM_guest api;
 
@@ -229,7 +230,7 @@ public class DWOplayer implements EntryPoint
 	public void start()
 	{
 		Logger.getLogger("DWOplayer").log(Level.WARNING, "Version " + BUILD.version + ", build " + BUILD.buildNumber);
-		deferredProfile = new Deferred<DomDwoProfile>();
+		deferredProfile = new Deferred<DomDwoProfileFull>();
 		dwoProfile = deferredProfile.getPromise();
 		setupResources();
 		setupDWOPlayer();
@@ -237,13 +238,13 @@ public class DWOplayer implements EntryPoint
 	}
 
 	protected void initProfile() {
-		Success<DomDwoProfile, Void> getProfileCallback = new Success<DomDwoProfile, Void>() {
+		Success<DomDwoProfileFull, Void> getProfileCallback = new Success<DomDwoProfileFull, Void>() {
 
 			@Override
-			public Promise<Void> call(Promise<DomDwoProfile> promise)
+			public Promise<Void> call(Promise<DomDwoProfileFull> promise)
 					throws Exception {
 				SelectModuleItem r = SelectModuleItem.ROOT;
-				DomDwoProfile p = promise.getValue();
+				DomDwoProfileFull p = promise.getValue();
 				r.setName(p.getDwoProfileDescription());
 				r.setDescription(p.getDwoProfileText());
 				return null;
