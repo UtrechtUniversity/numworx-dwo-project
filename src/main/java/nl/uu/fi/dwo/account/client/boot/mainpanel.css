@@ -3,8 +3,8 @@
     Author     : G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
 */
 
-tr:nth-child(even) {background-color: #c7dafa}
-tr:nth-child(odd) {background-color: #c7d4ea}
+/*tr:nth-child(even) {background-color: #c7dafa}
+tr:nth-child(odd) {background-color: #c7d4ea}*/
 table {
     /*border: 1px solid #555555;*/
 }

@@ -7,17 +7,22 @@
     <g:DockLayoutPanel unit='EM'>
         <g:north size='5'>
             <g:HTML addStyleNames='{accountnav.header}'>
-                <div class='{accountnav.header}' align="left"><div>DWO - My School, my schoolclass - myrole, my name</div><div align="right">version xx</div></div>
+                <div class='{accountnav.header}' align="left">
+                    <div>DWO - My School, my schoolclass - myrole, my name</div>
+                    <div align="right">version xx</div>
+                </div>
             </g:HTML>
         </g:north>
         <g:south size='5'>
             <g:HTML addStyleNames='{accountnav.status}'>
-                <div class='{accountnav.status}'>status panel
-                </div>
+                <div class='{accountnav.status}'>status panel</div>
             </g:HTML>
         </g:south>
         <g:center>
+            <g:FlowPanel><div>
                 <g:Widget addStyleNames='{accountnav.body}' ui:field="loginWidget" />
+            </div>
+            </g:FlowPanel>
         </g:center>
         <g:west size='10'>
             <g:HTML addStyleNames='{accountnav.navi}'>

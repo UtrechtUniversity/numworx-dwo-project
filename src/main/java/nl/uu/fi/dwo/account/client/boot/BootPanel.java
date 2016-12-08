@@ -7,7 +7,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
-import nl.uu.fi.dwo.account.client.LoginPanel;
 
 /**
  * BootPanel, boots the app, initializes with the server, requests a login.
@@ -25,7 +24,7 @@ public class BootPanel extends Composite implements EntryPoint {
 
     public BootPanel() {
         loginWidget = new LoginPanel();
-        initWidget(loginWidget);
+//        initWidget(loginWidget);
         initWidget(uiBinder.createAndBindUi(this));
     }
 

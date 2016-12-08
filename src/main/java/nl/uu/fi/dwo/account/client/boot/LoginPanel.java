@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.account.gui;
+package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -9,7 +9,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- *
+ * 
+ * 
  * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
  */
 public class LoginPanel extends Composite {

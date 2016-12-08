@@ -3,9 +3,9 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
     <ui:style field="mainpanel" src="mainpanel.css" />
-    <g:VerticalPanel>f
+    <g:VerticalPanel>
         <g:Label>naam</g:Label>
-        <g:TextBox ui:field='usernameText'>dfg</g:TextBox>
+        <g:TextBox ui:field='usernameText'>df</g:TextBox>
         <g:Label>password</g:Label>
         <g:PasswordTextBox ui:field='passwordTextBox'>dfgfd</g:PasswordTextBox>
     </g:VerticalPanel>    
