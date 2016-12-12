@@ -1364,7 +1364,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				  ( woLast.getTeken().equals("1")  && wo.getTeken().equals("\\") )
 				) { 
 			int diam = (boxLast.height + box.height)/2;
-			if (distance(woLast.getBoxMid(), wo.getBoxMid()) < diam / 4)
+			if (distance(woLast.getBoxMid(), wo.getBoxMid()) < diam / 3)
 				return new WriteObject("x", mergePoints(woLast.getPoints(), wo.getPoints()));
 		}
 		// x = \ + / of y = \ (klein) + /
@@ -1383,7 +1383,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			else
 			{
 				int diam = (boxLast.height + box.height) / 2;
-				if (distance(woLast.getBoxMid(), wo.getBoxMid()) < diam / 4)
+				if (distance(woLast.getBoxMid(), wo.getBoxMid()) < diam / 3)
 					return new WriteObject("x", mergePoints(woLast.getPoints(), wo.getPoints()));
 			}
 		}
