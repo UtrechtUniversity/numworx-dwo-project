@@ -1212,12 +1212,22 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
 	}
 	
+	/**
+	 * Zet vinkje of kruis voor checkwaardeunit. Het vinkje of de kruis moet
+	 * in dit geval altijd getoond worden.
+	 * 
+	 * @param uitslag
+	 */
 	public void zetGoedFoutCheckWaarde(int uitslag)
 	{
-		boolean checkWas = check;
-		check = true;
-		zetGoedFout(uitslag);
-		check = checkWas;
+		if (uitslag == AntwoordVakChecker.GOED)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+		else if (uitslag == AntwoordVakChecker.DOOR || uitslag == AntwoordVakChecker.HALF)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
+		else if (uitslag == AntwoordVakChecker.FOUT)
+			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
+
+		checkimg.setVisible(true); // voor checkwaardeunit moet checkimg altijd getoond worden
 	}
 	
 	private void fireEvent(CBookEvent event) 
