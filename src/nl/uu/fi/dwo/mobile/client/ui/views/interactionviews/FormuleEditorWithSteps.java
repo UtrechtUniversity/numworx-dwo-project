@@ -2098,7 +2098,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					editor.kijkNa(true);
 					//maakNakijkenAf(false);
 				}
-				else if (i == stapNr - 1 && !nagekeken && !linStrategieVersie && !substitutieVak)
+				else if (i == stapNr - 1 && !nagekeken && !linStrategieVersie && !substitutieVak && !isBordjesMethode()) // waar is dit voor? ook niet voor bordjesmethode!
 					fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				else
 					fv.showResult(FormuleViewer.NONE);
