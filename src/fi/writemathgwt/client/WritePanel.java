@@ -39,7 +39,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 
 
 public class WritePanel extends LayoutPanel { //HorizontalPanel
-	private static Logger logger = Logger.getLogger("WritePanel");
+//	private static Logger logger = Logger.getLogger("WritePanel");
 
 	WritePanelHolder eigenaar;
 	ArrayList<WriteObject> writeObjects;
@@ -1271,7 +1271,6 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	
 	private WriteObject tryTwoStroke(WriteObject woLast, WriteObject wo) {
 		
-		logger.info("T2S :: last = "+ woLast +", this = "+ wo); 
 		if ( (woLast == null) || ( woLast.isTwoStrokeObject()) ) {
 			return wo; 
 		}
@@ -1326,7 +1325,6 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				)
 		{
 			int diam = (boxLast.width + box.height) / 2;
-
 /* Old merge - criteria 4 */
 //			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < (diam / 3)  && 
 //				Math.abs(boxLast.y - box.y) < diam ) {
@@ -1335,7 +1333,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			if ( (box.x+box.width > (boxLast.x + 0.40 *boxLast.width)) && (box.x+box.width < (boxLast.x + 1.15 *boxLast.width)) &&
  				 (box.y > (boxLast.y - 0.05 *boxLast.height)) && (box.y < (boxLast.y + 0.95 *boxLast.height))
 			   ) {
-					return new WriteObject("4",mergePoints(woLast.getPoints(), wo.getPoints(),true));	
+//					return new WriteObject("4",mergePoints(woLast.getPoints(), wo.getPoints(),true));	
+					return new WriteObject("4", mergePoints(woLast.getPoints(), wo.getPoints()));
 			} 
 		}
 		// x = ) + (
@@ -1344,8 +1343,6 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			    ) {
 			int avgWidth = (boxLast.width + box.width) / 2;
 			int diam = (boxLast.height + box.height) / 2;
-			logger.info("diam :: "+ diam);
-			logger.info("Crit 1 :: "+ Math.abs(woLast.getBox().x + woLast.getBox().width - wo.getBoxMid().x));
 			if (Math.abs(woLast.getBox().x + woLast.getBox().width - wo.getBox().x) < avgWidth / 4 && 
 				Math.abs(boxLast.y - box.y) < diam / 2)
 				return new WriteObject("x", mergePoints(woLast.getPoints(), wo.getPoints()));
@@ -1492,8 +1489,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	}
 	
 	//OK
-	private ArrayList<Point> mergePoints(ArrayList<Point> p1, ArrayList<Point> p2, boolean reverseFirst) 
-	{	if (!reverseFirst)
+	private ArrayList<Point> mergePoints(ArrayList<Point> p1, ArrayList<Point> p2, boolean reverseFirst) {
+		if (!reverseFirst)
 			return mergePoints(p1,p2);
 		ArrayList<Point> result = new ArrayList<Point>();
 		for (int i = p1.size() - 1; i >= 0; i--)

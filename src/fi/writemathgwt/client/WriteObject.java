@@ -22,6 +22,7 @@ public class WriteObject {
 	public static void initSamples(int tekenSet) {
 //		logger.info("tekenSet = "+tekenSet);		
 		newTekenSet = tekenSet;
+		newTekenSet = 1;
 		samples = Samples20.init(tekenSet);
 	}
 	
@@ -105,7 +106,6 @@ public class WriteObject {
 
 	//OK
 	public WriteObject(String teken, ArrayList<Point> points){
-		logger.info("2-Stroke Object :: " + teken);
 		isTwoStrokeObject = true;
 		makeBox(points);
 		doublePoints = new ArrayList<DoublePoint>();
