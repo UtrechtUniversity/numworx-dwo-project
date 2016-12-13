@@ -75,6 +75,11 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 			setNagekeken: function(arg) {
 				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::view.@nl.uu.fi.dwo.interaction.client.InteractionView::zetNagekeken(Z)(arg);
 			},
+			
+			kijkNa: function() {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::view.@nl.uu.fi.dwo.interaction.client.InteractionView::kijkNa()();
+			},
+			
 			getState: function() {
 				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::getState()();
 			},
