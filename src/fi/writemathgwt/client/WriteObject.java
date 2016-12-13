@@ -12,7 +12,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 
 
 public class WriteObject {
-	private static Logger logger = Logger.getLogger("WriteObject");
+//	private static Logger logger = Logger.getLogger("WriteObject");
 
 	private final static boolean cNewStrokmatcher = true;
 	static int newTekenSet = 0;
@@ -22,7 +22,6 @@ public class WriteObject {
 	public static void initSamples(int tekenSet) {
 //		logger.info("tekenSet = "+tekenSet);		
 		newTekenSet = tekenSet;
-		newTekenSet = 1;
 		samples = Samples20.init(tekenSet);
 	}
 	
@@ -301,7 +300,7 @@ public class WriteObject {
 			teken2 = newStrokeMatcher.getTeken2();
 			teken3 = newStrokeMatcher.getTeken3();
 			teken4 = newStrokeMatcher.getTeken4();
-			logger.info("parsing :: match = " + teken1 + "("+ newStrokeMatcher.getTekenId(0) + ")");
+//			logger.info("parsing :: match = " + teken1 + "("+ newStrokeMatcher.getTekenId(0) + ")");
 //			logger.info("parsing :: teken2 = " + teken2);
 //			logger.info("parsing :: teken3 = " + teken3);
 //			logger.info("parsing :: teken4 = " + teken4);
