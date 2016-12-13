@@ -3,15 +3,50 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
     <ui:style field="mainpanel" src="mainpanel.css" />
-    <g:VerticalPanel>
-        <g:HorizontalPanel>
-        <g:Label>naam:</g:Label>
-        <g:TextBox ui:field='usernameText'>da</g:TextBox>
-        </g:HorizontalPanel>
-        <g:HorizontalPanel>
-        <g:Label><password:</g:Label>
-        <g:PasswordTextBox ui:field='passwordTextBox'>dfgfd</g:PasswordTextBox>
-        </g:HorizontalPanel>        
-        <g:Button ui:field='loginBtn'>Login</g:Button>
-    </g:VerticalPanel>    
+    <g:HorizontalPanel addStyleNames='{mainpanel.widget}'>
+        <g:VerticalPanel horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+            <g:Grid>
+                <g:row styleName="optionalHeaderStyle">
+                    <g:customCell styleName="optionalFooCellStyle">
+                        <g:Label>naam:</g:Label>
+                    </g:customCell>
+                    <g:customCell styleName="optionalBarCellStyle">
+                        <g:TextBox ui:field='usernameText'>gert_project</g:TextBox>
+                    </g:customCell>
+                </g:row>
+                <g:row styleName="optionalHeaderStyle">
+                    <g:customCell styleName="optionalFooCellStyle">
+                        <g:Label>password:</g:Label>
+                    </g:customCell>
+                    <g:customCell styleName="optionalBarCellStyle">
+                        <g:PasswordTextBox ui:field='passwordTextBox'>PASSW</g:PasswordTextBox>
+                    </g:customCell>
+                </g:row>
+                <g:row styleName="optionalHeaderStyle">
+                    <g:customCell styleName="optionalFooCellStyle">
+                        <g:CheckBox ui:field='checkBox' checked="true">switch to teacher</g:CheckBox>
+                    </g:customCell>
+                    <g:customCell styleName="optionalBarCellStyle">
+                        <g:Button ui:field='loginBtn'>Login</g:Button>
+                    </g:customCell>
+                </g:row>
+<!--                <g:row>
+                        <g:cell>
+                        <g:Label>password:</g:Label>
+                    </g:cell>
+                    <g:cell>
+                        <g:PasswordTextBox ui:field='passwordTextBox'>passw</g:PasswordTextBox>
+                    </g:cell>
+                </g:row>
+                <g:row>
+                    <g:cell>
+                        <g:CheckBox ui:field='checkBox' checked="true">switch to teacher</g:CheckBox>
+                    </g:cell>
+                    <g:cell>
+                        <g:Button ui:field='loginBtn'>Login</g:Button>
+                    </g:cell>
+                </g:row>-->
+            </g:Grid>            
+        </g:VerticalPanel>    
+    </g:HorizontalPanel>
 </ui:UiBinder> 

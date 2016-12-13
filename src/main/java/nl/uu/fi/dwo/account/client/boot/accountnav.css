@@ -2,27 +2,61 @@
     Created on : Dec 8, 2016, 2:20:25 PM
     Author     : G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
 */
-        .header {
-        padding: 8px;
-        /*border: 1px solid #31425c*/
-        background-color: #91d2fc;
-        border-radius: 5px;        
-        }	
-        .navi {
-        padding: 8px;
-        /*border: 1px solid #555555;*/
-        background-color: #d9dadf;
-        border-radius: 5px;        
-        }
-        .body {
-        padding: 8px;
-        /*border: 1px solid #555555;*/
-        background-color: #ffffff;
-        border-radius: 5px;        
-        }
-        .status {
-        padding: 8px;
-        /*border: 1px solid #555555;*/
-        background-color: #91d2fc;
-        border-radius: 5px;        
-        }	
+.appPanel{
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+}
+.header {
+    padding: 8px;
+    border: 1px solid #555555;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    border-style: solid;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top : 5px;
+    margin-bottom: 5px;
+}	
+.navi {
+    padding: 8px;
+    border: 1px solid #555555;
+    background-color: #dedede;
+    border-radius: 5px;        
+    height: 5%;
+}
+.body {
+    padding: 8px;
+    border: 1px solid #555555;
+    background-color: #deeefe;
+    border-radius: 4px;   
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top : 5px;
+    margin-bottom: 5px;
+    height: 95%;
+    border-style: solid;
+}
+.widget {
+    padding: 8px;
+    border: 1px solid #555555;
+    background-color: #fdfdfd;
+    border-radius: 5px;   
+    margin-left: auto;
+    margin-right: auto;
+    margin-top : auto;
+    margin-bottom: auto;
+    vertical-align: middle;
+}
+.status {
+    padding: 8px;
+    border: 1px solid #555555;
+    background-color: #f0f0f0;
+    border-radius: 5px; 
+    border-style: solid;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top : 5px;
+    margin-bottom: 5px;
+    height: 5%;
+}	

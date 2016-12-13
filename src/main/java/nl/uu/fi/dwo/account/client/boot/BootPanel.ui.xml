@@ -4,35 +4,39 @@
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
     <ui:style field="accountnav" src="accountnav.css" />    
     
-    <g:HeaderPanel  width="95%">
+    <g:HeaderPanel  width="100%" height="100%" addStyleNames='{accountnav.appPanel}' >
         <!--<g:FlowPanel size='2'>-->
-            <g:HTML addStyleNames='{accountnav.header}'>
-                <div class='{accountnav.header}' align="left">
-                    <div>DWO - My School, my schoolclass - myrole, my name</div>
-                    <div align="right">version xx</div>
-                </div>
-            </g:HTML>
+        <g:HTML addStyleNames='{accountnav.header}' horizontalAlignment="ALIGN_CENTER"  >
+            <div>
+                <div align="left">DWO - My School, my schoolclass - myrole, my name</div>
+                <div align="left">version xx</div>
+            </div>
+        </g:HTML>
         <!--</g:FlowPanel>-->
-        <g:FlowPanel height="100%" >
+        <g:DeckPanel addStyleNames='{accountnav.body}' ui:field="mainDeckPanel" >
             <!--<g:FlowPanel>-->
-                <g:Widget addStyleNames='{accountnav.body}' ui:field="loginWidget" width="100%"/>
+        <g:HorizontalPanel>
+            <g:Widget ui:field="loginWidget" addStyleNames='{accountnav.widget}'/>
+        </g:HorizontalPanel>
             <!--</g:FlowPanel>-->
-        </g:FlowPanel>
-<!--        <g:FlowPanel size='10'>
-            <g:HTML addStyleNames='{accountnav.navi}'>
-                <div class='{accountnav.navi}'>
-                    <ul>
-                        <li>Sidebar</li>
-                        <li>Sidebar</li>
-                        <li>Sidebar</li>
-                    </ul>
-                </div>
-            </g:HTML>
-        </g:FlowPanel>-->
-        <!--<g:FlowPanel size='2'>-->
-            <g:HTML addStyleNames='{accountnav.status}'>
-                <div class='{accountnav.status}'>status panel</div>
-            </g:HTML>
-        <!--</g:FlowPanel>-->
+        </g:DeckPanel>
+
+    
+    <!--        <g:FlowPanel size='10'>
+        <g:HTML addStyleNames='{accountnav.navi}'>
+            <div class='{accountnav.navi}'>
+                <ul>
+                    <li>Sidebar</li>
+                    <li>Sidebar</li>
+                    <li>Sidebar</li>
+                </ul>
+            </div>
+        </g:HTML>
+    </g:FlowPanel>-->
+    <!--<g:FlowPanel size='2'>-->
+    <g:HTML addStyleNames='{accountnav.status}' horizontalAlignment="ALIGN_CENTER">
+        <div>status panel</div>
+    </g:HTML>
+    <!--</g:FlowPanel>-->
     </g:HeaderPanel>            
 </ui:UiBinder> 

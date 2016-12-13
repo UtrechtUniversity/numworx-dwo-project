@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -12,7 +11,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;

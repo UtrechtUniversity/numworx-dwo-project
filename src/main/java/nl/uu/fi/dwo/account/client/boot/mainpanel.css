@@ -3,12 +3,20 @@
     Author     : G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
 */
 
+.widget {
+    padding: 8px;
+    border: 1px solid #555555;
+    background-color: #fdfdfd;
+    border-radius: 5px;   
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+}
 /*tr:nth-child(even) {background-color: #c7dafa}
 tr:nth-child(odd) {background-color: #c7d4ea}*/
 table {
     /*border: 1px solid #555555;*/
 }
-
 
 th {
     padding: 8px;
@@ -20,18 +28,19 @@ td {
     /*border: 1px solid #555555;*/
     padding: 8px;
     text-align: left;
-/*    border-top: 3px solid #999999;
-    border-left: 3px solid #999999;
-    border-right: 3px solid #555555;
-    border-bottom: 3px solid #555555;*/
+    /*    border-top: 3px solid #999999;
+        border-left: 3px solid #999999;
+        border-right: 3px solid #555555;
+        border-bottom: 3px solid #555555;*/
     border-radius: 5px;
 }
 body {
     /*background-color: #e2dfd2;*/
     background-color: #edfaff;
+    vertical-align: middle;
 }
-div {
+/*div {
     padding: 15px;
     text-align: center;
-}
+}*/
 

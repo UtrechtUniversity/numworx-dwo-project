@@ -1,0 +1,68 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+             xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
+    <ui:style field="mainpanel" src="../mainpanel.css" />
+    <g:VerticalPanel  horizontalAlignment="ALIGN_CENTER" >
+        <g:Grid addStyleNames='{mainpanel.widget}'>
+            <g:row styleName="optionalHeaderStyle">
+                <g:customCell styleName="optionalFooCellStyle">
+                    <g:Label>rowheader/columnheader</g:Label>
+                </g:customCell>
+                <g:customCell styleName="optionalBarCellStyle">
+                    <g:Label>column 0</g:Label>
+                </g:customCell>
+                <g:customCell styleName="optionalBarCellStyle">
+                    <g:Label>column 1</g:Label>
+                </g:customCell>
+                <g:customCell styleName="optionalBarCellStyle">
+                    <g:Label>column 2</g:Label>
+                </g:customCell>
+            </g:row>
+            <g:row styleName="optionalHeaderStyle">
+                <g:customCell styleName="optionalFooCellStyle">
+                    <g:Label>row 0</g:Label>
+                </g:customCell>
+                <g:customCell styleName="optionalBarCellStyle">
+                    <g:Label> (0,0)</g:Label>
+                </g:customCell>
+                <g:customCell styleName="optionalBarCellStyle">
+                    <g:Label>(1,0)</g:Label>
+                </g:customCell>
+                <g:customCell styleName="optionalBarCellStyle">
+                    <g:Label>(2,0)</g:Label>
+                </g:customCell>
+            </g:row>
+            <g:row styleName="optionalHeaderStyle">
+                <g:customCell styleName="optionalFooCellStyle">
+                    <g:Label>row 1</g:Label>
+                </g:customCell>
+                <g:customCell styleName="optionalBarCellStyle">
+                    <g:Label> (0,1)</g:Label>
+                </g:customCell>
+                <g:customCell styleName="optionalBarCellStyle">
+                    <g:Label>(1,2)</g:Label>
+                </g:customCell>
+                <g:customCell styleName="optionalBarCellStyle">
+                    <g:Label>(2,3)</g:Label>
+                </g:customCell>
+            </g:row>
+            <!--                <g:row>
+                    <g:cell>
+                    <g:Label>password:</g:Label>
+                </g:cell>
+                <g:cell>
+                    <g:PasswordTextBox ui:field='passwordTextBox'>passw</g:PasswordTextBox>
+                </g:cell>
+            </g:row>
+            <g:row>
+                <g:cell>
+                    <g:CheckBox ui:field='checkBox' checked="true">switch to teacher</g:CheckBox>
+                </g:cell>
+                <g:cell>
+                    <g:Button ui:field='loginBtn'>Login</g:Button>
+                </g:cell>
+            </g:row>-->
+        </g:Grid>   
+    </g:VerticalPanel>    
+</ui:UiBinder> 
