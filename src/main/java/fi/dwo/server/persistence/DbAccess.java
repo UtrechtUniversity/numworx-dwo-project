@@ -4690,7 +4690,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         "cmi.score.raw",
         "cmi.total_time",
         "cmi.location",
-        "cmi.completion_status"
+        "cmi.completion_status",
+        "cmi.comments_from_lms.0.comment"
     };
 
     static private final Properties CONVERT = new Properties();
