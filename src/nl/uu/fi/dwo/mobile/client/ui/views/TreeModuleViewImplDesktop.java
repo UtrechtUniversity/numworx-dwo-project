@@ -350,7 +350,10 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 	{
 		
 		if (currentModel.isEmpty() )
+		{
+			tree.removeItems();
 			return;
+		}
 		if (model != currentModel)
 		{
 			tree.removeItems();

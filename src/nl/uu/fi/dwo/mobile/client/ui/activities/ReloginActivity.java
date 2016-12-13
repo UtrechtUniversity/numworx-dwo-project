@@ -31,9 +31,10 @@ public class ReloginActivity extends MGWTAbstractActivity {
 
 		@Override
 		public Promise<Void> call(Promise<Void> resolved) throws Exception {
-			if(next == null)
+			if(next == null) {
+				DWOplayer.api = clientFactory.setupAPI();
 				DWOplayer.gotoCourses();
-			else
+			} else
 				clientFactory.getPlaceController().goTo(next);
 			return null;
 
