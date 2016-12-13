@@ -4,27 +4,21 @@
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
     <ui:style field="accountnav" src="accountnav.css" />    
     
-    <g:DockLayoutPanel unit='EM'>
-        <g:north size='5'>
+    <g:HeaderPanel  width="95%">
+        <!--<g:FlowPanel size='2'>-->
             <g:HTML addStyleNames='{accountnav.header}'>
                 <div class='{accountnav.header}' align="left">
                     <div>DWO - My School, my schoolclass - myrole, my name</div>
                     <div align="right">version xx</div>
                 </div>
             </g:HTML>
-        </g:north>
-        <g:south size='5'>
-            <g:HTML addStyleNames='{accountnav.status}'>
-                <div class='{accountnav.status}'>status panel</div>
-            </g:HTML>
-        </g:south>
-        <g:center>
-            <g:FlowPanel><div>
-                <g:Widget addStyleNames='{accountnav.body}' ui:field="loginWidget" />
-            </div>
-            </g:FlowPanel>
-        </g:center>
-        <g:west size='10'>
+        <!--</g:FlowPanel>-->
+        <g:FlowPanel height="100%" >
+            <!--<g:FlowPanel>-->
+                <g:Widget addStyleNames='{accountnav.body}' ui:field="loginWidget" width="100%"/>
+            <!--</g:FlowPanel>-->
+        </g:FlowPanel>
+<!--        <g:FlowPanel size='10'>
             <g:HTML addStyleNames='{accountnav.navi}'>
                 <div class='{accountnav.navi}'>
                     <ul>
@@ -34,6 +28,11 @@
                     </ul>
                 </div>
             </g:HTML>
-        </g:west>
-    </g:DockLayoutPanel>    
+        </g:FlowPanel>-->
+        <!--<g:FlowPanel size='2'>-->
+            <g:HTML addStyleNames='{accountnav.status}'>
+                <div class='{accountnav.status}'>status panel</div>
+            </g:HTML>
+        <!--</g:FlowPanel>-->
+    </g:HeaderPanel>            
 </ui:UiBinder> 

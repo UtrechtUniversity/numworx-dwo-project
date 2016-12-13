@@ -4,9 +4,14 @@
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
     <ui:style field="mainpanel" src="mainpanel.css" />
     <g:VerticalPanel>
-        <g:Label>naam</g:Label>
-        <g:TextBox ui:field='usernameText'>df</g:TextBox>
-        <g:Label>password</g:Label>
+        <g:HorizontalPanel>
+        <g:Label>naam:</g:Label>
+        <g:TextBox ui:field='usernameText'>da</g:TextBox>
+        </g:HorizontalPanel>
+        <g:HorizontalPanel>
+        <g:Label><password:</g:Label>
         <g:PasswordTextBox ui:field='passwordTextBox'>dfgfd</g:PasswordTextBox>
+        </g:HorizontalPanel>        
+        <g:Button ui:field='loginBtn'>Login</g:Button>
     </g:VerticalPanel>    
 </ui:UiBinder> 

@@ -20,7 +20,7 @@ public class BootPanel extends Composite implements EntryPoint {
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     @UiField(provided = true)
-    Widget loginWidget;
+    Widget loginWidget= new LoginPanel();
 
     public BootPanel() {
         loginWidget = new LoginPanel();
