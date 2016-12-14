@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import java.util.MissingResourceException;
 
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
@@ -23,6 +24,7 @@ public class UserBar extends Composite implements Command {
 	private String display;
 	private MenuItem status;
 	private MenuItem itemSchoolLogin;
+	private MenuItem userbar;
 	
     public UserBar() {
         init();
@@ -31,9 +33,8 @@ public class UserBar extends Composite implements Command {
     private void init() {
         initWidget(top);
         top.addStyleName("UserBar");
-        MenuItem item;
         final int correctie = 10; // width popup 
-        item = new MenuItem("<i class='fa fa-navicon fa-2x'></i>", true, items) {
+        userbar = new MenuItem("<i class='fa fa-navicon fa-2x'></i>", true, items) {
             @Override
             public int getAbsoluteLeft() {
                 int w1 = items.getOffsetWidth();
@@ -42,8 +43,8 @@ public class UserBar extends Composite implements Command {
             }
 
         };
-        item.addStyleName("UserItem");
-        top.addItem(item);
+        userbar.addStyleName("UserItem");
+        top.addItem(userbar);
 
         status = new MenuItem("this is a status", new Command(){
 
@@ -52,10 +53,10 @@ public class UserBar extends Composite implements Command {
 			}});
         status.setEnabled(false); status.removeStyleDependentName("disabled");
         
-        items.addItem(status);
-        items.addSeparator();
+        //items.addItem(status);
+        //items.addSeparator();
         
-        
+        MenuItem item;
         item = new MenuItem(DwoLocalesForGWT.instance.GUI_MyProfile(), profileCmd);
         items.addItem(item);
 
@@ -102,7 +103,14 @@ public class UserBar extends Composite implements Command {
 		} catch (MissingResourceException e) {
 		}
 		display = DwoGlobalVars.getInstance().getCurrentUser().getDisplayName();
-
+		SafeHtmlBuilder builder = new SafeHtmlBuilder();
+		builder.appendEscaped(rolename);
+		builder.append(' ');
+		builder.appendEscaped(display);
+		builder.appendHtmlConstant(" <i class='fa fa-navicon fa-2x'></i>");
+		userbar.setHTML(builder.toSafeHtml());
+		
+		
 		status.setText(rolename + " " + display);
 	}
 
