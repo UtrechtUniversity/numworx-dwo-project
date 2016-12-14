@@ -3,20 +3,26 @@
     Author     : G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
 */
 .appPanel{
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top : 5px;
+    margin-bottom: 5px;
     vertical-align: middle;
+    height: calc(100vh - 16px);
+    width: calc(100vw - 16px);
 }
 .header {
-    padding: 8px;
+    /*padding: 8px;*/
     border: 1px solid #555555;
     background-color: #f0f0f0;
-    border-radius: 5px;
+    border-radius: 4px;
     border-style: solid;
     margin-left: 5px;
     margin-right: 5px;
     margin-top : 5px;
     margin-bottom: 5px;
+    height: 50px;
+    width: 100vw;
 }	
 .navi {
     padding: 8px;
@@ -26,7 +32,12 @@
     height: 5%;
 }
 .body {
-    padding: 8px;
+    height: 100vh;
+    width: calc(100vw - 16px);
+    padding-top: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 8px;
     border: 1px solid #555555;
     background-color: #deeefe;
     border-radius: 4px;   
@@ -34,7 +45,6 @@
     margin-right: 5px;
     margin-top : 5px;
     margin-bottom: 5px;
-    height: 95%;
     border-style: solid;
 }
 .widget {
@@ -49,6 +59,8 @@
     vertical-align: middle;
 }
 .status {
+    height: 25px;
+    width: 100vw;
     padding: 8px;
     border: 1px solid #555555;
     background-color: #f0f0f0;
@@ -58,5 +70,4 @@
     margin-right: 5px;
     margin-top : 5px;
     margin-bottom: 5px;
-    height: 5%;
 }	

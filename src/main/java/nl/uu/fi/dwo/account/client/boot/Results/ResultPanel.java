@@ -1,20 +1,21 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 
 /**
- * 
- * 
+ *
+ *
  * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
  */
 public class ResultPanel extends Composite {
@@ -25,14 +26,62 @@ public class ResultPanel extends Composite {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-//    @UiField TextBox usernameText;
-//    @UiField PasswordTextBox passwordTextBox;
-//    @UiField Button loginBtn;
+    private ResultsTeacherController control;
+
+    //initial gridsize
+    final int xInitialGridSize = 6;
+    final int yInitialGridSize = 6;
+
+    @UiField
+    SimplePanel tablePanel;
+    @UiField(provided = true)
+    Grid resultGrid = new Grid(xInitialGridSize, yInitialGridSize);
+    ListDataProvider<DomResultScore> dataProvider = new ListDataProvider<DomResultScore>();
+
 //    @UiField(provided = true)
-//CellTable<MyType> cellTable;
-    
+//    SimplePager pager;
     public ResultPanel() {
-        initWidget(uiBinder.createAndBindUi(this));        
+        LOG.log(Level.INFO, "Grid size:" + resultGrid.getRowCount() + "x" + resultGrid.getColumnCount() + ".");
+        init();
+//        tablePanel.setWidget(resultGrid);
+        initWidget(uiBinder.createAndBindUi(this));
+        control = new ResultsTeacherController(this);
+        addRow();
+    }
+// following the example of http://samples.gwtproject.org/samples/Showcase/Showcase.html#!CwCellTable
+
+    public void init() {
+        int rows = resultGrid.getRowCount();
+        int cols = resultGrid.getColumnCount();
+
+        //Set row headers
+        for (int i = 0; i < rows; i++) {
+            resultGrid.setWidget(i, 0, new Label("rowheader " + i));
+        }
+
+        //Set column headers
+        for (int i = 0; i < cols; i++) {
+            resultGrid.setWidget(0, i, new Label("colheader " + i));
+        }
+
+        for (int i = 1; i < rows; i++) {
+            for (int j = 1; j < cols; j++) {
+                resultGrid.setWidget(i, j, new Label("data " + i + "x" + j));
+            }
+        }
+
+    }
+
+    public void addRow() {
+        int rows = resultGrid.getRowCount();
+        int cols = resultGrid.getColumnCount();
+        resultGrid.insertRow(rows);
+        //Set row headers
+        resultGrid.setWidget(rows, 0, new Label("rowheader " + rows));
+
+        for (int j = 1; j < cols; j++) {
+            resultGrid.setWidget(rows, j, new Label("data " + rows + "x" + j));
+        }
     }
 
 }

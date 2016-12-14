@@ -3,8 +3,14 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
     <ui:style field="mainpanel" src="../mainpanel.css" />
-    <g:VerticalPanel  horizontalAlignment="ALIGN_CENTER" >
-        <g:Grid addStyleNames='{mainpanel.widget}'>
+<g:SimplePanel ui:field='tablePanel' >
+          <g:Grid
+            ui:field='resultGrid' />
+<!--          <c:SimplePager
+            ui:field='pager' />-->
+ </g:SimplePanel>
+<!--  <g:VerticalPanel  horizontalAlignment="ALIGN_CENTER" >
+        <c:CellTable addStyleNames='{mainpanel.widget}' ui:field='resultTable'>
             <g:row styleName="optionalHeaderStyle">
                 <g:customCell styleName="optionalFooCellStyle">
                     <g:Label>rowheader/columnheader</g:Label>
@@ -47,22 +53,5 @@
                     <g:Label>(2,3)</g:Label>
                 </g:customCell>
             </g:row>
-            <!--                <g:row>
-                    <g:cell>
-                    <g:Label>password:</g:Label>
-                </g:cell>
-                <g:cell>
-                    <g:PasswordTextBox ui:field='passwordTextBox'>passw</g:PasswordTextBox>
-                </g:cell>
-            </g:row>
-            <g:row>
-                <g:cell>
-                    <g:CheckBox ui:field='checkBox' checked="true">switch to teacher</g:CheckBox>
-                </g:cell>
-                <g:cell>
-                    <g:Button ui:field='loginBtn'>Login</g:Button>
-                </g:cell>
-            </g:row>-->
-        </g:Grid>   
-    </g:VerticalPanel>    
+    </g:VerticalPanel>    -->
 </ui:UiBinder> 

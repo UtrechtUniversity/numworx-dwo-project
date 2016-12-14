@@ -48,7 +48,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     private Button addBtn;
     private Button closeBtn;
     CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
-    ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
+        ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
     Command resetLogin;
 
     private HandlerRegistration registration;
