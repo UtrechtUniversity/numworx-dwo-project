@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer.FormuleEditorPopup;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.client.Canvas;
@@ -768,23 +769,35 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			Object object = opdrachtObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
 			{
-				((FormuleEditorWithAnswer) object).requestFocus();
-				//om te zorgen dat cursor ook getekend wordt:
-				if(((FormuleEditorWithAnswer) object).getCurrentElement() == null)
-				{	((FormuleEditorWithAnswer) object).setCurrentElementRepaint(((FormuleEditorWithAnswer) object).getMainRegel());
+				FormuleEditorWithAnswer fewa = (FormuleEditorWithAnswer) object;
+				if(!fewa.isPopup())
+				{
+					fewa.requestFocus();
+					//om te zorgen dat cursor ook getekend wordt:
+					if(fewa.getCurrentElement() == null)
+					{	fewa.setCurrentElementRepaint(fewa.getMainRegel());
+					}
+					return true;
 				}
-				return true;
 			}
 			else if(object instanceof AntwoordTekstVak)
 			{
-				((AntwoordTekstVak) object).requestFocus();
-				return true;
+				if(!((AntwoordTekstVak) object).isPopup())
+				{
+					((AntwoordTekstVak) object).requestFocus();
+					return true;
+				}
+				
 			}
 			else if(object instanceof TekstVakPanel)
 			{
-				focusVerlegd = ((TekstVakPanel) object).tabFocus(this, false);
-				if(focusVerlegd)
-					return true;
+				TekstVakPanel tvp = (TekstVakPanel) object;
+				if(!tvp.isPopup())
+				{
+					focusVerlegd = tvp.tabFocus(this, false);
+					if(focusVerlegd)
+						return true;
+				}
 			}
 		}
 		
@@ -821,29 +834,40 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			Object object = opdrachtObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
 			{
-				((FormuleEditorWithAnswer) object).requestFocus();
-				//om te zorgen dat cursor ook getekend wordt:
-				if(((FormuleEditorWithAnswer) object).getCurrentElement() == null)
-				{	((FormuleEditorWithAnswer) object).setCurrentElementRepaint(((FormuleEditorWithAnswer) object).getMainRegel());
+				FormuleEditorWithAnswer fewa = (FormuleEditorWithAnswer) object;
+				if(!fewa.isPopup())
+				{
+					fewa.requestFocus();
+					//om te zorgen dat cursor ook getekend wordt:
+					if(fewa.getCurrentElement() == null)
+					{	fewa.setCurrentElementRepaint(fewa.getMainRegel());
+					}
+					return true;
 				}
-				return true;
 			}
 			else if(object instanceof AntwoordTekstVak)
 			{
-				((AntwoordTekstVak) object).requestFocus();
-				return true;
+				if(!((AntwoordTekstVak) object).isPopup())
+				{
+					((AntwoordTekstVak) object).requestFocus();
+					return true;
+				}
+				
 			}
 			else if(object instanceof TekstVakPanel)
 			{
-				focusVerlegd = ((TekstVakPanel) object).shiftTabFocus(this, false);
-				if(focusVerlegd)
-					return true;
+				TekstVakPanel tvp = (TekstVakPanel) object;
+				if(!tvp.isPopup())
+				{
+					focusVerlegd = tvp.shiftTabFocus(this, false);
+					if(focusVerlegd)
+						return true;
+				}
 			}
 		}
 		
 		//hier gekomen heb je alles binnen het TekstVak bekeken en niets gevonden, dus naar vorige tekstvak binnen tekstvakpanel.
 		return parent.shiftTabFocus(this, true);
-			
 	}
 	
 	public void resize()

@@ -1229,6 +1229,11 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		return facade.wrap(getAsPanel());
 	}
 	
+	public boolean isPopup()
+	{
+		return facade.isPopup();
+	}
+	
 	public void setFontSize(int size)
 	{
 		if(formuleMode)

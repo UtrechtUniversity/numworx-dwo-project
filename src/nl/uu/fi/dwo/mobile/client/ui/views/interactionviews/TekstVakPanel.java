@@ -1408,6 +1408,11 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		return facade.wrap(getAsPanel(), this);
 	}
 	
+	public boolean isPopup()
+	{
+		return facade.isPopup();
+	}
+	
 	public boolean isInklapbaar()
 	{
 		return inklapbaar;

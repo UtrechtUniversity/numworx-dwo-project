@@ -1654,6 +1654,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		return facade.wrap(getAsPanel());
 	}
+	
+	public boolean isPopup()
+	{
+		return facade.isPopup();
+	}
 
 	public void zetMode(int mode) {
 		this.mode = mode;

@@ -311,5 +311,13 @@ public class PopupFacade implements InteractionView, FacetAware {
 		if(popup)
 			this.popupListener = popupListener;
 	}
+
+	public boolean isPopup() {
+		return popup;
+	}
+
+	public void setPopup(boolean popup) {
+		this.popup = popup;
+	}
 	
 }
