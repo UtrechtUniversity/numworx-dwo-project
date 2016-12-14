@@ -1536,7 +1536,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			{	
 				randPanel.getElement().getStyle().setBorderColor(selectionColor.toString());
 				randPanel.getElement().getStyle().setOpacity(0.4); 
-				randPanel.getElement().getStyle().setBorderWidth(400, Unit.PX);
+				int borderWidth = (int) Math.round(Math.min(new Double(hoogte) / 2, new Double(breedte) / 2));
+				randPanel.getElement().getStyle().setBorderWidth(borderWidth, Unit.PX);
 			}
 			else
 			{	randPanel.getElement().getStyle().setBorderColor(grijs.toString());
