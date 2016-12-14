@@ -1,4 +1,4 @@
-package fi.dwo.gwt.lib.rest.client;
+package fi.dwo.gwt.lib.rest.client.RestCallers;
 
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;

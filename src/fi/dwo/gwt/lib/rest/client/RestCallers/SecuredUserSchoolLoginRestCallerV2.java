@@ -1,4 +1,4 @@
-package fi.dwo.gwt.lib.rest.client;
+package fi.dwo.gwt.lib.rest.client.RestCallers;
 
 import fi.dwo.gwt.lib.rest.CallManagers.Callback;
 import javax.ws.rs.GET;

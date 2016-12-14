@@ -3,7 +3,7 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import fi.dwo.gwt.lib.rest.client.SecuredUserSchoolLoginRestCallerV2;
+import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserSchoolLoginRestCallerV2;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;

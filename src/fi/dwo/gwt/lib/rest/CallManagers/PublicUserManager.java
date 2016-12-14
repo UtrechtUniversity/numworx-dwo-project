@@ -1,13 +1,11 @@
 package fi.dwo.gwt.lib.rest.CallManagers;
 
-import org.fusesource.restygwt.client.Defaults;
-import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
-import fi.dwo.gwt.lib.rest.client.PublicUserRestCaller;
+import fi.dwo.gwt.lib.rest.client.RestCallers.PublicUserRestCaller;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import nl.uu.fi.dwo.rest.entities.RestNewUser;
