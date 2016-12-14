@@ -426,6 +426,10 @@ public class TekstBuffer
 			//return new PopupFacade(map, new fi.grafiek3dgwt.client.Grafiek3DGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 32:
 			return new StubView("TegelsLeggenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		case 40:
+			return new StubView("StippelPatronenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		case 31:
+			return new StubView("StroomDiagrammenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 50:
 			return x(map, 
 					new StubView("SliderWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
