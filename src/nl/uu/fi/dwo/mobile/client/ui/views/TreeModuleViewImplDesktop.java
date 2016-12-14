@@ -107,7 +107,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			for (Iterator<DomCourseStudent> iterator = t.iterator(); iterator.hasNext();) {
 				DomCourseStudent map =  iterator.next();
 				SelectModuleItem item = new SelectModuleItem(map,(DomClassCourse)null);
-				item.setParent(item);
+				item.setParent(this.item);
 				SelectModuleItemHolder.insert(item);
 				items.add(item);
 			}

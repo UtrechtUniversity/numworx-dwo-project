@@ -46,10 +46,8 @@ public interface RPCHandler {
 			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback);
 
 
-	void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback);
 	Promise<List<DomScoContext>> getScos(Object id);
 	
-	void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 	Promise<List<DomCourseStudent>> getCourses(Object parentID);
 	
 	Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins();

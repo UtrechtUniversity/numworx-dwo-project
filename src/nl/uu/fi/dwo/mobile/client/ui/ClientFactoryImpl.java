@@ -1,8 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import java.util.Map;
-
-import nl.uu.fi.dwo.account.client.RPCHandlerV1;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
@@ -11,7 +8,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
@@ -95,7 +91,8 @@ public class ClientFactoryImpl implements ClientFactory
 		if (treeModuleView == null){
 			OsDetection detection = MGWT.getOsDetection();
 			if(detection.isDesktop()
-					//&& false
+					//
+					&& false
 					) {
 				this.treeModuleView = new TreeModuleViewImplDesktop();
 			} else {

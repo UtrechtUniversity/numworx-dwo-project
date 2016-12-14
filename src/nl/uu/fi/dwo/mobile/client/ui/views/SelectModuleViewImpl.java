@@ -5,12 +5,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.osgi.util.function.Function;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -125,18 +130,64 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView,
 		return this;
 	}
 
-	@Override
-	public void render(final SelectModuleItem item) {
-		GetScosCallback getScosCallback;
-		if(item.getChildren() != null)
-			render(item.getChildren());
-		else
-		{
-			getScosCallback = new GetScosCallback(item);
-			DWOplayer.clientfactory.getRPCHandler().getScos(item.getID(), getScosCallback);
+//	@Override
+//	public void render(final SelectModuleItem item) {
+//		GetScosCallback getScosCallback;
+//		if(item.getChildren() != null)
+//			render(item.getChildren());
+//		else
+//		{
+//			getScosCallback = new GetScosCallback(item);
+//			DWOplayer.clientfactory.getRPCHandler().getScos(item.getID(), getScosCallback);
+//		}
+//	}
+
+	private static class SCO_TO_MODULEITEM implements Function<List<DomScoContext>, List<SelectModuleItem>> {
+
+		private final SelectModuleItem parent;
+		public SCO_TO_MODULEITEM(SelectModuleItem item) {
+			this.parent = item;
+		}
+
+		@Override
+		public List<SelectModuleItem> apply(List<DomScoContext> t) {
+			List<SelectModuleItem> items = new ArrayList<SelectModuleItem>(t.size());
+			for(DomScoContext sco: t) {
+				SelectModuleItem item = new SelectModuleItem(sco);
+				item.setParent(parent);
+				items.add(item);
+				SelectModuleItemHolder.insert(item);
+			}
+			return items;
 		}
 	}
+	
+	@Override
+	public void render(final SelectModuleItem item) {
+		Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
 
+		if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
+			promise = DWOplayer.clientfactory.getRPCHandler().getScos(item.getID())
+					.map(new SCO_TO_MODULEITEM(item));
+			item.setChildrenAsync(promise);
+		}
+
+		promise.then(new Success<List<SelectModuleItem>, Void>() {
+
+			@Override
+			public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+				render(resolved.getValue());
+				return null;
+			}
+			
+		});
+	}
+
+	
+	
+	
+	
+	
 	@Override
 	public List<SelectModuleItem> getItems() {
 		return items;

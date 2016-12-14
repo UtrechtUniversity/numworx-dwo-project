@@ -4,62 +4,53 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.function.Function;
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop.TreeAnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop.SCO_TO_MODULEITEM;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.safehtml.client.SafeHtmlTemplates;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.ui.client.widget.Button;
 import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.widget.ScrollPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
-import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
 public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewModuleView.Loader, Comparator<SelectModuleItem>, AnchorContext
 {
@@ -423,15 +414,15 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 			}
 			if(item.getType() == SelectModuleItem.Type.FOLDER)
 			{
-				if(item.getChildren() == null)
+//				if(item.getChildren() == null)
 					loadChildren(item);
-				else
-					addChildren(item.getChildren());
+//				else
+//					addChildren(item.getChildren());
 			} else if(item.getType() == SelectModuleItem.Type.MODULE)
-			{	if(item.getChildren() == null)
+			{	//if(item.getChildren() == null)
 					loadScos(item);
-				else
-					addChildren(item.getChildren());
+//				else
+//					addChildren(item.getChildren());
 			} else if(item.getType() == SelectModuleItem.Type.ROOT )
 			{
 				navigationBackButton.setVisible(true); // was false
@@ -452,75 +443,168 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
     // Load children and Scos
     //================================================================================
 
-	class GetChildrenCourses implements AsyncCallback<List<Map<String,Object>>> {
+//	private class GetChildrenCourses implements AsyncCallback<List<Map<String,Object>>> {
+//
+//		private SelectModuleItem parent;
+//		
+//		public GetChildrenCourses(SelectModuleItem item) {
+//			parent = item;
+//		}
+//
+//		@Override
+//		public void onFailure(Throwable caught) {
+//			Window.alert(caught.toString());
+//		}
+//
+//		@Override
+//		public void onSuccess(List<Map<String,Object>> result) {
+//			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
+//			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+//				Map<String, Object> map = (Map<String, Object>) iterator.next();
+//				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
+//				item.setParent(parent);
+//				SelectModuleItemHolder.insert(item);
+//				items.add(item);
+//			}
+//			parent.setChildren(items);
+//			addChildren(items);
+//			initTree(items);
+//		}
+//		
+//	};
 
-		private SelectModuleItem parent;
-		
-		public GetChildrenCourses(SelectModuleItem item) {
-			parent = item;
+//	class GetChildrenScos implements AsyncCallback<List<Map<String,Object>>> {
+//
+//		private SelectModuleItem parent;
+//		
+//		public GetChildrenScos(SelectModuleItem item) {
+//			parent = item;
+//		}
+//
+//		@Override
+//		public void onFailure(Throwable caught) {
+//			Window.alert(caught.toString());
+//		}
+//
+//		@Override
+//		public void onSuccess(List<Map<String,Object>> result) {
+//			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
+//			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+//				Map<String, Object> map = (Map<String, Object>) iterator.next();
+//				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.SCO);
+//				item.setParent(parent);
+//				items.add(item);
+//				SelectModuleItemHolder.insert(item);
+//			}
+//			parent.setChildren(items);
+//			addChildren(items);
+//			initTree(items);
+//		}
+//		
+//	};
+	
+	private final class COURSE_TO_MODULEITEM implements Function<List<DomCourseStudent>, List<SelectModuleItem>> {
+		private final SelectModuleItem item;
+
+		private COURSE_TO_MODULEITEM(SelectModuleItem item) {
+			this.item = item;
 		}
 
 		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert(caught.toString());
-		}
-
-		@Override
-		public void onSuccess(List<Map<String,Object>> result) {
-			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
-			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-				Map<String, Object> map = (Map<String, Object>) iterator.next();
-				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
-				item.setParent(parent);
+		public List<SelectModuleItem> apply(List<DomCourseStudent> t) {
+			List<SelectModuleItem> items = new ArrayList<SelectModuleItem>(t.size());
+			for (Iterator<DomCourseStudent> iterator = t.iterator(); iterator.hasNext();) {
+				DomCourseStudent map = iterator.next();
+				SelectModuleItem item = new SelectModuleItem(map, (DomClassCourse) null);
+				item.setParent(this.item);
 				SelectModuleItemHolder.insert(item);
 				items.add(item);
 			}
-			parent.setChildren(items);
-			addChildren(items);
-			initTree(items);
+			return items;
 		}
-		
-	};
+	}
 
-	class GetChildrenScos implements AsyncCallback<List<Map<String,Object>>> {
-
-		private SelectModuleItem parent;
-		
-		public GetChildrenScos(SelectModuleItem item) {
-			parent = item;
-		}
-
-		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert(caught.toString());
-		}
-
-		@Override
-		public void onSuccess(List<Map<String,Object>> result) {
-			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
-			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-				Map<String, Object> map = (Map<String, Object>) iterator.next();
-				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.SCO);
-				item.setParent(parent);
-				items.add(item);
-				SelectModuleItemHolder.insert(item);
-			}
-			parent.setChildren(items);
-			addChildren(items);
-			initTree(items);
-		}
-		
-	};
-	
-	
 	private void loadChildren(final SelectModuleItem item) {
-		GetChildrenCourses getCoursesCallback = new GetChildrenCourses(item);
-		DWOplayer.clientfactory.getRPCHandler().getCourses(item.getID(), getCoursesCallback);
+		Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
+
+		if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
+			promise = DWOplayer.clientfactory.getRPCHandler().getCourses(item.getID())
+					.map(new COURSE_TO_MODULEITEM(item));
+			item.setChildrenAsync(promise);
+			promise
+			.then(new Success<List<SelectModuleItem>, List<SelectModuleItem>>() {
+
+				@Override
+				public Promise<List<SelectModuleItem>> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+					for(SelectModuleItem item: resolved.getValue()) {
+						if(item.getType() == SelectModuleItem.Type.FOLDER) {
+							if(item.getChildrenAsync() == null) {
+								item.setChildrenAsync(DWOplayer.clientfactory.getRPCHandler().getCourses(item.getID())
+										.map(new COURSE_TO_MODULEITEM(item)));
+							}
+						}
+					}	
+					return resolved;
+				}}, new Failure() {
+					
+					@Override
+					public void fail(Promise<?> resolved) throws Exception {
+						Window.alert(resolved.getFailure().toString());
+						item.setChildrenAsync(null);
+					}
+				});
+		}
+		promise.then(new Success<List<SelectModuleItem>, Void>() {
+
+			@Override
+			public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+				addChildren(resolved.getValue());
+				//initTree(resolved.getValue());
+				return null;
+			}
+			
+		});
+	}
+
+	private static class SCO_TO_MODULEITEM implements Function<List<DomScoContext>, List<SelectModuleItem>> {
+
+		private final SelectModuleItem parent;
+		public SCO_TO_MODULEITEM(SelectModuleItem item) {
+			this.parent = item;
+		}
+
+		@Override
+		public List<SelectModuleItem> apply(List<DomScoContext> t) {
+			List<SelectModuleItem> items = new ArrayList<SelectModuleItem>(t.size());
+			for(DomScoContext sco: t) {
+				SelectModuleItem item = new SelectModuleItem(sco);
+				item.setParent(parent);
+				items.add(item);
+				SelectModuleItemHolder.insert(item);
+			}
+			return items;
+		}
 	}
 	
 	private void loadScos(final SelectModuleItem item) {
-		GetChildrenScos getScosCallback = new GetChildrenScos(item);
-		DWOplayer.clientfactory.getRPCHandler().getScos(item.getID(), getScosCallback);
+		Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
+
+		if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
+			promise = DWOplayer.clientfactory.getRPCHandler().getScos(item.getID())
+					.map(new SCO_TO_MODULEITEM(item));
+			item.setChildrenAsync(promise);
+		}
+// Same as above
+		promise.then(new Success<List<SelectModuleItem>, Void>() {
+
+			@Override
+			public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+				addChildren(resolved.getValue());
+				//initTree(resolved.getValue());
+				return null;
+			}
+			
+		});
 	}
 
 	private void addChildren(List<SelectModuleItem> list) {
