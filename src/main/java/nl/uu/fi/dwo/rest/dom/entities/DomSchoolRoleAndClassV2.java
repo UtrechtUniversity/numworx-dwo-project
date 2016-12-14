@@ -5,8 +5,6 @@
  */
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import com.owlike.genson.annotation.JsonIgnore;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
