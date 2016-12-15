@@ -86,5 +86,15 @@ public class StrokeMatcherWrapper {
 			return "null";
 		}
 	}
+	
+	public String getTekenId(int rank) {
+		MatchResult matchResult = strokeMatcher.getResult(rank);
+		if (matchResult != null) {
+			return (String) matchResult.getFilterData("sampleInstanceId");
+		} else {
+			return "null";
+		}
+	}
+
 
 }

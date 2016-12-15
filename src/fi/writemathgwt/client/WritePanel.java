@@ -4,10 +4,12 @@ package fi.writemathgwt.client;
 //import java.awt.event.ActionListener;
 //import java.awt.Point;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 
 //import javax.swing.JButton;
+
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -30,16 +32,14 @@ import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
-
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PushButton;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 
-public class WritePanel extends LayoutPanel //HorizontalPanel
-{
+public class WritePanel extends LayoutPanel { //HorizontalPanel
+//	private static Logger logger = Logger.getLogger("WritePanel");
 
 	WritePanelHolder eigenaar;
 	ArrayList<WriteObject> writeObjects;
@@ -777,6 +777,13 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 			String s2 = result.substring(jHIndex + 2);
 			result = s1 + s2;
 		}
+		int xHIndex = result.indexOf("xH");
+		if (xHIndex >= 0)
+		{	String s1 = result.substring(0,xHIndex);
+			String s2 = result.substring(xHIndex + 2);
+			result = s1 + s2;
+		}
+
 		
 		
 		return result;
@@ -1262,10 +1269,11 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 		averageHeight = (writeObjects.size()*averageHeight + wo.getBox().height)/(writeObjects.size()+1);	
 	}
 	
-	private WriteObject tryTwoStroke(WriteObject woLast, WriteObject wo) 
-	{
-		if (woLast == null) 
-			return wo;
+	private WriteObject tryTwoStroke(WriteObject woLast, WriteObject wo) {
+		
+		if ( (woLast == null) || ( woLast.isTwoStrokeObject()) ) {
+			return wo; 
+		}
 		Rectangle boxLast = woLast.getBox();
 		Rectangle box = wo.getBox();
 		
@@ -1308,33 +1316,63 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 				return new WriteObject("5", mergePoints(woLast.getPoints(), wo.getPoints(),true));
 		}
 		// 4 = 4H + 1
-		else if (woLast.getTeken().equals("4H") && wo.getTeken().equals("1"))
+		else if ( (woLast.getTeken().equals("4H") && wo.getTeken().equals("1")) || 
+				  (woLast.getTeken().equals("tH") && wo.getTeken().equals("1")) ||
+ 				  (woLast.getTeken().equals("<") && wo.getTeken().equals("1")) || 
+ 				  (woLast.getTeken().equals("4H") && wo.getTeken().equals("/")) || 
+				  (woLast.getTeken().equals("tH") && wo.getTeken().equals("/")) ||
+ 				  (woLast.getTeken().equals("<") && wo.getTeken().equals("/"))
+				)
 		{
 			int diam = (boxLast.width + box.height) / 2;
-			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < diam && 
-				Math.abs(boxLast.y - box.y) < diam / 2)
-				return new WriteObject("4",mergePoints(woLast.getPoints(), wo.getPoints(),true));	
+/* Old merge - criteria 4 */
+//			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < (diam / 3)  && 
+//				Math.abs(boxLast.y - box.y) < diam ) {
+/* end of old merge criteria 4 */			
+
+			if ( (box.x+box.width > (boxLast.x + 0.40 *boxLast.width)) && (box.x+box.width < (boxLast.x + 1.15 *boxLast.width)) &&
+ 				 (box.y > (boxLast.y - 0.05 *boxLast.height)) && (box.y < (boxLast.y + 0.95 *boxLast.height))
+			   ) {
+//					return new WriteObject("4",mergePoints(woLast.getPoints(), wo.getPoints(),true));	
+					return new WriteObject("4", mergePoints(woLast.getPoints(), wo.getPoints()));
+			} 
 		}
-		
 		// x = ) + (
-		else if(woLast.getTeken().equals(")")  && wo.getTeken().equals("(")) 
-		{
+		else if ( ( woLast.getTeken().equals(")") || woLast.getTeken().equals("xH") ) && 
+				    ( wo.getTeken().equals("(") || wo.getTeken().equals("c") || wo.getTeken().equals("4H") ) 
+			    ) {
+			int avgWidth = (boxLast.width + box.width) / 2;
 			int diam = (boxLast.height + box.height) / 2;
-			if (Math.abs(woLast.getBox().x + woLast.getBox().width - wo.getBoxMid().x) < diam / 2 && 
+			if (Math.abs(woLast.getBox().x + woLast.getBox().width - wo.getBox().x) < avgWidth / 4 && 
 				Math.abs(boxLast.y - box.y) < diam / 2)
-				return new WriteObject("x",mergePoints(woLast.getPoints(), wo.getPoints()));
+				return new WriteObject("x", mergePoints(woLast.getPoints(), wo.getPoints()));
 		}
+		else if ( ( woLast.getTeken().equals("(") || woLast.getTeken().equals("c") || woLast.getTeken().equals("4H") ) && 
+  				  ( wo.getTeken().equals(")")     || wo.getTeken().equals("xH") ) 
+		        ) {
+		int diam = (boxLast.height + box.height) / 2;
+		if (Math.abs(wo.getBox().x + wo.getBox().width - woLast.getBox().x) < diam / 4 && 
+			Math.abs(boxLast.y - box.y) < diam / 2)
+			return new WriteObject("x", mergePoints(woLast.getPoints(), wo.getPoints()));
+	}
 		// x = / + \
-		else if (woLast.getTeken().equals("/") && wo.getTeken().equals("\\")) 
-		{
+		else if ( ( woLast.getTeken().equals("/")  && wo.getTeken().equals("\\") )  || 
+				  ( woLast.getTeken().equals("/")  && wo.getTeken().equals("1") ) ||
+				  ( woLast.getTeken().equals("1")  && wo.getTeken().equals("\\") )
+				) { 
 			int diam = (boxLast.height + box.height)/2;
-			if (distance(woLast.getBoxMid(), wo.getBoxMid()) < diam / 4)
+			if (distance(woLast.getBoxMid(), wo.getBoxMid()) < diam / 3)
 				return new WriteObject("x", mergePoints(woLast.getPoints(), wo.getPoints()));
 		}
 		// x = \ + / of y = \ (klein) + /
-		else if(woLast.getTeken().equals("\\")  && wo.getTeken().equals("/")) 
-		{
-			if (Math.abs(boxLast.x - box.x) < averageHeight / 4 &&
+		else if ( (woLast.getTeken().equals("\\")  && wo.getTeken().equals("/")) ||
+				  (woLast.getTeken().equals("\\")  && wo.getTeken().equals("1")) ||
+				  (woLast.getTeken().equals("1")  && wo.getTeken().equals("/"))
+				) {
+//			if (Math.abs(boxLast.x - box.x) < averageHeight / 4 &&
+//					Math.abs(boxLast.y - box.y) < averageHeight / 4 &&	
+//					boxLast.height < 2 * box.height / 3)
+			if (Math.abs(boxLast.x - box.x) < box.height / 2 &&
 					Math.abs(boxLast.y - box.y) < averageHeight / 4 &&	
 					boxLast.height < 2 * box.height / 3)
 			{		return new WriteObject("y", mergePoints(woLast.getPoints(),wo.getPoints()));
@@ -1342,7 +1380,7 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 			else
 			{
 				int diam = (boxLast.height + box.height) / 2;
-				if (distance(woLast.getBoxMid(), wo.getBoxMid()) < diam / 4)
+				if (distance(woLast.getBoxMid(), wo.getBoxMid()) < diam / 3)
 					return new WriteObject("x", mergePoints(woLast.getPoints(), wo.getPoints()));
 			}
 		}
@@ -1432,8 +1470,7 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 		}
 		// k = 1 + <
 		else if(woLast.getTeken().equals("1") && wo.getTeken().equals(" < ")) 
-		{			
-			
+		{		
 //System.out.println("try2 k");
 
 			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < averageHeight / 2 && 
@@ -1452,8 +1489,8 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 	}
 	
 	//OK
-	private ArrayList<Point> mergePoints(ArrayList<Point> p1, ArrayList<Point> p2, boolean reverseFirst) 
-	{	if (!reverseFirst)
+	private ArrayList<Point> mergePoints(ArrayList<Point> p1, ArrayList<Point> p2, boolean reverseFirst) {
+		if (!reverseFirst)
 			return mergePoints(p1,p2);
 		ArrayList<Point> result = new ArrayList<Point>();
 		for (int i = p1.size() - 1; i >= 0; i--)
@@ -1474,8 +1511,7 @@ public class WritePanel extends LayoutPanel //HorizontalPanel
 		
 		p1.add(pu1);
 		p1.add(pu2);
-		p1.add(pu3);
-		
+		p1.add(pu3);		
 		
 		return p1;
 	}
