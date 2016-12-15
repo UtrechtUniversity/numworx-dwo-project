@@ -91,8 +91,7 @@ public class ClientFactoryImpl implements ClientFactory
 		if (treeModuleView == null){
 			OsDetection detection = MGWT.getOsDetection();
 			if(detection.isDesktop()
-					//
-					&& false
+					//&& false
 					) {
 				this.treeModuleView = new TreeModuleViewImplDesktop();
 			} else {
