@@ -5,15 +5,23 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.account.client.boot.Results.ResultPanel;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 /**
  * Panel that handles the login-authentication. 
@@ -54,11 +62,73 @@ public class LoginPanel extends Composite implements ClickHandler {
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == loginBtn) {
-            usernameText.setValue("Clicked it");
-            LOG.log(Level.INFO, "Simulating login switching to resultpanel.");              
-            LOG.log(Level.INFO, "Widget Count:"+parent.mainDeckPanel.getWidgetCount()+".");
-            parent.mainDeckPanel.showWidget(1);
-            
-        }
-    }    
+                
+            }  
+    }
 }
+//                @Override
+//                public void onFailure(Throwable t) {
+//                    //TODO show fail
+//                };
+//
+//                //Process login results
+//                @Override
+//                public void onSuccess(DomUserFullwLoginContext result) {
+//                    //TODO switch to other panel
+//                    LOG.log(Level.INFO, "Login for user with username:" + result.getDomUserFull().getUserName() + ".");
+//                    user = ((DomUserFullwLoginContext) result).getDomUserFull();
+//                    loginStatusPanel.setStatus(user.getUserName(), true);
+//                    userBar.setSingleSchool(user.getSingleSchool());
+//                    DwoGlobalVars.instance().setCurrentUser(user);
+//                    SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
+//                    final SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
+//
+//                    manager.getActiveSchoolClass(new AsyncCallback<DomSchoolClass>() {
+//                        @Override
+//                        public void onFailure(Throwable t) {
+//                            if (t instanceof Dwo2Exception) {
+//                                Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+//                                if (code == Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set) {
+//                                    onSuccess(null);
+//                                    return;
+//                                }
+//                            }
+//                            LOG.log(Level.INFO, t.toString(), t);
+//                            header.setRightWidget(null);
+//                        }
+//
+//                        //Process getActiveSchoolClass results (Only works for student?)
+//                        @Override
+//                        public void onSuccess(DomSchoolClass result) {
+//                            DwoGlobalVars.instance()
+//                                    .setCurrentSchoolClass(result);
+//                            if (result != null) {
+//                                loginStatusPanel.setSchoolClass(result.getSchoolClassName());
+//                            } else {
+//                                loginStatusPanel.setSchoolClass("");
+//                            }
+//                            //Fill DWOGlobalVars with DomSchoolsRolesAndClasses
+//
+//                            loginManager.getSchoolLoginsV2(new AsyncCallback<DomSchoolsRolesAndClassesV2>() {
+//                                @Override
+//                                public void onFailure(Throwable t) {
+//                                    if (t instanceof Dwo2Exception) {
+//                                        Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+//                                    }
+//                                    LOG.log(Level.INFO, t.toString(), t);
+//                                    header.setRightWidget(null);
+//                                }
+//                                //Process getActiveSchoolClass results (Only works for student?)
+//
+//                                @Override
+//                                public void onSuccess(DomSchoolsRolesAndClassesV2 result) {
+//                                    DwoGlobalVars.getInstance().setSchoolLogins(result);
+//                                    header.setRightWidget(userBar);
+//                                    LOG.log(Level.INFO,
+//                                            "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");
+//                                }
+//                            });
+//
+//                        }
+//                    });
+//                }}

@@ -21,7 +21,12 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 /**
  * Stores global variables The class is state is initialized by calls in
  * different boot phases. Whenever a global state is changed it should be called
- * and have the state updated.
+ * and have the state updated. The following states exist and occur in the 
+ * following order Unintialized, Initializing, NotLoggedIn, LoggedIn, Closing. 
+ * Additionally each state can transition to the Uninitialized.
+ * 
+ * 
+ * 
  *
  * @author Gert van der Plas
  */
@@ -29,6 +34,30 @@ public class DwoGlobalVars {
 
     private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
 
+    /**
+     * @return the state
+     */
+    public DwoGlobalVarsState getState() {
+        return state;
+    }
+
+    /**
+     * @param state the state to set
+     */
+    public void setState(DwoGlobalVarsState state) {
+        this.state = state;
+    }
+
+    /**
+     * DwoGlobalStates that define which functions can be called without problems.
+     * 
+     */
+    
+    public enum DwoGlobalVarsState {
+        Unintialized, Initializing, NotLoggedIn, LoggedIn, Closing
+    }
+    
+    private DwoGlobalVarsState state=DwoGlobalVarsState.Unintialized;
     private static volatile DwoGlobalVars instance;
     private DomSchoolClass currentSchoolClass=null;
     private DomUserFull currentUser;
@@ -96,6 +125,7 @@ public class DwoGlobalVars {
     }
 
     public DwoGlobalVars() throws Dwo2Exception {
+        //TODO define initialization stages: Unintialized, Initializing, NotLoggedIn, LoggedIn. Closing.
         initProperties();
         initObjects();
         initVars();

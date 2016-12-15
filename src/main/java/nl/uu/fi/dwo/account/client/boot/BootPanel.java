@@ -6,11 +6,15 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.boot.Results.ResultPanel;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * BootPanel, boots the app, initializes with the server, requests a login.
@@ -20,6 +24,7 @@ import nl.uu.fi.dwo.account.client.boot.Results.ResultPanel;
 public class BootPanel extends Composite implements EntryPoint {
 
     private static final Logger LOG = Logger.getLogger(BootPanel.class.getName());
+    private DwoGlobalVars dwoGlobalVars;
 
     /**
      * @return the loginWidget
@@ -46,12 +51,18 @@ public class BootPanel extends Composite implements EntryPoint {
     Widget resultWidget = new ResultPanel();
 
     public BootPanel() {
+        try {
+            dwoGlobalVars = new DwoGlobalVars();
+        } catch (Dwo2Exception ex) {            
+            LOG.log(Level.SEVERE, null, ex);
+            PopupPanel popup = new PopupPanel();
+            popup.add(new Label("Programmers-error"));
+        }
         initWidget(uiBinder.createAndBindUi(this));
-        LOG.log(Level.INFO, "Widget Count:" + mainDeckPanel.getWidgetCount() + ".");
         ((LoginPanel) loginWidget).setParent(this);
         mainDeckPanel.add(resultWidget);
         mainDeckPanel.showWidget(0);
-        LOG.log(Level.INFO, "Widget Count:" + mainDeckPanel.getWidgetCount() + ".");
+        LOG.log(Level.INFO, "Showing loginPanel.");
     }
 
     @Override
