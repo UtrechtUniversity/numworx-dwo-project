@@ -3331,6 +3331,16 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		return hoogte;
 	}
 	
+	public TekstRegel findParentRegel()
+	{
+		Widget parent = asWidget();
+		while (parent != null && !(parent instanceof TekstRegel))
+		{
+			parent = parent.getParent();
+		}
+		return (TekstRegel) parent;
+		
+	}
 	
 
 	@Override
@@ -3364,6 +3374,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	public Widget asWidget()
 	{
 		return facade.wrap(getAsPanel());
+	}
+	
+	public boolean isPopup()
+	{
+		return facade.isPopup();
 	}
 	
 	@Override

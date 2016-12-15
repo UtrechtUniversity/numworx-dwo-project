@@ -170,7 +170,8 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 			//variabelen omzetten naar nette varnamen (met name belangrijk voor variabelen met subscripts)
 			for(int i = 0; i < varNamen.length; i++)
 			{
-				FormuleParser.geefExpressie("$f"+ varNamen[i] + "@").geefVarNaam();
+				if(varNamen[i].length() > 0)
+					FormuleParser.geefExpressie("$f"+ varNamen[i] + "@").geefVarNaam();
 				
 			}
 			//splitsen in verschillende oplossingen. Eerst $f en @ weghalen.
@@ -181,14 +182,17 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 			for(int i = 0; i < oplossingenStrings.length; i++)
 			{
 				//haakjes verwijderen:
-				String opl = oplossingenStrings[i].substring(1, oplossingenStrings[i].length() - 1);
-				String[] varWaardes;
-				if(opl.contains(";"))
-					varWaardes = opl.split(";");
-				else
-					varWaardes = opl.split(",");
-				for(int j = 0; j < varNamen.length; j++)
-				{	oplossingen[i][j] = FormuleParser.geefExpressie("$f" + varWaardes[j] + "@");
+				if(oplossingenStrings[i].length() > 0)
+				{
+					String opl = oplossingenStrings[i].substring(1, oplossingenStrings[i].length() - 1);
+					String[] varWaardes;
+					if(opl.contains(";"))
+						varWaardes = opl.split(";");
+					else
+						varWaardes = opl.split(",");
+					for(int j = 0; j < varNamen.length; j++)
+					{	oplossingen[i][j] = FormuleParser.geefExpressie("$f" + varWaardes[j] + "@");
+					}
 				}
 			}
 			
@@ -292,6 +296,16 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		
 	}
 	
+	public void requestFocus()
+	{
+		if(rekenVakZichtbaar)
+		{	if(!rekenVak.geefHoofdEditor().heeftKinderen())
+				rekenVak.geefHoofdEditor().requestFocus(false);
+		}
+		else
+			focusNaarOplossingenVak();
+	}
+		
 	@Override
 	public HashMap<String, Object> getState() {
 		HashMap<String, Object> h = new HashMap<String, Object>();
@@ -377,6 +391,16 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		}
 	}
 
+	public boolean isRekenVakZichtbaar()
+	{
+		return rekenVakZichtbaar;
+	}
+	
+	public StelselRekenVak getRekenVak()
+	{
+		return rekenVak;
+	}
+	
 	@Override
 	public Widget asWidget() {
 		return mainPanel;

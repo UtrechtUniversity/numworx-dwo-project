@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -15,7 +16,9 @@ import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer.FormuleEditorPopup;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselAntwoordVak;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
+import nl.uu.fi.dwo.mobile.utils.PopupFacadeWithFont;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -757,9 +760,19 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		{
 			for(int i = 0; i < opdrachtObjects.size(); i++)
 			{
-				if(((Object)opdrachtObjects.get(i)).equals(source))
+				Object object = opdrachtObjects.get(i);
+				if(object.equals(source))
 				{	start = i + 1;
 					break;
+				}
+				else if(object instanceof PopupFacadeWithFont)
+				{
+					PopupFacadeWithFont facade = (PopupFacadeWithFont) object;
+					if(facade.getDelegate().equals(source))
+					{
+						start = i + 1;
+						break;
+					}
 				}
 			}
 		}
@@ -782,12 +795,47 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 			else if(object instanceof AntwoordTekstVak)
 			{
-				if(!((AntwoordTekstVak) object).isPopup())
+				AntwoordTekstVak atv = (AntwoordTekstVak) object;
+				if(!atv.isPopup())
 				{
-					((AntwoordTekstVak) object).requestFocus();
+					atv.requestFocus();
+					if(atv.heeftFormuleInvoer())
+						atv.tekenCursor();
 					return true;
 				}
 				
+			}
+			else if(object instanceof FormuleEditorWithSteps)
+			{
+				FormuleEditorWithSteps fews = (FormuleEditorWithSteps) object;
+				if(!fews.isPopup())
+				{
+					if(fews.getEditor() != null)
+					{	fews.getEditor().requestFocus();
+						if(fews.getEditor().getCurrentElement() == null)
+						{	fews.getEditor().setCurrentElementRepaint(fews.getEditor().getMainRegel());
+						}
+						return true;
+					}
+				}
+			}
+			else if(object instanceof PopupFacadeWithFont && ((PopupFacadeWithFont) object).getDelegate() instanceof TextEditor)
+			{
+				((TextEditor) ((PopupFacadeWithFont) object).getDelegate()).requestFocus();
+				return true;
+			}
+			else if(object instanceof StelselAntwoordVak)
+			{
+				StelselAntwoordVak sav = (StelselAntwoordVak) object;
+				sav.requestFocus();
+				if(sav.isRekenVakZichtbaar())
+				{	FormuleEditor editor = sav.getRekenVak().geefHoofdEditor().getEditor();
+					if(editor != null && editor.getCurrentElement() == null)
+					{
+						editor.setCurrentElementRepaint(editor.getMainRegel());
+					}
+				}
+				return true;
 			}
 			else if(object instanceof TekstVakPanel)
 			{
@@ -822,9 +870,19 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		{
 			for(int i = opdrachtObjects.size() - 1; i >= 0; i--)
 			{
-				if(((Object)opdrachtObjects.get(i)).equals(source))
+				Object object = opdrachtObjects.get(i);
+				if(object.equals(source))
 				{	start = i - 1;
 					break;
+				}
+				else if(object instanceof PopupFacadeWithFont)
+				{
+					PopupFacadeWithFont facade = (PopupFacadeWithFont) object;
+					if(facade.getDelegate().equals(source))
+					{
+						start = i - 1;
+						break;
+					}
 				}
 			}
 		}
@@ -847,12 +905,47 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 			else if(object instanceof AntwoordTekstVak)
 			{
-				if(!((AntwoordTekstVak) object).isPopup())
+				AntwoordTekstVak atv = (AntwoordTekstVak) object;
+				if(!atv.isPopup())
 				{
-					((AntwoordTekstVak) object).requestFocus();
+					atv.requestFocus();
+					if(atv.heeftFormuleInvoer())
+						atv.tekenCursor();
 					return true;
 				}
 				
+			}
+			else if(object instanceof FormuleEditorWithSteps)
+			{
+				FormuleEditorWithSteps fews = (FormuleEditorWithSteps) object;
+				if(!fews.isPopup())
+				{
+					if(fews.getEditor() != null)
+					{	fews.getEditor().requestFocus();
+						if(fews.getEditor().getCurrentElement() == null)
+						{	fews.getEditor().setCurrentElementRepaint(fews.getEditor().getMainRegel());
+						}
+						return true;
+					}
+				}
+			}
+			else if(object instanceof PopupFacadeWithFont && ((PopupFacadeWithFont) object).getDelegate() instanceof TextEditor)
+			{
+				((TextEditor) ((PopupFacadeWithFont) object).getDelegate()).requestFocus();
+				return true;
+			}
+			else if(object instanceof StelselAntwoordVak)
+			{
+				StelselAntwoordVak sav = (StelselAntwoordVak) object;
+				sav.requestFocus();
+				if(sav.isRekenVakZichtbaar())
+				{	FormuleEditor editor = sav.getRekenVak().geefHoofdEditor().getEditor();
+					if(editor != null && editor.getCurrentElement() == null)
+					{
+						editor.setCurrentElementRepaint(editor.getMainRegel());
+					}
+				}
+				return true;
 			}
 			else if(object instanceof TekstVakPanel)
 			{

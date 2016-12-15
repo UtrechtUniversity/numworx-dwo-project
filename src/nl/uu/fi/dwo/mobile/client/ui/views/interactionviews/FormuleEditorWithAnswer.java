@@ -804,6 +804,22 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			parentRegel.getTekstVak().tabFocus(this, true);
 		}
+		else if(fe != null)
+		{
+			TekstRegel parentRegel = fe.findParentRegel(); 
+			if(parentRegel != null)
+			{	if(fe instanceof StelselEditor)
+					parentRegel.getTekstVak().tabFocus(((StelselEditor) fe).geefHoofdPanel().geefAntwoordVak(), true);
+				else
+					parentRegel.getTekstVak().tabFocus(fe, true);
+			}
+		}
+		else if(stelselVak != null)
+		{
+			TekstRegel parentRegel = stelselVak.findParentRegel();
+			if(parentRegel != null)
+				parentRegel.getTekstVak().tabFocus(stelselVak.getParent(), true);
+		}
 	}
 	
 	public void shiftTab()
@@ -811,6 +827,22 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(parentRegel != null)
 		{
 			parentRegel.getTekstVak().shiftTabFocus(this, true);
+		}
+		else if(fe != null)
+		{
+			TekstRegel parentRegel = fe.findParentRegel(); 
+			if(parentRegel != null)
+			{	if(fe instanceof StelselEditor)
+					parentRegel.getTekstVak().shiftTabFocus(((StelselEditor) fe).geefHoofdPanel().geefAntwoordVak(), true);
+				else
+					parentRegel.getTekstVak().shiftTabFocus(fe, true);
+			}
+		}
+		else if(stelselVak != null)
+		{
+			TekstRegel parentRegel = stelselVak.findParentRegel();
+			if(parentRegel != null)
+				parentRegel.getTekstVak().shiftTabFocus(stelselVak.getParent(), true);
 		}
 	}
 

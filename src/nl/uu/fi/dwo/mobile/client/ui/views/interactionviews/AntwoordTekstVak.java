@@ -352,9 +352,9 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 					event.stopPropagation();
 					event.preventDefault();
 					if(event.isShiftKeyDown())
-						shiftTab();
+						shiftTabAntwoordTekstVak();
 					else
-						tab();
+						tabAntwoordTekstVak();
 				}
 			}
 		});
@@ -473,6 +473,18 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			public void setCurrentElementRepaint() {
 				super.setCurrentElementRepaint();
 				fireText();
+			}
+			
+			@Override
+			public void tab()
+			{
+				tabAntwoordTekstVak();
+			}
+			
+			@Override
+			public void shiftTab()
+			{
+				shiftTabAntwoordTekstVak();
 			}
 		} ;
 		//hier toetsenbord aan vastmaken. WIM??
@@ -888,7 +900,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		attempts = new Vector();
 	}
 	
-	public void tab()
+	public void tabAntwoordTekstVak()
 	{
 		if(parentRegel != null)
 		{
@@ -896,7 +908,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		}
 	}
 	
-	public void shiftTab()
+	public void shiftTabAntwoordTekstVak()
 	{
 		
 		if(parentRegel != null)
@@ -1147,6 +1159,16 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 	public boolean heeftFormuleInvoer()
 	{
 		return formuleMode;
+	}
+	
+	public void tekenCursor()
+	{
+		if(formuleMode)
+		{
+			if(formuleVak.getCurrentElement() == null)
+			{	formuleVak.setCurrentElementRepaint(formuleVak.getMainRegel());
+			}
+		}
 	}
 
 	@Override

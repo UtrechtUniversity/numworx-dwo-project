@@ -41,6 +41,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
 
 
+
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
@@ -461,6 +462,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	protected void requestFocus() {
 		comRoot.getKeyboard().setEditor(this);
 		FocusOnTouch.focus();
+		setCursorWidget(cursorWidget);
 	}
 
 	private void setState(ObjectMap h) {
@@ -1029,14 +1031,30 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public void tab() {
-		// TODO Auto-generated method stub
+		Widget parent = asWidget();
+		while (parent != null && !(parent instanceof TekstRegel))
+		{
+			parent = parent.getParent();
+		}
 		
+		if(parent != null && parent instanceof TekstRegel)
+		{
+			((TekstRegel) parent).getTekstVak().tabFocus(this, true);
+		}
 	}
 
 	@Override
 	public void shiftTab() {
-		// TODO Auto-generated method stub
+		Widget parent = asWidget();
+		while (parent != null && !(parent instanceof TekstRegel))
+		{
+			parent = parent.getParent();
+		}
 		
+		if(parent != null && parent instanceof TekstRegel)
+		{
+			((TekstRegel) parent).getTekstVak().shiftTabFocus(this, true);
+		}
 	}
 
 

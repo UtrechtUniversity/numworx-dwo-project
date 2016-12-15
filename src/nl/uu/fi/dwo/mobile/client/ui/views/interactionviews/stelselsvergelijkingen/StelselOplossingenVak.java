@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
@@ -34,6 +35,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import fi.wiskopdr.AntwoordStelselVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.FormuleParser;
@@ -463,8 +465,23 @@ public class StelselOplossingenVak
 	{
 		return editor.getAsPanel();
 	}
-
-
+	
+	public TekstRegel findParentRegel()
+	{
+		Widget parent = asWidget();
+		while (parent != null && !(parent instanceof TekstRegel))
+		{
+			parent = parent.getParent();
+		}
+		
+		return (TekstRegel) parent;
+		
+	}
+	
+	public StelselAntwoordVak getParent()
+	{
+		return parent;
+	}
 	
 	public boolean isIngevuld()
 	{
