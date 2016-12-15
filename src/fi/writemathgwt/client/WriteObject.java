@@ -320,8 +320,7 @@ public class WriteObject {
 	}
 	
 	//OK
-	private double distance(Point p1, Point p2) 
-	{
+	private double distance(Point p1, Point p2) {
 		return Math.sqrt(1.0*(p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y));
 	}
 	
