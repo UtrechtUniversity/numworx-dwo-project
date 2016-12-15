@@ -609,6 +609,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		
 		setState(state);
+		hoofdPanel.tabFocus(null, false);
 		
 		if(on.isEindtoetsVerzegeld()) {
 			zetNagekeken(true);

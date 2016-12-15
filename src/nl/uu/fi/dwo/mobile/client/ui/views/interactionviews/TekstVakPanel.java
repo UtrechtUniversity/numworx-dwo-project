@@ -250,6 +250,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private boolean bgColorZichtbaar;
 	
 	private String styleString;
+	private boolean doorzochtDoorTab = false;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -1695,6 +1696,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	public boolean tabFocus(TekstVak source, boolean up)
 	{
+		if(source == null)
+			doorzochtDoorTab = false;
 		int startRij = 0;
 		int startKolom = 0;
 		boolean focusVerlegd = false; 
@@ -1752,8 +1755,9 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		if(parent != null)
 			return parent.tabFocus(this, up);
 		//Anders: helemaal aan het begin van dit tekstvak verder zoeken. 
-		else
-		{	for(int i = 0; i < tekstVakken.length; i++)
+		else if(!doorzochtDoorTab)
+		{	doorzochtDoorTab = true;
+			for(int i = 0; i < tekstVakken.length; i++)
 			{
 				for(int j = 0; j < tekstVakken[i].length; j++)
 				{
@@ -1764,6 +1768,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			}
 			return false;
 		}
+		else
+			return true;
 	}
 	
 	public boolean shiftTabFocus(TekstVak source, boolean up)
