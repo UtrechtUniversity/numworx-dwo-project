@@ -395,6 +395,12 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 
+	public Promise<DomCourseStudent> getCourse(Object courseID) {
+		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
+		getCourse(courseID, defer);
+		return defer.getPromise().map(TO_DOMCOURSE);
+	}
+
 	public void getSco(Object scoID, AsyncCallback<Map<String,Object>> callback) 
 	{
 		String method = "getRecord";
@@ -403,7 +409,12 @@ public class RPCHandlerV1 {
 		XmlRpcRequest<Map<String,Object>> request = new XmlRpcRequest<Map<String,Object>>(client, method, params, callback);
 		request.execute();
 	}
-	
+
+	public Promise<DomScoContext> getSco(Object scoID) {
+		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
+		getSco(scoID, defer);
+		return defer.getPromise().map(TO_DOMSCOCONTEXT);
+	}
 	
 // In Mc2 new String()
 	protected Object objectToKey(Object courseID) {

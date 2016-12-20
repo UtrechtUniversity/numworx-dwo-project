@@ -29,21 +29,6 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 	public RPCHandlerV2(String server, int profile) {
 		super(server, profile);
 	}
-
-//	protected void loginMD5Helper(final String name, final String password, final AsyncCallback<DomUserFullwLoginContext> callback)
-//	{
-//		accountManager.loginUserMD5(name, password, callback, null);
-//	}
-	
-//	@Override
-//	public abstract void loginMD5(String name, String pwmd5,
-//			AsyncCallback<Map<String, Object>> callback);
-
-//	protected void loginHelper(final String name, final String password, final AsyncCallback<DomUserFullwLoginContext> callback)
-//	{
-//		accountManager.loginUser(name, password, callback, null);
-//		
-//	}
 	
 	public Promise<DomUserFullwLoginContext> login(String name, String password) {
 		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
@@ -62,15 +47,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 		schoolManager.getSchoolLoginsV2(defer);
 		return defer.getPromise();
 	}
-	
-	
-	
-	
-//	@Override
-//	protected abstract void login(String name, String pwmd5,
-//			AsyncCallback<Map<String, Object>> callback);
-//	
-	
+		
 	protected void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
 			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
 		Object[] params = { courseID, userID, schoolGroupID };
@@ -143,18 +120,12 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 		accountManager.getUserFromAuthToken(authToken, callback);
 	}
 	
-//	@Override
-//	public abstract void getUserFromAuthToken(String authToken,
-//			AsyncCallback<Map<String,Object>> callback);
-	
-
 	public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
 		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
 		accountManager.getUserFromAuthToken(authToken, defer);
 		return defer.getPromise();
 	}
-	
-	
+		
 	@Override
 	public void logout() {
 		super.logout();
@@ -171,8 +142,6 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 				}});
 	}
 	
-//	@Override
-//	public abstract void samlLogin(String name, String org, AsyncCallback<Map<String,Object>> callback);
 	public Promise<DomUserFullwLoginContext> samlLogin(String name, String org) {
 		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
 		samlLoginHelper(name, org, defer);
