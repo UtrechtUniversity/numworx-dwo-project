@@ -1,4 +1,4 @@
-package fi.dwo.gwt.lib.rest.client.RestCallers;
+package fi.dwo.gwt.lib.rest.graveyard.CallManagers;
 
 import org.fusesource.restygwt.client.RestService;
 

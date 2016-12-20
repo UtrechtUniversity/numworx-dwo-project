@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.dwo.gwt.lib.rest.CallManagers;
+package fi.dwo.gwt.lib.rest.graveyard.CallManagers;
 
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import com.google.gwt.core.client.GWT;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
-import fi.dwo.gwt.lib.rest.client.RestCallers.DWO2RestCaller;
+//import fi.dwo.gwt.lib.rest.client.RestCallers.DWO2RestCaller;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
