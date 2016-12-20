@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.FlatModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ReloginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
@@ -37,6 +38,10 @@ public class TabletActivityMapper implements ActivityMapper
 	@Override
 	public Activity getActivity(Place place)
 	{
+		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.guest)
+		{
+			return new GuestActivity(clientFactory);
+		}
 		
 		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.c) 
 		{
