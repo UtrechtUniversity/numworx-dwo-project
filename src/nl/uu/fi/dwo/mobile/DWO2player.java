@@ -12,6 +12,16 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.googlecode.mgwt.ui.client.MGWT;
+
+import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.RPCHandlerV2;
 import nl.uu.fi.dwo.account.client.UserBar;
@@ -29,35 +39,12 @@ import nl.uu.fi.dwo.mobile.client.ui.views.Login2ViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
-import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomRole;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
-
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.place.shared.Place;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.googlecode.mgwt.ui.client.MGWT;
-
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
-import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
-import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
 public class DWO2player extends DWOplayer implements EntryPoint {
 
@@ -76,21 +63,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			super(server, profile);
 		}
 
-//		@Override
-//		public void loginMD5(final String name, final String password, final AsyncCallback<Map<String,Object>> callback)
-//		{
-//			final AsyncCallback<DomUserFullwLoginContext> userCallback = new AsyncUserCallback(schoolManager, callback);
-//			loginMD5Helper(name, password, userCallback);	
-//		}
-
-//		@Override
-//		protected void login(final String name, final String password, final AsyncCallback<Map<String,Object>> callback)
-//		{
-//			final AsyncCallback<DomUserFullwLoginContext> userCallback = new AsyncUserCallback(schoolManager, callback);
-//			loginHelper(name, password, userCallback);
-//			
-//		}
-
 		@Override
 		public void getUserResults(Object courseID, Object userID,
 				AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
@@ -98,71 +70,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			getUserResultsHelper(courseID, userID, schoolGroupID, getUserResultsCallback);
 		}
 
-//		@Override
-//		public void samlLogin(String name, String org,
-//				AsyncCallback<Map<String, Object>> callback) {
-//			final AsyncUserCallback userCallback = new AsyncUserCallback(schoolManager, callback);
-//			samlLoginHelper(name, org, userCallback);
-//		}
-
-		/* (non-Javadoc)
-		 * @see nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler#getAuthTokenUser(java.lang.String, com.google.gwt.user.client.rpc.AsyncCallback)
-		 */
-//		@Override
-//		public void getUserFromAuthToken(String authToken,
-//				AsyncCallback<Map<String, Object>> callback) {
-//			final AsyncUserCallback userCallback = new AsyncUserCallback(schoolManager, callback);
-//			getUserFromAuthTokenHelper(authToken, userCallback);
-//		}
 	}
 
-//	final class AsyncUserCallback implements AsyncCallback<DomUserFullwLoginContext> {
-//		private final SecuredUserSchoolLoginManagerV2 schoolManager;
-//		Map<String,Object> profile = new HashMap<String,Object>();
-//		AsyncCallback<? super Map<String,Object>> callback;
-//
-//		AsyncUserCallback(SecuredUserSchoolLoginManagerV2 schoolManager, AsyncCallback<? super Map<String,Object>> callback) {
-//			this.schoolManager = schoolManager;
-//			this.callback = callback;
-//		}
-//
-//		@Override
-//		public void onSuccess(DomUserFullwLoginContext result) {
-//			DomLoginContext context = result.getDomLoginContext();
-//			timezone =  context.getLastLoginTimeStamp().longValue() - System.currentTimeMillis();
-//			DomUserFull user = result.getDomUserFull();
-//			DwoGlobalVars.getInstance().setCurrentUser(user);
-//			DwoGlobalVars.getInstance().setCurrentLoginContext(context);
-//			toProfile(user, profile);
-//			schoolManager.getSchoolLoginsV2(new AsyncCallback<DomSchoolsRolesAndClassesV2>() {
-//
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						callback.onFailure(caught);			
-//					}
-//
-//					@Override
-//					public void onSuccess(DomSchoolsRolesAndClassesV2 result) {
-//						DwoGlobalVars.instance().setSchoolLogins(result);
-//						DomSchoolRoleAndClassV2 active = result.getActiveSchoolRoleAndClass();
-//						DomSchoolClass schoolClass = active != null ? active.getSchoolClass() : null;
-//						DwoGlobalVars.instance().setCurrentSchoolClass(schoolClass);
-//
-//						toProfile(result, profile);
-//						callback.onSuccess(profile);
-//					}
-//				});
-//			
-//			
-//		}
-//
-//		@Override
-//		public void onFailure(Throwable caught) {
-//			if(caught.getMessage().contains("Cancelled"))
-//				return; // Probeer het nog eens...
-//			callback.onFailure(caught);
-//		}
-//	}
 
 	private Object getSchoolGroupID() {
 		Object sgID;
