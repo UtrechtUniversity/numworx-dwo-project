@@ -1,5 +1,5 @@
 var mc2 = {
-		"de.cinderella.CindyWidget": "http://cinderella.de/services/widget",
+		"de.cinderella.CindyWidget": "https://cdyconvert.cinderella.de/mc2",
 		"org.cbook.mediaman.MediaMan": "https://mc2-mediaman.appspot.com/",
 		"maltsample.maltWidget": "https://www.talent.gr/malt/",
 		"widgetsample.SampleWidget": "https://mc2-jssample.appspot.com/Jssample.jsp",
