@@ -23,6 +23,7 @@ import fi.dwo.dwojapplet.gui.action.PasteAction;
 import fi.dwo.dwojapplet.gui.action.RenameAction;
 import fi.dwo.dwojapplet.gui.action.Save2004Action;
 import fi.dwo.dwojapplet.gui.action.SaveAppletAction;
+import fi.dwo.dwojapplet.gui.action.SaveScosAction;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
@@ -433,6 +434,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 			{
 				item = new JMenuItem("Import activiteit"); menu.add(item);item.setAction(new ImportScorm());
 				item = new JMenuItem("Backup activiteit"); menu.add(item);item.setAction(new Save2004Action());
+				item = new JMenuItem(new SaveScosAction()); menu.add(item);
 			}
 			 if (DwoHelper.isAppletExportLoggedIn())
 			{

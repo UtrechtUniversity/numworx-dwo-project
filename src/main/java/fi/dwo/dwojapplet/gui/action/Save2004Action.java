@@ -147,45 +147,8 @@ public class Save2004Action extends GuiAction {
             sco.jsonEncode(ld, wr);
             wr.flush();
             out.closeEntry();
-// copies.....
-			// TODO meer xsd's?
-	        String HTML_SOURCE = WWWURL + "/dwo/scorm/course/cp/";
-	        String[] scormFileNames = {
-	        		"adlcp_v1p3.xsd",
-	        		"imscp_v1p1.xsd",
-	        		"imsmd_v1p2p4.xsd",
-	        };
-	        
-	        copyList(out, runner, HTML_SOURCE, scormFileNames);
-	        
-	        String[] viewFileNames = {
-	        		"AlgebraPijlenGWT.html",
-	        		"AlgebraExprGWT.html",
-	        		"BalansFruitGWT.html",
-	        		"DoorzienGWT.html",
-	        		"DraaibankGWT.html",
-	        		"GeoGebra.html",
-	        		"GeomAlgGWT.html",
-	        		"GraphToolGWT.html",
-	        		"KladjeGWT.html",
-	        		"NabouwenAanzichtenGWT.html",
-	        		"StatistiekGWT.html",
-	        		"KansbomenGWT.html",
-	        		"TekenVeelvlakGWT.html"
-	        		// TODO more html files
-	        };
-        	HashSet<String> set = new HashSet<String>(Arrays.asList(viewFileNames));
-	        try {
-	        	in = new URL(scormURL + "index.lst").openStream();
-	        	BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
-	        	String line;
-	        	while ( (line = reader.readLine())!= null) { set.add(line); }
-	        } catch(Exception e) {
-	        	e.printStackTrace();
-	        }
-	        viewFileNames = set.toArray(viewFileNames);
-	        
-	        copyList(out, runner, scormURL, viewFileNames);
+            
+            makeCopies(out, runner, scormURL);
 	        
 		
 			out.close();
@@ -196,7 +159,35 @@ public class Save2004Action extends GuiAction {
 
     }
 
-    private void copyList(ZipOutputStream out, ScormParameters runner,
+	static void makeCopies(ZipOutputStream out, ScormParameters runner, String scormURL)
+			throws MalformedURLException, IOException {
+		InputStream in;
+		// copies.....
+        String HTML_SOURCE = new URL(DwoHelper.getResourceUrlPath() , "resources/scorm/course/cp/").toString();
+        String[] scormFileNames = {
+        		"adlcp_v1p3.xsd",
+        		"imscp_v1p1.xsd",
+        		"imsmd_v1p2p4.xsd",
+        };
+        
+        copyList(out, runner, HTML_SOURCE, scormFileNames);
+        
+        String[] viewFileNames = new String[0];
+    	HashSet<String> set = new HashSet<String>();
+        try {
+        	in = new URL(scormURL + "index.lst").openStream();
+        	BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+        	String line;
+        	while ( (line = reader.readLine())!= null) { set.add(line); }
+        } catch(Exception e) {
+        	LOG.log(Level.SEVERE, "makeCopies", e);;
+        }
+        viewFileNames = set.toArray(viewFileNames);
+        
+        copyList(out, runner, scormURL, viewFileNames);
+	}
+
+    static void copyList(ZipOutputStream out, ScormParameters runner,
             String HTML_SOURCE, String[] scormFileNames)
             throws MalformedURLException, IOException {
         InputStream in;
@@ -210,8 +201,7 @@ public class Save2004Action extends GuiAction {
                 runner.rawCopy(in, out);
                 out.closeEntry();
             } catch (Exception e) {
-                System.err.println("Error in " + htmlSourceString);
-                System.err.println(e);
+                LOG.log(Level.SEVERE, "Error in " + htmlSourceString, e);
             }
         }
     }
