@@ -273,9 +273,11 @@ public class GuiCreator {
     public void login() throws LoginException {
         dwo.setWait();
         try {
+            DwoHelper.setContact(false);
             if (dwo.login()) {
-                mainPanel = new MainPanel(dwo.getDwoProfile());
-                dwo.setPanel(mainPanel);
+ //               mainPanel = new MainPanel(dwo.getDwoProfile());
+ //               dwo.setPanel(mainPanel);
+            	configurePanelsForUser(getUser());
             }
         }
         catch (LoginException e) {

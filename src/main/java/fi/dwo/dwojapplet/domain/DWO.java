@@ -567,7 +567,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 	 * 
 	 * System.out.println("Aanroep NewWindow:"+ result);
          */
-        return true;
+        return setExtraRights(getUser());
     }
 
     /**
@@ -1442,6 +1442,24 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 LOG.log(Level.SEVERE, "", e);
             }
         }
+        if (!DwoHelper.isApplication()) {
+            dwoProfileID = 1;
+            String dwoProfileString = getParameter("profile");
+            if ((dwoProfileString != null) && (!dwoProfileString.equals(""))) {
+                try {
+                    dwoProfileID = Integer.parseInt(dwoProfileString);
+                } catch (Exception e) {
+                }
+            }
+        }
+        JVMChecker jvmChecker = new JVMChecker(this);
+        jvmChecker.check();
+
+        try {
+            dwoProfile = (DwoProfile) PersistenceFacade.instance().get(dwoProfileID, DwoProfile.class);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.DLG_SERVER_OUT), e.getMessage(), JOptionPane.ERROR_MESSAGE);
+        }
 
         boolean limitedSchoolAccess = false;
         if (!DwoHelper.isApplication()) {
@@ -1449,11 +1467,13 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         }
         if (limitedSchoolAccessString != null && limitedSchoolAccessString.equals("true")) {
             limitedSchoolAccess = true;
+        } else {
+        	limitedSchoolAccess = DwoProfile.hasRight(DwoProfile.LIMITED); // Haal LIMITED op uit profiel
         }
 
         if (limitedSchoolAccess) {
             if (!DwoHelper.isApplication()) {
-                schoolAccessPropertiesString = getParameter("schoolAccessProperties");
+                schoolAccessPropertiesString = getParameter("schoolAccessProperties"); // TODO wegwerken: database of resource
             }
 
             Properties schoolAccessProperties;
@@ -1476,37 +1496,13 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                     }
                 }
             } catch (Exception e) {
-                schoolAccessKeys = null;
-                limitedSchoolAccess = false;
+                schoolAccessKeys = new Properties();
+                //limitedSchoolAccess = false; // FIXME Security scan
                 LOG.log(Level.SEVERE, "", e);
             }
 
         }
 
-        // deprecated
-        // String key = getParameter("key");
-        // if(key == null) {
-        // key = "";
-        // }
-        // DwoHelper.setKey(key);
-        if (!DwoHelper.isApplication()) {
-            dwoProfileID = 1;
-            String dwoProfileString = getParameter("profile");
-            if ((dwoProfileString != null) && (!dwoProfileString.equals(""))) {
-                try {
-                    dwoProfileID = Integer.parseInt(dwoProfileString);
-                } catch (Exception e) {
-                }
-            }
-        }
-        JVMChecker jvmChecker = new JVMChecker(this);
-        jvmChecker.check();
-
-        try {
-            dwoProfile = (DwoProfile) PersistenceFacade.instance().get(dwoProfileID, DwoProfile.class);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.DLG_SERVER_OUT), e.getMessage(), JOptionPane.ERROR_MESSAGE);
-        }
         GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
         ModuleTreePanel.initialize(dwoProfile);
         // Hier fixen we nog de iconizer
