@@ -14,9 +14,9 @@
 			background-color: #eee;
 		}
 
-			.split_left_area {
+		.split_left_area {
 			
-			width: 350px;
+			width: 350px !important;
 			
 			border-right:1px solid  #000;
 			float: left;
