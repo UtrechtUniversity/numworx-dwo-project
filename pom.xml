@@ -114,15 +114,13 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
-			<version>${gwtVersion}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>interaction</artifactId>
 			<scope>provided</scope>
-			<version>0.0.2</version>
-		</dependency>
+			</dependency>
 		<dependency>
 			<groupId>com.googlecode.mgwt</groupId>
 			<artifactId>MGWT</artifactId>
