@@ -361,7 +361,7 @@ public class RPCHandlerV1 {
 	}
 	
 	
-	public void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback) {
+	void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("courseID", id);
 		String method = "getTable";
