@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordKeuzeVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordTekstVak;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordTekstVak2;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSelectieUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSleepUnit;
@@ -442,6 +443,11 @@ public class TekstBuffer
 			return x(map, 
 					new StubView("GeoDefinerGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
 			);
+// Wim: ander check-tekstantwoordvak in tekstmodus
+		case 13:
+			//return x(map, new AntwoordTekstVak2(currentVakGegevens, randomVarNamen, randomVarWaarden));
+
+		
 		}
 
 		if (soortVak == 0)
