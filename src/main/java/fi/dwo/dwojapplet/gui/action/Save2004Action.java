@@ -1,7 +1,6 @@
 package fi.dwo.dwojapplet.gui.action;
 
 import fi.beans.appletutil.AppletUtil;
-import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
@@ -12,6 +11,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScormChooser;
 import fi.dwo.dwojapplet.gui.ScormParameters;
 
+import java.applet.Applet;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,12 +22,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -42,8 +42,6 @@ import javax.swing.JFileChooser;
 public class Save2004Action extends GuiAction {
 
     private static final Logger LOG = Logger.getLogger(Save2004Action.class.getName());
-
-    private static final String WWWURL = "http://www.fisme.science.uu.nl";
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -103,65 +101,72 @@ public class Save2004Action extends GuiAction {
     private void createHtml5(File file, String variant) {
         try {
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
-            AppletUtil au = DwoHelper.getAu();
 
             ScormParameters runner = new ScormParameters();
-            runner.setSco(sco);
-            String id;
-            //id = Integer.toString(sco.getID());
-            id = sco.getScoName();
-// verboden characters worden _	: space, /, ? , #	
-            id = id.replace(' ', '_');
-            id = id.replace('/', '_');
-            id = id.replace('?', '_');
-            id = id.replace('#', '_');
-            runner.setId(id);
 
             // ugly string creation
             String scormURL = DwoHelper.getAppURLPath().toString() + variant + "/";
             runner.setBase(scormURL);
             runner.setUser(GuiCreator.instance().getUser());
 
-// manifest
-            out.putNextEntry(new ZipEntry("imsmanifest.xml"));
-            runner.copy(au.getStream("resources/imsmanifestHtml5.txt"), out);
-            out.closeEntry();
-// metadata
-            out.putNextEntry(new ZipEntry("metadata.xml"));
-            runner.copy(au.getStream("resources/metadata.txt"), out);
-            out.closeEntry();
-// sco
-            out.putNextEntry(new ZipEntry(id + ".html"));
-// sco.txt is profiel afhankelijk!
-            int profile = sco.getCourse().getDwoProfile();
-            InputStream in = au.getStream("resources/" + variant + "-" + profile + ".txt");
-            if (in == null) {
-                in = au.getStream("resources/" + variant + ".txt");
-            }
-            runner.copy(in, out);
-            out.closeEntry();
-
-            out.putNextEntry(new ZipEntry(id + ".xml"));
-            Map ld = new HashMap(runner.getLaunchData());
-            OutputStreamWriter wr = new OutputStreamWriter(out, ScormParameters.UTF8);
-            sco.jsonEncode(ld, wr);
-            wr.flush();
-            out.closeEntry();
-            
-            makeCopies(out, runner, scormURL);
+            createHtml5(variant, out, runner, sco);
 	        
 		
 			out.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             LOG.log(Level.SEVERE, null, e);
         }
 
     }
 
+	static void createHtml5(String variant, ZipOutputStream out, ScormParameters runner, Sco sco)
+			throws IOException, UnsupportedEncodingException, MalformedURLException {
+		createHTML_XML(variant, out, runner, sco, "");
+
+		AppletUtil au = DwoHelper.getAu();
+ // manifest
+ 		out.putNextEntry(new ZipEntry("imsmanifest.xml"));
+ 		runner.copy(au.getStream("resources/imsmanifestHtml5.txt"), out);
+ 		out.closeEntry();
+ // metadata
+ 		out.putNextEntry(new ZipEntry("metadata.xml"));
+ 		runner.copy(au.getStream("resources/metadata.txt"), out);
+ 		out.closeEntry();
+
+		makeCopies(out, runner, runner.getBase());
+	}
+
+	static void createHTML_XML(String variant, ZipOutputStream out, ScormParameters runner, Sco sco, String prefix)
+			throws IOException, UnsupportedEncodingException {
+		AppletUtil au = DwoHelper.getAu();
+		runner.setSco(sco);
+		String id;
+		id = sco.getScoName();
+// verboden characters worden _	: space, /, ? , #	
+		id = en_code_(id);
+		runner.setId(id);
+		id = prefix + id;
+// sco
+		out.putNextEntry(new ZipEntry(id + ".html"));
+// sco.txt is profiel afhankelijk!
+		int profile = GuiCreator.instance().getDWO().getDwoProfile().getID();
+		InputStream in = au.getStream("resources/" + variant + "-" + profile + ".txt");
+		if (in == null) {
+		    in = au.getStream("resources/" + variant + ".txt");
+		}
+		runner.copy(in, out);
+		out.closeEntry();
+
+		out.putNextEntry(new ZipEntry(id + ".xml"));
+		Map ld = new HashMap(runner.getLaunchData());
+		OutputStreamWriter wr = new OutputStreamWriter(out, ScormParameters.UTF8);
+		sco.jsonEncode(ld, wr);
+		wr.flush();
+		out.closeEntry();
+	}
+
 	static void makeCopies(ZipOutputStream out, ScormParameters runner, String scormURL)
 			throws MalformedURLException, IOException {
-		InputStream in;
 		// copies.....
         String HTML_SOURCE = new URL(DwoHelper.getResourceUrlPath() , "resources/scorm/course/cp/").toString();
         String[] scormFileNames = {
@@ -170,9 +175,15 @@ public class Save2004Action extends GuiAction {
         		"imsmd_v1p2p4.xsd",
         };
         
-        copyList(out, runner, HTML_SOURCE, scormFileNames);
-        
-        String[] viewFileNames = new String[0];
+        copyList(out, runner, HTML_SOURCE, scormFileNames, "");
+       
+        makeAuxilaryCopies(out, runner, scormURL, "");
+	}
+
+	static void makeAuxilaryCopies(ZipOutputStream out, ScormParameters runner, String scormURL, String prefix)
+			throws MalformedURLException, IOException {
+		InputStream in;
+		String[] viewFileNames = new String[0];
     	HashSet<String> set = new HashSet<String>();
         try {
         	in = new URL(scormURL + "index.lst").openStream();
@@ -184,11 +195,11 @@ public class Save2004Action extends GuiAction {
         }
         viewFileNames = set.toArray(viewFileNames);
         
-        copyList(out, runner, scormURL, viewFileNames);
+        copyList(out, runner, scormURL, viewFileNames, prefix);
 	}
 
     static void copyList(ZipOutputStream out, ScormParameters runner,
-            String HTML_SOURCE, String[] scormFileNames)
+            String HTML_SOURCE, String[] scormFileNames, String HTML_DEST)
             throws MalformedURLException, IOException {
         InputStream in;
         for (int i = 0; i < scormFileNames.length; i++) {
@@ -197,7 +208,7 @@ public class Save2004Action extends GuiAction {
                 URL htmlSource = new URL(htmlSourceString);
                 URLConnection connection = htmlSource.openConnection();
                 in = connection.getInputStream();
-                out.putNextEntry(new ZipEntry(scormFileNames[i]));
+                out.putNextEntry(new ZipEntry(HTML_DEST + scormFileNames[i]));
                 runner.rawCopy(in, out);
                 out.closeEntry();
             } catch (Exception e) {
@@ -207,8 +218,6 @@ public class Save2004Action extends GuiAction {
     }
 
     public void createZip(String zipName) {
-        String jarname = System.getProperty("java.class.path");
-
         try {
             String outFilename = zipName + ".zip";
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outFilename));
@@ -252,7 +261,7 @@ public class Save2004Action extends GuiAction {
             printManifest(pw);
             pw.flush();
             out.closeEntry();
-// TODO zipEntry metadata.xml 
+// zipEntry metadata.xml 
             out.putNextEntry(new ZipEntry("metadata.xml"));
             printMetadata(pw);
             pw.flush();
@@ -274,8 +283,8 @@ public class Save2004Action extends GuiAction {
         pw.println("<lom>");
         String title = sco.getScoName();
         String description = sco.getDescription();
-        String auteur = "Peter Boon"; // currentuser...
-        String datum = new java.util.Date().toString(); // formateren!
+//        String auteur = "Peter Boon"; // currentuser...
+//        String datum = new java.util.Date().toString(); // formateren!
         String uri = "MANIFEST-9ECDE6EE-4D8C-0E0A-E9B1-A1C808BC2ECD";
         String lang = DwoHelper.getApplet().getLocale().getLanguage();
         // print metadata: 
@@ -302,7 +311,7 @@ public class Save2004Action extends GuiAction {
     public void printManifest(PrintWriter out) {
         String scoName = sco.getScoName();
 
-        String[] arguments = {scoName};
+        Object[] arguments = {scoName};
 
         try {
             URL htmlSource = new URL(DwoHelper.getResourceUrlPath(), "resources/scorm/course/cp/imsmanifest.txt");
@@ -334,7 +343,7 @@ public class Save2004Action extends GuiAction {
         if (launchData == null) {
             launchData = sco.getLaunchdata();
         }
-        Class applet = sco.getApplet().getClass();
+        Class<? extends Applet> applet = sco.getApplet().getClass();
         String className = applet.getName();
         String jarName = className.substring(3, className.indexOf(".", 3));
         String scoName = sco.getScoName();
@@ -346,7 +355,7 @@ public class Save2004Action extends GuiAction {
 //			launchData.put(LicMan.LICENSE_KEY, licentie);
 //		} catch (LicenseException e)
 //		{
-//			// TODO iets beters dan printstacktrace
+//			// iets beters dan printstacktrace
 //			LOG.log(Level.SEVERE,null,e);
 //		}
         String launchDataString = StringCodeObject.encodeObjectToString(launchData);
@@ -355,7 +364,7 @@ public class Save2004Action extends GuiAction {
         String language = TextMapper.getLanguage();
         String bgcolor = "#" + Integer.toHexString(GuiConstants.MAIN_BACKGROUND.getRGB()).substring(2);
 
-        String[] arguments = {scoName, className, jarName, language, bgcolor, launchDataString, licentie};
+        Object[] arguments = {scoName, className, jarName, language, bgcolor, launchDataString, licentie};
 
         try {
             URL htmlSource = new URL(DwoHelper.getResourceUrlPath(), "resources/scorm/course/cp/sco/Sco.htm");
@@ -474,7 +483,7 @@ public class Save2004Action extends GuiAction {
                 "sco/Image8.png"
             };
 
-            copyList(out, runner, HTML_SOURCE, scormFileNames);
+            copyList(out, runner, HTML_SOURCE, scormFileNames,"");
 
             out.close();
         } catch (IOException e) {
@@ -491,5 +500,18 @@ public class Save2004Action extends GuiAction {
             setEnabled(false);
         }
     }
+
+	/**
+	 * verboden characters worden _	: space, /, ? , #	
+	 * @param id input
+	 * @return id
+	 */
+		static String en_code_(String id) {
+			id = id.replace(' ', '_');
+			id = id.replace('/', '_');
+			id = id.replace('?', '_');
+			id = id.replace('#', '_');
+			return id;
+		}
 
 }

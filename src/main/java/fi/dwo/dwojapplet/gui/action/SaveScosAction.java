@@ -4,11 +4,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -61,6 +57,7 @@ public class SaveScosAction extends GuiAction {
         if (scormChooser == null) {
             scormChooser = new ScormChooser();
             scormChooser.html5.setText("Noordhoff HTML5");
+            scormChooser.html5.setSelected(true);
         }
         course = userObject;
         int result = scormChooser.showSaveDialog(GuiCreator.instance().getMainPanel());
@@ -103,19 +100,21 @@ public class SaveScosAction extends GuiAction {
             ScormParameters runner = new ScormParameters();
             runner.setBase(scormURL);
             runner.setUser(instance().getUser());
-            makeScos(course, variant, out, au, runner);
-            //runner.setSco(scos[0]); // FIXME NIET GOED
+            makeScos(course, variant, out, au, runner, new StringBuilder());
    // manifest
-            out.putNextEntry(new ZipEntry("imsmanifest.xml"));
-            runner.copy(au.getStream("resources/imsmanifestHtml5.txt"), out);
-            out.closeEntry();
-
-         // metadata
-            out.putNextEntry(new ZipEntry("metadata.xml"));
-            runner.copy(au.getStream("resources/metadata.txt"), out);
-            out.closeEntry();
-            Save2004Action.makeCopies(out, runner, scormURL);
+            if(!zip) {
+	            out.putNextEntry(new ZipEntry("imsmanifest.xml"));
+	            runner.copy(au.getStream("resources/imsmanifestHtml5.txt"), out);
+	            out.closeEntry();
+	
+	         // metadata
+	            out.putNextEntry(new ZipEntry("metadata.xml"));
+	            runner.copy(au.getStream("resources/metadata.txt"), out);
+	            out.closeEntry();
+	            Save2004Action.makeCopies(out, runner, runner.getBase());
+            }
             out.close(); out = null;
+   // TODO xsd
 		} catch(Exception e) {
 			LOG.log(Level.SEVERE, "createHTML5", e);
 		} finally { 
@@ -127,13 +126,20 @@ public class SaveScosAction extends GuiAction {
 		
 	}
 
-	void makeScos(Course course2, String variant, ZipOutputStream out, AppletUtil au, ScormParameters runner)
+	static boolean zip = true;
+	void makeScos(Course course2, String variant, ZipOutputStream out, AppletUtil au, ScormParameters runner, StringBuilder prefix)
 			throws IOException, UnsupportedEncodingException {
+		int length = prefix.length();
 		if(course2.isWithChildren())
 		{
 			CourseMap[] children = course2.getChildren();
-			for (int i = 0; i < children.length; i++) {
-				makeScos((Course) children[i].getUserObject(), variant, out, au, runner);
+			try {
+				prefix.append(Save2004Action.en_code_(course2.getName())).append('/');
+				for (int i = 0; i < children.length; i++) {
+					makeScos((Course) children[i].getUserObject(), variant, out, au, runner, prefix);
+				}
+			} finally {
+				prefix.setLength(length);
 			}
 			return;
 		}
@@ -144,39 +150,28 @@ public class SaveScosAction extends GuiAction {
 		}
 		if(scos == null || scos.length == 0) return; // early out.
 		
-		 
-		for(Sco sco: scos) {
-		    runner.setSco(sco);
-		    String id;
-		    //id = Integer.toString(sco.getID());
-		    id = sco.getScoName();
-   // verboden characters worden _	: space, /, ? , #	
-		    id = id.replace(' ', '_');
-		    id = id.replace('/', '_');
-		    id = id.replace('?', '_');
-		    id = id.replace('#', '_');
-		    runner.setId(id);
-		 // sco
-		    out.putNextEntry(new ZipEntry(id + ".html"));
-   // sco.txt is profiel afhankelijk!
-		    int profile = sco.getCourse().getDwoProfile();
-		    InputStream in = au.getStream("resources/" + variant + "-" + profile + ".txt");
-		    if (in == null) {
-		        in = au.getStream("resources/" + variant + ".txt");
-		    }
-		    runner.copy(in, out);
-		    out.closeEntry();
+		try {
+			prefix.append(Save2004Action.en_code_(course2.getName())).append('/');
+            if(!zip)Save2004Action.makeAuxilaryCopies(out, runner, runner.getBase(), prefix.toString());
 
-		    out.putNextEntry(new ZipEntry(id + ".xml"));
-		    Map<?, ?> ld = new HashMap<Object, Object>(runner.getLaunchData());
-		    OutputStreamWriter wr = new OutputStreamWriter(out, ScormParameters.UTF8);
-		    sco.jsonEncode(ld, wr);
-		    wr.flush();
-		    out.closeEntry();
+		for(Sco sco: scos) {
+			if(zip) {
+				String name = Save2004Action.en_code_(sco.getScoName()) + ".zip";
+				out.putNextEntry(new ZipEntry(prefix + name));
+				ZipOutputStream inner = new ZipOutputStream(out);
+				Save2004Action.createHtml5(variant, inner, runner, sco);
+				inner.finish();
+				inner.flush();
+				out.closeEntry();
+			} else {
+				Save2004Action.createHTML_XML(variant, out, runner, sco, prefix.toString());
+			}
+		}
+		} finally {
+			prefix.setLength(length);
 		}
 	}
-
-	@Override
+@Override
     void setMap(CourseMap map) {
         if (map != null) {
             setEnabled(map.getUserObject() instanceof Course);
