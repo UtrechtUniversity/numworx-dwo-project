@@ -3964,6 +3964,20 @@ public class Algebra
 			else
 				return new BasisExpressie(exp.geefWaarde());
 		}
+		if(exp instanceof Min)
+		{
+			if(exp.kind1.geefWaarde()<=exp.kind2.geefWaarde())
+				exp = exp.kind1;
+			else if(exp.kind2.geefWaarde()<exp.kind1.geefWaarde())
+				exp = exp.kind2;
+		}
+		if(exp instanceof Max)
+		{
+			if(exp.kind1.geefWaarde()>=exp.kind2.geefWaarde())
+				exp = exp.kind1;
+			else if(exp.kind2.geefWaarde()>exp.kind1.geefWaarde())
+				exp = exp.kind2;
+		}
 
 		PointLong p = eval(exp);
 
