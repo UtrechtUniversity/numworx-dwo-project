@@ -399,7 +399,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private int height;
 	private boolean volledigeBreedte;
 	private int asHoogte = 17;
-	private OpdrNavIF comRoot;
+	OpdrNavIF comRoot;
 	private FormuleFont defaultfont = FormuleFont.createFromFontSize(14);
 	private FormuleFont font = defaultfont;
 	
@@ -415,6 +415,32 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	Logging logging;
 	private String lastAttempt;
+	
+	TextEditor(int breedte, int hoogte, boolean boxMetRand) { // voor checktextantwoordvak
+		this.width = breedte;
+		this.height = hoogte;
+		this.boxMetRand = boxMetRand;
+		this.volledigeBreedte = false;
+		this.padding = 0;
+		boxsize = boxMetRand?2:0;
+		hbox = new FlowPanel();
+		hbox.setStylePrimaryName("textEditor");
+		initWidget(hbox);
+		menubar = null;
+		content = getContent(null);
+		content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
+		Style style = content.getElement().getStyle();
+		style.setPadding(padding/2, Unit.PX);
+		//style.setBackgroundColor("white");
+		style.setOverflow(Overflow.HIDDEN);
+		hbox.add(content);
+		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
+		hbox.setPixelSize(width-boxsize, height-boxsize);
+		if(boxMetRand)
+			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
+		logging = null;
+		shown = true;
+	}
 	
 	public TextEditor(HashMap<String, Object> currentVakGegevens,
 			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden) {
@@ -465,10 +491,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		setCursorWidget(cursorWidget);
 	}
 
-	private void setState(ObjectMap h) {
+	private void setState(ObjectMap h) { // h kan null zijn!
 		editable = true;
 		shown = false;
-		String tekst = h.getString("tekst");
+		String tekst = h == null ? "" : h.getString("tekst");
 		if(tekst == null) tekst = "";
 		else if(tekst.endsWith("\n"))
 			tekst = tekst.substring(0, tekst.length()-1);
@@ -477,7 +503,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		insert(tekst);
 		lastAttempt = tekst;
 		removeCursor();
-		editable = h.getBoolean("editable", true);
+		editable = h == null || h.getBoolean("editable", true);
 		if(!editable) setReadonly();
 		shown = true;
 	}
@@ -1055,6 +1081,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		{
 			((TekstRegel) parent).getTekstVak().shiftTabFocus(this, true);
 		}
+	}
+
+	String getText() {
+		return getAllText().toString();
 	}
 
 
