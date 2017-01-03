@@ -41,6 +41,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -68,6 +69,15 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
 			Object schoolGroupID = getSchoolGroupID();
 			getUserResultsHelper(courseID, userID, schoolGroupID, getUserResultsCallback);
+		}
+// FIXME
+		@Override
+		public Promise<DomScoContext> getSco(Object id) {
+			return Promises.failed(new RuntimeException());
+		}
+		@Override
+		public Promise<DomCourseStudent> getCourse(Object id) {
+			return Promises.failed(new RuntimeException());
 		}
 
 	}

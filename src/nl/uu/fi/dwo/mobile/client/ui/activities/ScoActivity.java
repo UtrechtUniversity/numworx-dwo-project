@@ -2,12 +2,16 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.Map;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
@@ -58,21 +62,32 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext {
 		name = item.getName();
 		if(name == null) {
 			name = scoID;
-			AsyncCallback<Map<String, Object>> callback = new AsyncCallback<Map<String,Object>>() {
+//			AsyncCallback<Map<String, Object>> callback = new AsyncCallback<Map<String,Object>>() {
+//
+//				@Override
+//				public void onFailure(Throwable caught) {					// TODO Auto-generated method stub
+//				}
+//
+//				@Override
+//				public void onSuccess(Map<String, Object> result) {
+//					name = String.valueOf (result.get("sconame"));
+//					item.setName(name);
+//					view.setTitle(name);
+//				}
+//				
+//			};
+//			clientFactory.getRPCHandler().getSco(item.getID(), callback);
+			clientFactory.getRPCHandler().getSco(item.getID()).then(new Success<DomScoContext, Void>() {
 
 				@Override
-				public void onFailure(Throwable caught) {					// TODO Auto-generated method stub
-				}
-
-				@Override
-				public void onSuccess(Map<String, Object> result) {
-					name = String.valueOf (result.get("sconame"));
+				public Promise<Void> call(Promise<DomScoContext> resolved) throws Exception {
+					name = resolved.getValue().getScoName();
 					item.setName(name);
 					view.setTitle(name);
+					return null;
 				}
-				
-			};
-			clientFactory.getRPCHandler().getSco(item.getID(), callback);
+			});
+			
 		}
 		
 		DWOplayer.api.setScoID(scoID);

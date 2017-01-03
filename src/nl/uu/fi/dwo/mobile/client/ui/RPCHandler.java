@@ -37,10 +37,12 @@ public interface RPCHandler {
 	
 	XmlRpcClient getClient();
 
-	void getCourse(Object id,
-			AsyncCallback<Map<String, Object>> getCoursesCallback);
-
-	void getSco(Object id, AsyncCallback<Map<String, Object>> callback);
+	//void getCourse(Object id,AsyncCallback<Map<String, Object>> getCoursesCallback);
+	Promise<DomCourseStudent> getCourse(Object id);
+	
+	
+	//void getSco(Object id, AsyncCallback<Map<String, Object>> callback);
+	Promise<DomScoContext> getSco(Object id);
 
 	void getUserResults(Object courseID, Object userID,
 			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback);

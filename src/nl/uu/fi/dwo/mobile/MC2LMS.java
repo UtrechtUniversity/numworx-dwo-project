@@ -17,7 +17,9 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
@@ -41,6 +43,15 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 		private MC2RPCHandler(String server, int profile) {
 			super(server, profile);
 		}
+		// FIXME
+				@Override
+				public Promise<DomScoContext> getSco(Object id) {
+					return Promises.failed(new RuntimeException());
+				}
+				@Override
+				public Promise<DomCourseStudent> getCourse(Object id) {
+					return Promises.failed(new RuntimeException());
+				}
 
 		public void getCourses(
 				AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
