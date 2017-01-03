@@ -131,10 +131,6 @@
     <methods>;
 }
 -keep class fi.dwo.dwojapplet.domain.AppletData
--keep class fi.dwo.dwojapplet.persistence.CourseSequenceMapper{
-    <methods>;
-}
--keep class fi.dwo.dwojapplet.domain.CourseSequence
 -keep class fi.dwo.dwojapplet.persistence.ClassCourseMapper{
     <methods>;
 }
