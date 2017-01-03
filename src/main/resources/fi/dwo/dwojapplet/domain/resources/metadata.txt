@@ -74,7 +74,7 @@ END:VCARD
 		</intendedenduserrole>
 		<context>
 			<source>
-				<langstring xml:lang="x-none"> http://download.edustandaard.nl/xsd/vdex_context_czp.xml</langstring>
+				<langstring xml:lang="x-none">http://download.edustandaard.nl/xsd/vdex_context_czp.xml</langstring>
 			</source>
 			<value>
 				<langstring xml:lang="x-none">PO</langstring>
@@ -82,7 +82,7 @@ END:VCARD
 		</context>
 		<context>
 			<source>
-				<langstring xml:lang="x-none"> http://download.edustandaard.nl/xsd/vdex_context_czp.xml</langstring>
+				<langstring xml:lang="x-none">http://download.edustandaard.nl/xsd/vdex_context_czp.xml</langstring>
 			</source>
 			<value>
 				<langstring xml:lang="x-none">VO</langstring>
