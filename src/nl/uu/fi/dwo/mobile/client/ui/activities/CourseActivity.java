@@ -1,14 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
-import java.util.Map;
-
-import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Success;
-
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_MC2mAccess;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -16,10 +8,12 @@ import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
+
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
@@ -68,23 +62,6 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 		view.render(item);
 		if(item.getName() == null) {
 			item.setName("#c:" + item.getID());
-//			AsyncCallback<Map<String,Object>> getCoursesCallback = 
-//					new AsyncCallback<Map<String,Object>>() {
-//
-//						@Override
-//						public void onFailure(Throwable caught) {
-//						}
-//
-//						@Override
-//						public void onSuccess(Map<String, Object> result) {
-//							String name = (String) result.get("name");
-//							String description = (String) result.get("description");
-//							item.setDescription(description);
-//							item.setName(name);
-//							view.setDescription(item);
-//						}
-//					};
-//			clientFactory.getRPCHandler().getCourse(item.getID(), getCoursesCallback);
 			clientFactory.getRPCHandler().getCourse(item.getID()).then(new Success<DomCourseStudent, Void>() {
 
 				@Override

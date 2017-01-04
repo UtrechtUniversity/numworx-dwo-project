@@ -1,7 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
-import java.util.Map;
-
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
@@ -62,21 +60,6 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext {
 		name = item.getName();
 		if(name == null) {
 			name = scoID;
-//			AsyncCallback<Map<String, Object>> callback = new AsyncCallback<Map<String,Object>>() {
-//
-//				@Override
-//				public void onFailure(Throwable caught) {					// TODO Auto-generated method stub
-//				}
-//
-//				@Override
-//				public void onSuccess(Map<String, Object> result) {
-//					name = String.valueOf (result.get("sconame"));
-//					item.setName(name);
-//					view.setTitle(name);
-//				}
-//				
-//			};
-//			clientFactory.getRPCHandler().getSco(item.getID(), callback);
 			clientFactory.getRPCHandler().getSco(item.getID()).then(new Success<DomScoContext, Void>() {
 
 				@Override

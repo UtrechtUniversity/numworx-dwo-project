@@ -120,6 +120,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				keyboard.setEditor(deze);
 				keyboard.setEnterType(EnterType.ENTER);
 				keyboard.softFocus();
+				hbox.removeStyleDependentName("empty");
 				int flowTop = flow.getAbsoluteTop();
 				int y = event.getClientY() - flowTop;
 				int w;
@@ -169,6 +170,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			keyboard.setEditor(TextEditor.this);
 			keyboard.setEnterType(EnterType.ENTER);
 			setCursorWidget(cursorWidget);
+			hbox.removeStyleDependentName("empty");
 			keyboard.softFocus();
 			event.stopPropagation();
 			event.preventDefault();
@@ -181,7 +183,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			setCursorWidget(cursorWidget);
 			keyboard.setEnterType(EnterType.ENTER);
 			keyboard.softFocus();
-			
+			hbox.removeStyleDependentName("empty");
 			event.stopPropagation();
 			event.preventDefault();
 			
@@ -425,6 +427,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		boxsize = boxMetRand?2:0;
 		hbox = new FlowPanel();
 		hbox.setStylePrimaryName("textEditor");
+		hbox.addStyleDependentName("nowrap");
 		initWidget(hbox);
 		menubar = null;
 		content = getContent(null);
@@ -473,7 +476,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		hbox.setPixelSize(width-boxsize, height-boxsize);
 		if(boxMetRand)
 			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
-
+		else {
+			updateEmpty();
+		}
 		boolean logOption = launchdata.getBoolean("logOption", false);
 		if(logOption) {
 			String logID = launchdata.getString("logID");
@@ -485,10 +490,22 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		shown = true;
 	}
 
+	private void updateEmpty() {
+		if (!boxMetRand) {
+			hbox.setStyleDependentName("empty", isContentEmpty());
+		}
+	}
+	
+	
+	private boolean isContentEmpty() {
+		return flow.getWidgetCount() < 2;
+	}
+
 	protected void requestFocus() {
 		comRoot.getKeyboard().setEditor(this);
 		FocusOnTouch.focus();
 		setCursorWidget(cursorWidget);
+		hbox.removeStyleDependentName("empty");
 	}
 
 	private void setState(ObjectMap h) { // h kan null zijn!
@@ -506,6 +523,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		editable = h == null || h.getBoolean("editable", true);
 		if(!editable) setReadonly();
 		shown = true;
+		updateEmpty();
 	}
 
 	private Widget cursorWidget;
@@ -788,6 +806,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		setAttempt();
 		if(comRoot != null)
 			comRoot.getKeyboard().setEnterType(EnterType.APPLY);
+		updateEmpty();
 	}
 
 	private void removeCursor() {

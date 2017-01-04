@@ -70,15 +70,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			Object schoolGroupID = getSchoolGroupID();
 			getUserResultsHelper(courseID, userID, schoolGroupID, getUserResultsCallback);
 		}
-// FIXME
-		@Override
-		public Promise<DomScoContext> getSco(Object id) {
-			return Promises.failed(new RuntimeException());
-		}
-		@Override
-		public Promise<DomCourseStudent> getCourse(Object id) {
-			return Promises.failed(new RuntimeException());
-		}
 
 	}
 

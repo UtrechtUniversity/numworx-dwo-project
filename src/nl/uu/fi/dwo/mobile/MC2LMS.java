@@ -43,15 +43,6 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 		private MC2RPCHandler(String server, int profile) {
 			super(server, profile);
 		}
-		// FIXME
-				@Override
-				public Promise<DomScoContext> getSco(Object id) {
-					return Promises.failed(new RuntimeException());
-				}
-				@Override
-				public Promise<DomCourseStudent> getCourse(Object id) {
-					return Promises.failed(new RuntimeException());
-				}
 
 		public void getCourses(
 				AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {

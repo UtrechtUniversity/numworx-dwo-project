@@ -21,16 +21,5 @@ public class RPCHandler extends RPCHandlerV1 implements nl.uu.fi.dwo.mobile.clie
 	public RPCHandler() {
 		super(Window.Location.getProtocol() +  "//" + DWOplayer.PARAMETERS.getHost() + "/DWOmAccess/dbaccess", DWOplayer.PROFILE_ID);
 	}
-
-	@Override
-	public Promise<DomScoContext> getSco(Object id) {
-		return Promises.failed(new RuntimeException());
-	}
-
-	@Override
-	public Promise<DomCourseStudent> getCourse(Object id) {
-		return Promises.failed(new RuntimeException());
-	}
-
 	
 }

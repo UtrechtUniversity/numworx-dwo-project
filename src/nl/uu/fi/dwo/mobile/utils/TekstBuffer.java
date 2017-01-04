@@ -445,7 +445,7 @@ public class TekstBuffer
 			);
 // Wim: ander check-tekstantwoordvak in tekstmodus
 		case 13:
-			//return x(map, new AntwoordTekstVak2(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new AntwoordTekstVak2(currentVakGegevens, randomVarNamen, randomVarWaarden));
 
 		
 		}
