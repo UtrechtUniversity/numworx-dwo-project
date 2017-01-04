@@ -3233,15 +3233,21 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         //log("DbAccess.addSco " + data);
         int appletID = -1;
         String launchdata = "";
-        if (data.containsKey("appletID")) {
+//        boolean showScore = false;
+       if (data.containsKey("appletID")) {
             appletID = ((Integer) data.get("appletID")).intValue();
         }
         if (data.containsKey("launchdata")) {
             launchdata = (String) data.get("launchdata");
         }
-
+//        if (data.containsKey("showscore")) {
+//        	showScore =  Boolean.TRUE.equals(data.get("showscore"));
+//        }
         int scoID = addSco(courseID, name, description, appletID, launchdata,
                 sequencenr);
+//		if (showScore) {
+//            changeSco(scoID, name, description, false);
+//        }
         try {
             Object launchdatabytes = data.get("launchdatabytes");
             if (launchdatabytes instanceof byte[]) {
@@ -3298,6 +3304,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         if (appletID != -1) {
 
             Connection c = getConnection();
+            boolean commit = c.getAutoCommit();
             c.setAutoCommit(false);
 
             PreparedStatement ps = getStatementWithGeneratedKeys(QRY_ADD_SCO_CONTEXT);
@@ -3309,6 +3316,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             try {
                 ps.execute();
             } catch (SQLException e) {
+            	c.rollback();
+            	c.setAutoCommit(commit);
                 if (e.getErrorCode() == 1062) {
                     /* The sco already exists */
                     throw new DwoXmlRpcException(
@@ -3340,6 +3349,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             }
             result = id;
             c.commit();
+            c.setAutoCommit(commit);
+
             return result;
         } else { //no appletconfig found
             throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCO_EXISTS);
@@ -3560,11 +3571,11 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
                 + "launchdatabytes = ? "
                 + "WHERE (scoID = ?) ";
         ps = getStatement(query);
-        ps.setObject(1, launchdata);
+        ps.setBytes(1, launchdata);
         ps.setInt(2, scoID);
 
         try {
-            ps.execute();
+            int count = ps.executeUpdate();
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
                 /* The course already exists */
