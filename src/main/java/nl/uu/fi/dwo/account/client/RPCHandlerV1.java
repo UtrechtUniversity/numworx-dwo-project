@@ -387,7 +387,7 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	public void getCourse(Object courseID, AsyncCallback<Map<String, Object>> getCourseCallback) {
+	void getCourse(Object courseID, AsyncCallback<Map<String, Object>> getCourseCallback) {
 		String method = "getRecord";
 		Object[] params = { "tblCourse", "courseID", objectToKey(courseID) };
 		XmlRpcClient client = getClient();
@@ -401,7 +401,7 @@ public class RPCHandlerV1 {
 		return defer.getPromise().map(TO_DOMCOURSE);
 	}
 
-	public void getSco(Object scoID, AsyncCallback<Map<String,Object>> callback) 
+	void getSco(Object scoID, AsyncCallback<Map<String,Object>> callback) 
 	{
 		String method = "getRecord";
 		Object[] params = { "tblScoContext", "scoID", objectToKey(scoID) };
