@@ -258,7 +258,18 @@ div.listItem-dwo-separator {
 	color: gray;
 }
 
+.textEditor-empty > div::before {
+	content: "...";
+	color: #808080
+}
 
+.textEditor-empty > div {
+	color: #808080
+}
+
+.textEditor-nowrap {
+	white-space: nowrap;
+}
 
 .cursor_gum {
 	cursor: url(images/resources/gumcursor.gif) 10 10, auto; 
