@@ -63,6 +63,7 @@ public class ObjectListImpl implements ObjectList {
 	}
 
 	static  ObjectList wrapList(Object object) {
+		if(object == null) return null;
 		if(object instanceof Object[])
 			return new ObjectArrayImpl( (Object[]) object);
 		return new ObjectListImpl( (List<Object>) object);

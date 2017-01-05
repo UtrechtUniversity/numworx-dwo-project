@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.interaction.client.json;
 
-import java.util.ArrayList;
+import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 
-public class JSONObjectListImpl extends ArrayList<Object> implements ObjectList {
+public class JSONObjectListImpl extends AbstractList<Object> implements ObjectList {
 
 	private JSONArray list;
 
@@ -65,24 +65,28 @@ public class JSONObjectListImpl extends ArrayList<Object> implements ObjectList 
 	@Override
 	public Map<String, Object> getMap(int key) {
 		JSONObject o = get0(key).isObject();
+		if(o == null) return null;
 		return new JSONObjectMapImpl(o);
 	}
 
 	@Override
 	public List<Object> getList(int key) {
 		JSONArray o = get0(key).isArray();
+		if(o == null) return null;
 		return new JSONObjectListImpl(o);
 	}
 
 	@Override
 	public ObjectMap getObjectMap(int key) {
 		JSONObject o = get0(key).isObject();
+		if(o == null) return null;
 		return new JSONObjectMapImpl(o);
 	}
 
 	@Override
 	public ObjectList getObjectList(int key) {
 		JSONArray o = get0(key).isArray();
+		if(o == null) return null;
 		return new JSONObjectListImpl(o);
 
 	}
