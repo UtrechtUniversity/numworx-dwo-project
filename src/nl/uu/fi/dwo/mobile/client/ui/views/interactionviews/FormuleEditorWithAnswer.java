@@ -1079,6 +1079,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private String lastanswer = "$f@";
 	private boolean isVergelijkingVak;
 	private String isTeken = "=";
+	private ObjectMap reviewInteractieData;
 	
 	public void kijkNa(final boolean backStep, final boolean show, final boolean setState) {
 		try {
@@ -1536,6 +1537,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		}
 		ObjectMap map = JSONUtilities.wrapMap(h);
+		reviewInteractieData = map.getObjectMap("reviewInteractieData"); // FIXME doe er wat mee.
 		boolean ingevuld = true;
 		boolean nagekeken = false;
 		boolean isVeranderdNaNakijken = false;

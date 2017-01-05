@@ -99,7 +99,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	protected int hoogte = 250;
 	private boolean volledigeBreedte = false;
 	private HashMap<String, Object> launchState;
-	private ObjectMap instellingen;
+	private ObjectMap instellingen, reviewInteractieData;
 	protected ArrayList<FormuleViewer> viewers = new ArrayList<FormuleViewer>();
 	protected FormuleEditorWithAnswer editor = null;
 	private FormuleViewer prefixViewer;
@@ -1833,6 +1833,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		String substitutieString = "";
 		String antwoordString = "";
 		String[] gebruikersSubStrings = null;
+		ObjectMap hh = JSONUtilities.wrapMap(h);
+		reviewInteractieData = hh.getObjectMap("reviewInteractieData"); // FIXME doe er wat mee.
 		
 		if (h.get("stapNr") != null)
 			stapNr = ((Number) h.get("stapNr")).intValue();
