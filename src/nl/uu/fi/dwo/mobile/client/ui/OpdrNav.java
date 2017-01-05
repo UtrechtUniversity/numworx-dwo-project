@@ -620,10 +620,37 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if(scoresVisible())
 		{
 			button.setStyleDependentName("correct", b);
-			button.getElement().setPropertyInt("title", getItemScores()[j]);
+			String  value = String.valueOf(getItemScores()[j]);
+			int correctie = getItemCorrectie(j);
+			if(correctie > 0) { 
+				value = value + "+" + correctie;
+			} else if (correctie < 0) {
+				value = value + correctie;
+			}
+			button.getElement().setPropertyString("title", value);
 		}
 	}
 	
+	private int getItemCorrectie(int j) {
+		HashMap state = states[currentActiviteit][j];
+		ObjectMap map = JSONUtilities.wrapMap(state);
+		return getItemCorrectie(map);
+	}
+	private int getItemCorrectie(ObjectMap map) {
+		if(map == null) return 0;
+		if(map.containsKey("reviewScoreCorrectie")) return map.getInt("reviewScoreCorrectie");
+		if(map.containsKey("reviewInteractieData")) return getItemCorrectie(map.getObjectMap("reviewInteractieData"));
+		if(map.containsKey("interactiePanelStates")) {
+			int s = 0;
+			ObjectList list = map.getObjectList("interactiePanelStates");
+			int len = list.size();
+			for(int i = 0; i < len; i++) {
+				s += getItemCorrectie(list.getObjectMap(i));
+			}
+			return s;
+		}
+		return 0;
+	}
 	public boolean geefNoScore(int actNr, int opdrNr)
 	{
 		return scoresMax[actNr][opdrNr] == 0;
