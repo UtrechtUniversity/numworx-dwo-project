@@ -84,6 +84,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public static final String LEARNER_NAME = "cmi.learner_name";
 	public static final String LEARNER_PREFERENCE_LANGUAGE = "cmi.learner_preference.language";
 	public static final String LOCATION = "cmi.location";
+	private static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
 	
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String SHARE_MAP = "shareMap";
@@ -113,6 +114,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		value = getValue(SUSPEND_DATA);
 		//value = TESTVALUE;
 		scoreRaw = getValue(SCORE_RAW);
+		String reviewData = getValue(REVIEW_DATA);
 		try
 		{
 			suspendData = (JSONObject) JSONParser.parseStrict(value);
@@ -126,6 +128,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			aantalNakijken = (JSONArray) onsState.get(AANTAL_NAKIJKEN);
 			logState = (JSONObject) suspendData.get(LOG_STATE);
 			shareMap = (JSONObject) onsState.get(SHARE_MAP);
+			if(reviewData != null && reviewData.length() > 2)
+				opdrContStates = mergeReviewData(opdrContStates, reviewData);
 		}
 		catch (Exception e)
 		{
@@ -143,6 +147,47 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		instalOnBeforeUnload();
 		
 		ShareFacade.setSharedState(shareMap);
+	}
+
+	private JSONArray mergeReviewData(JSONArray opdrContStates, String reviewData) {
+		try {
+			JSONValue value = JSONParser.parseStrict(reviewData);
+			JSONArray review = value.isObject().get(OPDR_CONT_STATES).isArray();
+			int l = Math.min(opdrContStates.size(), review.size());
+			for(int i = 0; i < l; i++) {
+				JSONArray statei = opdrContStates.get(i).isArray();
+				JSONArray reviewi = review.get(i).isArray();
+				if(statei == null || reviewi == null ) continue;
+				int ll = Math.min(statei.size(), reviewi.size());
+				for(int j = 0; j < ll; j++ ) {
+					JSONObject statej = statei.get(j).isObject();
+					JSONObject reviewj = reviewi.get(j).isObject();
+					if(statej == null || reviewj == null ) continue;
+					statej = statej.get("interactiePanelStates").isArray().get(5).isObject();
+					mergeReviewState(statej, reviewj, 5);
+				}
+				
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE,"mergeReviewData", e);
+		}
+		return opdrContStates;
+	}
+
+	private void mergeReviewState(JSONObject statej, JSONObject reviewj, int off) {
+		if (statej.containsKey("interactiePanelStates")) {
+			JSONArray stateArray = statej.get("interactiePanelStates").isArray();
+			JSONArray reviewArray = reviewj.get("interactiePanelStates").isArray();
+			int l = Math.min(stateArray.size()+off, reviewArray.size());
+			for(int i = off; i < l; i++) {
+				mergeReviewState( stateArray.get(i-off).isObject(), reviewArray.get(i).isObject(), 0);
+			}
+		} else {
+			Set<String> keys = reviewj.keySet();
+			for (String key : keys) {
+				statej.put(key, reviewj.get(key));
+			}
+		}
 	}
 
 	String getValue(String key)
