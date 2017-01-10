@@ -124,7 +124,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                     DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(lclRow, 5);
                     String msg = MessageFormat.format(
                             Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), 
-                                    Dwo2ExceptionCode.User_ConfirmSchoolDelete),school.getSchoolLogin());
+                                    Dwo2ExceptionCode.User_ConfirmSchoolDelete),school.getSchoolName());
                 if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
                     try {
                         prop.deleteSchool(school);
