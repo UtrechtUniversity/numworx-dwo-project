@@ -292,6 +292,7 @@ public class SecuredDwoAdminSchoolManager {
             LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex.getDwo2Code(), "Illegal Persistence key.");
         }
+        LOG.log(Level.INFO, "Username " + sc.getUserPrincipal().getName() + " requests delete school with login "+school.getSchoolLogin()+" and id "+school.getSchoolID()+".");
 
         PersistentHasRole hr = null;
         try {
@@ -300,8 +301,10 @@ public class SecuredDwoAdminSchoolManager {
             Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
+        LOG.log(Level.INFO, "Username " + sc.getUserPrincipal().getName() + " requests delete school with login "+school.getSchoolLogin()+" and id "+school.getSchoolID()+".");
         if (hr != null) {
             try {
+        LOG.log(Level.INFO, "Username " + sc.getUserPrincipal().getName() + " started delete school with login "+school.getSchoolLogin()+" and id "+school.getSchoolID()+".");
                 //Loop FromTos in School
                 List<PersistentFromTo> ftList = FromToManager.findEntities(school);
                 for (PersistentFromTo ft : ftList) {
@@ -411,7 +414,7 @@ public class SecuredDwoAdminSchoolManager {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove the school with id {1}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to rempve the school.");
         }
-
+        LOG.log(Level.INFO, "Delete school with login "+school.getSchoolLogin()+" and id "+school.getSchoolID()+" completed for username " + sc.getUserPrincipal().getName()+".");
         return true;
     }
 
