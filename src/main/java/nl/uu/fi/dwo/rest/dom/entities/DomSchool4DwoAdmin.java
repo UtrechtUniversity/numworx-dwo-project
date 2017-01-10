@@ -32,4 +32,13 @@ public class DomSchool4DwoAdmin extends DomSchool{
         this.schoolLogin = schoolLogin;
     }
     
+    public String getUniqueDisplayName() {
+        StringBuilder result = new StringBuilder();
+        result.append(this.schoolLogin);
+        result.append(" - ");
+        result.append(this.getUniqueDisplayName());
+
+        return result.toString();
+    }
+    
 }
