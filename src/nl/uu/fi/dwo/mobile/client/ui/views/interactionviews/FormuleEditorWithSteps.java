@@ -1835,7 +1835,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		String[] gebruikersSubStrings = null;
 		ObjectMap hh = JSONUtilities.wrapMap(h);
 		reviewInteractieData = hh.getObjectMap("reviewInteractieData"); // FIXME doe er wat mee.
-		
+		FormuleEditorWithAnswer.showReview(reviewInteractieData, getAsPanel());
 		if (h.get("stapNr") != null)
 			stapNr = ((Number) h.get("stapNr")).intValue();
 		if (h.get("ingevuld") != null)

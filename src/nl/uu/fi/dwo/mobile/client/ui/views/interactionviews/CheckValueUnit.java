@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
@@ -327,7 +328,10 @@ public class CheckValueUnit implements InteractionStub{
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
-       
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		ObjectMap reviewInteractieData = map.getObjectMap("reviewInteractieData"); // FIXME doe er wat mee.
+		FormuleEditorWithAnswer.showReview(reviewInteractieData, asWidget());
+      
 	    if(h.get("ingevuld") != null) 
 	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();
 	    if(h.get("nagekeken") != null) 

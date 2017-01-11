@@ -792,20 +792,24 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		int attemptsCount = 0;
 		int errorCount = 0;
 
-		if (h.containsKey("ingevuld"))
-			ingevuld = ((Boolean) h.get("ingevuld")).booleanValue();
-		if (h.containsKey("nagekeken"))
-			nagekeken = ((Boolean) h.get("nagekeken")).booleanValue();
-		if (h.get("isVeranderdNaNakijken") != null)
-			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
-		if (h.containsKey("antwoord"))
-			antwoord = (String) h.get("antwoord");
-		if (h.containsKey("attempts"))
-			attempts = JSONUtilities.toArrayList( h.get("attempts") ); // do not expect Vector, it might be Object[]
-		if (h.containsKey("attemptsCount"))
-			attemptsCount = ((Number) h.get("attemptsCount")).intValue();
-		if (h.containsKey("errorCount"))
-			errorCount = ((Number) h.get("errorCount")).intValue();
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		ObjectMap reviewInteractieData = map.getObjectMap("reviewInteractieData"); // FIXME doe er wat mee.
+		FormuleEditorWithAnswer.showReview(reviewInteractieData, getAsPanel());
+
+		if (map.containsKey("ingevuld"))
+			ingevuld = map.getBoolean("ingevuld");
+		if (map.containsKey("nagekeken"))
+			nagekeken = map.getBoolean("nagekeken");
+		if (map.containsKey("isVeranderdNaNakijken"))
+			isVeranderdNaNakijken = map.getBoolean("isVeranderdNaNakijken");
+		if (map.containsKey("antwoord"))
+			antwoord = map.getString("antwoord");
+		if (map.containsKey("attempts"))
+			attempts = map.getList("attempts"); // do not expect Vector, it might be Object[]
+		if (map.containsKey("attemptsCount"))
+			attemptsCount = map.getInt("attemptsCount");
+		if (map.containsKey("errorCount"))
+			errorCount = map.getInt("errorCount");
 
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;

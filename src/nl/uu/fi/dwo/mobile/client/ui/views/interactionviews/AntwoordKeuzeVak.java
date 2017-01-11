@@ -767,6 +767,9 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		Vector attempts = new Vector();
 		int attemptsCount = 0;
 		int errorCount = 0;
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		ObjectMap reviewInteractieData = map.getObjectMap("reviewInteractieData"); // FIXME doe er wat mee.
+		FormuleEditorWithAnswer.showReview(reviewInteractieData, asWidget());
 
 		if (h.containsKey("ingevuld"))
 			ingevuld = ((Boolean) h.get("ingevuld")).booleanValue();

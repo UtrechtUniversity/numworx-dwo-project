@@ -316,3 +316,10 @@ div.listItem-dwo-separator {
 .UserBar .UserItem.gwt-MenuItem-selected {
 	background: initial !important;	
 }
+
+.correctie {
+	background-image: url("images/resources/correctie.png");
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	background-color: transparent;
+}
