@@ -395,6 +395,12 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         sd.show();
     }
 
+    private static void refreshApplet(ScoPanel sp) {
+    	sp.getSco().getApplet().stop();
+    	sp.appletStart();
+    }
+    
+    
     public static void showScoDialog(Component parent, final ScoPanel sp, final User u, final SchoolClass s) {
         String[] arguments = {sp.getSco().getScoName(), ""};
         String title = TextMapper.format((TextMapper.UG_RESULTS_OF_STUDENT), arguments);
@@ -443,7 +449,9 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
             @Override
             public void itemStateChanged(ItemEvent e) {
                 boolean selected = sealmodel.isSelected();
-                sp.LMSSetValue("cmi.completion_status", selected ? "completed" : "incomplete");
+            	sp.getSco().getApplet().stop();
+            	sp.LMSSetValue("cmi.completion_status", selected ? "completed" : "incomplete");
+           		sp.appletStart(); 
             }
         });
 
@@ -814,12 +822,14 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         }
         if (e.getSource() == globalSeal) {
             if (JOptionPane.showConfirmDialog(this, "De activiteit voor alle leerlingen verzegelen?", "Verzegelen", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            	scoPanel.getSco().getApplet().stop();
                 Model m = (Model) table.getModel();
                 ClassModel model = m.model;
                 for (int i = 0; i < model.getSize(); i++) {
                     model.setComplete(i, Boolean.TRUE);
                 }
                 studentSeal.setSelected(true);
+                scoPanel.appletStart();
             }
         }
     }

@@ -398,10 +398,9 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
         return ko("false");
     }
 
-    void firePropertyChange(String lessonLocation2, String last,
-            String lessonLocation3) {
-		// TODO Auto-generated method stub
-
+    void firePropertyChange(String property, Object last,
+            Object lessonLocation3) {
+		// Stub
     }
 
     public User getUser() {
