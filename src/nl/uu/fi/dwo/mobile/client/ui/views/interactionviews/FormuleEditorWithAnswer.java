@@ -1537,8 +1537,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		}
 		ObjectMap map = JSONUtilities.wrapMap(h);
-		reviewInteractieData = map.getObjectMap("reviewInteractieData"); // FIXME doe er wat mee.
-		showReview(reviewInteractieData, getAsPanel());
+		PopupFacade.showReview(h, this);
 		boolean ingevuld = true;
 		boolean nagekeken = false;
 		boolean isVeranderdNaNakijken = false;
@@ -1580,12 +1579,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				kijkNa(true); // FIXME kijkna in setstate
 		}
 
-	}
-
-	public static  void showReview(ObjectMap reviewData, Widget asPanel) {
-		if(reviewData != null && reviewData.containsKey("reviewScoreCorrectie") && reviewData.getInt("reviewScoreCorrectie")!=0) {
-			asPanel.addStyleName("correctie");
-		}
 	}
 
 	public String strip$f(String antwoord) {

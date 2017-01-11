@@ -419,6 +419,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		} else {
 			this.pendingState = null;
 		}
+		PopupFacade.showReview(h, this);
 		ObjectMap wrap = JSONUtilities.wrapMap(h);
 		ingevuld = wrap.getBoolean("ingevuld", false);
 		nagekeken = wrap.getBoolean("nagekeken", false);

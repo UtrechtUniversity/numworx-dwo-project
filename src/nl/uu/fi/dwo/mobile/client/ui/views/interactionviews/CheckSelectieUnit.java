@@ -62,6 +62,7 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMisconceptions
 {
@@ -358,7 +359,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    int attemptsCount = 0;
 		int errorCount = 0;
         ObjectMap map = JSONUtilities.wrapMap(h);
-		
+		PopupFacade.showReview(h, this);
 		if(map.containsKey("randomizedPositions")) 
 	    {	ObjectList list = map.getObjectList("randomizedPositions");
 	    	randomizedPositions = new Point[list.size()];

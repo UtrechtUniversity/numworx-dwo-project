@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 
@@ -324,6 +325,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	public void setState(HashMap<String, Object> h) {
 		if(h == null)
 			return;
+		PopupFacade.showReview(h, this);
 		if(rekenVakZichtbaar)
 			rekenVak.setState(h);
 		if(oplossingenRegelZichtbaar)

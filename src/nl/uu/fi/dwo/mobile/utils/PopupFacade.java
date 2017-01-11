@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.utils;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -10,10 +11,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
@@ -115,20 +118,20 @@ public class PopupFacade implements InteractionView, FacetAware {
 	
 	public Widget wrap(MC2View container) {
 		if(popup) {
-			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
-			popupBtn = btn; // ???
-			list.add(btn);
-			return btn;
+			if(popupBtn == null)
+				popupBtn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
+			list.add(popupBtn);
+			return popupBtn;
 		}
 		return container;
 	}
 	
 	public Widget wrap(GeogebraView container) {
 		if(popup) {
-			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
-			popupBtn = btn;
-			list.add(btn);
-			return btn;
+			if(popupBtn!=null)
+				popupBtn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
+			list.add(popupBtn);
+			return popupBtn;
 		}
 		return container.getWidget();
 	}
@@ -186,6 +189,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	public void setState(HashMap<String, Object> h) {
 			setPopupState(h);
 			delegate.setState(h);
+			showReview(h, delegate);
 	}
 
 	public void setPopupState(HashMap<String, Object> h) {
@@ -318,6 +322,15 @@ public class PopupFacade implements InteractionView, FacetAware {
 
 	public void setPopup(boolean popup) {
 		this.popup = popup;
+	}
+
+	public static  void showReview(Map<String,Object> h0, IsWidget w) {
+		if(h0 == null) return;
+		ObjectMap h = JSONUtilities.wrapMap(h0);
+		h = h.getObjectMap("reviewInteractieData");
+		if(h != null && h.containsKey("reviewScoreCorrectie") && h.getInt("reviewScoreCorrectie")!=0) {
+			w.asWidget().addStyleName("correctie");
+		}
 	}
 	
 }

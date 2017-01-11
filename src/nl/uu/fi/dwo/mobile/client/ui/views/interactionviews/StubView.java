@@ -190,7 +190,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			score = Integer.parseInt(h.get("STUBVIEW_score").toString());
 		if(h.containsKey("STUBVIEW_correct"))
 			correct = toBoolean(h.get("STUBVIEW_correct").toString());
-		
+		PopupFacade.showReview(h, this);
 		JSONValue object = JSONUtilities.toJSONObject(h);
 		if(innerView != null)
 		{

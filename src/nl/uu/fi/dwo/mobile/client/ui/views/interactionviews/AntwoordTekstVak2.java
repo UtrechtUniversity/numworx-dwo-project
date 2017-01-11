@@ -793,8 +793,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		int errorCount = 0;
 
 		ObjectMap map = JSONUtilities.wrapMap(h);
-		ObjectMap reviewInteractieData = map.getObjectMap("reviewInteractieData"); // FIXME doe er wat mee.
-		FormuleEditorWithAnswer.showReview(reviewInteractieData, getAsPanel());
+		PopupFacade.showReview(h, this);
 
 		if (map.containsKey("ingevuld"))
 			ingevuld = map.getBoolean("ingevuld");

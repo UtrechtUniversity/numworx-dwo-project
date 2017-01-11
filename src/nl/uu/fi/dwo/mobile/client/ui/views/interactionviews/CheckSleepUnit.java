@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -220,7 +221,7 @@ public class CheckSleepUnit implements InteractionStub{
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
-        
+        PopupFacade.showReview(h, this);
 		if(h.get("randomizedPositions") != null) 
 	    {	List<Object> randomizedPositionsList = JSONUtilities.toArrayList(h.get("randomizedPositions"));
 			randomizedPositions = new Point[randomizedPositionsList.size()];

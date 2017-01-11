@@ -46,6 +46,7 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
@@ -767,9 +768,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		Vector attempts = new Vector();
 		int attemptsCount = 0;
 		int errorCount = 0;
-		ObjectMap map = JSONUtilities.wrapMap(h);
-		ObjectMap reviewInteractieData = map.getObjectMap("reviewInteractieData"); // FIXME doe er wat mee.
-		FormuleEditorWithAnswer.showReview(reviewInteractieData, asWidget());
+		PopupFacade.showReview(h, this);
 
 		if (h.containsKey("ingevuld"))
 			ingevuld = ((Boolean) h.get("ingevuld")).booleanValue();
