@@ -298,11 +298,19 @@ public class SelectModuleItem
 		return showScore && getScore() != null;
 	}
 
-	private Map<Object, Number> scoreMap;
+	private Promise<Map<Object, Number>> promisedScoreMap;
+
+	public Promise<Map<Object, Number>> getPromisedScoreMap() {
+		return promisedScoreMap;
+	}
+
+	public void setPromisedScoreMap(Promise<Map<Object, Number>> promisedScoreMap) {
+		this.promisedScoreMap = promisedScoreMap;
+	}
 
 	public Number getScore() {
 		if(getParent() == null) return null;
-		Map<Object,? extends Number> scoreMap = getParent().scoreMap;
+		Map<Object,? extends Number> scoreMap = getParent().getScoreMap();
 		if(scoreMap == null) return null;
 		Number score = scoreMap.get(id);
 		return score;
@@ -310,18 +318,19 @@ public class SelectModuleItem
 
 	public void setScore(Number number) {
 		if(getParent() == null) return;
-		Map<Object, Number> scoreMap = getParent().scoreMap;
+		Map<Object, Number> scoreMap = getParent().getScoreMap();
 		if(scoreMap == null)
-			getParent().scoreMap = scoreMap = new HashMap<Object, Number>();
+			getParent().setScoreMap( scoreMap = new HashMap<Object, Number>() );
 		scoreMap.put(id, number);
 	}
 
 	public Map<Object, Number> getScoreMap() {
-		return scoreMap;
+		if(promisedScoreMap != null && promisedScoreMap.isDone()) return promisedScoreMap.getValue();
+		return null;
 	}
 
 	public void setScoreMap(Map<Object, Number> scoreMap) {
-		this.scoreMap = scoreMap;
+		promisedScoreMap = Promises.resolved(scoreMap);
 	}
 	
 	public int getSequencenr() {

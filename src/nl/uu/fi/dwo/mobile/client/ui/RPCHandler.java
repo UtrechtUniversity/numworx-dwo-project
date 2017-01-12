@@ -6,6 +6,7 @@ import java.util.Map;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerStudentCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
@@ -43,7 +44,7 @@ public interface RPCHandler {
 
 	void getUserResults(Object courseID, Object userID,
 			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback);
-
+	Promise<DomResultsPerStudentCourse> getUserResults(Object courseID, Object userID);
 
 	Promise<List<DomScoContext>> getScos(Object id);
 	

@@ -2,12 +2,6 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import nl.uu.fi.dwo.account.client.RPCHandlerV1;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
-
-import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 
 import com.google.gwt.user.client.Window;
 

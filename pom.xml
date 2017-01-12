@@ -183,7 +183,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.ideas</groupId>
 			<artifactId>IdeasGWT</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.2</version>
 		</dependency>
 	</dependencies>
 	<parent>
@@ -199,7 +199,7 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>0.0.7-SNAPSHOT</accountVersion>
+		<accountVersion>0.0.7</accountVersion>
 	</properties>
 	<profiles>
 		<profile>
@@ -271,7 +271,7 @@
 			</properties>
 		</profile>
 	</profiles>
-	<version>2.1.4</version>
+	<version>2.1.5</version>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DwoPlayer/GWT/DWOplayer</developerConnection>
 	</scm>
