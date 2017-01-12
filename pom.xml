@@ -179,4 +179,7 @@
         <version>0.0.2</version>
         <relativePath>../ParentGWT</relativePath>
     </parent>
+    <scm>
+    	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Account/trunk</developerConnection>
+    </scm>
 </project>
