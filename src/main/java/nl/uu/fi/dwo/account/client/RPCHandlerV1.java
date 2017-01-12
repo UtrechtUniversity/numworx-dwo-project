@@ -26,10 +26,12 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerStudentCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -231,6 +233,31 @@ public class RPCHandlerV1 {
 					return result;
 				}
 			};
+
+	private static final Function<List<Map<String, Object>>, DomResultsPerStudentCourse> TO_RESULTS_PER_STUDENTCOURSE = 
+			new Function<List<Map<String,Object>>, DomResultsPerStudentCourse>() {
+
+				@Override
+				public DomResultsPerStudentCourse apply(List<Map<String, Object>> t) {
+					DomResultsPerStudentCourse result = new DomResultsPerStudentCourse();
+					Map<PersistenceId, DomStudentScoContext> studentScoContexts = new LinkedHashMap<>();
+					result.setStudentScoContexts(studentScoContexts);
+					for(Map<String, Object> item: t) {
+						Object scoID = item.get("scoID");
+						Object score = item.get("score");
+						PersistenceId scoId = idOf(scoID, PersistenceClassType.PersistentScoContext);
+						float scoref = 0f;
+						if(score instanceof Number) scoref = ((Number) score).floatValue();
+						else continue;
+						DomStudentScoContext context = new DomStudentScoContext();
+						context.setScore(scoref);
+						context.setScoID(scoId);
+						studentScoContexts.put(scoId, context);
+					}
+					return result;
+				}
+			};
+			
 	
 	
 	
@@ -448,13 +475,13 @@ public class RPCHandlerV1 {
 		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, "getUserResults", params, getUserResultsCallback);
 		request.execute();
 	}
-			
-//	public void getCourseSequence(final Object schoolID, final Runnable runner) {
-//
-//			runner.run();
-//			return;
-//	}
 
+	public Promise<DomResultsPerStudentCourse> getUserResults(Object courseID, Object userID) {
+		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+		getUserResults(courseID, userID, defer);
+		return defer.getPromise().map(TO_RESULTS_PER_STUDENTCOURSE);
+	}
+	
 	public void logout() {
 	}
 	
