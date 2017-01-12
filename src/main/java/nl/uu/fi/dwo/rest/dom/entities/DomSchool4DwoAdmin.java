@@ -36,7 +36,7 @@ public class DomSchool4DwoAdmin extends DomSchool{
         StringBuilder result = new StringBuilder();
         result.append(this.schoolLogin);
         result.append(" - ");
-        result.append(this.getUniqueDisplayName());
+        result.append(this.getSchoolName());
 
         return result.toString();
     }
