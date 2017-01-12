@@ -4,6 +4,11 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
+/** 
+ * UNDERCONSTRUCTION, IMPLEMENTATION MAY CHANGE ANY TIME.
+ * 
+ * @author G.A.J. van der Plas <W.P.G.vanVelthoven@uu.nl>
+ */
 public class DomResultsPerStudentCourse {
 
 	public DomResultsPerStudentCourse() {
