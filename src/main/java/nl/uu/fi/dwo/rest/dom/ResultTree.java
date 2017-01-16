@@ -26,7 +26,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 public class ResultTree {
 
-    DomResultTeacher root;
+    private DomResultTeacher root;
 
     public ResultTree(DomResultsPerTeacher resultData) {
         buildResultTree(resultData);
@@ -48,13 +48,13 @@ public class ResultTree {
         //build tree from results collection
 
         //set the root teacher
-        root = new DomResultTeacher(resultData.getTeacher());
+        setRoot(new DomResultTeacher(resultData.getTeacher()));
         //set the schoolclasses of the teacher
         Map<PersistenceId, DomResultSchoolClass> schoolClasses = new HashMap<PersistenceId, DomResultSchoolClass>(resultData.getSchoolClasses().size());
-        root.setChildren(schoolClasses);
+        getRoot().setChildren(schoolClasses);
         for (PersistenceId key : resultData.getSchoolClasses().keySet()) {
             DomResultSchoolClass value = new DomResultSchoolClass(resultData.getSchoolClasses().get(key));
-            value.setParent(root);
+            value.setParent(getRoot());
             schoolClasses.put(key, value);
 
         }
@@ -103,4 +103,18 @@ public class ResultTree {
             scoContext.getChildren().put(id, studentSco);
         }
    }
+
+    /**
+     * @return the root
+     */
+    public DomResultTeacher getRoot() {
+        return root;
+    }
+
+    /**
+     * @param root the root to set
+     */
+    public void setRoot(DomResultTeacher root) {
+        this.root = root;
+    }
 }
