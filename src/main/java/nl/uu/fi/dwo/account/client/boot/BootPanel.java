@@ -19,7 +19,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 /**
  * BootPanel, boots the app, initializes with the server, requests a login.
  *
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas 
  */
 public class BootPanel extends Composite implements EntryPoint {
 

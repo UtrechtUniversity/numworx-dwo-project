@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 /**
  * Panel that handles the login-authentication.
  *
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas 
  */
 public class LoginPanel extends Composite implements ClickHandler {
 

@@ -17,7 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 /**
  *
  *
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas 
  */
 public class ResultPanel extends Composite {
 
