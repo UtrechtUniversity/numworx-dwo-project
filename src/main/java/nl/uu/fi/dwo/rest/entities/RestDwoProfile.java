@@ -6,7 +6,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 /**
  * RestDwoProfile contains a minimal DwoProfile info.
  * 
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
 public class RestDwoProfile {
 	private DomContext restContext;

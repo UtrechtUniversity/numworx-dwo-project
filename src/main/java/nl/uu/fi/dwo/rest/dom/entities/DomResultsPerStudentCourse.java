@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 /** 
  * UNDERCONSTRUCTION, IMPLEMENTATION MAY CHANGE ANY TIME.
  * 
- * @author G.A.J. van der Plas <W.P.G.vanVelthoven@uu.nl>
+ * @author G.A.J. van der Plas
  */
 public class DomResultsPerStudentCourse {
 

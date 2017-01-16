@@ -2,9 +2,9 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 /**
  *
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
-public class DomResultTeacher extends DomResultScore {
+public class DomResultTeacher extends DomResultScore<DomResultSchoolClass> {
     private DomTeacher teacher;
 
     public DomResultTeacher(DomTeacher aTeacher){

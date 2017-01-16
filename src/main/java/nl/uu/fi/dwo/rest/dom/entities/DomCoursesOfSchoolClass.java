@@ -7,10 +7,10 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * ClassCourse and Courses in the subtree of the ClassCourse Courses for a 
- * SchoolClass. This is client a different user case than the {@Link DomResultsPerTeacher}.
+ * SchoolClass. This is a different use-case than the {@Link DomResultsPerTeacher}.
  * 
  * 
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
 @XmlRootElement
 public class DomCoursesOfSchoolClass {

@@ -8,7 +8,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 /**
  * The class defines which DomSchoolClass has which DomCourse.
  * 
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
 @XmlRootElement
 public class DomClassCourse {

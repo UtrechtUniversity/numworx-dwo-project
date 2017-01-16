@@ -1,18 +1,21 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
- *
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * Node of the ResultScoreTree. The tree is crawled to calculate a result matrix
+ * for the result viewing.
+ * 
+ * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
-public abstract class DomResultScore {
+public abstract class DomResultScore<T extends DomResultScore> {
 
     private Double score = null;
     private String label;
     private DomResultScore parent = null;
-    private List<? extends DomResultScore> children = Collections.emptyList();
+    private Map<PersistenceId,T> children = Collections.emptyMap();
 
     /**
      * @return the score
@@ -63,14 +66,14 @@ public abstract class DomResultScore {
     /**
      * @return the children
      */
-    public List<? extends DomResultScore> getChildren() {
+    public Map<PersistenceId,T>  getChildren() {
         return children;
     }
 
     /**
      * @param children the children to set
      */
-    public void setChildren(List<? extends DomResultScore> children) {
+    public void setChildren(Map<PersistenceId,T> children) {
         this.children = children;
     }
 

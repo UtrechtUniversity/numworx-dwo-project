@@ -14,7 +14,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * DomCourse,DomCourse, ..., DomCourse. A leave of the kd-tree is by definition 
  * a course-leave. 
  * 
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
 @XmlRootElement
 public class DomResultsPerTeacher {

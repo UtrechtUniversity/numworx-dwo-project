@@ -2,12 +2,13 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 /**
  *
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
+ * @param <T>
  */
-public class DomResultCourse extends DomResultScore{
+public class DomResultCourse <T extends DomResultScore> extends DomResultScore<T> {
     private DomCourse course;
 
-        void DomResultCourse(DomCourse aCourse){
+    public DomResultCourse(DomCourse aCourse){
         course = aCourse;
         super.setLabel(course.getName());
     }

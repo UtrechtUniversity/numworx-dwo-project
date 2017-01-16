@@ -2,15 +2,17 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 /**
  *
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  */
-public class DomResultSchoolClass extends DomResultScore{
+public class DomResultSchoolClass extends DomResultScore<DomResultCourse> {
+
     private DomSchoolClass schoolClass;
 
-    void DomResultSchoolClass(DomSchoolClass aSchoolClass){
+    public DomResultSchoolClass(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
         super.setLabel(schoolClass.getSchoolClassName());
     }
+
     /**
      * @return the schoolClass
      */
@@ -24,5 +26,5 @@ public class DomResultSchoolClass extends DomResultScore{
     public void setSchoolClass(DomSchoolClass schoolClass) {
         this.schoolClass = schoolClass;
     }
-    
+
 }

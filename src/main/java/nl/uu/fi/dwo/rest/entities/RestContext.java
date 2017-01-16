@@ -4,7 +4,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 
 /**
  *
- * @author G.A.J. van der Plas <G.A.J.vanderPlas@uu.nl>
+ * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
 public class RestContext {
     private DomContext restContext;
