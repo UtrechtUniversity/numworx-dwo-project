@@ -58,26 +58,58 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     	
     }
     
-	Logger LOG = Logger.getLogger("SchoolLoginPanel");
+    /**
+     *
+     */
+    Logger LOG = Logger.getLogger("SchoolLoginPanel");
 
+    /**
+     *
+     */
     SchoolLoginController control;
+
+    /**
+     *
+     */
     PopupPanel popup;
     private Button delBtn;
     private Button addBtn;
     private Button closeBtn;
+
+    /**
+     *
+     */
     CellTable<DomSchoolRoleAndClass> table = new CellTable<DomSchoolRoleAndClass>();
+
+    /**
+     *
+     */
     ListDataProvider<DomSchoolRoleAndClass> dataProvider = new ListDataProvider<DomSchoolRoleAndClass>();
 
 	private Command resetLogin;
 
+    /**
+     *
+     * @return
+     */
     public PopupPanel getPopup() {
         return popup;
     }
 
+    /**
+     *
+     * @param popup
+     */
     public void setPopup(PopupPanel popup) {
         this.popup = popup;
     }
 
+    /**
+     *
+     * @param resetLogin
+     * @param user
+     * @throws Dwo2Exception
+     */
     SchoolLoginPanel(Command resetLogin, DomUserFull user) throws Dwo2Exception {
         init(user);
         this.resetLogin = resetLogin;
@@ -85,6 +117,10 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         //control.init(user); dubbel!
     }
 
+    /**
+     *
+     * @param user
+     */
     protected void init(DomUserFull user) {
         //this.setSize("400", "500");
         //
@@ -176,6 +212,10 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         }
     }
 
+    /**
+     *
+     * @param srcs
+     */
     void update(DomSchoolsRolesAndClasses srcs) {
     	// FIXME Gert?
         //reinitiale the table.

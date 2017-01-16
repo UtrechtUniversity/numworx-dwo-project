@@ -12,6 +12,10 @@ import com.google.gwt.user.client.ui.MenuItem;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
+/**
+ *
+ * @author plas0006
+ */
 public class UserBar extends Composite implements Command {
 
     private final MenuBar top = new MenuBar();
@@ -26,6 +30,9 @@ public class UserBar extends Composite implements Command {
 	private MenuItem itemSchoolLogin;
 	private MenuItem userbar;
 	
+    /**
+     *
+     */
     public UserBar() {
         init();
     }
@@ -72,7 +79,11 @@ public class UserBar extends Composite implements Command {
         Window.alert("wim calls a new login here.");
 	}
 	
-	public void setResetLogin(Command resetLogin) {
+    /**
+     *
+     * @param resetLogin
+     */
+    public void setResetLogin(Command resetLogin) {
 		if(resetLogin == null) resetLogin = this; // NEVER NULL
 		schoolClassCmd.setResetLogin(resetLogin);
 		schoolLoginCmd.setResetLogin(resetLogin);
@@ -114,7 +125,11 @@ public class UserBar extends Composite implements Command {
 		status.setText(rolename + " " + display);
 	}
 
-	public void setSingleSchool(Boolean singleSchool) {
+    /**
+     *
+     * @param singleSchool
+     */
+    public void setSingleSchool(Boolean singleSchool) {
 		itemSchoolLogin.setEnabled(!Boolean.TRUE.equals(singleSchool));
 	}
 }

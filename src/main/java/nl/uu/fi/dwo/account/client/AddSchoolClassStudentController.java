@@ -24,11 +24,20 @@ class AddSchoolClassStudentController {
     private List<DomSchoolClass> schoolClasses = new ArrayList<DomSchoolClass>();    
     private SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
 
+    /**
+     *
+     * @param view
+     * @param user
+     */
     AddSchoolClassStudentController(AddSchoolClassStudentPanel view, DomUserFull user) {
         this.view = view;
         init(user);
     }
 
+    /**
+     *
+     * @param user
+     */
     public void init(DomUserFull user) {
         currentUser = user;
         LOG.log(Level.INFO,""+manager);
@@ -65,22 +74,45 @@ class AddSchoolClassStudentController {
         this.currentUser = currentUser;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<DomSchoolClass> getSchoolClasses() {
         return schoolClasses;
     }
 
+    /**
+     *
+     * @param submit
+     * @param callBack
+     */
     public void setActiveSchoolClass(DomSchoolClass submit,AsyncCallback<Boolean> callBack) {
         manager.setActiveSchoolClass(submit, callBack);
     }
     
+    /**
+     *
+     * @param callBack
+     */
     public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack){
         manager.getActiveSchoolClass(callBack);
     }
     
+    /**
+     *
+     * @param submit
+     * @param callBack
+     */
     public void removeSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
         manager.removeSchoolClass(submit, callBack);
     }
 
+    /**
+     *
+     * @param submit
+     * @param callBack
+     */
     public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit, AsyncCallback<Boolean> callBack) {
         manager.registerStudentForSchoolClass(submit, callBack);
     }

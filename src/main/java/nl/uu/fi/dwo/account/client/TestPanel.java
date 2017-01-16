@@ -16,6 +16,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class TestPanel extends VerticalPanel  implements ClickHandler{
     
+    /**
+     *
+     */
     public TestPanel(){
         Button b = new Button("Test");
 //        b.addAttachHandler()

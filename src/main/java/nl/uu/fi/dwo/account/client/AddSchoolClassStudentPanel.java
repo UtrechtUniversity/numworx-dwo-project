@@ -50,14 +50,27 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
     private ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
     private DomSchoolClass selectedClass = null;
 
+    /**
+     *
+     * @return the popup panel.
+     */
     public PopupPanel getPopup() {
         return popup;
     }
 
+    /**
+     *
+     * @param popup set the the popup panel.
+     */
     public void setPopup(PopupPanel popup) {
         this.popup = popup;
     }
 
+    /**
+     *
+     * @param user
+     * @param aControl
+     */
     AddSchoolClassStudentPanel(DomUserFull user, SchoolClassStudentController aControl) {
         dataProvider.getList().clear();
         selectedClass = null;
@@ -67,6 +80,9 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 
     }
     
+    /**
+     *
+     */
     final Comparator<DomSchoolClass> classComparator = new Comparator<DomSchoolClass>() {
     	public int compare(DomSchoolClass o1, DomSchoolClass o2) {
 		    if (o1 == o2) {
@@ -83,6 +99,10 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
 
 	private SingleSelectionModel<DomSchoolClass> selectionModel;
 
+    /**
+     *
+     * @param user the current signed-in user.
+     */
     public void init(DomUserFull user) {
         this.setSize("400", "500");
 
@@ -210,6 +230,10 @@ public class AddSchoolClassStudentPanel extends VerticalPanel implements ClickHa
         LOG.log(Level.INFO, event.getSource().toString());
     }
 
+    /**
+     *
+     * @param schoolClasses
+     */
     protected void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
 //        if (dataProvider == null) {
 //            dataProvider = new ListDataProvider<DomSchoolClass>();

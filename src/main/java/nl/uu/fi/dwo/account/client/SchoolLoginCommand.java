@@ -21,6 +21,10 @@ class SchoolLoginCommand implements Command {
     private static final Logger LOG = Logger.getLogger(SchoolLoginCommand.class.getName());
 	private Command resetLogin;
 
+    /**
+     *
+     * @param resetLogin
+     */
     public SchoolLoginCommand(Command resetLogin) {
     	this.resetLogin = resetLogin;
     }
@@ -45,7 +49,11 @@ class SchoolLoginCommand implements Command {
         }
     }
 
-	public void setResetLogin(Command resetLogin) {
+    /**
+     *
+     * @param resetLogin
+     */
+    public void setResetLogin(Command resetLogin) {
 		this.resetLogin = resetLogin;
 	}
 }

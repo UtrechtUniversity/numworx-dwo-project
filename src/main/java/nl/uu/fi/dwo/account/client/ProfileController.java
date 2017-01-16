@@ -21,11 +21,20 @@ class ProfileController {
     private DomUserFull updateUser = null;
     private SecuredUserAccountManager manager = new SecuredUserAccountManager();
 
+    /**
+     *
+     * @param view
+     * @param user
+     */
     public ProfileController(ProfilePanel view, DomUserFull user) {
         this.view = view;
         this.init(user);
     }
 
+    /**
+     *
+     * @param user
+     */
     public void init(DomUserFull user) {
         currentUser = user;
         updateUser = currentUser.duplicate();
@@ -34,7 +43,6 @@ class ProfileController {
     /**
      * Update the currentUser.
      *
-     * @param callback
      */
     public void callUpdate() {
         LOG.log(Level.INFO, "Calling REST-interface login.");

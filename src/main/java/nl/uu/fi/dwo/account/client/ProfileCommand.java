@@ -6,10 +6,17 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Logger;
 
+/**
+ *
+ * @author plas0006
+ */
 public class ProfileCommand implements Command {
 
     private static final Logger LOG = Logger.getLogger(ProfileCommand.class.getName());
 
+    /**
+     *
+     */
     public ProfileCommand() {
     }
     

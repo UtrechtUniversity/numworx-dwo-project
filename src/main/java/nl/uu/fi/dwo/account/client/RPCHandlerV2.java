@@ -19,36 +19,74 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
+/**
+ *
+ * @author plas0006
+ */
 public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 
-	protected final SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
-	protected final SecuredUserSchoolLoginManagerV2 schoolManager = new SecuredUserSchoolLoginManagerV2();
+    /**
+     *
+     */
+    protected final SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
+
+    /**
+     *
+     */
+    protected final SecuredUserSchoolLoginManagerV2 schoolManager = new SecuredUserSchoolLoginManagerV2();
 	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 
-
-	public RPCHandlerV2(String server, int profile) {
+    /**
+     *
+     * @param server
+     * @param profile
+     */
+    public RPCHandlerV2(String server, int profile) {
 		super(server, profile);
 	}
 	
-	public Promise<DomUserFullwLoginContext> login(String name, String password) {
+    /**
+     *
+     * @param name
+     * @param password
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> login(String name, String password) {
 		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
 		accountManager.loginUser(name,  password, defer, null);
 		return defer.getPromise();
 	}
 
-	public Promise<DomUserFullwLoginContext> loginMD5(String name, String password) {
+    /**
+     *
+     * @param name
+     * @param password
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> loginMD5(String name, String password) {
 		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
 		accountManager.loginUserMD5(name,  password, defer, null);
 		return defer.getPromise();
 	}
 	
-	public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
+    /**
+     *
+     * @return
+     */
+    public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
 		PromiseCallback<DomSchoolsRolesAndClassesV2> defer = new PromiseCallback<>();
 		schoolManager.getSchoolLoginsV2(defer);
 		return defer.getPromise();
 	}
 		
-	protected void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
+    /**
+     *
+     * @param courseID
+     * @param userID
+     * @param schoolGroupID
+     * @param getUserResultsCallback
+     */
+    protected void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
 			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
 		Object[] params = { courseID, userID, schoolGroupID };
 		XmlRpcClient client = getClient();
@@ -56,11 +94,21 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 		request.execute();
 	}
 	
-	@Override 
+    /**
+     *
+     * @param courseID
+     * @param userID
+     * @param getUserResultsCallback
+     */
+    @Override 
 	public abstract void getUserResults(Object courseID, Object userID,
 			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
 	
-	public void getCourses(
+    /**
+     *
+     * @param getCoursesCallback
+     */
+    public void getCourses(
 			AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		
 		String method = "getCoursesJS"; // sort sequencenr
@@ -76,7 +124,12 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 		request.execute();
 	}
 
-	public void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+    /**
+     *
+     * @param id
+     * @param getCoursesCallback
+     */
+    public void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("parentID", id);
 		String method = "getTableJS";
@@ -86,7 +139,12 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 		request.execute();
 	}
 
-	public void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+    /**
+     *
+     * @param schoolID
+     * @param getCoursesCallback
+     */
+    public void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		String method = "getTableJS";
 		HashMap<String,Object> g = new HashMap<String,Object>();
 		g.put("parentID", 0);
@@ -98,7 +156,12 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 		request.execute();
 	}
 
-	public void getCoursesClass(Object classid, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+    /**
+     *
+     * @param classid
+     * @param getCoursesCallback
+     */
+    public void getCoursesClass(Object classid, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		String method = "getCoursesForClassJS";
 		Object[] params = { classid };
 		XmlRpcClient client = getClient();
@@ -106,7 +169,13 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 		request.execute();
 	}
 
-	protected void samlLoginHelper(String name, String org,
+    /**
+     *
+     * @param name
+     * @param org
+     * @param callback
+     */
+    protected void samlLoginHelper(String name, String org,
 			AsyncCallback<DomUserFullwLoginContext> callback) {
 		String authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
 		accountManager.samlLogin(name, org, authToken, callback);
@@ -115,18 +184,33 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 	/* (non-Javadoc)
 	 * @see nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler#getAuthTokenUser(java.lang.String, com.google.gwt.user.client.rpc.AsyncCallback)
 	 */
+
+    /**
+     *
+     * @param authToken
+     * @param callback
+     */
+
 	public void getUserFromAuthTokenHelper(String authToken,
 			AsyncCallback<DomUserFullwLoginContext> callback) {
 		accountManager.getUserFromAuthToken(authToken, callback);
 	}
 	
-	public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
+    /**
+     *
+     * @param authToken
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
 		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
 		accountManager.getUserFromAuthToken(authToken, defer);
 		return defer.getPromise();
 	}
 		
-	@Override
+    /**
+     *
+     */
+    @Override
 	public void logout() {
 		super.logout();
 		if(DwoGlobalVars.instance().getCurrentUser() != null)
@@ -142,7 +226,13 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 				}});
 	}
 	
-	public Promise<DomUserFullwLoginContext> samlLogin(String name, String org) {
+    /**
+     *
+     * @param name
+     * @param org
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> samlLogin(String name, String org) {
 		PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<>();
 		samlLoginHelper(name, org, defer);
 		return defer.getPromise();

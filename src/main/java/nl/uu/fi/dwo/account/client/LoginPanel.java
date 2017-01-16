@@ -22,13 +22,36 @@ public class LoginPanel extends VerticalPanel {
 
     private static final Logger LOG = Logger.getLogger(LoginPanel.class.getName());
 
+    /**
+     *
+     */
     Label loginLabel = new Label("usercode:");
+
+    /**
+     *
+     */
     Label passLabel = new Label("password:");
+
+    /**
+     *
+     */
     TextBox loginText = new TextBox();
+
+    /**
+     *
+     */
     PasswordTextBox passText = new PasswordTextBox();
+
+    /**
+     *
+     */
     Label localization = new Label("Localisation: " + LocaleInfo.getLocaleNativeDisplayName("en-gb"));
 
     //Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_GUI_AnIncorrectPasswordWasGiven());
+
+    /**
+     *
+     */
     public LoginPanel() {
         Grid g = new Grid(2, 2);
         g.setWidget(0, 0, loginLabel);
@@ -40,25 +63,46 @@ public class LoginPanel extends VerticalPanel {
         this.add(g);
     }
 
+    /**
+     *
+     * @param usercode
+     * @param loggedIn
+     */
     public void setStatus(String usercode, boolean loggedIn) {
         loginLabel.setText("usercode: " + usercode);
         passLabel.setText("logged in: " + Boolean.valueOf(loggedIn).toString());
         localization.setText("Localisation: " + LocaleInfo.getLocaleNativeDisplayName("en-gb"));
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUserCode() {
         LOG.log(Level.INFO,""+loginText.getText());
         return loginText.getText();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPassWord() {
         return passText.getText();
     }
 
+    /**
+     *
+     * @param username
+     */
     public void setUserCode(String username) {
         loginText.setText(username);
     }
 
+    /**
+     *
+     * @param password
+     */
     public void setPassWord(String password) {
         passText.setText(password);
     }

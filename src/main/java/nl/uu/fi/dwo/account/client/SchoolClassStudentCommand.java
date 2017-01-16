@@ -20,14 +20,26 @@ public class SchoolClassStudentCommand implements Command {
     private static final Logger LOG = Logger.getLogger(ProfileCommand.class.getName());
     private Command resetLogin;
 
+    /**
+     *
+     * @param resetLogin
+     */
     public SchoolClassStudentCommand(Command resetLogin) {
         this.resetLogin = resetLogin;
     }
 
+    /**
+     *
+     * @return
+     */
     Command getResetLogin() {
         return resetLogin;
     }
 
+    /**
+     *
+     * @param resetLogin
+     */
     void setResetLogin(Command resetLogin) {
         this.resetLogin = resetLogin;
     }

@@ -54,7 +54,31 @@ public class DwoGlobalVars {
      */
     
     public enum DwoGlobalVarsState {
-        Unintialized, Initializing, NotLoggedIn, LoggedIn, Closing
+
+        /**
+         *
+         */
+        Unintialized, 
+
+        /**
+         *
+         */
+        Initializing, 
+
+        /**
+         *
+         */
+        NotLoggedIn, 
+
+        /**
+         *
+         */
+        LoggedIn, 
+
+        /**
+         *
+         */
+        Closing
     }
     
     private DwoGlobalVarsState state=DwoGlobalVarsState.Unintialized;
@@ -64,20 +88,34 @@ public class DwoGlobalVars {
     private DomLoginContext currentLoginContext;
     private DomSchoolsRolesAndClassesV2 schoolLogins;
    
-    
-
+    /**
+     *
+     * @return
+     */
     public static DwoGlobalVars getInstance() {
         return instance;
     }
 
+    /**
+     *
+     * @param instance
+     */
     public static void setInstance(DwoGlobalVars instance) {
         DwoGlobalVars.instance = instance;
     }
     
+    /**
+     *
+     * @return
+     */
     public DomSchoolClass getCurrentSchoolClass() {
         return currentSchoolClass;
     }
 
+    /**
+     *
+     * @param currentSchoolClass
+     */
     public void setCurrentSchoolClass(DomSchoolClass currentSchoolClass) {
         this.currentSchoolClass = currentSchoolClass;
     }
@@ -124,6 +162,10 @@ public class DwoGlobalVars {
         return instance;
     }
 
+    /**
+     *
+     * @throws Dwo2Exception
+     */
     public DwoGlobalVars() throws Dwo2Exception {
         //TODO define initialization stages: Unintialized, Initializing, NotLoggedIn, LoggedIn. Closing.
         initProperties();
@@ -195,7 +237,7 @@ public class DwoGlobalVars {
     }
 
     /**
-     * @param curUser the currentUser to set
+     * @param aCurUser the currentUser to set
      */
     public void setCurrentUser(DomUserFull aCurUser) {
         currentUser = aCurUser;

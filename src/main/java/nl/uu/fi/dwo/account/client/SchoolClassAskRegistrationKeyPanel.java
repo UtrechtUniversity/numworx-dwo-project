@@ -45,6 +45,12 @@ public class SchoolClassAskRegistrationKeyPanel extends VerticalPanel implements
     private DomSchoolClass schoolClass;
 
     //Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_GUI_AnIncorrectPasswordWasGiven());
+
+    /**
+     *
+     * @param aControl
+     * @param sc
+     */
     public SchoolClassAskRegistrationKeyPanel(SchoolClassStudentController aControl, DomSchoolClass sc) {
         control = aControl;
         schoolClass = sc;
@@ -98,12 +104,16 @@ public class SchoolClassAskRegistrationKeyPanel extends VerticalPanel implements
     }
 
     /**
-     * @param key the regKeyText to set
+     * @param name
      */
     public void setSchoolClassName(String name) {
         this.schoolClassNameText.setText(name);
     }
 
+    /**
+     *
+     * @param popup
+     */
     void setPopup(PopupPanel popup) {
         this.popup = popup;
     }

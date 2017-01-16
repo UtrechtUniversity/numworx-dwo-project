@@ -22,35 +22,105 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  */
 public class ProfilePanel extends VerticalPanel implements ClickHandler {
 
+    /**
+     *
+     */
     Logger LOG = Logger.getLogger("Account");
 
+    /**
+     *
+     */
     ProfileController control;
+
+    /**
+     *
+     */
     PopupPanel popup;
+
+    /**
+     *
+     */
     Button cnlBtn;
+
+    /**
+     *
+     */
     Button updateBtn;
+
+    /**
+     *
+     */
     DomUserFull user;
+
+    /**
+     *
+     */
     TextBox login = new TextBox();
+
+    /**
+     *
+     */
     TextBox givenName = new TextBox();
+
+    /**
+     *
+     */
     TextBox insertion = new TextBox();
+
+    /**
+     *
+     */
     TextBox familyName = new TextBox();
+
+    /**
+     *
+     */
     TextBox email = new TextBox();
+
+    /**
+     *
+     */
     PasswordTextBox password = new PasswordTextBox();
+
+    /**
+     *
+     */
     PasswordTextBox newPassword = new PasswordTextBox();
+
+    /**
+     *
+     */
     PasswordTextBox newPasswordAgain = new PasswordTextBox();
 
+    /**
+     *
+     * @return
+     */
     public PopupPanel getPopup() {
         return popup;
     }
 
+    /**
+     *
+     * @param popup
+     */
     public void setPopup(PopupPanel popup) {
         this.popup = popup;
     }
 
+    /**
+     *
+     * @param user
+     */
     ProfilePanel(DomUserFull user) {
         control = new ProfileController(this, user);
         init(user);
     }
 
+    /**
+     *
+     * @param aUser
+     */
     public void init(DomUserFull aUser) {
         user = aUser;
         //this.setPixelSize(400, 500); Wim: wrong size, default is okay

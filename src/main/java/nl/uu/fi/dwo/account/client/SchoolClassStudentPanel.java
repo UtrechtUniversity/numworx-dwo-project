@@ -47,20 +47,45 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     private Button delBtn;
     private Button addBtn;
     private Button closeBtn;
+
+    /**
+     *
+     */
     CellTable<DomSchoolClass> table = new CellTable<DomSchoolClass>();
-        ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
+
+    /**
+     *
+     */
+    ListDataProvider<DomSchoolClass> dataProvider = new ListDataProvider<DomSchoolClass>();
+
+    /**
+     *
+     */
     Command resetLogin;
 
     private HandlerRegistration registration;
 
+    /**
+     *
+     * @return
+     */
     public PopupPanel getPopup() {
         return popup;
     }
 
+    /**
+     *
+     * @param popup
+     */
     public void setPopup(PopupPanel popup) {
         this.popup = popup;
     }
 
+    /**
+     *
+     * @param resetLogin
+     * @param user
+     */
     SchoolClassStudentPanel(Command resetLogin, DomUserFull user) {
         this.resetLogin = resetLogin;
         init(user);
@@ -76,6 +101,10 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                 && object.getId().equals(DwoGlobalVars.getInstance().getCurrentSchoolClass().getId());
     }
 
+    /**
+     *
+     * @param user
+     */
     public void init(DomUserFull user) {
         //this.setSize("400", "500");
 
@@ -335,6 +364,10 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         LOG.log(Level.INFO, event.getSource().toString());
     }
 
+    /**
+     *
+     * @param schoolClasses
+     */
     public void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
         List<DomSchoolClass> list = dataProvider.getList();
         list.clear();

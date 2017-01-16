@@ -65,29 +65,59 @@ public class RPCHandlerV1 {
 	private String server;
 	private int profile;
 	
-	public RPCHandlerV1(String server, int profile) {
+    /**
+     *
+     * @param server
+     * @param profile
+     */
+    public RPCHandlerV1(String server, int profile) {
 		this.server = server;
 		this.profile = profile;
 	}
 		
-	protected static int PROFILE_OFFSET = -1234;
+    /**
+     *
+     */
+    protected static int PROFILE_OFFSET = -1234;
 	
-	protected void login(String name, String password, AsyncCallback<Map<String,Object>> callback)
+    /**
+     *
+     * @param name
+     * @param password
+     * @param callback
+     */
+    protected void login(String name, String password, AsyncCallback<Map<String,Object>> callback)
 	{
 		String pwmd5 = MD5.md5(password);
 		loginMD5(name, pwmd5, callback);
 	}
 
-	public Promise<DomUserFullwLoginContext> login(String name, String password)
+    /**
+     *
+     * @param name
+     * @param password
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> login(String name, String password)
 	{
 		return Promises.failed(new Error());
 	}
 	
-	public Promise<DomUserFullwLoginContext> loginMD5(String name, String password) {
+    /**
+     *
+     * @param name
+     * @param password
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> loginMD5(String name, String password) {
 		return Promises.failed(new Error());
 	}
 	
-	public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
+    /**
+     *
+     * @return
+     */
+    public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
 		return Promises.failed(new Error());
 	}
 	
@@ -103,11 +133,22 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	public Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id) {
+    /**
+     *
+     * @param user_id
+     * @param org_id
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id) {
 		return Promises.failed(new Error());
 	}
 	
-	public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
+    /**
+     *
+     * @param authToken
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
 		return Promises.failed(new RuntimeException(""));
 	}
 
@@ -157,8 +198,10 @@ public class RPCHandlerV1 {
 	private static final Function<List<Map<String,Object>>, List<DomCourseStudent>> TO_DOMCOURSELIST = 
 		new ListFunction<DomCourseStudent>(TO_DOMCOURSE);
 	
-
-	protected static final Function<Map<String, Object>, DomScoContext> TO_DOMSCOCONTEXT = 
+    /**
+     *
+     */
+    protected static final Function<Map<String, Object>, DomScoContext> TO_DOMSCOCONTEXT = 
 			new Function<Map<String,Object>, DomScoContext>() {
 
 				@Override
@@ -187,7 +230,10 @@ public class RPCHandlerV1 {
 	private static final Function<List<Map<String,Object>>, List<DomScoContext>> TO_DOMSCOCONTEXTLIST = 
 			new ListFunction<DomScoContext>(TO_DOMSCOCONTEXT);
 	
-	protected static final Function<Map<String, Object>, DomClassCourse> TO_DOMCLASSCOURSE = 
+    /**
+     *
+     */
+    protected static final Function<Map<String, Object>, DomClassCourse> TO_DOMCLASSCOURSE = 
 			new Function<Map<String,Object>, DomClassCourse>() {
 
 				@Override
@@ -258,10 +304,11 @@ public class RPCHandlerV1 {
 				}
 			};
 			
-	
-	
-	
-	public XmlRpcClient getClient() {
+    /**
+     *
+     * @return
+     */
+    public XmlRpcClient getClient() {
 		if( xmlRpcClient == null)
 		{
 			xmlRpcClient = new XmlRpcClient(server);
@@ -270,7 +317,13 @@ public class RPCHandlerV1 {
 		return xmlRpcClient;
 	}
 
-	protected static PersistenceId idOf(Object object, PersistenceClassType type) {
+    /**
+     *
+     * @param object
+     * @param type
+     * @return
+     */
+    protected static PersistenceId idOf(Object object, PersistenceClassType type) {
 		if(object == null || "".equals(object))
 				return null;
 		PersistenceId id = new PersistenceId();
@@ -278,7 +331,11 @@ public class RPCHandlerV1 {
 		return id;
 	}
 
-	public void getCourses(
+    /**
+     *
+     * @param getCoursesCallback
+     */
+    public void getCourses(
 			AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		
 		String method = "getCourses";
@@ -294,13 +351,22 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	public Promise<List<DomCourseStudent>> getCourses() {
+    /**
+     *
+     * @return
+     */
+    public Promise<List<DomCourseStudent>> getCourses() {
 		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
 		getCourses(defer);
 		return defer.getPromise().map(TO_DOMCOURSELIST);
 	}
 	
-	public void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+    /**
+     *
+     * @param schoolID
+     * @param getCoursesCallback
+     */
+    public void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		String method = "getTable";
 		HashMap<String,Object> g = new HashMap<String,Object>();
 		g.put("parentID", 0);
@@ -312,14 +378,24 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	public Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school) {
+    /**
+     *
+     * @param school
+     * @return
+     */
+    public Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school) {
 		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
 		Object id = PersistenceIdDecoderInterface.instance.idOf(school.getId(), PersistenceClassType.PersistentSchool);
 		getCoursesSchool(id, defer);
 		return defer.getPromise().map(TO_DOMCOURSELIST);
 	}
 		
-	public void getCoursesClass(Object classid, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+    /**
+     *
+     * @param classid
+     * @param getCoursesCallback
+     */
+    public void getCoursesClass(Object classid, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		String method = "getCoursesForClass";
 		Object[] params = { classid };
 		XmlRpcClient client = getClient();
@@ -327,7 +403,12 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 
-	public Promise<DomCoursesOfSchoolClass> getCoursesClass(final DomSchoolClass schoolclass) {
+    /**
+     *
+     * @param schoolclass
+     * @return
+     */
+    public Promise<DomCoursesOfSchoolClass> getCoursesClass(final DomSchoolClass schoolclass) {
 		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
 		Object id = PersistenceIdDecoderInterface.instance.idOf(schoolclass.getId(), PersistenceClassType.PersistentSchoolClass);
 		getCoursesClass(id, defer);
@@ -341,8 +422,12 @@ public class RPCHandlerV1 {
 		});
 	}
 	
-	
-	protected  AsyncCallback<List<Map<String,Object>>> filterProfile(final AsyncCallback<List<Map<String,Object>>> callback) {
+    /**
+     *
+     * @param callback
+     * @return
+     */
+    protected  AsyncCallback<List<Map<String,Object>>> filterProfile(final AsyncCallback<List<Map<String,Object>>> callback) {
 		return new AsyncCallback<List<Map<String,Object>>>() {
 
 			@Override
@@ -367,11 +452,20 @@ public class RPCHandlerV1 {
 		};
 	}
 	
-	final int getProfile() {
+    /**
+     *
+     * @return
+     */
+    final int getProfile() {
 		return profile;
 	}
 
-	public void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
+    /**
+     *
+     * @param id
+     * @param getCoursesCallback
+     */
+    public void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("parentID", id);
 		String method = "getTable";
@@ -381,14 +475,23 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 
-	public Promise<List<DomCourseStudent>> getCourses(Object id) {
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public Promise<List<DomCourseStudent>> getCourses(Object id) {
 		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
 		getCourses(id, defer);
 		return defer.getPromise().map(TO_DOMCOURSELIST);
 	}
 	
-	
-	void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback) {
+    /**
+     *
+     * @param id
+     * @param getScosCallback
+     */
+    void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("courseID", id);
 		String method = "getTable";
@@ -398,14 +501,23 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	public Promise<List<DomScoContext>> getScos(Object id) {
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public Promise<List<DomScoContext>> getScos(Object id) {
 		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
 		getScos(id, defer);
 		return defer.getPromise().map(TO_DOMSCOCONTEXTLIST);
 	}
 	
-	
-	@Deprecated
+    /**
+     *
+     * @param getProfileCallback
+     * @deprecated
+     */
+    @Deprecated
 	void getDwoProfile(AsyncCallback<Map<String,Object>> getProfileCallback) {
 		String method = "getRecord";
 		Object[] params = { "tblDwoProfile", "dwoProfileID", getProfile() };
@@ -414,7 +526,12 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	void getCourse(Object courseID, AsyncCallback<Map<String, Object>> getCourseCallback) {
+    /**
+     *
+     * @param courseID
+     * @param getCourseCallback
+     */
+    void getCourse(Object courseID, AsyncCallback<Map<String, Object>> getCourseCallback) {
 		String method = "getRecord";
 		Object[] params = { "tblCourse", "courseID", objectToKey(courseID) };
 		XmlRpcClient client = getClient();
@@ -422,13 +539,23 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 
-	public Promise<DomCourseStudent> getCourse(Object courseID) {
+    /**
+     *
+     * @param courseID
+     * @return
+     */
+    public Promise<DomCourseStudent> getCourse(Object courseID) {
 		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
 		getCourse(courseID, defer);
 		return defer.getPromise().map(TO_DOMCOURSE);
 	}
 
-	void getSco(Object scoID, AsyncCallback<Map<String,Object>> callback) 
+    /**
+     *
+     * @param scoID
+     * @param callback
+     */
+    void getSco(Object scoID, AsyncCallback<Map<String,Object>> callback) 
 	{
 		String method = "getRecord";
 		Object[] params = { "tblScoContext", "scoID", objectToKey(scoID) };
@@ -437,19 +564,35 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 
-	public Promise<DomScoContext> getSco(Object scoID) {
+    /**
+     *
+     * @param scoID
+     * @return
+     */
+    public Promise<DomScoContext> getSco(Object scoID) {
 		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
 		getSco(scoID, defer);
 		return defer.getPromise().map(TO_DOMSCOCONTEXT);
 	}
 	
 // In Mc2 new String()
+
+    /**
+     *
+     * @param courseID
+     * @return
+     */
 	protected Object objectToKey(Object courseID) {
 		return new Integer(courseID.toString());
 	}
 	
-	
-	public <T> void getClasses(Object userID, AsyncCallback<T> getClassesCallback) {
+    /**
+     *
+     * @param <T>
+     * @param userID
+     * @param getClassesCallback
+     */
+    public <T> void getClasses(Object userID, AsyncCallback<T> getClassesCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("userID", userID);
 		String method = "getTable";
@@ -459,7 +602,13 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	public <T> void getStudents(int classID, AsyncCallback<T> getStudentsCallback) {
+    /**
+     *
+     * @param <T>
+     * @param classID
+     * @param getStudentsCallback
+     */
+    public <T> void getStudents(int classID, AsyncCallback<T> getStudentsCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("classID", classID);
 		String method = "getTable";
@@ -469,20 +618,35 @@ public class RPCHandlerV1 {
 		request.execute();
 	}
 	
-	public void getUserResults(Object courseID, Object userID, AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
+    /**
+     *
+     * @param courseID
+     * @param userID
+     * @param getUserResultsCallback
+     */
+    public void getUserResults(Object courseID, Object userID, AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
 		Object[] params = { courseID, userID };
 		XmlRpcClient client = getClient();
 		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, "getUserResults", params, getUserResultsCallback);
 		request.execute();
 	}
 
-	public Promise<DomResultsPerStudentCourse> getUserResults(Object courseID, Object userID) {
+    /**
+     *
+     * @param courseID
+     * @param userID
+     * @return
+     */
+    public Promise<DomResultsPerStudentCourse> getUserResults(Object courseID, Object userID) {
 		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
 		getUserResults(courseID, userID, defer);
 		return defer.getPromise().map(TO_RESULTS_PER_STUDENTCOURSE);
 	}
 	
-	public void logout() {
+    /**
+     *
+     */
+    public void logout() {
 	}
 	
 	

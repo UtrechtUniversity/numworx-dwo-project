@@ -14,6 +14,11 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
  * @author G.A.J. van der Plas
  */
 public class DwoViewer {
+
+    /**
+     *
+     * @param code
+     */
     public static void showMessage(Dwo2ExceptionCode code){
         Window.alert(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.instance().getDwoLocale(), code));
     }

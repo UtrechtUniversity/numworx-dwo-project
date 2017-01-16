@@ -28,11 +28,20 @@ class SchoolClassStudentController {
     private SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
     private AddSchoolClassStudentPanel addSchoolClassView;
 
+    /**
+     *
+     * @param view
+     * @param user
+     */
     SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user) {
         this.view = view;
         init(user);
     }
 
+    /**
+     *
+     * @param user
+     */
     public void init(DomUserFull user) {
         currentUser = user;
         LOG.log(Level.INFO, "" + manager);
@@ -40,6 +49,10 @@ class SchoolClassStudentController {
 
     }
 
+    /**
+     *
+     * @param callBack
+     */
     public void getCurrentSchoolRoleAndClass(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack) {
         loginManager.getSchoolLoginsV2(callBack);
     };
@@ -57,6 +70,9 @@ class SchoolClassStudentController {
         this.currentUser = currentUser;
     }
 
+    /**
+     *
+     */
     public void updateStudentsSchoolClassesInView() {
         manager.getStudentsSchoolClasses(new AsyncCallback<List<DomSchoolClass>>() {
             @Override
@@ -76,6 +92,9 @@ class SchoolClassStudentController {
         });
     }
 
+    /**
+     *
+     */
     public void updateSchoolClassesAddSchoolClassView() {
         manager.getSchoolsClasses(new AsyncCallback<List<DomSchoolClass>>() {
             @Override
@@ -108,18 +127,37 @@ class SchoolClassStudentController {
         });
     }
 
+    /**
+     *
+     * @param submit
+     * @param callBack
+     */
     public void setActiveSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
         manager.setActiveSchoolClass(submit, callBack);
     }
 
+    /**
+     *
+     * @param callBack
+     */
     public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack) {
         manager.getActiveSchoolClass(callBack);
     }
 
+    /**
+     *
+     * @param submit
+     * @param callBack
+     */
     public void removeSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
         manager.removeSchoolClass(submit, callBack);
     }
 
+    /**
+     *
+     * @param submit
+     * @param callBack
+     */
     public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit, AsyncCallback<Boolean> callBack) {
         manager.registerStudentForSchoolClass(submit, callBack);
     }

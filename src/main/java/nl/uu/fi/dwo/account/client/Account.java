@@ -28,6 +28,10 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.util.logging.Level;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
+/**
+ *
+ * @author plas0006
+ */
 public class Account implements EntryPoint, ClickHandler {
 
     private static final Logger LOG = Logger.getLogger(Account.class.getName());
