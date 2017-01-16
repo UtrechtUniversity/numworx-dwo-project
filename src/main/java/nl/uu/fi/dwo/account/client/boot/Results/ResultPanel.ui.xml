@@ -3,7 +3,7 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
     <ui:style field="mainpanel" src="../mainpanel.css" />
-<g:SimplePanel ui:field='tablePanel' >
+<g:SimplePanel ui:field='tablePanel' addStyleNames='{mainpanel.widget}' >
           <g:Grid
             ui:field='resultGrid' />
 <!--          <c:SimplePager

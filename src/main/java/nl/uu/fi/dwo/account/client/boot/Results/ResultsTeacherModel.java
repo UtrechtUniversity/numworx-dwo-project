@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 
 /**
@@ -23,6 +24,6 @@ public class ResultsTeacherModel {
     
     public void init(DomResultsPerTeacher domResults){
         //Build result tree
-        resultTree.build(domResults);
+        //resultTree.build(domResults);
     }
 }

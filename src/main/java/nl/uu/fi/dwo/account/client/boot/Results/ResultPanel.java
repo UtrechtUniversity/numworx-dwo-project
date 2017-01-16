@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.boot.BootPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 
 /**
@@ -38,8 +39,23 @@ public class ResultPanel extends Composite {
     Grid resultGrid = new Grid(xInitialGridSize, yInitialGridSize);
     ListDataProvider<DomResultScore> dataProvider = new ListDataProvider<DomResultScore>();
 
+    private BootPanel parent;
+
+    public void setParent(BootPanel aParent) {
+        parent = aParent;
+    }
+    
+    
+    /**
+     * @return the parent
+     */
+    public BootPanel getParent() {
+        return parent;
+    }
+
 //    @UiField(provided = true)
 //    SimplePager pager;
+
     public ResultPanel() {
         LOG.log(Level.INFO, "Grid size:" + resultGrid.getRowCount() + "x" + resultGrid.getColumnCount() + ".");
         init();
@@ -48,7 +64,6 @@ public class ResultPanel extends Composite {
         control = new ResultsTeacherController(this);
         addRow();
     }
-// following the example of http://samples.gwtproject.org/samples/Showcase/Showcase.html#!CwCellTable
 
     public void init() {
         int rows = resultGrid.getRowCount();

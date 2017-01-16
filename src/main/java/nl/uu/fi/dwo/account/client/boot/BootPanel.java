@@ -48,9 +48,15 @@ public class BootPanel extends Composite implements EntryPoint {
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
     Widget loginWidget = new LoginPanel();
+    @UiField(provided = true)
     Widget resultWidget = new ResultPanel();
 
     public BootPanel() {
+
+    }
+
+    @Override
+    public void onModuleLoad() {
         try {
             dwoGlobalVars = new DwoGlobalVars();
         } catch (Dwo2Exception ex) {            
@@ -60,15 +66,17 @@ public class BootPanel extends Composite implements EntryPoint {
         }
         initWidget(uiBinder.createAndBindUi(this));
         ((LoginPanel) loginWidget).setParent(this);
-        mainDeckPanel.add(resultWidget);
+//        mainDeckPanel.add(loginWidget);
         mainDeckPanel.showWidget(0);
+        ((ResultPanel) resultWidget).setParent(this);
+//        mainDeckPanel.add(resultWidget);
         LOG.log(Level.INFO, "Showing loginPanel.");
-    }
-
-    @Override
-    public void onModuleLoad() {
+        
         RootLayoutPanel.get().add(this);
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public int getMainDeckCount(){
+        return mainDeckPanel.getWidgetCount();
+    }
 }

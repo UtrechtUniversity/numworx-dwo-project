@@ -14,16 +14,13 @@
             </div>
         </g:HTML>
         </g:HorizontalPanel>
-        <!--</g:FlowPanel>-->
-        <g:DeckPanel addStyleNames='{accountnav.body}' ui:field="mainDeckPanel" >
-            <!--<g:FlowPanel>-->
-        <g:HorizontalPanel>
-            <g:Widget ui:field="loginWidget" addStyleNames='{accountnav.widget}'/>
-        </g:HorizontalPanel>
+            <g:FlowPanel addStyleNames='{accountnav.body}'>
+        <g:DeckPanel  ui:field="mainDeckPanel" >
+            <g:Widget ui:field="loginWidget" />
+            <g:Widget ui:field="resultWidget" />
             <!--</g:FlowPanel>-->
         </g:DeckPanel>
-
-    
+        </g:FlowPanel>
     <!--        <g:FlowPanel size='10'>
         <g:HTML addStyleNames='{accountnav.navi}'>
             <div class='{accountnav.navi}'>

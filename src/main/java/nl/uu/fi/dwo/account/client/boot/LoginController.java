@@ -1,10 +1,7 @@
 package nl.uu.fi.dwo.account.client.boot;
 
-import nl.uu.fi.dwo.account.client.boot.Results.*;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherResultsManager;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
-import org.osgi.util.promise.Promise;
 
 /**
  * Controller for Login.
