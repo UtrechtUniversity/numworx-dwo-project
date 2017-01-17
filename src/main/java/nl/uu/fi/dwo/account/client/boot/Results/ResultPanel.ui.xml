@@ -3,12 +3,17 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
     <ui:style field="mainpanel" src="../mainpanel.css" />
-<g:SimplePanel ui:field='tablePanel' addStyleNames='{mainpanel.widget}' >
+    <g:HorizontalPanel ui:field='tablePanel' addStyleNames='{mainpanel.widget}'
+ horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+<!--<g:SimplePanel >-->
+    <!-- content goes here -->
           <g:Grid
-            ui:field='resultGrid' />
+            ui:field='resultGrid'/>
+              
 <!--          <c:SimplePager
             ui:field='pager' />-->
- </g:SimplePanel>
+ <!--</g:SimplePanel>-->
+    </g:HorizontalPanel>
 <!--  <g:VerticalPanel  horizontalAlignment="ALIGN_CENTER" >
         <c:CellTable addStyleNames='{mainpanel.widget}' ui:field='resultTable'>
             <g:row styleName="optionalHeaderStyle">

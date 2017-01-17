@@ -5,8 +5,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.logging.Level;
@@ -34,7 +34,7 @@ public class ResultPanel extends Composite {
     final int yInitialGridSize = 6;
 
     @UiField
-    SimplePanel tablePanel;
+    HorizontalPanel tablePanel;
     @UiField(provided = true)
     Grid resultGrid = new Grid(xInitialGridSize, yInitialGridSize);
     ListDataProvider<DomResultScore> dataProvider = new ListDataProvider<DomResultScore>();

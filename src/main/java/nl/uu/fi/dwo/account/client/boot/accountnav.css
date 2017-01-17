@@ -22,7 +22,7 @@
     margin-top : 5px;
     margin-bottom: 5px;
     height: 50px;
-    width: 100vw;
+    width: calc(100vw - 16px);
 }	
 .navi {
     padding: 8px;
@@ -32,7 +32,7 @@
     height: 5%;
 }
 .body {
-    height: 100vh;
+    height: 100%;
     width: calc(100vw - 16px);
     padding-top: 8px;
     padding-left: 8px;
@@ -60,7 +60,7 @@
 }
 .status {
     height: 25px;
-    width: 100vw;
+    width: calc(100vw - 16px);
     padding: 8px;
     border: 1px solid #555555;
     background-color: #f0f0f0;
