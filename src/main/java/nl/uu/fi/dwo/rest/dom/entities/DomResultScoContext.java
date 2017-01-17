@@ -11,5 +11,19 @@ public class DomResultScoContext extends DomResultScore<DomResultStudentSco> {
         scoContext = aSco;
         super.setLabel(scoContext.getScoName());
     }
+
+    /**
+     * @return the scoContext
+     */
+    public DomScoContext getScoContext() {
+        return scoContext;
+    }
+
+    /**
+     * @param scoContext the scoContext to set
+     */
+    public void setScoContext(DomScoContext scoContext) {
+        this.scoContext = scoContext;
+    }
         
 }

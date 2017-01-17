@@ -12,7 +12,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 public abstract class DomResultScore<T extends DomResultScore> {
 
-    private Double score = null;
+    private double score = 0;
+    private double cnt = 0;
     private String label;
     private DomResultScore parent = null;
     private Map<PersistenceId,T> children = Collections.emptyMap();
@@ -75,6 +76,20 @@ public abstract class DomResultScore<T extends DomResultScore> {
      */
     public void setChildren(Map<PersistenceId,T> children) {
         this.children = children;
+    }
+
+    /**
+     * @return the cnt
+     */
+    public double getCnt() {
+        return cnt;
+    }
+
+    /**
+     * @param cnt the cnt to set
+     */
+    public void setCnt(double cnt) {
+        this.cnt = cnt;
     }
 
 }

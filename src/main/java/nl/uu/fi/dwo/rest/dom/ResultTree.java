@@ -27,9 +27,11 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class ResultTree {
 
     private DomResultTeacher root;
+    private DomResultsPerTeacher restData;
 
     public ResultTree(DomResultsPerTeacher resultData) {
-        buildResultTree(resultData);
+        restData = resultData;
+        buildResultTree(restData);
         //reCalculateResults();
     }
 
@@ -116,5 +118,19 @@ public class ResultTree {
      */
     public void setRoot(DomResultTeacher root) {
         this.root = root;
+    }
+
+    /**
+     * @return the restData
+     */
+    public DomResultsPerTeacher getRestData() {
+        return restData;
+    }
+
+    /**
+     * @param restData the restData to set
+     */
+    public void setRestData(DomResultsPerTeacher restData) {
+        this.restData = restData;
     }
 }
