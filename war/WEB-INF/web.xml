@@ -39,7 +39,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
     <init-param>
       <param-name>targetUri</param-name>
-      <param-value>http://dummytwo.dwo.nl/dwo</param-value>
+      <param-value>http://test.dwo.nl/dwo</param-value>
     </init-param>
     <init-param>
       <param-name>log</param-name>
