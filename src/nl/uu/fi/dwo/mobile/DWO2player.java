@@ -41,7 +41,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -150,12 +151,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					api = new SCORM_guest();
 					menuWidget = null;
 				} else {
-					Object userID = 
-							PersistenceIdDecoderInterface.instance.idOf(
-							DwoGlobalVars.getInstance().getCurrentUser().getId(), 
-							PersistenceClassType.PersistentUser);
-					Object sgID;
-					sgID = getSchoolGroupID();
+					Object userID = getUserID();
+					Object sgID = getSchoolGroupID();
 					
 					api = new SCORM_DWO2(userID, sgID);
 					menuWidget = getUserBar();
@@ -174,7 +171,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			@Override
 			public Object getSchoolID() {
 				try {
-					PersistenceId id = DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getId();
+					PersistenceId id = clientfactory.getSchool().getId();
 					return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentSchool);
 				} catch (Exception e) {
 					return "";
@@ -182,19 +179,33 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			}
 
 			@Override
+			public DomSchool getSchool() {
+				try {
+					return DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
+				} catch (Exception e) {
+					return null;
+				}
+			}
+			
+			@Override
 			public Object getClassID() {
 				try {
-					PersistenceId id = DwoGlobalVars.getInstance().getCurrentSchoolClass().getId();
+					PersistenceId id = getSchoolClass().getId();
 					return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentSchoolClass);
 				} catch (Exception e) {
 					return "";
 				}
 			}
-
+			@Override
+			public DomSchoolClass getSchoolClass() {
+				return DwoGlobalVars.getInstance().getCurrentSchoolClass();
+			}
+			
+			
 			@Override
 			public boolean isIconizer() {
 				try {
-					return DwoGlobalVars.getInstance().getCurrentSchoolClass().getIconizer().booleanValue();
+					return getSchoolClass().getIconizer().booleanValue();
 				} catch (Exception e) {
 					return true;
 				}
@@ -219,7 +230,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			@Override
 			public Object getSchoolName() {
 				try {
-					return DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getSchoolName();
+					return getSchool().getSchoolName();
 				} catch (Exception e) {
 					return "school";
 				}
@@ -250,8 +261,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	protected void gotoCourses_impl() {
 		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
 		Promise<List<SelectModuleItem>> modules;
-		if( withUser() && DwoGlobalVars.getInstance().getCurrentSchoolClass() != null) {
-			Promise<DomCoursesOfSchoolClass> promise = clientfactory.getRPCHandler().getCoursesClass(DwoGlobalVars.getInstance().getCurrentSchoolClass());
+		if( withUser() && clientfactory.getSchoolClass() != null) {
+			Promise<DomCoursesOfSchoolClass> promise = clientfactory.getRPCHandler().getCoursesClass(clientfactory.getSchoolClass());
 
 			modules = promise.map(new Function<DomCoursesOfSchoolClass, List<SelectModuleItem>>() {
 
@@ -350,7 +361,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		} else if (withUser() && RoleType.STUDENT != clientfactory.getRoleType())
 		{
 			Promise<List<DomCourseStudent>> p1 = clientfactory.getRPCHandler().getCourses();
-			Promise<List<DomCourseStudent>> p2 = clientfactory.getRPCHandler().getCoursesSchool(DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool());
+			Promise<List<DomCourseStudent>> p2 = clientfactory.getRPCHandler().getCoursesSchool(clientfactory.getSchool());
 			modules = Promises.all(p1,p2).map(new Function<List<List<DomCourseStudent>>,List<DomCourseStudent>>() {
 
 				@Override
@@ -402,51 +413,4 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		//super.gotoCourses_impl();
 	}
 
-// From RestRpcHandler
-//	void toProfile(DomSchoolsRolesAndClassesV2 result, Map<String, Object> profile) {
-//		PersistenceIdDecoderInterface instance = PersistenceIdDecoderInterface.instance;
-//		DomSchoolRoleAndClassV2 active = result.getActiveSchoolRoleAndClass();
-//		DomSchoolClass schoolClass;
-//		DomSchool      school;
-//		DomHasRole     hasRole;
-//		DomRole        role;
-//		schoolClass = active.getSchoolClass();
-//		school = active.getSchool();
-//		hasRole = active.getHasRole();
-//		role  = active.getRole();
-//		PersistenceId classId = schoolClass != null ? schoolClass.getId() : null;
-//		PersistenceId schoolId = school != null ? school.getId() : null;
-//		PersistenceId sgId = hasRole != null ? hasRole.getSchoolGroupId() : null;
-//
-//		profile.put("iconizer", schoolClass != null ? schoolClass.getIconizer() : Boolean.FALSE);
-//		profile.put("classID", classId == null ? "" :
-//				instance.idOf(classId, PersistenceClassType.PersistentSchoolClass));
-//		profile.put("schoolID", schoolId == null ? "" :
-//				instance.idOf(schoolId, PersistenceClassType.PersistentSchool));
-//		profile.put("schoolName", school.getSchoolName());
-//		profile.put("groupname",  role.getRoleName());
-//		profile.put("class", schoolClass == null ? "" :schoolClass.getSchoolClassName());
-//		profile.put("groupID", instance.idOf(role.getId(), PersistenceClassType.PersistentRole));
-//		profile.put("schoolGroupID", instance.idOf(sgId, PersistenceClassType.PersistentSchoolGroup));
-//		RoleType roleType = RoleType.NONE;
-//		try { roleType = RoleType.valueOf(role.getRoleName()); } catch(Exception ignore) {}
-//		getUserBar().setRole(roleType);
-//	}
-//
-//	void toProfile(DomUserFull result, Map<String, Object> profile) {
-//		profile.put("firstname", result.getGivenName());
-//		profile.put("middlename", result.getInsertion());
-//		profile.put("lastname", result.getFamilyName());
-//		profile.put("userID", PersistenceIdDecoderInterface.instance.idOf(result.getId(), PersistenceClassType.PersistentUser));
-//		profile.put("username", result.getUserName());
-//		profile.put("password",result.getPassword());
-//		PersistenceId userId = result.getId();
-//		PersistenceIdDecoderInterface instance = PersistenceIdDecoderInterface.instance;
-//		profile.put("userID", instance.idOf(userId, PersistenceClassType.PersistentUser));
-//
-//		getUserBar().setSingleSchool(result.getSingleSchool());
-//		
-//	}
-
-	
 }

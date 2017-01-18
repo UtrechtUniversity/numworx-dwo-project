@@ -9,4 +9,9 @@ public class WiskOpdrDefaults extends DWOplayerDefaults {
 		return base;
 	}
 
+	@Override
+	public String getCDN() {
+		return "www.dwo.nl";
+	}
+
 }

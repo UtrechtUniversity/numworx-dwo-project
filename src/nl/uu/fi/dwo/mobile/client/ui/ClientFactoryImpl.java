@@ -12,7 +12,11 @@ import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
@@ -157,10 +161,33 @@ public class ClientFactoryImpl implements ClientFactory
 		return DWOplayer.profiledata.get("schoolID");
 	}
 
-	@Override
+	public DomSchool getSchool() {
+		if (getSchoolID() == null || getSchoolID() .equals("")) return null;
+		DomSchool school = new DomSchool();
+		school.setId(idOf(getSchoolID(), PersistenceClassType.PersistentSchool));
+		school.setSchoolName((String)getSchoolName());
+		return school;
+	}
+	
 	public Object getClassID() {
 		return DWOplayer.profiledata.get("classID");
 	}
+	
+	public DomSchoolClass getSchoolClass() {
+		if(getClassID() == null) return null;
+		DomSchoolClass cls = new DomSchoolClass();
+		cls.setId(idOf(getClass(), PersistenceClassType.PersistentSchoolClass));
+		return cls;
+	}
+	
+	protected static PersistenceId idOf(Object object, PersistenceClassType type) {
+		if(object == null || "".equals(object))
+				return null;
+		PersistenceId id = new PersistenceId();
+		id.setIdString("MYSQL;" + type + ";" + object);
+		return id;
+	}
+
 
 	@Override
 	public boolean isIconizer() {
@@ -181,7 +208,6 @@ public class ClientFactoryImpl implements ClientFactory
 		return DWOplayer.profiledata.get("userID");
 	}
 
-	@Override
 	public Object getSchoolName() {
 		return DWOplayer.profiledata.get("schoolName");
 	}

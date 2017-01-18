@@ -7,8 +7,26 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 
 public class DWOIdeasClient extends IdeasClient {
 
+	static native String casServer() /*-{
+		return $wnd.casServer
+	}-*/;
+	
+	
+	private static int ENDPOINT = IdeasClient.DEFAULT;
+	private static String BASE = Window.Location.getProtocol() + "//" + DWOplayer.PARAMETERS.getHost();
+
+	static {
+		try {
+			String casServer = casServer();
+			if(casServer != null && !casServer.isEmpty())
+			{ ENDPOINT = IdeasClient.NONE;
+			  BASE = casServer;
+			}
+		} catch (Exception _) { }
+	}
+	
 	public DWOIdeasClient() {
-		super(Window.Location.getProtocol() + "//" + DWOplayer.PARAMETERS.getHost(), IdeasClient.DEFAULT);
+		super(BASE, ENDPOINT);
 	}
 	
 }

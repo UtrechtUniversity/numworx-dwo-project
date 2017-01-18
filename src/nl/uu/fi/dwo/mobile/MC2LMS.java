@@ -147,113 +147,113 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 
 
 
-	public static final AsyncCallback<List<Map<String,Object>>>
-	GETCOURSES_CALLBACK_CLASS_TREE = new AsyncCallback<List<Map<String,Object>>>(){
-
-		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert(caught.toString());
-			goTree();
-		}
-
-		@Override
-		public void onSuccess(List<Map<String, Object>> result) {
-			sort(result);
-			insertTree(result);
-			goTree();
-		}
-		
-		private String getParentID(Map<String,Object> course) {
-			try {
-				return (String) course.get("parentID");
-			} catch (Exception e) {
-				return "";
-			}
-		}
-		
-		private String getID(Map<String, Object> course) {
-			try {
-				return (String) course.get("courseID");
-			} catch (Exception e) {
-				return "";
-			}
-		}
-		private void sort(List<Map<String,Object>> courses) {
-			boolean again;
-			if(courses == null || courses.isEmpty())
-				return;
-			do {
-				again = false;
-				more:
-				for(int i = 0; i < courses.size(); i++ ) {
-					Map<String,Object> course = courses.get(i);
-					if( getParentID(course) .length() > 0) {
-						int j;
-						for(j = i-1; j >= 0; j--) {
-							if(getParentID(courses.get(j)).length() > 0 ) {
-								if(j == i-1)
-									break;
-								courses.add(j+1, courses.remove(i));
-								continue more;
-							}
-						}
-						if(j == -1) {
-							courses.add(0, courses.remove(i));
-							continue more;
-						}
-					} else {
-						String pid = getParentID(course); int j;
-						for(j = i-1; j>=0; j--) {
-							if(getParentID(courses.get(j))==pid || getID(courses.get(j)) == pid) {
-								if(j == i-1) break;
-								courses.add(j+1, courses.remove(i));
-								continue more;
-							}
-						}
-						if(j == -1) {
-							again = true;
-						}
-					}
-				}
-			} while(again);
-		}
-		
-	};
+//	public static final AsyncCallback<List<Map<String,Object>>>
+//	GETCOURSES_CALLBACK_CLASS_TREE = new AsyncCallback<List<Map<String,Object>>>(){
+//
+//		@Override
+//		public void onFailure(Throwable caught) {
+//			Window.alert(caught.toString());
+//			goTree();
+//		}
+//
+//		@Override
+//		public void onSuccess(List<Map<String, Object>> result) {
+//			sort(result);
+//			insertTree(result);
+//			goTree();
+//		}
+//		
+//		private String getParentID(Map<String,Object> course) {
+//			try {
+//				return (String) course.get("parentID");
+//			} catch (Exception e) {
+//				return "";
+//			}
+//		}
+//		
+//		private String getID(Map<String, Object> course) {
+//			try {
+//				return (String) course.get("courseID");
+//			} catch (Exception e) {
+//				return "";
+//			}
+//		}
+//		private void sort(List<Map<String,Object>> courses) {
+//			boolean again;
+//			if(courses == null || courses.isEmpty())
+//				return;
+//			do {
+//				again = false;
+//				more:
+//				for(int i = 0; i < courses.size(); i++ ) {
+//					Map<String,Object> course = courses.get(i);
+//					if( getParentID(course) .length() > 0) {
+//						int j;
+//						for(j = i-1; j >= 0; j--) {
+//							if(getParentID(courses.get(j)).length() > 0 ) {
+//								if(j == i-1)
+//									break;
+//								courses.add(j+1, courses.remove(i));
+//								continue more;
+//							}
+//						}
+//						if(j == -1) {
+//							courses.add(0, courses.remove(i));
+//							continue more;
+//						}
+//					} else {
+//						String pid = getParentID(course); int j;
+//						for(j = i-1; j>=0; j--) {
+//							if(getParentID(courses.get(j))==pid || getID(courses.get(j)) == pid) {
+//								if(j == i-1) break;
+//								courses.add(j+1, courses.remove(i));
+//								continue more;
+//							}
+//						}
+//						if(j == -1) {
+//							again = true;
+//						}
+//					}
+//				}
+//			} while(again);
+//		}
+//		
+//	};
 
 	
 
 
 	@Override
 	protected void gotoCourses_impl() {
-		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
-		count = 1;
-		AsyncCallback<List<Map<String, Object>>> callback = GETCOURSES_CALLBACK;
-		if(!withUser())
-			api = clientfactory.setupAPI();
-		else
-		{
-			api = clientfactory.setupAPI();
-			if(!"".equals(clientfactory.getClassID()))
-			{
-				boolean iconizer = clientfactory.isIconizer();
-				if(iconizer)
-					callback = GETCOURSES_CALLBACK_CLASS_TREE;
-				else
-					callback = GETCOURSES_CALLBACK_CLASS_FLAT;
-				clientfactory.getRPCHandler().getCoursesClass(clientfactory.getClassID(), callback);
-				return;
-			}
-			if(!"".equals(clientfactory.getSchoolID()))
-			{
-				count = 2;
-				clientfactory.getRPCHandler().getCoursesSchool(clientfactory.getSchoolID(), callback);
-			}
-		
-		}
-		
-		
-		clientfactory.getRPCHandler().getCourses(callback);
-		
+//		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
+//		count = 1;
+//		AsyncCallback<List<Map<String, Object>>> callback = GETCOURSES_CALLBACK;
+//		if(!withUser())
+//			api = clientfactory.setupAPI();
+//		else
+//		{
+//			api = clientfactory.setupAPI();
+//			if(!"".equals(clientfactory.getClassID()))
+//			{
+//				boolean iconizer = clientfactory.isIconizer();
+//				if(iconizer)
+//					callback = GETCOURSES_CALLBACK_CLASS_TREE;
+//				else
+//					callback = GETCOURSES_CALLBACK_CLASS_FLAT;
+//				clientfactory.getRPCHandler().getCoursesClass(clientfactory.getClassID(), callback);
+//				return;
+//			}
+//			if(!"".equals(clientfactory.getSchoolID()))
+//			{
+//				count = 2;
+//				clientfactory.getRPCHandler().getCoursesSchool(clientfactory.getSchoolID(), callback);
+//			}
+//		
+//		}
+//		
+//		
+//		clientfactory.getRPCHandler().getCourses(callback);
+//		
 	}
 
 	private static void insertTree(List<Map<String,Object>> result) {

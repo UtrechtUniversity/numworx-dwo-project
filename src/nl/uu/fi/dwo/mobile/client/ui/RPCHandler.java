@@ -24,12 +24,12 @@ public interface RPCHandler {
 
 	Promise<DomDwoProfileFull> getDwoProfile();
 
-	void getCoursesClass(Object classid,
-			AsyncCallback<List<Map<String, Object>>> callback);
+//	void getCoursesClass(Object classid,
+//			AsyncCallback<List<Map<String, Object>>> callback);
 	Promise<DomCoursesOfSchoolClass> getCoursesClass(DomSchoolClass schoolClass);
 	
-	void getCoursesSchool(Object schoolID,
-			AsyncCallback<List<Map<String, Object>>> callback);
+//	void getCoursesSchool(Object schoolID,
+//			AsyncCallback<List<Map<String, Object>>> callback);
 	Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school);
 	
 	void getCourses(
@@ -42,8 +42,6 @@ public interface RPCHandler {
 	
 	Promise<DomScoContext> getSco(Object id);
 
-	void getUserResults(Object courseID, Object userID,
-			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback);
 	Promise<DomResultsPerStudentCourse> getUserResults(Object courseID, Object userID);
 
 	Promise<List<DomScoContext>> getScos(Object id);

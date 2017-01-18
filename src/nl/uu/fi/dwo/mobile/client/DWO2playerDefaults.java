@@ -42,4 +42,9 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 		return http + "//" + host + "/dwo/rest/";
 	}
 
+	@Override
+	public String getCDN() {
+		return "cdn.dwo.nl";
+	}
+
 }

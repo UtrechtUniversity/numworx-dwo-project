@@ -7,6 +7,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 import com.google.gwt.core.client.GWT;
@@ -52,13 +54,16 @@ public interface ClientFactory
 	
 	boolean withUser();
 // Low level functions	
-	Object getSchoolID();
-	Object getClassID();
+//	Object getSchoolID();
+//	Object getClassID();
+	DomSchool getSchool();
+	DomSchoolClass getSchoolClass();
+	
 	boolean isIconizer();
 	RoleType getRoleType();
 	
 	Object getUserID();
-	Object getSchoolName();
+//	Object getSchoolName();
 
 // High level functions
 /*	Full varianten?

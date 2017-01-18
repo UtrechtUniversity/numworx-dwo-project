@@ -172,4 +172,9 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	public Text getTextBundle() {
 		return GWT.create(Text.class);
 	}
+
+	@Override
+	public String getCDN() {
+		return getHost();
+	}
 }

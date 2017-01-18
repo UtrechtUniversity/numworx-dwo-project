@@ -67,4 +67,5 @@ public interface DWOplayerParameters {
 	OpdrNav.Prepare getPrepareInstance();
 	String getCourseDescription();
 	Text   getTextBundle();
+	String getCDN();
 }

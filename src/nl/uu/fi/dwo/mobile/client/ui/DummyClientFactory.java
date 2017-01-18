@@ -10,6 +10,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 import com.google.gwt.place.shared.PlaceController;
@@ -97,7 +99,6 @@ public class DummyClientFactory implements ClientFactory {
 		return "";
 	}
 
-	@Override
 	public Object getClassID() {
 		return "";
 	}
@@ -117,8 +118,19 @@ public class DummyClientFactory implements ClientFactory {
 		return null;
 	}
 
-	@Override
 	public Object getSchoolName() {
 		return "";
+	}
+
+	@Override
+	public DomSchool getSchool() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DomSchoolClass getSchoolClass() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
