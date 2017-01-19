@@ -47,8 +47,13 @@ public class ResultTree {
      * @param resultData
      */
     private void buildResultTree(DomResultsPerTeacher resultData) {
-        //build tree from results collection
+        /* build tree from results collection
+           create the treeroot a DomResultTeacher, Attach the DomResultSchoolclass
+           objects, create the subtrees of the DomCourse objects, attach them 
+           to the DomResultSchoolClasses, add the Students per schoolclass
 
+        */
+        
         //set the root teacher
         setRoot(new DomResultTeacher(resultData.getTeacher()));
         //set the schoolclasses of the teacher
