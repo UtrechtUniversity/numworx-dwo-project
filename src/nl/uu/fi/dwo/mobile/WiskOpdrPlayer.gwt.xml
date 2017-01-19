@@ -25,6 +25,7 @@
 <!-- English language, independent of country -->
   	<extend-property name="locale" values="en"/>
    	<extend-property name="locale" values="nl"/>  	
+   	<extend-property name="locale" values="fr"/>  	
   	<set-property-fallback name="locale" value="en"/>
 	
 	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOIdeasClient">
