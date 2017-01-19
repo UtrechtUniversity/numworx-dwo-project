@@ -203,6 +203,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		    	dwologger.setMaxScore(scoreMax);
 		    	dwologger.setClassName("fi.wiskopdr.AntwoordKeuzeVak");
 		    	dwologger.setLogID(logID);
+		    	if(map.containsKey("logIDLabel"))
+					dwologger.setLogIDLabel(map.getString("logIDLabel"));
 		    	dwologger.setLogObjectives(logObjectives);
 		    	logging = dwologger;
 		    }
