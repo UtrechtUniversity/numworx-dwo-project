@@ -106,7 +106,7 @@ public class PublicServerStatus {
         String softwareVersion = manifestAttributes.getValue("Implementation-Version");
         String timeStamp = manifestAttributes.getValue("Implementation-Timestamp");
 
-        String out = "Software version, buildnumber: " + softwareVersion + ", " + buildNumber + ", timestamp " + timeStamp + "\n";
+        String out = "Software version: " + softwareVersion + ", buildnumber: " + buildNumber + ", timestamp " + timeStamp + "\n";
         LOG.log(Level.INFO, "Software version {0}, buildnumber {1}, timestamp {2}", new Object[]{softwareVersion, buildNumber, timeStamp});
 
         return out;
