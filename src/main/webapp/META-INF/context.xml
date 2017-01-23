@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
  <Context antiJARLocking="true" crossContext="false" path="/dwo"> 
   <!--<Context aliases="/apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
-  <!--     beans for CORS suppor in JAX-RS 
+  <!--     beans for CORS support in JAX-RS 
     <beans>
         <bean id="cors-filter" class="org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter"/>
  
