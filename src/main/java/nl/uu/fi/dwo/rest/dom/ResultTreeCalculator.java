@@ -21,7 +21,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class ResultTreeCalculator {
 
     public static void UpdateResultTree(ResultTree tree) {
-        DomResultScore node = tree.getRoot();
+        DomResultScore node = tree.getResultTree();
         updateNode(node);
     }
 
@@ -39,21 +39,26 @@ public class ResultTreeCalculator {
     }
 
     public static void getViewSchoolClassCourse(ResultTree tree) {
-        DomResultTeacher teacherScore = tree.getRoot();
-        //get schoolClasses
-        Map<PersistenceId, DomResultSchoolClass> schoolClasses = teacherScore.getChildren();
-        Map<PersistenceId, DomResultCourse> courses = new HashMap<PersistenceId, DomResultCourse>();
-        //Get courses
-        for (DomResultSchoolClass schoolClass : schoolClasses.values()) {
-            for (DomResultCourse course : schoolClass.getChildren().values()) {
-                courses.put(course.getCourse().getId(), course);
-            }
-        }
-
-        //build array and fill with values
+//        DomResultTeacher teacherScore = tree.getResultTree();
+//        //get schoolClasses
+//        Map<PersistenceId, DomResultSchoolClass> schoolClasses = teacherScore.getChildren();
+//        Map<PersistenceId, DomResultCourse> courses = new HashMap<PersistenceId, DomResultCourse>();
+//        //Get courses
+//        for (DomResultSchoolClass schoolClass : schoolClasses.values()) {
+//            for (DomResultCourse course : schoolClass.getChildren().values()) {
+//                courses.put(course.getCourse().getId(), course);
+//            }
+//        }
+//
+//        //build array and fill with values
     }
     
-
+    /**
+     * 
+     * 
+     * @param course
+     * @param scoMap 
+     */
     private void crawlSchoolClassSco(DomResultScore course, Map<PersistenceId, DomResultScoContext> scoMap) {
         if (course instanceof DomResultScoContext) {
             DomResultScoContext context = (DomResultScoContext) course;

@@ -6,10 +6,12 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -17,21 +19,21 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * Client side class, not meant to be transported.
  *
  * The information in the DomResultsPerTeacher class is inserted client-side
- * into this simplified kd-range tree. The kd-tree has a search range of 1 and
- * has a node type from root to leave a sequence of: DomTeacher, DomSchoolClass,
- * DomClassCourse referred DomCourse,DomCourse, ..., DomCourse. A leave of the
- * kd-tree is by definition a course-leave.
+ into this simplified kd-range tree. The kd-tree has a search range of 1 and
+ has a node type from resultTree to leave a sequence of: DomTeacher, DomSchoolClass,
+ DomClassCourse referred DomCourse,DomCourse, ..., DomCourse. A leave of the
+ kd-tree is by definition a course-leave.
  *
  * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  */
 public class ResultTree {
 
-    private DomResultTeacher root;
-    private DomResultsPerTeacher restData;
+    private DomResultTeacher resultTree;
+    private DomResultTeacher studentTree;
 
     public ResultTree(DomResultsPerTeacher resultData) {
-        restData = resultData;
-        buildResultTree(restData);
+        //restData = resultData;
+        buildResultTree(resultData);
         //reCalculateResults();
     }
 
@@ -54,16 +56,26 @@ public class ResultTree {
 
         */
         
-        //set the root teacher
-        setRoot(new DomResultTeacher(resultData.getTeacher()));
+        //set the resultTree teacher
+        setResultTree(new DomResultTeacher(resultData.getTeacher()));
+        studentTree = new DomResultTeacher(resultData.getTeacher());
         //set the schoolclasses of the teacher
         Map<PersistenceId, DomResultSchoolClass> schoolClasses = new HashMap<PersistenceId, DomResultSchoolClass>(resultData.getSchoolClasses().size());
-        getRoot().setChildren(schoolClasses);
+        Map<PersistenceId, DomResultSchoolClass> studentClasses = new HashMap<PersistenceId, DomResultSchoolClass>(resultData.getSchoolClasses().size());
+        getResultTree().setChildren(schoolClasses);
         for (PersistenceId key : resultData.getSchoolClasses().keySet()) {
-            DomResultSchoolClass value = new DomResultSchoolClass(resultData.getSchoolClasses().get(key));
-            value.setParent(getRoot());
-            schoolClasses.put(key, value);
-
+            DomResultSchoolClass resultValue = new DomResultSchoolClass(resultData.getSchoolClasses().get(key));
+            DomResultSchoolClass classValue = new DomResultSchoolClass(resultData.getSchoolClasses().get(key));
+            resultValue.setParent(getResultTree());
+            classValue.setParent(studentTree);
+            schoolClasses.put(key, resultValue);
+            studentClasses.put(key, resultValue);
+        }
+        
+        //add students to studenttree
+        for (PersistenceId key : resultData.getStudentsOfClasses().keySet()) {
+            DomStudentOfClass soc = resultData.getStudentsOfClasses().get(key);
+            studentClasses.get(soc.getClassId()).getChildren().put(key, new DomResultStudent(resultData.getStudents().get(soc.getStudentId())));
         }
 
         //Scan all DomCourses and map them into a DomResultCourse map
@@ -112,30 +124,17 @@ public class ResultTree {
    }
 
     /**
-     * @return the root
+     * @return the resultTree
      */
-    public DomResultTeacher getRoot() {
-        return root;
+    public DomResultTeacher getResultTree() {
+        return resultTree;
     }
 
     /**
-     * @param root the root to set
+     * @param resultTree the resultTree to set
      */
-    public void setRoot(DomResultTeacher root) {
-        this.root = root;
+    public void setResultTree(DomResultTeacher resultTree) {
+        this.resultTree = resultTree;
     }
 
-    /**
-     * @return the restData
-     */
-    public DomResultsPerTeacher getRestData() {
-        return restData;
-    }
-
-    /**
-     * @param restData the restData to set
-     */
-    public void setRestData(DomResultsPerTeacher restData) {
-        this.restData = restData;
-    }
 }

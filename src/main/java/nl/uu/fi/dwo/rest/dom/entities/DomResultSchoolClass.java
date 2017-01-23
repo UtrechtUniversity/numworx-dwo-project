@@ -4,7 +4,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
  *
  * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  */
-public class DomResultSchoolClass extends DomResultScore<DomResultCourse> {
+public class DomResultSchoolClass <T extends DomResultScore> extends DomResultScore<T> {
 
     private DomSchoolClass schoolClass;
 
