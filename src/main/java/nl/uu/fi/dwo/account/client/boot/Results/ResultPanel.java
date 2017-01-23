@@ -30,7 +30,7 @@ public class ResultPanel extends Composite {
     private ResultsTeacherController control;
 
     //initial gridsize
-    final int xInitialGridSize = 6;
+    final int xInitialGridSize = 12;
     final int yInitialGridSize = 6;
 
     @UiField
