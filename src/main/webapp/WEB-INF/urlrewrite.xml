@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 2.6//EN"
+        "http://tuckey.org/res/dtds/urlrewrite2.6.dtd">
+
+<!--
+
+    Configuration file for UrlRewriteFilter
+    http://tuckey.org/urlrewrite/
+
+-->
+<urlrewrite>
+<!--     <rule> -->
+<!--         <note> convert URI to a search </note> -->
+<!--         <condition type="method">GET</condition> -->
+<!--         <from>^/([a-z0-9]+)/$</from> -->
+<!--         <to>/search/fisme?query=oai.identifier+exact+%22$1%22&amp;recordSchema=lom</to> -->
+<!--         <set name="service">APP</set> -->
+<!--         </rule> -->
+
+<!--     <rule> -->
+<!--         <note>Send a 303 (SC_SEE_ALSO_REDIRECT) for Real World Objects</note> -->
+<!--         <from>^/([a-z0-9]+)$</from> -->
+<!--         <to type="redirect">$1/</to> -->
+<!--         </rule> -->
+
+	<rule>
+		<note>/profile/language/dwo.jnlp</note>
+		<from>^/([0-9]+)/([a-z][a-z])/dwo.jnlp$</from>
+		<to>/dwojnlppage?profile=$1&amp;language=$2</to>
+	</rule>
+	<rule>
+		<note>/profile/language/index.html</note>
+		<from>^/([0-9]+)/([a-z][a-z])/index.html$</from>
+		<to>/dwoindexpage?profile=$1&amp;language=$2</to>
+	</rule>
+	<rule>
+		<note>/profile/language/</note>
+		<from>^/([0-9]+)/([a-z][a-z])/$</from>
+		<to>/dwoindexpage?profile=$1&amp;language=$2</to>
+	</rule>
+	<rule>
+		<note>/profile/language</note>
+		<from>^/([0-9]+)/([a-z][a-z])$</from>
+		<to type="redirect">%{context-path}/$1/$2/index.html</to>
+	</rule>
+	
+	<rule>
+		<note>/profile/language/dwo.html</note>
+		<from>^/([0-9]+)/([a-z][a-z])/dwo.html$</from>
+		<to>/dwoindexpage?profile=$1&amp;language=$2</to>
+	</rule>
+
+    <rule>
+        <note>Default rule when no other content-type was asked for</note>
+        <from>^/$</from>
+        <to>index.html</to>
+    </rule>
+        
+</urlrewrite>   

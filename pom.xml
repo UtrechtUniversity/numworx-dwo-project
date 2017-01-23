@@ -1,0 +1,191 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>nl.uu.fi.dwo</groupId>
+		<artifactId>DWO</artifactId>
+		<version>2.1.10-SNAPSHOT</version>
+	</parent>
+  <artifactId>EBServer</artifactId>
+	<packaging>war</packaging>
+	<name>Elastic beanstalk war</name>
+	<dependencies>
+         <dependency>
+            <groupId>nl.uu.fi.dwo</groupId>
+            <artifactId>DWOServer</artifactId>
+            <version>${project.version}</version>
+            <classifier>classes</classifier>
+        </dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.34</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jamonapi</groupId>
+			<artifactId>jamon</artifactId>
+			<version>2.80</version>
+		</dependency>
+       <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency> 
+        <!--  best found media type json support, faster than jackson --> 
+
+        <dependency>
+        	<groupId>fi.servlet</groupId>
+        	<artifactId>DWOmAccess</artifactId>
+        	<version>0.0.8-SNAPSHOT</version>
+        	<classifier>classes</classifier>
+        </dependency>
+        <dependency>
+        	<groupId>fi.servlet</groupId>
+        	<artifactId>ideas-servlet</artifactId>
+        	<version>0.0.3</version>
+        </dependency>
+        <dependency>
+        <groupId>nl.tue.win.riaca.openmath</groupId>
+        <artifactId>om-lib</artifactId>
+        <version>1.3.18</version>
+    </dependency>
+        <dependency>
+        <groupId>nl.tue.win.riaca.mathematica</groupId>
+        <artifactId>mathematica-phrasebook</artifactId>
+        <version>1.3.7</version>
+    </dependency>
+    <dependency>
+        <groupId>fi.servlet</groupId>
+        <artifactId>openmath</artifactId>
+        <version>0.0.1</version>
+    </dependency>
+    <dependency>
+        <groupId>fi.mpreduce</groupId>
+        <artifactId>mpreduce-phrasebook</artifactId>
+        <version>0.0.3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>org.geogebra</groupId>
+        <artifactId>geogebra_cas</artifactId>
+        <version>4.0.29</version>
+        <scope>runtime</scope>
+    </dependency>
+<dependency>
+    <groupId>nl.tue.win.riaca.mathml</groupId>
+    <artifactId>mathml-phrasebook</artifactId>
+    <version>1.3.2</version>
+</dependency>
+<dependency>
+    <groupId>fi.beans</groupId>
+    <artifactId>ideas</artifactId>
+    <version>1.0.0</version>
+</dependency>
+<dependency>
+    <groupId>fi.servlet</groupId>
+    <artifactId>ideas-codec</artifactId>
+    <version>0.0.3</version>
+</dependency>
+<dependency>
+    <groupId>org.geogebra</groupId>
+    <artifactId>geogebra_cas</artifactId>
+    <version>4.0.29</version>
+</dependency>
+<dependency>
+    <groupId>org.geogebra</groupId>
+    <artifactId>geogebra_main</artifactId>
+    <version>4.0.29</version>
+</dependency>
+<dependency>
+    <groupId>org.geogebra</groupId>
+    <artifactId>geogebra</artifactId>
+    <version>4.0.29</version>
+</dependency>		
+<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+	</dependencies>
+	<build>
+	 <plugins>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-dependency-plugin</artifactId>
+		<version>2.10</version>
+		<executions>
+			<execution>
+				<id>copy</id>
+				<phase>process-resources</phase>
+				<goals>
+					<goal>copy</goal>
+				</goals>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>DWOJClient</artifactId>
+							<version>${project.version}</version>
+							<classifier>jar-with-dependencies</classifier>
+							<overWrite>true</overWrite>
+							<destFileName>dwo/DWOJApplet.jar</destFileName>
+						</artifactItem>
+						<!-- <artifactItem> <groupId>${project.groupId}</groupId> <artifactId>DWOJClient</artifactId> 
+							<version>${project.version}</version> <classifier>jar-with-dependencies</classifier> 
+							<type>jar.pack.gz</type> <overWrite>true</overWrite> <destFileName>DWOJApplet.jar.pack.gz</destFileName> 
+							</artifactItem> -->
+					</artifactItems>
+					<outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
+					<overWriteReleases>false</overWriteReleases>
+					<overWriteSnapshots>true</overWriteSnapshots>
+				</configuration>
+			</execution>
+			<execution>
+				<id>unpack</id>
+				<goals>
+					<goal>unpack</goal>
+				</goals>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							    <groupId>fi.dwo</groupId>
+    							<artifactId>DWO-apps</artifactId>
+    							<version>2.0-SNAPSHOT</version>
+    							<type>war</type>
+								<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/apps/</outputDirectory>
+						</artifactItem>
+						<artifactItem>
+								<groupId>nl.uu.fi.dwo.mobile</groupId>
+								<artifactId>DWOplayer</artifactId>
+								<version>2.1.5</version>
+								<type>war</type>
+								<classifier>dwo2</classifier>
+								<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/tablet/</outputDirectory>								
+						</artifactItem>
+					</artifactItems>
+					<overWriteReleases>false</overWriteReleases>
+					<overWriteSnapshots>true</overWriteSnapshots>				
+				</configuration>
+			</execution>
+		</executions>
+	</plugin>
+        <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                    <configuration>
+                        <server>TomcatServer</server>
+                        <path>/</path>
+                        <warFile>target/${project.artifactId}-${project.version}.war</warFile>
+                        <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
+                    </configuration>
+            </plugin> 
+	</plugins>
+	</build>
+</project>
