@@ -32,13 +32,25 @@ public class PublicServerStatus {
 
     private static final Logger LOG = Logger.getLogger(PublicServerStatus.class.getName());
 
+    /**
+     * Returns an empty set of of Attributes if not found.
+     * 
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     Attributes getManifestAttributes() throws FileNotFoundException, IOException {
+        Attributes atts;
+        try{
         InputStream resourceAsStream = context.getResourceAsStream("/META-INF/MANIFEST.MF");
         Manifest mf = new Manifest();
         mf.read(resourceAsStream);
-        Attributes atts = mf.getMainAttributes();
-
+        atts = mf.getMainAttributes();
         return atts;
+        }catch(NullPointerException ex){
+            atts = new Attributes();
+            return atts;
+        }
     }
     
 //  tests above getManifestAttributes()
@@ -112,6 +124,12 @@ public class PublicServerStatus {
         return out;
     }
 
+    /**
+     * Returns server status values. In case no Manifest is found 'null' is returned.
+     * 
+     * @return
+     * @throws IOException 
+     */
     @GET
     @Produces({"application/json"})
     @Path("/get")
@@ -122,8 +140,8 @@ public class PublicServerStatus {
         String timeStamp = manifestAttributes.getValue("Implementation-Timestamp");
         
         StringBuilder result = new StringBuilder();
-        result.append("[")
-                .append("{\"name\":\"projectVersion\", \"value\":\"").append(softwareVersion).append("\"},")
+        result.append("[");
+        result.append("{\"name\":\"projectVersion\", \"value\":\"").append(softwareVersion).append("\"},")
                 .append("{\"name\":\"buildNumber\", \"value\":\"").append(buildNumber).append("\"},")
                 .append("{\"name\":\"timestamp\", \"value\":\"").append(timeStamp);
         for (PersistentDwoSystemParameters p : getDwoSystemParamStatus()) {
