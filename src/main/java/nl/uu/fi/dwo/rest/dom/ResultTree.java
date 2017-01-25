@@ -58,7 +58,7 @@ public class ResultTree {
         
         //set the resultTree teacher
         setResultTree(new DomResultTeacher(resultData.getTeacher()));
-        studentTree = new DomResultTeacher(resultData.getTeacher());
+        setStudentTree(new DomResultTeacher(resultData.getTeacher()));
         //set the schoolclasses of the teacher
         Map<PersistenceId, DomResultSchoolClass> schoolClasses = new HashMap<PersistenceId, DomResultSchoolClass>(resultData.getSchoolClasses().size());
         Map<PersistenceId, DomResultSchoolClass> studentClasses = new HashMap<PersistenceId, DomResultSchoolClass>(resultData.getSchoolClasses().size());
@@ -67,7 +67,7 @@ public class ResultTree {
             DomResultSchoolClass resultValue = new DomResultSchoolClass(resultData.getSchoolClasses().get(key));
             DomResultSchoolClass classValue = new DomResultSchoolClass(resultData.getSchoolClasses().get(key));
             resultValue.setParent(getResultTree());
-            classValue.setParent(studentTree);
+            classValue.setParent(getStudentTree());
             schoolClasses.put(key, resultValue);
             studentClasses.put(key, resultValue);
         }
@@ -120,7 +120,7 @@ public class ResultTree {
             DomResultStudentSco studentSco = new DomResultStudentSco(resultData.getStudentScoContexts().get(id),student);
             DomResultScoContext scoContext = scoContextMap.get(resultData.getStudentScoContexts().get(id).getId());
             scoContext.getChildren().put(id, studentSco);
-        }
+        }               
    }
 
     /**
@@ -135,6 +135,20 @@ public class ResultTree {
      */
     public void setResultTree(DomResultTeacher resultTree) {
         this.resultTree = resultTree;
+    }
+
+    /**
+     * @return the studentTree
+     */
+    public DomResultTeacher getStudentTree() {
+        return studentTree;
+    }
+
+    /**
+     * @param studentTree the studentTree to set
+     */
+    public void setStudentTree(DomResultTeacher studentTree) {
+        this.studentTree = studentTree;
     }
 
 }

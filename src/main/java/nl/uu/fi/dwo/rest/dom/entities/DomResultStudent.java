@@ -21,5 +21,19 @@ public class DomResultStudent extends DomResultScore<DomResultSchoolClass> {
     public void setParent(DomResultScore score){
         super.setParent(null);
     }
+
+    /**
+     * @return the student
+     */
+    public DomStudent getStudent() {
+        return student;
+    }
+
+    /**
+     * @param student the student to set
+     */
+    public void setStudent(DomStudent student) {
+        this.student = student;
+    }
         
 }
