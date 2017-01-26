@@ -251,7 +251,7 @@ public class SecuredUserAccountManager {
      * @param password
      * @return
      */
-    public Promise<DomUserFull> updateAccountData() {
+    public Promise<DomUserFull> getAccountData() {
         PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
         this.getAccountData(defer);
         return defer.getPromise();
