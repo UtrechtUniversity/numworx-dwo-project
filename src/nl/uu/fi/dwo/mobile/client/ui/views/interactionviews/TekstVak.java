@@ -788,7 +788,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					fewa.requestFocus();
 					//om te zorgen dat cursor ook getekend wordt:
 					if(fewa.getCurrentElement() == null)
-					{	fewa.setCurrentElementRepaint(fewa.getMainRegel());
+					{	fewa.setCurrentElementRepaint(fewa.getCurrentRegel());
+						//zorgen dat cursor netjes aan eind vakje staat.
+						fewa.cursorToLeft();
+						fewa.cursorToRight();
 					}
 					return true;
 				}
@@ -814,6 +817,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					{	fews.getEditor().requestFocus();
 						if(fews.getEditor().getCurrentElement() == null)
 						{	fews.getEditor().setCurrentElementRepaint(fews.getEditor().getMainRegel());
+							//zorgen dat cursor netjes aan eind vakje staat.
+							fews.getEditor().cursorToLeft();
+							fews.getEditor().cursorToRight();
 						}
 						return true;
 					}
@@ -899,6 +905,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					//om te zorgen dat cursor ook getekend wordt:
 					if(fewa.getCurrentElement() == null)
 					{	fewa.setCurrentElementRepaint(fewa.getMainRegel());
+						//zorgen dat cursor netjes aan eind vakje staat.
+						fewa.cursorToLeft();
+						fewa.cursorToRight();
 					}
 					return true;
 				}
@@ -924,6 +933,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					{	fews.getEditor().requestFocus();
 						if(fews.getEditor().getCurrentElement() == null)
 						{	fews.getEditor().setCurrentElementRepaint(fews.getEditor().getMainRegel());
+							//zorgen dat cursor netjes aan eind vakje staat.
+							fews.getEditor().cursorToLeft();
+							fews.getEditor().cursorToRight();
 						}
 						return true;
 					}

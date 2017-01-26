@@ -609,7 +609,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		
 		setState(state);
-		hoofdPanel.tabFocus(null, false);
 		
 		if(on.isEindtoetsVerzegeld()) {
 			zetNagekeken(true);
@@ -754,6 +753,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		zetVorigeKnoppenEnabled(opdrNr > 0);
 		zetNakijkKnopEnabled();
+		if(!disableScreen.isAttached())
+			hoofdPanel.tabFocus(null, false);
 	}
 	
 	
