@@ -3,18 +3,37 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
     <ui:style field="mainpanel" src="../mainpanel.css" />
+    <ui:style type="nl.uu.fi.dwo.account.client.boot.Results.ResultPanel.Style">
+        .tableCelleven {
+        padding: 5px;
+        background: #008AB8;
+        border: 1px solid #ffffff;
+        }
+        .tableCellodd {
+        padding: 5px;
+        background: #FFCC33;
+        border: 1px solid #ffffff;
+        }
+        .panel {
+        background-color: #C3D9FF;
+        border: 1px solid #000000;
+        padding: 3px;
+        margin: 3px;
+        font-weight: normal;  
+        }
+    </ui:style>
+        
     <g:HorizontalPanel ui:field='tablePanel' addStyleNames='{mainpanel.widget}'
- horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
-<!--<g:SimplePanel >-->
-    <!-- content goes here -->
-          <g:Grid
-            ui:field='resultGrid'/>
-              
-<!--          <c:SimplePager
-            ui:field='pager' />-->
- <!--</g:SimplePanel>-->
+                       horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+        <!--<g:SimplePanel >-->
+        <!-- content goes here -->
+        <g:Grid addStyleNames='{mainpanel.grid}'
+                  ui:field='resultGrid'/>              
+        <!--          <c:SimplePager
+        ui:field='pager' />-->
+        <!--</g:SimplePanel>-->
     </g:HorizontalPanel>
-<!--  <g:VerticalPanel  horizontalAlignment="ALIGN_CENTER" >
+    <!--  <g:VerticalPanel  horizontalAlignment="ALIGN_CENTER" >
         <c:CellTable addStyleNames='{mainpanel.widget}' ui:field='resultTable'>
             <g:row styleName="optionalHeaderStyle">
                 <g:customCell styleName="optionalFooCellStyle">
