@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.system.MD5;
 import nl.uu.fi.dwo.rest.entities.RestAuthToken;
 import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
 import nl.uu.fi.dwo.rest.entities.RestNewUser;
@@ -159,7 +160,8 @@ public class PublicUserManagerIT {
         restLoginCheck.setRestContext(new DomContext());
         restLoginCheck.setDomLoginCheck(new DomLoginCheck());
         restLoginCheck.getDomLoginCheck().setUsername("user01");
-        restLoginCheck.getDomLoginCheck().setPassword(DomLoginCheck.crypt("user01"));
+        restLoginCheck.getDomLoginCheck().setPassword(DomLoginCheck.crypt(MD5.getHashString("passw")));
+//        restLoginCheck.getDomLoginCheck().setPassword("passw");
         Boolean result = instance.getLoginCheck(restLoginCheck);
         assertEquals(true, result);
         restLoginCheck.getDomLoginCheck().setPassword("bla");
