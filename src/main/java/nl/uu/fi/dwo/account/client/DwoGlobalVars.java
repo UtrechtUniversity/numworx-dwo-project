@@ -7,6 +7,8 @@ import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import com.google.gwt.user.client.Window;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
@@ -17,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import org.osgi.util.promise.Promise;
 
 /**
  * Stores global variables The class is state is initialized by calls in
@@ -56,12 +59,12 @@ public class DwoGlobalVars {
     public enum DwoGlobalVarsState {
 
         /**
-         *
+         * Nothing is set.
          */
         Unintialized, 
 
         /**
-         *
+         * DwoSystemParameters
          */
         Initializing, 
 
@@ -214,6 +217,30 @@ public class DwoGlobalVars {
 //                                }
 //                            });
     }
+    
+
+    public void initUser() throws Dwo2Exception {
+        SecuredUserAccountManager userManager = new SecuredUserAccountManager();
+        SecureUserAccountLoginsManager accountManager = new SecureUserAccountLoginsManager();
+        Promise<DomUserFull>  user = userManager.getAccountData();
+//        currentUser = userManager.getAccountData();
+//        schoolLogins = accountManager.
+//            control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
+//                                @Override
+//                                public void onFailure(Throwable t) {
+//                                    //fail and reset all the data.
+//                                    Window.alert(t.getMessage());
+//                                    //TODO Wim
+//                                    //Window.alert("wim handles error here.");
+//                                }
+//
+//                                @Override
+//                                public void onSuccess(Boolean result) {
+//                                    popup.hide();
+//                                    resetLogin.execute();
+//                                }
+//                            });
+    }    
 
     /**
      * @return the server

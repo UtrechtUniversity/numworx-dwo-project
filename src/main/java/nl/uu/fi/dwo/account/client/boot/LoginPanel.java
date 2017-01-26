@@ -5,7 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
@@ -13,13 +13,9 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.account.client.RPCHandlerV1;
-import nl.uu.fi.dwo.account.client.RPCHandlerV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import org.osgi.util.promise.Failure;
@@ -101,12 +97,17 @@ public class LoginPanel extends Composite implements ClickHandler {
                 @Override
                 public void fail(Promise<?> resolved) throws Exception {
                     // complain...
+                    LOG.log(Level.INFO, resolved.getFailure().getMessage());
+                    ShowMessageToUser(resolved.getFailure().getMessage());
                 }
             }
             );
         }
     }
-
+    
+    private void ShowMessageToUser(String msg){
+        Window.alert(msg);
+    }
 }
 //                @Override
 //                public void onFailure(Throwable t) {
