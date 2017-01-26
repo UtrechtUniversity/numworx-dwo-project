@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredTeacherResultsRestCaller;
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -13,6 +14,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
+import org.osgi.util.promise.Promise;
 
 public class SecuredTeacherResultsManager {
 
@@ -32,6 +34,12 @@ public class SecuredTeacherResultsManager {
         LOG.log(Level.INFO, "" + service);
     }
 
+   public Promise<DomResultsPerTeacher> getTeachersResults(DomContext domContext, DomDwoProfile aProfile) {
+        PromiseCallback<DomResultsPerTeacher> defer = new PromiseCallback<DomResultsPerTeacher>();
+        this.getTeachersResults(domContext,aProfile,defer);
+        return defer.getPromise();
+    }
+   
     /**
      * Returns the current teacher result data. 
      * @param domContext A valid domContext for a teacher in a school.

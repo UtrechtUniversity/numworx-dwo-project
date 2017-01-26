@@ -10,6 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserAccountRestCaller;
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
@@ -25,8 +26,10 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.entities.RestAuthToken;
+import org.osgi.util.promise.Promise;
 
 public class SecuredUserAccountManager {
+
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountManager.class.getName());
 
     private SecuredUserAccountRestCaller service;
@@ -35,7 +38,7 @@ public class SecuredUserAccountManager {
     public SecuredUserAccountManager() {
         String url = GwtRestVars.instance().getServer();
         init(url);
-                
+
     }
 
     public SecuredUserAccountManager(String url) {
@@ -44,28 +47,45 @@ public class SecuredUserAccountManager {
 //        } catch (Dwo2Exception ex) {
 //            LOG.log(Level.SEVERE, null, ex);
 //        }
-     init(url);   
+        init(url);
     }
-    
-    private void init(String url){
+
+    private void init(String url) {
         Defaults.setServiceRoot(url);
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
         service = (SecuredUserAccountRestCaller) GWT.create(SecuredUserAccountRestCaller.class);
-        LOG.log(Level.INFO,""+service);
+        LOG.log(Level.INFO, "" + service);
     }
-    
-/********************************************************************************
-*   Extra login functions, For Resty
-* 
-********************************************************************************/
+
     /**
-     * 
-     * 
+     * ******************************************************************************
+     * Extra login functions, For Resty
+     *
+     *******************************************************************************
+     */
+    /**
+     * Checks if a username/password combination is valid. This function is a
+     * security risk.
+     *
      * @param username
      * @param password
-     * @param callback 
+     * @return
      */
-    
+    public Promise<Boolean> loginCheck(String username, String password) {
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.loginCheck(username, password, defer);
+        return defer.getPromise();
+    }
+
+    /**
+     * Checks if a username/password combination is valid. This function is a
+     * security risk.
+     *
+     * @param username
+     * @param password
+     * @param callback
+     */
+    @Deprecated
     public void loginCheck(final String username, final String password, final AsyncCallback<Boolean> callback) {
         DomLoginCheck domLoginCheck = new DomLoginCheck();
         domLoginCheck.setUsername(username);
@@ -91,58 +111,77 @@ public class SecuredUserAccountManager {
 
     }
 
-    public void loginUser(final String name, String password, final AsyncCallback<DomUserFullwLoginContext> callback, 
-    		LoginPresenter presenter) {
+    public Promise<DomUserFullwLoginContext> login(String name, String password) {
+        PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<DomUserFullwLoginContext>();
+        this.loginUser(name, password, defer, null);
+        return defer.getPromise();
+    }
+
+    public void loginUser(final String name, String password, final AsyncCallback<DomUserFullwLoginContext> callback,
+            LoginPresenter presenter) {
         final String pwmd5 = MD5.md5(password);
         GWT.log(pwmd5);
         loginUserMD5(name, pwmd5, callback, presenter);
 
     }
 
-	public void loginUserMD5(final String name, final String pwmd5,
-			final AsyncCallback<DomUserFullwLoginContext> callback, final LoginPresenter presenter) {
-		loginCheck(name, pwmd5, new AsyncCallback<Boolean>() {
+    /**
+     *
+     * @param name
+     * @param password
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> loginMD5(String name, String password) {
+        PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<DomUserFullwLoginContext>();
+        this.loginUserMD5(name, password, defer, null);
+        return defer.getPromise();
+    }
+
+    public void loginUserMD5(final String name, final String pwmd5,
+            final AsyncCallback<DomUserFullwLoginContext> callback, final LoginPresenter presenter) {
+        loginCheck(name, pwmd5, new AsyncCallback<Boolean>() {
 
             @Override
             public void onSuccess(Boolean result) {
                 if (Boolean.TRUE.equals(result)) {
-                	if(presenter != null)
-                	{	getLoginContext(new AsyncCallback<DomLoginContext>() {
+                    if (presenter != null) {
+                        getLoginContext(new AsyncCallback<DomLoginContext>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								callback.onFailure(caught);
-							}
-	
-							@Override
-							public void onSuccess(DomLoginContext loginContext) {
-								if (loginContext.getLastLoginTimeStamp() != null 
-									&& presenter != null)
-								{	
-			                		presenter.otherlogin(new AsyncCallback<Boolean>() {
-	
-										@Override
-										public void onFailure(Throwable caught) {
-											callback.onFailure(caught);
-										}
-	
-										@Override
-										public void onSuccess(Boolean result) {
-											if(result.booleanValue())
-												getDomUserFullwLoginContext(name, callback);
-											else
-												callback.onFailure(new RuntimeException("Cancelled"));
-										}
-									});
-			                	} else {
-			                		getDomUserFullwLoginContext(name, callback);
-			                	}
-	
-							}
-						});
-                	} else 
-                		getDomUserFullwLoginContext(name, callback);
-                	
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                callback.onFailure(caught);
+                            }
+
+                            @Override
+                            public void onSuccess(DomLoginContext loginContext) {
+                                if (loginContext.getLastLoginTimeStamp() != null
+                                        && presenter != null) {
+                                    presenter.otherlogin(new AsyncCallback<Boolean>() {
+
+                                        @Override
+                                        public void onFailure(Throwable caught) {
+                                            callback.onFailure(caught);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(Boolean result) {
+                                            if (result.booleanValue()) {
+                                                getDomUserFullwLoginContext(name, callback);
+                                            } else {
+                                                callback.onFailure(new RuntimeException("Cancelled"));
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    getDomUserFullwLoginContext(name, callback);
+                                }
+
+                            }
+                        });
+                    } else {
+                        getDomUserFullwLoginContext(name, callback);
+                    }
+
                 } else {
                     callback.onFailure(new RuntimeException("LoginException"));
                 }
@@ -153,26 +192,51 @@ public class SecuredUserAccountManager {
                 callback.onFailure(caught);
             }
         });
-	}
-
-/********************************************************************************
-*   Interface login stuff
-* 
-********************************************************************************/
+    }
 
     /**
-     * 
+     * ******************************************************************************
+     * Interface login stuff
+     *
+     *******************************************************************************
+     */
+    /**
+     *
+     * @param name
+     * @param password
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> loginUser(String name) {
+        PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<DomUserFullwLoginContext>();
+        this.loginUser(name, defer);
+        return defer.getPromise();
+    }
+
+    /**
+     *
      * @param username
-     * @param callBack 
+     * @param callBack
      */
     public void loginUser(String username, AsyncCallback<DomUserFullwLoginContext> callBack) {
         service.loginUserWithPOST(username, new Callback<DomUserFullwLoginContext>(callBack));
     }
 
     /**
-     * 
+     *
+     * @param name
+     * @param password
+     * @return
+     */
+    public Promise<DomUserFull> updateAccountData(DomUserFull updateUser) {
+        PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
+        this.updateAccountData(updateUser, defer);
+        return defer.getPromise();
+    }
+
+    /**
+     *
      * @param updateUser
-     * @param callBack 
+     * @param callBack
      */
     public void updateAccountData(DomUserFull updateUser, AsyncCallback<DomUserFull> callBack) {
         RestUserFull user = new RestUserFull();
@@ -182,86 +246,140 @@ public class SecuredUserAccountManager {
     }
 
     /**
-     * 
-     * @param callBack 
+     *
+     * @param name
+     * @param password
+     * @return
+     */
+    public Promise<DomUserFull> updateAccountData() {
+        PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
+        this.getAccountData(defer);
+        return defer.getPromise();
+    }
+
+    /**
+     *
+     * @param callBack
      */
     public void getAccountData(AsyncCallback<DomUserFull> callBack) {
         service.getAccountData(new Callback<DomUserFull>(callBack));
     }
 
-	public void samlLogin(String userid, String org, String token, final AsyncCallback<DomUserFullwLoginContext> userCallback)
-	{
-		DomSamlUser domSamlUser = new DomSamlUser();
-		domSamlUser.setSamlUserId(userid);
-		domSamlUser.setSamlOrgId(org);
-		domSamlUser.setAuthToken(token);
-		GwtRestVars.instance().setCurrentUser(null);
-		RestSamlUser samlRestUser = new RestSamlUser();
-		samlRestUser.setDomSamlUser(domSamlUser);
-		MethodCallback<DomUserFullwLoginContext> restcallback = new MethodCallback<DomUserFullwLoginContext>() {
+    /**
+     *
+     * @param name
+     * @param password
+     * @return
+     */
+    public Promise<DomUserFullwLoginContext> updateAccountData(String userid, String org, String token) {
+        PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<DomUserFullwLoginContext>();
+        this.samlLogin(userid, org, token, defer);
+        return defer.getPromise();
+    }
 
-			@Override
-			public void onFailure(Method method, Throwable exception) {
-				userCallback.onFailure(exception);
-			}
+    public void samlLogin(String userid, String org, String token, final AsyncCallback<DomUserFullwLoginContext> userCallback) {
+        DomSamlUser domSamlUser = new DomSamlUser();
+        domSamlUser.setSamlUserId(userid);
+        domSamlUser.setSamlOrgId(org);
+        domSamlUser.setAuthToken(token);
+        GwtRestVars.instance().setCurrentUser(null);
+        RestSamlUser samlRestUser = new RestSamlUser();
+        samlRestUser.setDomSamlUser(domSamlUser);
+        MethodCallback<DomUserFullwLoginContext> restcallback = new MethodCallback<DomUserFullwLoginContext>() {
 
-			@Override
-			public void onSuccess(Method method, DomUserFullwLoginContext response) {
-				GwtRestVars.instance().setCurrentUser(response.getDomUserFull());
-				userCallback.onSuccess(response);
-			}
-		};
-		service.getSamlUser(samlRestUser, restcallback);
-	}
-	public void getUserFromAuthToken(String authToken,final AsyncCallback<DomUserFullwLoginContext> userCallback) {
-		RestAuthToken restToken = new RestAuthToken();
-		restToken.setAuthToken(authToken);
-		restToken.setRestContext(new DomContext());
-		MethodCallback<DomUserFullwLoginContext> restcallback = new MethodCallback<DomUserFullwLoginContext>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                userCallback.onFailure(exception);
+            }
 
-			@Override
-			public void onFailure(Method method, Throwable exception) {
-				userCallback.onFailure(exception);
-			}
+            @Override
+            public void onSuccess(Method method, DomUserFullwLoginContext response) {
+                GwtRestVars.instance().setCurrentUser(response.getDomUserFull());
+                userCallback.onSuccess(response);
+            }
+        };
+        service.getSamlUser(samlRestUser, restcallback);
+    }
 
-			@Override
-			public void onSuccess(Method method, DomUserFullwLoginContext response) {
-				GwtRestVars.instance().setCurrentUser(response.getDomUserFull());
-				userCallback.onSuccess(response);
-			}
-		};
-		service.getUserFromAuthToken(restToken, restcallback);
+    public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
+        PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<DomUserFullwLoginContext>();
+        this.getUserFromAuthToken(authToken, defer);
+        return defer.getPromise();
+    }
 
-	}
-	
-	
-	public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
-		RestLoginContext restcontext = new RestLoginContext();
-		restcontext.setDomLoginContext(loginContext);
-		restcontext.setRestContext(new DomContext());
-		service.logout(restcontext, new Callback<Dwo2Exception>(callback));
-	}
-	
-	public void getLoginContext(AsyncCallback<DomLoginContext> callback) {
-		service.getLoginContext(new Callback<DomLoginContext>(callback));
-	}
+    public void getUserFromAuthToken(String authToken, final AsyncCallback<DomUserFullwLoginContext> userCallback) {
+        RestAuthToken restToken = new RestAuthToken();
+        restToken.setAuthToken(authToken);
+        restToken.setRestContext(new DomContext());
+        MethodCallback<DomUserFullwLoginContext> restcallback = new MethodCallback<DomUserFullwLoginContext>() {
 
-	private void getDomUserFullwLoginContext(final String name,
-			final AsyncCallback<DomUserFullwLoginContext> callback) {
-		loginUser(name, new AsyncCallback<DomUserFullwLoginContext>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                userCallback.onFailure(exception);
+            }
 
-		    @Override
-		    public void onFailure(Throwable caught) {
-		        callback.onFailure(caught);
-		    }
+            @Override
+            public void onSuccess(Method method, DomUserFullwLoginContext response) {
+                GwtRestVars.instance().setCurrentUser(response.getDomUserFull());
+                userCallback.onSuccess(response);
+            }
+        };
+        service.getUserFromAuthToken(restToken, restcallback);
 
-		    @Override
-		    public void onSuccess(DomUserFullwLoginContext result) {
-		    	if(result.getDomUserFull() != null && name.equalsIgnoreCase(result.getDomUserFull().getUserName()))
-		    		callback.onSuccess(result);
-		    	else
-		    		callback.onFailure(new RuntimeException("Please restart browser")); // FIXME showstopper?
-		    }
-		});
-	}
+    }
+
+    public Promise<Dwo2Exception> logout(DomLoginContext loginContext) {
+        PromiseCallback<Dwo2Exception> defer = new PromiseCallback<Dwo2Exception>();
+        this.logout(loginContext, defer);
+        return defer.getPromise();
+    }
+
+    public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
+        RestLoginContext restcontext = new RestLoginContext();
+        restcontext.setDomLoginContext(loginContext);
+        restcontext.setRestContext(new DomContext());
+        service.logout(restcontext, new Callback<Dwo2Exception>(callback));
+    }
+
+   public Promise<DomLoginContext> logout() {
+        PromiseCallback<DomLoginContext> defer = new PromiseCallback<DomLoginContext>();
+        this.getLoginContext(defer);
+        return defer.getPromise();
+    }
+
+       public Promise<DomLoginContext> getLoginContext() {
+        PromiseCallback<DomLoginContext> defer = new PromiseCallback<DomLoginContext>();
+        this.getLoginContext(defer);
+        return defer.getPromise();
+    }
+
+    public void getLoginContext(AsyncCallback<DomLoginContext> callback) {
+        service.getLoginContext(new Callback<DomLoginContext>(callback));
+    }
+
+   public Promise<DomUserFullwLoginContext> getDomUserFullwLoginContext(String name) {
+        PromiseCallback<DomUserFullwLoginContext> defer = new PromiseCallback<DomUserFullwLoginContext>();
+        this.getDomUserFullwLoginContext(name,defer);
+        return defer.getPromise();
+    }
+    
+    private void getDomUserFullwLoginContext(final String name,
+            final AsyncCallback<DomUserFullwLoginContext> callback) {
+        loginUser(name, new AsyncCallback<DomUserFullwLoginContext>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+
+            @Override
+            public void onSuccess(DomUserFullwLoginContext result) {
+                if (result.getDomUserFull() != null && name.equalsIgnoreCase(result.getDomUserFull().getUserName())) {
+                    callback.onSuccess(result);
+                } else {
+                    callback.onFailure(new RuntimeException("Please restart browser")); // FIXME showstopper?
+                }
+            }
+        });
+    }
 }
