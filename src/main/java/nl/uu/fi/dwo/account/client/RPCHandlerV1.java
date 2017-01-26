@@ -42,6 +42,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author velth101
  *
  */
+@Deprecated
 public class RPCHandlerV1 {
 
 	private static final class ListFunction<D> implements Function<List<Map<String,Object>>, List<D>> {

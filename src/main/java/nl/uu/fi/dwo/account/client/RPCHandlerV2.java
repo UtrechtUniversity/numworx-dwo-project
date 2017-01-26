@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  *
  * @author plas0006
  */
+@Deprecated
 public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 
     /**

@@ -5,18 +5,31 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.account.client.RPCHandlerV1;
+import nl.uu.fi.dwo.account.client.RPCHandlerV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
 
 /**
  * Panel that handles the login-authentication.
  *
- * @author G.A.J. van der Plas 
+ * @author G.A.J. van der Plas
  */
 public class LoginPanel extends Composite implements ClickHandler {
 
@@ -25,6 +38,23 @@ public class LoginPanel extends Composite implements ClickHandler {
     interface MyUiBinder extends UiBinder<Widget, LoginPanel> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+
+    private SecuredUserAccountManager handler = new SecuredUserAccountManager();
+//    //login
+//	private final class DWO2RPCHandler extends RPCHandlerV2 {
+//		private DWO2RPCHandler(String server, int profile) {
+//			super(server, profile);
+//		}
+//
+//		@Override
+//		public void getUserResults(Object courseID, Object userID,
+//				AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
+//			//Object schoolGroupID = getSchoolGroupID();
+//			//getUserResultsHelper(courseID, userID, schoolGroupID, getUserResultsCallback);
+//		}
+//
+//	}    
+//    private DWO2RPCHandler handler = new DWO2RPCHandler();
 
     @UiField
     TextBox usernameText;
@@ -55,9 +85,28 @@ public class LoginPanel extends Composite implements ClickHandler {
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == loginBtn) {
-            parent.mainDeckPanel.showWidget(1);
+            LOG.log(Level.INFO, "Login clicked.");
+            Promise<DomUserFullwLoginContext> result
+                    = handler.login(this.usernameText.getText(), this.passwordTextBox.getText());
+            result.then(new Success<DomUserFullwLoginContext, Void>() {
+                @Override
+                public Promise<Void> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
+                    DomUserFull user = resolved.getValue().getDomUserFull();
+                    DwoGlobalVars.instance().setCurrentUser(user);
+                    parent.mainDeckPanel.showWidget(1);
+                    return null;
+                }
+            },
+                    new Failure() {
+                @Override
+                public void fail(Promise<?> resolved) throws Exception {
+                    // complain...
+                }
+            }
+            );
         }
     }
+
 }
 //                @Override
 //                public void onFailure(Throwable t) {
