@@ -362,6 +362,7 @@
                     <warSourceDirectory>src/main/webapp</warSourceDirectory>
 <!--                    <contextFile>${basedir}/config/tomcat/context.xml</contextFile>                    -->
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+  					<attachClasses>true</attachClasses>
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -396,7 +397,7 @@
                         <url>${tomcat.local.deploy.url}</url>-->
                         <path>/dwo</path>
                         <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                        <contextFile>src/test/tomcat/junittest-context.xml</contextFile>
+                        <contextFile>src/test/tomcat/context.xml</contextFile>
                         <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
                     </configuration>
                     <dependencies>
