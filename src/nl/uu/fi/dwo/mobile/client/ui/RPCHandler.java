@@ -32,8 +32,8 @@ public interface RPCHandler {
 //			AsyncCallback<List<Map<String, Object>>> callback);
 	Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school);
 	
-	void getCourses(
-			AsyncCallback<List<Map<String, Object>>> callback_final);
+//	void getCourses(
+//			AsyncCallback<List<Map<String, Object>>> callback_final);
 	Promise<List<DomCourseStudent>> getCourses();
 	
 	XmlRpcClient getClient();
