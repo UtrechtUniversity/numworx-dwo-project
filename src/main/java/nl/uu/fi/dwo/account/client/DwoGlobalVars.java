@@ -7,8 +7,8 @@ import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import com.google.gwt.user.client.Window;
-import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
@@ -86,7 +86,6 @@ public class DwoGlobalVars {
     
     private DwoGlobalVarsState state=DwoGlobalVarsState.Unintialized;
     private static volatile DwoGlobalVars instance;
-    private DomSchoolClass currentSchoolClass=null;
     private DomUserFull currentUser;
     private DomLoginContext currentLoginContext;
     private DomSchoolsRolesAndClassesV2 schoolLogins;
@@ -112,7 +111,7 @@ public class DwoGlobalVars {
      * @return
      */
     public DomSchoolClass getCurrentSchoolClass() {
-        return currentSchoolClass;
+        return schoolLogins.getActiveSchoolRoleAndClass().getSchoolClass();
     }
 
     /**
@@ -120,7 +119,7 @@ public class DwoGlobalVars {
      * @param currentSchoolClass
      */
     public void setCurrentSchoolClass(DomSchoolClass currentSchoolClass) {
-        this.currentSchoolClass = currentSchoolClass;
+        schoolLogins.getActiveSchoolRoleAndClass().setSchoolClass(currentSchoolClass);
     }
 
     static {
@@ -218,28 +217,17 @@ public class DwoGlobalVars {
 //                            });
     }
     
-
+    public void initUser(DomUserFull user) throws Dwo2Exception {
+        SecuredUserSchoolLoginManagerV2 accountManager = new SecuredUserSchoolLoginManagerV2();
+        Promise<DomSchoolsRolesAndClassesV2>  logins = accountManager.getSchoolLogins();
+        setCurrentUser(user);
+        setSchoolLogins(logins.getValue());
+    }
+    
     public void initUser() throws Dwo2Exception {
         SecuredUserAccountManager userManager = new SecuredUserAccountManager();
-        SecureUserAccountLoginsManager accountManager = new SecureUserAccountLoginsManager();
         Promise<DomUserFull>  user = userManager.getAccountData();
-//        currentUser = userManager.getAccountData();
-//        schoolLogins = accountManager.
-//            control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
-//                                @Override
-//                                public void onFailure(Throwable t) {
-//                                    //fail and reset all the data.
-//                                    Window.alert(t.getMessage());
-//                                    //TODO Wim
-//                                    //Window.alert("wim handles error here.");
-//                                }
-//
-//                                @Override
-//                                public void onSuccess(Boolean result) {
-//                                    popup.hide();
-//                                    resetLogin.execute();
-//                                }
-//                            });
+        initUser(user.getValue());
     }    
 
     /**

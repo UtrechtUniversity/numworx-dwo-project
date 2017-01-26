@@ -2,6 +2,11 @@ package nl.uu.fi.dwo.account.client.boot.Results;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherResultsManager;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import org.osgi.util.promise.Promise;
 
 /**
  * Controller for Teacher results.
@@ -27,6 +32,11 @@ class ResultsTeacherController {
     }
 
     public void updateResultsInView() {
+        DomContext context = new DomContext();
+        context.setDomHasRole(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+        DomDwoProfile profile = new DomDwoProfile();
+        Promise<DomResultsPerTeacher> promResults = manager.getTeachersResults(context, profile);
+        DomResultsPerTeacher results = promResults.getValue();
 //        manager.getTeachersResults(new AsyncCallback<List<DomSchoolClass>>() {
 //            @Override
 //            public void onFailure(Throwable t) {

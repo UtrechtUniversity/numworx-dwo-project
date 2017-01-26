@@ -88,7 +88,7 @@ public class LoginPanel extends Composite implements ClickHandler {
                 @Override
                 public Promise<Void> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
                     DomUserFull user = resolved.getValue().getDomUserFull();
-                    DwoGlobalVars.instance().setCurrentUser(user);
+                    DwoGlobalVars.instance().initUser(user);
                     parent.mainDeckPanel.showWidget(1);
                     return null;
                 }
