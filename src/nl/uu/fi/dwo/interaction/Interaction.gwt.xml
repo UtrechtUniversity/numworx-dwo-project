@@ -3,7 +3,15 @@
 <module>
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.google.gwt.json.JSON" />
-	<inherits name="com.google.gwt.logging.Logging"/>
-	<set-property name="gwt.logging.popupHandler" value="DISABLED"/>
-	<source path="client"/>
+	<inherits name="com.google.gwt.logging.Logging" />
+<!-- property is niet gedefinieerd in 2.7.0 -->	
+<!-- 	<define-property name="gwt.logging.popupHandler" -->
+<!-- 		values="ENABLED, DISABLED" /> -->
+	<set-property name="gwt.logging.popupHandler" value="DISABLED" />
+
+<!-- 	<set-property name="gwt.logging.popupHandler" value="ENABLED"> -->
+<!-- 		<when-property-is name="gwt.logging.hasWidgetsHandler" -->
+<!-- 			value="ENABLED" /> -->
+<!-- 	</set-property> -->
+	<source path="client" />
 </module>
