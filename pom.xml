@@ -168,6 +168,13 @@
 								<classifier>dwo2</classifier>
 								<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/tablet/</outputDirectory>								
 						</artifactItem>
+						<artifactItem>
+								<groupId>nl.uu.fi.dwo.register</groupId>
+								<artifactId>Register</artifactId>
+								<version>0.0.1</version>
+								<type>war</type>
+								<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/register</outputDirectory>
+						</artifactItem>
 					</artifactItems>
 					<overWriteReleases>false</overWriteReleases>
 					<overWriteSnapshots>true</overWriteSnapshots>				
@@ -188,4 +195,8 @@
             </plugin> 
 	</plugins>
 	</build>
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
 </project>
