@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <Context antiJARLocking="true" crossContext="false" path="/"> 
+  <!--<Context aliases="/apps=D:\GertvanderPlas\Programs\apache-tomcat-7.0.65\dwo-webapps\war-shared\apps" antiJARLocking="true" crossContext="false" path="/dwo">-->
+  <!--     beans for CORS support in JAX-RS 
+    <beans>
+        <bean id="cors-filter" class="org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter"/>
+ 
+    <jaxrs:server id="service" address="/dwo/rest">
+        <jaxrs:serviceBeans>
+            <ref bean="cors-server" />
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="cors-filter" />
+        </jaxrs:providers>
+    </jaxrs:server>
+ 
+        <bean id="cors-server" scope="prototype"
+          class="org.apache.cxf.systest.jaxrs.cors.AnnotatedCorsServer" /> 
+ 
+    </beans>-->
+  <!-- paths for jars and resources have moved. Jars and resources are configured in the DWO.properties file. Apps are in a different path. For example:
+# htttpAuthentication = {BASIC, DIGEST}, BASIC currently required.
+httpAuthentication=BASIC
+#default usernames
+#defaultUsername=gert_project
+#defaultPassword=passw
+
+#local development for Gert
+serverUrlPath=http://127.0.0.1:8080/dwo/
+resourceUrlPath=FILE:resources
+jarUrlPath=FILE:jars    
+        -->
+  <!-- maxActive: Maximum number of database connections in pool. Make sure you
+    configure your mysqld max_connections large enough to handle
+    all of your db connections. Set to -1 for no limit.
+    -->
+  <!-- maxIdle: Maximum number of idle database connections to retain in pool.
+    Set to -1 for no limit.  See also the DBCP documentation on this
+    and the minEvictableIdleTimeMillis configuration parameter.
+    -->
+  <!-- maxWait: Maximum time to wait for a database connection to become available
+    in ms, in this example 10 seconds. An Exception is thrown if
+    this timeout is exceeded.  Set to -1 to wait indefinitely.
+    -->
+  <!-- username and password: MySQL username and password for database connections  -->
+  <!-- driverClassName: Class name for the official MySQL Connector/J driver is com.mysql.jdbc.Driver.
+    -->
+  <!-- url: The JDBC connection url for connecting to your MySQL database.
+    -->
+  <!-- this context resource can be overloaded by placing a copy in the context.xml 
+    of the tomcat -->
+<!--   <ResourceLink global="jdbc/dwodb" name="jdbc/dwodb" type="javax.sql.DataSource"/> -->
+  <Resource
+  	name="jdbc/dwodb"
+  	auth="Container"
+  	type="javax.sql.DataSource"
+  	maxActive="100" 
+  	minIdle="30" 
+  	maxIdle="50" 
+  	maxWait="10000" 
+  	validationQuery="Select 1" 
+  	testOnBorrow="true"
+  	testWhileIdle="true"
+    logAbandoned="true"
+    removeAbandonedTimeout="60"
+    abandonWhenPercentageFull="50"
+    jdbcInterceptors="ResetAbandonedTimer"
+    timeBetweenEvictionRunsMillis="10000"
+    minEvictableIdleTimeMillis="60000"
+   	username="${RDS_USERNAME}" password="${RDS_PASSWORD}"
+   	driverClassName="com.mysql.jdbc.Driver"
+    url="jdbc:mysql://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}"
+  />
+  <!-- LockOut Realm configured 5 minute time-out after 5 password failures in DWOServer.war. cacheSize-limited for a low DOS sensitivity-->
+  <Realm cacheRemovalWarningTime="360" cacheSize="100" className="org.apache.catalina.realm.LockOutRealm" failureCount="500" lockOutTime="300">
+    <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
+  </Realm>
+  <!-- may be configured in server.xml of tomcat -->
+  <Parameter name="fi.dwo.server.rest.smtp.server" override="true" value="localhost"/>
+  <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="25"/>
+  <Parameter name="fi.dwo.server.rest.smtp.auth" override="true" value="false"/>
+  <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="no"/>
+  <Parameter name="fi.dwo.server.rest.smtp.user" override="true" value="me"/>
+  <Parameter name="fi.dwo.server.rest.smtp.password" override="true" value="mySecret"/>
+  <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="wisweb@fi.uu.nl"/>
+</Context>
