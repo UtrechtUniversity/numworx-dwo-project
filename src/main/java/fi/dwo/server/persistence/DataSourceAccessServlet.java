@@ -193,7 +193,7 @@ public class DataSourceAccessServlet extends Servlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-
+        LOG.log(Level.SEVERE,"rds: {0} port: {1}", new Object[]{System.getProperty("RDS_HOSTNAME","onbekend"),System.getProperty("RDS_PORT","onbekend")});
         String buildnumber = getInitParameter("buildnumber");
         String projectVersion = getInitParameter("projectVersion");
         LOG.log(Level.INFO, "Software version, buildnumber: {0}, {1}", new Object[]{projectVersion, buildnumber});
