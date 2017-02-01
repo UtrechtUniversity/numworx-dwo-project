@@ -808,6 +808,18 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				}
 				
 			}
+			else if(object instanceof AntwoordTekstVak2)
+			{
+				AntwoordTekstVak2 atv = (AntwoordTekstVak2) object;
+				if(!atv.isPopup())
+				{
+					atv.requestFocus();
+					if(atv.heeftFormuleInvoer())
+						atv.tekenCursor();
+					return true;
+				}
+				
+			}
 			else if(object instanceof FormuleEditorWithSteps)
 			{
 				FormuleEditorWithSteps fews = (FormuleEditorWithSteps) object;
@@ -915,6 +927,18 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			else if(object instanceof AntwoordTekstVak)
 			{
 				AntwoordTekstVak atv = (AntwoordTekstVak) object;
+				if(!atv.isPopup())
+				{
+					atv.requestFocus();
+					if(atv.heeftFormuleInvoer())
+						atv.tekenCursor();
+					return true;
+				}
+				
+			}
+			else if(object instanceof AntwoordTekstVak2)
+			{
+				AntwoordTekstVak2 atv = (AntwoordTekstVak2) object;
 				if(!atv.isPopup())
 				{
 					atv.requestFocus();
