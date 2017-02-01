@@ -14,7 +14,7 @@ public class DomCourseStudent extends DomCourse{
     private String image;
     private byte[] imageData;
     private String description;
-    
+    private boolean notVisible;
     /**
      * @return the description
      */
@@ -56,5 +56,14 @@ public class DomCourseStudent extends DomCourse{
      */
     public void setImageData(byte[] imageData) {
         this.imageData = imageData;
-    }    
+    }
+
+	public boolean isNotVisible() {
+		return notVisible;
+	}
+
+	public void setNotVisible(boolean notVisible) {
+		this.notVisible = notVisible;
+	} 
+    
 }
