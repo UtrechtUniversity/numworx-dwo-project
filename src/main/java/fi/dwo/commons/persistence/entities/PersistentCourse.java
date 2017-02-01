@@ -97,10 +97,14 @@ public class PersistentCourse implements Serializable {
     @NotNull
     @Column(name = "parentID", nullable = false) //0 means no parent.
     private Long parentID;
-//    @Basic(optional = false)
-//    @NotNull
-//    @Column(name = "notVisible", nullable = false)
-//    private short notVisible; //not used deprecated. 
+
+  /**
+   * show list of children (sco/course): false = do, true = don't 
+   */
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "notVisible", nullable = false)
+    private boolean notVisible; 
 
     @Basic(optional = false)
     @NotNull
@@ -327,6 +331,7 @@ public class PersistentCourse implements Serializable {
 //        fillDomCourse(course);
 //        course.setImage(image);
 //        course.setImageData(imageData);
+//		  course.setNotVisible(notVisible);
 //        course.setDescription(description);
 //    }
 
@@ -338,8 +343,12 @@ public class PersistentCourse implements Serializable {
 
     private void fillDomCourseFull(DomCourseFull course) {
         PersistentCourse.this.fillDomCourse(course);
+		course.setImage(image);
+		course.setImageData(imageData);
+		course.setDescription(description);
         course.setDwoProfileId(buildPersistenceId());
         course.setExport(export);
+        course.setNotVisible(notVisible);
     }
 
     /**
@@ -363,4 +372,13 @@ public class PersistentCourse implements Serializable {
                 PersistenceClassType.PersistentCourse.name(), aCourseId));
         return id;
     }
+
+	public boolean isNotVisible() {
+		return notVisible;
+	}
+
+	public void setNotVisible(boolean notVisible) {
+		this.notVisible = notVisible;
+	}
+    
 }
