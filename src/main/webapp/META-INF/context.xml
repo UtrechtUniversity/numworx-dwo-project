@@ -75,7 +75,7 @@ jarUrlPath=FILE:jars
 <!--
     tomcat 8.0 configuration, note the performance of org.apache.commons.dbcp.BasicDataSourceFactory
     is not yet tested in production. note tomcat 8.5 has more changes particular for
-    credential realms.
+    credential realms. 
     -->
     <Resource abandonWhenPercentageFull="50" auth="Container" 
               driverClassName="com.mysql.jdbc.Driver" 
