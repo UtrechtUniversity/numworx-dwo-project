@@ -8,7 +8,7 @@
 	</parent>
   <artifactId>EBServer</artifactId>
 	<packaging>war</packaging>
-	<name>Elastic beanstalk war</name>
+	<name>${project.build.finalName}</name>
 	<dependencies>
          <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
