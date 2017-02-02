@@ -79,9 +79,14 @@
             <properties>
                 <RDS_USERNAME>root</RDS_USERNAME>
                 <RDS_PASSWORD>E=mc2Dwo</RDS_PASSWORD>
-                <DRDS_HOSTNAME>localhost</DRDS_HOSTNAME>
-                <DRDS_PORT>3306</DRDS_PORT>
+                <RDS_HOSTNAME>127.0.0.1</RDS_HOSTNAME>
+                <RDS_PORT>3306</RDS_PORT>
+                
+                
                 <RDS_DB_NAME>dwo_devel_v1_4</RDS_DB_NAME>
             </properties>
+            <activatedProfiles>
+                <activatedProfile>dev</activatedProfile>
+            </activatedProfiles>
         </action>
     </actions>

@@ -24,48 +24,35 @@ commands in mysql:
 CREATE USER 'dwo'@'%' IDENTIFIED BY 'dwopasswd';
 GRANT SELECT,INSERT,UPDATE,DELETE ON `dwodb`.* TO 'dwo'@'%';
 
-Configure the following tomcat context-parameter in the tomcat
-main context.xml. 'fi.dwo.dwojapplet.web.appletName' is the name of the 
-DWOJApplet jar which should be placed in a subdirectory of the location where 
-the index.jsp of the war file is unpacked by the tomcat. The jars directory 
-should contain all relevant applet files.
-
-<Parameter name="fi.dwo.dwojapplet.web.appletName" value="DWOJApplet-1.0.1-r9269.jar"
-         override="true"/>
-
-Once the database was created configure a mysql-db resource in the main server.xml:
- <GlobalNamingResources>
-...   
-<Resource name="jdbc/dwodb" auth="Container" type="javax.sql.DataSource"
-               maxActive="100" maxIdle="30" maxWait="10000"
-               username="dwo" password="dwopassword" driverClassName="com.mysql.jdbc.Driver"
-               url="jdbc:mysql://localhost:3306/dwo_production_v1_2"/>
-...  
-</GlobalNamingResources>
-
-Deploy the war using a context fragment, it enables the resource db and sets the 
-security realm to be used:
-
-<?xml version="1.0" encoding="utf-8"?>
-<Context path="/DWO/DWOServer"  docBase="/opt/dwo/tomcat7/wars/DWOServer" debug="0" crossContext="false" >
-<ResourceLink
-    name="jdbc/dwodb"
-    global="jdbc/dwodb"
-    type="javax.sql.DataSource"
-  />
-    <Realm localDataSource="true" roleNameCol="groupname" userRoleTable="tomcat_roles_view" userCredCol="passwd"
-          userNameCol="username" userTable="tomcat_user_view" dataSourceName="jdbc/dwodb"
-          className="org.apache.catalina.realm.DataSourceRealm"/>
-</Context>
-
-Verify there is enough permgenspace voor de tomcat.
-
-Note the localDataSource="true" attribute in <Realm/>.
-
 For authentication by tomcat we should use create some views in the MySQL database:
 
 CREATE VIEW tomcat_user_view AS SELECT username, passwd FROM tblUser;
 CREATE VIEW tomcat_roles_view AS select u.username, g.groupname from tblUser u  join tblhasrole h using (userid) join tblschoolgroup sg on (h.schoolGroupID =  sg.schoolGroupID) join tblgroup g using (groupID);
+
+The database jdbc/dwodb resource is configured using system properties. The best 
+way is to add them to the catalina.properties in the tomcat/conf directory.     
+
+    RDS_USERNAME=root
+    RDS_PASSWORD=MyRDSSecret
+    RDS_HOSTNAME=127.0.0.1
+    RDS_PORT=3306
+    RDS_DB_NAME=dwo_devel_v1_4
+
+in case of a name clash they can be reconfigured by editing the META-INF/context.xml.
+
+STMP system properties must be configured for sending email. Again the catalina.properties
+are the recommended place.
+   
+SMTP_SERVER=localhost
+SMTP_PORT=25
+SMTP_AUTH=false
+SMTP_TLS=no
+SMTP_USER=me
+SMTP_PASSWORD=mySmtpSecret
+SMTP_EMAIL=wisweb@fi.uu.nl
+
+Verify there is enough permgenspace voor de tomcat.
+
 
 For sending emails to allow a password change we need an smtp server that allows 
 authentication. Configure it in the context.xml or the server.xml:
