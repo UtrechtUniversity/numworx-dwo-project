@@ -27,7 +27,7 @@ class ResultsTeacherController {
     }
 
     public void init() {
-        updateResultsInView();
+        //updateResultsInView();
 
     }
 
