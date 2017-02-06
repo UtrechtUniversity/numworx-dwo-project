@@ -37,5 +37,6 @@ Any value defined here will override the pom.xml file value but is only applicab
         <de-markiewb-netbeans-plugins-eclipse-formatter.enableFormatAsSaveAction>false</de-markiewb-netbeans-plugins-eclipse-formatter.enableFormatAsSaveAction>
         <de-markiewb-netbeans-plugins-eclipse-formatter.sourcelevel/>
         <de-markiewb-netbeans-plugins-eclipse-formatter.useProjectSettings>true</de-markiewb-netbeans-plugins-eclipse-formatter.useProjectSettings>
+        <netbeans.hint.jdkPlatform>Open-JDK_1.8</netbeans.hint.jdkPlatform>
     </properties>
 </project-shared-configuration>

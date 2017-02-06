@@ -31,32 +31,32 @@
         <bean id="cors-server" scope="prototype"
           class="org.apache.cxf.systest.jaxrs.cors.AnnotatedCorsServer" />  
     </beans>-->
-    <!-- maxActive: Maximum number of database connections in pool. Make sure you
+  <!-- maxActive: Maximum number of database connections in pool. Make sure you
     configure your mysqld max_connections large enough to handle
     all of your db connections. Set to -1 for no limit.
     -->
-    <!-- maxIdle: Maximum number of idle database connections to retain in pool.
+  <!-- maxIdle: Maximum number of idle database connections to retain in pool.
     Set to -1 for no limit.  See also the DBCP documentation on this
     and the minEvictableIdleTimeMillis configuration parameter.
     -->
-    <!-- maxWait: Maximum time to wait for a database connection to become available
+  <!-- maxWait: Maximum time to wait for a database connection to become available
     in ms, in this example 10 seconds. An Exception is thrown if
     this timeout is exceeded.  Set to -1 to wait indefinitely.
     -->
-    <!-- username and password: MySQL username and password for database connections  -->
-    <!-- driverClassName: Class name for the official MySQL Connector/J driver is com.mysql.jdbc.Driver.
+  <!-- username and password: MySQL username and password for database connections  -->
+  <!-- driverClassName: Class name for the official MySQL Connector/J driver is com.mysql.jdbc.Driver.
     -->
-    <!-- url: The JDBC connection url for connecting to your MySQL database.
+  <!-- url: The JDBC connection url for connecting to your MySQL database.
     -->
-    <!-- this context resource can be overloaded by placing a copy in the context.xml 
+  <!-- this context resource can be overloaded by placing a copy in the context.xml 
     of the tomcat -->
-    <!--   <ResourceLink global="jdbc/dwodb" name="jdbc/dwodb" type="javax.sql.DataSource"/> 
+  <!--   <ResourceLink global="jdbc/dwodb" name="jdbc/dwodb" type="javax.sql.DataSource"/> 
             replaces 
               <ResourceLink global="jdbc/dwodb" name="jdbc/dwodb" type="javax.sql.DataSource"/>
               the parameters are system properties which can be set in conf\catalina.properties
               if required for testing.
     -->
-<!-- 
+  <!-- 
     The following System properties should be added to the running tomcat to configure
     the jdbc/dwodb Resource defined here. One of several options is by adding them to the 
     catalina.properties in the tomcat/conf directory.     
@@ -66,25 +66,25 @@
     RDS_HOSTNAME=127.0.0.1
     RDS_PORT=3306
     RDS_DB_NAME=dwo_devel_v1_4
--->    
-<!--  tomcat 7 configuration -->
-<Resource abandonWhenPercentageFull="50" auth="Container" 
-              driverClassName="com.mysql.jdbc.Driver" 
-              jdbcInterceptors="ResetAbandonedTimer" 
-              logAbandoned="true" maxActive="100" maxIdle="50" 
-              maxWait="10000" minEvictableIdleTimeMillis="60000" minIdle="30" 
-              name="jdbc/dwodb" password="${RDS_PASSWORD}" 
-              removeAbandonedTimeout="60" testOnBorrow="true" 
-              testWhileIdle="true" timeBetweenEvictionRunsMillis="10000" 
-              type="javax.sql.DataSource" 
-              url="jdbc:mysql://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}" 
-              username="${RDS_USERNAME}" validationQuery="Select 1"/>
-<!--
+-->
+  <!--  tomcat 7 configuration -->
+  <Resource abandonWhenPercentageFull="50" auth="Container" 
+            driverClassName="com.mysql.jdbc.Driver" 
+            jdbcInterceptors="ResetAbandonedTimer" logAbandoned="true" 
+            maxActive="100" maxIdle="50" maxWait="10000" 
+            minEvictableIdleTimeMillis="60000" minIdle="30" 
+            name="jdbc/dwodb" password="${RDS_PASSWORD}" 
+            removeAbandonedTimeout="60" testOnBorrow="true" 
+            testWhileIdle="true" timeBetweenEvictionRunsMillis="10000" 
+            type="javax.sql.DataSource" 
+            url="jdbc:mysql://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}" 
+            username="${RDS_USERNAME}" validationQuery="Select 1"/>
+  <!--
     tomcat 8.0 configuration, note the performance of org.apache.commons.dbcp.BasicDataSourceFactory
     is not yet tested in production. note tomcat 8.5 has more changes particular for
     credential realms.
     -->
-<!--    <Resource abandonWhenPercentageFull="50" auth="Container" 
+  <!--    <Resource abandonWhenPercentageFull="50" auth="Container" 
               driverClassName="com.mysql.jdbc.Driver" 
               factory="org.apache.commons.dbcp.BasicDataSourceFactory"
               jdbcInterceptors="ResetAbandonedTimer" 
@@ -96,23 +96,19 @@
               type="javax.sql.DataSource"
               url="jdbc:mysql://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}" 
               username="${RDS_USERNAME}" validationQuery="Select 1"/>-->
-
-    <!-- 
+  <!-- 
     The LockOut Realm configured 5 minute time-out after 500 password failures 
     in DWOServer.war. cacheSize-limited for a low DOS sensitivity -->
-    <Realm cacheRemovalWarningTime="360" cacheSize="100" 
-           className="org.apache.catalina.realm.LockOutRealm" failureCount="500" 
-           lockOutTime="300">
-        <!-- user credentials configured -->
-        <Realm className="org.apache.catalina.realm.DataSourceRealm" 
-               dataSourceName="jdbc/dwodb" localDataSource="true" 
-               roleNameCol="groupname" userCredCol="passwd" 
-               userNameCol="username" userRoleTable="tomcat_roles_view" 
-               userTable="tomcat_user_view"/>
-    </Realm>
-    
-    <!-- Parameters may be configured in server.xml of tomcat -->
-<!--
+  <Realm cacheRemovalWarningTime="360" cacheSize="100" className="org.apache.catalina.realm.LockOutRealm" failureCount="500" lockOutTime="300">
+    <!-- user credentials configured -->
+    <Realm className="org.apache.catalina.realm.DataSourceRealm" 
+           dataSourceName="jdbc/dwodb" localDataSource="true" 
+           roleNameCol="groupname" userCredCol="passwd" userNameCol="username" 
+           userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"
+    />
+  </Realm>
+  <!-- Parameters may be configured in server.xml of tomcat -->
+  <!--
     The following System properties should be added to the running tomcat to configure
     the smtp properties for sending email. One of several options is by adding 
     them to the catalina.properties in the tomcat/conf directory.     
@@ -123,11 +119,11 @@ SMTP_TLS=no
 SMTP_USER=me
 SMTP_PASSWORD=mySmtpSecret
 SMTP_EMAIL=wisweb@fi.uu.nl -->
-    <Parameter name="fi.dwo.server.rest.smtp.server" override="true" value="${SMTP_SERVER}"/>
-    <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="${SMTP_PORT}"/>
-    <Parameter name="fi.dwo.server.rest.smtp.auth" override="true" value="${SMTP_AUTH}"/>
-    <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="${SMTP_TLS}"/>
-    <Parameter name="fi.dwo.server.rest.smtp.user" override="true" value="${SMTP_USER}"/>
-    <Parameter name="fi.dwo.server.rest.smtp.password" override="true" value="${SMTP_PASSWORD}"/>
-    <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="${SMTP_EMAIL}"/>
+  <Parameter name="fi.dwo.server.rest.smtp.server" override="true" value="${SMTP_SERVER}"/>
+  <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="${SMTP_PORT}"/>
+  <Parameter name="fi.dwo.server.rest.smtp.auth" override="true" value="${SMTP_AUTH}"/>
+  <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="${SMTP_TLS}"/>
+  <Parameter name="fi.dwo.server.rest.smtp.user" override="true" value="${SMTP_USER}"/>
+  <Parameter name="fi.dwo.server.rest.smtp.password" override="true" value="${SMTP_PASSWORD}"/>
+  <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="${SMTP_EMAIL}"/>
 </Context>
