@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.account.client.boot;
 
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherResultsManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import org.osgi.util.promise.Promise;
 
 /**
  * Controller for Login.
@@ -12,15 +14,13 @@ class LoginController {
 
     private static final Logger LOG = Logger.getLogger(LoginController.class.getName());
 
-    private LoginPanel view;
-    private SecuredTeacherResultsManager manager = new SecuredTeacherResultsManager();
+    private SecuredUserAccountManager manager = new SecuredUserAccountManager();
 
-    LoginController(LoginPanel view) {
-        this.view = view;
+    LoginController() {
         init();
     }
 
-    public void init() {
+    private void init() {
 
     }
 
@@ -29,4 +29,8 @@ class LoginController {
 //    public void login(....){
         //}
  //   }
+    
+    public Promise<DomUserFullwLoginContext> login(String user, String password){
+        return manager.login(user, password);
+    }
 }

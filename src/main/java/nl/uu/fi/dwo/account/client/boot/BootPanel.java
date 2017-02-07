@@ -79,4 +79,12 @@ public class BootPanel extends Composite implements EntryPoint {
     public int getMainDeckCount(){
         return mainDeckPanel.getWidgetCount();
     }
+    
+    public void showLoginWidget(){
+        mainDeckPanel.showWidget(0);
+    }
+    public void showResultWidget(){
+        mainDeckPanel.showWidget(1);
+    }
+
 }

@@ -22,17 +22,26 @@
         font-weight: normal;  
         }
     </ui:style>
-        
-    <g:HorizontalPanel ui:field='tablePanel' addStyleNames='{mainpanel.widget}'
-                       horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
-        <!--<g:SimplePanel >-->
-        <!-- content goes here -->
-        <g:Grid addStyleNames='{mainpanel.grid}'
-                  ui:field='resultGrid'/>              
-        <!--          <c:SimplePager
-        ui:field='pager' />-->
-        <!--</g:SimplePanel>-->
-    </g:HorizontalPanel>
+    <g:VerticalPanel>
+        <g:HorizontalPanel ui:field='tablePanel' addStyleNames='{mainpanel.widget}'
+                           horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+            <!--<g:SimplePanel >-->
+            <!-- content goes here -->
+            <g:Grid addStyleNames='{mainpanel.grid}'
+                    ui:field='resultGrid'/>              
+            <!--          <c:SimplePager
+            ui:field='pager' />-->
+            <!--</g:SimplePanel>-->
+        </g:HorizontalPanel>
+<!--        <g:HorizontalPanel>
+            <g:customCell styleName="optionalBarCellStyle">
+                <g:Button ui:field='Btn'>Login</g:Button>
+            </g:customCell>
+            <g:customCell styleName="optionalBarCellStyle">
+                <g:Button ui:field='loginBtn'>Login</g:Button>
+            </g:customCell>
+        </g:HorizontalPanel>-->
+    </g:VerticalPanel>
     <!--  <g:VerticalPanel  horizontalAlignment="ALIGN_CENTER" >
         <c:CellTable addStyleNames='{mainpanel.widget}' ui:field='resultTable'>
             <g:row styleName="optionalHeaderStyle">
@@ -78,4 +87,4 @@
                 </g:customCell>
             </g:row>
     </g:VerticalPanel>    -->
-</ui:UiBinder> 
+</ui:UiBinder>

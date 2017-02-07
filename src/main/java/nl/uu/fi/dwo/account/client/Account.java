@@ -162,7 +162,7 @@ public class Account implements EntryPoint, ClickHandler {
 
                                 @Override
                                 public void onSuccess(DomSchoolsRolesAndClassesV2 result) {
-                                    DwoGlobalVars.getInstance().setSchoolLogins(result);
+                                    DwoGlobalVars.instance().setSchoolLogins(result);
                                     header.setRightWidget(userBar);
                                     LOG.log(Level.INFO,
                                             "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");

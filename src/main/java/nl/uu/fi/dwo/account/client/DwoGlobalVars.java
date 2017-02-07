@@ -18,24 +18,31 @@ import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
 
 /**
  * Stores global variables The class is state is initialized by calls in
  * different boot phases. Whenever a global state is changed it should be called
- * and have the state updated. The following states exist and occur in the 
- * following order Unintialized, Initializing, NotLoggedIn, LoggedIn, Closing. 
+ * and have the state updated. The following states exist and occur in the
+ * following order Unintialized, Initializing, NotLoggedIn, LoggedIn, Closing.
  * Additionally each state can transition to the Uninitialized.
- * 
- * 
- * 
+ *
+ *
+ *
  *
  * @author Gert van der Plas
  */
 public class DwoGlobalVars {
 
     private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
+
+    private SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
+    private SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
 
     /**
      * @return the state
@@ -47,65 +54,71 @@ public class DwoGlobalVars {
     /**
      * @param state the state to set
      */
-    public void setState(DwoGlobalVarsState state) {
+    private void setState(DwoGlobalVarsState state) {
         this.state = state;
     }
 
     /**
-     * DwoGlobalStates that define which functions can be called without problems.
-     * 
+     * DwoGlobalStates that define which functions can be called without
+     * problems.
+     *
      */
-    
     public enum DwoGlobalVarsState {
 
         /**
-         * Nothing is set.
+         * Can only transition to next state.
          */
-        Unintialized, 
-
+        Unintialized,
         /**
-         * DwoSystemParameters
+         * Can only transition to next state.
          */
-        Initializing, 
-
+        Initializing,
         /**
-         *
+         * Can only transition to next state.
          */
-        NotLoggedIn, 
-
+        Initialized,
         /**
-         *
+         * Can only transition to next state.
          */
-        LoggedIn, 
-
+        NotLoggedIn,
         /**
-         *
+         * Can only transition to next state.
+         */
+        LoggingIn,
+        /**
+         * Can only transition to next state.
+         */
+        LoggedIn,
+        /**
+         * Can transition to next state or NotLoggedIn state.
+         */
+        LoggingOut,
+        /**
+         * Can transition to Uninitialized state.
          */
         Closing
     }
-    
-    private DwoGlobalVarsState state=DwoGlobalVarsState.Unintialized;
+
+    private DwoGlobalVarsState state = DwoGlobalVarsState.Unintialized;
     private static volatile DwoGlobalVars instance;
     private DomUserFull currentUser;
     private DomLoginContext currentLoginContext;
     private DomSchoolsRolesAndClassesV2 schoolLogins;
-   
+
     /**
-     *
-     * @return
+     * @return the instance
      */
-    public static DwoGlobalVars getInstance() {
+    public static DwoGlobalVars instance() {
+        if (instance == null) {
+            try {
+                instance = new DwoGlobalVars();
+            } catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, "", ex);
+            }
+        }
         return instance;
     }
 
-    /**
-     *
-     * @param instance
-     */
-    public static void setInstance(DwoGlobalVars instance) {
-        DwoGlobalVars.instance = instance;
-    }
-    
     /**
      *
      * @return
@@ -151,28 +164,16 @@ public class DwoGlobalVars {
     private static DwoLocale dwoLocale = new DwoLocale("nl-NL");
 
     /**
-     * @return the instance
-     */
-    public static DwoGlobalVars instance() {
-        if (instance == null) {
-            try {
-                instance = new DwoGlobalVars();
-            } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, "", ex);
-            }
-        }
-        return instance;
-    }
-
-    /**
      *
      * @throws Dwo2Exception
      */
     public DwoGlobalVars() throws Dwo2Exception {
         //TODO define initialization stages: Unintialized, Initializing, NotLoggedIn, LoggedIn. Closing.
+        setState(DwoGlobalVarsState.Initializing);
         initProperties();
         initObjects();
         initVars();
+        setState(DwoGlobalVarsState.Initialized);
     }
 
     /**
@@ -198,37 +199,66 @@ public class DwoGlobalVars {
     }
 
     private void initVars() throws Dwo2Exception {
-        //TODO fill DwoSystemParameters and more into the instance.
-//            schoolLogins = SecureUserAccountLoginsManager.getSchoolLogins();
-//            control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
-//                                @Override
-//                                public void onFailure(Throwable t) {
-//                                    //fail and reset all the data.
-//                                    Window.alert(t.getMessage());
-//                                    //TODO Wim
-//                                    //Window.alert("wim handles error here.");
-//                                }
-//
-//                                @Override
-//                                public void onSuccess(Boolean result) {
-//                                    popup.hide();
-//                                    resetLogin.execute();
-//                                }
-//                            });
     }
-    
-    public void initUser(DomUserFull user) throws Dwo2Exception {
-        SecuredUserSchoolLoginManagerV2 accountManager = new SecuredUserSchoolLoginManagerV2();
-        Promise<DomSchoolsRolesAndClassesV2>  logins = accountManager.getSchoolLogins();
-        setCurrentUser(user);
-        setSchoolLogins(logins.getValue());
+
+    public Promise<DwoGlobalVarsState> initUser(String usercode, String password) throws Dwo2Exception {
+        if (state != DwoGlobalVarsState.Initialized) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Trying to initialize a user while in the wrong state");
+            //better yet logout.
+        };
+        //correct state.
+        state = DwoGlobalVarsState.LoggingIn;
+        Promise<DomUserFullwLoginContext> userwLoginContext = accountManager.login(usercode, password);
+        userwLoginContext.then(new Success<DomUserFullwLoginContext, DwoGlobalVarsState>() {
+            @Override
+            public Promise<DwoGlobalVarsState> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
+                setCurrentUser(resolved.getValue().getDomUserFull());
+                return initUser(resolved.getValue().getDomUserFull());
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+
+                state = DwoGlobalVarsState.Initialized;
+            }
+        }
+        );
+        return new DwoGlobalVarPromise();
     }
-    
+
+    private Promise<DwoGlobalVarsState> initUser(DomUserFull user) throws Dwo2Exception {
+        if (state != DwoGlobalVarsState.Initializing) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Trying to initialize a user while in the wrong state");
+            //better yet logout.
+        };
+
+        SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
+        Promise<DomSchoolsRolesAndClassesV2> logins = loginManager.getSchoolLogins();
+        logins.then(new Success<DomSchoolsRolesAndClassesV2, DwoGlobalVarsState>() {
+            @Override
+            public Promise<DwoGlobalVarsState> call(Promise<DomSchoolsRolesAndClassesV2> resolved) throws Exception {
+                schoolLogins = (resolved.getValue());
+                state = DwoGlobalVarsState.LoggedIn;
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                clearCurrentUser();
+                state = DwoGlobalVarsState.Initialized;
+            }
+        }
+        );
+        return new DwoGlobalVarPromise();
+    }
+
     public void initUser() throws Dwo2Exception {
         SecuredUserAccountManager userManager = new SecuredUserAccountManager();
-        Promise<DomUserFull>  user = userManager.getAccountData();
+        Promise<DomUserFull> user = userManager.getAccountData();
         initUser(user.getValue());
-    }    
+    }
 
     /**
      * @return the server
@@ -259,7 +289,16 @@ public class DwoGlobalVars {
         this.currentUser = aCurUser;
         //notify the gwt-rest interface configuration
         GwtRestVars.getInstance().setCurrentUser(aCurUser);
-        
+
+    }
+
+    /**
+     */
+    public void clearCurrentUser() {
+        currentUser = null;
+        //notify the gwt-rest interface configuration
+        GwtRestVars.getInstance().setCurrentUser(null);
+
     }
 
     /**
@@ -290,5 +329,4 @@ public class DwoGlobalVars {
         this.schoolLogins = schoolLogins;
     }
 
-    
 }

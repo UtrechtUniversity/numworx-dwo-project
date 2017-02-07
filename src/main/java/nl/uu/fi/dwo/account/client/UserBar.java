@@ -113,7 +113,7 @@ public class UserBar extends Composite implements Command {
 			rolename = DwoLocalesForGWT.instance.getString(rolename);
 		} catch (MissingResourceException e) {
 		}
-		display = DwoGlobalVars.getInstance().getCurrentUser().getDisplayName();
+		display = DwoGlobalVars.instance().getCurrentUser().getDisplayName();
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		builder.appendEscaped(rolename);
 		builder.append(' ');

@@ -96,9 +96,9 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
     }
 
     private boolean isCurrentSchoolClass(DomSchoolClass object) {
-        return DwoGlobalVars.getInstance().getCurrentSchoolClass() != null
+        return DwoGlobalVars.instance().getCurrentSchoolClass() != null
                 && object != null
-                && object.getId().equals(DwoGlobalVars.getInstance().getCurrentSchoolClass().getId());
+                && object.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId());
     }
 
     /**
@@ -248,7 +248,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
                                             @Override
                                             public void onSuccess(DomSchoolClass result) {
-                                                DomSchoolClass current = DwoGlobalVars.getInstance().getCurrentSchoolClass();
+                                                DomSchoolClass current = DwoGlobalVars.instance().getCurrentSchoolClass();
                                                 if (result != current
                                                         && (result == null
                                                         || current == null
