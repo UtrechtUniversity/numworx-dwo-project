@@ -136,7 +136,7 @@ public class GwtRestVars {
     }
 
     /**
-     * @param curUser the currentUser to set
+     * @param aCurUser
      */
     public void setCurrentUser(DomUserFull aCurUser) {
         currentUser = aCurUser;
