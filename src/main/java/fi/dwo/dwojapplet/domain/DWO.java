@@ -1472,14 +1472,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         }
 
         if (limitedSchoolAccess) {
-            if (!DwoHelper.isApplication()) {
-                schoolAccessPropertiesString = getParameter("schoolAccessProperties"); // TODO wegwerken: database of resource
-            }
-
+        	// vaste string, as RESOURCE
+        	schoolAccessPropertiesString = "resources/schools-" + dwoProfileID + ".properties"; 
+        	
+//            if (!DwoHelper.isApplication()) {
+//                schoolAccessPropertiesString = getParameter("schoolAccessProperties"); // TODO wegwerken: database of resource
+//            }
+            
             Properties schoolAccessProperties;
 
             try {
-                URL url = new URL(getDocumentBase(), schoolAccessPropertiesString);
+//                URL url = new URL(getDocumentBase(), schoolAccessPropertiesString);
+            	URL url = DwoHelper.getResourceUrlPath();
+            	url = new URL(url, schoolAccessPropertiesString);
                 InputStream in = url.openStream();
                 schoolAccessProperties = new Properties();
                 schoolAccessProperties.load(in);
