@@ -1024,7 +1024,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			}
 			else
 			{
-				if (show)
+				if (show && ingevuld) // bij een leeg antwoord geen kruis zetten
 					zetGoedFout(FOUT);
 				correct = Boolean.FALSE;
 				score = 0;
