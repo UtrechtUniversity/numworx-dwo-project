@@ -100,7 +100,7 @@ public class DwoGlobalVars {
     }
 
     private DwoGlobalVarsState state = DwoGlobalVarsState.Unintialized;
-    private DwoGlobalVarPromise statePromise = new DwoGlobalVarPromise(this, state);
+    private DwoGlobalVarPromise statePromise = new DwoGlobalVarPromise(this, DwoGlobalVarsState.LoggedIn);
     private static volatile DwoGlobalVars instance;
     private DomUserFull currentUser;
     private DomLoginContext currentLoginContext;

@@ -62,6 +62,15 @@ class LoginPanelHandler {
         );
     }
 
+    public Success<DomUserFullwLoginContext, Void> LoginSuccessPromise() {
+        return new Success<DomUserFullwLoginContext, Void>() {
+            @Override
+            public Promise<Void> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
+                view.onLoginSuccess();
+                return null;
+            }
+        };
+    }
 //                @Override
 //                public void onFailure(Throwable t) {
 //                    //TODO show fail

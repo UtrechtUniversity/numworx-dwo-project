@@ -98,15 +98,6 @@ public class LoginPanel extends Composite implements ClickHandler {
         //reset user interface?
     }
     
-    public Success<DomUserFullwLoginContext, Void> LoginSuccessPromise() {
-        return new Success<DomUserFullwLoginContext, Void>() {
-            @Override
-            public Promise<Void> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
-                onLoginSuccess();
-                return null;
-            }
-        };
-    }
     
 
 //    public Promise<?> LoginFailPromise() {
