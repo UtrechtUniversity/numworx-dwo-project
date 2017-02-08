@@ -37,10 +37,13 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -50,6 +53,7 @@ import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -58,6 +62,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -108,16 +113,21 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private WaitScreen waitscreen = WaitScreen.instance();
 	Label disableScreen = new Label("");
 	
+	private PopupPanel timerPanel;
+	private Label timerMessage;
+	private PopupPanel timerMessagePopupPanel;
+	private Canvas timerCanvas;
+	private Timer timerTempoToets;
+	private int timeLimitSecondsLeft;
+	
 	private Widget next, prev, end;
 	private int[][][] beginStateMeasuredMisconceptions;
 
 	private Scorm2004IF api;
 
-	public ViewModuleViewImpl(boolean b) {
+	public ViewModuleViewImpl(boolean b) 
+	{
 		standalone = b;
-		
-		
-		
 	}
 	
 	public ViewModuleViewImpl() {
@@ -315,8 +325,61 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		scoreNav.started();
 	
-	}
+		if (isTempotoets())
+		{
+			if (on.getTempotoetsSecondsLeft() > -1)
+				timeLimitSecondsLeft = on.getTempotoetsSecondsLeft();
+			else
+				timeLimitSecondsLeft = timeLimitSeconds; // volledige duur
+			
+			// create the timer message
+			timerMessage = new Label("");
+			timerMessage.getElement().getStyle().setFontSize(2.0, Unit.EM);
+			timerMessage.getElement().getStyle().setProperty("margin", "15px");
+			timerMessage.getElement().getStyle().setProperty("padding", "25px");
+			timerMessagePopupPanel = new PopupPanel(false, false);
+			timerMessagePopupPanel.add(timerMessage);
+			timerMessagePopupPanel.center();
+			
+			// create the timer panel
+			timerPanel = new PopupPanel(false, false);			
+			
+			timerCanvas = Canvas.createIfSupported();
+			timerCanvas.getCanvasElement().setWidth(100);
+			timerCanvas.getCanvasElement().setHeight(100);
+			timerPanel.add(timerCanvas);
 
+			if (timerCanvas == null)
+			{
+				throw new RuntimeException("Timercanvas could not be created.");
+			}
+
+			int left = contentPanel.getOffsetWidth() - timerCanvas.getCanvasElement().getWidth();
+			int top = contentPanel.getOffsetHeight() - timerCanvas.getCanvasElement().getHeight();
+			
+			timerPanel.setPopupPosition(left - 20, top + 20);
+			timerPanel.show();
+			paintTimer();
+			
+			if (on.isTemptoetsVerlopen())
+			{
+				//timeLimitSecondsLeft = 0;				
+				tempotoetsLocked = true;
+			}
+			else if (isAllCorrect())
+			{
+				tempotoetsLocked = true;
+			}
+			else
+			{
+				tempotoetsLocked = false;
+				scheduleTimerPainting();
+			} // tempotoets niet verlopen
+
+			zetAfdekPanelTempotoets(tempotoetsLocked, isAllCorrect());
+		}
+	}
+	
 	protected Memento createMemento() {
 		return new Memento(getApi());
 	}
@@ -380,6 +443,19 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void setZelftoetsNagekeken(boolean b)
 	{
 		zelftoetsNagekeken = b;
+	}
+
+	/**
+	 * Reset de tempotoets timer, verwijder het afdekpanel.
+	 */
+	public void resetTimer()
+	{
+		zetAfdekPanelTempotoets(false, false);
+		timeLimitSecondsLeft = timeLimitSeconds;
+		tempotoetsLocked = false;
+		timerTempoToets.cancel();
+		paintTimer();
+		scheduleTimerPainting();
 	}
 	
 	public void gaNaarVolgendeOpdracht()
@@ -627,6 +703,18 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		{
 			zetAfdekPanel(true);
 		}
+		else if (isTempotoets())
+		{
+			if (isAllCorrect())
+			{
+				tempotoetsLocked = true;
+				if (timerTempoToets != null)
+				{
+					timerTempoToets.cancel();
+				}
+			}
+			zetAfdekPanelTempotoets(tempotoetsLocked, isAllCorrect());
+		}
 		else
 		{
 			zetAfdekPanel(false);
@@ -757,7 +845,55 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			hoofdPanel.tabFocus(null, false);
 	}
 	
-	
+	/**
+	 * Als de tempotoets gelocked is, zet dan een afdekpanel met de bijpassende melding.
+	 * Als de tempotoets niet gelocked is, verwijder dan het afdekpanel.
+	 * 
+	 * @param locked
+	 * 		of de tempotoets gelocked is
+	 * @param allCorrect
+	 * 		of alle opgaven op alle bolletjes goed zijn gemaakt
+	 */
+	private void zetAfdekPanelTempotoets(boolean locked, Boolean allCorrect)
+	{
+		if (locked)
+		{
+			contentScrollPanel.remove(disableScreen);
+			contentScrollPanel.add(disableScreen);
+			
+			//contentScrollPanel.remove(timerMessage);
+
+			if (allCorrect != null && allCorrect.booleanValue())
+			{
+				if (timerMessage != null && timerMessagePopupPanel != null)
+				{
+					// toon "Op tijd klaar"
+					timerMessage.setText("Op tijd klaar");
+					timerMessage.getElement().getStyle().setBackgroundColor(TimerImageGenerator.greenColor);
+					timerMessagePopupPanel.show();
+				}
+			}
+			else
+			{
+				if (timerMessage != null && timerMessagePopupPanel != null)
+				{
+					// toon "De tijd is om"
+					timerMessage.setText("De tijd is om");
+					timerMessage.getElement().getStyle().setBackgroundColor(TimerImageGenerator.redColor);
+					timerMessagePopupPanel.show();
+				}
+			}
+		}
+		else
+		{
+			contentScrollPanel.remove(disableScreen);
+			if (timerMessagePopupPanel != null)
+			{
+				timerMessagePopupPanel.hide();
+			}
+		}
+	}
+
 	public void zetVolgendeKnoppenEnabled(boolean b)
 	{	
 		scoreNav.setVolgendeEnabled(b);
@@ -1112,6 +1248,26 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				if(Boolean.FALSE.equals(check) ) return check;
 			}
 		}
+		return correct;
+	}
+	
+	/**
+	 * Determine whether all opdrachten in the activiteit are correct.  
+	 * 
+	 * @return
+	 */
+	public Boolean isAllCorrect()
+	{
+		Boolean correct = Boolean.TRUE;
+		
+		// loop over alle bolletjes
+		for (int j = 0; j < on.getAantalOpdrachten(); j++)
+		{
+			correct = on.isCorrect(on.getCurrentActiviteit(), j);
+			if (!correct)
+				return correct;
+		}
+		
 		return correct;
 	}
 	
@@ -1512,6 +1668,26 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			on.close();
 		PopupFacade.removeAll();
 		kb.blur();
+		
+		if (isTempotoets())
+		{
+			removeTimer();
+		}
+	}
+
+	/**
+	 * Remove the timer related to the tempotoets.
+	 */
+	private void removeTimer()
+	{
+		if (timerTempoToets != null)
+			timerTempoToets.cancel();
+		else
+			System.out.println("ViewModuleViewImpl.removeTimer(): timerTempoToets == null!");
+		
+		timerPanel.hide();
+		timerMessagePopupPanel.hide();
+		timerMessagePopupPanel.setVisible(false);
 	}
 
 	public FormuleKeyboardIF getKeyboard() {
@@ -1636,4 +1812,154 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		return Double.valueOf(on.getScore());
 	}
 
+
+	/**
+	 * Schedule the painting of the timer for tempotoets.
+	 * 
+	 */
+	private void scheduleTimerPainting()
+	{
+		timerTempoToets = new Timer()
+		{
+			@Override
+			public void run()
+			{
+				timeLimitSecondsLeft = Math.max(timeLimitSecondsLeft - 1, 0); // nooit kleiner dan 0; 0 moet getekend worden, daarna niet meer
+				paintTimer();
+				//GWT.log("ViewModuleViewImpl.scheduleTimerPainting(): timeLimitSecondsLeft = " + timeLimitSecondsLeft);
+				
+				if (timeLimitSecondsLeft == 0)
+				{
+					// tijd is om!
+					setTempotoetsLocked();
+				}
+				else
+					scheduleTimerPainting();
+			}
+		};
+		int delay = 1000 - (int) (System.currentTimeMillis() % 1000);
+		timerTempoToets.schedule(delay);
+	}
+
+	private void paintTimer()
+	{
+		TimerImageGenerator.drawImage(timerCanvas.getCanvasElement(), timeLimitSeconds, timeLimitSecondsLeft);
+	}
+
+	/**
+	 * Set tempotoets locked.
+	 */
+	public void setTempotoetsLocked()
+	{
+		timerPanel.setGlassEnabled(true);
+		tempotoetsLocked = true;
+		if (isAllCorrect())
+		{
+			timerTempoToets.cancel();
+		}
+		zetAfdekPanelTempotoets(tempotoetsLocked, isAllCorrect());
+	}
+	
+	public int getTimeLimitSecondsLeft()
+	{
+		return timeLimitSecondsLeft;
+	}
+
+
+
+	/**
+	 * Class TimerImageGenerator for the timer in a tempotoets.
+	 * 
+	 * @author Sylvia van Borkulo
+	 *
+	 */
+	private static class TimerImageGenerator
+	{
+		private static final String secondsLabel = " sec";
+		private static final String transparentColor = "rgba(0,0,0,0)";
+		private static final String blackColor = "#000000";
+		private static final String greenColor = "#00B400";// groen uit WiskOpdr
+		private static final String redColor = "#FF9696";// rood uit WiskOpdr
+
+		private Context2d context;
+		private double width;
+		private double height;
+		private double r;
+		private double centerX;
+		private double centerY;
+		
+		private int timeLimitSeconds;
+		private int timeLimitSecondsLeft;
+
+		private TimerImageGenerator(CanvasElement canvas, int timeLimitSeconds, int timeLimitSecondsLeft)
+		{
+			context = canvas.getContext2d();
+			width = canvas.getWidth();
+			height = canvas.getHeight();
+			r = Math.min(width, height) * 2 / 5;
+			centerX = width / 2;
+			centerY = 8 + (height * 2 / 3) / 2;
+			this.timeLimitSeconds = timeLimitSeconds;
+			this.timeLimitSecondsLeft = timeLimitSecondsLeft;
+		}
+
+		public static void drawImage(CanvasElement canvas, int timeLimitSeconds, int timeLimitSecondsLeft)
+		{
+			new TimerImageGenerator(canvas, timeLimitSeconds, timeLimitSecondsLeft).drawImage();
+		}
+
+		@SuppressWarnings("deprecation")
+		private void drawImage()
+		{
+			// clear the canvas 
+			context.clearRect(0, 0, width, height);
+
+			// Paint outer background.
+			context.save();
+			context.setFillStyle(transparentColor);
+			context.fillRect(0, 0, width, height);
+			context.restore();
+			
+			// Paint the timer
+			
+			// green part (time left)
+			context.save();
+			context.setFillStyle(greenColor);
+			context.beginPath();
+			context.moveTo(centerX, centerY);
+			context.arc(centerX, centerY, r, (2 * Math.PI * (timeLimitSeconds - timeLimitSecondsLeft) / timeLimitSeconds) - Math.PI / 2, 2 * Math.PI - Math.PI / 2);
+			context.fill();
+			
+			// red part (time elapsed)
+			context.save();
+			context.setFillStyle(redColor);
+			context.beginPath();
+			context.moveTo(centerX, centerY);
+			context.arc(centerX, centerY, r, - Math.PI / 2, (2 * Math.PI * (timeLimitSeconds - timeLimitSecondsLeft) / timeLimitSeconds) - Math.PI / 2);
+			context.fill();
+
+			// Draw text.
+			drawSecondsLeft();
+		}
+
+		/**
+		 * Draw the seconds left beneath the timer.
+		 */
+		private void drawSecondsLeft()
+		{
+			context.save();
+			long fontSize = Math.round(r / 3);
+			context.setFont("bold " + fontSize + "px Helvetica, sans-serif");
+			context.setTextAlign(Context2d.TextAlign.CENTER);
+			context.setTextBaseline(Context2d.TextBaseline.MIDDLE);
+			context.setFillStyle(blackColor);
+			double x = centerX;
+			double y = height - 5;
+			context.fillText(timeLimitSecondsLeft + secondsLabel, x, y);
+			context.restore();
+			
+			//System.out.println("ViewModuleViewImpl.TimerImageGenerator.drawSecondsLeft(): left = " + timeLimitSecondsLeft);
+		}
+
+	} // end class ClockImageGenerator
 }
