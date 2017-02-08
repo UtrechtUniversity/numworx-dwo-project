@@ -317,16 +317,24 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{
 			//logger.info("zetOpdracht plus state");
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], state);
-			
 		}
-		
-		
-
 	}
 	
-	public boolean isEindtoetsVerzegeld() {
+	public boolean isTemptoetsVerlopen()
+	{
+		return memento.isTempotoetsVerlopen();
+	}
+	
+	public int getTempotoetsSecondsLeft()
+	{
+		return memento.getTempotoetsSecondsLeft();
+	}
+
+	public boolean isEindtoetsVerzegeld()
+	{
 		return mode == EINDTOETS && memento.isEindtoetsVerzegeld();
 	}
+
 	public static void setObjectives(String[][] o)
 	{
 		objectives = o;
@@ -392,6 +400,19 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return mainPanel;
 	}
 	
+	/**
+	 * For some reason opdrachtenCorrect[][] in getOpdrachtCorrect() is not set
+	 * and isCorrect[][] is.
+	 * 
+	 * @param i
+	 * @param j
+	 * @return
+	 */
+	public boolean isCorrect(int i, int j)
+	{
+		return isCorrect[i][j];
+	}
+
 	public boolean getOpdrachtCorrect(int i, int j)
 	{
 		return opdrachtenCorrect[i][j];
@@ -421,6 +442,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			if (scoresVisible())
 			{
 				setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
+				
+				if (entry.isTempotoets() && entry.isAllCorrect())
+				{
+					entry.setTempotoetsLocked();
+				}
 			}
 		}
 //		saveCurrentState(); // naar hierboven verplaatst, want er wordt score gezet
@@ -868,6 +894,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			memento.setScoresObjectives(scoresObjectives);
 		memento.setBezocht(entry.bezocht);
 		memento.setZelftoetsNagekeken(entry.zelftoetsNagekeken);
+		
+		// tempotoets locked opslaan
+		memento.setTempotoetsLocked(entry.tempotoetsLocked);
+		// tempotoets time left
+		memento.setTempotoetsSecondsLeft(entry.getTimeLimitSecondsLeft());
+		
 		memento.setAantalNakijken(aantalNakijken);
 		memento.setCompletion(suspendDataCompleted(currentActiviteit, currentOpdracht));
 		memento.setOpdrContStates(states);
@@ -1414,7 +1446,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		saveCurrentState();
 		removeButtonCursor(buttons.get(currentOpdracht));
 		boolean randomize;
-		if (opdracht < 0) 
+		if (opdracht < 0) // alles opnieuw
 		{	
 			randomize = true; // Alles opnieuw, dus ook nieuwe random variabelen
 			currentOpdracht = 0;
@@ -1426,6 +1458,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			}
 			
 			entry.setZelftoetsNagekeken(false);
+			entry.resetTimer();
 
 			if (getAantalNakijken(currentActiviteit) > 0)
 				aantalNakijken[currentActiviteit] = 0;
