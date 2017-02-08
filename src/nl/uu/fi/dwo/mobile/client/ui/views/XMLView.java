@@ -91,6 +91,18 @@ public abstract class XMLView {
 	protected boolean allesCorrectNodig = false;
 	public boolean zelftoetsGeenCorr = false;
 	public boolean eerderGeenCorr = false;
+	/**
+	 * Boolean indicating timer for a tempotoets.
+	 */
+	public boolean timer = false;
+	/**
+	 * The time limit in seconds for a tempotoets.
+	 */
+	public int timeLimitSeconds = 0;
+	/**
+	 * Boolean indicating whether the tempotoets is locked
+	 */
+	public boolean tempotoetsLocked = false;
 	
 	//private int[][][][] scoresObjectives;
 	public static String[][] objectives;
@@ -196,6 +208,11 @@ public abstract class XMLView {
 				zelftoetsGeenCorr = wrap.getBoolean("zelftoetsGeenCorr");
 			if (wrap.containsKey("eerderGeenCorr"))
 				eerderGeenCorr = wrap.getBoolean("eerderGeenCorr");
+			if (wrap.containsKey("timer"))
+				timer = wrap.getBoolean("timer");
+			if (wrap.containsKey("timeLimit"))
+				timeLimitSeconds = wrap.getInt("timeLimit");
+			
 			if (wrap.containsKey("objectives"))
 			{	
 				ObjectList objectivesList = wrap.getObjectList("objectives");
@@ -457,5 +474,15 @@ public abstract class XMLView {
 			launchData = JSONUtilities.wrapMap(dom.isObject());
 		}
 		setupView(launchData);
+	}
+	
+	/**
+	 * Returns whether the activity is a tempo test.
+	 * 
+	 * @return
+	 */
+	public boolean isTempotoets()
+	{
+		return this.timer;
 	}
 }
