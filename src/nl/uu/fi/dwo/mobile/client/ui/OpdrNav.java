@@ -1191,13 +1191,15 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 //	        else 
 //	        	scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
 	        scoresObjectivesDialog.add(scoresObjectivesPanel.asWidget());
+	        scoresObjectivesDialog.show();
 	        //scoresObjectivesDialog.setSize(scoresObjectivesPanel.getSize());
 	        int width = 1200;
 			int height = 730;
+			
 			if(pilot)
 			{
 				width = 500;
-				height = 730;
+				height = scoresObjectivesPanel.asWidget().getOffsetHeight();
 			}
 			else if(aantalDiagrammen < 4)
 			{	
@@ -1206,8 +1208,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			}
 	        scoresObjectivesDialog.setWidth(width + "px");
 	        scoresObjectivesDialog.setHeight(height + "px");
-	        scoresObjectivesDialog.show();
-	       // scoresObjectivesDialog.setVisible(true);
+	        
 	}
 	
 	public void openMisconceptionsPanel()
