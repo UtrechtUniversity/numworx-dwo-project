@@ -43,6 +43,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 {
 	private static final String BEZOCHT = "bezocht";
 	private static final String ZELFTOETS_NAGEKEKEN = "zelftoetsNagekeken";
+	private static final String TEMPOTOETS_LOCKED = "tempotoetsLocked";
+	private static final String TEMPOTOETS_SECONDS_LEFT = "tempotoetsSecondsLeft";
 	private static Memento _instance;
 	static private Logger logger = Logger.getLogger("Memento");
 
@@ -96,6 +98,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private JSONObject logState;
 	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout, opdrScores, opdrBezocht;
 	private JSONBoolean zelftoetsNagekeken, zelftoetsGeenCorr;
+	private JSONBoolean tempotoetsLocked;
+	private JSONNumber tempotoetsSecondsLeft;
 
 	private String scoreRaw;
 	private Date startDate = new Date();
@@ -111,12 +115,18 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		Window.addCloseHandler(this);
 		initialize();
 		String value;
-		value = getValue(SUSPEND_DATA);
-		//value = TESTVALUE;
 		scoreRaw = getValue(SCORE_RAW);
-		String reviewData = getValue(REVIEW_DATA);
+		
+		value = getValue(COMPLETION_STATUS);
+		eindtoetsVerzegeld = COMPLETED.equals(value);
+
+		String reviewData = null; 
+		if (eindtoetsVerzegeld)
+			reviewData = getValue(REVIEW_DATA);
+		
 		try
 		{
+			value = getValue(SUSPEND_DATA);
 			suspendData = (JSONObject) JSONParser.parseStrict(value);
 			onsState = (JSONObject) suspendData.get(ONS_STATE);
 			opdrContStates = (JSONArray) onsState.get(OPDR_CONT_STATES);
@@ -125,10 +135,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			opdrScores    = (JSONArray) onsState.get(SCORES);
 			opdrBezocht   = (JSONArray) onsState.get(BEZOCHT);
 			zelftoetsNagekeken = (JSONBoolean) onsState.get(ZELFTOETS_NAGEKEKEN);
+			tempotoetsLocked = (JSONBoolean) onsState.get(TEMPOTOETS_LOCKED);
+			tempotoetsSecondsLeft = (JSONNumber) onsState.get(TEMPOTOETS_SECONDS_LEFT);
 			aantalNakijken = (JSONArray) onsState.get(AANTAL_NAKIJKEN);
 			logState = (JSONObject) suspendData.get(LOG_STATE);
 			shareMap = (JSONObject) onsState.get(SHARE_MAP);
-			if(reviewData != null && reviewData.length() > 2)
+			if (reviewData != null && reviewData.length() > 2)
 				opdrContStates = mergeReviewData(opdrContStates, reviewData);
 		}
 		catch (Exception e)
@@ -141,9 +153,6 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			shareMap = null;
 		}
 
-		value = getValue(COMPLETION_STATUS);
-		eindtoetsVerzegeld = COMPLETED.equals(value);
-		
 		instalOnBeforeUnload();
 		
 		ShareFacade.setSharedState(shareMap);
@@ -175,6 +184,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	}
 
 	private void mergeReviewState(JSONObject statej, JSONObject reviewj, int off) {
+		if (statej == null || reviewj == null) return;
 		if (statej.containsKey("interactiePanelStates")) {
 			JSONArray stateArray = statej.get("interactiePanelStates").isArray();
 			JSONArray reviewArray = reviewj.get("interactiePanelStates").isArray();
@@ -861,6 +871,40 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public void setScoresObjectives(int[][][][] scoresObjectives) {
 		JSONValue result = JSONUtilities.toJSONValue(scoresObjectives);
 		onsState.put("scoresObjectives", result);
+	}
+
+	public void setTempotoetsLocked(boolean tempotoetsLocked)
+	{
+		this.tempotoetsLocked = JSONBoolean.getInstance(tempotoetsLocked);
+		this.onsState.put(TEMPOTOETS_LOCKED, this.tempotoetsLocked);
+	}
+
+	public void setTempotoetsSecondsLeft(int seconds)
+	{
+		this.tempotoetsSecondsLeft = new JSONNumber(seconds);
+		this.onsState.put(TEMPOTOETS_SECONDS_LEFT, this.tempotoetsSecondsLeft);
+	}
+
+	public boolean isTempotoetsVerlopen()
+	{
+		if (this.tempotoetsLocked == null) // when there haven't been any suspenddata yet
+			return false;
+		else
+			return this.tempotoetsLocked.booleanValue();
+	}
+
+	/**
+	 * Get the number of seconds left for the tempotoets.
+	 * If there is no number available -1 is returned. 
+	 * 
+	 * @return
+	 */
+	public int getTempotoetsSecondsLeft()
+	{
+		if (this.tempotoetsSecondsLeft == null)
+			return -1;
+		else
+			return (int) this.tempotoetsSecondsLeft.doubleValue();
 	}
 
 }
