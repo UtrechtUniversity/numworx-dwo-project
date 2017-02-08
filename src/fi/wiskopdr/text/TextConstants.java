@@ -160,10 +160,7 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String pilotTextPart1();
 	@DefaultStringValue("gedetailleerde onderwerpen te bekijken.")
 	String pilotTextPart2();
-	@DefaultStringValue("Je kunt dit overzicht sluiten door ergens buiten het")
-	String pilotTextPart3();
-	@DefaultStringValue("venster te klikken.")
-	String pilotTextPart4();
+
 	
 	
 // enzovoort

@@ -583,10 +583,6 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		ctx.fillText(Text.constants.pilotTextPart1(), margin, y);
 		y += lineHeight - margin;
 		ctx.fillText(Text.constants.pilotTextPart2(), margin, y);
-		y += lineHeight - margin;
-		ctx.fillText(Text.constants.pilotTextPart3(), margin, y);
-		y += lineHeight - margin;
-		ctx.fillText(Text.constants.pilotTextPart4(), margin, y);
 	}
 	
 	public void paint()

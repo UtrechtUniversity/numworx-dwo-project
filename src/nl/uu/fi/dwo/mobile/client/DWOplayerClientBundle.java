@@ -19,7 +19,7 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	@Source("nl/uu/fi/dwo/mobile/client/resources/pijlcopy.gif")
 	ImageResource pijlcopy();
 	
-	@Source("nl/uu/fi/dwo/mobile/client/resources/closebutton.gif")
+	@Source("nl/uu/fi/dwo/mobile/client/resources/closebutton.png")
 	ImageResource closebutton();
 	
 	@Source("nl/uu/fi/dwo/mobile/client/resources/pijldown.gif")

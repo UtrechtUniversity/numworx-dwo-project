@@ -29,11 +29,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -41,10 +45,16 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.web.bindery.event.shared.EventBus;
@@ -101,9 +111,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int[][][][] possibleMisconceptions;
 	private int[][][][] measuredMisconceptions;
 	
-	private DialogBox scoresObjectivesDialog;
+	private MyDialog scoresObjectivesDialog;
 	private ScoresObjectivesPanel scoresObjectivesPanel;
-	private DialogBox viewMisconceptionsDialog;
+	private MyDialog viewMisconceptionsDialog;
 	private ScoresObjectivesPanel viewMisconceptionsPanel;
 
 	private int mode;
@@ -1150,6 +1160,85 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return misconceptions != null;
 	}
 	
+	public class MyDialog extends DialogBox
+	{
+		Image close = new Image(DWOplayer.DWO_BUNDLE.closebutton().getSafeUri());
+		HTML title = new HTML("");
+		HorizontalPanel captionPanel = new HorizontalPanel();
+		
+		public MyDialog(boolean autoHide, boolean modal)
+		{
+			super(autoHide, modal);
+			Element td = getCellElement(0, 1);
+			DOM.removeChild(td, (Element) td.getFirstChildElement());
+			DOM.appendChild(td, captionPanel.getElement());
+			captionPanel.setWidth("100%");
+			//captionPanel.getElement().getStyle().setOpacity(0);
+			captionPanel.setStyleName("Caption");//width: 100%
+			//captionPanel.getElement().getStyle().s
+			captionPanel.add(title);
+			//close.addStyleName("CloseButton");//float:right
+			captionPanel.add(close);
+			close.getElement().getStyle().setFloat(Float.RIGHT);
+			
+			super.setGlassEnabled(true);
+			super.setAnimationEnabled(true);
+		}
+		
+		public MyDialog(boolean autoHide)
+		{
+			this(autoHide, true);
+		}
+		
+		public MyDialog()
+		{
+			this(false);
+		}
+		
+		@Override
+		public String getHTML()
+		{
+			return this.title.getHTML();
+		}
+		
+		@Override
+		public String getText()
+		{
+			return this.title.getText();
+		}
+		
+		@Override
+		public void setHTML(String html)
+		{
+			this.title.setHTML(html);
+		}
+		
+		@Override
+		public void setText(String text)
+		{
+			this.title.setText(text);
+		}
+		
+		@Override
+		protected void onPreviewNativeEvent(NativePreviewEvent event)
+		{
+			NativeEvent nativeEvent = event.getNativeEvent();
+			
+			if(!event.isCanceled()
+					&& (event.getTypeInt() == Event.ONCLICK)
+					&& isCloseEvent(nativeEvent))
+			{
+				this.hide();
+			}
+			super.onPreviewNativeEvent(event);
+		}
+		
+		private boolean isCloseEvent(NativeEvent event)
+		{
+			return event.getEventTarget().equals(close.getElement());
+		}
+	}
+	
 	public void openObjectivesPanel(boolean pilot)
 	{
 		/**
@@ -1169,7 +1258,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	        		}
 	        	if(somObjective > 0) aantalDiagrammen++;
 	        }
-			scoresObjectivesDialog = new DialogBox(true); //evt argument true meegeven voor autohide.
+			scoresObjectivesDialog = new MyDialog(true); //evt argument true meegeven voor autohide.
+			
+
 	        //Misschien geen dialogbox maar een popup. Moet in elk geval ook weer te sluiten zijn.
 	        //scoresObjectivesDialog = new DialogBox(true);
 	        scoresObjectivesDialog.setText(Text.constants.objectivesKnopLabel()); 
@@ -1217,7 +1308,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		 * Maakt panel met analyse van misconcepties zichtbaar mbv een popup-venster
 		 */
 		    int aantalDiagrammen = misconceptions.length;
-		    viewMisconceptionsDialog = new DialogBox(true); //evt argument true meegeven voor autohide.
+		    viewMisconceptionsDialog = new MyDialog(true); //evt argument true meegeven voor autohide.
 	        //Misschien geen dialogbox maar een popup. Moet in elk geval ook weer te sluiten zijn.
 	        //scoresObjectivesDialog = new DialogBox(true);
 	        viewMisconceptionsDialog.setText(Text.constants.viewMisconceptionsKnopLabel()); 
