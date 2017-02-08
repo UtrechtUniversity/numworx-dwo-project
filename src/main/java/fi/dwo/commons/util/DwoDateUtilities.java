@@ -44,7 +44,7 @@ public class DwoDateUtilities {
 
     }
 
-    public static Date getStartOfDay(Date date) {
+    public static Date getStartOfDay() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -53,11 +53,11 @@ public class DwoDateUtilities {
         return calendar.getTime();
     }
 
-    public static long getTimeStampForStartOfDay(Date date) {
-        return getStartOfDay(date).getTime();
+    public static long getTimeStampForStartOfDay() {
+        return getStartOfDay().getTime();
     }
 
-    public static Date getEndOfDay(Date date) {
+    public static Date getEndOfDay() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -66,8 +66,8 @@ public class DwoDateUtilities {
         return calendar.getTime();
     }
 
-    public static long getTimeStampForEndOfDay(Date date) {
-        return getEndOfDay(date).getTime();
+    public static long getTimeStampForEndOfDay() {
+        return getEndOfDay().getTime();
     }
 
 // Needs testen.
