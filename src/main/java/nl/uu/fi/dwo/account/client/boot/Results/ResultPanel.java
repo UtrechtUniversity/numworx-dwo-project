@@ -16,7 +16,7 @@ import nl.uu.fi.dwo.account.client.boot.BootPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 
 /**
- *
+ * 
  *
  * @author G.A.J. van der Plas
  */

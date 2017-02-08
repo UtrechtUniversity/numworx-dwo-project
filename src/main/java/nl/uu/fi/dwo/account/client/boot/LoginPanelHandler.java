@@ -2,7 +2,10 @@ package nl.uu.fi.dwo.account.client.boot;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.DwoGlobalVarPromise;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -34,12 +37,16 @@ class LoginPanelHandler {
     //   }
     public void loginClicked(String user, String password) {
         Promise<DomUserFullwLoginContext> loginUser = controller.login(user, password);
-        loginUser.then(new Success<DomUserFullwLoginContext, Void>() {
+        Promise<DwoGlobalVars.DwoGlobalVarsState> promise;
+        loginUser.then(new Success<DomUserFullwLoginContext, DwoGlobalVars.DwoGlobalVarsState>() {
+                @Override
+                public Promise<DwoGlobalVars.DwoGlobalVarsState> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
+                    return DwoGlobalVars.instance().initUser(resolved.getValue().getDomUserFull().getUserName(),
+                            resolved.getValue().getDomUserFull().getUserName());
+                }
+                }).then(new Success<DwoGlobalVars.DwoGlobalVarsState, Void>() {
             @Override
-            public Promise<Void> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
-//                    DomUserFull user = resolved.getValue().getDomUserFull();
-//                    DwoGlobalVars.instance().initUser(user);
-//                    parent.mainDeckPanel.showWidget(1);
+            public Promise<Void> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                 view.onLoginSuccess();
                 return null;
             }

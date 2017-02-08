@@ -1,76 +1,37 @@
 package nl.uu.fi.dwo.account.client;
 
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import org.osgi.util.function.Function;
-import org.osgi.util.function.Predicate;
-import org.osgi.util.promise.Failure;
-import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Success;
+import org.osgi.util.promise.Deferred;
 
 /**
- *
+ * A DwoGlobalVarPromise that promises a certain state of the DwoGlobalVars.
+ * 
  * @author G.A.J. van der Plas
  */
-public class DwoGlobalVarPromise implements Promise<DwoGlobalVars.DwoGlobalVarsState> {
+public class DwoGlobalVarPromise<T> extends Deferred<T> {
 
-    @Override
-    public boolean isDone() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private DwoGlobalVars vars;
+    private T value;
+
+    DwoGlobalVarPromise(DwoGlobalVars aVars, T aValue) {
+        vars = aVars;
+        value = aValue;
     }
 
     @Override
-    public DwoGlobalVars.DwoGlobalVarsState getValue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void fail(Throwable caught) {
+        super.fail(caught);
     }
 
-    @Override
-    public Throwable getFailure() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+     @Override
+    public void resolve(T result) {
+        super.resolve(getValue());
     }
 
-    @Override
-    public Promise<DwoGlobalVars.DwoGlobalVarsState> onResolve(Runnable callback) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    /**
+     * @return the state
+     */
+    public T getValue() {
+        return value;
     }
 
-    @Override
-    public <R> Promise<R> then(Success<? super DwoGlobalVars.DwoGlobalVarsState, ? extends R> success, Failure failure) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <R> Promise<R> then(Success<? super DwoGlobalVars.DwoGlobalVarsState, ? extends R> success) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Promise<DwoGlobalVars.DwoGlobalVarsState> filter(Predicate<? super DwoGlobalVars.DwoGlobalVarsState> predicate) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <R> Promise<R> map(Function<? super DwoGlobalVars.DwoGlobalVarsState, ? extends R> mapper) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <R> Promise<R> flatMap(Function<? super DwoGlobalVars.DwoGlobalVarsState, Promise<? extends R>> mapper) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Promise<DwoGlobalVars.DwoGlobalVarsState> recover(Function<Promise<?>, ? extends DwoGlobalVars.DwoGlobalVarsState> recovery) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Promise<DwoGlobalVars.DwoGlobalVarsState> recoverWith(Function<Promise<?>, Promise<? extends DwoGlobalVars.DwoGlobalVarsState>> recovery) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Promise<DwoGlobalVars.DwoGlobalVarsState> fallbackTo(Promise<? extends DwoGlobalVars.DwoGlobalVarsState> fallback) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }
