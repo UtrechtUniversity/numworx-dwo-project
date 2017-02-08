@@ -580,13 +580,14 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	
 	public void schrijfPilotText(int y)
 	{
-		ctx.fillText("Klik op een hoofdonderwep om ook de scores voor de ", marge, y);
+		
+		ctx.fillText(Text.constants.pilotTextPart1(), marge, y);
 		y += regelHoogte - marge;
-		ctx.fillText("gedetailleerde onderwerpen te bekijken.", marge, y);
+		ctx.fillText(Text.constants.pilotTextPart2(), marge, y);
 		y += regelHoogte - marge;
-		ctx.fillText("Je kunt dit overzicht sluiten door ergens buiten het", marge, y);
+		ctx.fillText(Text.constants.pilotTextPart3(), marge, y);
 		y += regelHoogte - marge;
-		ctx.fillText("venster te klikken.", marge, y);
+		ctx.fillText(Text.constants.pilotTextPart4(), marge, y);
 	}
 	
 	public void paint()
