@@ -29,8 +29,8 @@ public class SecureUserStatsManager {
         //StringBuilder result = new StringBuilder();
         //fetch statistics for servlet wide singleton
         Date today = DwoDateUtilities.getCurrentDwoDate();
-        long fromTimeStamp = DwoDateUtilities.getTimeStampForStartOfDay(today);
-        long toTimeStamp = DwoDateUtilities.getTimeStampForEndOfDay(today);
+        long fromTimeStamp = DwoDateUtilities.getTimeStampForStartOfDay();
+        long toTimeStamp = DwoDateUtilities.getTimeStampForEndOfDay();
         List<PersistentLogData> data = LoginDataManager.findEntities(fromTimeStamp, toTimeStamp);        
 //        LoginDataManager.findEntities(fromTimeStamp, toTimeStamp);
         return data;
