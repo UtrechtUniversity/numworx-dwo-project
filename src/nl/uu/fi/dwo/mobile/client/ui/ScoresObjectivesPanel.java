@@ -285,9 +285,10 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		
 		else
 		{
+			margin = 5;
 			straalRij = new int[numberOfDiagrams][];
 			objectivesTextAreas = new TextArea[numberOfDiagrams][];
-			
+			ctx.setFont("12 px Arial");
 			for(int j = 0; j<numberOfDiagrams; j++)
 			{	straalRij[j] = new int[objectivesForDiagram[j].length];
 				objectivesTextAreas[j] = new TextArea[objectivesForDiagram[j].length];
@@ -297,15 +298,17 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				{	objectivesTextAreas[j][i] = new TextArea();
 					objectivesTextAreas[j][i].setWidth(breedteLabel(i,j) + "px");
 					objectivesTextAreas[j][i].getElement().getStyle().setFontSize(12, Unit.PX);
-					//objectivesTextAreas[j][i].getElement().getStyle().setBackgroundColor("pink");
-					//objectivesTextAreas[j][i].setReadOnly(true);
+					objectivesTextAreas[j][i].setReadOnly(true);
+					objectivesTextAreas[j][i].getElement().getStyle().setColor("black");
 					objectivesTextAreas[j][i].getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 					objectivesTextAreas[j][i].getElement().getStyle().setMargin(0, Unit.PX);
 					objectivesTextAreas[j][i].getElement().getStyle().setPadding(0, Unit.PX);
+					objectivesTextAreas[j][i].getElement().getStyle().setProperty("overflow", "hidden");
+					objectivesTextAreas[j][i].getElement().getStyle().setProperty("background", "transparent");
 								
 					double links = 0; 
 					double top = 0;
-					ctx.setFont("12 px Arial");
+					
 					
 					if(labelEndPointX[j][i] >= mpX[j]) //label 'righthandside' of circle
 					{	if(labelEndPointY[j][i] > mpY[j] + straal)
@@ -325,7 +328,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 						else
 						{
 							links = labelEndPointX[j][i];
-							top = labelEndPointY[j][i] - hoogteLabel(i, j);
+							top = labelEndPointY[j][i] - hoogteLabel(i,j);
 						}
 					}
 					else //label 'lefthandside' of circle
@@ -351,9 +354,11 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 						}
 					}	
 					objectivesTextAreas[j][i].setText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i]+"%");
-					this.add(objectivesTextAreas[j][i]);
-					setWidgetLeftWidth(objectivesTextAreas[j][i], links, Unit.PX, breedteLabel(i, j), Unit.PX);
-					setWidgetTopHeight(objectivesTextAreas[j][i], top, Unit.PX, hoogteLabel(i, j), Unit.PX);
+					if(totalMaxForDiagram[j][i] > 0)
+					{	this.add(objectivesTextAreas[j][i]);
+						setWidgetLeftWidth(objectivesTextAreas[j][i], links, Unit.PX, breedteLabel(i, j), Unit.PX);
+						setWidgetTopHeight(objectivesTextAreas[j][i], top, Unit.PX, hoogteLabel(i, j), Unit.PX);
+					}
 				}
 			}
 		}
@@ -368,7 +373,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	public double breedteLabel(int i, int j)
 	{
 		double breedte = Math.min(mpX[0] - straal - margin, 
-			ctx.measureText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i]+"%").getWidth() + 2 * margin);
+			ctx.measureText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i]+"%").getWidth() + margin);
 		return breedte;	
 	}
 	
