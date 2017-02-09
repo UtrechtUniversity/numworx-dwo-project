@@ -96,7 +96,7 @@ iframe {
 	border-left-width: 0px;
 }
 
-.gwt-InlineHTML-cursor {
+.gwt-InlineHTML-cursor, .insert_formule-cursor {
 	border-left: thin solid black;
 }
 
@@ -318,8 +318,8 @@ div.listItem-dwo-separator {
 }
 
 .correctie {
-	background-image: url("images/resources/correctie.png");
-	background-repeat: no-repeat;
-	background-position: right bottom;
+	background-image: url("images/resources/correctie.png") !important;
+	background-repeat: no-repeat !important;
+	background-position: right bottom !important;
 	background-color: transparent;
 }
