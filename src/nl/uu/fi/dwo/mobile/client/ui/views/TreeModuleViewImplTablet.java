@@ -196,6 +196,8 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 				break;
 			} else if (notAfter != null) {
 				long timeToGo = notAfter.getTime()-System.currentTimeMillis() - DWOplayer.timezone;
+				timeToGo = Math.min(timeToGo, Integer.MAX_VALUE);
+				timeToGo = Math.max(timeToGo,1); 
 				final TreeModulePlace gotoPlace = new TreeModulePlace(o.getParentID());
 				tm = new Timer() {
 

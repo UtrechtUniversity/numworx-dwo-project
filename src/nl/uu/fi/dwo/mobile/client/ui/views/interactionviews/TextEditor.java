@@ -89,7 +89,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			keyboard.setEnterType(EnterType.APPLY);
 //			keyboard.focus();
 //			deze.requestFocus();
-			setCursorWidget(widget);
+			setCursorWidget(widget);removeCursor(); // cursor is in formule editor
 			event.stopPropagation();
 		}
 		public FormuleTapper(FormuleEditor deze, Widget widget) {
@@ -232,13 +232,16 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				}
 				@Override
 				public void enter() {
+					FormuleKeyboardIF keyboard = comRoot.getKeyboard();
 					setCurrentElementRepaint();
+					keyboard.blur();
 					TextEditor.this.cursorToRight();
+					keyboard.setEnterType(EnterType.ENTER);
 					TextEditor.this.requestFocus();
 				}
 			};
 			editor.setFormuleToolBijFocus(true);
-			setFont(font);
+			setFont(defaultfont);
 			//editor.insert();
 			panel = editor.getAsPanel();
 			//comRoot.getKeyboard().setEditor(editor);
@@ -373,6 +376,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		@Override
 		public void onClick(ClickEvent event) {
 			if(!editable) return;
+			if(comRoot.getKeyboard().getEditor() != TextEditor.this) return;
 			FormulaVak panel = new FormulaVak();
 			panel.start();
 			//sb.insert(cursor, '@');
@@ -403,7 +407,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private int asHoogte = 17;
 	OpdrNavIF comRoot;
 	private FormuleFont defaultfont = FormuleFont.createFromFontSize(14);
-	private FormuleFont font = defaultfont;
+	private FormuleFont font = defaultfont.createCopy();
 	
 	private FlowPanel  flow;
 	private int cursor;
@@ -761,7 +765,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				if(chars[i+1] == 'f')
 				{		
 						FormulaVak fv = new FormulaVak();
-						fv.setText(string);
+						fv.setText(string);fv.editor.setCurrentElementRepaint(); // no cursor here!
 //						sb.insert(cursor, '@');
 						flow.insert(fv,cursor++);
 						break;
@@ -792,7 +796,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public FormuleFont getDefaultFont() {
-		return defaultfont;
+		return defaultfont.createCopy();
 	}
 
 	@Override
@@ -1072,6 +1076,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void setParentRegel(TekstRegel regel) {
 		font = regel.getFont();
+		defaultfont = font;
 	}
 
 	@Override

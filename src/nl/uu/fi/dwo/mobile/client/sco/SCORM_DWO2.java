@@ -79,7 +79,7 @@ public class SCORM_DWO2 extends SCORM_guest {
 					commit();
 				}
 			};
-			backoff.schedule((int) (retry*Math.random()));
+			backoff.schedule(Math.max(1, (int) (retry*Math.random())));
 			
 		}
 

@@ -74,7 +74,7 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 					commit();
 				}
 			};
-			backoff.schedule((int) (retry*Math.random()));
+			backoff.schedule(Math.max(1,(int) (retry*Math.random())));
 			
 		}
 
