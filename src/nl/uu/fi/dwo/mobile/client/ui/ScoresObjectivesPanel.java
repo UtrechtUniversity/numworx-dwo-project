@@ -180,7 +180,6 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			{	mpX[i] = 200 + (i-3)*400;
 				mpY[i] = 525;
 			}
-			
 		}
 		
 		for(int j = 0; j < numberOfDiagrams; j++)
@@ -234,6 +233,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		}
 		//canvas.setWidth(width + "px");
 		//canvas.setHeight(height + "px");
+		
 		canvas.setCoordinateSpaceWidth(canvasWidth);
 		canvas.setCoordinateSpaceHeight(canvasHeight);
 			
@@ -251,20 +251,14 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			categoryLabels = new Label[objectivesForDiagram.length];
 			margin = 10;
 			
-			
-			//int categorieX = marge + 5;
-			//int categorieY = regelHoogte + 5;
 			for(int j = 0; j < objectivesForDiagram.length; j++)
 			{
-				//categorieY += regelHoogte;
 				categoryLabels[j] = new Label(categoryStringForDiagram[j]);
 				categoryLabels[j].getElement().getStyle().setFontSize(12, Unit.PX);
+				categoryLabels[j].getElement().getStyle().setPaddingLeft(15, Unit.PX);
 				
-				//categorieLabels[j].setFont(theFont);
-				//maatzetting pas regelen in paint.
-				//this.setWidgetLeftWidth(categorieLabels[j], categorieX, Unit.PX, tekstKolomBreedte, Unit.PX);
-				//this.setWidgetTopHeight(categorieLabels[j], categorieY, Unit.PX, regelHoogte, Unit.PX);
-				add(categoryLabels[j]);
+				if(numberOfDiagrams > 1)
+					add(categoryLabels[j]);
 				
 				categoryLabels[j].addClickHandler(new ClickHandler(){
 					
@@ -303,6 +297,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				{	objectivesTextAreas[j][i] = new TextArea();
 					objectivesTextAreas[j][i].setWidth(breedteLabel(i,j) + "px");
 					objectivesTextAreas[j][i].getElement().getStyle().setFontSize(12, Unit.PX);
+					//objectivesTextAreas[j][i].getElement().getStyle().setBackgroundColor("pink");
 					//objectivesTextAreas[j][i].setReadOnly(true);
 					objectivesTextAreas[j][i].getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 					objectivesTextAreas[j][i].getElement().getStyle().setMargin(0, Unit.PX);
@@ -312,7 +307,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 					double top = 0;
 					ctx.setFont("12 px Arial");
 					
-					if(labelEndPointX[j][i] >= mpX[j]) //label staat 'rechts' van cirkel
+					if(labelEndPointX[j][i] >= mpX[j]) //label 'righthandside' of circle
 					{	if(labelEndPointY[j][i] > mpY[j] + straal)
 						{	links = labelEndPointX[j][i] - breedteLabel(i,j)/2;
 							top = labelEndPointY[j][i];
@@ -333,7 +328,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 							top = labelEndPointY[j][i] - hoogteLabel(i, j);
 						}
 					}
-					else //label staat 'links' van cirkel
+					else //label 'lefthandside' of circle
 					{	if(labelEndPointY[j][i] > mpY[j] + straal)
 						{
 							links = labelEndPointX[j][i] - breedteLabel(i,j)/2;
@@ -373,14 +368,14 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	public double breedteLabel(int i, int j)
 	{
 		double breedte = Math.min(mpX[0] - straal - margin, 
-			ctx.measureText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i]+"%").getWidth() + margin);
+			ctx.measureText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i]+"%").getWidth() + 2 * margin);
 		return breedte;	
 	}
 	
 	public double hoogteLabel(int i, int j)
 	{
 		double hoogte = 0;
-		if(ctx.measureText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i] + "%").getWidth() > mpX[0] - straal - margin)
+		if(ctx.measureText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i] + "%").getWidth() + 2 * margin > mpX[0] - straal - margin)
 			hoogte = 35;
 		else 
 			hoogte = 17;			
@@ -421,7 +416,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		}
 	}
 	
-	public void paintPilot()
+		public void paintPilot()
 	{
 		ctx.setFillStyle("white");
 		ctx.fillRect(0, 0, canvas.getOffsetWidth(), canvas.getOffsetHeight());
@@ -431,7 +426,6 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		ctx.setStrokeStyle("black");
 		int scoreWidth = (int) ctx.measureText(scoreText).getWidth() + margin;
 		
-		//iets met ctx doen zodat ik mooie scherpe lijnen krijg... maar setLineWidth alleen helpt niet genoeg; ergens heb ik hiervoor iets slims gedaan. 
 		
 		lineHeight = 15 + margin; //TODO nog iets zinvollers van 15 maken; meten mbv canvas?
 		textColumnWidth = 0;
@@ -487,15 +481,17 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			ctx.lineTo(margin + textColumnWidth + scoreWidth, columnHeight);
 			ctx.closePath();
 			ctx.stroke();
-			writePilotText(columnHeight + lineHeight);
 		}
 		else
 		{
+			int buttonWidth = 15;
+			textColumnWidth += buttonWidth;
 			int categoryX = margin + 5;
-			int labelX = margin + indent + 5;
+			int labelX = margin + indent + buttonWidth + 5;
 			int scoreX = categoryX + textColumnWidth;
-			int colorX = margin + textColumnWidth;
+			//int colorX = margin + textColumnWidth + buttonWidth;
 			int columnHeight = margin;
+			int tableWidth = textColumnWidth + scoreWidth + margin;
 			
 			//int tekstY = regelHoogte + 2;
 			int textDifference = lineHeight - margin + 2;
@@ -507,7 +503,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			textDifference += 3;
 			ctx.beginPath();
 			ctx.moveTo(margin, columnHeight);
-			ctx.lineTo(textColumnWidth + scoreWidth + margin, columnHeight);
+			ctx.lineTo(tableWidth, columnHeight);
 			ctx.closePath();
 			ctx.stroke();
 			columnHeight += lineHeight;			
@@ -517,21 +513,27 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				//dubble line above each category.
 				ctx.beginPath();
 				ctx.moveTo(margin, columnHeight);
-				ctx.lineTo(textColumnWidth + scoreWidth + margin, columnHeight);
+				ctx.lineTo(tableWidth, columnHeight);
 				ctx.closePath();
 				ctx.stroke();
 				columnHeight += interspace;
 				ctx.setFillStyle(categoryColorArray[j]);
-				ctx.fillRect(colorX, columnHeight, scoreWidth, lineHeight);
+				ctx.fillRect(tableWidth - scoreWidth, columnHeight, scoreWidth, lineHeight);
 				ctx.beginPath();
 				ctx.moveTo(margin, columnHeight);
-				ctx.lineTo(textColumnWidth + scoreWidth + margin, columnHeight);
+				ctx.lineTo(tableWidth, columnHeight);
 				ctx.closePath();
 				ctx.stroke();
 				
 				//fill in category name and score
 				textDifference += 12 - lineHeight;
 				ctx.setFillStyle("black");
+				
+				if(categoryFoldedOut[j])
+					drawMinusButton(categoryX, columnHeight + 9);
+				else
+					drawPlusButton(categoryX, columnHeight + 9);
+				
 				this.setWidgetLeftWidth(categoryLabels[j], categoryX, Unit.PX, textColumnWidth, Unit.PX);
 				this.setWidgetTopHeight(categoryLabels[j], columnHeight + textDifference, Unit.PX, lineHeight, Unit.PX);
 				
@@ -544,13 +546,13 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 					{
 						columnHeight += lineHeight;
 						ctx.setFillStyle(colorArray[j][i]);
-						ctx.fillRect(colorX, columnHeight, scoreWidth, lineHeight);
+						ctx.fillRect(tableWidth - scoreWidth, columnHeight, scoreWidth, lineHeight);
 						ctx.setFillStyle("black");
 						ctx.fillText(objectivesForDiagram[j][i], labelX, columnHeight + textDifference);
 						ctx.fillText((int) scoresPercObjectives[j][i]+"%", scoreX, columnHeight + textDifference);
 						ctx.beginPath();
 						ctx.moveTo(margin, columnHeight);
-						ctx.lineTo(textColumnWidth + scoreWidth + margin, columnHeight);
+						ctx.lineTo(tableWidth, columnHeight);//textColumnWidth + margin, columnHeight);
 						ctx.closePath();
 						ctx.stroke();
 					}
@@ -560,29 +562,83 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			}
 			ctx.beginPath();
 			ctx.moveTo(margin, columnHeight);
-			ctx.lineTo(textColumnWidth + scoreWidth + margin, columnHeight);
+			ctx.lineTo(tableWidth, columnHeight);
 			
-			//draw table borders
+			//draw vertical table borders
 			ctx.moveTo(margin, margin);
 			ctx.lineTo(margin, columnHeight);
-			ctx.moveTo(margin + textColumnWidth, margin);
-			ctx.lineTo(margin + textColumnWidth, columnHeight);
-			ctx.moveTo(margin + textColumnWidth + scoreWidth, margin);
-			ctx.lineTo(margin + textColumnWidth + scoreWidth, columnHeight);
+			ctx.moveTo(tableWidth - scoreWidth, margin);
+			ctx.lineTo(tableWidth - scoreWidth, columnHeight);
+			ctx.moveTo(tableWidth, margin);
+			ctx.lineTo(tableWidth, columnHeight);
 			
 			ctx.closePath();
 			ctx.stroke();
-			writePilotText(columnHeight + lineHeight);
 		}
 		
 	}
 	
-	public void writePilotText(int y)
+	public void drawPlusButton(int x, int y)
 	{
 		
-		ctx.fillText(Text.constants.pilotTextPart1(), margin, y);
-		y += lineHeight - margin;
-		ctx.fillText(Text.constants.pilotTextPart2(), margin, y);
+		//without outline
+//		ctx.beginPath();
+//		ctx.moveTo(x + 5, y + 1);
+//		ctx.lineTo(x + 5, y + 9);
+//		ctx.moveTo(x + 1, y + 5);
+//		ctx.lineTo(x + 9, y + 5);
+//		ctx.stroke();
+		
+		//with outline
+		ctx.beginPath();
+		ctx.moveTo(x + 5, y + 2);
+		ctx.lineTo(x + 5, y + 8);
+		ctx.moveTo(x + 2, y + 5);
+		ctx.lineTo(x + 8, y + 5);
+		ctx.stroke();
+		ctx.setLineWidth(0.5);
+		ctx.beginPath();
+		ctx.moveTo(x + 1, y);
+		ctx.lineTo(x + 9, y);
+		ctx.lineTo(x + 10, y + 1);
+		ctx.lineTo(x + 10, y + 9);
+		ctx.lineTo(x + 9, y + 10);
+		ctx.lineTo(x + 1, y + 10);
+		ctx.lineTo(x, y + 9);
+		ctx.lineTo(x, y + 1);
+		ctx.closePath();
+		ctx.stroke();
+		ctx.setLineWidth(1);
+		
+		
+	}
+	
+	public void drawMinusButton(int x, int y)
+	{
+		//without outline
+//		ctx.beginPath();
+//		ctx.moveTo(x + 1, y + 5);
+//		ctx.lineTo(x + 9, y + 5);
+//		ctx.stroke();
+		
+		//with outline
+		ctx.beginPath();
+		ctx.moveTo(x + 2, y + 5);
+		ctx.lineTo(x + 8, y + 5);
+		ctx.stroke();
+		ctx.setLineWidth(0.5);
+		ctx.beginPath();
+		ctx.moveTo(x + 1, y);
+		ctx.lineTo(x + 9, y);
+		ctx.lineTo(x + 10, y + 1);
+		ctx.lineTo(x + 10, y + 9);
+		ctx.lineTo(x + 9, y + 10);
+		ctx.lineTo(x + 1, y + 10);
+		ctx.lineTo(x, y + 9);
+		ctx.lineTo(x, y + 1);
+		ctx.closePath();
+		ctx.stroke();
+		ctx.setLineWidth(1);
 	}
 	
 	public void paint()

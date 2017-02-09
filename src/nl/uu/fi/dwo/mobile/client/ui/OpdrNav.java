@@ -1300,6 +1300,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	        scoresObjectivesDialog.setWidth(width + "px");
 	        scoresObjectivesDialog.setHeight(height + "px");
 	        
+	        
 	}
 	
 	public void openMisconceptionsPanel()

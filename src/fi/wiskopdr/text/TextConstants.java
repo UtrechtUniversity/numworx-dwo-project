@@ -156,10 +156,6 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	@DefaultStringValue("Oplossingen")
 	String oplossingenLabel();
 	
-	@DefaultStringValue("Klik op een hoofdonderwep om ook de scores voor de ")
-	String pilotTextPart1();
-	@DefaultStringValue("gedetailleerde onderwerpen te bekijken.")
-	String pilotTextPart2();
 
 	
 	
