@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.1.10-SNAPSHOT</version>
+		<version>2.1.10</version>
 	</parent>
   <artifactId>EBServer</artifactId>
 	<packaging>war</packaging>
@@ -163,7 +163,7 @@
 						<artifactItem>
 								<groupId>nl.uu.fi.dwo.mobile</groupId>
 								<artifactId>DWOplayer</artifactId>
-								<version>2.1.5</version>
+								<version>2.1.7</version>
 								<type>war</type>
 								<classifier>dwo2</classifier>
 								<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/tablet/</outputDirectory>								
