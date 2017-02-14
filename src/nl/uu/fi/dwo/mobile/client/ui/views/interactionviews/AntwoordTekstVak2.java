@@ -2,56 +2,10 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
@@ -59,18 +13,15 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
-import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
-import nl.uu.fi.dwo.interaction.client.FacetAware.Type;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.DWOPlayerMC2;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
@@ -88,26 +39,14 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.FontWeight;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
@@ -326,15 +265,46 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			}
 
 			@Override
-			public void tab() {
+			public void tab()
+			{
 				AntwoordTekstVak2.this.tabAntwoordTekstVak();
 			}
 
 			@Override
-			public void shiftTab() {
+			public void shiftTab()
+			{
 				AntwoordTekstVak2.this.shiftTabAntwoordTekstVak();
 			}
 			
+			@Override
+			public void insert(char charAt)
+			{
+				super.insert(charAt);
+				changed = true;
+				resetimg();
+			}
+
+			@Override
+			public void removeCurrentElement()
+			{
+				super.removeCurrentElement();				
+				changed = true;
+				resetimg();
+				
+				if (nagekeken)
+					zetIsVeranderdNaNakijken(true);
+			}
+			
+			@Override
+			public void removeNextElement()
+			{
+				super.removeNextElement();
+				changed = true;
+				resetimg();
+				
+				if (nagekeken)
+					zetIsVeranderdNaNakijken(true);
+			}
 		};
 //		if(boxMetRand)
 //			antwoordTF.getElement().getStyle().setProperty("border", "1px solid gray");
@@ -472,14 +442,6 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 					parentRegel.resize();
 			}
 			
-			void resetimg() {
-				goedKrulImage.setVisible(false);
-				goedKrulHalfImage.setVisible(false);
-				foutKruisImage.setVisible(false);
-				feedbackLabel.setVisible(false);
-				feedbackPanel.hide();			
-			}
-
 			/* (non-Javadoc)
 			 * @see nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor#setCurrentElementRepaint()
 			 */
@@ -651,17 +613,18 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	}
 	
 	
-	private void fireText() {
-		if(comRoot.hasListeners(TEXT))
-		{	Map<String, String> parameters = new HashMap<String,String>();
+	private void fireText()
+	{
+		if (comRoot.hasListeners(TEXT))
+		{
+			Map<String, String> parameters = new HashMap<String, String>();
 			parameters.put("content", getText());
-			if(logID != null)
+			if (logID != null)
 				parameters.put("logID", logID);
 			CBookEvent event = new CBookEvent(this, TEXT, parameters);
 			comRoot.fireEvent(event);
 		}
 	}
-
 
 	public void voegFeedbackSluitKnopToe()
 	{
@@ -1210,6 +1173,18 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		zetIsVeranderdNaNakijken(false);
 
 		kijkNa(true, true);
+	}
+	
+	/**
+	 * Reset het goed/fout-plaatje en verberg de feedback.
+	 */
+	void resetimg()
+	{
+		goedKrulImage.setVisible(false);
+		goedKrulHalfImage.setVisible(false);
+		foutKruisImage.setVisible(false);
+		feedbackLabel.setVisible(false);
+		feedbackPanel.hide();
 	}
 
 	@Override
