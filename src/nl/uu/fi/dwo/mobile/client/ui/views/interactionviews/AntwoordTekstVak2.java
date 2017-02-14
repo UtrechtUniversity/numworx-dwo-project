@@ -320,10 +320,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		antwoordTF = new TextEditor(breedte-2, hoogte-3, boxMetRand) {
 
 			@Override
-			public void enter() {
-				AntwoordTekstVak2.this.kijkNa();
-				AntwoordTekstVak2.this.setAttempt();
-				AntwoordTekstVak2.this.fireText();
+			public void enter()
+			{
+				AntwoordTekstVak2.this.enter();
 			}
 
 			@Override
@@ -401,15 +400,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		formuleVak = new FormuleEditor() {
 
 			@Override
-			public void enter() {
-				fireText();
-				if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
-				{
-					return; 
-				}
-				kijkNa();
-				if(comRoot != null)
-					comRoot.setChanged(teltMee && Boolean.FALSE.equals(correct));
+			public void enter()
+			{
+				AntwoordTekstVak2.this.enter();
 			}
 
 			@Override
@@ -968,10 +961,15 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		// reset isVeranderdNaNakijken
 		zetIsVeranderdNaNakijken(false);
 
-		kijkNa(true, true);
+		kijkNa(true, false);
 	}
 
-	private void kijkNa(boolean show, boolean up)
+	/**
+	 * 
+	 * @param show
+	 * @param setState
+	 */
+	private void kijkNa(boolean show, boolean setState)
 	{
 		checkAntwoord(show);
 		
@@ -1031,8 +1029,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				verhoogErrorCount();
 			}
 		}
-		if(show && check && ingevuld && up)
-        {	comRoot.setChanged(teltMee && correct == Boolean.FALSE);
+		if (show && check && ingevuld && setState)
+        {	
+			comRoot.setChanged(teltMee && correct == Boolean.FALSE);
         }
 		
 		//if (ingevuld && show && mode != -1)
@@ -1195,6 +1194,22 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			{	formuleVak.setCurrentElementRepaint(formuleVak.getMainRegel());
 			}
 		}
+	}
+	
+	public void enter()
+	{
+		setAttempt();
+		fireText();
+		
+		if (mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
+		{
+			return;
+		}
+		
+		// reset isVeranderdNaNakijken
+		zetIsVeranderdNaNakijken(false);
+
+		kijkNa(true, true);
 	}
 
 	@Override
