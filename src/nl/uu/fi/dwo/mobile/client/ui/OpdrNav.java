@@ -643,24 +643,31 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		
 	}
 	
-	
-	
-	private void setButtonCorrect(TouchButton button, boolean b, int j)
+	/**
+	 * 	
+	 * @param button
+	 * @param b
+	 * @param opdrNr
+	 */
+	private void setButtonCorrect(TouchButton button, boolean b, int opdrNr)
 	{
-		if (geefNoScore(currentActiviteit, j))
+		if (geefNoScore(currentActiviteit, opdrNr))
 		{
-			button.setStyleDependentName("max0", geefNoScore(currentActiviteit, j) );
+			button.setStyleDependentName("max0", geefNoScore(currentActiviteit, opdrNr));
 			return;
 		}
 		button.setStyleDependentName("max0", false);
-		if(scoresVisible())
+		if (scoresVisible())
 		{
 			button.setStyleDependentName("correct", b);
-			String  value = String.valueOf(getItemScores()[j]);
-			int correctie = getItemCorrectie(j);
-			if(correctie > 0) { 
+			String value = String.valueOf(getItemScores()[opdrNr]);
+			int correctie = getItemCorrectie(opdrNr);
+			if (correctie > 0)
+			{
 				value = value + "+" + correctie;
-			} else if (correctie < 0) {
+			}
+			else if (correctie < 0)
+			{
 				value = value + correctie;
 			}
 			button.getElement().setPropertyString("title", value);
@@ -1551,7 +1558,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			}
 			
 			entry.setZelftoetsNagekeken(false);
-			entry.resetTimer();
+			if (entry.isTempotoets())
+			{
+				entry.resetTimer();
+			}
 
 			if (getAantalNakijken(currentActiviteit) > 0)
 				aantalNakijken[currentActiviteit] = 0;
