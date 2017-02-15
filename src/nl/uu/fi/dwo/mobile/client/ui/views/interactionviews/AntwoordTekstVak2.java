@@ -60,11 +60,13 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
 	public static final String ACTION_FALSE2 = "action.false_2";
+	public static final String ACTION_READONLY = "action.setNotEditable"; 
 
 	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
 	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
 	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2);
-	private static final String TEXT = "text"; 
+	private static final CBookEvent EVENT_READONLY = new CBookEvent(ACTION_READONLY);
+	private static final String TEXT = "text";
 
 	private Map<String, Object> launchState; 
 	OpdrNavIF comRoot;
@@ -128,7 +130,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	Image goedKrulImage, foutKruisImage, goedKrulHalfImage;
 	
-	private boolean logOption;
+	private boolean logOption, editable = true;
 	private String logID;
 	private Logging logging;
 	
@@ -735,6 +737,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		h.put("attempts", attempts);
 		h.put("attemptsCount", new Integer(attemptsCount));
 		h.put("errorCount", new Integer(errorCount));
+		h.put("editable", Boolean.valueOf(editable));
 
 		return h;
 	}
@@ -779,6 +782,14 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 
 		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
 			kijkNa(true, false);
+		this.editable = map.getBoolean("editable", true);
+		if(!editable) {
+			if(formuleMode) {
+				//formuleVak.setEditable(editable);
+			} else {
+				antwoordTF.acceptCBookEvent(EVENT_READONLY);
+			}
+		}
 	}
 
 
@@ -1210,6 +1221,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		mode = comRoot.getMode();
 		if(logging != null) logging.setCommunicationRoot(comRoot);
 		comRoot.addCBookEventListener(TEXT, this);
+		comRoot.addCBookEventListener(ACTION_READONLY, this);
 	}
 
 
@@ -1335,6 +1347,13 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			String content = (String) event.getParameter("content");
 			if(content == null) content = "";
 			setText(content);
+		} else if ( ACTION_READONLY.equals(event.getCommand())) {
+			if(formuleMode) {
+				// TODO formuleVak.setEditable(false); zoals in wiskopdr
+			} else {
+				//antwoordTF
+				antwoordTF.acceptCBookEvent(event);
+			}
 		}
 		
 	}
