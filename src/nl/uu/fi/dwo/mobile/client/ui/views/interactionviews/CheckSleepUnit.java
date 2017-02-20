@@ -577,24 +577,28 @@ public class CheckSleepUnit implements InteractionStub{
             verhoogErrorCount();
         	score = 0;
         }
-        if(show && check)
-        {	
-        	if (ingevuld  && changed)
-        		comRoot.setChanged(teltMee && !juist);
-        	nakijkAchtergrond.setVisible(true);
-    		if(correct)
-        		goedKrulImage.setVisible(true);
-        	else
-        		foutKruisImage.setVisible(true);
-        	
-        }
         
-		if (correct) 
-			fireEvent(EVENT_CORRECT);
-		if (fout && errorCount > 1) 
-			fireEvent(EVENT_FALSE2);
-		if (fout)
-			fireEvent(EVENT_FALSE);
+		if (show && check)
+		{
+			if (ingevuld && changed)
+				comRoot.setChanged(teltMee && !juist);
+			nakijkAchtergrond.setVisible(true);
+			if (correct)
+				goedKrulImage.setVisible(true);
+			else
+				foutKruisImage.setVisible(true);
+
+		}
+        
+		if (show) // alleen als feedback moet worden getoond
+		{
+			if (correct) 
+				fireEvent(EVENT_CORRECT);
+			if (fout && errorCount > 1) 
+				fireEvent(EVENT_FALSE2);
+			if (fout)
+				fireEvent(EVENT_FALSE);
+		}
     }
     
 	private void fireEvent(CBookEvent event) 
