@@ -768,12 +768,15 @@ public class CheckValueUnit implements InteractionStub{
         
         //if(show || mode==0 || mode==1)produceAction("changed");
         
-		if (correct) 
-			fireEvent(EVENT_CORRECT);
-		if (fout && errorCount > 1) 
-			fireEvent(EVENT_FALSE2);
-		if (fout)
-			fireEvent(EVENT_FALSE);
+		if (show) // alleen als feedback moet worden getoond
+		{
+			if (correct) 
+				fireEvent(EVENT_CORRECT);
+			if (fout && errorCount > 1) 
+				fireEvent(EVENT_FALSE2);
+			if (fout)
+				fireEvent(EVENT_FALSE);
+		}
     }
     
 	private void fireEvent(CBookEvent event) 
