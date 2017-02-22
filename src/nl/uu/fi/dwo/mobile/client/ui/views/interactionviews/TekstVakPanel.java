@@ -1368,8 +1368,13 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			int fontStyleOvererving = parent.getTekstVakParent().font_style;
 			String fontNameOvererving = parent.getTekstVakParent().font_name;
 			
+			fgColor = fgColorOvererving;
+			font_size = fontSizeOvererving;
+			font_style = fontStyleOvererving;
+			font_name = fontNameOvererving;
+			
 			for (int i = 0; i < hoogtes.size(); i++)
-			{
+			{	
 				for (int j = 0; j < breedtes.size(); j++)
 				{	tekstVakken[i][j].setColor(fgColorOvererving);
 					tekstVakken[i][j].setFontStyle(fontStyleOvererving);
