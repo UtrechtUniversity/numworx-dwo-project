@@ -1290,6 +1290,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 //	        	scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
 	        scoresObjectivesDialog.add(scoresObjectivesPanel.asWidget());
 	        scoresObjectivesDialog.show();
+	        scoresObjectivesDialog.center();
 	        //scoresObjectivesDialog.setSize(scoresObjectivesPanel.getSize());
 	        int width = 1200;
 			int height = 730;
