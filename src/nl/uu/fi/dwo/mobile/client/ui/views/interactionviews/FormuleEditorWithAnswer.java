@@ -175,8 +175,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				}
 				
 				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
-				fews.setUitgeklapt(true);
-				fews.setIsBoss(true);
+				formuleEditorPopup.setUitgeklapt(true);
+				formuleEditorPopup.setIsBoss(true);
 			}
 			
 			if (TekstVakPanel.TVP_KLAPIN == event.getCommand())
@@ -222,7 +222,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				}
 			
 				// t.b.v. uitklapvak (voor popup wordt dit gezet in onShow/onHide)
-				fews.setUitgeklapt(false);
+				formuleEditorPopup.setUitgeklapt(false);
 			}
 		}
 
@@ -252,7 +252,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	Context2d gIm;
 	TouchPanel checkPanel;
 	private ObjectMap launchState;
-	protected FormuleEditorWithSteps fe = null;
+	/**
+	 * Als fews niet null is, dan staat de FormuleEditorWithAnswer
+	 * niet op zichzelf, maar hoort hij
+	 * bij een FormuleEditorWithSteps.
+	 */
+	protected FormuleEditorWithSteps fews = null;
 	private boolean strict = true;
 	private ObjectMap instellingen = null;
 	private int score = 0;
@@ -290,7 +295,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	private TekstRegel parentRegel;
 	private StelselOplossingenVak stelselVak;
-	private FormuleEditorPopup fews;
+	private FormuleEditorPopup formuleEditorPopup;
 	
 	private static boolean fontOvererving = false;
 	
@@ -315,7 +320,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		if (fe != null)
 		{
-			this.fe = fe;
+			this.fews = fe;
 		}
 		facade = new PopupFacade(h);
 		sp = new TouchPanel();
@@ -404,7 +409,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						HashMap ll = new HashMap();
 						hh.put("interactiePanelLaunchState", launchState);
 						
-						fews = new FormuleEditorPopup(hh,isVergelijkingVak,this.avChecker);
+						formuleEditorPopup = new FormuleEditorPopup(hh,isVergelijkingVak,this.avChecker);
 					}
 				}
 				if(launchState.containsKey("hasFeedback"))
@@ -644,7 +649,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public boolean isInputNeeded() {
 		
 		//nieuwe implementatie: alleen false teruggeven als er nog niets in het vakje staat, anders true teruggeven
-		if(fe != null)
+		if(fews != null)
 			return true;
 		if(this.toString().equals(""))
 			return false;
@@ -683,12 +688,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (nagekeken)
 			zetIsVeranderdNaNakijken(true);
 		
-		if (this.fe != null) 
+		if (this.fews != null) 
 		{
-			this.fe.resetimg();
+			this.fews.resetimg();
 			
-			if (this.fe.isNagekeken())
-				this.fe.zetIsVeranderdNaNakijken(true);
+			if (this.fews.isNagekeken())
+				this.fews.zetIsVeranderdNaNakijken(true);
 		}
 
 		resize();
@@ -710,12 +715,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (nagekeken)
 			zetIsVeranderdNaNakijken(true);
 		
-		if (this.fe != null) 
+		if (this.fews != null) 
 		{
-			this.fe.resetimg();
+			this.fews.resetimg();
 			
-			if (this.fe.isNagekeken())
-				this.fe.zetIsVeranderdNaNakijken(true);
+			if (this.fews.isNagekeken())
+				this.fews.zetIsVeranderdNaNakijken(true);
 		}
 
 		resize();
@@ -786,12 +791,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			return;
 		}
 		*/
-		if (fews != null) // is er een uitwerking
+		if (formuleEditorPopup != null) // is er een uitwerking in de popup
 		{
-			fews.transfer = true;
+			formuleEditorPopup.transfer = true;
 			transferToFEWS();
-			fews.getEditor().enter();
-			fews.transfer = false;
+			formuleEditorPopup.getEditor().enter();
+			formuleEditorPopup.transfer = false;
 			return;
 		}
 		else
@@ -804,14 +809,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			parentRegel.getTekstVak().tabFocus(this, true);
 		}
-		else if(fe != null)
+		else if(fews != null)
 		{
-			TekstRegel parentRegel = fe.findParentRegel(); 
+			TekstRegel parentRegel = fews.findParentRegel(); 
 			if(parentRegel != null)
-			{	if(fe instanceof StelselEditor)
-					parentRegel.getTekstVak().tabFocus(((StelselEditor) fe).geefHoofdPanel().geefAntwoordVak(), true);
+			{	if(fews instanceof StelselEditor)
+					parentRegel.getTekstVak().tabFocus(((StelselEditor) fews).geefHoofdPanel().geefAntwoordVak(), true);
 				else
-					parentRegel.getTekstVak().tabFocus(fe, true);
+					parentRegel.getTekstVak().tabFocus(fews, true);
 			}
 		}
 		else if(stelselVak != null)
@@ -828,14 +833,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			parentRegel.getTekstVak().shiftTabFocus(this, true);
 		}
-		else if(fe != null)
+		else if(fews != null)
 		{
-			TekstRegel parentRegel = fe.findParentRegel(); 
+			TekstRegel parentRegel = fews.findParentRegel(); 
 			if(parentRegel != null)
-			{	if(fe instanceof StelselEditor)
-					parentRegel.getTekstVak().shiftTabFocus(((StelselEditor) fe).geefHoofdPanel().geefAntwoordVak(), true);
+			{	if(fews instanceof StelselEditor)
+					parentRegel.getTekstVak().shiftTabFocus(((StelselEditor) fews).geefHoofdPanel().geefAntwoordVak(), true);
 				else
-					parentRegel.getTekstVak().shiftTabFocus(fe, true);
+					parentRegel.getTekstVak().shiftTabFocus(fews, true);
 			}
 		}
 		else if(stelselVak != null)
@@ -848,12 +853,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	private void transferToFEWS() {
 		//doen alsof het in de laatste regel van de fews is ingevuld; dan komt het automatisch terug naar de fewa.
-		if(fews.getEditor() == null || fews.getEditor().toString().equals(""))
+		if(formuleEditorPopup.getEditor() == null || formuleEditorPopup.getEditor().toString().equals(""))
 		{
-			fews.backStep(false);
+			formuleEditorPopup.backStep(false);
 		}
-		fews.getEditor().clearAll();
-		fews.getEditor().insert(this.toString());
+		formuleEditorPopup.getEditor().clearAll();
+		formuleEditorPopup.getEditor().insert(this.toString());
 	}
 	
 	private void processAntwoord() {
@@ -878,16 +883,27 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (comRoot != null) // alleen niet null als fewa een toplevel is.
 		{
 			comRoot.fireEvent(new CBookEvent(this, "input", toString()));
+			comRoot.fireEvent(new CBookEvent(this, "expression", toString()));
+			
 			if (isDouble(toString()))
 			{
 				// zorgt dat voor locale met ','-separator de double waarde ook goed wordt doorgegeven
 				// anders volgt NumberFormatException aan de kant van de double-ontvanger
 				comRoot.fireEvent(new CBookEvent(this, "double", getDoubleValue(toString()).toString()));
 			}
+			if (this.isVergelijkingVak)
+			{
+				comRoot.fireEvent(new CBookEvent(this, "equation", toString()));
+			}
 		}
-		else if (fe != null)
+		else if (fews != null) // fewa is onderdeel van FormuleEditorWithSteps
 		{
-			fe.fire("input", toString());
+			fews.fire("input", toString());
+			
+			if (this.isVergelijkingVak)
+			{
+				fews.fire("equation", toString());
+			}
 		}
 
 		if (logging != null)
@@ -1034,17 +1050,17 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	private Object getStep() 
 	{
-		if (fe != null) return fe.getStep();
+		if (fews != null) return fews.getStep();
 		return "";
 	}
 
 	public void haalAntwoordOp() 
 	{
-		if (fews != null && fews.getEditor() != null 
-			&& (!fews.getEditor().toString().equals("") || fews.getStapNr() == 0)) // als fews.editor leeg en er zijn geen andere stappen, dan moet dit lege antwoord erin
+		if (formuleEditorPopup != null && formuleEditorPopup.getEditor() != null 
+			&& (!formuleEditorPopup.getEditor().toString().equals("") || formuleEditorPopup.getStapNr() == 0)) // als fews.editor leeg en er zijn geen andere stappen, dan moet dit lege antwoord erin
 		{
 			clearMain();
-			insert(fews.getEditor().toString());
+			insert(formuleEditorPopup.getEditor().toString());
 			//TODO: setChanged goed regelen.
 		}
 	}
@@ -1057,11 +1073,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	 */
 	public void kijkNa()
 	{
-		if(fews != null) {
-			fews.transfer = true;
+		if(formuleEditorPopup != null) {
+			formuleEditorPopup.transfer = true;
 			transferToFEWS();
-			fews.kijkNa();
-			fews.transfer = false;
+			formuleEditorPopup.kijkNa();
+			formuleEditorPopup.transfer = false;
 		}
 		
 		// reset isVeranderdNaNakijken
@@ -1107,24 +1123,25 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		else
 			ingevuld = true;
 		
-		if (fe != null) // fe: onderdeel van formuleeditorwithsteps
-			fe.zetIngevuld(ingevuld);
+		if (fews != null) // fe: onderdeel van formuleeditorwithsteps
+			fews.zetIngevuld(ingevuld);
 		
-		if (fe != null && fe.getEigenOpdr() && fe.getLatestAnswer() == null)
+		if (fews != null && fews.getEigenOpdr() && fews.getLatestAnswer() == null)
 		{
 			// eerste stap bij eigen opdracht is altijd goed
-			avChecker.zetJuisteAntwoord(useranswer);
+			avChecker.zetJuisteAntwoord(useranswer); // dit is niet het goede juiste antwoord, bijv. voor useranswer = "x+x+x" wordt juistantwoord "x+x+x"
+						
 			goedHalfFout = AntwoordVakChecker.DOOR;
 			if (!"$f@".equals(useranswer)) // eerste stap is leeg, dan niet verder nakijken
 			{
-				fe.maakNakijkenAf(backStep, show, setState);
+				fews.maakNakijkenAf(backStep, show, setState);
 			}
 			return;
 		}
 		
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
-		if (fe != null && !(fe.isToets() && hasFeedback())) // voor toets met feedback willen we nakijken obv de correctheid van de huidige invoerregel
-			checkResults = avChecker.checkAnswer(useranswer, fe.getLatestAnswer(), fe.getSubstitutie(), fe.getGebruikersSubstituties());
+		if (fews != null && !(fews.isToets() && hasFeedback())) // voor toets met feedback willen we nakijken obv de correctheid van de huidige invoerregel
+			checkResults = avChecker.checkAnswer(useranswer, fews.getLatestAnswer(), fews.getSubstitutie(), fews.getGebruikersSubstituties());
 		else	
 			checkResults = avChecker.checkAnswer(useranswer);
 
@@ -1136,12 +1153,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR)
 			correct = null;
 		this.score = (Integer) checkResults.get("score");
-		if ((fe != null) && (fe.isBordjesMethode()))
+		if ((fews != null) && (fews.isBordjesMethode()))
 		{ 
 			// waarom werkt dit überhaupt? normaal gebeurt dit in 'maakNakijkenAf'
 			// Maar voor oefenen bordjesmethode met goede eindoplossing weet fe niet dat het antwoord correct is
-			fe.setCorrect(this.correct); // update correct van parent fe
-			fe.setScore(this.score);     // update score van parent fe
+			fews.setCorrect(this.correct); // update correct van parent fe
+			fews.setScore(this.score);     // update score van parent fe
 		}
 		this.scoreZonderAftrek = (Integer) checkResults.get("score");
 		if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
@@ -1158,16 +1175,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		
 
-		if (fe != null)
+		if (fews != null)
 		{	
-			boolean stapCorrect = fe.controleerStap();
+			boolean stapCorrect = fews.controleerStap();
 			if (!stapCorrect)
 				this.goedHalfFout = AntwoordVakChecker.FOUT;
 		}
 		if ((mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS) && !show)
 		{	
-			if (this.fe != null)
-				fe.maakNakijkenAf(backStep, show, setState);
+			if (this.fews != null)
+				fews.maakNakijkenAf(backStep, show, setState);
 			
 			if (syntaxFout)
 			{	//checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
@@ -1195,7 +1212,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		resize();
 		//logger.finer(String.valueOf(checkimg.isVisible()));
 		//sp.setPixelSize(breedte, -1);
-		if (this.fe == null && !useranswer.equals(lastanswer))
+		if (this.fews == null && !useranswer.equals(lastanswer))
 		{
 			lastanswer = useranswer;
 			if ((mode == OpdrNav.OEFENEN || mode == OpdrNav.OEFENEN_STRAFPUNTEN) && teltMee) 
@@ -1204,22 +1221,22 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		//if(this.fe != null && !(mode == 2 || mode == 3))
 		//	fe.maakNakijkenAf(backStep);
-		if (!feedback.equals("") && fe == null)
+		if (!feedback.equals("") && fews == null)
 		{
 			zetFeedback();
 		}
 		
-		if (this.fe != null && ingevuld)
+		if (this.fews != null && ingevuld)
 		{	
-			fe.maakNakijkenAf(backStep, show, setState);
+			fews.maakNakijkenAf(backStep, show, setState);
 		}
 		// in maakNakijkenAf wordt voor setState = false comRoot.setChanged(false) gedaan;
 		// als fe == null dus niet...
 		
-		if (fews != null && fews.isToets() && hasFeedback())
+		if (formuleEditorPopup != null && formuleEditorPopup.isToets() && hasFeedback())
 		{
 			// er is een popup in een toets met feedback/tabbladen, dus nemen we de voortgangsscore van fews
-			score = fews.getScore();
+			score = formuleEditorPopup.getScore();
 		}
 		
 		if (show) // alleen als feedback moet worden getoond
@@ -1268,8 +1285,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
 		if (this.comRoot != null)
 			this.comRoot.fireEvent(event);
-		else if (this.fe != null)
-			this.fe.fireEvent(event);
+		else if (this.fews != null)
+			this.fews.fireEvent(event);
 			
 	}
 
@@ -1329,8 +1346,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(isChanged())
 		{
 			errorCount++;
-			if(fe != null)
-				fe.verhoogErrorCount();
+			if(fews != null)
+				fews.verhoogErrorCount();
 		}
 		setChanged(false);
 	}
@@ -1348,8 +1365,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(parentRegel != null)
 		{	parentRegel.resize();
 		}
-		if(fe != null)
-		{	fe.resize();
+		if(fews != null)
+		{	fews.resize();
 		}
 		if(stelselVak != null)
 			stelselVak.resize();
@@ -1411,11 +1428,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public HashMap<String, Object> getState()
 	{
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		if(fews != null)
+		if(formuleEditorPopup != null)
 		{
-			HashMap<String, Object> h2 = fews.getState();
+			HashMap<String, Object> h2 = formuleEditorPopup.getState();
 
-			if (fews.isUitgeklapt() && fews.isBoss())
+			if (formuleEditorPopup.isUitgeklapt() && formuleEditorPopup.isBoss())
 			{
 				// als uitgeklapt, dan is FEWS de baas
 				h = h2;
@@ -1431,12 +1448,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				}
 				
 				// trim "$f" + antwoord + "@"
-				antwoord = fews.removeFormulaCodes(antwoord);
+				antwoord = formuleEditorPopup.removeFormulaCodes(antwoord);
 
 				if (antwoord != null && !"".equals(antwoord.trim()) && !antwoord.equals(this.toString()))
 				{
 					this.clearMain();
-					antwoord = fews.removeIsTeken(antwoord);
+					antwoord = formuleEditorPopup.removeIsTeken(antwoord);
 					setCurrentElementRepaint();
 					
 					if (!"".equals(toString()))
@@ -1480,9 +1497,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			kijkNa(false, false, false);
 
 			// als fews een hogere voortgangsscore heeft, neem deze dan over
-			if (fews.getScore() > this.getScore())
+			if (formuleEditorPopup.getScore() > this.getScore())
 			{
-				this.score = fews.getScore();
+				this.score = formuleEditorPopup.getScore();
 			}
 		} // fews != null	
 		else	
@@ -1526,14 +1543,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		logger.fine("setState " + h);
 		//antwoord eruit halen en dan uit h halen, zodat de antwoordstring niet wordt meegenomen in setState. 
 		
-		if(fews != null)
+		if(formuleEditorPopup != null)
 		{
-			boolean enabled = fews.setFocusEnabled(false); // Geen focus tijdens setState, dus ook niet hier bij wis()
+			boolean enabled = formuleEditorPopup.setFocusEnabled(false); // Geen focus tijdens setState, dus ook niet hier bij wis()
 			try {
-				fews.wis();
-				fews.setState(h);
+				formuleEditorPopup.wis();
+				formuleEditorPopup.setState(h);
 			}	finally {
-				fews.setFocusEnabled(enabled);
+				formuleEditorPopup.setFocusEnabled(enabled);
 			}
 		}
 		ObjectMap map = JSONUtilities.wrapMap(h);
@@ -1556,16 +1573,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
 		this.errorCount = errorCount;
 		String antwoord = (String) h.get(ANTWOORD_STRING);
-		if( (antwoord == null || "".equals(antwoord.trim()) || "$f@".equals(antwoord.trim())) && fews != null)
-			antwoord = fews.getLatestAnswer();
+		if( (antwoord == null || "".equals(antwoord.trim()) || "$f@".equals(antwoord.trim())) && formuleEditorPopup != null)
+			antwoord = formuleEditorPopup.getLatestAnswer();
 		if (antwoord != null && !"".equals(antwoord.trim()))
 		{
 			antwoord = strip$f(antwoord);
 
 			// verwijder isteken
-			if (fews != null)
+			if (formuleEditorPopup != null)
 			{
-				antwoord = fews.removeIsTeken(antwoord);
+				antwoord = formuleEditorPopup.removeIsTeken(antwoord);
 			}
 
 			this.clearMain();
@@ -1635,8 +1652,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void zetNagekeken(boolean b) {
 		if (ingevuld)
 		{	nagekeken = b;
-			if(fews != null)
-			{	fews.zetNagekeken(b);
+			if(formuleEditorPopup != null)
+			{	formuleEditorPopup.zetNagekeken(b);
 			}
 		}
 	}
@@ -1664,8 +1681,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void requestFocus()
 	{
 		super.requestFocus();
-		if(fe != null && fe instanceof StelselEditor)
-			((StelselEditor) fe).requestFocus(true);
+		if(fews != null && fews instanceof StelselEditor)
+			((StelselEditor) fews).requestFocus(true);
 	}
 
 	@Override
@@ -1673,13 +1690,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		this.comRoot = comRoot;
 		zetMode(comRoot.getMode());
-		if(fews != null)
-		{	fews.setCommunicationRoot(comRoot);
+		
+		if (formuleEditorPopup != null)
+		{	
+			formuleEditorPopup.setCommunicationRoot(comRoot);
 		}
 		comRoot.addCBookEventListener("input", this);
 		comRoot.addCBookEventListener("index", this);
 		comRoot.addCBookEventListener("double", this);
-		if(logging != null) 
+		comRoot.addCBookEventListener("equation", this);
+		comRoot.addCBookEventListener("expression", this);
+
+		if (logging != null) 
 			logging.setCommunicationRoot(comRoot);
 	}
 
@@ -1703,14 +1725,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(parent != null && vakUitwerking && parent.uitklapHoogtes != null && parent.uitklapHoogtes.size() > 1)
 		{
 			double hoogte = parent.uitklapHoogtes.get(1); // Marges??????
-			fews.setHeight(hoogte);
-			parent.addCBookEventListener(fews);
-			return fews;
+			formuleEditorPopup.setHeight(hoogte);
+			parent.addCBookEventListener(formuleEditorPopup);
+			return formuleEditorPopup;
 		}
 // van constructor naar hier....
 		if( vakUitwerking )
 		{
-			PopupButton popup = new PopupButton(fews, ImageUtils.newImage("images/resources/popup_voor_uitw_icoon.png"), this, this);
+			PopupButton popup = new PopupButton(formuleEditorPopup, ImageUtils.newImage("images/resources/popup_voor_uitw_icoon.png"), this, this);
 			PopupFacade.addPopup(popup);
 			popupBtn = popup;
 			Style popupstyle = popup.getElement().getStyle();
@@ -1781,7 +1803,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		message = strip$f(message);
 		clearMain();
-		insert(message); // Of zo iets.Strip $F en @
+		insert(message);
 		setCurrentElementRepaint();
 	}
 
@@ -1874,15 +1896,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		HashMap<String, Object> state;
 		this.setEnabled(false);
 // zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
-		fews.setUitgeklapt(true);
-		fews.setIsBoss(false);
+		formuleEditorPopup.setUitgeklapt(true);
+		formuleEditorPopup.setIsBoss(false);
 		state = this.getState();
 		this.setState(state);
 // Fire popup event ......			
 // als de state is gezet is FEWS de baas
-		fews.setIsBoss(true);
+		formuleEditorPopup.setIsBoss(true);
 
-		FormuleEditor editor = fews.getEditor();
+		FormuleEditor editor = formuleEditorPopup.getEditor();
 		if (editor != null)
 		{	
 			editor.requestFocus();
@@ -1902,7 +1924,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.haalAntwoordOp();
 		this.setEnabled(true);
 // zet isUitgeklapt t.b.v. verwerken antwoord FormuleEditorWithSteps of FormuleEditorWithAnswer
-		fews.setUitgeklapt(false);
+		formuleEditorPopup.setUitgeklapt(false);
 		
 		HashMap<String, Object> state;
 		state = this.getState();
@@ -1910,9 +1932,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		popupBtn.state = state; // XXX ???
 
 		// voor toets met feedback (deelscores) moet de voortgangsscore van fews genomen worden
-		if (fews.getScore() > this.getScore())
+		if (formuleEditorPopup.getScore() > this.getScore())
 		{
-			this.score = fews.getScore();
+			this.score = formuleEditorPopup.getScore();
 		}
 		
 		// na setState() is het goede antwoord in FEWA gezet
