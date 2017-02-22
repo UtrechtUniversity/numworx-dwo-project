@@ -1797,6 +1797,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			return ContentMathML.INSTANCE.toString(antwoord);
 		}
 	}
+	
+	public boolean isVergelijkingVak()
+	{
+		return isVergelijkingVak;
+	}
 
 	@Override
 	public void getResponses(List<String> responses) {

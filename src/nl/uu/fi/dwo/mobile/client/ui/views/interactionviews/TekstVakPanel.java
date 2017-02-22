@@ -77,9 +77,12 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.expressies.Aftrekking;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Optelling;
+import fi.wiskopdr.expressies.Vergelijking;
+import fi.wiskopdr.expressies.VergelijkingMeerv;
 
 
 
@@ -1995,38 +1998,30 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		for(int i = 0; i < interactionViewObjects.size(); i++)
 		{	Object object = interactionViewObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
-			{	FormuleRegel fr = ((FormuleEditorWithAnswer) object).getMainRegel();
-				if (fr != null)
+			{	
+				FormuleEditorWithAnswer fewa = (FormuleEditorWithAnswer) object;
+				FormuleRegel fr = fewa.getMainRegel();
+				if (fr != null && fewa.isVergelijkingVak())
+				{
+					String string = fr.toString();
+					VergelijkingMeerv vgm = FormuleParser.parseVergelijking("$f" + string + "@");
+					Vergelijking vg = null;
+					if (vgm != null)
+						vg = vgm.geefVergelijking(0);
+					Expressie e = null;
+					if (vg != null)
+						e = new Aftrekking(vg.geefExpLinks(), vg.geefExpRechts());
+					if (e != null)
+						return "$f" + e.toString() + "@";
+				}
+				else if(fr != null)
 				{
 					String string = fr.toString();
 					return "$f" + string + "@";
-				}
-				
+				}	
 			}
 		}
-			//Als er een formulevak inzit: expressie uit formulevak geven
-			//Als er een vergelijkingsvak inzit: 
-			/*
-			String string = null;
-			FormuleVak fv = ((SimpelAntwoordVergelijkingVak) ip).geefFormuleVak();
-			if (fv != null)
-			{
-				string = fv.toString();
-				VergelijkingMeerv vgm = FormuleParser.parseVergelijking(string);
-				Vergelijking vg = null;
-				if (vgm != null)
-					vg = vgm.geefVergelijking(0);
-				Expressie e = null;
-				if (vg != null)
-					e = new Aftrekking(vg.geefExpLinks(), vg.geefExpRechts());
-				if (e != null)
-					return "$f" + e.toString() + "@";
-			}
-			*/
 			
-			
-			
-		
 		return checkExpressieString;
 	}
 
@@ -2156,8 +2151,9 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	public Expressie geefObjectWaarde()
 	{
-		Expressie waarde = FormuleParser.geefExpressie(getIpExpString());
-		if("$f@".equals(getIpExpString()) && defaultBijNull)
+		String ipExpString = getIpExpString();
+		Expressie waarde = FormuleParser.geefExpressie(ipExpString);
+		if("$f@".equals(ipExpString) && defaultBijNull)
 			waarde = FormuleParser.geefExpressie(checkExpressieString);
 		return waarde;
 	}
