@@ -1371,7 +1371,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 		@Override
 		public void enter() {
-			fe.berekenStap();
+			fews.berekenStap();
 		}
 		
 	}
@@ -2610,7 +2610,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (editor != null && editor.hasFeedback())
 			score = voortgangsScore;
 
-		if (editor != null)
+		if (editor != null && !editor.toString().equals(""))
 			zetGoedFoutEditor(editor.getGoedHalfFout());
 
 		if (linStrategieVersie || linOefenVersie) // alleen strategie- en strategieoefenversie hebben tekst bij de pijlen
@@ -3349,21 +3349,41 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{
 		this.comRoot = comRoot;
 		mode = comRoot.getMode();
-		if(dwologger != null)
+		if (dwologger != null)
 			dwologger.setCommunicationRoot(comRoot);
-		if(editor != null) {
+		if (editor != null)
+		{
 			editor.setCommunicationRoot(comRoot);
-			//editor.zetMode(mode); // FIXME why null? after init?
-			if(isVergelijkingVak)
-				comRoot.addCBookEventListener("balansvergelijking", new CBookEventListener() {
-					
+			// editor.zetMode(mode); // FIXME why null? after init?
+			if (isVergelijkingVak)
+			{
+				comRoot.addCBookEventListener("balansvergelijking", new CBookEventListener()
+				{
+
 					@Override
-					public void acceptCBookEvent(CBookEvent event) {
-						editor.acceptCBookEvent(event); // steeds een andere editor!
+					public void acceptCBookEvent(CBookEvent event)
+					{
+						editor.acceptCBookEvent(event); // steeds een andere
+														// editor!
 					}
 				});
+				
+				comRoot.addCBookEventListener("equation", new CBookEventListener()
+				{
+
+					@Override
+					public void acceptCBookEvent(CBookEvent event)
+					{
+						if (editor != null)
+						{
+							editor.acceptCBookEvent(event); // steeds een andere
+															// editor!
+						}
+					}
+				});
+
+			}
 		}
-		
 	}
 	
 	public OpdrNavIF getCommunicationRoot()
