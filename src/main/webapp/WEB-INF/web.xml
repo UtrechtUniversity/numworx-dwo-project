@@ -308,4 +308,12 @@
             fi.dwo.server.rest.TranslatorServletContextListener 
         </listener-class>
     </listener>
+    
+    
+    <welcome-file-list>
+    	<welcome-file>index.html</welcome-file>
+    	<welcome-file>index.jsp</welcome-file>
+    	<welcome-file>Register.html</welcome-file>
+    	<welcome-file>menu.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>
