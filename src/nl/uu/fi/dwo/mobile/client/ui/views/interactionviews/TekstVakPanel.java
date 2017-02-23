@@ -1117,8 +1117,22 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 
 	public HashMap<String, Object> getState()
 	{
-		if(facade.hasState()) 
-			return facade.getState();
+		// Onderstaand if-statement is nodig voor tonen vinkjes in popuptekstvak in nagekeken zelf/eindtoets 
+//		if (facade.hasState() && facade.getState() != null)
+//		{
+//			HashMap<String, Object> state = facade.getState();
+//			if (state != null)
+//				state.put("nagekeken", nagekeken); // alleen op topnivo
+//			return state; 
+//			// hier mis ik op het cruciale moment de getState() als een vak in de popup gewijzigd is na nakijken
+//			// en dan opnieuw toets wordt nagekeken 
+//			// Als geen getState() gebeurt, blijft isVeranderdNaNakijken = true en wordt geen vinkje getoond na openen popup
+//		}
+
+//		if (facade.hasState()) 
+//			return facade.getState();
+		
+		// Nu: ten behoeve van issues met isVeranderdNaNakijken altijd een volledige getState()
 		
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		ArrayList<Object> states = new ArrayList<Object>();
@@ -1340,8 +1354,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		{
 			Object currentObject = interactionViewObjects.get(i);
 			Boolean check = ((InteractionView) currentObject).isCorrect();
-			if(check == null) correct = null; 
-			if(Boolean.FALSE.equals( check )) return check;
+			if (check == null)
+				correct = null;
+			if (Boolean.FALSE.equals(check))
+				return check;
 		}
 		return correct;
 	}
@@ -2922,35 +2938,70 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	}
 	*/
 
+	/**
+	 * Kijk de componenten op het popup-tekstvak na
+	 * als de popup wordt geopend. Als een component
+	 * isVeranderdNaNakijken moet geen vinkje worden
+	 * getoond.
+	 */
+	public void kijkNaOnShow() 
+	{
+		comRoot.pause();
+		for (Object object : interactionViewObjects)
+		{
+			if (object instanceof InteractionView)
+			{
+				HashMap<String, Object> state = ((InteractionView) object).getState();
+				ObjectMap map = JSONUtilities.wrapMap(state);
+				boolean isVeranderdNaNakijken = false;
+				if (map.containsKey("isVeranderdNaNakijken"))
+				{
+					isVeranderdNaNakijken = map.getBoolean("isVeranderdNaNakijken");
+				}
+				if (!isVeranderdNaNakijken)
+				{
+					// alleen nakijken en feedback tonen als het antwoord niet is veranderd na nakijken
+					((InteractionView) object).kijkNa();
+				}
+			}
+		}
+		comRoot.unpause();
+	}
 
 	@Override
-	public void kijkNa() {
+	public void kijkNa()
+	{
 		comRoot.pause();
-		for (Object object : interactionViewObjects) {
-			if(object instanceof InteractionView)
+		for (Object object : interactionViewObjects)
+		{
+			if (object instanceof InteractionView)
 				((InteractionView) object).kijkNa();
 		}
 		comRoot.unpause();
 	}
 
 	@Override
-	public int getAsHoogte() {
+	public int getAsHoogte()
+	{
 		int ashoogte = tekstVakken[0][0].getAsHoogte();
-		for(int j = 1; j < breedtes.size(); j++)
-		{	if(tekstVakken[0][j].getAsHoogte() > ashoogte)
+		for (int j = 1; j < breedtes.size(); j++)
+		{
+			if (tekstVakken[0][j].getAsHoogte() > ashoogte)
 				ashoogte = tekstVakken[0][j].getAsHoogte();
 		}
-		
-		return facade.wrapAsHoogte(ashoogte); 
+
+		return facade.wrapAsHoogte(ashoogte);
 	}
 
 	@Override
-	public int getHeight() {
+	public int getHeight()
+	{
 		return facade.wrapHeight(hoogte);
 	}
 
 	@Override
-	public int getWidth() {
+	public int getWidth()
+	{
 		return facade.wrapWidth(breedte);
 	}
 	
@@ -2993,9 +3044,22 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	}
 
 	@Override
-	public void onShow() {
+	public void onShow() 
+	{
+		boolean nagekeken = this.nagekeken; // voor eindtoets even opslaan, want setState() zet hem weer op false.
+		
 		HashMap<String, Object> state = facade.getPopupState();
-		if(state != null) setState(state);
+		if (state != null) 
+			setState(state);
+		else 
+			setStateNull();
+		
+		if (nagekeken)
+		{
+			zetNagekeken(nagekeken);
+			if (nagekeken)
+				kijkNaOnShow();
+		}
 		setPopupUsed();
 	}
 
