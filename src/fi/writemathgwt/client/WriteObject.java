@@ -12,7 +12,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 
 
 public class WriteObject {
-//	private static Logger logger = Logger.getLogger("WriteObject");
+	private static Logger logger = Logger.getLogger("WriteObject");
 
 	private final static boolean cNewStrokmatcher = true;
 	static int newTekenSet = 0;
@@ -26,8 +26,10 @@ public class WriteObject {
 	}
 	
 	private boolean isTwoStrokeObject;
+	private int twoStrokeGap;
 	private ArrayList<DoublePoint> doublePoints;
 	private ArrayList<DoublePoint> parsePoints;
+	private ArrayList<DoublePoint> rawPoints;
 	private Rectangle box;
 	int boxOffset = 2;
 	private String teken;
@@ -58,15 +60,18 @@ public class WriteObject {
 	//OK
 	public WriteObject(ArrayList<Point> points) {
 		isTwoStrokeObject = false;
+		twoStrokeGap = 0;
 		if ( cNewStrokmatcher ) {
 			newStrokeMatcher = new StrokeMatcherWrapper(newTekenSet);
 		}
 		
 		doublePoints = new ArrayList<DoublePoint>();
+		rawPoints = new ArrayList<DoublePoint>();
 		double size = 0;
 		for(int i = 0 ; i < points.size() ; i++) 
 		{
 			doublePoints.add(new DoublePoint(points.get(i).x, points.get(i).y));
+			rawPoints.add(new DoublePoint(points.get(i).x, points.get(i).y));
 			size = Math.max(size, distance(points.get(0), points.get(i)));
 		}
 		makeBox(points);
@@ -105,14 +110,47 @@ public class WriteObject {
 
 	//OK
 	public WriteObject(String teken, ArrayList<Point> points){
-		isTwoStrokeObject = true;
+		isTwoStrokeObject = false;
 		makeBox(points);
 		doublePoints = new ArrayList<DoublePoint>();
+		rawPoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <points.size() ; i++) {
 			doublePoints.add(points.get(i).getDoublePoint());
+			rawPoints.add(points.get(i).getDoublePoint());
 		}
 		this.teken = teken;
 	}
+	
+	//OK
+	public WriteObject(String teken, WriteObject wo1, WriteObject wo2){
+		isTwoStrokeObject = true;
+		
+		ArrayList<Point> wo1Points = wo1.getPoints();
+		ArrayList<Point> wo2Points = wo2.getPoints();
+		ArrayList<Point> wo1RawPoints = wo1.getRawPoints();
+		ArrayList<Point> wo2RawPoints = wo2.getRawPoints();
+		twoStrokeGap = wo1RawPoints.size();
+
+		doublePoints = new ArrayList<DoublePoint>();
+		for(int i = 0 ; i <wo1Points.size() ; i++) {
+			doublePoints.add(wo1Points.get(i).getDoublePoint());
+		}
+		for(int i = 0 ; i <wo2Points.size() ; i++) {
+			doublePoints.add(wo2Points.get(i).getDoublePoint());
+		}
+		makeBoxDouble(doublePoints);
+		
+		rawPoints = new ArrayList<DoublePoint>();
+		for(int i = 0 ; i <wo1RawPoints.size() ; i++) {
+			rawPoints.add(wo1RawPoints.get(i).getDoublePoint());
+		}
+		for(int i = 0 ; i <wo2RawPoints.size() ; i++) {
+			rawPoints.add(wo2RawPoints.get(i).getDoublePoint());
+		}
+
+		this.teken = teken;
+	}
+
 
 	// compact deep copy
 	public WriteObject(WriteObject wo)
@@ -129,6 +167,16 @@ public class WriteObject {
 		}
 		return points;
 	}
+	
+	public ArrayList<Point> getRawPoints() 
+	{
+		ArrayList<Point> points = new ArrayList<Point>();
+		for(int i = 0 ; i < rawPoints.size() ; i++) {
+			points.add(rawPoints.get(i).getPoint());
+		}
+		return points;
+	}
+
 	
 	//OK
 	public Rectangle getBox() 
@@ -214,41 +262,109 @@ public class WriteObject {
 	}
 
 	//OK
-	public void draw(Context2d g)
-	{	g.setStrokeStyle(CssColor.make(0, 0, 0));
+//	public void draw(Context2d g)
+//	{	g.setStrokeStyle(CssColor.make(0, 0, 0));
+//		
+//		if (doublePoints.size() > 0) 
+//		{
+//			
+//			if (".".equals(teken))
+//			{
+//				g.setFillStyle(CssColor.make(0, 0, 0));
+//				g.fillRect(doublePoints.get(0).getX(), doublePoints.get(0).getY(), 3, 3);
+//				g.setFillStyle(CssColor.make(255, 255, 255));
+//				return;
+//			}
+//			
+//			boolean drawContinuous = "-".equals(teken) || "sqrt".equals(teken);			
+//			g.beginPath();
+//			g.moveTo(doublePoints.get(0).getX(), doublePoints.get(0).getY());
+//			
+//			for (int j = 1; j <doublePoints.size(); j++) 
+//			{	if (drawContinuous)
+//				{
+//					g.lineTo(doublePoints.get(j).getX(), doublePoints.get(j).getY());
+//				}
+//				else // skip gaps for two-strokes
+//				{	
+//					if (distance(doublePoints.get(j-1), doublePoints.get(j)) < 3 * getStandardLength(doublePoints))
+//						g.lineTo(doublePoints.get(j).getX(), doublePoints.get(j).getY());
+//					else 
+//						g.moveTo(doublePoints.get(j).getX(), doublePoints.get(j).getY());
+//				}
+//			}
+//			g.stroke();
+//		}
+//		
+//	}
+	
+	public void draw(Context2d g, int shiftX, int shiftY) {	
+		g.setStrokeStyle(CssColor.make(0, 0, 0));
 		
-		if (doublePoints.size() > 0) 
-		{
-			
-			if (".".equals(teken))
-			{
+		if (rawPoints.size() > 0) {
+			if (".".equals(teken)) {
 				g.setFillStyle(CssColor.make(0, 0, 0));
-				g.fillRect(doublePoints.get(0).getX(), doublePoints.get(0).getY(), 3, 3);
+				g.fillRect(rawPoints.get(0).getX(), rawPoints.get(0).getY(), 3, 3);
 				g.setFillStyle(CssColor.make(255, 255, 255));
 				return;
 			}
 			
-			boolean drawContinuous = "-".equals(teken) || "sqrt".equals(teken);			
+//			boolean drawContinuous = "-".equals(teken) || "sqrt".equals(teken);			
+			boolean drawContinuous = true;
 			g.beginPath();
-			g.moveTo(doublePoints.get(0).getX(), doublePoints.get(0).getY());
+			g.moveTo(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY);
 			
-			for (int j = 1; j <doublePoints.size(); j++) 
-			{	if (drawContinuous)
-				{
-					g.lineTo(doublePoints.get(j).getX(), doublePoints.get(j).getY());
-				}
-				else // skip gaps for two-strokes
-				{	
-					if (distance(doublePoints.get(j-1), doublePoints.get(j)) < 3 * getStandardLength(doublePoints))
-						g.lineTo(doublePoints.get(j).getX(), doublePoints.get(j).getY());
-					else 
-						g.moveTo(doublePoints.get(j).getX(), doublePoints.get(j).getY());
+			for (int j = 1; j <rawPoints.size(); j++) {	
+				if (!isTwoStrokeObject() || (isTwoStrokeObject() && (twoStrokeGap!= j))) {
+					g.lineTo(rawPoints.get(j).getX()+shiftX, rawPoints.get(j).getY()+shiftY);
+				} else { // skip gaps for two-strokes
+					g.moveTo(rawPoints.get(j).getX()+shiftX, rawPoints.get(j).getY()+shiftY);
 				}
 			}
 			g.stroke();
 		}
 		
 	}
+	
+//	public void draw(Context2d g, int shiftX, int shiftY) {	
+//		g.setStrokeStyle(CssColor.make(0, 0, 0));
+//		
+//		if (doublePoints.size() > 0) {
+//			if (".".equals(teken)) {
+//				g.setFillStyle(CssColor.make(0, 0, 0));
+//				g.fillRect(doublePoints.get(0).getX(), doublePoints.get(0).getY(), 3, 3);
+//				g.setFillStyle(CssColor.make(255, 255, 255));
+//				return;
+//			}
+//			
+//			boolean drawContinuous = "-".equals(teken) || "sqrt".equals(teken);			
+//			g.beginPath();
+//			g.moveTo(doublePoints.get(0).getX()+shiftX, doublePoints.get(0).getY()+shiftY);
+//			
+//			for (int j = 1; j <doublePoints.size(); j++) 
+//			{	if (drawContinuous)
+//				{
+//					g.lineTo(doublePoints.get(j).getX()+shiftX, doublePoints.get(j).getY()+shiftY);
+//				}
+//				else // skip gaps for two-strokes
+//				{	
+//					if (distance(doublePoints.get(j-1), doublePoints.get(j)) < 3 * getStandardLength(doublePoints))
+//						g.lineTo(doublePoints.get(j).getX()+shiftX, doublePoints.get(j).getY()+shiftY);
+//					else 
+//						g.moveTo(doublePoints.get(j).getX()+shiftX, doublePoints.get(j).getY()+shiftY);
+//				}
+//			}
+//			g.stroke();
+//		}
+//		
+//	}
+
+	
+	public void draw(Context2d g){
+		draw(g, 0, 0);
+	}
+
+
 	
 	public boolean isTwoStrokeObject() {
 		return isTwoStrokeObject;
@@ -269,6 +385,22 @@ public class WriteObject {
 		}
 		box = new Rectangle(xMin, yMin, xMax-xMin+1, yMax-yMin+1);
 	}
+	
+	private void makeBoxDouble(ArrayList<DoublePoint> doublePoints) 
+	{
+		int xMin = maxWidth;
+		int xMax = 0;
+		int yMin = maxHeigth;
+		int yMax = 0;
+		for(int i = 0 ; i < doublePoints.size() ; i++) { 
+			xMin = Math.min(xMin, (int) doublePoints.get(i).getX());
+			yMin = Math.min(yMin, (int) doublePoints.get(i).getY());
+			xMax = Math.max(xMax, (int) doublePoints.get(i).getX());
+			yMax = Math.max(yMax, (int) doublePoints.get(i).getY());
+		}
+		box = new Rectangle(xMin, yMin, xMax-xMin+1, yMax-yMin+1);
+	}
+
 	
 	private ArrayList<DoublePoint> deepCopy(ArrayList<DoublePoint> toCopy)
 	{

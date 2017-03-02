@@ -4,19 +4,19 @@ package fi.writemathgwt.client;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
-
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.TextBox;
-
 import com.google.gwt.user.client.ui.PushButton;
 
 
@@ -51,8 +51,13 @@ public class WriteMathGWT implements EntryPoint, WritePanelHolder
 	
 	int tekenSet = 2;
 	
-	public void onModuleLoad() 
-	{
+	public void onModuleLoad() {
+		
+		/* Eliminate context menu (on right click */
+	    Element body = Document.get().getBody();
+	    body.setAttribute("oncontextmenu", "return false;");
+		/* Eliminate context menu (on right click */
+		
 		dlp = new DockLayoutPanel(Style.Unit.PX);
 		dlp.addStyleName("dock");
 		dlp.setSize("" + breedte + "px", "" + hoogte + "px");

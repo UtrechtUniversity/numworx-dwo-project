@@ -101,19 +101,18 @@ public class Breukvak extends FormuleElementWithChildren
 		double scaleY = 1; //((double) Samples20.breuklijnDikte) /(yMax - yMin);
 	
 		ArrayList<Point> newList = new ArrayList<Point>();
-		for (int i = 0; i < pList.size(); i++) 
-		{	int px = pList.get(i).x;
+		for (int i = 0; i < pList.size(); i++)  {	
+			int px = pList.get(i).x;
 			int py = pList.get(i).y;
 			
 			int npx = xPos + (int) Math.round(scaleX * (px - xMin));
 			int npy = yPos + (py - yMin); // (int) Math.round(scaleY * (py - yMin));
 			
-			newList.add(new Point(npx,npy));
-			
+			newList.add(new Point(npx,npy));			
 		}	
-		
 		return newList;
 	}
+	
 	//convertToWriteObject
 	public void convertToWriteObject()
 	{ 
@@ -129,9 +128,7 @@ public class Breukvak extends FormuleElementWithChildren
 		
 		getChild(0).convertToWriteObject();
 		getChild(1).convertToWriteObject();
-		
 //System.out.println("Breukvak convertToWriteObject");		
-		
 	}
 
 
