@@ -171,6 +171,28 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		buttonsEnabled = new boolean[aantalActiviteiten][];
 		
 		mode = Integer.parseInt((String)launchData.get("mode"));
+		
+		// Get the aftrekCorrectieZelftoets uit instellingen
+		ObjectMap instellingen;
+		ObjectMap wrap = JSONUtilities.wrapMap(launchData);
+		if (wrap.containsKey("instellingen"))
+		{	
+			instellingen = wrap.getObjectMap("instellingen");
+			if (instellingen.containsKey("aftrekCorrectieZelftoets"))
+			{
+				aftrekCorrectieZelftoets = instellingen.getInt("aftrekCorrectieZelftoets");
+			}
+			else
+			{
+				aftrekCorrectieZelftoets = 5; // the old default
+			}
+		}
+		else
+		{
+			aftrekCorrectieZelftoets = 5; // the old default
+		}
+
+		
 		maxAantalOpdrachten = 1;
 		for (int i = 0; i < aantalActiviteiten; i++)
 		{
@@ -584,7 +606,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	private Timer popupTimer;
-	private final int nakijkStraf = 5; // voorlopig final
+	private int aftrekCorrectieZelftoets;
 	
 	private void schedule(final int index, boolean touch) {
 		if(popupTimer != null) 
@@ -759,7 +781,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			switch (mode)
 			{
 				case ZELFTOETS:
-					int hulp = (getAantalNakijken(i) * nakijkStraf - nakijkStraf); // een keer gratis nakijken.
+					int hulp = (getAantalNakijken(i) * aftrekCorrectieZelftoets - aftrekCorrectieZelftoets); // een keer gratis nakijken.
 					
 					if (hulp < 0)
 						hulp = 0;
