@@ -185,6 +185,7 @@ public class RPCHandlerV1 {
 			course.setName((String)t.get("name"));
 			course.setParentID(idOf(t.get("parentID"), PersistenceClassType.PersistentCourse));
 			course.setSchoolId(idOf(t.get("schoolID"),PersistenceClassType.PersistentSchool));
+			course.setNotVisible(Integer.valueOf(1).equals(t.get("notVisible")));
 			try {
 				course.setSequenceNr(((Number)t.get("sequencenr")).longValue());
 			} catch (Exception e) {
