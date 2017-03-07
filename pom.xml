@@ -49,7 +49,7 @@
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWOJClient/trunk</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/trunk</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
