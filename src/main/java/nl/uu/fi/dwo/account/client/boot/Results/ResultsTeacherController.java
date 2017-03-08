@@ -9,7 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import org.osgi.util.promise.Promise;
 
 /**
- * Controller for Teacher results.
+ * Persistent model Controller for Teacher results.
  * 
  * @author Gert van der Plas
  */
@@ -17,26 +17,14 @@ class ResultsTeacherController {
 
     private static final Logger LOG = Logger.getLogger(ResultsTeacherController.class.getName());
 
-    private ResultPanel view;
     private SecuredTeacherResultsManager manager = new SecuredTeacherResultsManager();
     
-
-    ResultsTeacherController(ResultPanel view) {
-        this.view = view;
-        init();
-    }
-
-    public void init() {
-        //updateResultsInView();
-
-    }
-
-    public void updateResultsInView() {
+    public Promise<DomResultsPerTeacher> getResultsPerTeacher() {
         DomContext context = new DomContext();
         context.setDomHasRole(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
         DomDwoProfile profile = new DomDwoProfile();
-        Promise<DomResultsPerTeacher> promResults = manager.getTeachersResults(context, profile);
-        DomResultsPerTeacher results = promResults.getValue();
+        //Promise<DomResultsPerTeacher> promResults = 
+        return manager.getTeachersResults(context, profile);
 //        manager.getTeachersResults(new AsyncCallback<List<DomSchoolClass>>() {
 //            @Override
 //            public void onFailure(Throwable t) {

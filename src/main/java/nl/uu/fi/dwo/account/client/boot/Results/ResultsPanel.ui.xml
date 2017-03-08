@@ -23,6 +23,7 @@
         }
     </ui:style>
     <g:VerticalPanel>
+        <g:Label>Role</g:Label><g:TextBox :field='userRole'></g:TextBox>
         <g:HorizontalPanel ui:field='tablePanel' addStyleNames='{mainpanel.widget}'
                            horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
             <!--<g:SimplePanel >-->

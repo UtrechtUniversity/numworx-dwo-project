@@ -19,7 +19,7 @@
                         <g:Label>password:</g:Label>
                     </g:customCell>
                     <g:customCell styleName="optionalBarCellStyle">
-                        <g:PasswordTextBox ui:field='passwordTextBox'>PASSW</g:PasswordTextBox>
+                        <g:PasswordTextBox ui:field='passwordTextBox'>passw</g:PasswordTextBox>
                     </g:customCell>
                 </g:row>
                 <g:row styleName="optionalHeaderStyle">

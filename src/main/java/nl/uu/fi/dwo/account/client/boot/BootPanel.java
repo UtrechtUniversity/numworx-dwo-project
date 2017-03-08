@@ -10,11 +10,13 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
+import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.account.client.boot.Results.ResultPanel;
+import nl.uu.fi.dwo.account.client.boot.Results.ResultsPanel;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
  * BootPanel, boots the app, initializes with the server, requests a login.
@@ -26,6 +28,10 @@ public class BootPanel extends Composite implements EntryPoint {
     private static final Logger LOG = Logger.getLogger(BootPanel.class.getName());
     private DwoGlobalVars dwoGlobalVars;
 
+static {
+        //Initialize an Exception translator.
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
+    }    
     /**
      * @return the loginWidget
      */
@@ -49,7 +55,7 @@ public class BootPanel extends Composite implements EntryPoint {
     @UiField(provided = true)
     Widget loginWidget = new LoginPanel();
     @UiField(provided = true)
-    Widget resultWidget = new ResultPanel();
+    Widget resultWidget = new ResultsPanel();
 
     public BootPanel() {
 
@@ -68,7 +74,7 @@ public class BootPanel extends Composite implements EntryPoint {
         ((LoginPanel) loginWidget).setParent(this);
 //        mainDeckPanel.add(loginWidget);
         mainDeckPanel.showWidget(0);
-        ((ResultPanel) resultWidget).setParent(this);
+        ((ResultsPanel) resultWidget).setParent(this);
 //        mainDeckPanel.add(resultWidget);
         LOG.log(Level.INFO, "Showing loginPanel.");
         

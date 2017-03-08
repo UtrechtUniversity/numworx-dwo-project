@@ -8,29 +8,34 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.boot.BootPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 
 /**
- * 
+ *
  *
  * @author G.A.J. van der Plas
  */
-public class ResultPanel extends Composite {
+public class ResultsPanel extends Composite {
 
-    private static final Logger LOG = Logger.getLogger(ResultPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(ResultsPanel.class.getName());
 
-    interface MyUiBinder extends UiBinder<Widget, ResultPanel> {
+    interface MyUiBinder extends UiBinder<Widget, ResultsPanel> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     public interface Style extends CssResource {
+
         String panel();
+
         String tableCelleven();
+
         String tableCellodd();
     }
     @UiField
@@ -41,6 +46,8 @@ public class ResultPanel extends Composite {
 //  Style getPanel();
 //  // ... snip ...
 //}
+
+    private ResultsPanelHandler handler;
     private ResultsTeacherController control;
 
     //initial gridsize
@@ -49,11 +56,11 @@ public class ResultPanel extends Composite {
 
     @UiField
     HorizontalPanel tablePanel;
+    @UiField
+    TextBox teacherRole;
     @UiField(provided = true)
     Grid resultGrid = new Grid(yInitialGridSize, xInitialGridSize);
     ListDataProvider<DomResultScore> dataProvider = new ListDataProvider<DomResultScore>();
-    
-    
 
     private BootPanel parent;
 
@@ -70,12 +77,12 @@ public class ResultPanel extends Composite {
 
 //    @UiField(provided = true)
 //    SimplePager pager;
-    public ResultPanel() {
+    public ResultsPanel() {
         LOG.log(Level.INFO, "Grid size:" + resultGrid.getRowCount() + "x" + resultGrid.getColumnCount() + ".");
         init();
 //        tablePanel.setWidget(resultGrid);
         initWidget(uiBinder.createAndBindUi(this));
-        control = new ResultsTeacherController(this);
+        handler = new ResultsPanelHandler(this);
         addRow();
     }
 
@@ -108,6 +115,8 @@ public class ResultPanel extends Composite {
 //                }
             }
         }
+
+        teacherRole.setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
 
     }
 

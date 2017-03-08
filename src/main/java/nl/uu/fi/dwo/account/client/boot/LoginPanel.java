@@ -14,13 +14,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
-import org.osgi.util.promise.Failure;
-import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Success;
 
 /**
- * Panel that handles the login-authentication.
+ * GWT Panel that handles the login-authentication.
  *
  * @author G.A.J. van der Plas
  */
@@ -34,21 +30,6 @@ public class LoginPanel extends Composite implements ClickHandler {
     
     private LoginPanelHandler handler;
 
-//    //login
-//	private final class DWO2RPCHandler extends RPCHandlerV2 {
-//		private DWO2RPCHandler(String server, int profile) {
-//			super(server, profile);
-//		}
-//
-//		@Override
-//		public void getUserResults(Object courseID, Object userID,
-//				AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
-//			//Object schoolGroupID = getSchoolGroupID();
-//			//getUserResultsHelper(courseID, userID, schoolGroupID, getUserResultsCallback);
-//		}
-//
-//	}    
-//    private DWO2RPCHandler handler = new DWO2RPCHandler();
     @UiField
     TextBox usernameText;
     @UiField
@@ -86,50 +67,22 @@ public class LoginPanel extends Composite implements ClickHandler {
             //            curUser.setPassword("passw"); //md5Hash = d79096188b670c2f81b7001f73801117
         }
     }
-    
+    /**
+     * Called from handler after successful login.
+     */
     public void onLoginSuccess() {
         LOG.log(Level.INFO,"Login succeeded.");
         parent.showResultWidget();
     }
-    
-    public void onLoginFailure(Promise<?> failure) {
-        LOG.log(Level.INFO, failure.getFailure().getMessage());
-        Window.alert(failure.getFailure().getMessage());
+    /**
+     * Called from handler after failed login.
+     * 
+     * @param failMessage 
+     */
+    public void onLoginFailure(String failMessage) {
+        LOG.log(Level.INFO, failMessage);
+        Window.alert(failMessage);
         //reset user interface?
     }
     
-    
-
-//    public Promise<?> LoginFailPromise() {
-//        return new Failure() {
-//            @Override
-//            public void fail(Promise<?> resolved) throws Exception {
-//                // complain...
-//                onLoginFailure(resolved);
-//            }
-//        };
-//    }
-        
-//    
-//    public Promise<DomUserFullwLoginContext> getLoginResultPromise() {
-//        Promise<DomUserFullwLoginContext> result
-//                = handler.loginClicked(this.usernameText.getText(), this.passwordTextBox.getText());
-////            result.then(null, result.getFailure());
-//        result.then(new Success<DomUserFullwLoginContext, Void>() {
-//            @Override
-//            public Promise<Void> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
-//                onLoginSuccess();
-//                return null;
-//            }
-//        },
-//                new Failure() {
-//            @Override
-//            public void fail(Promise<?> resolved) throws Exception {
-//                // complain...
-//                onLoginFailure(resolved);
-//            }
-//        }
-//        );
-//        return result;
-//    }
 }
