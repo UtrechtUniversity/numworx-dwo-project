@@ -153,6 +153,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		return getState0();
 	}
 
+	private HashMap<String, Object> lastResort;
 	private HashMap<String, Object> getState0() {
 		if(innerView != null)
 		{
@@ -161,14 +162,18 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			{
 				JSONObject js = JSONParser.parseLenient(jso).isObject();
 				//return JSONUtilities.fromJSONObject(js);
-				return wrap(JSONUtilities.wrapMap(js));
+				return lastResort = wrap(JSONUtilities.wrapMap(js));
 			}
 		}
 		if(pendingState != null)
 		{
 			JSONObject js = JSONParser.parseLenient(pendingState).isObject();
-			return wrap(JSONUtilities.wrapMap(js));
+			return lastResort = wrap(JSONUtilities.wrapMap(js));
 		}
+		
+		if (lastResort != null) 
+			return lastResort;
+		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
 		return wrap(map);
@@ -186,6 +191,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		facade.setPopupState(h);
 		if(h == null)
 			h = new HashMap<String, Object>(); // Never NULL, komt voor!
+		lastResort = h;
 		if(h.containsKey("STUBVIEW_score"))
 			score = Integer.parseInt(h.get("STUBVIEW_score").toString());
 		if(h.containsKey("STUBVIEW_correct"))
