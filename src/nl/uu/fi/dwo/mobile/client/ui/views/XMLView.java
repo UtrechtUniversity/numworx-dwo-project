@@ -356,7 +356,6 @@ public abstract class XMLView {
 		hoofdPanel.zetInstellingen(instellingen);
 		hoofdPanel.setKeyboard(kb);
 		hoofdPanel.zetOpdracht(opdracht);
-		hoofdPanel.tabFocus(null, false);
 		
 		destination.add(hoofdPanel);
 		opdrachtObjects.add(hoofdPanel);
