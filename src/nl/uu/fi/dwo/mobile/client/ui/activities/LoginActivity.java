@@ -75,7 +75,7 @@ public class LoginActivity extends MGWTAbstractActivity
 				
 				@Override
 				public Promise<DomSchoolsRolesAndClassesV2> call(Promise<DomUserFullwLoginContext> promise) throws Exception {
-					DwoGlobalVars instance = DwoGlobalVars.getInstance();
+					DwoGlobalVars instance = DwoGlobalVars.instance();
 					DomUserFullwLoginContext value = promise.getValue();
 					if(value == null) {
 						instance.setCurrentLoginContext(null);
@@ -110,7 +110,7 @@ public class LoginActivity extends MGWTAbstractActivity
 
 				@Override
 				public Promise<Void> call(Promise<DomSchoolsRolesAndClassesV2> promise) throws Exception {
-					DwoGlobalVars instance = DwoGlobalVars.getInstance();
+					DwoGlobalVars instance = DwoGlobalVars.instance();
 					DomSchoolsRolesAndClassesV2 value = promise.getValue();
 					if(value != null) {
 						instance.setSchoolLogins(value);

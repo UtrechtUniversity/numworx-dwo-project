@@ -40,7 +40,7 @@ public class FlatModuleActivity extends MGWTAbstractActivity {
 		currentModel = SelectModuleItemHolder.getItems();
 		if(item == null || item == SelectModuleItem.ROOT)
 		{
-			view.render(currentModel);
+			view.render(currentModel, true);
 			view.setDescription(SelectModuleItem.ROOT);
 		}
 		else

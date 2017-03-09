@@ -1,16 +1,13 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -21,11 +18,8 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -34,15 +28,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.OsDetection;
 import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
-
 import fi.wiskopdr.text.TextConstants;
 
 /**
@@ -53,34 +44,34 @@ import fi.wiskopdr.text.TextConstants;
 public class SelectModuleViewImpl extends Composite implements SelectModuleView, AnchorContext, HasCellSelectedHandler
 {
 	
-	class GetScosCallback implements AsyncCallback<List<Map<String,Object>>> {
-
-		private SelectModuleItem parent;
-		
-		public GetScosCallback(SelectModuleItem item) {
-			parent = item;
-		}
-
-		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert(caught.toString());
-		}
-
-		@Override
-		public void onSuccess(List<Map<String,Object>> result) {
-			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
-			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-				Map<String, Object> map = (Map<String, Object>) iterator.next();
-				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.SCO);
-				item.setParent(parent);
-				items.add(item);
-				SelectModuleItemHolder.insert(item);
-			}
-			parent.setChildren(items);
-			render(items);
-		}
-		
-	};
+//	class GetScosCallback implements AsyncCallback<List<Map<String,Object>>> {
+//
+//		private SelectModuleItem parent;
+//		
+//		public GetScosCallback(SelectModuleItem item) {
+//			parent = item;
+//		}
+//
+//		@Override
+//		public void onFailure(Throwable caught) {
+//			Window.alert(caught.toString());
+//		}
+//
+//		@Override
+//		public void onSuccess(List<Map<String,Object>> result) {
+//			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
+//			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+//				Map<String, Object> map = (Map<String, Object>) iterator.next();
+//				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.SCO);
+//				item.setParent(parent);
+//				items.add(item);
+//				SelectModuleItemHolder.insert(item);
+//			}
+//			parent.setChildren(items);
+//			render(items, parent.showChildren());
+//		}
+//		
+//	};
 
 
 	@UiField (provided=true) CellList<SelectModuleItem> list;
@@ -117,11 +108,17 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView,
 
 	HandlerRegistration back,sel;
 	
-
+	@Deprecated
 	@Override
 	public void render(List<SelectModuleItem> items)
 	{
 		this.items = items;
+		list.render(items);
+	}
+
+	public void render(List<SelectModuleItem> items, boolean showChildren) {
+		this.items = items;
+		if(!showChildren) items = Collections.emptyList();
 		list.render(items);
 	}
 
@@ -176,9 +173,10 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView,
 
 			@Override
 			public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
-				render(resolved.getValue());
+				render(resolved.getValue(), item.showChildren());
 				return null;
 			}
+
 			
 		});
 	}

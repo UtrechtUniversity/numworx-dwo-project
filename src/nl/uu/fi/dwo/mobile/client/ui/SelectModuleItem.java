@@ -58,6 +58,7 @@ public class SelectModuleItem
 	private Promise<List<SelectModuleItem>> childrenAsync;
 	private Object parent;
 	private Date notBefore, notAfter;
+	private boolean showChildren = true;
 
 	public Date getNotAfter() {
 		return notAfter;
@@ -339,6 +340,14 @@ public class SelectModuleItem
 
 	public void setSequencenr(int sequencenr) {
 		this.sequencenr = sequencenr;
+	}
+
+	public boolean showChildren() {
+		return showChildren;
+	}
+
+	public void showChildren(boolean showChildren) {
+		this.showChildren = showChildren;
 	}
 	
 }

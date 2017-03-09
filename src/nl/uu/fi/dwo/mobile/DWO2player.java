@@ -79,7 +79,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		Object sgID;
 		try {
 			sgID = PersistenceIdDecoderInterface.instance.idOf(
-					DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole().getSchoolGroupId(),
+					DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole().getSchoolGroupId(),
 					PersistenceClassType.PersistentSchoolGroup);
 		} catch (Exception ignore) {/*NPE*/ sgID = null;}
 		return sgID;
@@ -165,7 +165,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 			@Override
 			public boolean withUser() {
-				return DwoGlobalVars.getInstance().getCurrentUser() != null;
+				return DwoGlobalVars.instance().getCurrentUser() != null;
 			}
 
 			@Override
@@ -181,7 +181,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			@Override
 			public DomSchool getSchool() {
 				try {
-					return DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
+					return DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
 				} catch (Exception e) {
 					return null;
 				}
@@ -198,7 +198,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			}
 			@Override
 			public DomSchoolClass getSchoolClass() {
-				return DwoGlobalVars.getInstance().getCurrentSchoolClass();
+				return DwoGlobalVars.instance().getCurrentSchoolClass();
 			}
 			
 			
@@ -214,7 +214,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			@Override
 			public RoleType getRoleType() {
 				try {
-					String roleName = DwoGlobalVars.getInstance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName();
+					String roleName = DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName();
 					return RoleType.valueOf(roleName);
 				} catch (Exception e) {
 					return RoleType.ANONYMOUS;
@@ -223,7 +223,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 			@Override
 			public Object getUserID() {
-				PersistenceId id = DwoGlobalVars.getInstance().getCurrentUser().getId();
+				PersistenceId id = DwoGlobalVars.instance().getCurrentUser().getId();
 				return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
 			}
 

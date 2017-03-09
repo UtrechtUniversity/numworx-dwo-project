@@ -25,7 +25,8 @@ public interface SelectModuleView extends IsWidget
 	public HasCellSelectedHandler getList();
 	public void setLogout(boolean b);
 	
-	void setMenuWidget(IsWidget w);    
+	void setMenuWidget(IsWidget w);
+	public void render(List<SelectModuleItem> currentModel, boolean show);    
 
 
 }

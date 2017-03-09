@@ -43,7 +43,7 @@ public class GuestActivity extends MGWTAbstractActivity implements Activity {
 
 				@Override
 				public Promise<Void> call(Promise<DomDwoProfileFull> resolved) throws Exception {
-					DwoGlobalVars instance = DwoGlobalVars.getInstance();
+					DwoGlobalVars instance = DwoGlobalVars.instance();
 					instance.setCurrentLoginContext(null);
 					instance.setCurrentUser(null);
 					instance.setCurrentSchoolClass(null);

@@ -45,8 +45,8 @@ public class ReloginActivity extends MGWTAbstractActivity {
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		SelectModuleItemHolder.destroy();
-		password = DwoGlobalVars.getInstance().getCurrentUser().getPassword();
-		username = DwoGlobalVars.getInstance().getCurrentUser().getUserName();
+		password = DwoGlobalVars.instance().getCurrentUser().getPassword();
+		username = DwoGlobalVars.instance().getCurrentUser().getUserName();
 		clientFactory.logout();
 		panel.setWidget(new Label());
 		clientFactory.getRPCHandler().loginMD5(getUsername(), getPassword())
