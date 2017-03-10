@@ -35,4 +35,26 @@ public class DomResultPlotMatrix {
         this.marks[i][j] = mark;
     }
 
+    public int getvSize(){
+        return vIndex.length;
+    }
+
+    public int gethSize(){
+        return hIndex.length;
+    }
+
+    /**
+     * @return the vIndex
+     */
+    public DomResultScore getvIndex(int i) {
+        return vIndex[i];
+    }
+
+    /**
+     * @return the hIndex
+     */
+    public DomResultScore gethIndex(int j) {
+        return hIndex[j];
+    }
+
 }

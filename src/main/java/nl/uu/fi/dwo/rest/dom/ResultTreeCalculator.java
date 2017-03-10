@@ -135,6 +135,14 @@ public class ResultTreeCalculator {
     }
 
     public static DomResultPlotMatrix CrawlTeacherGetScoClass(ResultTree tree) {
+        Map<PersistenceId, DomResultSchoolClass> scMap = tree.getResultTree().getChildren();
+        Map<PersistenceId, DomResultSchoolClass> studentMap = tree.getStudentTree().getChildren();
+        //Create DomResultPlotMatrix and fill data.
+//        DomResultPlotMatrix result= new DomResultPlotMatrix(String[]{}. String[]{});
+//        for(DomResultSchoolClass sc : scMap.values()){
+//            DomResultPlotMatrix scResult = CrawlClassGetScoStudent(tree,sc);
+//            
+//        };
         DomResultPlotMatrix result=null;
         return result;
     }
