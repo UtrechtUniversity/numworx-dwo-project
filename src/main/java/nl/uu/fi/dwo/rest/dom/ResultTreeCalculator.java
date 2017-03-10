@@ -91,7 +91,7 @@ public class ResultTreeCalculator {
      * Returns a matrix with all the ClassCourseValues.
      *
      */
-    public void CrawlClassGetCourseStudent() {
+    public static void CrawlClassGetCourseStudent() {
 
     }
 
@@ -134,10 +134,12 @@ public class ResultTreeCalculator {
         return result;
     }
 
-    public void CrawlTeacherGetScoClass() {
+    public static DomResultPlotMatrix CrawlTeacherGetScoClass(ResultTree tree) {
+        DomResultPlotMatrix result=null;
+        return result;
     }
 
-    public void CrawlTeacherGetCourseClass() {
+    public static void CrawlTeacherGetCourseClass(ResultTree tree) {
     }
 }
 
