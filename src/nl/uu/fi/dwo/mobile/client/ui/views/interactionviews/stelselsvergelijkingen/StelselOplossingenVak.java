@@ -91,6 +91,7 @@ public class StelselOplossingenVak
 	private StelselAntwoordVak parent;
 	
 	private OpdrNavIF comRoot;
+	private boolean formuleToolBijFocus = true;
 	
 	public static void zetFontOverervingForm(boolean b)
 	{	fontOvererving = b;
@@ -119,7 +120,7 @@ public class StelselOplossingenVak
 		avChecker.zetVarNamen(varNamen);
 		
 		editor = new FormuleEditorWithAnswer(h, false, null, randomVarNamen, randomVarWaarden, avChecker);
-		editor.setFormuleToolBijFocus(true);
+		editor.setFormuleToolBijFocus(formuleToolBijFocus);
 		editor.setFont(font);
 		editor.setCurrent(0, 0);
 		editor.setParentStelselOplossingenVak(this);
@@ -188,6 +189,7 @@ public class StelselOplossingenVak
 		this.logOption = logOption;
 		this.logID = logID;
 		this.logObjectives = logObjectives;
+		this.formuleToolBijFocus = formuleToolBijFocus;
 		
 		//TODO: fontOvererving
 //		if(fontOvererving && getParent() instanceof TekstInteractiePanelVak)
