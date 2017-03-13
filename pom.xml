@@ -139,6 +139,18 @@
             <classifier>sources</classifier>
         </dependency>
         <dependency>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
+            <artifactId>DWO-rest-lib</artifactId>
+            <version>${dwoVersion}</version>
+        </dependency>      
+        <dependency>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
+            <artifactId>DWO-rest-lib</artifactId>
+            <version>${dwoVersion}</version>
+            <classifier>sources</classifier>
+        </dependency>
+        
+        <dependency>
             <groupId>com.owlike</groupId>
             <artifactId>genson</artifactId>
             <version>1.3</version>
