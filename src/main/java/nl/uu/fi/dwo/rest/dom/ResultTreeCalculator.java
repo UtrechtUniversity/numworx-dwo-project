@@ -133,11 +133,26 @@ public class ResultTreeCalculator {
 
         return result;
     }
+    
+    private static DomResultPlotMatrix CrawlClassGetSco(ResultTree tree, DomResultSchoolClass schoolClass){
+        return null;
+    }
 
     public static DomResultPlotMatrix CrawlTeacherGetScoClass(ResultTree tree) {
-        Map<PersistenceId, DomResultSchoolClass> scMap = tree.getResultTree().getChildren();
-        Map<PersistenceId, DomResultSchoolClass> studentMap = tree.getStudentTree().getChildren();
-        //Create DomResultPlotMatrix and fill data.
+        DomResultSchoolClass[] scList = (DomResultSchoolClass[]) tree.getResultTree().getChildren().values().toArray();
+        String[] vList = new String[scList.length];
+//        
+//        //fetch Sco's and their results
+//        scList.
+//        String[] hList = new String[studentList.length];
+//        
+//        Iterator iter =scList.iterator();
+//        while(iter.hasNext()){
+//            
+//        }
+//        for(int i=0;i<vList.length;i++){
+//            
+//        }
 //        DomResultPlotMatrix result= new DomResultPlotMatrix(String[]{}. String[]{});
 //        for(DomResultSchoolClass sc : scMap.values()){
 //            DomResultPlotMatrix scResult = CrawlClassGetScoStudent(tree,sc);
@@ -151,3 +166,8 @@ public class ResultTreeCalculator {
     }
 }
 
+ // sc <- course <- ... <- course <- sco <- studentsco - student
+//  sc <- student
+// browse <score, sc, course> <score, sc, sco>
+// browse <score, student, course> for some sc
+// 
