@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.boot.BootPanel;
+import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 
 /**
@@ -132,4 +133,10 @@ public class ResultsPanel extends Composite {
         }
     }
 
+    public void plot(DomResultPlotMatrix resultMatrix){
+        //if null then no data available.
+        
+        //else plot data
+        
+    }
 }

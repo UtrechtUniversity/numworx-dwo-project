@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.ResultTree;
+import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
@@ -20,7 +22,8 @@ class ResultsPanelHandler {
     private ResultsPanel view;
     private ResultsTeacherController controller = new ResultsTeacherController();
     //model
-    private Promise<DomResultsPerTeacher> promResults;
+    private ResultTree rTree;
+    private DomResultPlotMatrix matrix;
     
     ResultsPanelHandler(ResultsPanel view) {
         this.view = view;
@@ -28,14 +31,16 @@ class ResultsPanelHandler {
     }
 
     public void init() {
+        Promise<DomResultsPerTeacher> promResults;
         promResults= controller.getResultsPerTeacher();
         // onSuccess calculate results and show.
         promResults.then(new Success<DomResultsPerTeacher, Void>() {
                 @Override
                 public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
                     //calculate tree and call plotting
-                    ResultTree rTree = new ResultTree(resolved.getValue());
-                    
+                    rTree = new ResultTree(resolved.getValue());
+                    matrix  = ResultTreeCalculator.CrawlTeacherGetScoClass(rTree);
+                    view.plot(matrix);
                     return null;
                 }
             },
@@ -49,9 +54,7 @@ class ResultsPanelHandler {
                         //throw directly
                     }
                 }
-            });
-        
+            });        
     }
-
 
 }

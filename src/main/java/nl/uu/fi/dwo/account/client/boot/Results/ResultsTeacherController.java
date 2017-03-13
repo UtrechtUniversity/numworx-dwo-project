@@ -9,7 +9,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import org.osgi.util.promise.Promise;
 
 /**
- * Persistent model Controller for Teacher results.
+ * Persistent model Controller for Teacher results. Retrieves DomResultsPerTeacher data.
+ * In the future it may cache this data and merge updates into it. it may also request
+ * Updates if required. In example, fetch new data if older than xx seconds or
+ * Check if changes of results exist within the schoolgroup.
  * 
  * @author Gert van der Plas
  */

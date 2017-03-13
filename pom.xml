@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-        <dwoVersion>2.1.10</dwoVersion>
+        <dwoVersion>2.1.11-SNAPSHOT</dwoVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.test.skip>true</maven.test.skip>
     </properties>
