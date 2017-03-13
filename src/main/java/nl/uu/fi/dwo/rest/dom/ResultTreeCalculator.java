@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
@@ -53,8 +54,8 @@ public class ResultTreeCalculator {
     }
 
     /**
-     * Adds the sco's in the subtree to the scoMap given. The algorithm uses put in 
-     * the map to ensure only one reference exists.
+     * Adds the sco's in the subtree to the scoMap given. The algorithm uses put
+     * in the map to ensure only one reference exists.
      *
      * @param course
      * @param scoMap
@@ -96,49 +97,49 @@ public class ResultTreeCalculator {
     }
 
     /**
-     * Returns a {@Link DomResultPlotMatrix} for the DomResultScoxDomResultStudent
-     * in a school class.
-     * 
-     * 
-     * @param tree 
+     * Returns a {@Link DomResultPlotMatrix} for the
+     * DomResultScoxDomResultStudent in a school class.
+     *
+     *
+     * @param tree
      * @param schoolClass
      */
     public static DomResultPlotMatrix CrawlClassGetScoStudent(ResultTree tree, DomResultSchoolClass schoolClass) {
         DomResultStudent[] studentIndex; //uses label property for display
         DomResultScoContext[] scoIndex; //uses label property for display
-        
+
         //init studentIndex
-        Map<PersistenceId, DomResultStudent> studentMap = tree.getStudentTree().getChildren().get(schoolClass.getSchoolClass().getId()).getChildren();        
+        Map<PersistenceId, DomResultStudent> studentMap = tree.getStudentTree().getChildren().get(schoolClass.getSchoolClass().getId()).getChildren();
         Collection studentValues = studentMap.values();
         studentIndex = new DomResultStudent[studentValues.size()];
-        int i=0;
-        for(DomResultStudent student: studentMap.values()){
-            studentIndex[i]= student;
+        int i = 0;
+        for (DomResultStudent student : studentMap.values()) {
+            studentIndex[i] = student;
             i++;
         }
 
         //init scoIndex
         Map<PersistenceId, DomResultScoContext> scoMap = new HashMap<PersistenceId, DomResultScoContext>();
         crawlSubTreeForScos(schoolClass, scoMap);
-        Collection scoValues = scoMap.values();            
+        Collection scoValues = scoMap.values();
         scoIndex = new DomResultScoContext[scoValues.size()];
-        int j=0;
-        for(DomResultScoContext sco: scoMap.values()){
-            scoIndex[j]= sco;
+        int j = 0;
+        for (DomResultScoContext sco : scoMap.values()) {
+            scoIndex[j] = sco;
             j++;
         }
-                
+
         DomResultPlotMatrix result = new DomResultPlotMatrix(studentIndex, scoIndex);
         //crawl and insert
 
         return result;
     }
-    
-    private static DomResultPlotMatrix CrawlClassGetSco(ResultTree tree, DomResultSchoolClass schoolClass){
+
+    private static DomResultPlotMatrix CrawlClassGetSco(ResultTree tree, DomResultSchoolClass schoolClass) {
         return null;
     }
 
-    public static DomResultPlotMatrix CrawlTeacherGetScoClass(ResultTree tree) {
+    public static DomResultPlotMatrix CrawlTeacherGetScoClass(ResultTree tree, DomResultSchoolClass schoolClass) {
         DomResultSchoolClass[] scList = (DomResultSchoolClass[]) tree.getResultTree().getChildren().values().toArray();
         String[] vList = new String[scList.length];
 //        
@@ -158,15 +159,28 @@ public class ResultTreeCalculator {
 //            DomResultPlotMatrix scResult = CrawlClassGetScoStudent(tree,sc);
 //            
 //        };
-        DomResultPlotMatrix result=null;
+        DomResultPlotMatrix result = null;
         return result;
     }
 
-    public static void CrawlTeacherGetCourseClass(ResultTree tree) {
+    public static DomResultPlotMatrix GetScoreOfTeacherClassesByLeafCourses(ResultTree tree) {
+        int nClasses = tree.getResultTree().getChildren().size();
+        DomResultScore[] classes = new DomResultScore[nClasses];
+        int i = 0;
+        for (DomResultScore<DomResultSchoolClass> sc : tree.getResultTree().getChildren().values()) {
+            classes[i] = sc;
+            i++;
+        }
+
+        Map<PersistenceId, DomResultCourse> resultMap = new HashMap<PersistenceId, DomResultCourse>();
+        tree.getResultTree().countCourseLeaves(resultMap);
+        DomResultScore[] courses = (DomResultScore[]) resultMap.values().toArray();
+        DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
+        return result;
     }
 }
 
- // sc <- course <- ... <- course <- sco <- studentsco - student
+// sc <- course <- ... <- course <- sco <- studentsco - student
 //  sc <- student
 // browse <score, sc, course> <score, sc, sco>
 // browse <score, student, course> for some sc

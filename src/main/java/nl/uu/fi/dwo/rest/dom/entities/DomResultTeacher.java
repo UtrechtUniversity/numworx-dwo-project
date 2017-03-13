@@ -21,5 +21,5 @@ public class DomResultTeacher extends DomResultScore<DomResultSchoolClass> {
     public void setParent(DomResultScore score){
         super.setParent(null);
     }
-        
+
 }

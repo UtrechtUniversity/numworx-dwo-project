@@ -38,13 +38,17 @@ public class ResultTree {
     }
 
     /**
-     * Takes the data of a DomResultsPerTeacher object and builds a result tree.
-     * The result tree can be crawled and data can be collected for result
-     * viewing of studentsco data. The result tree is a mixed object type tree
+     * Takes the data of a DomResultsPerTeacher object and builds two result trees.
+     * The result trees can be crawled and data can be collected for result
+     * viewing of studentsco data. The result trees are a mixed object type tree
      * where every tree path has the following object type sequence:
      *
-     * DomResultTeacher, DomResultSchoolClass, one or more DomCourse,
-     * DomStudent, DomSco,DomStudentSco.
+     * resultTree:DomResultTeacher, DomResultSchoolClass, one or more DomCourse, DomSco,
+     * DomStudentSco.
+     * 
+     * or
+     * 
+     * studentTree: DomResultTeacher, DomResultSchoolClass, DomStudent
      *
      * @param resultData
      */

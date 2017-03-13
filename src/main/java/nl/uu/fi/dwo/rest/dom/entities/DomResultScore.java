@@ -7,8 +7,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 /**
  * Node of the ResultScoreTree. The tree is crawled to calculate a result matrix
  * for the result viewing.
- * 
- * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
+ *
+ * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  */
 public abstract class DomResultScore<T extends DomResultScore> {
 
@@ -16,7 +16,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
     private double cnt = 0;
     private String label;
     private DomResultScore parent = null;
-    private Map<PersistenceId,T> children = Collections.emptyMap();
+    private Map<PersistenceId, T> children = Collections.emptyMap();
 
     /**
      * @return the score
@@ -57,7 +57,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
      * @param aParent
      */
     public void setParent(DomResultScore aParent) {
-        if (parent instanceof DomResultTeacher && aParent!=null) {
+        if (parent instanceof DomResultTeacher && aParent != null) {
             throw new RuntimeException("Root node should have null as parent.");
         } else {
             parent = aParent;
@@ -67,14 +67,14 @@ public abstract class DomResultScore<T extends DomResultScore> {
     /**
      * @return the children
      */
-    public Map<PersistenceId,T>  getChildren() {
+    public Map<PersistenceId, T> getChildren() {
         return children;
     }
 
     /**
      * @param children the children to set
      */
-    public void setChildren(Map<PersistenceId,T> children) {
+    public void setChildren(Map<PersistenceId, T> children) {
         this.children = children;
     }
 
@@ -92,4 +92,32 @@ public abstract class DomResultScore<T extends DomResultScore> {
         this.cnt = cnt;
     }
 
+    public int countScoLeaves() {
+        if (this instanceof DomResultScoContext) {
+            return 1;
+        } else if (this.children.isEmpty()) {
+            return 0;
+        } else {
+            int cnt=0;
+            for (DomResultScore s : this.getChildren().values()) {
+                cnt = cnt + s.countScoLeaves();
+            }
+            return cnt;
+        }
+    }
+
+    public void countCourseLeaves(Map<PersistenceId, DomResultCourse> courseLeaves) {
+        T[] kids = (T[]) this.getChildren().values().toArray();
+        
+        if (this.children.isEmpty()) {
+            return;
+        } else if (kids[0] instanceof DomResultScoContext) {
+            courseLeaves.put(((DomResultCourse) this).getCourse().getId(), (DomResultCourse) this);
+            return;
+        } else {
+            for (DomResultScore s : this.getChildren().values()) {
+                s.countCourseLeaves(courseLeaves);
+            }
+        }
+    }
 }
