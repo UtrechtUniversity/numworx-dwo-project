@@ -60,7 +60,7 @@ public abstract class FormuleElement implements TekstElement
 	{
 		if (holder instanceof FormuleEditor)
 		{
-			FormuleHolder editor = (FormuleHolder) holder;
+			FormuleHolder editor = holder;
 			if (editor.getCurrentRegel() != null)
 			{
 				initWithParent(editor.getCurrentRegel());

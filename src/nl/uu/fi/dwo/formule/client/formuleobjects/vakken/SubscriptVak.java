@@ -32,13 +32,13 @@ public class SubscriptVak extends FormuleElementWithChildren
 		FormuleElement prev = parentRegel.getPrevious(this);
 
 		int vgh = parentRegel.getFont().getHeight();
-		int vgah = parentRegel.getFont().getHeight() / 2;
+		int vgah = parentRegel.getFont().getHeight() - 2;
 		if (prev != null)
 		{
 			vgh = prev.getHeight();
 			vgah = prev.getAsHoogte();
 		}
-
+		
 		width = getChild().width;
 
 		height = getChild().height - 2 * fm.getAscent() / 3 + vgh;
