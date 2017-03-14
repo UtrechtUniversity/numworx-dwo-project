@@ -5,7 +5,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Color;
@@ -42,8 +41,12 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
  * The panel which shows the school classes for a teacher.
@@ -75,6 +78,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     private Image delImage;
 
     private JPanel jtbl;
+    private JTable jtable = new JTable();
 
     public enum UserType {
 
@@ -82,6 +86,66 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     };
 
     private UserType userType = UserType.TEACHER;
+
+    class UsernameCellRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                    row, column);
+
+            if (value != null && ValidUserFieldsChecker.isValidUserName(value.toString())) {
+                component.setBackground(Color.WHITE);
+            } else {
+                component.setBackground(new Color(255, 128, 128));
+            }
+
+            return component;
+        }
+    }
+
+    class EmailCellRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                    row, column);
+
+            if (value != null && ValidUserFieldsChecker.isValidEmail(value.toString())) {
+                component.setBackground(Color.WHITE);
+            } else {
+                component.setBackground(new Color(255, 128, 128));
+            }
+
+            return component;
+        }
+    }
+
+    class PasswordCellRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                    row, column);
+
+            if (value != null && ValidUserFieldsChecker.isValidPassword(value.toString())) {
+                component.setBackground(Color.WHITE);
+            } else {
+                component.setBackground(new Color(255, 128, 128));
+            }
+
+            return component;
+        }
+    }
 
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
@@ -144,6 +208,10 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == delImage) {
                 tableModel.deleteSelectedRow(tableModel.getSelectedRow());
+                //set input verification
+                jtable.getColumnModel().getColumn(3).setCellRenderer(new UsernameCellRenderer());
+                jtable.getColumnModel().getColumn(4).setCellRenderer(new PasswordCellRenderer());
+                jtable.getColumnModel().getColumn(5).setCellRenderer(new EmailCellRenderer());
 
             }
         }
@@ -156,7 +224,6 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         }
         jtbl = new JPanel();
 
-        JTable jtable = new JTable();
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.setBackground(Color.LIGHT_GRAY);
         jtable.getTableHeader().setReorderingAllowed(false);
@@ -177,7 +244,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jtable.setColumnSelectionAllowed(false);
         jtable.setCellSelectionEnabled(false);
-        
+
         InputMap im = jtable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         KeyStroke tab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0);
         KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
@@ -293,9 +360,15 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 
         jtable.putClientProperty(
                 "terminateEditOnFocusLost", Boolean.TRUE);
-        
+
         TableUtil.setDefaults(jtable, true, new NewSingleSchoolStudentsTeacherPanel.ImageRenderer(), new NewSingleSchoolStudentsTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
+
+        //set input verification
+        jtable.getColumnModel().getColumn(3).setCellRenderer(new UsernameCellRenderer());
+        jtable.getColumnModel().getColumn(4).setCellRenderer(new PasswordCellRenderer());
+        jtable.getColumnModel().getColumn(5).setCellRenderer(new EmailCellRenderer());
+
 //        TableUtil.setBorder(jtable);
         //Override default settings for spreadsheet like border.
         jtable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
@@ -446,6 +519,22 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 boolean fatalFlag = false;
                 String tmpPassword = null;
                 int cnt = 0;
+                //check input once more!
+                try {
+                    for (DomSingleSchoolStudent submit : submitList) {
+                        if (NewSingleSchoolStudentsTeacherPanelProperties.IsValidUserDataInput(submit)) {
+                            if (!ValidUserFieldsChecker.isValidEmail(submit.getEmail())) {
+                                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
+                            }
+                            if (!ValidUserFieldsChecker.isValidUserName(submit.getUserName())) {
+                                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
+                            }
+                        }
+                    }
+                } catch (Dwo2Exception ex) {
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATESTUDENTERROR));
+                    return;
+                }
                 for (DomSingleSchoolStudent submit : submitList) {
                     if (NewSingleSchoolStudentsTeacherPanelProperties.IsValidUserDataInput(submit)) {
                         cnt++;
@@ -466,13 +555,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                         } catch (Dwo2Exception ex) {
                             submit.setPassword(tmpPassword);
                             resultList.add(submit);
-                            if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
-                                LOG.log(Level.FINE, "", ex);
-                                failFlag = true;
-                            } else {
-                                fatalFlag = true;
-                                LOG.log(Level.SEVERE, "", ex);
-                            }
+                            LOG.log(Level.FINE, "", ex);
+                            failFlag = true;
+                        } catch (Exception ex2) {
+                            LOG.log(Level.FINE, "", ex2);
+                            fatalFlag = true;
                         }
                     }
                 }
@@ -480,12 +567,19 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
                 }
                 tableModel.init(prop, columnNames, resultList, delImage);
+                //set input verification
+                jtable.getColumnModel().getColumn(3).setCellRenderer(new UsernameCellRenderer());
+                jtable.getColumnModel().getColumn(4).setCellRenderer(new PasswordCellRenderer());
+                jtable.getColumnModel().getColumn(5).setCellRenderer(new EmailCellRenderer());
+
                 tableModel.fireTableDataChanged();
                 if (failFlag == true) {
-                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATESTUDENTERROR));
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(),
+                            Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(),
+                                    Dwo2ExceptionCode.Rest_Registration_UserNames_exists));
                 }
                 if (fatalFlag == true) {
-                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATESTUDENTERROR));
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR));
                 }
                 if (fatalFlag == false && failFlag == false) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_DONE_MSG));

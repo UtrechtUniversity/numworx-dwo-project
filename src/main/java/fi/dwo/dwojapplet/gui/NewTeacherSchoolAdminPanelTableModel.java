@@ -202,8 +202,8 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
         if (row != data.size() - 1) {
             emptyRow--;
             data.remove(row);
-            this.fireTableDataChanged();
-//            this.fireTableStructureChanged();
+//            this.fireTableDataChanged();
+            this.fireTableStructureChanged();
         }
     }
 

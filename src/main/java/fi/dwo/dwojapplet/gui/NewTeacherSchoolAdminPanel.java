@@ -6,7 +6,6 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.MD5;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -44,8 +43,13 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
  * The panel which shows the school classes for a teacher.
@@ -76,7 +80,68 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
     private Image delImage;
 
     private JPanel jtbl;
+    private JTable jtable = new JTable();
 
+    class UsernameCellRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                    row, column);
+
+            if (value != null && ValidUserFieldsChecker.isValidUserName(value.toString())) {
+                component.setBackground(Color.WHITE);
+            } else {
+                component.setBackground(new Color(255, 128, 128));
+            }
+
+            return component;
+        }
+    }
+
+    class EmailCellRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                    row, column);
+
+            if (value != null && ValidUserFieldsChecker.isValidEmail(value.toString())) {
+                component.setBackground(Color.WHITE);
+            } else {
+                component.setBackground(new Color(255, 128, 128));
+            }
+
+            return component;
+        }
+    }
+
+    class PasswordCellRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                    row, column);
+
+            if (value != null && ValidUserFieldsChecker.isValidPassword(value.toString())) {
+                component.setBackground(Color.WHITE);
+            } else {
+                component.setBackground(new Color(255, 128, 128));
+            }
+
+            return component;
+        }
+    }
+    
 //    public enum UserType {
 //        ADMIN, SCHOOLADMIN
 //    };
@@ -143,6 +208,10 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == delImage) {
                 tableModel.deleteSelectedRow(row);
+                //set input verification
+                jtable.getColumnModel().getColumn(3).setCellRenderer(new NewTeacherSchoolAdminPanel.UsernameCellRenderer());
+                jtable.getColumnModel().getColumn(4).setCellRenderer(new NewTeacherSchoolAdminPanel.PasswordCellRenderer());
+                jtable.getColumnModel().getColumn(5).setCellRenderer(new NewTeacherSchoolAdminPanel.EmailCellRenderer());
 
             }
         }
@@ -231,8 +300,9 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 if (row == t.getRowCount() - 1) {
                     NewTeacherSchoolAdminPanelTableModel model = (NewTeacherSchoolAdminPanelTableModel) t.getModel();
                     final DomUserFull teacher = new DomUserFull();
-                    teacher.clearSettings();teacher.setSingleSchool(null); // XXX initialisatie Teacher
-					model.getData().add(teacher);
+                    teacher.clearSettings();
+                    teacher.setSingleSchool(null); // XXX initialisatie Teacher
+                    model.getData().add(teacher);
                     model.setSelectedColumn(column + 1);
                     model.setSelectedRow(model.getData().size() - 1);
                     model.fireTableDataChanged();
@@ -297,8 +367,11 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         TableUtil.setDefaults(jtable,
                 true, new NewTeacherSchoolAdminPanel.ImageRenderer(), new NewTeacherSchoolAdminPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
-//        TableUtil.setBorder(jtable);
-        //Override default settings for spreadsheet like border.
+
+        //set input verification
+                jtable.getColumnModel().getColumn(3).setCellRenderer(new NewTeacherSchoolAdminPanel.UsernameCellRenderer());
+                jtable.getColumnModel().getColumn(4).setCellRenderer(new NewTeacherSchoolAdminPanel.PasswordCellRenderer());
+                jtable.getColumnModel().getColumn(5).setCellRenderer(new NewTeacherSchoolAdminPanel.EmailCellRenderer());
 
         jtable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         jtable.setGridColor(Color.LIGHT_GRAY);
@@ -441,6 +514,22 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 boolean fatalFlag = false;
                 String tmpPassword = null;
                 int cnt = 0;
+                //check input once more!
+                try {
+                    for (DomUserFull submit : submitList) {
+                        if (NewTeacherSchoolAdminPanelProperties.IsValidUserDataInput(submit)) {
+                            if (!ValidUserFieldsChecker.isValidEmail(submit.getEmail())) {
+                                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
+                            }
+                            if (!ValidUserFieldsChecker.isValidUserName(submit.getUserName())) {
+                                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
+                            }
+                        }
+                    }
+                } catch (Dwo2Exception ex) {
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATESTUDENTERROR));
+                    return;
+                }                
                 for (DomUserFull submit : submitList) {
                     if (NewTeacherSchoolAdminPanelProperties.IsValidUserDataInput(submit)) {
                         cnt++;
@@ -451,26 +540,29 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                         } catch (Dwo2Exception ex) {
                             submit.setPassword(tmpPassword);
                             resultList.add(submit);
-                            if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
-                                LOG.log(Level.FINE, "", ex);
-                                failFlag = true;
-                            } else {
-                                fatalFlag = true;
-                                LOG.log(Level.SEVERE, "", ex);
-                            }
+                            LOG.log(Level.FINE, "", ex);
+                            failFlag = true;
+                        } catch (Exception ex2) {
+                            LOG.log(Level.FINE, "", ex2);
+                            fatalFlag = true;
                         }
                     } else {
-                    	resultList.add(submit);
                     }
                 }
                 tableModel.init(prop, columnNames, resultList, delImage);
+                //set input verification
+                jtable.getColumnModel().getColumn(3).setCellRenderer(new NewTeacherSchoolAdminPanel.UsernameCellRenderer());
+                jtable.getColumnModel().getColumn(4).setCellRenderer(new NewTeacherSchoolAdminPanel.PasswordCellRenderer());
+                jtable.getColumnModel().getColumn(5).setCellRenderer(new NewTeacherSchoolAdminPanel.EmailCellRenderer());
+                
                 tableModel.fireTableDataChanged();
                 if (cnt == 0) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
                 }
                 if (failFlag == true) {
-                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATETEACHERERROR));
-                }
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(),
+                            Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(),
+                                    Dwo2ExceptionCode.Rest_Registration_UserNames_exists));                }
                 if (fatalFlag == true) {
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR));
                 }
@@ -485,7 +577,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
             pasteFromSystemClipboard();
         } else if (e.getSource() == backButton) {
             if (tableModel.getRowCount() > 1) {
-                if (GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_LOSE_NEW_STUDENT_ACCOUNTS)) != JOptionPane.OK_OPTION) {
+                if (GuiCreator.instance().ShowConfirmDialog(center, TextMapper.getText(TextMapper.DLG_Q_LOSE_NEW_TEACHER_ACCOUNTS)) != JOptionPane.OK_OPTION) {
                     return;
                 }
             }
