@@ -3,39 +3,45 @@ package nl.uu.fi.dwo.rest.dom.entities;
 /**
  * ValidUserFieldsChecker checks the class for valid user fields. Currently it
  * checks the username characters and size, and the email characters.
- * 
+ *
  * @author Gert van der Plas
  */
 public final class ValidUserFieldsChecker {
-    public static boolean isValidPassword(String password){
-        if(password==null) return false;
-        if(password.length()>=128) return false;
+
+    public static boolean isValidPassword(String password) {
+        if (password == null) {
+            return false;
+        }
+        if (password.isEmpty()) {
+            return false;
+        }
+        if (password.length() >= 128) {
+            return false;
+        }
         return true;
     }
-    
-    
+
     /**
      * Verify required fields are filled.
+     *
      * @param fields
      * @return
      */
-    
     public static boolean isEmptyOrNull(String... fields) {
-    	for (int i = 0; i < fields.length; i++) {
-			String field = fields[i];
-			if (field == null || field.trim().isEmpty())
-				return false;
-		}  	
-    	return true;
+        for (int i = 0; i < fields.length; i++) {
+            String field = fields[i];
+            if (field == null || field.trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
-    
-    
-    
+
     /**
-     *  Tests for RFC 5322 addresses, but not RFC 6530.
-     * 
+     * Tests for RFC 5322 addresses, but not RFC 6530.
+     *
      * @param email
-     * @return 
+     * @return
      */
     public static boolean isValidEmail(String email) {
 // JavaMail package approach
@@ -56,7 +62,9 @@ public final class ValidUserFieldsChecker {
     }
 
     public static boolean isValidUserName(String username) {
-
+        if (username == null || username.isEmpty()) {
+            return false;
+        }
         if (!username.trim().equals(username)) {
             return false;
         }
@@ -77,5 +85,5 @@ public final class ValidUserFieldsChecker {
             }
         }
         return true;
-    }    
+    }
 }
