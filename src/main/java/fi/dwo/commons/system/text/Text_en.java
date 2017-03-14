@@ -94,7 +94,8 @@ public class Text_en extends ListResourceBundle {
                         {TextMapper.DLG_Q_REMOVE_TEACHER_BY_NAME, "Do you want to remove teacher \"{0}\" from the school class."},
                         {TextMapper.DLG_Q_REMOVE_STUDENT_BY_NAME, "Do you want to remove student \"{0}\" from the school class."},
 			{TextMapper.DLG_CREATESTUDENTERROR,
-					"The remaining students can not be added, likely their usernames are not unqiue." },
+					"The remaining students can not be added. Some of the email addresses or usernames\n"
+                                      + "may contain illegal tokens. Check the marked field values against the manual." },
 			{TextMapper.DLG_COPYSTUDENTERROR,"Some students could not be copied, probabely they were already in the schoolclass"},
 			{TextMapper.DLG_CREATETEACHERERROR,
 					"The remaining teachers can not be added, likely their usernames are not unqiue." },

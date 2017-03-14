@@ -91,7 +91,9 @@ public class Text_nl extends ListResourceBundle {
                         { TextMapper.DLG_NO_TEACHERS_SELECTED, "U moet eest een of meer docenten aanvinken."},
 			{
 					TextMapper.DLG_CREATESTUDENTERROR,
-					"De overgebleven leerlingen kunnen niet worden toegevoegd, vermoedelijk is de username niet uniek." },
+					"De overgebleven leerlingen kunnen niet worden toegevoegd. Dit kan zijn doordat\n"
+                                      + "er illegale karakters of leestekens in het emailadres of de usernaam zitten.\n"
+                                      + "Controleer de waarden van de gemarkeerde velden aan de hand van de handleiding." },
 			{TextMapper.DLG_COPYSTUDENTERROR,"Sommige leerlingen konden niet in de klas worden geplaatst, mogelijk zaten ze er al in."},
                         
 			{
