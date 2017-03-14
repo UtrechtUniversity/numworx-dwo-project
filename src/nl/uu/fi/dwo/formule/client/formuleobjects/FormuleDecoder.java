@@ -31,110 +31,37 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
  */
 public class FormuleDecoder
 {
-	public FormuleDecoder()
+	private FormuleDecoder()
 	{
 	}
 
 	public static FormuleElement getElementFromCharacter(char ch1, FormuleElement holder)
 	{
+		switch(ch1) {
+		case 'o': return new OptelVak(holder);
+		case 'a': return new AftrekVak(holder);
+		case 'v': return new VermenigvuldigingVak(holder);
+		case 'b': return new BreukVak(holder);
+		case 'p': return new PowerVak(holder);
+		case 'w': return new WortelVak(holder);
+		case 'W': return new NdeWortelVak(holder);
+		case 'L': return new NdeLogVak(holder);
+		case 'd': return new DiffVak(holder);
+		case 'D': return new DiffPartialVak(holder);
+		case 'P': return new PrimitieveVak(holder);
+		case 'T': return new LimietVak(holder);
+		case 'S': return new SigmaVak(holder);
+		case 'i': return new IntegraalVak(holder);
+		case 'q': return new PrvVak(holder);
+		case 'm': return new Machtvak(holder);
+		case 's': return new SubscriptVak(holder);
+		case 'h': return new Haakjesvak(holder);
+		case 'r': return new AbsVak(holder);
+		case 'c': return new ConjugVak(holder);
+		case 'y': return new BinVak(holder);
+		case 'Q': return new StelselVak(holder);
+		default: return null;
+		}			
 		
-		if(ch1=='o')
-		{	return new OptelVak(holder);
-		}
-		else if(ch1=='a')
-		{	return new AftrekVak(holder);
-		}
-		else if(ch1=='v')
-		{	return new VermenigvuldigingVak(holder);
-		}
-		else if (ch1 == 'b')
-		{
-			return new BreukVak(holder);
-			//bv.vulVak(s.substring(2, eind));
-			//regel.addElement(bv);
-			//insert(bv);
-			//s = s.substring(eind);
-		}
-		else if(ch1=='p')
-		{	return new PowerVak(holder);
-		}
-		else if (ch1 == 'w')
-		{
-			return new WortelVak(holder);
-		}
-		else if (ch1 == 'W')
-		{
-			return new NdeWortelVak(holder);
-		}
-		else if(ch1=='L')
-		{	return new NdeLogVak(holder);
-		}
-		else if(ch1=='d')
-		{	return new DiffVak(holder);
-		}
-		else if(ch1=='D')
-		{	return new DiffPartialVak(holder);
-		}
-		else if(ch1=='P')
-		{	return new PrimitieveVak(holder);
-		}
-		else if(ch1=='T')
-		{	return new LimietVak(holder);
-		}
-		else if(ch1=='S')
-		{   return new SigmaVak(holder);
-		}
-		else if (ch1 == 'i')
-		{
-			return new IntegraalVak(holder);
-		}
-		else if(ch1=='q')
-		{	return new PrvVak(holder);
-			
-		}
-		else if (ch1 == 'm')
-		{
-			Machtvak mv = new Machtvak(holder);
-			return mv;
-		}
-		else if(ch1=='s')
-		{   return new SubscriptVak(holder);
-			//SubscriptVak sv = new SubscriptVak(formuleVak);
-			//   insert(sv);
-			//   sv.vulVak(s.substring(2,eind));
-			//   s = s.substring(eind);
-		}
-		else if (ch1 == 'h')
-		{
-			return new Haakjesvak(holder);
-		}
-		else if(ch1=='r')
-		{	return new AbsVak(holder);
-			//AbsVak av = new AbsVak(formuleVak);
-			//av.setFGColor(fgColor);
-			//av.vulVak(s.substring(2,eind));
-			//insert(av);
-			//s = s.substring(eind);
-		}
-		else if(ch1=='c')
-		{   return new ConjugVak(holder);
-			//ConjugVak av = new ConjugVak(formuleVak);
-			//  av.vulVak(s.substring(2,eind));
-			//  insert(av);
-			//  s = s.substring(eind);
-		}
-		else if(ch1=='y')
-		{	return new BinVak(holder);
-			//BinVak iv = new BinVak(formuleVak);
-			//iv.vulVak(s.substring(2,eind));
-			//insert(iv);
-			//s = s.substring(eind);
-		}
-		else if(ch1=='Q')
-		{
-			return new StelselVak(holder);
-		}
-			
-		return null;
 	}
 }
