@@ -466,7 +466,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     nur.setSchoolLogin(null);
                     nur.setSchoolCode(null);
                     nur.setRole(RoleType.STUDENT);
-                    PublicUserManager.RegisterNewUser(nur); //throws Dwo2RestException.
+                    PublicUserManager.RegisterNewUser(nur); //throws Dwo2Exception.
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED));
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
@@ -487,7 +487,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     nur.setRole(role);
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
-                    PublicUserManager.RegisterNewUser(nur); //throws Dwo2RestException.
+                    PublicUserManager.RegisterNewUser(nur); //throws Dwo2Exception.
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED));
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
