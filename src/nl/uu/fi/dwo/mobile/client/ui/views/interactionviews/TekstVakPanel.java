@@ -91,9 +91,13 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 {
 	public static final String TVP_KLAPUIT = "action.unfold";
 	public static final String TVP_KLAPIN = "action.fold";
+	public static final String TVP_SELECT = "action.select";
+	public static final String TVP_DESELECT = "action.deselect";
 	
 	private static final CBookEvent KLAPUIT_EVENT = new CBookEvent(TVP_KLAPUIT); 
 	private static final CBookEvent KLAPIN_EVENT = new CBookEvent(TVP_KLAPIN); 
+	private static final CBookEvent SELECT_EVENT = new CBookEvent(TVP_SELECT); 
+	private static final CBookEvent DESELECT_EVENT = new CBookEvent(TVP_DESELECT);
 	
 	public static Map<String,Map<String,Object>> styles;
 	
@@ -174,7 +178,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	CssColor bgColor = CssColor.make(255, 255, 255);
 	CssColor fgColor = CssColor.make(0, 0, 0);
 	CssColor randColor = CssColor.make(150, 150, 150);
-	CssColor selectionColor = CssColor.make(255, 128, 0);
+	CssColor selectieColor = CssColor.make(255, 128, 0);
 	CssColor grijs = CssColor.make(128, 128, 128);
 	int randDikte = 0;
 	private boolean popup;
@@ -365,6 +369,9 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		int randColor_red = 0;
 		int randColor_green = 0;
 		int randColor_blue = 0;
+		int selectieColor_red = 255;
+		int selectieColor_green = 128;
+		int selectieColor_blue = 0;
 		//boolean anderFont = false;
 
 		if (launchState.containsKey("breedtes") )
@@ -555,6 +562,15 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		if (launchState.containsKey("ipId"))
 			ipId = launchState.getInt("ipId");
 		colorSelection = launchState.getBoolean("colorSelection",colorSelection);
+		if (launchState.containsKey("selectieColor_red") )
+			selectieColor_red = launchState.getInt("selectieColor_red");
+		if (launchState.containsKey("selectieColor_green"))
+			selectieColor_green = launchState.getInt("selectieColor_green");
+		if (launchState.containsKey("selectieColor_blue"))
+			selectieColor_blue = launchState.getInt("selectieColor_blue");
+		selectieColor = getColor(launchState, "selectieColor",selectieColor_red, selectieColor_green, selectieColor_blue);
+		if (launchState.containsKey("selected"))
+			selected = launchState.getBoolean("selected");
 		
 		zwevend = launchState.getBoolean("zwevend",zwevend);
 		if (launchState.containsKey("locationX"))
@@ -723,7 +739,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			
 		}
 		
-		
+		if(selected)
+			setSelected(selected);
 		
 // pas bij zet opdracht
 //		if(inklapbaar)
@@ -1113,6 +1130,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		if (dwologger != null) dwologger.setCommunicationRoot(comRoot);
 		comRoot.addCBookEventListener(ACTION_SETVISIBLE, this);
 		comRoot.addCBookEventListener(ACTION_SETNOTVISIBLE, this);
+		comRoot.addCBookEventListener(TVP_SELECT, this);
+		comRoot.addCBookEventListener(TVP_DESELECT, this);
+		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
+		comRoot.addCBookEventListener(TVP_KLAPIN, this);
 	}
 
 	public HashMap<String, Object> getState()
@@ -1564,26 +1585,45 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		{
 			if (colorSelection)
 			{	
-				randPanel.getElement().getStyle().setBorderColor(selectionColor.toString());
-				randPanel.getElement().getStyle().setOpacity(0.4); 
-				int borderWidth = (int) Math.round(Math.min(new Double(hoogte) / 2, new Double(breedte) / 2));
-				randPanel.getElement().getStyle().setBorderWidth(borderWidth, Unit.PX);
+				//randPanel.getElement().getStyle().setBorderColor(selectieColor.toString());
+				if(bgColorZichtbaar)
+					randPanel.getElement().getStyle().setBackgroundColor(selectieColor.toString());
+				else {
+					randPanel.getElement().getStyle().setBorderColor(selectieColor.toString());
+					int borderWidth = (int) Math.round(Math.min(new Double(hoogte) / 2, new Double(breedte) / 2));
+					randPanel.getElement().getStyle().setBorderWidth(borderWidth, Unit.PX);
+				}
+					
+				//randPanel.getElement().getStyle().setOpacity(0.4); 
+				
 			}
 			else
 			{	randPanel.getElement().getStyle().setBorderColor(grijs.toString());
 				randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
 			}
 		
-			
-		
 		}
 		else
 		{
-			randPanel.getElement().getStyle().setBorderColor(randColor.toString());
-			randPanel.getElement().getStyle().setOpacity(1);
-			randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+			if(colorSelection)
+			{
+				if(bgColorZichtbaar)
+					randPanel.getElement().getStyle().setBackgroundColor(bgColor.toString());
+				else {
+					randPanel.getElement().getStyle().setBorderColor(randColor.toString());
+					randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+				}
+					
+			}
+			else
+			{
+				randPanel.getElement().getStyle().setBorderColor(randColor.toString());
+				//randPanel.getElement().getStyle().setOpacity(1);
+				randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+			}
 			
-
+			
+			
 		}
 	}
 	
@@ -2247,6 +2287,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		{
 			selected = !selected;
 			setSelected(selected);
+			if(selected)
+				fireEvent(SELECT_EVENT);
+			else
+				fireEvent(DESELECT_EVENT);
 			return;
 		}
 		
@@ -2592,7 +2636,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			setCurrentSize(breedte,  (int) Math.round(hoogtes.get(0).doubleValue()) );
 			//this.hoogte = hoogtes.get(0).intValue();
 			if(parent != null) parent.resize();
-			fireEvent(KLAPIN_EVENT);
+			
 		} 
 		else {
 			double hoogte = hoogtes.get(0);
@@ -2626,7 +2670,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			
 			setCurrentSize( breedte, this.hoogte);
 			
-			fireEvent(KLAPUIT_EVENT);
+			
 			setPopupUsed();
 			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
@@ -2665,8 +2709,32 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		if(ACTION_SETVISIBLE.equals(command)) {
 			setVisibility(true);
 		}
-		if(ACTION_SETNOTVISIBLE.equals(command)) {
+		else if(ACTION_SETNOTVISIBLE.equals(command)) {
 			setVisibility(false);
+		}
+		else if(TVP_SELECT.equals(command)) {
+			if(!selected) {
+				setSelected(true);
+				//fireEvent(SELECT_EVENT);
+			}
+		}
+		else if(TVP_DESELECT.equals(command)) {
+			if(selected) {
+				setSelected(false);
+				//fireEvent(DESELECT_EVENT);
+			}
+		}
+		else if(TVP_KLAPUIT.equals(command)) {
+			if(TekstVakPanel.this.ingeklapt) {
+				klapUitAction();
+				klapUitButton.setDown(false);
+			}
+		}
+		else if(TVP_KLAPIN.equals(command)) {
+			if(!TekstVakPanel.this.ingeklapt) {
+				klapUitAction();
+				klapUitButton.setDown(true);
+			}
 		}
 		
 	}
@@ -2708,6 +2776,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private static final int LEFT = 0;
 	private static final int RIGHT = 1;
 	private static final int MIDDLE = 2;
+	private static final int NONE = 3;
 	
 	private Image view1; 
 	
@@ -2761,6 +2830,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 					
 				}
 				klapUitAction();
+				if(TekstVakPanel.this.ingeklapt)
+					fireEvent(KLAPIN_EVENT);
+				else
+					fireEvent(KLAPUIT_EVENT);
 				
 				// t.b.v. updaten kleur bol
 				HashMap<String, Object> state;
@@ -2802,6 +2875,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		default:
 		case MIDDLE:
 		case RIGHT: pos = breedtes.size()-1;
+		case NONE: {
+				klapUitButton.setVisible(false);
+				pos=0;
+			}
 		}
 		
 		final TekstVak layoutPanel = tekstVakken[0][pos];
