@@ -169,6 +169,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
 			keyboard.setEditor(TextEditor.this);
 			keyboard.setEnterType(EnterType.ENTER);
+			shown = true;
 			setCursorWidget(cursorWidget);
 			hbox.removeStyleDependentName("empty");
 			keyboard.softFocus();
@@ -180,6 +181,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		public void onClick(ClickEvent event) {
 			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
 			keyboard.setEditor(TextEditor.this);
+			shown = true;
 			setCursorWidget(cursorWidget);
 			keyboard.setEnterType(EnterType.ENTER);
 			keyboard.softFocus();
@@ -446,7 +448,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if(boxMetRand)
 			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
 		logging = null;
-		shown = true;
+		//shown = true;
 	}
 	
 	public TextEditor(HashMap<String, Object> currentVakGegevens,
@@ -491,7 +493,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			dwologger.setLogID(logID);
 			logging = dwologger;
 		}
-		shown = true;
+		//shown = true;
 	}
 
 	private void updateEmpty() {
@@ -508,6 +510,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	protected void requestFocus() {
 		comRoot.getKeyboard().setEditor(this);
 		FocusOnTouch.focus();
+		//shown = true; // mag dat hier al? nee dus
 		setCursorWidget(cursorWidget);
 		hbox.removeStyleDependentName("empty");
 	}
@@ -526,7 +529,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		removeCursor();
 		editable = h == null || h.getBoolean("editable", true);
 		if(!editable) setReadonly();
-		shown = true;
+		//shown = true;
 		updateEmpty();
 	}
 
