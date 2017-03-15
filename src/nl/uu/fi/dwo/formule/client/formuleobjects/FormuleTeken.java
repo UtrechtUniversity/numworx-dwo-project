@@ -7,8 +7,6 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.Context2d.TextAlign;
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.canvas.dom.client.TextMetrics;
-
 import fi.wiskopdr.Letter;
 import fi.wiskopdr.FormuleParser;
 
@@ -19,16 +17,14 @@ import fi.wiskopdr.FormuleParser;
  */
 public class FormuleTeken extends FormuleElement
 {
-	//private FontMetrics fm;
-
 	private static final int INFINITY_BONUS = 4;
 	private String teken;
 	private char character;
 	private boolean combined;
-	private boolean selected = false;
-	private boolean functieTeken = false;
-	private static boolean maalteken = false;
-	private static boolean diffOperatoren = false;
+	private boolean selected;
+	private boolean functieTeken;
+	private static boolean maalteken;
+	private static boolean diffOperatoren;
 
 	public FormuleTeken(FormuleElement holder, String tktk)
 	{
@@ -36,6 +32,7 @@ public class FormuleTeken extends FormuleElement
 		character = tktk.charAt(0);
 		teken = tktk;
 		combined = true;
+		sizechanged = true;
 		setFont(fm);
 	}
 	
@@ -85,12 +82,13 @@ public class FormuleTeken extends FormuleElement
 		}
 		selected = false;
 		sizechanged = true;
+		if(teken != null) setFont(fm);
 	}
 
 	private void calculateSize() {	
 		double width = calculateWidth();
-
 		int fontheight = fm.getAscent() + fm.getDescent();
+		if(teken != null) {
 		if(fm.isItalic())
 		{	if(FormuleFont.formTimes)
 			{
@@ -113,7 +111,11 @@ public class FormuleTeken extends FormuleElement
 		}
 		else
 		{	this.setSize((int) width + 1, fontheight);
+		} 
+		} else {
+			setSize( (int)width, fontheight); // zonder +1
 		}
+		
 
 		this.setAsHoogte(fm.getAscent());//maakt geen verschil..?
 	}
