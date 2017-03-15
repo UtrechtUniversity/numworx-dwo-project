@@ -359,8 +359,9 @@ public class FormuleTeken extends FormuleElement
 				//bold = true;
 			}
 			
-		}		
-		fm.setItalic(italic);
+		}
+		if(this.fm.isItalic() != italic)
+			(this.fm = this.fm.createCopy()).setItalic(italic);
 		//fm.setBold(bold);
 		
 		return returnWaarde;

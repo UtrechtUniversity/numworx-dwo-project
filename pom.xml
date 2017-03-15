@@ -81,4 +81,7 @@
 		</dependency>
 	</dependencies>
 	<version>0.0.4-SNAPSHOT</version>
+	<properties>
+		<maven.test.skip>true</maven.test.skip>
+	</properties>
 </project>

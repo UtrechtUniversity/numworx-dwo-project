@@ -8,7 +8,7 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.junit.client.GWTTestCase;
 
-public class RegelTest extends TestCase {
+public class RegelTest extends GWTTestCase {
 
 	class MockHolder extends FormuleHolder {
 		@Override

@@ -212,7 +212,7 @@ public abstract class FormuleElement implements TekstElement
 	{
 		w = Math.max(w, minW);
 		h = Math.max(h, minH);
-
+		final boolean resize = w != width || h != height;
 		width = w;
 		height = h;
 		this.setChanged(true);
@@ -230,12 +230,15 @@ public abstract class FormuleElement implements TekstElement
 			this.canvas.setCoordinateSpaceHeight(h);
 			this.canvas.setCoordinateSpaceWidth(w);
 		}
+		if(!resize)
+			ctx.clearRect(0, 0, w, h); // uitpoetsen als setPixelSize dat niet gedaan heeft.
 	}
 		
 	public boolean setColor(CssColor c)
-	{
-		if(color == null || color != c.toString())
-		{	color = c.toString();
+	{		
+		String cstr = c.toString();
+		if(!cstr.equals(color))
+		{	color = cstr;
 			this.setChanged(true);
 			return(true);
 		}
@@ -353,8 +356,11 @@ public abstract class FormuleElement implements TekstElement
 	 */
 	public void paint()
 	{
-		if (this.changed == true)
-			this.paintObject();
+		if (changed)
+		{
+			paintObject();
+			setChanged(false); // ?????? missing ?????
+		}
 	}
 
 	public void zetMaat() {

@@ -47,13 +47,7 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	}
 	
 	//protected static String clipboard = "";
-	public static FormuleClientBundle FORMULE_BUNDLE;
-
-	public static void createBundle() 
-	{
-		FORMULE_BUNDLE	= GWT.create(FormuleClientBundle.class);
-		
-	}
+	public static final FormuleClientBundle FORMULE_BUNDLE = GWT.create(FormuleClientBundle.class);
 	
 	private FormuleRegel main = null;
 
@@ -67,7 +61,7 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	private int ashoogte;
 	private boolean formuleToolBijFocus;
 	
-	public String color = "black";
+	public String color = CssColor.make(0, 0, 0).toString();
 
 	protected boolean hasSelection = false;
 
