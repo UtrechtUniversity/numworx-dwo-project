@@ -46,7 +46,8 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
         columnNames = colNames;
         data = teachers;
         DomUserFull teacher = new DomUserFull();
-        teacher.clearSettings();teacher.setSingleSchool(null); // XXX initialisatie empty teacher
+        teacher.clearSettings();
+        teacher.setSingleSchool(null); // XXX initialisatie empty teacher
         data.add(teacher);
         prop = props;
         fireTableDataChanged();

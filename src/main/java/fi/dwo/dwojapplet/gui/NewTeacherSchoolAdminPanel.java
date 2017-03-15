@@ -46,7 +46,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -141,7 +140,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
             return component;
         }
     }
-    
+
 //    public enum UserType {
 //        ADMIN, SCHOOLADMIN
 //    };
@@ -369,9 +368,9 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         TableUtil.setJTableSizes(jtable);
 
         //set input verification
-                jtable.getColumnModel().getColumn(3).setCellRenderer(new NewTeacherSchoolAdminPanel.UsernameCellRenderer());
-                jtable.getColumnModel().getColumn(4).setCellRenderer(new NewTeacherSchoolAdminPanel.PasswordCellRenderer());
-                jtable.getColumnModel().getColumn(5).setCellRenderer(new NewTeacherSchoolAdminPanel.EmailCellRenderer());
+        jtable.getColumnModel().getColumn(3).setCellRenderer(new NewTeacherSchoolAdminPanel.UsernameCellRenderer());
+        jtable.getColumnModel().getColumn(4).setCellRenderer(new NewTeacherSchoolAdminPanel.PasswordCellRenderer());
+        jtable.getColumnModel().getColumn(5).setCellRenderer(new NewTeacherSchoolAdminPanel.EmailCellRenderer());
 
         jtable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         jtable.setGridColor(Color.LIGHT_GRAY);
@@ -527,9 +526,9 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                         }
                     }
                 } catch (Dwo2Exception ex) {
-                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATESTUDENTERROR));
+                    GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CREATETEACHERERROR));
                     return;
-                }                
+                }
                 for (DomUserFull submit : submitList) {
                     if (NewTeacherSchoolAdminPanelProperties.IsValidUserDataInput(submit)) {
                         cnt++;
@@ -546,23 +545,24 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                             LOG.log(Level.FINE, "", ex2);
                             fatalFlag = true;
                         }
-                    } else {
-                    }
+                    } 
+                }
+                if (cnt == 0) {
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
                 }
                 tableModel.init(prop, columnNames, resultList, delImage);
+                jtable.setModel(tableModel);
                 //set input verification
                 jtable.getColumnModel().getColumn(3).setCellRenderer(new NewTeacherSchoolAdminPanel.UsernameCellRenderer());
                 jtable.getColumnModel().getColumn(4).setCellRenderer(new NewTeacherSchoolAdminPanel.PasswordCellRenderer());
                 jtable.getColumnModel().getColumn(5).setCellRenderer(new NewTeacherSchoolAdminPanel.EmailCellRenderer());
-                
+
                 tableModel.fireTableDataChanged();
-                if (cnt == 0) {
-                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
-                }
                 if (failFlag == true) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(),
                             Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(),
-                                    Dwo2ExceptionCode.Rest_Registration_UserNames_exists));                }
+                                    Dwo2ExceptionCode.Rest_Registration_UserNames_exists));
+                }
                 if (fatalFlag == true) {
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR));
                 }

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class NewTeacherSchoolAdminPanelProperties {
 
     private static final Logger LOG = Logger.getLogger(NewTeacherSchoolAdminPanelProperties.class.getName());
-    
+
 //    public NewSingleSchoolStudentsTeacherPanelProperties() {
 //
 //    }
@@ -32,22 +32,28 @@ public class NewTeacherSchoolAdminPanelProperties {
 //    public static Boolean submitSingleSchoolStudent(DomNewSingleSchoolStudent submit) throws Dwo2Exception {
 //        return SecureTeacherSchoolClassManager.submitSingleSchoolStudent(submit);
 //    }
-
     public static Boolean IsValidUserDataInput(DomUserFull submit) throws Dwo2Exception {
 // from submit new user
-    	
-    	if (! ValidUserFieldsChecker.isEmptyOrNull(submit.getInsertion()) ) 
-    		submit.setInsertion("");
-    	
-        if ( ! ValidUserFieldsChecker.isEmptyOrNull(submit.getUserName(), submit.getFamilyName(), submit.getGivenName(), submit.getEmail(), submit.getPassword()))
-        	return false;
-        if (!ValidUserFieldsChecker.isValidEmail(submit.getEmail())) {
+        if (submit.getUserName() != null
+                && !submit.getUserName().equals("")
+                && submit.getPassword() != null) {
+            return true;
+        } else {
             return false;
         }
-        if (!ValidUserFieldsChecker.isValidUserName(submit.getUserName())) {
-            return false;
-        }
-        return true;
+//    	
+//    	if (! ValidUserFieldsChecker.isEmptyOrNull(submit.getInsertion()) ) 
+//    		submit.setInsertion("");
+//    	
+//        if ( ! ValidUserFieldsChecker.isEmptyOrNull(submit.getUserName(), submit.getFamilyName(), submit.getGivenName(), submit.getEmail(), submit.getPassword()))
+//        	return false;
+//        if (!ValidUserFieldsChecker.isValidEmail(submit.getEmail())) {
+//            return false;
+//        }
+//        if (!ValidUserFieldsChecker.isValidUserName(submit.getUserName())) {
+//            return false;
+//        }
+//        return true;
 
     }
 
