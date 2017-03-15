@@ -79,7 +79,7 @@ public class FormuleRegel extends FormuleElement
 
 	private void init()
 	{
-		ctx.setFont(fm.getFontStyle());
+		//ctx.setFont(fm.getFontStyle());
 		//default when there are no children
 		defaultwidth = fm.getAscent() / 2;
 		//fm.getHeight() is hetzelfde als fm.getAscent() + fm.getDescent() (dat wordt in wiskOpdr gebruikt).
@@ -106,7 +106,7 @@ public class FormuleRegel extends FormuleElement
 		//this should be done in the new child, but just to make sure the changed value is set to true.
 		this.setChanged(true);
 		
-		holder.paint();
+		//holder.paint();
 		
 		//resizeEditorWithAnswer();
 		
@@ -230,6 +230,12 @@ public class FormuleRegel extends FormuleElement
 			holder.setCurrentElement(this);
 		}
 		return this;
+	}
+
+	@Override
+	public void zetMaat() {
+
+		super.zetMaat();
 	}
 
 	@Override
@@ -591,7 +597,7 @@ public class FormuleRegel extends FormuleElement
 	{	if(super.setColor(c) == false)
 			return false;
 	
-		color = c; 
+		color = c.toString(); 
 		if(this.children.size() == 0)
 			return true;
 		for(int i = 0; i < this.children.size(); i++)
@@ -1097,7 +1103,7 @@ public class FormuleRegel extends FormuleElement
 					insert(ne);
 					s = s.substring(eind);
 					if (holder instanceof FormuleEditor)
-						((FormuleHolder) holder).setCurrentElement(ne);
+						(holder).setCurrentElement(ne);
 					continue;
 				}
 			}
@@ -1108,7 +1114,7 @@ public class FormuleRegel extends FormuleElement
 				{
 					FormuleTeken t = new FormuleTeken(this, s.substring(0, 2));
 					if (holder instanceof FormuleEditor)
-						((FormuleHolder) holder).setCurrentElement(t);
+						(holder).setCurrentElement(t);
 					this.insert(t);
 					s = s.substring(2);
 					

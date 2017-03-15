@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 
 import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -31,9 +32,28 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 		kb = keyb;
 	}
 	
+	public Canvas createCanvas(FormuleElement element) {
+		return Canvas.createIfSupported();
+	}
+
+	public Context2d createContext2d(FormuleElement element) {
+		return element.getCanvas().getContext2d();
+	}
+
+	public double measureWidth(FormuleElement element, FormuleFont f, String string) {
+		Context2d ctx = createContext2d(element);
+		ctx.setFont(f.getFontStyle());
+		return ctx.measureText(string).getWidth();
+	}
 	
 	//protected static String clipboard = "";
-	public static final FormuleClientBundle FORMULE_BUNDLE = GWT.create(FormuleClientBundle.class);
+	public static FormuleClientBundle FORMULE_BUNDLE;
+
+	public static void createBundle() 
+	{
+		FORMULE_BUNDLE	= GWT.create(FormuleClientBundle.class);
+		
+	}
 	
 	private FormuleRegel main = null;
 
@@ -47,7 +67,7 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	private int ashoogte;
 	private boolean formuleToolBijFocus;
 	
-	private CssColor color = CssColor.make(0, 0, 0);
+	public String color = "black";
 
 	protected boolean hasSelection = false;
 
@@ -96,7 +116,7 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	
 	public CssColor getColor()
 	{
-		return this.color;
+		return CssColor.make(this.color);
 	}
 			
 
@@ -110,7 +130,7 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	
 	public void setColor(CssColor c)
 	{
-		this.color = c;
+		this.color = c.toString();
 		this.getMainRegel().setColor(c);
 		this.paint();
 	}

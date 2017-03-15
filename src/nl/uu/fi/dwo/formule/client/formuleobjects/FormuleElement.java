@@ -26,10 +26,11 @@ public abstract class FormuleElement implements TekstElement
 	public int height;
 	public int width;
 	
-	protected CssColor color;
+	protected String color;
 
 	private boolean changed = false;
 	protected boolean selected = false;
+	protected boolean sizechanged = false;
 
 	//font is the FormuleFont set from method, fm a copy (if changes) of font with the changes applied
 	protected FormuleFont fm;
@@ -70,7 +71,7 @@ public abstract class FormuleElement implements TekstElement
 		this.holder = holder;
 
 		this.font = holder.getFont();
-		this.color = holder.getColor();
+		this.color = holder.color;
 		init();
 	}
 
@@ -103,17 +104,15 @@ public abstract class FormuleElement implements TekstElement
 		this.parent = parent;
 
 		this.font = parent.getFont();
-		this.color = parent.getColor();
+		this.color = parent.color;
 		init();
 	}
 
 	private void init()
 	{
-		canvas = Canvas.createIfSupported();
-		ctx = canvas.getContext2d();
+		canvas = holder.createCanvas(this);
+		ctx = holder.createContext2d(this);
 		this.fm = font;
-		//this.color = color;
-		//System.out.println("this.color = CssColor.make(0, 0, 0)");
 	}
 
 	/**
@@ -208,17 +207,18 @@ public abstract class FormuleElement implements TekstElement
 
 	protected int minW = 0;
 	protected int minH = 0;
+
 	public void setSize(int w, int h)
 	{
-		//width = w;
-		//height = h;
-
 		w = Math.max(w, minW);
 		h = Math.max(h, minH);
 
 		width = w;
 		height = h;
-		
+		this.setChanged(true);
+
+		if(canvas == null)
+			return;
 		double ratio = getDeviceRatio(ctx);
 		canvas.setPixelSize(w, h);
 		if(ratio > 1.0) {
@@ -230,13 +230,12 @@ public abstract class FormuleElement implements TekstElement
 			this.canvas.setCoordinateSpaceHeight(h);
 			this.canvas.setCoordinateSpaceWidth(w);
 		}
-		this.setChanged(true);
 	}
 		
 	public boolean setColor(CssColor c)
 	{
-		if(color == null || color != c)
-		{	color = c;
+		if(color == null || color != c.toString())
+		{	color = c.toString();
 			this.setChanged(true);
 			return(true);
 		}
@@ -246,7 +245,7 @@ public abstract class FormuleElement implements TekstElement
 	
 	public CssColor getColor()
 	{
-		return color;
+		return CssColor.make(color);
 	}
 
 	/**
@@ -303,13 +302,14 @@ public abstract class FormuleElement implements TekstElement
 	{
 		if (this.changed == b)
 			return;
-		if (b == false)
+		if (!b)
 		{
 			this.changed = false;
 			return;
 		}
-		//if the object changed, the parent will be changed aswell (width,height etc)
+//if the object changed, the parent will be changed aswell (width,height etc)
 		this.changed = true;
+		this.sizechanged = true;
 		if (this.parent != null)
 			parent.setChanged(true);
 	}
@@ -357,6 +357,15 @@ public abstract class FormuleElement implements TekstElement
 			this.paintObject();
 	}
 
+	public void zetMaat() {
+		sizechanged = false;
+	}
+	
+	public void validate() {
+		if(sizechanged)
+			zetMaat();
+	}
+	
 	public void paintObject()
 	{
 		//this method should only draw on it's own canvas

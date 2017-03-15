@@ -111,7 +111,7 @@ public class LimietVak extends FormuleElementWithChildren{
 		getChild(3).insert(""+richting);
 	}
 	
-	private void zetMaat()
+	public void zetMaat()
 	{	
 		setAsHoogte(getChild(0).getAsHoogte()); 
 		//System.out.println("getChild(0): " + getChild(0).toString());

@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.Context2d.TextAlign;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.TextMetrics;
@@ -35,7 +36,7 @@ public class FormuleTeken extends FormuleElement
 		character = tktk.charAt(0);
 		teken = tktk;
 		combined = true;
-		calculateSize();
+		setFont(fm);
 	}
 	
 	
@@ -45,16 +46,29 @@ public class FormuleTeken extends FormuleElement
 		super(holder);
 		character = tk;
 		//\u2264: kleiner/gelijk, \u2265: groter/gelijk, \u2248: ongeveer gelijk.
-		if (tk == '+' || tk == '=' || tk == '<' || tk == '>' || tk == '\u2264' || tk == '\u2265' || tk == '\u2248' || tk == ':')
-			teken = " " + tk + " "; 
-		//else if(maalteken && (tk == '*' || tk == '\u00d7'))
-		//	teken = " \u00d7 ";
-		else if (tk == '*')
-			teken = null;
-		else if (tk == '\u00d7') //vermenigvuldigingspunt
-			teken = null;
-		else if (tk == '-')
-			teken = null;
+		switch(tk) {
+		case '+':
+		case '=':
+		case '<':
+		case '>':
+		case '\u2264':
+		case '\u2265':
+		case '\u2248':
+		case ':':
+			teken = " " + tk + " ";
+			break;
+		case '*':
+		case '\u00d7':
+		case '-':
+		case '\u3008':
+		case '\u3009':
+		case '[':
+		case ']':
+		case '\u2220':
+			teken = null; 
+			break;
+		default:
+		
 		//else if (tk == ':')
 		//	teken = null;
 		/*
@@ -66,60 +80,83 @@ public class FormuleTeken extends FormuleElement
 		//TODO:removed this?
 		//else if (tk == 'y')
 		//teken = null;
-		else if (tk == '\u3008') //punthaak (<) links
-			teken = null;
-		else if (tk == '\u3009') //punthaak (>) rechts
-			teken = null;
-		else if (tk == '[')
-			teken = null;
-		else if (tk == ']')
-			teken = null;
-		else if (tk == '\u2220') //hoekteken
-			teken = null;
-		else
-			teken = "" + tk;
-		
 
+			teken = String.valueOf(tk);
+		}
 		selected = false;
-		// setOpaque(false);
-		calculateSize();
+		sizechanged = true;
 	}
 
-
-
-	private void calculateSize() {
-		
+	private void calculateSize() {	
 		double width = calculateWidth();
-		this.setSize((int) width, fm.getAscent() + fm.getDescent());
-		//this.setAsHoogte(fm.getAscent() / 2);
-		this.setAsHoogte(fm.getAscent());//maakt geen verschil..?
 
+		int fontheight = fm.getAscent() + fm.getDescent();
+		if(fm.isItalic())
+		{	if(FormuleFont.formTimes)
+			{
+				if("f".equals(teken))
+					this.setSize((int) width + 8, fontheight);
+				else if("j".equals(teken))
+					this.setSize((int) width + 5, fontheight);
+				else if("p".equals(teken) || "y".equals(teken))
+					this.setSize((int) width + 4, fontheight);
+				else
+					this.setSize((int) width + 2, fontheight);
+			}
+			else
+			{
+				if(teken.equals("j"))
+					this.setSize((int) width + 4, fontheight);
+				else
+					this.setSize((int) width + 2, fontheight);
+			}
+		}
+		else
+		{	this.setSize((int) width + 1, fontheight);
+		}
+
+		this.setAsHoogte(fm.getAscent());//maakt geen verschil..?
 	}
 
-
-
+	public void zetMaat() {
+		calculateSize();
+		super.zetMaat();
+	}
+	
 	private double calculateWidth() {
-		ctx.setFont(fm.getFontStyle());
-		TextMetrics m;
-		double width;
-		if(this.character == '\u221e')
-		{
+		switch(this.character) {
+		case '\u221e':
 			FormuleFont fm2 = fm.createCopy();
 			fm2.setFontSize(fm.getFontSize() + INFINITY_BONUS); // other font!!!! for infinity
-			ctx.setFont(fm2.getFontStyle());
-			m = ctx.measureText(this.teken);
-			width = m.getWidth();
-			ctx.setFont(fm.getFontStyle());
-		} else
+			return holder.measureWidth(this, fm2, teken);
+		case '*':
+		case '\u00d7':
+			if(maalteken)
+				return fm.getAscent() / 2 + 7;
+			else
+				return fm.getAscent() / 2 + 2;
+		case '-':
+		//case ':':
+		case '\u2220':
+			return fm.getAscent();
+		case 'z':
+			fm = fm.createCopy();
+			fm.setItalic(true);
+			return holder.measureWidth(this, fm, "z");
+		case '\u3008':
+		case '\u3009':
+		case '[':
+		case ']':
+			return fm.getAscent() / 2;
+		} 
 		if (this.teken != null)
-		{	m = ctx.measureText(this.teken);
-			width = m.getWidth();
+		{	
+			return holder.measureWidth(this, fm, teken);
 		}
 		else
-		{	m = ctx.measureText(" ");
-			width = m.getWidth();
+		{
+			return holder.measureWidth(this, fm, " ");
 		}
-		return width;
 	}
 
 
@@ -167,39 +204,23 @@ public class FormuleTeken extends FormuleElement
 		return 0;
 	}
 
-	private void setupCTXState()
+	private void setupCTXState(Context2d ctx)
 	{
 		if (this.isSelected())
 		{
 			ctx.setFillStyle("#aaf");
 			ctx.fillRect(0, 0, this.width, this.height);
 		}
-		/*
-				if (this.isCurrent())
-				{
-					ctx.setStrokeStyle("#f00");
-					ctx.setFillStyle("#f00");
-				}
-				else */if (selected)
+		if (selected)
 		{
 			ctx.setStrokeStyle("#fff");
 			ctx.setFillStyle("#fff");
 		}
-		//g.setColor(Color.white);
 		else
 		{
-			//ctx.setStrokeStyle("#000");
-			//ctx.setFillStyle("#000");
 			ctx.setFillStyle(color);
 			ctx.setStrokeStyle(color);
-			
 		}
-		// g.setColor(fgColor);
-
-		// g.setFont(getFont());
-		//ctx.setTextAlign(TextAlign.CENTER);
-		//ctx.setTextBaseline(TextBaseline.HANGING);
-		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		ctx.setFont(fm.getFontStyle());
 	}
 
@@ -209,15 +230,14 @@ public class FormuleTeken extends FormuleElement
 		//TODO: set the correct width and x position for custom items like [] and x y z etc
 		//currently all are draw on a canvas. overwrite the draw(ctx,x,y) method to draw straight on the parent canvas
 		
-		this.setSize(width, height);
-		this.setAsHoogte(fm.getAscent());
+		validate();
 		
-		//is dit nodig?
-		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
+		Context2d ctx = this.ctx;
+		this.setupCTXState(ctx);
+		
 		//draw single character
 		if (teken != null)
-		{	setFont(fm);
-			this.setupCTXState();
+		{	//setFont(fm);
 			if(FormuleFont.formTimes && teken.equals("f"))
 				ctx.fillText(teken, 4, this.getAsHoogte());
 			else if(FormuleFont.formTimes && teken.equals("j")) 
@@ -229,29 +249,80 @@ public class FormuleTeken extends FormuleElement
 				FormuleFont fm2 = fm.createCopy();
 				fm2.setFontSize(fm.getFontSize() + INFINITY_BONUS);
 				ctx.setFont(fm2.getFontStyle());
-				ctx.fillText(teken+"|", 0, this.getAsHoogte()  + 3);
+				ctx.fillText(teken, 0, this.getAsHoogte()  + 3);
 				ctx.setFont(fm.getFontStyle());
 			}
 			else
 				ctx.fillText(teken, 0, this.getAsHoogte());
 			
 			
+		} else switch(character) {
+		case '*':
+		case '\u00d7':
+			drawKeer(ctx); break;
+		case '-':
+			drawMin(ctx); break;
+		case ':': // FIXME not used?
+			drawDubbelePunt(ctx); break;
+			
+		case '\u3008':
+			{
+				int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
+				//x = this.width/2 - (3*fm.getAscent() / 8 /2)/2;
+				this.drawline(ctx, x + 3 * fm.getAscent() / 8, y, x + fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
+				this.drawline(ctx, x + 3 * fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent(), x + fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
+			} break;
+		case '\u3009':
+			{
+//				this.width = fm.getAscent() / 2;
+//				this.setSize(width, height);
+				
+				int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
+				this.drawline(ctx, x + fm.getAscent() / 8, y, x + 3 * fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
+				this.drawline(ctx, x + fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent(), x + 3 * fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
+			} break;
+		case '[':
+			{
+				ctx.setLineWidth(0.6 * fm.getStrokeWidth());
+				ctx.beginPath();
+				ctx.moveTo(3 * fm.getAscent() / 8, 0);
+				ctx.lineTo(fm.getAscent() / 8, 0);
+				ctx.lineTo(fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
+				ctx.lineTo(3 * fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
+				ctx.stroke();
+				ctx.setLineWidth(fm.getStrokeWidth());
+			} break;
+		case ']':
+			{
+				ctx.setLineWidth(0.6 * fm.getStrokeWidth());
+				ctx.beginPath();
+				ctx.moveTo(fm.getAscent() / 8, 0);
+				ctx.lineTo(3 * fm.getAscent() / 8, 0);
+				ctx.lineTo(3 * fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
+				ctx.lineTo(fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
+				ctx.stroke();
+				ctx.setLineWidth(fm.getStrokeWidth());
+			} break;
+		case '\u2220':
+			{
+				ctx.beginPath();
+				ctx.moveTo(fm.getAscent() / 4 + fm.getAscent() / 2, fm.getAscent() - 1);
+				ctx.lineTo(fm.getAscent() / 4,  fm.getAscent() - 1);
+				ctx.lineTo(fm.getAscent() / 4 + fm.getAscent() / 2, 4 * fm.getAscent() / 8);
+				ctx.stroke();
+			} break;
+// FIXME not used?			
+		case 'z':
+			{
+				//TODO: remove the italic?
+				fm = fm.createCopy();
+				fm.setItalic(true);
+				ctx.setFont(fm.getFontStyle());
+				ctx.setTextAlign(TextAlign.CENTER);
+				ctx.fillText("z", this.width / 2, height);
+			} break;	
 		}
 
-		// g.drawString(teken,x,y+fm.getAscent());
-		else if (character == '*' || character == '\u00d7')
-		{
-			this.drawKeer();
-		}
-
-		else if (character == '-')
-		{
-			this.drawMin();
-		}
-		else if (character == ':')
-		{
-			this.drawDubbelePunt();
-		}
 		/*
 		 * else if(character=='2') { g.drawString("2", x,y+fm.getAscent());
 		 * g.drawLine
@@ -259,24 +330,6 @@ public class FormuleTeken extends FormuleElement
 		 * )-2-fm.getAscent()/5); }
 		 */
 
-		else if (character == 'z')
-		{
-			//TODO: remove the italic?
-			fm = fm.createCopy();
-			fm.setItalic(true);
-			ctx.setFont(fm.getFontStyle());
-
-			TextMetrics m = ctx.measureText("z");
-			this.setSize((int) m.getWidth(), height);
-			ctx.setFont(fm.getFontStyle());
-			ctx.setTextAlign(TextAlign.CENTER);
-			//ctx.setTextBaseline(TextBaseline.BOTTOM);
-			ctx.fillText("z", this.width / 2, height);
-			// boolean b = getFont().getSize()==12 &&
-			// (getFont().getName().equals("SansSerif") ||
-			// getFont().getName().equals("Arial"));
-			// g.drawLine(x-1,y+fm.getAscent()-1,x+fm.getAscent()/3,y+fm.getAscent()-2-fm.getAscent()/3);
-		}
 		/*
 		else if (character == 'y')
 		{
@@ -287,70 +340,7 @@ public class FormuleTeken extends FormuleElement
 				g.drawLine(x + fm.getAscent() / 3 - 1, y + fm.getAscent() - 2, x + 1, y + fm.getAscent() - 2 - fm.getAscent() / 3);
 				
 		}*/
-		else if (character == '\u3008')
-		{
-			this.width = fm.getAscent() / 2;
-			this.setSize(width, height);
-			this.setupCTXState();
-			int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
-			//x = this.width/2 - (3*fm.getAscent() / 8 /2)/2;
-			this.drawline(ctx, x + 3 * fm.getAscent() / 8, y, x + fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
-			this.drawline(ctx, x + 3 * fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent(), x + fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
-		}
-		else if (character == '\u3009')
-		{
-			this.width = fm.getAscent() / 2;
-			this.setSize(width, height);
-			
-			this.setupCTXState();
-			int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
-			this.drawline(ctx, x + fm.getAscent() / 8, y, x + 3 * fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
-			this.drawline(ctx, x + fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent(), x + 3 * fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
-		}
-		else if (character == '[')
-		{
-			this.width = fm.getAscent() / 2;
-			this.setSize(width, height);
-			this.setupCTXState();
-			ctx.setLineWidth(0.6 * fm.getStrokeWidth());
-			ctx.beginPath();
-			ctx.moveTo(3 * fm.getAscent() / 8, 0);
-			ctx.lineTo(fm.getAscent() / 8, 0);
-			ctx.lineTo(fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
-			ctx.lineTo(3 * fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
-			ctx.stroke();
-			ctx.setLineWidth(fm.getStrokeWidth());
-			
-		}
-		else if (character == ']')
-		{
-			this.width = fm.getAscent() / 2;
-			this.setSize(width, height);
-			this.setupCTXState();
-			ctx.setLineWidth(0.6 * fm.getStrokeWidth());
-			ctx.beginPath();
-			ctx.moveTo(fm.getAscent() / 8, 0);
-			ctx.lineTo(3 * fm.getAscent() / 8, 0);
-			ctx.lineTo(3 * fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
-			ctx.lineTo(fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
-			ctx.stroke();
-			ctx.setLineWidth(fm.getStrokeWidth());
-			
-		}
-		else if (character == '\u2220')
-		{
-			this.width = fm.getAscent();
-			this.setSize(width, height);
-			this.setupCTXState();
-			ctx.beginPath();
-			ctx.moveTo(fm.getAscent() / 4 + fm.getAscent() / 2, fm.getAscent() - 1);
-			ctx.lineTo(fm.getAscent() / 4,  fm.getAscent() - 1);
-			ctx.lineTo(fm.getAscent() / 4 + fm.getAscent() / 2, 4 * fm.getAscent() / 8);
-			ctx.stroke();
-			//this.drawline(ctx, x + fm.getAscent() / 4, y + fm.getAscent() - 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + fm.getAscent() - 1);
-			//this.drawline(ctx, x + fm.getAscent() / 4, y + fm.getAscent() - 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 4 * fm.getAscent() / 8);
-		}
-
+		
 		this.drawCursor();
 	}
 
@@ -358,12 +348,8 @@ public class FormuleTeken extends FormuleElement
 	
 	public boolean setFont(FormuleFont fm)
 	{
-		boolean returnWaarde = true;
-		
-		if (super.setFont(fm) == false)
-			returnWaarde = false;
-		
-		
+		boolean returnWaarde = super.setFont(fm);
+				
 		boolean italic = false;
 		if(Letter.isLetter(character))
 		{	if(!functieTeken || FormuleParser.isWoordFormule())
@@ -371,44 +357,10 @@ public class FormuleTeken extends FormuleElement
 				//bold = true;
 			}
 			
-		}
-		
+		}		
 		fm.setItalic(italic);
-		
-		
 		//fm.setBold(bold);
 		
-		double width = calculateWidth();
-
-		int fontheight = fm.getAscent() + fm.getDescent();
-		if(fm.isItalic())
-		{	if(FormuleFont.formTimes)
-			{
-				if("f".equals(teken))
-					this.setSize((int) width + 8, fontheight);
-				else if("j".equals(teken))
-					this.setSize((int) width + 5, fontheight);
-				else if("p".equals(teken) || "y".equals(teken))
-					this.setSize((int) width + 4, fontheight);
-				else
-					this.setSize((int) width + 2, fontheight);
-			}
-			else
-			{
-				if(teken.equals("j"))
-					this.setSize((int) width + 4, fontheight);
-				else
-					this.setSize((int) width + 2, fontheight);
-			}
-			
-			
-		
-		}
-		else
-		{	this.setSize((int) width + 1, fontheight);
-		}
-		//this.setAsHoogte(fm.getAscent()/2);
-		this.setAsHoogte(fm.getAscent());
 		return returnWaarde;
 	}
 	
@@ -417,45 +369,35 @@ public class FormuleTeken extends FormuleElement
 		if(super.setColor(c) == false)
 			return false;
 		
-		color = c;
+		color = c.toString();
 		//ctx.setFillStyle(c);
 		//ctx.setStrokeStyle(c);
 		return true;
 		
 	}
 
-	private void drawKeer()
+	private void drawKeer(Context2d ctx)
 	{
-		//int y = this.getAsHoogte();
-		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 
-		//dit is veel te veel als de keer als punt wordt getekend. Kijken hoe de breedte in wiskOpdr wordt bepaald. 
-		if(maalteken)
-			this.width = fm.getAscent() / 2 + 7;
-		else
-			this.width = fm.getAscent() / 2 + 2;
-		//this.width = fm.getAscent();
+//		//dit is veel te veel als de keer als punt wordt getekend. Kijken hoe de breedte in wiskOpdr wordt bepaald. 
+//		if(maalteken)
+//			this.width = fm.getAscent() / 2 + 7;
+//		else
+//			this.width = fm.getAscent() / 2 + 2;
+//		//this.width = fm.getAscent();
+//
+//		this.setSize(width, height);
 
-		this.setSize(width, height);
-		this.setupCTXState();
-		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4 + 5;
-		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 		ctx.setLineWidth(fm.getStrokeWidth());
 
 		if (maalteken)
 		{
 			ctx.beginPath();
-			//ctx.moveTo(x + fm.getAscent()/4 + 1, y + 5 * fm.getAscent()/8 - 1);
-			//ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent()/8 + 4);
-			//ctx.moveTo(x + fm.getAscent()/4 + 1, y + 5 * fm.getAscent()/8 + 4);
-			//ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent()/8 - 1);
 			ctx.moveTo(fm.getAscent()/4, 5 * fm.getAscent() / 8 - 1);
 			ctx.lineTo(fm.getAscent()/4 + 6, 5 * fm.getAscent() / 8 + 5);
 			ctx.moveTo(fm.getAscent()/4, 5 * fm.getAscent() / 8 + 5);
 			ctx.lineTo(fm.getAscent()/4 + 6, 5 * fm.getAscent() / 8 - 1);
 			ctx.stroke();
-			//this.drawline(ctx, x + fm.getAscent() / 4 + 1, y + 5 * fm.getAscent() / 8 - 1, x + fm.getAscent() / 4 + 6, y + 5 * fm.getAscent() / 8 + 4);
-			//this.drawline(ctx, x + fm.getAscent() / 4 + 1, y + 5 * fm.getAscent() / 8 + 4, x + fm.getAscent() / 4 + 6, y + 5 * fm.getAscent() / 8 - 1);
 		}
 		else
 		{
@@ -465,56 +407,35 @@ public class FormuleTeken extends FormuleElement
 			ctx.moveTo(fm.getAscent()/4, 5 * fm.getAscent() / 8 + 1);
 			ctx.lineTo(fm.getAscent()/4 + 2, 5 * fm.getAscent() / 8 + 1);
 			ctx.stroke();
-			//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8);
-			//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8 + 1);
 		}
-		
-		
-		
-
-		//g.drawLine(x+fm.getAscent()/4,y+5*fm.getAscent()/8,x+fm.getAscent()/4+1,y+5*fm.getAscent()/8);
-		//g.drawLine(x+fm.getAscent()/4,y+5*fm.getAscent()/8+1,x+fm.getAscent()/4+1,y+5*fm.getAscent()/8+1);
 	}
 
-	private void drawMin()
+	private void drawMin(Context2d ctx)
 	{
-		this.width = fm.getAscent();
-		
-		//is dit nodig?
-		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
-		this.setSize(width, height);
-		this.setupCTXState();
+//		this.width = fm.getAscent();
+//		
+//		//is dit nodig?
+//		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
+//		this.setSize(width, height);
 		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
 		
 		ctx.beginPath();
 		ctx.moveTo(fm.getAscent() / 4, 5 * fm.getAscent()/8 + 1);
 		ctx.lineTo(fm.getAscent()/4 + fm.getAscent()/2, 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
 		ctx.stroke();
-		//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8);
 		if (getFont().isBold())
 		{	ctx.beginPath();
-			//ctx.moveTo(x + fm.getAscent() / 4, y + 1);// fm.getAscent() / 6 + 1);
-			//ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + 1);// + fm.getAscent() / 6 + 1);
 			ctx.moveTo(fm.getAscent() / 4, 5 * fm.getAscent()/8 + 1);
 			ctx.lineTo(fm.getAscent()/4 + fm.getAscent()/2, 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
-		
 			ctx.stroke();	
-		
-		//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 + 1);
 		}
-		
 		ctx.setLineWidth(fm.getStrokeWidth());
 	}
 
-	private void drawDubbelePunt()
+	private void drawDubbelePunt(Context2d ctx) //FIXME not used?
 	{
 		int x = 0;
 		int y = 0;
-		x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
-		this.width = fm.getAscent();
-
-		this.setSize(width, height);
-		this.setupCTXState();
 		x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4 + 5;
 		ctx.setLineWidth(fm.getStrokeWidth());
 		this.drawline(ctx, x + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 - 2, x + fm.getAscent() / 2 + 1, y + 5 * fm.getAscent() / 8 - 2);
