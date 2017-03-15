@@ -82,6 +82,14 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 		//font = defaultfont;
 	}
 
+	public FormuleHolder(FormuleFont font, CssColor color) {
+		defaultFont = font;
+		this.font = font;
+		this.color = color.toString();
+		main = new FormuleRegel(this);
+		ashoogte = main.getAsHoogte();
+	}
+	
 	public void paint()
 	{
 		main.paint();

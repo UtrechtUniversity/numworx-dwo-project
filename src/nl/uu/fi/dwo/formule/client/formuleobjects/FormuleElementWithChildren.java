@@ -99,7 +99,7 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 	{
 		if(super.setColor(c) == false)
 			return false;
-		color = c.toString();
+		//color = c.toString();
 		for(int i = 0; i < this.getChildrenSize(); i++)
 			getChild(i).setColor(c);
 		return true;

@@ -597,7 +597,7 @@ public class FormuleRegel extends FormuleElement
 	{	if(super.setColor(c) == false)
 			return false;
 	
-		color = c.toString(); 
+		//color = c.toString(); 
 		if(this.children.size() == 0)
 			return true;
 		for(int i = 0; i < this.children.size(); i++)

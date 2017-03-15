@@ -28,9 +28,9 @@ public abstract class FormuleElement implements TekstElement
 	
 	protected String color;
 
-	private boolean changed = false;
-	protected boolean selected = false;
-	protected boolean sizechanged = false;
+	private boolean changed;
+	protected boolean selected;
+	protected boolean sizechanged;
 
 	//font is the FormuleFont set from method, fm a copy (if changes) of font with the changes applied
 	protected FormuleFont fm;
@@ -38,16 +38,16 @@ public abstract class FormuleElement implements TekstElement
 	private FormuleFontChanges fontchanges;
 	private boolean fontchangesapplied = true;
 
-	public int x = 0;
-	public int y = 0;
+	public int x;
+	public int y;
 
-	protected boolean current = false;
+	protected boolean current;
 
 	//protected Vector<FormuleElement> children = new Vector<FormuleElement>();
 	//we need the parent, when a element changes the parent(s) should be redrawn
 	protected FormuleElement parent = null;
 
-	private int ashoogte = 0;
+	private int ashoogte;
 
 	protected FormuleHolder holder;
 
