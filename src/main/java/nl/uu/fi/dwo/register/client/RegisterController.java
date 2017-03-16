@@ -8,6 +8,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.PublicUserManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class RegisterController {
@@ -43,13 +44,15 @@ public class RegisterController {
 
 			@Override
 			public void onSuccess(Boolean result) {
+				DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
+
 				if (result) {
-					Window.alert("De gebruiker is succesvol aangemeld.");
+					Window.alert(rb.GUI_UserRegistrationSucceeded());
 
 					if(next != null)
 						next.execute();
 				} else {
-					Window.alert("De gebruiker is niet aangemeld.");
+					Window.alert(rb.GUI_UserRegistrationFailed());
 					
 				}
 				
