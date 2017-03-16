@@ -28,7 +28,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.MisconceptionsHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.ObjectivesHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
-import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
+import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
