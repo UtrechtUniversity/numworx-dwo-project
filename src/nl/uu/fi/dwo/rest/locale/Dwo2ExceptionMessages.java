@@ -115,11 +115,11 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   String Dwo2ExceptionCode_Rest_Registration_Invalid_schoolclass_registration_key();
 
   /**
-   * Translated "The password length exceeds 128 characters.".
+   * Translated "The password format is invalid.".
    * 
-   * @return translated "The password length exceeds 128 characters."
+   * @return translated "The password format is invalid."
    */
-  @DefaultStringValue("The password length exceeds 128 characters.")
+  @DefaultStringValue("The password format is invalid.")
   @Key("Dwo2ExceptionCode.Rest_Registration_Password_Invalid")
   String Dwo2ExceptionCode_Rest_Registration_Password_Invalid();
 
@@ -167,6 +167,15 @@ public interface Dwo2ExceptionMessages extends com.google.gwt.i18n.client.Consta
   @DefaultStringValue("That username already exists in the database.")
   @Key("Dwo2ExceptionCode.Rest_Registration_UserName_exists")
   String Dwo2ExceptionCode_Rest_Registration_UserName_exists();
+
+  /**
+   * Translated "The remaining users can not be created. Their usernames already exist.".
+   * 
+   * @return translated "The remaining users can not be created. Their usernames already exist."
+   */
+  @DefaultStringValue("The remaining users can not be created. Their usernames already exist.")
+  @Key("Dwo2ExceptionCode.Rest_Registration_UserNames_exists")
+  String Dwo2ExceptionCode_Rest_Registration_UserNames_exists();
 
   /**
    * Translated "You are already registered for that combination of school and role. ".

@@ -214,6 +214,24 @@ public interface DwoLocaleMessages extends com.google.gwt.i18n.client.ConstantsW
   String GUI_SchoolclassName();
 
   /**
+   * Translated "Userregistration failed.".
+   * 
+   * @return translated "Userregistration failed."
+   */
+  @DefaultStringValue("Userregistration failed.")
+  @Key("GUI.UserRegistrationFailed")
+  String GUI_UserRegistrationFailed();
+
+  /**
+   * Translated "The user is successfully registered.".
+   * 
+   * @return translated "The user is successfully registered."
+   */
+  @DefaultStringValue("The user is successfully registered.")
+  @Key("GUI.UserRegistrationSucceeded")
+  String GUI_UserRegistrationSucceeded();
+
+  /**
    * Translated "username".
    * 
    * @return translated "username"
