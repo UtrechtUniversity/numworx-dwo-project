@@ -9,10 +9,13 @@ package nl.uu.fi.dwo.rest.dom.entities;
 public final class ValidUserFieldsChecker {
 
     public static boolean isValidPassword(String password) {
+        if(password.startsWith(" ")|| password.endsWith(" ")){
+            return false;
+        }
         if (password == null) {
             return false;
         }
-        if (password.isEmpty()) {
+        if (password.length()<5) {
             return false;
         }
         if (password.length() >= 128) {
@@ -63,7 +66,7 @@ public final class ValidUserFieldsChecker {
 
     public static boolean isValidUserName(String username) {
         //nieuwe valid username is alphanumeriek met '-', '_' en '@'.
-        return username.matches("[A-Za-z0-9_@.-]+");
+        return username.matches("[A-Za-z0-9_.-]+");
 //        if (username == null || username.isEmpty()) {
 //            return false;
 //        }
