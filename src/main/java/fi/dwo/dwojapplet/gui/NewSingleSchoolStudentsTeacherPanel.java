@@ -87,45 +87,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 
     private UserType userType = UserType.TEACHER;
 
-    class UsernameCellRenderer extends DefaultTableCellRenderer {
 
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                    row, column);
-
-            if (value != null && ValidUserFieldsChecker.isValidUserName(value.toString())) {
-                component.setBackground(Color.WHITE);
-            } else {
-                component.setBackground(new Color(255, 128, 128));
-            }
-
-            return component;
-        }
-    }
-
-    class EmailCellRenderer extends DefaultTableCellRenderer {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                    row, column);
-
-            if (value != null && ValidUserFieldsChecker.isValidEmail(value.toString())) {
-                component.setBackground(Color.WHITE);
-            } else {
-                component.setBackground(new Color(255, 128, 128));
-            }
-
-            return component;
-        }
-    }
 
     class PasswordCellRenderer extends DefaultTableCellRenderer {
 
@@ -209,9 +171,9 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
             if (value == delImage) {
                 tableModel.deleteSelectedRow(tableModel.getSelectedRow());
                 //set input verification
-                jtable.getColumnModel().getColumn(3).setCellRenderer(new UsernameCellRenderer());
+                jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
                 jtable.getColumnModel().getColumn(4).setCellRenderer(new PasswordCellRenderer());
-                jtable.getColumnModel().getColumn(5).setCellRenderer(new EmailCellRenderer());
+                jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
 
             }
         }
@@ -365,9 +327,9 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         TableUtil.setJTableSizes(jtable);
 
         //set input verification
-        jtable.getColumnModel().getColumn(3).setCellRenderer(new UsernameCellRenderer());
+        jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
         jtable.getColumnModel().getColumn(4).setCellRenderer(new PasswordCellRenderer());
-        jtable.getColumnModel().getColumn(5).setCellRenderer(new EmailCellRenderer());
+        jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
 
 //        TableUtil.setBorder(jtable);
         //Override default settings for spreadsheet like border.
@@ -568,9 +530,9 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 }
                 tableModel.init(prop, columnNames, resultList, delImage);
                 //set input verification
-                jtable.getColumnModel().getColumn(3).setCellRenderer(new UsernameCellRenderer());
+                jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
                 jtable.getColumnModel().getColumn(4).setCellRenderer(new PasswordCellRenderer());
-                jtable.getColumnModel().getColumn(5).setCellRenderer(new EmailCellRenderer());
+                jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
 
                 tableModel.fireTableDataChanged();
                 if (failFlag == true) {

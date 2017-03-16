@@ -43,7 +43,6 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
@@ -80,66 +79,6 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
 
     private JPanel jtbl;
     private JTable jtable = new JTable();
-
-    class UsernameCellRenderer extends DefaultTableCellRenderer {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                    row, column);
-
-            if (value != null && ValidUserFieldsChecker.isValidUserName(value.toString())) {
-                component.setBackground(Color.WHITE);
-            } else {
-                component.setBackground(new Color(255, 128, 128));
-            }
-
-            return component;
-        }
-    }
-
-    class EmailCellRenderer extends DefaultTableCellRenderer {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                    row, column);
-
-            if (value != null && ValidUserFieldsChecker.isValidEmail(value.toString())) {
-                component.setBackground(Color.WHITE);
-            } else {
-                component.setBackground(new Color(255, 128, 128));
-            }
-
-            return component;
-        }
-    }
-
-    class PasswordCellRenderer extends DefaultTableCellRenderer {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                    row, column);
-
-            if (value != null && ValidUserFieldsChecker.isValidPassword(value.toString())) {
-                component.setBackground(Color.WHITE);
-            } else {
-                component.setBackground(new Color(255, 128, 128));
-            }
-
-            return component;
-        }
-    }
 
 //    public enum UserType {
 //        ADMIN, SCHOOLADMIN
@@ -208,9 +147,9 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
             if (value == delImage) {
                 tableModel.deleteSelectedRow(row);
                 //set input verification
-                jtable.getColumnModel().getColumn(3).setCellRenderer(new NewTeacherSchoolAdminPanel.UsernameCellRenderer());
-                jtable.getColumnModel().getColumn(4).setCellRenderer(new NewTeacherSchoolAdminPanel.PasswordCellRenderer());
-                jtable.getColumnModel().getColumn(5).setCellRenderer(new NewTeacherSchoolAdminPanel.EmailCellRenderer());
+                jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
+                jtable.getColumnModel().getColumn(4).setCellRenderer(new InputCellRendererPassword());
+                jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
 
             }
         }
@@ -368,9 +307,9 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         TableUtil.setJTableSizes(jtable);
 
         //set input verification
-        jtable.getColumnModel().getColumn(3).setCellRenderer(new NewTeacherSchoolAdminPanel.UsernameCellRenderer());
-        jtable.getColumnModel().getColumn(4).setCellRenderer(new NewTeacherSchoolAdminPanel.PasswordCellRenderer());
-        jtable.getColumnModel().getColumn(5).setCellRenderer(new NewTeacherSchoolAdminPanel.EmailCellRenderer());
+        jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
+        jtable.getColumnModel().getColumn(4).setCellRenderer(new InputCellRendererPassword());
+        jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
 
         jtable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         jtable.setGridColor(Color.LIGHT_GRAY);
@@ -545,7 +484,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                             LOG.log(Level.FINE, "", ex2);
                             fatalFlag = true;
                         }
-                    } 
+                    }
                 }
                 if (cnt == 0) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
@@ -553,9 +492,9 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 tableModel.init(prop, columnNames, resultList, delImage);
                 jtable.setModel(tableModel);
                 //set input verification
-                jtable.getColumnModel().getColumn(3).setCellRenderer(new NewTeacherSchoolAdminPanel.UsernameCellRenderer());
-                jtable.getColumnModel().getColumn(4).setCellRenderer(new NewTeacherSchoolAdminPanel.PasswordCellRenderer());
-                jtable.getColumnModel().getColumn(5).setCellRenderer(new NewTeacherSchoolAdminPanel.EmailCellRenderer());
+                jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
+                jtable.getColumnModel().getColumn(4).setCellRenderer(new InputCellRendererPassword());
+                jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
 
                 tableModel.fireTableDataChanged();
                 if (failFlag == true) {
