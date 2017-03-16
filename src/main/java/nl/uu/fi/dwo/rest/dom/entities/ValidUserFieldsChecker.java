@@ -62,28 +62,30 @@ public final class ValidUserFieldsChecker {
     }
 
     public static boolean isValidUserName(String username) {
-        if (username == null || username.isEmpty()) {
-            return false;
-        }
-        if (!username.trim().equals(username)) {
-            return false;
-        }
-        char[] chars = username.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-            if (c < 0x20 || c >= 0x7F // ascii, no space?, no delete?
-                    || c == '(' // aselect verbiedt =*?
-                    || c == ')' // maar ook , \ ( en ) mogen niet
-                    || c == '*' || c == '?' || c == '=' || c == '\\' || c == ',' || c == ';' // beter
-                    // van
-                    // niet
-                    // in
-                    // LDAP
-                    || c == '+' || c == '#' // nieuw, werkt niet in PHP
-                    ) {
-                return false;
-            }
-        }
-        return true;
+        //nieuwe valid username is alphanumeriek met '-', '_' en '@'.
+        return username.matches("[A-Za-z0-9_@.-]+");
+//        if (username == null || username.isEmpty()) {
+//            return false;
+//        }
+//        if (!username.trim().equals(username)) {
+//            return false;
+//        }
+//        char[] chars = username.toCharArray();
+//        for (int i = 0; i < chars.length; i++) {
+//            char c = chars[i];
+//            if (c < 0x20 || c >= 0x7F // ascii, no space?, no delete?
+//                    || c == '(' // aselect verbiedt =*?
+//                    || c == ')' // maar ook , \ ( en ) mogen niet
+//                    || c == '*' || c == '?' || c == '=' || c == '\\' || c == ',' || c == ';' // beter
+//                    // van
+//                    // niet
+//                    // in
+//                    // LDAP
+//                    || c == '+' || c == '#' // nieuw, werkt niet in PHP
+//                    ) {
+//                return false;
+//            }
+//        }
+//        return true;
     }
 }
