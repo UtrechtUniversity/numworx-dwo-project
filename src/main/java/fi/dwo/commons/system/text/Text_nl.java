@@ -92,17 +92,17 @@ public class Text_nl extends ListResourceBundle {
 			{
 					TextMapper.DLG_CREATESTUDENTERROR,
 					"De overgebleven leerlingen kunnen niet worden toegevoegd. Dit kan zijn doordat\n"
-                                      + "er illegale karakters of leestekens in het emailadres of de usernaam zitten.\n"
-                                      + "Controleer de waarden en het formaat van de gemarkeerde velden aan de hand van\n"
-                                      + " de handleiding." },
+                                      + "er illegale karakters of leestekens in het emailadres, wachtwoord of de usernaam\n"
+                                      + "zitten. Controleer de waarden en het formaat van de gemarkeerde velden aan de hand\n"
+                                      + "van de handleiding." },
 			{TextMapper.DLG_COPYSTUDENTERROR,"Sommige leerlingen konden niet in de klas worden geplaatst, mogelijk zaten ze er al in."},
                         
 			{
 					TextMapper.DLG_CREATETEACHERERROR,
 					"De overgebleven docenten kunnen niet worden toegevoegd. Dit kan zijn doordat\n"
-                                      + "er illegale karakters of leestekens in het emailadres of de usernaam zitten.\n"
-                                      + "Controleer de waarden en het formaat van de gemarkeerde velden aan de hand van\n"
-                                      + " de handleiding." },
+                                      + "er illegale karakters of leestekens in het emailadres, wachtwoord of de usernaam\n"
+                                      + "zitten. Controleer de waarden en het formaat van de gemarkeerde velden aan de hand\n"
+                                      + "van de handleiding." },
        			{ TextMapper.DLG_NO_USERS_SELECTED, "Er zijn geen gebruikers geselecteerd." },
 			{ TextMapper.EX_UNKNOWN_ERROR, "Er is een interne fout opgetreden" },
 			{ TextMapper.EXR_USER_EXISTS,
