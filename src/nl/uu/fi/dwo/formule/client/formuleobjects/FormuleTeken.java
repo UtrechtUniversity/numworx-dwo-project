@@ -232,7 +232,14 @@ public class FormuleTeken extends FormuleElement
 		
 		validate();
 		
-		Context2d ctx = this.ctx;
+		paintComponent(this.ctx);
+		
+		this.drawCursor();
+	}
+
+
+
+	public void paintComponent(Context2d ctx) {
 		this.setupCTXState(ctx);
 		
 		//draw single character
@@ -340,8 +347,6 @@ public class FormuleTeken extends FormuleElement
 				g.drawLine(x + fm.getAscent() / 3 - 1, y + fm.getAscent() - 2, x + 1, y + fm.getAscent() - 2 - fm.getAscent() / 3);
 				
 		}*/
-		
-		this.drawCursor();
 	}
 
 	

@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import java.util.Vector;
 
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 import fi.wiskopdr.Letter;
@@ -85,11 +86,9 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 	@Override
 	public boolean setFont(FormuleFont fm)
 	{
-		//GWT.log("Setting childern font");
-		if (super.setFont(fm) == false)
+		if (!super.setFont(fm))
 			return false;
 		fm = this.getFont();
-		//GWT.log(fm.getFontStyle() + " = new old: " + getChild().getFont().getFontStyle());
 		for (int i = 0; i < this.getChildrenSize(); i++)
 			getChild(i).setFont(fm);
 		return true;
@@ -97,7 +96,7 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 	
 	public boolean setColor(CssColor c)
 	{
-		if(super.setColor(c) == false)
+		if(!super.setColor(c))
 			return false;
 		//color = c.toString();
 		for(int i = 0; i < this.getChildrenSize(); i++)
@@ -190,14 +189,6 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 		}
 	}
 	
-	/*public void setSelected(boolean b)
-	{
-		for (int i = 0; i < this.children.size(); i++)
-			//for (int i = this.selectionStart; i <= this.selectionEnd; i++)
-			this.children.get(i).setSelected(b);
-		this.setChanged(true);
-	}*/
-
 	public FormuleRegel selection(int selectionStartX, int selectionStartY, int selectionEndX, int selectionEndY)
 	{
 		for (int i = 0; i < this.children.size(); i++)
@@ -228,4 +219,41 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 		}
 		return s;
 	}
+	
+	
+	
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
+		if (isSelected())
+		{
+			ctx.setFillStyle("#aaf");
+			ctx.fillRect(0, 0, width, height);
+		}		
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void paintAll(Context2d ctx) {
+		paintComponent(ctx);
+		for(FormuleElement e: children) {
+			int x = e.getX();
+			int y = e.getY();
+			ctx.translate(x, y);
+			e.paintAll(ctx);
+			ctx.translate(-x, -y);
+		}
+	}
+
+	public void validate() {
+		if(sizechanged) {
+			for(FormuleElement e: children) e.validate();
+			zetMaat();
+		}
+	}
+
 }

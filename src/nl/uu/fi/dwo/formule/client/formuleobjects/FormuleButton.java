@@ -48,14 +48,7 @@ public class FormuleButton extends TouchButton{
 			ctx = canvas.getContext2d();
 			this.add(canvas);
 			
-			paintComponent();
-			
-//			this.getElement().getStyle().setFontSize(10, Style.Unit.PX);
-//			this.setText(code);
-//			Image achtergrond = new Image(DWOplayer.DWO_BUNDLE.formuleachtergrondknop().getSafeUri());
-//			this.getElement().getStyle().setBackgroundImage(achtergrond.toString());
-//			//this.add(achtergrond);
-			
+			paintComponent();			
 			
 		}
 		
@@ -76,16 +69,12 @@ public class FormuleButton extends TouchButton{
 		ctx.lineTo(0, 0);
 		ctx.lineTo(19, 0);
 		ctx.stroke();
-		//g.drawLine(0,0,getSize().width-1,0);
-		//g.drawLine(0,0,0,getSize().height-1);
 		if(focus)
 		{	ctx.beginPath();
 			ctx.moveTo(1,18);
 			ctx.lineTo(1, 1);
 			ctx.lineTo(18,1);
 			ctx.stroke();
-			//g.drawLine(1,1,getSize().width-2,1);
-			//g.drawLine(1,1,1,getSize().height-2);
 		}
 		if(actief || toggleAan)ctx.setStrokeStyle(randLicht);
 		else ctx.setStrokeStyle(randDonker);
@@ -95,8 +84,6 @@ public class FormuleButton extends TouchButton{
 		ctx.lineTo(20, 0);
 		ctx.stroke();
 		
-		//g.drawLine(getSize().width-1,0,getSize().width-1,getSize().height-1);
-		//g.drawLine(0,getSize().height-1,getSize().width-1,getSize().height-1);
 		if(focus)
 		{	ctx.beginPath();
 			ctx.moveTo(1,19);
@@ -104,8 +91,6 @@ public class FormuleButton extends TouchButton{
 			ctx.lineTo(19, 1);
 			ctx.stroke();
 			
-			//g.drawLine(getSize().width-2,1,getSize().width-2,getSize().height-2);
-			//g.drawLine(1,getSize().height-2,getSize().width-2,getSize().height-2);
 		}
 		
 		//tekst/tekening op knop zetten afhankelijk van code
@@ -157,9 +142,6 @@ public class FormuleButton extends TouchButton{
 			ctx.moveTo(b/4+2, 3*h/4-2);
 			ctx.lineTo(3*b/4-2,h/4+2);
 			ctx.stroke();
-			
-			//g.drawLine(b/4+2,h/4+2,3*b/4-2,3*h/4-2);
-			//g.drawLine(b/4+2,3*h/4-2,3*b/4-2,h/4+2);
 		}
 		else if(code.equals("deel"))
 		{	ctx.fillRect(b/2, h/4+1, 2, 2);
@@ -168,10 +150,6 @@ public class FormuleButton extends TouchButton{
 			ctx.moveTo(b/4+2, h/2);
 			ctx.lineTo(3*b/4-1, h/2);
 			ctx.stroke();
-			
-//			g.fillRect(b/2,h/4+1,2,2);
-//			g.fillRect(b/2,3*h/4-2,2,2);
-//			g.drawLine(b/4+2,b/2,3*b/4-2,b/2);
 		}
 		else if(code.equals("haakjesweg"))
 		{	ctx.setFont("14px Arial");
@@ -181,19 +159,12 @@ public class FormuleButton extends TouchButton{
 			ctx.moveTo(b/5, h/5);
 			ctx.lineTo(4*b/5, 4*h/5);
 			ctx.stroke();
-			
-//			g.drawString("(",5,15);
-//			g.drawString(")",11,15);
-//			g.drawLine(b/5,h/5,4*b/5,4*h/5);
 		}
 		else if(code.equals("ontbind"))
 		{	ctx.setFont("14px Arial");
 		
 			ctx.fillText("(", 11, 15);
 			ctx.fillText(")", 5, 15);
-		
-//			g.drawString("(",11,15);
-//			g.drawString(")",5,15);
 		}
 		
 		else if(code.equals("splits"))
@@ -211,15 +182,6 @@ public class FormuleButton extends TouchButton{
 			ctx.moveTo(16, 16);
 			ctx.lineTo(12, 16);
 			ctx.stroke();
-			
-			
-//			g.drawLine(10,10,16,16);
-//			g.drawLine(10,10,4,16);
-//			g.drawLine(10,4,10,10);
-//			g.drawLine(16,16,16,12);
-//			g.drawLine(16,16,12,16);
-//			g.drawLine(4,16,8,16);
-//			g.drawLine(4,16,4,12);
 		}
 		else if(code.equals("herleid"))
 		{	ctx.beginPath();
@@ -230,14 +192,7 @@ public class FormuleButton extends TouchButton{
 			ctx.lineTo(b/5, 4*h/5);
 			ctx.lineTo(b/5-1, 4*h/5-1);
 			ctx.stroke();
-			
-//			g.drawRect(b/5,h/6,b/5,h/2);
-//			g.drawRect(b/2+1,h/6,b/5,h/2);
-//			g.drawLine(b/5,4*h/5,4*b/5-1,4*h/5);
-//			g.drawLine(b/5,4*h/5,b/5-1,4*h/5-1);
-//			g.drawLine(4*b/5-1,4*h/5,4*b/5,4*h/5-1);
-		}
-				
+		}				
 	}
 	
 	public void setFocusable(boolean b)

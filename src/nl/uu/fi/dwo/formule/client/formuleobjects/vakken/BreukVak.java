@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -39,8 +41,7 @@ public class BreukVak extends FormuleElementWithChildren
 	{	for(int i=0 ; i<s.length(); i++)
 		{	if(!Character.isDigit(s.charAt(i))) return false;
 		}
-		if(s.length()==0) return false;
-		return true;
+		return (s.length()!=0);
 	}
 
 	@Override
@@ -59,6 +60,45 @@ public class BreukVak extends FormuleElementWithChildren
 		this.getChild(0).paint();
 		this.getChild(1).paint();
 		
+		zetMaat();
+		paintComponent(ctx);
+		
+		this.getChild(1).draw(ctx);
+		this.getChild(0).draw(ctx);
+
+		this.drawCursor();
+	}
+	
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
+
+		ctx.setStrokeStyle(color);
+//		ctx.setFillStyle(color);
+
+		ctx.setLineWidth(fm.getStrokeWidth());
+		
+		ctx.beginPath();
+		//ctx.moveTo(fm.getAscent() / 8, getChild(0).height + fm.getAscent() / 8);
+		//ctx.lineTo(this.width - (fm.getAscent() / 8), getChild(0).height + fm.getAscent() / 8);
+		ctx.moveTo(fm.getAscent() / 8, this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
+		ctx.lineTo(this.width - (fm.getAscent() / 8), this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
+		ctx.stroke();
+		
+	}
+
+	@Override
+	public void validate() {
+		if(sizechanged) {
+			boolean onlyDigits = onlyDigits(getChild(0).toString()) && onlyDigits(getChild(1).toString());
+			getChild(0).setSmallText(onlyDigits);
+			getChild(1).setSmallText(onlyDigits);
+		}
+		super.validate();
+	}
+
+	@Override
+	public void zetMaat() {
 		//width = 2*fm.getAscent()/3 + ((getChild(1).width > getChild(0).width) ? getChild(1).width : getChild(0).width);
 		width = fm.getAscent()/4 + Math.max(getChild(0).width, getChild(1).width);
 		//height = getChild(1).height + getChild(0).height + 2 * fm.getDescent();
@@ -89,33 +129,9 @@ public class BreukVak extends FormuleElementWithChildren
 		this.setAsHoogte(getChild(0).height + 5*fm.getAscent()/8);//of moet dit dan +5* worden?
 		//this.setAsHoogte(getChild(0).height - fm.getAscent() / 8);
 		//this.setAsHoogte(this.height / 2);
-
-		
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
-
-		ctx.setStrokeStyle(color);
-//		ctx.setFillStyle(color);
-		//}
-
-		ctx.setLineWidth(fm.getStrokeWidth());
-		
-		ctx.beginPath();
-		//ctx.moveTo(fm.getAscent() / 8, getChild(0).height + fm.getAscent() / 8);
-		//ctx.lineTo(this.width - (fm.getAscent() / 8), getChild(0).height + fm.getAscent() / 8);
-		ctx.moveTo(fm.getAscent() / 8, this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
-		ctx.lineTo(this.width - (fm.getAscent() / 8), this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
-		ctx.stroke();
-		
-		this.getChild(1).draw(ctx);
-		this.getChild(0).draw(ctx);
-
-		this.drawCursor();
+		super.zetMaat();
 	}
-	
+
 	public int getAsHoogte()
 	{
 		return //getChild(0).height + fm.getAscent() / 8;

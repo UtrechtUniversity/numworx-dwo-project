@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -13,6 +15,16 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
  */
 public class WortelVak extends FormuleElementWithChildren
 {
+	@Override
+	public void zetMaat() {
+		width = 5 * fm.getAscent() / 6 + getChild().width;
+		height = fm.getAscent() / 4 + getChild().height;// + 3; //+3 omdat dat werkt.. is misschien niet de netste oplossing.
+
+		this.setAsHoogte(getChild().getAsHoogte() + fm.getAscent() / 4);
+		this.setSize(width, height);
+		super.zetMaat();
+	}
+
 	public WortelVak(FormuleElement editor)
 	{
 		super(editor, 1);
@@ -32,24 +44,18 @@ public class WortelVak extends FormuleElementWithChildren
 
 	@Override
 	public void paintObject() {
-		this.getChild().paint();
+		getChild().paint();
+		zetMaat();
+		paintComponent(ctx);
+		getChild().draw(ctx);
+		drawCursor();
+	}
 
-		width = 5 * fm.getAscent() / 6 + getChild().width;
-		height = fm.getAscent() / 4 + getChild().height;// + 3; //+3 omdat dat werkt.. is misschien niet de netste oplossing.
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
 
-		this.setAsHoogte(getChild().getAsHoogte() + fm.getAscent() / 4);
-		this.setSize(width, height);
-
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
-
-		//ctx.setStrokeStyle("#000");
-		//ctx.setFillStyle("#000");
 		ctx.setStrokeStyle(color);
-		ctx.setFillStyle(color);
 		
 		//ctx.setLineWidth(fm.getStrokeWidth());
 		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
@@ -67,9 +73,6 @@ public class WortelVak extends FormuleElementWithChildren
 		ctx.lineTo(width, fm.getAscent() / 8  +1);
 		ctx.stroke();
 		ctx.setLineWidth(fm.getStrokeWidth());
-
-		this.getChild().draw(ctx);
-		this.drawCursor();
 	}
 
 	@Override

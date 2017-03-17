@@ -380,8 +380,15 @@ public abstract class FormuleElement implements TekstElement
 		//this method should only draw on it's own canvas
 	}
 
+	public void paintComponent(Context2d ctx) {
+	}
+	
+	public void paintAll(Context2d ctx) {
+		paintComponent(ctx);
+	}
+	
 	/**
-	 * dreaw on parent canvas
+	 * draw on parent canvas
 	 * 
 	 * @param ctx
 	 * @param x
@@ -438,7 +445,6 @@ public abstract class FormuleElement implements TekstElement
 	}
 
 	protected void drawCursor()
-	//public void drawCursor()
 	{
 		this.drawCursor(width);
 	}
@@ -539,4 +545,15 @@ public abstract class FormuleElement implements TekstElement
 	public String toMathML() {
 		return toString();
 	}
+	
+	public int getCorrectieLinks()
+	{
+		return 0;
+	}
+
+	public int getCorrectieRechts()
+	{
+		return 0;
+	}
+
 }

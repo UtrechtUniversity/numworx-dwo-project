@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
-import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
 public class SubscriptVak extends FormuleElementWithChildren
@@ -21,9 +20,38 @@ public class SubscriptVak extends FormuleElementWithChildren
 	
 	public void paintObject()
 	{
-		getChild(0).paint();
+		getChild().paint();
+
+		zetMaat();
+
+		paintComponent(ctx);
 		
-		FormuleRegel parentRegel = getRegelParent();
+		this.getChild().draw(ctx);
+
+		this.drawCursor();
+	}
+	
+	
+	
+	
+//	public boolean setFont(FormuleFont fm)
+//	{
+//		if (super.setFont(fm) == false)
+//			return false;
+//		return true;
+//	}
+	
+
+	public void zetMaat()
+	{	//int vgh = ((FormuleRegel)getParent()).geefVoorgangerHoogte(this);
+		//int vgah = ((FormuleRegel)getParent()).geefVoorgangerAsHoogte(this);
+		
+ //       setSize(getChild(0).width, getChild(0).height + fm.getAscent());
+ //       getChild(0).setPosition(0, fm.getAscent());
+		//setAsashoogte = vgah;
+		//if(getParent()instanceof FormuleElement)((FormuleElement)getParent()).zetMaat();
+
+        FormuleRegel parentRegel = getRegelParent();
 
 		//previous object in the line
 		FormuleElement prev = parentRegel.getPrevious(this);
@@ -45,37 +73,7 @@ public class SubscriptVak extends FormuleElementWithChildren
 		this.setSize(width, height);
 		
 		getChild().setPosition(0, vgh - 2*fm.getAscent()/3);
-
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
-
-//		ctx.setStrokeStyle(color);
-//		ctx.setFillStyle(color);
-//		
-		
-		this.getChild().draw(ctx);
-
-		this.drawCursor();
-	}
-	
-//	public boolean setFont(FormuleFont fm)
-//	{
-//		if (super.setFont(fm) == false)
-//			return false;
-//		return true;
-//	}
-	
-	public void zetMaat()
-	{	//int vgh = ((FormuleRegel)getParent()).geefVoorgangerHoogte(this);
-		//int vgah = ((FormuleRegel)getParent()).geefVoorgangerAsHoogte(this);
-		
-        setSize(getChild(0).width, getChild(0).height + fm.getAscent());
-        getChild(0).setPosition(0, fm.getAscent());
-		//setAsashoogte = vgah;
-		//if(getParent()instanceof FormuleElement)((FormuleElement)getParent()).zetMaat();
+		super.zetMaat();
 	}
 	
 	public String toString()

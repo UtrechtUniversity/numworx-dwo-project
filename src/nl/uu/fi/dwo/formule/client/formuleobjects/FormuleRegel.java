@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 
@@ -40,8 +41,6 @@ public class FormuleRegel extends FormuleElement
 	//private FormuleEditorWithAnswer editorParent;
 
 	private int nextx = 0;
-	private int nexty = 0;
-
 	private int defaultwidth = 0;
 	private int defaultheight = 0;
 
@@ -60,8 +59,8 @@ public class FormuleRegel extends FormuleElement
 
 	private boolean smalltext = false;
 
-	private int[] selectioncords =
-	{ 0, 0, 0, 0 };
+//	private int[] selectioncords =
+//	{ 0, 0, 0, 0 };
 	
 	private boolean stippels = false;
 
@@ -184,7 +183,7 @@ public class FormuleRegel extends FormuleElement
 		//ignore if the formule is not editable
 		if (holder instanceof FormuleEditor == false)
 			return null;
-		FormuleHolder holder = (FormuleHolder) this.holder;
+		FormuleHolder holder = this.holder;
 		if (x < 0)
 		{
 			this.currentPosition = -1;
@@ -232,25 +231,20 @@ public class FormuleRegel extends FormuleElement
 		return this;
 	}
 
+	public void validate() {
+		if(sizechanged) {
+			for(FormuleElement e: children) e.validate();
+			zetMaat();
+		}
+	}
+	
+	
 	@Override
 	public void zetMaat() {
-
-		super.zetMaat();
-	}
-
-	@Override
-	public void paintObject()
-	{
 		this.height = defaultheight;
 		this.width = 0;
 		this.nextx = 0;
-		this.nexty = 0;
-
 		//painting coordinates
-		//int paintabove = height / 2;
-		//int paintbelow = height / 2;
-		//int paintabove = fm.getAscent() / 2;
-		//int paintbelow = height - fm.getAscent() / 2;
 		int paintabove = fm.getAscent();
 		int paintbelow = height - fm.getAscent();
 				
@@ -267,17 +261,14 @@ public class FormuleRegel extends FormuleElement
 				width += 2;
 			}
 			//repaint child (if it has changed)
-			e.paint();
 			width += e.width;
-			if(e instanceof FormuleTeken)
-				nextx -= ((FormuleTeken) e).getCorrectieLinks();
+			nextx -=  e.getCorrectieLinks();
 			if(i > 0)
 			{
 				FormuleElement ePrev = this.children.get(i - 1);
-				if(ePrev instanceof FormuleTeken)
-					nextx -= ((FormuleTeken) ePrev).getCorrectieRechts();
+				nextx -= ePrev.getCorrectieRechts();
 			}
-			e.setPosition(nextx, nexty);
+			e.setX(nextx);
 
 			paintabove_e = e.getAsHoogte();
 			paintbelow_e = e.height - e.getAsHoogte();
@@ -314,76 +305,95 @@ public class FormuleRegel extends FormuleElement
 					nextx--;
 				}
 			}
-			
-			
 		}
 
 		//draw all the childs canvases on this canvas
-		if (this.children.size() == 0)
+		if (this.children.isEmpty())
 			this.width = defaultwidth;
 		this.setSize(width, height);
+
+		for (FormuleElement e: children)
+		{
+			e.setY(paintabove - e.getAsHoogte());
+		}
+
 		this.setAsHoogte(paintabove);
+		super.zetMaat();
+	}
 
-		//ignore if the formule is not editable
-		if (holder instanceof FormuleEditor)
-			if (((FormuleHolder) holder).getCurrentRegel() == this && this.parent != null)
-			{
-				//draw background
-				ctx.setFillStyle("#eee");
-				ctx.fillRect(0, 0, width, height);
-			}
+	@Override
+	public void paintObject()
+	{
+		for(FormuleElement e: children) e.paint();
 
-		if (this.children.size() == 0 && holder.isInputNeeded())
-		{
-			//draw square if line is empty
-			ctx.setStrokeStyle("#888");
-			ctx.beginPath();
-			ctx.moveTo(0, 0);
-			ctx.lineTo(width, 0);
-			ctx.lineTo(width, height);
-			ctx.lineTo(0, height);
-			ctx.lineTo(0, 0);
-			ctx.stroke();
-		}
+		zetMaat();
 
-		int elx, ely;
-		FormuleElement e;
-		for (int i = 0; i < this.children.size(); i++)
-		{
-			e = this.children.get(i);
-			//if(e instanceof Breukvak)
-			//	System.out.println("breukVak: " + e.toString());
-			//else
-			//	System.out.println("ander vak: " + e.toString());
-			elx = e.getX();
-			//ely = this.height / 2 - e.getAsHoogte();
-			ely = paintabove - e.getAsHoogte();
-			//System.out.println("tekenHoogte: " + ely);
-			e.draw(this.ctx, elx, ely);
-		}
+		Context2d ctx = this.ctx;
+		
+		paintComponent(ctx);
+
+		for (FormuleElement e: children)
+			e.draw(ctx);
 		
 		
 		int x = this.width;
-		if (this.currentPosition == -1 || this.children.size() == 0)
+		if (this.currentPosition == -1 || this.children.isEmpty())
 			x = 0;
 		if(this.selectionStart == -1) //in dit geval geen selectie?
 		{	
 			this.drawCursor(x);
 		}
 
-		//draw selection line
-		ctx.setStrokeStyle("#f00");
-		ctx.setLineWidth(2.0);
-		this.drawline(ctx, selectioncords[0], selectioncords[1], selectioncords[2], selectioncords[3]);
+// draw selection line
+//		ctx.setStrokeStyle("#f00");
+//		ctx.setLineWidth(2.0);
+//		this.drawline(ctx, selectioncords[0], selectioncords[1], selectioncords[2], selectioncords[3]);
 		
-		if(children.size() == 0 && stippels)
+		if(children.isEmpty() && stippels)
 		{	String font = ctx.getFont();
 			ctx.setFont(fm.getFontStyle());
+			ctx.setFillStyle(color);
 			ctx.fillText("...", 0, getAsHoogte());
 			ctx.setFont(font);
 		}
 	}
 
+	public void paintComponent(Context2d ctx) {
+		//ignore if the formule is not editable
+				if (holder instanceof FormuleEditor)
+					if (holder.getCurrentRegel() == this && this.parent != null)
+					{
+						//draw background
+						ctx.setFillStyle("#eee");
+						ctx.fillRect(0, 0, width, height);
+					}
+		
+				if (this.children.isEmpty() && holder.isInputNeeded())
+				{
+					//draw square if line is empty
+					ctx.setStrokeStyle("#888");
+//					ctx.beginPath();
+//					ctx.moveTo(0, 0);
+//					ctx.lineTo(width, 0);
+//					ctx.lineTo(width, height);
+//					ctx.lineTo(0, height);
+//					ctx.lineTo(0, 0);
+//					ctx.stroke();
+					ctx.strokeRect(0, 0, width, height);
+				}
+	}
+
+	public void paintAll(Context2d ctx) {
+		paintComponent(ctx);
+		for(FormuleElement e: children) {
+			int x = e.getX();
+			int y = e.getY();
+			ctx.translate(x, y);
+			e.paintAll(ctx);
+			ctx.translate(-x, -y);
+		}
+	}
+	
 
 	/**
 	 * backspace
