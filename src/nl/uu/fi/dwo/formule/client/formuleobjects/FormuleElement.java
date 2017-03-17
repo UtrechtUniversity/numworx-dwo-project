@@ -10,6 +10,7 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
@@ -113,6 +114,7 @@ public abstract class FormuleElement implements TekstElement
 		canvas = holder.createCanvas(this);
 		ctx = holder.createContext2d(this);
 		this.fm = font;
+		changed = sizechanged = true;
 	}
 
 	/**
@@ -356,7 +358,8 @@ public abstract class FormuleElement implements TekstElement
 	 */
 	public void paint()
 	{
-		if (changed)
+		java.util.logging.Logger.getLogger("FormuleElement").info("paint " + this + " " + isChanged());
+		if (isChanged())
 		{
 			paintObject();
 			setChanged(false); // ?????? missing ?????

@@ -31,7 +31,7 @@ public class ConjugVak extends FormuleElementWithChildren
 		}
 
 		ctx.setStrokeStyle(color);
-		ctx.setFillStyle(color);
+//		ctx.setFillStyle(color);
 		
 		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
 

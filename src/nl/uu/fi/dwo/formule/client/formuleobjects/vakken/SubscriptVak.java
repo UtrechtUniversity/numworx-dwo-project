@@ -17,9 +17,6 @@ public class SubscriptVak extends FormuleElementWithChildren
 		
 		this.setFontChanges(changes);
 
-		//getChild().setPosition(0, 0);
-
-		this.setChanged(true);
 	}
 	
 	public void paintObject()
@@ -55,21 +52,21 @@ public class SubscriptVak extends FormuleElementWithChildren
 			ctx.fillRect(0, 0, this.width, this.height);
 		}
 
-		ctx.setStrokeStyle(color);
-		ctx.setFillStyle(color);
-		
+//		ctx.setStrokeStyle(color);
+//		ctx.setFillStyle(color);
+//		
 		
 		this.getChild().draw(ctx);
 
 		this.drawCursor();
 	}
 	
-	public boolean setFont(FormuleFont fm)
-	{
-		if (super.setFont(fm) == false)
-			return false;
-		return true;
-	}
+//	public boolean setFont(FormuleFont fm)
+//	{
+//		if (super.setFont(fm) == false)
+//			return false;
+//		return true;
+//	}
 	
 	public void zetMaat()
 	{	//int vgh = ((FormuleRegel)getParent()).geefVoorgangerHoogte(this);

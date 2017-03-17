@@ -130,9 +130,9 @@ public class DiffVak extends FormuleElementWithChildren
 			ctx.lineTo(locx+c, locy+hoogte-hh+b-d);
 			ctx.lineTo(locx+c+b-bb, locy+hoogte-bb-d);
 			ctx.lineTo(locx+c+b, locy+hoogte-d);
-			ctx.stroke();
-			
-			ctx.beginPath();
+//			ctx.stroke();
+//			
+//			ctx.beginPath();
 			ctx.moveTo(breedte-b-1-c, locy+d);
 			ctx.lineTo(breedte-b+bb-1-c, locy+d+bb);
 			ctx.lineTo(breedte-1-c, locy+d+hh-b);

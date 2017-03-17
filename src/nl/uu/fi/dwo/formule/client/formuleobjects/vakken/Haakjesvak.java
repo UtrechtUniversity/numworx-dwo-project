@@ -32,12 +32,10 @@ public class Haakjesvak extends FormuleElementWithChildren
 	}
 
 	@Override
-	public void paint()
+	public void paintObject()
 	{
 		try
 		{
-			if (this.isChanged() == false)
-				return;
 			this.getChild().paint();
 
 			//width = getChild().width;
@@ -61,10 +59,7 @@ public class Haakjesvak extends FormuleElementWithChildren
 				ctx.fillRect(0, 0, this.width, this.height);
 			}
 
-			//ctx.setStrokeStyle("#000");
-			//ctx.setFillStyle("#000");
 			ctx.setStrokeStyle(color);
-			ctx.setFillStyle(color);
 			ctx.setLineWidth(fm.getStrokeWidth());
 
 			ctx.beginPath();
@@ -74,9 +69,9 @@ public class Haakjesvak extends FormuleElementWithChildren
 			ctx.lineTo(c, height - hh + b - d);
 			ctx.lineTo(c+b-bb, height-bb-d);
 			ctx.lineTo(c+b, height-d);
-			ctx.stroke();
-			
-			ctx.beginPath();
+//			ctx.stroke();
+//			
+//			ctx.beginPath();
 			ctx.moveTo(width-b-1-c, d);
 			ctx.lineTo(width-1-c, d+hh-b);
 			ctx.lineTo(width-1-c, height-hh+b-d);
@@ -84,20 +79,6 @@ public class Haakjesvak extends FormuleElementWithChildren
 			ctx.lineTo(width-b-1-c, height-d);
 			ctx.stroke();
 			
-			/*
-			drawline(ctx, c + b, d, c + b - bb, d + bb);
-			drawline(ctx, c + b - bb, d + bb, c, d + hh - b);
-			drawline(ctx, c, d + hh - b, c, hoogte - hh + b - d);
-			drawline(ctx, c + b - bb, hoogte - bb - d, c, hoogte - hh + b - d);
-			drawline(ctx, c + b, hoogte - d, c + b - bb, hoogte - bb - d);
-
-			drawline(ctx, breedte - b - 1 - c, d, breedte - b + bb - 1 - c, d + bb);
-			drawline(ctx, breedte - b + bb - 1 - c, d + bb, breedte - 1 - c, d + hh - b);
-			drawline(ctx, breedte - 1 - c, d + hh - b, breedte - 1 - c, hoogte - hh + b - d);
-			drawline(ctx, breedte - b + bb - 1 - c, hoogte - bb - d, breedte - 1 - c, hoogte - hh + b - d);
-			drawline(ctx, breedte - b - 1 - c, hoogte - d, breedte - b + bb - 1 - c, hoogte - bb - d);
-			*/
-
 			this.getChild().draw(ctx);
 
 			this.drawCursor();

@@ -56,11 +56,9 @@ public class NdeWortelVak extends FormuleElementWithChildren
 			ctx.fillRect(0, 0, this.width, this.height);
 		}
 
-		//ctx.setStrokeStyle("#000");
-		//ctx.setFillStyle("#000");
 		
 		ctx.setStrokeStyle(color);
-		ctx.setFillStyle(color);
+//		ctx.setFillStyle(color);
 		
 
 		ctx.setLineWidth(fm.getStrokeWidth());
@@ -75,11 +73,6 @@ public class NdeWortelVak extends FormuleElementWithChildren
 		ctx.lineTo(width + 5, fm.getAscent() / 8);
 		ctx.stroke();
 		
-		//this.drawline(ctx, 5, 2 * height / 3, fm.getAscent() / 3 + 5, height);
-		//this.drawline(ctx, 6, 2 * height / 3, fm.getAscent() / 3 + 6, height);
-		//this.drawline(ctx, fm.getAscent() / 3 + 5, height, 2 * fm.getAscent() / 3 + 4, fm.getAscent() / 8);
-		//this.drawline(ctx, 2 * fm.getAscent() / 3 + 5, fm.getAscent() / 8, width + 5, fm.getAscent() / 8);
-
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);
 		this.drawCursor();

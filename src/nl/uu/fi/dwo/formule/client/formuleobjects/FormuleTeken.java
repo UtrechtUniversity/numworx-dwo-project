@@ -32,7 +32,6 @@ public class FormuleTeken extends FormuleElement
 		character = tktk.charAt(0);
 		teken = tktk;
 		combined = true;
-		sizechanged = true;
 		setFont(fm);
 	}
 	
@@ -81,7 +80,6 @@ public class FormuleTeken extends FormuleElement
 			teken = String.valueOf(tk);
 		}
 		selected = false;
-		sizechanged = true;
 		if(teken != null) setFont(fm);
 	}
 

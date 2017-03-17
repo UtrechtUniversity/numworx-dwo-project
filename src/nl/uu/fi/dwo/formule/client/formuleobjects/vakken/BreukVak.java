@@ -97,10 +97,8 @@ public class BreukVak extends FormuleElementWithChildren
 			ctx.fillRect(0, 0, this.width, this.height);
 		}
 
-		//ctx.setStrokeStyle("#000");
-		//ctx.setFillStyle("#000");
 		ctx.setStrokeStyle(color);
-		ctx.setFillStyle(color);
+//		ctx.setFillStyle(color);
 		//}
 
 		ctx.setLineWidth(fm.getStrokeWidth());
@@ -111,11 +109,6 @@ public class BreukVak extends FormuleElementWithChildren
 		ctx.moveTo(fm.getAscent() / 8, this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
 		ctx.lineTo(this.width - (fm.getAscent() / 8), this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
 		ctx.stroke();
-		//this.drawline(ctx, fm.getAscent() / 3, getChild(0).height + fm.getAscent() / 8, this.width - (fm.getAscent() / 3), getChild(0).height + fm.getAscent() / 8);
-
-		//g.drawLine(fm.getAscent()/8,kind1.getSize().height + fm.getAscent()/8,getSize().width - fm.getAscent()/8,kind1.getSize().height + fm.getAscent()/8);
-		
-		
 		
 		this.getChild(1).draw(ctx);
 		this.getChild(0).draw(ctx);

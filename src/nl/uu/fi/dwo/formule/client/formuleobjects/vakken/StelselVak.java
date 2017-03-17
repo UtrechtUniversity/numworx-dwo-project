@@ -30,23 +30,19 @@ public class StelselVak extends FormuleElementWithChildren
 		
 		//getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
 		//this.paint();
-		this.setChanged(true);
+//		this.setChanged(true);
 		//this.setAsHoogte(3 * fm.getAscent() / 4);
 		
 	}
 
 	@Override
-	public void paint()
-	{
-		
-		if (this.isChanged() == false)
-			return;
-
-		maakMaat();
-		
+	public void paintObject()
+	{		
+	
 		for(int i = 0; i < getChildrenSize(); i++)
 		{	getChild(i).paint();
 		}
+		maakMaat();
 		//((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//((Graphics2D)g).setStroke(new BasicStroke(1.2f));
 	    		
@@ -56,7 +52,7 @@ public class StelselVak extends FormuleElementWithChildren
 			ctx.fillRect(0, 0, this.width, this.height);
 		}
 		ctx.setStrokeStyle(color);
-		ctx.setFillStyle(color);
+//		ctx.setFillStyle(color);
 		ctx.setLineWidth(fm.getStrokeWidth());
 		
 		ctx.beginPath();
@@ -73,52 +69,6 @@ public class StelselVak extends FormuleElementWithChildren
 			getChild(i).draw(ctx);
 		//this.getChild().draw(ctx);
 		this.drawCursor();
-//		((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-//		((Graphics2D)g).setStroke(new BasicStroke(0.7f));
-		
-//		super.paint(g);
-//		
-//		
-//		
-//		
-//		HTML5 wortel		
-//		this.getChild().paint();
-//
-//		width = 5 * fm.getAscent() / 6 + getChild().width;
-//		height = fm.getAscent() / 4 + getChild().height + 3; //+3 omdat dat werkt.. is misschien niet de netste oplossing.
-//
-//		this.setAsHoogte(getChild().getAsHoogte() + fm.getAscent() / 4);
-//		this.setSize(width, height);
-//
-//		if (this.isSelected())
-//		{
-//			ctx.setFillStyle("#aaf");
-//			ctx.fillRect(0, 0, this.width, this.height);
-//		}
-//
-//		//ctx.setStrokeStyle("#000");
-//		//ctx.setFillStyle("#000");
-//		ctx.setStrokeStyle(color);
-//		ctx.setFillStyle(color);
-//		
-//
-//		ctx.setLineWidth(fm.getStrokeWidth());
-//
-//		ctx.beginPath();
-//		ctx.moveTo(1, 2 * height / 3 - 1);
-//		ctx.lineTo(fm.getAscent() / 3, height - 3);
-//		ctx.stroke();
-//		//this.drawline(ctx, 0, 2 * height / 3, fm.getAscent() / 3, height);
-//
-//		ctx.beginPath();
-//		ctx.moveTo(2, 2 * height / 3 - 1);
-//		ctx.lineTo(fm.getAscent() / 3 + 1, height - 3);
-//		ctx.lineTo(2 * fm.getAscent() / 3 - 1, fm.getAscent() / 8);
-//		ctx.lineTo(width, fm.getAscent() / 8);
-//		ctx.stroke();
-//
-//		this.getChild().draw(ctx);
-//		this.drawCursor();
 	}
 	
 	public int bepaalKindMetFocus()

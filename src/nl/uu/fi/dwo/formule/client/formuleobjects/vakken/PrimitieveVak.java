@@ -32,9 +32,7 @@ public class PrimitieveVak extends FormuleElementWithChildren
 		int ty = 0;
 		int tb = 2*asc/3;
 		int th = getChild(0).height + tb;
-		
-		ctx.beginPath();
-		
+				
 		ctx.beginPath();
 		ctx.arc(tx + asc / 2, ty + asc / 6, asc / 6, 0, Math.PI, true);
 		ctx.lineTo(tx + asc/3, ty + th - asc/6);

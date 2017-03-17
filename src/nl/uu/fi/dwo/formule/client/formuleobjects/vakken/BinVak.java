@@ -31,7 +31,7 @@ public class BinVak extends FormuleElementWithChildren
 		}
 		
 		ctx.setStrokeStyle(color);
-		ctx.setFillStyle(color);
+//		ctx.setFillStyle(color);
 		
 		ctx.beginPath();
 		ctx.moveTo(c+b, d);
@@ -40,9 +40,9 @@ public class BinVak extends FormuleElementWithChildren
 		ctx.lineTo(c, height - hh + b - d);
 		ctx.lineTo(c+b-bb, height-bb-d);
 		ctx.lineTo(c+b, height-d);
-		ctx.stroke();
-		
-		ctx.beginPath();
+//		ctx.stroke();
+//		
+//		ctx.beginPath();
 		ctx.moveTo(width-b-1-c, d);
 		ctx.lineTo(width-1-c, d+hh-b);
 		ctx.lineTo(width-1-c, height-hh+b-d);

@@ -128,9 +128,9 @@ public class DiffPartialVak extends FormuleElementWithChildren
 			ctx.lineTo(locx+c, locy+hoogte-hh+b-d);
 			ctx.lineTo(locx+c+b-bb, locy+hoogte-bb-d);
 			ctx.lineTo(locx+c+b, locy+hoogte-d);
-			ctx.stroke();
-			
-			ctx.beginPath();
+//			ctx.stroke();
+//			
+//			ctx.beginPath();
 			ctx.moveTo(breedte-b-1-c, locy+d);
 			ctx.lineTo(breedte-b+bb-1-c, locy+d+bb);
 			ctx.lineTo(breedte-1-c, locy+d+hh-b);
@@ -139,18 +139,6 @@ public class DiffPartialVak extends FormuleElementWithChildren
 			ctx.lineTo(breedte-b-1-c, locy+hoogte-d);
 			ctx.stroke();
 			
-			
-			//this.drawline(ctx, locx+c+b, locy+d, locx+c+b-bb, locy+d+bb);
-			//this.drawline(ctx, locx+c+b-bb, locy+d+bb, locx+c, locy+d+hh-b);
-			//this.drawline(ctx, locx+c, locy+d+hh-b, locx+c, locy+hoogte-hh+b-d);		
-			//this.drawline(ctx, locx+c+b-bb, locy+hoogte-bb-d, locx+c, locy+hoogte-hh+b-d);
-			//this.drawline(ctx, locx+c+b, locy+hoogte-d, locx+c+b-bb, locy+hoogte-bb-d);
-			
-			//this.drawline(ctx, breedte-b-1-c, locy+d, breedte-b+bb-1-c, locy+d+bb);
-			//this.drawline(ctx, breedte-b+bb-1-c, locy+d+bb, breedte-1-c, locy+d+hh-b);
-			//this.drawline(ctx, breedte-1-c, locy+d+hh-b, breedte-1-c, locy+hoogte-hh+b-d);		
-			//this.drawline(ctx, breedte-b+bb-1-c, locy+hoogte-bb-d, breedte-1-c, locy+hoogte-hh+b-d);
-			//this.drawline(ctx, breedte-b-1-c, locy+hoogte-d, breedte-b+bb-1-c, locy+hoogte-bb-d);
 		}
 
 	

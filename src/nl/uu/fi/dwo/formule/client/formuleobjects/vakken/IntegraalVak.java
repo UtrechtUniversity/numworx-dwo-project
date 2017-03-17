@@ -47,7 +47,6 @@ public class IntegraalVak extends FormuleElementWithChildren
 		int ty = getChild(2).height + 1;
 		int tb = 2 * asc / 3;
 		int th = getChild(0).height + tb;
-		//int ashoogte = this.getAsHoogte();
 		int ashoogte = getAsHoogte();
 		
 		if (this.isSelected())
@@ -58,19 +57,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 		
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
-		
-		
-		//g.drawArc(tx+asc/3,ty,asc/3,asc/3,0,180);
-        //g.drawArc(tx,ty+th-asc/3,asc/3,asc/3,180,180);
-        //g.drawLine(tx+asc/3,ty+asc/6,tx+asc/3,ty+th-asc/6);
-        //g.drawString("d",tx+asc+k1w+asc/5-2,ashoogte+(asc-1)/2+1);//(int)Math.rint(4.0*asc/8));
-		
-        /*
-		ctx.beginPath();
-		ctx.arc(tx + (asc / 3) + (asc / 3 / 2), ty + asc / 6, asc / 3 / 2, 0, Math.PI, true);
-		ctx.arc(tx + (asc / 3 / 2), ty + th - asc / 6, asc / 3 / 2, 0, Math.PI, false);
-		ctx.stroke();
-*/
+				
 		ctx.beginPath();
         ctx.arc(tx + asc/2, ty + asc/6,  asc/6, 0, Math.PI, true);
         ctx.lineTo(tx + asc/3, ty + th - asc/6);

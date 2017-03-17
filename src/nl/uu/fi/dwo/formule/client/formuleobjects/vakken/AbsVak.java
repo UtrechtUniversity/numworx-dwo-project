@@ -25,13 +25,13 @@ public class AbsVak extends FormuleElementWithChildren
 		}
 		
 		ctx.setStrokeStyle(color);
-		ctx.setFillStyle(color);
+//		ctx.setFillStyle(color);
 		
 		ctx.beginPath();
 		ctx.moveTo(c,  d);
 		ctx.lineTo(c, height-d);
-		ctx.stroke();
-		ctx.beginPath();
+//		ctx.stroke();
+//		ctx.beginPath();
 		ctx.moveTo(width - 1 - c, d);
 		ctx.lineTo(width - 1 - c, height - d);
 		ctx.stroke();

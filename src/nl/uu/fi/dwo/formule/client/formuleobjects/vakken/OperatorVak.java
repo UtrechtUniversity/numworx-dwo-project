@@ -60,16 +60,10 @@ public class OperatorVak extends FormuleElementWithChildren {
 			ctx.fillRect(0, 0, this.width, this.height);
 		}
 
-		//ctx.setStrokeStyle("#000");
-		//ctx.setFillStyle("#000");
-		ctx.setStrokeStyle(color);
-		ctx.setFillStyle(color);
+//		ctx.setStrokeStyle(color);
+//		ctx.setFillStyle(color);
 		
-		//}
 
-		//ctx.setLineWidth(fm.getStrokeWidth());
-
-		//this.drawline(ctx, fm.getAscent() / 3, a.height + fm.getAscent() / 8, this.width - (fm.getAscent() / 3), a.height + fm.getAscent() / 8);
 
 		b.draw(ctx, b.x, as-b.getAsHoogte());
 		if(!(this instanceof AftrekVak && a.toString().equals(0)))

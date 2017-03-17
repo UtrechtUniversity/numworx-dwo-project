@@ -25,17 +25,13 @@ public class WortelVak extends FormuleElementWithChildren
 		
 		getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
 		//this.paint();
-		this.setChanged(true);
+//		this.setChanged(true);
 		this.setAsHoogte(3 * fm.getAscent() / 4);
 		
 	}
 
 	@Override
-	public void paint()
-	{
-		if (this.isChanged() == false)
-			return;
-
+	public void paintObject() {
 		this.getChild().paint();
 
 		width = 5 * fm.getAscent() / 6 + getChild().width;
@@ -61,10 +57,10 @@ public class WortelVak extends FormuleElementWithChildren
 		ctx.beginPath();
 		ctx.moveTo(0, 2 * height / 3);
 		ctx.lineTo(fm.getAscent() / 3, height);
-		ctx.stroke();
+		//ctx.stroke();
 		//this.drawline(ctx, 0, 2 * height / 3, fm.getAscent() / 3, height);
 
-		ctx.beginPath();
+		//ctx.beginPath();
 		ctx.moveTo(1, 2 * height / 3);
 		ctx.lineTo(fm.getAscent() / 3 + 1, height);
 		ctx.lineTo(2 * fm.getAscent() / 3 - 1, fm.getAscent() / 8 + 1);
