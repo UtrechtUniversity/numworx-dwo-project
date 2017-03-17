@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
@@ -23,9 +25,9 @@ public class Machtvak extends FormuleElementWithChildren
 
 		this.setFontChanges(fc);
 
-		getChild().setPosition(0, 0);
-
-		this.setChanged(true);
+//		getChild().setPosition(0, 0);
+//
+//		this.setChanged(true);
 	}
 
 	@Override
@@ -35,15 +37,7 @@ public class Machtvak extends FormuleElementWithChildren
 
 		zetMaat();
 
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
-
-//		ctx.setStrokeStyle(color);
-//		ctx.setFillStyle(color);
-		
+		paintComponent(ctx);
 		
 		this.getChild().draw(ctx);
 
@@ -72,7 +66,7 @@ public class Machtvak extends FormuleElementWithChildren
 		this.setAsHoogte(getChild().height - 2 * fm.getAscent() / 3 - fm.getDescent() + vgah);
 		
 		this.setSize(width, height);
-		
+		super.zetMaat();
 	}
 	
 	public int getAsHoogte()

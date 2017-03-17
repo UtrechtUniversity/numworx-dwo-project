@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -16,15 +18,15 @@ public class NdeLogVak extends FormuleElementWithChildren
 		super(editor, 2);
 
 		//this.paint();
-		this.setChanged(true);
+		//this.setChanged(true);
 		this.setAsHoogte(3 * fm.getAscent() / 4);
 		//ctx.setFont(fm.getFontStyle());
 		//ctx.setTextAlign(TextAlign.CENTER);
 		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		//ctx.setFont(fm.getFontStyle());
 		//System.out.println("this.getFontChanges.toString()" + this.font.toString());
-		int fStr = (int) Math.round(ctx.measureText("log").getWidth());
-		
+		int fStr = //(int) Math.round(ctx.measureText("log").getWidth());
+				(int) holder.measureWidth(this, fm, "log");
 		setSize(4 * fm.getAscent() / 3, 5 * fm.getAscent() / 4 + fm.getDescent());
 		setAsHoogte(getChild(0).getAsHoogte() + getChild(1).height/2);
 		//if(WiskOpdr.language.toString().equals("en"))ashoogte = kind1.ashoogte;
@@ -58,43 +60,18 @@ public class NdeLogVak extends FormuleElementWithChildren
 		return getChild(0).getAsHoogte() + getChild(1).height/2;
 	}
 
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren#paintComponent(com.google.gwt.canvas.dom.client.Context2d)
+	 */
 	@Override
-	public void paintObject()
-	{
-		this.getChild(0).paint();
-		this.getChild(1).paint();
-		//ctx.setFont(fm.getFontStyle());
-		//ctx.setTextAlign(TextAlign.CENTER);
-		//ctx.setTextBaseline(TextBaseline.BOTTOM);
-		ctx.setFont(fm.getFontStyle());
-		
-		int fStr = (int) Math.round(ctx.measureText("log").getWidth());
-		setSize(2*fm.getAscent()/3+getChild(1).width + fStr + getChild(0).width + fm.getAscent()/2, getChild(1).height/2 + getChild(0).height);
-		setAsHoogte(getChild(0).getAsHoogte() + getChild(1).getHeight()/2);
+	public void paintComponent(Context2d ctx) {
+		// TODO Auto-generated method stub
+		super.paintComponent(ctx);
 
-		getChild(0).setPosition(getChild(1).width + fStr + 3*fm.getAscent()/4, getChild(1).height/2);
-        getChild(1).setPosition(fm.getAscent()/3, getAsHoogte()-(this.getChild(1).height/2 + fm.getAscent()));
-        
-        if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
-
-		//ctx.setStrokeStyle("#000");
-		//ctx.setFillStyle("#000");
-		
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		
 
-		//ctx.setLineWidth(fm.getStrokeWidth());
-
-		//this.drawline(ctx, 5, 2 * height / 3, fm.getAscent() / 3 + 5, height);
-		//this.drawline(ctx, 6, 2 * height / 3, fm.getAscent() / 3 + 6, height);
-		//this.drawline(ctx, fm.getAscent() / 3 + 5, height, 2 * fm.getAscent() / 3 + 4, fm.getAscent() / 8);
-		//this.drawline(ctx, 2 * fm.getAscent() / 3 + 5, fm.getAscent() / 8, width + 5, fm.getAscent() / 8);
-		
 		// FIXME if(language.toString().equals("en"))g.drawString("log", 3 ,ashoogte + asc/2 + asc/12);
 		//else g.drawString("log", 5+k2w ,ashoogte + asc/2 + asc/12);
 		//ctx.setTextAlign(TextAlign.CENTER);
@@ -136,6 +113,33 @@ public class NdeLogVak extends FormuleElementWithChildren
 		ctx.lineTo(breedte-b+bb-1-c, locy+hoogte-bb-d);
 		ctx.lineTo(breedte-b-1-c, locy+hoogte-d);
 		ctx.stroke();
+	}
+
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement#zetMaat()
+	 */
+	@Override
+	public void zetMaat() {
+		//ctx.setFont(fm.getFontStyle());
+		
+		fStr = (int) //Math.round(ctx.measureText("log").getWidth());
+				holder.measureWidth(this, fm, "log");
+		setSize(2*fm.getAscent()/3+getChild(1).width + fStr + getChild(0).width + fm.getAscent()/2, getChild(1).height/2 + getChild(0).height);
+		setAsHoogte(getChild(0).getAsHoogte() + getChild(1).getHeight()/2);
+
+		getChild(0).setPosition(getChild(1).width + fStr + 3*fm.getAscent()/4, getChild(1).height/2);
+        getChild(1).setPosition(fm.getAscent()/3, getAsHoogte()-(this.getChild(1).height/2 + fm.getAscent()));
+		super.zetMaat();
+	}
+
+	@Override
+	public void paintObject()
+	{
+		this.getChild(0).paint();
+		this.getChild(1).paint();
+		
+		zetMaat();
+		paintComponent(ctx);
 				
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);
@@ -183,6 +187,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 	}
 
 	static final boolean isEN = false;
+	private int fStr;
 	public String toMathML() 
 	{
 // if language is 'en' grondtal als subscript

@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
@@ -23,20 +25,12 @@ public class LimietVak extends FormuleElementWithChildren{
 		//getChild(3).setFontChanges(changes);
 	}
 	
-	public void paintObject()
-	{
-		this.getChild(0).paint();
-		this.getChild(1).paint();
-		this.getChild(2).paint();
-		//this.getChild(3).paint();
-		zetMaat();
-		
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
-		
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren#paintComponent(com.google.gwt.canvas.dom.client.Context2d)
+	 */
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		
@@ -87,11 +81,19 @@ public class LimietVak extends FormuleElementWithChildren{
 			ctx.lineTo(pijlX + 2, pijlY - pijlH + 2);
 			ctx.stroke();
 		}
+	}
+
+	public void paintObject()
+	{
+		this.getChild(0).paint();
+		this.getChild(1).paint();
+		this.getChild(2).paint();
+		zetMaat();
+		paintComponent(ctx);
 		
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);
 		this.getChild(2).draw(ctx);
-		//this.getChild(3).draw(ctx);
 		
 		this.drawCursor();
 	}
@@ -131,6 +133,7 @@ public class LimietVak extends FormuleElementWithChildren{
 		//kind1.setLocation(k1x,k1y);
 		//kind2.setLocation(k2x,k2y);
 		//kind3.setLocation(k3x,k3y);
+		super.zetMaat();
 	}
 	
 	public int getAsHoogte()

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import fi.wiskopdr.Letter;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -11,6 +13,8 @@ public class DiffVak extends FormuleElementWithChildren
 
 {		
 	private boolean diffBreuk;
+	private double asc;
+	private double desc;
 	
 	public DiffVak(FormuleElement editor)
 	{
@@ -59,38 +63,20 @@ public class DiffVak extends FormuleElementWithChildren
 		
 		this.getChild(0).paint();
 		this.getChild(1).paint();
+		zetMaat();
+        paintComponent(ctx);
 	
-		diffBreuk = getChild(0).toString().length()==1 && Character.isLetter(getChild(0).toString().charAt(0));
-        double asc = fm.getAscent();
-		double desc = fm.getDescent();
-		width = (int) (asc/8+asc+asc/3+getChild(0).width+asc/3+asc/4);
-		int h1 = getChild(0).height;
-		int h2 = (int) (getChild(1).height + asc + desc + asc/4);
-		height = (int) (Math.max(getChild(0).height, asc + desc + getChild(1).height + asc/4));
-        if(diffBreuk) 
-        	width = (int) (asc/8+getChild(0).width+asc/3+asc/4);
-        int k1x = (int) (asc/8+asc+asc/3+2);
-        int k1y = (int) ((height-getChild(0).height)/2);// + 4*asc/8 + 1);//was zonder - 1
-        if(diffBreuk) 
-        {	k1x = (int) (asc/2) - 1;
-        	k1y = -1;
-        }
-        int k2x = (int) (asc/8+asc/2 - 1)-2;//was zonder -2;
-        setAsHoogte((int) (getChild(0).getAsHoogte() + k1y));// - 4* asc/8 - 1));
-        if(diffBreuk) 
-        	setAsHoogte((int)(asc + desc + 3* asc/8));
-        
-        //int k2y = (int) (getAsHoogte() + asc/8 - 3*asc/8);
-        int k2y = (int) (getAsHoogte() + asc/8 - asc/2 + asc/8);
-        setSize(width, height);
-        getChild(0).setPosition(k1x, k1y);
-        getChild(1).setPosition(k2x, k2y);
-        
-        if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
+		this.getChild(0).draw(ctx);
+		this.getChild(1).draw(ctx);
+		this.drawCursor();
+	}
+	
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren#paintComponent(com.google.gwt.canvas.dom.client.Context2d)
+	 */
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
 	
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
@@ -105,6 +91,7 @@ public class DiffVak extends FormuleElementWithChildren
 				
 		ctx.stroke();
 		ctx.fillText(dString, fm.getAscent()/8+ (diffBreuk?0:fm.getAscent()/4), getAsHoogte() - 3*asc/8 - desc);
+		int k2y = getChild(2).getY();
 		ctx.fillText(dString, fm.getAscent()/8, k2y + asc);
 		fm.setItalic(true);
 		
@@ -140,27 +127,42 @@ public class DiffVak extends FormuleElementWithChildren
 			ctx.lineTo(breedte-b+bb-1-c, locy+hoogte-bb-d);
 			ctx.lineTo(breedte-b-1-c, locy+hoogte-d);
 			ctx.stroke();
-			
-			
-			//this.drawline(ctx, locx+c+b, locy+d, locx+c+b-bb, locy+d+bb);
-			//this.drawline(ctx, locx+c+b-bb, locy+d+bb, locx+c, locy+d+hh-b);
-			//this.drawline(ctx, locx+c, locy+d+hh-b, locx+c, locy+hoogte-hh+b-d);		
-			//this.drawline(ctx, locx+c+b-bb, locy+hoogte-bb-d, locx+c, locy+hoogte-hh+b-d);
-			//this.drawline(ctx, locx+c+b, locy+hoogte-d, locx+c+b-bb, locy+hoogte-bb-d);
-			
-			//this.drawline(ctx, breedte-b-1-c, locy+d, breedte-b+bb-1-c, locy+d+bb);
-			//this.drawline(ctx, breedte-b+bb-1-c, locy+d+bb, breedte-1-c, locy+d+hh-b);
-			//this.drawline(ctx, breedte-1-c, locy+d+hh-b, breedte-1-c, locy+hoogte-hh+b-d);		
-			//this.drawline(ctx, breedte-b+bb-1-c, locy+hoogte-bb-d, breedte-1-c, locy+hoogte-hh+b-d);
-			//this.drawline(ctx, breedte-b-1-c, locy+hoogte-d, breedte-b+bb-1-c, locy+hoogte-bb-d);
 		}
 
-	
-		this.getChild(0).draw(ctx);
-		this.getChild(1).draw(ctx);
-		this.drawCursor();
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement#zetMaat()
+	 */
+	@Override
+	public void zetMaat() {
+		diffBreuk = getChild(0).toString().length()==1 && Character.isLetter(getChild(0).toString().charAt(0));
+        asc = fm.getAscent();
+		desc = fm.getDescent();
+		width = (int) (asc/8+asc+asc/3+getChild(0).width+asc/3+asc/4);
+		//int h1 = getChild(0).height;
+		//int h2 = (int) (getChild(1).height + asc + desc + asc/4);
+		height = (int) (Math.max(getChild(0).height, asc + desc + getChild(1).height + asc/4));
+        if(diffBreuk) 
+        	width = (int) (asc/8+getChild(0).width+asc/3+asc/4);
+        int k1x = (int) (asc/8+asc+asc/3+2);
+        int k1y = (int) ((height-getChild(0).height)/2);// + 4*asc/8 + 1);//was zonder - 1
+        if(diffBreuk) 
+        {	k1x = (int) (asc/2) - 1;
+        	k1y = -1;
+        }
+        int k2x = (int) (asc/8+asc/2 - 1)-2;//was zonder -2;
+        setAsHoogte((int) (getChild(0).getAsHoogte() + k1y));// - 4* asc/8 - 1));
+        if(diffBreuk) 
+        	setAsHoogte((int)(asc + desc + 3* asc/8));
+        
+        int k2y = (int) (getAsHoogte() + asc/8 - asc/2 + asc/8);
+        setSize(width, height);
+        getChild(0).setPosition(k1x, k1y);
+        getChild(1).setPosition(k2x, k2y);
+		super.zetMaat();
+	}
+
 	@Override
 	public FormuleElement setCurrentElementAt(int x, int y)
 	{

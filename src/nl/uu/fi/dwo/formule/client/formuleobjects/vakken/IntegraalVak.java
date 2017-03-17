@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.GWT;
 
 /**
@@ -32,15 +33,12 @@ public class IntegraalVak extends FormuleElementWithChildren
 		getChild(3).insert(var);
 	}
 
-	public void paintObject()
-	{
-		this.getChild(0).paint();
-		this.getChild(1).paint();
-		this.getChild(2).paint();
-		this.getChild(3).paint();
-		
-		zetMaat();
-
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren#paintComponent(com.google.gwt.canvas.dom.client.Context2d)
+	 */
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
 		int asc = fm.getAscent();
 
 		int tx = Math.max(1, getChild(1).width - asc / 2);
@@ -48,13 +46,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 		int tb = 2 * asc / 3;
 		int th = getChild(0).height + tb;
 		int ashoogte = getAsHoogte();
-		
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
-		
+				
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 				
@@ -71,6 +63,17 @@ public class IntegraalVak extends FormuleElementWithChildren
 		ctx.fillText("d", tx + asc + getChild(0).width + asc / 5 - 2, ashoogte);
 		
 		fm.setItalic(true);
+	}
+
+	public void paintObject()
+	{
+		this.getChild(0).paint();
+		this.getChild(1).paint();
+		this.getChild(2).paint();
+		this.getChild(3).paint();
+		
+		zetMaat();
+		paintComponent(ctx);
 		
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);
@@ -127,6 +130,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 		getChild(2).setPosition(k3x, k3y);
 		getChild(3).setPosition(k4x, k4y);
 		this.setAsHoogte(ashoogte);
+		super.zetMaat();
 	}
 	
 	public int getAsHoogte()

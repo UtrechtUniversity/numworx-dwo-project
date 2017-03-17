@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 
@@ -10,12 +12,12 @@ public class BinVak extends FormuleElementWithChildren
 		super(holder, 2);
 	}
 	
-	public void paintObject()
-	{
-		getChild(0).paint();
-		getChild(1).paint();
-		zetMaat();
-		
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren#paintComponent(com.google.gwt.canvas.dom.client.Context2d)
+	 */
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
 		int h =3*fm.getAscent()/2;
 		int hh = h/2;
 		int b = h/6;
@@ -23,13 +25,7 @@ public class BinVak extends FormuleElementWithChildren
 		
 		int c = fm.getAscent()/6;
 		int d = fm.getAscent()/8;
-		
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
-		
+				
 		ctx.setStrokeStyle(color);
 //		ctx.setFillStyle(color);
 		
@@ -48,21 +44,15 @@ public class BinVak extends FormuleElementWithChildren
 		ctx.lineTo(width-1-c, height-hh+b-d);
 		ctx.lineTo(width-b+bb-1-c, height-bb-d);
 		ctx.lineTo(width-b-1-c, height-d);
-		ctx.stroke();
-		
-		/*
-		this.drawline(ctx, c+b, d, c+b-bb, d+bb);
-		this.drawline(ctx, c+b-bb, d+bb, c, d+hh-b);
-		this.drawline(ctx, c, d+hh-b, c, height-hh+b-d);		
-		this.drawline(ctx, c+b-bb, height-bb-d, c, height-hh+b-d);
-		this.drawline(ctx, c+b, height-d, c+b-bb, height-bb-d);
-		
-		this.drawline(ctx, width-b-1-c, d, width-b+bb-1-c, d+bb);
-		this.drawline(ctx, width-b+bb-1-c, d+bb, width-1-c, d+hh-b);
-		this.drawline(ctx, width-1-c, d+hh-b, width-1-c, height-hh+b-d);		
-		this.drawline(ctx, width-b+bb-1-c, height-bb-d, width-1-c, height-hh+b-d);
-		this.drawline(ctx, width-b-1-c, height-d, width-b+bb-1-c, height-bb-d);
-		*/
+		ctx.stroke();		
+	}
+
+	public void paintObject()
+	{
+		getChild(0).paint();
+		getChild(1).paint();
+		zetMaat();
+		paintComponent(ctx);
 		
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);

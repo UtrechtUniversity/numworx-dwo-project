@@ -40,29 +40,29 @@ public class FormuleRegel extends FormuleElement
 	
 	//private FormuleEditorWithAnswer editorParent;
 
-	private int nextx = 0;
-	private int defaultwidth = 0;
-	private int defaultheight = 0;
+	private int nextx;
+	private int defaultwidth;
+	private int defaultheight;
 
 	private int currentPosition = -1;
 
 	private int selectionDragStart = -1;
 	private int selectionStart = -1;
-	private int selectionStartx = 0;
+	private int selectionStartx;
 
 	//TODO: implement non editable lines
 	private boolean editable = true;
 	//private CssColor color = CssColor.make(0, 0, 0);
 
 	//how many children are numbers?
-	private int nonNumberChildern = 0;
+	private int nonNumberChildern;
 
-	private boolean smalltext = false;
+	private boolean smalltext;
 
 //	private int[] selectioncords =
 //	{ 0, 0, 0, 0 };
 	
-	private boolean stippels = false;
+	private boolean stippels;
 
 	public FormuleRegel(FormuleHolder holder)
 	{
