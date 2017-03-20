@@ -40,7 +40,7 @@ way is to add them to the catalina.properties in the tomcat/conf directory.
 
 in case of a name clash they can be reconfigured by editing the META-INF/context.xml.
 
-STMP system properties must be configured for sending email. Again the catalina.properties
+SMTP system properties must be configured for sending email. Again the catalina.properties
 are the recommended place.
    
 SMTP_SERVER=localhost
@@ -52,7 +52,6 @@ SMTP_PASSWORD=mySmtpSecret
 SMTP_EMAIL=wisweb@fi.uu.nl
 
 Verify there is enough permgenspace voor de tomcat.
-
 
 For sending emails to allow a password change we need an smtp server that allows 
 authentication. Configure it in the context.xml or the server.xml:
