@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
@@ -16,9 +18,7 @@ public class OperatorVak extends FormuleElementWithChildren {
 		this.code = code;
 		this.operator = operator;
 		teken = new FormuleTeken(holder, operator);
-		setChanged(true);
-		getChild(0).setPosition(0, 0);
-		
+		getChild(0).setPosition(0, 0);		
 	}
 	
 	public boolean setFont(FormuleFont f)
@@ -31,44 +31,61 @@ public class OperatorVak extends FormuleElementWithChildren {
 		return "$" + code + getChild(0) + "$n" + getChild(1) + "@@";
 	}
 	
-	public void paintObject() {
-// at 0,0
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
+		ctx.translate(teken.x, teken.y);
+		teken.paintComponent(ctx);
+		ctx.translate(-teken.x, -teken.y);
+	}
+
+	@Override
+	public void zetMaat() {
 		final FormuleRegel a = getChild(0);
+		final FormuleRegel b = getChild(1);
+
+		teken.validate();
+
 		int width = 0;
 		if(!(this instanceof AftrekVak && a.toString().equals("0")))
-		{	a.paint();
+		{	
 			width = a.width;
 		}
 		int as;
 // at width,0
-		teken.setPosition(width, 0);
-		teken.paint();
+		teken.setX(width);
 		width += teken.width;
 // at width+width, 0
-		final FormuleRegel b = getChild(1);
-		b.setPosition(width, 0);
-		b.paint();
+		b.setX(width);
 		width += b.width;
 		as = Math.max(a.getAsHoogte(), Math.max(b.getAsHoogte(), teken.getAsHoogte()));
-		height = as + Math.max(a.height-a.getAsHoogte(), Math.max( teken.height-teken.getAsHoogte(), b.height-b.getAsHoogte()));
+		int height = as + Math.max(a.height-a.getAsHoogte(), Math.max( teken.height-teken.getAsHoogte(), b.height-b.getAsHoogte()));
 		setSize(width, height);
 		setAsHoogte(as);
+		a.setY(as-a.getAsHoogte());
+		b.setY(as-b.getAsHoogte());
+		teken.setY(as-teken.getAsHoogte());
+		super.zetMaat();
+	}
 
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
+	public void paintObject() {
+// at 0,0
+		final FormuleRegel a = getChild(0);
+		final FormuleRegel b = getChild(1);
+
+		b.paint();
+
+		if(!(this instanceof AftrekVak && a.toString().equals("0")))
+		{	a.paint();
 		}
-
-//		ctx.setStrokeStyle(color);
-//		ctx.setFillStyle(color);
 		
+		zetMaat();
+		paintComponent(ctx);
 
-
-		b.draw(ctx, b.x, as-b.getAsHoogte());
-		if(!(this instanceof AftrekVak && a.toString().equals(0)))
-			a.draw(ctx, a.x, as-a.getAsHoogte());
-		teken.draw(ctx, teken.x, as-teken.getAsHoogte());
+		b.draw(ctx);
+		if(!(this instanceof AftrekVak && a.toString().equals("0")))
+			a.draw(ctx);
+		
 		this.drawCursor();
 
 	}

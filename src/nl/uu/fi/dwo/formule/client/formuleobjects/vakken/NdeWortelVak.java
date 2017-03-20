@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -19,7 +21,7 @@ public class NdeWortelVak extends FormuleElementWithChildren
 		super(editor, 2);
 
 		//this.paint();
-		this.setChanged(true);
+		//this.setChanged(true);
 		this.setAsHoogte(3 * fm.getAscent() / 4);
 
 		setSize(4 * fm.getAscent() / 3, 5 * fm.getAscent() / 4 + fm.getDescent());
@@ -41,26 +43,20 @@ public class NdeWortelVak extends FormuleElementWithChildren
 	{
 		this.getChild(0).paint();
 		this.getChild(1).paint();
+		zetMaat();		
+		paintComponent(ctx);
+		this.getChild(0).draw(ctx);
+		this.getChild(1).draw(ctx);
+		this.drawCursor();
+	}
 
-		//setSize(5 * fm.getAscent() / 6 + getChild(0).width + 5, fm.getAscent() / 4 + getChild(0).height);
-		//System.out.println("getChild(1).width = " + getChild(1).width);
-		setSize(getChild(1).width + getChild(0).width + 5 * fm.getAscent() / 6 - 2, fm.getAscent() / 4 + getChild(0).height);
-		getChild(0).x = 5 * fm.getAscent() / 7 + getChild(1).width - 2;
-		
-		
-		setAsHoogte(getChild(0).getAsHoogte() + fm.getAscent() / 4);
-		
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
-
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
 		
 		ctx.setStrokeStyle(color);
 //		ctx.setFillStyle(color);
 		
-
 		ctx.setLineWidth(fm.getStrokeWidth());
 
 		ctx.beginPath();
@@ -72,10 +68,16 @@ public class NdeWortelVak extends FormuleElementWithChildren
 		ctx.moveTo(2 * fm.getAscent() / 3 + getChild(1).width - 2, fm.getAscent() / 8);
 		ctx.lineTo(width + 5, fm.getAscent() / 8);
 		ctx.stroke();
-		
-		this.getChild(0).draw(ctx);
-		this.getChild(1).draw(ctx);
-		this.drawCursor();
+	}
+
+	@Override
+	public void zetMaat() {
+		//setSize(5 * fm.getAscent() / 6 + getChild(0).width + 5, fm.getAscent() / 4 + getChild(0).height);
+		//System.out.println("getChild(1).width = " + getChild(1).width);
+		setSize(getChild(1).width + getChild(0).width + 5 * fm.getAscent() / 6 - 2, fm.getAscent() / 4 + getChild(0).height);
+		getChild(0).x = 5 * fm.getAscent() / 7 + getChild(1).width - 2;
+		setAsHoogte(getChild(0).getAsHoogte() + fm.getAscent() / 4);
+		super.zetMaat();
 	}
 
 	public int getAsHoogte()

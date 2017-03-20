@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 
@@ -11,19 +13,10 @@ public class PrimitieveVak extends FormuleElementWithChildren
 		getChild(1).insert("x");
 	}
 
-	public void paintObject()
-	{
-		this.getChild(0).paint();
-		this.getChild(1).paint();
-		zetMaat();
-
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
 		int asc = fm.getAscent();
-
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
 		
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
@@ -38,17 +31,19 @@ public class PrimitieveVak extends FormuleElementWithChildren
 		ctx.lineTo(tx + asc/3, ty + th - asc/6);
         ctx.arc(tx + asc / 6, ty + th - asc / 6, asc / 6, 0, Math.PI, false);
 		ctx.stroke();
-		
-        //this.drawline(ctx, tx+asc/3,ty+asc/6,tx+asc/3,ty+th-asc/6);
         
-		//ctx.setTextAlign(TextAlign.CENTER);
-		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		fm.setItalic(false);
 		ctx.setFont(fm.getFontStyle());
-		//ctx.fillText("d", tx+asc+getChild(0).width+asc/5-2,getAsHoogte()+(asc-1)/2+1);
-
 		ctx.fillText("d", tx+asc+getChild(0).width+asc/5-2,getAsHoogte());
 		fm.setItalic(true);
+	}
+
+	public void paintObject()
+	{
+		this.getChild(0).paint();
+		this.getChild(1).paint();
+		zetMaat();
+
 		
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);
@@ -79,7 +74,7 @@ public class PrimitieveVak extends FormuleElementWithChildren
 		setAsHoogte(k1y + getChild(0).getAsHoogte());
 		getChild(0).setPosition(k1x,k1y);
 		getChild(1).setPosition(k2x,k2y);
-
+		super.zetMaat();
 	}
 	
 	public int getAsHoogte()

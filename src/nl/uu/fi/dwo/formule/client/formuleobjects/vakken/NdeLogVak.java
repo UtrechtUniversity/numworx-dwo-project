@@ -172,13 +172,13 @@ public class NdeLogVak extends FormuleElementWithChildren
 		return this;
 	}
 
-	@Override
-	public boolean setFont(FormuleFont fm)
-	{
-		if (super.setFont(fm) == false)
-			return false;
-		return true;
-	}
+//	@Override
+//	public boolean setFont(FormuleFont fm)
+//	{
+//		if (super.setFont(fm) == false)
+//			return false;
+//		return true;
+//	}
 
 	@Override
 	public String toString()

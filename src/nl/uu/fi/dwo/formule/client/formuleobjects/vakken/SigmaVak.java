@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -25,25 +27,14 @@ public class SigmaVak extends FormuleElementWithChildren{
 		
 	}
 	
-	public void paintObject()
-	{
-		this.getChild(0).paint();
-		this.getChild(1).paint();
-		this.getChild(2).paint();
-		this.getChild(3).paint();
-		zetMaat();
-		
+	@Override
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
 		FormuleFontChanges changes0 = new FormuleFontChanges();
 		changes0.setItalic(FormuleFontChanges.FALSE);
 		changes0.setRelativeSize(150);
 		FormuleFont f0 = FormuleFont.createFromChanges(fm, changes0);
-		
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
-		
+				
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		//int fontSize = fm.getFontSize();
@@ -74,6 +65,17 @@ public class SigmaVak extends FormuleElementWithChildren{
 		//changes2.setSmallText(FormuleFontChanges.FALSE);
 		//setFontChanges(changes2);
 		//fm.setFontSize(fontSize);
+	}
+
+	public void paintObject()
+	{
+		this.getChild(0).paint();
+		this.getChild(1).paint();
+		this.getChild(2).paint();
+		this.getChild(3).paint();
+		zetMaat();
+		
+
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);
 		this.getChild(2).draw(ctx);

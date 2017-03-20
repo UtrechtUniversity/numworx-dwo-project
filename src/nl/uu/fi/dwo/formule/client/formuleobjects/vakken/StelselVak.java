@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 import java.util.Vector;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -36,21 +38,9 @@ public class StelselVak extends FormuleElementWithChildren
 	}
 
 	@Override
-	public void paintObject()
-	{		
-	
-		for(int i = 0; i < getChildrenSize(); i++)
-		{	getChild(i).paint();
-		}
-		maakMaat();
-		//((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		//((Graphics2D)g).setStroke(new BasicStroke(1.2f));
-	    		
-		if (this.isSelected())
-		{
-			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
-		}
+	public void paintComponent(Context2d ctx) {
+		super.paintComponent(ctx);
+
 		ctx.setStrokeStyle(color);
 //		ctx.setFillStyle(color);
 		ctx.setLineWidth(fm.getStrokeWidth());
@@ -64,10 +54,20 @@ public class StelselVak extends FormuleElementWithChildren
 		ctx.lineTo(5, height - 6);
 		ctx.arc(10, height - 7, 5, Math.PI, Math.PI / 2, true);
 		ctx.stroke();
+	}
+
+	@Override
+	public void paintObject()
+	{			
+		for(int i = 0; i < getChildrenSize(); i++)
+		{	getChild(i).paint();
+		}
+
+		zetMaat();
+		paintComponent(ctx);	
 		
 		for(int i = 0; i < getChildrenSize(); i++)
 			getChild(i).draw(ctx);
-		//this.getChild().draw(ctx);
 		this.drawCursor();
 	}
 	
@@ -182,6 +182,11 @@ public class StelselVak extends FormuleElementWithChildren
 			kindHoogte += children.get(i).height + 5;
 		}
 	
+	}
+	
+	public void zetMaat() {
+		maakMaat();
+		super.zetMaat();
 	}
 	
 //	public int getAsHoogte()
