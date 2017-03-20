@@ -1592,9 +1592,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 					randPanel.getElement().getStyle().setBorderColor(selectieColor.toString());
 					int borderWidth = (int) Math.round(Math.min(new Double(hoogte) / 2, new Double(breedte) / 2));
 					randPanel.getElement().getStyle().setBorderWidth(borderWidth, Unit.PX);
+					randPanel.getElement().getStyle().setOpacity(0.4); 
 				}
 					
-				//randPanel.getElement().getStyle().setOpacity(0.4); 
+				//
 				
 			}
 			else
@@ -1612,6 +1613,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				else {
 					randPanel.getElement().getStyle().setBorderColor(randColor.toString());
 					randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+					randPanel.getElement().getStyle().setOpacity(1);
 				}
 					
 			}
