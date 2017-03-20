@@ -176,8 +176,28 @@ public class ResultTreeCalculator {
         tree.getResultTree().countCourseLeaves(resultMap);
         DomResultScore[] courses = (DomResultScore[]) resultMap.values().toArray();
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
+        
+        // for each of the SchoolClasses fetch a hashmap of courses with the score.
+        
+        
         return result;
     }
+
+    public static Map<PersistenceId, DomResultCourse> CrawlScoreOfSchoolClass(DomResultSchoolClass sc) {
+//        sc.countCourseLeaves(courseLeaves);
+        Map<PersistenceId, DomResultCourse> resultMap = new HashMap<PersistenceId, DomResultCourse>();
+//        tree.getResultTree().countCourseLeaves(resultMap);
+//        
+//        //crawl and put leaves in the resultmap
+//        
+//        
+//        //normalize
+//        
+//        //done
+
+        return resultMap;
+    }
+
 }
 
 // sc <- course <- ... <- course <- sco <- studentsco - student
