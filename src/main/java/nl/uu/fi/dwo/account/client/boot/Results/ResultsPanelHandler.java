@@ -39,7 +39,7 @@ class ResultsPanelHandler {
                 public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
                     //calculate tree and call plotting
                     rTree = new ResultTree(resolved.getValue());
-                    matrix  = ResultTreeCalculator.CrawlTeacherGetScoClass(rTree);
+                    matrix  = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
                     view.plot(matrix);
                     return null;
                 }
