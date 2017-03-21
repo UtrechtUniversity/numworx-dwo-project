@@ -3,7 +3,7 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
     <ui:style field="mainpanel" src="../mainpanel.css" />
-    <ui:style type="nl.uu.fi.dwo.account.client.boot.Results.ResultPanel.Style">
+<!--    <ui:style type="nl.uu.fi.dwo.account.client.boot.Results.ResultPanel.style">
         .tableCelleven {
         padding: 5px;
         background: #008AB8;
@@ -21,9 +21,9 @@
         margin: 3px;
         font-weight: normal;  
         }
-    </ui:style>
+    </ui:style>-->
     <g:VerticalPanel>
-        <g:Label>Role</g:Label><g:TextBox :field='userRole'></g:TextBox>
+        <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE" addStyleNames='{mainpanel.panel}'><g:Label>Role: </g:Label><g:TextBox ui:field='teacherRole'></g:TextBox></g:HorizontalPanel>
         <g:HorizontalPanel ui:field='tablePanel' addStyleNames='{mainpanel.widget}'
                            horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
             <!--<g:SimplePanel >-->

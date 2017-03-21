@@ -24,6 +24,13 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     vertical-align: middle;    
 }
 
+.panel {
+    padding: 8px;
+    border: 5px;
+    border-radius: 5px;   
+    vertical-align: middle;    
+}
+
 
 
 

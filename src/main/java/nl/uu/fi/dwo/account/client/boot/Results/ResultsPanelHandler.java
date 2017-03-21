@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.ResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
@@ -27,7 +28,6 @@ class ResultsPanelHandler {
     
     ResultsPanelHandler(ResultsPanel view) {
         this.view = view;
-        init();
     }
 
     public void init() {

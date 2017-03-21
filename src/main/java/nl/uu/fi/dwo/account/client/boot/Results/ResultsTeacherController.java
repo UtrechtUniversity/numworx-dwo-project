@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.osgi.util.promise.Promise;
 
 /**
@@ -26,6 +27,9 @@ class ResultsTeacherController {
         DomContext context = new DomContext();
         context.setDomHasRole(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
         DomDwoProfile profile = new DomDwoProfile();
+        profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;00000000000000000001"));;
+        profile.setDwoProfileName("test");
+        profile.setDwoProfileRights("_");
         //Promise<DomResultsPerTeacher> promResults = 
         return manager.getTeachersResults(context, profile);
 //        manager.getTeachersResults(new AsyncCallback<List<DomSchoolClass>>() {

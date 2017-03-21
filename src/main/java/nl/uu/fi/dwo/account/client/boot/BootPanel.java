@@ -90,6 +90,8 @@ static {
         mainDeckPanel.showWidget(0);
     }
     public void showResultWidget(){
+        ResultsPanel panel = (ResultsPanel) resultWidget;
+        panel.updateView();
         mainDeckPanel.showWidget(1);
     }
 

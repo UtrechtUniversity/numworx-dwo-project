@@ -39,8 +39,6 @@ public class ResultsPanel extends Composite {
 
         String tableCellodd();
     }
-    @UiField
-    Style style;
 //
 //    interface MyUiRenderer extends UiRenderer {
 //  // ... snip ...
@@ -117,7 +115,7 @@ public class ResultsPanel extends Composite {
             }
         }
 
-        teacherRole.setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
+        //teacherRole.setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
 
     }
 
@@ -133,6 +131,12 @@ public class ResultsPanel extends Composite {
         }
     }
 
+    public void updateView(){
+        teacherRole.setText(
+        DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName()
+        );
+        handler.init();
+    }
     public void plot(DomResultPlotMatrix resultMatrix){
         //if null then no data available.
         
