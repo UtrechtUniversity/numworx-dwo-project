@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -74,7 +73,7 @@ public class DomResultsPerTeacher {
      * 
      * @return the students
      */
-    public Map<PersistenceId,DomStudent> getStudents() {
+    public HashMap<PersistenceId,DomStudent> getStudents() {
         return students;
     }
 
