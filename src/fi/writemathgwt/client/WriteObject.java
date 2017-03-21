@@ -2,7 +2,6 @@ package fi.writemathgwt.client;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -10,9 +9,8 @@ import java.util.Set;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 
-
 public class WriteObject {
-	private static Logger logger = Logger.getLogger("WriteObject");
+//	private static Logger logger = Logger.getLogger("WriteObject");
 
 	private final static boolean cNewStrokmatcher = true;
 	static int newTekenSet = 0;
@@ -111,6 +109,11 @@ public class WriteObject {
 	//OK
 	public WriteObject(String teken, ArrayList<Point> points){
 		isTwoStrokeObject = false;
+		
+//		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+//		logger.info("New Object, teken = " + teken);
+//		logger.info("Stacktrace = "+ stackTraceElements);
+		
 		makeBox(points);
 		doublePoints = new ArrayList<DoublePoint>();
 		rawPoints = new ArrayList<DoublePoint>();
@@ -304,7 +307,14 @@ public class WriteObject {
 		if (rawPoints.size() > 0) {
 			if (".".equals(teken)) {
 				g.setFillStyle(CssColor.make(0, 0, 0));
-				g.fillRect(rawPoints.get(0).getX(), rawPoints.get(0).getY(), 3, 3);
+//				g.fillRect(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 3, 3);
+				
+				g.beginPath();
+				g.arc(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 2, 0, 2* Math.PI);
+				g.closePath();
+				g.fill();
+				g.stroke();
+
 				g.setFillStyle(CssColor.make(255, 255, 255));
 				return;
 			}

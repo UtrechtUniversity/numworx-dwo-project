@@ -2,6 +2,7 @@ package fi.writemathgwt.client;
 
 
 import com.google.gwt.canvas.client.Canvas;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Document;
@@ -93,11 +94,9 @@ if (standAlone)
 	bottomPanel.setWidgetLeftWidth(testBox, testX, Style.Unit.PX, 500, Style.Unit.PX);
 	bottomPanel.setWidgetTopHeight(testBox, testY, Style.Unit.PX, 40, Style.Unit.PX);
 	testBox.addKeyDownHandler(new TextBoxKeyDownHandler());
-	testBox.addClickHandler(new TextBoxClickHandler());
-	
+	testBox.addClickHandler(new TextBoxClickHandler());	
 }
-*/		
-		
+*/				
 		wisButton = new PushButton("wis");
 		//wisButton.addStyleName("pushbutton");
 		int currentX = 50;
