@@ -245,5 +245,7 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 		return wrapList(toArrayList(o));
 	}
 	
-	
+	public String toString() {
+		return String.valueOf(map);
+	}
 }

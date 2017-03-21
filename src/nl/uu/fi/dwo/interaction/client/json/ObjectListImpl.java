@@ -132,4 +132,7 @@ public class ObjectListImpl implements ObjectList {
 		return result;
 	}
 
+	public String toString() {
+		return String.valueOf(list);
+	}
 }
