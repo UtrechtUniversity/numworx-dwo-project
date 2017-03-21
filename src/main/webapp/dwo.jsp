@@ -31,7 +31,7 @@
 	Object cookies = request.getAttribute("cookies");
 	if(cookies == null) cookies = Boolean.FALSE;
 // extras: Limited School Access (profiel eigenschap)
-	boolean limited = false;
+/* 	boolean limited = false;
 	if("87".equals(profile.toString())) {
 		limited = true;
 	}
@@ -40,7 +40,9 @@
 	}
 	if (limited) {
 		extras = extras.toString() + "<param name='limitedSchoolAccess' value='true' />\n     <param name='schoolAccessProperties' value='schools.properties' />";
-	}	
+	}
+ */
+ 	String dwo_env = System.getProperty("DWO_ENV","app");
 %>
 </HEAD>
 <BODY	bgcolor="#E6E7E9"
@@ -75,6 +77,7 @@
 	<param name="guestUser" value="<%=guestUser %>" />
 	<param name="courseViewNr" value="<%=courseViewNr%>"/>
 	<param name="scoViewNr" value="<%=scoViewNr%>" />
+	<param name="dwo_env" value="<%=dwo_env%>" />
 <!--
 	<param name="jnlp_href" value="<%=contextPath %>/<%=profile%>/<%=language%>/dwo.jnlp" />
 -->
