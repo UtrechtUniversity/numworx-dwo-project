@@ -129,7 +129,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		$wnd.inner.stub = o;
 		
 		function doPublish() {
-			if($wnd.publish)
+			if(!(typeof $wnd.publish === "undefined") && $wnd.publish)
 				$wnd.publish($wnd.inner, $wnd.outer)
 			else 
 			{	console.log("window.publish not defined, waiting...");
@@ -149,7 +149,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		try { 
 			publish0(stub);
 		} catch(Exception e) {
-			logger.log(Level.SEVERE, "publish", e);
+			logger.log(Level.WARNING, "publish", e);
 			view.setCommunicationRoot(stub);
 		}
 	}

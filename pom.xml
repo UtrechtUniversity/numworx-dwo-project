@@ -44,4 +44,5 @@
   </parent>
   <groupId>nl.uu.fi.dwo.mobile</groupId>
   <description>interaction library</description>
+  <version>0.0.3-SNAPSHOT</version>
 </project>

@@ -283,4 +283,38 @@ public class FormuleFont
 		return this.getFontStyle();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (bold ? 1231 : 1237);
+		result = prime * result + ((font == null) ? 0 : font.hashCode());
+		result = prime * result + fontSize;
+		result = prime * result + (italic ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof FormuleFont))
+			return false;
+		FormuleFont other = (FormuleFont) obj;
+		if (bold != other.bold)
+			return false;
+		if (font == null) {
+			if (other.font != null)
+				return false;
+		} else if (!font.equals(other.font))
+			return false;
+		if (fontSize != other.fontSize)
+			return false;
+		if (italic != other.italic)
+			return false;
+		return true;
+	}
+
 }
