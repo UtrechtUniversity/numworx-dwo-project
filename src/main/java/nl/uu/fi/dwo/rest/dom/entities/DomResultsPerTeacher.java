@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -22,13 +23,13 @@ public class DomResultsPerTeacher {
     
     private DomTeacher teacher;
     private Long fetchTimeStamp;   
-    private Map<PersistenceId,DomStudent> students; 
-    private Map<PersistenceId,DomStudentOfClass> studentsOfClasses;
-    private Map<PersistenceId,DomSchoolClass> schoolClasses;
-    private Map<PersistenceId,DomClassCourse> classCourses;
-    private Map<PersistenceId,DomCourse> courses;
-    private Map<PersistenceId,DomScoContext> scoContexts;
-    private Map<PersistenceId,DomStudentScoContext> studentScoContexts;    
+    private HashMap<PersistenceId,DomStudent> students; 
+    private HashMap<PersistenceId,DomStudentOfClass> studentsOfClasses;
+    private HashMap<PersistenceId,DomSchoolClass> schoolClasses;
+    private HashMap<PersistenceId,DomClassCourse> classCourses;
+    private HashMap<PersistenceId,DomCourse> courses;
+    private HashMap<PersistenceId,DomScoContext> scoContexts;
+    private HashMap<PersistenceId,DomStudentScoContext> studentScoContexts;    
 
     /**
      * @return the teacher
@@ -80,7 +81,7 @@ public class DomResultsPerTeacher {
     /**
      * @param students the students to set
      */
-    public void setStudents(Map<PersistenceId,DomStudent> students) {
+    public void setStudents(HashMap<PersistenceId,DomStudent> students) {
         this.students = students;
     }
 
@@ -91,14 +92,14 @@ public class DomResultsPerTeacher {
      * 
      * @return the schoolClasses
      */
-    public Map<PersistenceId,DomSchoolClass> getSchoolClasses() {
+    public HashMap<PersistenceId,DomSchoolClass> getSchoolClasses() {
         return schoolClasses;
     }
 
     /**
      * @param schoolClasses the schoolClasses to set
      */
-    public void setSchoolClasses(Map<PersistenceId,DomSchoolClass> schoolClasses) {
+    public void setSchoolClasses(HashMap<PersistenceId,DomSchoolClass> schoolClasses) {
         this.schoolClasses = schoolClasses;
     }
 
@@ -109,14 +110,14 @@ public class DomResultsPerTeacher {
      * 
      * @return the scoContexts
      */
-    public Map<PersistenceId,DomScoContext> getScoContexts() {
+    public HashMap<PersistenceId,DomScoContext> getScoContexts() {
         return scoContexts;
     }
 
     /**
      * @param scoContexts the scoContexts to set
      */
-    public void setScoContexts(Map<PersistenceId,DomScoContext> scoContexts) {
+    public void setScoContexts(HashMap<PersistenceId,DomScoContext> scoContexts) {
         this.scoContexts = scoContexts;
     }
 
@@ -126,14 +127,14 @@ public class DomResultsPerTeacher {
      * 
      * @return the studentScoContexts
      */
-    public Map<PersistenceId,DomStudentScoContext> getStudentScoContexts() {
+    public HashMap<PersistenceId,DomStudentScoContext> getStudentScoContexts() {
         return studentScoContexts;
     }
 
     /**
      * @param studentScoContexts the studentScoContexts to set
      */
-    public void setStudentScoContexts(Map<PersistenceId,DomStudentScoContext> studentScoContexts) {
+    public void setStudentScoContexts(HashMap<PersistenceId,DomStudentScoContext> studentScoContexts) {
         this.studentScoContexts = studentScoContexts;
     }
 
@@ -143,14 +144,14 @@ public class DomResultsPerTeacher {
      * 
      * @return the courses
      */
-    public Map<PersistenceId,DomCourse> getCourses() {
+    public HashMap<PersistenceId,DomCourse> getCourses() {
         return courses;
     }
 
     /**
      * @param courses the courses to set
      */
-    public void setCourses(Map<PersistenceId,DomCourse> courses) {
+    public void setCourses(HashMap<PersistenceId,DomCourse> courses) {
         this.courses = courses;
     }
 
@@ -160,14 +161,14 @@ public class DomResultsPerTeacher {
      * 
      * @return the classCourses
      */
-    public Map<PersistenceId,DomClassCourse> getClassCourses() {
+    public HashMap<PersistenceId,DomClassCourse> getClassCourses() {
         return classCourses;
     }
 
     /**
      * @param classCourses the classCourses to set
      */
-    public void setClassCourses(Map<PersistenceId,DomClassCourse> classCourses) {
+    public void setClassCourses(HashMap<PersistenceId,DomClassCourse> classCourses) {
         this.classCourses = classCourses;
     }
 
@@ -177,14 +178,14 @@ public class DomResultsPerTeacher {
      * 
      * @return the studentsOfClasses
      */
-    public Map<PersistenceId,DomStudentOfClass> getStudentsOfClasses() {
+    public HashMap<PersistenceId,DomStudentOfClass> getStudentsOfClasses() {
         return studentsOfClasses;
     }
 
     /**
      * @param studentsOfClasses the studentsOfClasses to set
      */
-    public void setStudentsOfClasses(Map<PersistenceId,DomStudentOfClass> studentsOfClasses) {
+    public void setStudentsOfClasses(HashMap<PersistenceId,DomStudentOfClass> studentsOfClasses) {
         this.studentsOfClasses = studentsOfClasses;
     }
     
