@@ -83,7 +83,9 @@ import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
  */
 public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM2004APIInterface {
 
-    private static final Logger LOG = Logger.getLogger("fi.dwo");
+    private static final String DWO_ENV = "dwo_env";
+
+	private static final Logger LOG = Logger.getLogger("fi.dwo");
 
     private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
 
@@ -271,6 +273,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug", xmlrpc_debug});
         MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
 
+        dwo_env = properties.getProperty(DWO_ENV, super.getParameter(DWO_ENV));
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{DWO_ENV, dwo_env});
+       
     }
 
     /**
@@ -2306,6 +2311,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     HashMap samlData;
 
+	private String dwo_env;
+
     private static String getDecodedCookie(String cookie) {
         String value = DwoHelper.getCookie(cookie);
         try {
@@ -2476,7 +2483,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (PROFILE_EXTENSION.equals(name) && extensionOverride != null) {
             return extensionOverride;
         }
-
+        if(DWO_ENV.equals(name) && dwo_env != null)
+        	return dwo_env;
         return super.getParameter(name);
     }
 
