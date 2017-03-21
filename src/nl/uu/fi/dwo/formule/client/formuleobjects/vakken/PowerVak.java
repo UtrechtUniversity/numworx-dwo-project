@@ -29,8 +29,8 @@ public class PowerVak extends FormuleElementWithChildren {
 		int width =  b.width;
 		int height = b.height;
 		FormuleRegel p = getChild(1);
-		width += p.width;	
 		p.setPosition(width, 0);
+		width += p.width;	
 
 		int superscript = p.height - 2 * p.getFont().getAscent() / 3 - p.getFont().getDescent();
 		height += superscript;

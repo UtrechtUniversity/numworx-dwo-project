@@ -83,5 +83,6 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<properties>
 		<maven.test.skip>true</maven.test.skip>
+		<interactionVersion>0.0.3-SNAPSHOT</interactionVersion>
 	</properties>
 </project>

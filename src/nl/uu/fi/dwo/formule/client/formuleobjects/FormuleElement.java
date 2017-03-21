@@ -264,7 +264,8 @@ public abstract class FormuleElement implements TekstElement
 	}
 
 	public boolean setFont(FormuleFont fm)
-	{	if (this.font == null || fm.toString() != this.font.toString() || fm.toString() != this.fm.toString() || fontchangesapplied == false)
+	{	//if (this.font == null || fm.toString() != this.font.toString() || fm.toString() != this.fm.toString() || fontchangesapplied == false)
+		if (!fm.equals(font)|| !fm.equals(this.fm) || !fontchangesapplied)
 		{	fontchangesapplied = true;
 			this.setChanged(true);
 			this.font = fm;
@@ -285,7 +286,6 @@ public abstract class FormuleElement implements TekstElement
 		//apply to font
 		//fm = FormuleFont.createFromChanges(fm, font);
 		this.setFont(fm);
-		this.setChanged(true);
 	}
 
 	public FormuleFontChanges getFontChanges()
