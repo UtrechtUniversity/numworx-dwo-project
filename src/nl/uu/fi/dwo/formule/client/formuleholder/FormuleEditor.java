@@ -240,13 +240,17 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		resize();
 	}
 
-	public void requestFocus() {
+	public void requestFocus(boolean forceSoft) {
 		if(kb!=null)
 		{
 			kb.setEditor(this);
-			if(isSoft()) kb.softFocus(); else kb.focus();
+			if (isSoft()||forceSoft) kb.softFocus(); else kb.focus();
 			//XXX BREEKT FEWS getCurrentRegel().getCanvas().getElement().scrollIntoView();
 		}
+	}
+	
+	public void requestFocus() {
+		requestFocus(false);
 	}
 	
 	public FormuleKeyboardIF getKeyboard()
