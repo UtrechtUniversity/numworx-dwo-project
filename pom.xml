@@ -395,7 +395,7 @@
             <id>dev</id>
             <activation>
                 <property>
-                    <name>!dev</name>
+                    <name>dev</name>
                 </property>
             </activation>
         </profile>
