@@ -338,11 +338,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			timerMessage.getElement().getStyle().setProperty("margin", "15px");
 			timerMessage.getElement().getStyle().setProperty("padding", "25px");
 			timerMessagePopupPanel = new PopupPanel(false, false);
+			timerMessagePopupPanel.setStylePrimaryName("tempotoetsPopupPanel");
 			timerMessagePopupPanel.add(timerMessage);
 			timerMessagePopupPanel.center();
 			
 			// create the timer panel
-			timerPanel = new PopupPanel(false, false);			
+			timerPanel = new PopupPanel(false, false);
+			timerPanel.setStylePrimaryName("tempotoetsPopupPanel");
 			
 			timerCanvas = Canvas.createIfSupported();
 			timerCanvas.getCanvasElement().setWidth(100);
