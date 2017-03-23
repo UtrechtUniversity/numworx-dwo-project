@@ -27,6 +27,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +47,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -160,21 +162,24 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 //                    Logger.getLogger(SecuredTeacherResultsManager.class.getName()).log(Level.SEVERE, null, ex);
 //                }
             });
-            results.setSchoolClasses(domSchoolClasses.entrySet());
             //convert studentMap and set in result
             HashMap<PersistenceId, DomStudent> domStudents = new HashMap<>(studentMap.size());
             studentMap.entrySet().stream().forEach((keyValuePair) -> {
                 DomStudent s = keyValuePair.getValue().buildDomStudent();
                 domStudents.put(s.getId(), s);
             });
-            results.setStudents(domStudents.entrySet());
+            List<DomMapEntry<PersistenceId, DomStudent>> entryList = new ArrayList<>(domStudents.size());
+            domStudents.entrySet().stream().forEach((entry) -> {entryList.add(new DomMapEntry(entry));});
+            results.setStudents(entryList);
             //convert StudentOfClass map (socMap) and set in result
             HashMap<PersistenceId, DomStudentOfClass> domSocs = new HashMap<>(socMap.size());
             socMap.entrySet().stream().forEach((keyValuePair) -> {
                 DomStudentOfClass s = keyValuePair.getValue().buildDomStudentOfClass();
                 domSocs.putIfAbsent(s.getId(), s);
             });
-            results.setStudentsOfClasses(domSocs.entrySet());
+            List<DomMapEntry<PersistenceId, DomStudentOfClass>> socsList = new ArrayList<>(domSocs.size());
+            domSocs.entrySet().stream().forEach((entry) -> {socsList.add(new DomMapEntry(entry));});
+            results.setStudentsOfClasses(socsList);
 
             //Fetch courses for all classes ClassCourses. No filtering occurs on
             //CourseType, notBefore and notAfter for results. Filtering of Courses
@@ -201,7 +206,10 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 DomClassCourse c = keyValuePair.getValue().buildDomClassCourse();
                 domClassCourses.put(c.getId(), c);
             });
-            results.setClassCourses(domClassCourses.entrySet());
+                        List<DomMapEntry<PersistenceId, DomClassCourse>> socsList = new ArrayList<>(domSocs.size());
+            domSocs.entrySet().stream().forEach((entry) -> {socsList.add(new DomMapEntry(entry));});
+
+            results.setClassCourses(new ArrayList<>(domClassCourses.entrySet()));
 
             HashMap<PersistenceId, DomCourse> domCourses = new HashMap<>();
             Map<Long, PersistentCourse> courses = new HashMap<>();
@@ -231,7 +239,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 DomCourse c = keyValuePair.getValue().buildDomCourse();
                 domCourses.putIfAbsent(c.getId(), c);
             });
-            results.setCourses(domCourses.entrySet());
+            results.setCourses(new ArrayList<>(domCourses.entrySet()));
 
             //process leaves and fill hashmap scoContext
             HashMap<Long, PersistentScoContext> scosMap = new HashMap<>();
@@ -246,7 +254,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 DomScoContext s = keyValuePair.getValue().buildDomScoContext();
                 domScoContexts.put(s.getId(), s);
             });
-            results.setScoContexts(domScoContexts.entrySet());
+            results.setScoContexts(new ArrayList<>(domScoContexts.entrySet()));
 
             //fill hashmap studenSco
             HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
@@ -261,7 +269,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 DomStudentScoContext s = keyValuePair.getValue().buildDomStudentScoContext();
                 domStudentScoContexts.put(s.getId(), s);
             });
-            results.setStudentScoContexts(domStudentScoContexts.entrySet());
+            results.setStudentScoContexts(new ArrayList<>(domStudentScoContexts.entrySet()));
 
 //            //test null returns
 //            if(results.getClassCourses().isEmpty()){
