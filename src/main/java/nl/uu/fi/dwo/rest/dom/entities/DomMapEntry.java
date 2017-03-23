@@ -11,6 +11,9 @@ public class DomMapEntry<K, V> implements Map.Entry<K, V> {
     private K key;
     V value;
 
+    public DomMapEntry() {
+    }
+    
     public DomMapEntry(Map.Entry<K, V> entry) {
         key = entry.getKey();
         value = entry.getValue();
