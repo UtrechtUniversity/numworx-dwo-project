@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>com.jamonapi</groupId>
 			<artifactId>jamon</artifactId>
-			<version>2.80</version>
+			<version>${jamonVersion}</version>
 		</dependency>
        <dependency>
             <groupId>javax.servlet</groupId>
@@ -43,7 +43,7 @@
         <dependency>
         	<groupId>fi.servlet</groupId>
         	<artifactId>DWOmAccess</artifactId>
-        	<version>0.0.8-SNAPSHOT</version>
+        	<version>${DWOmAccessVersion}</version>
         	<classifier>classes</classifier>
         </dependency>
         <dependency>
@@ -173,7 +173,7 @@
 						<artifactItem>
 								<groupId>nl.uu.fi.dwo.mobile</groupId>
 								<artifactId>DWOplayer</artifactId>
-								<version>2.1.7</version>
+								<version>${DWOplayerVersion}</version>
 								<type>war</type>
 								<classifier>dwo2</classifier>
 								<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/tablet/</outputDirectory>								
@@ -188,7 +188,7 @@
 						<artifactItem>
 								<groupId>com.jamonapi</groupId>
 								<artifactId>jamon_war</artifactId>
-								<version>2.80</version>
+								<version>${jamonVersion}</version>
 								<type>war</type>
 								<excludes>WEB-INF/lib/**</excludes>
 								<outputDirectory>${project.build.directory}/${project.build.finalName}/jamon</outputDirectory>
@@ -196,7 +196,7 @@
 						<artifactItem>
 								<groupId>com.jamonapi</groupId>
 								<artifactId>jamon_war</artifactId>
-								<version>2.80</version>
+								<version>${jamonVersion}</version>
 								<type>war</type>
 								<outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
 								<includes>WEB-INF/lib/**</includes>
@@ -204,8 +204,9 @@
 						<artifactItem>
 				        	<groupId>fi.servlet</groupId>
         					<artifactId>DWOmAccess</artifactId>
-        					<version>0.0.8-SNAPSHOT</version>
+        					<version>${DWOmAccessVersion}</version>
 							<type>war</type>
+							<excludes>WEB-INF/**</excludes>
 							<outputDirectory>${project.build.directory}/${project.build.finalName}/DWOmAccess</outputDirectory>
 						</artifactItem>
 					</artifactItems>
@@ -231,5 +232,8 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<DWOplayerVersion>2.1.9</DWOplayerVersion>
+		<DWOmAccessVersion>0.0.8-SNAPSHOT</DWOmAccessVersion>
+		<jamonVersion>2.80</jamonVersion>
 	</properties>
 </project>
