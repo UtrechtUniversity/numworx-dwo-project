@@ -263,6 +263,25 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             });
             results.setStudentScoContexts(domStudentScoContexts);
 
+            //test null returns
+//            if(results.getClassCourses().isEmpty()){
+//                results.setClassCourses(null);
+//            }
+//            if(results.getCourses().isEmpty()){
+//                results.setCourses(null);
+//            }
+//            if(results.getSchoolClasses().isEmpty()){
+//                results.setSchoolClasses(null);
+//            }
+//            if(results.getScoContexts().isEmpty()){
+//                results.setScoContexts(null);
+//            }
+//            if(results.getStudents().isEmpty()){
+//                results.setStudents(null);
+//            }
+//            if(results.getStudentsOfClasses().isEmpty()){
+//                results.setStudentsOfClasses(null);
+//            }
             return results;
             // recurse here using Java queue
         } else {
