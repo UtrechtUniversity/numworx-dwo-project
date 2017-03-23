@@ -116,7 +116,6 @@ public class ResultsPanel extends Composite {
         }
 
         //teacherRole.setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
-
     }
 
     public void addRow() {
@@ -131,16 +130,29 @@ public class ResultsPanel extends Composite {
         }
     }
 
-    public void updateView(){
+    public void updateView() {
         teacherRole.setText(
-        DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName()
+                DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName()
         );
         handler.init();
     }
-    public void plot(DomResultPlotMatrix resultMatrix){
+
+    public void plot(DomResultPlotMatrix resultMatrix) {
+        int i = 0;
+        for (i = 0; i < resultGrid.getColumnCount(); i++) {
+            if (i == resultMatrix.gethSize()) {
+                break;
+            }
+            resultGrid.setWidget(0, i, new Label(resultMatrix.gethIndex(i).getLabel()));
+        }
+        for (i = 0; i < resultGrid.getRowCount(); i++) {
+            if (i == resultMatrix.getvSize()) {
+                break;
+            }
+            resultGrid.setWidget(i, 0, new Label(resultMatrix.getvIndex(i).getLabel()));
+        }
         //if null then no data available.
-        
+
         //else plot data
-        
     }
 }

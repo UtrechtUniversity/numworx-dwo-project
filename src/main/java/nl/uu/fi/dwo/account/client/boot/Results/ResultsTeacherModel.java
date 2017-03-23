@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
-import nl.uu.fi.dwo.rest.dom.ResultTree;
+import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 
 /**
@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 public class ResultsTeacherModel {
     
     //cached, allows for updating with diffs
-    ResultTree resultTree;
+    DomResultTree resultTree;
     //horizontal axis course -> sco
     //vertical axis  schoolclass -> student
     // if sco, result load stuff.

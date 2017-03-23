@@ -1,9 +1,8 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
-import nl.uu.fi.dwo.rest.dom.ResultTree;
+import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -23,7 +22,7 @@ class ResultsPanelHandler {
     private ResultsPanel view;
     private ResultsTeacherController controller = new ResultsTeacherController();
     //model
-    private ResultTree rTree;
+    private DomResultTree rTree;
     private DomResultPlotMatrix matrix;
     
     ResultsPanelHandler(ResultsPanel view) {
@@ -38,7 +37,7 @@ class ResultsPanelHandler {
                 @Override
                 public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
                     //calculate tree and call plotting
-                    rTree = new ResultTree(resolved.getValue());
+                    rTree = new DomResultTree(resolved.getValue());
                     matrix  = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
                     view.plot(matrix);
                     return null;
