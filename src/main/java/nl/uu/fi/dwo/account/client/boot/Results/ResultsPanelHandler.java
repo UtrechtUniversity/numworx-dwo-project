@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
@@ -37,8 +38,10 @@ class ResultsPanelHandler {
                 @Override
                 public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
                     //calculate tree and call plotting
+                    LOG.log(Level.INFO,resolved.toString());
                     rTree = new DomResultTree(resolved.getValue());
                     matrix  = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+                    LOG.log(Level.INFO,rTree.getResultTree().getLabel());
                     view.plot(matrix);
                     return null;
                 }
