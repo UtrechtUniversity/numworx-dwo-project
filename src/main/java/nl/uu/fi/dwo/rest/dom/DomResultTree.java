@@ -26,14 +26,15 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  */
-public class ResultTree {
+public class DomResultTree {
 
     private DomResultTeacher resultTree;
     private DomResultTeacher studentTree;
 
-    public ResultTree(DomResultsPerTeacher resultData) {
+    public DomResultTree(DomResultsPerTeacher resultData) {
+        
         //restData = resultData;
-        buildResultTree(resultData);
+        buildResultTree(new DomMappedResultsPerTeacher(resultData));
         //reCalculateResults();
     }
 
@@ -52,7 +53,7 @@ public class ResultTree {
      *
      * @param resultData
      */
-    private void buildResultTree(DomResultsPerTeacher resultData) {
+    private void buildResultTree(DomMappedResultsPerTeacher resultData) {
         /* build tree from results collection
            create the treeroot a DomResultTeacher, Attach the DomResultSchoolclass
            objects, create the subtrees of the DomCourse objects, attach them 

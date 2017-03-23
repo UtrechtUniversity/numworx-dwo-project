@@ -13,14 +13,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
- * Calculates the score value for each node in the ResultTree. This simplifies
+ * Calculates the score value for each node in the DomResultTree. This simplifies
  * the calculation of the view matrices.
  *
  * @author Gert van der Plas
  */
 public class ResultTreeCalculator {
 
-    public static void UpdateResultTree(ResultTree tree) {
+    public static void UpdateResultTree(DomResultTree tree) {
         DomResultScore node = tree.getResultTree();
         updateNode(node);
     }
@@ -38,7 +38,7 @@ public class ResultTreeCalculator {
         resultScore.setScore(score / cnt);
     }
 
-    public static void getViewSchoolClassCourse(ResultTree tree) {
+    public static void getViewSchoolClassCourse(DomResultTree tree) {
 //        DomResultTeacher teacherScore = tree.getResultTree();
 //        //get schoolClasses
 //        Map<PersistenceId, DomResultSchoolClass> schoolClasses = teacherScore.getChildren();
@@ -104,7 +104,7 @@ public class ResultTreeCalculator {
      * @param tree
      * @param schoolClass
      */
-    public static DomResultPlotMatrix CrawlClassGetScoStudent(ResultTree tree, DomResultSchoolClass schoolClass) {
+    public static DomResultPlotMatrix CrawlClassGetScoStudent(DomResultTree tree, DomResultSchoolClass schoolClass) {
         DomResultStudent[] studentIndex; //uses label property for display
         DomResultScoContext[] scoIndex; //uses label property for display
 
@@ -135,11 +135,11 @@ public class ResultTreeCalculator {
         return result;
     }
 
-    private static DomResultPlotMatrix CrawlClassGetSco(ResultTree tree, DomResultSchoolClass schoolClass) {
+    private static DomResultPlotMatrix CrawlClassGetSco(DomResultTree tree, DomResultSchoolClass schoolClass) {
         return null;
     }
 
-    public static DomResultPlotMatrix CrawlTeacherGetScoClass(ResultTree tree, DomResultSchoolClass schoolClass) {
+    public static DomResultPlotMatrix CrawlTeacherGetScoClass(DomResultTree tree, DomResultSchoolClass schoolClass) {
         DomResultSchoolClass[] scList = (DomResultSchoolClass[]) tree.getResultTree().getChildren().values().toArray();
         String[] vList = new String[scList.length];
 //        
@@ -163,7 +163,7 @@ public class ResultTreeCalculator {
         return result;
     }
 
-    public static DomResultPlotMatrix GetScoreOfTeacherClassesByLeafCourses(ResultTree tree) {
+    public static DomResultPlotMatrix GetScoreOfTeacherClassesByLeafCourses(DomResultTree tree) {
         int nClasses = tree.getResultTree().getChildren().size();
         DomResultScore[] classes = new DomResultScore[nClasses];
         int i = 0;
