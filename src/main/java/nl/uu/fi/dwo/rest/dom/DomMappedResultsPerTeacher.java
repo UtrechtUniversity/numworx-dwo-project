@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.rest.dom;
 import nl.uu.fi.dwo.rest.dom.entities.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -42,6 +43,12 @@ public class DomMappedResultsPerTeacher {
         if (results == null) {
             return;
         }
+        LOG.log(Level.INFO,""+results.getStudents().size());
+        LOG.log(Level.INFO,""+results.getClassCourses().size());
+        LOG.log(Level.INFO,""+results.getCourses().size());
+        LOG.log(Level.INFO,""+results.getSchoolClasses().size());
+        LOG.log(Level.INFO,""+results.getStudentScoContexts().size());
+        LOG.log(Level.INFO,""+results.getStudentsOfClasses().size());
         teacher = results.getTeacher();
         fetchTimeStamp = results.getFetchTimeStamp();
         //fill and ensure no null values;

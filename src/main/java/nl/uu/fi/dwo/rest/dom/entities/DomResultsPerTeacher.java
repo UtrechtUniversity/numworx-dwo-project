@@ -1,8 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -26,13 +25,13 @@ public class DomResultsPerTeacher {
 
     private DomTeacher teacher;
     private Long fetchTimeStamp;
-    private Map<PersistenceId, DomStudent> students;
-    private Map<PersistenceId, DomStudentOfClass> studentsOfClasses;
-    private Map<PersistenceId, DomSchoolClass> schoolClasses;
-    private Map<PersistenceId, DomClassCourse> classCourses;
-    private Map<PersistenceId, DomCourse> courses;
-    private Map<PersistenceId, DomScoContext> scoContexts;
-    private Map<PersistenceId, DomStudentScoContext> studentScoContexts;
+    private List<Map.Entry<PersistenceId, DomStudent>> students;
+    private List<Map.Entry<PersistenceId, DomStudentOfClass>> studentsOfClasses;
+    private List<Map.Entry<PersistenceId, DomSchoolClass>> schoolClasses;
+    private List<Map.Entry<PersistenceId, DomClassCourse>> classCourses;
+    private List<Map.Entry<PersistenceId, DomCourse>> courses;
+    private List<Map.Entry<PersistenceId, DomScoContext>> scoContexts;
+    private List<Map.Entry<PersistenceId, DomStudentScoContext>> studentScoContexts;
 
     /**
      * @return the teacher
@@ -77,19 +76,15 @@ public class DomResultsPerTeacher {
      *
      * @return the students
      */
-    public Set<Map.Entry<PersistenceId, DomStudent>> getStudents() {
-        return students.entrySet();
+    public List<Map.Entry<PersistenceId, DomStudent>> getStudents() {
+        return students;
     }
 
     /**
-     * @param students the students to set
+     * @param aStudents the students to set
      */
-    public void setStudents(Set<Map.Entry<PersistenceId, DomStudent>> students) {
-        HashMap<PersistenceId, DomStudent> map = new HashMap<PersistenceId, DomStudent>(students.size());
-        for (Map.Entry<PersistenceId, DomStudent> student : students) {
-            map.put(student.getKey(), student.getValue());
-        }
-        this.students = map;
+    public void setStudents(List<Map.Entry<PersistenceId, DomStudent>> aStudents) {
+        this.students = aStudents;
     }
 
     /**
@@ -98,19 +93,15 @@ public class DomResultsPerTeacher {
      *
      * @return the schoolClasses
      */
-    public Set<Map.Entry<PersistenceId, DomSchoolClass>> getSchoolClasses() {
-        return schoolClasses.entrySet();
+    public List<Map.Entry<PersistenceId, DomSchoolClass>> getSchoolClasses() {
+        return schoolClasses;
     }
 
     /**
-     * @param schoolClasses the schoolClasses to set
+     * @param aSchoolClasses the schoolClasses to set
      */
-    public void setSchoolClasses(Set<Map.Entry<PersistenceId, DomSchoolClass>> schoolClasses) {
-        HashMap<PersistenceId, DomSchoolClass> map = new HashMap<PersistenceId, DomSchoolClass>(schoolClasses.size());
-        for (Map.Entry<PersistenceId, DomSchoolClass> schoolClass : schoolClasses) {
-            map.put(schoolClass.getKey(), schoolClass.getValue());
-        }
-        this.schoolClasses = map;
+    public void setSchoolClasses(List<Map.Entry<PersistenceId, DomSchoolClass>> aSchoolClasses) {
+        this.schoolClasses = aSchoolClasses;
     }
 
     /**
@@ -119,19 +110,15 @@ public class DomResultsPerTeacher {
      *
      * @return the scoContexts
      */
-    public Set<Map.Entry<PersistenceId, DomScoContext>> getScoContexts() {
-        return this.scoContexts.entrySet();
+    public List<Map.Entry<PersistenceId, DomScoContext>> getScoContexts() {
+        return this.scoContexts;
     }
 
     /**
-     * @param scoContexts the scoContexts to set
+     * @param aScoContexts the scoContexts to set
      */
-    public void setScoContexts(Set<Map.Entry<PersistenceId, DomScoContext>> scoContexts) {
-        HashMap<PersistenceId, DomScoContext> map = new HashMap<PersistenceId, DomScoContext>(scoContexts.size());
-        for (Map.Entry<PersistenceId, DomScoContext> scoContext : scoContexts) {
-            map.put(scoContext.getKey(), scoContext.getValue());
-        }
-        this.scoContexts = map;
+    public void setScoContexts(List<Map.Entry<PersistenceId, DomScoContext>> aScoContexts) {
+        this.scoContexts = aScoContexts;
     }
 
     /**
@@ -140,19 +127,15 @@ public class DomResultsPerTeacher {
      *
      * @return the studentScoContexts
      */
-    public Set<Map.Entry<PersistenceId, DomStudentScoContext>> getStudentScoContexts() {
-        return studentScoContexts.entrySet();
+    public List<Map.Entry<PersistenceId, DomStudentScoContext>> getStudentScoContexts() {
+        return studentScoContexts;
     }
 
     /**
      * @param studentScoContexts the studentScoContexts to set
      */
-    public void setStudentScoContexts(Set<Map.Entry<PersistenceId, DomStudentScoContext>> studentScoContexts) {
-        HashMap<PersistenceId, DomStudentScoContext> map = new HashMap<PersistenceId, DomStudentScoContext>(studentScoContexts.size());
-        for (Map.Entry<PersistenceId, DomStudentScoContext> studentScoContext : studentScoContexts) {
-            map.put(studentScoContext.getKey(), studentScoContext.getValue());
-        }
-        this.studentScoContexts = map;
+    public void setStudentScoContexts(List<Map.Entry<PersistenceId, DomStudentScoContext>> aStudentScoContexts) {
+        this.studentScoContexts = aStudentScoContexts;
     }
 
     /**
@@ -161,19 +144,15 @@ public class DomResultsPerTeacher {
      *
      * @return the courses
      */
-    public Set<Map.Entry<PersistenceId, DomCourse>> getCourses() {
-        return courses.entrySet();
+    public List<Map.Entry<PersistenceId, DomCourse>> getCourses() {
+        return courses;
     }
 
     /**
-     * @param courses the courses to set
+     * @param aCourses the courses to set
      */
-    public void setCourses(Set<Map.Entry<PersistenceId, DomCourse>> courses) {
-        HashMap<PersistenceId, DomCourse> map = new HashMap<PersistenceId, DomCourse>(courses.size());
-        for (Map.Entry<PersistenceId, DomCourse> course : courses) {
-            map.put(course.getKey(), course.getValue());
-        }
-        this.courses = map;
+    public void setCourses(List<Map.Entry<PersistenceId, DomCourse>> aCourses) {
+        this.courses = aCourses;
     }
 
     /**
@@ -182,19 +161,15 @@ public class DomResultsPerTeacher {
      *
      * @return the classCourses
      */
-    public Set<Map.Entry<PersistenceId, DomClassCourse>> getClassCourses() {
-        return classCourses.entrySet();
+    public List<Map.Entry<PersistenceId, DomClassCourse>> getClassCourses() {
+        return classCourses;
     }
 
     /**
-     * @param classCourses the classCourses to set
+     * @param aClassCourses the classCourses to set
      */
-    public void setClassCourses(Set<Map.Entry<PersistenceId, DomClassCourse>> classCourses) {
-        HashMap<PersistenceId, DomClassCourse> map = new HashMap<PersistenceId, DomClassCourse>(classCourses.size());
-        for (Map.Entry<PersistenceId, DomClassCourse> cc : classCourses) {
-            map.put(cc.getKey(), cc.getValue());
-        }
-        this.classCourses = map;
+    public void setClassCourses(List<Map.Entry<PersistenceId, DomClassCourse>> aClassCourses) {
+        this.classCourses = aClassCourses;
     }
 
     /**
@@ -203,19 +178,15 @@ public class DomResultsPerTeacher {
      *
      * @return the studentsOfClasses
      */
-    public Set<Map.Entry<PersistenceId, DomStudentOfClass>> getStudentsOfClasses() {
-        return studentsOfClasses.entrySet();
+    public List<Map.Entry<PersistenceId, DomStudentOfClass>> getStudentsOfClasses() {
+        return studentsOfClasses;
     }
 
     /**
-     * @param studentsOfClasses the studentsOfClasses to set
+     * @param aStudentsOfClasses the studentsOfClasses to set
      */
-    public void setStudentsOfClasses(Set<Map.Entry<PersistenceId, DomStudentOfClass>> studentsOfClasses) {
-        HashMap<PersistenceId, DomStudentOfClass> map = new HashMap<PersistenceId, DomStudentOfClass>(studentsOfClasses.size());
-        for (Map.Entry<PersistenceId, DomStudentOfClass> soc : studentsOfClasses) {
-            map.put(soc.getKey(), soc.getValue());
-        }
-        this.studentsOfClasses = map;
+    public void setStudentsOfClasses(List<Map.Entry<PersistenceId, DomStudentOfClass>> aStudentsOfClasses) {
+        this.studentsOfClasses = aStudentsOfClasses;
     }
 
 }
