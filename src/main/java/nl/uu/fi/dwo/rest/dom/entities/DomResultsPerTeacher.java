@@ -25,13 +25,13 @@ public class DomResultsPerTeacher {
 
     private DomTeacher teacher;
     private Long fetchTimeStamp;
-    private List<Map.Entry<PersistenceId, DomStudent>> students;
-    private List<Map.Entry<PersistenceId, DomStudentOfClass>> studentsOfClasses;
-    private List<Map.Entry<PersistenceId, DomSchoolClass>> schoolClasses;
-    private List<Map.Entry<PersistenceId, DomClassCourse>> classCourses;
-    private List<Map.Entry<PersistenceId, DomCourse>> courses;
-    private List<Map.Entry<PersistenceId, DomScoContext>> scoContexts;
-    private List<Map.Entry<PersistenceId, DomStudentScoContext>> studentScoContexts;
+    private List<DomMapEntry<PersistenceId, DomStudent>> students;
+    private List<DomMapEntry<PersistenceId, DomStudentOfClass>> studentsOfClasses;
+    private List<DomMapEntry<PersistenceId, DomSchoolClass>> schoolClasses;
+    private List<DomMapEntry<PersistenceId, DomClassCourse>> classCourses;
+    private List<DomMapEntry<PersistenceId, DomCourse>> courses;
+    private List<DomMapEntry<PersistenceId, DomScoContext>> scoContexts;
+    private List<DomMapEntry<PersistenceId, DomStudentScoContext>> studentScoContexts;
 
     /**
      * @return the teacher
@@ -76,14 +76,14 @@ public class DomResultsPerTeacher {
      *
      * @return the students
      */
-    public List<Map.Entry<PersistenceId, DomStudent>> getStudents() {
+    public List<DomMapEntry<PersistenceId, DomStudent>> getStudents() {
         return students;
     }
 
     /**
      * @param aStudents the students to set
      */
-    public void setStudents(List<Map.Entry<PersistenceId, DomStudent>> aStudents) {
+    public void setStudents(List<DomMapEntry<PersistenceId, DomStudent>> aStudents) {
         this.students = aStudents;
     }
 
@@ -93,14 +93,14 @@ public class DomResultsPerTeacher {
      *
      * @return the schoolClasses
      */
-    public List<Map.Entry<PersistenceId, DomSchoolClass>> getSchoolClasses() {
+    public List<DomMapEntry<PersistenceId, DomSchoolClass>> getSchoolClasses() {
         return schoolClasses;
     }
 
     /**
      * @param aSchoolClasses the schoolClasses to set
      */
-    public void setSchoolClasses(List<Map.Entry<PersistenceId, DomSchoolClass>> aSchoolClasses) {
+    public void setSchoolClasses(List<DomMapEntry<PersistenceId, DomSchoolClass>> aSchoolClasses) {
         this.schoolClasses = aSchoolClasses;
     }
 
@@ -110,14 +110,14 @@ public class DomResultsPerTeacher {
      *
      * @return the scoContexts
      */
-    public List<Map.Entry<PersistenceId, DomScoContext>> getScoContexts() {
+    public List<DomMapEntry<PersistenceId, DomScoContext>> getScoContexts() {
         return this.scoContexts;
     }
 
     /**
      * @param aScoContexts the scoContexts to set
      */
-    public void setScoContexts(List<Map.Entry<PersistenceId, DomScoContext>> aScoContexts) {
+    public void setScoContexts(List<DomMapEntry<PersistenceId, DomScoContext>> aScoContexts) {
         this.scoContexts = aScoContexts;
     }
 
@@ -127,14 +127,14 @@ public class DomResultsPerTeacher {
      *
      * @return the studentScoContexts
      */
-    public List<Map.Entry<PersistenceId, DomStudentScoContext>> getStudentScoContexts() {
+    public List<DomMapEntry<PersistenceId, DomStudentScoContext>> getStudentScoContexts() {
         return studentScoContexts;
     }
 
     /**
      * @param studentScoContexts the studentScoContexts to set
      */
-    public void setStudentScoContexts(List<Map.Entry<PersistenceId, DomStudentScoContext>> aStudentScoContexts) {
+    public void setStudentScoContexts(List<DomMapEntry<PersistenceId, DomStudentScoContext>> aStudentScoContexts) {
         this.studentScoContexts = aStudentScoContexts;
     }
 
@@ -144,14 +144,14 @@ public class DomResultsPerTeacher {
      *
      * @return the courses
      */
-    public List<Map.Entry<PersistenceId, DomCourse>> getCourses() {
+    public List<DomMapEntry<PersistenceId, DomCourse>> getCourses() {
         return courses;
     }
 
     /**
      * @param aCourses the courses to set
      */
-    public void setCourses(List<Map.Entry<PersistenceId, DomCourse>> aCourses) {
+    public void setCourses(List<DomMapEntry<PersistenceId, DomCourse>> aCourses) {
         this.courses = aCourses;
     }
 
@@ -161,14 +161,14 @@ public class DomResultsPerTeacher {
      *
      * @return the classCourses
      */
-    public List<Map.Entry<PersistenceId, DomClassCourse>> getClassCourses() {
+    public List<DomMapEntry<PersistenceId, DomClassCourse>> getClassCourses() {
         return classCourses;
     }
 
     /**
      * @param aClassCourses the classCourses to set
      */
-    public void setClassCourses(List<Map.Entry<PersistenceId, DomClassCourse>> aClassCourses) {
+    public void setClassCourses(List<DomMapEntry<PersistenceId, DomClassCourse>> aClassCourses) {
         this.classCourses = aClassCourses;
     }
 
@@ -178,14 +178,14 @@ public class DomResultsPerTeacher {
      *
      * @return the studentsOfClasses
      */
-    public List<Map.Entry<PersistenceId, DomStudentOfClass>> getStudentsOfClasses() {
+    public List<DomMapEntry<PersistenceId, DomStudentOfClass>> getStudentsOfClasses() {
         return studentsOfClasses;
     }
 
     /**
      * @param aStudentsOfClasses the studentsOfClasses to set
      */
-    public void setStudentsOfClasses(List<Map.Entry<PersistenceId, DomStudentOfClass>> aStudentsOfClasses) {
+    public void setStudentsOfClasses(List<DomMapEntry<PersistenceId, DomStudentOfClass>> aStudentsOfClasses) {
         this.studentsOfClasses = aStudentsOfClasses;
     }
 
