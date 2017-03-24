@@ -36,7 +36,7 @@ class LoginPanelHandler {
                 @Override
                 public Promise<Void> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
-                        LOG.log(Level.INFO, "login succeeded for user:" + DwoGlobalVars.instance().getCurrentUser());
+                        LOG.log(Level.INFO, "login succeeded for user:" + DwoGlobalVars.instance().getCurrentUser().getUniqueDisplayName());
                         view.onLoginSuccess();
                     } else {
                         view.onLoginFailure("Illegal credentials.");
@@ -50,7 +50,11 @@ class LoginPanelHandler {
                     view.onLoginFailure(resolved.getFailure().getMessage());
                 }
             }
-            );
+            ).onResolve(new Runnable() {
+                public void run() {
+                    System.out.println("Need tot test onResolve and fill data here! Calling stuff to get results promise here!");
+                }
+            });;
         } catch (Dwo2Exception ex) {
             Logger.getLogger(LoginPanelHandler.class.getName()).log(Level.SEVERE, null, ex);
         }

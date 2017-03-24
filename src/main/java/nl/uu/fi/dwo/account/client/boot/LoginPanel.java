@@ -21,14 +21,15 @@ import java.util.logging.Logger;
  * @author G.A.J. van der Plas
  */
 public class LoginPanel extends Composite implements ClickHandler {
-    
+
     private static final Logger LOG = Logger.getLogger(LoginPanel.class.getName());
-    
+
     interface MyUiBinder extends UiBinder<Widget, LoginPanel> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-    
+
     private LoginPanelHandler handler;
+    private boolean loginClicked = false;
 
     @UiField
     TextBox usernameText;
@@ -38,9 +39,9 @@ public class LoginPanel extends Composite implements ClickHandler {
     CheckBox checkBox;
     @UiField
     Button loginBtn;
-    
+
     private BootPanel parent;
-    
+
     public void setParent(BootPanel aParent) {
         parent = aParent;
     }
@@ -51,38 +52,40 @@ public class LoginPanel extends Composite implements ClickHandler {
     public BootPanel getParent() {
         return parent;
     }
-    
+
     public LoginPanel() {
         initWidget(uiBinder.createAndBindUi(this));
         handler = new LoginPanelHandler(this);
         //controller must be before clicks occur
         loginBtn.addClickHandler(this);
-        
+
     }
-    
+
     public void onClick(ClickEvent event) {
         if (event.getSource() == loginBtn) {
-            LOG.log(Level.INFO, "Login clicked.");
+            LOG.log(Level.INFO, "Login button clicked.");
             handler.loginClicked(this.usernameText.getText(), this.passwordTextBox.getText());
             //            curUser.setPassword("passw"); //md5Hash = d79096188b670c2f81b7001f73801117
         }
     }
+
     /**
      * Called from handler after successful login.
      */
     public void onLoginSuccess() {
-        LOG.log(Level.INFO,"Login succeeded.");
+        LOG.log(Level.INFO, "Login succeeded.");
         parent.showResultWidget();
     }
+
     /**
      * Called from handler after failed login.
-     * 
-     * @param failMessage 
+     *
+     * @param failMessage
      */
     public void onLoginFailure(String failMessage) {
         LOG.log(Level.INFO, failMessage);
         Window.alert(failMessage);
         //reset user interface?
     }
-    
+
 }

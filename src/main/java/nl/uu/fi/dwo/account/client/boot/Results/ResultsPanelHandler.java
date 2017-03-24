@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client.boot.Results;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
@@ -31,6 +32,7 @@ class ResultsPanelHandler {
     }
 
     public void init() {
+        LOG.log(Level.INFO,"DwoGlobalVarsState = "+DwoGlobalVars.instance().getState().name());
         Promise<DomResultsPerTeacher> promResults;
         promResults= controller.getResultsPerTeacher();
         // onSuccess calculate results and show.
@@ -38,11 +40,13 @@ class ResultsPanelHandler {
                 @Override
                 public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
                     //calculate tree and call plotting
-                    LOG.log(Level.INFO,resolved.toString());
+                    LOG.log(Level.INFO,"DomResults returned.");
                     rTree = new DomResultTree(resolved.getValue());
+                    LOG.log(Level.INFO,"ResultTree obtained.");
                     matrix  = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
-                    LOG.log(Level.INFO,rTree.getResultTree().getLabel());
+                    LOG.log(Level.INFO,"ResultMatrix obtained.");
                     view.plot(matrix);
+                    LOG.log(Level.INFO,"plotted ResultMatrix.");
                     return null;
                 }
             },
