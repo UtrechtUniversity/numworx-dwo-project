@@ -2876,7 +2876,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		case LEFT: pos = 0; break;
 		default:
 		case MIDDLE:
-		case RIGHT: pos = breedtes.size()-1;
+		case RIGHT: pos = breedtes.size()-1; break;
 		case NONE: {
 				klapUitButton.setVisible(false);
 				pos=0;
