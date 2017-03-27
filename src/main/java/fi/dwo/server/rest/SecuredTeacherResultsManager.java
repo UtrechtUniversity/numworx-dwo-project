@@ -215,7 +215,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 dccList.add(new DomMapEntry(entry));
             });
 
-            results.setClassCourses(new ArrayList<>(dccList));
+            results.setClassCourses(dccList);
 
             HashMap<PersistenceId, DomCourse> domCourses = new HashMap<>();
             Map<Long, PersistentCourse> courses = new HashMap<>();
@@ -250,8 +250,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             domCourses.entrySet().stream().forEach((entry) -> {
                 dcList.add(new DomMapEntry(entry));
             });
-
-            results.setCourses(new ArrayList<>(dcList));
+            results.setCourses(dcList);
 
             //process leaves and fill hashmap scoContext
             HashMap<Long, PersistentScoContext> scosMap = new HashMap<>();
@@ -267,12 +266,11 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 domScoContexts.put(s.getId(), s);
             });
             
-            List<DomMapEntry<PersistenceId, DomScoContext>> dcsList = new ArrayList<>(domScoContexts.size());
+            List<DomMapEntry<PersistenceId, DomScoContext>> dscList = new ArrayList<>(domScoContexts.size());
             domScoContexts.entrySet().stream().forEach((entry) -> {
-                dcsList.add(new DomMapEntry(entry));
+                dscList.add(new DomMapEntry(entry));
             });
-
-            results.setScoContexts(dcsList);
+            results.setScoContexts(dscList);
 
             //fill hashmap studenSco
             HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
@@ -287,12 +285,13 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 DomStudentScoContext s = keyValuePair.getValue().buildDomStudentScoContext();
                 domStudentScoContexts.put(s.getId(), s);
             });
-            List<DomMapEntry<PersistenceId, DomStudentScoContext>> scoList = new ArrayList<>(domStudentScoContexts.size());
+
+            List<DomMapEntry<PersistenceId, DomScoContext>> sscList = new ArrayList<>(domStudentScoContexts.size());
             domStudentScoContexts.entrySet().stream().forEach((entry) -> {
-                scoList.add(new DomMapEntry(entry));
+                sscList.add(new DomMapEntry(entry));
             });
 
-            results.setStudentScoContexts(new ArrayList<>(scoList));
+            results.setScoContexts(sscList);
 
 //            //test null returns
 //            if(results.getClassCourses().isEmpty()){
