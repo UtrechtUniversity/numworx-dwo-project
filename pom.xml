@@ -125,7 +125,7 @@
         <dependency>
             <groupId>com.owlike</groupId>
             <artifactId>genson</artifactId>
-            <version>1.3</version>
+            <version>1.4</version>
         </dependency> 
         
 <!-- 4MB file with dependencies 
