@@ -30,6 +30,7 @@ public class DomSchoolClass implements Cloneable {
         this.id = clone.id;
         this.hasRegKey = clone.getHasRegKey();
         this.schoolClassName = clone.getSchoolClassName();
+        this.iconizer = clone.getIconizer();
     }
 
     public DomSchoolClass duplicate() {
@@ -37,6 +38,7 @@ public class DomSchoolClass implements Cloneable {
         sc.id = (PersistenceId) this.id.duplicate();
         sc.schoolClassName = this.getSchoolClassName(); //strings are final
         sc.hasRegKey = this.getHasRegKey().equals(true); //ensuring cloned stuff
+        sc.iconizer = this.getIconizer();
         return sc;
     }
 

@@ -25,7 +25,7 @@ public class DomResultsPerTeacher {
 
     private DomTeacher teacher;
     private Long fetchTimeStamp;
-    private List<DomMapEntry<PersistenceId, DomStudent>> students;
+    private List<DomStudentMapEntry> students;
     private List<DomMapEntry<PersistenceId, DomStudentOfClass>> studentsOfClasses;
     private List<DomMapEntry<PersistenceId, DomSchoolClass>> schoolClasses;
     private List<DomMapEntry<PersistenceId, DomClassCourse>> classCourses;
@@ -76,14 +76,14 @@ public class DomResultsPerTeacher {
      *
      * @return the students
      */
-    public List<DomMapEntry<PersistenceId, DomStudent>> getStudents() {
+    public List<DomStudentMapEntry> getStudents() {
         return students;
     }
 
     /**
      * @param aStudents the students to set
      */
-    public void setStudents(List<DomMapEntry<PersistenceId, DomStudent>> aStudents) {
+    public void setStudents(List<DomStudentMapEntry> aStudents) {
         this.students = aStudents;
     }
 

@@ -54,7 +54,7 @@ public class DomMappedResultsPerTeacher {
         //fill and ensure no null values;
         if (results.getStudents() != null) {
             students = new HashMap<PersistenceId, DomStudent>(results.getStudents().size());
-            for (Map.Entry<PersistenceId, DomStudent> student : results.getStudents()) {
+            for (DomStudentMapEntry student : results.getStudents()) {
                 students.put(student.getKey(), student.getValue());
             }
         }else{
@@ -62,7 +62,7 @@ public class DomMappedResultsPerTeacher {
         }
         if (results.getStudentsOfClasses() != null) {
             studentsOfClasses = new HashMap<PersistenceId, DomStudentOfClass>(results.getStudentsOfClasses().size());
-            for (Map.Entry<PersistenceId, DomStudentOfClass> soc : results.getStudentsOfClasses()) {
+            for (DomMapEntry<PersistenceId, DomStudentOfClass> soc : results.getStudentsOfClasses()) {
                 studentsOfClasses.put(soc.getKey(), soc.getValue());
             }
         }else{
@@ -71,7 +71,7 @@ public class DomMappedResultsPerTeacher {
 
         if (results.getSchoolClasses() != null) {
             schoolClasses = new HashMap<PersistenceId, DomSchoolClass>(results.getSchoolClasses().size());
-            for (Map.Entry<PersistenceId, DomSchoolClass> schoolClass : results.getSchoolClasses()) {
+            for (DomMapEntry<PersistenceId, DomSchoolClass> schoolClass : results.getSchoolClasses()) {
                 schoolClasses.put(schoolClass.getKey(), schoolClass.getValue());
             }
         }else{
@@ -79,7 +79,7 @@ public class DomMappedResultsPerTeacher {
         }
         if (results.getClassCourses() != null) {
             classCourses = new HashMap<PersistenceId, DomClassCourse>(results.getClassCourses().size());
-            for (Map.Entry<PersistenceId, DomClassCourse> cc : results.getClassCourses()) {
+            for (DomMapEntry<PersistenceId, DomClassCourse> cc : results.getClassCourses()) {
                 classCourses.put(cc.getKey(), cc.getValue());
             }
         }else{
@@ -87,13 +87,13 @@ public class DomMappedResultsPerTeacher {
         }
         if (results.getCourses() != null) {
             courses = new HashMap<PersistenceId, DomCourse>(results.getCourses().size());
-            for (Map.Entry<PersistenceId, DomCourse> course : results.getCourses()) {
+            for (DomMapEntry<PersistenceId, DomCourse> course : results.getCourses()) {
                 courses.put(course.getKey(), course.getValue());
             }
         }
         if(results.getScoContexts()!=null){
         scoContexts = new HashMap<PersistenceId, DomScoContext>(results.getScoContexts().size());
-        for (Map.Entry<PersistenceId, DomScoContext> scoContext : results.getScoContexts()) {
+        for (DomMapEntry<PersistenceId, DomScoContext> scoContext : results.getScoContexts()) {
             scoContexts.put(scoContext.getKey(), scoContext.getValue());
         }
         }else{
@@ -101,7 +101,7 @@ public class DomMappedResultsPerTeacher {
         }
         if(results.getStudentScoContexts()!=null){
         studentScoContexts = new HashMap<PersistenceId, DomStudentScoContext>(results.getStudentScoContexts().size());
-        for (Map.Entry<PersistenceId, DomStudentScoContext> ssc : results.getStudentScoContexts()) {
+        for (DomMapEntry<PersistenceId, DomStudentScoContext> ssc : results.getStudentScoContexts()) {
             studentScoContexts.put(ssc.getKey(), ssc.getValue());
         }
         }else{

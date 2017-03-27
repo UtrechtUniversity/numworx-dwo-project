@@ -2,21 +2,22 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class DomMapEntry<PersistenceId, V>  {
+public class DomStudentMapEntry  {
 
     private PersistenceId key;
-    private V value;
+    private DomStudent value;
 
-    public DomMapEntry() {
+    public DomStudentMapEntry() {
     }
     
-    public DomMapEntry(Map.Entry<PersistenceId, V> entry) {
+    public DomStudentMapEntry(Map.Entry<PersistenceId, DomStudent> entry) {
         key = entry.getKey();
         value = entry.getValue();
     }
@@ -32,12 +33,12 @@ public class DomMapEntry<PersistenceId, V>  {
         this.key = key;
     }
 
-    public V getValue() {
+    public DomStudent getValue() {
         return value;
     }
 
-    public V setValue(V aValue) {
-        V oldValue;
+    public DomStudent setValue(DomStudent aValue) {
+        DomStudent oldValue;
         oldValue = value;
         value = aValue;
         return oldValue;

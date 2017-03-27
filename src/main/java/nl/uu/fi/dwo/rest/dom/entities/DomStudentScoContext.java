@@ -1,18 +1,19 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.util.Date;
+import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * 
  * @author Gert van der Plas
  */
+@XmlRootElement
 public class DomStudentScoContext {
     private PersistenceId id;
     private PersistenceId scoID;
     private PersistenceId userID;
     private PersistenceId schoolGroupID;
-    private float score;
+    private double score;
 
     /**
      * @return the id
@@ -73,14 +74,14 @@ public class DomStudentScoContext {
     /**
      * @return the score
      */
-    public float getScore() {
+    public double getScore() {
         return score;
     }
 
     /**
      * @param score the score to set
      */
-    public void setScore(float score) {
+    public void setScore(double score) {
         this.score = score;
     }
 

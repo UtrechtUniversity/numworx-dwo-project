@@ -25,6 +25,7 @@ public enum RestListClassTypes {
         DomImage,
         DomJars,
         DomRole,
+        DomResultsPerTeacher,        
         DomSamlUser,
         DomSchool,
         DomSchool4DwoAdmin,
