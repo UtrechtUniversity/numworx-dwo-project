@@ -172,7 +172,8 @@ public class FormuleFont
 		FormuleFont.formTimes = formTimes;
 		if(formTimes)
 			defaultFont = "TimesRoman";
-		
+//		else  /*zetDefaultFont is net geweest*/
+//			defaultFont = defaultTekstFont;
 	}	
 
 	public boolean isBold()
