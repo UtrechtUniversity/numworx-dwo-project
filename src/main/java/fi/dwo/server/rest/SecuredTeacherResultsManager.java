@@ -52,6 +52,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -162,15 +163,21 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 //                    Logger.getLogger(SecuredTeacherResultsManager.class.getName()).log(Level.SEVERE, null, ex);
 //                }
             });
+            List<DomMapEntry<PersistenceId, DomSchoolClass>> scList = new ArrayList<>(domSchoolClasses.size());
+            domSchoolClasses.entrySet().stream().forEach((entry) -> {
+                scList.add(new DomMapEntry(entry));
+            });
+            results.setSchoolClasses(scList);
+            
             //convert studentMap and set in result
             HashMap<PersistenceId, DomStudent> domStudents = new HashMap<>(studentMap.size());
             studentMap.entrySet().stream().forEach((keyValuePair) -> {
                 DomStudent s = keyValuePair.getValue().buildDomStudent();
                 domStudents.put(s.getId(), s);
             });
-            List<DomMapEntry<PersistenceId, DomStudent>> entryList = new ArrayList<>(domStudents.size());
+            List<DomStudentMapEntry> entryList = new ArrayList<>(domStudents.size());
             domStudents.entrySet().stream().forEach((entry) -> {
-                entryList.add(new DomMapEntry(entry));
+                entryList.add(new DomStudentMapEntry(entry));
             });
             results.setStudents(entryList);
             //convert StudentOfClass map (socMap) and set in result
@@ -286,32 +293,13 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 domStudentScoContexts.put(s.getId(), s);
             });
 
-            List<DomMapEntry<PersistenceId, DomScoContext>> sscList = new ArrayList<>(domStudentScoContexts.size());
+            List<DomMapEntry<PersistenceId, DomStudentScoContext>> sscList = new ArrayList<>(domStudentScoContexts.size());
             domStudentScoContexts.entrySet().stream().forEach((entry) -> {
                 sscList.add(new DomMapEntry(entry));
             });
 
-            results.setScoContexts(sscList);
+            results.setStudentScoContexts(sscList);
 
-//            //test null returns
-//            if(results.getClassCourses().isEmpty()){
-//                results.setClassCourses(null);
-//            }
-//            if(results.getCourses().isEmpty()){
-//                results.setCourses(null);
-//            }
-//            if(results.getSchoolClasses().isEmpty()){
-//                results.setSchoolClasses(null);
-//            }
-//            if(results.getScoContexts().isEmpty()){
-//                results.setScoContexts(null);
-//            }
-//            if(results.getStudents().isEmpty()){
-//                results.setStudents(null);
-//            }
-//            if(results.getStudentsOfClasses().isEmpty()){
-//                results.setStudentsOfClasses(null);
-//            }
             return results;
             // recurse here using Java queue
         } else {
