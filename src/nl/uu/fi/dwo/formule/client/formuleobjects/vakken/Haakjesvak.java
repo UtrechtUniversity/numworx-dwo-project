@@ -38,6 +38,7 @@ public class Haakjesvak extends FormuleElementWithChildren
 	@Override
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
+
 		int h = 3 * fm.getAscent() / 2;
 		int hh = h / 2;
 		int b = h / 6;
@@ -87,12 +88,11 @@ public class Haakjesvak extends FormuleElementWithChildren
 	{
 		try
 		{
-			this.getChild().paint();
-
-			
-			this.getChild().draw(ctx);
-
-			this.drawCursor();
+			getChild().paint();
+			zetMaat();
+			paintComponent(ctx);
+			getChild().draw(ctx);
+			drawCursor();
 		}
 		catch (Exception e)
 		{

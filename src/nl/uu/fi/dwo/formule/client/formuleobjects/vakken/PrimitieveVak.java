@@ -43,7 +43,7 @@ public class PrimitieveVak extends FormuleElementWithChildren
 		this.getChild(0).paint();
 		this.getChild(1).paint();
 		zetMaat();
-
+		paintComponent(ctx);
 		
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);

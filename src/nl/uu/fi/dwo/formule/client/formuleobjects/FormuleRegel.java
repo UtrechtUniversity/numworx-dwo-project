@@ -572,7 +572,8 @@ public class FormuleRegel extends FormuleElement
 		if (holder instanceof FormuleEditor == false)
 			return;
 		FormuleHolder holder = (FormuleHolder) this.holder;
-		this.current = current;
+		//this.current = current;
+		super.setCurrent(current);
 		if (current == true)
 			holder.setCurrentRegel(this);
 	}

@@ -80,9 +80,8 @@ public class PrvVak extends FormuleElementWithChildren
 		this.getChild(2).paint();
 		//this.getChild(3).paint();
 		zetMaat();
-		
-		
-		
+		paintComponent(ctx);
+	
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);
 		this.getChild(2).draw(ctx);

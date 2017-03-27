@@ -276,17 +276,20 @@ public class FormuleTeken extends FormuleElement
 			{
 				int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
 				//x = this.width/2 - (3*fm.getAscent() / 8 /2)/2;
-				this.drawline(ctx, x + 3 * fm.getAscent() / 8, y, x + fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
-				this.drawline(ctx, x + 3 * fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent(), x + fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
+//				this.drawline(ctx, x + 3 * fm.getAscent() / 8, 0,                                    x + fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
+//				this.drawline(ctx, x + 3 * fm.getAscent() / 8, 0 + fm.getAscent() + fm.getDescent(), x + fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
+				ctx.beginPath();
+				ctx.moveTo(x + 3 * fm.getAscent() / 8, 0);
+				ctx.lineTo(x + fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
+				ctx.lineTo(x + 3 * fm.getAscent() / 8, 0 + fm.getAscent() + fm.getDescent());
+				ctx.stroke();
+			
 			} break;
 		case '\u3009':
-			{
-//				this.width = fm.getAscent() / 2;
-//				this.setSize(width, height);
-				
+			{				
 				int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
-				this.drawline(ctx, x + fm.getAscent() / 8, y, x + 3 * fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
-				this.drawline(ctx, x + fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent(), x + 3 * fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
+				this.drawline(ctx, x + fm.getAscent() / 8, 0, x + 3 * fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
+				this.drawline(ctx, x + fm.getAscent() / 8, 0 + fm.getAscent() + fm.getDescent(), x + 3 * fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
 			} break;
 		case '[':
 			{
@@ -364,7 +367,11 @@ public class FormuleTeken extends FormuleElement
 			
 		}
 		if(this.fm.isItalic() != italic)
+		{
 			(this.fm = this.fm.createCopy()).setItalic(italic);
+			setChanged(true);
+			returnWaarde = true;
+		}
 		//fm.setBold(bold);
 		
 		return returnWaarde;
@@ -456,8 +463,13 @@ public class FormuleTeken extends FormuleElement
 	}
 
 	public void zetFunctieTeken(boolean b)
-	{
+	{	boolean old = functieTeken;
 		functieTeken = b;
+		if(b != old)
+		{	
+			setFont(fm); // 
+			setChanged(true);
+		}
 	}
 	
 	public boolean getFunctieTeken()
