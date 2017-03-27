@@ -134,6 +134,13 @@ public class DomUser {
         this.singleSchool = singleSchool;
     }
 
+    /**
+     * Returns a unique display name, the display name prefixed with the username
+     * separated by a dash.
+     * 
+     * @return the user's unique display name ' &lt;username &gt; - &lt; display 
+     * name &gt;'.
+     */
     public String getUniqueDisplayName() {
         StringBuilder result = new StringBuilder();
         result.append(this.userName);
@@ -147,6 +154,13 @@ public class DomUser {
         return result.toString();
     }
 
+    /**
+     Returns the display name. The display name is the given name followed by the
+     * insertion followed by the family name. 
+     * 
+     * @return the user's display name.
+     * @return 
+     */
     public String getDisplayName() {
         StringBuilder result = new StringBuilder();
         result.append(this.givenName);

@@ -1,0 +1,7 @@
+#LMS-51 ResultsPage. Eod, null-pointer bug in results processing.
+--This line, and those below, will be ignored--
+
+M    src/main/java/nl/uu/fi/dwo/rest/dom/DomMappedResultsPerTeacher.java
+M    src/main/java/nl/uu/fi/dwo/rest/dom/DomResultTree.java
+M    src/main/java/nl/uu/fi/dwo/rest/dom/ResultTreeCalculator.java
+M    src/main/java/nl/uu/fi/dwo/rest/dom/entities/DomUser.java

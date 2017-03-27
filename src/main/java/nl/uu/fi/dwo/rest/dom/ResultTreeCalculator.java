@@ -178,8 +178,6 @@ public class ResultTreeCalculator {
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
         
         // for each of the SchoolClasses fetch a hashmap of courses with the score.
-        
-        
         return result;
     }
 

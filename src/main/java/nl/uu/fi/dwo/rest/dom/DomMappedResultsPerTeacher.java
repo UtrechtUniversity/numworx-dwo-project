@@ -43,12 +43,12 @@ public class DomMappedResultsPerTeacher {
         if (results == null) {
             return;
         }
-        LOG.log(Level.INFO,""+results.getStudents().size());
-        LOG.log(Level.INFO,""+results.getClassCourses().size());
-        LOG.log(Level.INFO,""+results.getCourses().size());
-        LOG.log(Level.INFO,""+results.getSchoolClasses().size());
-        LOG.log(Level.INFO,""+results.getStudentScoContexts().size());
-        LOG.log(Level.INFO,""+results.getStudentsOfClasses().size());
+        LOG.log(Level.INFO,"DomResultsPerTeacher.getStudents"+results.getStudents().size());
+        LOG.log(Level.INFO,"DomResultsPerTeacher.getClassCourses"+results.getClassCourses().size());
+        LOG.log(Level.INFO,"DomResultsPerTeacher.getCourses"+results.getCourses().size());
+        LOG.log(Level.INFO,"DomResultsPerTeacher.getSchoolClasses"+results.getSchoolClasses().size());
+        LOG.log(Level.INFO,"DomResultsPerTeacher.getStudentScoContexts"+results.getStudentScoContexts().size());
+        LOG.log(Level.INFO,"DomResultsPerTeacher.getStudentsOfClasses"+results.getStudentsOfClasses().size());
         teacher = results.getTeacher();
         fetchTimeStamp = results.getFetchTimeStamp();
         //fill and ensure no null values;

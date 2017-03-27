@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.rest.dom;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
@@ -28,12 +30,15 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 public class DomResultTree {
 
+    private static final Logger LOG = Logger.getLogger(DomResultTree.class.getName());
+
     private DomResultTeacher resultTree;
     private DomResultTeacher studentTree;
 
     public DomResultTree(DomResultsPerTeacher resultData) {
         
         //restData = resultData;
+        LOG.log(Level.INFO, "Initializing a DomResultTree.");
         buildResultTree(new DomMappedResultsPerTeacher(resultData));
         //reCalculateResults();
     }
