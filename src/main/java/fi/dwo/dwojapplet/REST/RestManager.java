@@ -321,8 +321,9 @@ class RestManager {
             }
             conn.disconnect();
             //decode JSON
-//            List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
+//            List<DomResultsPerTeacher> user = genson.deserialize(json.toString(), new GenericType<List<DomResultsPerTeacher>>(){});
             LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
+            
             T result = genson.deserialize(json.toString(), c);
             return result;
         } catch (MalformedURLException e) {

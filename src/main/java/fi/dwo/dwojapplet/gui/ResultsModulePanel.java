@@ -14,6 +14,7 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserGroup;
 import fi.dwo.dwojapplet.domain.UserResultList;
+import fi.dwo.dwojapplet.domain.rest.SecuredTeacherResultsManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -53,6 +54,14 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
+import nl.uu.fi.dwo.rest.dom.DomMappedResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
+import nl.uu.fi.dwo.rest.dom.DomResultTree;
+import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * This class is a panel represents the resultscores of a group of users and a
@@ -639,6 +648,21 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
      * @param rm
      */
     public ResultsModulePanel(ResultsModuleIF rm) {
+        DomResultsPerTeacher results;
+        try {
+DomDwoProfile profile = new DomDwoProfile();
+        profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;00000000000000000001"));;
+        profile.setDwoProfileName("test");
+        profile.setDwoProfileRights("_");            
+            results = SecuredTeacherResultsManager.getTeachersResults(profile);
+//        DomMappedResultsPerTeacher mapResults = new DomMappedResultsPerTeacher((results));
+         DomResultTree rTree = new DomResultTree(results);
+         DomResultPlotMatrix matrix  = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);  
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(600, 480);
         this.setSize(600, 280);
