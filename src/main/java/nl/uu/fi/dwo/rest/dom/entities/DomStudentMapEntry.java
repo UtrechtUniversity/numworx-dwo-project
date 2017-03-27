@@ -37,11 +37,14 @@ public class DomStudentMapEntry  {
         return value;
     }
 
-    public DomStudent setValue(DomStudent aValue) {
-        DomStudent oldValue;
-        oldValue = value;
+//    public DomStudent setValue(DomStudent aValue) {
+//        DomStudent oldValue;
+//        oldValue = value;
+//        value = aValue;
+//        return oldValue;
+//    }
+    public void setValue(DomStudent aValue) {
         value = aValue;
-        return oldValue;
     }
 
 }
