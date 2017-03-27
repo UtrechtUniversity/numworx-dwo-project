@@ -36,11 +36,8 @@ public class DomMapEntry<PersistenceId, V>  {
         return value;
     }
 
-    public V setValue(V aValue) {
-        V oldValue;
-        oldValue = value;
+    public void setValue(V aValue) {
         value = aValue;
-        return oldValue;
     }
 
 }
