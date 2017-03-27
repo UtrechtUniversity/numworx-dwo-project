@@ -52,7 +52,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -175,9 +174,9 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 DomStudent s = keyValuePair.getValue().buildDomStudent();
                 domStudents.put(s.getId(), s);
             });
-            List<DomStudentMapEntry> entryList = new ArrayList<>(domStudents.size());
+            List<DomMapEntry<PersistenceId, DomStudent>> entryList = new ArrayList<>(domStudents.size());
             domStudents.entrySet().stream().forEach((entry) -> {
-                entryList.add(new DomStudentMapEntry(entry));
+                entryList.add(new DomMapEntry<PersistenceId, DomStudent>(entry));
             });
             results.setStudents(entryList);
             //convert StudentOfClass map (socMap) and set in result
