@@ -36,6 +36,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 
 /**
  * This is the plain and direct restManager. Please use the
@@ -321,7 +322,7 @@ class RestManager {
             }
             conn.disconnect();
             //decode JSON
-//            List<DomResultsPerTeacher> user = genson.deserialize(json.toString(), new GenericType<List<DomResultsPerTeacher>>(){});
+            DomResultsPerTeacher user = genson.deserialize(json.toString(), new GenericType<DomResultsPerTeacher>(){});
             LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
             
             T result = genson.deserialize(json.toString(), c);
