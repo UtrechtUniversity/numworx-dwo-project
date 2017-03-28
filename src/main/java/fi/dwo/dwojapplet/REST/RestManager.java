@@ -322,7 +322,7 @@ class RestManager {
             }
             conn.disconnect();
             //decode JSON
-            DomResultsPerTeacher user = genson.deserialize(json.toString(), new GenericType<DomResultsPerTeacher>(){});
+//            DomResultsPerTeacher user = genson.deserialize(json.toString(), new GenericType<DomResultsPerTeacher>(){});
             LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
             
             T result = genson.deserialize(json.toString(), c);

@@ -651,7 +651,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
         DomResultsPerTeacher results;
         try {
 DomDwoProfile profile = new DomDwoProfile();
-        profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;00000000000000000001"));;
+        profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;000000000000000000077"));;
         profile.setDwoProfileName("test");
         profile.setDwoProfileRights("_");            
             results = SecuredTeacherResultsManager.getTeachersResults(profile);
