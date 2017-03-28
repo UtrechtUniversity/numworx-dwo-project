@@ -35,6 +35,16 @@
             </roles>
         </developer>
     </developers>
+    
+    <properties>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+    </properties>
+    
+    <scm>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-gwt-lib/trunk</connection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-gwt-lib/trunk</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
         
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -120,6 +130,16 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <preparationGoals>clean verify install</preparationGoals>
+                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-gwt-lib/tags/</tagBase>
+                </configuration>            
+            </plugin>            
+            
             <!--            <plugin>
                  usage: jetty:run-war of jetty:run-exploded 
                 <groupId>org.eclipse.jetty</groupId>
