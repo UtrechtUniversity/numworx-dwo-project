@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.interaction.client;
 
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -35,4 +36,6 @@ public interface OpdrNavIF
 	
 	void pause();
 	void unpause();
+	
+	ObjectMap getConfiguration(); // instellingen
 }

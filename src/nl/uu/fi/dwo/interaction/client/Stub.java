@@ -369,7 +369,6 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	@Override
 	public void unpause() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -381,6 +380,12 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	@Override
 	public boolean hasListeners(String command) {
 		return true;
+	}
+
+	@Override
+	public ObjectMap getConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
