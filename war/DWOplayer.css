@@ -269,6 +269,8 @@ div.listItem-dwo-separator {
 
 .textEditor-nowrap {
 	white-space: nowrap;
+	background-color: white;
+	font-size: 12px !important;
 }
 
 .cursor_gum {

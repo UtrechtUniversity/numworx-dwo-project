@@ -437,9 +437,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		initWidget(hbox);
 		menubar = null;
 		content = getContent(null);
-		content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
+		content.setPixelSize(width-boxsize-padding, 13); // altijd 13 pixels? font is 12px, klopt dat?
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding/2, Unit.PX);
+		int top = (height-menuheight-boxsize-padding-13)/2;
+		style.setMarginTop(top, Unit.PX);
 		//style.setBackgroundColor("white");
 		style.setOverflow(Overflow.HIDDEN);
 		hbox.add(content);

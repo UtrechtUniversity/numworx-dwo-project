@@ -508,7 +508,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			basisPanel.add(antwoordTF);
 			basisPanel.setWidgetLeftRight(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			basisPanel.setWidgetTopBottom(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			ashoogte = Math.round(hoogte) - 11;// /*antwoordTF.getOffsetHeight()*/ - 3;
+			ashoogte = Math.round(hoogte)/2 + 2;// /*antwoordTF.getOffsetHeight()*/ - 3;
 		}
 		
 		//TODO: Noordhoff-instelling maken.
