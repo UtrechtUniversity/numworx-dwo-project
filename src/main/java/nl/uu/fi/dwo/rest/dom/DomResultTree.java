@@ -87,7 +87,8 @@ public class DomResultTree {
             PersistenceId sId = soc.getStudentId();
             DomStudent student = resultData.getStudents().get(sId);
             if (!studentClasses.get(soc.getClassId()).getChildren().containsKey(key)) {
-                Map<PersistenceId, DomStudent> kids = studentClasses.get(soc.getClassId()).getChildren();               
+                Map<PersistenceId, DomStudent> kids = (Map<PersistenceId, DomStudent>) studentClasses.get(soc.getClassId()).getChildren();
+                kids = new HashMap<PersistenceId, DomStudent>();
                kids.put(key, student);
             }
         }
