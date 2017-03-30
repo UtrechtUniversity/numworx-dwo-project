@@ -382,10 +382,20 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return true;
 	}
 
-	@Override
+	private static native JSONObject getConfiguration0() /*-{
+		return $wnd.getConfiguration($wnd.outer);
+	}-*/;
+
+	private static JSONObject getConfiguration1() {
+		try {
+			return getConfiguration0();
+		} catch(Throwable t) {
+			return null;
+		}
+	}
+	
 	public ObjectMap getConfiguration() {
-		// TODO Auto-generated method stub
-		return null;
+		return JSONUtilities.wrapMap(getConfiguration1());
 	}
 
 }

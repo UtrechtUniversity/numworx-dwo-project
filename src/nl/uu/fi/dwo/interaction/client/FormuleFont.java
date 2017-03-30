@@ -20,20 +20,20 @@ public class FormuleFont
 	font size = font height - internal leading = 18 - 2 = 16 pixels
 	 */
 	//private int fontSize = 16;
-	private int ascent = 0;
-	private int descent = 0;
+	private int ascent;
+	private int descent;
 	//private int leading = 0;
-	private int height = ascent + descent;
-	private int fontSize = height;// - leading;
+	private int height;
+	private int fontSize;// - leading;
 
 	private static String defaultFont = "Arial";
 	private static String defaultTekstFont = "Arial";
-	public static boolean formTimes = false;
+	public static boolean formTimes;
 	private String font = "Arial";
-	private boolean bold = false;
+	private boolean bold;
 	//private boolean italic = true;
-	private boolean italic = false;
-	private boolean smalltext = false;
+	private boolean italic;
+	private boolean smalltext;
 	
 	public static FormuleFont createFromFontSize(int size)
 	{
@@ -243,7 +243,7 @@ public class FormuleFont
 	{
 		if (smalltext != this.smalltext)
 		{
-			if (smalltext == true)
+			if (smalltext)
 				this.setSizes((int)Math.round((double) this.fontSize * 2/3));
 			else
 				this.setSizes(this.fontSize * 3/2);
