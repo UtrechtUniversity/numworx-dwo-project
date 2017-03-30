@@ -36,6 +36,8 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -585,14 +587,29 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		if( launchState.containsKey("inklapKnopPos"))
 			inklapKnopPos = launchState.getInt("inklapKnopPos");
 		else inklapKnopPos = RIGHT;
-		if( launchState.containsKey("uitklapHoogtes"))
+		if (launchState.containsKey("uitklapHoogtes"))
 			uitklapHoogtes = launchState.getDoubleList("uitklapHoogtes");
-		if( launchState.containsKey("knopImageString1"))
+		if (launchState.containsKey("knopImageString1"))
 			knopImageView1 = new ImageView(launchState.getString("knopImageString1"));
-		if( launchState.containsKey("knopImageString2"))
+		if (launchState.containsKey("knopImageString2"))
 			knopImageView2 = new ImageView(launchState.getString("knopImageString2"));
 // launchState never null!
 		
+		// call out
+		if (launchState.containsKey("callOut"))
+			callOut = launchState.getBoolean("callOut", callOut);
+		if (launchState.containsKey("callOutMargeX0"))
+			callOutMargeX0 = launchState.getInt("callOutMargeX0");
+		if (launchState.containsKey("callOutMargeY0"))
+			callOutMargeY0 = launchState.getInt("callOutMargeY0");
+		if (launchState.containsKey("callOutMargeX1"))
+			callOutMargeX1 = launchState.getInt("callOutMargeX1");
+		if (launchState.containsKey("callOutMargeY1"))
+			callOutMargeY1 = launchState.getInt("callOutMargeY1");
+		if (launchState.containsKey("callOutPointX"))
+			callOutPointX = launchState.getInt("callOutPointX");
+		if (launchState.containsKey("callOutPointY"))
+			callOutPointY = launchState.getInt("callOutPointY");
 		
 		vulHoogte = launchState.getBoolean("vulHoogte", vulHoogte);
 		
@@ -627,6 +644,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 //			}
 //		}
 		
+		if (callOut)
+		{
+			resizeForCallOut();
+		}
 		
 		randDikte = randZichtbaar ? randDikte : 0; 
 
@@ -652,6 +673,11 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
 		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
 		randPanel.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
+		
+		if (callOut)
+		{
+			randPanel.setPixelSize(breedte - callOutMargeX0 - callOutMargeX1, hoogte - callOutMargeY0 - callOutMargeY1);
+		}
 		
 		horizontalBorders = new LayoutPanel[hoogtes.size() - 1];
 		verticalBorders = new LayoutPanel[breedtes.size() - 1];
@@ -680,18 +706,50 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		plaatsTabelRanden();
 		
+		if (callOut)
+		{
+			// hier moet als eerste een canvas met punttekening op mainPanel2 worden gezet
+			LayoutPanel callOutPanel = new LayoutPanel();
+			Canvas callOutCanvas = Canvas.createIfSupported();
+			setUpCallOutCanvas(callOutCanvas);
+			callOutPanel.add(callOutCanvas);
+			mainPanel2.add(callOutPanel);
+			mainPanel2.setWidgetLeftRight(callOutPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+			mainPanel2.setWidgetTopBottom(callOutPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		}
 		
-		mainPanel = new Grid(hoogtes.size(), breedtes.size());
+
+		int callOutExtraIndex = 0;
+		if (callOut)
+		{
+			// for call out create an extra row and column to account for callOutMargeX0 and callOutMargeY0
+			callOutExtraIndex = 1;
+		}
+		
+		mainPanel = new Grid(hoogtes.size() + callOutExtraIndex, breedtes.size() + callOutExtraIndex);
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
 		mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow) + "px " + (-cellSpaceColumn) + "px");
 		
-		tekstVakken = new TekstVak[hoogtes.size()][breedtes.size()];	
+		if (callOut)
+		{
+			mainPanel.setPixelSize(breedte - callOutMargeX0 - callOutMargeX1, hoogte - callOutMargeY0 - callOutMargeY1);
+
+			// add an extra 'fill' panel to create the callOutMargeX0 and callOutMargeY0
+			LayoutPanel callOutFillPanel = new LayoutPanel();
+			LayoutPanel callOutFillPanel2 = new LayoutPanel();
+			callOutFillPanel.setPixelSize(callOutMargeX0, callOutMargeY0);
+			callOutFillPanel2.setPixelSize(callOutMargeX0, callOutMargeY0);
+			mainPanel.setWidget(0, 0, callOutFillPanel);
+			mainPanel.setWidget(0, 1, callOutFillPanel2);
+		}
+		
+		tekstVakken = new TekstVak[hoogtes.size()][breedtes.size()];
 		for (int i = 0; i < hoogtes.size(); i++)
 		{
 			for (int j = 0; j < breedtes.size(); j++)
-			{	double tekstVakBreedte =  breedtes.get(j).doubleValue() - 2 * cellMarge;
+			{	
+				double tekstVakBreedte =  breedtes.get(j).doubleValue() - 2 * cellMarge;
 				double tekstVakHoogte = hoogtes.get(i).doubleValue() - 2 * bovenMarge;
-				
 				
 				if( tekstVakBreedte < 0) tekstVakBreedte = 0;
 				if( tekstVakHoogte < 0) tekstVakHoogte = 0;
@@ -712,13 +770,21 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				tekstVakken[i][j].setMarges(bovenMarge, cellMarge);
 				tekstVakken[i][j].setInterlinie(interlinie);
 				
-				mainPanel.setWidget(i, j, tekstVakken[i][j]);
-				
+				mainPanel.setWidget(i + callOutExtraIndex, j + callOutExtraIndex, tekstVakken[i][j]);
 			}
 		}
 		mainPanel2.add(randPanel);
-		mainPanel2.setWidgetLeftRight(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-		mainPanel2.setWidgetTopBottom(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		if (callOut)
+		{
+			// take the margins into account
+			mainPanel2.setWidgetLeftRight(randPanel, callOutMargeX0 + cellSpaceColumn - randDikte, Style.Unit.PX, 0, Style.Unit.PX);
+			mainPanel2.setWidgetTopBottom(randPanel, callOutMargeY0 + cellSpaceRow - randDikte, Style.Unit.PX, 0, Style.Unit.PX);
+		}
+		else
+		{
+			mainPanel2.setWidgetLeftRight(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+			mainPanel2.setWidgetTopBottom(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		}
 		
 		
 		mainPanel2.add(mainPanel);
@@ -747,6 +813,57 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 //		{	initieerKlapUitButton(ingeklapt);
 //		}
 
+	}
+
+	/**
+	 * Set up the call out canvas with the callout drawing.
+	 * 
+	 * @param callOutCanvas
+	 */
+	private void setUpCallOutCanvas(Canvas callOutCanvas)
+	{
+		Context2d ctx = callOutCanvas.getContext2d();
+		
+		callOutCanvas.setPixelSize(breedte, hoogte);
+		callOutCanvas.setCoordinateSpaceWidth(breedte);
+		callOutCanvas.setCoordinateSpaceHeight(hoogte);
+	
+		ctx.clearRect(0, 0, breedte, hoogte);
+		
+		// draw the call out shape
+		ctx.beginPath();
+		ctx.setFillStyle(randColor);
+		ctx.setStrokeStyle(randColor);
+		
+		
+		int xm = callOutMargeX0 + breedtes.get(0).intValue() / 2;
+		int ym = callOutMargeY0 + hoogtes.get(0).intValue() / 2;
+
+		double x = xm - callOutPointX;
+		double y = ym - callOutPointY;
+		if (x == 0)
+			x += 0.000001;
+
+		double rx = 1.0 / Math.sqrt(1.0 + y * y / (x * x));
+		double ry = 1.0 * y / x / Math.sqrt(1.0 + y * y / (x * x));
+
+		ctx.moveTo(callOutPointX, callOutPointY);
+		ctx.lineTo((int) (xm + 5 * ry), (int) (ym - 5 * rx));
+		ctx.lineTo((int) (xm - 5 * ry), (int) (ym + 5 * rx));
+		ctx.lineTo(callOutPointX, callOutPointY);
+		ctx.stroke();
+		ctx.fill();
+	}
+
+	/**
+	 * Resize hoogtes en breedtes voor callout, d.w.z. trek de marges er vanaf.
+	 */
+	private void resizeForCallOut()
+	{
+		if (hoogtes.size() == 1)
+			hoogtes.set(0, (double) hoogte - callOutMargeY0 - callOutMargeY1);
+		if (breedtes.size() == 1)
+			breedtes.set(0, (double) breedte - callOutMargeX0 - callOutMargeX1);
 	}
 	
 //	public void setTableBounds()
@@ -846,12 +963,15 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	//	return height;
 	//}
 	
-	public void setCurrentSize(int w, int h) {
-		int oldHeight = hoogte; 
+	public void setCurrentSize(int w, int h)
+	{
+		int oldHeight = hoogte;
 		mainPanel2.setPixelSize(w, h);
-		if(w >= 0) breedte = w;
-		if(h >= 0) hoogte = h;
-		if(container != null)
+		if (w >= 0)
+			breedte = w;
+		if (h >= 0)
+			hoogte = h;
+		if (container != null)
 			container.doLayout(this, hoogte - oldHeight);
 	}
 	
@@ -1198,6 +1318,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			setStateNull();
 			return;
 		}
+
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		boolean ingeklapt = this.ingeklapt;
 		if (map.containsKey("hoogtes") )
@@ -1217,6 +1338,11 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			breedte = 0;
 		}
 
+		// hier hoogtes en breedtes aanpassen voor callout
+		if (callOut)
+		{
+			resizeForCallOut();
+		}
 		
 		List<Object> states = JSONUtilities.toArrayList(h.get("interactiePanelStates"));
 		int size = interactionViewObjects.size();
@@ -1241,8 +1367,9 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			locationX = map.getInt("locationX");
 		if(map.containsKey("locationY"))
 			locationY = map.getInt("locationY");
-		if(parent != null && zwevend)
-		{	parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
+		if (!callOut && parent != null && zwevend)
+		{	
+			parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
 			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 		}
 		setSelected(selected);
@@ -1631,135 +1758,177 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	public void resize()
 	{
-		//Allereerst zorgen dat ashoogtes op alle regels over de gehele regel gelijk zijn.
-				
-		for(int i = 0; i < hoogtes.size(); i++)
-		{	int asHoogte = 0;
-			for(int j = 0; j < breedtes.size(); j++)
+		// Allereerst zorgen dat ashoogtes op alle regels over de gehele regel
+		// gelijk zijn.
+
+		for (int i = 0; i < hoogtes.size(); i++)
+		{
+			int asHoogte = 0;
+			for (int j = 0; j < breedtes.size(); j++)
 			{
-				if(tekstVakken[i][j].getAsHoogte() > asHoogte)
+				if (tekstVakken[i][j].getAsHoogte() > asHoogte)
 				{
 					asHoogte = tekstVakken[i][j].getAsHoogte();
 				}
-				
+
 			}
-			for(int j = 0; j < breedtes.size(); j++)
-			{	tekstVakken[i][j].setAshoogte(asHoogte);
-				//tekstVakken[i][j].setRegelHoogte(regelHoogte);
+			for (int j = 0; j < breedtes.size(); j++)
+			{
+				tekstVakken[i][j].setAshoogte(asHoogte);
+				// tekstVakken[i][j].setRegelHoogte(regelHoogte);
 			}
 		}
-		
-		//kijken of pasAanH en of pasAanB true zijn; anders zijn we klaar. 
-		//NEE, want resize gebeurt ook bij in/uitklappen van vak binnen tekstvakpanel; dan veranderen maten ook.
-		//if(!pasAanH && !pasAanB)
-		//	return;
-		
+
+		// kijken of pasAanH en of pasAanB true zijn; anders zijn we klaar.
+		// NEE, want resize gebeurt ook bij in/uitklappen van vak binnen
+		// tekstvakpanel; dan veranderen maten ook.
+		// if(!pasAanH && !pasAanB)
+		// return;
+
 		int[] ashoogtes = new int[hoogtes.size()];
-		for(int i = 0; i < hoogtes.size(); i++) //ashoogtes vullen, voor het geval de hoogte niet wordt aangepast.
-		{	int ashoogte = tekstVakken[i][0].getAsHoogte();
-			//volgens mij is dit hieronder niet nodig, je hebt net  gezorgd dat de ashoogtes op de hele regel gelijk zijn. 
-			for(int j = 1; j < breedtes.size(); j++)
-			{	if(tekstVakken[i][j].getAsHoogte() > ashoogte)
+		for (int i = 0; i < hoogtes.size(); i++) 	// ashoogtes vullen, voor het
+													// geval de hoogte niet
+													// wordt aangepast.
+		{
+			int ashoogte = tekstVakken[i][0].getAsHoogte();
+			// volgens mij is dit hieronder niet nodig, je hebt net gezorgd dat
+			// de ashoogtes op de hele regel gelijk zijn.
+			for (int j = 1; j < breedtes.size(); j++)
+			{
+				if (tekstVakken[i][j].getAsHoogte() > ashoogte)
 					ashoogte = tekstVakken[i][j].getAsHoogte();
 			}
 			ashoogtes[i] = ashoogte;
 		}
 		int totaleHoogte = hoogte;
 		int totaleBreedte = breedte;
-		
-		if(pasAanH && !vulHoogte)
+
+		if (pasAanH && !vulHoogte)
 			totaleHoogte = 0;
-		for(int i = 0; i < hoogtes.size(); i++)
+		for (int i = 0; i < hoogtes.size(); i++)
 		{
-			if(i > 0 && inklapbaar && ingeklapt)
+			if (i > 0 && inklapbaar && ingeklapt)
 				break;
-			
+
 			int h1 = 0;
 			int h2 = 0;
-			for(int j = 0; j < breedtes.size(); j++)
+			for (int j = 0; j < breedtes.size(); j++)
 			{
-				//opnieuw alles plaatsen qua hoogte; zoals het tekstvak het zelf zou doen als hem geen hoogte was opgelegd.
-				if(pasAanH)
+				// opnieuw alles plaatsen qua hoogte; zoals het tekstvak het
+				// zelf zou doen als hem geen hoogte was opgelegd.
+				if (pasAanH)
 					tekstVakken[i][j].pasHoogteAanInhoudAan(true);
 				else
-					for(int k = 0; k < tekstVakken[i][j].getAantalRegels(); k++)
+					for (int k = 0; k < tekstVakken[i][j].getAantalRegels(); k++)
 					{
 						tekstVakken[i][j].getRegelVak(k).bepaalAshoogte();
 					}
 				int hoogte = tekstVakken[i][j].hoogte;
 				int ash = tekstVakken[i][j].getAsHoogte();
-				if(!tekstVakken[i][j].isVisible())
+				if (!tekstVakken[i][j].isVisible())
 				{
 					hoogte = ash = 0;
 				}
-				
-				if(ash > h1)
+
+				if (ash > h1)
 					h1 = ash;
-				if(hoogte - ash > h2)
+				if (hoogte - ash > h2)
 					h2 = hoogte - ash;
 			}
-			if(pasAanH && !vulHoogte)
-			{	hoogtes.set(i, new Double(h1 + h2));
+
+			if (pasAanH && !vulHoogte && !callOut)
+			{
+				hoogtes.set(i, new Double(h1 + h2));
 				totaleHoogte += h1 + h2 + cellSpaceRow;
 			}
 			ashoogtes[i] = h1;
 		}
-		if(pasAanH && !vulHoogte)
+		if (pasAanH && !vulHoogte)
 			totaleHoogte -= cellSpaceRow;
-		
-		if(pasAanB)
-		{	
+
+		if (pasAanB)
+		{
 			totaleBreedte = 0;
-			for(int j = 0; j < breedtes.size(); j++)
-			{	int breedte = 0;
-				for(int i = 0; i < hoogtes.size(); i++)
-				{	//opnieuw alles plaatsen qua breedte, zoals het tekstvak het zelf zou doen als hem geen breedte was opgelegd.
-					//tekstVakken[i][j].
-					
-					if(tekstVakken[i][j].getInhoudBreedte() > breedte)
+			for (int j = 0; j < breedtes.size(); j++)
+			{
+				int breedte = 0;
+				for (int i = 0; i < hoogtes.size(); i++)
+				{ 
+					// opnieuw alles plaatsen qua breedte, zoals het tekstvak het
+					// zelf zou doen als hem geen breedte was opgelegd.
+					// tekstVakken[i][j].
+
+					if (tekstVakken[i][j].getInhoudBreedte() > breedte)
 						breedte = tekstVakken[i][j].getInhoudBreedte();
 				}
 				breedte += 2 * cellMarge;
-				breedtes.set(j, new Double(breedte));
+				if (!callOut)
+				{
+					breedtes.set(j, new Double(breedte));
+				}
 				totaleBreedte += breedte + cellSpaceColumn;
 			}
 			totaleBreedte -= cellSpaceColumn;
 		}
-		if(!visible)
-		{	totaleHoogte = 0;
+		if (!visible)
+		{
+			totaleHoogte = 0;
 			totaleBreedte = 0;
 		}
 
-		setCurrentSize(totaleBreedte, totaleHoogte);
-		plaatsTabelRanden();
+		if (!callOut)
+		{
+			setCurrentSize(totaleBreedte, totaleHoogte);
+		}
 		
-		for(int i = 0; i < hoogtes.size(); i++)
-		{	for(int j = 0; j < breedtes.size(); j++)
+		plaatsTabelRanden();
+
+		if (callOut)
+		{
+			resizeRandPanel();
+		}
+
+		for (int i = 0; i < hoogtes.size(); i++)
+		{
+			for (int j = 0; j < breedtes.size(); j++)
 			{
-				if(i == 0 || !(inklapbaar && ingeklapt))
+				if (i == 0 || !(inklapbaar && ingeklapt))
 				{
-					tekstVakken[i][j].setSize((int) Math.round(breedtes.get(j).doubleValue()), (int) Math.round(hoogtes.get(i).doubleValue()));
+					tekstVakken[i][j].setSize((int) Math.round(breedtes.get(j).doubleValue()),
+						(int) Math.round(hoogtes.get(i).doubleValue()));
 					tekstVakken[i][j].setAshoogte(ashoogtes[i]);
 				}
 			}
 		}
-		
-		if(parent != null)
-		{	if(isZwevend() && this.getAsPanel().isAttached())
+
+		if (parent != null)
+		{
+			if (!callOut && isZwevend() && this.getAsPanel().isAttached())
 			{
-				parent.setWidgetLeftWidth(this.getAsPanel(), this.getLocationX(), Style.Unit.PX, totaleBreedte, Style.Unit.PX);
-				parent.setWidgetTopHeight(this.getAsPanel(), this.getLocationY(), Style.Unit.PX, totaleHoogte, Style.Unit.PX);
+				parent.setWidgetLeftWidth(this.getAsPanel(), this.getLocationX(), Style.Unit.PX, totaleBreedte,
+					Style.Unit.PX);
+				parent.setWidgetTopHeight(this.getAsPanel(), this.getLocationY(), Style.Unit.PX, totaleHoogte,
+					Style.Unit.PX);
 			}
-			if(!vulHoogte)
+			if (!vulHoogte)
 				parent.resize();
-		
+
 		}
-		//eventueel opvullen hoogtes in tekstvakken regelen en hoogtes symbolen instellen
+
+		// eventueel opvullen hoogtes in tekstvakken regelen en hoogtes symbolen
+		// instellen
 		corrigeerOpvulHoogtes();
 		vulSymboolHoogtes();
-				
 	}
 	
+	/**
+	 * Resize randpanel with the current breedtes and hoogtes.
+	 */
+	private void resizeRandPanel()
+	{
+		randPanel.setPixelSize(breedtes.get(0).intValue(), hoogtes.get(0).intValue());
+	}
+
 	public boolean tabFocus(TekstVak source, boolean up)
 	{
 		if(source == null)
@@ -2765,6 +2934,12 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			if(breedtes.size() > 0)
 				breedteDouble -= cellSpaceColumn;
 			breedte = (int) Math.round(breedteDouble);
+			
+			if (callOut)
+			{
+				hoogte = hoogte + callOutMargeY0 + callOutMargeY1;
+				breedte = breedte + callOutMargeX0 + callOutMargeX1;
+			}
 			setCurrentSize( breedte, hoogte);
 		}
 		else
@@ -3120,6 +3295,14 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		parameters.put("response", fi.wiskopdr.text.Text.constants.jaTekst());
 		parameters.put("score", Collections.singletonMap("raw", -this.puntenAftrekPopup));
 		return parameters;
+	}
+	
+	public void setCallOut(boolean b)
+	{
+		if (b && tekstVakken.length == 1 && tekstVakken[0].length == 1)
+			callOut = true;
+		else
+			callOut = false;
 	}
 
 	@Override
