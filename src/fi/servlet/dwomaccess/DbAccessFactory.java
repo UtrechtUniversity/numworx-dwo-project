@@ -6,9 +6,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 
-import fi.dwo.client.persistence.DbAccessClient;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.dwojapplet.persistence.DbAccessBridge;
 
 public class DbAccessFactory {
 
@@ -19,13 +18,13 @@ public class DbAccessFactory {
 		try {
 			String param = context.getInitParameter("dbaccess.url");
 			Logger.getLogger(DbAccessFactory.class.getName()).info("dbaccess url = " + param);
-			singleton = new DbAccessClient(new URL(param));
-			DbAccessCreator.setInstance(singleton);
+			singleton = DbAccessBridge.createClient(new URL(param));
+			DbAccessBridge.setInstance(singleton);
 			return singleton;
 		} catch(Exception e) {
 			Logger.getLogger(DbAccessFactory.class.getName()).log(Level.SEVERE, "dbaccess url error", e);
 					
-			return singleton = DbAccessCreator.instance();
+			return singleton = DbAccessBridge.instance();
 		}
 
 	}

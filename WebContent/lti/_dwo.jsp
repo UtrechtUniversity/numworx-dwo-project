@@ -1,5 +1,4 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@page import="fi.dwo.server.persistence.DbAccessLocal"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <html>
 <head>
@@ -66,7 +65,8 @@
 	String pathInfo = request.getPathInfo();
 	if(pathInfo != null && pathInfo.endsWith("DWO.properties"))
 	{
-	  	response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	  	//response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	  	response.sendRedirect("/dwo/DWO.properties");
 	 	return;
 	}
 

@@ -52,7 +52,7 @@ public class DWOmAccessTest extends TestCase {
 			@Override
 			public String getInitParameter(String arg0) {
 				// TODO Auto-generated method stub
-				return "http://dummyone.dwo.nl/dwo/dsaccess"; // to database
+				return "http://dummytwo.dwo.nl/dwo/xmlrpc"; // to database
 			}
 
 			@Override

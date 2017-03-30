@@ -24,7 +24,7 @@ public class DbAccessServlet extends Servlet {
 		super.init(config);
 		unLock();
 		setHandler(
-				new DbAccessWrapper
+				
 				(DbAccessFactory.getDbAccess(getServletContext())));
 	}
 	

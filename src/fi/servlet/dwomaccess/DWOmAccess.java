@@ -50,16 +50,17 @@ import javax.swing.WindowConstants;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.beans.base64code.Base64InputStream;
-import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.private_base64code.Base64InputStream;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.xmlrpc.Servlet;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.persistence.CourseMapper;
-import fi.dwo.client.persistence.DbAccessIF;
-import fi.dwo.client.persistence.ScoMapper;
+import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.persistence.CourseMapperBridge;
+import fi.dwo.dwojapplet.persistence.ScoMapperBridge;
+
 /**
  * Servlet voor het achterhalen van de deelscores en screenshots. 
  * Methoden:
@@ -109,7 +110,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		}
 	}
 	
-	public class ExtraScoMapper extends ScoMapper {
+	public class ExtraScoMapper extends ScoMapperBridge {
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public byte[] getLaunchDataBytes(int scoid) throws IOException, XmlRpcException, SQLException {
@@ -238,7 +239,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	 */
 	ClassLoader getClassLoader() {
 		if(dwo_jar == null)
-			dwo_jar = Loader.create("dwo.jar"); // Helaas, wiskopdr.jar geen goede index.
+			dwo_jar = Loader.create("wiskopdr.jar"); // Helaas, wiskopdr.jar geen goede index.
 		return dwo_jar;
 	}
 
@@ -328,7 +329,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	@SuppressWarnings({ "rawtypes" })
 	private Hashtable getCourseDescription_int( int courseid) throws IOException, XmlRpcException, SQLException
 	{
-		CourseMapper mapper = new CourseMapper();
+		CourseMapperBridge mapper = new CourseMapperBridge();
 		Course course = (Course) mapper.get(courseid);
 		String description = course.getDescription();
 		Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(description);
@@ -366,6 +367,8 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 
 		private int scoid, userid;
 		private String location;
+		private int sgid;
+
 		public ScormDecorator(Component comp, int scoid, int userid, String location) {
 			super(new GridLayout(1,1));
 			add(comp);
@@ -414,7 +417,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			String result = "";
 			key = keymap.getProperty(key, key);
 			try {
-				result = access.LMSGetValue(scoid, userid, key);
+				result = access.LMSGetValue(scoid, userid, sgid, key);
 			} catch (Exception e) {
 				e.printStackTrace();
 			} 
@@ -795,7 +798,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		Map map;
 		try {
 			map = extraScoMapper.getLaunchData(sco);
-			JSONEncoder.encode(map, out);
+			JSONEncoder.encode(map, out, getClassLoader());
 		} catch (XmlRpcException e) {
 			throw new IOException(e.getMessage());
 		} catch (SQLException e) {
@@ -815,7 +818,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			map = getCourseDescription_int(course);
 			OutputStreamWriter w = new OutputStreamWriter(out,"UTF-8");
 			if(map != null)
-				JSONEncoder.encode(map, w);
+				JSONEncoder.encode(map, w, getClassLoader());
 			w.flush();
 		} catch (XmlRpcException e) {
 			throw new IOException(e.getMessage());
@@ -901,7 +904,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	public String getCourseDescription(int courseID) throws Exception {
 		Hashtable map = getCourseDescription_int(courseID);
 		StringWriter out = new StringWriter();
-		JSONEncoder.encode(map, out);
+		JSONEncoder.encode(map, out, getClassLoader());
 		out.close();
 		return out.toString();
 	}

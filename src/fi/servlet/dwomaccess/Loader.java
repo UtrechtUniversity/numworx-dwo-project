@@ -21,7 +21,7 @@ import java.util.jar.Manifest;
 public class Loader extends URLClassLoader {
 
 	static String URL_PREFIX = //"http://www.fisme.science.uu.nl/dwo/jars/";
-				"http://127.0.0.1/dwo/jars/";
+				"http://cdn.dwo.nl/jars/";
 	private Loader(URL[] array, ClassLoader parent) {
 		super(array, parent);
 	}
