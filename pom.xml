@@ -1,16 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- Adjust artifact, name and description for new projects -->
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.1.12-SNAPSHOT</version>
+        <version>2.1.12</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <artifactId>DWOServer</artifactId>
 <!--    <version>2.0-SNAPSHOT</version>-->
-        <version>2.1.12-SNAPSHOT</version>
+        <version>2.1.12</version>
     <packaging>war</packaging>
     <name>${project.build.finalName}</name>
     <url>http://www.dwo.nl</url>
@@ -39,8 +38,8 @@
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOServer/trunk</connection>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOServer/trunk</developerConnection>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/tags/DWO-2.1.12/trunk</connection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/tags/DWO-2.1.12/trunk</developerConnection>
         <tag>HEAD</tag>
     </scm>
   
@@ -495,7 +494,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore></ignore>
+                                        <ignore />
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>
