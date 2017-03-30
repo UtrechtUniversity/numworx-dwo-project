@@ -39,10 +39,10 @@
   <parent>
   	<groupId>fi.parentgwt</groupId>
   	<artifactId>ParentGWT</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
   	<relativePath>../ParentGWT</relativePath>
   </parent>
   <groupId>nl.uu.fi.dwo.mobile</groupId>
   <description>interaction library</description>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.3</version>
 </project>
