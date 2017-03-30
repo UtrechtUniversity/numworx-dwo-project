@@ -4,12 +4,11 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.1.12</version>
+        <version>2.1.13-SNAPSHOT</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <artifactId>DWOServer</artifactId>
 <!--    <version>2.0-SNAPSHOT</version>-->
-        <version>2.1.13-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>${project.build.finalName}</name>
     <url>http://www.dwo.nl</url>
@@ -47,13 +46,13 @@
          <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-commons-lib</artifactId>
-            <version>2.1.12</version>
+        <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
             <artifactId>DWO-rest-lib</artifactId>
-            <version>2.1.12</version>
+        <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
