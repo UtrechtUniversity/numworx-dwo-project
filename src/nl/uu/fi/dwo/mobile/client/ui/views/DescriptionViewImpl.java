@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
@@ -276,6 +277,11 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 
 	@Override
 	public void unpause() {
+	}
+
+	public ObjectMap getConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

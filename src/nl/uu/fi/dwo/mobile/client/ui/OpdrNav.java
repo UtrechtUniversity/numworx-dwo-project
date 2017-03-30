@@ -1756,4 +1756,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public boolean hasListeners(String command) {
 		return false;
 	}
+
+	public ObjectMap getConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

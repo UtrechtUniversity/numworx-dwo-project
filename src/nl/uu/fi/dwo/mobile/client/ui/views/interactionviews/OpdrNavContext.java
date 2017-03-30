@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.utils.Connector;
 
@@ -190,6 +191,13 @@ public class OpdrNavContext implements OpdrNavIF {
 		if(connector == null)
 			return false;
 		return connector.commands.contains(command);
+	}
+
+
+	public ObjectMap getConfiguration() {
+		if(comRoot!=null)
+			return comRoot.getConfiguration();
+		return null;
 	}
 
 }

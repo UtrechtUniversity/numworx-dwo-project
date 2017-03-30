@@ -793,7 +793,6 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			tab(innerView);
 		} catch(Exception not_implemented) {	
 		}
-		
 	}
 
 	private static native void tab(Object innerView)/*-{ innerView.tab() }-*/;
@@ -805,6 +804,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			shiftTab(innerView);
 		} catch(Exception not_implemented) {	
 		}
+	}
+
+	public ObjectMap getConfiguration() {
+		if(comRoot!=this && comRoot!=null)
+			return comRoot.getConfiguration();
+		return null;
 	}
 	
 }
