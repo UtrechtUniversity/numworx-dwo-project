@@ -8,12 +8,12 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.1.12-SNAPSHOT</version>
+        <version>2.1.12</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
     <artifactId>DWOJClient</artifactId>
-        <version>2.1.12-SNAPSHOT</version>
+        <version>2.1.12</version>
     <name>${project.build.finalName}</name>
     <url>http://www.dwo.nl</url>
     <packaging>jar</packaging>
@@ -52,8 +52,8 @@
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/trunk</connection>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOJClient/trunk</developerConnection>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/tags/DWO-2.1.12/trunk</connection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/tags/DWO-2.1.12/trunk</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
