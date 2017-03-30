@@ -11,6 +11,7 @@
     <!--<groupId>nl.uu.fi.dwo.gwt</groupId>-->
     <artifactId>DWO-gwt-lib</artifactId>
     <name>${project.build.finalName}</name>
+        <version>2.1.12-SNAPSHOT</version>
     
     <packaging>jar</packaging>
     <developers>
