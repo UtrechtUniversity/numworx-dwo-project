@@ -39,7 +39,7 @@
 	<parent>
 		<groupId>fi.parentgwt</groupId>
 		<artifactId>ParentGWT</artifactId>
-		<version>0.0.2</version>
+		<version>0.0.3</version>
 		<relativePath>../ParentGWT</relativePath>
 	</parent>
 	<dependencies>
@@ -80,9 +80,8 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.4</version>
 	<properties>
 		<maven.test.skip>true</maven.test.skip>
-		<interactionVersion>0.0.3-SNAPSHOT</interactionVersion>
 	</properties>
 </project>
