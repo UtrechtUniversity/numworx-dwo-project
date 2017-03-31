@@ -363,9 +363,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return memento.getTempotoetsSecondsLeft();
 	}
 
-	public boolean isEindtoetsVerzegeld()
+	public boolean isVerzegeld()
 	{
-		return mode == EINDTOETS && memento.isEindtoetsVerzegeld();
+		return memento.isEindtoetsVerzegeld();
 	}
 
 	public static void setObjectives(String[][] o)

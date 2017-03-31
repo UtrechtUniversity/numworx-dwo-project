@@ -36,5 +36,7 @@ public interface ViewModuleView extends IsWidget
 
 	OpdrNavIF getOpdrNav();
 	Number getScoreRaw();
-
+	
+	void setReadonly(boolean readonly);
+	boolean isReadonly();
 }

@@ -267,6 +267,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			scoreNav.setKijkNaEnabled(on.getAantalOpdrachten() == 1 || on.getKeerNagekeken() > 0);
 			
 			sb.addKnop(scoreNav.getKijkNaButton(), false);
+		}
 			scoreNav.setKijkNa(new ScoreNavIF.Checker()
 			{
 				@Override
@@ -294,7 +295,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				}
 
 			});
-		}
+		
 		scoreNav.setNextPrevHandler(this);
 		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig()
 			&& mode != OpdrNav.EINDTOETS && !pilotObjectives);
@@ -314,7 +315,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			sb.addLabel(scoreNav.getTotaalScoreLabel());
 			sb.addLabel(scoreNav.getKeerNagekekenLabel());
 		}
-		if ( on.isEindtoetsVerzegeld()) {
+		if ( on.isVerzegeld()) {
 			sb.addLabel(new Label(Text.constants.lockToetsLabel()));
 		}
 //		else if (mode == OpdrNav.OEFENEN || mode == OpdrNav.OEFENEN_STRAFPUNTEN)
@@ -416,25 +417,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			
 			scoreNav.setTotaalScoreLabel(on.getTotaalScore());
 			scoreNav.setKeerNagekekenLabel(on.getKeerNagekeken());
-//			totaal = Math.max(0, totaal - (Math.max(0, aantalNakijken[activiteitNr] - 1)) * nakijkStraf);
-//			aantalNakijkLabel.setText("" + aantalNakijken[activiteitNr] + " keer nagekeken");
-//			if (aantalNakijken[activiteitNr] > 0 && !zelftoetsGeenCorr)
-//				aantalNakijkLabel.setVisible(true);
 		}
-//		activiteitScoreLabels[activiteitNr].setText(WiskOpdr.rb.getString("score") + totaal);
-//		if (aantalActiviteiten == 1)
-//		{	activiteitScoreLabels[activiteitNr].setText(WiskOpdr.rb.getString("totaal") + totaal);
-//			if(voortgang)
-//				activiteitScoreLabels[0].setText(WiskOpdr.rb.getString("voortgang") + bepaalVoortgangPercentage(activiteitNr, opdrachtNr) + "%");
-//		}
-
-		
-//		if (mode == 0 || mode == OEFENEN_STRAFPUNTEN)
-//		{
-//			WiskOpdr.setLMSScore();
-//			WiskOpdr.setLMSState();
-//			setMWScoreLabel();
-//		}
 	}
 	
 	public boolean getZelftoetsNagekeken()
@@ -688,7 +671,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		setState(state);
 		
-		if(on.isEindtoetsVerzegeld()) {
+		if(on.getMode() == OpdrNav.EINDTOETS && on.isVerzegeld()) {
 			zetNagekeken(true);
 			kijkNa();
 		}
@@ -1814,6 +1797,27 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		return Double.valueOf(on.getScore());
 	}
 
+	
+	private boolean readonly;
+
+	/**
+	 * @return the readonly
+	 */
+	public boolean isReadonly() {
+		return readonly;
+	}
+
+	/**
+	 * @param readonly the readonly to set
+	 */
+	public void setReadonly(boolean readonly) {
+		boolean old = this.readonly;
+		this.readonly = readonly;
+		if(readonly != old) {
+// FIXME ....
+			zetAfdekPanel(readonly);
+		}
+	}
 
 	/**
 	 * Schedule the painting of the timer for tempotoets.

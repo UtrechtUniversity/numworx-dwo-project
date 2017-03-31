@@ -27,12 +27,74 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 
 public class CheckButton implements InteractionStub
 {
+	final class NakijkenVak implements ClickHandler {
+		public void onClick(ClickEvent e)
+		{	e.stopPropagation();
+			logger.warning("CheckButton nakijkenVak");
+			comRoot.pause();
+			for (int i = 0; i < lijst.size(); i++)
+			{	Object object = lijst.get(i);
+				if(object instanceof InteractionView) {
+					InteractionView view = (InteractionView) object;
+					view.kijkNa();
+				}
+			}
+			comRoot.unpause();				
+			logger.warning("CheckButton click end");
+		}
+	}
+
+	public static final String CHECK = "check";
+	public static final String AFRONDEN = "action.seal";
+	public static final CBookEvent CHECK_EVENT = new CBookEvent(CHECK);
+	public static final CBookEvent SEAL_EVENT = new CBookEvent(AFRONDEN);
+	
+	
+	final class NakijkenPagina implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
+			event.stopPropagation();
+			logger.warning("CheckButton nakijkenPagina");
+			DWOplayer.clientfactory.getEventBus().fireEvent(CHECK_EVENT);
+		}
+	}
+
+	final class NakijkenXWidget implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
+			event.stopPropagation();
+			logger.warning("CheckButton nakijkenXWidget");
+// Welke van de twee?
+			comRoot.fireEvent(CHECK_EVENT);
+		}
+	}
+	
+	final class ActieAfronden implements ClickHandler {
+
+		@Override
+		public void onClick(ClickEvent event) {
+			event.stopPropagation();
+			logger.warning("CheckButton actieAfronden");
+			DWOplayer.clientfactory.getEventBus().fireEvent(SEAL_EVENT);
+		}
+	}
+	
+	final class ActieBewaren implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
+			event.stopPropagation();
+			logger.warning("CheckButton actieBewaren");
+			comRoot.setChanged(false);
+		}	
+	}
+
 	static final String holderId = "dockholder";
 	private static Logger logger = Logger.getLogger("CheckButton");
 	
@@ -51,7 +113,13 @@ public class CheckButton implements InteractionStub
 	ArrayList<Object> lijst;
 	
 	private int mode; 
-	
+// variaties op een thema
+	private boolean nakijkenVak=true;
+	private boolean nakijkenPagina=false;
+	private boolean nakijkenXWidget=false;
+	private boolean actieBewaren=false;
+	private boolean actieAfronden=false;
+
 	
 	public CheckButton(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -68,14 +136,22 @@ public class CheckButton implements InteractionStub
 		initialize(h, randomVarNamen, randomVarWaarden);
 	}
 	
-	public void init(int width, int height, Map<String, Object> launchData,
+	public void init(int width, int height, Map<String, Object> h,
 			Map<String, Number> values) {
 		breedte = width;
 		hoogte = height;
-		if (launchData != null)
-		{
+		if (h != null)
+		{	ObjectMap launchData = JSONUtilities.wrapMap(h);
+			
 			if(launchData.containsKey("knopImageString") ) 
-				knopImageString = (String)launchData.get("knopImageString");
+				knopImageString = launchData.getString("knopImageString");
+			boolean nakijken;
+			nakijken = launchData.getBoolean("nakijken", true);
+			nakijkenPagina = nakijken && launchData.getBoolean("nakijkenPagina", nakijkenPagina);
+			nakijkenVak = nakijken && launchData.getBoolean("nakijkenVak", nakijkenVak);
+			nakijkenXWidget = nakijken && launchData.getBoolean("nakijkenXWidget", nakijkenXWidget);
+			actieBewaren = launchData.getBoolean("actieBewaren", actieBewaren);
+			actieAfronden = launchData.getBoolean("actieAfronden", actieAfronden);
 		}
 	}
 	
@@ -134,32 +210,12 @@ public class CheckButton implements InteractionStub
 			basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);
 		} else
 			logger.fine("await checkbutton loaded " + imWidth + " x " + imHeight);
-			
-		checkButton.addClickHandler(new ClickHandler(){
-
-			public void onClick(ClickEvent e)
-			{	e.stopPropagation();
-//				correct = Boolean.TRUE;
-				logger.warning("CheckButton click start");
-				comRoot.pause();
-				for (int i = 0; i < lijst.size(); i++)
-				{	Object object = lijst.get(i);
-					if(object instanceof InteractionView) {
-						InteractionView view = (InteractionView) object;
-						view.kijkNa();
-						//view.zetNagekeken(true); 
-	//						Boolean check = view.isCorrect();
-	//						if(check == null) correct = null;
-	//						if(check == Boolean.FALSE) {
-	//							correct = check; 
-	//							return; // early out.
-	//						}
-					}
-				}
-				comRoot.unpause();				
-				logger.warning("CheckButton click end");
-			}
-		});
+		
+		if(nakijkenVak) checkButton.addClickHandler(new NakijkenVak());
+		if(nakijkenPagina) checkButton.addClickHandler(new NakijkenPagina());
+		if(nakijkenXWidget) checkButton.addClickHandler(new NakijkenXWidget());
+		if(actieBewaren) checkButton.addClickHandler(new ActieBewaren());
+		if(actieAfronden) checkButton.addClickHandler(new ActieAfronden());
 	}
 	
 	boolean fout;

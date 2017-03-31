@@ -70,13 +70,19 @@ public class AssetAPI implements Scorm2004IF {
 				SetScore(guid, lastScore = toScore(value));
 			else if(Memento.SUSPEND_DATA.equals(name))
 				SetAssetData(guid, value);
-			else if(Memento.EXIT_STATUS.equals(name))
-			{
-				final boolean equals = Memento.EXIT_NORMAL.equals(value);
+//			else if(Memento.EXIT_STATUS.equals(name))
+//			{
+//				final boolean equals = Memento.EXIT_NORMAL.equals(value);
+//				logger.info("setCompleted(" + value  + " ) " + equals);
+//				if(equals)
+//					SetCompleted(guid, equals);
+//			} 
+			else if ( Memento.COMPLETION_STATUS.equals(name)) {
+				boolean equals = Memento.COMPLETED.equals(value);
 				logger.info("setCompleted(" + value  + " ) " + equals);
-				if(equals)
-					SetCompleted(guid, equals);
-			} else
+				SetCompleted(guid, equals);
+			}
+			else
 				return "false";
 		} catch (Exception e) {
 			logger.severe("setValue " + name + " :" + e);

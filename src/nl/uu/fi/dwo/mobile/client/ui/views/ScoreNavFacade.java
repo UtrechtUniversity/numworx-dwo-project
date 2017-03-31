@@ -1,9 +1,13 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
@@ -19,10 +23,11 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import fi.wiskopdr.text.Text;
 
-public class ScoreNavFacade implements ScoreNavIF {
+public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 
 	StatusBarIF sb;
 	public void setStatusBar(StatusBarIF bar) {
@@ -410,12 +415,25 @@ public class ScoreNavFacade implements ScoreNavIF {
 	public void setAuthELOhelp(boolean b) {
 	}
 
+	HandlerRegistration registration;
+	
 	@Override
 	public void started() {
+		registration = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
 	}
 
 	@Override
 	public void stopped() {
+		if(registration != null) {
+			registration.removeHandler();
+			registration = null;
+		}
 	}
-	
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if(checker != null && CheckButton.CHECK.equals(event.getCommand()))
+			checker.checkOpdracht(this);
+	}
+
 }

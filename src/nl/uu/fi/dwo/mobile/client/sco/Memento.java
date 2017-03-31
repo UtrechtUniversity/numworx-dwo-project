@@ -12,7 +12,11 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
@@ -31,6 +35,7 @@ import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
  * Class om suspend_data in en uit te pakken. JSON format, Javascript is hier
@@ -39,7 +44,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
  * @author velth101
  * 
  */
-public class Memento implements ClosingHandler, CloseHandler<Window>
+public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEventListener
 {
 	private static final String BEZOCHT = "bezocht";
 	private static final String ZELFTOETS_NAGEKEKEN = "zelftoetsNagekeken";
@@ -77,8 +82,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	static final String EXIT_STATUS = "cmi.exit";
 	private static final String SESSION_TIME = "cmi.session_time";
 	private static final String TOTAL_TIME = "cmi.total_time";
-	private static final String COMPLETION_STATUS = "cmi.completion_status";
-	private static final String COMPLETED = "completed";
+	static final String COMPLETION_STATUS = "cmi.completion_status";
+	static final String COMPLETED = "completed";
 	
 	static final String EXIT_NORMAL = "normal";
 	static final String EXIT_SUSPEND = "suspend";
@@ -113,6 +118,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		_instance = this;
 		Window.addWindowClosingHandler(this);
 		Window.addCloseHandler(this);
+		registration = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
 		initialize();
 		String value;
 		scoreRaw = getValue(SCORE_RAW);
@@ -142,6 +148,14 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			shareMap = (JSONObject) onsState.get(SHARE_MAP);
 			if (reviewData != null && reviewData.length() > 2)
 				opdrContStates = mergeReviewData(opdrContStates, reviewData);
+			// oldschool toetsLocked
+			JSONValue oldReviewData =  suspendData.get("reviewData");
+			if(!eindtoetsVerzegeld && oldReviewData != null) {
+				JSONValue oldToetsLocked = oldReviewData.isObject().get("toetsLocked");
+				if(oldToetsLocked != null) {
+					if(oldToetsLocked.isBoolean().booleanValue()) eindtoetsVerzegeld = true;
+				}
+			}
 		}
 		catch (Exception e)
 		{
@@ -547,7 +561,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			if(this == _instance) // API break?
 				api.Commit();
 			else 
-				logger.warning("No commit, since we are closing, terminate should follow!");
+				logger.fine("No commit, since we are closing, terminate should follow!");
 		}
 		catch (Exception e)
 		{
@@ -563,13 +577,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		new ScheduledCommand() {
 			public void execute() {
 				logger.info("closing memento");
+				if(registration != null) {
+					registration.removeHandler();
+					registration = null;
+				}
 				runner.run();
-				Date stopDate = new Date();
-				long millis = stopDate.getTime() - startDate.getTime();
-				String totalStr = getValue(TOTAL_TIME);
-				long total = parse(totalStr);
-				setValue(SESSION_TIME, format(millis));
-				setValue(TOTAL_TIME, format(total + millis));
+				setSessionTimes();
 				try {
 					api.Terminate();
 					api = null;
@@ -905,6 +918,37 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			return -1;
 		else
 			return (int) this.tempotoetsSecondsLeft.doubleValue();
+	}
+
+	HandlerRegistration registration;
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if(CheckButton.AFRONDEN.equals(event.getCommand())) {
+			if(registration == null) return;
+			registration.removeHandler();
+			registration = null;
+			setSessionTimes();
+			JSONObject reviewData = new JSONObject();
+			reviewData.put("toetsLocked", JSONBoolean.getInstance(true));
+			suspendData.put("reviewData", reviewData);
+			setValue(SUSPEND_DATA, suspendData.toString());
+			// START AFRONDEN
+			logger.info("start afronden");
+			api.Commit();
+			setValue(COMPLETION_STATUS, COMPLETED);
+			eindtoetsVerzegeld = true;
+			DWOplayer.clientfactory.getEntryView().setReadonly(true);
+		}
+		
+	}
+
+	void setSessionTimes() {
+		Date stopDate = new Date();
+		long millis = stopDate.getTime() - startDate.getTime();
+		String totalStr = getValue(TOTAL_TIME);
+		long total = parse(totalStr);
+		setValue(SESSION_TIME, format(millis));
+		setValue(TOTAL_TIME, format(total + millis));
 	}
 
 }
