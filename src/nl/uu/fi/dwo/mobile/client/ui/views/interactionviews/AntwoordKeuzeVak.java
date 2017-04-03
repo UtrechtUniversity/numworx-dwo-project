@@ -39,6 +39,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -49,7 +50,7 @@ import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
-public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
+public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEventListener {
 	
 	//public static Text_nl rb = new Text_nl();
 	
@@ -87,6 +88,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
     private boolean ingevuld;
     private boolean nagekeken;
 	private boolean isVeranderdNaNakijken = false;
+	private boolean editable = true;
     
     private boolean correct;
     private boolean fout;
@@ -224,6 +226,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		attempts = new Vector();
 		
 		basisPanel = new LayoutPanel();
+		basisPanel.setStylePrimaryName("AntwoordKeuzeVak");
 		
 		ashoogte = hoogte / 2 + 7;
 		basisPanel.setPixelSize(breedte,  hoogte);
@@ -250,7 +253,10 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		
 		huidigeKeuzeVak.addDomHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
-			{	int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
+			{
+				if(!editable) return;
+				
+				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
 			    int topMax = DWOplayer.PARAMETERS.getWindowHeight() - hoogtePopup;
 			    top = Math.min(top,topMax);
 			    popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
@@ -535,7 +541,10 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		
 		uitklapPijlCanvas.addDomHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
-			{	int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
+			{
+				if (!editable) return;
+				
+				int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
 				int topMax = DWOplayer.PARAMETERS.getWindowHeight() - hoogtePopup;
 				top = Math.min(top, topMax);
 				popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
@@ -689,6 +698,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("ingevuld", new Boolean(ingevuld));
 		h.put("nagekeken", new Boolean(nagekeken));
+		h.put("editable", Boolean.valueOf(editable));
 		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
 		h.put("antwoord", antwoord);
 		h.put("attempts", attempts);
@@ -765,6 +775,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		if( h == null) return; // setStateNull();
 		boolean ingevuld = false;
 		boolean nagekeken = false;
+		boolean editable = true;
 		boolean isVeranderdNaNakijken = false;
 		String antwoord = "";
 		Vector attempts = new Vector();
@@ -776,6 +787,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			ingevuld = ((Boolean) h.get("ingevuld")).booleanValue();
 		if (h.containsKey("nagekeken"))
 			nagekeken = ((Boolean) h.get("nagekeken")).booleanValue();
+		if (h.containsKey("editable"))
+			editable = ((Boolean)h.get("editable")).booleanValue();
 		if (h.containsKey("isVeranderdNaNakijken"))
 			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 		if (h.containsKey("antwoord"))
@@ -796,6 +809,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		this.attempts = attempts;
 		this.attemptsCount = attemptsCount;
 		this.errorCount = errorCount;
+		this.editable = editable;
 
 		selectedIndex = 0;
 		for(int i = 0; i < keuzeMogelijkheden.length; i++)
@@ -818,6 +832,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 
 		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
 			kijkNa(true, true);
+		
+		basisPanel.setStyleDependentName("readonly", !editable);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -1164,6 +1180,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		this.comRoot = comRoot;
 		zetMode(comRoot.getMode());
 		if(logging != null) logging.setCommunicationRoot(comRoot);
+		comRoot.addCBookEventListener("action.setNotEditable", this);
 	}
 
 	
@@ -1208,6 +1225,14 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	@Override
 	public void getResponses(List<String> responses) {
 		responses.add(Integer.toString(selectedIndex));
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if("action.setNotEditable".equals(event.getCommand())) {
+			editable = false;
+			basisPanel.setStyleDependentName("readonly", !editable);
+		}
 	}
 
 }
