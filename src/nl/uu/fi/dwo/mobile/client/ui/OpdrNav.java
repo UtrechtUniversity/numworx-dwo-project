@@ -173,8 +173,6 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		
 		mode = Integer.parseInt((String)launchData.get("mode"));
 		
-		// Get the aftrekCorrectieZelftoets uit instellingen
-		ObjectMap instellingen;
 		ObjectMap wrap = JSONUtilities.wrapMap(launchData);
 		if (wrap.containsKey("instellingen"))
 		{	
@@ -881,6 +879,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int scsInUse;
 	private boolean scsPending;
 	private boolean goon = true;
+	private ObjectMap instellingen;
 	
 	public void saveCurrentState()
 	{
@@ -1758,8 +1757,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	public ObjectMap getConfiguration() {
-		// TODO Auto-generated method stub
-		return null;
+		return instellingen;
 	}
 	
 }
