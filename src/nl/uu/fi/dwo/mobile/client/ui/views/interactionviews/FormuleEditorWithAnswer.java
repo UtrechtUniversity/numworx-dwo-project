@@ -1126,17 +1126,75 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (fews != null) // fe: onderdeel van formuleeditorwithsteps
 			fews.zetIngevuld(ingevuld);
 		
-		if (fews != null && fews.getEigenOpdr() && fews.getLatestAnswer() == null)
+		if (fews != null && fews.getEigenOpdr())
 		{
-			// eerste stap bij eigen opdracht is altijd goed
-			avChecker.zetJuisteAntwoord(useranswer); // dit is niet het goede juiste antwoord, bijv. voor useranswer = "x+x+x" wordt juistantwoord "x+x+x"
-						
-			goedHalfFout = AntwoordVakChecker.DOOR;
-			if (!"$f@".equals(useranswer)) // eerste stap is leeg, dan niet verder nakijken
+			if (fews.getLatestAnswer() == null)
 			{
-				fews.maakNakijkenAf(backStep, show, setState);
+				// eerste stap bij eigen opdracht is altijd goed, mits zo eenvoudig mogelijk
+				if (!isVergelijkingVak())
+				{
+					Expressie expUserAnswer = FormuleParser.geefExpressie(useranswer);
+					if (expUserAnswer != null)
+					{
+						Expressie exp = Expressie.evalWithCAS(expUserAnswer);
+						useranswer = addFormulaCodes(exp.toString());
+					}
+				}
+				else
+				{
+					// iets met solve()... zie wiskopdr docentomgeving 'mogelijk antwoordmodel':
+					// uit AntwoordVergelijkingVakEditPanel.actionPerformed():
+					
+					// UNDER CONSTRUCTION - solveWithCas() implementeren...
+					
+//		        	VergelijkingMeerv vm = FormuleParser.parseVergelijking(useranswer);
+//
+//		        	Expressie vmAntw = null;
+//					if (vm != null)
+//					{
+//						Vergelijking v = vm.geefVergelijking(0);
+//						vmAntw = Expressie.solveWithCas(vm, v.geefVarNaam());
+//						String def = "";
+//
+//						if (vmAntw != null)
+//						{
+//							def = vmAntw.toString();
+//						}
+//
+//						useranswer = addFormulaCodes(def);
+//					}
+				}
+	
+				avChecker.zetJuisteAntwoord(useranswer);
+							
+				goedHalfFout = AntwoordVakChecker.DOOR;
+				if (!"$f@".equals(useranswer)) // eerste stap is leeg, dan niet verder nakijken
+				{
+					fews.maakNakijkenAf(backStep, show, setState);
+				}
+				return;
 			}
-			return;
+			else
+			{
+				// er is al een eigen opdracht ingevoerd, dus zet het juiste antwoord
+				String juisteAntwoord = "";
+				if (!isVergelijkingVak())
+				{
+					String eersteRegel = removeIsTeken(fews.getFirstViewerString());
+					Expressie exp = Expressie.evalWithCAS(FormuleParser.geefExpressie(addFormulaCodes(eersteRegel)));
+					juisteAntwoord = addFormulaCodes(exp.toString());
+					avChecker.zetJuisteAntwoord(juisteAntwoord);
+				}
+				else
+				{
+					// iets met solve()... zie wiskopdr docentomgeving 'mogelijk antwoordmodel'
+//					String eersteRegel = fews.getFirstViewerString();
+//					VergelijkingMeerv vgl = FormuleParser.parseVergelijking(eersteRegel);
+//					juisteAntwoord = addFormulaCodes(vgl.toString());
+				}
+
+				//avChecker.zetJuisteAntwoord(juisteAntwoord);
+			}
 		}
 		
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
@@ -1250,6 +1308,40 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 	}
 	
+	/**
+	 * Verwijder het is-teken aan het eind van de gegeven string.
+	 * 
+	 * @param firstViewerString
+	 * @return
+	 */
+	private String removeIsTeken(String s)
+	{
+		String sZonderIsTeken = "";
+		
+		if (s.indexOf("=") == s.length() - 1)
+		{
+			sZonderIsTeken = s.substring(0, s.length() - 1);
+		}
+		else
+		{
+			sZonderIsTeken = s;
+		}
+		return sZonderIsTeken;
+	}
+
+	/**
+	 * Surround the given string with the formule codes "$f" and "@".
+	 * @param string
+	 * @return
+	 */
+	private String addFormulaCodes(String string)
+	{
+		String startCode = "$f";
+		String endCode = "@";
+		String s = startCode + string + endCode;
+		return s;
+	}
+
 	public void zetGoedFout(int uitslag)
 	{
 		if (uitslag == AntwoordVakChecker.GOED)
