@@ -41,6 +41,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentStudentScoContext.findByStudentSco", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.studentSco = :studentSco"),
     @NamedQuery(name = "PersistentStudentScoContext.findByScoID", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.scoID = :scoID"),
     @NamedQuery(name = "PersistentStudentScoContext.findByHasRolePK", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.persistentHasRolePK = :keyID"),
+    @NamedQuery(name = "PersistentStudentScoContext.findByScoIDandHasRolePK", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.scoID = :scoID and p.persistentHasRolePK = :keyID"),    
     @NamedQuery(name = "PersistentStudentScoContext.findByCreateDate", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.createDate = :createDate"),
     @NamedQuery(name = "PersistentStudentScoContext.findByScore", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.score = :score")})
 public class PersistentStudentScoContext implements Serializable {

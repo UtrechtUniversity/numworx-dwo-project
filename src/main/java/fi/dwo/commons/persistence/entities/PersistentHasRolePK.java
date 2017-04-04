@@ -36,6 +36,11 @@ public class PersistentHasRolePK implements Serializable {
         this.schoolGroupID = schoolGroupID;
     }
 
+    public PersistentHasRolePK(PersistentStudentOfClassPK soc) {
+        this.userID = soc.getUserID();
+        this.schoolGroupID = soc.getSchoolGroupID();
+    }
+    
     public Long getUserID() {
         return userID;
     }

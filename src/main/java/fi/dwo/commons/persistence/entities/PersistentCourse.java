@@ -56,6 +56,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentCourse.findByDwoProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID"),
     @NamedQuery(name = "PersistentCourse.findByExport", query = "SELECT p FROM PersistentCourse p WHERE p.export = :export"),
     @NamedQuery(name = "PersistentCourse.findByWithChildren", query = "SELECT p FROM PersistentCourse p WHERE p.withChildren = :withChildren"),
+    @NamedQuery(name = "PersistentCourse.findByParentIDAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND p.parentID = :parentID"),
     @NamedQuery(name = "PersistentCourse.findByParentID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID")})
 //    @NamedQuery(name = "PersistentCourse.findByNotVisible", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = :notVisible")})
 public class PersistentCourse implements Serializable {
@@ -305,6 +306,7 @@ public class PersistentCourse implements Serializable {
 
     private void fillDomCourse(DomCourse course) {
         course.setId(buildPersistenceId());
+        course.setName(name);
         if (this.schoolID != null) {
             course.setSchoolId(PersistentSchool.buildPersistenceId(this.schoolID));
         }
