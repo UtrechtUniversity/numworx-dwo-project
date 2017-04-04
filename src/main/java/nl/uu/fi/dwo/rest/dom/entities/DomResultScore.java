@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.util.Collections;
+import java.lang.reflect.Array;
+import java.util.HashMap;
 import java.util.Map;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -16,7 +17,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
     private double cnt = 0;
     private String label;
     private DomResultScore parent = null;
-    private Map<PersistenceId, T> children = Collections.emptyMap();
+    private Map<PersistenceId, T> children = new HashMap<PersistenceId, T>();
 
     /**
      * @return the score
@@ -75,7 +76,11 @@ public abstract class DomResultScore<T extends DomResultScore> {
      * @param children the children to set
      */
     public void setChildren(Map<PersistenceId, T> children) {
-        this.children = children;
+//        if (children.equals(Collections.EMPTY_MAP)) {
+//            this.children = new HashMap<PersistenceId, T>();
+//        } else {
+            this.children = children;
+//        }
     }
 
     /**
@@ -98,7 +103,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
         } else if (this.children.isEmpty()) {
             return 0;
         } else {
-            int cnt=0;
+            int cnt = 0;
             for (DomResultScore s : this.getChildren().values()) {
                 cnt = cnt + s.countScoLeaves();
             }
@@ -107,8 +112,8 @@ public abstract class DomResultScore<T extends DomResultScore> {
     }
 
     public void countCourseLeaves(Map<PersistenceId, DomResultCourse> courseLeaves) {
-        T[] kids = (T[]) this.getChildren().values().toArray();
-        
+        Object[] kids =  this.getChildren().values().toArray();
+
         if (this.children.isEmpty()) {
             return;
         } else if (kids[0] instanceof DomResultScoContext) {

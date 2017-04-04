@@ -11,5 +11,19 @@ public class DomResultStudentSco extends DomResultScore<DomResultScore> {
         studentSco = aSco;
         super.setLabel(student.getUniqueDisplayName());
     }
+
+    /**
+     * @return the studentSco
+     */
+    public DomStudentScoContext getStudentSco() {
+        return studentSco;
+    }
+
+    /**
+     * @param studentSco the studentSco to set
+     */
+    public void setStudentSco(DomStudentScoContext studentSco) {
+        this.studentSco = studentSco;
+    }
         
 }

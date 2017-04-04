@@ -72,27 +72,36 @@ public class DomResultTree {
         Map<PersistenceId, DomResultSchoolClass> schoolClasses = new HashMap<PersistenceId, DomResultSchoolClass>(resultData.getSchoolClasses().size());
         Map<PersistenceId, DomResultSchoolClass> studentClasses = new HashMap<PersistenceId, DomResultSchoolClass>(resultData.getSchoolClasses().size());
         getResultTree().setChildren(schoolClasses);
+        getStudentTree().setChildren(studentClasses);
         for (PersistenceId key : resultData.getSchoolClasses().keySet()) {
             DomResultSchoolClass resultValue = new DomResultSchoolClass(resultData.getSchoolClasses().get(key));
             DomResultSchoolClass classValue = new DomResultSchoolClass(resultData.getSchoolClasses().get(key));
+            //set child to parent
             resultValue.setParent(getResultTree());
             classValue.setParent(getStudentTree());
+            //add to parent
             schoolClasses.put(key, resultValue);
-            studentClasses.put(key, resultValue);
+            studentClasses.put(key, classValue);
         }
 
         //add students to studenttree
         for (PersistenceId key : resultData.getStudentsOfClasses().keySet()) {
+            //for each student in a class
             DomStudentOfClass soc = resultData.getStudentsOfClasses().get(key);
             PersistenceId sId = soc.getStudentId();
+            //fetch student
             DomStudent student = resultData.getStudents().get(sId);
             if (!studentClasses.get(soc.getClassId()).getChildren().containsKey(key)) {
-                Map<PersistenceId, DomStudent> kids = (Map<PersistenceId, DomStudent>) studentClasses.get(soc.getClassId()).getChildren();
-                if(kids.size()==0){
-                    kids = new HashMap<PersistenceId, DomStudent>();
-                    studentClasses.get(soc.getClassId()).setChildren(kids);
-                }
-               kids.put(key, student);
+                //if class exists get students list
+                Map<PersistenceId, DomStudent> studentsInClass = (Map<PersistenceId, DomStudent>) studentClasses.get(soc.getClassId()).getChildren();
+//                //ensure it is a HashMap and not an Empty Collection
+//                if (studentsInClass.size() == 0) {
+//                    studentsInClass = new HashMap<PersistenceId, DomStudent>();
+//                    studentClasses.get(soc.getClassId()).setChildren(studentsInClass);
+//                }
+                //set parent in child does not occur here, not a ResultTreeNode.
+                //add child to parent list
+                studentsInClass.put(student.getId(), student);
             }
         }
 
@@ -101,13 +110,17 @@ public class DomResultTree {
         for (PersistenceId id : resultData.getCourses().keySet()) {
             resultCourseMap.put(id, new DomResultCourse(resultData.getCourses().get(id)));
         }
-
+        //
         //Scan all DomResultCourses and build them into a tree
         for (PersistenceId id : resultCourseMap.keySet()) {
             if (resultCourseMap.get(id).getCourse().getParentID() != null) {
                 DomResultCourse parentCourse = resultCourseMap.get(resultCourseMap.get(id).getCourse().getParentID());
                 if (parentCourse != null) {
-                    parentCourse.getChildren().put(id, resultCourseMap.get(id).getCourse());
+                    //set parent for child for DomResultCourse object
+                    resultCourseMap.get(id).getCourse().setParentID(parentCourse.getCourse().getId());
+                    //add child to parent list
+                    parentCourse.getChildren().put(id, resultCourseMap.get(id));
+
                 }
                 //connect the sco later
 //                if (!resultCourseMap.get(id).getCourse().getWithChildren()) {                    
@@ -119,25 +132,40 @@ public class DomResultTree {
         for (PersistenceId key : resultData.getClassCourses().keySet()) {
             DomClassCourse cc = resultData.getClassCourses().get(key);
             DomResultCourse resultCourse = resultCourseMap.get(cc.getCourseId());
-            schoolClasses.get(cc.getClassId()).getChildren().put(resultCourse.getCourse().getId(), resultCourse);
+            if (resultCourse != null) {
+                //set school class parent for child for DomResultCourse object
+                resultCourse.setParent(schoolClasses.get(cc.getClassId()));
+                //add child to parent list                
+                schoolClasses.get(cc.getClassId()).getChildren().put(resultCourse.getCourse().getId(), resultCourse);
+            }
         }
 
-        Map<PersistenceId, DomResultScoContext> scoContextMap = new HashMap<PersistenceId, DomResultScoContext>(resultData.getScoContexts().size());
+        Map<PersistenceId, DomResultScoContext> scoContextMap
+                = new HashMap<PersistenceId, DomResultScoContext>(resultData.getScoContexts().size());
         //Connect all DomResultScoContext with all leave DomResultCourses
         //for each of the schoolclasses set the courses
         for (PersistenceId key : resultData.getScoContexts().keySet()) {
             DomResultScoContext scoContext = new DomResultScoContext(resultData.getScoContexts().get(key));
+
             //fill map for connecting studentScoContext data
             scoContextMap.put(key, scoContext);
             DomResultCourse resultCourse = resultCourseMap.get(resultData.getScoContexts().get(key).getCourseId());
-            resultCourse.getChildren().put(resultCourse.getCourse().getId(), scoContext);
+            //set course parent for child for DomResultScoContext object
+            scoContext.setParent(resultCourse);
+            //add child to parent list
+            resultCourse.getChildren().put(scoContext.getScoContext().getId(), scoContext);
         }
 
-        for (PersistenceId id : resultData.getStudentScoContexts().keySet()) {
+        for (PersistenceId id : resultData.getStudentScoContexts().keySet()) {            
             DomStudent student = resultData.getStudents().get(resultData.getStudentScoContexts().get(id).getUserID());
-            DomResultStudentSco studentSco = new DomResultStudentSco(resultData.getStudentScoContexts().get(id), student);
-            DomResultScoContext scoContext = scoContextMap.get(resultData.getStudentScoContexts().get(id).getId());
-            scoContext.getChildren().put(id, studentSco);
+            DomResultScoContext scoContext = scoContextMap.get(resultData.getStudentScoContexts().get(id).getScoID());
+            if (student != null && scoContext != null) {
+                DomResultStudentSco studentSco = new DomResultStudentSco(resultData.getStudentScoContexts().get(id), student);
+                //set course parent for child for DomResultScoContext object
+                studentSco.setParent(scoContext);
+                //add child to parent list
+                scoContext.getChildren().put(id, studentSco);
+            }
         }
     }
 

@@ -174,7 +174,8 @@ public class ResultTreeCalculator {
 
         Map<PersistenceId, DomResultCourse> resultMap = new HashMap<PersistenceId, DomResultCourse>();
         tree.getResultTree().countCourseLeaves(resultMap);
-        DomResultScore[] courses = (DomResultScore[]) resultMap.values().toArray();
+        DomResultScore[] courses;
+        courses =   resultMap.values().toArray(new DomResultScore[0]);
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
         
         // for each of the SchoolClasses fetch a hashmap of courses with the score.

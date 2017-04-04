@@ -13,11 +13,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * Collected sparse results of Students that are in one or more SchoolClasses of
  * a Teacher.
  *
- * The information in this class is inserted client-side into a simplified
- * kd-range tree. The kd-tree has a search range of 1 and has a node type from
- * root to leave a sequence of: DomTeacher, DomSchoolClass, DomClassCourse
- * referred DomCourse,DomCourse, ..., DomCourse. A leave of the kd-tree is by
- * definition a course-leave.
+ * Converts  DomResultsPerTeacher that stores arrays to a HashMap version.
  *
  * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  */
