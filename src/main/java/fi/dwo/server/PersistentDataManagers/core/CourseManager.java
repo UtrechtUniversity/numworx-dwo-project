@@ -1,6 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -144,6 +145,21 @@ public class CourseManager {
         }
     }
 
+    public static List<PersistentCourse> findChildrenOf(PersistentDwoProfile p,PersistentCourse c) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentCourse.findByParentIDAndProfileID");
+            q.setParameter("parentID", c.getCourseID());
+            q.setParameter("dwoProfileID", p.getDwoProfileID());
+            List<PersistentCourse> list = q.getResultList();
+            LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourse children of course with id {1} in profile {2}.", new Object[]{list.size(), c.getCourseID(), p.getDwoProfileID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
+    
         
     public static List<PersistentCourse> findEntities(PersistentSchool s) {
         EntityManager em = getEntityManager();

@@ -29,10 +29,12 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -167,7 +169,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 scList.add(new DomMapEntry(entry));
             });
             results.setSchoolClasses(scList);
-            
+
             //convert studentMap and set in result
             HashMap<PersistenceId, DomStudent> domStudents = new HashMap<>(studentMap.size());
             studentMap.entrySet().stream().forEach((keyValuePair) -> {
@@ -181,9 +183,13 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             results.setStudents(entryList);
             //convert StudentOfClass map (socMap) and set in result
             HashMap<PersistenceId, DomStudentOfClass> domSocs = new HashMap<>(socMap.size());
+            Set<PersistentHasRolePK> studentHasRoleSet = new HashSet<>();
             socMap.entrySet().stream().forEach((keyValuePair) -> {
                 DomStudentOfClass s = keyValuePair.getValue().buildDomStudentOfClass();
                 domSocs.putIfAbsent(s.getId(), s);
+                PersistentHasRolePK key = new PersistentHasRolePK(keyValuePair.getKey());
+                                        studentHasRoleSet.add(key);
+
             });
             List<DomMapEntry<PersistenceId, DomStudentOfClass>> socsList = new ArrayList<>(domSocs.size());
             domSocs.entrySet().stream().forEach((entry) -> {
@@ -200,8 +206,10 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 List<PersistentClassCourse> ccList = ClassCourseManager.findEntities(schoolClass);
                 ccList.forEach((classCourse) -> {
                     //fetch course and check profile
-                    PersistentCourse course = CourseManager.findEntity(classCourse.getClassID());
-                    if (course != null && course.getDwoProfileID().equals(profile.getDwoProfileID())) {
+                    PersistentCourse course = CourseManager.findEntity(classCourse.getCourseID());
+                    //note currently one class course per higher tree node
+                    if (course != null && !course.isWithChildren()
+                            && course.getDwoProfileID().equals(profile.getDwoProfileID())) {
                         //push to classCourses 
                         classCoursesMap.putIfAbsent(classCourse.getClassCourseID(), classCourse);
                         //push to courses map for recursive collection
@@ -238,7 +246,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 if (r == null && course.isWithChildren()) {
                     //put current course in the courseMap
                     //put kids on the queue
-                    List<PersistentCourse> childrenCourses = CourseManager.findChildrenOf(course);
+                    List<PersistentCourse> childrenCourses = CourseManager.findChildrenOf(profile, course);
                     //add courses to a map 
                     //if not in map add to queue
                     courseQueue.addAll(childrenCourses);
@@ -251,7 +259,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 DomCourse c = keyValuePair.getValue().buildDomCourse();
                 domCourses.putIfAbsent(c.getId(), c);
             });
-            
+
             List<DomMapEntry<PersistenceId, DomCourse>> dcList = new ArrayList<>(domCourses.size());
             domCourses.entrySet().stream().forEach((entry) -> {
                 dcList.add(new DomMapEntry(entry));
@@ -271,21 +279,31 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 DomScoContext s = keyValuePair.getValue().buildDomScoContext();
                 domScoContexts.put(s.getId(), s);
             });
-            
+
             List<DomMapEntry<PersistenceId, DomScoContext>> dscList = new ArrayList<>(domScoContexts.size());
             domScoContexts.entrySet().stream().forEach((entry) -> {
                 dscList.add(new DomMapEntry(entry));
             });
             results.setScoContexts(dscList);
 
-            //fill hashmap studenSco
+            //fill hashmap studentSco for each student x sco
+//            HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
+//            scosMap.entrySet().forEach((sco) -> {
+//                List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findEntities(sco.getValue());
+//                studentScos.forEach((studentSco) -> {
+//                    studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
+//                });
+//            });
             HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
-            scosMap.entrySet().forEach((sco) -> {
-                List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findEntities(sco.getValue());
-                studentScos.forEach((studentSco) -> {
-                    studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
-                });
-            });
+            for (PersistentScoContext sco : scosMap.values()) {
+                for (PersistentHasRolePK hasRoleKey : studentHasRoleSet) {
+                    List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findEntities(sco, hasRoleKey);
+                    studentScos.forEach((studentSco) -> {
+                        studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
+                    });
+                }
+            }
+
             HashMap<PersistenceId, DomStudentScoContext> domStudentScoContexts = new HashMap<>(studentScosMap.size());
             studentScosMap.entrySet().stream().forEach((keyValuePair) -> {
                 DomStudentScoContext s = keyValuePair.getValue().buildDomStudentScoContext();
