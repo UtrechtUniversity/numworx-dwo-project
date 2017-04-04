@@ -205,6 +205,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		facade = new PopupFacade(map);
 		rmknop = false;
+		
+		// 'eigen opdracht' voor vergelijkingvak
+		boolean casAntw = false;		
+
 		if (h.get("interactiePanelLaunchState") != null)
 		{
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
@@ -225,6 +229,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				exact = (Boolean) launchState.get("exact");
 			if (launchState.get("eigenOpdr") != null)
 				eigenOpdr = (Boolean) launchState.get("eigenOpdr");
+			if (launchState.get("casAntw") != null) // een vergelijkingvak krijgt geen eigenOpdr mee maar casAntw
+				casAntw = (Boolean) launchState.get("casAntw");
 			if (launchState.get("boxMetRand") != null)
 				boxMetRand = (Boolean) launchState.get("boxMetRand");
 			if (launchStateMap.containsKey("antwoordString"))
@@ -292,9 +298,6 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				linStrategieVersie = false;
 				linOefenVersie = false;
 			}
-		
-			
-			
 		}
 		else
 		{
@@ -317,6 +320,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if(!startString.equals("$f@"))
 			hasStartString = true;
+		
+		if (isVergelijkingVak && !hasStartString && casAntw) // de 'eigen opdracht' variant van vergelijkingvak met stappen
+		{
+			eigenOpdr = true;
+		}
 		
 		if (randomVarNamen != null && randomVarWaarden != null)
 		{
@@ -1151,9 +1159,22 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 	public String getLatestAnswer()
 	{
-		if(latest_answer_viewer != null)
+		if (latest_answer_viewer != null)
 			return latest_answer_viewer.toString();
 		return null;
+	}
+	
+	/**
+	 * Geef de eerste invoerregel (t.b.v. eigen opdracht).
+	 * 
+	 * @return
+	 */
+	public String getFirstViewerString()
+	{
+		String s = "";
+		if (viewers != null && viewers.size() > 0)
+			s = getViewerString(0);
+		return s;
 	}
 	
 	public String getOperator()
