@@ -647,20 +647,20 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
      * @param rm
      */
     public ResultsModulePanel(ResultsModuleIF rm) {
-        DomResultsPerTeacher results;
-        try {
-DomDwoProfile profile = new DomDwoProfile();
-        profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;000000000000000000001"));;
-        profile.setDwoProfileName("test");
-        profile.setDwoProfileRights("_");            
-            results = SecuredTeacherResultsManager.getTeachersResults(profile);
-//        DomMappedResultsPerTeacher mapResults = new DomMappedResultsPerTeacher((results));
-         DomResultTree rTree = new DomResultTree(results);
-         DomResultPlotMatrix matrix  = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);  
-         LOG.log(Level.INFO, matrix.toString());
-        } catch (Dwo2Exception ex) {
-            Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        DomResultsPerTeacher results;
+//        try {
+//DomDwoProfile profile = new DomDwoProfile();
+//        profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;000000000000000000001"));;
+//        profile.setDwoProfileName("test");
+//        profile.setDwoProfileRights("_");            
+//            results = SecuredTeacherResultsManager.getTeachersResults(profile);
+////        DomMappedResultsPerTeacher mapResults = new DomMappedResultsPerTeacher((results));
+//         DomResultTree rTree = new DomResultTree(results);
+//         DomResultPlotMatrix matrix  = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);  
+//         LOG.log(Level.INFO, matrix.toString());
+//        } catch (Dwo2Exception ex) {
+//            Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
         
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
