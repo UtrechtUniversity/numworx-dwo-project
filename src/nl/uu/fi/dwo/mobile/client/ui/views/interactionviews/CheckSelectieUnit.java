@@ -1,7 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
-//import java.util.ArrayList;
-import java.awt.Component;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,6 +53,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Stub;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -64,7 +63,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
-public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMisconceptions
+public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMisconceptions, CBookEventListener
 {
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
@@ -93,6 +92,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
     private boolean ingevuld;
     private boolean nagekeken;
 	private boolean isVeranderdNaNakijken = false;
+	private boolean editable = true;
     
     private boolean correct;
     private boolean fout;
@@ -344,6 +344,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         
         h.put("ingevuld", new Boolean(ingevuld));
         h.put("nagekeken", new Boolean(nagekeken));
+        h.put("editable", Boolean.valueOf(editable));
 		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
         h.put("attempts", attempts);
         h.put("attemptsCount", new Integer(attemptsCount));
@@ -358,6 +359,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    boolean ingevuld = false;
 	    boolean nagekeken = false;
 		boolean isVeranderdNaNakijken = false;
+		boolean editable = true;
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
@@ -381,6 +383,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    	ingevuld = map.getBoolean("ingevuld");
 	    if(map.containsKey("nagekeken")) 
 	    	nagekeken = map.getBoolean("nagekeken");
+	    editable = map.getBoolean("editable", true);
 		if (h.get("isVeranderdNaNakijken") != null)
 			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 	    if(map.containsKey("attempts"))
@@ -397,6 +400,8 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         this.attempts = attempts;
         this.attemptsCount = attemptsCount;
 	    this.errorCount = errorCount;
+	    this.editable = editable;
+	    basisPanel.setStyleDependentName("readonly", !editable);
         
         if(randomizePositions) 
         {   for(int i=0 ; i<ipList.length ; i++)
@@ -570,6 +575,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		this.comRoot = comRoot;
 		zetMode(comRoot.getMode());
 		if(dwologger != null) dwologger.setCommunicationRoot(comRoot);
+		comRoot.addCBookEventListener("action.setNotEditable", this);
 	}
 	
 	public CheckSelectieUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipList)
@@ -679,6 +685,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		attempts = new Vector();
 		
 		basisPanel = new LayoutPanel();
+		basisPanel.setStylePrimaryName("checkselectieunit");
 		//basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		
 		//int imWidth = breedte - 30;
@@ -719,7 +726,9 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);
 		checkButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
-			{	e.stopPropagation();
+			{
+				e.stopPropagation();
+				if(!editable) return;
 				kijkNa();
 	        	attemptsCount++;
 				setAttempt();
@@ -897,6 +906,15 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	@Override
 	public int[][] getPossibleMisconceptions() {
 		return possibleMisconceptions;
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if("action.setNotEditable".equals(event.getCommand())) {
+			editable = false;
+			basisPanel.setStyleDependentName("readonle", !editable);
+		}
+		
 	}
 
 }

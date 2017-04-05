@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
@@ -47,7 +48,7 @@ import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text;
 
-public class CheckSleepUnit implements InteractionStub{
+public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
@@ -99,6 +100,7 @@ public class CheckSleepUnit implements InteractionStub{
     private int scoreMax=10;
     private int foutStraf = 2;
     private boolean changed = false;
+    private boolean editable = true;
     
 	static int GOED = 1;
 	static int FOUT = 0;
@@ -157,7 +159,14 @@ public class CheckSleepUnit implements InteractionStub{
 		return basisPanel;
 	}
 	
-	
+	private void setEditable(boolean editable) {
+		this.editable = editable;
+		basisPanel.setStyleDependentName("readonly", !editable);
+		if (ipListSleep != null)
+			for(TekstVakPanel panel: ipListSleep) {
+				panel.setEditable(editable);
+		}
+	}
 
 	
 	@Override
@@ -205,6 +214,7 @@ public class CheckSleepUnit implements InteractionStub{
         h.put("ingevuld", new Boolean(ingevuld));
         h.put("nagekeken", new Boolean(nagekeken));
 		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
+		h.put("editable", Boolean.valueOf(editable));
         h.put("attempts", attempts);
         h.put("attemptsCount", new Integer(attemptsCount));
         h.put("errorCount", new Integer(errorCount));
@@ -218,6 +228,7 @@ public class CheckSleepUnit implements InteractionStub{
 	    boolean ingevuld = false;
 	    boolean nagekeken = false;
 		boolean isVeranderdNaNakijken = false;
+		boolean editable = true;
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
@@ -240,6 +251,8 @@ public class CheckSleepUnit implements InteractionStub{
 	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();
 	    if(h.get("nagekeken") != null) 
 	    	nagekeken = ((Boolean)h.get("nagekeken")).booleanValue();
+	    if(h.containsKey("editable"))
+	    	editable = ((Boolean)h.get("editable")).booleanValue();
 		if (h.get("isVeranderdNaNakijken") != null)
 			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 	    if(h.get("attempts") != null)
@@ -256,6 +269,8 @@ public class CheckSleepUnit implements InteractionStub{
         this.attempts = attempts;
         this.attemptsCount = attemptsCount;
 	    this.errorCount = errorCount;
+	    setEditable( editable );
+
         
         if(randomizePositions) 
         {   for(int i=0 ; i<aantalSleepObjects ; i++)
@@ -624,6 +639,7 @@ public class CheckSleepUnit implements InteractionStub{
 		zetMode(comRoot.getMode());
 		if(dwologger!=null)
 			dwologger.setCommunicationRoot(comRoot);
+		comRoot.addCBookEventListener("action.setNotEditable", this);
 	}
 	
 	
@@ -759,6 +775,7 @@ public class CheckSleepUnit implements InteractionStub{
 		checkButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
+				if (!editable) return;
 				kijkNa();
 				attemptsCount++;
 				setAttempt();
@@ -853,8 +870,10 @@ public class CheckSleepUnit implements InteractionStub{
 		return aantalDoelObjects;
 	}
 	
-	public void clickAction()
+	private void clickAction()
 	{
+		if (!editable) return;
+
 		if (nagekeken)
 			zetIsVeranderdNaNakijken(true);
 
@@ -890,5 +909,14 @@ public class CheckSleepUnit implements InteractionStub{
 	@Override
 	public void setAsHoogte(int ashoogte) {
 		this.ashoogte = ashoogte;
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if("action.setNotEditable".equals(event.getCommand()))
+		{
+			setEditable (false);
+		}
+		
 	}
 }

@@ -13,6 +13,8 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
@@ -33,6 +35,7 @@ import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithMisconceptions;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
@@ -91,6 +94,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
 	private static final String KEYBOARD = "keyboardNr";
 	private static final String WRITE_MATH_SET = "writeMathSetNr";
+	private static final CBookEvent ACTION_READONLY = new CBookEvent("action.setNotEditable");
 	static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
@@ -576,6 +580,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			setupOldVersion(opdracht, tb);
 		}
+		
+		if(on.isVerzegeld()) {
+			seal(); // push action.setNotEditable
+		}
+
 	}
 
 /**
@@ -675,8 +684,20 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			zetNagekeken(true);
 			kijkNa();
 		}
+
+		if(on.isVerzegeld()) {
+			seal(); // push action.setNotEditable
+		}
 			
  	}
+
+	protected void seal() {
+		for(Object o: opdrachtObjects) {
+			if(o instanceof CBookEventListener) {
+				((CBookEventListener) o).acceptCBookEvent(ACTION_READONLY);
+			}
+		}
+	}
 	
 	public void stelNavigatieIn()
 	{	//Omzetting in GWT: overal opdrachtenCorrect[actNr][opdrNr] vervangen door on.getOpdrachtCorrect(actNr, opdrNr)
@@ -1815,7 +1836,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		this.readonly = readonly;
 		if(readonly != old) {
 // FIXME ....
-			zetAfdekPanel(readonly);
+			if(readonly) 
+				seal();
+			// else no way to break seal();
 		}
 	}
 

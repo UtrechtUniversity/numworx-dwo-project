@@ -226,7 +226,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		attempts = new Vector();
 		
 		basisPanel = new LayoutPanel();
-		basisPanel.setStylePrimaryName("AntwoordKeuzeVak");
+		basisPanel.setStylePrimaryName("antwoordkeuzevak");
 		
 		ashoogte = hoogte / 2 + 7;
 		basisPanel.setPixelSize(breedte,  hoogte);

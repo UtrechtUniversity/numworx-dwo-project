@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
@@ -21,11 +22,9 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
-import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.TextAlign;
-import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -46,7 +45,7 @@ import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text;
 
 
-public class CheckValueUnit implements InteractionStub{
+public class CheckValueUnit implements InteractionStub, CBookEventListener {
 
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
@@ -74,6 +73,7 @@ public class CheckValueUnit implements InteractionStub{
     
     private boolean correct;
     private boolean fout;
+    private boolean editable = true;
     
     private int attemptsCount;
 	private Vector attempts;
@@ -326,6 +326,7 @@ public class CheckValueUnit implements InteractionStub{
 	    boolean ingevuld = false;
 	    boolean nagekeken = false;
 		boolean isVeranderdNaNakijken = false;
+		boolean editable = true;
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
@@ -337,6 +338,8 @@ public class CheckValueUnit implements InteractionStub{
 	    	nagekeken = ((Boolean)h.get("nagekeken")).booleanValue();
 		if (h.get("isVeranderdNaNakijken") != null)
 			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
+		if (h.containsKey("editable"))
+			editable = ((Boolean)h.get("editable")).booleanValue();
 	    if(h.get("attempts") != null)
 	    	attempts = new Vector(JSONUtilities.toArrayList(h.get("attempts")));
 	    if(h.get("attemptsCount") != null) 
@@ -350,6 +353,8 @@ public class CheckValueUnit implements InteractionStub{
         this.attempts = attempts;
         this.attemptsCount = attemptsCount;
 	    this.errorCount = errorCount;
+	    this.editable = editable;
+	    basisPanel.setStyleDependentName("readonly", !editable);
         
         if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken))) 
         	kijkNa();
@@ -382,6 +387,7 @@ public class CheckValueUnit implements InteractionStub{
 	    HashMap<String, Object> h = new HashMap<String, Object>();
         h.put("ingevuld", new Boolean(ingevuld));
         h.put("nagekeken", new Boolean(nagekeken));
+        h.put("editable", Boolean.valueOf(editable));
 		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
         h.put("attempts", attempts);
         h.put("attemptsCount", new Integer(attemptsCount));
@@ -527,6 +533,7 @@ public class CheckValueUnit implements InteractionStub{
 		zetMode(comRoot.getMode());
 		if(dwologger != null)
 			dwologger.setCommunicationRoot(comRoot);
+		comRoot.addCBookEventListener("action.setNotEditable", this);
 	}
 	
 	@Override
@@ -820,5 +827,14 @@ public class CheckValueUnit implements InteractionStub{
 	@Override
 	public void setAsHoogte(int ashoogte) {
 		this.ashoogte = ashoogte;
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if ("action.setNotEditable".equals(event.getCommand())) {
+			editable = false;
+			basisPanel.setStyleDependentName("readonly", !editable);
+		}
+		
 	}
 }

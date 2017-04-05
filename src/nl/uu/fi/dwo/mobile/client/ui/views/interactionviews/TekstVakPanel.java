@@ -2567,6 +2567,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		public void onMouseDown(MouseDownEvent e)
 		{
+			if(!editable) return;
 			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
 				return;
 			e.stopPropagation();
@@ -2584,6 +2585,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 //				return;
 //			}
 			e.stopPropagation(); 
+			if(!editable) return;
 			int eventX = e.getClientX();
 			int eventY = e.getClientY();
 			
@@ -2634,6 +2636,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			}
 			
 			e.stopPropagation();
+			if(!editable) return;
 			int eventX = e.getClientX();
 			int eventY = e.getClientY();
 			
@@ -2672,6 +2675,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		public void onMouseOut(MouseOutEvent e) {
 			
 			e.stopPropagation();
+			if(!editable) return;
 			int eventX = e.getClientX();
 			int eventY = e.getClientY();
 			
@@ -2709,6 +2713,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		public void onTouchStart(TouchStartEvent e)
 		{
 			e.stopPropagation();
+			if(!editable) return;
 			
 			if(e.getTouches().length() == 0)
 			{	return;
@@ -2732,6 +2737,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		public void onTouchMove(TouchMoveEvent e)
 		{
 			e.stopPropagation();
+			if(!editable) return;
 			
 			if(e.getTouches().length() == 0)
 				return;
@@ -2756,6 +2762,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		public void onTouchEnd(TouchEndEvent e)
 		{
 			e.stopPropagation();
+			if(!editable) return;
 			if(sleepbaar || selectable)
 				e.preventDefault();
 			
@@ -2906,8 +2913,18 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				klapUitAction();
 				klapUitButton.setDown(true);
 			}
+		} else if ("action.setNotEditable".equals(command)) {
+			seal(event);
 		}
 		
+	}
+
+	private void seal(CBookEvent event) {
+		for (Object object : interactionViewObjects)
+		{
+			if (object instanceof CBookEventListener)
+				((CBookEventListener) object).acceptCBookEvent(event);
+		}
 	}
 
 	// visible (default) or hidden.
@@ -3282,6 +3299,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	}
 	
 	DWOLogger dwologger;
+	private boolean editable = true;
 	
 	private void setAttempt() {
 		if(dwologger != null) {
@@ -3328,6 +3346,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	@Override
 	public void onHide() {
 		facade.setPopupState(getState());
+	}
+
+	void setEditable(boolean editable) {
+		this.editable = editable;	
 	}
 	
 }

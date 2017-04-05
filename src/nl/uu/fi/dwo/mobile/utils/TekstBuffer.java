@@ -490,7 +490,7 @@ public class TekstBuffer
 		}
 		else if(soortVak == 49)
 		{
-			result = new CheckButton(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = x(map, new CheckButton(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if(soortVak == 14) 
 		{

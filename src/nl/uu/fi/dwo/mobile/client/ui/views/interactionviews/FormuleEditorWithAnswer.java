@@ -278,6 +278,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	private boolean check = true;
 	private boolean teltMee = true;
+	private boolean editable = true;
 	private boolean syntaxFout = false;
 	private int breedte;
 	private int hoogte;
@@ -1616,6 +1617,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			h.put(ANTWOORD_STRING, formuleVakInhouden[0]);
 			h.put("ingevuld", new Boolean(ingevuld));
 			h.put("nagekeken", new Boolean(nagekeken));
+			h.put("editable", Boolean.valueOf(editable));
 			h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
 			h.put("errorCount", new Integer(errorCount));
 			
@@ -1649,6 +1651,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		PopupFacade.showReview(h, this);
 		boolean ingevuld = true;
 		boolean nagekeken = false;
+		boolean editable = true;
 		boolean isVeranderdNaNakijken = false;
 		int errorCount = 0;
 		if (h.get("ingevuld") != null)
@@ -1659,6 +1662,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			isVeranderdNaNakijken = ((Boolean) h.get("isVeranderdNaNakijken")).booleanValue();
 		if (map.containsKey("errorCount"))
 			errorCount = map.getInt("errorCount");
+		editable = map.getBoolean("editable", true);
 		
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
@@ -1687,7 +1691,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			if (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken))
 				kijkNa(true); // FIXME kijkna in setstate
 		}
-
+		setEditable(editable);
 	}
 
 	public String strip$f(String antwoord) {
@@ -1792,6 +1796,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		comRoot.addCBookEventListener("double", this);
 		comRoot.addCBookEventListener("equation", this);
 		comRoot.addCBookEventListener("expression", this);
+		comRoot.addCBookEventListener("action.setNotEditable", this);
 
 		if (logging != null) 
 			logging.setCommunicationRoot(comRoot);
@@ -1859,6 +1864,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public void acceptCBookEvent(CBookEvent event) {
 		String message;
+		
+		if ("action.setNotEditable".equals(event.getCommand())) {
+			setEditable(false);
+			return;
+		} else 
 		if ("balansvergelijking".equals(event.getCommand()))
 		{
 			message = event.getParameter("balansvergelijking").toString();
@@ -1949,7 +1959,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	 */
 	public void setEnabled(boolean b)
 	{
-		if (b)
+		if (b && editable)
 		{
 			sp.getElement().getStyle().clearProperty("pointerEvents");
 			this.requestFocus();
@@ -1967,6 +1977,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 	}
 
+	void setEditable(boolean editable) {
+		this.editable = editable;
+		getAsPanel().setStyleDependentName("readonly", !editable);
+		if(!editable) setEnabled(false);
+		if(fews != null) fews.setEditable(editable); 
+	}
+	
 	@Override
 	public void setFontSize(int font_size) {
 	}

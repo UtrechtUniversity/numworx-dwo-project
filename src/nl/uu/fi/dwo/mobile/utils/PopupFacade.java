@@ -13,6 +13,8 @@ import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -23,7 +25,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
 
-public class PopupFacade implements InteractionView, FacetAware {
+public class PopupFacade implements InteractionView, FacetAware, CBookEventListener {
 	
 	public interface PopupListener {
 		void onShow();
@@ -331,6 +333,14 @@ public class PopupFacade implements InteractionView, FacetAware {
 		if(h != null && h.containsKey("reviewScoreCorrectie") && h.getInt("reviewScoreCorrectie")!=0) {
 			w.asWidget().addStyleName("correctie");
 		}
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if (delegate instanceof CBookEventListener) {
+			((CBookEventListener) delegate).acceptCBookEvent(event);
+		}
+		
 	}
 	
 }

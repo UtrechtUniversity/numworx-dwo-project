@@ -70,7 +70,7 @@ import fi.wiskopdr.text.Text;
  * @author Evertson Croes
  * 
  */
-public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions, FacetAware, TekstElementWithFont
+public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions, FacetAware, TekstElementWithFont, CBookEventListener
 {
 	private final static Logger logger = Logger.getLogger("FormuleEditorWithSteps");
 
@@ -95,6 +95,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	boolean boxMetRand = true;
 	private Boolean exact = false;
 	private boolean eigenOpdr = false;
+	private boolean editable = true;
 	protected int breedte = 600;
 	protected int hoogte = 250;
 	private boolean volledigeBreedte = false;
@@ -606,7 +607,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 		}
 
-		contentPanel.getElement().addClassName("insert_formule_steps");
+		contentPanel.addStyleName("insert_formule_steps");
 
 		//zorgen dat cursor niet direct, maar pas bij focus verschijnt
 		if(editor != null)
@@ -1413,6 +1414,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
+				if(!editable) return;
 				if (nagekeken)
 					zetIsVeranderdNaNakijken(true);
 				backStep(false);
@@ -1424,7 +1426,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	maakStap("abc");
+			{
+				if(!editable) return;
+				maakStap("abc");
 			}
 		});
 	}
@@ -1433,7 +1437,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	if(subExtra)
+			{	
+				if(!editable) return;
+				if(subExtra)
 				{
 					voegGebruikersSubstitutiesVakToe();
 					
@@ -1452,7 +1458,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	maakStap("+");
+			{
+				if(!editable) return;
+				maakStap("+");
 			}
 		});
 	}
@@ -1461,7 +1469,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	maakStap("-");
+			{
+				if(!editable) return;
+				maakStap("-");
 			}
 		});
 	}
@@ -1470,7 +1480,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	maakStap("*");
+			{
+				if(!editable) return;
+				maakStap("*");
 			}
 		});
 	}
@@ -1479,7 +1491,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	maakStap(":");
+			{
+				if(!editable) return;
+				maakStap(":");
 			}
 		});
 	}
@@ -1488,7 +1502,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	maakStap("haakjes");
+			{	
+				if(!editable) return;
+				maakStap("haakjes");
 				maakBewerkingStap();
 			}
 		});
@@ -1498,7 +1514,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	maakStap("herleid");
+			{
+				if(!editable) return;
+				maakStap("herleid");
 				maakBewerkingStap();
 			}
 		});
@@ -1508,7 +1526,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	maakStap("ontbind");
+			{	
+				if(!editable) return;
+				maakStap("ontbind");
 				maakBewerkingStap();
 			}
 		});
@@ -1518,7 +1538,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	maakStap("splits");
+			{
+				if(!editable) return;
+				maakStap("splits");
 				maakBewerkingStap();
 			}
 		});
@@ -1528,7 +1550,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{	tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	maakStap("wortel");
+			{
+				if(!editable) return;
+				maakStap("wortel");
 				maakBewerkingStap();
 			}
 		});
@@ -1541,6 +1565,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
+				if(!editable) return;
 				downStep();
 			}
 		});
@@ -1553,6 +1578,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
+				if(!editable) return;
 				copyStep();
 			}
 		});
@@ -1575,6 +1601,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 			@Override
 			public void onTouchStart(TouchStartEvent event) {
+				if(!editable) return;
 				berekenStap();
 			}
 			
@@ -1669,6 +1696,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		@Override
 		public void onTouchStart(TouchStartEvent event)
 		{
+			if(!editable) return;
 			super.onTouchStart(event);
 			if(editor != null)
 				editor.requestFocus();
@@ -1677,8 +1705,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		@Override
 		public void onTouchEnd(TouchEndEvent event) 
 		{
+			if(!editable) return;
 			super.onTouchEnd(event);
-			
 			if (bordjesMethode)
 			{
 				addBordjesStap();
@@ -1786,6 +1814,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		h.put("pijlVakOperatoren", pijlVakOperatoren);
 		h.put("ingevuld", new Boolean(ingevuld));
 		h.put("nagekeken", new Boolean(nagekeken));
+		h.put("editable", Boolean.valueOf(editable));
 		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
 		h.put("errorCount", new Integer(errorCount));
 		h.put("substitutieString", substitutieString);
@@ -2183,6 +2212,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			editor.setCurrentElementRepaint();
 		}
 		
+		boolean editable = true;
+		if( h.containsKey("editable")) editable = ((Boolean) h.get("editable")).booleanValue();
+		setEditable(editable);
 		scrollToBottom();
 	}
 	
@@ -3653,6 +3685,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		this.correct = b;
 	}
 
+	void setEditable(boolean editable) {
+		this.editable = editable;
+		getAsPanel().setStyleDependentName("readonly", !editable);
+// TODO in css regelen 
+		if(!editable) contentPanel.getElement().getStyle().setProperty("pointerEvents", "none");
+		else contentPanel.getElement().getStyle().clearProperty("pointerEvents");
+	}
+	
 	/**
 	 * Methode om score te laten zetten door FormuleEditorWithAnswer.
 	 * 
@@ -3680,5 +3720,16 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	public void setStapOk(boolean stapOk)
 	{
 		this.stapOk = stapOk;
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if("action.setNotEditable".equals(event.getCommand())) {
+			if(editor != null) 
+				editor.acceptCBookEvent(event);
+			else
+				setEditable(false);
+		}
+		
 	}
 }

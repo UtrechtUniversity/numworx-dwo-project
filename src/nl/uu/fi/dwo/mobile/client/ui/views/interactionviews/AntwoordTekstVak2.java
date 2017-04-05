@@ -57,6 +57,120 @@ import fi.wiskopdr.expressies.repr.ContentMathML;
 
 public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElementWithFont, CBookEventListener {
 
+	private final class FormuleEditorVak extends FormuleEditor {
+		
+		void setEditable(boolean editable) {
+			AntwoordTekstVak2.this.editable = editable;
+			if(editable) {
+				getAsPanel().getElement().getStyle().clearProperty("pointerEvents");
+			} else {
+				getAsPanel().getElement().getStyle().setProperty("pointerEvents", "none");
+
+				// zorg dat de formule editor geen focus heeft
+				if (getKeyboard() != null)
+				{
+					getKeyboard().setEditor(null);
+					getKeyboard().blur();
+				}
+
+			}
+		}
+		
+		@Override
+		public void enter()
+		{
+			AntwoordTekstVak2.this.enter();
+		}
+
+		@Override
+		public void addElement(FormuleElement e)
+		{
+			super.addElement(e);
+			changed = true;
+			resize();
+			resetimg();
+			
+			if (nagekeken)
+				zetIsVeranderdNaNakijken(true);
+		}
+
+		@Override
+		public void removeCurrentElement()
+		{
+			super.removeCurrentElement();
+			changed = true;
+			resize();
+			resetimg();
+			
+			if (nagekeken)
+				zetIsVeranderdNaNakijken(true);
+		}
+
+		@Override
+		public void removeNextElement()
+		{
+			super.removeNextElement();
+			changed = true;
+			resize();
+			resetimg();
+			
+			if (nagekeken)
+				zetIsVeranderdNaNakijken(true);
+		}
+
+		@Override
+		public void insert(String text)
+		{
+			super.insert(text);
+			changed = true;
+			resize();
+			resetimg();
+		}
+
+		@Override
+		public boolean isInputNeeded() {
+			return false;
+		}
+
+		public void resize()
+		{
+			if(!formuleMode)
+				return;
+			
+			breedte = formuleVak.getMainRegel().getWidth() + 18;
+			hoogte = formuleVak.getMainRegel().getHeight() + 4;
+			//System.out.println("nieuwe breedte: " + breedte);
+			//System.out.println("nieuwe hoogte: " + hoogte);
+			//nog zorgen dat hoogte altijd minimaal 24 is?
+			basisPanel.setSize((breedte) + "px", (hoogte) + "px");
+			ashoogte = formuleVak.getMainRegel().getAsHoogte() + 3;
+			if(parentRegel != null)
+				parentRegel.resize();
+		}
+
+		/* (non-Javadoc)
+		 * @see nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor#setCurrentElementRepaint()
+		 */
+		@Override
+		public void setCurrentElementRepaint() {
+			super.setCurrentElementRepaint();
+			fireText();
+		}
+
+		@Override
+		public void tab()
+		{
+			tabAntwoordTekstVak();
+		}
+
+		@Override
+		public void shiftTab()
+		{
+			shiftTabAntwoordTekstVak();
+		}
+	}
+
+
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
 	public static final String ACTION_FALSE2 = "action.false_2";
@@ -103,7 +217,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	static int GEEN = 3;
 	
 	private TextEditor antwoordTF;
-	private FormuleEditor formuleVak;
+	private FormuleEditorVak formuleVak;
 	
 	private String antwoordString = "";
 	private String[] juisteAntwoorden;
@@ -369,102 +483,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		//antwoordTF.setBounds(0, 0, 80, 21);
 		//antwoordTF.addActionListener(this);
 		
-		formuleVak = new FormuleEditor() {
-
-			@Override
-			public void enter()
-			{
-				AntwoordTekstVak2.this.enter();
-			}
-
-			@Override
-			public void addElement(FormuleElement e)
-			{
-				super.addElement(e);
-				changed = true;
-				resize();
-				resetimg();
-				
-				if (nagekeken)
-					zetIsVeranderdNaNakijken(true);
-			}
-
-			@Override
-			public void removeCurrentElement()
-			{
-				super.removeCurrentElement();
-				changed = true;
-				resize();
-				resetimg();
-				
-				if (nagekeken)
-					zetIsVeranderdNaNakijken(true);
-			}
-
-			@Override
-			public void removeNextElement()
-			{
-				super.removeNextElement();
-				changed = true;
-				resize();
-				resetimg();
-				
-				if (nagekeken)
-					zetIsVeranderdNaNakijken(true);
-			}
-
-			@Override
-			public void insert(String text)
-			{
-				super.insert(text);
-				changed = true;
-				resize();
-				resetimg();
-			}
-
-			@Override
-			public boolean isInputNeeded() {
-				return false;
-			}
-			
-				
-			public void resize()
-			{
-				if(!formuleMode)
-					return;
-				
-				breedte = formuleVak.getMainRegel().getWidth() + 18;
-				hoogte = formuleVak.getMainRegel().getHeight() + 4;
-				//System.out.println("nieuwe breedte: " + breedte);
-				//System.out.println("nieuwe hoogte: " + hoogte);
-				//nog zorgen dat hoogte altijd minimaal 24 is?
-				basisPanel.setSize((breedte) + "px", (hoogte) + "px");
-				ashoogte = formuleVak.getMainRegel().getAsHoogte() + 3;
-				if(parentRegel != null)
-					parentRegel.resize();
-			}
-			
-			/* (non-Javadoc)
-			 * @see nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor#setCurrentElementRepaint()
-			 */
-			@Override
-			public void setCurrentElementRepaint() {
-				super.setCurrentElementRepaint();
-				fireText();
-			}
-			
-			@Override
-			public void tab()
-			{
-				tabAntwoordTekstVak();
-			}
-			
-			@Override
-			public void shiftTab()
-			{
-				shiftTabAntwoordTekstVak();
-			}
-		} ;
+		formuleVak = new FormuleEditorVak() ;
 		//hier toetsenbord aan vastmaken. WIM??
 		formuleVak.setFormuleToolBijFocus(formuleToolBijFocus);
 		//formuleVak.getMainRegel().setMinimumWidth(breedte - 20);
@@ -785,7 +804,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		this.editable = map.getBoolean("editable", true);
 		if(!editable) {
 			if(formuleMode) {
-				//formuleVak.setEditable(editable);
+				formuleVak.setEditable(editable);
 			} else {
 				antwoordTF.acceptCBookEvent(EVENT_READONLY);
 			}
@@ -1348,8 +1367,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			if(content == null) content = "";
 			setText(content);
 		} else if ( ACTION_READONLY.equals(event.getCommand())) {
+			editable = false;
 			if(formuleMode) {
-				// TODO formuleVak.setEditable(false); zoals in wiskopdr
+				formuleVak.setEditable(false);
 			} else {
 				//antwoordTF
 				antwoordTF.acceptCBookEvent(event);
