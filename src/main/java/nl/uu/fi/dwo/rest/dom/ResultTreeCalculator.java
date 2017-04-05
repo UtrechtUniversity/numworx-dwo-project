@@ -195,7 +195,6 @@ public class ResultTreeCalculator {
         DomResultScore[] courses;
         courses =   courseLeaves.values().toArray(new DomResultScore[0]);        
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
-        
         return result;
     }
 
