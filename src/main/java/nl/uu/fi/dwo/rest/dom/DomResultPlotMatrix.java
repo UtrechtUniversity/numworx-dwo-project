@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.rest.dom;
 
+import com.sun.javafx.binding.StringFormatter;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 
@@ -22,6 +23,8 @@ public class DomResultPlotMatrix {
     }
 
     /**
+     * @param i row
+     * @param j column
      * @return the marks
      */
     public DomResultStudentSco getMark(int i, int j) {
@@ -29,32 +32,60 @@ public class DomResultPlotMatrix {
     }
 
     /**
-     * @param marks the marks to set
+     * @param i row index
+     * @param j column index
+     * @param mark the mark to set
      */
     public void setMarks(int i, int j, DomResultStudentSco mark) {
         this.marks[i][j] = mark;
     }
 
-    public int getvSize(){
+    public int getvSize() {
         return vIndex.length;
     }
 
-    public int gethSize(){
+    public int gethSize() {
         return hIndex.length;
     }
 
     /**
-     * @return the vIndex
+     * @param i row index
+     * @return the vIndex value
      */
     public DomResultScore getvIndex(int i) {
         return vIndex[i];
     }
 
     /**
-     * @return the hIndex
+     * @param i column index
+     * @return the hIndex value
      */
-    public DomResultScore gethIndex(int j) {
-        return hIndex[j];
+    public DomResultScore gethIndex(int i) {
+        return hIndex[i];
     }
 
+    @Override
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        //build header
+        buf.append(StringFormatter.format("%50s", " ")); //empty field
+        for (int i = 0; i < hIndex.length; i++) {
+            buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()));
+        }
+        buf.append('\n');
+        //build body plus vertical labels
+        for (int j = 0; j < vIndex.length; j++) {
+            buf.append(StringFormatter.format("%50s", vIndex[j].getLabel()));
+            for (int i = 0; i < hIndex.length; i++) {
+                //row, column 
+                if(marks[j][i]!=null && marks[j][i].getScore()!=null){
+                buf.append(StringFormatter.format("%50d", marks[j][i].getScore()));
+                }else{
+                    buf.append(StringFormatter.format("%50s", "null"));
+                }
+            }
+            buf.append('\n');
+        }
+        return buf.toString();
+    }
 }

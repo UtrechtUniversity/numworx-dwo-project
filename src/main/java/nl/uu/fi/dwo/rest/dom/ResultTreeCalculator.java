@@ -13,8 +13,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
- * Calculates the score value for each node in the DomResultTree. This simplifies
- * the calculation of the view matrices.
+ * Calculates the score value for each node in the DomResultTree. This
+ * simplifies the calculation of the view matrices.
  *
  * @author Gert van der Plas
  */
@@ -164,28 +164,45 @@ public class ResultTreeCalculator {
     }
 
     public static DomResultPlotMatrix GetScoreOfTeacherClassesByLeafCourses(DomResultTree tree) {
+        //collect classes
         int nClasses = tree.getResultTree().getChildren().size();
         DomResultScore[] classes = new DomResultScore[nClasses];
-        int i = 0;
-        for (DomResultScore<DomResultSchoolClass> sc : tree.getResultTree().getChildren().values()) {
-            classes[i] = sc;
-            i++;
+//        int i = 0;
+//        for (DomResultScore<DomResultSchoolClass> sc : tree.getResultTree().getChildren().values()) {
+//            classes[i] = sc;
+//            i++;
+//        }
+//
+//        //collect courses
+//        Map<PersistenceId, DomResultCourse> resultMap = new HashMap<PersistenceId, DomResultCourse>();
+//        tree.getResultTree().fetchCourseLeaves(resultMap);
+//        DomResultScore[] courses;
+//        courses =   resultMap.values().toArray(new DomResultScore[0]);
+//        
+//        DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
+//        
+//        // for each of the SchoolClasses fetch a hashmap of courses with the score.
+
+//create sparse matrix
+        Map<PersistenceId, Map<PersistenceId, DomResultCourse>> sparseMatrix = new HashMap<PersistenceId, Map<PersistenceId, DomResultCourse>>();
+        for (Map.Entry<PersistenceId, DomResultSchoolClass> entry : tree.getResultTree().getChildren().entrySet()) {
+            sparseMatrix.put(entry.getKey(), new HashMap<PersistenceId, DomResultCourse>());
         }
 
-        Map<PersistenceId, DomResultCourse> resultMap = new HashMap<PersistenceId, DomResultCourse>();
-        tree.getResultTree().countCourseLeaves(resultMap);
+        //crawl and fill
+        Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
+        tree.getResultTree().crawlSchoolClassCourse(null, courseLeaves,sparseMatrix);
         DomResultScore[] courses;
-        courses =   resultMap.values().toArray(new DomResultScore[0]);
+        courses =   courseLeaves.values().toArray(new DomResultScore[0]);        
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
         
-        // for each of the SchoolClasses fetch a hashmap of courses with the score.
         return result;
     }
 
     public static Map<PersistenceId, DomResultCourse> CrawlScoreOfSchoolClass(DomResultSchoolClass sc) {
-//        sc.countCourseLeaves(courseLeaves);
+//        sc.fetchCourseLeaves(courseLeaves);
         Map<PersistenceId, DomResultCourse> resultMap = new HashMap<PersistenceId, DomResultCourse>();
-//        tree.getResultTree().countCourseLeaves(resultMap);
+//        tree.getResultTree().fetchCourseLeaves(resultMap);
 //        
 //        //crawl and put leaves in the resultmap
 //        
@@ -199,8 +216,3 @@ public class ResultTreeCalculator {
 
 }
 
-// sc <- course <- ... <- course <- sco <- studentsco - student
-//  sc <- student
-// browse <score, sc, course> <score, sc, sco>
-// browse <score, student, course> for some sc
-// 

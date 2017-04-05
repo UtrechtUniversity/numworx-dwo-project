@@ -111,7 +111,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
         }
     }
 
-    public void countCourseLeaves(Map<PersistenceId, DomResultCourse> courseLeaves) {
+    public void fetchCourseLeaves(Map<PersistenceId, DomResultCourse> courseLeaves) {
         Object[] kids =  this.getChildren().values().toArray();
 
         if (this.children.isEmpty()) {
@@ -121,8 +121,40 @@ public abstract class DomResultScore<T extends DomResultScore> {
             return;
         } else {
             for (DomResultScore s : this.getChildren().values()) {
-                s.countCourseLeaves(courseLeaves);
+                s.fetchCourseLeaves(courseLeaves);
             }
         }
     }
+
+    public void crawlSchoolClassCourse(DomResultSchoolClass schoolClass, Map<PersistenceId, DomResultCourse> courseLeaves, Map<PersistenceId, Map<PersistenceId, DomResultCourse>> sparseMatrix) {
+        Object[] kids =  this.getChildren().values().toArray();
+        if(this instanceof DomResultSchoolClass){
+            schoolClass = (DomResultSchoolClass) this;
+             this.crawlSchoolClassCourse(schoolClass, courseLeaves, sparseMatrix);
+             return;
+        }
+        if (this.children.isEmpty()) {
+            return;
+        }; 
+        if (kids[0] instanceof DomResultScoContext) {
+            //add course to horizontal header
+            courseLeaves.put(((DomResultCourse) this).getCourse().getId(), (DomResultCourse) this);
+            //add course score to sparse matrix
+            this.score = this.getAvgSubTreeScore(this);
+            sparseMatrix.get(schoolClass.getSchoolClass().getId()).put(((DomResultCourse) this).getCourse().getId(), (DomResultCourse) this);
+        } else {
+            for (DomResultScore s : this.getChildren().values()) {
+                s.crawlSchoolClassCourse(schoolClass, courseLeaves, sparseMatrix);
+            }
+        }
+    }
+
+    private double getAvgSubTreeScore(DomResultScore<T> aThis) {
+        double result=0.0;
+        for (DomResultScore s : this.getChildren().values()) {
+                result+=this.getAvgSubTreeScore(s);
+            }
+        return result/this.getChildren().size();
+    }
+
 }
