@@ -657,7 +657,7 @@ DomDwoProfile profile = new DomDwoProfile();
 //        DomMappedResultsPerTeacher mapResults = new DomMappedResultsPerTeacher((results));
          DomResultTree rTree = new DomResultTree(results);
          DomResultPlotMatrix matrix  = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);  
-         matrix.toString();
+         LOG.log(Level.INFO, matrix.toString());
         } catch (Dwo2Exception ex) {
             Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
