@@ -154,6 +154,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 
         JTableHeader header;
         int col;
+
         /* (non-Javadoc)
          * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
          */
@@ -193,6 +194,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
                 }
             }
         }
+
         /* (non-Javadoc)
          * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
          */
@@ -400,12 +402,10 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
                     }
                     if (f > 100) {
                         red = 0;
+                    } else if (f < 50) {
+                        green = (int) (green * (f / 50));
                     } else {
-                        if (f < 50) {
-                            green = (int) (green * (f / 50));
-                        } else {
-                            red = (int) (red * (1 - (f - 50) / 50));
-                        }
+                        red = (int) (red * (1 - (f - 50) / 50));
                     }
                 }
                 if (red > 255) {
@@ -560,7 +560,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
          */
         @Override
         protected void paintComponent(Graphics arg0) {
-    
+
             super.paintComponent(arg0);
         }
 
@@ -649,19 +649,19 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
     public ResultsModulePanel(ResultsModuleIF rm) {
         DomResultsPerTeacher results;
         try {
-DomDwoProfile profile = new DomDwoProfile();
-        profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;000000000000000000001"));;
-        profile.setDwoProfileName("test");
-        profile.setDwoProfileRights("_");            
+            DomDwoProfile profile = new DomDwoProfile();
+            profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;000000000000000000001"));;
+            profile.setDwoProfileName("test");
+            profile.setDwoProfileRights("_");
             results = SecuredTeacherResultsManager.getTeachersResults(profile);
 //        DomMappedResultsPerTeacher mapResults = new DomMappedResultsPerTeacher((results));
-         DomResultTree rTree = new DomResultTree(results);
-         DomResultPlotMatrix matrix  = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);  
-         LOG.log(Level.INFO, matrix.toString());
+            DomResultTree rTree = new DomResultTree(results);
+            DomResultPlotMatrix matrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+            LOG.log(Level.INFO, matrix.toString());
         } catch (Dwo2Exception ex) {
             Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(600, 480);
         this.setSize(600, 280);
@@ -1252,7 +1252,6 @@ DomDwoProfile profile = new DomDwoProfile();
 
     @Override
     public void stateChanged(ChangeEvent e) {
-
 
     }
 }

@@ -14,6 +14,9 @@
                 <exec.executable>java</exec.executable>
                 <exec.workingdir>/Users/gert/SURFdrive/DWO-project/DWO2-testruns/DWOJApplet-macbook</exec.workingdir>
             </properties>
+            <activatedProfiles>
+                <activatedProfile>dev</activatedProfile>
+            </activatedProfiles>
         </action>
         <action>
             <actionName>debug</actionName>
@@ -30,6 +33,9 @@
                 <jpda.listen>true</jpda.listen>
                 <exec.workingdir>/Users/gert/SURFdrive/DWO-project/DWO2-testruns/DWOJApplet-macbook</exec.workingdir>
             </properties>
+            <activatedProfiles>
+                <activatedProfile>dev</activatedProfile>
+            </activatedProfiles>
         </action>
         <action>
             <actionName>profile</actionName>
@@ -52,6 +58,81 @@
             <goals>
                 <goal>install</goal>
             </goals>
+            <activatedProfiles>
+                <activatedProfile>dev</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>build</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>install</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>clean</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>clean</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>dev</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>rebuild</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>dev</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>build-with-dependencies</actionName>
+            <reactor>also-make</reactor>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>install</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>dev</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>test</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>test</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>dev</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>test.single</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>test-compile</goal>
+                <goal>surefire:test</goal>
+            </goals>
+            <properties>
+                <test>${packageClassName}</test>
+            </properties>
             <activatedProfiles>
                 <activatedProfile>dev</activatedProfile>
             </activatedProfiles>
