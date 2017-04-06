@@ -9,6 +9,8 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
@@ -38,7 +40,7 @@ import fi.wiskopdr.text.Text;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class GeogebraView implements InteractionView, LoadHandler
+public class GeogebraView implements InteractionView, LoadHandler, CBookEventListener
 {
 
 	private static final String KIJK_NA = "<span>" + Text.constants.nakijkKnopLabel() + "\u00A0</span>";
@@ -72,6 +74,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private OpdrNavIF comRoot;
 	private String dir;
 	private boolean bigdata;
+	private boolean editable = true;
 	private String filename;
 	
 	private static final String RESOURCE = "https://mc2-resource.appspot.com/dav/Unit/";
@@ -131,6 +134,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	{
 		super();
 		mainPanel = new SimplePanel();
+		mainPanel.setStylePrimaryName("GeogebraView");
 	}
 
 	public GeogebraView(HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,?> randomVarWaarden)
@@ -179,7 +183,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 			scoreMax = ggbMap.getInt("scoreMax");
 				
 		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
-		frame.setStylePrimaryName(".gwt-StubView");
+		frame.setStylePrimaryName("gwt-StubView");
 		frame.addStyleDependentName("borderless");
 		
 		if(bigdata)
@@ -292,7 +296,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 			mainPanel.setWidget(frame);
 	}
 
-	protected void onCheck() {
+	void onCheck() {
+		if (!editable) return;
 		kijkNa(true);  // Feedback in view
 		setCheckImg(); // FeedBack on button
 		attemptsCount ++;
@@ -673,6 +678,16 @@ public class GeogebraView implements InteractionView, LoadHandler
 	@Override
 	public void setAsHoogte(int ashoogte) {
 		//this.ashoogte = ashoogte;
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if("action.setNotEditable".equals(event.getCommand())) {
+			editable = true;
+			mainPanel.setStyleDependentName("readonly", !editable);
+			frame.setStyleDependentName("readonly", !editable);
+		}
+		
 	}
 
 }

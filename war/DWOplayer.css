@@ -325,3 +325,8 @@ div.listItem-dwo-separator {
 	background-position: right bottom !important;
 	background-color: transparent;
 }
+
+.StubView-readonly {
+	pointer-events: none !important;
+	background-color: #EEEEEE;
+}

@@ -41,7 +41,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class StubView extends SimplePanel implements InteractionView, LoadHandler, OpdrNavIF, FormuleEditorIF, AttachEvent.Handler  {
+public class StubView extends SimplePanel implements InteractionView, LoadHandler, OpdrNavIF, FormuleEditorIF, AttachEvent.Handler, CBookEventListener {
 
 	public void pause() {
 		comRoot.pause();
@@ -112,7 +112,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		facade = new PopupFacade(outermap);
 		frame = new Frame(html);
 		frame.getElement().getStyle().setOverflow(Overflow.HIDDEN);
-		frame.setStylePrimaryName(".gwt-StubView");
+		frame.setStylePrimaryName("StubView");
 		frame.addStyleDependentName("borderless");
 		int width = 400; if(outermap.containsKey("breedte")) width = outermap.getInt("breedte");
 		int height =400; if(outermap.containsKey("hoogte")) height = outermap.getInt("hoogte");
@@ -395,16 +395,20 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		jso(event)
 	}-*/;
 	
+	CBookEventListener setNotEditableListener;
 	
 	private HandlerRegistration addCBookEventListener(String command, final JavaScriptObject listener) {
-		return comRoot.addCBookEventListener(command, new CBookEventListener() {
+		CBookEventListener javalistener = new CBookEventListener() {
 			
 			@Override
 			public void acceptCBookEvent(CBookEvent event) {
 				JSONValue ev = JSONUtilities.toJSONObject(event.toObjectMap());
 				StubView.acceptCBookEvent(listener, ev.toString());
 			}
-		});
+		};
+		if("action.setNotEditable".equals(command))
+			setNotEditableListener = javalistener;
+		return comRoot.addCBookEventListener(command, javalistener);
 	}
 	
 	private static void removeCBookListener(HandlerRegistration r) {
@@ -810,6 +814,17 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(comRoot!=this && comRoot!=null)
 			return comRoot.getConfiguration();
 		return null;
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if("action.setNotEditable".equals(event.getCommand())) {
+			if(setNotEditableListener != null) {
+				setNotEditableListener.acceptCBookEvent(event);
+			} else {
+				frame.setStyleDependentName("readonly", true);
+			}
+		}
 	}
 	
 }

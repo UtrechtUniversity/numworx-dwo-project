@@ -28,15 +28,20 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 
-public class CheckButton implements InteractionStub
+public class CheckButton implements InteractionStub, CBookEventListener
 {
+	boolean editable = true;
+	
 	final class NakijkenVak implements ClickHandler {
 		public void onClick(ClickEvent e)
-		{	e.stopPropagation();
+		{	
+			if(!editable) return;
+			e.stopPropagation();
 			logger.warning("CheckButton nakijkenVak");
 			comRoot.pause();
 			for (int i = 0; i < lijst.size(); i++)
@@ -53,6 +58,7 @@ public class CheckButton implements InteractionStub
 
 	public static final String CHECK = "check";
 	public static final String AFRONDEN = "action.seal";
+	private static final String READONLY = "action.setNotEditable";
 	public static final CBookEvent CHECK_EVENT = new CBookEvent(CHECK);
 	public static final CBookEvent SEAL_EVENT = new CBookEvent(AFRONDEN);
 	
@@ -60,6 +66,7 @@ public class CheckButton implements InteractionStub
 	final class NakijkenPagina implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
+			if(!editable) return;
 			event.stopPropagation();
 			logger.warning("CheckButton nakijkenPagina");
 			DWOplayer.clientfactory.getEventBus().fireEvent(CHECK_EVENT);
@@ -69,6 +76,7 @@ public class CheckButton implements InteractionStub
 	final class NakijkenXWidget implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
+			if(!editable) return;
 			event.stopPropagation();
 			logger.warning("CheckButton nakijkenXWidget");
 // Welke van de twee?
@@ -80,6 +88,7 @@ public class CheckButton implements InteractionStub
 
 		@Override
 		public void onClick(ClickEvent event) {
+			if(!editable) return;
 			event.stopPropagation();
 			logger.warning("CheckButton actieAfronden");
 			DWOplayer.clientfactory.getEventBus().fireEvent(SEAL_EVENT);
@@ -89,6 +98,7 @@ public class CheckButton implements InteractionStub
 	final class ActieBewaren implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
+			if(!editable) return;
 			event.stopPropagation();
 			logger.warning("CheckButton actieBewaren");
 			comRoot.setChanged(false);
@@ -298,5 +308,14 @@ public class CheckButton implements InteractionStub
 	@Override
 	public void setAsHoogte(int ashoogte) {
 		this.ashoogte = ashoogte;
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if(READONLY.equals(event.getCommand())) {
+			editable = false;
+			basisPanel.setStyleDependentName("readonly", !editable);
+		}
+		
 	}
 }

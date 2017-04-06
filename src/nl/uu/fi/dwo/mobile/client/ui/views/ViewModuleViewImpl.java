@@ -146,6 +146,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void setupModule(String name, String file)
 	{
 		contentPanel.clear();
+		readonly = false;
 		if(DWOplayer.JSON) loadJSON(file); else loadXML(file);
 		if(!DWOplayer.PARAMETERS.isNavTitle()) setTitle(name);
 	}
