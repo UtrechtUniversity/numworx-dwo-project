@@ -662,7 +662,6 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 //            Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
 //        }
         
-        
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(600, 480);
         this.setSize(600, 280);
