@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -79,7 +78,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
 //        if (children.equals(Collections.EMPTY_MAP)) {
 //            this.children = new HashMap<PersistenceId, T>();
 //        } else {
-            this.children = children;
+        this.children = children;
 //        }
     }
 
@@ -112,7 +111,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
     }
 
     public void fetchCourseLeaves(Map<PersistenceId, DomResultCourse> courseLeaves) {
-        Object[] kids =  this.getChildren().values().toArray();
+        Object[] kids = this.getChildren().values().toArray();
 
         if (this.children.isEmpty()) {
             return;
@@ -127,21 +126,22 @@ public abstract class DomResultScore<T extends DomResultScore> {
     }
 
     public void crawlSchoolClassCourse(DomResultSchoolClass schoolClass, Map<PersistenceId, DomResultCourse> courseLeaves, Map<PersistenceId, Map<PersistenceId, DomResultCourse>> sparseMatrix) {
-        Object[] kids =  this.getChildren().values().toArray();
-        if(this instanceof DomResultSchoolClass){
+        Object[] kids = this.getChildren().values().toArray();
+        if (this instanceof DomResultSchoolClass) {
             schoolClass = (DomResultSchoolClass) this;
-             this.crawlSchoolClassCourse(schoolClass, courseLeaves, sparseMatrix);
-             return;
+            this.crawlSchoolClassCourse(schoolClass, courseLeaves, sparseMatrix);
+            return;
         }
         if (this.children.isEmpty()) {
             return;
-        }; 
+        }
         if (kids[0] instanceof DomResultScoContext) {
             //add course to horizontal header
             courseLeaves.put(((DomResultCourse) this).getCourse().getId(), (DomResultCourse) this);
             //add course score to sparse matrix
             this.score = this.getAvgSubTreeScore(this);
             sparseMatrix.get(schoolClass.getSchoolClass().getId()).put(((DomResultCourse) this).getCourse().getId(), (DomResultCourse) this);
+            return;
         } else {
             for (DomResultScore s : this.getChildren().values()) {
                 s.crawlSchoolClassCourse(schoolClass, courseLeaves, sparseMatrix);
@@ -149,12 +149,24 @@ public abstract class DomResultScore<T extends DomResultScore> {
         }
     }
 
-    private double getAvgSubTreeScore(DomResultScore<T> aThis) {
-        double result=0.0;
-        for (DomResultScore s : this.getChildren().values()) {
-                result+=this.getAvgSubTreeScore(s);
+    /**
+     * Calculates the average score of a subtree. Each node in the subtree has a
+     * score equal to the average score of its children with weight 1.
+     *
+     * @param sub
+     * @return
+     */
+    private double getAvgSubTreeScore(DomResultScore<T> sub) {
+        double result = 0.0;
+        if (this instanceof DomResultStudentSco) {
+            DomResultStudentSco ss = (DomResultStudentSco) this;
+            result = ss.getStudentSco().getScore(); // normalized 0-100. 
+        } else {
+            for (DomResultScore s : sub.getChildren().values()) {
+                result += this.getAvgSubTreeScore(s);
             }
-        return result/this.getChildren().size();
+        }
+        return result / this.getChildren().size();
     }
 
 }
