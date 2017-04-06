@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.rest.dom;
 
 import com.sun.javafx.binding.StringFormatter;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 
 /**
  * PlotMatrix of results. The matrix has two arrays containing the axis labels
@@ -19,7 +18,7 @@ public class DomResultPlotMatrix {
     DomResultPlotMatrix(DomResultScore[] theVIndex, DomResultScore[] theHIndex) {
         vIndex = theVIndex;
         hIndex = theHIndex;
-        marks = new DomResultStudentSco[hIndex.length][vIndex.length];
+        marks = new DomResultScore[vIndex.length][hIndex.length];
     }
 
     /**
@@ -68,29 +67,29 @@ public class DomResultPlotMatrix {
     public String toString() {
         StringBuilder buf = new StringBuilder();
         //build header
-        buf.append(StringFormatter.format("%50s", " ")); //empty field
+        buf.append(StringFormatter.format("%50s", " ").getValue()); //empty field
         for (int i = 0; i < hIndex.length; i++) {
         if(vIndex[i]!=null && vIndex[i].getLabel()!=null){
-                buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()));
+                buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()).getValue());
                 }else{
-                    buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()));
+                    buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()).getValue());
                 }
         }
         buf.append('\n');
         //build body plus vertical labels
         for (int j = 0; j < vIndex.length; j++) {
         if(vIndex[j]!=null && vIndex[j].getLabel()!=null){
-                buf.append(StringFormatter.format("%50s", vIndex[j].getLabel()));
+                buf.append(StringFormatter.format("%50s", vIndex[j].getLabel()).getValue());
                 }else{
-                    buf.append(StringFormatter.format("%50s", "null"));
+                    buf.append(StringFormatter.format("%50s", "null").getValue());
                 }
 
             for (int i = 0; i < hIndex.length; i++) {
                 //row, column 
                 if(marks[j][i]!=null && marks[j][i].getScore()!=null){
-                buf.append(StringFormatter.format("%50d", marks[j][i].getScore()));
+                buf.append(StringFormatter.format("%50f", marks[j][i].getScore()).getValue());
                 }else{
-                    buf.append(StringFormatter.format("%50s", "null"));
+                    buf.append(StringFormatter.format("%50s", "null").getValue());
                 }
             }
             buf.append('\n');

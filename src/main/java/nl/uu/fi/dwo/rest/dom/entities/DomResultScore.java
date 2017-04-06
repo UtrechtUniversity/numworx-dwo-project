@@ -160,8 +160,8 @@ public abstract class DomResultScore<T extends DomResultScore> {
      */
     private double getAvgSubTreeScore(DomResultScore<T> sub) {
         double result = 0.0;
-        if (this instanceof DomResultStudentSco) {
-            DomResultStudentSco ss = (DomResultStudentSco) this;
+        if (sub instanceof DomResultStudentSco) {
+            DomResultStudentSco ss = (DomResultStudentSco) sub;
             result = ss.getStudentSco().getScore(); // normalized 0-100. 
         } else {
             for (DomResultScore s : sub.getChildren().values()) {
