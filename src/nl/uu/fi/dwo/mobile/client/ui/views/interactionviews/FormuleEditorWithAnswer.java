@@ -64,6 +64,7 @@ import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.repr.ContentMathML;
 
@@ -1129,7 +1130,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		if (fews != null && fews.getEigenOpdr())
 		{
-			if (fews.getLatestAnswer() == null)
+			String juisteAntwoord = useranswer;
+			
+			if (fews.getLatestAnswer() == null || "".equals(fews.getFirstViewerString())) // als een van de twee leeg is, moet juiste antwoord uit userantwoord worden gehaald
 			{
 				// eerste stap bij eigen opdracht is altijd goed, mits zo eenvoudig mogelijk
 				if (!isVergelijkingVak())
@@ -1138,35 +1141,30 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					if (expUserAnswer != null)
 					{
 						Expressie exp = Expressie.evalWithCAS(expUserAnswer);
-						useranswer = addFormulaCodes(exp.toString());
+						juisteAntwoord = addFormulaCodes(exp.toString());
 					}
 				}
 				else
 				{
-					// iets met solve()... zie wiskopdr docentomgeving 'mogelijk antwoordmodel':
-					// uit AntwoordVergelijkingVakEditPanel.actionPerformed():
-					
-					// UNDER CONSTRUCTION - solveWithCas() implementeren...
-					
-//		        	VergelijkingMeerv vm = FormuleParser.parseVergelijking(useranswer);
-//
-//		        	Expressie vmAntw = null;
-//					if (vm != null)
-//					{
-//						Vergelijking v = vm.geefVergelijking(0);
-//						vmAntw = Expressie.solveWithCas(vm, v.geefVarNaam());
-//						String def = "";
-//
-//						if (vmAntw != null)
-//						{
-//							def = vmAntw.toString();
-//						}
-//
-//						useranswer = addFormulaCodes(def);
-//					}
+		        	VergelijkingMeerv vm = FormuleParser.parseVergelijking(useranswer); 
+
+		        	VergelijkingMeerv vmAntw = null;
+					if (vm != null)
+					{
+						Vergelijking v = vm.geefVergelijking(0);
+						vmAntw = Expressie.solveWithCas(vm, v.geefVarNaam());
+						String def = "";
+
+						if (vmAntw != null)
+						{
+							def = vmAntw.toString();
+						}
+
+						juisteAntwoord = addFormulaCodes(def);
+					}
 				}
 	
-				avChecker.zetJuisteAntwoord(useranswer);
+				avChecker.zetJuisteAntwoord(juisteAntwoord);
 							
 				goedHalfFout = AntwoordVakChecker.DOOR;
 				if (!"$f@".equals(useranswer)) // eerste stap is leeg, dan niet verder nakijken
@@ -1178,23 +1176,34 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			else
 			{
 				// er is al een eigen opdracht ingevoerd, dus zet het juiste antwoord
-				String juisteAntwoord = "";
 				if (!isVergelijkingVak())
 				{
 					String eersteRegel = removeIsTeken(fews.getFirstViewerString());
 					Expressie exp = Expressie.evalWithCAS(FormuleParser.geefExpressie(addFormulaCodes(eersteRegel)));
 					juisteAntwoord = addFormulaCodes(exp.toString());
-					avChecker.zetJuisteAntwoord(juisteAntwoord);
 				}
 				else
 				{
-					// iets met solve()... zie wiskopdr docentomgeving 'mogelijk antwoordmodel'
-//					String eersteRegel = fews.getFirstViewerString();
-//					VergelijkingMeerv vgl = FormuleParser.parseVergelijking(eersteRegel);
-//					juisteAntwoord = addFormulaCodes(vgl.toString());
+					String eersteRegel = removeIsTeken(fews.getFirstViewerString());
+		        	VergelijkingMeerv vm = FormuleParser.parseVergelijking(addFormulaCodes(eersteRegel)); 
+
+		        	VergelijkingMeerv vmAntw = null;
+					if (vm != null)
+					{
+						Vergelijking v = vm.geefVergelijking(0);
+						vmAntw = Expressie.solveWithCas(vm, v.geefVarNaam());
+						String def = "";
+
+						if (vmAntw != null)
+						{
+							def = vmAntw.toString();
+						}
+
+						juisteAntwoord = addFormulaCodes(def);
+					}
 				}
 
-				//avChecker.zetJuisteAntwoord(juisteAntwoord);
+				avChecker.zetJuisteAntwoord(juisteAntwoord);
 			}
 		}
 		
@@ -1319,7 +1328,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		String sZonderIsTeken = "";
 		
-		if (s.indexOf("=") == s.length() - 1)
+		if (!"".equals(s) && s.indexOf("=") == s.length() - 1)
 		{
 			sZonderIsTeken = s.substring(0, s.length() - 1);
 		}
