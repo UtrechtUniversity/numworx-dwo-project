@@ -1819,6 +1819,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		h.put("errorCount", new Integer(errorCount));
 		h.put("substitutieString", substitutieString);
 		h.put("gebruikersSubStrings", gebruikersSubStrings);
+		h.put("eigenOpdr", eigenOpdr);
 		
 		if (dwologger!= null) 
 		{
@@ -1879,6 +1880,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		boolean ingevuld = false;
 		boolean nagekeken = false;
 		boolean isVeranderdNaNakijken = false;
+		boolean eigenOpdr = false;
 		int errorCount = 0;
 		String substitutieString = "";
 		String antwoordString = "";
@@ -1929,13 +1931,16 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			substitutieString = (String) h.get("substitutieString");
 		if (h.containsKey("gebruikersSubStrings"))
 			gebruikersSubStrings = JSONUtilities.toStringArray(h.get("gebruikersSubStrings"));
-		
+		if (h.get("eigenOpdr") != null)
+			eigenOpdr = (Boolean) h.get("eigenOpdr");
+
 
 		this.stapNr = stapNr;
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
 		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
 		this.errorCount = errorCount;
+		this.eigenOpdr = eigenOpdr;
 		if(gebruikersSubstitutiesVak != null)
 			gebruikersSubstitutiesVak.zetRegels(gebruikersSubStrings);
 		
