@@ -223,10 +223,82 @@
 			<param-value>mpreduce</param-value>
 		</init-param>
 	</servlet>
-
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>image.png</servlet-name>
+  	<servlet-class>fi.servlet.dwomaccess.DWOmAccess</servlet-class>
+  </servlet>
+  	<servlet>
+      <servlet-name>ProviderServlet</servlet-name>
+      <servlet-class>fi.servlet.lti.ProviderServlet</servlet-class>
+    </servlet>
+    <servlet>
+      <servlet-name>ServiceServlet</servlet-name>
+      <servlet-class>fi.servlet.lti.ServiceServlet</servlet-class>
+    </servlet>   
+    <servlet>
+      <servlet-name>dwoparam</servlet-name>
+      <jsp-file>/DWOmAccess/lti/_dwo.jsp</jsp-file>
+    </servlet>
+    <servlet>
+    	<servlet-name>appparam</servlet-name>
+    	<jsp-file>/DWOmAccess/lti/_app.jsp</jsp-file>
+    </servlet>
     <!--
     servlet mappings 
     -->
+    
+   <servlet-mapping>
+      <servlet-name>dwoparam</servlet-name>
+      <url-pattern>/DWOmAccess/lti/dwo.jsp/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>dwoparam</servlet-name>
+      <url-pattern>/DWOmAccess/lti/dwo.jsp</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>appparam</servlet-name>
+      <url-pattern>/DWOmAccess/lti/app.jsp/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>appparam</servlet-name>
+      <url-pattern>/DWOmAccess/lti/app.jsp</url-pattern>
+   </servlet-mapping>
+  
+  <servlet-mapping>
+	<servlet-name>image.png</servlet-name>
+	<url-pattern>/DWOmAccess/image.png</url-pattern>
+  </servlet-mapping>
+   <servlet-mapping>
+	<servlet-name>image.png</servlet-name>
+	<url-pattern>/DWOmAccess/partialScore</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>image.png</servlet-name>
+	<url-pattern>/DWOmAccess/getLaunchData</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>image.png</servlet-name>
+	<url-pattern>/DWOmAccess/getJSONLaunchData</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>image.png</servlet-name>
+	<url-pattern>/DWOmAccess/getJSONLaunchDataBytes</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>image.png</servlet-name>
+	<url-pattern>/DWOmAccess/getCourseDescription</url-pattern>
+  </servlet-mapping>
+      <servlet-mapping>
+      <servlet-name>ProviderServlet</servlet-name>
+      <url-pattern>/DWOmAccess/lti/provider/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+      <servlet-name>ServiceServlet</servlet-name>
+      <url-pattern>/DWOmAccess/lti/service/*</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <!-- note that xmlrpc is a hardcoded path relative to the applet containing html page -->
         <!-- note that jars is also a hardcoded path relative to the applet containing html page -->
