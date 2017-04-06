@@ -129,7 +129,9 @@ public abstract class DomResultScore<T extends DomResultScore> {
         Object[] kids = this.getChildren().values().toArray();
         if (this instanceof DomResultSchoolClass) {
             schoolClass = (DomResultSchoolClass) this;
-            this.crawlSchoolClassCourse(schoolClass, courseLeaves, sparseMatrix);
+            for (DomResultScore s : this.getChildren().values()) {
+                s.crawlSchoolClassCourse(schoolClass, courseLeaves, sparseMatrix);
+            }
             return;
         }
         if (this.children.isEmpty()) {

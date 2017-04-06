@@ -12,7 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
  */
 public class DomResultPlotMatrix {
 
-    private DomResultStudentSco marks[][] = null;
+    private DomResultScore marks[][] = null;
     private DomResultScore[] vIndex; //uses label property for display
     private DomResultScore[] hIndex; //uses label property for display
 
@@ -27,7 +27,7 @@ public class DomResultPlotMatrix {
      * @param j column
      * @return the marks
      */
-    public DomResultStudentSco getMark(int i, int j) {
+    public DomResultScore getMark(int i, int j) {
         return marks[i][j];
     }
 
@@ -36,7 +36,7 @@ public class DomResultPlotMatrix {
      * @param j column index
      * @param mark the mark to set
      */
-    public void setMarks(int i, int j, DomResultStudentSco mark) {
+    public void setMarks(int i, int j, DomResultScore mark) {
         this.marks[i][j] = mark;
     }
 
@@ -70,12 +70,21 @@ public class DomResultPlotMatrix {
         //build header
         buf.append(StringFormatter.format("%50s", " ")); //empty field
         for (int i = 0; i < hIndex.length; i++) {
-            buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()));
+        if(vIndex[i]!=null && vIndex[i].getLabel()!=null){
+                buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()));
+                }else{
+                    buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()));
+                }
         }
         buf.append('\n');
         //build body plus vertical labels
         for (int j = 0; j < vIndex.length; j++) {
-            buf.append(StringFormatter.format("%50s", vIndex[j].getLabel()));
+        if(vIndex[j]!=null && vIndex[j].getLabel()!=null){
+                buf.append(StringFormatter.format("%50s", vIndex[j].getLabel()));
+                }else{
+                    buf.append(StringFormatter.format("%50s", "null"));
+                }
+
             for (int i = 0; i < hIndex.length; i++) {
                 //row, column 
                 if(marks[j][i]!=null && marks[j][i].getScore()!=null){

@@ -165,24 +165,6 @@ public class ResultTreeCalculator {
 
     public static DomResultPlotMatrix GetScoreOfTeacherClassesByLeafCourses(DomResultTree tree) {
         //collect classes
-        int nClasses = tree.getResultTree().getChildren().size();
-        DomResultScore[] classes = new DomResultScore[nClasses];
-//        int i = 0;
-//        for (DomResultScore<DomResultSchoolClass> sc : tree.getResultTree().getChildren().values()) {
-//            classes[i] = sc;
-//            i++;
-//        }
-//
-//        //collect courses
-//        Map<PersistenceId, DomResultCourse> resultMap = new HashMap<PersistenceId, DomResultCourse>();
-//        tree.getResultTree().fetchCourseLeaves(resultMap);
-//        DomResultScore[] courses;
-//        courses =   resultMap.values().toArray(new DomResultScore[0]);
-//        
-//        DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
-//        
-//        // for each of the SchoolClasses fetch a hashmap of courses with the score.
-
 //create sparse matrix
         Map<PersistenceId, Map<PersistenceId, DomResultCourse>> sparseMatrix = new HashMap<PersistenceId, Map<PersistenceId, DomResultCourse>>();
         for (Map.Entry<PersistenceId, DomResultSchoolClass> entry : tree.getResultTree().getChildren().entrySet()) {
@@ -191,10 +173,26 @@ public class ResultTreeCalculator {
 
         //crawl and fill
         Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
-        tree.getResultTree().crawlSchoolClassCourse(null, courseLeaves,sparseMatrix);
+        tree.getResultTree().crawlSchoolClassCourse(null, courseLeaves, sparseMatrix);
+        int nClasses = tree.getResultTree().getChildren().size();
+        DomResultScore[] classes = new DomResultScore[nClasses];
+        classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
         DomResultScore[] courses;
-        courses =   courseLeaves.values().toArray(new DomResultScore[0]);        
+        courses = courseLeaves.values().toArray(new DomResultScore[0]);
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
+        for (int i = 0; i < classes.length; i++) {
+            for (int j = 0; j < courses.length; j++) {
+                DomResultScore fieldScore= sparseMatrix.get(((DomResultSchoolClass) classes[i]).getSchoolClass().getId())
+                        .get(((DomResultCourse) courses[j]).getCourse().getId());
+                if(fieldScore != null
+                        ){
+                    result.setMarks(i, j, fieldScore);
+                }else{
+                    result.setMarks(i, j, null);
+                }
+            }
+        }
+        //put sparseMatrix in result
         return result;
     }
 
@@ -214,4 +212,3 @@ public class ResultTreeCalculator {
     }
 
 }
-
