@@ -194,7 +194,7 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 		for (int i = 0; i < this.children.size(); i++)
 		{
 			FormuleRegel regel = this.getChild(i);
-			if (regel.x <= selectionStartX && regel.x + regel.width >= selectionEndX && regel.y <= selectionStartY && regel.y + regel.height >= selectionEndY)
+			if (regel.x <= selectionStartX && regel.x + regel.width > selectionEndX && regel.y <= selectionStartY && regel.y + regel.height > selectionEndY)
 				return regel.selection(selectionStartX - regel.x, selectionStartY - regel.y, selectionEndX - regel.x, selectionEndY - regel.y);
 		}
 		return null;
