@@ -1487,18 +1487,6 @@ public class FormuleRegel extends FormuleElement
 		return mathML;
 	}
 
-	/**
-	 * Test of midden tussen start en eind ziet, waarbij eind = start + lengte.
-	 * Start is inclusief en eind exclusief
-	 * @param start eerste pixel
-	 * @param midden te testen waarde
-	 * @param lengte aantal pixels
-	 * @return
-	 */
-	private boolean contains(int start, int midden, int lengte) {
-		return start <= midden && midden < start + lengte;
-	}
-	
 	public FormuleRegel selection(int selectionStartX, int selectionStartY, int selectionEndX, int selectionEndY)
 	{
 		if (editable == false)
@@ -1515,8 +1503,7 @@ public class FormuleRegel extends FormuleElement
 		{
 			el = this.children.elementAt(i);
 			//selection inside element?
-			if (//selectionStartX >= el.x && selectionEndX < el.x + el.width 
-					contains(el.x, selectionStartX, el.width)
+			if (selectionStartX >= el.x && selectionEndX < el.x + el.width 
 					&& selectionStartY > this.getAsHoogte() - el.getAsHoogte() && selectionEndY < this.getAsHoogte() - el.getAsHoogte() + el.height)
 			{
 				selectionfound = true;
@@ -1552,9 +1539,8 @@ public class FormuleRegel extends FormuleElement
 
 			int elx = el.getX();// + (el.getWidth() / 2);
 
-			if (// elx > selectionEndX || elx + el.getWidth() <= selectionStartX 
-					!contains(elx, selectionEndX, el.getWidth())
-					|| this.getAsHoogte() - el.getAsHoogte() > selectionEndY || this.getAsHoogte() - el.getAsHoogte() + el.getHeight() < selectionStartY)
+			if ( elx > selectionEndX || elx + el.getWidth() <= selectionStartX 
+				|| this.getAsHoogte() - el.getAsHoogte() > selectionEndY || this.getAsHoogte() - el.getAsHoogte() + el.getHeight() < selectionStartY)
 				//outside selection
 				el.setSelected(false);
 			else if(selectionStartX == selectionEndX && selectionStartY == selectionEndY)//geen selectie, wel cursorpositie veranderen
