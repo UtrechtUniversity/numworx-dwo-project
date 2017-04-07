@@ -183,7 +183,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 			scoreMax = ggbMap.getInt("scoreMax");
 				
 		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
-		frame.setStylePrimaryName("gwt-StubView");
+		frame.setStylePrimaryName("StubView");
 		frame.addStyleDependentName("borderless");
 		
 		if(bigdata)
