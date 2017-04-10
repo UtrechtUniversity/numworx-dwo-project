@@ -269,6 +269,93 @@ public class Samples20
 		"<",
 		"\u2264",
 		};
+	
+	public static int[] sample_4_part1 = {129,0, 109,28, 89,56, 67,82, 42,105, 18,129, 11,147, 45,147, 80,147, 114,147, 148,147, 182,147, 179,147};  /* , 145,148 */
+	public static int[] sample_4_part2 = {/* 117,136, */ 104,104, 105,98, 105,132, 105,167, 107,200};
+	
+	public static int[] sample_EQ_part1 = {90,75,99,75,107,75,116,75,124,75,132,75,141,75,144,75,150,75,155,75};
+	public static int[] sample_EQ_part2 = {90,97,99,97,107,97,116,97,124,97,132,97,141,97,144,97,150,97,155,97};
+	
+	public static int[] sample_plus_part1 = {107,0, 107,29, 107,58, 107,87, 107,116, 107,145, 107,174, /*107,172, 107,143, 107,114 */};
+	// tussen-stukje {90,94, 61,92,}
+	public static int[] sample_plus_part2 =  {32,92, 26,93, 55,95, 84,95, 113,95, 142,92, 171,91, 200,90};
+
+	public static int[] sample_LTE_part1 = {115,43, 102,52, 89,62, 73,70, 59,79, 46,89, 43,98, 59,103, 75,109}; 
+	public static int[] sample_LTE_part2 = {91,114, 106,119, 106,119, 106,119, 106,119, 45,118, 36,119, 52,124, 68,130, 83,137, 99,140};
+	
+	public static int[] sample_GTE_part1 = {34,43, 47,49, 60,58, 72,69, 84,79, 98,87, 92,97, 79,106, 67,114};
+	public static int[] sample_GTE_part2 = {54,122, 38,126, 38,126, 38,126, 98,112, 98,112, 88,118, 76,125, 63,133, 49,139, 37,148};
+	
+	public static int[] sample_x_part1 = {19,2, 58,18, 87,50, 99,92, 95,135, 71,171, 34,194 }; 
+	public static int[] sample_x_part2 = {150,9, 119,40, 98,78, 99,120, 121,157, 159,178, 200,193};
+
+	public static String[] twoStrokes = {
+		"4", " = ", "+", "\u2264", "\u2265", "x"
+	};
+	
+	public static boolean isTwoStroke(String teken) {
+		boolean returnValue = false;
+		for (int i=0; i<twoStrokes.length; i++) {
+			if ( teken.equals(twoStrokes[i]) ) {
+				returnValue = true;
+			}
+		}
+		return returnValue;
+	}
+	
+	public static int[] getSamplePart(String teken, int part) {
+		int[] returnValue = null;
+		
+		if (teken.equals("4") && (part == 1)) {
+			returnValue = sample_4_part1;
+		}
+		
+		if (teken.equals("4") && (part == 2)) {
+			returnValue = sample_4_part2;
+		}
+		
+		if (teken.equals(" = ") && (part == 1)) {
+			returnValue = sample_EQ_part1;
+		}
+		
+		if (teken.equals(" = ") && (part == 2)) {
+			returnValue = sample_EQ_part2;
+		}
+		
+		if (teken.equals("+") && (part == 1)) {
+			returnValue = sample_plus_part1;
+		}
+		
+		if (teken.equals("+") && (part == 2)) {
+			returnValue = sample_plus_part2;
+		}
+		
+		if (teken.equals(" \u2264 ") && (part == 1)) {
+			returnValue = sample_LTE_part1;
+		}
+		
+		if (teken.equals(" \u2264 ") && (part == 2)) {
+			returnValue = sample_LTE_part2;
+		}
+		
+		if (teken.equals(" \u2265 ") && (part == 1)) {
+			returnValue = sample_GTE_part1;
+		}
+		
+		if (teken.equals(" \u2265 ") && (part == 2)) {
+			returnValue = sample_GTE_part2;
+		}
+
+		if (teken.equals("x") && (part == 1)) {
+			returnValue = sample_x_part1;
+		}
+		
+		if (teken.equals("x") && (part == 2)) {
+			returnValue = sample_x_part2;
+		}
+
+		return returnValue;
+	}
 
 	public static HashMap<String,int[]> init(int tekenSet)
 	{	
@@ -385,6 +472,7 @@ public class Samples20
 
 		samples.put("back",sample_back);
 		samples.put(" of ",sample_of);
+		samples.put("of",sample_of);
 
 		samples.put(" = ",sample_EQ);
 		

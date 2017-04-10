@@ -1231,12 +1231,16 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		//}
 	}
 	
-	protected void addWriteObject(String teken, ArrayList<Point> points)
-	{
-		
-//System.out.println("addWriteObject " + teken + " " + points.size());
-		
+	protected void addWriteObject(String teken, ArrayList<Point> points) {
 		WriteObject wo = new WriteObject(teken, points);
+		lastObject = wo;
+		writeObjects.add(wo);
+	}
+	
+	protected void addWriteObject(String teken, ArrayList<Point> points1, ArrayList<Point> points2) {
+		WriteObject wo1 = new WriteObject(teken, points1);
+		WriteObject wo2 = new WriteObject(teken, points2);
+		WriteObject wo = new WriteObject(teken, wo1, wo2);
 		lastObject = wo;
 		writeObjects.add(wo);
 	}
@@ -1594,6 +1598,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	{	
 		writeObjects.clear();
 		lastObject = null;
+		resetPanelShift();
 		paint();
 	}
 
@@ -1624,7 +1629,6 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		Point pScreen = new Point(p.getX()+panelShiftX, p.getY()+panelShiftY);
 		return pScreen;
 	}
-
 	
 	//OK
 	class MouseHandler implements MouseDownHandler, MouseMoveHandler, MouseUpHandler {
