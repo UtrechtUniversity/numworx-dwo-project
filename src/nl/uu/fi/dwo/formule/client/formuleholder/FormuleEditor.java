@@ -309,6 +309,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	public void plak(FormuleClipboardIF clip)
 	{
 		getCurrentRegel().plak(clip);
+		paint();
 		changed = true;
 	}
 
