@@ -67,9 +67,9 @@ public class DomResultPlotMatrix {
     public String toString() {
         StringBuilder buf = new StringBuilder();
         //build header
-        buf.append(StringFormatter.format("%50s", " ").getValue()); //empty field
+        buf.append(StringFormatter.format("\n%50s", "vlabels\\hlabels").getValue()); //empty field
         for (int i = 0; i < hIndex.length; i++) {
-        if(vIndex[i]!=null && vIndex[i].getLabel()!=null){
+        if(hIndex[i]!=null && hIndex[i].getLabel()!=null){
                 buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()).getValue());
                 }else{
                     buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()).getValue());
