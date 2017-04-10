@@ -154,7 +154,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.17</version>
+            <version>5.1.34</version>
             <!--comment scope for elastic beanstalk-->
             <scope>test</scope>
         </dependency>
@@ -401,8 +401,9 @@
                         <url>${tomcat.local.deploy.url}</url>-->
                         <path>/dwo</path>
                         <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                        <contextFile>src/test/tomcat/context.xml</contextFile>
-                        <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
+                        <!--<contextFile>src/test/tomcat/context.xml</contextFile>-->
+                            <contextFile>src/test/tomcat/junittest-context.xml</contextFile>
+                            <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
                     </configuration>
                     <dependencies>
                         <dependency>
@@ -584,7 +585,7 @@
                             <server>TomcatServer</server>
                             <path>/dwo</path>
                             <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                            <contextFile>src/test/tomcat/context.xml</contextFile>
+                            <contextFile>src/test/tomcat/junittest-context.xml</contextFile>
                             <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
                         </configuration>
                         <dependencies>

@@ -22,16 +22,38 @@
   <!-- this context resource can be overloaded by placing a copy in the context.xml 
     of the tomcat -->
 <!--   <ResourceLink global="jdbc/dwodb" name="jdbc/dwodb" type="javax.sql.DataSource"/> -->
-  <Resource 
-  	name="jdbc/dwodb"
-  	auth="Container"
-  	type="javax.sql.DataSource"
+    <Resource
+        name="jdbc/dwodb"
+        auth="Container"
+        type="javax.sql.DataSource"
+        maxActive="100" 
+        minIdle="30" 
+        maxIdle="50" 
+        maxWait="10000" 
+        validationQuery="Select 1" 
+        testOnBorrow="true"
+        testWhileIdle="true"
+        logAbandoned="true"
+        removeAbandonedTimeout="60"
+        abandonWhenPercentageFull="50"
+        jdbcInterceptors="ResetAbandonedTimer"
+        timeBetweenEvictionRunsMillis="10000"
+        minEvictableIdleTimeMillis="60000"
   	username="test"
   	password="test"
   	driverClassName="com.mysql.jdbc.Driver"
   	url="jdbc:mysql://localhost:3306/dwojunittest"
-    maxActive="4"
-    maxIdle="4"
-  />
-  <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
+    />    
+    <!--          <Resource 
+          name="jdbc/dwodb"
+          auth="Container"
+          type="javax.sql.DataSource"
+          username="root"
+          password="E=mc2Dwo"
+          driverClassName="com.mysql.jdbc.Driver"
+          url="jdbc:mysql://localhost:3306/dwo_productie"
+      maxActive="4"
+      maxIdle="4"
+    />-->
+    <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
 </Context>

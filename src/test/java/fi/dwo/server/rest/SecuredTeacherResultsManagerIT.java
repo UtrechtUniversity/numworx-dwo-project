@@ -87,7 +87,7 @@ public class SecuredTeacherResultsManagerIT {
         pProfile.setDwoProfileID(1L);
         pProfile.setDwoProfileName("testprofile01");
         pProfile.setDwoProfileRights("_");
-        pProfile.setDwoProfileDescription("Test dwoProfileDescription02iption");
+        pProfile.setDwoProfileDescription("Test dwoProfileDescription");
         pProfile.setDwoProfileText("Test dwoProfileText01");
         domProfile = pProfile.buildDomDwoProfileFull();
         
@@ -97,7 +97,7 @@ public class SecuredTeacherResultsManagerIT {
         
         DomHasRole domHasRole = null;
         PersistentUser pUser = UserManager.findByUserName("user07");
-        PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");
+        PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
 
         try {
             PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.TEACHER);

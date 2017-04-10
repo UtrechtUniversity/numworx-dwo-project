@@ -14,22 +14,22 @@ import org.junit.Test;
  * @author G.A.J. van der Plas
  */
 public class TestDatabaseManagerIT {
-    
+
     public TestDatabaseManagerIT() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -53,7 +53,8 @@ public class TestDatabaseManagerIT {
 //    }
     /**
      * Test of IntializeTestDatabase method, of class DatabaseManager. Running a
-     * focussed junit test on this will fill the junittestdatabase for manipulation.
+     * focussed junit test on this will fill the junittestdatabase for
+     * manipulation.
      */
     @Test
     public void testIntializeDatabase() {

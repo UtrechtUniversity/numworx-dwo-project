@@ -1,1 +1,7 @@
 
+
+Release 2.1.13 
+
+Improved Rest Interface for TeacherResults. Junit Integration
+tests for teacher results are working now properly. 
+
