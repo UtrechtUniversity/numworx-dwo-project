@@ -71,12 +71,6 @@
         <artifactId>mpreduce-phrasebook</artifactId>
         <version>0.0.3-SNAPSHOT</version>
     </dependency>
-    <dependency>
-        <groupId>org.geogebra</groupId>
-        <artifactId>geogebra_cas</artifactId>
-        <version>4.0.29</version>
-        <scope>runtime</scope>
-    </dependency>
 <dependency>
     <groupId>nl.tue.win.riaca.mathml</groupId>
     <artifactId>mathml-phrasebook</artifactId>
@@ -124,7 +118,7 @@
         </dependency>
 	</dependencies>
 	<build>
-	 <finalName>${project.artifactId}-${project.version}-r${buildNumber}-${timestamp}</finalName>
+<!-- 	 <finalName>${project.artifactId}-${project.version}-r${buildNumber}-${timestamp}</finalName> -->
 	 <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -249,7 +243,7 @@
 							<outputDirectory>${project.build.directory}/${project.build.finalName}/DWOmAccess</outputDirectory>
 						</artifactItem>
 					</artifactItems>
-					<overWriteReleases>false</overWriteReleases>
+					<overWriteReleases>true</overWriteReleases>
 					<overWriteSnapshots>true</overWriteSnapshots>				
 				</configuration>
 			</execution>
@@ -262,8 +256,8 @@
                     <configuration>
                         <server>TomcatServer</server>
                         <path>/</path>
-                        <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                        <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
+<!--                         <warFile>target/${project.build.finalName}.war</warFile> -->
+                        <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
                     </configuration>
             </plugin> 
 	</plugins>
