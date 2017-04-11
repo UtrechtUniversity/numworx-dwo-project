@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/web-app_3_0.xsd">
     <display-name>EBServer</display-name>
+  <context-param>
+  	<param-name>dbaccess.url</param-name>
+	<param-value>http://127.0.0.1/dwo/xmlrpc</param-value>  
+  </context-param>
+  <context-param>
+  	<param-name>dbrest.url</param-name>
+	<param-value>http://127.0.0.1/dwo/rest/</param-value>  
+  </context-param>
+  <context-param>
+  	<param-name>SERVLET</param-name>
+  	<param-value>/dwo/xmlrpc</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>IDEAS</param-name>
+  	<param-value>/ideas/IdeasServlet</param-value>
+  </context-param>
 	<listener>
 		<listener-class>fi.dwo.server.db.DBInstaller</listener-class> 
 	</listener>
@@ -60,7 +76,7 @@
         apps (note, defaults to /rewrite-status) note, must start with / -->
         <init-param>
             <param-name>statusPath</param-name>
-            <param-value>/rewrite-status</param-value>
+            <param-value>/dwo/rewrite-status</param-value>
         </init-param>
     </filter>
     <filter>
@@ -108,7 +124,7 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>UrlRewriteFilter</filter-name>
-        <url-pattern>/dwo/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     

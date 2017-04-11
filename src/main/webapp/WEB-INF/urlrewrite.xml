@@ -25,35 +25,45 @@
 
 	<rule>
 		<note>/profile/language/dwo.jnlp</note>
-		<from>^/([0-9]+)/([a-z][a-z])/dwo.jnlp$</from>
-		<to>/dwojnlppage?profile=$1&amp;language=$2</to>
+		<from>^/dwo/([0-9]+)/([a-z][a-z])/dwo.jnlp$</from>
+		<to>/dwo/dwojnlppage?profile=$1&amp;language=$2</to>
 	</rule>
 	<rule>
 		<note>/profile/language/index.html</note>
-		<from>^/([0-9]+)/([a-z][a-z])/index.html$</from>
-		<to>/dwoindexpage?profile=$1&amp;language=$2</to>
+		<from>^/dwo/([0-9]+)/([a-z][a-z])/index.html$</from>
+		<to>/dwo/dwoindexpage?profile=$1&amp;language=$2</to>
 	</rule>
 	<rule>
 		<note>/profile/language/</note>
-		<from>^/([0-9]+)/([a-z][a-z])/$</from>
-		<to>/dwoindexpage?profile=$1&amp;language=$2</to>
+		<from>^/dwo/([0-9]+)/([a-z][a-z])/$</from>
+		<to>/dwo/dwoindexpage?profile=$1&amp;language=$2</to>
 	</rule>
 	<rule>
 		<note>/profile/language</note>
 		<from>^/([0-9]+)/([a-z][a-z])$</from>
-		<to type="redirect">%{context-path}/$1/$2/index.html</to>
+		<to type="redirect">/dwo/$1/$2/index.html</to>
 	</rule>
 	
 	<rule>
 		<note>/profile/language/dwo.html</note>
-		<from>^/([0-9]+)/([a-z][a-z])/dwo.html$</from>
-		<to>/dwoindexpage?profile=$1&amp;language=$2</to>
+		<from>^/dwo/([0-9]+)/([a-z][a-z])/dwo.html$</from>
+		<to>/dwo/dwoindexpage?profile=$1&amp;language=$2</to>
 	</rule>
 
+	<rule>
+		<note>DWO.properties in DWOmAccess</note>
+		<from>^/DWOmAccess/lti/DWO.properties</from>
+		<to type="redirect">/dwo/DWO.properties</to>
+	</rule>
+	<rule>
+		<note>/wisweb naar cdn</note>
+		<from>^/wisweb/(.+)$</from>
+		<to type="temporary-redirect">https://cdn.dwo.nl/wisweb/$1</to>
+	</rule>
     <rule>
         <note>Default rule when no other content-type was asked for</note>
         <from>^/$</from>
-        <to>index.html</to>
+        <to>index.jsp</to>
     </rule>
         
 </urlrewrite>   

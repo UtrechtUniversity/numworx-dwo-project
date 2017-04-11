@@ -15,7 +15,7 @@
 	if(request.getServerPort() == 80) port = "";  // default http
 	if(request.getServerPort() == 443) port = ""; // default https
 	String server = scheme + "://" + host + port;
-	String contextPath = request.getContextPath();
+	String contextPath = "/dwo";
 	String href = new StringBuffer(server).
 // 			append("/dwo/dwojnlppage").			
 // 			append('?').append(request.getQueryString()).toString();
@@ -43,7 +43,7 @@
         <vendor>Universiteit Utrecht</vendor>
     </information>
     <resources>
-        <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"
+        <j2se version="1.8+" href="http://java.sun.com/products/autodl/j2se"
         	java-vm-args="-Djava.net.preferIPv4Stack=true -Xmx1024m -Dhttps.protocols=TLSv1"
         	max-heap-size="1024m"
         />
