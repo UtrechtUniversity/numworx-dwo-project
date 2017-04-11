@@ -51,6 +51,7 @@
         String height = request.getParameter("launch_presentation_height");
         if(height == null || height.isEmpty()) height="100%";
     	String contextPath = request.getContextPath();
+    	if(contextPath.isEmpty()) contextPath="/DWOmAccess"; // EBServer fix
 
 %>
 <body style="font-family:sans-serif; margin:0px; position: absolute; width: <%=width%>;height:<%=height%>;">
