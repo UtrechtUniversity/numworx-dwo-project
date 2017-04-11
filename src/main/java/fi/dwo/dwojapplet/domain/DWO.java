@@ -437,7 +437,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     /**
      * Logs a user in into the system. The user will be remembered while the
-     * user is logged in.
+     * user is logged in. setExtraRights
+     * The "real" login was done by the LoginManager
      *
      * @param username The username of the user.
      * @param password The password of the user.
@@ -448,30 +449,24 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      */
     @Override
     public boolean login(String username, String password) throws LoginException {
-        // DwoHelper.setPlainPassword(password);
-        // String pw = MD5.getHashString(password);
-        // DomFullUser user=null;
-        // try {
-        // user = LoginManager.login(username, pw); //sets DwoHelper user and
-        // DwoHelper.currentFacadeUser
-        // }
-        // catch (Dwo2Exception ex) {
-        // Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, "", ex);
-        // }
-        //
-        // if (user == null) {
-        // throw new LoginException(LoginException.LE_UNKNOWN_USER);
-        // }
-        if (password == null) {
-            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
-        } else {
-            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
-        }
-
+    	setUserName(username);
+    	setPassWord(password);
         return setExtraRights(DwoHelper.getCurrentFacadeUser());
     }
 
-    /**
+    private void setPassWord(String password2) {
+		firePropertyChange("passWord", passWord, password2);
+		passWord = password2;
+		DwoHelper.setDefaultPassword(password2);
+	}
+
+	private void setUserName(String username2) {
+		firePropertyChange("userName", userName,username2);
+		userName = username2;
+		DwoHelper.setDefaultUsername(username2);
+	}
+
+	/**
      * Logs a user in into the system. The user will be remembered while the
      * user is logged in.
      *

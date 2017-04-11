@@ -150,7 +150,7 @@ public class GuiCreator {
                 // TODO: remove, currently checks if licence is still valid
                 validLicenceCheck(dwo.getUser());
                 // Check if user has enough rights to continue
-                if (dwo.setExtraRights(dwo.getUser())) {
+                if (dwo.login(username, password)) {
                 //configure GuiCreator to show correct Panels and options.
                 	configurePanelsForUser(dwo.getUser());
                 } else {
