@@ -43,4 +43,21 @@ public class RegelTest extends GWTTestCase {
 		assertFalse(t1.getWidth() == 0);
 		assertFalse(regel.getWidth() == 0);
 	}
+	
+	public void testSelection() {
+		FormuleHolder holder = new MockHolder();
+		FormuleRegel regel = holder.getCurrentRegel();
+		FormuleTeken t1 = new FormuleTeken(regel, "1");
+		FormuleTeken t2 = new FormuleTeken(regel, "2");
+		FormuleTeken t3 = new FormuleTeken(regel, "3");
+		regel.insert(t1); regel.insert(t2); regel.insert(t3);
+		regel.validate();
+		int w = regel.getWidth();
+		int h = regel.getHeight();
+		FormuleRegel r = regel.selection(2, h/2, w-2, h/2);
+		assertNull(r);
+		assertTrue(t1.isSelected());
+		String selectie = regel.getSelectionString();
+		assertEquals("123", selectie);
+	}
 }
