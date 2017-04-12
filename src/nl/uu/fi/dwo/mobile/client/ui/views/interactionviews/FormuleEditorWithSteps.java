@@ -1007,7 +1007,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			if(stapNr == 0 && hasStartString)
 				terugButton.getElement().getStyle().setVisibility(Visibility.HIDDEN);
 				
-			if (!isToets() && (stapNr > 0 || !hasStartString) && (stapNr > 0 || !eigenOpdr) && !linStrategieVersie && !bordjesMethode)
+			if (!isToets() && stapNr == 0 && eigenOpdr)
+			{
+				// niet nakijken, wel focus
+				setStapOk(false);
+				requestFocus();
+			}
+			else if (!isToets() && (stapNr > 0 || !hasStartString) && !linStrategieVersie && !bordjesMethode)
 			{
 				setStapOk(false); // waarom eigenlijk? Als je een stap terug doet, mag je toch wel weer een nieuwe stap bij maken?
 				
