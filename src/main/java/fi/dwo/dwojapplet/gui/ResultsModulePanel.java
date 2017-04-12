@@ -58,6 +58,7 @@ import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -658,6 +659,10 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
             DomResultTree rTree = new DomResultTree(results);
             DomResultPlotMatrix matrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
             LOG.log(Level.INFO, matrix.toString());
+            for(DomResultSchoolClass c: rTree.getResultTree().getChildren().values()){
+               matrix = ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree.getStudentTree().getChildren().get(c.getSchoolClass().getId()), c);
+            LOG.log(Level.INFO, matrix.toString());
+            }
         } catch (Dwo2Exception ex) {
             Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
