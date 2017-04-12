@@ -86,8 +86,9 @@ public class DomResultPlotMatrix {
 
             for (int i = 0; i < hIndex.length; i++) {
                 //row, column 
-                if(marks[j][i]!=null && marks[j][i].getScore()!=null){
-                buf.append(StringFormatter.format("%50f", marks[j][i].getScore()).getValue());
+                if(marks[j][i]!=null && marks[j][i].getScore()!=null 
+                        && marks[j][i].getCnt()>0.0){
+                buf.append(StringFormatter.format("%50f", marks[j][i].getScore()/ marks[j][i].getCnt()).getValue());
                 }else{
                     buf.append(StringFormatter.format("%50s", "null").getValue());
                 }
