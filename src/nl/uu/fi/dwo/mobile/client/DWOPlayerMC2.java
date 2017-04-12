@@ -16,11 +16,15 @@ import com.google.web.bindery.event.shared.EventBus;
 public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParameters {
 
 	public DWOPlayerMC2() {
+		super(null);
 		String host = getHost();
 		String http = Window.Location.getProtocol();
 		launchData = http +"//"
 				+ host
 				+ "/getJSONLaunchDataBytes?s=";
+		courseDescription = http + "//"
+		+ host
+		+ "/DWOmAccess/getCourseDescription?c=";
 	}
 
 	public String getDefaultHost() {

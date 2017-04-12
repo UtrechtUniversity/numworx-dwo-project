@@ -6,9 +6,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/DWOmAccess-0.0.3-classes.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/oauth-20100601.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/oauth-provider-20100601.jar"/>
 	<classpathentry kind="src" output="target/test-classes" path="test">
 		<attributes>
 			<attribute name="optional" value="true"/>
@@ -22,7 +19,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/dwo.jar"/>
 	<classpathentry kind="src" output="target/classes" path="target/generated-sources/java-templates">
 		<attributes>
 			<attribute name="optional" value="true"/>

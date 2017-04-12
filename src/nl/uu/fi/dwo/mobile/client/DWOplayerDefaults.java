@@ -130,12 +130,18 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		super();
 		String host = getHost();
 		String http = Window.Location.getProtocol();
+//		launchData = http +"//"
+//				+ host
+//				+ "/DWOmAccess/getJSONLaunchDataBytes?s=";
+//		courseDescription = http + "//"
+//				+ host
+//				+ "/DWOmAccess/getCourseDescription?c=";
 		launchData = http +"//"
 				+ host
-				+ "/DWOmAccess/getJSONLaunchDataBytes?s=";
+				+ "/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
 		courseDescription = http + "//"
 				+ host
-				+ "/DWOmAccess/getCourseDescription?c=";
+				+ "/dwo/rest/public/course/getCourseDescription?courseId=";		
 	}
 
 //	protected String getDefaultHost() {
