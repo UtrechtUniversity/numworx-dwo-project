@@ -358,7 +358,6 @@ public abstract class FormuleElement implements TekstElement
 	 */
 	public void paint()
 	{
-		java.util.logging.Logger.getLogger("FormuleElement").info("paint " + this + " " + isChanged());
 		if (isChanged())
 		{
 			paintObject();
