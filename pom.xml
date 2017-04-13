@@ -28,6 +28,12 @@
   		<groupId>fi.wiskopdrgwt</groupId>
   		<artifactId>WiskOpdrGWT</artifactId>
   		<version>0.0.2</version>
+  		<exclusions>
+  			<exclusion>
+  				<artifactId>IdeasGWT</artifactId>
+  				<groupId>nl.uu.fi.dwo.ideas</groupId>
+  			</exclusion>
+  		</exclusions>
   	</dependency>
   	<dependency>
   		<groupId>com.googlecode.mgwt</groupId>
