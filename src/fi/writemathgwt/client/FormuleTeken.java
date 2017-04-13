@@ -2,9 +2,12 @@ package fi.writemathgwt.client;
 
 //import java.awt.*;
 import java.util.*;
+import java.util.logging.Logger;
 
-public class FormuleTeken extends FormuleElement
-{
+
+public class FormuleTeken extends FormuleElement {
+	
+	private static Logger logger = Logger.getLogger("FormuleTeken");	
 
 	private String teken;
 	char character;
@@ -137,7 +140,9 @@ public class FormuleTeken extends FormuleElement
 //System.out.println("FT convertToWriteObject start");
 
 		FormuleElement root = findRoot();
-		
+		logger.info("==== convertToWriteObject === START ====");
+		logger.info("character = " + character);
+		logger.info("positie = ["+ x + ", "+ y + "]");
 		// uitzonderingen
 		String oTeken = "";
 		
@@ -150,7 +155,6 @@ public class FormuleTeken extends FormuleElement
 			oTeken = "" + character;
 //System.out.println("character = " + character);		
 //System.out.println("oTeken = " + oTeken);		
-		
 		
 		// apart
 		if (oTeken.equals("."))
@@ -181,6 +185,8 @@ public class FormuleTeken extends FormuleElement
 		if (oIntArray1 == null)
 			return;
 		
+		logger.info("Valide oIntArray1 -- Length =" + oIntArray1.length);
+		
 		if ( Samples20.isTwoStroke(oTeken) ) {
 			ArrayList<Point> oPoints1 = WriteObject.intConvertSample(oIntArray1);
 			ArrayList<Point> oPoints2 = WriteObject.intConvertSample(oIntArray2);
@@ -193,6 +199,7 @@ public class FormuleTeken extends FormuleElement
 			ArrayList<Point> sPoints = scaleAndPosition(oPoints);
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
 		}
+		logger.info("==== convertToWriteObject === FINISH ====");
 	}
 	
 	// eerst maar even alles evenhoog

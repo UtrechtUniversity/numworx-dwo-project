@@ -1,9 +1,12 @@
 package fi.writemathgwt.client;
 
+import java.util.logging.Logger;
+
 //import java.awt.*;
 
-public abstract class FormuleElement 
-{
+public abstract class FormuleElement {
+//	private static Logger logger = Logger.getLogger("FormuleElement");	
+	
 	public int x = 0;
 	public int y = 0;
 	public int height;
