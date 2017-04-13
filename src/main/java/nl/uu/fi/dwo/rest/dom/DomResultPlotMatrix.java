@@ -63,8 +63,13 @@ public class DomResultPlotMatrix {
         return hIndex[i];
     }
 
+    
     @Override
     public String toString() {
+        return toString(1);
+    }    
+    
+    public String toString(int divider) {
         StringBuilder buf = new StringBuilder();
         //build header
         buf.append(StringFormatter.format("\n%50s", "vlabels\\hlabels").getValue()); //empty field
@@ -87,8 +92,8 @@ public class DomResultPlotMatrix {
             for (int i = 0; i < hIndex.length; i++) {
                 //row, column 
                 if(marks[j][i]!=null && marks[j][i].getScore()!=null 
-                        && marks[j][i].getCnt()>0.0){
-                buf.append(StringFormatter.format("%50f", marks[j][i].getScore()/ marks[j][i].getCnt()).getValue());
+                        && marks[j][i].getScoCount()>0.0){
+                buf.append(StringFormatter.format("%50f", marks[j][i].getScore()/divider/marks[j][i].getScoCount()).getValue());
                 }else{
                     buf.append(StringFormatter.format("%50s", "null").getValue());
                 }

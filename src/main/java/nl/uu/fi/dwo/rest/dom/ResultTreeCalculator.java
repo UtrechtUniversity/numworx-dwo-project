@@ -52,14 +52,16 @@ public class ResultTreeCalculator {
 
         //crawl and fill
         Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
-        tree.getResultTree().collectScoresPerCourseOverSchoolClass(null, courseLeaves, sparseMatrix);
+        tree.getResultTree().collectCourseLeaves(courseLeaves);
         int nClasses = tree.getResultTree().getChildren().size();
         DomResultScore[] classes = new DomResultScore[nClasses];
         classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
         DomResultScore[] courses;
         courses = courseLeaves.values().toArray(new DomResultScore[0]);
+        
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
         for (int i = 0; i < classes.length; i++) {
+        tree.getResultTree().collectScoresPerCourseOverSchoolClass((DomResultSchoolClass) classes[i] , courseLeaves, sparseMatrix);
             for (int j = 0; j < courses.length; j++) {
                 DomResultScore fieldScore = sparseMatrix.get(((DomResultSchoolClass) classes[i]).getSchoolClass().getId())
                         .get(((DomResultCourse) courses[j]).getCourse().getId());
@@ -73,43 +75,6 @@ public class ResultTreeCalculator {
         //put sparseMatrix in result
         return result;
     }
-//
-//    /**
-//     * Score per schoolclass per leaf course. Every sco that has no work has score
-//     * 0.0.
-//     * @param tree
-//     * @return 
-//     */
-//    public static DomResultPlotMatrix GetScoreOfLeafCoursesByStudentsInClass(DomResultSchoolClass schoolClass) {
-//        //create sparse matrix of courses
-//        Map<PersistenceId, Map<PersistenceId, DomResultStudent>> sparseMatrix = new HashMap<PersistenceId, Map<PersistenceId, DomResultStudent>>();
-//        Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
-//        schoolClass.getChildren().crawlCourseForLeaves(null, courseLeaves, sparseMatrix);
-//        //crawl and fill
-//        Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
-//        tree.getResultTree().crawlSchoolClassCourse(null, courseLeaves, sparseMatrix);
-//        int nClasses = tree.getResultTree().getChildren().size();
-//        DomResultScore[] classes = new DomResultScore[nClasses];
-//        classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
-//        DomResultScore[] courses;
-//        courses = courseLeaves.values().toArray(new DomResultScore[0]);
-//        DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
-//        for (int i = 0; i < classes.length; i++) {
-//            for (int j = 0; j < courses.length; j++) {
-//                DomResultScore fieldScore= sparseMatrix.get(((DomResultSchoolClass) classes[i]).getSchoolClass().getId())
-//                        .get(((DomResultCourse) courses[j]).getCourse().getId());
-//                if(fieldScore != null
-//                        ){
-//                    result.setMarks(i, j, fieldScore);
-//                }else{
-//                    result.setMarks(i, j, null);
-//                }
-//            }
-//        }
-//        //put sparseMatrix in result
-//        return result;
-//    }
-//    
 
     /**
      * Score per schoolclass per leaf course. Every sco that has no work has
@@ -124,7 +89,7 @@ public class ResultTreeCalculator {
         //collect leave courses in schoolClass
         Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
         //collect courseLeaves in class
-        resultClass.collectCourseLeaves(resultClass, courseLeaves);
+        resultClass.collectCourseLeaves(courseLeaves);
         DomResultScore[] courses;
         courses = courseLeaves.values().toArray(new DomResultScore[0]);
         
@@ -143,7 +108,7 @@ public class ResultTreeCalculator {
             for (int i = 0; i < students.length; i++) {
             studentScores.put(students[i].getStudent().getId(), students[i]);
                     }
-            courses[j].getStudentCollectedAverageSubtreeScore(courses[j],studentScores);
+            courses[j].getStudentCollectedAverageSubtreeScore(studentScores);
             for (int i = 0; i < students.length; i++) {
                 //put studentscore in matrix
                  if(studentScores.containsKey(students[i].getStudent().getId())){
