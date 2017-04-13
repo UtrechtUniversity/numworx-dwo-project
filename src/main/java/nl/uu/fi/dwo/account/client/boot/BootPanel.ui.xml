@@ -14,7 +14,7 @@
                 </div>
             </g:HTML>
         </g:FlowPanel>
-        <g:FlowPanel addStyleNames='{accountnav.body}'>
+        <g:FlowPanel addStyleNames='{accountnav.deckpanel} FLOWPANEL'>
             <g:DeckPanel  ui:field="mainDeckPanel" >
                 <g:Widget ui:field="loginWidget" />
                 <g:Widget ui:field="resultWidget" />
