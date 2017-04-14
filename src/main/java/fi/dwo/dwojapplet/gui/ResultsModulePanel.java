@@ -661,7 +661,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
             LOG.log(Level.INFO, matrix.toString());
             for(DomResultSchoolClass c: rTree.getResultTree().getChildren().values()){
                matrix = ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree.getStudentTree().getChildren().get(c.getSchoolClass().getId()), c);
-            LOG.log(Level.INFO, matrix.toString(c.getChildren().size()));
+            LOG.log(Level.INFO, c.getLabel()+"\n\n"+matrix.toString());
             }
         } catch (Dwo2Exception ex) {
             Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
