@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -58,10 +59,11 @@ public class ResultTreeCalculator {
         classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
         DomResultScore[] courses;
         courses = courseLeaves.values().toArray(new DomResultScore[0]);
-        
+
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
         for (int i = 0; i < classes.length; i++) {
-        tree.getResultTree().collectScoresPerCourseOverSchoolClass((DomResultSchoolClass) classes[i] , courseLeaves, sparseMatrix);
+            DomResultSchoolClass resultClass = (DomResultSchoolClass) classes[i];
+            tree.getResultTree().collectScoresPerCourseOverSchoolClass(resultClass, tree.getStudentTree().getChildren().get(resultClass.getSchoolClass().getId()).getChildren().size(), courseLeaves, sparseMatrix);
             for (int j = 0; j < courses.length; j++) {
                 DomResultScore fieldScore = sparseMatrix.get(((DomResultSchoolClass) classes[i]).getSchoolClass().getId())
                         .get(((DomResultCourse) courses[j]).getCourse().getId());
@@ -92,30 +94,32 @@ public class ResultTreeCalculator {
         resultClass.collectCourseLeaves(courseLeaves);
         DomResultScore[] courses;
         courses = courseLeaves.values().toArray(new DomResultScore[0]);
-        
+
         //collect students
         DomStudent[] domStudents = (DomStudent[]) studentClass.getChildren().values().toArray(new DomStudent[0]);
         DomResultStudent[] students = new DomResultStudent[domStudents.length];
-        for(int i =0; i< domStudents.length;i++){
+        for (int i = 0; i < domStudents.length; i++) {
             students[i] = new DomResultStudent(domStudents[i]);
         }
         result = new DomResultPlotMatrix(students, courses);
-        
-            //put sparseMatrix in result
+
+        //put sparseMatrix in result
         for (int j = 0; j < courses.length; j++) {
-            //fetch student hashmap for course
-            Map<PersistenceId, DomResultStudent> studentScores = new HashMap<PersistenceId, DomResultStudent>(students.length);
-            for (int i = 0; i < students.length; i++) {
-            studentScores.put(students[i].getStudent().getId(), students[i]);
-                    }
+            //fetch student hashmap for course, with key the student's userid
+            Map<PersistenceId, DomResultStudent> studentScores = new HashMap<PersistenceId, DomResultStudent>(domStudents.length);
+            //fill map with new DomResultStudents
+            for (DomStudent student : domStudents) {
+                studentScores.put(student.getId(), new DomResultStudent(student));
+            }
             courses[j].getStudentCollectedAverageSubtreeScore(studentScores);
+            for(DomResultStudent rStudent: studentScores.values()){
+                rStudent.setScore(rStudent.getScore()/courses[j].getChildren().size());
+            }
             for (int i = 0; i < students.length; i++) {
                 //put studentscore in matrix
-                 if(studentScores.containsKey(students[i].getStudent().getId())){
-                     result.setMarks(i, j, studentScores.get(students[i].getStudent().getId()));
-                 }
+                result.setMarks(i, j, studentScores.get(students[i].getStudent().getId()));
             }
-        }        
+        }
         return result;
     }
 }
