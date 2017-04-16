@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -32,6 +33,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -310,7 +312,8 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         //addClassButton.setVisible(true);
-        jtbl.add(jtable);
+        JScrollPane scrollPane = new JScrollPane(jtable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jtbl.add(scrollPane /*jtable*/);
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new AccountSchoolsRolesTableModel();
 
