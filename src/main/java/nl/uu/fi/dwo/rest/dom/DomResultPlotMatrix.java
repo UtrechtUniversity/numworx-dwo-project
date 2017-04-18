@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.rest.dom;
 
-import com.sun.javafx.binding.StringFormatter;
+import java.util.Formatter;
+import java.util.Locale;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 
 /**
@@ -71,31 +73,32 @@ public class DomResultPlotMatrix {
     
     public String toString(int divider) {
         StringBuilder buf = new StringBuilder();
+        Formatter formatter = new Formatter(buf, Locale.getDefault());
         //build header
-        buf.append(StringFormatter.format("\n%50s", "vlabels\\hlabels").getValue()); //empty field
+        formatter.format("\n%50s", "vlabels\\hlabels"); //empty field
         for (int i = 0; i < hIndex.length; i++) {
         if(hIndex[i]!=null && hIndex[i].getLabel()!=null){
-                buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()).getValue());
+                formatter.format("%50s", hIndex[i].getLabel());
                 }else{
-                    buf.append(StringFormatter.format("%50s", hIndex[i].getLabel()).getValue());
+                    formatter.format("%50s", hIndex[i].getLabel());
                 }
         }
         buf.append('\n');
         //build body plus vertical labels
         for (int j = 0; j < vIndex.length; j++) {
         if(vIndex[j]!=null && vIndex[j].getLabel()!=null){
-                buf.append(StringFormatter.format("%50s", vIndex[j].getLabel()).getValue());
+                formatter.format("%50s", vIndex[j].getLabel());
                 }else{
-                    buf.append(StringFormatter.format("%50s", "null").getValue());
+                    formatter.format("%50s", "null");
                 }
 
             for (int i = 0; i < hIndex.length; i++) {
                 //row, column 
                 if(marks[j][i]!=null && marks[j][i].getScore()!=null 
                         && marks[j][i].getScoCount()>0.0){
-                buf.append(StringFormatter.format("%50f", marks[j][i].getScore()/divider/marks[j][i].getScoCount()).getValue());
+                formatter.format("%50f", marks[j][i].getScore()/divider/marks[j][i].getScoCount());
                 }else{
-                    buf.append(StringFormatter.format("%50s", "null").getValue());
+                    formatter.format("%50s", "null");
                 }
             }
             buf.append('\n');
