@@ -174,6 +174,7 @@ public class SelectModuleItem
 		Long sequence = course.getSequenceNr();
 		sequencenr = sequence != null ? sequence.intValue() : Integer.MAX_VALUE;
 		showScore = false;
+		showChildren(!course.isNotVisible());
 		if (domClassCourse!=null) {
 			notAfter = domClassCourse.getNotAfter();
 			notBefore = domClassCourse.getNotBefore();

@@ -24,7 +24,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop.SCO_TO_MODULEITEM;
+import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -560,7 +560,11 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 
 			@Override
 			public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
-				addChildren(resolved.getValue());
+				
+				if(item.showChildren())
+					addChildren(resolved.getValue());
+				else
+					addChildren(null);
 				//initTree(resolved.getValue());
 				return null;
 			}
@@ -568,25 +572,25 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 		});
 	}
 
-	private static class SCO_TO_MODULEITEM implements Function<List<DomScoContext>, List<SelectModuleItem>> {
-
-		private final SelectModuleItem parent;
-		public SCO_TO_MODULEITEM(SelectModuleItem item) {
-			this.parent = item;
-		}
-
-		@Override
-		public List<SelectModuleItem> apply(List<DomScoContext> t) {
-			List<SelectModuleItem> items = new ArrayList<SelectModuleItem>(t.size());
-			for(DomScoContext sco: t) {
-				SelectModuleItem item = new SelectModuleItem(sco);
-				item.setParent(parent);
-				items.add(item);
-				SelectModuleItemHolder.insert(item);
-			}
-			return items;
-		}
-	}
+//	private static class SCO_TO_MODULEITEM implements Function<List<DomScoContext>, List<SelectModuleItem>> {
+//
+//		private final SelectModuleItem parent;
+//		public SCO_TO_MODULEITEM(SelectModuleItem item) {
+//			this.parent = item;
+//		}
+//
+//		@Override
+//		public List<SelectModuleItem> apply(List<DomScoContext> t) {
+//			List<SelectModuleItem> items = new ArrayList<SelectModuleItem>(t.size());
+//			for(DomScoContext sco: t) {
+//				SelectModuleItem item = new SelectModuleItem(sco);
+//				item.setParent(parent);
+//				items.add(item);
+//				SelectModuleItemHolder.insert(item);
+//			}
+//			return items;
+//		}
+//	}
 	
 	private void loadScos(final SelectModuleItem item) {
 		Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
@@ -601,7 +605,11 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 
 			@Override
 			public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
-				addChildren(resolved.getValue());
+				
+				if(item.showChildren())
+					addChildren(resolved.getValue());
+				else
+					addChildren(null);
 				//initTree(resolved.getValue());
 				return null;
 			}

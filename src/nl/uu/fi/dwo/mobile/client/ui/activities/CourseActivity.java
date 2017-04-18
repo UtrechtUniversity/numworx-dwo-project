@@ -1,7 +1,10 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.List;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
@@ -59,9 +62,18 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 			}
 		}));
 		
-		view.render(item);
 		if(item.getName() == null) {
 			item.setName("#c:" + item.getID());
+
+			Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
+// Start downloading sco's
+			if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
+				promise = DWOplayer.clientfactory.getRPCHandler().getScos(item.getID())
+						.map(new SCO_TO_MODULEITEM(item));
+				item.setChildrenAsync(promise);
+			}
+// start downloading description/name/attributes
+			
 			clientFactory.getRPCHandler().getCourse(item.getID()).then(new Success<DomCourseStudent, Void>() {
 
 				@Override
@@ -70,10 +82,15 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 					String description = resolved.getValue().getDescription();
 					item.setDescription(description);
 					item.setName(name);
+					item.showChildren(!resolved.getValue().isNotVisible());
 					view.setDescription(item);
+					view.render(item);
 					return null;
 				}
 			});
+		} else {
+			view.render(item);
+			
 		}
 		view.setDescription(item);
 		panel.setWidget(view);

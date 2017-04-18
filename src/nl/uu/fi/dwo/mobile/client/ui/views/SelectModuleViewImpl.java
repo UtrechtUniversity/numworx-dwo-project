@@ -1,18 +1,16 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.osgi.util.function.Function;
+
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -34,6 +32,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
+
 import fi.wiskopdr.text.TextConstants;
 
 /**
@@ -139,26 +138,6 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView,
 //		}
 //	}
 
-	private static class SCO_TO_MODULEITEM implements Function<List<DomScoContext>, List<SelectModuleItem>> {
-
-		private final SelectModuleItem parent;
-		public SCO_TO_MODULEITEM(SelectModuleItem item) {
-			this.parent = item;
-		}
-
-		@Override
-		public List<SelectModuleItem> apply(List<DomScoContext> t) {
-			List<SelectModuleItem> items = new ArrayList<SelectModuleItem>(t.size());
-			for(DomScoContext sco: t) {
-				SelectModuleItem item = new SelectModuleItem(sco);
-				item.setParent(parent);
-				items.add(item);
-				SelectModuleItemHolder.insert(item);
-			}
-			return items;
-		}
-	}
-	
 	@Override
 	public void render(final SelectModuleItem item) {
 		Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();

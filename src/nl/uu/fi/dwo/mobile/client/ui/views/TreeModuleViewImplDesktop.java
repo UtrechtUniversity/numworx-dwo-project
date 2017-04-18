@@ -396,7 +396,12 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			{	if(item.getChildren() == null)
 					loadScos(item);
 				else
-					addChildren(item.getChildren());
+				{
+					if(item.showChildren())
+						addChildren(item.getChildren());
+					else
+						addChildren(Collections.<SelectModuleItem> emptyList());
+				}
 			} else if(item.getType() == SelectModuleItem.Type.ROOT )
 			{
 				addChildren(standardModel);
@@ -623,7 +628,10 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 
 			@Override
 			public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
-				addChildren(resolved.getValue());
+				if(item.showChildren())
+					addChildren(resolved.getValue());
+				else
+					addChildren(Collections.<SelectModuleItem> emptyList());
 				return null;
 			}
 			
