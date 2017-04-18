@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -35,6 +36,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellEditor;
@@ -314,7 +316,9 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         //addClassButton.setVisible(true);
         JScrollPane scrollPane = new JScrollPane(jtable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jtbl.add(scrollPane /*jtable*/);
-        //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
+        JViewport viewport = scrollPane.getViewport();
+		viewport.setBackground(GuiConstants.MAIN_BACKGROUND);
+		
         tableModel = new AccountSchoolsRolesTableModel();
 
         tableModel.init(prop, loginImage, removeImage, emptyImage);
@@ -332,6 +336,9 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new ImageRenderer(), new ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
+//        Dimension pref = viewport.getPreferredSize();
+//        pref.width = jtable.getPreferredSize().width + 20; // iets breder!
+//        viewport.setPreferredSize(pref);
 
 // TODO shrink to fit heeft 520 als breedte
 //        Dimension size = table.getPreferredSize();
