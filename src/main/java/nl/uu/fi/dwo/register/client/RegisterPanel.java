@@ -14,6 +14,7 @@ import com.googlecode.mgwt.ui.client.widget.Button;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
@@ -53,6 +54,7 @@ public class RegisterPanel extends Composite {
 		domUser.setFamilyName(familyName.getText());
 		domUser.setGivenName(givenName.getText());
 		domUser.setInsertion(insertion.getText());
+		domUser.setUsername(username.getText());
 		
 		String p1 = password.getText();
 		String p2 = passwordAgain.getText();
@@ -61,13 +63,24 @@ public class RegisterPanel extends Composite {
 			return;
 		}
 
-//		DomNewUser n = domUser; FIXME java.util.regex niet in GWT
-//        if ( ! ValidUserFieldsChecker.isEmptyOrNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), n.getPassword()))
-//        {
-//        	Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Required_Fields());
-//        	return;
-//        }
-		
+		DomNewUser n = domUser; //FIXME java.util.regex niet in GWT
+        if ( ! SimpleValidUserFieldsChecker.isEmptyOrNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), n.getPassword()))
+        {
+        	Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Required_Fields());
+        	return;
+        }
+		if ( ! SimpleValidUserFieldsChecker.isValidUserName(n.getUsername()))
+		{
+			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_UserName_Invalid());
+		}
+		if ( ! SimpleValidUserFieldsChecker.isValidEmail(n.getEmail()))
+		{
+			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Email_Address_Invalid());
+		}
+		if ( ! SimpleValidUserFieldsChecker.isValidPassword(password.getText()))
+		{
+			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Password_Invalid());
+		}
 		
 		domUser.setPassword(MD5.md5(password.getText()));
 		
@@ -79,7 +92,6 @@ public class RegisterPanel extends Composite {
 		}
 		domUser.setSchoolCode(sCode);
 		domUser.setSchoolLogin(sLogin);		
-		domUser.setUsername(username.getText());
 		
 		controller.register(domUser);
 		
