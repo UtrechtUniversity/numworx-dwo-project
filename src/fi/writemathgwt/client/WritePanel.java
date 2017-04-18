@@ -1232,6 +1232,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	}
 	
 	protected void addWriteObject(String teken, ArrayList<Point> points) {
+		logger.info("addWriteObject :: "+ teken + ", #Points = "+ points.size());
 		WriteObject wo = new WriteObject(teken, points);
 		lastObject = wo;
 		writeObjects.add(wo);

@@ -161,6 +161,8 @@ public class FormuleTeken extends FormuleElement {
 		{
 			ArrayList<Point> sPoints = new ArrayList<Point>();
 			sPoints.add(new Point(x + width / 2, y + height));
+			logger.info("Punt detected  :: Point = [" + sPoints.get(0).getX() +", " + 
+														sPoints.get(0).getX() + "]");
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
 			return;
 		}
@@ -168,6 +170,9 @@ public class FormuleTeken extends FormuleElement {
 		{
 			ArrayList<Point> sPoints = new ArrayList<Point>();
 			sPoints.add(new Point(x + width / 2, y + height / 2));
+			logger.info("Maal detected  :: Point = [" + sPoints.get(0).getX() +", " + 
+														sPoints.get(0).getX() + "]");
+
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
 			return;
 		}
