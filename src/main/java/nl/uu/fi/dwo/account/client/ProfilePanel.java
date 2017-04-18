@@ -8,11 +8,16 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
@@ -184,7 +189,19 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             user.setUserName(control.getCurrentUser().getUserName());
             user.setSingleSchool(control.getCurrentUser().getSingleSchool());
 //            user.setPassword(control.getCurrentUser().getPassword());
-            user.setEmail(email.getText());
+            String newEmail = email.getText();
+            if( !SimpleValidUserFieldsChecker.isValidEmail(newEmail))
+            {
+            	DwoViewer.showMessage(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid);
+            	return;
+            }
+            if (!newPassword.getText().isEmpty() &&
+            	!SimpleValidUserFieldsChecker.isValidPassword(newPassword.getText()))
+            {
+            	DwoViewer.showMessage(Dwo2ExceptionCode.Rest_Registration_Password_Invalid);
+            	return;
+            }
+			user.setEmail(newEmail);
             user.setFamilyName(familyName.getText());
             user.setGivenName(givenName.getText());
             user.setInsertion(insertion.getText());
