@@ -10,7 +10,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 public class WriteObject {
-//	private static Logger logger = Logger.getLogger("WriteObject");
+	private static Logger logger = Logger.getLogger("WriteObject");
 
 	private final static boolean cNewStrokmatcher = true;
 	static int newTekenSet = 0;
@@ -111,13 +111,15 @@ public class WriteObject {
 		isTwoStrokeObject = false;
 		
 //		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-//		logger.info("New Object, teken = " + teken);
+		logger.info("New Object, teken = " + teken);
 //		logger.info("Stacktrace = "+ stackTraceElements);
 		
 		makeBox(points);
 		doublePoints = new ArrayList<DoublePoint>();
 		rawPoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <points.size() ; i++) {
+			logger.info("new Point added -" +i +"- X="+points.get(i).getDoublePoint().getX() +
+					",Y="+points.get(i).getDoublePoint().getY());
 			doublePoints.add(points.get(i).getDoublePoint());
 			rawPoints.add(points.get(i).getDoublePoint());
 		}
