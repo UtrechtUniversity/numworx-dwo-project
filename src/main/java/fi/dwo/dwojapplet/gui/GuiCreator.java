@@ -191,7 +191,10 @@ public class GuiCreator {
                 // TODO: remove, currently checks if licence is still valid
                 validLicenceCheck(dwo.getUser());
                 //configure GuiCreator to show correct Panels and options.
-                configurePanelsForUser(dwo.getUser());
+               if ( dwo.loginWithMd5(username, password) ) 
+               		configurePanelsForUser(dwo.getUser());
+               else 
+            	   dwo.logoff(); // TODO Should not happen???
             }
         }
         catch (Dwo2Exception e) {

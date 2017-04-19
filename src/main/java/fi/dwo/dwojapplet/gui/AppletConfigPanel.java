@@ -158,8 +158,8 @@ class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener
 
 	    		} else if (value == removeImage) {
 	                /* Delete the course */
-	                if (JOptionPane.showConfirmDialog(AppletConfigPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)
-	                        + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+	                if (JOptionPane.showConfirmDialog(AppletConfigPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_APPLETCONFIG)
+	                        + "?", TextMapper.getText(TextMapper.GUIC_DELETE_APPLETCONFIG), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 	                    try {
 							SecureDwoAdminConfigManager.removeConfig(sc);
 						} catch (Dwo2Exception e) {
