@@ -62,9 +62,8 @@ public class RegisterPanel extends Composite {
 			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_NewPasswordsDoNotMatch());
 			return;
 		}
-
 		DomNewUser n = domUser; //FIXME java.util.regex niet in GWT
-        if ( ! SimpleValidUserFieldsChecker.isEmptyOrNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), n.getPassword()))
+        if ( ! SimpleValidUserFieldsChecker.isEmptyOrNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), password.getText()))
         {
         	Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Required_Fields());
         	return;
@@ -72,14 +71,17 @@ public class RegisterPanel extends Composite {
 		if ( ! SimpleValidUserFieldsChecker.isValidUserName(n.getUsername()))
 		{
 			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_UserName_Invalid());
+			return;
 		}
 		if ( ! SimpleValidUserFieldsChecker.isValidEmail(n.getEmail()))
 		{
 			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Email_Address_Invalid());
+			return;
 		}
 		if ( ! SimpleValidUserFieldsChecker.isValidPassword(password.getText()))
 		{
 			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Password_Invalid());
+			return;
 		}
 		
 		domUser.setPassword(MD5.md5(password.getText()));
