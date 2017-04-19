@@ -534,6 +534,10 @@ public abstract class TextMapper {
 	public static final String FSD_TIMEUP = "FSD_TIMEUP";
 	public static final String FSD_START = "FSD_START";
 
+	// templates
+	public static final String GUIC_DELETE_APPLETCONFIG = "GUIC_DELETE_APPLETCONFIG";
+	public static final String GUIC_MSG_DELETE_APPLETCONFIG = "GUIC_MSG_DELETE_APPLETCONFIG";
+	
 	/**
      *
      */

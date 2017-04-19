@@ -474,6 +474,8 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.FSD_TIMEUP, "De toets wordt afgesloten en ingeleverd" },
 			{ TextMapper.FSD_START, "Start toets" },
 
+			{ TextMapper.GUIC_DELETE_APPLETCONFIG, "Verwijder template" },
+			{ TextMapper.GUIC_MSG_DELETE_APPLETCONFIG, "Weet u zeker dat u het template wilt verwijderen" },
 	};
 
 	public Text_nl() {
