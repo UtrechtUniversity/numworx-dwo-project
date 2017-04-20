@@ -657,7 +657,6 @@ public class Samples20
 		samples.put("sqrt_1",sample_sqrt_1);
 		samples.put("sqrt_2",sample_sqrt_2);
 
-
 		samples.put("back",sample_back);
 		samples.put(" of ",sample_of);
 
@@ -666,8 +665,7 @@ public class Samples20
 		samples.put(" > ",sample_GT);
 		samples.put(" \u2265 ",sample_GTE);
 		samples.put(" < ",sample_LT);
-		samples.put(" \u2264 ",sample_LTE);
-		
+		samples.put(" \u2264 ",sample_LTE);		
 		
 		return samples;
 	}
