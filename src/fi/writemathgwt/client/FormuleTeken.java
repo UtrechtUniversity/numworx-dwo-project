@@ -2,9 +2,11 @@ package fi.writemathgwt.client;
 
 //import java.awt.*;
 import java.util.*;
+import java.util.logging.Logger;
 
-public class FormuleTeken extends FormuleElement
-{
+
+public class FormuleTeken extends FormuleElement {
+//	private static Logger logger = Logger.getLogger("FormuleTeken");	
 
 	private String teken;
 	char character;
@@ -94,19 +96,54 @@ public class FormuleTeken extends FormuleElement
 		return newList;
 	}
 	
+	public ArrayList<Point> scaleAndPosition(ArrayList<Point> pList, ArrayList<Point> pListAssist)
+	{
+		int xMin = 1000;
+		int xMax = 0;
+		int yMin = 1000;
+		int yMax = 0;
+		for (int i = 0; i < pList.size(); i++) 
+		{ 
+			xMin = Math.min(xMin, pList.get(i).x);
+			yMin = Math.min(yMin, pList.get(i).y);
+			xMax = Math.max(xMax, pList.get(i).x);
+			yMax = Math.max(yMax, pList.get(i).y);
+		}
+		for (int i = 0; i < pListAssist.size(); i++) 
+		{ 
+			xMin = Math.min(xMin, pListAssist.get(i).x);
+			yMin = Math.min(yMin, pListAssist.get(i).y);
+			xMax = Math.max(xMax, pListAssist.get(i).x);
+			yMax = Math.max(yMax, pListAssist.get(i).y);
+		}
+		ArrayList<Point> newList = new ArrayList<Point>();
+		for (int i = 0; i < pList.size(); i++) 
+		{	int px = pList.get(i).x;
+			int py = pList.get(i).y;
+			
+			double scaleX = ((double) width) /(xMax - xMin);
+			double scaleY = ((double) height) /(yMax - yMin);
+			int npx = x + (int) Math.round(scaleX * (px - xMin));
+			int npy = y + (int) Math.round(scaleY * (py - yMin));
+			
+			newList.add(new Point(npx,npy));
+		}	
+		
+		return newList;
+	}
+
+	
 	//convertToWriteObject
 	public void convertToWriteObject()
 	{ 
 //System.out.println("FT convertToWriteObject start");
 
 		FormuleElement root = findRoot();
-		
 		// uitzonderingen
 		String oTeken = "";
 		
 		if ((character == '<')||(character == '>')|| (character == '\u2264') || (character == '\u2265') ||
-			(character == '=')	)
-		{
+			(character == '=')	) {
 			oTeken = " " + character + " ";
 		}
 		else
@@ -114,39 +151,47 @@ public class FormuleTeken extends FormuleElement
 //System.out.println("character = " + character);		
 //System.out.println("oTeken = " + oTeken);		
 		
-		
 		// apart
-		if (oTeken.equals("."))
-		{
+		if (oTeken.equals(".")) {
 			ArrayList<Point> sPoints = new ArrayList<Point>();
 			sPoints.add(new Point(x + width / 2, y + height));
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
 			return;
 		}
-		if (oTeken.equals("*") || oTeken.equals("\u00d7"))
-		{
+		if (oTeken.equals("*") || oTeken.equals("\u00d7")) {
 			ArrayList<Point> sPoints = new ArrayList<Point>();
 			sPoints.add(new Point(x + width / 2, y + height / 2));
+
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
 			return;
 		}
 
-		int[] oIntArray = WriteObject.samples.get(oTeken);
-//System.out.println("array " + oIntArray.length);
+		int[] oIntArray1=null;
+		int[] oIntArray2=null;
+		if ( Samples20.isTwoStroke(oTeken) ) {
+			oIntArray1 = Samples20.getSamplePart(oTeken , 1);
+			oIntArray2 = Samples20.getSamplePart(oTeken , 2);
+		} else {
+			oIntArray1 = WriteObject.samples.get(oTeken);
+		}
 
 		// sample not available
-		if (oIntArray == null)
+		if (oIntArray1 == null) {
 			return;
+		}
 		
-		ArrayList<Point> oPoints = WriteObject.intConvertSample(oIntArray);
-//System.out.println("oPoints " + oPoints.size());		
-		// schalen en op de goede plek zetten
-		ArrayList<Point> sPoints = scaleAndPosition(oPoints);
-//System.out.println("sPoints " + sPoints.size());				
-		// checken?
-		((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
-		
-//System.out.println("FT convertToWriteObject end");		
+		if ( Samples20.isTwoStroke(oTeken) ) {
+			ArrayList<Point> oPoints1 = WriteObject.intConvertSample(oIntArray1);
+			ArrayList<Point> oPoints2 = WriteObject.intConvertSample(oIntArray2);
+			ArrayList<Point> sPoints1 = scaleAndPosition(oPoints1, oPoints2);
+			ArrayList<Point> sPoints2 = scaleAndPosition(oPoints2, oPoints1);
+			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints1, sPoints2);
+			
+		} else {
+			ArrayList<Point> oPoints = WriteObject.intConvertSample(oIntArray1);
+			ArrayList<Point> sPoints = scaleAndPosition(oPoints);
+			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
+		}
 	}
 	
 	// eerst maar even alles evenhoog

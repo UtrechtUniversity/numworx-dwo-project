@@ -10,7 +10,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 public class WriteObject {
-//	private static Logger logger = Logger.getLogger("WriteObject");
+	private static Logger logger = Logger.getLogger("WriteObject");
 
 	private final static boolean cNewStrokmatcher = true;
 	static int newTekenSet = 0;
@@ -111,13 +111,15 @@ public class WriteObject {
 		isTwoStrokeObject = false;
 		
 //		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-//		logger.info("New Object, teken = " + teken);
+		logger.info("New Object, teken = " + teken);
 //		logger.info("Stacktrace = "+ stackTraceElements);
 		
 		makeBox(points);
 		doublePoints = new ArrayList<DoublePoint>();
 		rawPoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <points.size() ; i++) {
+			logger.info("new Point added -" +i +"- X="+points.get(i).getDoublePoint().getX() +
+					",Y="+points.get(i).getDoublePoint().getY());
 			doublePoints.add(points.get(i).getDoublePoint());
 			rawPoints.add(points.get(i).getDoublePoint());
 		}
@@ -303,18 +305,16 @@ public class WriteObject {
 	
 	public void draw(Context2d g, int shiftX, int shiftY) {	
 		g.setStrokeStyle(CssColor.make(0, 0, 0));
-		
+		logger.info("Teken object : "+ teken);
 		if (rawPoints.size() > 0) {
-			if (".".equals(teken)) {
+			if ( (".".equals(teken)) || ("*".equals(teken) ) ) {
 				g.setFillStyle(CssColor.make(0, 0, 0));
 //				g.fillRect(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 3, 3);
-				
 				g.beginPath();
 				g.arc(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 2, 0, 2* Math.PI);
 				g.closePath();
 				g.fill();
 				g.stroke();
-
 				g.setFillStyle(CssColor.make(255, 255, 255));
 				return;
 			}
