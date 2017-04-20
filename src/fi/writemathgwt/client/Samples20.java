@@ -473,6 +473,8 @@ public class Samples20
 		samples.put("back",sample_back);
 		samples.put(" of ",sample_of);
 		samples.put("of",sample_of);
+		samples.put("o",sample_o);
+		samples.put("f",sample_f);
 
 		samples.put(" = ",sample_EQ);
 		

@@ -305,18 +305,16 @@ public class WriteObject {
 	
 	public void draw(Context2d g, int shiftX, int shiftY) {	
 		g.setStrokeStyle(CssColor.make(0, 0, 0));
-		
+		logger.info("Teken object : "+ teken);
 		if (rawPoints.size() > 0) {
-			if (".".equals(teken)) {
+			if ( (".".equals(teken)) || ("*".equals(teken) ) ) {
 				g.setFillStyle(CssColor.make(0, 0, 0));
 //				g.fillRect(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 3, 3);
-				
 				g.beginPath();
 				g.arc(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 2, 0, 2* Math.PI);
 				g.closePath();
 				g.fill();
 				g.stroke();
-
 				g.setFillStyle(CssColor.make(255, 255, 255));
 				return;
 			}

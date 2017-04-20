@@ -6,8 +6,7 @@ import java.util.logging.Logger;
 
 
 public class FormuleTeken extends FormuleElement {
-	
-	private static Logger logger = Logger.getLogger("FormuleTeken");	
+//	private static Logger logger = Logger.getLogger("FormuleTeken");	
 
 	private String teken;
 	char character;
@@ -140,15 +139,11 @@ public class FormuleTeken extends FormuleElement {
 //System.out.println("FT convertToWriteObject start");
 
 		FormuleElement root = findRoot();
-		logger.info("==== convertToWriteObject === START ====");
-		logger.info("character = " + character);
-		logger.info("positie = ["+ x + ", "+ y + "]");
 		// uitzonderingen
 		String oTeken = "";
 		
 		if ((character == '<')||(character == '>')|| (character == '\u2264') || (character == '\u2265') ||
-			(character == '=')	)
-		{
+			(character == '=')	) {
 			oTeken = " " + character + " ";
 		}
 		else
@@ -157,21 +152,15 @@ public class FormuleTeken extends FormuleElement {
 //System.out.println("oTeken = " + oTeken);		
 		
 		// apart
-		if (oTeken.equals("."))
-		{
+		if (oTeken.equals(".")) {
 			ArrayList<Point> sPoints = new ArrayList<Point>();
 			sPoints.add(new Point(x + width / 2, y + height));
-			logger.info("Punt detected  :: Point = [" + sPoints.get(0).getX() +", " + 
-														sPoints.get(0).getX() + "]");
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
 			return;
 		}
-		if (oTeken.equals("*") || oTeken.equals("\u00d7"))
-		{
+		if (oTeken.equals("*") || oTeken.equals("\u00d7")) {
 			ArrayList<Point> sPoints = new ArrayList<Point>();
 			sPoints.add(new Point(x + width / 2, y + height / 2));
-			logger.info("Maal detected  :: Point = [" + sPoints.get(0).getX() +", " + 
-														sPoints.get(0).getX() + "]");
 
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
 			return;
@@ -187,10 +176,9 @@ public class FormuleTeken extends FormuleElement {
 		}
 
 		// sample not available
-		if (oIntArray1 == null)
+		if (oIntArray1 == null) {
 			return;
-		
-		logger.info("Valide oIntArray1 -- Length =" + oIntArray1.length);
+		}
 		
 		if ( Samples20.isTwoStroke(oTeken) ) {
 			ArrayList<Point> oPoints1 = WriteObject.intConvertSample(oIntArray1);
@@ -204,7 +192,6 @@ public class FormuleTeken extends FormuleElement {
 			ArrayList<Point> sPoints = scaleAndPosition(oPoints);
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
 		}
-		logger.info("==== convertToWriteObject === FINISH ====");
 	}
 	
 	// eerst maar even alles evenhoog
