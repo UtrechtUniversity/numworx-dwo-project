@@ -2,8 +2,8 @@
 /**
  * script en css loader
  */
-
-var deploy = "//cdn.dwo.nl/apps/"
+<% String cdn = System.getProperty("CDN_HOST", "cdn.dwo.nl"); %>
+var deploy = "//<%= cdn %>/apps/"
 //deploy = "//test-dwo-nl.s3.amazonaws.com/apps/"	
 function script(name) {
 	var elem = document.createElement('script');
