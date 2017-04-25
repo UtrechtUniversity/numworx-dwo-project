@@ -4,7 +4,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<meta http-equiv="refresh" content="0; URL=https://www.dwo.nl/site/index.html">
+<title>DWO: Digitale Wiskunde Omgeving | Home</title>
 </head>
 <body>
 

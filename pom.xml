@@ -6,16 +6,16 @@
 		<artifactId>DWO</artifactId>
 		<version>2.1.11</version>
 	</parent>
-  <artifactId>EBServer</artifactId>
+	<artifactId>EBServer</artifactId>
 	<packaging>war</packaging>
 	<name>${project.build.finalName}</name>
 	<dependencies>
-         <dependency>
-            <groupId>nl.uu.fi.dwo</groupId>
-            <artifactId>DWOServer</artifactId>
-            <version>${project.version}</version>
-            <classifier>classes</classifier>
-        </dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo</groupId>
+			<artifactId>DWOServer</artifactId>
+			<version>${project.version}</version>
+			<classifier>classes</classifier>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -26,246 +26,270 @@
 			<artifactId>jamon</artifactId>
 			<version>${jamonVersion}</version>
 		</dependency>
-       <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency> 
-        <!--  best found media type json support, faster than jackson --> 
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- best found media type json support, faster than jackson -->
 
-        <dependency>
-        	<groupId>fi.servlet</groupId>
-        	<artifactId>DWOmAccess</artifactId>
-        	<version>${DWOmAccessVersion}</version>
-        	<classifier>classes</classifier>
-        </dependency>
-        <dependency>
-        	<groupId>fi.servlet</groupId>
-        	<artifactId>ideas-servlet</artifactId>
-        	<version>0.0.3</version>
-        </dependency>
-        <dependency>
-        <groupId>nl.tue.win.riaca.openmath</groupId>
-        <artifactId>om-lib</artifactId>
-        <version>1.3.18</version>
-    </dependency>
-        <dependency>
-        <groupId>nl.tue.win.riaca.mathematica</groupId>
-        <artifactId>mathematica-phrasebook</artifactId>
-        <version>1.3.7</version>
-    </dependency>
-    <dependency>
-        <groupId>fi.servlet</groupId>
-        <artifactId>openmath</artifactId>
-        <version>0.0.1</version>
-    </dependency>
-    <dependency>
-        <groupId>fi.mpreduce</groupId>
-        <artifactId>mpreduce-phrasebook</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
-    </dependency>
-<dependency>
-    <groupId>nl.tue.win.riaca.mathml</groupId>
-    <artifactId>mathml-phrasebook</artifactId>
-    <version>1.3.2</version>
-</dependency>
-<dependency>
-    <groupId>fi.beans</groupId>
-    <artifactId>ideas</artifactId>
-    <version>1.0.0</version>
-</dependency>
-<dependency>
-    <groupId>fi.servlet</groupId>
-    <artifactId>ideas-codec</artifactId>
-    <version>0.0.3</version>
-</dependency>
-<dependency>
-    <groupId>org.geogebra</groupId>
-    <artifactId>geogebra_cas</artifactId>
-    <version>4.0.29</version>
-</dependency>
-<dependency>
-    <groupId>org.geogebra</groupId>
-    <artifactId>geogebra_main</artifactId>
-    <version>4.0.29</version>
-</dependency>
-<dependency>
-    <groupId>org.geogebra</groupId>
-    <artifactId>geogebra</artifactId>
-    <version>4.0.29</version>
-</dependency>		
-<dependency>
+		<dependency>
+			<groupId>fi.servlet</groupId>
+			<artifactId>DWOmAccess</artifactId>
+			<version>${DWOmAccessVersion}</version>
+			<classifier>classes</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>aelfred</groupId>
+					<artifactId>aelfred</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>fi.servlet</groupId>
+			<artifactId>ideas-servlet</artifactId>
+			<version>0.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.tue.win.riaca.openmath</groupId>
+			<artifactId>om-lib</artifactId>
+			<version>1.3.18</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.tue.win.riaca.mathematica</groupId>
+			<artifactId>mathematica-phrasebook</artifactId>
+			<version>1.3.7</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.servlet</groupId>
+			<artifactId>openmath</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.mpreduce</groupId>
+			<artifactId>mpreduce-phrasebook</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>nl.tue.win.riaca.mathml</groupId>
+			<artifactId>mathml-phrasebook</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.beans</groupId>
+			<artifactId>ideas</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.servlet</groupId>
+			<artifactId>ideas-codec</artifactId>
+			<version>0.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geogebra</groupId>
+			<artifactId>geogebra_cas</artifactId>
+			<version>4.0.29</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geogebra</groupId>
+			<artifactId>geogebra_main</artifactId>
+			<version>4.0.29</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geogebra</groupId>
+			<artifactId>geogebra</artifactId>
+			<version>4.0.29</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.1</version>
 		</dependency>
-        <dependency>
-            <groupId>net.oauth.core</groupId>
-            <artifactId>oauth-provider</artifactId>
-            <version>20100601</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
+		<dependency>
+			<groupId>net.oauth.core</groupId>
+			<artifactId>oauth-provider</artifactId>
+			<version>20100601</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
 	</dependencies>
 	<build>
-<!-- 	 <finalName>${project.artifactId}-${project.version}-r${buildNumber}-${timestamp}</finalName> -->
-	 <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.3</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!--
-                     doCheck and doUpdate actually talk to repository if it's true,
-                     Check would check that there are no local changes.
-                     Update would update it
-                    -->
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
-                    <!--
-                     This ensures that even if we are not connected to scm than also
-                     take the version from local .svn file
-                    -->
-                    <revisiononscmfailure>
-       
-                        <!--
-                         Generate sequence build number based on:
-                         build number and timestamp     
-                        -->
-                        <format>Build: #{0} ({1,date})</format>
-                        <items>
-                            <item>buildNumber\d*</item>
-                            <item>timestamp</item>
-                        </items>
-                    </revisiononscmfailure>
-                </configuration>
-            </plugin>    
-	<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-dependency-plugin</artifactId>
-		<version>2.10</version>
-		<executions>
-			<execution>
-				<id>copy</id>
-				<phase>process-resources</phase>
-				<goals>
-					<goal>copy</goal>
-				</goals>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.3</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
-					<artifactItems>
-						<artifactItem>
-							<groupId>${project.groupId}</groupId>
-							<artifactId>DWOJClient</artifactId>
-							<version>${project.version}</version>
-							<classifier>jar-with-dependencies</classifier>
-							<overWrite>true</overWrite>
-							<destFileName>dwo/DWOJApplet.jar</destFileName>
-						</artifactItem>
-						<!-- <artifactItem> <groupId>${project.groupId}</groupId> <artifactId>DWOJClient</artifactId> 
-							<version>${project.version}</version> <classifier>jar-with-dependencies</classifier> 
-							<type>jar.pack.gz</type> <overWrite>true</overWrite> <destFileName>DWOJApplet.jar.pack.gz</destFileName> 
-							</artifactItem> -->
-					</artifactItems>
-					<outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
-					<overWriteReleases>false</overWriteReleases>
-					<overWriteSnapshots>true</overWriteSnapshots>
+					<!-- doCheck and doUpdate actually talk to repository if it's true, 
+						Check would check that there are no local changes. Update would update it -->
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+					<!-- This ensures that even if we are not connected to scm than also 
+						take the version from local .svn file -->
+					<revisiononscmfailure>
+
+						<!-- Generate sequence build number based on: build number and timestamp -->
+						<format>Build: #{0} ({1,date})</format>
+						<items>
+							<item>buildNumber\d*</item>
+							<item>timestamp</item>
+						</items>
+					</revisiononscmfailure>
 				</configuration>
-			</execution>
-			<execution>
-				<id>unpack</id>
-				<goals>
-					<goal>unpack</goal>
-				</goals>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>DWOJClient</artifactId>
+									<version>${project.version}</version>
+									<classifier>jar-with-dependencies</classifier>
+									<overWrite>true</overWrite>
+									<destFileName>dwo/DWOJApplet.jar</destFileName>
+								</artifactItem>
+								<!-- <artifactItem> <groupId>${project.groupId}</groupId> <artifactId>DWOJClient</artifactId> 
+									<version>${project.version}</version> <classifier>jar-with-dependencies</classifier> 
+									<type>jar.pack.gz</type> <overWrite>true</overWrite> <destFileName>DWOJApplet.jar.pack.gz</destFileName> 
+									</artifactItem> -->
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack</id>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>fi.dwo</groupId>
+									<artifactId>DWO-apps</artifactId>
+									<version>2.0-SNAPSHOT</version>
+									<type>war</type>
+									<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/apps/</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>nl.uu.fi.dwo.mobile</groupId>
+									<artifactId>DWOplayer</artifactId>
+									<version>${DWOplayerVersion}</version>
+									<type>war</type>
+									<classifier>dwo2</classifier>
+									<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/tablet/</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>nl.uu.fi.dwo.register</groupId>
+									<artifactId>Register</artifactId>
+									<version>0.0.1</version>
+									<type>war</type>
+									<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/register</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.jamonapi</groupId>
+									<artifactId>jamon_war</artifactId>
+									<version>${jamonVersion}</version>
+									<type>war</type>
+									<excludes>WEB-INF/lib/**</excludes>
+									<outputDirectory>${project.build.directory}/${project.build.finalName}/jamon</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.jamonapi</groupId>
+									<artifactId>jamon_war</artifactId>
+									<version>${jamonVersion}</version>
+									<type>war</type>
+									<outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
+									<includes>WEB-INF/lib/**</includes>
+								</artifactItem>
+								<artifactItem>
+									<groupId>fi.servlet</groupId>
+									<artifactId>DWOmAccess</artifactId>
+									<version>${DWOmAccessVersion}</version>
+									<type>war</type>
+									<excludes>WEB-INF/**</excludes>
+									<outputDirectory>${project.build.directory}/${project.build.finalName}/DWOmAccess</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
 				<configuration>
-					<artifactItems>
-						<artifactItem>
-							    <groupId>fi.dwo</groupId>
-    							<artifactId>DWO-apps</artifactId>
-    							<version>2.0-SNAPSHOT</version>
-    							<type>war</type>
-								<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/apps/</outputDirectory>
-						</artifactItem>
-						<artifactItem>
-								<groupId>nl.uu.fi.dwo.mobile</groupId>
-								<artifactId>DWOplayer</artifactId>
-								<version>${DWOplayerVersion}</version>
-								<type>war</type>
-								<classifier>dwo2</classifier>
-								<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/tablet/</outputDirectory>								
-						</artifactItem>
-						<artifactItem>
-								<groupId>nl.uu.fi.dwo.register</groupId>
-								<artifactId>Register</artifactId>
-								<version>0.0.1</version>
-								<type>war</type>
-								<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/register</outputDirectory>
-						</artifactItem>
-						<artifactItem>
-								<groupId>com.jamonapi</groupId>
-								<artifactId>jamon_war</artifactId>
-								<version>${jamonVersion}</version>
-								<type>war</type>
-								<excludes>WEB-INF/lib/**</excludes>
-								<outputDirectory>${project.build.directory}/${project.build.finalName}/jamon</outputDirectory>
-						</artifactItem>
-						<artifactItem>
-								<groupId>com.jamonapi</groupId>
-								<artifactId>jamon_war</artifactId>
-								<version>${jamonVersion}</version>
-								<type>war</type>
-								<outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
-								<includes>WEB-INF/lib/**</includes>
-						</artifactItem>
-						<artifactItem>
-				        	<groupId>fi.servlet</groupId>
-        					<artifactId>DWOmAccess</artifactId>
-        					<version>${DWOmAccessVersion}</version>
-							<type>war</type>
-							<excludes>WEB-INF/**</excludes>
-							<outputDirectory>${project.build.directory}/${project.build.finalName}/DWOmAccess</outputDirectory>
-						</artifactItem>
-					</artifactItems>
-					<overWriteReleases>true</overWriteReleases>
-					<overWriteSnapshots>true</overWriteSnapshots>				
+					<server>TomcatServer</server>
+					<path>/</path>
+					<!-- <warFile>target/${project.build.finalName}.war</warFile> -->
+					<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+                       <contextFile>src/test/tomcat/context.xml</contextFile>
 				</configuration>
-			</execution>
-		</executions>
-	</plugin>
-        <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                    <configuration>
-                        <server>TomcatServer</server>
-                        <path>/</path>
-<!--                         <warFile>target/${project.build.finalName}.war</warFile> -->
-                        <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
-                    </configuration>
-            </plugin> 
-	</plugins>
+			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.0.0</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
+							<Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+							<Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
+						</manifestEntries>
+					</archive>
+				</configuration>
+
+			</plugin>
+
+
+		</plugins>
 	</build>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.1.9</DWOplayerVersion>
+		<DWOplayerVersion>2.1.11</DWOplayerVersion>
 		<DWOmAccessVersion>0.0.9-SNAPSHOT</DWOmAccessVersion>
 		<jamonVersion>2.80</jamonVersion>
 	</properties>

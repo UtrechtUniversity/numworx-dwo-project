@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Title: ${project.artifactId}-${project.version}
+Implementation-Version: ${project.version}
+Archiver-Version: Plexus Archiver
+Implementation-Vendor-Id: ${project.groupId}
+Implementation-Timestamp: ${timestamp}
+Implementation-Vendor: Freudenthal Institute
+Implementation-ScmBranch: ${buildScmBranch}
+Implementation-Build: ${buildNumber}
+Created-By: Apache Maven 3.2.3
+Build-Jdk: 1.8.0_45
+Implementation-URL: http://www.dwo.nl

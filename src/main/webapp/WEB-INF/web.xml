@@ -260,6 +260,10 @@
     	<servlet-name>appparam</servlet-name>
     	<jsp-file>/DWOmAccess/lti/_app.jsp</jsp-file>
     </servlet>
+    <servlet>
+    	<servlet-name>DWOproperties</servlet-name>
+    	<jsp-file>/dwo/DWO.properties.jsp</jsp-file>
+    </servlet>
     <!--
     servlet mappings 
     -->
@@ -332,6 +336,10 @@
     <servlet-mapping>
         <servlet-name>DwoIndexPage</servlet-name>
         <url-pattern>/dwo/dwoindexpage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+    	<servlet-name>DWOproperties</servlet-name>
+    	<url-pattern>/dwo/DWO.properties</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>download</servlet-name>
