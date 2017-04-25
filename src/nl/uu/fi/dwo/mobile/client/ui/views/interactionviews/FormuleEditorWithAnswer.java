@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselEditor;
@@ -89,7 +90,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	private int extraWidth = 23 ; // of 43; breedte voor nakijkplaatje en als nodig voor knop voor uitklappen.
 	
-	class FormuleEditorPopup extends FormuleEditorWithSteps implements CBookEventListener, StateLess {
+	class FormuleEditorPopup extends FormuleEditorWithSteps implements CBookEventListener, StateLess, ResizableContentIF 
+	{
 
 		public FormuleEditorPopup(HashMap<String, Object> h,
 				boolean isVergelijkingVak, String[] randomVarNamen,
@@ -230,6 +232,21 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		void setHeight(double hoogte) {
 			logger.fine("setHeight(" + hoogte + ")");
 			super.setHeight((int)hoogte);
+		}
+		
+		public void setSize(int w, int h)
+		{
+			super.setSize(w, h);
+		}
+
+		public void setWidth(int w)
+		{
+			super.setWidth(w);
+		}
+
+		public void setHeight(int h)
+		{
+			super.setHeightIncludingHeader(h);
 		}
 
 		@Override
