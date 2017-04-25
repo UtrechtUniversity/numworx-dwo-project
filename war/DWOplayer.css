@@ -330,3 +330,7 @@ div.listItem-dwo-separator {
 	pointer-events: none !important;
 	background-color: #EEEEEE;
 }
+
+.gwt-DialogBox .Caption {
+   cursor: auto !important;
+}
