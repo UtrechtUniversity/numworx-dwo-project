@@ -22,8 +22,7 @@
         font-weight: normal;  
         }
     </ui:style>-->
-    <g:VerticalPanel>
-        <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE" addStyleNames='{mainpanel.panel}'><g:Label>Role: </g:Label><g:TextBox ui:field='teacherRole'></g:TextBox></g:HorizontalPanel>
+    <g:VerticalPanel horizontalAlignment="ALIGN_CENTER" >
         <g:HorizontalPanel ui:field='tablePanel' addStyleNames='{mainpanel.widget}'
                            horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
             <!--<g:SimplePanel >-->
@@ -33,6 +32,11 @@
             <!--          <c:SimplePager
             ui:field='pager' />-->
             <!--</g:SimplePanel>-->
+        </g:HorizontalPanel>
+        <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE" addStyleNames='{mainpanel.panel}'><g:Button ui:field="upBtn">&uarr;</g:Button>
+        <g:Button ui:field="downBtn">&darr;</g:Button>
+        <g:Button ui:field="leftBtn">&larr;</g:Button>
+        <g:Button ui:field="rightBtn">&rarr;</g:Button>
         </g:HorizontalPanel>
 <!--        <g:HorizontalPanel>
             <g:customCell styleName="optionalBarCellStyle">

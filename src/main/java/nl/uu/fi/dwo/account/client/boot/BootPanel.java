@@ -46,16 +46,67 @@ static {
         this.loginWidget = loginWidget;
     }
 
+    /**
+     * @return the schoolName
+     */
+    public Label getSchoolName() {
+        return schoolName;
+    }
+
+    /**
+     * @param schoolName the schoolName to set
+     */
+    public void setSchoolName(Label schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    /**
+     * @return the presentationName
+     */
+    public Label getPresentationName() {
+        return presentationName;
+    }
+
+    /**
+     * @param presentationName the presentationName to set
+     */
+    public void setPresentationName(Label presentationName) {
+        this.presentationName = presentationName;
+    }
+
+    /**
+     * @return the userRole
+     */
+    public Label getUserRole() {
+        return userRole;
+    }
+
+    /**
+     * @param userRole the userRole to set
+     */
+    public void setUserRole(Label userRole) {
+        this.userRole = userRole;
+    }
+
     interface MyUiBinder extends UiBinder<Widget, BootPanel> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
+    @UiField
+    Label schoolName;
+    @UiField
+    Label presentationName;
+    @UiField
+    Label userRole;
+    
     @UiField
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
     Widget loginWidget = new LoginPanel();
     @UiField(provided = true)
     Widget resultWidget = new ResultsPanel();
+    @UiField(provided = true)
+    Widget switchSchoolWidget = new SwitchSchoolPanel();
 
     public BootPanel() {
 
@@ -88,10 +139,17 @@ static {
     public void showLoginWidget(){
         mainDeckPanel.showWidget(0);
     }
+    
+    public void showSwitchSchoolWidget(){
+        SwitchSchoolPanel panel = (SwitchSchoolPanel) resultWidget;
+        panel.updateView();
+        mainDeckPanel.showWidget(1);
+    }
+
     public void showResultWidget(){
         ResultsPanel panel = (ResultsPanel) resultWidget;
         panel.updateView();
-        mainDeckPanel.showWidget(1);
+        mainDeckPanel.showWidget(2);
     }
 
 }

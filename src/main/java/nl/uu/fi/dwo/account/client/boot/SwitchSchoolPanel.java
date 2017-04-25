@@ -14,32 +14,30 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 
 /**
  * GWT Panel that handles the login-authentication.
  *
  * @author G.A.J. van der Plas
  */
-public class LoginPanel extends Composite implements ClickHandler {
+public class SwitchSchoolPanel extends Composite implements ClickHandler {
 
-    private static final Logger LOG = Logger.getLogger(LoginPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(SwitchSchoolPanel.class.getName());
 
-    interface MyUiBinder extends UiBinder<Widget, LoginPanel> {
+    interface MyUiBinder extends UiBinder<Widget, SwitchSchoolPanel> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    private LoginPanelHandler handler;
-    private boolean loginClicked = false;
+    private SwitchSchoolPanelHandler handler;
 
     @UiField
     TextBox usernameText;
     @UiField
     PasswordTextBox passwordTextBox;
     @UiField
-    CheckBox switchBtn;
-    @UiField
-    Button loginBtn;
+    Button switchBtn;
+//    @UiField
+//    Button loginBtn;
 
     private BootPanel parent;
 
@@ -54,19 +52,17 @@ public class LoginPanel extends Composite implements ClickHandler {
         return parent;
     }
 
-    public LoginPanel() {
+    public SwitchSchoolPanel() {
         initWidget(uiBinder.createAndBindUi(this));
-        handler = new LoginPanelHandler(this);
+        handler = new SwitchSchoolPanelHandler(this);
         //controller must be before clicks occur
-        loginBtn.addClickHandler(this);
+        //loginBtn.addClickHandler(this);
 
     }
 
     public void onClick(ClickEvent event) {
-        if (event.getSource() == loginBtn) {
-            LOG.log(Level.INFO, "Login button clicked.");
-            handler.loginClicked(this.usernameText.getText(), this.passwordTextBox.getText());
-            //            curUser.setPassword("passw"); //md5Hash = d79096188b670c2f81b7001f73801117
+        if (event.getSource() == switchBtn) {
+            parent.showResultWidget();
         }
     }
 
@@ -75,14 +71,6 @@ public class LoginPanel extends Composite implements ClickHandler {
      */
     public void onLoginSuccess() {
         LOG.log(Level.INFO, "Login succeeded.");
-        parent.getSchoolName().setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getSchoolName());
-        parent.getPresentationName().setText(DwoGlobalVars.instance().getCurrentUser().getDisplayName());
-        parent.getUserRole().setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
-        if(switchBtn.getValue()==true){
-            parent.showSwitchSchoolWidget();
-            return;
-        }
-        // if switch school enabled, then show switchSchoolWidget
         parent.showResultWidget();
     }
 
@@ -95,6 +83,14 @@ public class LoginPanel extends Composite implements ClickHandler {
         LOG.log(Level.INFO, failMessage);
         Window.alert(failMessage);
         //reset user interface?
+    }
+
+    public void updateView() {
+        //fetch and display all the schoollogins that have teachers.
+//        teacherRole.setText(
+//                DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName()
+//        );
+        handler.init();
     }
 
 }

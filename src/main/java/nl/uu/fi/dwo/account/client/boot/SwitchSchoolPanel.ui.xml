@@ -8,7 +8,7 @@
             <g:Grid>
                 <g:row styleName="optionalHeaderStyle">
                     <g:customCell styleName="optionalFooCellStyle">
-                        <g:Label>naam:</g:Label>
+                        <g:Label>school1</g:Label>
                     </g:customCell>
                     <g:customCell styleName="optionalBarCellStyle">
                         <g:TextBox ui:field='usernameText'>gert_project</g:TextBox>
@@ -16,7 +16,7 @@
                 </g:row>
                 <g:row styleName="optionalHeaderStyle">
                     <g:customCell styleName="optionalFooCellStyle">
-                        <g:Label>password:</g:Label>
+                        <g:Label>school2</g:Label>
                     </g:customCell>
                     <g:customCell styleName="optionalBarCellStyle">
                         <g:PasswordTextBox ui:field='passwordTextBox'>passw</g:PasswordTextBox>
@@ -24,13 +24,13 @@
                 </g:row>
                 <g:row styleName="optionalHeaderStyle">
                     <g:customCell styleName="optionalFooCellStyle">
-                        <g:CheckBox ui:field='switchBtn' checked="false">switch school</g:CheckBox>
+                        <g:Label>select a school and click switch</g:Label>
                     </g:customCell>
                     <g:customCell styleName="optionalBarCellStyle">
-                        <g:Button ui:field='loginBtn'>Login</g:Button>
+                        <g:Button ui:field='switchBtn'>Switch</g:Button>
                     </g:customCell>
                 </g:row>
-<!--                <g:row>
+                <!--                <g:row>
                         <g:cell>
                         <g:Label>password:</g:Label>
                     </g:cell>

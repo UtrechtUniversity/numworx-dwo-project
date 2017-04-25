@@ -7,17 +7,16 @@
     <g:HeaderPanel addStyleNames='{accountnav.appPanel}'>
         <!--<g:FlowPanel size='2'>-->
         <g:FlowPanel addStyleNames='{accountnav.header}'>
-            <g:HTML horizontalAlignment="ALIGN_CENTER">
-                <div>
-                    <div align="left">DWO - My School, my schoolclass - myrole, my name</div>
-                    <div align="left">version xx</div>
-                </div>
-            </g:HTML>
+                        <g:Label ui:field="schoolName"></g:Label>
+                        <g:Label ui:field="userRole"></g:Label>
+                        <g:Label ui:field="presentationName"></g:Label>
         </g:FlowPanel>
         <g:FlowPanel addStyleNames='{accountnav.deckpanel} FLOWPANEL'>
             <g:DeckPanel  ui:field="mainDeckPanel" >
                 <g:Widget ui:field="loginWidget" />
+                <g:Widget ui:field="switchSchoolWidget" />
                 <g:Widget ui:field="resultWidget" />
+                
                 <!--</g:FlowPanel>-->
             </g:DeckPanel>
         </g:FlowPanel>
