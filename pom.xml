@@ -512,7 +512,7 @@
                             <storepass>${dwoCertKeyStorePassword}</storepass>
                             <keypass>${dwoCertKeyPassword}</keypass>
                             <sigfile>UU</sigfile>
-                            <tsa>https://timestamp.geotrust.com/tsa</tsa>
+                            <tsa>http://sha256timestamp.ws.symantec.com/sha256/timestamp</tsa>
                         </configuration>            
                     </plugin>  
             <plugin>
