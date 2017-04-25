@@ -8,6 +8,8 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
+import nl.uu.fi.dwo.mobile.client.ui.ResizableDialogBox;
 import nl.uu.fi.dwo.mobile.utils.HasHide;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
 
@@ -51,7 +53,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Touch;
 
 public class PopupButton extends Composite implements ClickHandler, /*TouchStartHandler, MouseDownHandler,*/ HasHide {
 
@@ -250,6 +251,7 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	IsWidget content;
 	DialogBox box;
 	InteractionView view;
+
 	HashMap<String,Object> state;
 	PopupListener listener;
 
@@ -386,27 +388,41 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	private static Logger logger = Logger.getLogger("PopupButton");
 	
 	@Override
-	public void onClick(ClickEvent event) {
-		if(box == null) {
+	public void onClick(ClickEvent event)
+	{
+		if (box == null)
+		{
 			DialogBox.Caption caption = new CaptionImpl();
-			box = new DialogBox(false,false, caption);
+
+			if (content instanceof ResizableContentIF) // tot nu toe alleen FormuleEditorPopup
+			{
+				// a resizable dialogbox
+				box = new ResizableDialogBox(false, false, false, false, true, caption);
+				((ResizableDialogBox) box).setResizableContent((ResizableContentIF) content);
+			}
+			else
+			{
+				// other content remains non-resizable
+				box = new DialogBox(false, false, caption);
+			}
+
 			DragOnTouch t = new DragOnTouch();
 			box.addDomHandler(t, TouchStartEvent.getType());
 			box.addDomHandler(t, TouchMoveEvent.getType());
 			box.addDomHandler(t, TouchEndEvent.getType());
 			box.addDomHandler(t, TouchCancelEvent.getType());
-// doe niets als je in het contentvak klikt middels stopPropagation
+			// doe niets als je in het contentvak klikt middels stopPropagation
 			NothingOnTouch nt = new NothingOnTouch();
-			FocusPanel wrap = FocusOnTouch.wrap(content.asWidget(),false);
+			FocusPanel wrap = FocusOnTouch.wrap(content.asWidget(), false);
 			wrap.addDomHandler(nt, TouchStartEvent.getType());
 			wrap.addDomHandler(nt, TouchMoveEvent.getType());
 			wrap.addDomHandler(nt, TouchEndEvent.getType());
 			wrap.addDomHandler(nt, TouchCancelEvent.getType());
-			
+
 			box.setWidget(wrap);
 		}
-// fire popupevent here.
-		if(!box.isShowing())
+		// fire popupevent here.
+		if (!box.isShowing())
 		{
 			box.showRelativeTo(this);
 			listener.onShow();
@@ -480,8 +496,5 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 	public void setState(HashMap<String, Object> state) {
 		this.state = state;
 	}
-
-	
-	
 
 }
