@@ -3476,12 +3476,70 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	public int getHeight() {
 		return facade.wrapHeight(hoogte);
 	}
-	protected void setHeight(int h) {
+
+	protected void setHeight(int h)
+	{
 		hoogte = h;
-		mainPanel.setPixelSize(-1, h-2);
-		sp.setPixelSize(-1, h-50);
+		mainPanel.setPixelSize(-1, h - 2);
+		sp.setPixelSize(-1, h - 50);
 	}
-	
+
+	/**
+	 * T.b.v. setSize() in FormuleEditorPopup i.v.m. resizable dialogbox.
+	 * 
+	 * @param w
+	 * @param h
+	 */
+	protected void setSize(int w, int h)
+	{
+		if (w >= 0 && h >= 0) // check valid values
+		{
+			breedte = w;
+			hoogte = h;
+			mainPanel.setPixelSize(breedte - 2, hoogte - 2);
+			sp.setPixelSize(breedte - 5, hoogte - 50 + 20); // waar komt die 50
+															// vandaan, er kan nog
+															// 20 pixels bij
+			headerPanel.setPixelSize(breedte - 2, 22); // anders vallen knoppen buiten beeld...
+		}
+	}
+
+	/**
+	 * T.b.v. setWidth() in FormuleEditorPopup i.v.m. resizable dialogbox.
+	 * 
+	 * @param w
+	 */
+	protected void setWidth(int w)
+	{
+		if (w > 0) // check valid values
+		{
+			breedte = w;
+			mainPanel.setPixelSize(breedte - 2, hoogte - 2);
+			sp.setPixelSize(breedte - 5, hoogte - 50 + 20); // waar komt die 50
+															// vandaan, er kan nog
+															// 20 pixels bij
+			headerPanel.setPixelSize(breedte - 2, 22); // anders vallen knoppen buiten beeld...
+		}
+	}
+
+	/**
+	 * T.b.v. setHeight() in FormuleEditorPopup i.v.m. resizable dialogbox.
+	 * 
+	 * @param h
+	 */
+	protected void setHeightIncludingHeader(int h)
+	{
+		if (h > 0) // check valid values
+		{
+			hoogte = h;
+			mainPanel.setPixelSize(breedte - 2, hoogte - 2);
+			sp.setPixelSize(breedte - 5, hoogte - 50 + 20); // waar komt die 50
+															// vandaan, er kan nog
+															// 20 pixels bij
+			headerPanel.setPixelSize(breedte - 2, 22); // anders vallen knoppen buiten beeld...
+		}
+	}
+
 	@Override
 	public int getWidth() {
 		return facade.wrapWidth(breedte);
