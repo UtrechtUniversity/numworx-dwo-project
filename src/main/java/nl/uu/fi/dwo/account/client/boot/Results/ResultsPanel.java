@@ -50,7 +50,7 @@ public class ResultsPanel extends Composite {
     private ResultsTeacherController control;
 
     //initial gridsize
-    final int yInitialGridSize = 6;
+    final int yInitialGridSize = 12;
     final int xInitialGridSize = 6;
     int xOffset = 0;
     int yOffset = 0;

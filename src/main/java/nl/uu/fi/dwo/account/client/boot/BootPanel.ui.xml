@@ -5,13 +5,16 @@
     <ui:style field="accountnav" src="accountnav.css" />    
     
     <g:HeaderPanel addStyleNames='{accountnav.appPanel}'>
-        <!--<g:FlowPanel size='2'>-->
         <g:FlowPanel addStyleNames='{accountnav.header}'>
-                        <g:Label ui:field="schoolName"></g:Label>
-                        <g:Label ui:field="userRole"></g:Label>
-                        <g:Label ui:field="presentationName"></g:Label>
+                <g:Label addStyleNames='{accountnav.leftbox}' ui:field="schoolLabel">School&nbsp;</g:Label>
+                <g:Label addStyleNames='{accountnav.leftbox}' ui:field="schoolName"></g:Label>
+                <g:Label addStyleNames='{accountnav.leftbox}'>&nbsp;</g:Label>
+                <g:Label addStyleNames='{accountnav.leftbox}' ui:field="userRole"></g:Label>
+                <g:Label addStyleNames='{accountnav.leftbox}'>&nbsp;</g:Label>
+                <g:Label addStyleNames='{accountnav.leftbox}' ui:field="presentationName"></g:Label>
+                <g:Button addStyleNames='{accountnav.rightbox}' ui:field="logoutBtn">Logout</g:Button>
         </g:FlowPanel>
-        <g:FlowPanel addStyleNames='{accountnav.deckpanel} FLOWPANEL'>
+        <g:FlowPanel addStyleNames='{accountnav.deckpanel}'>
             <g:DeckPanel  ui:field="mainDeckPanel" >
                 <g:Widget ui:field="loginWidget" />
                 <g:Widget ui:field="switchSchoolWidget" />

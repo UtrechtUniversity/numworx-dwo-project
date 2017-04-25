@@ -37,7 +37,7 @@ public class LoginPanel extends Composite implements ClickHandler {
     @UiField
     PasswordTextBox passwordTextBox;
     @UiField
-    CheckBox switchBtn;
+    CheckBox switchSchoolBox;
     @UiField
     Button loginBtn;
 
@@ -78,7 +78,8 @@ public class LoginPanel extends Composite implements ClickHandler {
         parent.getSchoolName().setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getSchoolName());
         parent.getPresentationName().setText(DwoGlobalVars.instance().getCurrentUser().getDisplayName());
         parent.getUserRole().setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
-        if(switchBtn.getValue()==true){
+        LOG.log(Level.INFO, "Button: "+switchSchoolBox.getValue());
+        if(switchSchoolBox.getValue()==true){
             parent.showSwitchSchoolWidget();
             return;
         }

@@ -2,8 +2,12 @@ package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -23,16 +27,102 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
  *
  * @author G.A.J. van der Plas 
  */
-public class BootPanel extends Composite implements EntryPoint {
+public class BootPanel extends Composite implements EntryPoint, ClickHandler {
 
     private static final Logger LOG = Logger.getLogger(BootPanel.class.getName());
     private DwoGlobalVars dwoGlobalVars;
+    private BootPanelHandler handler;
 
 static {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
     }    
-    /**
+ 
+
+    interface MyUiBinder extends UiBinder<Widget, BootPanel> {
+    }
+    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+
+    @UiField
+    Label schoolName;
+    @UiField
+    Label presentationName;
+    @UiField
+    Label userRole;
+    @UiField
+    Button logoutBtn;
+    @UiField
+    DeckPanel mainDeckPanel = new DeckPanel();
+    @UiField(provided = true)
+    Widget loginWidget = new LoginPanel();
+    @UiField(provided = true)
+    Widget resultWidget = new ResultsPanel();
+    @UiField(provided = true)
+    Widget switchSchoolWidget = new SwitchSchoolPanel();
+
+    public BootPanel() {
+
+    }
+
+    @Override
+    public void onModuleLoad() {
+        try {
+            dwoGlobalVars = new DwoGlobalVars();
+        } catch (Dwo2Exception ex) {            
+            LOG.log(Level.SEVERE, null, ex);
+            PopupPanel popup = new PopupPanel();
+            popup.add(new Label("Programmers-error"));
+        }
+        initWidget(uiBinder.createAndBindUi(this));
+        handler = new BootPanelHandler(this);
+        logoutBtn.addClickHandler(this);
+        ((LoginPanel) loginWidget).setParent(this);
+//        mainDeckPanel.add(loginWidget);
+        mainDeckPanel.showWidget(0);
+        ((SwitchSchoolPanel) switchSchoolWidget).setParent(this);
+//        mainDeckPanel.add(resultWidget);
+        ((ResultsPanel) resultWidget).setParent(this);
+        LOG.log(Level.INFO, "Showing loginPanel.");
+        
+        RootLayoutPanel.get().add(this);
+    }
+
+    public void onClick(ClickEvent event) {
+        if (event.getSource() == logoutBtn) {
+            LOG.log(Level.INFO, "Logout button clicked.");
+            handler.logoutClicked();
+        }                    
+    }
+    
+    public void logoutFailed(){
+        Window.alert("logout failed, close browser to destroy session.");
+    }
+    
+    public void logoutSuccess(){
+        showLoginWidget();
+    }
+    
+    public int getMainDeckCount(){
+        return mainDeckPanel.getWidgetCount();
+    }
+    
+    public void showLoginWidget(){
+        mainDeckPanel.showWidget(0);
+    }
+    
+    public void showSwitchSchoolWidget(){
+        SwitchSchoolPanel panel = (SwitchSchoolPanel) switchSchoolWidget;
+        panel.updateView();
+        mainDeckPanel.showWidget(1);
+    }
+
+    public void showResultWidget(){
+        ResultsPanel panel = (ResultsPanel) resultWidget;
+        panel.updateView();
+        mainDeckPanel.showWidget(2);
+    }
+
+   /**
      * @return the loginWidget
      */
     public Widget getLoginWidget() {
@@ -86,70 +176,4 @@ static {
      */
     public void setUserRole(Label userRole) {
         this.userRole = userRole;
-    }
-
-    interface MyUiBinder extends UiBinder<Widget, BootPanel> {
-    }
-    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-
-    @UiField
-    Label schoolName;
-    @UiField
-    Label presentationName;
-    @UiField
-    Label userRole;
-    
-    @UiField
-    DeckPanel mainDeckPanel = new DeckPanel();
-    @UiField(provided = true)
-    Widget loginWidget = new LoginPanel();
-    @UiField(provided = true)
-    Widget resultWidget = new ResultsPanel();
-    @UiField(provided = true)
-    Widget switchSchoolWidget = new SwitchSchoolPanel();
-
-    public BootPanel() {
-
-    }
-
-    @Override
-    public void onModuleLoad() {
-        try {
-            dwoGlobalVars = new DwoGlobalVars();
-        } catch (Dwo2Exception ex) {            
-            LOG.log(Level.SEVERE, null, ex);
-            PopupPanel popup = new PopupPanel();
-            popup.add(new Label("Programmers-error"));
-        }
-        initWidget(uiBinder.createAndBindUi(this));
-        ((LoginPanel) loginWidget).setParent(this);
-//        mainDeckPanel.add(loginWidget);
-        mainDeckPanel.showWidget(0);
-        ((ResultsPanel) resultWidget).setParent(this);
-//        mainDeckPanel.add(resultWidget);
-        LOG.log(Level.INFO, "Showing loginPanel.");
-        
-        RootLayoutPanel.get().add(this);
-    }
-
-    public int getMainDeckCount(){
-        return mainDeckPanel.getWidgetCount();
-    }
-    
-    public void showLoginWidget(){
-        mainDeckPanel.showWidget(0);
-    }
-    
-    public void showSwitchSchoolWidget(){
-        SwitchSchoolPanel panel = (SwitchSchoolPanel) resultWidget;
-        panel.updateView();
-        mainDeckPanel.showWidget(1);
-    }
-
-    public void showResultWidget(){
-        ResultsPanel panel = (ResultsPanel) resultWidget;
-        panel.updateView();
-        mainDeckPanel.showWidget(2);
-    }
-
-}
+    }}

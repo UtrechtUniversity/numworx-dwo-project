@@ -24,7 +24,7 @@
                 </g:row>
                 <g:row styleName="optionalHeaderStyle">
                     <g:customCell styleName="optionalFooCellStyle">
-                        <g:CheckBox ui:field='switchBtn' checked="false">switch school</g:CheckBox>
+                        <g:CheckBox ui:field='switchSchoolBox' checked="false">switch school</g:CheckBox>
                     </g:customCell>
                     <g:customCell styleName="optionalBarCellStyle">
                         <g:Button ui:field='loginBtn'>Login</g:Button>

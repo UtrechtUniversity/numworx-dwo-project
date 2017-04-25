@@ -23,6 +23,7 @@
     margin-bottom: 5px;
     height: 50px;
     width: calc(100vw-16px);
+    padding: 10px;
 }	
 .navi {
     padding: 8px;
@@ -90,4 +91,22 @@
     margin-top : 5px;
     margin-bottom: 5px;
     border-style: solid;
+}
+
+.logoutButton{
+    align: right;
+}
+
+.box{
+    display:inline;
+    overflow:hidden;
+}
+.leftbox{
+    display:inline;
+    float: left;
+}
+
+.rightbox{
+    display:inline;
+    float: right;
 }

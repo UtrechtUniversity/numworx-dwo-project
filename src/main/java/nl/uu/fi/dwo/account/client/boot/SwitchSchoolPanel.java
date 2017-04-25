@@ -56,34 +56,35 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
         initWidget(uiBinder.createAndBindUi(this));
         handler = new SwitchSchoolPanelHandler(this);
         //controller must be before clicks occur
-        //loginBtn.addClickHandler(this);
+        switchBtn.addClickHandler(this);
 
     }
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == switchBtn) {
+            handler.switchSchool();
             parent.showResultWidget();
         }
     }
-
-    /**
-     * Called from handler after successful login.
-     */
-    public void onLoginSuccess() {
-        LOG.log(Level.INFO, "Login succeeded.");
-        parent.showResultWidget();
-    }
-
-    /**
-     * Called from handler after failed login.
-     *
-     * @param failMessage
-     */
-    public void onLoginFailure(String failMessage) {
-        LOG.log(Level.INFO, failMessage);
-        Window.alert(failMessage);
-        //reset user interface?
-    }
+//
+//    /**
+//     * Called from handler after successful login.
+//     */
+//    public void onLoginSuccess() {
+//        LOG.log(Level.INFO, "Login succeeded.");
+//        parent.showResultWidget();
+//    }
+//
+//    /**
+//     * Called from handler after failed login.
+//     *
+//     * @param failMessage
+//     */
+//    public void onLoginFailure(String failMessage) {
+//        LOG.log(Level.INFO, failMessage);
+//        Window.alert(failMessage);
+//        //reset user interface?
+//    }
 
     public void updateView() {
         //fetch and display all the schoollogins that have teachers.
