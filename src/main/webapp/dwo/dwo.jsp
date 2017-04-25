@@ -57,7 +57,7 @@
 	code	= "fi.dwo.dwojapplet.domain.DWO"
 	width	= "100%"
 	height= "100%"
-	archive = "DWOJApplet.jar"
+	archive = "DWOJApplet.jar,dwo1compat.jar"
 	mayscript
 	id="API"
 	name="DWO"
