@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
+
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.TextAlign;
@@ -14,6 +18,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PushButton;
@@ -91,8 +96,23 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			if(!editable) return;
 			event.stopPropagation();
 			logger.warning("CheckButton actieAfronden");
-			DWOplayer.clientfactory.getEventBus().fireEvent(SEAL_EVENT);
+			confirm().then(new Success<Boolean, Void>() {
+
+				@Override
+				public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+					if(resolved.getValue())
+						DWOplayer.clientfactory.getEventBus().fireEvent(SEAL_EVENT);
+					return null;
+				}
+			});
 		}
+// FIXME een andere implementatie zie "alles opnieuw"		
+		private Promise<Boolean> confirm() {
+			return Promises.resolved(Window.confirm(nl.uu.fi.dwo.mobile.client.text.Text.constants.afronden()));
+		}
+		
+		
+		
 	}
 	
 	final class ActieBewaren implements ClickHandler {

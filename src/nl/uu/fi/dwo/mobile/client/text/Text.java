@@ -64,4 +64,7 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("Aanmelden")
 	String aanmelden();
+	
+	@DefaultStringValue("Wil je de opdracht afronden?")
+	String afronden();
 }
