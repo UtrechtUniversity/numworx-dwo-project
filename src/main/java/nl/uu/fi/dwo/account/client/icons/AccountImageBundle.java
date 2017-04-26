@@ -22,4 +22,8 @@ public ImageResource empty();
     
 @Source("student.png")
 public ImageResource student();
+
+
+@Source("DWO_logo_full.png")
+public ImageResource dwoLogo();
 }

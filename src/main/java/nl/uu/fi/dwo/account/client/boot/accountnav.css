@@ -24,6 +24,7 @@
     height: 50px;
     width: calc(100vw-16px);
     padding: 10px;
+    vertical-align: bottom;     
 }	
 .navi {
     padding: 8px;
@@ -101,12 +102,42 @@
     display:inline;
     overflow:hidden;
 }
-.leftbox{
-    display:inline;
-    float: left;
+
+.leftLogoBox{
+    display: inline-block;
+    margin-bottom:10px;
+    margin-left: 10px;
+    margin-right: 5px;
+    vertical-align: bottom;
+    visibility: visible;    
 }
 
-.rightbox{
-    display:inline;
+.leftFullBox{
+    display: inline-block;
+    margin-bottom:10px;
+    margin-left: 10px;
+    margin-right: 5px;
+    vertical-align: bottom;
+    visibility: hidden;
+}
+
+.leftHalfBox{
+    display: inline-block;
+    border-left:0px;
+    margin-bottom:10px;
+    margin-left: 0px;
+    margin-right: 5px;
+    vertical-align: bottom;
+    visibility: hidden;
+}
+
+.rightBox{
+    display: inline;
     float: right;
+    margin-top: auto;
+    margin-bottom:10px;
+    margin-left: 10px;
+    margin-right: 5px;
+    vertical-align: bottom;    
+    visibility: hidden;
 }

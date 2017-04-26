@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -25,7 +26,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 /**
  * BootPanel, boots the app, initializes with the server, requests a login.
  *
- * @author G.A.J. van der Plas 
+ * @author G.A.J. van der Plas
  */
 public class BootPanel extends Composite implements EntryPoint, ClickHandler {
 
@@ -33,11 +34,10 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     private DwoGlobalVars dwoGlobalVars;
     private BootPanelHandler handler;
 
-static {
+    static {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
-    }    
- 
+    }
 
     interface MyUiBinder extends UiBinder<Widget, BootPanel> {
     }
@@ -51,6 +51,8 @@ static {
     Label userRole;
     @UiField
     Button logoutBtn;
+    @UiField
+    Image dwoLogo;
     @UiField
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
@@ -68,7 +70,7 @@ static {
     public void onModuleLoad() {
         try {
             dwoGlobalVars = new DwoGlobalVars();
-        } catch (Dwo2Exception ex) {            
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
             PopupPanel popup = new PopupPanel();
             popup.add(new Label("Programmers-error"));
@@ -83,7 +85,7 @@ static {
 //        mainDeckPanel.add(resultWidget);
         ((ResultsPanel) resultWidget).setParent(this);
         LOG.log(Level.INFO, "Showing loginPanel.");
-        
+
         RootLayoutPanel.get().add(this);
     }
 
@@ -91,38 +93,38 @@ static {
         if (event.getSource() == logoutBtn) {
             LOG.log(Level.INFO, "Logout button clicked.");
             handler.logoutClicked();
-        }                    
+        }
     }
-    
-    public void logoutFailed(){
+
+    public void logoutFailed() {
         Window.alert("logout failed, close browser to destroy session.");
     }
-    
-    public void logoutSuccess(){
+
+    public void logoutSuccess() {
         showLoginWidget();
     }
-    
-    public int getMainDeckCount(){
+
+    public int getMainDeckCount() {
         return mainDeckPanel.getWidgetCount();
     }
-    
-    public void showLoginWidget(){
+
+    public void showLoginWidget() {
         mainDeckPanel.showWidget(0);
     }
-    
-    public void showSwitchSchoolWidget(){
+
+    public void showSwitchSchoolWidget() {
         SwitchSchoolPanel panel = (SwitchSchoolPanel) switchSchoolWidget;
         panel.updateView();
         mainDeckPanel.showWidget(1);
     }
 
-    public void showResultWidget(){
+    public void showResultWidget() {
         ResultsPanel panel = (ResultsPanel) resultWidget;
         panel.updateView();
         mainDeckPanel.showWidget(2);
     }
 
-   /**
+    /**
      * @return the loginWidget
      */
     public Widget getLoginWidget() {
@@ -176,4 +178,5 @@ static {
      */
     public void setUserRole(Label userRole) {
         this.userRole = userRole;
-    }}
+    }
+}
