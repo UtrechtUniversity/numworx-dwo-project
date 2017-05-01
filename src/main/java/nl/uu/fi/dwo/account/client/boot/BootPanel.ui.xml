@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
-    <ui:style field="accountnav" src="accountnav.css" />    
+    <ui:style field="accountnav" src="resultapp.css" />    
     <ui:with type="nl.uu.fi.dwo.account.client.icons.AccountImageBundle" field="icons" />
     
     <g:HeaderPanel addStyleNames='{accountnav.appPanel}'>
@@ -10,9 +10,9 @@
             <g:Image addStyleNames='{accountnav.leftLogoBox}' height = '90%' width = 'auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />            
             <g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="schoolLabel">School:</g:Label>
             <g:Label addStyleNames='{accountnav.leftHalfBox}' ui:field="schoolName"></g:Label>
-            <g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="rolLabel">rol:</g:Label>
+            <g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="roleLabel">rol:</g:Label>
             <g:Label addStyleNames='{accountnav.leftHalfBox}' ui:field="userRole"></g:Label>
-            <g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="userlabel">gebruikernaam:</g:Label>
+            <g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="userLabel">gebruikernaam:</g:Label>
             <g:Label addStyleNames='{accountnav.leftHalfBox}' ui:field="presentationName"></g:Label>
             <g:Button addStyleNames='{accountnav.rightBox}'   ui:field="logoutBtn">Logout</g:Button>
         </g:FlowPanel>

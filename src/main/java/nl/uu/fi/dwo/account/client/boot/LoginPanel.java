@@ -79,6 +79,12 @@ public class LoginPanel extends Composite implements ClickHandler {
         parent.getPresentationName().setText(DwoGlobalVars.instance().getCurrentUser().getDisplayName());
         parent.getUserRole().setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
         LOG.log(Level.INFO, "Button: "+switchSchoolBox.getValue());
+        parent.getSchoolLabel().setVisible(true);
+        parent.getSchoolName().setVisible(true);
+        parent.getRoleLabel().setVisible(true);
+        parent.getUserRole().setVisible(true);
+        parent.getUserLabel().setVisible(true);
+        parent.getPresentationName().setVisible(true);
         if(switchSchoolBox.getValue()==true){
             parent.showSwitchSchoolWidget();
             return;

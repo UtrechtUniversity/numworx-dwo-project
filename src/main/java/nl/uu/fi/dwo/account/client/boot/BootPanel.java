@@ -39,14 +39,62 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
     }
 
+    /**
+     * @return the schoolLabel
+     */
+    public Label getSchoolLabel() {
+        return schoolLabel;
+    }
+
+    /**
+     * @param schoolLabel the schoolLabel to set
+     */
+    public void setSchoolLabel(Label schoolLabel) {
+        this.schoolLabel = schoolLabel;
+    }
+
+    /**
+     * @return the roleLabel
+     */
+    public Label getRoleLabel() {
+        return roleLabel;
+    }
+
+    /**
+     * @param roleLabel the roleLabel to set
+     */
+    public void setRoleLabel(Label roleLabel) {
+        this.roleLabel = roleLabel;
+    }
+
+    /**
+     * @return the userLabel
+     */
+    public Label getUserLabel() {
+        return userLabel;
+    }
+
+    /**
+     * @param userLabel the userLabel to set
+     */
+    public void setUserLabel(Label userLabel) {
+        this.userLabel = userLabel;
+    }
+
     interface MyUiBinder extends UiBinder<Widget, BootPanel> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     @UiField
+    Label schoolLabel;
+    @UiField
     Label schoolName;
     @UiField
+    private Label userLabel;
+    @UiField
     Label presentationName;
+    @UiField
+    Label roleLabel;
     @UiField
     Label userRole;
     @UiField

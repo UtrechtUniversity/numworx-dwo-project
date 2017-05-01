@@ -2,51 +2,11 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
-    <ui:style field="mainpanel" src="mainpanel.css" />
-    <g:HorizontalPanel addStyleNames='{mainpanel.widget}'>
-        <g:VerticalPanel horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
-            <g:Grid>
-                <g:row styleName="optionalHeaderStyle">
-                    <g:customCell styleName="optionalFooCellStyle">
-                        <g:Label>school1</g:Label>
-                    </g:customCell>
-                    <g:customCell styleName="optionalBarCellStyle">
-                        <g:TextBox ui:field='usernameText'>gert_project</g:TextBox>
-                    </g:customCell>
-                </g:row>
-                <g:row styleName="optionalHeaderStyle">
-                    <g:customCell styleName="optionalFooCellStyle">
-                        <g:Label>school2</g:Label>
-                    </g:customCell>
-                    <g:customCell styleName="optionalBarCellStyle">
-                        <g:PasswordTextBox ui:field='passwordTextBox'>passw</g:PasswordTextBox>
-                    </g:customCell>
-                </g:row>
-                <g:row styleName="optionalHeaderStyle">
-                    <g:customCell styleName="optionalFooCellStyle">
-                        <g:Label>select a school and click switch</g:Label>
-                    </g:customCell>
-                    <g:customCell styleName="optionalBarCellStyle">
-                        <g:Button ui:field='switchBtn'>Switch</g:Button>
-                    </g:customCell>
-                </g:row>
-                <!--                <g:row>
-                        <g:cell>
-                        <g:Label>password:</g:Label>
-                    </g:cell>
-                    <g:cell>
-                        <g:PasswordTextBox ui:field='passwordTextBox'>passw</g:PasswordTextBox>
-                    </g:cell>
-                </g:row>
-                <g:row>
-                    <g:cell>
-                        <g:CheckBox ui:field='checkBox' checked="true">switch to teacher</g:CheckBox>
-                    </g:cell>
-                    <g:cell>
-                        <g:Button ui:field='loginBtn'>Login</g:Button>
-                    </g:cell>
-                </g:row>-->
-            </g:Grid>            
-        </g:VerticalPanel>    
-    </g:HorizontalPanel>
+    <ui:style field="resultapp" src="resultapp.css" />
+    <g:FlowPanel>
+        <g:FlexTable ui:field="table" styleName="{resultapp.flexTable}" borderWidth="2" />
+        <g:Button addStyleNames='{resultapp.leftHalfBox}' ui:field="cancelBtn">cancel</g:Button>
+        <g:Button addStyleNames='{resultapp.leftFullBox}' ui:field="switchBtn">switch</g:Button>
+
+    </g:FlowPanel>
 </ui:UiBinder> 
