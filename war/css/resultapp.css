@@ -199,6 +199,11 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     background-color: #dedede;
 }
 
+.flexTableHeader {
+  background-color: #aaaaaa;
+}
+
+
 .flexTableOddRow {
   background-color: #dddddd;
 }

@@ -1,6 +1,10 @@
 package nl.uu.fi.dwo.account.client.boot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
 /**
  * Handler for for Login actions.
@@ -18,6 +22,17 @@ class SwitchSchoolPanelHandler {
         init();
     }
 
+    public List<DomSchoolRoleAndClassV2> getTeacherRoles(){
+        List<DomSchoolRoleAndClassV2> result =new ArrayList<DomSchoolRoleAndClassV2>();
+        List<DomSchoolRoleAndClassV2>  fullList = DwoGlobalVars.instance().getSchoolLogins().getSchoolsRolesAndClassesList();
+        for(DomSchoolRoleAndClassV2 hasRole : fullList){
+            if(hasRole.getRole().getRoleName().equals("TEACHER")){
+                result.add(hasRole);
+            }
+        }
+        return result;
+    }
+    
     public void init() {
 
     }

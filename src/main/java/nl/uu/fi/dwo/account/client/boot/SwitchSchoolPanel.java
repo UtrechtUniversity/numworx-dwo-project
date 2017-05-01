@@ -3,14 +3,19 @@ package nl.uu.fi.dwo.account.client.boot;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiRenderer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
 /**
  * GWT Panel that handles the login-authentication.
@@ -23,16 +28,35 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
 
     interface MyUiBinder extends UiBinder<Widget, SwitchSchoolPanel> {
     }
-    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+    
+    
+//    }
+//        interface MyUiRenderer extends UiRenderer {
+//            @ClientBundle.Source("resultapp.css")
+//        MyStyle getMyStyle();
+//  // ... snip ...
+//}
 
+//    public interface MyStyle extends CssResource {
+//        String selectedBackground();
+//        String red();
+//    }
+// private static final MyUiRenderer myRenderer = GWT.create(MyUiRenderer.class);
+ 
+    
+    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+   
     private SwitchSchoolPanelHandler handler;
 
+    @UiField
+    FlexTable flexTable;
     @UiField
     Button cancelBtn;
     @UiField
     Button switchBtn;
 //    @UiField
 //    Button loginBtn;
+    int selectedRow = 0;
 
     private BootPanel parent;
 
@@ -52,11 +76,37 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
         handler = new SwitchSchoolPanelHandler(this);
         //controller must be before clicks occur
         switchBtn.addClickHandler(this);
+    }
 
+    public void init() {
+        flexTable.setWidget(0, 0, new Label("Schoolnaam"));
+        flexTable.getCellFormatter().addStyleName(0,0,"flexTableHeader");
+        int i = 1;
+        for (DomSchoolRoleAndClassV2 role : handler.getTeacherRoles()) {
+            flexTable.setWidget(i, 0, new Label(role.getSchool().getSchoolName()));
+            if(i%2==0){
+               flexTable.getCellFormatter().addStyleName(i,0,"flexTableOddRow");                
+            }else{
+               flexTable.getCellFormatter().addStyleName(i,0,"flexTableEvenRow");                                
+            }
+            flexTable.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    int curRow = selectedRow;
+                    selectedRow = flexTable.getCellForEvent(event).getRowIndex();
+                    flexTable.getRowFormatter().getElement(selectedRow).addClassName("flexTableSelectedBackground");
+                    if (curRow != selectedRow) {
+                        flexTable.getRowFormatter().getElement(curRow).removeClassName("flexTableSelectedBackground");
+                    }
+                    LOG.log(Level.INFO, "" + selectedRow);
+                }
+            });
+            i++;
+        }
     }
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == switchBtn) {
+            // LOG.log(Level.INFO, "" + selectedRow);
             handler.switchSchool();
             parent.showResultWidget();
         }
