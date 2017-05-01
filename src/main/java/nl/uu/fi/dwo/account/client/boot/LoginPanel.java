@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -79,12 +80,13 @@ public class LoginPanel extends Composite implements ClickHandler {
         parent.getPresentationName().setText(DwoGlobalVars.instance().getCurrentUser().getDisplayName());
         parent.getUserRole().setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
         LOG.log(Level.INFO, "Button: "+switchSchoolBox.getValue());
-        parent.getSchoolLabel().setVisible(true);
-        parent.getSchoolName().setVisible(true);
-        parent.getRoleLabel().setVisible(true);
-        parent.getUserRole().setVisible(true);
-        parent.getUserLabel().setVisible(true);
-        parent.getPresentationName().setVisible(true);
+        parent.getSchoolLabel().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        parent.getSchoolName().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        parent.getRoleLabel().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        parent.getUserRole().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        parent.getUserLabel().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        parent.getPresentationName().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        parent.getLogoutBtn().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         if(switchSchoolBox.getValue()==true){
             parent.showSwitchSchoolWidget();
             return;

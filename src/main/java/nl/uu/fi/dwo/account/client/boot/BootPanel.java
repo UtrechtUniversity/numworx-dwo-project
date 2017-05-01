@@ -38,7 +38,6 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
     }
-    
     interface MyUiBinder extends UiBinder<Widget, BootPanel> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
@@ -83,7 +82,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
         }
         initWidget(uiBinder.createAndBindUi(this));
         handler = new BootPanelHandler(this);
-        logoutBtn.addClickHandler(this);
+        getLogoutBtn().addClickHandler(this);
         ((LoginPanel) loginWidget).setParent(this);
 //        mainDeckPanel.add(loginWidget);
         mainDeckPanel.showWidget(0);
@@ -139,7 +138,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     }
 
     public void onClick(ClickEvent event) {
-        if (event.getSource() == logoutBtn) {
+        if (event.getSource() == getLogoutBtn()) {
             LOG.log(Level.INFO, "Logout button clicked.");
             handler.logoutClicked();
         }
@@ -229,4 +228,19 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     public void setUserRole(Label userRole) {
         this.userRole = userRole;
     }
+
+    /**
+     * @return the logoutBtn
+     */
+    public Button getLogoutBtn() {
+        return logoutBtn;
+    }
+
+    /**
+     * @param logoutBtn the logoutBtn to set
+     */
+    public void setLogoutBtn(Button logoutBtn) {
+        this.logoutBtn = logoutBtn;
+    }
+    
 }

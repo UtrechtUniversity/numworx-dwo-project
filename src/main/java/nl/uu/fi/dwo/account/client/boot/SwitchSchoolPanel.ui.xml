@@ -5,7 +5,9 @@
     <ui:style field="resultApp" src="resultapp.css" />
     <g:FlowPanel>
         <g:FlexTable styleName="{resultApp.flexTable}" ui:field="flexTable"/>
-        <g:Button addStyleNames='{resultApp.leftFullBox}' ui:field="switchBtn">switch</g:Button>
-        <g:Button addStyleNames='{resultApp.leftHalfBox}' ui:field="cancelBtn">cancel</g:Button>
+        <g:FlowPanel>
+                <g:Button addStyleNames='{resultApp.rightFullBox}' ui:field="switchBtn">switch</g:Button>
+                <g:Button addStyleNames='{resultApp.rightHalfBox}'  ui:field="cancelBtn">cancel</g:Button>
+        </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder> 

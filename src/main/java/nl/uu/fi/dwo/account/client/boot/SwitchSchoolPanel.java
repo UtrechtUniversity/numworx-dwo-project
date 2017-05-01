@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ClientBundle;
@@ -28,22 +29,6 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
 
     interface MyUiBinder extends UiBinder<Widget, SwitchSchoolPanel> {
     }
-    
-    
-//    }
-//        interface MyUiRenderer extends UiRenderer {
-//            @ClientBundle.Source("resultapp.css")
-//        MyStyle getMyStyle();
-//  // ... snip ...
-//}
-
-//    public interface MyStyle extends CssResource {
-//        String selectedBackground();
-//        String red();
-//    }
-// private static final MyUiRenderer myRenderer = GWT.create(MyUiRenderer.class);
- 
-    
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
    
     private SwitchSchoolPanelHandler handler;
@@ -54,8 +39,6 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
     Button cancelBtn;
     @UiField
     Button switchBtn;
-//    @UiField
-//    Button loginBtn;
     int selectedRow = 0;
 
     private BootPanel parent;
@@ -85,9 +68,9 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
         for (DomSchoolRoleAndClassV2 role : handler.getTeacherRoles()) {
             flexTable.setWidget(i, 0, new Label(role.getSchool().getSchoolName()));
             if(i%2==0){
-               flexTable.getCellFormatter().addStyleName(i,0,"flexTableOddRow");                
+//               flexTable.getCellFormatter().addStyleName(i,0,"flexTableOddRow");                
             }else{
-               flexTable.getCellFormatter().addStyleName(i,0,"flexTableEvenRow");                                
+//               flexTable.getCellFormatter().addStyleName(i,0,"flexTableEvenRow");                                
             }
             flexTable.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
@@ -102,12 +85,14 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
             });
             i++;
         }
+//        cancelBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        switchBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == switchBtn) {
-            // LOG.log(Level.INFO, "" + selectedRow);
-            handler.switchSchool();
+            parent.getSchoolName().setText(handler.getTeacherRoles().get(selectedRow).getSchool().getSchoolName());
+            handler.switchSchool();//handler.getTeacherRoles().get(selectedRow)
             parent.showResultWidget();
         }
     }

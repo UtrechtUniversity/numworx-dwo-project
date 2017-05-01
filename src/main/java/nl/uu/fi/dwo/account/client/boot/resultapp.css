@@ -135,6 +135,28 @@
     visibility: hidden;
 }
 
+.rightFullBox{
+    display: inline;
+    float: right;
+    margin-top: auto;
+    margin-bottom:10px;
+    margin-left: 5px;
+    margin-right: 10px;
+    vertical-align: bottom;    
+    visibility: hidden;
+}
+
+.rightHalfBox{
+    display: inline;
+    float: right;
+    margin-top: auto;
+    margin-bottom:10px;
+    margin-left: 5px;
+    margin-right: 0px;
+    vertical-align: bottom;    
+    visibility: hidden;
+}
+
 .rightBox{
     display: inline;
     float: right;
@@ -191,16 +213,9 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     background-color: #dedede;
 }
 
-.flexTableOddRow tr:hover {        
-    background-color: #dedede;
-}
-
-.flexTableEvenRow tr:hover {        
-    background-color: #dedede;
-}
-
 .flexTableOddRow {
   background-color: #dddddd;
+  
 }
 
 .flexTableEvenRow {
@@ -208,6 +223,6 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
 }
 
 .flexTableSelectedBackground {
-    background-color: red !important;
+    background-color: royalblue !important;
 }
 
