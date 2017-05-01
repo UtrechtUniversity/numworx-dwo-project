@@ -72,7 +72,8 @@ public class PasteAction extends GuiAction
 					if(!dest.isWithChildren())
 						return;
 					if(dest.getSchoolID() == 0 && !hasAdminRight()) return;
-					// TODO check copy parent into child.
+					// check copy parent into child.
+					if(checkAncestor(dest, source)) return;
 					copyCourseMap(dest, source, map);
 				} else if(clip instanceof Sco && object instanceof Sco) 
 				{
@@ -84,6 +85,14 @@ public class PasteAction extends GuiAction
 				
 				
 			}
+		}
+		private boolean checkAncestor(CourseMap dest, Course source) {
+			if(!source.isWithChildren()) return false; // source is leaf-course (module)
+			do {
+				if (dest == source) return true;
+				dest = dest.getParentMap();
+			} while (dest != null);
+			return false;
 		}
 		private void copySco(Course course, Sco sco) {
 // verify we have scos
