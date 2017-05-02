@@ -67,4 +67,10 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("Wil je de opdracht afronden?")
 	String afronden();
+	
+	@DefaultStringValue("OK")
+	String ok();
+	
+	@DefaultStringValue("Cancel")
+	String cancel();
 }

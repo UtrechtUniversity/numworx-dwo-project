@@ -9,6 +9,9 @@ import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
+
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
@@ -328,14 +331,12 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 		if(opdracht < 0)
 		{
 			final int opdr = opdracht;
-			final DialogBox box = new DialogBox();
-			box.getElement().getStyle().setZIndex(10);
-			FlowPanel contents = new FlowPanel();
+			final MessageDialog box = new MessageDialog();
 			Label titel = new Label(Text.constants.opnieuwPanelTitel());
 			titel.getElement().getStyle().setFontSize(16, Style.Unit.PX);
 			titel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 			titel.getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
-			contents.add(titel);
+			box.addLine(titel);
 			Label meldingTekst1 = new Label(Text.constants.opnieuwPanelTekst1());
 			meldingTekst1.getElement().getStyle().setFontSize(14, Style.Unit.PX);
 			meldingTekst1.getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
@@ -343,30 +344,40 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 			meldingTekst2.getElement().getStyle().setFontSize(14, Style.Unit.PX);
 			meldingTekst2.getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
 			
-			contents.add(meldingTekst1);
-			contents.add(meldingTekst2);
-			Button jaKnop = new Button(Text.constants.jaTekst());
-			jaKnop.getElement().getStyle().setPaddingLeft(20, Style.Unit.PX);
-		    jaKnop.addClickHandler(new ClickHandler() {
-		        public void onClick(ClickEvent event) {
-		        	box.hide();
-		        	gotoOpdracht.reloadOpdracht(opdr, ScoreNavFacade.this);
-		        	
-		        	
-		        }
-		    });
-		    Button neeKnop = new Button(Text.constants.neeTekst());
-		    neeKnop.getElement().getStyle().setFloat(Float.RIGHT);
-		    neeKnop.getElement().getStyle().setPaddingRight(20, Style.Unit.PX);
-		    neeKnop.addClickHandler(new ClickHandler() { 
-		    	public void onClick(ClickEvent event) {
-		    		box.hide();
-		    	}
-		    });
-		    contents.add(jaKnop);
-		    contents.add(neeKnop);
-		    box.setWidget(contents);
-		    box.show();
+			box.addLine(meldingTekst1);
+			box.addLine(meldingTekst2);
+			box.addYes();
+//			Button jaKnop = new Button(Text.constants.jaTekst());
+//			jaKnop.getElement().getStyle().setPaddingLeft(20, Style.Unit.PX);
+//		    jaKnop.addClickHandler(new ClickHandler() {
+//		        public void onClick(ClickEvent event) {
+//		        	box.hide();
+//		        	gotoOpdracht.reloadOpdracht(opdr, ScoreNavFacade.this);
+//		        	
+//		        	
+//		        }
+//		    });
+			box.addNo();
+//			Button neeKnop = new Button(Text.constants.neeTekst());
+//		    neeKnop.getElement().getStyle().setFloat(Float.RIGHT);
+//		    neeKnop.getElement().getStyle().setPaddingRight(20, Style.Unit.PX);
+//		    neeKnop.addClickHandler(new ClickHandler() { 
+//		    	public void onClick(ClickEvent event) {
+//		    		box.hide();
+//		    	}
+//		    });
+//		    contents.add(jaKnop);
+//		    contents.add(neeKnop);
+//		    box.setWidget(contents);
+//		    box.show();
+			box.showDialog().then(new Success<Integer, Void>() {
+
+				@Override
+				public Promise<Void> call(Promise<Integer> resolved) throws Exception {
+					if(resolved.getValue().intValue() == MessageDialog.YES)
+						gotoOpdracht.reloadOpdracht(opdr, ScoreNavFacade.this);
+					return null;
+				}});
 		}
 		else
 			gotoOpdracht.reloadOpdracht(opdracht, ScoreNavFacade.this);

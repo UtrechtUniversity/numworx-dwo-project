@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
+import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -47,12 +48,16 @@ public class LoginActivity extends MGWTAbstractActivity
 			Throwable caught = promise.getFailure();
 			LOG.log(Level.WARNING, "login failure ", caught);
 			if (caught instanceof NoSuchElementException)
-				Window.alert("Geen toegang voor deze site"); // Rekenwise limited
+				alert("Geen toegang voor deze site"); // Rekenwise limited
 			else
 			if (caught.getMessage().contains("LoginException"))
-				Window.alert(Text.constants.EXR_WRONG_USERNAME_PASSWORD());
+				alert(Text.constants.EXR_WRONG_USERNAME_PASSWORD());
 			else
-				Window.alert("Unable to login"); // if exception is DWO2exception?
+				alert("Unable to login"); // if exception is DWO2exception?
+		}
+
+		private Promise<Integer> alert(String string) {
+			return MessageDialog.alert(string);
 		}
 	};
 

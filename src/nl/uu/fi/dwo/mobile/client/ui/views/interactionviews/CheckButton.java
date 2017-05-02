@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
@@ -20,6 +21,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,6 +39,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 
 public class CheckButton implements InteractionStub, CBookEventListener
 {
@@ -108,11 +111,20 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		}
 // FIXME een andere implementatie zie "alles opnieuw"		
 		private Promise<Boolean> confirm() {
-			return Promises.resolved(Window.confirm(nl.uu.fi.dwo.mobile.client.text.Text.constants.afronden()));
+//			return Promises.resolved(Window.confirm(nl.uu.fi.dwo.mobile.client.text.Text.constants.afronden()));
+		MessageDialog box = new MessageDialog();
+		box.addYes();
+		box.addNo();
+		Label line = new Label(nl.uu.fi.dwo.mobile.client.text.Text.constants.afronden());
+		box.addLine(line);
+		return box.showDialog().map(new Function<Integer, Boolean>() {
+
+			@Override
+			public Boolean apply(Integer t) {
+				return t.intValue() == MessageDialog.YES;
+			}
+		});		
 		}
-		
-		
-		
 	}
 	
 	final class ActieBewaren implements ClickHandler {
