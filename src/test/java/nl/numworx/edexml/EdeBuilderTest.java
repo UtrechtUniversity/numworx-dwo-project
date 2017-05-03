@@ -1,10 +1,10 @@
 package nl.numworx.edexml;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Map;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 
 import org.xml.sax.InputSource;
 
@@ -40,11 +40,20 @@ public class EdeBuilderTest extends TestCase {
 	}
 	
 	public void testParseLeerlingen() throws Exception {
-		
-		
+		InputStream in  = getClass().getResourceAsStream("/sample1.xml");
+		InputSource is = new InputSource();
+		is.setByteStream(in);
+		builder.setSource(is);
+		Map<String, DomUserFull> result = builder.parseLeerlingen();
+		assertEquals(3, result.size());
 	}
 	
 	public void testParseLeerkrachten() throws Exception {
-		
+		InputStream in  = getClass().getResourceAsStream("/sample1.xml");
+		InputSource is = new InputSource();
+		is.setByteStream(in);
+		builder.setSource(is);
+		Map<String, DomUserFull> result = builder.parseLeerkrachten();
+		assertEquals(3, result.size());
 	}
 }
