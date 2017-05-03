@@ -648,24 +648,25 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
      * @param rm
      */
     public ResultsModulePanel(ResultsModuleIF rm) {
-        DomResultsPerTeacher results;
-        try {
-            DomDwoProfile profile = new DomDwoProfile();
-            profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;000000000000000000001"));;
-            profile.setDwoProfileName("test");
-            profile.setDwoProfileRights("_");
-            results = SecuredTeacherResultsManager.getTeachersResults(profile);
-//        DomMappedResultsPerTeacher mapResults = new DomMappedResultsPerTeacher((results));
-            DomResultTree rTree = new DomResultTree(results);
-            DomResultPlotMatrix matrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
-            LOG.log(Level.INFO, matrix.toString());
-            for(DomResultSchoolClass c: rTree.getResultTree().getChildren().values()){
-               matrix = ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree.getStudentTree().getChildren().get(c.getSchoolClass().getId()), c);
-            LOG.log(Level.INFO, c.getLabel()+"\n\n"+matrix.toString());
-            }
-        } catch (Dwo2Exception ex) {
-            Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //keep, required for comparing gui data with new REST-results
+//        DomResultsPerTeacher results;
+//        try {
+//            DomDwoProfile profile = new DomDwoProfile();
+//            profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;000000000000000000001"));;
+//            profile.setDwoProfileName("test");
+//            profile.setDwoProfileRights("_");
+//            results = SecuredTeacherResultsManager.getTeachersResults(profile);
+////        DomMappedResultsPerTeacher mapResults = new DomMappedResultsPerTeacher((results));
+//            DomResultTree rTree = new DomResultTree(results);
+//            DomResultPlotMatrix matrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+//            LOG.log(Level.INFO, matrix.toString());
+//            for(DomResultSchoolClass c: rTree.getResultTree().getChildren().values()){
+//               matrix = ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree.getStudentTree().getChildren().get(c.getSchoolClass().getId()), c);
+//            LOG.log(Level.INFO, c.getLabel()+"\n\n"+matrix.toString());
+//            }
+//        } catch (Dwo2Exception ex) {
+//            Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(600, 480);
