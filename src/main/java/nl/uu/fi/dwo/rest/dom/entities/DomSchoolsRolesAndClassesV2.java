@@ -25,6 +25,8 @@ public class DomSchoolsRolesAndClassesV2 {
         schoolsRolesAndClassesList = new ArrayList<DomSchoolRoleAndClassV2>();
     }
     /**
+     * Returns the ActiveSchoolRoleAndClass stored in the Persistent Datastore.
+     * 
      * @return the currentSchoolRoleAndClass
      */
     public DomSchoolRoleAndClassV2 getActiveSchoolRoleAndClass() {
@@ -32,6 +34,8 @@ public class DomSchoolsRolesAndClassesV2 {
     }
 
     /**
+     * Sets the ActiveSchoolRoleAndClass stored in the Persistent Datastore.
+     * 
      * @param currentSRC the currentSchoolRoleAndClass to set
      */
     public void setActiveSchoolRoleAndClass(DomSchoolRoleAndClassV2 currentSRC) {
