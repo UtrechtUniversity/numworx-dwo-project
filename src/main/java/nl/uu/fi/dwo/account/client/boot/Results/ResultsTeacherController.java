@@ -25,7 +25,7 @@ class ResultsTeacherController {
     
     public Promise<DomResultsPerTeacher> getResultsPerTeacher() {
         DomContext context = new DomContext();
-        context.setDomHasRole(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
         DomDwoProfile profile = new DomDwoProfile();
         profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;00000000000000000001"));;
         profile.setDwoProfileName("test");

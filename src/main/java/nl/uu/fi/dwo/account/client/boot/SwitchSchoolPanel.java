@@ -60,6 +60,7 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
     }
 
     public void init() {
+        //create table
         flexTable.setWidget(0, 0, new Label("Schoolnaam"));
         flexTable.getCellFormatter().addStyleName(0,0,"flexTableHeader");
         int i = 1;

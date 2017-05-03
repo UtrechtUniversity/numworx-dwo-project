@@ -2,8 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
-    <ui:style field="mainpanel" src="../resultapp.css" />
-<!--    <ui:style type="nl.uu.fi.dwo.account.client.boot.Results.ResultPanel.style">
+    <ui:style field="resultApp" src="../resultapp.css" />
+    <!--    <ui:style type="nl.uu.fi.dwo.account.client.boot.Results.ResultPanel.style">
         .tableCelleven {
         padding: 5px;
         background: #008AB8;
@@ -22,74 +22,16 @@
         font-weight: normal;  
         }
     </ui:style>-->
-    <g:VerticalPanel horizontalAlignment="ALIGN_CENTER" >
-        <g:HorizontalPanel ui:field='tablePanel' addStyleNames='{mainpanel.widget}'
-                           horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
-            <!--<g:SimplePanel >-->
-            <!-- content goes here -->
-            <g:Grid addStyleNames='{mainpanel.grid}'
-                    ui:field='resultGrid'/>              
-            <!--          <c:SimplePager
-            ui:field='pager' />-->
-            <!--</g:SimplePanel>-->
-        </g:HorizontalPanel>
-        <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE" addStyleNames='{mainpanel.panel}'><g:Button ui:field="upBtn">&uarr;</g:Button>
+    <!--<g:Panel styleName="{resultApp.fullPanel}" >-->
+        <g:ScrollPanel styleName="{resultApp.fullPanel}">
+            <g:FlowPanel>
+                <g:FlexTable styleName="{resultApp.flexTable}" ui:field="resultTable"/>
+            </g:FlowPanel>
+        </g:ScrollPanel>
+<!--        <g:Button ui:field="upBtn">&uarr;</g:Button>
         <g:Button ui:field="downBtn">&darr;</g:Button>
         <g:Button ui:field="leftBtn">&larr;</g:Button>
-        <g:Button ui:field="rightBtn">&rarr;</g:Button>
-        </g:HorizontalPanel>
-<!--        <g:HorizontalPanel>
-            <g:customCell styleName="optionalBarCellStyle">
-                <g:Button ui:field='Btn'>Login</g:Button>
-            </g:customCell>
-            <g:customCell styleName="optionalBarCellStyle">
-                <g:Button ui:field='loginBtn'>Login</g:Button>
-            </g:customCell>
-        </g:HorizontalPanel>-->
-    </g:VerticalPanel>
-    <!--  <g:VerticalPanel  horizontalAlignment="ALIGN_CENTER" >
-        <c:CellTable addStyleNames='{mainpanel.widget}' ui:field='resultTable'>
-            <g:row styleName="optionalHeaderStyle">
-                <g:customCell styleName="optionalFooCellStyle">
-                    <g:Label>rowheader/columnheader</g:Label>
-                </g:customCell>
-                <g:customCell styleName="optionalBarCellStyle">
-                    <g:Label>column 0</g:Label>
-                </g:customCell>
-                <g:customCell styleName="optionalBarCellStyle">
-                    <g:Label>column 1</g:Label>
-                </g:customCell>
-                <g:customCell styleName="optionalBarCellStyle">
-                    <g:Label>column 2</g:Label>
-                </g:customCell>
-            </g:row>
-            <g:row styleName="optionalHeaderStyle">
-                <g:customCell styleName="optionalFooCellStyle">
-                    <g:Label>row 0</g:Label>
-                </g:customCell>
-                <g:customCell styleName="optionalBarCellStyle">
-                    <g:Label> (0,0)</g:Label>
-                </g:customCell>
-                <g:customCell styleName="optionalBarCellStyle">
-                    <g:Label>(1,0)</g:Label>
-                </g:customCell>
-                <g:customCell styleName="optionalBarCellStyle">
-                    <g:Label>(2,0)</g:Label>
-                </g:customCell>
-            </g:row>
-            <g:row styleName="optionalHeaderStyle">
-                <g:customCell styleName="optionalFooCellStyle">
-                    <g:Label>row 1</g:Label>
-                </g:customCell>
-                <g:customCell styleName="optionalBarCellStyle">
-                    <g:Label> (0,1)</g:Label>
-                </g:customCell>
-                <g:customCell styleName="optionalBarCellStyle">
-                    <g:Label>(1,2)</g:Label>
-                </g:customCell>
-                <g:customCell styleName="optionalBarCellStyle">
-                    <g:Label>(2,3)</g:Label>
-                </g:customCell>
-            </g:row>
-    </g:VerticalPanel>    -->
+        <g:Button ui:field="rightBtn">&rarr;</g:Button>-->
+    <!--</g:Panel>-->
+        
 </ui:UiBinder>

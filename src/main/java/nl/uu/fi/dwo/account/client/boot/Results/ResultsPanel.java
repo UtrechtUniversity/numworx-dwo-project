@@ -5,15 +5,12 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.boot.BootPanel;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
@@ -55,10 +52,9 @@ public class ResultsPanel extends Composite {
     int xOffset = 0;
     int yOffset = 0;
 
-    @UiField
-    HorizontalPanel tablePanel;
     @UiField(provided = true)
-    Grid resultGrid = new Grid(yInitialGridSize, xInitialGridSize);
+    FlexTable resultTable = new FlexTable();
+
     ListDataProvider<DomResultScore> dataProvider = new ListDataProvider<DomResultScore>();
 
     private BootPanel parent;
@@ -77,29 +73,30 @@ public class ResultsPanel extends Composite {
 //    @UiField(provided = true)
 //    SimplePager pager;
     public ResultsPanel() {
-        LOG.log(Level.INFO, "Grid size:" + resultGrid.getRowCount() + "x" + resultGrid.getColumnCount() + ".");
-        resultGrid.setVisible(false);
+        LOG.log(Level.INFO, "Grid size:" + resultTable.getRowCount() + "x.");
+        resultTable.setWidget(0, 0, new Label("class\\course"));
+        resultTable.getCellFormatter().addStyleName(0, 0, "flexTableHeader");
+
+        resultTable.setVisible(true);
         init();
 //        tablePanel.setWidget(resultGrid);
         initWidget(uiBinder.createAndBindUi(this));
         handler = new ResultsPanelHandler(this);
-        addRow();
-        resultGrid.setBorderWidth(1);
-        resultGrid.setVisible(true);
+//        resultGrid.setVisible(true);
 
     }
 
     public void init() {
-        int rows = resultGrid.getRowCount();
-        int cols = resultGrid.getColumnCount();
-        for (int i = 1; i < rows; i++) {
-            for (int j = 1; j < cols; j++) {
-                Label l = new Label("");
-                l.setStylePrimaryName(".widget");
-//                l.setStyleName(style.panel());
-                resultGrid.setWidget(i, j, l);
-            }
-        }
+//        int rows = resultTable.getRowCount();
+//        int cols = resultTable.getRowCount();
+//        for (int i = 1; i < rows; i++) {
+//            for (int j = 1; j < cols; j++) {
+//                Label l = new Label("");
+//                l.setStylePrimaryName(".widget");
+////                l.setStyleName(style.panel());
+//                resultGrid.setWidget(i, j, l);
+//            }
+//       }
 
 //        //Set row headers
 //        for (int i = 0; i < rows; i++) {
@@ -128,18 +125,6 @@ public class ResultsPanel extends Composite {
         //teacherRole.setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
     }
 
-    public void addRow() {
-        int rows = resultGrid.getRowCount();
-        int cols = resultGrid.getColumnCount();
-        resultGrid.insertRow(rows);
-        //Set row headers
-//        resultGrid.setWidget(rows, 0, new Label("rowheader " + rows));
-//
-//        for (int j = 1; j < cols; j++) {
-//            resultGrid.setWidget(rows, j, new Label("data " + rows + "x" + j));
-//        }
-    }
-
     public void updateView() {
         handler.init();
     }
@@ -147,21 +132,18 @@ public class ResultsPanel extends Composite {
     public void plot(DomResultPlotMatrix resultMatrix) {
         int i = 0;
         int j = 0;
-        for (i = 0; i < resultGrid.getColumnCount(); i++) {
-            if (i == resultMatrix.gethSize()) {
-                break;
-            }
-            resultGrid.setWidget(0, i + 1, new Label(resultMatrix.gethIndex(i).getLabel()));
+        for (i = 0; i < resultMatrix.gethSize(); i++) {
+            resultTable.setWidget(0, i + 1, new Label(resultMatrix.gethIndex(i).getLabel()));
+            resultTable.getCellFormatter().addStyleName(0, i + 1, "flexTableHeader");
+
         }
-        for (i = 0; i < resultGrid.getRowCount(); i++) {
-            if (i == resultMatrix.getvSize()) {
-                break;
-            }
-            resultGrid.setWidget(i + 1, 0, new Label(resultMatrix.getvIndex(i).getLabel()));
+        for (i = 0; i < resultMatrix.getvSize(); i++) {
+            resultTable.setWidget(i + 1, 0, new Label(resultMatrix.getvIndex(i).getLabel()));
+            resultTable.getCellFormatter().addStyleName(i + 1, 0, "flexTableHeader");
         }
 
-        for (i = 0; i < resultGrid.getColumnCount(); i++) {
-            for (j = 0; j < resultGrid.getRowCount(); j++) {
+        for (j = 0; j < resultMatrix.gethSize(); j++) {
+            for (i = 0; i < resultMatrix.getvSize(); i++) {
                 double score = 0.0;
                 if (resultMatrix.getMark(i, j).getScore() != null) {
                     if (resultMatrix.getMark(i, j).getScoCount() > 0.0) {
@@ -174,12 +156,12 @@ public class ResultsPanel extends Composite {
                 } else {
                     score = 0.0;
                 }
-                resultGrid.setWidget(i + 1, j + 1, new Label(Double.toString(score)));
+                resultTable.setWidget(i + 1, j + 1, new Label(" "+Double.toString(score)));
+                
             }
-
         }
-
-        //if null then no data available.
-        //else plot data
     }
+
+    //if null then no data available.
+    //else plot data
 }
