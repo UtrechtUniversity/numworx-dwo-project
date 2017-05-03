@@ -16,6 +16,7 @@ import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -54,6 +55,22 @@ public class DwoGlobalVars {
      */
     private void setState(DwoGlobalVarsState state) {
         this.state = state;
+    }
+
+    /**
+     * Returns the activeSchoolRoleAndClass selected in the Application.
+     * 
+     * @return the activeSchoolRoleAndClass
+     */
+    public DomSchoolRoleAndClassV2 getActiveSchoolRoleAndClass() {
+        return activeSchoolRoleAndClass;
+    }
+
+    /**
+     * @param activeSchoolRoleAndClass the activeSchoolRoleAndClass to set
+     */
+    public void setActiveSchoolRoleAndClass(DomSchoolRoleAndClassV2 activeSchoolRoleAndClass) {
+        this.activeSchoolRoleAndClass = activeSchoolRoleAndClass;
     }
 
     /**
@@ -99,6 +116,7 @@ public class DwoGlobalVars {
     private DomUserFull currentUser;
     private DomLoginContext currentLoginContext;
     private DomSchoolsRolesAndClassesV2 schoolLogins;
+    private DomSchoolRoleAndClassV2  activeSchoolRoleAndClass;
 
     /**
      * @return the instance
@@ -236,6 +254,7 @@ public class DwoGlobalVars {
             @Override
             public Promise<DwoGlobalVarsState> call(Promise<DomSchoolsRolesAndClassesV2> resolved) throws Exception {
                 schoolLogins = (resolved.getValue());
+                setActiveSchoolRoleAndClass(schoolLogins.getActiveSchoolRoleAndClass());
                 state = DwoGlobalVarsState.LoggedIn;
                 if (statePromise.getValue().equals(state)) {
                     statePromise.resolve(state);

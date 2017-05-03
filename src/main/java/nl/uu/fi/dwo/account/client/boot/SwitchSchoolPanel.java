@@ -4,11 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiRenderer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -16,6 +13,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
 /**
@@ -39,7 +37,7 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
     Button cancelBtn;
     @UiField
     Button switchBtn;
-    int selectedRow = 0;
+    int schoolIndex = 1;
 
     private BootPanel parent;
 
@@ -65,8 +63,12 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
         flexTable.setWidget(0, 0, new Label("Schoolnaam"));
         flexTable.getCellFormatter().addStyleName(0,0,"flexTableHeader");
         int i = 1;
-        for (DomSchoolRoleAndClassV2 role : handler.getTeacherRoles()) {
-            flexTable.setWidget(i, 0, new Label(role.getSchool().getSchoolName()));
+        for (DomSchoolRoleAndClassV2 srac : handler.getTeacherRoles()) {            
+            flexTable.setWidget(i, 0, new Label(srac.getSchool().getSchoolName()));
+            if(srac.getHasRole().getId().equals(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole().getId())){
+                schoolIndex = i-1;
+                flexTable.getRowFormatter().getElement(i).addClassName("flexTableSelectedBackground");
+            }
             if(i%2==0){
 //               flexTable.getCellFormatter().addStyleName(i,0,"flexTableOddRow");                
             }else{
@@ -74,13 +76,13 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
             }
             flexTable.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
-                    int curRow = selectedRow;
-                    selectedRow = flexTable.getCellForEvent(event).getRowIndex();
-                    flexTable.getRowFormatter().getElement(selectedRow).addClassName("flexTableSelectedBackground");
-                    if (curRow != selectedRow) {
-                        flexTable.getRowFormatter().getElement(curRow).removeClassName("flexTableSelectedBackground");
+                    int curSchoolIndex = schoolIndex;
+                    schoolIndex = flexTable.getCellForEvent(event).getRowIndex()-1;
+                    flexTable.getRowFormatter().getElement(schoolIndex+1).addClassName("flexTableSelectedBackground");
+                    if (curSchoolIndex != schoolIndex) {
+                        flexTable.getRowFormatter().getElement(curSchoolIndex+1).removeClassName("flexTableSelectedBackground");
                     }
-                    LOG.log(Level.INFO, "" + selectedRow);
+                    LOG.log(Level.INFO, "" + schoolIndex);
                 }
             });
             i++;
@@ -91,8 +93,9 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == switchBtn) {
-            parent.getSchoolName().setText(handler.getTeacherRoles().get(selectedRow).getSchool().getSchoolName());
-            handler.switchSchool();//handler.getTeacherRoles().get(selectedRow)
+            parent.getSchoolName().setText(handler.getTeacherRoles().get(schoolIndex).getSchool().getSchoolName());
+            DwoGlobalVars.instance().setActiveSchoolRoleAndClass(handler.getTeacherRoles().get(schoolIndex));
+            handler.switchSchool();//handler.getTeacherRoles().get(schoolIndex)
             parent.showResultWidget();
         }
     }
