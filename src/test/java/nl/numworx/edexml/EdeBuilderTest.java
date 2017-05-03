@@ -38,4 +38,13 @@ public class EdeBuilderTest extends TestCase {
 		Map<String, DomSchoolClassFull> result = builder.parseGroepen();
 		assertEquals(8, result.size());
 	}
+	
+	public void testParseLeerlingen() throws Exception {
+		
+		
+	}
+	
+	public void testParseLeerkrachten() throws Exception {
+		
+	}
 }
