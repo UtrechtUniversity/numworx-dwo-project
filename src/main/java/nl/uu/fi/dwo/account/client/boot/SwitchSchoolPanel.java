@@ -28,7 +28,7 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
     interface MyUiBinder extends UiBinder<Widget, SwitchSchoolPanel> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-   
+
     private SwitchSchoolPanelHandler handler;
 
     @UiField
@@ -62,26 +62,35 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
     public void init() {
         //create table
         flexTable.setWidget(0, 0, new Label("Schoolnaam"));
-        flexTable.getCellFormatter().addStyleName(0,0,"flexTableHeader");
+        flexTable.getCellFormatter().addStyleName(0, 0, "flexTableHeader");
         int i = 1;
-        for (DomSchoolRoleAndClassV2 srac : handler.getTeacherRoles()) {            
+        for (DomSchoolRoleAndClassV2 srac : handler.getTeacherRoles()) {
             flexTable.setWidget(i, 0, new Label(srac.getSchool().getSchoolName()));
-            if(srac.getHasRole().getId().equals(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole().getId())){
-                schoolIndex = i-1;
+            if (srac.getHasRole().getId().equals(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole().getId())) {
+                schoolIndex = i - 1;
                 flexTable.getRowFormatter().getElement(i).addClassName("flexTableSelectedBackground");
-            }
-            if(i%2==0){
-//               flexTable.getCellFormatter().addStyleName(i,0,"flexTableOddRow");                
-            }else{
-//               flexTable.getCellFormatter().addStyleName(i,0,"flexTableEvenRow");                                
+            } else if (i % 2 == 0) {
+                flexTable.getCellFormatter().addStyleName(i, 0, "flexTableOddRow");
+            } else {
+                flexTable.getCellFormatter().addStyleName(i, 0, "flexTableEvenRow");
             }
             flexTable.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
                     int curSchoolIndex = schoolIndex;
-                    schoolIndex = flexTable.getCellForEvent(event).getRowIndex()-1;
-                    flexTable.getRowFormatter().getElement(schoolIndex+1).addClassName("flexTableSelectedBackground");
+                    schoolIndex = flexTable.getCellForEvent(event).getRowIndex() - 1;
+                    if ((schoolIndex + 1) % 2 == 0) {
+                        flexTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableOddRow");
+                    } else {
+                        flexTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
+                    }
+                    flexTable.getRowFormatter().getElement(schoolIndex + 1).addClassName("flexTableSelectedBackground");
                     if (curSchoolIndex != schoolIndex) {
-                        flexTable.getRowFormatter().getElement(curSchoolIndex+1).removeClassName("flexTableSelectedBackground");
+                        flexTable.getRowFormatter().getElement(curSchoolIndex + 1).removeClassName("flexTableSelectedBackground");
+                        if ((schoolIndex + 1) % 2 == 0) {
+                            flexTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableOddRow");
+                        } else {
+                            flexTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
+                        }
                     }
                     LOG.log(Level.INFO, "" + schoolIndex);
                 }
@@ -100,31 +109,8 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
             parent.showResultWidget();
         }
     }
-//
-//    /**
-//     * Called from handler after successful login.
-//     */
-//    public void onLoginSuccess() {
-//        LOG.log(Level.INFO, "Login succeeded.");
-//        parent.showResultWidget();
-//    }
-//
-//    /**
-//     * Called from handler after failed login.
-//     *
-//     * @param failMessage
-//     */
-//    public void onLoginFailure(String failMessage) {
-//        LOG.log(Level.INFO, failMessage);
-//        Window.alert(failMessage);
-//        //reset user interface?
-//    }
 
     public void updateView() {
-        //fetch and display all the schoollogins that have teachers.
-//        teacherRole.setText(
-//                DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName()
-//        );
         handler.init();
     }
 

@@ -87,42 +87,7 @@ public class ResultsPanel extends Composite {
     }
 
     public void init() {
-//        int rows = resultTable.getRowCount();
-//        int cols = resultTable.getRowCount();
-//        for (int i = 1; i < rows; i++) {
-//            for (int j = 1; j < cols; j++) {
-//                Label l = new Label("");
-//                l.setStylePrimaryName(".widget");
-////                l.setStyleName(style.panel());
-//                resultGrid.setWidget(i, j, l);
-//            }
-//       }
 
-//        //Set row headers
-//        for (int i = 0; i < rows; i++) {
-//            resultGrid.setWidget(i, 0, new Label("rowheader " + i));
-//        }
-//
-//        //Set column headers
-//        for (int i = 0; i < cols; i++) {
-//            //Label l = new Label("colheader " + i);
-//            resultGrid.setWidget(0, i, new Label("colheader " + i));
-//
-//        }
-//        for (int i = 1; i < rows; i++) {
-//            for (int j = 1; j < cols; j++) {
-//                Label l = new Label("data " + i + "x" + j);
-//                l.setStylePrimaryName(".widget");
-////                l.setStyleName(style.panel());
-//                resultGrid.setWidget(i, j, l);
-////                if ((j % 2) == 0) {
-////                    resultGrid.getCellFormatter().setStyleName(i, j, "tableCell-even");
-////                } else {
-////                    resultGrid.getCellFormatter().setStyleName(i, j, "tableCell-odd");
-////                }
-//            }
-//        }
-        //teacherRole.setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
     }
 
     public void updateView() {
@@ -132,14 +97,17 @@ public class ResultsPanel extends Composite {
     public void plot(DomResultPlotMatrix resultMatrix) {
         int i = 0;
         int j = 0;
+        // column labels
         for (i = 0; i < resultMatrix.gethSize(); i++) {
             resultTable.setWidget(0, i + 1, new Label(resultMatrix.gethIndex(i).getLabel()));
             resultTable.getCellFormatter().addStyleName(0, i + 1, "flexTableHeader");
-
+            // add clickhandler to labels
         }
+        // row labels
         for (i = 0; i < resultMatrix.getvSize(); i++) {
             resultTable.setWidget(i + 1, 0, new Label(resultMatrix.getvIndex(i).getLabel()));
             resultTable.getCellFormatter().addStyleName(i + 1, 0, "flexTableHeader");
+            // add clickhandler to labels
         }
 
         for (j = 0; j < resultMatrix.gethSize(); j++) {
