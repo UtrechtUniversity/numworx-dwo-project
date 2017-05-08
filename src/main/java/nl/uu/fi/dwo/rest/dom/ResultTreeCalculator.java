@@ -7,7 +7,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -82,12 +81,18 @@ public class ResultTreeCalculator {
      * Score per schoolclass per leaf course. Every sco that has no work has
      * score 0.0.
      *
-     * @param studentClass
+     * @param tree
      * @param resultClass
      * @return
      */
-    public static DomResultPlotMatrix GetScoreOfLeafCoursesByStudentsInClass(DomResultSchoolClass studentClass, DomResultSchoolClass resultClass) {
+    public static DomResultPlotMatrix GetScoreOfLeafCoursesByStudentsInClass(DomResultTree tree, DomResultSchoolClass resultClass) {
+        DomResultSchoolClass studentClass;
+        studentClass = tree.getStudentTree().getChildren().get(resultClass.getSchoolClass().getId());
+        resultClass = tree.getResultTree().getChildren().get(resultClass.getSchoolClass().getId()); //ensure up-to-date just in case.
         DomResultPlotMatrix result = null;
+        if(result == null) {
+            return result;
+        }
         //collect leave courses in schoolClass
         Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
         //collect courseLeaves in class
