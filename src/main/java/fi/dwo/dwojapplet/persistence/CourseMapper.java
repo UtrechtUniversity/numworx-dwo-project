@@ -196,9 +196,9 @@ class CourseMapper extends XmlRpcMapper {
      * @throws XmlRpcException
      * @throws SQLException
      */
-    private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
+    @SuppressWarnings("rawtypes")
+	private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
             SQLException {
-        Object[] result;
         Vector v;
         v = (Vector) cachemap.get(ht);
 // easy found in cache, return objects
@@ -216,8 +216,16 @@ class CourseMapper extends XmlRpcMapper {
 // get all courses from a school
                 v = (Vector) cachemap.get(ht);
                 if (v == null) {
-                    v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
-                    cachemap.put(ht, v);
+                    try {
+						v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
+						cachemap.put(ht, v);
+					} catch (IOException e) {
+						LOG.log(Level.SEVERE, "getTableJS, no parent", e);
+		                ht.put("parentID", parent);
+		                v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
+		                cachemap.put(ht, v);
+		                return super.getObjectFromReturn(v);
+					}
                 }
 // v is all courses from school, filter parent = 0, fill cachemap with parent != 0
                 v = filterParent(v, (Integer) parent);
