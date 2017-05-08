@@ -479,6 +479,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      */
     @Override
     public boolean loginWithMd5(String username, String password) throws LoginException {
+        PersistenceFacade.instance().clearCurrentMapperDataCache(Sco.class);
+        PersistenceFacade.instance().clearCurrentMapperDataCache(Course.class);
         String plainPassword = DwoHelper.getPlainPassword();
         // DomFullUser user=null;
         // try {
