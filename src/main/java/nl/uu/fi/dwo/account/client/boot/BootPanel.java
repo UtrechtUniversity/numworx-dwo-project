@@ -169,7 +169,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
 
     public void showResultWidget() {
         ResultsPanel panel = (ResultsPanel) resultWidget;
-        panel.updateView();
+        panel.init();
         mainDeckPanel.showWidget(2);
     }
 

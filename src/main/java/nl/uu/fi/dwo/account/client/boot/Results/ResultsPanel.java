@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.boot.BootPanel;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 
 /**
@@ -38,13 +40,6 @@ public class ResultsPanel extends Composite {
 
         String tableCellodd();
     }
-//
-//    interface MyUiRenderer extends UiRenderer {
-//  // ... snip ...
-//  Style getPanel();
-//  // ... snip ...
-//}
-
     private ResultsPanelHandler handler;
     private ResultsTeacherController control;
 
@@ -72,34 +67,32 @@ public class ResultsPanel extends Composite {
         return parent;
     }
 
-//    @UiField(provided = true)
-//    SimplePager pager;
     public ResultsPanel() {
         LOG.log(Level.INFO, "Grid size:" + resultTable.getRowCount() + "x.");
         resultTable.setWidget(0, 0, new Label("class\\course"));
         resultTable.getCellFormatter().addStyleName(0, 0, "flexTableHeader");
 
-        resultTable.setVisible(true);
-        init();
 //        tablePanel.setWidget(resultGrid);
         initWidget(uiBinder.createAndBindUi(this));
         handler = new ResultsPanelHandler(this);
 //        resultGrid.setVisible(true);
-
     }
 
     public void init() {
-
+        handler.init();
     }
 
     public void updateView() {
         handler.init();
     }
 
-    public void plot(DomResultPlotMatrix resultMatrix) {
+    public void plot() {
+        resultTable.setVisible(false);
+        final DomResultPlotMatrix resultMatrix = handler.getResultMatrix();
         int i = 0;
         int j = 0;
         // column labels
+        resultTable.removeAllRows();
         for (i = 0; i < resultMatrix.gethSize(); i++) {
             resultTable.setWidget(0, i + 1, new Label(resultMatrix.gethIndex(i).getLabel()));
             resultTable.getCellFormatter().addStyleName(0, i + 1, "flexTableHeader");
@@ -107,43 +100,60 @@ public class ResultsPanel extends Composite {
             resultTable.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
+                    int col = resultTable.getCellForEvent(event).getCellIndex() - 1;
+                    int row = resultTable.getCellForEvent(event).getRowIndex() - 1;
+                    DomResultScore score = resultMatrix.gethIndex(col);
+                    if (row == 0 && score instanceof DomResultSchoolClass) {
+                        LOG.log(Level.INFO, "Column label" + col + " clicked.");
+                        DomResultSchoolClass sc = (DomResultSchoolClass) score;
+                        handler.setSchoolClass(sc);
+                        handler.updateResults();
+                        plot();
+                    }
                 }
-            });
-            
-        }
-        // row labels
-        for (i = 0; i < resultMatrix.getvSize(); i++) {
-            resultTable.setWidget(i + 1, 0, new Label(resultMatrix.getvIndex(i).getLabel()));
-            resultTable.getCellFormatter().addStyleName(i + 1, 0, "flexTableHeader");
-            // add clickhandler to labels
-            resultTable.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    //getResults();
-                }
-            });
-        }
-
-        for (j = 0; j < resultMatrix.gethSize(); j++) {
+            }
+            );
+            // row labels
             for (i = 0; i < resultMatrix.getvSize(); i++) {
-                double score = 0.0;
-                if (resultMatrix.getMark(i, j).getScore() != null) {
-                    if (resultMatrix.getMark(i, j).getScoCount() > 0.0) {
-                        score = resultMatrix.getMark(i, j).getScore() / resultMatrix.getMark(i, j).getScoCount();
-                    } else if (resultMatrix.getMark(i, j).getStudentScoCount() > 0.0) {
-                        score = resultMatrix.getMark(i, j).getScore();
+                resultTable.setWidget(i + 1, 0, new Label(resultMatrix.getvIndex(i).getLabel()));
+                resultTable.getCellFormatter().addStyleName(i + 1, 0, "flexTableHeader");
+                // add clickhandler to labels
+                resultTable.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        int col = resultTable.getCellForEvent(event).getCellIndex() - 1;
+                        int row = resultTable.getCellForEvent(event).getRowIndex() - 1;
+                        DomResultScore score = resultMatrix.gethIndex(row);
+                        if (col == 0 && score instanceof DomResultCourse) {
+                            LOG.log(Level.INFO, "Row label" + row + " clicked.");
+                            DomResultSchoolClass sc = (DomResultSchoolClass) score;
+                            handler.setSchoolClass(sc);
+                            handler.updateResults();
+                            plot();
+                        }
+                    }
+                });
+            }
+
+            for (j = 0; j < resultMatrix.gethSize(); j++) {
+                for (i = 0; i < resultMatrix.getvSize(); i++) {
+                    double score = 0.0;
+                    if (resultMatrix.getMark(i, j).getScore() != null) {
+                        if (resultMatrix.getMark(i, j).getScoCount() > 0.0) {
+                            score = resultMatrix.getMark(i, j).getScore() / resultMatrix.getMark(i, j).getScoCount();
+                        } else if (resultMatrix.getMark(i, j).getStudentScoCount() > 0.0) {
+                            score = resultMatrix.getMark(i, j).getScore();
+                        } else {
+                            score = 0.0;
+                        }
                     } else {
                         score = 0.0;
                     }
-                } else {
-                    score = 0.0;
-                }
-                resultTable.setWidget(i + 1, j + 1, new Label(" " + Double.toString(score)));
+                    resultTable.setWidget(i + 1, j + 1, new Label(" " + Double.toString(score)));
 
+                }
             }
         }
+        resultTable.setVisible(true);
     }
-
-    //if null then no data available.
-    //else plot data
 }

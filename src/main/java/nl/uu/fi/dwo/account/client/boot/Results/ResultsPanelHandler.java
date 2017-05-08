@@ -6,11 +6,9 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -29,7 +27,42 @@ class ResultsPanelHandler {
     private ResultsTeacherController controller = new ResultsTeacherController();
     //model
     private DomResultTree rTree;
-    private DomResultPlotMatrix matrix;
+    private DomResultPlotMatrix resultMatrix;
+
+    /**
+     * @return the course
+     */
+    public DomResultCourse getCourse() {
+        return course;
+    }
+
+    /**
+     * @param course the course to set
+     */
+    public void setCourse(DomResultCourse course) {
+        this.course = course;
+    }
+
+    /**
+     * @return the schoolClass
+     */
+    public DomResultSchoolClass getSchoolClass() {
+        return schoolClass;
+    }
+
+    /**
+     * @param schoolClass the schoolClass to set
+     */
+    public void setSchoolClass(DomResultSchoolClass schoolClass) {
+        this.schoolClass = schoolClass;
+    }
+
+    /**
+     * @return the resultMatrix
+     */
+    public DomResultPlotMatrix getResultMatrix() {
+        return resultMatrix;
+    }
 
     protected enum mode {
         CoursesClasses, //All Courses over all Classes
@@ -47,8 +80,8 @@ class ResultsPanelHandler {
 
     public void init() {
         LOG.log(Level.INFO, "DwoGlobalVarsState = " + DwoGlobalVars.instance().getState().name());
-        course = null;
-        schoolClass = null;
+        setCourse(null);
+        setSchoolClass(null);
         Promise<DomResultsPerTeacher> promResults;
         promResults = controller.getResultsPerTeacher();
         // onSuccess calculate results and show.
@@ -59,9 +92,9 @@ class ResultsPanelHandler {
                 LOG.log(Level.INFO, "DomResults returned.");
                 rTree = new DomResultTree(resolved.getValue());
                 LOG.log(Level.INFO, "ResultTree obtained.");
-                matrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+                resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
-                view.plot(matrix);
+                view.plot();
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
                 return null;
             }
@@ -79,9 +112,10 @@ class ResultsPanelHandler {
         });
     }
 
-    public DomResultPlotMatrix getResults(){
-        return getResults(course, schoolClass);
+    public void updateResults() {
+        resultMatrix = getResults(getCourse(), getSchoolClass());
     }
+
     private DomResultPlotMatrix getResults(DomResultCourse aCourse, DomResultSchoolClass aClass) {
         if (rTree != null) {
             if (aCourse == null && aClass == null) {
