@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -102,12 +104,24 @@ public class ResultsPanel extends Composite {
             resultTable.setWidget(0, i + 1, new Label(resultMatrix.gethIndex(i).getLabel()));
             resultTable.getCellFormatter().addStyleName(0, i + 1, "flexTableHeader");
             // add clickhandler to labels
+            resultTable.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                }
+            });
+            
         }
         // row labels
         for (i = 0; i < resultMatrix.getvSize(); i++) {
             resultTable.setWidget(i + 1, 0, new Label(resultMatrix.getvIndex(i).getLabel()));
             resultTable.getCellFormatter().addStyleName(i + 1, 0, "flexTableHeader");
             // add clickhandler to labels
+            resultTable.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    //getResults();
+                }
+            });
         }
 
         for (j = 0; j < resultMatrix.gethSize(); j++) {
@@ -124,8 +138,8 @@ public class ResultsPanel extends Composite {
                 } else {
                     score = 0.0;
                 }
-                resultTable.setWidget(i + 1, j + 1, new Label(" "+Double.toString(score)));
-                
+                resultTable.setWidget(i + 1, j + 1, new Label(" " + Double.toString(score)));
+
             }
         }
     }
