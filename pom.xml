@@ -45,6 +45,7 @@
     <scm>
         <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-rest-lib/trunk</connection>
         <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-rest-lib/trunk</developerConnection>
+        <url>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-rest-lib/trunk</url>
     </scm>
   
     <build>
