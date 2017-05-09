@@ -87,26 +87,28 @@ public class ResultsPanel extends Composite {
     }
 
     public void plot() {
-        resultTable.setVisible(false);
-        final DomResultPlotMatrix resultMatrix = handler.getResultMatrix();
+//        resultTable.setVisible(false);
+        final ResultsPanelHandler myHandler = handler;
+        
         int i = 0;
         int j = 0;
         // column labels
-        resultTable.removeAllRows();
-        for (i = 0; i < resultMatrix.gethSize(); i++) {
-            resultTable.setWidget(0, i + 1, new Label(resultMatrix.gethIndex(i).getLabel()));
+//        resultTable.removeAllRows();
+        for (i = 0; i < myHandler.getResultMatrix().gethSize(); i++) {
+            resultTable.setWidget(0, i + 1, new Label(myHandler.getResultMatrix().gethIndex(i).getLabel()));
             resultTable.getCellFormatter().addStyleName(0, i + 1, "flexTableHeader");
             // add clickhandler to labels
             resultTable.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    int col = resultTable.getCellForEvent(event).getCellIndex() - 1;
-                    int row = resultTable.getCellForEvent(event).getRowIndex() - 1;
-                    DomResultScore score = resultMatrix.gethIndex(col);
-                    if (row == 0 && score instanceof DomResultSchoolClass) {
+                    int col = resultTable.getCellForEvent(event).getCellIndex();
+                    int row = resultTable.getCellForEvent(event).getRowIndex();
+                        LOG.log(Level.INFO, "row "+row+", col " + col + " clicked.");
+                    DomResultScore score = myHandler.getResultMatrix().gethIndex(col);
+                    if (row == 0 && col >0 && score instanceof DomResultCourse) {
                         LOG.log(Level.INFO, "Column label" + col + " clicked.");
-                        DomResultSchoolClass sc = (DomResultSchoolClass) score;
-                        handler.setSchoolClass(sc);
+                        DomResultCourse sc = (DomResultCourse) score;
+                        handler.setCourse(sc);
                         handler.updateResults();
                         plot();
                     }
@@ -114,17 +116,18 @@ public class ResultsPanel extends Composite {
             }
             );
             // row labels
-            for (i = 0; i < resultMatrix.getvSize(); i++) {
-                resultTable.setWidget(i + 1, 0, new Label(resultMatrix.getvIndex(i).getLabel()));
+            for (i = 0; i < myHandler.getResultMatrix().getvSize(); i++) {
+                resultTable.setWidget(i + 1, 0, new Label(myHandler.getResultMatrix().getvIndex(i).getLabel()));
                 resultTable.getCellFormatter().addStyleName(i + 1, 0, "flexTableHeader");
                 // add clickhandler to labels
                 resultTable.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        int col = resultTable.getCellForEvent(event).getCellIndex() - 1;
-                        int row = resultTable.getCellForEvent(event).getRowIndex() - 1;
-                        DomResultScore score = resultMatrix.gethIndex(row);
-                        if (col == 0 && score instanceof DomResultCourse) {
+                        int col = resultTable.getCellForEvent(event).getCellIndex();
+                        int row = resultTable.getCellForEvent(event).getRowIndex();
+                        LOG.log(Level.INFO, "row "+row+", col " + col + " clicked.");
+                        DomResultScore score = myHandler.getResultMatrix().getvIndex(row);
+                        if (col == 0 && row >0 && score instanceof DomResultSchoolClass) {
                             LOG.log(Level.INFO, "Row label" + row + " clicked.");
                             DomResultSchoolClass sc = (DomResultSchoolClass) score;
                             handler.setSchoolClass(sc);
@@ -135,14 +138,14 @@ public class ResultsPanel extends Composite {
                 });
             }
 
-            for (j = 0; j < resultMatrix.gethSize(); j++) {
-                for (i = 0; i < resultMatrix.getvSize(); i++) {
+            for (j = 0; j < myHandler.getResultMatrix().gethSize(); j++) {
+                for (i = 0; i < myHandler.getResultMatrix().getvSize(); i++) {
                     double score = 0.0;
-                    if (resultMatrix.getMark(i, j).getScore() != null) {
-                        if (resultMatrix.getMark(i, j).getScoCount() > 0.0) {
-                            score = resultMatrix.getMark(i, j).getScore() / resultMatrix.getMark(i, j).getScoCount();
-                        } else if (resultMatrix.getMark(i, j).getStudentScoCount() > 0.0) {
-                            score = resultMatrix.getMark(i, j).getScore();
+                    if (myHandler.getResultMatrix().getMark(i, j).getScore() != null) {
+                        if (myHandler.getResultMatrix().getMark(i, j).getScoCount() > 0.0) {
+                            score = myHandler.getResultMatrix().getMark(i, j).getScore() / myHandler.getResultMatrix().getMark(i, j).getScoCount();
+                        } else if (myHandler.getResultMatrix().getMark(i, j).getStudentScoCount() > 0.0) {
+                            score = myHandler.getResultMatrix().getMark(i, j).getScore();
                         } else {
                             score = 0.0;
                         }
