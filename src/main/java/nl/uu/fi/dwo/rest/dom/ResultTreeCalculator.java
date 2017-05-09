@@ -90,9 +90,6 @@ public class ResultTreeCalculator {
         studentClass = tree.getStudentTree().getChildren().get(resultClass.getSchoolClass().getId());
         resultClass = tree.getResultTree().getChildren().get(resultClass.getSchoolClass().getId()); //ensure up-to-date just in case.
         DomResultPlotMatrix result = null;
-        if(result == null) {
-            return result;
-        }
         //collect leave courses in schoolClass
         Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
         //collect courseLeaves in class
