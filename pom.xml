@@ -193,6 +193,6 @@
         <relativePath>../ParentGWT</relativePath>
     </parent>
     <scm>
-    	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Account/trunk</developerConnection>
+    	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Account/trunk</developerConnection>
     </scm>
 </project>
