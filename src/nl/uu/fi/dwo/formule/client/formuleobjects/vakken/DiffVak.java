@@ -91,7 +91,7 @@ public class DiffVak extends FormuleElementWithChildren
 				
 		ctx.stroke();
 		ctx.fillText(dString, fm.getAscent()/8+ (diffBreuk?0:fm.getAscent()/4), getAsHoogte() - 3*asc/8 - desc);
-		int k2y = getChild(2).getY();
+		int k2y = getChild(1).getY();
 		ctx.fillText(dString, fm.getAscent()/8, k2y + asc);
 		fm.setItalic(true);
 		
