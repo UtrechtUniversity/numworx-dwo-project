@@ -74,9 +74,9 @@
   	<relativePath>../ParentGWT</relativePath>
   </parent>
   <properties>
-  	<dwoVersion>2.1.13-SNAPSHOT</dwoVersion>
+  	<dwoVersion>2.1.13</dwoVersion>
   </properties>
   <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/Register/trunk</developerConnection>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Register/trunk</developerConnection>
   </scm>
 </project>
