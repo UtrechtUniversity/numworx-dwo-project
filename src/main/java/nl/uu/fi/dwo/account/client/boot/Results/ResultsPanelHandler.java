@@ -94,7 +94,7 @@ class ResultsPanelHandler {
                 LOG.log(Level.INFO, "ResultTree obtained.");
                 resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
-                view.plot();
+                view.updateView();
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
                 return null;
             }
@@ -116,19 +116,23 @@ class ResultsPanelHandler {
         resultMatrix = getResults(getCourse(), getSchoolClass());
     }
 
+    public DomResultPlotMatrix getResults() {
+        return resultMatrix;
+    }
+
     private DomResultPlotMatrix getResults(DomResultCourse aCourse, DomResultSchoolClass aClass) {
+        DomResultPlotMatrix result=null;
         if (rTree != null) {
             if (aCourse == null && aClass == null) {
-                return ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+                result =  ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
             } else if (aCourse == null && aClass != null) {
-                return ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree, aClass);
+                result =  ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree, aClass);
             } else if (aCourse != null && aClass == null) {
-                return ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
-
+                result = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
             } else if (aCourse != null && aClass != null) {
-                return ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+                result =  ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
             }
         }
-        return null; // THough in Java 8 return Optional.
+        return result; // Though in Java 8 return Optional.
     }
 }
