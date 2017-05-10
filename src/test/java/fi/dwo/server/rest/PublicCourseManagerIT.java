@@ -63,7 +63,7 @@ public class PublicCourseManagerIT {
 		
 		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(1));
 		rest.getDomDwoProfile().setId(id);
-		List result = manager.getCourses(rest);
+		List<?> result = manager.getCourses(rest);
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
 	}
@@ -75,7 +75,7 @@ public class PublicCourseManagerIT {
 		
 		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(3));
 		rest.getDomDwoProfile().setId(id);
-		List result = manager.getCourses(rest);
+		List<?> result = manager.getCourses(rest);
 		assertNotNull(result);
 		assertTrue(result.isEmpty());
 	}
@@ -95,9 +95,8 @@ public class PublicCourseManagerIT {
 		DomCourseStudent result = manager.getCourse(rest);
 		
 		assertEquals("course01", result.getName());
-		
-		
 	}
+
 	@Test
 	public void testGetChildren01() {
 		RestCourse rest = new RestCourse();
@@ -109,11 +108,10 @@ public class PublicCourseManagerIT {
 		DomDwoProfile profile = new DomDwoProfile();
 		profile.setId(profileID);
 		rest.setDomDwoProfile(profile);	
+
 		List<DomCourseStudent> result = manager.getCourses(rest);
+
 		assertFalse(result.isEmpty());
-	
-		
-		
 	}
 	
 }

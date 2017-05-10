@@ -1,18 +1,7 @@
 package fi.dwo.server.rest;
 
 
-import fi.beans.dwomaccess.JSONEncoder;
-import fi.beans.private_base64code.StringCodeObject;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentCourse;
-import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.server.PersistentDataManagers.core.CourseManager;
-import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
-
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
@@ -34,7 +23,14 @@ import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.private_base64code.StringCodeObject;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 
 /**
  * Handles the public registration of new users.
@@ -70,7 +66,7 @@ public class PublicCourseManager {
 		}
     }
     
-    private static String LIMITED =  "l";
+    private static String LIMITED =  "l"; // Fixme ergens in PersistentDwoProfile?
     
     @PUT
     @Path("/getRoot")

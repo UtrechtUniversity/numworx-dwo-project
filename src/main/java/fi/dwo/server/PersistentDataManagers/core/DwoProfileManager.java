@@ -2,13 +2,17 @@ package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
@@ -150,5 +154,18 @@ public class DwoProfileManager {
             em.close();
         }
     }
+
+	public static PersistentDwoProfile findEntity(String id) {
+		EntityManager em = getEntityManager();
+		try {
+			TypedQuery<PersistentDwoProfile> q = em.createNamedQuery("PersistentDwoProfile.findByDwoProfileName", PersistentDwoProfile.class);
+			q.setParameter("dwoProfileName", id);
+			return q.getSingleResult();
+		} catch ( NoResultException nores) {
+			return null;
+		} finally {
+			em.close();
+		}
+	}
 
 }
