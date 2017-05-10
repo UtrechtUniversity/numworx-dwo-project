@@ -160,6 +160,30 @@ public class CourseManager {
         }
     }
     
+    public static List<PersistentCourse> findChildrenOf(PersistentDwoProfile p, PersistentSchool school) {
+        EntityManager em = getEntityManager();
+        try {
+        	Long schoolID = school == null ? null : school.getSchoolID();
+        	
+        	javax.persistence.Query q;
+        	if (schoolID == null)
+        		q = em.createNamedQuery("PersistentCourse.findByNullSchoolAndProfileID");
+        	else {
+        	 q= em.createNamedQuery("PersistentCourse.findBySchoolAndProfileID");
+        	 q.setParameter("schoolID", schoolID);
+        	}
+        	q.setParameter("dwoProfileID", p.getDwoProfileID());
+        	List<PersistentCourse> list = q.getResultList();
+            LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourse children of school with id {1} in profile {2}.", new Object[]{list.size(), schoolID, p.getDwoProfileID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    	
+    }
+    
+    
         
     public static List<PersistentCourse> findEntities(PersistentSchool s) {
         EntityManager em = getEntityManager();
