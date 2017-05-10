@@ -15,5 +15,23 @@
   		<version>3.8.2</version>
   		<scope>test</scope>
   	</dependency>
-  </dependencies>
+<dependency>
+    <groupId>org.osgi</groupId>
+    <artifactId>org.osgi.service.async</artifactId>
+    <version>1.0.0</version>
+    <scope>provided</scope>
+</dependency>
+
+ </dependencies>
+	<distributionManagement>
+		<repository>
+			<id>release</id>
+			<url>https://repos.dwo.nl/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>libs-snapshot</name>
+			<url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
