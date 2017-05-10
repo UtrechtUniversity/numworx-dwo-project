@@ -48,6 +48,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @UniqueConstraint(columnNames = {"name", "schoolID", "dwoProfileID", "parentID"})})
 @XmlRootElement
 @NamedQueries({
+	@NamedQuery(name = "PersistentCourse.findBySchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID"),
+	@NamedQuery(name = "PersistentCourse.findByNullSchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL"),
     @NamedQuery(name = "PersistentCourse.findAll", query = "SELECT p FROM PersistentCourse p"),
     @NamedQuery(name = "PersistentCourse.findByCourseID", query = "SELECT p FROM PersistentCourse p WHERE p.courseID = :courseID"),
     @NamedQuery(name = "PersistentCourse.findBySchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.schoolID = :schoolID"),
@@ -343,14 +345,25 @@ public class PersistentCourse implements Serializable {
         return course;
     }
 
+    private void fillDomCourseStudent(DomCourseStudent course) {
+    	fillDomCourse(course);
+    	course.setImage(image);
+    	course.setImageData(imageData);
+    	course.setDescription(description);
+    	course.setId(buildPersistenceId());
+    	course.setNotVisible(notVisible);
+    }
+    
+    public DomCourseStudent buildDomCourseStudent() {
+    	DomCourseStudent course = new DomCourseStudent();
+    	fillDomCourseStudent(course);
+    	return course;
+    }
+    
     private void fillDomCourseFull(DomCourseFull course) {
-        PersistentCourse.this.fillDomCourse(course);
-		course.setImage(image);
-		course.setImageData(imageData);
-		course.setDescription(description);
-        course.setDwoProfileId(buildPersistenceId());
+        fillDomCourseStudent(course);
         course.setExport(export);
-        course.setNotVisible(notVisible);
+        course.setDwoProfileId(buildDwoProfileId());
     }
 
     /**
@@ -373,6 +386,11 @@ public class PersistentCourse implements Serializable {
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentCourse.name(), aCourseId));
         return id;
+    }
+    
+    private PersistenceId buildDwoProfileId() {
+        return PersistentDwoProfile.buildPersistenceId(dwoProfileID);
+    	
     }
 
 	public boolean isNotVisible() {
