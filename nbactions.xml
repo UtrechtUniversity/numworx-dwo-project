@@ -7,16 +7,8 @@
                 <goal>gwt:run-codeserver</goal>
                 
             </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-tomcat7:run (is exploded).</actionName>
-            <displayName>tomcat7:run (is exploded).</displayName>
-            <goals>
-                <goal>tomcat7:run</goal>
-            </goals>
             <properties>
-                <jpda.listen>maven</jpda.listen>
-                <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
+                <gwt.style>PRETTY</gwt.style>
             </properties>
         </action>
         <action>
@@ -37,6 +29,11 @@
             <goals>
                 <goal>gwt:i18n</goal>
             </goals>
+            <properties>
+                <gwt.style>PRETTY</gwt.style>
+                
+                
+            </properties>
         </action>
         <action>
             <actionName>CUSTOM-pretty</actionName>
@@ -49,13 +46,9 @@
                 <gwt.style>PRETTY</gwt.style>
             </properties>
         </action>
-        <action>
-            <actionName>CUSTOM-gwt:run</actionName>
-            <displayName>gwt:run</displayName>
-            <goals>
-                <goal>gwt:run</goal>
-            </goals>
-        </action>
+        
+        
+        
         
         
         

@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
+import com.google.gwt.user.client.ui.HeaderPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -65,8 +65,8 @@ public class Account implements EntryPoint, ClickHandler {
         RootPanel.get()
                 .add(header);
 
-        header.setCenter(
-                "Account");
+//        header.setCenter(
+//                "Account");
 
         RootPanel.get().add(loginStatusPanel);
         loginPanel = new LoginPanel();
@@ -106,7 +106,7 @@ public class Account implements EntryPoint, ClickHandler {
                 public void onFailure(Throwable t) {
                     loginStatusPanel.setStatus("", false);
                     LOG.log(Level.INFO, "failure", t);
-                    header.setRightWidget(null);
+//                    header.setRightWidget(null);
                 }
 
                 //Process login results
@@ -134,7 +134,7 @@ public class Account implements EntryPoint, ClickHandler {
                                 }
                             }
                             LOG.log(Level.INFO, t.toString(), t);
-                            header.setRightWidget(null);
+//                            header.setRightWidget(null);
                         }
 
                         //Process getActiveSchoolClass results (Only works for student?)
@@ -156,14 +156,14 @@ public class Account implements EntryPoint, ClickHandler {
                                         Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
                                     }
                                     LOG.log(Level.INFO, t.toString(), t);
-                                    header.setRightWidget(null);
+//                                    header.setRightWidget(null);
                                 }
                                 //Process getActiveSchoolClass results (Only works for student?)
 
                                 @Override
                                 public void onSuccess(DomSchoolsRolesAndClassesV2 result) {
                                     DwoGlobalVars.instance().setSchoolLogins(result);
-                                    header.setRightWidget(userBar);
+//                                    header.setRightWidget(userBar);
                                     LOG.log(Level.INFO,
                                             "DwoGlobalVars has user with username:" + DwoGlobalVars.instance().getCurrentUser().getDisplayName() + ".");
                                 }

@@ -112,6 +112,35 @@ class ResultsPanelHandler {
         });
     }
 
+    public void updateServerResults() {
+        Promise<DomResultsPerTeacher> promResults;
+        promResults = controller.getResultsPerTeacher();
+        // onSuccess calculate results and show.
+        promResults.then(new Success<DomResultsPerTeacher, Void>() {
+            @Override
+            public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
+                //calculate tree and call plotting
+                LOG.log(Level.INFO, "DomResults returned.");
+                rTree = new DomResultTree(resolved.getValue());
+                LOG.log(Level.INFO, "ResultTree obtained.");
+                resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+                LOG.log(Level.INFO, "ResultMatrix obtained.");
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    //translate and display in gui
+                } else {
+                    //throw directly
+                }
+            }
+        });
+    }
+    
     public void updateResults() {
         resultMatrix = getResults(getCourse(), getSchoolClass());
     }
@@ -124,12 +153,18 @@ class ResultsPanelHandler {
         DomResultPlotMatrix result=null;
         if (rTree != null) {
             if (aCourse == null && aClass == null) {
+                this.setCourse(null);
+                this.setSchoolClass(null);
                 result =  ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
             } else if (aCourse == null && aClass != null) {
                 result =  ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree, aClass);
             } else if (aCourse != null && aClass == null) {
+                this.setCourse(null);
+                this.setSchoolClass(null);
                 result = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
             } else if (aCourse != null && aClass != null) {
+                this.setCourse(null);
+                this.setSchoolClass(null);
                 result =  ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
             }
         }

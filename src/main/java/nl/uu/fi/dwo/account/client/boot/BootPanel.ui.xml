@@ -26,10 +26,7 @@
             </g:DeckPanel>
         </g:FlowPanel>
         <g:FlowPanel addStyleNames='{accountnav.status}'>
-            <g:HTML horizontalAlignment="ALIGN_CENTER" width="100%" >
-                <div>status panel</div>
-            </g:HTML>
+                <g:Label  ui:field="statusMsg">unknown</g:Label>
         </g:FlowPanel>
-        <!--</g:FlowPanel>-->
     </g:HeaderPanel>            
 </ui:UiBinder> 

@@ -9,12 +9,12 @@
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name="nl.uu.fi.dwo.account.Account-DWO"/>
   <inherits name="com.google.gwt.logging.Logging"/>
-  <inherits name="com.googlecode.mgwt.MGWTMin"/>
+  <!--<inherits name="com.googlecode.mgwt.MGWTMin"/>-->
   <inherits name="nl.uu.fi.dwo.rest.DWO-rest-lib"/>
   <inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
-  <inherits name="com.fredhat.gwt.xmlrpc.XMLRPC" />
+  <!--<inherits name="com.fredhat.gwt.xmlrpc.XMLRPC" />-->
   
-  <set-property name="gwt.logging.popupHandler" value="DISABLED"/>  
+  <!--<set-property name="gwt.logging.popupHandler" value="DISABLED"/>-->  
   <set-property name="gwt.logging.enabled" value="TRUE"/>
   <set-property name="gwt.logging.logLevel" value="FINEST"/>
 
@@ -31,6 +31,6 @@
   <add-linker name='xsiframe' />
 <!--  chrome only -->
 <set-property name="user.agent" value="safari" />
-<set-property name="mgwt.os" value="desktop" />
-<set-property name="mobile.user.agent" value="not_mobile" />
+<!--<set-property name="mgwt.os" value="desktop" />-->
+<!--<set-property name="mobile.user.agent" value="not_mobile" />-->
 </module>

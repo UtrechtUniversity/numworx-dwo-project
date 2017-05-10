@@ -38,6 +38,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
     }
+
     interface MyUiBinder extends UiBinder<Widget, BootPanel> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
@@ -58,6 +59,8 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     Button logoutBtn;
     @UiField
     Image dwoLogo;
+    @UiField
+    Label statusMsg;
     @UiField
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
@@ -94,6 +97,10 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
         RootLayoutPanel.get().add(this);
     }
 
+    public void setStatus(String msg) {
+        statusMsg.setText(msg);
+    }
+    
 
     /**
      * @return the schoolLabel
