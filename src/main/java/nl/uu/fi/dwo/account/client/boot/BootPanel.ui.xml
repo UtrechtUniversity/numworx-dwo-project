@@ -25,8 +25,8 @@
                 <!--</g:FlowPanel>-->
             </g:DeckPanel>
         </g:FlowPanel>
-        <g:FlowPanel addStyleNames='{accountnav.status}'>
-                <g:Label  ui:field="statusMsg">unknown</g:Label>
+        <g:FlowPanel addStyleNames='{accountnav.status}' ui:field='statusPanel' >
+              <g:CheckBox ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox><g:  ui:field="statusMsg">unknown</g:Label> <g:Label  ui:field="statusMsg">unknown</g:Label>
         </g:FlowPanel>
     </g:HeaderPanel>            
 </ui:UiBinder> 

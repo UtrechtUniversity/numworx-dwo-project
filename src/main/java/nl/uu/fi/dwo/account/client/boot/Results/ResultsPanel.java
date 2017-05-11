@@ -72,12 +72,13 @@ public class ResultsPanel extends Composite {
         LOG.log(Level.INFO, "Grid size:" + resultTable.getRowCount() + "x.");
         resultTable.setWidget(0, 0, new Label("class\\course"));
         resultTable.getCellFormatter().addStyleName(0, 0, "flexTableHeader");
+ //       parent.showStatus();
         Timer t = new Timer() {
             @Override
             public void run() {
                 timer+=10;
                 try{
-                handler.updateServerResults();
+                //handler.updateServerResults();
                 parent.setStatus("Server OK, updated results for "+ timer+" seconds, updating every 10 seconds.");
                 }catch(Exception e){
                 parent.setStatus("Server Ofline");

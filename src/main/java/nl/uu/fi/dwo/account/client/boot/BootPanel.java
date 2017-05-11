@@ -8,8 +8,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -60,7 +62,11 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     @UiField
     Image dwoLogo;
     @UiField
+    FlowPanel statusPanel;
+    @UiField
     Label statusMsg;
+    @UiField
+    CheckBox autoUpdateResults;
     @UiField
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
@@ -97,10 +103,32 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
         RootLayoutPanel.get().add(this);
     }
 
+    /**
+     * @return the autoUpdateResults
+     */
+    public CheckBox getAutoUpdateResults() {
+        return autoUpdateResults;
+    }
+
+    /**
+     * @param autoUpdateResults the autoUpdateResults to set
+     */
+    public void setAutoUpdateResults(CheckBox autoUpdateResults) {
+        this.autoUpdateResults = autoUpdateResults;
+    }
+
+    public void hideStatus() {
+        statusPanel.setVisible(false);
+    }
+
+    public void showStatus() {
+        statusPanel.setVisible(true);
+
+    }
+
     public void setStatus(String msg) {
         statusMsg.setText(msg);
     }
-    
 
     /**
      * @return the schoolLabel
@@ -249,5 +277,5 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     public void setLogoutBtn(Button logoutBtn) {
         this.logoutBtn = logoutBtn;
     }
-    
+
 }

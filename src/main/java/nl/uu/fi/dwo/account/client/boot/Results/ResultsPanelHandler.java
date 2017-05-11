@@ -159,13 +159,13 @@ class ResultsPanelHandler {
             } else if (aCourse == null && aClass != null) {
                 result =  ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree, aClass);
             } else if (aCourse != null && aClass == null) {
-                this.setCourse(null);
-                this.setSchoolClass(null);
-                result = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+//                this.setCourse(null);
+//                this.setSchoolClass(null);
+                result = ResultTreeCalculator.GetScoreOfTeacherClassesByActivitiesOfCourse(rTree, aCourse);
             } else if (aCourse != null && aClass != null) {
                 this.setCourse(null);
                 this.setSchoolClass(null);
-                result =  ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+                result =  ResultTreeCalculator.GetScoreOfActivitiesOfCourseByStudentsInClass(rTree, aCourse, aClass);
             }
         }
         return result; // Though in Java 8 return Optional.
