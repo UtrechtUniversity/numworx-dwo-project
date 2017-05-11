@@ -37,6 +37,17 @@ class AsyncMediator implements InvocationHandler {
 
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
+		if("toString".equals(method.getName()) && (args == null || args.length == 0))
+		{
+			return org.toString();
+		}
+		if("hashCode".equals(method.getName()) && (args == null || args.length == 0))
+		{
+			return System.identityHashCode(proxy); //org.hashCode();
+		}
+		if("equals".equals(method.getName()) && args != null && args.length == 1 && method.getParameterTypes()[0] == Object.class) {
+			return Boolean.valueOf(args[1] == proxy);
+		}	
 		@SuppressWarnings("rawtypes")
 		Deferred<?> result = new Deferred();
 		async.setRunner(new AsyncRunner(result, org, method, args));

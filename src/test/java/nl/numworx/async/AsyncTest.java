@@ -65,6 +65,10 @@ public class AsyncTest extends TestCase {
 		} catch(InvocationTargetException e) {
 		}
 		assertEquals("n=4", p.getFailure().getMessage());
+		
+		assertFalse(0 == t2.hashCode());
+		assertNotNull(t2.toString());
+		assertFalse(t2.equals(t1));
 	}
 		
 	
