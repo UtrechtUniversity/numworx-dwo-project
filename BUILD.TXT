@@ -4,3 +4,8 @@ mvn gwt:i18n
 
 this updates nl.uu.fi.dwo.rest.local.Dwo2Exceptions.java for GWT-localization.
 
+Furthermore ensure a working tomcat with DWOServer that allows using 
+
+'mvn tomcat7:deploy' to deploy the application and 
+then run 'mvn gwt:run-codeserver'
+

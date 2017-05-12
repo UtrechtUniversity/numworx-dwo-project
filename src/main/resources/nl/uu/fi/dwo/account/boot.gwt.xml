@@ -11,6 +11,7 @@
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='com.google.gwt.user.theme.clean.Clean'/>
   <inherits name="nl.uu.fi.dwo.mobile.promise.Promise" /> 
+  <inherits name="com.github.nmorel.gwtjackson.GwtJackson" />
   <!--<inherits name="com.fredhat.gwt.xmlrpc.XMLRPC" />-->
   
   <!--<set-property name="gwt.logging.popupHandler" value="DISABLED"/>-->  

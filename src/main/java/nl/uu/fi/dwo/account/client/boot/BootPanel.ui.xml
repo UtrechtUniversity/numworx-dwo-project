@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-             xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
+             >
     <ui:style field="accountnav" src="resultapp.css" />    
     <ui:with type="nl.uu.fi.dwo.account.client.icons.AccountImageBundle" field="icons" />
     
@@ -26,7 +26,8 @@
             </g:DeckPanel>
         </g:FlowPanel>
         <g:FlowPanel addStyleNames='{accountnav.status}' ui:field='statusPanel' >
-              <g:CheckBox ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox><g:  ui:field="statusMsg">unknown</g:Label> <g:Label  ui:field="statusMsg">unknown</g:Label>
+              <g:CheckBox  addStyleNames='{accountnav.statusMsgBox}' ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox>
+              <g:Label addStyleNames='{accountnav.statusMsgBox}'  ui:field="statusMsg"></g:Label>
         </g:FlowPanel>
     </g:HeaderPanel>            
 </ui:UiBinder> 

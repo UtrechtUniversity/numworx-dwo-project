@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -122,8 +123,9 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     }
 
     public void showStatus() {
+        if(statusPanel!=null){
         statusPanel.setVisible(true);
-
+        }
     }
 
     public void setStatus(String msg) {
@@ -204,6 +206,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
 
     public void showResultWidget() {
         ResultsPanel panel = (ResultsPanel) resultWidget;
+        statusPanel.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         panel.init();
         mainDeckPanel.showWidget(2);
     }

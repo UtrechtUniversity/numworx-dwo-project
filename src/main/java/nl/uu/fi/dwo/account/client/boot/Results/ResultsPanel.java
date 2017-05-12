@@ -17,7 +17,10 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.boot.BootPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 
 /**
  *
@@ -48,7 +51,7 @@ public class ResultsPanel extends Composite {
     final int xInitialGridSize = 6;
     int xOffset = 0;
     int yOffset = 0;
-    int timer =0;
+    int timer = 0;
 
     @UiField(provided = true)
     FlexTable resultTable = new FlexTable();
@@ -72,16 +75,19 @@ public class ResultsPanel extends Composite {
         LOG.log(Level.INFO, "Grid size:" + resultTable.getRowCount() + "x.");
         resultTable.setWidget(0, 0, new Label("class\\course"));
         resultTable.getCellFormatter().addStyleName(0, 0, "flexTableHeader");
- //       parent.showStatus();
         Timer t = new Timer() {
             @Override
             public void run() {
-                timer+=10;
-                try{
-                //handler.updateServerResults();
-                parent.setStatus("Server OK, updated results for "+ timer+" seconds, updating every 10 seconds.");
-                }catch(Exception e){
-                parent.setStatus("Server Ofline");
+                timer += 1;
+                try {
+                    if (parent.getAutoUpdateResults().getValue()) {
+                        //handler.updateServerResults();
+                        parent.setStatus("Server OK, updating results every 5 seconds.");
+                    } else {
+                        parent.setStatus("Refresh paused.");
+                    }
+                } catch (Exception e) {
+                    parent.setStatus("Server Offline");
                 }
             }
         };
@@ -127,14 +133,13 @@ public class ResultsPanel extends Composite {
 //                        }
 //                    }
 //                });
-
 //        tablePanel.setWidget(resultGrid);
-    initWidget(uiBinder.createAndBindUi(this));
-        handler  = new ResultsPanelHandler(this);
+        initWidget(uiBinder.createAndBindUi(this));
+        handler = new ResultsPanelHandler(this);
 //        resultGrid.setVisible(true);
-}
+    }
 
-public void init() {
+    public void init() {
         handler.init();
     }
 
@@ -148,27 +153,36 @@ public void init() {
         int j = 0;
         // column labels
         resultTable.removeAllRows();
-        if(handler.getCourse()!=null || handler.getSchoolClass()!=null){
-        resultTable.setWidget(0, 0, new Label("[-]\\[-]"));
+        if (handler.getCourse() != null || handler.getSchoolClass() != null) {
+            resultTable.setWidget(0, 0, new Label("[-]\\[-]"));
         }
         for (i = 0; i < handler.getResultMatrix().gethSize(); i++) {
-            resultTable.setWidget(0, i + 1, new Label("[+] "+handler.getResultMatrix().gethIndex(i).getLabel()));
+            String action = "[+] ";
+            if (handler.getCourse() != null) {
+                action = "[-] ";
+            }
+            resultTable.setWidget(0, i + 1, new Label(action + handler.getResultMatrix().gethIndex(i).getLabel()));
             resultTable.getCellFormatter().addStyleName(0, i + 1, "flexTableHeader");
         }
         // row labels
         for (i = 0; i < handler.getResultMatrix().getvSize(); i++) {
-            resultTable.setWidget(i + 1, 0, new Label("[+] "+handler.getResultMatrix().getvIndex(i).getLabel()));
+            String action = "[+] ";
+            if (handler.getSchoolClass() != null) {
+                action = "[-] ";
+            }
+            resultTable.setWidget(i + 1, 0, new Label(action + handler.getResultMatrix().getvIndex(i).getLabel()));
             resultTable.getCellFormatter().addStyleName(i + 1, 0, "flexTableHeader");
         }
         // add clickhandler to labels
         resultTable.addClickHandler(new ClickHandler() {
             @Override
-        public void onClick(ClickEvent event) {
+            public void onClick(ClickEvent event) {
                 if (resultTable.getCellForEvent(event) != null) {
                     int col = resultTable.getCellForEvent(event).getCellIndex();
                     int row = resultTable.getCellForEvent(event).getRowIndex();
                     LOG.log(Level.INFO, "row " + row + ", col " + col + " clicked.");
                     if (col == 0 && row == 0) {
+                        //zoom class and/or course out
                         LOG.log(Level.INFO, "Reset label (0,0) clicked.");
                         handler.setCourse(null);
                         handler.setSchoolClass(null);
@@ -178,22 +192,35 @@ public void init() {
                     } else if (col > 0) {
                         DomResultScore score = handler.getResultMatrix().gethIndex(col - 1);
                         if (row == 0 && col > 0 && score instanceof DomResultCourse) {
+                            // zoom into Course
                             LOG.log(Level.INFO, "Column label" + col + " clicked.");
                             DomResultCourse sc = (DomResultCourse) score;
                             handler.setCourse(sc);
                             handler.updateResults();
                             updateView();
+                        } else if (row == 0 && col > 0 && score instanceof DomResultScoContext) {
+                            // zoom into Course
+                            LOG.log(Level.INFO, "Column label" + col + " clicked.");
+                            handler.setCourse(null);
+                            handler.updateResults();
+                            updateView();
+
                         }
-                    } else {
-                        if (row > 0) {
-                            DomResultScore score = handler.getResultMatrix().getvIndex(row - 1);
-                            if (col == 0 && row > 0 && score instanceof DomResultSchoolClass) {
-                                LOG.log(Level.INFO, "Row label" + row + " clicked.");
-                                DomResultSchoolClass sc = (DomResultSchoolClass) score;
-                                handler.setSchoolClass(sc);
-                                handler.updateResults();
-                                updateView();
-                            }
+                    } else if (row > 0) {
+                        DomResultScore score = handler.getResultMatrix().getvIndex(row - 1);
+                        if (col == 0 && row > 0 && score instanceof DomResultSchoolClass) {
+                            // zoom into Course
+                            LOG.log(Level.INFO, "Row label" + row + " clicked.");
+                            DomResultSchoolClass sc = (DomResultSchoolClass) score;
+                            handler.setSchoolClass(sc);
+                            handler.updateResults();
+                            updateView();
+                        } else if (col == 0 && row > 0 && score instanceof DomResultStudent) {
+                            // zoom into Course
+                            LOG.log(Level.INFO, "Column label" + row + " clicked.");
+                            handler.setSchoolClass(null);
+                            handler.updateResults();
+                            updateView();
                         }
                     }
 
@@ -209,7 +236,7 @@ public void init() {
                     if (handler.getResultMatrix().getMark(i, j).getScoCount() > 0.0) {
                         score = handler.getResultMatrix().getMark(i, j).getScore() / handler.getResultMatrix().getMark(i, j).getScoCount();
                     } else if (handler.getResultMatrix().getMark(i, j).getStudentScoCount() > 0.0) {
-                        score = handler.getResultMatrix().getMark(i, j).getScore();
+                        score = handler.getResultMatrix().getMark(i, j).getScore() / handler.getResultMatrix().getMark(i, j).getStudentScoCount();
                     } else {
                         score = 0.0;
                     }
