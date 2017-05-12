@@ -203,7 +203,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
      * @param parent
      * @param node
      */
-    private void calculateAverageSubtreeScore() {
+    public void calculateSumOfSubtreeScore() {
         //deepest level, most objects, no recursion
         if (this instanceof DomResultStudentSco) {
             DomResultStudentSco ss = (DomResultStudentSco) this;
@@ -218,7 +218,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
             this.setScoCount(1);
             this.setStudentScoCount(0.0);
             for (DomResultScore s : this.getChildren().values()) {
-                s.calculateAverageSubtreeScore();
+                s.calculateSumOfSubtreeScore();
                 this.setScore(this.getScore() + s.getScore());
                 this.setStudentScoCount(this.getStudentScoCount() + s.getStudentScoCount());
             }
@@ -235,7 +235,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
                 //is course leave
                 for (DomResultScore s : this.getChildren().values()) {
                     //recurse
-                    s.calculateAverageSubtreeScore();
+                    s.calculateSumOfSubtreeScore();
                     //add score from children and set cnt
                     this.setScore(this.getScore() + s.getScore());
                     this.setStudentScoCount(this.getStudentScoCount() + s.getStudentScoCount());
@@ -245,7 +245,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
                 //course node, not leave
                 for (DomResultScore s : this.getChildren().values()) {
                     //recurse
-                    s.calculateAverageSubtreeScore();
+                    s.calculateSumOfSubtreeScore();
                     //add score from children and set cnt
                     this.setScore(this.getScore() + s.getScore());
                     this.setScoCount(this.getScoCount() + s.getScoCount());
@@ -260,7 +260,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
         this.setScoCount(0.0);
         this.setStudentScoCount(0.0);
         for (DomResultScore s : this.getChildren().values()) {
-            s.calculateAverageSubtreeScore();
+            s.calculateSumOfSubtreeScore();
             //add score from children and set cnt
             this.setScore(this.getScore() + s.getScore());
             this.setScoCount(this.getScoCount() + s.getScoCount());
@@ -298,7 +298,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
             //add course to horizontal header
             courseLeaves.put(((DomResultCourse) this).getCourse().getId(), (DomResultCourse) this);
             //add course score to sparse matrix
-            this.calculateAverageSubtreeScore();
+            this.calculateSumOfSubtreeScore();
             this.setScore(this.getScore() / nStudents);
             //this.setScore(this.getScore()/nStudents);
             sparseMatrix.get(schoolClass.getSchoolClass().getId()).put(((DomResultCourse) this).getCourse().getId(), (DomResultCourse) this);
