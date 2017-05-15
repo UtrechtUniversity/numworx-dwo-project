@@ -8,7 +8,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -47,38 +46,33 @@ public class ResultTreeCalculator {
      * @return
      */
     public static DomResultPlotMatrix GetScoreOfTeacherClassesByLeafCourses(DomResultTree tree) {
-        Map<PersistenceId, Map<PersistenceId, DomResultCourse>> sparseMatrix = new HashMap<PersistenceId, Map<PersistenceId, DomResultCourse>>();
-        for (Map.Entry<PersistenceId, DomResultSchoolClass> entry : tree.getResultTree().getChildren().entrySet()) {
-            sparseMatrix.put(entry.getKey(), new HashMap<PersistenceId, DomResultCourse>());
-        }
-
-        //crawl and fill
+        //verified
+        
+        // show all classes  with courses.
+        DomResultSchoolClass[] classes;// = new DomResultSchoolClass[tree.getResultTree().getChildren().size()];
+        classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
+        
+        //crawl and collect course leaves.
         Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
         tree.getResultTree().collectCourseLeaves(courseLeaves);
-        int nClasses = tree.getResultTree().getChildren().size();
-        DomResultScore[] classes = new DomResultScore[nClasses];
-        classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
-        DomResultScore[] courses;
-        courses = courseLeaves.values().toArray(new DomResultScore[0]);
+        DomResultCourse[] courses;
+        courses = courseLeaves.values().toArray(new DomResultCourse[0]);
 
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
         for (int i = 0; i < classes.length; i++) {
             DomResultSchoolClass resultClass = (DomResultSchoolClass) classes[i];
-            tree.getResultTree().collectScoresPerCourseOverSchoolClass(resultClass, tree.getStudentTree().getChildren().get(resultClass.getSchoolClass().getId()).getChildren().size(), courseLeaves, sparseMatrix);
+            //recalculate for the number of students in a score. 
+            resultClass.calculateSumOfSubtreeScore(tree.getStudentTree().getChildren().get(classes[i].getSchoolClass().getId()).getChildren().size());
+            //assuming single threaded access to all variables.
             for (int j = 0; j < courses.length; j++) {
-                DomResultScore fieldScore = sparseMatrix.get(((DomResultSchoolClass) classes[i]).getSchoolClass().getId())
-                        .get(((DomResultCourse) courses[j]).getCourse().getId());
-                if (fieldScore != null) {
+                    DomResultScore fieldScore = (DomResultCourse) resultClass.getChildren().get(courses[j].getCourse().getId());
                     result.setMarks(i, j, fieldScore);
-                } else {
-                    result.setMarks(i, j, null);
-                }
             }
         }
         //put sparseMatrix in result
         return result;
     }
-
+    
     /**
      * Score per student in a given school class per leaf course. Every Sco that
      * has no work has score 0.0.
@@ -88,6 +82,7 @@ public class ResultTreeCalculator {
      * @return
      */
     public static DomResultPlotMatrix GetScoreOfLeafCoursesByStudentsInClass(DomResultTree tree, DomResultSchoolClass resultClass) {
+        //verified
         DomResultSchoolClass studentClass;
         studentClass = tree.getStudentTree().getChildren().get(resultClass.getSchoolClass().getId());
         resultClass = tree.getResultTree().getChildren().get(resultClass.getSchoolClass().getId()); //ensure up-to-date just in case.
@@ -136,43 +131,36 @@ public class ResultTreeCalculator {
      * @return
      */
     public static DomResultPlotMatrix GetScoreOfTeacherClassesByActivitiesOfCourse(DomResultTree tree, DomResultCourse resultCourse) {
-        DomResultPlotMatrix result = null;
         //collect classes
-        DomResultSchoolClass[] classes;
+       DomResultSchoolClass[] classes;// = new DomResultSchoolClass[tree.getResultTree().getChildren().size()];
         classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
 
+        DomResultScoContext[] activities;// = classes.collectActivities();
+        activities = new DomResultScoContext[0];
+        DomResultPlotMatrix result = new DomResultPlotMatrix(classes, activities);
+        for (int i = 0; i < classes.length; i++) {
+        //collect course leaves in class
+        Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
+        classes[i].collectCourseLeaves(courseLeaves);
+        resultCourse = courseLeaves.get(resultCourse.getCourse().getId());
+        //calculate
+        resultCourse.calculateSumOfSubtreeScore(tree.getStudentTree().getChildren().get(classes[i].getSchoolClass().getId()).getChildren().size());
+        
+        //crawl and collect course leaves.
         //collect activities
-        DomResultScoContext[] activities;
-        activities = (DomResultScoContext[]) resultCourse.getChildren().values().toArray(new DomResultScoContext[0]);
+        Map<PersistenceId,DomResultScoContext> courseActivities;
+        courseActivities =  resultCourse.getChildren();
 
-        //create plot matrix
-        result = new DomResultPlotMatrix(classes, activities);
-
-        //for each class collect the score of the activities.
-        for (int i = 0; i < classes.length; i++) {//(DomResultSchoolClass schoolClass : classes)
-            //getCourseLeaves in class
-            Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
-            classes[i].collectCourseLeaves(courseLeaves);
-
-            //find course in class
-            DomResultCourse curCourseLeave = courseLeaves.get(resultCourse.getCourse().getId());
-//            //collect activity scores in the course and insert   
-//            Map<PersistenceId, DomResultScoContext> curScoLeaves = new HashMap<PersistenceId, DomResultScoContext>();
-            for (int j = 0; j < activities.length; j++) { //(DomResultScoContext activity : activities) 
-                //get value
-                DomResultScoContext scoResult = null;
-                if (curCourseLeave != null && curCourseLeave.getChildren() != null && curCourseLeave.getChildren().containsKey(activities[j].getScoContext().getId())) {
-                    //set score
-                    DomResultScoContext calc = activities[j];
-                    calc.calculateSumOfSubtreeScore();
-                    scoResult = new DomResultScoContext(activities[j].getScoContext());
-                    scoResult.setScore(calc.getScore());
-                    scoResult.setScoCount(calc.getScoCount());
-                    scoResult.setStudentScoCount(calc.getStudentScoCount());
-                }
-                result.setMarks(i, j, scoResult);
+        //recalculate for the number of students in a score. 
+            //assuming single threaded access to all variables.
+            for (int j = 0; j < activities.length; j++) {
+                if(courseActivities.containsKey(activities[j].getScoContext().getId())){
+                    DomResultScore fieldScore = (DomResultScoContext) courseActivities.get(activities[j].getScoContext().getId());
+                    result.setMarks(i, j, fieldScore);
             }
         }
+        }
+        //put sparseMatrix in result
         return result;
     }
 
@@ -188,8 +176,8 @@ public class ResultTreeCalculator {
         DomResultPlotMatrix result = null;
 
         DomResultSchoolClass studentClass;
-        studentClass = tree.getStudentTree().getChildren().get(resultClass.getSchoolClass().getId());
         resultClass = tree.getResultTree().getChildren().get(resultClass.getSchoolClass().getId()); //ensure up-to-date just in case.
+        studentClass = tree.getStudentTree().getChildren().get(resultClass.getSchoolClass().getId());
 
         //collect students
         DomStudent[] domStudents = (DomStudent[]) studentClass.getChildren().values().toArray(new DomStudent[0]);
@@ -212,7 +200,10 @@ public class ResultTreeCalculator {
         for (int j = 0; j < activities.length; j++) { //(DomResultScoContext activity : activities) 
             //get map of studentSco scores
             Map<PersistenceId, DomResultStudent> studentScoMap = new HashMap<PersistenceId, DomResultStudent>();
-            resultCourse.getStudentCollectedAverageSubtreeScore(studentScoMap);
+            for(int i = 0; i < domStudents.length; i++) {
+                studentScoMap.put(students[i].getStudent().getId(), new DomResultStudent(domStudents[i]));
+            }
+            activities[j].getStudentCollectedAverageSubtreeScore(studentScoMap);
             for (int i = 0; i < students.length; i++) {
                 DomResultStudent scoResult = null;
                 if(studentScoMap.containsKey(students[i].getStudent().getId())){
