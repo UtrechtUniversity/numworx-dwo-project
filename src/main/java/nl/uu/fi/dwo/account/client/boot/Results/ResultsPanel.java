@@ -234,9 +234,9 @@ public class ResultsPanel extends Composite {
                 double score = 0.0;
                 if (handler.getResultMatrix().getMark(i, j) != null && handler.getResultMatrix().getMark(i, j).getScore() != null) {
                     if (handler.getResultMatrix().getMark(i, j).getScoCount() > 0.0) {
-                        score = handler.getResultMatrix().getMark(i, j).getScore() / handler.getResultMatrix().getMark(i, j).getScoCount();
+                        score = handler.getResultMatrix().getMark(i, j).getScore();
                     } else if (handler.getResultMatrix().getMark(i, j).getStudentScoCount() > 0.0) {
-                        score = handler.getResultMatrix().getMark(i, j).getScore() / handler.getResultMatrix().getMark(i, j).getStudentScoCount();
+                        score = handler.getResultMatrix().getMark(i, j).getScore();
                     } else {
                         score = 0.0;
                     }
