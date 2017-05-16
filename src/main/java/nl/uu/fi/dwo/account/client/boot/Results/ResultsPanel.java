@@ -189,7 +189,7 @@ public class ResultsPanel extends Composite {
                         handler.updateResults();
                         updateView();
 
-                    } else if (col > 0) {
+                    } else if (row == 0 && col > 0) {
                         DomResultScore score = handler.getResultMatrix().gethIndex(col - 1);
                         if (row == 0 && col > 0 && score instanceof DomResultCourse) {
                             // zoom into Course
@@ -206,7 +206,7 @@ public class ResultsPanel extends Composite {
                             updateView();
 
                         }
-                    } else if (row > 0) {
+                    } else if (col == 0 && row > 0) {
                         DomResultScore score = handler.getResultMatrix().getvIndex(row - 1);
                         if (col == 0 && row > 0 && score instanceof DomResultSchoolClass) {
                             // zoom into Course
@@ -222,6 +222,21 @@ public class ResultsPanel extends Composite {
                             handler.updateResults();
                             updateView();
                         }
+                    } 
+                    else if (row > 0 && col > 0) {
+                        DomResultScore rowScore = handler.getResultMatrix().getvIndex(row - 1);
+                        DomResultScore colScore = handler.getResultMatrix().gethIndex(col - 1);
+                        if (rowScore instanceof DomResultSchoolClass) {
+                            DomResultSchoolClass sc = (DomResultSchoolClass) rowScore;
+                            handler.setSchoolClass(sc);
+                        } 
+                        if (colScore instanceof DomResultCourse) {
+                            DomResultCourse c = (DomResultCourse) colScore;
+                            handler.setCourse(c);
+                        }
+                        LOG.log(Level.INFO, "Row " + row + ", col " + col + " clicked.");
+                        handler.updateResults();
+                        updateView();
                     }
 
                 }
@@ -229,7 +244,9 @@ public class ResultsPanel extends Composite {
         }
         );
 
-        for (j = 0; j < handler.getResultMatrix().gethSize(); j++) {
+        for (j = 0;
+                j < handler.getResultMatrix()
+                .gethSize(); j++) {
             for (i = 0; i < handler.getResultMatrix().getvSize(); i++) {
                 double score = 0.0;
                 if (handler.getResultMatrix().getMark(i, j) != null && handler.getResultMatrix().getMark(i, j).getScore() != null) {
@@ -247,6 +264,8 @@ public class ResultsPanel extends Composite {
 
             }
         }
-        resultTable.setVisible(true);
+
+        resultTable.setVisible(
+                true);
     }
 }
