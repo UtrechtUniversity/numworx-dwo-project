@@ -64,7 +64,7 @@ public class DomResultPlotMatrix {
     public DomResultScore gethIndex(int i) {
         return hIndex[i];
     }
-
+//
 //    @Override
 //    public String toString() {
 //        return toString(1);
@@ -94,13 +94,14 @@ public class DomResultPlotMatrix {
 //            for (int i = 0; i < hIndex.length; i++) {
 //                //row, column 
 //                if (marks[j][i] != null && marks[j][i].getScore() != null) {
-//                    if (marks[j][i].getScoCount() > 0.0) {
-//                        formatter.format("%50f", marks[j][i].getScore() / divider / marks[j][i].getScoCount());
-//                    } else if (marks[j][i].getStudentScoCount() > 0.0) {
-//                        formatter.format("%50f", marks[j][i].getScore() / divider);
-//                    } else {
-//                        formatter.format("%50s", "null");
-//                    }
+//                formatter.format("%50f", marks[j][i].getScore());
+////                    if (marks[j][i].getScoCount() > 0.0) {
+////                        formatter.format("%50f", marks[j][i].getScore() / divider );
+////                    } else if (marks[j][i].getStudentScoCount() > 0.0) {
+////                        formatter.format("%50f", marks[j][i].getScore() / divider);
+////                    } else {
+////                        formatter.format("%50s", "null");
+////                    }
 //                } else {
 //                    formatter.format("%50s", "null");
 //                }

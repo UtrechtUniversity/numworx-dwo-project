@@ -135,8 +135,9 @@ public class ResultTreeCalculator {
        DomResultSchoolClass[] classes;// = new DomResultSchoolClass[tree.getResultTree().getChildren().size()];
         classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
 
-        DomResultScoContext[] activities;// = classes.collectActivities();
-        activities = new DomResultScoContext[0];
+        Map<PersistenceId, DomResultScoContext> activityMap = new HashMap<PersistenceId, DomResultScoContext>();
+        tree.getResultTree().collectActivities(activityMap);
+        DomResultScoContext[] activities = activityMap.values().toArray(new DomResultScoContext[0]);
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, activities);
         for (int i = 0; i < classes.length; i++) {
         //collect course leaves in class
