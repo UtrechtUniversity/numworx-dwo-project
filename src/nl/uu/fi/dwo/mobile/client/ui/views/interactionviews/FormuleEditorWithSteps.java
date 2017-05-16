@@ -1353,7 +1353,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if(editor != null)
+				if(editor != null && editable)
 				{	
 					if (panel.equals(editor.getAsPanel().getParent())) // parent kan null zijn in rare gevallen
 					{	
