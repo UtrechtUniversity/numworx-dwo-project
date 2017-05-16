@@ -226,11 +226,11 @@ public class ResultsPanel extends Composite {
                     else if (row > 0 && col > 0) {
                         DomResultScore rowScore = handler.getResultMatrix().getvIndex(row - 1);
                         DomResultScore colScore = handler.getResultMatrix().gethIndex(col - 1);
-                        if (rowScore instanceof DomResultSchoolClass) {
+                        if (handler.getSchoolClass()==null && rowScore instanceof DomResultSchoolClass) {
                             DomResultSchoolClass sc = (DomResultSchoolClass) rowScore;
                             handler.setSchoolClass(sc);
                         } 
-                        if (colScore instanceof DomResultCourse) {
+                        if (handler.getCourse()==null && colScore instanceof DomResultCourse) {
                             DomResultCourse c = (DomResultCourse) colScore;
                             handler.setCourse(c);
                         }
