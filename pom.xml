@@ -30,18 +30,8 @@
         <maven.test.skip>true</maven.test.skip>
         <!-- Convenience property to set the GWT version -->
         <gwt.version>2.8.1</gwt.version>
-
-        <!-- Setting maven.compiler.source to something different to 1.8
-        needs that you configure the sourceLevel in gwt-maven-plugin since
-        GWT 2.8 requires 1.8 (see gwt-maven-plugin block below) -->
         <maven.compiler.source>1.8</maven.compiler.source>
-        <!-- This is an appengine webapp, so it must generate Java 7 classes
-        https://cloud.google.com/appengine/docs/java/tools/maven#java_requirements -->
         <maven.compiler.target>1.8</maven.compiler.target>
-
-        <!-- App Engine properties -->
-        <!--    <appengine.version>1.9.40</appengine.version>
-        <appengine.application.version>1</appengine.application.version>-->
 
         <!-- Don't let your Mac use a crazy non-standard encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -53,7 +43,7 @@
     </scm>
     <!-- Running with Maven -->
     <!-- mvn clean package -->
-    <!-- mvn appengine:devserver_start - start web server -->
+    <!-- mvn tomcat7:run package -->
     <!-- mvn gwt:codeserver - start gwt code server -->
     <!-- goto http://localhost:8080 -->
   
@@ -124,12 +114,30 @@
             <version>1.3</version>
             <!--<scope>provided</scope>-->
         </dependency> 
-            <dependency>
-  <groupId>com.github.nmorel.gwtjackson</groupId>
-  <artifactId>gwt-jackson</artifactId>
-  <version>0.14.2</version>
-  <scope>provided</scope>
-</dependency>
+        <dependency>
+            <groupId>com.github.nmorel.gwtjackson</groupId>
+            <artifactId>gwt-jackson</artifactId>
+            <version>0.14.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mitre.dsmiley.httpproxy</groupId>
+            <artifactId>smiley-http-proxy-servlet</artifactId>
+            <version>1.7</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jamonapi</groupId>
+            <artifactId>jamon</artifactId>
+            <version>2.80</version> 
+            <!--comment scope for elastic beanstalk-->
+        </dependency>  
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.34</version>
+            <!--comment scope for elastic beanstalk-->
+        </dependency>        
     </dependencies>
     
     <build>
@@ -145,7 +153,7 @@
                     <execution>
                         <configuration>
                            <module>nl.uu.fi.dwo.account.boot</module>
-                         </configuration>                        
+                </configuration>                           
                         <goals>
                             <goal>compile</goal>
                             <goal>generateAsync</goal>
@@ -189,49 +197,43 @@
                 <version>3.1</version>
             </plugin>
 
-<!--            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <version>${gwt.version}</version>
-                <configuration>
-                    <module>nl.uu.fi.dwo.account.boot</module>
-                    
-                    <runTarget>boot.html</runTarget>
-                    <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <warSourceDirectory>war</warSourceDirectory>
-                    <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
-                    <hostedWebapp>${webappDirectory}</hostedWebapp>  
-                    <compileSourcesArtifacts> 
-                                                <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact> 
-                                                <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-gwt-lib</compileSourcesArtifact> 
-                    </compileSourcesArtifacts> 
-                    <i18nConstantsWithLookupBundles>
-                        <i18nConstantsWithLookupBundle>nl.uu.fi.dwo.rest.locale.Dwo2Exceptions</i18nConstantsWithLookupBundle>                          
-                    </i18nConstantsWithLookupBundles>
-                     generate in generated sources, why not? 
-                    <generateDirectory>${basedir}/src/main/java</generateDirectory> 
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                             <goal>i18n</goal> 
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
                     <server>TomcatServer</server>
-                    <path>/boot</path>
+                    <port>8080</port>
+                    <!--<path>/</path>-->
+                    
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                     <tomcat.local.deploy.url>http://127.0.0.1:8080/manager/text</tomcat.local.deploy.url> 
                     <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
-                    <archiveClasses>true</archiveClasses> 
-                </configuration>                                        
+                    <archiveClasses>true</archiveClasses>
+                    <webapps>
+                        <webapp>
+                            <groupId>nl.uu.fi.dwo</groupId>
+                            <artifactId>DWOServer</artifactId> 
+                            <version>${dwoVersion}</version> 
+                            <type>war</type>    
+                            <asWebapp>true</asWebapp> 
+                            <contextPath>/dwo</contextPath>
+                            <contextFile>src/test/tomcat/context-ubuntu.xml</contextFile>
+                        </webapp>
+                    </webapps>                         
+                </configuration> 
+                <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>5.1.34</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>com.jamonapi</groupId>
+                            <artifactId>jamon</artifactId>
+                            <version>2.80</version>
+                        </dependency>        
+                    </dependencies>
             </plugin>            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -239,17 +241,11 @@
                 <version>2.5.3</version>
                 <configuration>
                     <goals>deploy</goals>
-                </configuration>
+                </configuration>    
             </plugin>
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
 
-    <description>Gebruiker: profiel en klas panels</description>
-    <!--    <parent>
-        <groupId>fi.parentgwt</groupId>
-        <artifactId>ParentGWT</artifactId>
-        <version>0.0.3</version>
-        <relativePath>../ParentGWT</relativePath>
-    </parent>-->
+    <description>Results viewer</description>
 </project>
