@@ -22,7 +22,7 @@ import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.account.client.boot.Results.ResultsPanel;
+import nl.uu.fi.dwo.account.client.boot.Results.ResultsView;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -73,7 +73,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     @UiField(provided = true)
     Widget loginWidget = new LoginPanel();
     @UiField(provided = true)
-    Widget resultWidget = new ResultsPanel();
+    Widget resultWidget = new ResultsView();
     @UiField(provided = true)
     Widget switchSchoolWidget = new SwitchSchoolPanel();
 
@@ -98,7 +98,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
         mainDeckPanel.showWidget(0);
         ((SwitchSchoolPanel) switchSchoolWidget).setParent(this);
 //        mainDeckPanel.add(resultWidget);
-        ((ResultsPanel) resultWidget).setParent(this);
+        ((ResultsView) resultWidget).setParent(this);
         LOG.log(Level.INFO, "Showing loginPanel.");
 
         RootLayoutPanel.get().add(this);
@@ -205,7 +205,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     }
 
     public void showResultWidget() {
-        ResultsPanel panel = (ResultsPanel) resultWidget;
+        ResultsView panel = (ResultsView) resultWidget;
         statusPanel.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         panel.init();
         mainDeckPanel.showWidget(2);

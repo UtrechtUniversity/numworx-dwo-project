@@ -27,11 +27,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
  *
  * @author G.A.J. van der Plas
  */
-public class ResultsPanel extends Composite {
+public class ResultsView extends Composite {
 
-    private static final Logger LOG = Logger.getLogger(ResultsPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(ResultsView.class.getName());
 
-    interface MyUiBinder extends UiBinder<Widget, ResultsPanel> {
+    interface MyUiBinder extends UiBinder<Widget, ResultsView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
@@ -43,8 +43,8 @@ public class ResultsPanel extends Composite {
 
         String tableCellodd();
     }
-    private ResultsPanelHandler handler;
-    private ResultsTeacherController control;
+    private ResultsPresenter handler;
+    private ResultsService control;
 
     //initial gridsize
     final int yInitialGridSize = 12;
@@ -56,7 +56,7 @@ public class ResultsPanel extends Composite {
     @UiField(provided = true)
     FlexTable resultTable = new FlexTable();
 
-    ListDataProvider<DomResultScore> dataProvider = new ListDataProvider<DomResultScore>();
+    //ListDataProvider<DomResultScore> dataProvider = new ListDataProvider<DomResultScore>();
 
     private BootPanel parent;
 
@@ -71,7 +71,7 @@ public class ResultsPanel extends Composite {
         return parent;
     }
 
-    public ResultsPanel() {
+    public ResultsView() {
         LOG.log(Level.INFO, "Grid size:" + resultTable.getRowCount() + "x.");
         resultTable.setWidget(0, 0, new Label("class\\course"));
         resultTable.getCellFormatter().addStyleName(0, 0, "flexTableHeader");
@@ -135,7 +135,7 @@ public class ResultsPanel extends Composite {
 //                });
 //        tablePanel.setWidget(resultGrid);
         initWidget(uiBinder.createAndBindUi(this));
-        handler = new ResultsPanelHandler(this);
+        handler = new ResultsPresenter(this);
 //        resultGrid.setVisible(true);
     }
 
@@ -229,14 +229,17 @@ public class ResultsPanel extends Composite {
                         if (handler.getSchoolClass()==null && rowScore instanceof DomResultSchoolClass) {
                             DomResultSchoolClass sc = (DomResultSchoolClass) rowScore;
                             handler.setSchoolClass(sc);
-                        } 
-                        if (handler.getCourse()==null && colScore instanceof DomResultCourse) {
-                            DomResultCourse c = (DomResultCourse) colScore;
-                            handler.setCourse(c);
-                        }
                         LOG.log(Level.INFO, "Row " + row + ", col " + col + " clicked.");
                         handler.updateResults();
                         updateView();
+                        }
+                        if (handler.getCourse()==null && colScore instanceof DomResultCourse) {
+                            DomResultCourse c = (DomResultCourse) colScore;
+                            handler.setCourse(c);
+                        LOG.log(Level.INFO, "Row " + row + ", col " + col + " clicked.");
+                        handler.updateResults();
+                        updateView();
+                        }
                     }
 
                 }

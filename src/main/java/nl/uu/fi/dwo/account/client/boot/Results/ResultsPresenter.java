@@ -15,16 +15,16 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 /**
- * Controller for ResultsPanel actions.
+ * Controller for ResultsView actions.
  *
  * @author Gert van der Plas
  */
-class ResultsPanelHandler {
+class ResultsPresenter {
 
-    private static final Logger LOG = Logger.getLogger(ResultsPanelHandler.class.getName());
+    private static final Logger LOG = Logger.getLogger(ResultsPresenter.class.getName());
 
-    private ResultsPanel view;
-    private ResultsTeacherController controller = new ResultsTeacherController();
+    private ResultsView view;
+    private ResultsService resultService = new ResultsService();
     //model
     private DomResultTree rTree;
     private DomResultPlotMatrix resultMatrix;
@@ -74,7 +74,7 @@ class ResultsPanelHandler {
     private DomResultCourse course; //null means all courses.
     private DomResultSchoolClass schoolClass; //null means all classes.
 
-    ResultsPanelHandler(ResultsPanel view) {
+    ResultsPresenter(ResultsView view) {
         this.view = view;
     }
 
@@ -83,7 +83,7 @@ class ResultsPanelHandler {
         setCourse(null);
         setSchoolClass(null);
         Promise<DomResultsPerTeacher> promResults;
-        promResults = controller.getResultsPerTeacher();
+        promResults = resultService.getResultsPerTeacher();
         // onSuccess calculate results and show.
         promResults.then(new Success<DomResultsPerTeacher, Void>() {
             @Override
@@ -114,7 +114,7 @@ class ResultsPanelHandler {
 
     public void updateServerResults() {
         Promise<DomResultsPerTeacher> promResults;
-        promResults = controller.getResultsPerTeacher();
+        promResults = resultService.getResultsPerTeacher();
         // onSuccess calculate results and show.
         promResults.then(new Success<DomResultsPerTeacher, Void>() {
             @Override
