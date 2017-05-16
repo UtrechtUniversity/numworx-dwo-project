@@ -26,4 +26,5 @@ public class PublicProfileManager {
 	public Promise<DomDwoProfileFull> get(int id) {
 		return get(Integer.toString(id));
 	}
+
 }
