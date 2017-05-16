@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -181,7 +182,11 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
     public static Long getNativeId(DomUser o) throws Dwo2Exception {
         return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentUser);
     }
-
+    
+    public static Long getNativeId(DomScoContext o) throws Dwo2Exception {
+    	return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentScoContext);
+    }
+    
     @Override
     public PersistenceClassType getType() {
         return super.getType();
