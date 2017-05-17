@@ -6,12 +6,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 
-public interface PublicScoContextRestCaller {
+public interface PublicScoContextRestCaller extends RestService {
 
 	@PUT
     @Path("/public/scoContext/get")
