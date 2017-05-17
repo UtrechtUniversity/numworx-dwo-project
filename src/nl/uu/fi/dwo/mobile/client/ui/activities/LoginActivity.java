@@ -98,7 +98,7 @@ public class LoginActivity extends MGWTAbstractActivity
 
 		@Override
 		public boolean test(DomSchoolsRolesAndClassesV2 t) {
-			if(DWOplayer.dwoProfile.isDone() && t == null)
+			if(DWOplayer.dwoProfile.isDone() && t == null && DWOplayer.dwoProfile.getFailure() == null)
 			{
 				String r = DWOplayer.dwoProfile.getValue().getDwoProfileRights();
 				return (r.indexOf('l') < 0);
