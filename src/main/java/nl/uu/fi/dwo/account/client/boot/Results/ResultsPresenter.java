@@ -30,31 +30,20 @@ class ResultsPresenter {
     private DomResultPlotMatrix resultMatrix;
 
     /**
-     * @return the course
+     * @param row the course to set
      */
-    public DomResultCourse getCourse() {
-        return course;
-    }
+    public void selectRowAndCol(int row, int col) {
+        if (resultMatrix.getvIndex(row) instanceof DomResultSchoolClass) {
+            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row);
+        } else {
+            schoolClass = null;
+        }
 
-    /**
-     * @param course the course to set
-     */
-    public void setCourse(DomResultCourse course) {
-        this.course = course;
-    }
-
-    /**
-     * @return the schoolClass
-     */
-    public DomResultSchoolClass getSchoolClass() {
-        return schoolClass;
-    }
-
-    /**
-     * @param schoolClass the schoolClass to set
-     */
-    public void setSchoolClass(DomResultSchoolClass schoolClass) {
-        this.schoolClass = schoolClass;
+        if (resultMatrix.gethIndex(col) instanceof DomResultCourse) {
+            course = (DomResultCourse) resultMatrix.gethIndex(col);
+        } else {
+            course = null;
+        }
     }
 
     /**
@@ -71,8 +60,8 @@ class ResultsPresenter {
         CourseClass     //A Course for a Class
     }
 
-    private DomResultCourse course; //null means all courses.
-    private DomResultSchoolClass schoolClass; //null means all classes.
+    private DomResultCourse course = null; //null means all courses.
+    private DomResultSchoolClass schoolClass = null; //null means all classes.
 
     ResultsPresenter(ResultsView view) {
         this.view = view;
@@ -80,8 +69,8 @@ class ResultsPresenter {
 
     public void init() {
         LOG.log(Level.INFO, "DwoGlobalVarsState = " + DwoGlobalVars.instance().getState().name());
-        setCourse(null);
-        setSchoolClass(null);
+        course = null;
+        schoolClass = null;
         Promise<DomResultsPerTeacher> promResults;
         promResults = resultService.getResultsPerTeacher();
         // onSuccess calculate results and show.
@@ -94,7 +83,7 @@ class ResultsPresenter {
                 LOG.log(Level.INFO, "ResultTree obtained.");
                 resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
-                view.updateView();
+                plotResultsEvent();
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
                 return null;
             }
@@ -104,8 +93,9 @@ class ResultsPresenter {
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
-                    //translate and display in gui
+                    LOG.log(Level.SEVERE,fail.getMessage());
                 } else {
+                    LOG.log(Level.SEVERE,fail.getMessage());
                     //throw directly
                 }
             }
@@ -125,6 +115,8 @@ class ResultsPresenter {
                 LOG.log(Level.INFO, "ResultTree obtained.");
                 resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
+                plotResultsEvent();
+                LOG.log(Level.INFO, "plotted ResultMatrix.");
                 return null;
             }
         },
@@ -140,9 +132,15 @@ class ResultsPresenter {
             }
         });
     }
-    
+
+    public void plotResultsEvent() {
+        resultMatrix = getResults(course, schoolClass);
+        String[][] data = buildPlotMatrix();
+        view.plot(data.length, data[0].length, data);
+    }
+
     public void updateResults() {
-        resultMatrix = getResults(getCourse(), getSchoolClass());
+        resultMatrix = getResults(course, schoolClass);
     }
 
     public DomResultPlotMatrix getResults() {
@@ -150,20 +148,71 @@ class ResultsPresenter {
     }
 
     private DomResultPlotMatrix getResults(DomResultCourse aCourse, DomResultSchoolClass aClass) {
-        DomResultPlotMatrix result=null;
+        DomResultPlotMatrix result = null;
         if (rTree != null) {
             if (aCourse == null && aClass == null) {
-                this.setCourse(null);
-                this.setSchoolClass(null);
-                result =  ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+                result = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
             } else if (aCourse == null && aClass != null) {
-                result =  ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree, aClass);
+                result = ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree, aClass);
             } else if (aCourse != null && aClass == null) {
                 result = ResultTreeCalculator.GetScoreOfTeacherClassesByActivitiesOfCourse(rTree, aCourse);
             } else if (aCourse != null && aClass != null) {
-                result =  ResultTreeCalculator.GetScoreOfActivitiesOfCourseByStudentsInClass(rTree, aCourse, aClass);
+                result = ResultTreeCalculator.GetScoreOfActivitiesOfCourseByStudentsInClass(rTree, aCourse, aClass);
             }
         }
         return result; // Though in Java 8 return Optional.
+    }
+
+    public String[][] buildPlotMatrix() {
+
+        int i = this.getResultMatrix().getvSize();
+        int j = this.getResultMatrix().gethSize();
+        String[][] data = new String[i+1][j+1];
+
+        // column labels
+        if (course != null || schoolClass != null) {
+            data[0][0] = "[-]\\[-]";
+        } else {
+            data[0][0] = "";
+        }
+
+        for (i = 0; i < getResultMatrix().gethSize(); i++) {
+            String action = "[+] ";
+            if (course != null) {
+                action = "[-] ";
+            }
+            data[0][i + 1] = "" + action + getResultMatrix().gethIndex(i).getLabel();
+        }
+
+        // row labels
+        for (i = 0; i < getResultMatrix().getvSize(); i++) {
+            String action = "[+] ";
+            if (schoolClass != null) {
+                data[i+1][0] = "[-] ";
+            }
+            data[i + 1][0] = "" + action + getResultMatrix().getvIndex(i).getLabel();
+        }
+
+        for (j = 0;
+                j < getResultMatrix()
+                .gethSize(); j++) {
+            for (i = 0; i < getResultMatrix().getvSize(); i++) {
+                double score = 0.0;
+                if (getResultMatrix().getMark(i, j) != null && getResultMatrix().getMark(i, j).getScore() != null) {
+                    if (getResultMatrix().getMark(i, j).getScoCount() > 0.0) {
+                        score = getResultMatrix().getMark(i, j).getScore();
+                    } else if (getResultMatrix().getMark(i, j).getStudentScoCount() > 0.0) {
+                        score = getResultMatrix().getMark(i, j).getScore();
+                    } else {
+                        score = 0.0;
+                    }
+                } else {
+                    score = 0.0;
+                }
+                data[i + 1][j + 1] = " " + Double.toString(score);
+
+            }
+        }
+        return data;
     }
 }

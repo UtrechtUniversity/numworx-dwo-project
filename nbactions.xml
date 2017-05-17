@@ -46,6 +46,13 @@
                 <gwt.style>PRETTY</gwt.style>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-tocmat7:run</actionName>
+            <displayName>tocmat7:run</displayName>
+            <goals>
+                <goal>tomcat7:run</goal>
+            </goals>
+        </action>
         
         
         
