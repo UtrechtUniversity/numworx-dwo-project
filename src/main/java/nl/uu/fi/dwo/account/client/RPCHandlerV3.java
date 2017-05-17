@@ -13,13 +13,16 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
+import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.CallManagers.CourseManager;
+import fi.dwo.gwt.lib.rest.CallManagers.PublicCourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
+import fi.dwo.gwt.lib.rest.CallManagers.PublicScoContextManager;
 import fi.dwo.gwt.lib.rest.CallManagers.ScoContextManager;
 
 public class RPCHandlerV3 extends RPCHandlerV2 {
@@ -34,11 +37,32 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	
 	public RPCHandlerV3(String server, int profile) {
 		super(server, profile);
+		
+		scoManager = new PublicScoContextManager();
+		courseManager = new PublicCourseManager();
+		profileManager = new PublicProfileManager();
+		
+		
 		this.profile = getDwoProfile(profile);
 	}
 
-	private Promise<DomDwoProfileFull> getDwoProfile(int id) {
-		return profileManager.get(id);
+// What if fails?
+	private Promise<DomDwoProfileFull> getDwoProfile(final int id) {
+		return profileManager.get(id)
+				.recover(new Function<Promise<?>, DomDwoProfileFull>() {
+
+			@Override
+			public DomDwoProfileFull apply(Promise<?> t) {
+				DomDwoProfileFull recover = new DomDwoProfileFull();
+				recover.setDwoProfileDescription("");
+				recover.setDwoProfileName("");
+				recover.setDwoProfileRights("rl");
+				recover.setDwoProfileText("");
+				recover.setId(idOf(id, PersistenceClassType.PersistentDwoProfile));
+				return recover;
+			}
+		})
+		;
 	}
 
 	@Override
