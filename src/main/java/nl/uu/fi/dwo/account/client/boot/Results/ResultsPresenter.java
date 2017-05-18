@@ -39,15 +39,15 @@ class ResultsPresenter {
             course = null;
             return;
         }
-        if (row != 0 &&  schoolClass == null && resultMatrix.getvIndex(row - 1) instanceof DomResultSchoolClass) {
+        if (row != 0 && schoolClass == null && resultMatrix.getvIndex(row - 1) instanceof DomResultSchoolClass) {
             schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row - 1);
-        } else if (row != 0  && schoolClass != null) {
+        } else if (row != 0 && schoolClass != null) {
             schoolClass = null;
         }
 
-        if (col != 0 &&  course == null && resultMatrix.gethIndex(col - 1) instanceof DomResultCourse) {
+        if (col != 0 && course == null && resultMatrix.gethIndex(col - 1) instanceof DomResultCourse) {
             course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
-        } else if (col != 0  && course != null) {
+        } else if (col != 0 && course != null) {
             course = null;
         }
     }
@@ -176,11 +176,22 @@ class ResultsPresenter {
         String[][] data = new String[i + 1][j + 1];
 
         // column labels
-        if (course != null || schoolClass != null) {
-            data[0][0] = "[-]\\[-]";
-        } else {
-            data[0][0] = "";
+        String nulLabel = "";
+        if(schoolClass!=null || course!=null){
+            nulLabel += "[-]\\[-] ";
         }
+        if (schoolClass != null) {
+            nulLabel += schoolClass.getLabel();
+        }else{
+            nulLabel += "classes";
+        }
+        nulLabel += "\\";
+        if (course != null) {
+            nulLabel += course.getLabel();
+        }else{
+            nulLabel += "courses";
+        }
+        data[0][0] = nulLabel;
 
         for (i = 0; i < getResultMatrix().gethSize(); i++) {
             String action = "[+] ";
