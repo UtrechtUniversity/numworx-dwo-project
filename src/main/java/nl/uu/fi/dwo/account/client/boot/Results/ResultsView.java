@@ -11,16 +11,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.ListDataProvider;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.boot.BootPanel;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 
 /**
  *

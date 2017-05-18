@@ -47,11 +47,30 @@
             </properties>
         </action>
         <action>
-            <actionName>CUSTOM-tocmat7:run</actionName>
-            <displayName>tocmat7:run</displayName>
+            <actionName>CUSTOM-tomcat7:run</actionName>
+            <displayName>tomcat7:run</displayName>
             <goals>
                 <goal>tomcat7:run</goal>
             </goals>
+            <properties>
+                <gwt.style>PRETTY</gwt.style>
+            </properties>
+        </action>
+        <action>
+            <actionName>run</actionName>
+            <packagings>
+                <packaging>war</packaging>
+                <packaging>ear</packaging>
+                <packaging>ejb</packaging>
+            </packagings>
+            <goals>
+                <goal>gwt:run</goal>
+                <goal>gwt:run-codeserver</goal>
+            </goals>
+            <properties>
+                <gwt.PRETTY>true</gwt.PRETTY>
+                <netbeans.deploy>true</netbeans.deploy>
+            </properties>
         </action>
         
         

@@ -33,13 +33,13 @@ class ResultsPresenter {
      * @param row the course to set
      */
     public void selectRowAndCol(int row, int col) {
-        if (resultMatrix.getvIndex(row) instanceof DomResultSchoolClass) {
+        if (row!=0 && resultMatrix.getvIndex(row) instanceof DomResultSchoolClass) {
             schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row);
         } else {
             schoolClass = null;
         }
 
-        if (resultMatrix.gethIndex(col) instanceof DomResultCourse) {
+        if (col!=0 && resultMatrix.gethIndex(col) instanceof DomResultCourse) {
             course = (DomResultCourse) resultMatrix.gethIndex(col);
         } else {
             course = null;
