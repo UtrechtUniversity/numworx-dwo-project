@@ -64,12 +64,12 @@
                 <packaging>ejb</packaging>
             </packagings>
             <goals>
-                <goal>gwt:run</goal>
-                <goal>gwt:run-codeserver</goal>
+                <goal>tomcat7:run</goal>
+                
             </goals>
             <properties>
                 <gwt.PRETTY>true</gwt.PRETTY>
-                <netbeans.deploy>true</netbeans.deploy>
+                
             </properties>
         </action>
         

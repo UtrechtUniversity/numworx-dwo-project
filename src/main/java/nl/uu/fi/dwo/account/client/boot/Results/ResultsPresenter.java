@@ -33,15 +33,21 @@ class ResultsPresenter {
      * @param row the course to set
      */
     public void selectRowAndCol(int row, int col) {
-        if (row!=0 && resultMatrix.getvIndex(row) instanceof DomResultSchoolClass) {
-            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row);
-        } else {
+        if (row == 0 && col == 0 && (schoolClass != null || course != null)) {
+            //zoom all out
+            schoolClass = null;
+            course = null;
+            return;
+        }
+        if (row != 0 &&  schoolClass == null && resultMatrix.getvIndex(row - 1) instanceof DomResultSchoolClass) {
+            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row - 1);
+        } else if (row != 0  && schoolClass != null) {
             schoolClass = null;
         }
 
-        if (col!=0 && resultMatrix.gethIndex(col) instanceof DomResultCourse) {
-            course = (DomResultCourse) resultMatrix.gethIndex(col);
-        } else {
+        if (col != 0 &&  course == null && resultMatrix.gethIndex(col - 1) instanceof DomResultCourse) {
+            course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
+        } else if (col != 0  && course != null) {
             course = null;
         }
     }
@@ -93,9 +99,9 @@ class ResultsPresenter {
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE,fail.getMessage());
+                    LOG.log(Level.SEVERE, fail.getMessage());
                 } else {
-                    LOG.log(Level.SEVERE,fail.getMessage());
+                    LOG.log(Level.SEVERE, fail.getMessage());
                     //throw directly
                 }
             }
@@ -167,7 +173,7 @@ class ResultsPresenter {
 
         int i = this.getResultMatrix().getvSize();
         int j = this.getResultMatrix().gethSize();
-        String[][] data = new String[i+1][j+1];
+        String[][] data = new String[i + 1][j + 1];
 
         // column labels
         if (course != null || schoolClass != null) {
@@ -188,7 +194,7 @@ class ResultsPresenter {
         for (i = 0; i < getResultMatrix().getvSize(); i++) {
             String action = "[+] ";
             if (schoolClass != null) {
-                data[i+1][0] = "[-] ";
+                action = "[-] ";
             }
             data[i + 1][0] = "" + action + getResultMatrix().getvIndex(i).getLabel();
         }
