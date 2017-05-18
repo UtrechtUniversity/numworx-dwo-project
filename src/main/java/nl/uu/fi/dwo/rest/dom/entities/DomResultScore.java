@@ -108,14 +108,14 @@ public abstract class DomResultScore<T extends DomResultScore> {
         this.studentScoCount = studentScoCount;
     }
 
-    public void collectActivities(Map<PersistenceId, DomResultScoContext> activities){
-               if (this.children.isEmpty()) {
+    public void collectActivities(Map<PersistenceId, DomResultScoContext> activities) {
+        if (this.children.isEmpty()) {
             return;
         }
         //deepest level, most objects, no recursion
         if (this instanceof DomResultScoContext) {
             DomResultScoContext sco = (DomResultScoContext) this;
-            if(!activities.containsKey(sco.getScoContext().getId())){
+            if (!activities.containsKey(sco.getScoContext().getId())) {
                 activities.put(sco.getScoContext().getId(), sco);
             }
             return;
@@ -124,7 +124,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
             s.collectActivities(activities);
         }
     }
-    
+
     /**
      * Fills the map courseLeaves with all Courses that are leaves in the course
      * tree.
@@ -247,7 +247,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
      */
     public void calculateSumOfSubtreeScore(int studentsInClass) {
         //verified code.
-        if(studentsInClass == 0){
+        if (studentsInClass == 0) {
             return;
         }
         //deepest level, most objects, no recursion
@@ -376,11 +376,11 @@ public abstract class DomResultScore<T extends DomResultScore> {
             ss.setScore(ss.getStudentSco().getScore());
 //            if (ss != null && ss.getStudentSco() != null) { //impossible else error
             DomResultStudent studentScore = studentScores.get(ss.getStudentSco().getUserID());
-                studentScore.setScore(studentScore.getScore() + ss.getScore());
+            studentScore.setScore(studentScore.getScore() + ss.getScore());
 //                studentScore.setScoCount(studentScore.getScoCount() + 1);
-                studentScore.setStudentScoCount(this.getStudentScoCount() + ss.getStudentScoCount());
-                //               }
-            
+            studentScore.setStudentScoCount(this.getStudentScoCount() + ss.getStudentScoCount());
+            //               }
+
             return;
         }
         if (this.children.isEmpty()) {
