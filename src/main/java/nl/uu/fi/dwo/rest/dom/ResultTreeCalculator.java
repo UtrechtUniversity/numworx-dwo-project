@@ -134,9 +134,20 @@ public class ResultTreeCalculator {
         //collect classes
         DomResultSchoolClass[] classes;// = new DomResultSchoolClass[tree.getResultTree().getChildren().size()];
         classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
-
+        //collect activities
         Map<PersistenceId, DomResultScoContext> activityMap = new HashMap<PersistenceId, DomResultScoContext>();
-        tree.getResultTree().collectActivities(activityMap);
+        for (int i = 0; i < classes.length; i++) {
+            //collect course leaves in class
+            Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
+            classes[i].collectCourseLeaves(courseLeaves);
+            DomResultCourse aResultCourse = courseLeaves.get(resultCourse.getCourse().getId());
+            if (aResultCourse != null) {
+                //aResultCourse.collectActivities(activityMap);
+                activityMap=aResultCourse.getChildren();
+                break;
+            }
+        }
+
         DomResultScoContext[] activities = activityMap.values().toArray(new DomResultScoContext[0]);
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, activities);
         for (int i = 0; i < classes.length; i++) {
@@ -205,7 +216,7 @@ public class ResultTreeCalculator {
         //collect activities
         DomResultScoContext[] activities;
 
-        if (aResultCourse != null && aResultCourse.getChildren() != null && aResultCourse.getChildren().size()>0) {
+        if (aResultCourse != null && aResultCourse.getChildren() != null && aResultCourse.getChildren().size() > 0) {
             activities = (DomResultScoContext[]) aResultCourse.getChildren().values().toArray(new DomResultScoContext[0]);
             //create plot matrix
             result = new DomResultPlotMatrix(students, activities);
@@ -229,7 +240,7 @@ public class ResultTreeCalculator {
                     result.setMarks(i, j, scoResult);
                 }
             }
-        }else{
+        } else {
             result = new DomResultPlotMatrix(students, new DomResultScoContext[0]);
         }
         return result;
