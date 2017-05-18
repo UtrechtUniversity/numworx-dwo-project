@@ -144,18 +144,18 @@ public class ResultTreeCalculator {
             Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
             classes[i].collectCourseLeaves(courseLeaves);
             resultCourse = courseLeaves.get(resultCourse.getCourse().getId());
+            
             //calculate
-            if (tree.getStudentTree().getChildren() != null
+            if (resultCourse !=null && tree.getStudentTree().getChildren() != null
                     && tree.getStudentTree().getChildren().get(classes[i].getSchoolClass().getId()) != null
                     && tree.getStudentTree().getChildren().get(classes[i].getSchoolClass().getId()).getChildren() != null) {
                 int size = tree.getStudentTree().getChildren().get(classes[i].getSchoolClass().getId())
                         .getChildren()
                         .size();
-                resultCourse.calculateSumOfSubtreeScore(size);
-            } else {
-                return result;
+                if (size > 0) {
+                    resultCourse.calculateSumOfSubtreeScore(size);
             }
-
+            }
             //crawl and collect course leaves.
             //collect activities
             Map<PersistenceId, DomResultScoContext> courseActivities;
