@@ -148,14 +148,10 @@ public class ResultTreeCalculator {
             if (tree.getStudentTree().getChildren() != null
                     && tree.getStudentTree().getChildren().get(classes[i].getSchoolClass().getId()) != null
                     && tree.getStudentTree().getChildren().get(classes[i].getSchoolClass().getId()).getChildren() != null) {
-                resultCourse.calculateSumOfSubtreeScore(
-                        tree.getStudentTree()
-                                .getChildren()
-                                .get(classes[i]
-                                        .getSchoolClass()
-                                        .getId())
-                                .getChildren()
-                                .size());
+                int size = tree.getStudentTree().getChildren().get(classes[i].getSchoolClass().getId())
+                        .getChildren()
+                        .size();
+                resultCourse.calculateSumOfSubtreeScore(size);
             } else {
                 return result;
             }
@@ -206,8 +202,12 @@ public class ResultTreeCalculator {
         resultCourse = courseLeaves.get(resultCourse.getCourse().getId());
         //collect activities
         DomResultScoContext[] activities;
-        activities = (DomResultScoContext[]) resultCourse.getChildren().values().toArray(new DomResultScoContext[0]);
 
+        if (resultCourse.getChildren() == null) {
+            activities = new DomResultScoContext[0];
+        } else {
+            activities = (DomResultScoContext[]) resultCourse.getChildren().values().toArray(new DomResultScoContext[0]);
+        }
         //create plot matrix
         result = new DomResultPlotMatrix(students, activities);
 

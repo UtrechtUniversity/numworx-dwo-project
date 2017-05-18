@@ -247,7 +247,9 @@ public abstract class DomResultScore<T extends DomResultScore> {
      */
     public void calculateSumOfSubtreeScore(int studentsInClass) {
         //verified code.
-
+        if(studentsInClass == 0){
+            return;
+        }
         //deepest level, most objects, no recursion
         if (this instanceof DomResultStudentSco) {
             DomResultStudentSco ss = (DomResultStudentSco) this;
