@@ -5,7 +5,7 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.1.16-SNAPSHOT</version>
+        <version>2.1.15-SNAPSHOT</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
         
