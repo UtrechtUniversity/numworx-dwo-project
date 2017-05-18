@@ -33,6 +33,7 @@
     </developers>
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <context.xml>junittest-context.xml</context.xml>
     </properties>
 
     <!-- update the https path for a different branch or tag! -->
@@ -585,7 +586,7 @@
                             <server>TomcatServer</server>
                             <path>/dwo</path>
                             <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                            <contextFile>src/test/tomcat/junittest-context.xml</contextFile>
+                            <contextFile>src/test/tomcat/${context.xml}</contextFile>
                             <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
                         </configuration>
                         <dependencies>
