@@ -30,8 +30,9 @@ public interface CourseManager {
 	 * get children of a course. The course must have children.
 	 * Security: profile can be limited, The course can be an assessment. Wrong profile, Wrong school
 	 * @param course
-	 * @return
+	 * @return ordered children courses of a folder
+	 * @throws Dwo2Exception 
 	 */
-	List<DomCourseStudent> getCourses(DomCourse course);
+	List<DomCourseStudent> getCourses(DomCourse course) throws Dwo2Exception;
 
 }
