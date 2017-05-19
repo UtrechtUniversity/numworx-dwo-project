@@ -19,6 +19,7 @@ public enum RestListClassTypes {
         DomClassCourse,
         DomCourse,
         DomCourseSequence,
+        DomCourseStudent,
         DomDwoProfile,
         DomDwoSystemParameters,
         DomHasRole,
