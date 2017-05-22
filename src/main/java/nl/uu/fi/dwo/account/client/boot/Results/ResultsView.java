@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
@@ -50,7 +51,6 @@ public class ResultsView extends Composite {
 
     //ListDataProvider<DomResultScore> dataProvider = new ListDataProvider<DomResultScore>();
     public class ResultData {
-
         int width;
         int height;
         String[][] data; //height, width
@@ -161,8 +161,7 @@ public class ResultsView extends Composite {
 
         for (j = 1; j < width; j++) {
             for (i = 1; i < height; i++) {
-                resultTable.setWidget(i, j, new Label(data[i][j]));
-//                resultTable.getCellFormatter().addStyleName(i, j, "flexTableHeader");
+                resultTable.setWidget(i, j, new HTML(data[i][j]));
             }
         }
 
@@ -175,7 +174,7 @@ public class ResultsView extends Composite {
                     int row = resultTable.getCellForEvent(event).getRowIndex();
                     LOG.log(Level.INFO, "Clicked on datafield (row,col) =  (" + row + "," + col + ").");
                     handler.selectRowAndCol(row, col);
-                    handler.plotResultsEvent();
+                    handler.plotResultsEvent();                    
                 }
             }
         });

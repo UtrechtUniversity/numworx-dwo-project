@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
+import com.google.gwt.i18n.client.NumberFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -33,6 +34,9 @@ class ResultsPresenter {
      * @param row the course to set
      */
     public void selectRowAndCol(int row, int col) {
+        if (row != 0 && col != 0 && schoolClass != null && course != null) {
+            LOG.log(Level.INFO,"selected a student sco I hope "+resultMatrix.getMark(row, col).getLabel());
+        }
         if (row == 0 && col == 0 && (schoolClass != null || course != null)) {
             //zoom all out
             schoolClass = null;
@@ -177,18 +181,18 @@ class ResultsPresenter {
 
         // column labels
         String nulLabel = "";
-        if(schoolClass!=null || course!=null){
+        if (schoolClass != null || course != null) {
             nulLabel += "[-]\\[-] ";
         }
         if (schoolClass != null) {
             nulLabel += schoolClass.getLabel();
-        }else{
+        } else {
             nulLabel += "classes";
         }
         nulLabel += "\\";
         if (course != null) {
             nulLabel += course.getLabel();
-        }else{
+        } else {
             nulLabel += "courses";
         }
         data[0][0] = nulLabel;
@@ -226,7 +230,24 @@ class ResultsPresenter {
                 } else {
                     score = 0.0;
                 }
-                data[i + 1][j + 1] = " " + Double.toString(score);
+                String color = "red";
+                if (score > 10.0 && score < 60.0) {
+                    color = "orange";
+                } else if (score >= 60) {
+                    color = "green";
+                }
+                String prefix;
+                if (score > 0) {
+                    int r, g, b;
+                    b = 0;
+                    g = (int) (255 * (score / 50));
+                    r = (int) (255 * (1 - (score - 50) / 50));
+                    prefix = "<div style=\"text-align: right; background:rgb(" + r + "," + g + "," + b + ");\">";
+                } else {
+                    prefix = "<div style=\"text-align: right; overflow auto;\">"; // use default of style
+                }
+                String formattedScore = NumberFormat.getFormat("0.0").format(score);
+                data[i + 1][j + 1] = prefix + formattedScore + "</div>";
 
             }
         }
