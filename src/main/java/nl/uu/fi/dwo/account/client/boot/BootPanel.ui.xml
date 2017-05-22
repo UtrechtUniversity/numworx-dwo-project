@@ -1,20 +1,30 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-             >
+>
     <ui:style field="accountnav" src="resultapp.css" />    
     <ui:with type="nl.uu.fi.dwo.account.client.icons.AccountImageBundle" field="icons" />
     
     <g:HeaderPanel addStyleNames='{accountnav.appPanel}'>
         <g:FlowPanel addStyleNames='{accountnav.header}'>
             <g:Image addStyleNames='{accountnav.leftLogoBox}' height = '90%' width = 'auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />            
-            <g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="schoolLabel">School:</g:Label>
+            <!--<g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="schoolLabel">School:</g:Label>-->
             <g:Label addStyleNames='{accountnav.leftHalfBox}' ui:field="schoolName"></g:Label>
-            <g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="roleLabel">rol:</g:Label>
+            <!--<g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="roleLabel">rol:</g:Label>-->
             <g:Label addStyleNames='{accountnav.leftHalfBox}' ui:field="userRole"></g:Label>
-            <g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="userLabel">gebruikernaam:</g:Label>
+            <!--<g:Label addStyleNames='{accountnav.leftFullBox}' ui:field="userLabel">gebruikernaam:</g:Label>-->
             <g:Label addStyleNames='{accountnav.leftHalfBox}' ui:field="presentationName"></g:Label>
-            <g:Button addStyleNames='{accountnav.rightBox}'   ui:field="logoutBtn">Logout</g:Button>
+            <g:PushButton addStyleNames='{accountnav.rightBox}' height = '90%' width = 'auto' ui:field="logoutBtn">
+<!--                <g:upFace>
+                    <b>click me</b>
+                </g:upFace>
+                <g:upHoveringFace>
+                    <b>Click ME!</b>
+                </g:upHoveringFace>
+                <g:downFace image='{downButton}'/>
+                <g:downHoveringFace image='{downButton}'/>-->
+                menu
+            </g:PushButton>            
         </g:FlowPanel>
         <g:FlowPanel addStyleNames='{accountnav.deckpanel}'>
             <g:DeckPanel  ui:field="mainDeckPanel" >
@@ -26,8 +36,8 @@
             </g:DeckPanel>
         </g:FlowPanel>
         <g:FlowPanel addStyleNames='{accountnav.status}' ui:field='statusPanel' >
-              <g:CheckBox  addStyleNames='{accountnav.statusMsgBox}' ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox>
-              <g:Label addStyleNames='{accountnav.statusMsgBox}'  ui:field="statusMsg"></g:Label>
+            <g:CheckBox  addStyleNames='{accountnav.statusMsgBox}' ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox>
+            <g:Label addStyleNames='{accountnav.statusMsgBox}'  ui:field="statusMsg"></g:Label>
         </g:FlowPanel>
     </g:HeaderPanel>            
 </ui:UiBinder> 

@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
@@ -46,20 +47,20 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    @UiField
-    Label schoolLabel;
+//    @UiField
+//    Label schoolLabel;
     @UiField
     Label schoolName;
-    @UiField
-    Label userLabel;
+//    @UiField
+//    Label userLabel;
     @UiField
     Label presentationName;
-    @UiField
-    Label roleLabel;
+//    @UiField
+//    Label roleLabel;
     @UiField
     Label userRole;
     @UiField
-    Button logoutBtn;
+    PushButton logoutBtn;
     @UiField
     Image dwoLogo;
     @UiField
@@ -131,48 +132,48 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     public void setStatus(String msg) {
         statusMsg.setText(msg);
     }
-
-    /**
-     * @return the schoolLabel
-     */
-    public Label getSchoolLabel() {
-        return schoolLabel;
-    }
-
-    /**
-     * @param schoolLabel the schoolLabel to set
-     */
-    public void setSchoolLabel(Label schoolLabel) {
-        this.schoolLabel = schoolLabel;
-    }
-
-    /**
-     * @return the roleLabel
-     */
-    public Label getRoleLabel() {
-        return roleLabel;
-    }
-
-    /**
-     * @param roleLabel the roleLabel to set
-     */
-    public void setRoleLabel(Label roleLabel) {
-        this.roleLabel = roleLabel;
-    }
-
-    /**
-     * @return the userLabel
-     */
-    public Label getUserLabel() {
-        return userLabel;
-    }
-
-    /**
-     * @param userLabel the userLabel to set
-     */
-    public void setUserLabel(Label userLabel) {
-        this.userLabel = userLabel;
-    }
+//
+//    /**
+//     * @return the schoolLabel
+//     */
+//    public Label getSchoolLabel() {
+//        return schoolLabel;
+//    }
+//
+//    /**
+//     * @param schoolLabel the schoolLabel to set
+//     */
+//    public void setSchoolLabel(Label schoolLabel) {
+//        this.schoolLabel = schoolLabel;
+//    }
+//
+//    /**
+//     * @return the roleLabel
+//     */
+//    public Label getRoleLabel() {
+//        return roleLabel;
+//    }
+//
+//    /**
+//     * @param roleLabel the roleLabel to set
+//     */
+//    public void setRoleLabel(Label roleLabel) {
+//        this.roleLabel = roleLabel;
+//    }
+//
+//    /**
+//     * @return the userLabel
+//     */
+//    public Label getUserLabel() {
+//        return userLabel;
+//    }
+//
+//    /**
+//     * @param userLabel the userLabel to set
+//     */
+//    public void setUserLabel(Label userLabel) {
+//        this.userLabel = userLabel;
+//    }
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == getLogoutBtn()) {
@@ -270,14 +271,14 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     /**
      * @return the logoutBtn
      */
-    public Button getLogoutBtn() {
+    public PushButton getLogoutBtn() {
         return logoutBtn;
     }
 
     /**
      * @param logoutBtn the logoutBtn to set
      */
-    public void setLogoutBtn(Button logoutBtn) {
+    public void setLogoutBtn(PushButton logoutBtn) {
         this.logoutBtn = logoutBtn;
     }
 

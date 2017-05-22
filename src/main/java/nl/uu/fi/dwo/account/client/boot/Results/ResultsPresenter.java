@@ -36,6 +36,8 @@ class ResultsPresenter {
     public void selectRowAndCol(int row, int col) {
         if (row != 0 && col != 0 && schoolClass != null && course != null) {
             LOG.log(Level.INFO,"selected a student sco I hope "+resultMatrix.getMark(row, col).getLabel());
+            //send event to show studentSco
+            return;
         }
         if (row == 0 && col == 0 && (schoolClass != null || course != null)) {
             //zoom all out

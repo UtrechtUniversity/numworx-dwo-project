@@ -56,22 +56,7 @@
                 <gwt.style>PRETTY</gwt.style>
             </properties>
         </action>
-        <action>
-            <actionName>run</actionName>
-            <packagings>
-                <packaging>war</packaging>
-                <packaging>ear</packaging>
-                <packaging>ejb</packaging>
-            </packagings>
-            <goals>
-                <goal>tomcat7:run</goal>
-                
-            </goals>
-            <properties>
-                <gwt.PRETTY>true</gwt.PRETTY>
-                
-            </properties>
-        </action>
+        
         
         
         
