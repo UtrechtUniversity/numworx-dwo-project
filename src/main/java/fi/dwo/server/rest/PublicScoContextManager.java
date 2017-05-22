@@ -41,18 +41,18 @@ public class PublicScoContextManager {
 				domDwoProfile.getDwoProfileRights().contains(LIMITED))
 			return Collections.emptyList();
 // Security, only non limited profiles are public 		
-		long id = MySQLPersistenceId.getNativeId(domDwoProfile);
-		PersistentDwoProfile profile = DwoProfileManager.findEntity(id);
+		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
+		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
 		if ( profile.getDwoProfileRights().contains(LIMITED))
 			return Collections.emptyList();
-		id = MySQLPersistenceId.getNativeId(rest.getDomCourse());
-		PersistentCourse parent = CourseManager.findEntity(id);
-		if ( id != parent.getDwoProfileID()				// match profile and public school
+		long cid = MySQLPersistenceId.getNativeId(rest.getDomCourse());
+		PersistentCourse parent = CourseManager.findEntity(cid);
+		if ( pid != parent.getDwoProfileID()				// match profile and public school
 				|| parent.getSchoolID() != null)
 		return Collections.emptyList();
 		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);
 		
-		return list.stream().map((s)->s.buildDomScoContext()).collect(Collectors.toList());    	
+		return list.stream().map((s)->s.buildDomScoContext()).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
     }
 
     public DomScoContext get(RestScoContext rest) throws Dwo2Exception {
