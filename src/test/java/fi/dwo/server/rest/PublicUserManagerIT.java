@@ -7,6 +7,7 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -201,6 +202,35 @@ public class PublicUserManagerIT {
 			System.out.println(e.getMessage());
 		}
 // TODO wrong format/version/user not found tests...
+		
+    }
+    
+    @Test
+    public void testGetAuthToken() throws Exception {
+    	PublicUserManager instance = new PublicUserManager();
+    	DomToken token = instance.getAuthToken("user01", "passw", "password", "");
+    	assertNotNull(token.getAccess_token());
+    	String authToken = token.getAccess_token();
+		RestAuthToken rest = new RestAuthToken();
+		rest.setAuthToken(authToken);		
+		DomUserFullwLoginContext result = instance.getUserFromAuthToken(rest);
+
+		assertEquals( "user01", result.getDomUserFull().getUserName());
+  	
+		try { 
+			token = instance.getAuthToken("user01", "passw", "nopassword", "noscope");
+// FIXME 			fail("should fail, somehow");
+			assertNull(token);
+		} catch (Dwo2RestException e) {
+			System.out.println(e);
+		}
+		try { 
+			token = instance.getAuthToken("user01", "pass", "password", "");
+// FIXME 			fail("should fail, somehow");
+			assertNull(token);
+		} catch (Dwo2RestException e) {
+			System.out.println(e);
+		}
 		
     }
     

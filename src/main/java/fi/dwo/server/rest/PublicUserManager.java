@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import fi.dwo.commons.util.DwoDateUtilities;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -42,8 +43,8 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
 import java.io.UnsupportedEncodingException;
-import static java.lang.Thread.sleep;
 
+import static java.lang.Thread.sleep;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -64,6 +65,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
@@ -79,6 +81,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
+import org.apache.commons.httpclient.URI.DefaultCharsetChanged;
+
 import static java.lang.Thread.sleep;
 
 /**
@@ -912,5 +917,40 @@ public class PublicUserManager {
         sleep(3000);//10 timesshorter for debugging
         return newPassword;
 
+    }
+    
+    /**
+     * RFC 6749 authorisation, see paragraph <b>4.3.2.  Access Token Request</b>
+     * @param username a user
+     * @param password a password
+     * @param type "password"
+     * @param scope dont care
+     * @return an access_token, or null 
+     */
+    @POST
+    @Produces({"application/json"})
+    @Consumes({"application/x-www-form-urlencoded"})
+    public DomToken getAuthToken(
+    		@FormParam("username") String username, 
+    		@FormParam("password") String password,  
+    		@FormParam("grant_type") String type, 
+    		@FormParam("scope") String scope) 
+    		throws WebApplicationException // TODO uitzoeken hoe je dat goed doet
+    {
+    	if(!"password".equals(type))
+    		return null; // Wrong type
+    	password = MD5.getHashString(password);
+    	PersistentUser u = UserManager.login(username, password);
+    	if(u == null)
+    		return null; // Wrong User
+    	DomToken token = new DomToken();
+    	token.setToken_type(DomToken.APARAM);
+    	token.setExpires_in(300); // seconds
+    	String auth_token;
+    	auth_token = "1\f" + System.currentTimeMillis() + "\f" + username + "\f" + password;
+    	byte[] auth_token_bytes = auth_token.getBytes(StandardCharsets.UTF_8);
+		auth_token = Base64.getUrlEncoder().encodeToString(auth_token_bytes);
+    	token.setAccess_token(auth_token);
+    	return token;
     }
 }
