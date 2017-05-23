@@ -77,7 +77,7 @@ public class DbAccess {
 	    if(organization == null)organization = oauth_consumer_key;
 	    
 	    String path = request.getContextPath();
-	    
+	    if(path.isEmpty()) path = "/DWOmAccess"; // EBServer fix
 		Cookie user  = new Cookie(DWO_SAML_USER_ID, lti_id);
 		user.setPath(path);
 		String orgidStr = "lti:" + oauth_consumer_key;
