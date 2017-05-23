@@ -69,6 +69,7 @@ public class AsyncTest extends TestCase {
 		assertFalse(0 == t2.hashCode());
 		assertNotNull(t2.toString());
 		assertFalse(t2.equals(t1));
+		assertTrue(t2.equals(t2));
 	}
 		
 	
