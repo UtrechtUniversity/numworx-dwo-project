@@ -60,6 +60,11 @@
 		<from>^/wisweb/(.+)$</from>
 		<to type="temporary-redirect">https://cdn.dwo.nl/wisweb/$1</to>
 	</rule>
+	<rule>
+		<note>/jars naar cdn</note>
+		<from>^/dwo/jars/(.+)$</from>
+		<to type="temporary-redirect">https://cdn.dwo.nl/jars/$1</to>
+	</rule>
     <rule>
         <note>Default rule when no other content-type was asked for</note>
         <from>^/$</from>
