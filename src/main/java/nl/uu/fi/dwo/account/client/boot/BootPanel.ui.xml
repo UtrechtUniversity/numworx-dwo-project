@@ -14,7 +14,7 @@
             <!--<g:Label addStyleNames='{resultApp.leftFullBox}' ui:field="userLabel">gebruikernaam:</g:Label>-->
             <g:Label addStyleNames='{resultApp.leftHalfBox}' ui:field="presentationName"></g:Label>
             <g:PushButton addStyleNames='{resultApp.menuButton}' height = '90%' width = 'auto' ui:field="menuButton">
-<!--                <g:upFace>
+                <!--                <g:upFace>
                     <b>click me</b>
                 </g:upFace>
                 <g:upHoveringFace>
@@ -25,16 +25,20 @@
                 menu
             </g:PushButton>            
         </g:FlowPanel>
-        <g:FlowPanel addStyleNames='{resultApp.deckpanel}'>
-            <g:DeckPanel  ui:field="mainDeckPanel" >
-                <g:Widget ui:field="loginWidget" />
-                <g:Widget ui:field="switchSchoolWidget" />
-                <g:Widget ui:field="resultWidget" />
-                
-                <!--</g:FlowPanel>-->
-            </g:DeckPanel>
+        <g:FlowPanel addStyleNames='{resultApp.mainPanel}'>
+            <g:FlowPanel>
+                <g:DeckPanel addStyleNames='{resultApp.deckPanel}' ui:field="mainDeckPanel" >
+                    <g:Widget ui:field="loginWidget" />
+                    <g:Widget ui:field="switchSchoolWidget" />
+                    <g:Widget ui:field="resultWidget" />
+                    <!--</g:FlowPanel>-->
+                </g:DeckPanel>
+                <g:FlowPanel addStyleNames='{resultApp.menuPanel}' ui:field="menuPanel" >
+                    <g:Label >test</g:Label>
+                </g:FlowPanel>
+            </g:FlowPanel>
         </g:FlowPanel>
-        <g:FlowPanel addStyleNames='{resultApp.status}' ui:field='statusPanel' >
+        <g:FlowPanel addStyleNames='{resultApp.statusPanel}' ui:field='statusPanel' >
             <g:CheckBox  addStyleNames='{resultApp.statusMsgBox}' ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox>
             <g:Label addStyleNames='{resultApp.statusMsgBox}'  ui:field="statusMsg"></g:Label>
         </g:FlowPanel>

@@ -59,6 +59,8 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     @UiField
     Label userRole;
     @UiField
+    FlowPanel menuPanel;
+    @UiField
     PushButton menuButton;
     @UiField
     Image dwoLogo;
@@ -77,6 +79,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     @UiField(provided = true)
     Widget switchSchoolWidget = new SwitchSchoolPanel();
 
+    boolean showMenu=false;
     public BootPanel() {
 
     }
@@ -176,8 +179,16 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == getMenuBtn()) {
-            LOG.log(Level.INFO, "Logout button clicked.");
-            handler.logoutClicked();
+            LOG.log(Level.INFO, "Menu button clicked.");
+            LOG.log(Level.INFO, menuPanel.getElement().getStyle().getVisibility());
+            if(!showMenu){
+            menuPanel.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+            showMenu=true;
+            }else{
+            menuPanel.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+            showMenu=false;
+            }
+            //handler.logoutClicked();
         }
     }
 

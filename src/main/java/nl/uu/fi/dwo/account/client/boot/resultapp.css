@@ -64,7 +64,7 @@
     margin-bottom: auto;
     vertical-align: middle;
 }
-.status {
+.statusPanel {
     height: 25px;
     width: calc(100vw-16px);
     padding: 8px;
@@ -76,7 +76,6 @@
     margin-right: 5px;
     margin-top : 5px;
     margin-bottom: 5px;
-    visibility: hidden;
 }
 
 
@@ -86,9 +85,10 @@
     margin-left: 10px;
     margin-right: 5px;
     vertical-align: baseline;
+    visibility: hidden;
 }
 
-.deckpanel {
+.mainPanel {
     bottom: 0px;
     position: absolute;
     top: 0px;
@@ -107,6 +107,41 @@
     margin-bottom: 5px;
     border-style: solid;
     align-content: center;
+}
+
+.deckPanel {
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    background-color: #deeefe;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top : 5px;
+    margin-bottom: 5px;
+    /*    border-radius: 4px;   
+        border-style: solid;*/
+    align-content: center;
+}
+
+.menuPanel {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    border-radius: 4px;   
+    border: 1px solid #555555;
+    background-color: #deeefe;
+    margin-top: auto;
+/*    margin-bottom:auto;*/
+    margin-left: 10px;
+    margin-right: 0px;
+    vertical-align: middle;    
+    text-align: center;
+    text-height: auto;
+    visibility: hidden;
+    max-height: 500px;
+    transition: max-height 500ms ease-in-out;
+    overflow: hidden;    
 }
 
 .menuButton{
