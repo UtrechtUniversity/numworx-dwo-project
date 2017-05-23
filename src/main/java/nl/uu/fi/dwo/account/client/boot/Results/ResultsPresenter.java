@@ -35,7 +35,7 @@ class ResultsPresenter {
      */
     public void selectRowAndCol(int row, int col) {
         if (row != 0 && col != 0 && schoolClass != null && course != null) {
-            LOG.log(Level.INFO,"selected a student sco"+resultMatrix.getMark(row-1, col-1).getLabel()+ " with score "+resultMatrix.getMark(row-1, col-1).getScore());
+            LOG.log(Level.INFO,"selected a student sco for "+resultMatrix.getMark(row-1, col-1).getLabel()+ " with score "+resultMatrix.getMark(row-1, col-1).getScore());
             //send event to show studentSco
             return;
         }

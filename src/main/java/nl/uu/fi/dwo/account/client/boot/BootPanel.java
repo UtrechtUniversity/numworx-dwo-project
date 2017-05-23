@@ -8,7 +8,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -60,7 +59,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     @UiField
     Label userRole;
     @UiField
-    PushButton logoutBtn;
+    PushButton menuButton;
     @UiField
     Image dwoLogo;
     @UiField
@@ -93,7 +92,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
         }
         initWidget(uiBinder.createAndBindUi(this));
         handler = new BootPanelHandler(this);
-        getLogoutBtn().addClickHandler(this);
+        getMenuBtn().addClickHandler(this);
         ((LoginPanel) loginWidget).setParent(this);
 //        mainDeckPanel.add(loginWidget);
         mainDeckPanel.showWidget(0);
@@ -176,7 +175,7 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
 //    }
 
     public void onClick(ClickEvent event) {
-        if (event.getSource() == getLogoutBtn()) {
+        if (event.getSource() == getMenuBtn()) {
             LOG.log(Level.INFO, "Logout button clicked.");
             handler.logoutClicked();
         }
@@ -271,15 +270,15 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     /**
      * @return the logoutBtn
      */
-    public PushButton getLogoutBtn() {
-        return logoutBtn;
+    public PushButton getMenuBtn() {
+        return menuButton;
     }
 
     /**
      * @param logoutBtn the logoutBtn to set
      */
-    public void setLogoutBtn(PushButton logoutBtn) {
-        this.logoutBtn = logoutBtn;
+    public void menuButton(PushButton menuButton) {
+        this.menuButton = menuButton;
     }
 
 }

@@ -106,10 +106,21 @@
     margin-top : 5px;
     margin-bottom: 5px;
     border-style: solid;
+    align-content: center;
 }
 
-.logoutButton{
-    align: right;
+.menuButton{
+    display: inline;
+    float: right;
+    border-radius: 4px;   
+    margin-top: auto;
+    margin-bottom:auto;
+    margin-left: 10px;
+    margin-right: 0px;
+    vertical-align: middle;    
+    text-align: center;
+    text-height: auto;
+    visibility: hidden;
 }
 
 .box{
@@ -226,19 +237,19 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
 
 
 .flexTableHeader {
-  background-color: #aaaaaa;
-  align-content: center;
+    background-color: #aaaaaa;
+    align-content: center;
 }
 
 .flexTableOddRow {
-  background-color: #dddddd;
-  
+    background-color: #dddddd;
+
 }
 
 .flexTableEvenRow {
-  background-color:  #eeeeee;
+    background-color:  #eeeeee;
 }
-    
+
 .flexTableOddRow tr:hover {        
     background-color: #dedede;
 }

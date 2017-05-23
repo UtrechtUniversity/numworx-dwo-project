@@ -86,7 +86,7 @@ public class LoginPanel extends Composite implements ClickHandler {
         parent.getUserRole().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
 //        parent.getUserLabel().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         parent.getPresentationName().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-        parent.getLogoutBtn().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        parent.getMenuBtn().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         if(switchSchoolBox.getValue()==true){
             parent.showSwitchSchoolWidget();
             return;
