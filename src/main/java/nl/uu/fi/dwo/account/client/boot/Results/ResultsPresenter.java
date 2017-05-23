@@ -35,7 +35,7 @@ class ResultsPresenter {
      */
     public void selectRowAndCol(int row, int col) {
         if (row != 0 && col != 0 && schoolClass != null && course != null) {
-            LOG.log(Level.INFO,"selected a student sco I hope "+resultMatrix.getMark(row, col).getLabel());
+            LOG.log(Level.INFO,"selected a student sco"+resultMatrix.getMark(row-1, col-1).getLabel()+ " with score "+resultMatrix.getMark(row-1, col-1).getScore());
             //send event to show studentSco
             return;
         }
@@ -248,7 +248,8 @@ class ResultsPresenter {
                 } else {
                     prefix = "<div style=\"text-align: right; overflow auto;\">"; // use default of style
                 }
-                String formattedScore = NumberFormat.getFormat("0.0").format(score);
+                long iScore = Math.round(score);
+                String formattedScore = NumberFormat.getFormat("0").format(iScore);
                 data[i + 1][j + 1] = prefix + formattedScore + "</div>";
 
             }
