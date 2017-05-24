@@ -92,7 +92,6 @@ public class SecuredUserScoContextManager {
 			return Collections.emptyList();
 
 		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);
-//sort?		
 		return list.stream().map((s)->s.buildDomScoContext()).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
     }
 
@@ -131,7 +130,7 @@ public class SecuredUserScoContextManager {
         PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(phr);
 		
 // profile match		
-		if ( pid != parent.getDwoProfileID())
+		if ( pid != parent.getDwoProfileID().longValue())
 			return null;
 // schools matches
 		if (parent.getSchoolID() != null) {

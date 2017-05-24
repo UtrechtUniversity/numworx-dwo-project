@@ -36,7 +36,7 @@ public class PublicScoContextManager {
     public List<DomScoContext> getScos(RestCourse rest) throws Dwo2Exception {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
-// test for honest people
+// test for honest people 
 		if (domDwoProfile.getDwoProfileRights() != null && 
 				domDwoProfile.getDwoProfileRights().contains(LIMITED))
 			return Collections.emptyList();
@@ -47,11 +47,11 @@ public class PublicScoContextManager {
 			return Collections.emptyList();
 		long cid = MySQLPersistenceId.getNativeId(rest.getDomCourse());
 		PersistentCourse parent = CourseManager.findEntity(cid);
-		if ( pid != parent.getDwoProfileID()				// match profile and public school
+		if ( pid != parent.getDwoProfileID().longValue()				// match profile and public school
 				|| parent.getSchoolID() != null)
-		return Collections.emptyList();
-		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);
+			return Collections.emptyList();
 		
+		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);	
 		return list.stream().map((s)->s.buildDomScoContext()).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
     }
 
@@ -63,15 +63,15 @@ public class PublicScoContextManager {
 				domDwoProfile.getDwoProfileRights().contains(LIMITED))
 			return null;
 // Security, only non limited profiles are public 		
-		long id = MySQLPersistenceId.getNativeId(domDwoProfile);
-		PersistentDwoProfile profile = DwoProfileManager.findEntity(id);
+		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
+		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
 		if ( profile.getDwoProfileRights().contains(LIMITED))
 			return null;
-		id = MySQLPersistenceId.getNativeId(rest.getDomScoContext());
+		long id = MySQLPersistenceId.getNativeId(rest.getDomScoContext());
 		PersistentScoContext scoContext = ScoContextManager.findEntity(id);
 		id = scoContext.getCourseID();
 		PersistentCourse parent = CourseManager.findEntity(id);
-		if ( id != parent.getDwoProfileID()				// match profile and public school
+		if ( pid != parent.getDwoProfileID().longValue()				// match profile and public school
 				|| parent.getSchoolID() != null)
 			return null;
 	
