@@ -3,14 +3,18 @@ package nl.uu.fi.dwo.account.client;
 import java.util.List;
 import java.util.Map;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 import org.osgi.util.function.Function;
@@ -24,6 +28,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.PublicCourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicScoContextManager;
 import fi.dwo.gwt.lib.rest.CallManagers.ScoContextManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserScoContextManager;
 
 public class RPCHandlerV3 extends RPCHandlerV2 {
 
@@ -49,19 +54,19 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 // What if fails?
 	private Promise<DomDwoProfileFull> getDwoProfile(final int id) {
 		return profileManager.get(id)
-				.recover(new Function<Promise<?>, DomDwoProfileFull>() {
-
-			@Override
-			public DomDwoProfileFull apply(Promise<?> t) {
-				DomDwoProfileFull recover = new DomDwoProfileFull();
-				recover.setDwoProfileDescription("");
-				recover.setDwoProfileName("");
-				recover.setDwoProfileRights("rl");
-				recover.setDwoProfileText("");
-				recover.setId(idOf(id, PersistenceClassType.PersistentDwoProfile));
-				return recover;
-			}
-		})
+//				.recover(new Function<Promise<?>, DomDwoProfileFull>() {
+//
+//			@Override
+//			public DomDwoProfileFull apply(Promise<?> t) {
+//				DomDwoProfileFull recover = new DomDwoProfileFull();
+//				recover.setDwoProfileDescription("");
+//				recover.setDwoProfileName("");
+//				recover.setDwoProfileRights("rl");
+//				recover.setDwoProfileText("");
+//				recover.setId(idOf(id, PersistenceClassType.PersistentDwoProfile));
+//				return recover;
+//			}
+//		})
 		;
 	}
 
@@ -144,8 +149,13 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<List<DomScoContext>> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
-				return scoManager.getScos(parent, resolved.getValue());
-			}});
+				return scoManager.getScos(parent, resolved.getValue(), getContext());
+			}
+			});
+	}
+
+	private DomContext getContext() {
+		return context;
 	}
 
 	@Override
@@ -156,7 +166,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<DomScoContext> call(Promise<DomDwoProfile> resolved)
 					throws Exception {
-				return scoManager.getSco(dummy, resolved.getValue());
+				return scoManager.getSco(dummy, resolved.getValue(), getContext());
 			}
 			
 		});
@@ -168,5 +178,31 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		sco.setId(idOf(scoID, PersistenceClassType.PersistentScoContext));
 		return sco;
 	}
+
+	private DomContext context = new DomContext();
+
+	@Override
+	public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
+		return super.getSchoolLogins().then(new Success<DomSchoolsRolesAndClassesV2, DomSchoolsRolesAndClassesV2>() {
+
+			@Override
+			public Promise<DomSchoolsRolesAndClassesV2> call(Promise<DomSchoolsRolesAndClassesV2> resolved)
+					throws Exception {
+				
+				DomHasRole hasRole = resolved.getValue().getActiveSchoolRoleAndClass().getHasRole();
+				context.setDomHasRole(hasRole);
+				scoManager = new SecuredUserScoContextManager();
+				return resolved;
+			}
+		});
+	}
+
+	@Override
+	public void logout() {
+		context.setDomHasRole(null);
+		scoManager = new PublicScoContextManager();
+		super.logout();
+	}
+
 
 }
