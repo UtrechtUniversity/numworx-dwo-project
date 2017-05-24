@@ -6,7 +6,7 @@ import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.GWT;
 
-import fi.dwo.gwt.lib.rest.client.RestCallers.PublicScoContextRestCaller;
+import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserScoContextRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -15,9 +15,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 
-public class PublicScoContextManager implements ScoContextManager {
+public class SecuredUserScoContextManager implements ScoContextManager {
 
-	PublicScoContextRestCaller server = GWT.create(PublicScoContextRestCaller.class);
+	SecuredUserScoContextRestCaller server = GWT.create(SecuredUserScoContextRestCaller.class);
+
 	/* (non-Javadoc)
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.ScoContext#getSco(nl.uu.fi.dwo.rest.dom.entities.DomScoContext, nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile)
 	 */

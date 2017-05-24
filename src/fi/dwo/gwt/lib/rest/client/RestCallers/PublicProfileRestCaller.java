@@ -12,7 +12,7 @@ import org.fusesource.restygwt.client.RestService;
 public interface PublicProfileRestCaller extends RestService {
 
 	@GET
-    @Path("/public/profile/get/{id}")
+    @Path("/public/profile/{id}")
     public void get(@PathParam("id") String id, MethodCallback<DomDwoProfileFull> callback);
 
 }
