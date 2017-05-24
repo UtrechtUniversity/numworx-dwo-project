@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
@@ -61,8 +62,10 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
 
     public void init() {
         //create table
-        flexTable.setWidget(0, 0, new Label("Schoolnaam"));
-        flexTable.getCellFormatter().addStyleName(0, 0, "flexTableHeader");
+        String nulLabel = "School";
+        HTML l = new HTML("<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">"+nulLabel+"</div>");
+        
+        flexTable.setWidget(0, 0, l);
         int i = 1;
         for (DomSchoolRoleAndClassV2 srac : handler.getTeacherRoles()) {
             flexTable.setWidget(i, 0, new Label(srac.getSchool().getSchoolName()));

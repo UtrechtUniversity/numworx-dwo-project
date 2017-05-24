@@ -1,12 +1,12 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" >
-    <ui:style field="resultApp" src="resultapp.css" />
+    <ui:style field="dwoStyle" src="dwostyle.css" />
     <g:FlowPanel>
-        <g:FlexTable styleName="{resultApp.flexTable}" ui:field="flexTable"/>
+        <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="flexTable"/>
         <g:FlowPanel>
-                <g:Button addStyleNames='{resultApp.rightFullBox}' ui:field="switchBtn">switch</g:Button>
-                <g:Button addStyleNames='{resultApp.rightHalfBox}'  ui:field="cancelBtn">cancel</g:Button>
+                <g:Button addStyleNames='dwoStyle' ui:field="switchBtn">switch</g:Button>
+                <g:Button addStyleNames='dwoStyle'  ui:field="cancelBtn">cancel</g:Button>
         </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder> 

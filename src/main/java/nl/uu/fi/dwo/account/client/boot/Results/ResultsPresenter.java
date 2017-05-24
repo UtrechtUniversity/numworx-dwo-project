@@ -181,7 +181,7 @@ class ResultsPresenter {
         int j = this.getResultMatrix().gethSize();
         String[][] data = new String[i + 1][j + 1];
 
-        // column labels
+        // nul label
         String nulLabel = "";
         if (schoolClass != null || course != null) {
             nulLabel += "[-]\\[-] ";
@@ -197,14 +197,15 @@ class ResultsPresenter {
         } else {
             nulLabel += "courses";
         }
-        data[0][0] = nulLabel;
+        data[0][0] = "<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">"+nulLabel+"</div>";
 
+        // col labels
         for (i = 0; i < getResultMatrix().gethSize(); i++) {
             String action = "[+] ";
             if (course != null) {
                 action = "[-] ";
             }
-            data[0][i + 1] = "" + action + getResultMatrix().gethIndex(i).getLabel();
+            data[0][i + 1] = "<div style=\"text-align: right; background-color: #aaaaaa; padding: 2px; overflow auto;\">" +  action + getResultMatrix().gethIndex(i).getLabel()+"</div>";
         }
 
         // row labels
@@ -213,7 +214,7 @@ class ResultsPresenter {
             if (schoolClass != null) {
                 action = "[-] ";
             }
-            data[i + 1][0] = "" + action + getResultMatrix().getvIndex(i).getLabel();
+            data[i + 1][0] = "<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">" + action + getResultMatrix().getvIndex(i).getLabel()+"</div>";
         }
 
         for (j = 0;
@@ -244,9 +245,9 @@ class ResultsPresenter {
                     b = 0;
                     g = (int) (255 * (score / 50));
                     r = (int) (255 * (1 - (score - 50) / 50));
-                    prefix = "<div style=\"text-align: right; background:rgb(" + r + "," + g + "," + b + ");\">";
+                    prefix = "<div style=\"text-align: right; padding: 2px; background:rgb(" + r + "," + g + "," + b + ");\">";
                 } else {
-                    prefix = "<div style=\"text-align: right; overflow auto;\">"; // use default of style
+                    prefix = "<div style=\"text-align: right; padding: 2px; overflow auto;\">"; // use default of style
                 }
                 long iScore = Math.round(score);
                 String formattedScore = NumberFormat.getFormat("0").format(iScore);

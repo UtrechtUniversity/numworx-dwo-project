@@ -146,22 +146,23 @@ public class ResultsView extends Composite {
         int i = height;
         int j = width;
         // column labels
-        resultTable.setWidget(0, 0, new Label(data[0][0]));
+        resultTable.setWidget(0, 0, new HTML(data[0][0]));
 
         for (i = 0; i < width; i++) {
-            resultTable.setWidget(0, i, new Label(data[0][i]));
-            resultTable.getCellFormatter().addStyleName(0, i, "flexTableHeader");
+            resultTable.setWidget(0, i, new HTML(data[0][i]));
+            resultTable.getCellFormatter().setStyleName(0, i, "flexTableHeader");
         }
 
         // row labels
         for (i = 0; i < height; i++) {
-            resultTable.setWidget(i, 0, new Label(data[i][0]));
-            resultTable.getCellFormatter().addStyleName(i, 0, "flexTableHeader");
+            resultTable.setWidget(i, 0, new HTML(data[i][0]));
+            resultTable.getCellFormatter().setStyleName(i, 0, "flexTableHeader");
         }
 
         for (j = 1; j < width; j++) {
             for (i = 1; i < height; i++) {
                 resultTable.setWidget(i, j, new HTML(data[i][j]));
+            resultTable.getCellFormatter().addStyleName(i, j, "flexTableCell");
             }
         }
 

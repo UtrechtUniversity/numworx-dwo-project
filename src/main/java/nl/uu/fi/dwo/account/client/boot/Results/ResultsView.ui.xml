@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" >
-    <ui:style field="resultApp" src="../resultapp.css" />
+    <ui:style field="dwoStyle" src="../dwostyle.css" />
     <!--    <ui:style type="nl.uu.fi.dwo.account.client.boot.Results.ResultPanel.style">
         .tableCelleven {
         padding: 5px;
@@ -21,10 +21,10 @@
         font-weight: normal;  
         }
     </ui:style>-->
-    <!--<g:Panel styleName="{resultApp.fullPanel}" >-->
-        <g:ScrollPanel styleName="{resultApp.fullPanel}">
+    <!--<g:Panel styleName="{dwoStyle.fullPanel}" >-->
+        <g:ScrollPanel styleName="{dwoStyle.fullPanel}">
             <g:FlowPanel>
-                <g:FlexTable styleName="{resultApp.flexTable}" ui:field="resultTable"/>
+                <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="resultTable"/>
             </g:FlowPanel>
         </g:ScrollPanel>
 <!--        <g:Button ui:field="upBtn">&uarr;</g:Button>

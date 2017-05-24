@@ -6,80 +6,73 @@
     Created on : Dec 8, 2016, 2:20:25 PM
     Author     : G.A.J. van der Plas 
 */
-.appPanel{
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top : 5px;
-    margin-bottom: 5px;
+.dwoAppPanel{
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top : 0px;
+    margin-bottom: 0px;
     vertical-align: middle;
     height: calc(100vh-16px);
     width: calc(100vw-16px);
 }
-.header {
+.dwoAppHeaderPanel {
     /*padding: 8px;*/
-    border: 1px solid #555555;
-    background-color: #f0f0f0;
-    border-radius: 4px;
-    border-style: solid;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top : 5px;
-    margin-bottom: 5px;
+    /*border: 1px solid #555555;*/
+    background-color: lightgrey;
+    /*    border-radius: 0px;
+        border-style: solid;*/
+    margin: 0px;
+    /*    margin-left: 5px;
+        margin-right: 5px;
+        margin-top : 5px;
+        margin-bottom: 5px;*/
     height: 50px;
     width: calc(100vw-16px);
     padding: 10px;
     vertical-align: bottom;     
-}	
-.navi {
-    padding: 8px;
-    border: 1px solid #555555;
-    background-color: #dedede;
-    border-radius: 5px;        
-    height: 5%;
+    border-bottom: 1px solid #999999;
 }
-.body {
+/*.dwoAppBody {
     height: 100%;
     width: calc(100vw-16px);
-    padding-top: 8px;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-bottom: 8px;
+    padding: 10px;
     border: 1px solid #555555;
-    background-color: #deeefe;
-    border-radius: 4px;   
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top : 5px;
-    margin-bottom: 5px;
+    background-color: #f4f7f9;
+    margin: 0px;
+            border-top: none;
+        border-left: 0px;
+        border-right: 0px;
+        border-bottom: 1px solid #555555;
+
+        border-radius: 4px;   
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top : 5px;
+        margin-bottom: 5px;
     border-style: solid;
-}
-.widget {
-    padding: 8px;
-    border: 1px solid #555555;
+}*/
+.dwoDeckWidget {
+    padding: 0px;
+    margin: 0px;
     background-color: #fdfdfd;
-    border-radius: 5px;   
-    margin-left: auto;
-    margin-right: auto;
-    margin-top : auto;
-    margin-bottom: auto;
+    /*    border-radius: 5px;   
+        margin-left: auto;
+        margin-right: auto;
+        margin-top : auto;
+        margin-bottom: auto;*/
     vertical-align: middle;
 }
-.statusPanel {
-    height: 25px;
+.dwoAppStatusPanel {
+    height: 50px;
     width: calc(100vw-16px);
     padding: 8px;
-    border: 1px solid #555555;
-    background-color: #f0f0f0;
-    border-radius: 5px; 
-    border-style: solid;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top : 5px;
-    margin-bottom: 5px;
+    /*border: 1px solid #555555;*/
+    background-color: lightgrey;
+    border-top: 1px solid #999999;
 }
 
 
-.statusMsgBox{
+.dwoAppStatusMsgBox{
     display: inline-block;
     margin-bottom:10px;
     margin-left: 10px;
@@ -88,7 +81,7 @@
     visibility: hidden;
 }
 
-.mainPanel {
+.dwoAppMainPanel {
     bottom: 0px;
     position: absolute;
     top: 0px;
@@ -98,18 +91,22 @@
     padding-left: 8px;
     padding-right: 8px;
     padding-bottom: 8px;
-    border: 1px solid #555555;
-    background-color: #deeefe;
-    border-radius: 4px;   
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top : 5px;
-    margin-bottom: 5px;
-    border-style: solid;
+    /*border: 1px solid #555555;*/
+    /*border-bottom: 2px solid #999999;*/
+    border-left: 0px;
+    border-right: 0px;
+    /*border-top: 1px solid #FFFFFF;*/
+    background-color: #f4f7f9;
+    /*border-radius: 4px;*/   
+    /*    margin-left: 5px;
+        margin-right: 5px;
+        margin-top : 5px;
+        margin-bottom: 5px;*/
+    /*border-style: solid;*/
     align-content: center;
 }
 
-.deckPanel {
+.dwoDeckPanel {
     padding-top: 0px;
     padding-left: 0px;
     padding-right: 0px;
@@ -124,38 +121,60 @@
     align-content: center;
 }
 
-.menuPanel {
-    position: absolute;
-    top: 13px;
-    right: 13px;
-    border-radius: 4px;   
-    border: 1px solid #555555;
-    background-color: #deeefe;
-    margin-top: auto;
-/*    margin-bottom:auto;*/
-    margin-left: 10px;
-    margin-right: 0px;
-    vertical-align: middle;    
-    text-align: center;
-    text-height: auto;
-    visibility: hidden;
-    max-height: 500px;
-    transition: max-height 500ms ease-in-out;
-    overflow: hidden;    
-}
 
-.menuButton{
+.dwoAppMenuButton{
     display: inline;
     float: right;
     border-radius: 4px;   
+    height: available;
+    margin-top: 10px;
+    margin-bottom:10px;
+    margin-left: 10px;
+    margin-right: 0px;
+    vertical-align: middle;    
+    text-align: center;
+    text-height: max-size;
+    align-content: bottom;
+    visibility: hidden;
+}
+
+.dwoAppMenuPanel {
+    display:block;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border-radius: 4px;   
+    /*border: 1px solid #555555;*/
+    background-color: #c2d5e1;
+    opacity: 0.9;
     margin-top: auto;
-    margin-bottom:auto;
+    /*    margin-bottom:auto;*/
     margin-left: 10px;
     margin-right: 0px;
     vertical-align: middle;    
     text-align: center;
     text-height: auto;
     visibility: hidden;
+    overflow: hidden;   
+    width: 200px;
+    transition-property: opacity;
+    transition-duration: 3s;    
+}
+
+.dwoMenuOut {
+    transition-property: opacity;
+    transition-duration: 3s;    
+    visibility: visible;
+    opacity: 1;
+    overflow: hidden; 
+}
+
+.dwoMenuIn {
+    transition-property: opacity;
+    transition-duration: 3s;    
+    visibility: hidden;
+    opacity: 0;
+    overflow: hidden;
 }
 
 .box{
@@ -194,22 +213,24 @@
 .rightFullBox{
     display: inline;
     float: right;
-    margin-top: auto;
+    height: available;
+    margin-top: 10px;
     margin-bottom:10px;
-    margin-left: 5px;
-    margin-right: 10px;
-    vertical-align: bottom;    
+    margin-left: 10px;
+    margin-right: 0px;
     visibility: hidden;
 }
 
 .rightHalfBox{
     display: inline;
     float: right;
-    margin-top: auto;
+    height: available;
+    margin-top: 10px;
     margin-bottom:10px;
-    margin-left: 5px;
+    margin-left: 10px;
     margin-right: 0px;
-    vertical-align: bottom;    
+    position: relative;
+    bottom: -5px;
     visibility: hidden;
 }
 
@@ -228,7 +249,7 @@
     padding: 8px;
     border: 1px solid #555555;
     background-color: #fdfdfd;
-    border-radius: 5px;   
+    /*border-radius: 5px;*/   
     margin-left: auto;
     margin-right: auto;
     vertical-align: middle;    
@@ -239,7 +260,7 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     padding: 8px;
     border: 1px solid #555555;
     background-color: #dddddd;
-    border-radius: 5px;   
+    /*border-radius: 5px;*/   
     margin-left: auto;
     margin-right: auto;
     vertical-align: middle;    
@@ -248,14 +269,14 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
 .panel {
     padding: 8px;
     border: 5px;
-    border-radius: 5px;   
+    /*border-radius: 5px;*/   
     vertical-align: middle;    
 }
 
 .flexTable{
     padding: 8px;
     border: 1px solid #555555;
-    border-radius: 5px;   
+    /*border-radius: 5px;*/   
     horizontal-align: middle;
     background-color: #fefefe;
     width: 100%;
@@ -263,18 +284,28 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
 }
 
 .flexTable tr {        
-    background-color: #eeeeee;
+    background-color: #eeeeee;    
 }
 
 .flexTable tr:hover {        
-    background-color: #dedede;
+    background-color: #a4d2ed;
 }
 
 
 .flexTableHeader {
     background-color: #aaaaaa;
-    align-content: center;
+    align-content: left;
+    padding: 2px; 
+    overflow: auto;
 }
+
+.flexTableCell {
+    background-color: #eeeeee;
+    align-content: left;
+    padding: 2px; 
+    overflow: auto;
+}
+
 
 .flexTableOddRow {
     background-color: #dddddd;

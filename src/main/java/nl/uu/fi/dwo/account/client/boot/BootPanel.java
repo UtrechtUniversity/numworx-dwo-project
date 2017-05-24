@@ -5,6 +5,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -17,6 +19,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.logging.Level;
@@ -46,8 +49,8 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-//    @UiField
-//    Label schoolLabel;
+    @UiField
+    Label schoolLabel;
     @UiField
     Label schoolName;
 //    @UiField
@@ -79,7 +82,8 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     @UiField(provided = true)
     Widget switchSchoolWidget = new SwitchSchoolPanel();
 
-    boolean showMenu=false;
+    boolean showMenu = false;
+
     public BootPanel() {
 
     }
@@ -93,6 +97,10 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
             PopupPanel popup = new PopupPanel();
             popup.add(new Label("Programmers-error"));
         }
+        EventBus eventBus = new SimpleEventBus();
+        BootPanelController appViewer = new BootPanelController(eventBus);
+        appViewer.init(RootPanel.get());
+
         initWidget(uiBinder.createAndBindUi(this));
         handler = new BootPanelHandler(this);
         getMenuBtn().addClickHandler(this);
@@ -126,29 +134,29 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
     }
 
     public void showStatus() {
-        if(statusPanel!=null){
-        statusPanel.setVisible(true);
+        if (statusPanel != null) {
+            statusPanel.setVisible(true);
         }
     }
 
     public void setStatus(String msg) {
         statusMsg.setText(msg);
     }
-//
-//    /**
-//     * @return the schoolLabel
-//     */
-//    public Label getSchoolLabel() {
-//        return schoolLabel;
-//    }
-//
-//    /**
-//     * @param schoolLabel the schoolLabel to set
-//     */
-//    public void setSchoolLabel(Label schoolLabel) {
-//        this.schoolLabel = schoolLabel;
-//    }
-//
+
+    /**
+     * @return the schoolLabel
+     */
+    public Label getSchoolLabel() {
+        return schoolLabel;
+    }
+
+    /**
+     * @param schoolLabel the schoolLabel to set
+     */
+    public void setSchoolLabel(Label schoolLabel) {
+        this.schoolLabel = schoolLabel;
+    }
+
 //    /**
 //     * @return the roleLabel
 //     */
@@ -176,17 +184,20 @@ public class BootPanel extends Composite implements EntryPoint, ClickHandler {
 //    public void setUserLabel(Label userLabel) {
 //        this.userLabel = userLabel;
 //    }
-
     public void onClick(ClickEvent event) {
         if (event.getSource() == getMenuBtn()) {
             LOG.log(Level.INFO, "Menu button clicked.");
-            LOG.log(Level.INFO, menuPanel.getElement().getStyle().getVisibility());
-            if(!showMenu){
-            menuPanel.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-            showMenu=true;
-            }else{
-            menuPanel.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-            showMenu=false;
+            LOG.log(Level.INFO, menuPanel.getElement().getStyle().getOpacity());
+            if (!showMenu) {
+                menuPanel.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                menuPanel.addStyleName("menuGrow");
+                LOG.log(Level.INFO, "Menu grow.");
+                showMenu = true;
+            } else {
+                menuPanel.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                menuPanel.removeStyleName("menuGrow");
+                LOG.log(Level.INFO, "Menu shrink.");
+                showMenu = false;
             }
             //handler.logoutClicked();
         }
