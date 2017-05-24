@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -43,9 +44,12 @@ public class PublicScoDataManager {
     @Produces({"application/json"})    
     @Path("/getJSONLaunchDataBytes")
     @Deprecated
-    public String getJSONLaunchDataBytes(@QueryParam("scoId") int scoId) {
+    public String getJSONLaunchDataBytes(@DefaultValue("0") @QueryParam("scoId") Long scoId) {
 
-            PersistentScoData scoData = ScoDataManager.findEntity(Long.valueOf(scoId));
+            PersistentScoData scoData = ScoDataManager.findEntity(scoId);
+            if(scoData == null) {
+            	return "{}"; // Not found, not fatal
+            }
             byte[] launchData = scoData.getLaunchdatabytes();
             if(launchData != null)
             {  

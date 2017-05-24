@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -53,9 +54,10 @@ public class PublicCourseManager {
     @Produces({"application/json"})
     @Path("/getCourseDescription")
     @Deprecated
-    public String getCourseDescription(@QueryParam("courseId") int courseId) {
+    public String getCourseDescription(@DefaultValue("0") @QueryParam("courseId") Long courseId) {
         try {
-            PersistentCourse course = CourseManager.findEntity(Long.valueOf(courseId));
+            PersistentCourse course = CourseManager.findEntity(courseId);
+            if(course == null) return "{}"; // Not fatal
             Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(course.getDescription(), null); // FIXM load wiskopdr.jar
             StringWriter writer = new StringWriter();
 			JSONEncoder.encode(map, writer, null); // FIXME, load wiskopdr.jar
