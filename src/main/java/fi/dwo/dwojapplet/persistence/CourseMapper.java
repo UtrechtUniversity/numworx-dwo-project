@@ -220,7 +220,11 @@ class CourseMapper extends XmlRpcMapper {
 						v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
 						cachemap.put(ht, v);
 					} catch (IOException e) {
-						LOG.log(Level.SEVERE, "getTableJS, no parent", e);
+						LOG.log(Level.SEVERE, "getTableJS, no parent, wait 30 seconds", e);
+						try {
+							Thread.sleep(30000L); // wait 10 seconds
+						} catch (InterruptedException e1) {
+						}
 		                ht.put("parentID", parent);
 		                v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
 		                cachemap.put(ht, v);
