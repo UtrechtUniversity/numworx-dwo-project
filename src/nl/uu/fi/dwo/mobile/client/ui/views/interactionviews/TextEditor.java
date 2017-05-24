@@ -1064,6 +1064,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		widget.setStyleDependentName("readonly", !editable);
 	}
 
+	public boolean isReadOnly() {
+		return !editable;
+	}
+	
 	@Override
 	public void setFontSize(int font_size) {
 		widget.getElement().getStyle().setFontSize(font_size, Unit.PX);

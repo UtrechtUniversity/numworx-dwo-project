@@ -783,7 +783,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			if(object instanceof FormuleEditorWithAnswer)
 			{
 				FormuleEditorWithAnswer fewa = (FormuleEditorWithAnswer) object;
-				if(!fewa.isPopup())
+				if(!fewa.isPopup() && !fewa.isReadOnly())
 				{
 					fewa.requestFocus();
 					//om te zorgen dat cursor ook getekend wordt:
@@ -811,7 +811,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			else if(object instanceof AntwoordTekstVak2)
 			{
 				AntwoordTekstVak2 atv = (AntwoordTekstVak2) object;
-				if(!atv.isPopup())
+				if(!atv.isPopup() && !atv.isReadOnly())
 				{
 					atv.requestFocus();
 					if(atv.heeftFormuleInvoer())
@@ -823,7 +823,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			else if(object instanceof FormuleEditorWithSteps)
 			{
 				FormuleEditorWithSteps fews = (FormuleEditorWithSteps) object;
-				if(!fews.isPopup())
+				if(!fews.isPopup() && !fews.isReadOnly())
 				{
 					if(fews.getEditor() != null)
 					{	fews.getEditor().requestFocus();
@@ -839,7 +839,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 			else if(object instanceof PopupFacadeWithFont && ((PopupFacadeWithFont) object).getDelegate() instanceof TextEditor)
 			{
-				((TextEditor) ((PopupFacadeWithFont) object).getDelegate()).requestFocus();
+				PopupFacadeWithFont facade = (PopupFacadeWithFont) object;
+				TextEditor textEditor = (TextEditor) facade.getDelegate();
+				if(!textEditor.isReadOnly() && !facade.isPopup()) 
+					textEditor.requestFocus();
 				return true;
 			}
 			else if(object instanceof StelselAntwoordVak)
@@ -911,7 +914,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			if(object instanceof FormuleEditorWithAnswer)
 			{
 				FormuleEditorWithAnswer fewa = (FormuleEditorWithAnswer) object;
-				if(!fewa.isPopup())
+				if(!fewa.isPopup() && !fewa.isReadOnly())
 				{
 					fewa.requestFocus();
 					//om te zorgen dat cursor ook getekend wordt:
@@ -939,7 +942,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			else if(object instanceof AntwoordTekstVak2)
 			{
 				AntwoordTekstVak2 atv = (AntwoordTekstVak2) object;
-				if(!atv.isPopup())
+				if(!atv.isPopup() && !atv.isReadOnly())
 				{
 					atv.requestFocus();
 					if(atv.heeftFormuleInvoer())
@@ -951,7 +954,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			else if(object instanceof FormuleEditorWithSteps)
 			{
 				FormuleEditorWithSteps fews = (FormuleEditorWithSteps) object;
-				if(!fews.isPopup())
+				if(!fews.isPopup() && !fews.isReadOnly())
 				{
 					if(fews.getEditor() != null)
 					{	fews.getEditor().requestFocus();
@@ -967,7 +970,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 			else if(object instanceof PopupFacadeWithFont && ((PopupFacadeWithFont) object).getDelegate() instanceof TextEditor)
 			{
-				((TextEditor) ((PopupFacadeWithFont) object).getDelegate()).requestFocus();
+				PopupFacadeWithFont facade = (PopupFacadeWithFont) object;
+				TextEditor textEditor = (TextEditor) facade.getDelegate();
+				if(!textEditor.isReadOnly() && !facade.isPopup()) 
+					textEditor.requestFocus();
 				return true;
 			}
 			else if(object instanceof StelselAntwoordVak)

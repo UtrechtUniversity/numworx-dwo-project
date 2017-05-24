@@ -3801,4 +3801,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		}
 		
 	}
+
+	public boolean isReadOnly() {
+		return !editable;
+	}
 }

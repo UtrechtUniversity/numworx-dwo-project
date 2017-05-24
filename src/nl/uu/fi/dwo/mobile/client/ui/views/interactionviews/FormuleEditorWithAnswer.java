@@ -2100,4 +2100,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		return hasFeedback;
 	}
+
+	/**
+	 * voor tabulatie.
+	 */
+	public boolean isReadOnly() {
+		return !editable;
+	}
 }

@@ -43,6 +43,7 @@ import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -57,14 +58,18 @@ import fi.wiskopdr.expressies.repr.ContentMathML;
 
 public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElementWithFont, CBookEventListener {
 
-	private final class FormuleEditorVak extends FormuleEditor {
-		
+	private final class FormuleEditorVak extends FormuleEditor implements IsWidget {
+
+		public Widget asWidget() {
+			return getMainRegel().getCanvas();
+		}
+
 		void setEditable(boolean editable) {
 			AntwoordTekstVak2.this.editable = editable;
 			if(editable) {
-				getAsPanel().getElement().getStyle().clearProperty("pointerEvents");
+				asWidget().getParent().getElement().getStyle().clearProperty("pointerEvents");
 			} else {
-				getAsPanel().getElement().getStyle().setProperty("pointerEvents", "none");
+				asWidget().getParent().getElement().getStyle().setProperty("pointerEvents", "none");
 
 				// zorg dat de formule editor geen focus heeft
 				if (getKeyboard() != null)
@@ -515,7 +520,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			achtergrondPanel.getElement().addClassName("insert_formule");
 			achtergrondPanel.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
 			achtergrondPanel.getElement().getStyle().setPaddingTop(2, Style.Unit.PX);
-			achtergrondPanel.add(formuleVak.getMainRegel().getCanvas());
+			achtergrondPanel.add(formuleVak);
 			achtergrondPanel.addTouchHandler(new FormuleEditorTouchHandler(formuleVak));
 			//basisPanel.add(formuleVak.getMainRegel().getCanvas());
 			//basisPanel.setWidgetLeftRight(formuleVak.getMainRegel().getCanvas(), 4, Style.Unit.PX, 20, Style.Unit.PX);
@@ -1376,6 +1381,14 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			}
 		}
 		
+	}
+
+	/**
+	 * voor tab/shifttab
+	 * @return not editable
+	 */
+	public boolean isReadOnly() {
+		return !editable;
 	}
 	
 }

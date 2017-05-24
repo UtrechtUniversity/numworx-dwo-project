@@ -23,7 +23,6 @@ import com.googlecode.mgwt.ui.client.MGWT;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.account.client.RPCHandlerV2;
 import nl.uu.fi.dwo.account.client.UserBar;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO2;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
@@ -60,7 +59,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 //		
 //	}
 	
-	private final class DWO2RPCHandler extends RPCHandlerV2 implements RPCHandler{
+	private final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV2 implements RPCHandler{
 		private DWO2RPCHandler(String server, int profile) {
 			super(server, profile);
 		}
