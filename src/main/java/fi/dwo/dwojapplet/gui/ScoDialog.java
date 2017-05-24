@@ -42,10 +42,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractCellEditor;
@@ -63,7 +65,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingWorker;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -201,11 +206,26 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     public static class ClassModel extends DefaultComboBoxModel<User> {
 
         private Sco sco;
+        private int index;
+        private List[] lists;
+        private ChangeListener listener;
+        public void setListener(ChangeListener listener) {
+			this.listener = listener;
+		}
 
-        public ClassModel(SchoolClass s, User u, Sco sco) {
+		int getIndex() {
+			return index;
+		}
+
+		public ClassModel(SchoolClass s, User u, Sco sco) {
             super(sorted(s.getStudents()));
             this.sco = sco;
             setSelectedItem(u);
+            index = getIndexOf(u);
+            if(index < 0) index = 0;
+            lists = new List[getSize()];
+            lists[index] = getScoreListSync(index);
+            
         }
 
         private void setComplete(int i, Boolean b) {
@@ -240,8 +260,43 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
             return students;
         }
 
-        public List getScoreList(int i) {
+        public synchronized List getScoreListSync(int i) {
             return sco.getPartialScoreIF().getScoreMapList(getApi(i));
+        }
+        
+        public synchronized List getScoreList(final int i) {
+        	if(true) return getScoreListSync(i);
+        	if(lists[i] != null) 
+        		return lists[i];
+        	final List list = new ArrayList();
+        	SwingWorker<List,?> worker = new SwingWorker<List, Object>() {
+
+				@Override
+				protected List doInBackground() throws Exception {
+					return getScoreListSync(i);
+				}
+
+				protected void done() {
+					try {
+						List result = get();
+						list.addAll(result);
+						if(listener != null)
+							listener.stateChanged(new ChangeEvent(this));
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+        	
+        	
+        	};
+        	worker.execute();
+        	return lists[i] = list;
+        	
         }
 
         public User getUser(int i) {
@@ -701,12 +756,12 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         }
     }
 
-    static class Model extends AbstractTableModel {
+    static class Model extends AbstractTableModel implements ChangeListener {
 
         List[] lists;
         Boolean global;
         String klas = "klas";
-
+        int index;
         private List getScoreList(int i) {
             if (lists[i] == null) {
                 lists[i] = model.getScoreList(i);
@@ -716,6 +771,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
         Model(ClassModel model, String klas) {
             this.model = model;
+            this.index = model.getIndex();
+            model.setListener(this);
             lists = new List[model.getSize()];
             this.klas = klas;
             global = Boolean.TRUE;
@@ -756,7 +813,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
         @Override
         public int getColumnCount() {
-            return getScoreList(0).size() + 1;
+            return getScoreList(index).size() + 1;
         }
 
         @Override
@@ -795,11 +852,16 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
             }
 // XXX 
             try {
-                return ((Map) getScoreList(0).get(column - 1)).get(PartialScoreIF.DESCRIPTION).toString();
+                return ((Map) getScoreList(index).get(column - 1)).get(PartialScoreIF.DESCRIPTION).toString();
             } catch (Exception e) {
             }
             return Integer.toString(column);
         }
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			fireTableDataChanged();
+		}
 
     }
 
