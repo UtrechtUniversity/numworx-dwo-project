@@ -42,17 +42,6 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
 
     private BootPanel parent;
 
-    public void setParent(BootPanel aParent) {
-        parent = aParent;
-    }
-
-    /**
-     * @return the parent
-     */
-    public BootPanel getParent() {
-        return parent;
-    }
-
     public SwitchSchoolPanel() {
         initWidget(uiBinder.createAndBindUi(this));
         handler = new SwitchSchoolPanelHandler(this);
@@ -105,12 +94,12 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
     }
 
     public void onClick(ClickEvent event) {
-        if (event.getSource() == switchBtn) {
-            parent.getSchoolName().setText(handler.getTeacherRoles().get(schoolIndex).getSchool().getSchoolName());
-            DwoGlobalVars.instance().setActiveSchoolRoleAndClass(handler.getTeacherRoles().get(schoolIndex));
-            handler.switchSchool();//handler.getTeacherRoles().get(schoolIndex)
-            parent.showResultWidget();
-        }
+//        if (event.getSource() == switchBtn) {
+//            parent.getSchoolName().setText(handler.getTeacherRoles().get(schoolIndex).getSchool().getSchoolName());
+//            DwoGlobalVars.instance().setActiveSchoolRoleAndClass(handler.getTeacherRoles().get(schoolIndex));
+//            handler.switchSchool();//handler.getTeacherRoles().get(schoolIndex)
+//            parent.showResultWidget();
+//        }
     }
 
     public void updateView() {

@@ -300,7 +300,7 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
 }
 
 .flexTableCell {
-    background-color: #eeeeee;
+    background-color: #aaaaaa;
     align-content: left;
     padding: 2px; 
     overflow: auto;

@@ -13,13 +13,13 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
-class LoginPanelHandler {
+class LoginPanelPresenter {
 
-    private static final Logger LOG = Logger.getLogger(LoginPanelHandler.class.getName());
+    private static final Logger LOG = Logger.getLogger(LoginPanelPresenter.class.getName());
 
-    private LoginPanel view;
+    private LoginView view;
 
-    LoginPanelHandler(LoginPanel view) {
+    LoginPanelPresenter(LoginView view) {
         this.view = view;
         init();
     }
@@ -56,7 +56,7 @@ class LoginPanelHandler {
                 }
             });;
         } catch (Dwo2Exception ex) {
-            Logger.getLogger(LoginPanelHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginPanelPresenter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

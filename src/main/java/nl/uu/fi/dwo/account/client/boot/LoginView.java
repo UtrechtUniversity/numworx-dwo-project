@@ -22,15 +22,15 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
  *
  * @author G.A.J. van der Plas
  */
-public class LoginPanel extends Composite implements ClickHandler {
+public class LoginView extends Composite implements ClickHandler {
 
-    private static final Logger LOG = Logger.getLogger(LoginPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(LoginView.class.getName());
 
-    interface MyUiBinder extends UiBinder<Widget, LoginPanel> {
+    interface MyUiBinder extends UiBinder<Widget, LoginView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    private LoginPanelHandler handler;
+    private LoginPanelPresenter handler;
     private boolean loginClicked = false;
 
     @UiField
@@ -44,20 +44,9 @@ public class LoginPanel extends Composite implements ClickHandler {
 
     private BootPanel parent;
 
-    public void setParent(BootPanel aParent) {
-        parent = aParent;
-    }
-
-    /**
-     * @return the parent
-     */
-    public BootPanel getParent() {
-        return parent;
-    }
-
-    public LoginPanel() {
+    public LoginView(){
         initWidget(uiBinder.createAndBindUi(this));
-        handler = new LoginPanelHandler(this);
+        handler = new LoginPanelPresenter(this);
         //controller must be before clicks occur
         loginBtn.addClickHandler(this);
 
@@ -76,23 +65,7 @@ public class LoginPanel extends Composite implements ClickHandler {
      */
     public void onLoginSuccess() {
         LOG.log(Level.INFO, "Login succeeded.");
-        parent.getSchoolName().setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getSchoolName());
-        parent.getPresentationName().setText(DwoGlobalVars.instance().getCurrentUser().getDisplayName());
-        parent.getUserRole().setText(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
-        LOG.log(Level.INFO, "Button: "+switchSchoolBox.getValue());
-        parent.getSchoolLabel().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-        parent.getSchoolName().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-//        parent.getRoleLabel().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-        parent.getUserRole().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-//        parent.getUserLabel().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-        parent.getPresentationName().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-        parent.getMenuBtn().getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-        if(switchSchoolBox.getValue()==true){
-            parent.showSwitchSchoolWidget();
-            return;
-        }
-        // if switch school enabled, then show switchSchoolWidget
-        parent.showResultWidget();
+ 
     }
 
     /**
