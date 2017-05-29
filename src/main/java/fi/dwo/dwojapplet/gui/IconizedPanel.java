@@ -64,37 +64,37 @@ public class IconizedPanel extends JPanel implements ActionListener {
         return c;
     }
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        final IconizedPanel ip = new IconizedPanel();
-        Image img = ip.getToolkit().createImage(ip.getClass().getResource("/resources/iconized-bgimage.png"));
-        Border border = new DWOBorder(img, null, 0, 1, 1, 80, 490, 500);
-        Image menuimg = ip.getToolkit().createImage(ip.getClass().getResource("/resources/menu-bgimage.png"));
-        Image imgs = ip.getToolkit().createImage(ip.getClass().getResource("/resources/sco-bgimage.png"));
-        Border borderm = new DWOBorder(menuimg, new Insets(20, 20, 20, 20), 20, 140, 159, 80, 490, 500);
-        Border borders = new DWOBorder(imgs, new Insets(20, 20, 20, 20), 59, 600, 643, 80, 490, 500);
-        ip.setIconBorder(border);
-        ip.setText("terug");
-        JButton b = new JButton(ip.getCloseAction());
-        JPanel p = new JPanel();
-        p.setBorder(borderm);
-        p.add(b);
-        p.add(new JButton("äsdsadasdasd"));
-        ip.setWindow(p);
-        f.getContentPane().setBackground(Color.GREEN);
-        f.getContentPane().add(ip, BorderLayout.WEST);
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.PINK);
-        panel.setBorder(borders);
-        f.getContentPane().add(panel, BorderLayout.CENTER);
-        f.setSize(400, 200);
-        f.validate();
-        f.setVisible(true);
-    }
+//    /**
+//     * @param args
+//     */
+//    public static void main(String[] args) {
+//        JFrame f = new JFrame();
+//        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        final IconizedPanel ip = new IconizedPanel();
+//        Image img = ip.getToolkit().createImage(ip.getClass().getResource("/resources/iconized-bgimage.png"));
+//        Border border = new DWOBorder(img, null, 0, 1, 1, 80, 490, 500);
+//        Image menuimg = ip.getToolkit().createImage(ip.getClass().getResource("/resources/menu-bgimage.png"));
+//        Image imgs = ip.getToolkit().createImage(ip.getClass().getResource("/resources/sco-bgimage.png"));
+//        Border borderm = new DWOBorder(menuimg, new Insets(20, 20, 20, 20), 20, 140, 159, 80, 490, 500);
+//        Border borders = new DWOBorder(imgs, new Insets(20, 20, 20, 20), 59, 600, 643, 80, 490, 500);
+//        ip.setIconBorder(border);
+//        ip.setText("terug");
+//        JButton b = new JButton(ip.getCloseAction());
+//        JPanel p = new JPanel();
+//        p.setBorder(borderm);
+//        p.add(b);
+//        p.add(new JButton("äsdsadasdasd"));
+//        ip.setWindow(p);
+//        f.getContentPane().setBackground(Color.GREEN);
+//        f.getContentPane().add(ip, BorderLayout.WEST);
+//        JPanel panel = new JPanel();
+//        panel.setBackground(Color.PINK);
+//        panel.setBorder(borders);
+//        f.getContentPane().add(panel, BorderLayout.CENTER);
+//        f.setSize(400, 200);
+//        f.validate();
+//        f.setVisible(true);
+//    }
 
     public void setText(String string) {
         getIcon().setText(string);
