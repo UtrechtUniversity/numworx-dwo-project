@@ -250,9 +250,9 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
 //        return mainDeckPanel.getWidgetCount();
 //    }
 //
-//    public void showLoginWidget() {
-//        mainDeckPanel.showWidget(0);
-//    }
+    public void showLoginWidget() {
+        mainDeckPanel.showWidget(0);
+    }
 //
 //    public void showSwitchSchoolWidget() {
 //        SwitchSchoolPanel panel = (SwitchSchoolPanel) switchSchoolWidget;

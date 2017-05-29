@@ -2,12 +2,9 @@ package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.account.client.boot.Results.ResultsView;
 
 /**
  * Handler for BootPanel actions.
@@ -46,10 +43,11 @@ class MainPresenter {
 MainPresenter(MainPresenter.Display display, DwoGlobalVars dwoGlobalVars, EventBus eventBus) {
         this.dwoGlobalVars = dwoGlobalVars;
         this.eventBus = eventBus;
+        display.showLogin();
     }
 
     public void init() {
-
+        
     }
 
 
