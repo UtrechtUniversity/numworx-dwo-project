@@ -36,7 +36,8 @@ public class ResultsView extends Composite {
 
         String tableCellodd();
     }
-    private ResultsPresenter handler;
+    
+    private ResultsPresenter resultsPresenter;
 
     //initial gridsize
     final int yInitialGridSize = 12;
@@ -56,7 +57,8 @@ public class ResultsView extends Composite {
         String[][] data; //height, width
     }
 
-    public ResultsView() {
+    public ResultsView(ResultsPresenter rp) {
+        resultsPresenter = rp;
         LOG.log(Level.INFO, "Grid size:" + resultTable.getRowCount() + "x.");
         resultTable.setWidget(0, 0, new Label("class\\course"));
         resultTable.getCellFormatter().addStyleName(0, 0, "flexTableHeader");
@@ -86,12 +88,12 @@ public class ResultsView extends Composite {
 //                        int row = resultTable.getCellForEvent(event).getRowIndex();
 //                        LOG.log(Level.INFO, "row " + row + ", col " + col + " clicked.");
 //                        if (col > 0) {
-//                            DomResultScore score = handler.getResultMatrix().gethIndex(col - 1);
+//                            DomResultScore score = resultsPresenter.getResultMatrix().gethIndex(col - 1);
 //                            if (row == 0 && col > 0 && score instanceof DomResultCourse) {
 //                                LOG.log(Level.INFO, "Column label" + col + " clicked.");
 //                                DomResultCourse sc = (DomResultCourse) score;
-//                                handler.setCourse(sc);
-//                                handler.updateResults();
+//                                resultsPresenter.setCourse(sc);
+//                                resultsPresenter.updateResults();
 //                                updateView();
 //                            }
 //                        }
@@ -106,12 +108,12 @@ public class ResultsView extends Composite {
 //                            int row = resultTable.getCellForEvent(event).getRowIndex();
 //                            LOG.log(Level.INFO, "row " + row + ", col " + col + " clicked.");
 //                            if (row > 0) {
-//                                DomResultScore score = handler.getResultMatrix().getvIndex(row - 1);
+//                                DomResultScore score = resultsPresenter.getResultMatrix().getvIndex(row - 1);
 //                                if (col == 0 && row > 0 && score instanceof DomResultSchoolClass) {
 //                                    LOG.log(Level.INFO, "Row label" + row + " clicked.");
 //                                    DomResultSchoolClass sc = (DomResultSchoolClass) score;
-//                                    handler.setSchoolClass(sc);
-//                                    handler.updateResults();
+//                                    resultsPresenter.setSchoolClass(sc);
+//                                    resultsPresenter.updateResults();
 //                                    updateView();
 //                                }
 //                            }
@@ -120,11 +122,10 @@ public class ResultsView extends Composite {
 //                });
 //        tablePanel.setWidget(resultGrid);
         initWidget(uiBinder.createAndBindUi(this));
-        handler = new ResultsPresenter(this);
     }
 
     public void init() {
-        handler.init();
+        resultsPresenter.init();
         //handler.plotResultsEvent();
     }
 
@@ -167,8 +168,8 @@ public class ResultsView extends Composite {
                     int col = resultTable.getCellForEvent(event).getCellIndex();
                     int row = resultTable.getCellForEvent(event).getRowIndex();
                     LOG.log(Level.INFO, "Clicked on datafield (row,col) =  (" + row + "," + col + ").");
-                    handler.selectRowAndCol(row, col);
-                    handler.plotResultsEvent();
+                    resultsPresenter.selectRowAndCol(row, col);
+                    resultsPresenter.plotResultsEvent();
                 }
             }
         });

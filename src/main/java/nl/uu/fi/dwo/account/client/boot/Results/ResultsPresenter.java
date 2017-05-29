@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.NumberFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,10 +21,13 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
-class ResultsPresenter {
+public class ResultsPresenter {
 
     private static final Logger LOG = Logger.getLogger(ResultsPresenter.class.getName());
 
+    private DwoGlobalVars dwoGlobalVars;
+    private EventBus eventBus;
+    
     private ResultsView view;
     private ResultsService resultService = new ResultsService();
     //model
@@ -75,8 +79,9 @@ class ResultsPresenter {
     private DomResultCourse course = null; //null means all courses.
     private DomResultSchoolClass schoolClass = null; //null means all classes.
 
-    ResultsPresenter(ResultsView view) {
-        this.view = view;
+    public ResultsPresenter(EventBus anEventBus,DwoGlobalVars aDwoGlobalVars) {
+        eventBus = anEventBus;
+        dwoGlobalVars = aDwoGlobalVars;
     }
 
     public void init() {

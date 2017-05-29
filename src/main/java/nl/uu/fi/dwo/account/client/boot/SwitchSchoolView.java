@@ -22,15 +22,15 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
  *
  * @author G.A.J. van der Plas
  */
-public class SwitchSchoolPanel extends Composite implements ClickHandler {
+public class SwitchSchoolView extends Composite implements ClickHandler {
 
-    private static final Logger LOG = Logger.getLogger(SwitchSchoolPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(SwitchSchoolView.class.getName());
 
-    interface MyUiBinder extends UiBinder<Widget, SwitchSchoolPanel> {
+    interface MyUiBinder extends UiBinder<Widget, SwitchSchoolView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    private SwitchSchoolPanelHandler handler;
+    private SwitchSchoolPresenter switchSchoolPresenter;
 
     @UiField
     FlexTable flexTable;
@@ -42,9 +42,9 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
 
     private BootPanel parent;
 
-    public SwitchSchoolPanel() {
+    public SwitchSchoolView(SwitchSchoolPresenter sp) {
+        switchSchoolPresenter = sp;
         initWidget(uiBinder.createAndBindUi(this));
-        handler = new SwitchSchoolPanelHandler(this);
         //controller must be before clicks occur
         switchBtn.addClickHandler(this);
     }
@@ -56,7 +56,7 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
         
         flexTable.setWidget(0, 0, l);
         int i = 1;
-        for (DomSchoolRoleAndClassV2 srac : handler.getTeacherRoles()) {
+        for (DomSchoolRoleAndClassV2 srac : switchSchoolPresenter.getTeacherRoles()) {
             flexTable.setWidget(i, 0, new Label(srac.getSchool().getSchoolName()));
             if (srac.getHasRole().getId().equals(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole().getId())) {
                 schoolIndex = i - 1;
@@ -103,7 +103,7 @@ public class SwitchSchoolPanel extends Composite implements ClickHandler {
     }
 
     public void updateView() {
-        handler.init();
+        switchSchoolPresenter.init();
     }
 
 }

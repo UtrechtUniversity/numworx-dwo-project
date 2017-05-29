@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.account.client.boot;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import java.util.logging.Logger;
 
 /**
@@ -24,7 +24,7 @@ public class BootPanel implements EntryPoint {
         //init app controller
         EventBus eventBus = new SimpleEventBus(); // eventbus
         BootPanelController appViewer = new BootPanelController(eventBus);
-        appViewer.go(RootPanel.get());
+        appViewer.go(RootLayoutPanel.get());
     }
 
 }

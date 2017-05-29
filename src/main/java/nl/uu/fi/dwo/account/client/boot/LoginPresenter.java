@@ -1,43 +1,26 @@
 package nl.uu.fi.dwo.account.client.boot;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.EventBus;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
-/**
- * Handler for for Login actions.
- *
- * @author Gert van der Plas
- */
-class SwitchSchoolPanelHandler {
+public class LoginPresenter {
 
-    private static final Logger LOG = Logger.getLogger(SwitchSchoolPanelHandler.class.getName());
-
-    private SwitchSchoolPanel view;
-
-    SwitchSchoolPanelHandler(SwitchSchoolPanel view) {
-        this.view = view;
+    private static final Logger LOG = Logger.getLogger(LoginPresenter.class.getName());
+    private DwoGlobalVars dwoGlobalVars;
+    private EventBus eventBus;
+    
+    public LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+        eventBus = anEventBus;
+        dwoGlobalVars = aDwoGlobalVars;
         init();
     }
 
-    public List<DomSchoolRoleAndClassV2> getTeacherRoles(){
-        List<DomSchoolRoleAndClassV2> result =new ArrayList<DomSchoolRoleAndClassV2>();
-        List<DomSchoolRoleAndClassV2>  fullList = DwoGlobalVars.instance().getSchoolLogins().getSchoolsRolesAndClassesList();
-        for(DomSchoolRoleAndClassV2 hasRole : fullList){
-            if(hasRole.getRole().getRoleName().equals("TEACHER")){
-                result.add(hasRole);
-            }
-        }
-        return result;
-    }
-    
-    public void init() {
+    final public void init() {
 
     }
 
-    public void switchSchool() {
+//    public void loginClicked(String user, String password) {
 //        Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
 //        try {
 //            loginUser = DwoGlobalVars.instance().initUser(user, password);
@@ -65,8 +48,8 @@ class SwitchSchoolPanelHandler {
 //                }
 //            });;
 //        } catch (Dwo2Exception ex) {
-//            Logger.getLogger(SwitchSchoolPanelHandler.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(LoginPresenter.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-    }
+//    }
 
 }

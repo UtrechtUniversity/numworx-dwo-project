@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.Iterator;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.boot.Results.ResultsView;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -38,6 +37,8 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
     }
 
+    MainPresenter mainPresenter;
+    
     @UiField
     Label schoolLabel;
     @UiField
@@ -51,54 +52,44 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
     @UiField
     Label userRole;
     @UiField
-    FlowPanel menuPanel;
-    @UiField
     PushButton menuButton;
     @UiField
     Image dwoLogo;
-    @UiField
-    FlowPanel statusPanel;
     @UiField
     Label statusMsg;
     @UiField
     CheckBox autoUpdateResults;
     @UiField
+    FlowPanel headerView;
+    @UiField
+    FlowPanel statusView;
+//    @UiField
+//    FlowPanel menuView;
+    @UiField
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
-    Widget loginWidget = new LoginView();
+    LoginView loginView;
     @UiField(provided = true)
-    Widget resultWidget = new ResultsView();
+    ResultsView resultsView;
     @UiField(provided = true)
-    Widget switchSchoolWidget = new SwitchSchoolPanel();
+    SwitchSchoolView switchSchoolView;
 
     boolean showMenu = false;
 
-    MainView(HasWidgets rootPanel) {
-        initWidget(uiBinder.createAndBindUi(this));
-//        getMenuBtn().addClickHandler(this);
-        //controller sets login widget
-        //       ((LoginView) loginWidget).setParent(this);
-        this.mainDeckPanel.add(loginWidget);
-        this.mainDeckPanel.showWidget(0);
-//        ((SwitchSchoolPanel) switchSchoolWidget).setParent(this);
-        mainDeckPanel.add(resultWidget);
-//        ((ResultsView) resultWidget).setParent(this);
-        rootPanel.add(this.asWidget());
-        LOG.log(Level.INFO, "Showing loginPanel.");
+    ViewFactory clientFactory;
+
+    public MainView(MainPresenter lp) {
+        mainPresenter = lp;
     }
 
-    public void init() {
-//        initWidget(uiBinder.createAndBindUi(this));
-////        getMenuBtn().addClickHandler(this);
-//        //controller sets login widget
-//        //       ((LoginView) loginWidget).setParent(this);
-//        mainDeckPanel.add(loginWidget);
-//        mainDeckPanel.showWidget(0);
-////        ((SwitchSchoolPanel) switchSchoolWidget).setParent(this);
-//        mainDeckPanel.add(resultWidget);
-////        ((ResultsView) resultWidget).setParent(this);
-//        LOG.log(Level.INFO, "Showing loginPanel.");
-
+    public void init(ViewFactory clientFactory) {
+        this.clientFactory = clientFactory;
+        loginView = clientFactory.getLoginView();
+        resultsView = clientFactory.getResultsView();
+        switchSchoolView = clientFactory.getSwitchSchoolView();
+        initWidget(uiBinder.createAndBindUi(this));
+        int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
+        mainDeckPanel.showWidget(loginIndex);
     }
 
     @Override
@@ -192,12 +183,12 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
 //    }
 //
 //    public void hideStatus() {
-//        statusPanel.setVisible(false);
+//        statusView.setVisible(false);
 //    }
 //
 //    public void showStatus() {
-//        if (statusPanel != null) {
-//            statusPanel.setVisible(true);
+//        if (statusView != null) {
+//            statusView.setVisible(true);
 //        }
 //    }
 //
@@ -222,15 +213,15 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
 //    public void onClick(ClickEvent event) {
 //        if (event.getSource() == getMenuBtn()) {
 //            LOG.log(Level.INFO, "Menu button clicked.");
-//            LOG.log(Level.INFO, menuPanel.getElement().getStyle().getOpacity());
+//            LOG.log(Level.INFO, menuView.getElement().getStyle().getOpacity());
 //            if (!showMenu) {
-//                menuPanel.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-//                menuPanel.addStyleName("menuGrow");
+//                menuView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+//                menuView.addStyleName("menuGrow");
 //                LOG.log(Level.INFO, "Menu grow.");
 //                showMenu = true;
 //            } else {
-//                menuPanel.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-//                menuPanel.removeStyleName("menuGrow");
+//                menuView.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+//                menuView.removeStyleName("menuGrow");
 //                LOG.log(Level.INFO, "Menu shrink.");
 //                showMenu = false;
 //            }
@@ -250,36 +241,37 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
 //        return mainDeckPanel.getWidgetCount();
 //    }
 //
+
     public void showLoginWidget() {
         mainDeckPanel.showWidget(0);
     }
 //
 //    public void showSwitchSchoolWidget() {
-//        SwitchSchoolPanel panel = (SwitchSchoolPanel) switchSchoolWidget;
+//        SwitchSchoolView panel = (SwitchSchoolView) switchSchoolView;
 //        panel.init();
 //        panel.updateView();
 //        mainDeckPanel.showWidget(1);
 //    }
 //
 //    public void showResultWidget() {
-//        ResultsView panel = (ResultsView) resultWidget;
-//        statusPanel.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+//        ResultsView panel = (ResultsView) resultsView;
+//        statusView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
 //        panel.init();
 //        mainDeckPanel.showWidget(2);
 //    }
 //
 //    /**
-//     * @return the loginWidget
+//     * @return the loginView
 //     */
 //    public Widget getLoginWidget() {
-//        return loginWidget;
+//        return loginView;
 //    }
 //
 //    /**
-//     * @param loginWidget the loginWidget to set
+//     * @param loginView the loginView to set
 //     */
-//    public void setLoginWidget(Widget loginWidget) {
-//        this.loginWidget = loginWidget;
+//    public void setLoginWidget(Widget loginView) {
+//        this.loginView = loginView;
 //    }
 //
 //    /**
@@ -337,5 +329,26 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
 //    public void menuButton(PushButton menuButton) {
 //        this.menuButton = menuButton;
 //    }
+
+    /**
+     * @return the loginView
+     */
+    public LoginView getLoginView() {
+        return loginView;
+    }
+
+    /**
+     * @return the resultsView
+     */
+    public ResultsView getResultsView() {
+        return resultsView;
+    }
+
+    /**
+     * @return the switchSchoolView
+     */
+    public SwitchSchoolView getSwitchSchoolView() {
+        return switchSchoolView;
+    }
 
 }

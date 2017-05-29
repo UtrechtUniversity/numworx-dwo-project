@@ -11,48 +11,51 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
  *
  * @author Gert van der Plas
  */
-class MainPresenter {
+public class MainPresenter {
 
     private static final Logger LOG = Logger.getLogger(MainPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
 
     public interface Display {
+
         Widget asWidget();
+
         MainView getViewInstance();
+
         HasClickHandlers getMenuButton(); // handle clicking on button
-        void showPostLoginWidgets(); 
-        void hidePostLoginWidgets(); 
+
+        void showPostLoginWidgets();
+
+        void hidePostLoginWidgets();
+
         public void setSchoolName(String schoolName);
+
         public void setUserRole(String userRole);
+
         public void setPresentationName(String presentationName);
+
         public void setStatusMsg(String statusMsg);
+
         void clear();
+
         public void showLogin();
     }
 
     MainPresenter.Display display;
-//    DeckPanel mainDeckPanel = new DeckPanel();
-//    @UiField(provided = true)
-//    Widget loginWidget = new LoginView();
-//    @UiField(provided = true)
-//    Widget resultWidget = new ResultsView();
-//    @UiField(provided = true)
-//    Widget switchSchoolWidget = new SwitchSchoolPanel();
 
-MainPresenter(MainPresenter.Display display, DwoGlobalVars dwoGlobalVars, EventBus eventBus) {
-        this.dwoGlobalVars = dwoGlobalVars;
-        this.eventBus = eventBus;
-        display.showLogin();
+    MainPresenter(EventBus anEventBus,DwoGlobalVars aDwoGlobalVars) {
+        eventBus = anEventBus;
+        dwoGlobalVars = aDwoGlobalVars;        
     }
 
     public void init() {
-        
+        display.showLogin();
+
     }
 
-
     void goLogin() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        display.showLogin();
     }
 
 }

@@ -5,7 +5,7 @@
     <ui:style field="dwoStyle" src="dwostyle.css" />    
     <ui:with type="nl.uu.fi.dwo.account.client.icons.AccountImageBundle" field="icons" />
     <g:HeaderPanel addStyleNames='{dwoStyle.dwoAppPanel}'>
-        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppHeaderPanel}'>
+        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppHeaderPanel}' ui:field='headerView'>
             <g:Image addStyleNames='{dwoStyle.leftLogoBox}' height = '90%' width = 'auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />            
             <g:PushButton addStyleNames='{dwoStyle.dwoAppMenuButton}'  ui:field="menuButton">
                 <!--                <g:upFace>
@@ -28,19 +28,19 @@
         <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMainPanel}'>
             <g:FlowPanel>
                 <g:DeckPanel addStyleNames='{dwoStyle.dwoDeckPanel}' ui:field="mainDeckPanel" >
-                    <g:Widget ui:field="loginWidget" />
-                    <g:Widget ui:field="switchSchoolWidget" />
-                    <g:Widget ui:field="resultWidget" />
+                    <g:Widget ui:field="loginView" />
+                    <g:Widget ui:field="switchSchoolView" />
+                    <g:Widget ui:field="resultsView" />
                     <!--</g:FlowPanel>-->
                 </g:DeckPanel>
-                <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuPanel" >
+                <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView" >
                     <g:Label >menu a</g:Label>
                     <g:Label >menu b</g:Label>
                     <g:Label >menu c</g:Label>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:FlowPanel>
-        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppStatusPanel}' ui:field='statusPanel' >
+        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppStatusPanel}' ui:field='statusView' >
             <g:CheckBox  addStyleNames='{dwoStyle.dwoAppStatusMsgBox}' ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox>
             <g:Label addStyleNames='{dwoStyle.dwoAppStatusMsgBox}'  ui:field="statusMsg"></g:Label>
         </g:FlowPanel>
