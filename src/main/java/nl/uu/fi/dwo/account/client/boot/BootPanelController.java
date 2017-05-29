@@ -54,11 +54,25 @@ class BootPanelController {
         
         presenterFactory = new PresenterFactoryImpl(eventBus, dwoGlobalVars);
         viewFactory = new ViewFactoryImpl(presenterFactory);
+        
+        //add handlers do this using hasEventHandlers and add all eventhandlers off class
+        //add: onLogin, onLogout, onBack, onSwitchSchool, onManageClass, onProfile..
+        eventBus.addHandler(LoginEvent.TYPE, new LoginEventHandler()     {
+        @Override
+        public void onLoginEvent(LoginEvent loginEvent) {
+            if(loginEvent.getState().equals(LoginEvent.State.SUCCESS)){
+                LOG.log(Level.INFO,"Login Success in app controller.");
+                //presenterFactory.getMainPresenter().goResults();
+        }else{
+                LOG.log(Level.INFO,"Login fail in app controller.");
+            }
+        }
+    });
+        
         MainView mainView = viewFactory.getMainView();
         mainView.init(viewFactory);
         this.rootPanel.add(mainView);
         LOG.log(Level.INFO,"Intiated Main view.");
-        MainPresenter.Display  mainDisplay = mainView;
         MainPresenter mainPresenter = presenterFactory.getMainPresenter();
         LOG.log(Level.INFO,"Intiating Main presenter. Showing login screen.");
         mainPresenter.init();
@@ -68,4 +82,6 @@ class BootPanelController {
 //    public Promise<DomLoginContext> logout() {
 //        return accountManager.logout();
 //    }
+    
+    //add 
 }

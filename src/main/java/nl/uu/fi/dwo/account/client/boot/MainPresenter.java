@@ -42,7 +42,7 @@ public class MainPresenter {
         public void showLogin();
     }
 
-    MainPresenter.Display display;
+    private MainPresenter.Display display;
 
     MainPresenter(EventBus anEventBus,DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
@@ -54,6 +54,15 @@ public class MainPresenter {
 
     }
 
+
+    /**
+     * @param display the display to set
+     */
+    public void setDisplay(MainPresenter.Display display) {
+        this.display = display;
+    }
+
+    
     void goLogin() {
         display.showLogin();
     }

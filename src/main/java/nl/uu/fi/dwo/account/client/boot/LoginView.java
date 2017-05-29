@@ -53,7 +53,7 @@ public class LoginView extends Composite implements ClickHandler {
     public void onClick(ClickEvent event) {
         if (event.getSource() == loginBtn) {
             LOG.log(Level.INFO, "Login button clicked.");
-     //       loginPresenter.loginClicked(this.usernameText.getText(), this.passwordTextBox.getText());
+            loginPresenter.loginClicked(this.usernameText.getText(), this.passwordTextBox.getText());
             //            curUser.setPassword("passw"); //md5Hash = d79096188b670c2f81b7001f73801117
         }
     }

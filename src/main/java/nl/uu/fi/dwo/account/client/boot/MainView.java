@@ -80,6 +80,7 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
 
     public MainView(MainPresenter lp) {
         mainPresenter = lp;
+        mainPresenter.setDisplay(this);
     }
 
     public void init(ViewFactory clientFactory) {
