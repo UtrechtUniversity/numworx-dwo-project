@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client.boot.Results;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -25,50 +26,21 @@ public class ResultsPresenter {
 
     private static final Logger LOG = Logger.getLogger(ResultsPresenter.class.getName());
 
-    private DwoGlobalVars dwoGlobalVars;
-    private EventBus eventBus;
-    
-    private ResultsView view;
+    private ResultsPresenter.Display view;
     private ResultsService resultService = new ResultsService();
     //model
     private DomResultTree rTree;
     private DomResultPlotMatrix resultMatrix;
+    private DomResultCourse course = null; //null means all courses.
+    private DomResultSchoolClass schoolClass = null; //null means all classes.
 
-    /**
-     * @param row the course to set
-     */
-    public void selectRowAndCol(int row, int col) {
-        if (row != 0 && col != 0 && schoolClass != null && course != null) {
-            LOG.log(Level.INFO,"selected a student sco for "+resultMatrix.getMark(row-1, col-1).getLabel()+ " with score "+resultMatrix.getMark(row-1, col-1).getScore());
-            //send event to show studentSco
-            return;
-        }
-        if (row == 0 && col == 0 && (schoolClass != null || course != null)) {
-            //zoom all out
-            schoolClass = null;
-            course = null;
-            return;
-        }
-        if (row != 0 && schoolClass == null && resultMatrix.getvIndex(row - 1) instanceof DomResultSchoolClass) {
-            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row - 1);
-        } else if (row != 0 && schoolClass != null) {
-            schoolClass = null;
-        }
 
-        if (col != 0 && course == null && resultMatrix.gethIndex(col - 1) instanceof DomResultCourse) {
-            course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
-        } else if (col != 0 && course != null) {
-            course = null;
-        }
-    }
-
-    /**
-     * @return the resultMatrix
-     */
-    public DomResultPlotMatrix getResultMatrix() {
-        return resultMatrix;
-    }
-
+    public interface Display {
+        Widget asWidget();
+        void clear();
+        void plot(int height, int width, String[][] data);
+    }    
+    
     protected enum mode {
         CoursesClasses, //All Courses over all Classes
         CoursesClass, //All Courses over a Class
@@ -76,12 +48,7 @@ public class ResultsPresenter {
         CourseClass     //A Course for a Class
     }
 
-    private DomResultCourse course = null; //null means all courses.
-    private DomResultSchoolClass schoolClass = null; //null means all classes.
-
     public ResultsPresenter(EventBus anEventBus,DwoGlobalVars aDwoGlobalVars) {
-        eventBus = anEventBus;
-        dwoGlobalVars = aDwoGlobalVars;
     }
 
     public void init() {
@@ -117,6 +84,45 @@ public class ResultsPresenter {
                 }
             }
         });
+    }
+    
+    public void setDisplay(Display aView){
+        view = aView;
+    }
+
+    /**
+     * @param row the course to set
+     */
+    public void selectRowAndCol(int row, int col) {
+        if (row != 0 && col != 0 && schoolClass != null && course != null) {
+            LOG.log(Level.INFO,"selected a student sco for "+resultMatrix.getMark(row-1, col-1).getLabel()+ " with score "+resultMatrix.getMark(row-1, col-1).getScore());
+            //send event to show studentSco
+            return;
+        }
+        if (row == 0 && col == 0 && (schoolClass != null || course != null)) {
+            //zoom all out
+            schoolClass = null;
+            course = null;
+            return;
+        }
+        if (row != 0 && schoolClass == null && resultMatrix.getvIndex(row - 1) instanceof DomResultSchoolClass) {
+            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row - 1);
+        } else if (row != 0 && schoolClass != null) {
+            schoolClass = null;
+        }
+
+        if (col != 0 && course == null && resultMatrix.gethIndex(col - 1) instanceof DomResultCourse) {
+            course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
+        } else if (col != 0 && course != null) {
+            course = null;
+        }
+    }
+
+    /**
+     * @return the resultMatrix
+     */
+    public DomResultPlotMatrix getResultMatrix() {
+        return resultMatrix;
     }
 
     public void updateServerResults() {

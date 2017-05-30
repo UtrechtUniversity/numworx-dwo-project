@@ -11,7 +11,8 @@ public class LoginEvent extends GwtEvent<LoginEventHandler> {
     public enum State {
         FAIL,
         SUCCESS,
-        SUCCESS_RESULTS
+        SUCCESS_RESULTS,
+        LOGOUT
     }
     
     public static Type<LoginEventHandler> TYPE = new Type<LoginEventHandler>();

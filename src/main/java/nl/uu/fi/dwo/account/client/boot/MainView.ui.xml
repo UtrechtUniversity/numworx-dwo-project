@@ -16,7 +16,7 @@
                 </g:upHoveringFace>
                 <g:downFace image='{downButton}'/>
                 <g:downHoveringFace image='{downButton}'/>-->
-                menu
+                &#9776; Menu 
             </g:PushButton>            
             <!--<g:Label addStyleNames='{dwoStyle.leftFullBox}' ui:field="userLabel">gebruikernaam:</g:Label>-->
             <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="presentationName"></g:Label>
@@ -34,9 +34,9 @@
                     <!--</g:FlowPanel>-->
                 </g:DeckPanel>
                 <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView" >
-                    <g:Label >menu a</g:Label>
-                    <g:Label >menu b</g:Label>
-                    <g:Label >menu c</g:Label>
+                    <g:Label ui:field="switchRoleLabel">switch</g:Label>
+                    <g:Label ui:field="resultsLabel">results</g:Label>
+                    <g:Label ui:field="logoutLabel">logout</g:Label>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:FlowPanel>

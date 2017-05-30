@@ -16,11 +16,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Shows the students results of activities individually or grouped by schoolclass
+ * or leave course.
  *
  * @author G.A.J. van der Plas
  */
-public class ResultsView extends Composite {
+public class ResultsView extends Composite implements ResultsPresenter.Display{
 
     private static final Logger LOG = Logger.getLogger(ResultsView.class.getName());
 
@@ -31,9 +32,7 @@ public class ResultsView extends Composite {
     public interface Style extends CssResource {
 
         String panel();
-
         String tableCelleven();
-
         String tableCellodd();
     }
     
@@ -49,9 +48,7 @@ public class ResultsView extends Composite {
     @UiField(provided = true)
     FlexTable resultTable = new FlexTable();
 
-    //ListDataProvider<DomResultScore> dataProvider = new ListDataProvider<DomResultScore>();
     public class ResultData {
-
         int width;
         int height;
         String[][] data; //height, width
@@ -59,6 +56,7 @@ public class ResultsView extends Composite {
 
     public ResultsView(ResultsPresenter rp) {
         resultsPresenter = rp;
+        rp.setDisplay(this);
         LOG.log(Level.INFO, "Grid size:" + resultTable.getRowCount() + "x.");
         resultTable.setWidget(0, 0, new Label("class\\course"));
         resultTable.getCellFormatter().addStyleName(0, 0, "flexTableHeader");
@@ -80,53 +78,16 @@ public class ResultsView extends Composite {
         };
         t.scheduleRepeating(5000);
 
-//                    resultTable.addClickHandler(new ClickHandler() {
-//                @Override
-//                public void onClick(ClickEvent event) {
-//                    if (resultTable.getCellForEvent(event) != null) {
-//                        int col = resultTable.getCellForEvent(event).getCellIndex();
-//                        int row = resultTable.getCellForEvent(event).getRowIndex();
-//                        LOG.log(Level.INFO, "row " + row + ", col " + col + " clicked.");
-//                        if (col > 0) {
-//                            DomResultScore score = resultsPresenter.getResultMatrix().gethIndex(col - 1);
-//                            if (row == 0 && col > 0 && score instanceof DomResultCourse) {
-//                                LOG.log(Level.INFO, "Column label" + col + " clicked.");
-//                                DomResultCourse sc = (DomResultCourse) score;
-//                                resultsPresenter.setCourse(sc);
-//                                resultsPresenter.updateResults();
-//                                updateView();
-//                            }
-//                        }
-//                    }
-//                }
-//                    });
-//                resultTable.addClickHandler(new ClickHandler() {
-//                    @Override
-//                    public void onClick(ClickEvent event) {
-//                        if (resultTable.getCellForEvent(event) != null) {
-//                            int col = resultTable.getCellForEvent(event).getCellIndex();
-//                            int row = resultTable.getCellForEvent(event).getRowIndex();
-//                            LOG.log(Level.INFO, "row " + row + ", col " + col + " clicked.");
-//                            if (row > 0) {
-//                                DomResultScore score = resultsPresenter.getResultMatrix().getvIndex(row - 1);
-//                                if (col == 0 && row > 0 && score instanceof DomResultSchoolClass) {
-//                                    LOG.log(Level.INFO, "Row label" + row + " clicked.");
-//                                    DomResultSchoolClass sc = (DomResultSchoolClass) score;
-//                                    resultsPresenter.setSchoolClass(sc);
-//                                    resultsPresenter.updateResults();
-//                                    updateView();
-//                                }
-//                            }
-//                        }
-//                    }
-//                });
-//        tablePanel.setWidget(resultGrid);
         initWidget(uiBinder.createAndBindUi(this));
     }
 
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     public void init() {
-        resultsPresenter.init();
-        //handler.plotResultsEvent();
+        resultsPresenter.plotResultsEvent();
     }
 
     public void plot(int height, int width, String[][] data) {

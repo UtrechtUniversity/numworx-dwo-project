@@ -25,6 +25,8 @@ public class BootPanel implements EntryPoint {
         EventBus eventBus = new SimpleEventBus(); // eventbus
         BootPanelController appViewer = new BootPanelController(eventBus);
         appViewer.go(RootLayoutPanel.get());
+        
+        
     }
 
 }

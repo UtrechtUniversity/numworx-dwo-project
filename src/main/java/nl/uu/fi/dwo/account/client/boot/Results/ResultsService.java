@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client.boot.Results;
 
+import com.google.gwt.i18n.client.NumberFormat;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherResultsManager;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -27,7 +28,9 @@ class ResultsService {
         DomContext context = new DomContext();
         context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
         DomDwoProfile profile = new DomDwoProfile();
-        profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;00000000000000000001"));;
+        int profileId = DwoGlobalVars.instance().getProfileId();
+        String formattedId = NumberFormat.getFormat("00000000000000000000").format(profileId);
+        profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;"+formattedId));
         profile.setDwoProfileName("test");
         profile.setDwoProfileRights("_");
         return manager.getTeachersResults(context, profile);

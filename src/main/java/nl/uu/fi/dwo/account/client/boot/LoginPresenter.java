@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,12 +42,12 @@ public class LoginPresenter {
     public void loginClicked(String user, String password, Boolean switchRole) {
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
         try {
-            loginUser = DwoGlobalVars.instance().initUser(user, password);
+            loginUser = dwoGlobalVars.initUser(user, password);
             loginUser.then(new Success<DwoGlobalVars.DwoGlobalVarsState, Void>() {
                 @Override
                 public Promise<Void> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
-                        LOG.log(Level.INFO, "login succeeded for user:" + DwoGlobalVars.instance().getCurrentUser().getUniqueDisplayName());
+                        LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
                         if (switchRole) {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS));
                         } else {

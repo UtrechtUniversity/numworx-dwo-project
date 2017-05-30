@@ -2,9 +2,12 @@ package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -16,6 +19,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.boot.Results.ResultsView;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -24,7 +28,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
  *
  * @author Gert van der Plas
  */
-public class MainView extends Composite implements HasWidgets, MainPresenter.Display {
+public class MainView extends Composite implements HasWidgets, ClickHandler, MainPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(MainView.class.getName());
 
@@ -63,8 +67,8 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
     FlowPanel headerView;
     @UiField
     FlowPanel statusView;
-//    @UiField
-//    FlowPanel menuView;
+    @UiField
+    FlowPanel menuView;
     @UiField
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
@@ -73,6 +77,13 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
     ResultsView resultsView;
     @UiField(provided = true)
     SwitchSchoolView switchSchoolView;
+
+    @UiField(provided = true)
+    Label switchRoleLabel = new MenuLabel();
+    @UiField(provided = true)
+    Label resultsLabel = new MenuLabel();
+    @UiField(provided = true)
+    Label logoutLabel = new MenuLabel();
 
     boolean showMenu = false;
 
@@ -91,6 +102,10 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
         initWidget(uiBinder.createAndBindUi(this));
         int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(loginIndex);
+        menuButton.addClickHandler(this);
+        switchRoleLabel.addClickHandler(this);
+        resultsLabel.addClickHandler(this);
+        logoutLabel.addClickHandler(this);
     }
 
     @Override
@@ -182,6 +197,37 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
         mainDeckPanel.showWidget(loginIndex);
     }
 
+    @Override
+    public void showMenuButton() {
+        menuButton.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+    }
+
+    @Override
+    public void hideMenuButton() {
+        menuButton.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+    }
+
+    @Override
+    public void showMenuView() {
+        menuView.addStyleName("menuGrow");
+        menuView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        LOG.log(Level.INFO, "Menu grow.");
+        showMenu = true;
+    }
+
+    @Override
+    public void hideMenuView() {
+        menuView.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+        menuView.removeStyleName("menuGrow");
+        LOG.log(Level.INFO, "Menu shrink.");
+        showMenu = false;
+    }
+
+    @Override
+    public boolean menuVisible() {
+        return showMenu;
+    }
+
 //    
 //    /**
 //     * @return the autoUpdateResults
@@ -225,24 +271,33 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
 //        this.schoolLabel = schoolLabel;
 //    }
 //
-//    public void onClick(ClickEvent event) {
-//        if (event.getSource() == getMenuBtn()) {
-//            LOG.log(Level.INFO, "Menu button clicked.");
-//            LOG.log(Level.INFO, menuView.getElement().getStyle().getOpacity());
-//            if (!showMenu) {
-//                menuView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-//                menuView.addStyleName("menuGrow");
-//                LOG.log(Level.INFO, "Menu grow.");
-//                showMenu = true;
-//            } else {
-//                menuView.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-//                menuView.removeStyleName("menuGrow");
-//                LOG.log(Level.INFO, "Menu shrink.");
-//                showMenu = false;
-//            }
-//            //handler.logoutClicked();
-//        }
-//    }
+    public void onClick(ClickEvent event) {
+        if (event.getSource() == menuButton) {
+            LOG.log(Level.INFO, "Menu button clicked.");
+            LOG.log(Level.INFO, menuView.getElement().getStyle().getOpacity());
+            if (!showMenu) {
+                menuView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                menuView.addStyleName("menuGrow");
+                LOG.log(Level.INFO, "Menu grow.");
+                showMenu = true;
+            } else {
+                menuView.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                menuView.removeStyleName("menuGrow");
+                LOG.log(Level.INFO, "Menu shrink.");
+                showMenu = false;
+            }
+            //handler.logoutClicked();
+        } else if (event.getSource() == switchRoleLabel) {
+            hideMenuView();
+            mainPresenter.onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
+        } else if (event.getSource() == resultsLabel) {
+            hideMenuView();
+            mainPresenter.onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
+        } else if (event.getSource() == logoutLabel) {
+            hideMenuView();
+            Window.Location.assign("");
+        }
+    }
 //
 //    public void logoutFailed() {
 //        Window.alert("logout failed, close browser to destroy session.");
@@ -343,6 +398,7 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
 //    public void menuButton(PushButton menuButton) {
 //        this.menuButton = menuButton;
 //    }
+
     /**
      * @return the loginView
      */

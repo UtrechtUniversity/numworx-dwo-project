@@ -161,6 +161,11 @@
     transition-duration: 3s;    
 }
 
+.selectedMenu {
+    background-color: #0e7dc0;
+
+}
+
 .dwoMenuOut {
     transition-property: opacity;
     transition-duration: 3s;    
@@ -305,7 +310,6 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     padding: 2px; 
     overflow: auto;
 }
-
 
 .flexTableOddRow {
     background-color: #dddddd;

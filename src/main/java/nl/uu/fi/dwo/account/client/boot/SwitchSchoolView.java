@@ -10,19 +10,16 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
 /**
- * GWT Panel that handles the login-authentication.
+ * GWT Panel that handles switching the role.
  *
  * @author G.A.J. van der Plas
  */
-public class SwitchSchoolView extends Composite implements ClickHandler {
+public class SwitchSchoolView extends Composite implements ClickHandler, SwitchSchoolPresenter.Display{
 
     private static final Logger LOG = Logger.getLogger(SwitchSchoolView.class.getName());
 
@@ -40,10 +37,16 @@ public class SwitchSchoolView extends Composite implements ClickHandler {
     Button switchBtn;
     int schoolIndex = 1;
 
-    private BootPanel parent;
+
+    public class ResultData {
+        int width;
+        int height;
+        String[][] data; //height, width
+    }
 
     public SwitchSchoolView(SwitchSchoolPresenter sp) {
         switchSchoolPresenter = sp;
+        switchSchoolPresenter.setView(this);
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
         switchBtn.addClickHandler(this);
@@ -52,24 +55,64 @@ public class SwitchSchoolView extends Composite implements ClickHandler {
     public void init() {
         //create table
         String nulLabel = "School";
-        HTML l = new HTML("<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">"+nulLabel+"</div>");
+        HTML l = new HTML("<div style=\"text-align: left; background-color: #555555; padding: 2px; overflow auto;\">"+nulLabel+"</div>");
         
         flexTable.setWidget(0, 0, l);
-        int i = 1;
-        for (DomSchoolRoleAndClassV2 srac : switchSchoolPresenter.getTeacherRoles()) {
-            flexTable.setWidget(i, 0, new Label(srac.getSchool().getSchoolName()));
-            if (srac.getHasRole().getId().equals(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole().getId())) {
-                schoolIndex = i - 1;
-                flexTable.getRowFormatter().getElement(i).addClassName("flexTableSelectedBackground");
-            } else if (i % 2 == 0) {
-                flexTable.getCellFormatter().addStyleName(i, 0, "flexTableOddRow");
-            } else {
-                flexTable.getCellFormatter().addStyleName(i, 0, "flexTableEvenRow");
+        cancelBtn.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+        switchBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+    }
+
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public void onClick(ClickEvent event) {
+        //            switchSchoolPresenter.selectRow(schoolIndex);
+
+        if (event.getSource() == switchBtn) {
+            switchSchoolPresenter.switchSchool();
+        }
+    }
+
+    public void updateView(int height,int width, String[][] data) {
+        flexTable.removeAllRows();
+        int i = height;
+        int j = width;
+                flexTable.getCellFormatter().addStyleName(i, j, "flexTableHeader");
+        // column labels
+        HTML html = new HTML(data[0][0]);
+        html.setStyleName("flexTableHeader");
+        flexTable.setWidget(0, 0, html);
+
+        for (i = 0; i < width; i++) {
+            html = new HTML(data[0][i]);
+            html.setStyleName("flexTableHeader");
+            flexTable.setWidget(0, i, html);
+        }
+
+        // row labels
+        for (i = 0; i < height; i++) {
+            html = new HTML(data[i][0]);
+            html.setStyleName("flexTableHeader");
+            flexTable.setWidget(i, 0, html);
+        }
+
+        for (j = 1; j < width; j++) {
+            for (i = 1; i < height; i++) {
+            html = new HTML(data[i][j]);
+            html.setStyleName("flexTableCell");
+                flexTable.setWidget(i, j, html);
             }
-            flexTable.addClickHandler(new ClickHandler() {
+        }
+        
+        flexTable.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
+                    if (flexTable.getCellForEvent(event) != null) {
                     int curSchoolIndex = schoolIndex;
                     schoolIndex = flexTable.getCellForEvent(event).getRowIndex() - 1;
+                    switchSchoolPresenter.selectRow(schoolIndex);
                     if ((schoolIndex + 1) % 2 == 0) {
                         flexTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableOddRow");
                     } else {
@@ -86,24 +129,10 @@ public class SwitchSchoolView extends Composite implements ClickHandler {
                     }
                     LOG.log(Level.INFO, "" + schoolIndex);
                 }
-            });
-            i++;
-        }
-//        cancelBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-        switchBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-    }
+                    }
+            });        
 
-    public void onClick(ClickEvent event) {
-//        if (event.getSource() == switchBtn) {
-//            parent.getSchoolName().setText(handler.getTeacherRoles().get(schoolIndex).getSchool().getSchoolName());
-//            DwoGlobalVars.instance().setActiveSchoolRoleAndClass(handler.getTeacherRoles().get(schoolIndex));
-//            handler.switchSchool();//handler.getTeacherRoles().get(schoolIndex)
-//            parent.showResultWidget();
-//        }
+        flexTable.setVisible(true);
     }
-
-    public void updateView() {
-        switchSchoolPresenter.init();
-    }
-
+    
 }

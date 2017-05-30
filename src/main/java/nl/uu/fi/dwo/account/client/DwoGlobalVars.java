@@ -43,35 +43,16 @@ public class DwoGlobalVars {
     private SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
     private SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
 
-    /**
-     * @return the state
-     */
-    public DwoGlobalVarsState getState() {
-        return state;
-    }
 
-    /**
-     * @param state the state to set
-     */
-    private void setState(DwoGlobalVarsState state) {
-        this.state = state;
-    }
+    private DwoGlobalVarsState state = DwoGlobalVarsState.Unintialized;
+    private DwoGlobalVarPromise statePromise = new DwoGlobalVarPromise(this, DwoGlobalVarsState.LoggedIn);
+    private static volatile DwoGlobalVars instance;
+    private DomUserFull currentUser;
+    private DomLoginContext currentLoginContext;
+    private DomSchoolsRolesAndClassesV2 schoolLogins;
+    private DomSchoolRoleAndClassV2  activeSchoolRoleAndClass;    
+    private int profileId=1;//default
 
-    /**
-     * Returns the activeSchoolRoleAndClass selected in the Application.
-     * 
-     * @return the activeSchoolRoleAndClass
-     */
-    public DomSchoolRoleAndClassV2 getActiveSchoolRoleAndClass() {
-        return activeSchoolRoleAndClass;
-    }
-
-    /**
-     * @param activeSchoolRoleAndClass the activeSchoolRoleAndClass to set
-     */
-    public void setActiveSchoolRoleAndClass(DomSchoolRoleAndClassV2 activeSchoolRoleAndClass) {
-        this.activeSchoolRoleAndClass = activeSchoolRoleAndClass;
-    }
 
     /**
      * DwoGlobalStates that define which functions can be called without
@@ -109,14 +90,51 @@ public class DwoGlobalVars {
          */
         Closing
     }
+    
+    /**
+     * @return the state
+     */
+    public DwoGlobalVarsState getState() {
+        return state;
+    }
 
-    private DwoGlobalVarsState state = DwoGlobalVarsState.Unintialized;
-    private DwoGlobalVarPromise statePromise = new DwoGlobalVarPromise(this, DwoGlobalVarsState.LoggedIn);
-    private static volatile DwoGlobalVars instance;
-    private DomUserFull currentUser;
-    private DomLoginContext currentLoginContext;
-    private DomSchoolsRolesAndClassesV2 schoolLogins;
-    private DomSchoolRoleAndClassV2  activeSchoolRoleAndClass;
+    /**
+     * @param state the state to set
+     */
+    private void setState(DwoGlobalVarsState state) {
+        this.state = state;
+    }
+
+    /**
+     * Returns the activeSchoolRoleAndClass selected in the Application.
+     * 
+     * @return the activeSchoolRoleAndClass
+     */
+    public DomSchoolRoleAndClassV2 getActiveSchoolRoleAndClass() {
+        return activeSchoolRoleAndClass;
+    }
+
+    /**
+     * @param activeSchoolRoleAndClass the activeSchoolRoleAndClass to set
+     */
+    public void setActiveSchoolRoleAndClass(DomSchoolRoleAndClassV2 activeSchoolRoleAndClass) {
+        this.activeSchoolRoleAndClass = activeSchoolRoleAndClass;
+    }
+
+    /**
+     * @return the profileId
+     */
+    public int getProfileId() {
+        return profileId;
+    }
+
+    /**
+     * @param profileId the profileId to set
+     */
+    public void setProfileId(int profileId) {
+        this.profileId = profileId;
+    }
+
 
     /**
      * @return the instance
@@ -132,15 +150,15 @@ public class DwoGlobalVars {
         return instance;
     }
 
-    static {
-        try {
-            instance = new DwoGlobalVars();
-
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, "", ex);
-            Window.alert("System error: app improperly configured.");
-        }
-    }
+//    static {
+//        try {
+//            instance = new DwoGlobalVars();
+//
+//        } catch (Dwo2Exception ex) {
+//            LOG.log(Level.SEVERE, "", ex);
+//            Window.alert("System error: app improperly configured.");
+//        }
+//    }
 
     /**
      * @return the dwoLocale
@@ -164,7 +182,7 @@ public class DwoGlobalVars {
      *
      * @throws Dwo2Exception
      */
-    public DwoGlobalVars() throws Dwo2Exception {
+    private DwoGlobalVars() throws Dwo2Exception {
         //TODO define initialization stages: Unintialized, Initializing, NotLoggedIn, LoggedIn. Closing.
         setState(DwoGlobalVarsState.Initializing);
         initProperties();
