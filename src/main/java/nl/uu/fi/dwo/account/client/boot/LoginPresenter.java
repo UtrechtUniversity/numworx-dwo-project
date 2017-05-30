@@ -40,7 +40,7 @@ public class LoginPresenter {
 
     }
 
-    public void loginClicked(String user, String password) {
+    public void loginClicked(String user, String password, Boolean switchRole) {
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
         try {
             loginUser = DwoGlobalVars.instance().initUser(user, password);
@@ -49,11 +49,15 @@ public class LoginPresenter {
                 public Promise<Void> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
                         LOG.log(Level.INFO, "login succeeded for user:" + DwoGlobalVars.instance().getCurrentUser().getUniqueDisplayName());
-                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS));
-                        LOG.log(Level.INFO,"login succeeded. Firing Login success event.");
+                        if (switchRole) {
+                            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS));
+                        } else {
+                            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_RESULTS));
+                        }
+                        LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
                     } else {
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
-                        LOG.log(Level.INFO,"login failed. Firing Login fail event.");
+                        LOG.log(Level.INFO, "login failed. Firing Login fail event.");
                     }
                     return null;
                 }
@@ -61,8 +65,8 @@ public class LoginPresenter {
                     new Failure() {
                 @Override
                 public void fail(Promise<?> resolved) throws Exception {
-                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
-                        LOG.log(Level.INFO,"login failed. Firing Login fail event.");
+                    eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
+                    LOG.log(Level.INFO, "login failed. Firing Login fail event.");
                 }
             }
             ).onResolve(new Runnable() {

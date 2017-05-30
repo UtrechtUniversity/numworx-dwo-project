@@ -2,7 +2,9 @@ package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 
@@ -11,7 +13,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
  *
  * @author Gert van der Plas
  */
-public class MainPresenter {
+public class MainPresenter implements SwitchViewEventHandler {
 
     private static final Logger LOG = Logger.getLogger(MainPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
@@ -39,21 +41,25 @@ public class MainPresenter {
 
         void clear();
 
-        public void showLogin();
+        public void showLoginView();
+
+        public void showSwitchSchoolView();
+
+        public void showResultsView();
     }
 
     private MainPresenter.Display display;
 
-    MainPresenter(EventBus anEventBus,DwoGlobalVars aDwoGlobalVars) {
+    MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
-        dwoGlobalVars = aDwoGlobalVars;        
+        dwoGlobalVars = aDwoGlobalVars;
+        eventBus.addHandler(SwitchViewEvent.TYPE, this);
     }
 
     public void init() {
-        display.showLogin();
+        display.showLoginView();
 
     }
-
 
     /**
      * @param display the display to set
@@ -62,9 +68,23 @@ public class MainPresenter {
         this.display = display;
     }
 
-    
     void goLogin() {
-        display.showLogin();
+        display.showLoginView();
     }
 
+    @Override
+    public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
+        switch(switchViewEvent.getEventValue()){
+            case LOGIN:
+                display.showLoginView();
+                break;
+            case SWITCHSCHOOL:
+                display.showSwitchSchoolView();
+                break;
+            case RESULTS:
+                display.showResultsView();
+                break;
+        }
+    }
+    
 }

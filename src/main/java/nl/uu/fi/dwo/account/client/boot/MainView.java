@@ -38,7 +38,7 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
     }
 
     MainPresenter mainPresenter;
-    
+
     @UiField
     Label schoolLabel;
     @UiField
@@ -165,9 +165,23 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
     }
 
     @Override
-    public void showLogin() {
-        mainDeckPanel.showWidget(0);
+    public void showLoginView() {
+        int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
+        mainDeckPanel.showWidget(loginIndex);
     }
+
+    @Override
+    public void showSwitchSchoolView() {
+        int loginIndex = mainDeckPanel.getWidgetIndex(switchSchoolView);
+        mainDeckPanel.showWidget(loginIndex);
+    }
+
+    @Override
+    public void showResultsView() {
+        int loginIndex = mainDeckPanel.getWidgetIndex(resultsView);
+        mainDeckPanel.showWidget(loginIndex);
+    }
+
 //    
 //    /**
 //     * @return the autoUpdateResults
@@ -242,11 +256,10 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
 //        return mainDeckPanel.getWidgetCount();
 //    }
 //
-
-    public void showLoginWidget() {
-        mainDeckPanel.showWidget(0);
-    }
 //
+//    public void showLoginWidget() {
+//        mainDeckPanel.showWidget(0);
+//    }
 //    public void showSwitchSchoolWidget() {
 //        SwitchSchoolView panel = (SwitchSchoolView) switchSchoolView;
 //        panel.init();
@@ -330,7 +343,6 @@ public class MainView extends Composite implements HasWidgets, MainPresenter.Dis
 //    public void menuButton(PushButton menuButton) {
 //        this.menuButton = menuButton;
 //    }
-
     /**
      * @return the loginView
      */

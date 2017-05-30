@@ -60,10 +60,16 @@ class BootPanelController {
         eventBus.addHandler(LoginEvent.TYPE, new LoginEventHandler()     {
         @Override
         public void onLoginEvent(LoginEvent loginEvent) {
-            if(loginEvent.getState().equals(LoginEvent.State.SUCCESS)){
-                LOG.log(Level.INFO,"Login Success in app controller.");
-                //presenterFactory.getMainPresenter().goResults();
-        }else{
+            switch(loginEvent.getState()){
+                case SUCCESS_RESULTS:
+                LOG.log(Level.INFO,"Login succeeded. Showing results view.");
+                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
+                break;
+                case SUCCESS:
+                LOG.log(Level.INFO,"Login succeeded. Showing switch role view.");
+                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
+                    break;
+                default:
                 LOG.log(Level.INFO,"Login fail in app controller.");
             }
         }

@@ -10,7 +10,8 @@ import com.google.gwt.event.shared.GwtEvent;
 public class LoginEvent extends GwtEvent<LoginEventHandler> {
     public enum State {
         FAIL,
-        SUCCESS
+        SUCCESS,
+        SUCCESS_RESULTS
     }
     
     public static Type<LoginEventHandler> TYPE = new Type<LoginEventHandler>();
