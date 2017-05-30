@@ -62,7 +62,7 @@ public class MainPresenter implements SwitchViewEventHandler {
 //        display.showLoginView();
 //    }
 
-    public void MenuButtonClicked(){
+    public void menuButtonClicked(){
        if(display.menuVisible()){
            display.hideMenuView();
        }else{
@@ -70,12 +70,16 @@ public class MainPresenter implements SwitchViewEventHandler {
        }
     }
     
+    public void selectView(SwitchViewEvent.SelectedView selectedView) {
+        eventBus.fireEvent(new SwitchViewEvent(selectedView));
+    }
+    
     @Override
     public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
         onSwitchViewEvent(switchViewEvent.getEventValue());
     }
 
-    public void onSwitchViewEvent(SwitchViewEvent.SelectedView selectedView) {
+    private void onSwitchViewEvent(SwitchViewEvent.SelectedView selectedView) {
         switch(selectedView){
             case LOGIN:
                 display.showLoginView();

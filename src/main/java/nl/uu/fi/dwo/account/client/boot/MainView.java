@@ -289,115 +289,15 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
             //handler.logoutClicked();
         } else if (event.getSource() == switchRoleLabel) {
             hideMenuView();
-            mainPresenter.onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
+            mainPresenter.selectView(SwitchViewEvent.SelectedView.SWITCHSCHOOL);
         } else if (event.getSource() == resultsLabel) {
             hideMenuView();
-            mainPresenter.onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
+            mainPresenter.selectView(SwitchViewEvent.SelectedView.RESULTS);
         } else if (event.getSource() == logoutLabel) {
             hideMenuView();
             Window.Location.assign("");
         }
     }
-//
-//    public void logoutFailed() {
-//        Window.alert("logout failed, close browser to destroy session.");
-//    }
-//
-//    public void logoutSuccess() {
-//        showLoginWidget();
-//    }
-//
-//    public int getMainDeckCount() {
-//        return mainDeckPanel.getWidgetCount();
-//    }
-//
-//
-//    public void showLoginWidget() {
-//        mainDeckPanel.showWidget(0);
-//    }
-//    public void showSwitchSchoolWidget() {
-//        SwitchSchoolView panel = (SwitchSchoolView) switchSchoolView;
-//        panel.init();
-//        panel.updateView();
-//        mainDeckPanel.showWidget(1);
-//    }
-//
-//    public void showResultWidget() {
-//        ResultsView panel = (ResultsView) resultsView;
-//        statusView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-//        panel.init();
-//        mainDeckPanel.showWidget(2);
-//    }
-//
-//    /**
-//     * @return the loginView
-//     */
-//    public Widget getLoginWidget() {
-//        return loginView;
-//    }
-//
-//    /**
-//     * @param loginView the loginView to set
-//     */
-//    public void setLoginWidget(Widget loginView) {
-//        this.loginView = loginView;
-//    }
-//
-//    /**
-//     * @return the schoolName
-//     */
-//    public Label getSchoolName() {
-//        return schoolName;
-//    }
-//
-//    /**
-//     * @param schoolName the schoolName to set
-//     */
-//    public void setSchoolName(Label schoolName) {
-//        this.schoolName = schoolName;
-//    }
-//
-//    /**
-//     * @return the presentationName
-//     */
-//    public Label getPresentationName() {
-//        return presentationName;
-//    }
-//
-//    /**
-//     * @param presentationName the presentationName to set
-//     */
-//    public void setPresentationName(Label presentationName) {
-//        this.presentationName = presentationName;
-//    }
-//
-//    /**
-//     * @return the userRole
-//     */
-//    public Label getUserRole() {
-//        return userRole;
-//    }
-//
-//    /**
-//     * @param userRole the userRole to set
-//     */
-//    public void setUserRole(Label userRole) {
-//        this.userRole = userRole;
-//    }
-//
-//    /**
-//     * @return the logoutBtn
-//     */
-//    public PushButton getMenuBtn() {
-//        return menuButton;
-//    }
-//
-//    /**
-//     * @param menuButton
-//     */
-//    public void menuButton(PushButton menuButton) {
-//        this.menuButton = menuButton;
-//    }
 
     /**
      * @return the loginView

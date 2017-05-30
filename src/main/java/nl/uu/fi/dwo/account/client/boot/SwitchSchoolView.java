@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-public class SwitchSchoolView extends Composite implements ClickHandler, SwitchSchoolPresenter.Display{
+public class SwitchSchoolView extends Composite implements ClickHandler, SwitchSchoolPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(SwitchSchoolView.class.getName());
 
@@ -37,8 +37,8 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
     Button switchBtn;
     int schoolIndex = 1;
 
-
     public class ResultData {
+
         int width;
         int height;
         String[][] data; //height, width
@@ -52,22 +52,22 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
         switchBtn.addClickHandler(this);
     }
 
+    @Override
     public void init() {
         //create table
         String nulLabel = "School";
-        HTML l = new HTML("<div style=\"text-align: left; background-color: #555555; padding: 2px; overflow auto;\">"+nulLabel+"</div>");
-        
+        HTML l = new HTML("<div style=\"text-align: left; background-color: #555555; padding: 2px; overflow auto;\">" + nulLabel + "</div>");
+
         flexTable.setWidget(0, 0, l);
         cancelBtn.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
         switchBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
 
-
     @Override
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public void onClick(ClickEvent event) {
         //            switchSchoolPresenter.selectRow(schoolIndex);
 
@@ -76,11 +76,10 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
         }
     }
 
-    public void updateView(int height,int width, String[][] data) {
+    public void updateView(int height, int width, String[][] data) {
         flexTable.removeAllRows();
         int i = height;
         int j = width;
-                flexTable.getCellFormatter().addStyleName(i, j, "flexTableHeader");
         // column labels
         HTML html = new HTML(data[0][0]);
         html.setStyleName("flexTableHeader");
@@ -99,17 +98,18 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
             flexTable.setWidget(i, 0, html);
         }
 
-        for (j = 1; j < width; j++) {
+        for (j = 0; j < width; j++) {
             for (i = 1; i < height; i++) {
-            html = new HTML(data[i][j]);
-            html.setStyleName("flexTableCell");
+                html = new HTML(data[i][j]);
+                html.setStyleName("flexTableCell");
                 flexTable.setWidget(i, j, html);
             }
         }
-        
+
         flexTable.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    if (flexTable.getCellForEvent(event) != null) {
+            @Override
+            public void onClick(ClickEvent event) {
+                if (flexTable.getCellForEvent(event) != null) {
                     int curSchoolIndex = schoolIndex;
                     schoolIndex = flexTable.getCellForEvent(event).getRowIndex() - 1;
                     switchSchoolPresenter.selectRow(schoolIndex);
@@ -129,10 +129,10 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
                     }
                     LOG.log(Level.INFO, "" + schoolIndex);
                 }
-                    }
-            });        
+            }
+        });
 
         flexTable.setVisible(true);
     }
-    
+
 }

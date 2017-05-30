@@ -22,14 +22,12 @@ class BootPanelController {
     private ViewFactory viewFactory;
     private PresenterFactory presenterFactory;
     private DwoGlobalVars dwoGlobalVars;
-    private MainPresenter handler;
 
     static {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
     }
 
-    private final SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
     EventBus eventBus;
     HasWidgets rootPanel;
 
@@ -38,22 +36,20 @@ class BootPanelController {
     }
 
     public void go(RootLayoutPanel rootPanel) {
-//        try {
         dwoGlobalVars = DwoGlobalVars.instance();
+        
+        //parse profile if it exists.
         String value = com.google.gwt.user.client.Window.Location.getParameter("profile");
         if (value != null) {
             Integer profile = Integer.parseInt(value);
             dwoGlobalVars.setProfileId(profile);
+            LOG.log(Level.INFO, "Parsed and set profile id to "+profile+".");
         }
-//        } catch (Dwo2Exception ex) {
-//            LOG.log(Level.SEVERE, null, ex);
-//            PopupPanel popup = new PopupPanel();
-//            popup.add(new Label("Programmers-error"));
-//        }
-        LOG.log(Level.INFO, "Intiated DwoGlobalsVars.");
+        
         //show main panel
         this.rootPanel = rootPanel;
 
+        //create client factories
         presenterFactory = new PresenterFactoryImpl(eventBus, dwoGlobalVars);
         viewFactory = new ViewFactoryImpl(presenterFactory);
 
@@ -88,6 +84,8 @@ class BootPanelController {
                 }
             }
         });
+        
+        //add SwitchView events and do domain logic
         eventBus.addHandler(SwitchViewEvent.TYPE, new SwitchViewEventHandler() {
             @Override
             public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {

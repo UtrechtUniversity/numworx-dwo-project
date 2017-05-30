@@ -4,16 +4,10 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import org.osgi.util.promise.Failure;
-import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Success;
 
 /**
  * Handler for for Login actions.
@@ -40,6 +34,7 @@ public class SwitchSchoolPresenter {
     public interface Display {
         Widget asWidget();
         void clear();
+        void init();
         void updateView(int height, int width, String[][] data);
     }
 
@@ -71,6 +66,7 @@ public class SwitchSchoolPresenter {
             i++;
         }
         String[][] data = buildPlotData();
+        view.init();
         view.updateView(data.length,1,data);
     }
 
@@ -91,8 +87,9 @@ public class SwitchSchoolPresenter {
 
     private String[][] buildPlotData() {
         String[][] data = new String[sracData.size()+1][1];
-        data[0][0] = "School";
+        data[0][0] = "<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">School</div>";
         int i = 1;
+        selectedIndex=0;
         for (DomSchoolRoleAndClassV2 srac : sracData) {
             data[i][0] = srac.getSchool().getSchoolName();
             if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
