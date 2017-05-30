@@ -23,14 +23,17 @@ public class WiskOpdrCache {
 	}
 
 	public static synchronized void init() {
-		if(worker != null) {
+		if(worker == null) {
 			worker = new SwingWorker<Class<?>, Void>() {
 
 				@Override
 				protected Class<?> doInBackground() throws Exception {
-					return Loader.create(WISKOPDR_JAR).loadClass(WISKOPDR);
+					Class<?> loadClass = Loader.create(WISKOPDR_JAR).loadClass(WISKOPDR);
+					loadClass.newInstance(); // prepare all
+					return loadClass;
 				}
 			};
+			worker.execute();
 		}
 		
 	}
