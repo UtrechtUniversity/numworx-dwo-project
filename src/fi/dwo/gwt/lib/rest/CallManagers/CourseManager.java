@@ -18,4 +18,6 @@ public interface CourseManager {
 	public Promise<DomCourseStudent> getCourse(DomCourse course,
 			DomDwoProfile profile);
 
+	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile);
+
 }

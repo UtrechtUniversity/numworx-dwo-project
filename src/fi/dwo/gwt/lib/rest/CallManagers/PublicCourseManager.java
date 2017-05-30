@@ -3,6 +3,7 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 import java.util.List;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -67,6 +68,11 @@ public class PublicCourseManager implements CourseManager {
 		rest.setDomCourse(course);
 		service.getCourse(rest, result);
 		return result.getPromise();
+	}
+
+	@Override
+	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile) {
+		return Promises.failed(new IllegalArgumentException());
 	}
 
 }
