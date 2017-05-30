@@ -6,11 +6,14 @@ package fi.dwo.dwojapplet.persistence;
 
 import fi.beans.loader.Loader;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
@@ -126,8 +129,11 @@ class AppletMapper extends XmlRpcMapper {
         //Try loading class from remote server.
         try {
         	if(false) return Class.forName(className); // if debugging.
-        	
-            a = Loader.create(jarname).loadClass(className);
+// caching:
+        	if(jarname.equals(WiskOpdrCache.WISKOPDR_JAR) && className.equals(WiskOpdrCache.WISKOPDR))
+        		a = WiskOpdrCache.getInstance();
+        	else
+        		a = Loader.create(jarname).loadClass(className);
             return a;
         } catch (ClassNotFoundException e1) {
             //try loading the jar locally (might be updated).

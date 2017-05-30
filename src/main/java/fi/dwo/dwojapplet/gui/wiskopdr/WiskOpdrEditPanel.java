@@ -23,7 +23,7 @@ public class WiskOpdrEditPanel extends JPanel {
 		super(new BorderLayout());
 		this.text = text;
 		try {
-			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
+			Class<?> wiskopdr = WiskOpdrCache.getInstance();
 			Method m = wiskopdr.getMethod("getWiskOpdrEditPanel", String.class);
 			component = (Component) m.invoke(null, text);
 			add(component, BorderLayout.CENTER);

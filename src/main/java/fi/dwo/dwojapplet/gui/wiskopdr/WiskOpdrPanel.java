@@ -28,7 +28,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 		this.text = s;
 		
 		try {
-			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
+			Class<?> wiskopdr = WiskOpdrCache.getInstance();
 			Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class, Locale.class);
 			component = (Component) m.invoke(null, s, locale);
 			add(component, BorderLayout.CENTER);

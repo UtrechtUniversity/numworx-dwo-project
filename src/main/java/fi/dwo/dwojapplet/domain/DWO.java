@@ -28,6 +28,7 @@ import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.gui.WelcomePanel;
 import fi.dwo.dwojapplet.gui.action.Clipboard;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
 import fi.beans.loader.Loader;
@@ -1308,7 +1309,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         } catch (MalformedURLException ex) {
             LOG.log(Level.SEVERE, "", ex);
         }
-
         Clipboard.initialize();
         // It we started from the command line then the
         // DwoHelper.getServletConnectString()
@@ -1352,6 +1352,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (delegate != null) {
             setFocusTraversalPolicy(CATCH_POLICY);
         }
+        WiskOpdrCache.init();
 
         // override van swing properties...
         // TODO dit ook testen in een applet omgeving!
