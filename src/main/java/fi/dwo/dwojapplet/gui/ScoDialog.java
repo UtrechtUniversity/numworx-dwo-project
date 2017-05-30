@@ -11,7 +11,6 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.ScoBase;
-import static fi.dwo.dwojapplet.domain.ScoBase.REVIEW;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.print.ComboBoxModelIterator;
 import fi.dwo.dwojapplet.gui.print.PrintComponent;
@@ -44,7 +43,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -265,7 +263,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         }
         
         public synchronized List getScoreList(final int i) {
-        	if(true) return getScoreListSync(i);
+        	if(false) return getScoreListSync(i);  // XXX DEBUG SWITCH, om snel uit te zetten
         	if(lists[i] != null) 
         		return lists[i];
         	final List list = new ArrayList();
@@ -290,9 +288,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 						e.printStackTrace();
 					}
 					
-				}
-        	
-        	
+				}	
         	};
         	worker.execute();
         	return lists[i] = list;
@@ -525,6 +521,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         btn.setContentAreaFilled(false);
         vbox.add(btn, BorderLayout.NORTH);
         vbox.add(new Mover(6), BorderLayout.EAST);
+        tableModel.sizing = true;
         TableUtil.setJTableSizes(table);
         int cols = table.getColumnCount();
         for (int i = 0; i < cols; i++) {
@@ -535,6 +532,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         }
         table.setMaximumSize(table.getPreferredSize());
         table.setMinimumSize(table.getPreferredSize());
+        tableModel.sizing = false;
         JPanel x = new JPanel(new BorderLayout());
         x.setOpaque(false);
         x.add(table, BorderLayout.CENTER);
@@ -810,6 +808,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         }
 
         private ClassModel model;
+		private boolean sizing;
 
         @Override
         public int getColumnCount() {
@@ -828,7 +827,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
                     return "max";
                 }
                 try {
-                    return Integer.valueOf(((Map) getScoreList(row).get(col - 1)).get(PartialScoreIF.SCORE_MAX).toString());
+                    return Integer.valueOf(((Map) getScoreList(index).get(col - 1)).get(PartialScoreIF.SCORE_MAX).toString());
                 } catch (Exception e) {
                     return null;
                 }
@@ -839,6 +838,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
                 return (model.getUser(row)).getName();
             }
             try {
+            	if(sizing) row = index;
                 return Integer.valueOf(((Map) getScoreList(row).get(col - 1)).get(PartialScoreIF.SCORE_RAW).toString());
             } catch (Exception e) {
                 return null;
