@@ -24,10 +24,14 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.CallManagers.CourseManager;
+import fi.dwo.gwt.lib.rest.CallManagers.CoursesOfSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicCourseManager;
+import fi.dwo.gwt.lib.rest.CallManagers.PublicCoursesOfSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicScoContextManager;
 import fi.dwo.gwt.lib.rest.CallManagers.ScoContextManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentCoursesOfSchoolClassManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserCourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserScoContextManager;
 
 public class RPCHandlerV3 extends RPCHandlerV2 {
@@ -36,6 +40,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	ScoContextManager scoManager;	
 	CourseManager courseManager;
 	PublicProfileManager profileManager;
+	CoursesOfSchoolClassManager studentManager;
 	
 	protected Promise<DomDwoProfileFull> profile;
 	
@@ -46,7 +51,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		scoManager = new PublicScoContextManager();
 		courseManager = new PublicCourseManager();
 		profileManager = new PublicProfileManager();
-		
+		studentManager = new PublicCoursesOfSchoolClassManager();
 		
 		this.profile = getDwoProfile(profile);
 	}
@@ -92,15 +97,29 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 
 	@Override
 	public Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school) {
-		// TODO Auto-generated method stub
-		return super.getCoursesSchool(school);
+		return profile.then(new Success<DomDwoProfile, List<DomCourseStudent>>() {
+
+			@Override
+			public Promise<List<DomCourseStudent>> call(
+					Promise<DomDwoProfile> resolved) throws Exception {
+				DomDwoProfile p = resolved.getValue();
+				return courseManager.getCoursesSchool(p);
+			}
+		});
 	}
 
 	@Override
 	public Promise<DomCoursesOfSchoolClass> getCoursesClass(
-			DomSchoolClass schoolclass) {
-		// TODO Auto-generated method stub
-		return super.getCoursesClass(schoolclass);
+			final DomSchoolClass schoolclass) {
+		return profile.then(new Success<DomDwoProfile, DomCoursesOfSchoolClass>() {
+
+			@Override
+			public Promise<DomCoursesOfSchoolClass> call(
+					Promise<DomDwoProfile> resolved) throws Exception {
+				DomDwoProfile p = resolved.getValue();
+				return studentManager.getCoursesClass(getContext(), schoolclass, p);
+			}
+		});
 	}
 
 	@Override
@@ -192,6 +211,8 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				DomHasRole hasRole = resolved.getValue().getActiveSchoolRoleAndClass().getHasRole();
 				context.setDomHasRole(hasRole);
 				scoManager = new SecuredUserScoContextManager();
+				courseManager = new SecuredUserCourseManager(context); // FIXME 
+				studentManager = new SecuredStudentCoursesOfSchoolClassManager();
 				return resolved;
 			}
 		});
@@ -201,6 +222,8 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	public void logout() {
 		context.setDomHasRole(null);
 		scoManager = new PublicScoContextManager();
+		courseManager = new PublicCourseManager();
+		studentManager = new PublicCoursesOfSchoolClassManager();
 		super.logout();
 	}
 
