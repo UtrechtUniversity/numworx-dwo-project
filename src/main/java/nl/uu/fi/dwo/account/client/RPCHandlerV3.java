@@ -10,14 +10,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerStudentCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
-import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
@@ -29,10 +28,13 @@ import fi.dwo.gwt.lib.rest.CallManagers.PublicCourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicCoursesOfSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicScoContextManager;
+import fi.dwo.gwt.lib.rest.CallManagers.PublicUserResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.ScoContextManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentCoursesOfSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserCourseManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserScoContextManager;
+import fi.dwo.gwt.lib.rest.CallManagers.UserResultsManager;
 
 public class RPCHandlerV3 extends RPCHandlerV2 {
 
@@ -41,6 +43,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	CourseManager courseManager;
 	PublicProfileManager profileManager;
 	CoursesOfSchoolClassManager studentManager;
+	UserResultsManager resultManager;
 	
 	protected Promise<DomDwoProfileFull> profile;
 	
@@ -52,6 +55,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		courseManager = new PublicCourseManager();
 		profileManager = new PublicProfileManager();
 		studentManager = new PublicCoursesOfSchoolClassManager();
+		resultManager = new PublicUserResultsManager();
 		
 		this.profile = getDwoProfile(profile);
 	}
@@ -76,10 +80,15 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	}
 
 	@Override
-	public void getUserResults(Object courseID, Object userID,
-			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback) {
-		// TODO Auto-generated method stub
+	public Promise<DomResultsPerStudentCourse> getUserResults(Object courseID, Object userID) {
+		final DomCourse course = toCourse(courseID);
+		return profile.then(new Success<DomDwoProfile, DomResultsPerStudentCourse>() {
 
+			@Override
+			public Promise<DomResultsPerStudentCourse> call(Promise<DomDwoProfile> resolved) throws Exception {
+				return resultManager.getCourseResults(getContext(), course, resolved.getValue());
+			}
+		});
 	}
 
 	@Override
@@ -213,6 +222,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				scoManager = new SecuredUserScoContextManager();
 				courseManager = new SecuredUserCourseManager(context); // FIXME 
 				studentManager = new SecuredStudentCoursesOfSchoolClassManager();
+				resultManager = new SecuredUserResultsManager();
 				return resolved;
 			}
 		});
@@ -224,7 +234,15 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		scoManager = new PublicScoContextManager();
 		courseManager = new PublicCourseManager();
 		studentManager = new PublicCoursesOfSchoolClassManager();
+		resultManager = new PublicUserResultsManager();
 		super.logout();
+	}
+
+	@Override
+	@Deprecated
+	public void getUserResults(Object courseID, Object userID,
+			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback) {
+		getUserResultsCallback.onFailure(new Error());
 	}
 
 
