@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.1.13</version>
+		<version>2.1.15</version>
 	</parent>
 	<artifactId>EBServer</artifactId>
 	<packaging>war</packaging>
@@ -297,7 +297,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.1.13</DWOplayerVersion>
+		<DWOplayerVersion>2.1.14</DWOplayerVersion>
 		<DWOmAccessVersion>0.0.9-SNAPSHOT</DWOmAccessVersion>
 		<jamonVersion>2.80</jamonVersion>
 		<RegisterVersion>2.1.13</RegisterVersion>
