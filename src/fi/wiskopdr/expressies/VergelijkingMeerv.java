@@ -2,13 +2,14 @@ package fi.wiskopdr.expressies;
 
 import java.util.Vector;
 
+import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.repr.AbstractConverter;
 import fi.wiskopdr.text.Text;
 
 public class VergelijkingMeerv
 {
 	Vergelijking[] vergelijkingen;
-
+	
 	//OngelijkheidObject[] ongelijkheidObjecten;
 
 	public VergelijkingMeerv(Vergelijking[] v)
@@ -189,7 +190,7 @@ public class VergelijkingMeerv
 		return isOplossing;
 	}
 
-	public boolean isOplossing(Expressie subst, String var)
+	public boolean isOplossing(Expressie subst, String var) throws RestartException
 	{
 		String[] varNamen = geefVarNamen();
 		boolean isOplossing = false;
@@ -201,7 +202,7 @@ public class VergelijkingMeerv
 		return isOplossing;
 	}
 
-	public boolean isOplossing(Expressie subst, String var, String vergTeken)
+	public boolean isOplossing(Expressie subst, String var, String vergTeken) throws RestartException
 	{
 		String[] varNamen = geefVarNamen();
 		boolean isOplossing = false;
@@ -213,7 +214,7 @@ public class VergelijkingMeerv
 		return isOplossing;
 	}
 
-	public boolean isEindOplossingExact(Expressie subst, String var, String vergTeken)
+	public boolean isEindOplossingExact(Expressie subst, String var, String vergTeken) throws RestartException
 	{
 		String[] varNamen = geefVarNamen();
 		boolean isOplossing = false;
@@ -233,7 +234,27 @@ public class VergelijkingMeerv
 		return isOplossing;
 	}
 
-	public boolean isEindOplossingExact(Expressie[] subst, String var, String vergTeken)
+	public boolean isEindOplossing(Expressie subst, String var, String vergTeken) throws RestartException
+	{
+		for(int j = 0; j < vergelijkingen.length; j++)
+		{
+			if(vergelijkingen[j].isOplossing(subst, var, vergTeken))
+			{	if(vergelijkingen[j].isEindOplossing(var))
+					return true;
+			}
+			
+		}
+		return false;
+	}
+	
+	public boolean bevatOplossing(Expressie[] subst, String var, String vergTekens) throws RestartException
+	{	for(int i=0 ; i<vergelijkingen.length ; i++)
+		{	if(vergelijkingen[i].bevatOplossingP(subst,var, vergTekens))return true;
+		}
+		return false;
+	}
+	
+	public boolean isEindOplossingExact(Expressie[] subst, String var, String vergTeken) throws RestartException
 	{
 		String[] varNamen = geefVarNamen();
 		boolean isOplossing = false;
@@ -253,7 +274,7 @@ public class VergelijkingMeerv
 		return isOplossing;
 	}
 	
-	public boolean isEindOplossingSignificant(Expressie[] subst, String var, String vergTeken)
+	public boolean isEindOplossingSignificant(Expressie[] subst, String var, String vergTeken) throws RestartException
 	{	String[] varNamen = geefVarNamen();
 		boolean isOplossing = false;
 		for(int j=0 ; j<vergelijkingen.length ; j++)
@@ -279,7 +300,7 @@ public class VergelijkingMeerv
 		return false;
 	}*/
 
-	public boolean bevatFouteOplossing(VergelijkingMeerv antw, String var)
+	public boolean bevatFouteOplossing(VergelijkingMeerv antw, String var) throws RestartException
 	{
 		for (int j = 0; j < vergelijkingen.length; j++)
 		{
@@ -291,11 +312,23 @@ public class VergelijkingMeerv
 		return false;
 	}
 
-	public boolean bevatFouteOplossing(VergelijkingMeerv antw, String var, String[] vergTekens)
+	public boolean bevatFouteOplossing(VergelijkingMeerv antw, String var, String[] vergTekens) throws RestartException
 	{
 		for (int j = 0; j < vergelijkingen.length; j++)
 		{
 			if (!vergelijkingen[j].bevatOplossing(antw.geefEindOplossingen(var), var, vergTekens))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean bevatFouteStelselOplossing(Expressie[][] oplossingen, String[] vars) throws RestartException
+	{
+		for(int j = 0; j < vergelijkingen.length; j++)
+		{
+			if(!vergelijkingen[j].bevatStelselOplossing(oplossingen, vars))
 			{
 				return true;
 			}
@@ -329,7 +362,7 @@ public class VergelijkingMeerv
 		return true;
 	}
 
-	public boolean isOplossing(Expressie[] subst, String var)
+	public boolean isOplossing(Expressie[] subst, String var) throws RestartException
 	{
 		for (int i = 0; i < subst.length; i++)
 		{
@@ -339,7 +372,7 @@ public class VergelijkingMeerv
 		return true;
 	}
 
-	public boolean isOplossing(Expressie[] subst, String var, String[] vergTekens)
+	public boolean isOplossing(Expressie[] subst, String var, String[] vergTekens) throws RestartException
 	{
 		for (int i = 0; i < subst.length; i++)
 		{
@@ -349,7 +382,7 @@ public class VergelijkingMeerv
 		return true;
 	}
 
-	public boolean isOplossing(Expressie[][] subst, String var, String[] vergTekens)
+	public boolean isOplossing(Expressie[][] subst, String var, String[] vergTekens) throws RestartException
 	{
 		for (int i = 0; i < subst.length; i++)
 		{
@@ -358,15 +391,24 @@ public class VergelijkingMeerv
 		}
 		return true;
 	}
-
-	public boolean bevatOplossing(Expressie[] subst, String var, String vergTekens)
+	
+	public boolean isStelselOplossing(Expressie[][] subst, String[] vars) throws RestartException
 	{
-		for (int i = 0; i < vergelijkingen.length; i++)
+		for(int i = 0; i < subst.length; i++)
 		{
-			if (vergelijkingen[i].bevatOplossingP(subst, var, vergTekens))
-				return true;
+			if(!isStelselOplossing(subst[i], vars))return false;
 		}
-		return false;
+		return true;
+	}
+	
+	public boolean isStelselOplossing(Expressie[] subst, String[] vars) throws RestartException
+	{
+		boolean isOplossing = false;
+		for(int j=0 ; j<vergelijkingen.length ; j++)
+		{	if(!isOplossing)
+			isOplossing = vergelijkingen[j].isOplossing(subst, vars);
+		}
+		return isOplossing;
 	}
 
 	public boolean isDeelOplossing(double[] subst)
@@ -382,7 +424,7 @@ public class VergelijkingMeerv
 		return false;
 	}
 
-	public boolean isDeelOplossing(Expressie[] subst, String var)
+	public boolean isDeelOplossing(Expressie[] subst, String var) throws RestartException
 	{
 		for (int i = 0; i < subst.length; i++)
 		{
@@ -392,7 +434,7 @@ public class VergelijkingMeerv
 		return false;
 	}
 
-	public boolean isDeelOplossing(Expressie[] subst, String var, String[] vergTekens)
+	public boolean isDeelOplossing(Expressie[] subst, String var, String[] vergTekens) throws RestartException
 	{
 		for (int i = 0; i < subst.length; i++)
 		{
@@ -402,7 +444,7 @@ public class VergelijkingMeerv
 		return false;
 	}
 
-	public boolean isDeelOplossing(Expressie[][] subst, String var, String[] vergTekens)
+	public boolean isDeelOplossing(Expressie[][] subst, String var, String[] vergTekens) throws RestartException
 	{
 		for (int i = 0; i < subst.length; i++)
 		{
@@ -415,7 +457,16 @@ public class VergelijkingMeerv
 		}
 		return false;
 	}
-
+	
+	public boolean isStelselDeelOplossing(Expressie[][] subst, String[] vars) throws RestartException
+	{
+		for(int i = 0; i < subst.length; i++)
+		{
+			if(isStelselOplossing(subst[i], vars))return true;
+		}
+		return false;
+	}
+	
 	public boolean checkDiscriminant(int discriminant, String varNaam)
 	{
 		for (int i = 0; i < vergelijkingen.length; i++)
@@ -502,7 +553,7 @@ public class VergelijkingMeerv
 		return true;
 	}
 
-	public boolean isEindOplossingExact(Expressie[][] subst, String var, String[] vergTekens)
+	public boolean isEindOplossingExact(Expressie[][] subst, String var, String[] vergTekens) throws RestartException
 	{
 		for (int i = 0; i < subst.length; i++)
 		{
@@ -512,13 +563,21 @@ public class VergelijkingMeerv
 		return true;
 	}
 	
-	public boolean isEindOplossingSignificant(Expressie[][] subst, String var,  String[] vergTekens)
+	public boolean isEindOplossingSignificant(Expressie[][] subst, String var,  String[] vergTekens) throws RestartException
 	{	for(int i=0 ; i<subst.length ; i++)
 		{	if(!isEindOplossingSignificant(subst[i],var, vergTekens[i]))return false;
 		}
 		return true;
 	}
 
+	public boolean isStelselEindOplossing(String var, String[] vars)
+	{
+		for(int i = 0; i < vergelijkingen.length; i++)
+		{
+			if(!vergelijkingen[i].isStelselEindOplossing(var, vars))return false;
+		}
+		return true;
+	}
 	/*
 	public double[] geefEindOplossing()
 	{	double[] oplossingen = new double[vergelijkingen.length];
@@ -584,6 +643,27 @@ public class VergelijkingMeerv
 		for(int i = 0; i < vergelijkingen.length; i++)
 		{
 			vergelijkingenNieuw[i] = vergelijkingen[i].substitueerEindOplossing(subst, var);
+		}
+		return new VergelijkingMeerv(vergelijkingenNieuw);
+	}
+	
+	public VergelijkingMeerv vervangDifferentialen(String diffVar)
+	{
+		Vergelijking[] vergelijkingenNieuw = new Vergelijking[vergelijkingen.length];
+		for(int i = 0; i < vergelijkingen.length; i++)
+		{
+			vergelijkingenNieuw[i] = vergelijkingen[i].vervangDifferentialen(diffVar);
+		}
+		return new VergelijkingMeerv(vergelijkingenNieuw);
+	}
+	
+	public VergelijkingMeerv vervangDiffs(Expressie[][] substs, String var)
+	{
+		Vergelijking[] vergelijkingenNieuw = new Vergelijking[vergelijkingen.length];
+		Expressie subst = substs[0][0];
+		for(int i = 0; i < vergelijkingen.length; i++)
+		{
+			vergelijkingenNieuw[i] = vergelijkingen[i].vervangDiffs(subst, var);
 		}
 		return new VergelijkingMeerv(vergelijkingenNieuw);
 	}

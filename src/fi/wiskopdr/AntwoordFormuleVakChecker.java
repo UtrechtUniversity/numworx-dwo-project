@@ -13,7 +13,7 @@ import com.google.gwt.user.client.Window;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
-
+//import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 //import fi.beans.ideas.IdeasIF;
 //import fi.beans.ideas.RuleIF;
 //import fi.beans.stringutils.StringUtils;
@@ -47,12 +47,17 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	private boolean fout;
 	private boolean stapOk;
 	
+	private int[][] possibleMisconceptions;
+	private int[][] measuredMisconceptions;
+		
 	private Expressie[] juisteAntwoorden;
 	private double[] absPrecisions;
 	private Expressie[] juisteVormen;
 	
 	private Expressie substitutie;
+	private Vergelijking[] antwoordSubstituties;
 	private Vergelijking[] gebruikersSubstituties;
+	private FunctieMVDefSet functieMVDefSet = new FunctieMVDefSet();
 	
 	//private TekstArea feedbackTekst;
     
@@ -60,7 +65,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
     
     private List<Map<String,Object>> answerModels;
     private String[] randomVarNamen = null;
-	private HashMap<String,Object> randomVarWaarden = null;
+	private HashMap<String, Number> randomVarWaarden = null;
 	
 	private String feedback;
 	private boolean exactP;
@@ -110,7 +115,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	private final static Logger logger = Logger.getLogger("AntwoordFormuleVakChecker");
     
 	
-	public AntwoordFormuleVakChecker(HashMap<String,Object> map, String[] randomVars, HashMap<String,Object> randomValues )
+	public AntwoordFormuleVakChecker(HashMap<String,Object> map, String[] randomVars, HashMap<String,Number> randomValues )
 	{	
 		randomVarNamen = randomVars;
 		randomVarWaarden = randomValues;
@@ -131,6 +136,8 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		double eqTestValueMin = 0;
 		double eqTestValueMax = 5;
 		int scoreMax = 0;
+		List<String> antwoordSubStrings = null;
+		List<String> antwoordFuncStrings = null;
 		boolean tips = false;
 		String strategieDomein = "";
 		boolean meerTips = false;
@@ -160,6 +167,11 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		if(tips){
 			if(afvCheckerModel.containsKey("ideasInstellingen")) ideasInstellingen = afvCheckerModel.getObjectMap("ideasInstellingen");
 	    }
+		if (afvCheckerModel.containsKey("antwoordSubStrings"))
+			antwoordSubStrings = afvCheckerModel.getStringList("antwoordSubStrings");
+		if (afvCheckerModel.containsKey("antwoordFuncStrings"))
+			antwoordFuncStrings = afvCheckerModel.getStringList("antwoordFuncStrings");
+		
 		
 		this.herleiding = herleiding;
 		this.soortHerleiding = soortHerleiding;
@@ -169,8 +181,48 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		this.puntenHerleiding = puntenHerleiding;
 		this.puntenSignificant = puntenSignificant;
 		this.puntenExact = puntenExact;
+	
+//		if(OpdrNav.misconceptions != null && OpdrNav.misconceptions.length>0)
+//	     {	 possibleMisconceptions = new int[OpdrNav.misconceptions.length][];
+//	     	 measuredMisconceptions = new int[OpdrNav.misconceptions.length][];
+//		     for(int i=0 ; i<OpdrNav.misconceptions.length ; i++)
+//		     {	 possibleMisconceptions[i] = new int[OpdrNav.misconceptions[i].length];
+//		     	 measuredMisconceptions[i] = new int[OpdrNav.misconceptions[i].length];
+//		    	 for(int j=0 ; j<OpdrNav.misconceptions[i].length ; j++)
+//			     {  possibleMisconceptions[i][j] = 0;
+//			     	measuredMisconceptions[i][j] = 0;
+//			     }
+//		     }
+//	     }
 		
-        try         
+		if (antwoordFuncStrings != null) {
+			
+			for (int i = 0; i < antwoordFuncStrings.size(); i++)
+			{
+				String[] functieDelen = antwoordFuncStrings.get(i).split("=");
+				if(functieDelen.length<2) break;
+				String functieExpressieString = "$f"+functieDelen[1];
+				String functieNaam = functieDelen[0].substring(2, functieDelen[0].indexOf('('));
+				String varString = functieDelen[0].substring(functieDelen[0].indexOf('(')+1, functieDelen[0].indexOf(')'));
+				String[] functieMVVariabelen = varString.split(",");
+				//String functieVariabele = functieDelen[0].substring(functieDelen[0].indexOf('(')+1, functieDelen[0].indexOf('(')+2);
+				//System.out.println("varString:"+varString);
+				//System.out.println("functieExpressieString:"+functieExpressieString);
+				//System.out.println("functieMVVariabelen:"+functieMVVariabelen[0]);
+				try
+				{
+					functieExpressieString = FormuleParser.randomizeString(functieExpressieString, randomVars, randomValues);
+					
+				} catch (Exception e) {
+					
+				}
+				Expressie functieExpressie = FormuleParser.geefExpressie(functieExpressieString);
+				//functieDefSet.addFunctieExpressie(functieNaam, functieVariabele, functieExpressie);
+				functieMVDefSet.addFunctieMVExpressie(functieNaam, functieMVVariabelen, functieExpressie);
+			}
+		}
+		FunctieMV.setFunctieMVDefSet(functieMVDefSet);
+	    try         
         {   antwoordString = FormuleParser.randomizeString(antwoordString,randomVars,randomValues);
         }
         catch(Exception e)
@@ -184,9 +236,26 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
         {   vormString = "$f???@";
             
         }
+        
         zetJuisteAntwoord(antwoordString);
         zetJuisteVorm(vormString);
-         
+        if (antwoordSubStrings != null) {
+			boolean subCorrect = true;
+			antwoordSubstituties = new Vergelijking[antwoordSubStrings.size()];
+			for (int i = 0; i < antwoordSubStrings.size(); i++) {
+				try {
+					String ass = FormuleParser.randomizeString(antwoordSubStrings.get(i), randomVars, randomValues);
+					antwoordSubstituties[i] = (FormuleParser.parseVergelijking(ass)).geefVergelijking(0);
+					if (!antwoordSubstituties[i].geefExpLinks().isVar())
+						subCorrect = false;
+				} catch (Exception e) {
+					subCorrect = false;
+				}
+			}
+			if (!subCorrect)
+				antwoordSubstituties = null;
+		}
+        FunctieMV.setFunctieMVDefSet(null);
         
         this.gekozenAntwoordString = antwoordString;
         this.answerModels = new ArrayList<Map<String, Object>> ();
@@ -194,7 +263,35 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		{	this.answerModels.add(answerModels.get(i));
 		}
 		initialiseerAnswerModels();
-        this.hasFeedback = hasFeedback;
+		
+		if (answerModels!=null)
+        {
+        	boolean[][] logMisconceptions = null;
+        	for (int i = 0; i < answerModels.size(); i++)
+        	{	
+        		if (answerModels.get(i) != null && answerModels.get(i).containsKey("logMisconceptions"))
+        		{	ObjectMap wrap = JSONUtilities.wrapMap(answerModels.get(i));
+        			ObjectList misconceptionsList = wrap.getObjectList("logMisconceptions");
+					logMisconceptions = new boolean[misconceptionsList.size()][];
+					for(int j = 0; j < logMisconceptions.length; j++)
+					{	try{
+						logMisconceptions[j] = misconceptionsList.getBooleanArray(j);
+						}
+						catch(Exception e)
+						{}
+					}
+        			for (int j = 0; j < logMisconceptions.length && j < possibleMisconceptions.length; j++)
+        			{	
+        				for (int k = 0; k < logMisconceptions[j].length && k < possibleMisconceptions[j].length; k++)
+            			{	
+        					if (logMisconceptions[j][k])
+        						possibleMisconceptions[j][k] = 1;
+            			}
+        			}
+        		}
+        	}
+        }
+		this.hasFeedback = hasFeedback;
         
         this.eqTestValueMin = eqTestValueMin;
         this.eqTestValueMax = eqTestValueMax;
@@ -398,7 +495,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 //        catch(Exception e)
 //        {   feedback = "$f???@";
 //        }
-        zetJuisteAntwoord(antwoordString, false);
+		zetJuisteAntwoord(antwoordString, false);
         zetJuisteVorm(vormString);
        
         this.gekozenAntwoordString = antwoordString;
@@ -467,28 +564,30 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		juisteAntwoorden = new Expressie[antwoordStrings.length];
 		absPrecisions = new double[antwoordStrings.length];
 		
-		FormuleParser p = new FormuleParser();
+		//FormuleParser p = new FormuleParser();
 		for(int i=0 ; i<antwoordStrings.length; i++) 
 		{	if(antwoordStrings[i]!=null)
 			{	String[] antwoordDelen = antwoordStrings[i].split("\u00b1");//"�");
 				if(antwoordDelen.length>1)
 				{
 					String antwoordStr = "$f" + antwoordDelen[0] + "@";
-					juisteAntwoorden[i] = p.parse(p.schoon(p.formuleString(antwoordStr)));
-					Expressie e = FormuleParser.geefExpressie("$f" + antwoordDelen[1] + "@");
+					
+					juisteAntwoorden[i] = FormuleParser.geefExpressie(antwoordStr, functieMVDefSet);
+					Expressie e = FormuleParser.geefExpressie("$f" + antwoordDelen[1] + "@", functieMVDefSet);	
+					
 					if (e !=null && !Double.isNaN(e.geefWaarde())) absPrecisions[i] = e.geefWaarde();
 					
 				}
 				else
 				{
 					String antwoordStr = "$f" + antwoordStrings[i] + "@";
-					juisteAntwoorden[i] = p.parse(p.schoon(p.formuleString(antwoordStr)));
+					juisteAntwoorden[i] = FormuleParser.geefExpressie(antwoordStr, functieMVDefSet);
 				}
 			}
 			else
 			{
 				String antwoordStr = "$f" + antwoordStrings[i] + "@";
-				juisteAntwoorden[i] = p.parse(p.schoon(p.formuleString(antwoordStr)));
+				juisteAntwoorden[i] = FormuleParser.geefExpressie(antwoordStr, functieMVDefSet);
 			}
 		}
 		
@@ -502,10 +601,9 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		
 		juisteVormen = new Expressie[antwoordStrings.length];
 		
-		FormuleParser p = new FormuleParser();
 		for(int i=0 ; i<antwoordStrings.length; i++) 
 		{	String antwoordStr = "$f" + antwoordStrings[i] + "@";
-			juisteVormen[i] = p.parse(p.schoon(p.formuleString(antwoordStr)));
+			juisteVormen[i] = FormuleParser.geefExpressie(antwoordStr, functieMVDefSet);
 		}
 		
 	}
@@ -788,8 +886,8 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			}
 		}
 	}
-	/*
-	public void checkCasStatement(String expAntwoordString)	
+	
+	public void checkCasStatement(String expAntwoordString) throws RestartException	
 	{
 		String checkString = casString;
 		for(int j=checkString.length()-1 ; j>-1; j--)
@@ -797,19 +895,17 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			{	int index1 = checkString.substring(0,j).lastIndexOf("{");
 				String parseString = checkString.substring(index1+1,j);
 				if(parseString.equals("ANS"))
-				{	parseString = (FormuleParser.geefExpressie(expAntwoordString)).toStringCAS();
+				{	parseString = (FormuleParser.geefExpressie(expAntwoordString)).toStringStrikt();
 				}
 				checkString = ""+checkString.substring(0,index1)+parseString+checkString.substring(j+1);
 				j=index1;
 			}	
 		}
-		Expressie e = Expressie.evalWithCAS(checkString);
-		String casResultString = "False";
-		if(e!=null) casResultString = e.toString();
-		casResult = "True".equals(casResultString);
-		
+		VergelijkingMeerv v = FormuleParser.parseVergelijking("$f" + checkString +"@");
+		Expressie e = Expressie.decideWithCas(v);
+		casResult = e != null && e.geefWaarde() == 1.0;
 	}
-	*/
+	
 	public String verwijderIsTeken(String inputStr){
 		if(inputStr.charAt(inputStr.length()-2)=='=' || inputStr.charAt(inputStr.length()-2)=='\u2248')
 		{	int isIndex = inputStr.length()-2;
@@ -823,7 +919,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		syntaxFout = false;
 		leeg = false;
 		
-		Expressie antwoord = FormuleParser.geefExpressie(expAntwoordString);
+		Expressie antwoord = FormuleParser.geefExpressie(expAntwoordString, functieMVDefSet);
 		//logger.fine("check antwoord  " + (antwoord == null) );
 		//if(antwoord != null) logger.fine(antwoord.getClass().toString());
 // XXX Vraag me niet waarom? Bug in String.charAt(int)
@@ -842,7 +938,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			if(antwoordString.charAt(antwoordString.length()-2)=='=' || antwoordString.charAt(antwoordString.length()-2)=='\u2248')
 			{	int isIndex = antwoordString.length()-2;
 				antwoordString = antwoordString.substring(0,isIndex)+"@";
-				antwoord = FormuleParser.geefExpressie(antwoordString);
+				antwoord = FormuleParser.geefExpressie(antwoordString, functieMVDefSet);
 			}
 		}
 		
@@ -859,7 +955,12 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		if(substitutie!=null && antwoord!=null) 
 		{	antwoord = antwoord.substitueer(substitutie,"u");
 		}
-		
+		if (antwoordSubstituties != null && antwoord != null) {
+			for (int i = 0; i < antwoordSubstituties.length; i++)
+			{
+				antwoord = antwoord.substitueer(antwoordSubstituties[i].geefExpRechts(), antwoordSubstituties[i].geefExpLinks().geefVarNaam());
+			}
+		}
 		
 		Expressie antwoordEvalCAS = null;
 		boolean casNodig = false;
@@ -883,12 +984,12 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 				boolean pastSignificant = false;
 				
 				if(casCheck)
-				{	/*checkCasStatement(expAntwoordString);	
+				{	checkCasStatement(expAntwoordString);	
 					if(casResult)
 					{	pastGelijkwaardig = true;
 						pastHerleid = true;
 						pastExact = true;
-					}*/
+					}
 				}
 				else
 				{	for(int i=0 ; i<juisteAntwoorden.length ; i++)
@@ -915,6 +1016,30 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 				//if(juisteAntwoorden[0].toString().equals("else"))answerModelFits = true;
 				if(answerModelFits) 
 				{	// feedback van dit tabblad wordt gebruikt
+					
+					if(answerModels!=null)
+			        {
+			        	boolean[][] logMisconceptions = null;
+			        	if(answerModels.get(h).containsKey("logMisconceptions"))
+			        	{	ObjectMap wrap = JSONUtilities.wrapMap(answerModels.get(h));
+	        				ObjectList misconceptionsList = wrap.getObjectList("logMisconceptions");
+	        				logMisconceptions = new boolean[misconceptionsList.size()][];
+	        				for(int j = 0; j < logMisconceptions.length; j++)
+	        				{	try{
+	        					logMisconceptions[j] = misconceptionsList.getBooleanArray(j);
+								}
+								catch(Exception e)
+								{}
+	        				}	        			
+			        		
+			        		for( int j=0 ; j<logMisconceptions.length && j<measuredMisconceptions.length ; j++)
+			        		{	for( int k=0 ; k<logMisconceptions[j].length && k<measuredMisconceptions[j].length; k++)
+			            		{	if(logMisconceptions[j][k])
+			        				measuredMisconceptions[j][k] = 1;
+			            		}
+			        		}
+			        	}
+			        }
 					break;
 				}
 			}
@@ -995,5 +1120,20 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		catch(MissingResourceException e) {
 		}
 		return s;
+	}
+
+	@Override
+	public FunctieMVDefSet getFunctieMVDefSet() {
+		return functieMVDefSet;
+	}
+	
+	public int[][] getPossibleMisconceptions()
+	{
+		return possibleMisconceptions;
+	}
+	
+	public int[][] getMeasuredMisconceptions()
+	{
+		return measuredMisconceptions;
 	}
 }

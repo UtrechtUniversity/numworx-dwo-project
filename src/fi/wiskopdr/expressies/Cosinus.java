@@ -54,6 +54,15 @@ public class Cosinus extends Expressie
 	{	return new Cosinus(kind1.substitueer(subst,var));
 	}
 	
+	public Expressie vervangDifferentialen(String var)
+	{	return new Cosinus(kind1.vervangDifferentialen(var));
+	}
+	
+	public Expressie vervangDiffs(Expressie subst, String var)
+	{
+		return new Cosinus(kind1.vervangDiffs(subst, var));
+	}
+	
 	public boolean isWaarde(double subst)
 	{	return kind1.isWaarde(subst);
 	}

@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.ideas.client.AbstractRule;
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.ideas.client.RuleCallback;
 import nl.uu.fi.dwo.ideas.client.RuleIF;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 
 import fi.wiskopdr.FormuleParser;
@@ -33,8 +33,10 @@ public class Expressie
 	//public static DecimalFormat df3;
 	//public static FontMetrics fm;
 
-	private static final HashMap casEvalStrings = new HashMap();
+	private static final HashMap<String,Expressie> casEvalStrings = new HashMap<String,Expressie>();
+	private static final HashMap<String, VergelijkingMeerv> casSolveStrings = new HashMap<String, VergelijkingMeerv>();
 	private static final Expressie FAILED = new Expressie();
+	private static final VergelijkingMeerv VGL_FAILED = new VergelijkingMeerv(null);
 
 	static boolean hoekGraden;
 
@@ -168,46 +170,174 @@ public class Expressie
 			*/
 		}
 	
-		private static class Restart implements RestartHandler, RuleCallback {
-
-			private String message;
-			private Runnable run;
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				Logger.getLogger("Expressie").log(Level.WARNING, message, caught);
-				casEvalStrings.put(message, FAILED);
-				run.run();
-			}
-
-			@Override
-			public void onSuccess(RuleIF result) {
-				Expressie expr;
-				if(!result.isException()) {
-					expr = FormuleParser.geefExpressie("$f" + result.getExpr() + "@");
-					Logger.getLogger("Expressie").info(message + ": " + expr);
-				} else
-				{   
-					expr = FAILED;
-					Logger.getLogger("Expressie").log(Level.WARNING, message + ": " + result.getExpr());
-				}
-				casEvalStrings.put(message, expr);
-				run.run();
-			}
-
-			@Override
-			public void restart(String message, Runnable run) {
-				this.run = run;
-				this.message = message;
-				WiskOpdr.ideas.interpret(message, this);
-			}
-
+		public static Expressie decideWithCas(VergelijkingMeerv e) throws RestartException
+		{
+			return decideWithIdeas(e.toStringStrikt());
 		}
+
+	/**
+	 * Class Restart.
+	 * 
+	 * @author borku102
+	 *
+	 */
+	private static class Restart implements RestartHandler, RuleCallback
+	{
+
+		private String message;
+		private Runnable run;
+		private String command;
+
+		Restart(String command)
+		{
+			this.command = command;
+		}
+
+		Restart()
+		{
+			this(IdeasIF.EVAL);
+		}
+
+		@Override
+		public void onFailure(Throwable caught)
+		{
+			Logger.getLogger("Expressie").log(Level.WARNING, message, caught);
+			casEvalStrings.put(message, FAILED);
+			run.run();
+		}
+
+		@Override
+		public void onSuccess(RuleIF result)
+		{
+			Expressie expr;
+			if (!result.isException())
+			{
+				expr = FormuleParser.geefExpressie("$f" + result.getExpr() + "@");
+				Logger.getLogger("Expressie").info(message + ": " + expr);
+			}
+			else
+			{
+				expr = FAILED;
+				Logger.getLogger("Expressie").log(Level.WARNING, message + ": " + result.getExpr());
+			}
+			casEvalStrings.put(message, expr);
+			run.run();
+		}
+
+		@Override
+		public void restart(String message, Runnable run)
+		{
+			this.run = run;
+			this.message = message;
+			WiskOpdr.ideas.interpret(command, message, this);
+		}
+
+	} // class Restart
+	
+	private static class Rule extends AbstractRule
+	{
+		private String expr;
+
+		/**
+		 * @param expr
+		 */
+		Rule(String expr)
+		{
+			super();
+			this.expr = expr;
+		}
+
+		@Override
+		public String getExpr()
+		{
+			return expr;
+		}
+
+	} // class Rule
+
+	/**
+	 * Class Restart.
+	 * 
+	 * @author borku102
+	 *
+	 */
+	private static class SolveRestart extends Restart
+	{
+		SolveRestart(String command)
+		{
+			super.command = command;
+		}
+
+		@Override
+		public void restart(String message, Runnable run)
+		{
+			super.run = run;
+			super.message = message;
+			
+			// split message in varNaam en Verg
+			String separator = "\u0000";
+			String varNaam = message.substring(0, message.indexOf(separator));
+			String verg = message.substring(message.indexOf(separator) + separator.length(), message.length());
+			
+			RuleIF[] args = new RuleIF[] { 
+				new Rule(verg), new Rule(varNaam)
+			};
+
+			WiskOpdr.ideas.interpret(super.command, args, this);
+		}
+
+		@Override
+		public void onFailure(Throwable caught)
+		{
+			Logger.getLogger("Vergelijking").log(Level.WARNING, super.message, caught);
+			casSolveStrings.put(super.message, VGL_FAILED);
+			super.run.run();
+		}
+
+		VergelijkingMeerv parseVergelijking(String expr)
+		{
+			String[] strings = expr.split("\u2228"); // logical 'or' sign (v)
+
+			Vergelijking[] v = new Vergelijking[strings.length];
+
+			for (int i = 0; i < v.length; i++)
+			{
+				expr = strings[i];
+				int index = expr.indexOf("=") + 1;
+				String var = index >= 2 ? expr.substring(0, index - 1) : "x"; // varNaam
+				expr = expr.substring(index);
+				Expressie ps = FormuleParser.geefExpressie("@f" + var.trim() + "@");
+				Expressie es = FormuleParser.geefExpressie("$f" + expr.trim() + "@");
+				v[i] = new Vergelijking(ps, es);
+			}
+
+			return new VergelijkingMeerv(v);
+		}
+		
+		@Override
+		public void onSuccess(RuleIF result)
+		{
+			VergelijkingMeerv expr;
+			if (!result.isException())
+			{
+				expr = parseVergelijking(result.getExpr());
+				Logger.getLogger("Vergelijking").info(super.message + ": " + expr);
+			}
+			else
+			{
+				expr = VGL_FAILED;
+				Logger.getLogger("Expressie").log(Level.WARNING, super.message + ": " + result.getExpr());
+			}
+			casSolveStrings.put(super.message, expr);
+			super.run.run();
+		}
+		
+	} // class SolveRestart
 
 		private static Logger logger = Logger.getLogger("Expressie");
 		private static Expressie evalWithIdeas(String evalCommand) throws RestartException
 		{
-			Expressie expr = (Expressie) casEvalStrings.get(evalCommand);
+			Expressie expr = casEvalStrings.get(evalCommand);
 			if (expr == FAILED)
 				return null;
 			if (expr != null)
@@ -218,6 +348,17 @@ public class Expressie
 			throw new RestartException(evalCommand, new Restart());		
 		}
 
+		private static Expressie decideWithIdeas(String decideCommand) throws RestartException
+		{
+			Expressie expr = casEvalStrings.get(decideCommand);
+			if (expr == FAILED) 
+				return null;
+			if (expr != null)
+				return expr;
+			logger.fine("throw restart " + decideCommand);
+			throw new RestartException(decideCommand, new Restart(IdeasIF.DECIDE));		
+		}
+		
 		/**
 		 * Bereken de (double) waarde van een Expressie via een CAS.
 		 * 
@@ -303,67 +444,45 @@ public class Expressie
 			return e;
 		}
 	*/
-	/*
-	public static VergelijkingMeerv solveWithCAS(String evalCommand, String arg)
+
+	public static VergelijkingMeerv solveWithCas(VergelijkingMeerv e, String varNaam) throws RestartException
 	{
-		VergelijkingMeerv v = null;
-		String s = "";
-
-		if (casEvalStrings.containsKey(evalCommand))
-			s = (String) casEvalStrings.get(evalCommand);
-		else
-		{
-			System.out.println(evalCommand);
-
-			try
-			{
-				System.out.println(s);
-				s = WiskOpdr.phrasebook.eval("InputForm[" + arg + "/." + "Solve[" + evalCommand + "," + arg + "]" + "]");
-				System.out.println(s);
-			}
-			catch (Exception ex)
-			{
-				ex.printStackTrace();
-			}
-			//casEvalStrings.put(evalCommand, s);
-		}
-
-		String[] oplossingen = s.substring(1, s.length() - 2).split(",");
-		//StringUtils.split(s.substring(1,s.length()-2), ",");
-
-		for (int i = 0; i < oplossingen.length; i++)
-		{
-			s = oplossingen[i];
-			s = s.replace('[', '(');
-			s = s.replace(']', ')');
-			s = s.replace("Pi", "\u03C0");
-			s = s.replace("E", "e");
-			s = s.replace("I", "i");
-			s = s.replace("Log", "ln");
-			s = s.replace("Sin", "sin");
-			s = s.replace("Cos", "cos");
-			s = s.replace("Tan", "tan");
-			s = s.replace("Arc", "arc");
-			s = s.replace("Sqrt", "sqrt");
-			oplossingen[i] = s;
-			//System.out.println(oplossingen[i]);
-		}
-		Expressie[] es = new Expressie[oplossingen.length];
-
-		Vergelijking[] vs = new Vergelijking[oplossingen.length];
-		for (int i = 0; i < es.length; i++)
-		{
-			es[i] = FormuleParser.parse(FormuleParser.schoon(FormuleParser.formuleString("$f" + oplossingen[i].trim() + "@")));
-			//System.out.println(oplossingen[i]);
-			//System.out.println(es[i].toString());
-			vs[i] = new Vergelijking(new BasisExpressie(arg), es[i]);
-		}
-		v = new VergelijkingMeerv(vs);
-		return v;
+		return solveWithIdeas(e.toStringStrikt(), varNaam);
 	}
-	*/
+
+	/**
+	 * 
+	 * @param expr vergelijking.toStringStrikt()
+	 * @param varNaam bijv. "x"
+	 * @return
+	 */
+	public static VergelijkingMeerv solveWithIdeas(String verg, String varNaam) throws RestartException
+	{
+		// construeer het solveCommand
+		String solveCommand = varNaam + "\u0000" + verg;
+		
+		VergelijkingMeerv vgl = casSolveStrings.get(solveCommand); // geen expressie, maar vergelijkingMeerv...
+		
+		if (vgl == VGL_FAILED) 
+			return null;
+		if (vgl != null)
+			return vgl;
+		
+		logger.fine("throw restart " + solveCommand);
+		
+		throw new RestartException(solveCommand, new SolveRestart(IdeasIF.SOLVE));		
+	}
 
 	public Object visit(AbstractConverter converter) {
 		return converter.expressie(this);
+	}
+	
+	public Expressie vervangDifferentialen(String diffVar) {
+		
+		return null;
+	}
+	
+	public Expressie vervangDiffs(Expressie subst, String var) {
+		return null;
 	}
 }

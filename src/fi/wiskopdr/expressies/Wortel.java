@@ -65,6 +65,15 @@ public class Wortel extends Expressie
 	{	return new Wortel(kind1.substitueer(subst,var));
 	}
 	
+	public Expressie vervangDifferentialen(String var)
+	{	return new Wortel(kind1.vervangDifferentialen(var));
+	}
+	
+	public Expressie vervangDiffs(Expressie subst, String var)
+	{
+		return new Wortel(kind1.vervangDiffs(subst, var));
+	}
+	
 	public boolean isWaarde(double subst)
 	{	return kind1.isWaarde(subst) && kind1.geefWaarde(subst)>=0;
 	}

@@ -54,6 +54,15 @@ public class Limiet extends Expressie
 		//return Expressie.evalWithCAS(this.toStringCAS());
 	}
 
+	public Expressie vervangDifferentialen(String var)
+	{	return new Limiet(kind1.vervangDifferentialen(var), kind2, kind3.vervangDifferentialen(var), kind4);
+	}
+	
+	public Expressie vervangDiffs(Expressie subst, String var)
+	{
+		return new Limiet(kind1.vervangDiffs(subst, var), kind2, kind3.vervangDiffs(subst, var), kind4);
+	}
+	
 	public boolean isWaarde(double subst)
 	{
 		return kind1.isWaarde(subst);

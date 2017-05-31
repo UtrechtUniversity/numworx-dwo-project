@@ -39,6 +39,16 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String onderdeelLabel();
 	@DefaultStringValue("Score:")
 	String scoreLabel();
+	@DefaultStringValue("Deelscores")
+	String objectivesKnopLabel();
+	@DefaultStringValue("Analyse")
+	String viewMisconceptionsKnopLabel();
+	@DefaultStringValue("Categorie")
+	String categorieLabel();
+	@DefaultStringValue("Score")
+	String scoreKopLabel();
+
+
 	
 	@DefaultStringValue("Deze stap bevat correcte en niet correcte onderdelen. Verwijder of vervang de delen die niet correct zijn.")
 	String feedbackTekst01();
@@ -74,9 +84,37 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String feedbackTekst19();
 	@DefaultStringValue("Oplossing is goed, significantie klopt maar heeft nog niet in de juiste vorm.")
 	String feedbackTekst20();
+	@DefaultStringValue("Je hebt alle oplossingen gevonden, vul ze onderaan in.")
+	String feedbackTekst21a();
+	@DefaultStringValue("Je hebt alle oplossingen gevonden.")
+	String feedbackTekst21b();
+	@DefaultStringValue("Je hebt de oplossingen in deze tak gevonden, ga verder met een andere tak.")
+	String feedbackTekst22();
 	
 	
-
+	
+	//pijlvak
+	@DefaultStringValue("  haakjes") 
+	String haakjesLabel0();
+	@DefaultStringValue("    weg") 
+	String haakjesLabel1();
+	@DefaultStringValue("   herleid") 
+	String herleidLabel0();
+	@DefaultStringValue("") 
+	String herleidLabel1();
+	@DefaultStringValue("  ontbind") 
+	String ontbindLabel0();
+	@DefaultStringValue("  splits") 
+	String splitsLabel0();
+	@DefaultStringValue("  wortels") 
+	String wortelLabel0();
+	@DefaultStringValue("  gelijkwaardig") 
+	String gelijkwaardigLabel0();
+	@DefaultStringValue("    met:") 
+	String gelijkwaardigLabel1();
+	@DefaultStringValue("Substitueer:") 
+	String subLabel();
+	
 	@DefaultStringValue("geen oplossingen") // vergelijking.java
 	String geenOplossingen();
 	@DefaultStringValue("alles is een oplossing") // vergelijking.java
@@ -111,5 +149,15 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	
 	@DefaultStringValue("Uitvoeren")
 	String executeLabel();
+	
+	@DefaultStringValue("sub")
+	String sub();
+	
+	@DefaultStringValue("Oplossingen")
+	String oplossingenLabel();
+	
+
+	
+	
 // enzovoort
 }

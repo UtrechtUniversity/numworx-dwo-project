@@ -4,6 +4,8 @@ import java.util.Vector;
 
 import com.google.gwt.i18n.client.NumberFormat;
 
+import fi.wiskopdr.RestartException;
+
 public class Algebra
 {
 	private static double tryValuesStart = 0;
@@ -2298,21 +2300,30 @@ public class Algebra
 			if (isGelijkDouble(e.kind2.geefWaarde(), 1))
 				return e.kind1;
 		}
-		//TODO:ungecommend door Danny ivm CAS
-		/*
-		else if (e instanceof Diff)
-		{
-			return Expressie.evalWithCAS(e);
-		}
-		else if (e instanceof DiffPartial)
-		{
-			return Expressie.evalWithCAS(e);
-		}
-		else if (e instanceof Sigma)
-		{
-			return Expressie.evalWithCAS(e);
-		}
-		*/
+		else if(e instanceof Diff)
+		{	Expressie diff = ((Diff) e).evalDiff();
+			if(diff!=null)return herleidMild(diff,breukenGemengd);
+				try {
+					return Expressie.evalWithCAS(e);
+				} catch (RestartException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		}	
+		else if(e instanceof DiffPartial)
+			try {
+				return Expressie.evalWithCAS(e);
+			} catch (RestartException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		else if(e instanceof Sigma)
+			try {
+				return Expressie.evalWithCAS(e);
+			} catch (RestartException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		else if (e instanceof BasisExpressie && e.geefWaarde() < 0)
 		{
 			return new Aftrekking(new BasisExpressie(0), new BasisExpressie(-e.geefWaarde()));
@@ -3585,6 +3596,7 @@ public class Algebra
 			return eval(new BasisExpressie(e.geefWaarde()));
 		if (e instanceof Max)
 			return eval(new BasisExpressie(e.geefWaarde()));
+		if(e instanceof Abs)return eval(new BasisExpressie(e.geefWaarde()));
 		if (e instanceof BasisExpressie && !Double.isNaN(e.geefWaarde()))
 		{
 			if (Math.rint(e.geefWaarde()) - e.geefWaarde() != 0)
@@ -3951,6 +3963,20 @@ public class Algebra
 			}
 			else
 				return new BasisExpressie(exp.geefWaarde());
+		}
+		if(exp instanceof Min)
+		{
+			if(exp.kind1.geefWaarde()<=exp.kind2.geefWaarde())
+				exp = exp.kind1;
+			else if(exp.kind2.geefWaarde()<exp.kind1.geefWaarde())
+				exp = exp.kind2;
+		}
+		if(exp instanceof Max)
+		{
+			if(exp.kind1.geefWaarde()>=exp.kind2.geefWaarde())
+				exp = exp.kind1;
+			else if(exp.kind2.geefWaarde()>exp.kind1.geefWaarde())
+				exp = exp.kind2;
 		}
 
 		PointLong p = eval(exp);

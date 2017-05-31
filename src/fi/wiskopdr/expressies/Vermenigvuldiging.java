@@ -67,6 +67,15 @@ public class Vermenigvuldiging extends Expressie
 	{
 		return new Vermenigvuldiging(kind1.substitueer(subst, var), kind2.substitueer(subst, var));
 	}
+	
+	public Expressie vervangDifferentialen(String var)
+	{	return new Vermenigvuldiging(kind1.vervangDifferentialen(var), kind2.vervangDifferentialen(var));
+	}
+	
+	public Expressie vervangDiffs(Expressie subst, String var)
+	{
+		return new Vermenigvuldiging(kind1.vervangDiffs(subst, var), kind2.vervangDiffs(subst, var));
+	}
 
 	public boolean isWaarde(double subst)
 	{

@@ -10,6 +10,6 @@ public class WiskOpdr {
 	private WiskOpdr() {
 	}
 
-	public static IdeasIF ideas = GWT.create(IdeasIF.class);
+	public static IdeasIF ideas = GWT.create(FailingIdeas.class);
 	
 }
