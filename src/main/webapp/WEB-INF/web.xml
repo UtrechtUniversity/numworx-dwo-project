@@ -218,6 +218,22 @@
     <servlet>
     	<servlet-name>IdeasServlet</servlet-name>
     	<servlet-class>fi.servlet.ideas.IdeasServlet</servlet-class>
+      <init-param>
+         <param-name>ideascgi</param-name>
+         <param-value>http://ideas.cs.uu.nl/cgi-bin/ideas.cgi</param-value>
+      </init-param>
+      <init-param>
+         <param-name>mixedfraction</param-name>
+         <param-value>true</param-value>
+      </init-param>
+      <init-param>
+         <param-name>direct</param-name>
+         <param-value>true</param-value>
+      </init-param>
+      <init-param>
+         <param-name>phrasebook</param-name>
+         <param-value>mpreduce</param-value>
+      </init-param>
     </servlet>    
 	<servlet>
 		<servlet-name>MathShell</servlet-name>
@@ -236,6 +252,10 @@
 		</init-param>
 		<init-param>
 			<param-name>cas.default</param-name>
+			<param-value>mpreduce</param-value>
+		</init-param>
+		<init-param>
+			<param-name>phrasebook</param-name>
 			<param-value>mpreduce</param-value>
 		</init-param>
 	</servlet>
