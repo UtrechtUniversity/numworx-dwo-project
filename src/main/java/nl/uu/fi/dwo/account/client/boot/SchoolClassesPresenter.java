@@ -14,9 +14,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
  *
  * @author Gert van der Plas
  */
-public class SwitchSchoolPresenter {
+public class SchoolClassesPresenter {
 
-    private static final Logger LOG = Logger.getLogger(SwitchSchoolPresenter.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolClassesPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private int selectedIndex = 0;
@@ -38,7 +38,7 @@ public class SwitchSchoolPresenter {
         void updateView(int height, int width, String[][] data);
     }
 
-    SwitchSchoolPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    SchoolClassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
     }

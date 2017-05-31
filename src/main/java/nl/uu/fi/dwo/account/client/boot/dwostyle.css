@@ -111,7 +111,7 @@
     padding-left: 0px;
     padding-right: 0px;
     padding-bottom: 0px;
-    background-color: #deeefe;
+    background-color: #f4f7f9;
     margin-left: 5px;
     margin-right: 5px;
     margin-top : 5px;
@@ -297,7 +297,7 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
 }
 
 
-.flexTableHeader {
+.flexTableHeader{
     background-color: #aaaaaa;
     align-content: left;
     padding: 2px; 
@@ -305,7 +305,7 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
 }
 
 .flexTableCell {
-    background-color: #aaaaaa;
+    background-color: #eeeeee;
     align-content: left;
     padding: 2px; 
     overflow: auto;
@@ -328,7 +328,7 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     background-color: #dedede;
 }
 
-.flexTableSelectedBackground{
+.flexTableSelectedBackground tr{
     background-color: royalblue !important;
 }
 

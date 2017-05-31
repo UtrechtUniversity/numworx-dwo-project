@@ -64,14 +64,14 @@ class BootPanelController {
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
                         viewFactory.getMainView().showMenuButton();
                         viewFactory.getMainView().showPostLoginWidgets();
-                        presenterFactory.getResultsPresenter().init();
+//                        presenterFactory.getResultsPresenter().init();
                         break;
                     case SUCCESS:
                         LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
                         viewFactory.getMainView().showMenuButton();
                         viewFactory.getMainView().showPostLoginWidgets();
-                        presenterFactory.getSwitchSchoolPresenter().init();
+//                        presenterFactory.getSwitchSchoolPresenter().init();
                         break;
                     case LOGOUT:
                         LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");

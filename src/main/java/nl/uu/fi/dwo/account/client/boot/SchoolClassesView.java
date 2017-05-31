@@ -19,11 +19,11 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-public class SwitchSchoolView extends Composite implements ClickHandler, SwitchSchoolPresenter.Display {
+public class SchoolClassesView extends Composite implements ClickHandler, SwitchSchoolPresenter.Display {
 
-    private static final Logger LOG = Logger.getLogger(SwitchSchoolView.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolClassesView.class.getName());
 
-    interface MyUiBinder extends UiBinder<Widget, SwitchSchoolView> {
+    interface MyUiBinder extends UiBinder<Widget, SchoolClassesView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
@@ -44,7 +44,7 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
         String[][] data; //height, width
     }
 
-    public SwitchSchoolView(SwitchSchoolPresenter sp) {
+    public SchoolClassesView(SwitchSchoolPresenter sp) {
         switchSchoolPresenter = sp;
         switchSchoolPresenter.setView(this);
         initWidget(uiBinder.createAndBindUi(this));

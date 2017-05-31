@@ -26,7 +26,7 @@ public class ResultsPresenter {
 
     private static final Logger LOG = Logger.getLogger(ResultsPresenter.class.getName());
 
-    private ResultsPresenter.Display view;
+    private Display view;
     private ResultsService resultService = new ResultsService();
     //model
     private DomResultTree rTree;
@@ -86,7 +86,7 @@ public class ResultsPresenter {
         });
     }
     
-    public void setDisplay(Display aView){
+    public void setView(Display aView){
         view = aView;
     }
 

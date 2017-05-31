@@ -56,7 +56,7 @@ public class ResultsView extends Composite implements ResultsPresenter.Display{
 
     public ResultsView(ResultsPresenter rp) {
         resultsPresenter = rp;
-        rp.setDisplay(this);
+        rp.setView(this);
         LOG.log(Level.INFO, "Grid size:" + resultTable.getRowCount() + "x.");
         resultTable.setWidget(0, 0, new Label("class\\course"));
         resultTable.getCellFormatter().addStyleName(0, 0, "flexTableHeader");
@@ -129,7 +129,7 @@ public class ResultsView extends Composite implements ResultsPresenter.Display{
                     int col = resultTable.getCellForEvent(event).getCellIndex();
                     int row = resultTable.getCellForEvent(event).getRowIndex();
                     LOG.log(Level.INFO, "Clicked on datafield (row,col) =  (" + row + "," + col + ").");
-                    resultsPresenter.selectRowAndCol(row, col);
+                    resultsPresenter.selectRowAndCol(row, col); 
                     resultsPresenter.plotResultsEvent();
                 }
             }
