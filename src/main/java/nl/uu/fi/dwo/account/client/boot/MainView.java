@@ -21,7 +21,7 @@ import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.account.client.boot.Results.ResultsView;
+import nl.uu.fi.dwo.account.client.boot.Results.ResultsPresenter;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
@@ -72,11 +72,13 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @UiField
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
-    LoginView loginView;
+    LoginPresenter.Display loginView;
     @UiField(provided = true)
-    ResultsView resultsView;
+    ResultsPresenter.Display resultsView;
     @UiField(provided = true)
-    SwitchSchoolView switchSchoolView;
+    SwitchSchoolPresenter.Display switchSchoolView;
+    @UiField(provided = true)
+    ScoResultsPresenter.Display scoResultsView;
 
     @UiField(provided = true)
     Label switchRoleLabel = new MenuLabel();
@@ -94,11 +96,13 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         mainPresenter.setDisplay(this);
     }
 
+    @Override
     public void init(ViewFactory clientFactory) {
         this.clientFactory = clientFactory;
         loginView = clientFactory.getLoginView();
         resultsView = clientFactory.getResultsView();
         switchSchoolView = clientFactory.getSwitchSchoolView();
+        scoResultsView = clientFactory.getScoResultsView();
         initWidget(uiBinder.createAndBindUi(this));
         int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(loginIndex);
@@ -187,13 +191,13 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void showSwitchSchoolView() {
-        int loginIndex = mainDeckPanel.getWidgetIndex(switchSchoolView);
+        int loginIndex = mainDeckPanel.getWidgetIndex(switchSchoolView.asWidget());
         mainDeckPanel.showWidget(loginIndex);
     }
 
     @Override
     public void showResultsView() {
-        int loginIndex = mainDeckPanel.getWidgetIndex(resultsView);
+        int loginIndex = mainDeckPanel.getWidgetIndex(resultsView.asWidget());
         mainDeckPanel.showWidget(loginIndex);
     }
 
@@ -302,21 +306,21 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     /**
      * @return the loginView
      */
-    public LoginView getLoginView() {
+    public LoginPresenter.Display getLoginView() {
         return loginView;
     }
 
     /**
      * @return the resultsView
      */
-    public ResultsView getResultsView() {
+    public ResultsPresenter.Display getResultsView() {
         return resultsView;
     }
 
     /**
      * @return the switchSchoolView
      */
-    public SwitchSchoolView getSwitchSchoolView() {
+    public SwitchSchoolPresenter.Display getSwitchSchoolView() {
         return switchSchoolView;
     }
 

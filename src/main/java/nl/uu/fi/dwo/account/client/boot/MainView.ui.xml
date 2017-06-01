@@ -31,6 +31,7 @@
                     <g:Widget ui:field="loginView" />
                     <g:Widget ui:field="switchSchoolView" />
                     <g:Widget ui:field="resultsView" />
+                    <g:Widget ui:field="scoResultsView" />
                     <!--</g:FlowPanel>-->
                 </g:DeckPanel>
                 <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView" >

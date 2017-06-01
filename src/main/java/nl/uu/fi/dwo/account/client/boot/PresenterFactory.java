@@ -14,6 +14,7 @@ public interface PresenterFactory {
     public EventBus getEventBus();
     public MainPresenter getMainPresenter();
     public LoginPresenter getLoginPresenter();
-    public ResultsPresenter getResultsPresenter();
     public SwitchSchoolPresenter getSwitchSchoolPresenter();    
+    public ResultsPresenter getResultsPresenter();
+    public ScoResultsPresenter getScoResultsPresenter();
 }

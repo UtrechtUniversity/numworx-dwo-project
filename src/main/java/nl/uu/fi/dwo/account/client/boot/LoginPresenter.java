@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,17 +17,15 @@ public class LoginPresenter {
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
 
-    public interface Display {
+    public interface Display extends IsWidget{
 
         Widget asWidget();
 
-        LoginView getViewInstance();
-
         void clear();
 
-        public void setUser();
+        public void setUsername(String username);
 
-        public void setPassword();
+        public void setPassword(String password);
     }
 
     public LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-public class LoginView extends Composite implements ClickHandler {
+public class LoginView extends Composite implements ClickHandler, LoginPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(LoginView.class.getName());
 
@@ -77,4 +77,18 @@ public class LoginView extends Composite implements ClickHandler {
         //reset user interface?
     }
 
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setUsername(String username) {
+        this.usernameText.setText(username);
+    }
+
+    @Override
+    public void setPassword(String password) {
+        passwordTextBox.setText(password);
+    }    
 }

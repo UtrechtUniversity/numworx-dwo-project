@@ -105,9 +105,9 @@ class BootPanelController {
             }
         });        
 
-        MainView mainView = viewFactory.getMainView();
+        MainPresenter.Display mainView = viewFactory.getMainView();
         mainView.init(viewFactory);
-        this.rootPanel.add(mainView);
+        this.rootPanel.add(mainView.asWidget());
         LOG.log(Level.INFO, "Intiated Main view.");
         MainPresenter mainPresenter = presenterFactory.getMainPresenter();
         LOG.log(Level.INFO, "Intiating Main presenter. Showing login screen.");

@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -9,9 +8,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -19,7 +16,7 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-public class ScoResultsView extends Composite implements ClickHandler, SwitchSchoolPresenter.Display {
+public class ScoResultsView extends Composite implements ClickHandler, ScoResultsPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(ScoResultsView.class.getName());
 
@@ -27,15 +24,12 @@ public class ScoResultsView extends Composite implements ClickHandler, SwitchSch
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    private SwitchSchoolPresenter switchSchoolPresenter;
+    private ScoResultsPresenter scoResultsPresenter;
 
     @UiField
     FlexTable flexTable;
     @UiField
-    Button cancelBtn;
-    @UiField
-    Button switchBtn;
-    int schoolIndex = 1;
+    Button backBtn;
 
     public class ResultData {
 
@@ -44,23 +38,22 @@ public class ScoResultsView extends Composite implements ClickHandler, SwitchSch
         String[][] data; //height, width
     }
 
-    public ScoResultsView(SwitchSchoolPresenter sp) {
-        switchSchoolPresenter = sp;
-        switchSchoolPresenter.setView(this);
+    public ScoResultsView(ScoResultsPresenter sp) {
+        scoResultsPresenter = sp;
+        scoResultsPresenter.setView(this);
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
-        switchBtn.addClickHandler(this);
+        backBtn.addClickHandler(this);
     }
 
     @Override
     public void init() {
-        //create table
-        String nulLabel = "School";
-        HTML l = new HTML("<div style=\"text-align: left; background-color: #555555; padding: 2px; overflow auto;\">" + nulLabel + "</div>");
-
-        flexTable.setWidget(0, 0, l);
-        cancelBtn.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-        switchBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+//        //create table
+//        String nulLabel = "Result";
+//        HTML l = new HTML("<div style=\"text-align: left; background-color: #555555; padding: 2px; overflow auto;\">" + nulLabel + "</div>");
+//
+//        flexTable.setWidget(0, 0, l);
+//        backBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
 
     @Override
@@ -69,71 +62,71 @@ public class ScoResultsView extends Composite implements ClickHandler, SwitchSch
     }
 
     public void onClick(ClickEvent event) {
-        //            switchSchoolPresenter.selectRow(schoolIndex);
+        //            scoResultsPresenter.selectRow(schoolIndex);
 
-        if (event.getSource() == switchBtn) {
-            switchSchoolPresenter.switchSchool();
+        if (event.getSource() == backBtn) {
+            scoResultsPresenter.goBackToResults();
         }
     }
 
     public void updateView(int height, int width, String[][] data) {
-        flexTable.removeAllRows();
-        int i = height;
-        int j = width;
-        // column labels
-        HTML html;
-//= new HTML(data[0][0]);
-//        html.setStyleName("flexTableHeader");
-//        flexTable.setWidget(0, 0, html);
-//
-        for (i = 0; i < width; i++) {
-            html = new HTML("<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">"+data[0][i]+"<div>");
-            flexTable.setWidget(0, i, html);
-        }
- //       flexTable.getRowFormatter().getElement(0).setClassName("flexTableHeader");         
-//
-//        // row labels
-//        for (i = 0; i < height; i++) {
-//            html = new HTML(data[i][0]);
-//            html.setStyleName("flexTableHeader");
-//            flexTable.setWidget(i, 0, html);
+//        flexTable.removeAllRows();
+//        int i = height;
+//        int j = width;
+//        // column labels
+//        HTML html;
+////= new HTML(data[0][0]);
+////        html.setStyleName("flexTableHeader");
+////        flexTable.setWidget(0, 0, html);
+////
+//        for (i = 0; i < width; i++) {
+//            html = new HTML("<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">"+data[0][i]+"<div>");
+//            flexTable.setWidget(0, i, html);
 //        }
-
-        for (j = 0; j < width; j++) {
-            for (i = 1; i < height; i++) {
-                html = new HTML(data[i][j]);
-//                html.setStyleName("flexTableCell");
-                flexTable.setWidget(i, j, html);
-            }
-        }
-
-        flexTable.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (flexTable.getCellForEvent(event) != null) {
-                    int curSchoolIndex = schoolIndex;
-                    schoolIndex = flexTable.getCellForEvent(event).getRowIndex() - 1;
-                    switchSchoolPresenter.selectRow(schoolIndex);
-                    if ((schoolIndex + 1) % 2 == 0) {
-                        flexTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableOddRow");
-                    } else {
-                        flexTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
-                    }
-                    flexTable.getRowFormatter().getElement(schoolIndex + 1).setClassName("flexTableSelectedBackground");
-                    if (curSchoolIndex != schoolIndex) {
-                        flexTable.getRowFormatter().getElement(curSchoolIndex + 1).removeClassName("flexTableSelectedBackground");
-                        if ((schoolIndex + 1) % 2 == 0) {
-                            flexTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableOddRow");
-                        } else {
-                            flexTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
-                        }
-                    }
-                    LOG.log(Level.INFO, "Clicked school with index" + schoolIndex);
-                }
-            }
-        });
-
-        flexTable.setVisible(true);
+// //       flexTable.getRowFormatter().getElement(0).setClassName("flexTableHeader");         
+////
+////        // row labels
+////        for (i = 0; i < height; i++) {
+////            html = new HTML(data[i][0]);
+////            html.setStyleName("flexTableHeader");
+////            flexTable.setWidget(i, 0, html);
+////        }
+//
+//        for (j = 0; j < width; j++) {
+//            for (i = 1; i < height; i++) {
+//                html = new HTML(data[i][j]);
+////                html.setStyleName("flexTableCell");
+//                flexTable.setWidget(i, j, html);
+//            }
+//        }
+//
+//        flexTable.addClickHandler(new ClickHandler() {
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                if (flexTable.getCellForEvent(event) != null) {
+//                    int curSchoolIndex = schoolIndex;
+//                    schoolIndex = flexTable.getCellForEvent(event).getRowIndex() - 1;
+//                    scoResultsPresenter.selectRow(schoolIndex);
+//                    if ((schoolIndex + 1) % 2 == 0) {
+//                        flexTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableOddRow");
+//                    } else {
+//                        flexTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
+//                    }
+//                    flexTable.getRowFormatter().getElement(schoolIndex + 1).setClassName("flexTableSelectedBackground");
+//                    if (curSchoolIndex != schoolIndex) {
+//                        flexTable.getRowFormatter().getElement(curSchoolIndex + 1).removeClassName("flexTableSelectedBackground");
+//                        if ((schoolIndex + 1) % 2 == 0) {
+//                            flexTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableOddRow");
+//                        } else {
+//                            flexTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
+//                        }
+//                    }
+//                    LOG.log(Level.INFO, "Clicked school with index" + schoolIndex);
+//                }
+//            }
+//        });
+//
+//        flexTable.setVisible(true);
     }
 
 }

@@ -18,9 +18,10 @@ public class MainPresenter implements SwitchViewEventHandler {
     private EventBus eventBus;
 
     public interface Display {
-        Widget asWidget();
-        MainView getViewInstance();
-        HasClickHandlers getMenuButton(); // handle clicking on button
+        public void init(ViewFactory clientFactory);
+        public Widget asWidget();
+        public MainView getViewInstance();
+        public HasClickHandlers getMenuButton(); // handle clicking on button
         void showPostLoginWidgets();
         void hidePostLoginWidgets();
         public void setSchoolName(String schoolName);
