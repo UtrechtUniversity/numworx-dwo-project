@@ -19,15 +19,15 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-public class SchoolClassesView extends Composite implements ClickHandler, SwitchSchoolPresenter.Display {
+public class SchoolclassesView extends Composite implements ClickHandler, SchoolclassesPresenter.Display {
 
-    private static final Logger LOG = Logger.getLogger(SchoolClassesView.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolclassesView.class.getName());
 
-    interface MyUiBinder extends UiBinder<Widget, SchoolClassesView> {
+    interface MyUiBinder extends UiBinder<Widget, SchoolclassesView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    private SwitchSchoolPresenter switchSchoolPresenter;
+    private SchoolclassesPresenter schoolclassesPresenter;
 
     @UiField
     FlexTable flexTable;
@@ -44,9 +44,9 @@ public class SchoolClassesView extends Composite implements ClickHandler, Switch
         String[][] data; //height, width
     }
 
-    public SchoolClassesView(SwitchSchoolPresenter sp) {
-        switchSchoolPresenter = sp;
-        switchSchoolPresenter.setView(this);
+    public SchoolclassesView(SchoolclassesPresenter sp) {
+        schoolclassesPresenter = sp;
+        schoolclassesPresenter.setView(this);
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
         switchBtn.addClickHandler(this);
@@ -55,7 +55,7 @@ public class SchoolClassesView extends Composite implements ClickHandler, Switch
     @Override
     public void init() {
         //create table
-        String nulLabel = "School";
+        String nulLabel = "Schoolclasses";
         HTML l = new HTML("<div style=\"text-align: left; background-color: #555555; padding: 2px; overflow auto;\">" + nulLabel + "</div>");
 
         flexTable.setWidget(0, 0, l);
@@ -72,7 +72,7 @@ public class SchoolClassesView extends Composite implements ClickHandler, Switch
         //            switchSchoolPresenter.selectRow(schoolIndex);
 
         if (event.getSource() == switchBtn) {
-            switchSchoolPresenter.switchSchool();
+            schoolclassesPresenter.switchSchool();
         }
     }
 
@@ -113,7 +113,7 @@ public class SchoolClassesView extends Composite implements ClickHandler, Switch
                 if (flexTable.getCellForEvent(event) != null) {
                     int curSchoolIndex = schoolIndex;
                     schoolIndex = flexTable.getCellForEvent(event).getRowIndex() - 1;
-                    switchSchoolPresenter.selectRow(schoolIndex);
+                    schoolclassesPresenter.selectRow(schoolIndex);
                     if ((schoolIndex + 1) % 2 == 0) {
                         flexTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableOddRow");
                     } else {

@@ -99,6 +99,11 @@ class BootPanelController {
                     case RESULTS:
                         presenterFactory.getResultsPresenter().init();
                         break;
+                    case SCHOOLCLASSES:
+                        presenterFactory.getSchoolclassesPresenter().init();
+                        break;
+                    case SCORESULTS:
+                        presenterFactory.getScoResultsPresenter().init();
                     default:
                         LOG.log(Level.INFO, "Switch fail in app controller.");
                 }

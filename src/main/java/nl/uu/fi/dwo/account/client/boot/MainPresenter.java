@@ -31,7 +31,8 @@ public class MainPresenter implements SwitchViewEventHandler {
         void clear();
         public void showLoginView();
         public void showSwitchSchoolView();
-        public void showResultsView();        
+        public void showResultsView();  
+        public void showSchoolclassesView();
         public void showMenuButton();
         public void hideMenuButton();
         public void showMenuView();
@@ -90,6 +91,9 @@ public class MainPresenter implements SwitchViewEventHandler {
                 break;
             case RESULTS:
                 display.showResultsView();
+                break;
+            case SCHOOLCLASSES:
+                display.showSchoolclassesView();
                 break;
         }
     }

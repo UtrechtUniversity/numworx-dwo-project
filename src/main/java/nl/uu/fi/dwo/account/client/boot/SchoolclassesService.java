@@ -10,13 +10,13 @@ import org.osgi.util.promise.Promise;
  *
  * @author Gert van der Plas
  */
-class SchoolClassesController {
+class SchoolclassesService {
 
-    private static final Logger LOG = Logger.getLogger(SchoolClassesController.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolclassesService.class.getName());
 
     private SecuredUserAccountManager manager = new SecuredUserAccountManager();
 
-    SchoolClassesController() {
+    SchoolclassesService() {
         init();
     }
 

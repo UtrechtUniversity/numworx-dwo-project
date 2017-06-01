@@ -30,12 +30,14 @@
                 <g:DeckPanel addStyleNames='{dwoStyle.dwoDeckPanel}' ui:field="mainDeckPanel" >
                     <g:Widget ui:field="loginView" />
                     <g:Widget ui:field="switchSchoolView" />
+                    <g:Widget ui:field="schoolclassesView"/>
                     <g:Widget ui:field="resultsView" />
                     <g:Widget ui:field="scoResultsView" />
                     <!--</g:FlowPanel>-->
                 </g:DeckPanel>
                 <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView" >
                     <g:Label ui:field="switchRoleLabel">switch</g:Label>
+                    <g:Label ui:field="classesLabel">manage classes</g:Label>
                     <g:Label ui:field="resultsLabel">results</g:Label>
                     <g:Label ui:field="logoutLabel">logout</g:Label>
                 </g:FlowPanel>

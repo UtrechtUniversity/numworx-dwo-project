@@ -74,14 +74,18 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @UiField(provided = true)
     LoginView loginView;
     @UiField(provided = true)
-    ResultsView resultsView;
-    @UiField(provided = true)
     SwitchSchoolView switchSchoolView;
+    @UiField(provided = true)
+    SchoolclassesView schoolclassesView;
+    @UiField(provided = true)
+    ResultsView resultsView;
     @UiField(provided = true)
     ScoResultsView scoResultsView;
 
     @UiField(provided = true)
     Label switchRoleLabel = new MenuLabel();
+    @UiField(provided = true)
+    Label classesLabel = new MenuLabel();
     @UiField(provided = true)
     Label resultsLabel = new MenuLabel();
     @UiField(provided = true)
@@ -103,6 +107,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         resultsView = (ResultsView) clientFactory.getResultsView();
         switchSchoolView = (SwitchSchoolView) clientFactory.getSwitchSchoolView();
         scoResultsView = (ScoResultsView) clientFactory.getScoResultsView();
+        schoolclassesView = (SchoolclassesView) clientFactory.getSchoolclassesView();
         initWidget(uiBinder.createAndBindUi(this));
         int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(loginIndex);
@@ -110,6 +115,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         switchRoleLabel.addClickHandler(this);
         resultsLabel.addClickHandler(this);
         logoutLabel.addClickHandler(this);
+        classesLabel.addClickHandler(this);
     }
 
     @Override
@@ -185,20 +191,26 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void showLoginView() {
-        int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
-        mainDeckPanel.showWidget(loginIndex);
+        int index = mainDeckPanel.getWidgetIndex(loginView);
+        mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showSwitchSchoolView() {
-        int loginIndex = mainDeckPanel.getWidgetIndex(switchSchoolView.asWidget());
-        mainDeckPanel.showWidget(loginIndex);
+        int index = mainDeckPanel.getWidgetIndex(switchSchoolView.asWidget());
+        mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showResultsView() {
-        int loginIndex = mainDeckPanel.getWidgetIndex(resultsView.asWidget());
-        mainDeckPanel.showWidget(loginIndex);
+        int index = mainDeckPanel.getWidgetIndex(resultsView.asWidget());
+        mainDeckPanel.showWidget(index);
+    }
+
+    @Override
+    public void showSchoolclassesView() {
+        int index = mainDeckPanel.getWidgetIndex(schoolclassesView.asWidget());
+        mainDeckPanel.showWidget(index);
     }
 
     @Override
@@ -300,6 +312,9 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         } else if (event.getSource() == logoutLabel) {
             hideMenuView();
             Window.Location.assign("");
+        } else if (event.getSource() == classesLabel) {
+            hideMenuView();
+            mainPresenter.selectView(SwitchViewEvent.SelectedView.SCHOOLCLASSES);
         }
     }
 
@@ -322,6 +337,10 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
      */
     public SwitchSchoolView getSwitchSchoolView() {
         return switchSchoolView;
+    }
+
+    public SchoolclassesView getSchoolclassesView() {
+        return schoolclassesView;
     }
 
 }

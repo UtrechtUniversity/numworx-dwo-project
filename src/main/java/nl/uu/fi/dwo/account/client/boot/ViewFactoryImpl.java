@@ -14,6 +14,7 @@ public class ViewFactoryImpl implements ViewFactory {
     private final ResultsPresenter.Display resultsView;
     private final SwitchSchoolPresenter.Display switchSchoolView;
     private final ScoResultsPresenter.Display scoResultsView;
+    private final SchoolclassesPresenter.Display schoolclassesView;
     
     public ViewFactoryImpl(PresenterFactory pf){
     mainView = new MainView(pf.getMainPresenter());
@@ -21,6 +22,7 @@ public class ViewFactoryImpl implements ViewFactory {
     resultsView = new ResultsView(pf.getResultsPresenter());
     switchSchoolView = new SwitchSchoolView(pf.getSwitchSchoolPresenter());
     scoResultsView = new ScoResultsView(pf.getScoResultsPresenter());
+    schoolclassesView = new SchoolclassesView(pf.getSchoolclassesPresenter());
     }
     
     @Override
@@ -46,6 +48,11 @@ public class ViewFactoryImpl implements ViewFactory {
     @Override
     public ScoResultsPresenter.Display getScoResultsView() {
         return scoResultsView;
+    }
+    
+    @Override
+    public SchoolclassesPresenter.Display getSchoolclassesView(){
+        return schoolclassesView;
     }
 
 }

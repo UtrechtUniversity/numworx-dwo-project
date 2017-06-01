@@ -14,9 +14,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
  *
  * @author Gert van der Plas
  */
-public class SchoolClassesPresenter {
+public class SchoolclassesPresenter {
 
-    private static final Logger LOG = Logger.getLogger(SchoolClassesPresenter.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolclassesPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private int selectedIndex = 0;
@@ -38,7 +38,7 @@ public class SchoolClassesPresenter {
         void updateView(int height, int width, String[][] data);
     }
 
-    SchoolClassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    SchoolclassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
     }
@@ -56,18 +56,18 @@ public class SchoolClassesPresenter {
     }
 
     public void init() {
-        sracData = getTeacherRoles();
-        int i = 0;
-        selectedIndex = i;
-        for (DomSchoolRoleAndClassV2 srac : sracData) {
-            if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
-                selectedIndex = i;
-            }
-            i++;
-        }
-        String[][] data = buildPlotData();
+//        sracData = getTeacherRoles();
+//        int i = 0;
+//        selectedIndex = i;
+//        for (DomSchoolRoleAndClassV2 srac : sracData) {
+//            if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
+//                selectedIndex = i;
+//            }
+//            i++;
+//        }
+//        String[][] data = buildPlotData();
         view.init();
-        view.updateView(data.length,1,data);
+//        view.updateView(data.length,1,data);
     }
 
     /**

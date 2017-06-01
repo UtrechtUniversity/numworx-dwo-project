@@ -17,4 +17,5 @@ public interface PresenterFactory {
     public SwitchSchoolPresenter getSwitchSchoolPresenter();    
     public ResultsPresenter getResultsPresenter();
     public ScoResultsPresenter getScoResultsPresenter();
+    public SchoolclassesPresenter getSchoolclassesPresenter();
 }
