@@ -3,7 +3,7 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" >
     <ui:style field="dwoStyle" src="dwostyle.css" />
     <g:FlowPanel>
-        <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="scoreTable">
+        <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="flexTable">
         </g:FlexTable>
         <!-- add some wiskopdr stuff here -->
         <g:Label>Put ScoResults here</g:Label>

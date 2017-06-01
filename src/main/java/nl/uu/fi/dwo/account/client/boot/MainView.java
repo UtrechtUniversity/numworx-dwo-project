@@ -21,7 +21,7 @@ import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.account.client.boot.Results.ResultsPresenter;
+import nl.uu.fi.dwo.account.client.boot.Results.ResultsView;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
@@ -72,13 +72,13 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @UiField
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
-    LoginPresenter.Display loginView;
+    LoginView loginView;
     @UiField(provided = true)
-    ResultsPresenter.Display resultsView;
+    ResultsView resultsView;
     @UiField(provided = true)
-    SwitchSchoolPresenter.Display switchSchoolView;
+    SwitchSchoolView switchSchoolView;
     @UiField(provided = true)
-    ScoResultsPresenter.Display scoResultsView;
+    ScoResultsView scoResultsView;
 
     @UiField(provided = true)
     Label switchRoleLabel = new MenuLabel();
@@ -99,10 +99,10 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @Override
     public void init(ViewFactory clientFactory) {
         this.clientFactory = clientFactory;
-        loginView = clientFactory.getLoginView();
-        resultsView = clientFactory.getResultsView();
-        switchSchoolView = clientFactory.getSwitchSchoolView();
-        scoResultsView = clientFactory.getScoResultsView();
+        loginView = (LoginView) clientFactory.getLoginView();
+        resultsView = (ResultsView) clientFactory.getResultsView();
+        switchSchoolView = (SwitchSchoolView) clientFactory.getSwitchSchoolView();
+        scoResultsView = (ScoResultsView) clientFactory.getScoResultsView();
         initWidget(uiBinder.createAndBindUi(this));
         int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(loginIndex);
@@ -306,21 +306,21 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     /**
      * @return the loginView
      */
-    public LoginPresenter.Display getLoginView() {
+    public LoginView getLoginView() {
         return loginView;
     }
 
     /**
      * @return the resultsView
      */
-    public ResultsPresenter.Display getResultsView() {
+    public ResultsView getResultsView() {
         return resultsView;
     }
 
     /**
      * @return the switchSchoolView
      */
-    public SwitchSchoolPresenter.Display getSwitchSchoolView() {
+    public SwitchSchoolView getSwitchSchoolView() {
         return switchSchoolView;
     }
 
