@@ -930,6 +930,7 @@ public class PublicUserManager {
     @POST
     @Produces({"application/json"})
     @Consumes({"application/x-www-form-urlencoded"})
+    @Path("/token")
     public DomToken getAuthToken(
     		@FormParam("username") String username, 
     		@FormParam("password") String password,  
@@ -938,11 +939,15 @@ public class PublicUserManager {
     		throws WebApplicationException // TODO uitzoeken hoe je dat goed doet
     {
     	if(!"password".equals(type))
-    		return null; // Wrong type
+    	{
+    		throw new WebApplicationException();
+    	}
     	password = MD5.getHashString(password);
     	PersistentUser u = UserManager.login(username, password);
     	if(u == null)
-    		return null; // Wrong User
+    	{
+    		throw new WebApplicationException();
+    	}
     	DomToken token = new DomToken();
     	token.setToken_type(DomToken.APARAM);
     	token.setExpires_in(300); // seconds
