@@ -21,6 +21,7 @@ public class SchoolclassesPresenter {
     private EventBus eventBus;
     private int selectedIndex = 0;
     private List<DomSchoolRoleAndClassV2> sracData;
+    private String[] tableHeaders = { "classname", "edit", "students", "teachers", "remove"};
 
     private Display view;
 
@@ -70,6 +71,9 @@ public class SchoolclassesPresenter {
 //        view.updateView(data.length,1,data);
     }
 
+    public String[] getTableHeaders(){
+        return tableHeaders;
+    }
     /**
      * @param row the course to set
      */
