@@ -62,15 +62,15 @@ class BootPanelController {
                     case SUCCESS_RESULTS:
                         LOG.log(Level.INFO, "Login succeeded. Showing results view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
-                        viewFactory.getMainView().showMenuButton();
-                        viewFactory.getMainView().showPostLoginWidgets();
+//                        viewFactory.getMainView().showMenuButton();
+//                        viewFactory.getMainView().showPostLoginWidgets();
 //                        presenterFactory.getResultsPresenter().init();
                         break;
                     case SUCCESS:
                         LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
-                        viewFactory.getMainView().showMenuButton();
-                        viewFactory.getMainView().showPostLoginWidgets();
+//                        viewFactory.getMainView().showMenuButton();
+//                        viewFactory.getMainView().showPostLoginWidgets();
 //                        presenterFactory.getSwitchSchoolPresenter().init();
                         break;
                     case LOGOUT:
@@ -104,6 +104,7 @@ class BootPanelController {
                         break;
                     case SCORESULTS:
                         presenterFactory.getScoResultsPresenter().init();
+                        break;
                     default:
                         LOG.log(Level.INFO, "Switch fail in app controller.");
                 }

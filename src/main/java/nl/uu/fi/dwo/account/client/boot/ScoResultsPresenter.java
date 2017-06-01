@@ -5,7 +5,6 @@ import com.google.gwt.user.client.ui.Widget;
 import java.util.List;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 
 /**

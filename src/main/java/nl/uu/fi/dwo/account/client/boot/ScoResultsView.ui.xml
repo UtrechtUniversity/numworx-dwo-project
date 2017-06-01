@@ -8,7 +8,7 @@
         <!-- add some wiskopdr stuff here -->
         <g:Label>Put ScoResults here</g:Label>
         <g:FlowPanel>
-                <g:Button addStyleNames='dwoStyle' ui:field='backBtn'>cancel</g:Button>
+                <g:Button addStyleNames='dwoStyle' ui:field='backBtn'>back</g:Button>
         </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder> 

@@ -11,7 +11,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
  *
  * @author Gert van der Plas
  */
-public class MainPresenter implements SwitchViewEventHandler {
+public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler {
 
     private static final Logger LOG = Logger.getLogger(MainPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
@@ -22,8 +22,8 @@ public class MainPresenter implements SwitchViewEventHandler {
         public Widget asWidget();
         public MainView getViewInstance();
         public HasClickHandlers getMenuButton(); // handle clicking on button
-        void showPostLoginWidgets();
-        void hidePostLoginWidgets();
+        public void showPostLoginWidgets();
+        public void hidePostLoginWidgets();
         public void setSchoolName(String schoolName);
         public void setUserRole(String userRole);
         public void setPresentationName(String presentationName);
@@ -33,6 +33,7 @@ public class MainPresenter implements SwitchViewEventHandler {
         public void showSwitchSchoolView();
         public void showResultsView();  
         public void showSchoolclassesView();
+        public void showScoResultsView();
         public void showMenuButton();
         public void hideMenuButton();
         public void showMenuView();
@@ -46,6 +47,7 @@ public class MainPresenter implements SwitchViewEventHandler {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         eventBus.addHandler(SwitchViewEvent.TYPE, this);
+        eventBus.addHandler(LoginEvent.TYPE, this);
     }
 
     public void init() {
@@ -95,7 +97,15 @@ public class MainPresenter implements SwitchViewEventHandler {
             case SCHOOLCLASSES:
                 display.showSchoolclassesView();
                 break;
+            case SCORESULTS:
+                display.showScoResultsView();
         }
+    }
+
+
+    @Override
+    public void onLoginEvent(LoginEvent loginEvent) {
+        display.showPostLoginWidgets();
     }
     
 }

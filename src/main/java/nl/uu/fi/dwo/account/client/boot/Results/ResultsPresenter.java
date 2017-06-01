@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.account.client.boot.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
@@ -26,6 +27,9 @@ public class ResultsPresenter {
 
     private static final Logger LOG = Logger.getLogger(ResultsPresenter.class.getName());
 
+    private final EventBus eventBus;
+    private final DwoGlobalVars dwoGlobalVars;
+         
     private Display view;
     private ResultsService resultService = new ResultsService();
     //model
@@ -49,6 +53,8 @@ public class ResultsPresenter {
     }
 
     public ResultsPresenter(EventBus anEventBus,DwoGlobalVars aDwoGlobalVars) {
+        eventBus = anEventBus;
+        dwoGlobalVars = aDwoGlobalVars;
     }
 
     public void init() {
@@ -97,6 +103,7 @@ public class ResultsPresenter {
         if (row != 0 && col != 0 && schoolClass != null && course != null) {
             LOG.log(Level.INFO,"selected a student sco for "+resultMatrix.getMark(row-1, col-1).getLabel()+ " with score "+resultMatrix.getMark(row-1, col-1).getScore());
             //send event to show studentSco
+            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS));
             return;
         }
         if (row == 0 && col == 0 && (schoolClass != null || course != null)) {

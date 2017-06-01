@@ -208,6 +208,13 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     }
 
     @Override
+    public void showScoResultsView() {
+        int index = mainDeckPanel.getWidgetIndex(scoResultsView);
+        mainDeckPanel.showWidget(index);
+
+    }
+
+    @Override
     public void showSchoolclassesView() {
         int index = mainDeckPanel.getWidgetIndex(schoolclassesView.asWidget());
         mainDeckPanel.showWidget(index);
