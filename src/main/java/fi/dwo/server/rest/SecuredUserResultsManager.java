@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -51,9 +52,9 @@ public class SecuredUserResultsManager {
 	@PUT
 	@Produces({"application/json"})
     @Path("/getCourseResults")
-	public DomResultsPerStudentCourse getCourseResults(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception
+	public List<DomStudentScoContext> getCourseResults(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception
 	{
-		DomResultsPerStudentCourse result = new DomResultsPerStudentCourse();
+		List<DomStudentScoContext> result = new ArrayList<DomStudentScoContext>();
 // NPE
 		DomContext context = rest.getRestContext();
 		DomHasRole domHasRole = context.getDomHasRole();
@@ -95,15 +96,13 @@ public class SecuredUserResultsManager {
 			return result;
 // fetch results
 		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);
-		Map<PersistenceId,DomStudentScoContext> studentScoContexts = new HashMap<PersistenceId, DomStudentScoContext>();
-		result.setStudentScoContexts(studentScoContexts);
+
 		for(PersistentScoContext scoContext: list) {
 			List<PersistentStudentScoContext> lpssc = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
 			if(lpssc.isEmpty()) continue;
 			PersistentStudentScoContext pssc = lpssc.get(0); // assert 1 element
-			PersistenceId scoID = scoContext.buildPersistenceId();
 			DomStudentScoContext results = pssc.buildDomStudentScoContext();			
-			studentScoContexts.put(scoID, results);			
+			result.add(results);
 		}
 		return result;
 	}
