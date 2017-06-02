@@ -3,24 +3,17 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="dwostyle.css" />
-    <g:FlowPanel>
-        <g:FlowPanel>
-                        <g:Label> test</g:Label>
-                        <c:DataGrid ui:field='dataGrid' height ="100%" width="100%" />
-        </g:FlowPanel>
-                    <g:HTMLPanel>
-                        <table style="width:100%">
-                            <tr>
-                                <td align='center'>
-                                    <c:SimplePager ui:field='pager' location='CENTER' />
-                                </td>
-                            </tr>
-                        </table>
-                    </g:HTMLPanel>
+    <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
+        <!--<g:FlowPanel>-->
+        <!--<g:Label> test</g:Label>-->
+<!--        <g:SimpleLayoutPanel>-->
+                        <c:DataGrid addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
+<!--        </g:SimpleLayoutPanel>-->
         <!--<g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="flexTable"/>-->
-        <g:FlowPanel>
-            <g:Button addStyleNames='dwoStyle' ui:field="switchBtn">switch</g:Button>
-            <g:Button addStyleNames='dwoStyle'  ui:field="cancelBtn">cancel</g:Button>
-        </g:FlowPanel>
+        <!--<g:FlowPanel >-->
+<!--        <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="switchBtn">switch</g:Button>
+        <g:Button addStyleNames='{dwoStyle.dwoButton}'  ui:field="cancelBtn">cancel</g:Button>-->
+                        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}' location="CENTER" ui:field='pager'/>
+        <!--</g:FlowPanel>-->
     </g:FlowPanel>
 </ui:UiBinder>

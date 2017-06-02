@@ -36,9 +36,9 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     DataGrid dataGrid= new DataGrid<String>();
     @UiField
     SimplePager pager;
-    @UiField
+//    @UiField
     Button cancelBtn;
-    @UiField
+//    @UiField
     Button switchBtn;
     int schoolIndex = 1;
 
@@ -63,7 +63,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.setRowCount(data.size(), true);
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
-        switchBtn.addClickHandler(this);
+//        switchBtn.addClickHandler(this);
 //        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
 //        dataGrid.setSelectionModel(selectionModel);
 //        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {

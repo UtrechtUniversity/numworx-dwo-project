@@ -16,7 +16,7 @@
                 </g:upHoveringFace>
                 <g:downFace image='{downButton}'/>
                 <g:downHoveringFace image='{downButton}'/>-->
-                &#9776; Menu 
+                &#9776;
             </g:PushButton>            
             <!--<g:Label addStyleNames='{dwoStyle.leftFullBox}' ui:field="userLabel">gebruikernaam:</g:Label>-->
             <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="presentationName"></g:Label>
@@ -28,11 +28,11 @@
         <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMainPanel}'>
             <g:FlowPanel>
                 <g:DeckPanel addStyleNames='{dwoStyle.dwoDeckPanel}' ui:field="mainDeckPanel" >
-                    <g:Widget ui:field="loginView" />
-                    <g:Widget ui:field="switchSchoolView" />
-                    <g:Widget ui:field="schoolclassesView"/>
-                    <g:Widget ui:field="resultsView" />
-                    <g:Widget ui:field="scoResultsView" />
+                    <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="loginView" />
+                    <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="switchSchoolView" />
+                    <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="schoolclassesView"/>
+                    <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="resultsView" />
+                    <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="scoResultsView" />
                     <!--</g:FlowPanel>-->
                 </g:DeckPanel>
                 <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView" >
