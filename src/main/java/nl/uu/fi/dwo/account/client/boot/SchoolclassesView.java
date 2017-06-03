@@ -6,14 +6,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
-import java.util.ArrayList;
+import com.google.gwt.view.client.ListDataProvider;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -33,7 +33,9 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     private SchoolclassesPresenter schoolclassesPresenter;
 
     @UiField(provided = true)
-    DataGrid dataGrid= new DataGrid<String>();
+    CellTable dataGrid;
+//    @UiField(provided = true)            
+//    CellList dataGrid;
     @UiField
     SimplePager pager;
 //    @UiField
@@ -47,6 +49,8 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         schoolclassesPresenter.setView(this);
         //dataGrid
         String[] tableHeaders = sp.getTableHeaders();
+//        TextCell textCell = new TextCell();
+        dataGrid = new CellTable<String>();
         for (String header : tableHeaders) {
             TextColumn<String> value = new TextColumn<String>() {
                 @Override
@@ -56,11 +60,20 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
             };
             dataGrid.addColumn(value, header);
         }
-        List<String> data = new ArrayList<String>();
+
+        ListDataProvider<String> dataProvider = new ListDataProvider<String>();
+
+        // Connect the table to the data provider.
+        dataProvider.addDataDisplay(dataGrid);
+
+        // Add the data to the data provider, which automatically pushes it to the
+        // widget.
+        List<String> data = dataProvider.getList();
         data.add("een");
         data.add("twee");
-        dataGrid.setRowData(0,data);
+        dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);
+
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
 //        switchBtn.addClickHandler(this);

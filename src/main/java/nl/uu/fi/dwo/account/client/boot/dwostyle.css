@@ -121,15 +121,13 @@
     top: 0px;
     right: 0px;
     padding: 8px;
-    margin:8px;
-        border-style: solid;
+    margin:auto;
+    border-style: solid;
+    border-width: 1px;
     border-color: black;
     background-color: #fefefe;
-
-    /*vertical-align: middle;*/
 }
 .dwoDataGridWidget{
-    height: 90%;
     width: auto;
     padding-left: auto;
     padding-right: auto;
@@ -138,9 +136,13 @@
     left:8px;
     right:8px;
     bottom: 50px;*/
-    margin: 0px;
+    margin: auto;
     padding:0px;
-    background-color: #f4f7f9;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    background-color: #fefefe;
+    /*background-color: #f4f7f9;*/
     /*vertical-align: middle;*/
 }
 /*div.dwoDataGridWidget{

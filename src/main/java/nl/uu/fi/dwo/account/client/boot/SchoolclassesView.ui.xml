@@ -4,16 +4,18 @@
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="dwostyle.css" />
     <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
-        <!--<g:FlowPanel>-->
+        <g:FlowPanel>
         <!--<g:Label> test</g:Label>-->
 <!--        <g:SimpleLayoutPanel>-->
-                        <c:DataGrid addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
+                        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
+
+                        <!--<c:DataGrid addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>-->
 <!--        </g:SimpleLayoutPanel>-->
         <!--<g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="flexTable"/>-->
         <!--<g:FlowPanel >-->
 <!--        <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="switchBtn">switch</g:Button>
         <g:Button addStyleNames='{dwoStyle.dwoButton}'  ui:field="cancelBtn">cancel</g:Button>-->
                         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}' location="CENTER" ui:field='pager'/>
-        <!--</g:FlowPanel>-->
+        </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>
