@@ -53,8 +53,7 @@ class BootPanelController {
         presenterFactory = new PresenterFactoryImpl(eventBus, dwoGlobalVars);
         viewFactory = new ViewFactoryImpl(presenterFactory);
 
-        //add handlers do this using hasEventHandlers and add all eventhandlers off class
-        //add: onLogin, onLogout, onBack, onSwitchSchool, onManageClass, onProfile..
+        //handle login events
         eventBus.addHandler(LoginEvent.TYPE, new LoginEventHandler() {
             @Override
             public void onLoginEvent(LoginEvent loginEvent) {
@@ -85,11 +84,14 @@ class BootPanelController {
             }
         });
         
-        //add SwitchView events and do domain logic
+        //handle switch deckpanel events.
         eventBus.addHandler(SwitchViewEvent.TYPE, new SwitchViewEventHandler() {
             @Override
             public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
                 switch (switchViewEvent.getEventValue()) {
+                    case ACCOUNT:
+                        presenterFactory.getAccountPresenter().init();
+                        break;
                     case LOGIN:
                         presenterFactory.getLoginPresenter().init();
                         break;

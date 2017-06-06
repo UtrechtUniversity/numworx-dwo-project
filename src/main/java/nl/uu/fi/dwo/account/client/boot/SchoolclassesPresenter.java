@@ -4,6 +4,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -21,10 +22,10 @@ public class SchoolclassesPresenter {
     private EventBus eventBus;
     private int selectedIndex = 0;
     private List<DomSchoolRoleAndClassV2> sracData;
-    private String[] tableHeaders = { "classname", "edit", "students", "teachers", "remove"};
+    private String[] tableHeaders = { "classname", "edit", "modules","students", "teachers", "remove"};
 
     private Display view;
-
+    
     /**
      * @param view the view to set
      */
@@ -32,13 +33,26 @@ public class SchoolclassesPresenter {
         this.view = view;
     }
 
+    void addASchoolClass() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public interface Display {
         Widget asWidget();
         void clear();
         void init();
-        void updateView(int height, int width, String[][] data);
+        void updateView(Map<String,SchoolclassesPresenter.ClassItem>  data);
     }
 
+    public class ClassItem{
+        public String key; //unique
+        public String schoolclassName;
+        public ClassItem(String aKey, String value){
+            key = aKey;
+            schoolclassName = value;
+        }
+    }
+    
     SchoolclassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
@@ -84,23 +98,9 @@ public class SchoolclassesPresenter {
         }
     }
 
-    public void switchSchool() {
-        dwoGlobalVars.setActiveSchoolRoleAndClass(sracData.get(selectedIndex));
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
-    }
+//    public void switchSchool() {
+//        dwoGlobalVars.setActiveSchoolRoleAndClass(sracData.get(selectedIndex));
+//        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
+//    }
 
-    private String[][] buildPlotData() {
-        String[][] data = new String[sracData.size()+1][1];
-        data[0][0] = "School";//<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">School</div>";
-        int i = 1;
-        selectedIndex=0;
-        for (DomSchoolRoleAndClassV2 srac : sracData) {
-            data[i][0] = srac.getSchool().getSchoolName();
-            if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
-                selectedIndex = i;
-            }
-            i++;
-        }
-        return data;
-    }
 }

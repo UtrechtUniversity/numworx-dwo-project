@@ -14,13 +14,13 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,24 +37,22 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    private SchoolclassesPresenter schoolclassesPresenter;
-
     @UiField(provided = true)
     CellTable dataGrid;
 //    @UiField(provided = true)            
 //    CellList dataGrid;
     @UiField(provided = true)
     SimplePager pager;
-//    @UiField
-    Button cancelBtn;
-//    @UiField
-    Button switchBtn;
-    int schoolIndex = 1;
+    @UiField
+    Button addBtn;
 
+    private SchoolclassesPresenter schoolclassesPresenter;
+    SchoolclassesPresenter.ClassItem selected;
+    ListDataProvider<SchoolclassesPresenter.ClassItem> dataProvider = new ListDataProvider<SchoolclassesPresenter.ClassItem>();
+    
     public SchoolclassesView(SchoolclassesPresenter sp) {
         schoolclassesPresenter = sp;
         schoolclassesPresenter.setView(this);
-        //dataGrid
         String[] tableHeaders = sp.getTableHeaders();
 //        TextCell textCell = new TextCell();
         dataGrid = new CellTable<String>();
@@ -78,6 +76,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
                     return object;
                 }
             };
+            if(header.equals(tableHeaders[0])){
             value.setSortable(true);
             ListHandler<String> columnSortHandler = new ListHandler<String>(
                     data);
@@ -96,9 +95,9 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
                 }
             });
             dataGrid.addColumnSortHandler(columnSortHandler);
-
-            // We know that the data is sorted alphabetically by default.
-            //dataGrid.getColumnSortList().push(value);
+        }else{
+                value.setSortable(false);
+            }
             dataGrid.addColumn(value, header);
 
         }
@@ -112,7 +111,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
 
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
-//        switchBtn.addClickHandler(this);
+        addBtn.addClickHandler(this);
         final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
         dataGrid.setSelectionModel(selectionModel);
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -129,13 +128,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
 
     @Override
     public void init() {
-        //create table
-        String nulLabel = "Schoolclasses";
-        HTML l = new HTML("<div style=\"text-align: left; background-color: #555555; padding: 2px; overflow auto;\">" + nulLabel + "</div>");
-
-//        flexTable.setWidget(0, 0, l);
-        cancelBtn.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-        switchBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        addBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
 
     @Override
@@ -144,72 +137,15 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     }
 
     public void onClick(ClickEvent event) {
-        //            switchSchoolPresenter.selectRow(schoolIndex);
-
-        if (event.getSource() == switchBtn) {
-            schoolclassesPresenter.switchSchool();
+        if (event.getSource() == addBtn) {
+            schoolclassesPresenter.addASchoolClass();
         }
     }
 
-    public void updateView(int height, int width, String[][] data) {
-        //update listDataProvider with new data and that's all folks.
-//          flexTable.removeAllRows();
-//        int i = height;
-//        int j = width;
-//        // column labels
-//        HTML html;
-////= new HTML(data[0][0]);
-////        html.setStyleName("flexTableHeader");
-////        flexTable.setWidget(0, 0, html);
-////
-//        for (i = 0; i < width; i++) {
-//            html = new HTML("<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">" + data[0][i] + "<div>");
-//            flexTable.setWidget(0, i, html);
-//        }
-//        //       flexTable.getRowFormatter().getElement(0).setClassName("flexTableHeader");         
-////
-////        // row labels
-////        for (i = 0; i < height; i++) {
-////            html = new HTML(data[i][0]);
-////            html.setStyleName("flexTableHeader");
-////            flexTable.setWidget(i, 0, html);
-////        }
-//
-//        for (j = 0; j < width; j++) {
-//            for (i = 1; i < height; i++) {
-//                html = new HTML(data[i][j]);
-////                html.setStyleName("flexTableCell");
-//                flexTable.setWidget(i, j, html);
-//            }
-//        }
-//
-//        flexTable.addClickHandler(new ClickHandler() {
-//            @Override
-//            public void onClick(ClickEvent event) {
-//                if (flexTable.getCellForEvent(event) != null) {
-//                    int curSchoolIndex = schoolIndex;
-//                    schoolIndex = flexTable.getCellForEvent(event).getRowIndex() - 1;
-//                    schoolclassesPresenter.selectRow(schoolIndex);
-//                    if ((schoolIndex + 1) % 2 == 0) {
-//                        flexTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableOddRow");
-//                    } else {
-//                        flexTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
-//                    }
-//                    flexTable.getRowFormatter().getElement(schoolIndex + 1).setClassName("flexTableSelectedBackground");
-//                    if (curSchoolIndex != schoolIndex) {
-//                        flexTable.getRowFormatter().getElement(curSchoolIndex + 1).removeClassName("flexTableSelectedBackground");
-//                        if ((schoolIndex + 1) % 2 == 0) {
-//                            flexTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableOddRow");
-//                        } else {
-//                            flexTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
-//                        }
-//                    }
-//                    LOG.log(Level.INFO, "Clicked school with index" + schoolIndex);
-//                }
-//            }
-//        });
-//
-//        flexTable.setVisible(true);
+    public void updateView(Map<String, SchoolclassesPresenter.ClassItem> data) {
+        dataProvider.getList().clear();
+        dataProvider.getList().addAll(data.values());
+        dataProvider.refresh();
     }
 
 }

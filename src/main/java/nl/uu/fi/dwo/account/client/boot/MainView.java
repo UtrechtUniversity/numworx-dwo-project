@@ -72,6 +72,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @UiField
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
+    AccountView accountView;
+    @UiField(provided = true)
     LoginView loginView;
     @UiField(provided = true)
     SwitchSchoolView switchSchoolView;
@@ -82,6 +84,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @UiField(provided = true)
     ScoResultsView scoResultsView;
 
+    @UiField(provided = true)
+    Label accountLabel = new MenuLabel();
     @UiField(provided = true)
     Label switchRoleLabel = new MenuLabel();
     @UiField(provided = true)
@@ -104,6 +108,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     public void init(ViewFactory clientFactory) {
         this.clientFactory = clientFactory;
         loginView = (LoginView) clientFactory.getLoginView();
+        accountView = (AccountView) clientFactory.getAccountView();
         resultsView = (ResultsView) clientFactory.getResultsView();
         switchSchoolView = (SwitchSchoolView) clientFactory.getSwitchSchoolView();
         scoResultsView = (ScoResultsView) clientFactory.getScoResultsView();
@@ -116,6 +121,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         resultsLabel.addClickHandler(this);
         logoutLabel.addClickHandler(this);
         classesLabel.addClickHandler(this);
+        accountLabel.addClickHandler(this);
     }
 
     @Override
@@ -189,6 +195,12 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         this.setStatusMsg(statusMsg);
     }
 
+   @Override
+    public void showAccountView() {
+        int index = mainDeckPanel.getWidgetIndex(accountView);
+        mainDeckPanel.showWidget(index);
+    }
+    
     @Override
     public void showLoginView() {
         int index = mainDeckPanel.getWidgetIndex(loginView);
@@ -310,6 +322,9 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
                 showMenu = false;
             }
             //handler.logoutClicked();
+        } else if (event.getSource() == accountLabel) {
+            hideMenuView();
+            mainPresenter.selectView(SwitchViewEvent.SelectedView.ACCOUNT);
         } else if (event.getSource() == switchRoleLabel) {
             hideMenuView();
             mainPresenter.selectView(SwitchViewEvent.SelectedView.SWITCHSCHOOL);

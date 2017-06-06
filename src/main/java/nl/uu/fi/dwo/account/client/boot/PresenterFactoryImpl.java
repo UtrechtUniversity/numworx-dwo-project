@@ -19,6 +19,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final ResultsPresenter resultsPresenter;
     private final ScoResultsPresenter scoResultsPresenter;
     private final SchoolclassesPresenter schoolclassesPresenter;
+    private final AccountPresenter accountPresenter;
 
     public PresenterFactoryImpl(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
@@ -29,6 +30,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
         switchSchoolPresenter = new SwitchSchoolPresenter(eventBus, dwoGlobalVars);
         scoResultsPresenter = new ScoResultsPresenter(eventBus, dwoGlobalVars);
         schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
+        accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars);
     }
 
     @Override
@@ -80,5 +82,12 @@ public class PresenterFactoryImpl implements PresenterFactory {
     
     public SchoolclassesPresenter getSchoolclassesPresenter(){
         return schoolclassesPresenter;
+    }
+
+    /**
+     * @return the accountPresenter
+     */
+    public AccountPresenter getAccountPresenter() {
+        return accountPresenter;
     }
 }

@@ -14,4 +14,5 @@ public interface ViewFactory {
     public SwitchSchoolPresenter.Display getSwitchSchoolView();    
     public ScoResultsPresenter.Display getScoResultsView();
     public SchoolclassesPresenter.Display getSchoolclassesView();
+    public AccountPresenter.Display getAccountView();
 }

@@ -10,6 +10,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     public enum SelectedView {
         LOGIN,
+        ACCOUNT,
         SWITCHSCHOOL,
         RESULTS,
         SCORESULTS,

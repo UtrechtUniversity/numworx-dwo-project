@@ -29,6 +29,7 @@
             <g:FlowPanel>
                 <g:DeckPanel addStyleNames='{dwoStyle.dwoDeckPanel}' ui:field="mainDeckPanel" >
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="loginView" />
+                    <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="accountView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="switchSchoolView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="schoolclassesView"/>
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="resultsView" />
@@ -36,6 +37,7 @@
                     <!--</g:FlowPanel>-->
                 </g:DeckPanel>
                 <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView" >
+                    <g:Label ui:field="accountLabel">account</g:Label>
                     <g:Label ui:field="switchRoleLabel">switch</g:Label>
                     <g:Label ui:field="classesLabel">manage classes</g:Label>
                     <g:Label ui:field="resultsLabel">results</g:Label>

@@ -7,6 +7,10 @@
     Author     : G.A.J. van der Plas 
 */
 
+
+/*******************************************************************************
+DWO-overrides
+*******************************************************************************/
 .body {
     padding: 0px;
     margin: 0px;
@@ -142,10 +146,10 @@
     background-color: #fefefe;
 }
 
-/*div.dwoDataGridWidget{
-    position: inherit;
-    height: 90%;
-}*/
+.dwoDataGridWidget th{
+    background-color: #aaaaaa;
+    color: black;
+}
 .dwoDataGridPager{
     margin: auto;
     padding:0px;

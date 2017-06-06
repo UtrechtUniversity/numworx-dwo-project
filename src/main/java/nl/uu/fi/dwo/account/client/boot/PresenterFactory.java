@@ -18,4 +18,5 @@ public interface PresenterFactory {
     public ResultsPresenter getResultsPresenter();
     public ScoResultsPresenter getScoResultsPresenter();
     public SchoolclassesPresenter getSchoolclassesPresenter();
+    public AccountPresenter getAccountPresenter();
 }

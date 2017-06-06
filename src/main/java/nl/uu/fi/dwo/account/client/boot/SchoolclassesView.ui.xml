@@ -5,16 +5,9 @@
     <ui:style field="dwoStyle" src="dwostyle.css" />
     <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
         <g:FlowPanel>
-        <!--<g:Label> test</g:Label>-->
-<!--        <g:SimpleLayoutPanel>-->
-                        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
+                            <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addBtn">add schoolclass</g:Button>
 
-                        <!--<c:DataGrid addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>-->
-<!--        </g:SimpleLayoutPanel>-->
-        <!--<g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="flexTable"/>-->
-        <!--<g:FlowPanel >-->
-<!--        <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="switchBtn">switch</g:Button>
-        <g:Button addStyleNames='{dwoStyle.dwoButton}'  ui:field="cancelBtn">cancel</g:Button>-->
+                        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
                         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
         </g:FlowPanel>
     </g:FlowPanel>

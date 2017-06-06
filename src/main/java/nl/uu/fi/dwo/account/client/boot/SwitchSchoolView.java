@@ -33,9 +33,6 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
     interface MyUiBinder extends UiBinder<Widget, SwitchSchoolView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-
-    private SwitchSchoolPresenter switchSchoolPresenter;
-    private String[] tableHeaders = { "school"};
     
     @UiField(provided = true)
     CellTable cellTable;
@@ -45,11 +42,11 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
     Button cancelBtn;
     @UiField
     Button switchBtn;
+    
+    private SwitchSchoolPresenter switchSchoolPresenter;
     SwitchSchoolPresenter.SchoolItem selected;
-
     ListDataProvider<SwitchSchoolPresenter.SchoolItem> dataProvider = new ListDataProvider<SwitchSchoolPresenter.SchoolItem>();
-    
-    
+
     public class ResultData {
 
         int width;

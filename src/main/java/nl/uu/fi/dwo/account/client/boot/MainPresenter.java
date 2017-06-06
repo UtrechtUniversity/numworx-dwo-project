@@ -29,6 +29,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         public void setPresentationName(String presentationName);
         public void setStatusMsg(String statusMsg);
         void clear();
+        public void showAccountView();
         public void showLoginView();
         public void showSwitchSchoolView();
         public void showResultsView();  
@@ -85,6 +86,9 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
     private void onSwitchViewEvent(SwitchViewEvent.SelectedView selectedView) {
         switch(selectedView){
+            case ACCOUNT:
+                display.showAccountView();
+                break;
             case LOGIN:
                 display.showLoginView();
                 break;

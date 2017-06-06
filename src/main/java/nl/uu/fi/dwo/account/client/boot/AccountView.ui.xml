@@ -1,0 +1,94 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" >
+    <ui:style field="dwoStyle" src="dwostyle.css" />
+    <g:FlowPanel>
+        <g:Grid addStyleNames='{dwoStyle.loginWidget}'>
+            <g:row>
+                <g:customCell>
+                    <g:Label>usernaam:</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:TextBox ui:field='usernameText'></g:TextBox>
+                </g:customCell>
+            </g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label>voornaam:</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:TextBox ui:field='firstNameText'>
+                    </g:TextBox>
+                </g:customCell>
+            </g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label>tussenvoegsel:</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:TextBox ui:field='insertionText'>
+                    </g:TextBox>
+                </g:customCell>
+            </g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label>familienaam:</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:TextBox ui:field='familyNameText'>
+                    </g:TextBox>
+                </g:customCell>
+            </g:row>
+            <g:row></g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label>current password:</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:PasswordTextBox ui:field='passwordTextBox'></g:PasswordTextBox>
+                </g:customCell>
+            </g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label>new password:</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:PasswordTextBox ui:field='newPasswordTextBox'></g:PasswordTextBox>
+                </g:customCell>
+            </g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label>new password again:</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:PasswordTextBox ui:field='newPasswordAgainTextBox'></g:PasswordTextBox>
+                </g:customCell>
+            </g:row>
+            <g:row></g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Button ui:field='resetBtn'>reset</g:Button>
+                </g:customCell>
+                <g:customCell>
+                    <g:Button ui:field='updateBtn'>update</g:Button>
+                </g:customCell>
+            </g:row>
+            <!--                <g:row>
+                    <g:cell>
+                    <g:Label>password:</g:Label>
+                </g:cell>
+                <g:cell>
+                    <g:PasswordTextBox ui:field='passwordTextBox'>passw</g:PasswordTextBox>
+                </g:cell>
+            </g:row>
+            <g:row>
+                <g:cell>
+                    <g:CheckBox ui:field='checkBox' checked="true">switch to teacher</g:CheckBox>
+                </g:cell>
+                <g:cell>
+                    <g:Button ui:field='loginBtn'>Login</g:Button>
+                </g:cell>
+            </g:row>-->
+        </g:Grid>        
+    </g:FlowPanel>
+</ui:UiBinder> 
