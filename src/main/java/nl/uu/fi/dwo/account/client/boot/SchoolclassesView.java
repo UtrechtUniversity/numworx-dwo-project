@@ -7,14 +7,21 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
+import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -36,7 +43,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     CellTable dataGrid;
 //    @UiField(provided = true)            
 //    CellList dataGrid;
-    @UiField
+    @UiField(provided = true)
     SimplePager pager;
 //    @UiField
     Button cancelBtn;
@@ -51,15 +58,6 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         String[] tableHeaders = sp.getTableHeaders();
 //        TextCell textCell = new TextCell();
         dataGrid = new CellTable<String>();
-        for (String header : tableHeaders) {
-            TextColumn<String> value = new TextColumn<String>() {
-                @Override
-                public String getValue(String object) {
-                    return object;
-                }
-            };
-            dataGrid.addColumn(value, header);
-        }
 
         ListDataProvider<String> dataProvider = new ListDataProvider<String>();
 
@@ -69,25 +67,63 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         // Add the data to the data provider, which automatically pushes it to the
         // widget.
         List<String> data = dataProvider.getList();
-        data.add("een");
-        data.add("twee");
+        for (int i = 0; i < 100; i++) {
+            data.add("row" + i);
+        }
+
+        for (String header : tableHeaders) {
+            TextColumn<String> value = new TextColumn<String>() {
+                @Override
+                public String getValue(String object) {
+                    return object;
+                }
+            };
+            value.setSortable(true);
+            ListHandler<String> columnSortHandler = new ListHandler<String>(
+                    data);
+            columnSortHandler.setComparator(value,
+                    new Comparator<String>() {
+                public int compare(String o1, String o2) {
+                    if (o1 == o2) {
+                        return 0;
+                    }
+
+                    // Compare the name columns.
+                    if (o1 != null) {
+                        return (o2 != null) ? o1.compareTo(o2) : 1;
+                    }
+                    return -1;
+                }
+            });
+            dataGrid.addColumnSortHandler(columnSortHandler);
+
+            // We know that the data is sorted alphabetically by default.
+            //dataGrid.getColumnSortList().push(value);
+            dataGrid.addColumn(value, header);
+
+        }
+
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);
+        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+        pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
+        pager.setDisplay(dataGrid);
+        pager.setPageSize(dataGrid.getPageSize());
 
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
 //        switchBtn.addClickHandler(this);
-//        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
-//        dataGrid.setSelectionModel(selectionModel);
-//        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-//            public void onSelectionChange(SelectionChangeEvent event) {
-//                Address selected = selectionModel.getSelectedObject();
-//                if (selected != null) {
-//                    Window.alert("You selected: " + selected.houseNumber + " " + selected.streetName + " " + selected.county
-//                            + " " + selected.postCode + " " + selected.country);
-//                }
-//            }
-//        });
+        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+        dataGrid.setSelectionModel(selectionModel);
+        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            public void onSelectionChange(SelectionChangeEvent event) {
+                String selected = selectionModel.getSelectedObject();
+                LOG.log(Level.INFO, "selection key: "+selectionModel.getKey(selected));
+                if (selected != null) {
+                    Window.alert("You selected: " + selected + ".");
+                }
+            }
+        });
 
     }
 
@@ -116,6 +152,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     }
 
     public void updateView(int height, int width, String[][] data) {
+        //update listDataProvider with new data and that's all folks.
 //          flexTable.removeAllRows();
 //        int i = height;
 //        int j = width;

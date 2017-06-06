@@ -15,7 +15,7 @@
         <!--<g:FlowPanel >-->
 <!--        <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="switchBtn">switch</g:Button>
         <g:Button addStyleNames='{dwoStyle.dwoButton}'  ui:field="cancelBtn">cancel</g:Button>-->
-                        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}' location="CENTER" ui:field='pager'/>
+                        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
         </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>
