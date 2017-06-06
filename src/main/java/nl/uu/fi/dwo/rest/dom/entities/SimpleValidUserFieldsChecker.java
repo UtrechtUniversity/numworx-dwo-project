@@ -19,12 +19,23 @@ public class SimpleValidUserFieldsChecker {
 	}
 
 	/**
+	 * Verify required fields are filled. 
+	 *
+	 * @param fields
+	 * @return
+	 */
+        @Deprecated //("returns true when premise is false. Use isNonEmptyNorNull() instead")
+	public static boolean isEmptyOrNull(String... fields) {
+	    return !isNonEmptyNorNull(fields);
+	}
+
+	/**
 	 * Verify required fields are filled.
 	 *
 	 * @param fields
 	 * @return
 	 */
-	public static boolean isEmptyOrNull(String... fields) {
+	public static boolean isNonEmptyNorNull(String... fields) {
 	    for (int i = 0; i < fields.length; i++) {
 	        String field = fields[i];
 	        if (field == null || field.trim().isEmpty()) {
@@ -33,7 +44,7 @@ public class SimpleValidUserFieldsChecker {
 	    }
 	    return true;
 	}
-
+        
 	SimpleValidUserFieldsChecker() {
 	}
 	
