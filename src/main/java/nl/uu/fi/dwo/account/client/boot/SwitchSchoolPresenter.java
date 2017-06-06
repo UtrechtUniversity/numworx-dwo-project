@@ -3,7 +3,9 @@ package nl.uu.fi.dwo.account.client.boot;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -19,8 +21,9 @@ public class SwitchSchoolPresenter {
     private static final Logger LOG = Logger.getLogger(SwitchSchoolPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
-    private int selectedIndex = 0;
-    private List<DomSchoolRoleAndClassV2> sracData;
+    private SchoolItem selectedItem;
+    private Map<String,DomSchoolRoleAndClassV2> sracData;
+        private String[] tableHeaders = {"school"};
 
     private Display view;
 
@@ -31,11 +34,24 @@ public class SwitchSchoolPresenter {
         this.view = view;
     }
 
+    public String[] getTableHeaders() {
+        return tableHeaders;
+    }
+    
+    public class SchoolItem{
+        public String key; //unique
+        public String schoolName;
+        public SchoolItem(String aKey, String value){
+            key = aKey;
+            schoolName = value;
+        }
+    }
+
     public interface Display {
         Widget asWidget();
         void clear();
         void init();
-        void updateView(int height, int width, String[][] data);
+        void updateView(Map<String,SwitchSchoolPresenter.SchoolItem>  data);
     }
 
     SwitchSchoolPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -43,13 +59,13 @@ public class SwitchSchoolPresenter {
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    private List<DomSchoolRoleAndClassV2> getTeacherRoles() {
-        List<DomSchoolRoleAndClassV2> result = new ArrayList<DomSchoolRoleAndClassV2>();
+    private Map<String,DomSchoolRoleAndClassV2> getTeacherRoles() {
+        Map<String,DomSchoolRoleAndClassV2> result = new HashMap<String,DomSchoolRoleAndClassV2>();
         DomSchoolsRolesAndClassesV2 sl = dwoGlobalVars.getSchoolLogins();
         List<DomSchoolRoleAndClassV2> fullList = sl.getSchoolsRolesAndClassesList();
         for (DomSchoolRoleAndClassV2 hasRole : fullList) {
             if (hasRole.getRole().getRoleName().equals("TEACHER")) {
-                result.add(hasRole);
+                result.put(hasRole.getHasRole().getId().getIdString(),hasRole);
             }
         }
         return result;
@@ -57,46 +73,45 @@ public class SwitchSchoolPresenter {
 
     public void init() {
         sracData = getTeacherRoles();
-        int i = 0;
-        selectedIndex = i;
-        for (DomSchoolRoleAndClassV2 srac : sracData) {
+        Map<String,SchoolItem> data = new HashMap<String,SchoolItem>(sracData.size());
+        for (DomSchoolRoleAndClassV2 srac : sracData.values()) {
             if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
-                selectedIndex = i;
+                selectedItem =  new SchoolItem(srac.getHasRole().getId().getIdString(), srac.getSchool().getSchoolName());
             }
-            i++;
+            SchoolItem item = selectedItem;
+            data.put(item.key,item);
         }
-        String[][] data = buildPlotData();
         view.init();
-        view.updateView(data.length,1,data);
+        view.updateView(data);
     }
 
     /**
      * @param row the course to set
      */
-    public void selectRow(int row) {
-        if (row != -1) {
-            selectedIndex = row;
+    public void select(SchoolItem item) {
+        if (item != null) {
+            selectedItem = item;
             return;
         }
     }
 
     public void switchSchool() {
-        dwoGlobalVars.setActiveSchoolRoleAndClass(sracData.get(selectedIndex));
+        dwoGlobalVars.setActiveSchoolRoleAndClass(sracData.get(selectedItem.key));
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
     }
 
-    private String[][] buildPlotData() {
-        String[][] data = new String[sracData.size()+1][1];
-        data[0][0] = "School";//<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">School</div>";
-        int i = 1;
-        selectedIndex=0;
-        for (DomSchoolRoleAndClassV2 srac : sracData) {
-            data[i][0] = srac.getSchool().getSchoolName();
-            if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
-                selectedIndex = i;
-            }
-            i++;
-        }
-        return data;
-    }
+//    private String[][] buildPlotData() {
+//        String[][] data = new String[sracData.size()+1][1];
+//        data[0][0] = "School";//<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">School</div>";
+//        int i = 1;
+//        selectedIndex=0;
+//        for (DomSchoolRoleAndClassV2 srac : sracData) {
+//            data[i][0] = srac.getSchool().getSchoolName();
+//            if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
+//                selectedIndex = i;
+//            }
+//            i++;
+//        }
+//        return data;
+//    }
 }

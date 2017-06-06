@@ -127,24 +127,21 @@
     border-color: black;
     background-color: #fefefe;
 }
+
 .dwoDataGridWidget{
     width: auto;
+    height: auto;
+    min-width: 400px;
     padding-left: auto;
     padding-right: auto;
-/*    position: absolute;
-    top: 8px;
-    left:8px;
-    right:8px;
-    bottom: 50px;*/
     margin: auto;
     padding:0px;
     border-style: solid;
     border-width: 1px;
     border-color: black;
     background-color: #fefefe;
-    /*background-color: #f4f7f9;*/
-    /*vertical-align: middle;*/
 }
+
 /*div.dwoDataGridWidget{
     position: inherit;
     height: 90%;
@@ -410,12 +407,3 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     font-size: 130%;
     background: #eee;
 }
-/*
-.dwoGridCell {
-    padding: 8px;
-    border: 1px solid #555555;
-    border-radius: 5px;   
-    background-color: #fefefe;
-    width: 100%;
-    height: auto;  
-}*/
