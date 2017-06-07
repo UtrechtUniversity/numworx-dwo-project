@@ -1,0 +1,97 @@
+package nl.uu.fi.dwo.lms.gwtclient.gwt;
+
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
+import com.google.gwt.event.shared.EventBus;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
+
+/**
+ * Local ViewFactory implementation class.
+ *
+ * @author G.A.J. van der Plas
+ */
+public class PresenterFactoryImpl implements PresenterFactory {
+
+    private final DwoGlobalVars dwoGlobalVars;
+    private final EventBus eventBus;
+    private final MainPresenter mainPresenter;
+    private final LoginPresenter loginPresenter;
+    private final SwitchSchoolPresenter switchSchoolPresenter;
+    private final ResultsPresenter resultsPresenter;
+    private final ScoResultsPresenter scoResultsPresenter;
+    private final SchoolclassesPresenter schoolclassesPresenter;
+    private final AccountPresenter accountPresenter;
+
+    public PresenterFactoryImpl(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+        dwoGlobalVars = aDwoGlobalVars;
+        eventBus = anEventBus;
+        mainPresenter = new MainPresenter(eventBus, dwoGlobalVars);
+        loginPresenter = new LoginPresenter(eventBus, dwoGlobalVars);
+        resultsPresenter = new ResultsPresenter(eventBus, dwoGlobalVars);
+        switchSchoolPresenter = new SwitchSchoolPresenter(eventBus, dwoGlobalVars);
+        scoResultsPresenter = new ScoResultsPresenter(eventBus, dwoGlobalVars);
+        schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
+        accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars);
+    }
+
+    @Override
+    public EventBus getEventBus() {
+        return eventBus;
+    }
+
+    /**
+     * @return the dwoGlobalVars
+     */
+    public DwoGlobalVars getDwoGlobalVars() {
+        return dwoGlobalVars;
+    }
+
+    /**
+     * @return the mainPresenter
+     */
+    public MainPresenter getMainPresenter() {
+        return mainPresenter;
+    }
+
+    /**
+     * @return the loginPresenter
+     */
+    public LoginPresenter getLoginPresenter() {
+        return loginPresenter;
+    }
+
+    /**
+     * @return the resultsPresenter
+     */
+    public ResultsPresenter getResultsPresenter() {
+        return resultsPresenter;
+    }
+
+    /**
+     * @return the switchSchoolPresenter
+     */
+    public SwitchSchoolPresenter getSwitchSchoolPresenter() {
+        return switchSchoolPresenter;
+    }
+
+    /**
+     * @return the scoResultsPresenter
+     */
+    public ScoResultsPresenter getScoResultsPresenter() {
+        return scoResultsPresenter;
+    }
+    
+    public SchoolclassesPresenter getSchoolclassesPresenter(){
+        return schoolclassesPresenter;
+    }
+
+    /**
+     * @return the accountPresenter
+     */
+    public AccountPresenter getAccountPresenter() {
+        return accountPresenter;
+    }
+}

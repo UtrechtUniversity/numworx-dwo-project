@@ -13,8 +13,8 @@
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>-->
     <!-- Adjust artifact, name and description for new projects -->
-    <groupId>nl.uu.fi.dwo.account</groupId>
-    <artifactId>DWOResults</artifactId>
+    <groupId>nl.uu.fi.dwo.lms</groupId>
+    <artifactId>DWOGwtClient</artifactId>
     <version>0.0.9-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -157,7 +157,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <module>nl.uu.fi.dwo.account.boot</module>
+                            <module>nl.uu.fi.dwo.lms.gwtclient.gwtclient</module>
                         </configuration>                           
                         <goals>
                             <goal>compile</goal>

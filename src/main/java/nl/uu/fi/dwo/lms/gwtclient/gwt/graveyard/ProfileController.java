@@ -1,0 +1,99 @@
+package nl.uu.fi.dwo.lms.gwtclient.gwt.graveyard;
+
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.GwtRestVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+
+/**
+ *
+ * @author Gert van der Plas
+ */
+class ProfileController {
+
+    private static final Logger LOG = Logger.getLogger(ProfileController.class.getName());
+
+    private ProfilePanel view = null;
+    private DomUserFull currentUser = null;
+    private DomUserFull updateUser = null;
+    private SecuredUserAccountManager manager = new SecuredUserAccountManager();
+
+    /**
+     *
+     * @param view
+     * @param user
+     */
+    public ProfileController(ProfilePanel view, DomUserFull user) {
+        this.view = view;
+        this.init(user);
+    }
+
+    /**
+     *
+     * @param user
+     */
+    public void init(DomUserFull user) {
+        currentUser = user;
+        updateUser = currentUser.duplicate();
+    }
+
+    /**
+     * Update the currentUser.
+     *
+     */
+    public void callUpdate() {
+        LOG.log(Level.INFO, "Calling REST-interface login.");
+        manager.updateAccountData(updateUser, new AsyncCallback<DomUserFull>() {
+            @Override
+            public void onFailure(Throwable t) {
+                //fail and reset all the data.
+                Window.alert(t.getMessage());
+            }
+
+            @Override
+            public void onSuccess(DomUserFull result) {
+                //success and set all the data in the view
+                    LOG.log(Level.INFO, "update was succesful.");
+                    currentUser = result;
+                    updateUser = currentUser.duplicate();
+                    //update Globals otherwise can't loginUser in passwd change!
+                    DwoGlobalVars.instance().setCurrentUser(currentUser);
+                    //update rest authentication done by setcurrentuser
+                    view.init(currentUser);
+                    view.getPopup().hide();
+            }
+        });
+    }
+
+    /**
+     * @return the currentUser
+     */
+    public DomUserFull getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * @param aCurrentUser
+     */
+    public void setCurrentUser(DomUserFull aCurrentUser) {
+        currentUser = aCurrentUser;
+    }
+
+    /**
+     * @return the updateUser
+     */
+    public DomUserFull getUpdateUser() {
+        return updateUser;
+    }
+
+    /**
+     * @param updateUser the updateUser to set
+     */
+    public void setUpdateUser(DomUserFull updateUser) {
+        this.updateUser = updateUser;
+    }
+}
