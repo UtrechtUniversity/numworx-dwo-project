@@ -259,6 +259,16 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     }
 
     @Override
+    public void showMessageDialog(String msg) {
+        Window.confirm(msg);
+    }
+
+    @Override
+    public void showErrorDialog(String errMsg) {
+        Window.alert(errMsg);
+    }
+        
+    @Override
     public boolean menuVisible() {
         return showMenu;
     }

@@ -1,14 +1,20 @@
 package nl.uu.fi.dwo.account.client.boot;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.account.client.DwoViewer;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -41,10 +47,14 @@ public class AccountPresenter {
     }
 
     public interface Display {
+
         Widget asWidget();
+
         void clear();
+
         void init();
-        void updateView(String username, String firstName, String insertion, String familyName);
+
+        void updateView(String username, String firstName, String insertion, String familyName, String email);
     }
 
     AccountPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -55,7 +65,8 @@ public class AccountPresenter {
     public void init() {
         updateUserData();
     }
-   public void updateUserData() {
+
+    public void updateUserData() {
         Promise<DomUserFull> userPromise;
         userPromise = accountService.getUserData();
         // onSuccess calculate results and show.
@@ -64,8 +75,8 @@ public class AccountPresenter {
             public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomFullUser data returned.");
-                DomUserFull uf= resolved.getValue();
-                view.updateView(uf.getUserName(), uf.getGivenName(), uf.getInsertion(), uf.getFamilyName());
+                DomUserFull uf = resolved.getValue();
+                view.updateView(uf.getUserName(), uf.getGivenName(), uf.getInsertion(), uf.getFamilyName(), uf.getEmail());
                 dwoGlobalVars.setCurrentUser(uf);//updating data
                 return null;
             }
@@ -82,6 +93,7 @@ public class AccountPresenter {
             }
         });
     }
+
     /**
      * @param row the course to set
      */
@@ -92,18 +104,82 @@ public class AccountPresenter {
         }
     }
 
-    private String[][] buildPlotData() {
-        String[][] data = new String[resultScoData.size()+1][1];
-//        data[0][0] = "School";//<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">School</div>";
-//        int i = 1;
-//        selectedIndex=0;
-//        for (DomSchoolRoleAndClassV2 srac : resultScoData) {
-//            data[i][0] = srac.getSchool().getSchoolName();
-//            if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
-//                selectedIndex = i;
-//            }
-//            i++;
-//        }
-        return data;
+    public void updateUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
+        if (!MD5.md5(curPassword).equals(dwoGlobalVars.getCurrentUser().getPassword())) {
+            DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
+            return;
+        }
+
+        DomUserFull user = new DomUserFull();
+        user.setUserName(dwoGlobalVars.getCurrentUser().getUserName());
+        //set freely allowed values
+        if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(curPassword, familyName, givenName)) {
+            LOG.log(Level.INFO, "valid required fields.");
+            user.setFamilyName(familyName.trim());
+            user.setGivenName(givenName.trim());
+            if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(insertion)) {
+                user.setInsertion(insertion.trim());
+            } else {
+                user.setInsertion(null);
+            }
+        } else {
+            DwoViewer.showMessage(Dwo2ExceptionCode.Rest_Registration_Required_Fields);
+            return;
+        }
+
+        //check values
+        if (!SimpleValidUserFieldsChecker.isValidEmail(email)) {
+            DwoViewer.showMessage(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid);
+            return;
+        } else {
+            user.setEmail(email.trim());
+        }
+
+        if (!SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
+                && !SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPasswordAgain)) {
+            user.setPassword(dwoGlobalVars.getCurrentUser().getPassword());
+        } else if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
+                && SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPasswordAgain)
+                && newPassword.compareTo(newPasswordAgain) == 0) {
+            if (!SimpleValidUserFieldsChecker.isValidPassword(newPassword)) {
+                //invalid password format
+                DwoViewer.showMessage(Dwo2ExceptionCode.User_NewPasswordsDoNotMatch);
+            } else {
+                user.setPassword(MD5.md5(newPassword));
+            }
+        } else {
+            DwoViewer.showMessage(Dwo2ExceptionCode.User_NewPasswordsDoNotMatch);
+            return;
+        }
+
+        //All is well, proceed with REST-request
+        Promise<DomUserFull> promisedUser;
+        promisedUser = accountService.UpdateUserData(user);
+        // onSuccess calculate results and show.
+        promisedUser.then(new Success<DomUserFull, Void>() {
+            @Override
+            public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
+                //calculate tree and call plotting
+                LOG.log(Level.INFO, "DomUser returned.");
+                DomUserFull u = resolved.getValue();
+                dwoGlobalVars.setCurrentUser(u);
+                view.updateView(u.getUserName(), u.getGivenName(), u.getInsertion(), u.getFamilyName(), u.getEmail());
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    //throw directly
+                }
+            }
+        });
+        LOG.log(Level.INFO, "Data send to server.");
     }
+
 }

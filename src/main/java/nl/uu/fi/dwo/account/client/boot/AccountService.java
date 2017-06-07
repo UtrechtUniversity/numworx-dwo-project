@@ -22,8 +22,8 @@ public class AccountService {
     private SecuredUserAccountManager manager = new SecuredUserAccountManager();
 
    public Promise<DomUserFull> getUserData() {
-        DomContext context = new DomContext();
-        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
+//        DomContext context = new DomContext();
+//        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
 //        DomDwoProfile profile = new DomDwoProfile();
 //        int profileId = DwoGlobalVars.instance().getProfileId();
 //        String formattedId = NumberFormat.getFormat("00000000000000000000").format(profileId);
@@ -33,7 +33,7 @@ public class AccountService {
         return manager.getAccountData();
     }
    
-//   public Promise<DomUserFull> UpdateUserData(DomUserFull user){
+   public Promise<DomUserFull> UpdateUserData(DomUserFull user){
 //        DomContext context = new DomContext();
 //        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
 //        DomDwoProfile profile = new DomDwoProfile();
@@ -42,6 +42,6 @@ public class AccountService {
 //        profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;"+formattedId));
 //        profile.setDwoProfileName("test");
 //        profile.setDwoProfileRights("_");
-//        return manager.updateAccountData(user, callBack);       
-//   }
+        return manager.updateAccountData(user);       
+   }
 }

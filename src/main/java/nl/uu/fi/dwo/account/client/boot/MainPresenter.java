@@ -39,6 +39,8 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         public void hideMenuButton();
         public void showMenuView();
         public void hideMenuView();
+        public void showMessageDialog(String msg);
+        public void showErrorDialog(String msg);
         public boolean menuVisible();
     }
 

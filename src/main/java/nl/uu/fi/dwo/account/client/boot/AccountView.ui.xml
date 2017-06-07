@@ -39,6 +39,15 @@
                     </g:TextBox>
                 </g:customCell>
             </g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label>email:</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:TextBox ui:field='emailText'>
+                    </g:TextBox>
+                </g:customCell>
+            </g:row>
             <g:row></g:row>
             <g:row>
                 <g:customCell>
