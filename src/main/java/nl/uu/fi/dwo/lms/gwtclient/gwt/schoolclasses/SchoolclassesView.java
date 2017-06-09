@@ -6,8 +6,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -38,7 +38,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     @UiField(provided = true)
-    CellTable dataGrid;
+    DataGrid dataGrid;
 //    @UiField(provided = true)            
 //    CellList dataGrid;
     @UiField(provided = true)
@@ -55,7 +55,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         schoolclassesPresenter.setView(this);
         String[] tableHeaders = sp.getTableHeaders();
 //        TextCell textCell = new TextCell();
-        dataGrid = new CellTable<String>();
+        dataGrid = new DataGrid<String>();
 
         ListDataProvider<String> dataProvider = new ListDataProvider<String>();
 

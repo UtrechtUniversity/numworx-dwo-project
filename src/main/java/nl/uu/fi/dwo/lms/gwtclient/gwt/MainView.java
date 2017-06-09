@@ -14,13 +14,13 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.Iterator;
@@ -33,7 +33,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
  *
  * @author Gert van der Plas
  */
-public class MainView extends Composite implements HasWidgets, ClickHandler, MainPresenter.Display {
+public class MainView extends ResizeComposite implements HasWidgets, ClickHandler, MainPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(MainView.class.getName());
 
