@@ -126,7 +126,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 		//this.parent = parent;
 		
 		init(breedte, hoogte, launchState, randomVarWaarden);
-		this.ipValueList = ipValueList;
+		this.ipValueList = ipValueList; // waar moet ipValueList vandaan komen??
 		
 		initialize(h, randomVarNamen, randomVarWaarden);
 	}
@@ -566,7 +566,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
         boolean changed = false;
     	for (int i=0 ; i<aantalValueObjects ; i++)
         {   
-    		if (ipValueList[i].ipObjectIsChanged())
+    		if (ipValueList[i] != null && ipValueList[i].ipObjectIsChanged())
     			changed = true;
         }
     	correct = false;
@@ -583,7 +583,6 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
         {
         	if (formuleStrings!=null)
         	{
-        		
         		VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
         		for (int h=0 ; h<formuleStrings.length ; h++)
 		        {
@@ -605,20 +604,28 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
         			v[h] = FormuleParser.parseVergelijking(formuleString);
         			for (int i=0 ; i<aantalValueObjects ; i++)
     		        {   
-    	        		Expressie e = ipValueList[i].geefObjectWaarde();
-    	        		if (e!=null) 
-    	        		{	
-    	        			ingevuld = true;
-    	        			v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
-    	        		}
-    	        		else if (ipValueList[i].objectNullWaarde())
-    	        		{	
-    	        		}
-    	        		else 
-    	        		{	
-    	        			stapJuist = false;
+        				if (ipValueList[i] != null)
+        				{
+	    	        		Expressie e = ipValueList[i].geefObjectWaarde();
+	    	        		if (e!=null) 
+	    	        		{	
+	    	        			ingevuld = true;
+	    	        			v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
+	    	        		}
+	    	        		else if (ipValueList[i].objectNullWaarde())
+	    	        		{	
+	    	        		}
+	    	        		else 
+	    	        		{	
+	    	        			stapJuist = false;
+	    	        			break;
+	    	        		}
+        				}
+        				else
+        				{
+        					stapJuist = false;
     	        			break;
-    	        		}
+        				}
     		        }
         			
         			String[][] tekenParen = {{"<","<"},{"<","\u2264"},{"\u2264","<"},{"\u2264","\u2264"},{">",">"},{"\u2265",">"},{">","\u2265"},{"\u2265","\u2265"}};
@@ -698,52 +705,71 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
         			if (!juist && locationStrings==null) break;
         			
         			if (locationStrings!=null){
-        				for (int i=0 ; i<locationStrings.length ; i++){
+        				for (int i=0 ; i<locationStrings.length ; i++)
+        				{
             				int location = Integer.parseInt(locationStrings[i].trim());
             				if (show)
-            					(ipValueList[location-1]).zetGoedFout(stapJuist);
+            				{
+            					if (ipValueList[location-1] != null)
+            						(ipValueList[location-1]).zetGoedFout(stapJuist);
+            				}
             			}
         			}
         			
 		        }
-        	}
+        	} // formuleStrings != null
         	else
-        	{	
+        	{
         		VergelijkingMeerv v = FormuleParser.parseVergelijking(formuleString);
 	        	for (int i=0 ; i<aantalValueObjects ; i++)
-		        {   
-	        		Expressie e = (ipValueList[i]).geefObjectWaarde();
-	        		if (e!=null) 
-	        		{	
-	        			ingevuld = true;
-	        			v = v.substitueer(e, "V?("+(i+1)+")");
+		        {
+	        		if (ipValueList[i] != null)
+	        		{
+		        		Expressie e = (ipValueList[i]).geefObjectWaarde();
+		        		if (e!=null) 
+		        		{	
+		        			ingevuld = true;
+		        			v = v.substitueer(e, "V?("+(i+1)+")");
+		        		}
+		        		else 
+		        		{	
+		        			juist = false;
+		        			break;
+		        		}
 	        		}
-	        		else 
-	        		{	
+	        		else
+	        		{
 	        			juist = false;
 	        			break;
 	        		}
 		        }
-	        	try {
+	        	try 
+	        	{
 					juist = v.isOplossing(new BasisExpressie(1.212131415),"q");
-				} catch (RestartException e) {
+				} 
+	        	catch (RestartException e) 
+	        	{
 					juist = false; // Weet Niet
 				}
 	        }
-        }
+        } // checkSamen
         else
         {
         	for (int i=0 ; i<aantalValueObjects ; i++)
 	        {   
-        		//changed opvragen en straks weer terugzetten; wordt altijd op false gezet door kijkNa in ipobjectIsCorrect.
-        		boolean ipValueChanged = ipValueList[i].ipObjectIsChanged();
-        		boolean stapJuist = ipValueList[i].ipObjectIsCorrect();
-	        	ingevuld = ingevuld || ipValueList[i].ipObjectIsIngevuld();
-	        	juist = juist && stapJuist;
-	        	if(view && show)
-	        	{	ipValueList[i].zetGoedFout(stapJuist);
-	        	}
-	        	ipValueList[i].setChanged(ipValueChanged);
+        		if (ipValueList[i] != null)
+        		{
+	        		//changed opvragen en straks weer terugzetten; wordt altijd op false gezet door kijkNa in ipobjectIsCorrect.
+	        		boolean ipValueChanged = ipValueList[i].ipObjectIsChanged();
+	        		boolean stapJuist = ipValueList[i].ipObjectIsCorrect();
+		        	ingevuld = ingevuld || ipValueList[i].ipObjectIsIngevuld();
+		        	juist = juist && stapJuist;
+		        	if(view && show)
+		        	{	
+		        		ipValueList[i].zetGoedFout(stapJuist);
+		        	}
+		        	ipValueList[i].setChanged(ipValueChanged);
+        		}
 		    }
 	    }
         if (juist)
@@ -794,12 +820,17 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 
     public void verhoogErrorCount(boolean changed)
     {
-    	if(changed)
+    	if (changed)
 		{
 			errorCount++;
 		}
-    	for(int i = 0; i < aantalValueObjects; i++)
-    		ipValueList[i].setChanged(false);
+    	for (int i = 0; i < aantalValueObjects; i++)
+    	{
+    		if (ipValueList[i] != null)
+    		{
+    			ipValueList[i].setChanged(false);
+    		}
+    	}
 	}
     
     public void kijkNa(int stapNr)
