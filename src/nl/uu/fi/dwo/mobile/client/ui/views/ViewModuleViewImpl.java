@@ -267,8 +267,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		int mode = on.getMode();
 		if (mode == OpdrNav.ZELFTOETS)
 		{
-			// kijk na-knop enabled als er maar 1 opdracht is of als al eerder is nagekeken of als alles bezocht is
-			scoreNav.setKijkNaEnabled(on.getAantalOpdrachten() == 1 || on.getKeerNagekeken() > 0 || allesBezocht(on.getCurrentActiviteit()));
+			scoreNav.setKijkNaEnabled(isKijkNaEnabled());
 			
 			sb.addKnop(scoreNav.getKijkNaButton(), false);
 		}
@@ -289,6 +288,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 						zelftoetsNagekeken = true;
 						on.kijkToetsNa();
 						zetToetsNagekeken(source);
+						
+						// zet de nakijkknop enabled/disabled
+						scoreNav.setKijkNaEnabled(isKijkNaEnabled());
 
 						v();
 					}
@@ -381,6 +383,29 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			zetAfdekPanelTempotoets(tempotoetsLocked, isAllCorrect());
 		}
+	}
+
+	/**
+	 * De 'kijk na'-knop is enabled als:
+	 * - er maar 1 opdracht is, of
+	 * - als al eerder is nagekeken en niet geen correctiemogelijkheid zelftoets of eerdere pagina's, of
+	 * - als alles bezocht is
+	 *  
+	 * @return
+	 */
+	boolean isKijkNaEnabled()
+	{
+		boolean enabled = false;
+		
+		if (on.getAantalOpdrachten() == 1)
+			enabled = true;
+		else if ((on.getKeerNagekeken() > 0) && (eerderGeenCorr || zelftoetsGeenCorr))
+			enabled = false;
+		else if (on.getKeerNagekeken() > 0) // in andere gevallen van een nagekeken zelftoets enabled = true
+			enabled = true;
+		else if (allesBezocht(on.getCurrentActiviteit()))
+			enabled = true;
+		return enabled;
 	}
 	
 	/**
@@ -937,7 +962,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public void zetNakijkKnopEnabled()
 	{
-		boolean enable = !(zelftoetsNagekeken && zelftoetsGeenCorr) && suspendDataCompleted(on.getCurrentActiviteit(), on.getCurrentOpdracht());
+//		boolean enable = !(zelftoetsNagekeken && zelftoetsGeenCorr) && suspendDataCompleted(on.getCurrentActiviteit(), on.getCurrentOpdracht());
+		boolean enable = isKijkNaEnabled();
 		scoreNav.setKijkNaEnabled(enable);
 	}
 	
