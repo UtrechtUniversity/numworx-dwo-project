@@ -72,7 +72,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private static final String OPDR_CONT_STATES = "opdrContStates";
 	private static final String STRAFPUNTEN = "strafpunten"; // optional!
 	private static final String GOED_FOUT = "orGoedFout";
+	private static final String GOED_FOUT_ZELFTOETS = "isCorrectZelftoets";
 	private static final String SCORES = "orScores"; // TODO correct name? getPagina score gebruikt deze naam
+	private static final String SCORES_ZELFTOETS = "scoresZelftoets"; 
 	private static final String ONS_STATE = "onsState";
 	private static final String LOG_STATE = "log";
 	private static final String AANTAL_NAKIJKEN = "aantalNakijken";
@@ -102,6 +104,25 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private JSONObject onsState, shareMap;
 	private JSONObject logState;
 	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout, opdrScores, opdrBezocht;
+	/**
+	 * Scores (per activiteit, per opdracht/pagina, vgl. opdrScores) die getoond worden 
+	 * in een nagekeken zelftoets. Als een antwoord gewijzigd is na
+	 * het nakijken van de zelftoets, kan de score van de pagina met de huidige 
+	 * ingevulde antwoorden anders zijn dan die opgeslagen in scoresZelftoets.
+	 * De score bij de huidige ingevulde antwoorden moet pas getoond
+	 * worden als op de nakijk-knop wordt gedrukt.
+	 */
+	private JSONArray scoresZelftoets;
+	/**
+	 * Correctheid (per activiteit, per opdracht/pagina, vgl. opdrGoedFout) die getoond wordt
+	 * in een nagekeken zelftoets dmv een groen of rood bolletje.
+	 * Als een antwoord gewijzigd is na het nakijken van de zelftoets, 
+	 * kan de correctheid van de pagina met de huidige
+	 * ingevulde antwoorden anders zijn dan die opgeslagen in isCorrectZelftoets.
+	 * De correctheid bij de huidige ingevulde antwoorden moet pas getoond
+	 * worden als op de nakijk-knop wordt gedrukt.
+	 */
+	private JSONArray isCorrectZelftoets;
 	private JSONBoolean zelftoetsNagekeken, zelftoetsGeenCorr;
 	private JSONBoolean tempotoetsLocked;
 	private JSONNumber tempotoetsSecondsLeft;
@@ -138,7 +159,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			opdrContStates = (JSONArray) onsState.get(OPDR_CONT_STATES);
 			opdrStrafpunten = (JSONArray) onsState.get(STRAFPUNTEN);
 			opdrGoedFout  = (JSONArray) onsState.get(GOED_FOUT);
+			isCorrectZelftoets  = (JSONArray) onsState.get(GOED_FOUT_ZELFTOETS);
 			opdrScores    = (JSONArray) onsState.get(SCORES);
+			scoresZelftoets = (JSONArray) onsState.get(SCORES_ZELFTOETS);
 			opdrBezocht   = (JSONArray) onsState.get(BEZOCHT);
 			zelftoetsNagekeken = (JSONBoolean) onsState.get(ZELFTOETS_NAGEKEKEN);
 			tempotoetsLocked = (JSONBoolean) onsState.get(TEMPOTOETS_LOCKED);
@@ -897,7 +920,115 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		this.tempotoetsSecondsLeft = new JSONNumber(seconds);
 		this.onsState.put(TEMPOTOETS_SECONDS_LEFT, this.tempotoetsSecondsLeft);
 	}
+	
+	public int[][] getScoresZelftoets()
+	{
+		if (scoresZelftoets == null)
+		{
+			return null;
+		}
+		
+		int aantalActiviteiten = 0;
+		int aantalOpdrachten = 0;
+		
+		aantalActiviteiten = scoresZelftoets.size();
+		
+		for (int i = 0; i < scoresZelftoets.size(); i++)
+		{
+			JSONArray array = scoresZelftoets.get(i).isArray();
+			aantalOpdrachten = Math.max(array.size(), aantalOpdrachten);
+		}
+		
+		int[][] intArray = new int[aantalActiviteiten][aantalOpdrachten];
+		
+		for (int i = 0; i < scoresZelftoets.size(); i++)
+		{
+			JSONArray array = scoresZelftoets.get(i).isArray();
+			for (int j = 0; j < array.size(); j++)
+			{
+				JSONNumber jsonNr = array.get(j).isNumber();
+				if (jsonNr != null)
+				{
+					intArray[i][j] = (int) jsonNr.doubleValue();
+				}
+			}
+		}		
+		return intArray;
+	}
+	
+	public void setScoresZelftoets(int[][] scores)
+	{
+		JSONArray array = new JSONArray();
 
+		for (int i = 0; i < scores.length; i++)
+		{
+			int[] scoresPerActiviteit = scores[i];
+			Integer[] integerScores = new Integer[scoresPerActiviteit.length];
+			for (int j = 0; j < scoresPerActiviteit.length; j++)
+			{
+				integerScores[j] = new Integer(scoresPerActiviteit[j]);
+			}
+			array.set(i, JSONUtilities.toJSONArray(integerScores));
+		}
+
+		this.scoresZelftoets = array;
+		this.onsState.put(SCORES_ZELFTOETS, this.scoresZelftoets);
+	}
+	
+	public boolean[][] isCorrectZelftoets()
+	{
+		if (isCorrectZelftoets == null)
+		{
+			return null;
+		}
+		
+		int aantalActiviteiten = 0;
+		int aantalOpdrachten = 0;
+		
+		aantalActiviteiten = isCorrectZelftoets.size();
+		
+		for (int i = 0; i < isCorrectZelftoets.size(); i++)
+		{
+			JSONArray array = isCorrectZelftoets.get(i).isArray();
+			aantalOpdrachten = Math.max(array.size(), aantalOpdrachten);
+		}
+		
+		boolean[][] booleanArray = new boolean[aantalActiviteiten][aantalOpdrachten];
+		
+		for (int i = 0; i < isCorrectZelftoets.size(); i++)
+		{
+			JSONArray array = isCorrectZelftoets.get(i).isArray();
+			for (int j = 0; j < array.size(); j++)
+			{
+				JSONBoolean jsonBoolean = array.get(j).isBoolean();
+				if (jsonBoolean != null)
+				{
+					booleanArray[i][j] = jsonBoolean.booleanValue();
+				}
+			}
+		}		
+		return booleanArray;
+	}
+	
+	public void setIsCorrectZelftoets(boolean[][] isCorrect)
+	{
+		JSONArray array = new JSONArray();
+
+		for (int i = 0; i < isCorrect.length; i++)
+		{
+			boolean[] isCorrectPerActiviteit = isCorrect[i];
+			Boolean[] booleanScores = new Boolean[isCorrectPerActiviteit.length];
+			for (int j = 0; j < isCorrectPerActiviteit.length; j++)
+			{
+				booleanScores[j] = new Boolean(isCorrectPerActiviteit[j]);
+			}
+			array.set(i, JSONUtilities.toJSONArray(booleanScores));
+		}
+
+		this.isCorrectZelftoets = array;
+		this.onsState.put(GOED_FOUT_ZELFTOETS, this.isCorrectZelftoets);
+	}
+	
 	public boolean isTempotoetsVerlopen()
 	{
 		if (this.tempotoetsLocked == null) // when there haven't been any suspenddata yet
