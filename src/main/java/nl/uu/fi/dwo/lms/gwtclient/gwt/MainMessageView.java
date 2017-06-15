@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author Gert van der Plas
  */
-public class MainMessageView extends Composite {
+public class MainMessageView extends Composite{
 
     private static final Logger LOG = Logger.getLogger(MainMessageView.class.getName());
     
@@ -26,7 +27,7 @@ public class MainMessageView extends Composite {
     @UiField
     PushButton okButton;
 
-    MainMessageView(){
+    public MainMessageView(){
         initWidget(uiBinder.createAndBindUi(this));
 //        loginPresenter = lp;
         //controller must be before clicks occur
@@ -35,5 +36,9 @@ public class MainMessageView extends Composite {
     
     public void setMsg(String msg){
         msgLabel.setText(msg);    
+    }
+    
+    public void addOkClickHandler(ClickHandler handler) {
+        okButton.addClickHandler(handler);
     }
 }

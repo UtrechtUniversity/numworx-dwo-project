@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.gwt.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 
 /**
  * Local ViewFactory implementation class.
@@ -24,6 +25,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final ScoResultsPresenter scoResultsPresenter;
     private final SchoolclassesPresenter schoolclassesPresenter;
     private final AccountPresenter accountPresenter;
+    private final AddSchoolclassPresenter addSchoolclassPresenter;
 
     public PresenterFactoryImpl(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
@@ -35,6 +37,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
         scoResultsPresenter = new ScoResultsPresenter(eventBus, dwoGlobalVars);
         schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
         accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars);
+        addSchoolclassPresenter = new AddSchoolclassPresenter(eventBus, dwoGlobalVars);
     }
 
     @Override
@@ -93,5 +96,13 @@ public class PresenterFactoryImpl implements PresenterFactory {
      */
     public AccountPresenter getAccountPresenter() {
         return accountPresenter;
+    }
+    
+    
+    /**
+     * @return the addSchoolclassPresenter
+     */
+    public AddSchoolclassPresenter getAddSchoolclassPresenter() {
+        return addSchoolclassPresenter;
     }
 }

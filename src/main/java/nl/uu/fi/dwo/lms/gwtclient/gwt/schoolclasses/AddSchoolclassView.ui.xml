@@ -1,0 +1,53 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+>
+    <ui:style field="dwoStyle" src="../css/dwostyle.css" />    
+    <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
+    <g:FlowPanel addStyleNames='{dwoStyle.dwoDialogPanel}'>
+        <!--addStyleNames='{dwoStyle.dwoWidgetPanel}'>-->    
+        <g:Grid>
+            <g:row>
+                <g:customCell>
+                    <g:Label>classname</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:TextBox ui:field='schoolclassName'></g:TextBox>
+                </g:customCell>
+            </g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label>show tree</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:CheckBox ui:field='showTree' checked="false">boomStructuur</g:CheckBox>
+                </g:customCell>
+            </g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label>schoolclass key</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:CheckBox ui:field='setClassKey' checked="false">klassleutel</g:CheckBox>
+                </g:customCell>
+            </g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label>classkey</g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:TextBox ui:field='classKey'></g:TextBox>
+                </g:customCell>
+            </g:row>
+            <g:row></g:row>
+            <g:row>
+                <g:customCell>
+                    <g:PushButton  ui:field="cancelButton">Cancel</g:PushButton>
+                </g:customCell>
+                <g:customCell>
+                    <g:PushButton  ui:field="addButton">Add</g:PushButton>
+                </g:customCell>
+            </g:row>
+        </g:Grid>   
+    </g:FlowPanel>
+</ui:UiBinder> 

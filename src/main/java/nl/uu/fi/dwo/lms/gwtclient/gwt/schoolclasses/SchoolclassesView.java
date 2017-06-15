@@ -14,11 +14,11 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.Comparator;
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 
 /**
  * GWT Panel that handles switching the role.
@@ -48,8 +49,11 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     Button addBtn;
 
     private SchoolclassesPresenter schoolclassesPresenter;
+    private ViewFactory viewFactory;
     SchoolclassesPresenter.ClassItem selected;
     ListDataProvider<SchoolclassesPresenter.ClassItem> dataProvider = new ListDataProvider<SchoolclassesPresenter.ClassItem>();
+    AddSchoolclassView addSchoolclassView;
+    final DialogBox dialogBox = new DialogBox();
 
     public class MyCell extends AbstractCell<String> {
 
@@ -78,9 +82,17 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         }
     }
 
-    public SchoolclassesView(SchoolclassesPresenter sp) {
+    public SchoolclassesView(SchoolclassesPresenter sp, ViewFactory vf) {
         schoolclassesPresenter = sp;
+        viewFactory = vf;
         schoolclassesPresenter.setView(this);
+//            dialogBox.add(addSchoolclassView.asWidget());
+//            dialogBox.setModal(true);
+//            dialogBox.setAutoHideEnabled(true);
+//            dialogBox.setGlassEnabled(true);
+//            dialogBox.setAnimationEnabled(true);
+//            dialogBox.center();
+
         String[] tableHeaders = sp.getTableHeaders();
 //        TextCell textCell = new TextCell();
         dataGrid = new CellTable<String>();
@@ -89,7 +101,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         // Connect the table to the data provider.
         dataProvider.addDataDisplay(dataGrid);
         dataGrid.setSkipRowHoverCheck(true);
-        dataGrid.setKeyboardSelectionPolicy( com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
+        dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
 //        // Add the data to the data provider, which automatically pushes it to the
 //        // widget.
@@ -137,7 +149,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         };
             value.setSortable(false);
         dataGrid.addColumn(value, tableHeaders[1]);
-        
+
         //modules
         value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
             @Override
@@ -148,8 +160,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         };
             value.setSortable(false);
         dataGrid.addColumn(value, tableHeaders[2]);
-        
-        
+
         //students col
         value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
             @Override
@@ -157,7 +168,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
                 return tableHeaders[3];
             }
         };
-            value.setSortable(false);
+        value.setSortable(false);
         dataGrid.addColumn(value, tableHeaders[3]);
 
         //teachers col
@@ -167,7 +178,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
                 return tableHeaders[4];
             }
         };
-            value.setSortable(false);
+        value.setSortable(false);
         dataGrid.addColumn(value, tableHeaders[4]);
 
         //remove col
@@ -177,7 +188,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
                 return tableHeaders[5];
             }
         };
-            value.setSortable(false);
+        value.setSortable(false);
         dataGrid.addColumn(value, tableHeaders[5]);
 
         dataGrid.setRowData(0, data);
@@ -196,6 +207,11 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
 
     @Override
     public void init() {
+        addSchoolclassView = (AddSchoolclassView) viewFactory.getAddSchoolclassView();
+        addSchoolclassView.clear();
+        if (dialogBox != null) {
+            dialogBox.hide();
+        }
         addBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
 
@@ -206,7 +222,22 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == addBtn) {
-            schoolclassesPresenter.addSchoolClass();
+//            ClickHandler okHandler = new ClickHandler() {
+//                public void onClick(ClickEvent event) {
+//                    dialogBox.hide();
+//                }
+//            };
+            if (dialogBox.getWidget()==null) {
+                addSchoolclassView.clear();
+                dialogBox.add(addSchoolclassView.asWidget());
+                dialogBox.setModal(true);
+                dialogBox.setAutoHideEnabled(true);
+                dialogBox.setGlassEnabled(true);
+                dialogBox.setAnimationEnabled(true);
+                dialogBox.center();
+            }
+            dialogBox.show();
+//            schoolclassesPresenter.addSchoolClass();
         }
     }
 

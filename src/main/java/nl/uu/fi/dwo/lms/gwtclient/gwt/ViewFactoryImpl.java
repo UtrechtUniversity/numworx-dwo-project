@@ -12,6 +12,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassView;
 
 /**
  * Local ViewFactory implementation class. 
@@ -26,6 +28,7 @@ public class ViewFactoryImpl implements ViewFactory {
     private final ScoResultsPresenter.Display scoResultsView;
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AccountPresenter.Display accountView;
+    private final AddSchoolclassPresenter.Display addSchoolclassView;
     
     public ViewFactoryImpl(PresenterFactory pf){
     mainView = new MainView(pf.getMainPresenter());
@@ -33,8 +36,10 @@ public class ViewFactoryImpl implements ViewFactory {
     resultsView = new ResultsView(pf.getResultsPresenter());
     switchSchoolView = new SwitchSchoolView(pf.getSwitchSchoolPresenter());
     scoResultsView = new ScoResultsView(pf.getScoResultsPresenter());
-    schoolclassesView = new SchoolclassesView(pf.getSchoolclassesPresenter());
     accountView = new AccountView(pf.getAccountPresenter());
+    //ordered!
+    schoolclassesView = new SchoolclassesView(pf.getSchoolclassesPresenter(),this);
+    addSchoolclassView = new AddSchoolclassView(pf.getAddSchoolclassPresenter());
     }
     
     @Override
@@ -72,4 +77,8 @@ public class ViewFactoryImpl implements ViewFactory {
         return accountView;
     }
 
+    @Override
+    public AddSchoolclassPresenter.Display getAddSchoolclassView(){
+        return addSchoolclassView;
+    }
 }

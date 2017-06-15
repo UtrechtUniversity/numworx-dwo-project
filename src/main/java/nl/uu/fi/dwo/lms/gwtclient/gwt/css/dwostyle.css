@@ -430,3 +430,15 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     background-color: #fefefe;
     vertical-align: middle;
 }
+
+.dwoDialogPanel {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px;
+    border: 1px;
+    border-style: solid;
+    border-color: black;
+    background-color: #fefefe;
+}

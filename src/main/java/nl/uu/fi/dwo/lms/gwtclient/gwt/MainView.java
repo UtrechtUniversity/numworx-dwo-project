@@ -95,7 +95,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     ScoResultsView scoResultsView;
 
 //    @UiField(provided = true)
-    MainMessageView mainMessageView= new MainMessageView();
+    MainMessageView mainMessageView = new MainMessageView();
 
     @UiField(provided = true)
     Label accountLabel = new MenuLabel();
@@ -208,7 +208,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     public void showLoginView() {
         int index = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(index);
-                    //    showMessageDialog("hello world");
+        //    showMessageDialog("hello world");
     }
 
     @Override
@@ -264,11 +264,22 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void showMessageDialog(String msg) {
-        mainMessageView.setMsg(msg);
-        mainMessageView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-        final DialogBox box = new DialogBox();
-        box.add(mainMessageView);
-        box.showRelativeTo(this);
+        final DialogBox dialogBox = new DialogBox();
+        MainMessageView msgView = new MainMessageView();
+        msgView.setMsg(msg);
+        ClickHandler okHandler = new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                dialogBox.hide();
+            }
+        };
+        msgView.addOkClickHandler(okHandler);
+        dialogBox.add(msgView.asWidget());
+        dialogBox.setModal(true);
+        dialogBox.setAutoHideEnabled(true);
+        dialogBox.setGlassEnabled(true);
+        dialogBox.setAnimationEnabled(true);
+        dialogBox.center();
+        dialogBox.show();
     }
 
     @Override
@@ -281,49 +292,6 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         return showMenu;
     }
 
-//    
-//    /**
-//     * @return the autoUpdateResults
-//     */
-//    public CheckBox getAutoUpdateResults() {
-//        return autoUpdateResults;
-//    }
-//
-//    /**
-//     * @param autoUpdateResults the autoUpdateResults to set
-//     */
-//    public void setAutoUpdateResults(CheckBox autoUpdateResults) {
-//        this.autoUpdateResults = autoUpdateResults;
-//    }
-//
-//    public void hideStatus() {
-//        statusView.setVisible(false);
-//    }
-//
-//    public void showStatus() {
-//        if (statusView != null) {
-//            statusView.setVisible(true);
-//        }
-//    }
-//
-//    public void setStatus(String msg) {
-//        statusMsg.setText(msg);
-//    }
-//
-//    /**
-//     * @return the schoolLabel
-//     */
-//    public Label getSchoolLabel() {
-//        return schoolLabel;
-//    }
-//
-//    /**
-//     * @param schoolLabel the schoolLabel to set
-//     */
-//    public void setSchoolLabel(Label schoolLabel) {
-//        this.schoolLabel = schoolLabel;
-//    }
-//
     public void onClick(ClickEvent event) {
         if (event.getSource() == menuButton) {
             LOG.log(Level.INFO, "Menu button clicked.");
