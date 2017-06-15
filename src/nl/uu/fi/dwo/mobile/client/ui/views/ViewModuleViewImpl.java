@@ -110,7 +110,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public boolean zelftoetsNagekeken = false;
 	
-	
 	private Panel kbp = null;
 	private HeaderButton hb;
 	private HeaderPanel hp;
@@ -231,7 +230,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			// pas vanaf hier toevoegen mogelijk.
 			scoreNav.setBeantwoord(on.getAantalBeantwoord());
-			scoreNav.setItemScores(on.getItemScores());
+			scoreNav.setItemScores(on.getScoresHuidigeActiviteit());
 			scoreNav.setTotaalScore((int) on.getScore());
 			scoreNav.setGotoOpdracht(on);
 // FIXME authELO
@@ -268,38 +267,34 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		int mode = on.getMode();
 		if (mode == OpdrNav.ZELFTOETS)
 		{
-			// kijk na-knop enabled als er maar 1 opdracht is of als al eerder is nagekeken
-			scoreNav.setKijkNaEnabled(on.getAantalOpdrachten() == 1 || on.getKeerNagekeken() > 0);
+			// kijk na-knop enabled als er maar 1 opdracht is of als al eerder is nagekeken of als alles bezocht is
+			scoreNav.setKijkNaEnabled(on.getAantalOpdrachten() == 1 || on.getKeerNagekeken() > 0 || allesBezocht(on.getCurrentActiviteit()));
 			
 			sb.addKnop(scoreNav.getKijkNaButton(), false);
 		}
-			scoreNav.setKijkNa(new ScoreNavIF.Checker()
+		scoreNav.setKijkNa(new ScoreNavIF.Checker()
+		{
+			@Override
+			public void checkOpdracht(final ScoreNavIF source)
 			{
-				@Override
-				public void checkOpdracht(final ScoreNavIF source)
-				{	
-					p();
-					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+				p();
+				Scheduler.get().scheduleDeferred(new ScheduledCommand()
+				{
 
-						@Override
-						public void execute() {
+					@Override
+					public void execute()
+					{
+						// omgedraaid: keerNagekeken moet wel verhoogd zijn voor
+						// zetToetsNagekeken()
+						zelftoetsNagekeken = true;
+						on.kijkToetsNa();
+						zetToetsNagekeken(source);
 
-					
-							on.saveCurrentState(); // de wijzigingen van het huidige bolletje moeten wel verwerkt worden
-			//					zetToetsNagekeken(source);
-			//					on.kijkToetsNa();
-			
-							// omgedraaid: keerNagekeken moet wel verhoogd zijn voor zetToetsNagekeken()
-							zelftoetsNagekeken = true;
-							on.kijkToetsNa();
-							zetToetsNagekeken(source);
-			
-							on.saveCurrentState(); // op speciaal verzoek
-							v();
-						}});
-				}
-
-			});
+						v();
+					}
+				});
+			}
+		});
 		
 		scoreNav.setNextPrevHandler(this);
 		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig()
@@ -388,6 +383,28 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 	}
 	
+	/**
+	 * Retourneert true als alle opdrachten zijn bezocht in de gegeven activiteit.
+	 * 
+	 * @param activiteitNr
+	 * @return
+	 */
+	private boolean allesBezocht(int activiteitNr)
+	{
+		boolean allesBezocht = true;
+		
+		for (int i = 0; i < bezocht[activiteitNr].length; i++)
+		{
+			if (!bezocht[activiteitNr][i])
+			{
+				allesBezocht = false;
+				break;
+			}
+		}
+		
+		return allesBezocht;
+	}
+
 	protected Memento createMemento() {
 		return new Memento(getApi());
 	}
@@ -681,12 +698,18 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		setState(state);
 		
-		if(on.getMode() == OpdrNav.EINDTOETS && on.isVerzegeld()) {
+		if (on.getMode() == OpdrNav.ZELFTOETS && getZelftoetsNagekeken())
+		{
+			kijkNaOnveranderdeAntwoorden(); // er is al eerder een keer gedrukt op de knop 'kijk zelftoets na'
+		}
+		else if (on.getMode() == OpdrNav.EINDTOETS && on.isVerzegeld())
+		{
 			zetNagekeken(true);
 			kijkNa();
 		}
 
-		if(on.isVerzegeld()) {
+		if(on.isVerzegeld()) 
+		{
 			seal(); // push action.setNotEditable
 		}
 			
@@ -1033,6 +1056,14 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			if (currentObject instanceof InteractionView && ! (currentObject instanceof StateLess) )
 			{
 				states.add(aantalInteractionViews, ((InteractionView) currentObject).getState());
+				if (on.getMode() == OpdrNav.ZELFTOETS && !zelftoetsNagekeken)
+				{
+					// update de scores en isCorrect als de toets nog niet is nagekeken
+					on.setScoresZelftoets(on.getCurrentActiviteit(), on.getCurrentOpdracht(), ((InteractionView) currentObject).getScore());
+					on.setIsCorrectZelftoets(on.getCurrentActiviteit(), 
+						on.getCurrentOpdracht(), 
+						((InteractionView) currentObject).isCorrect() == null ? false : ((InteractionView) currentObject).isCorrect());
+				}
 				aantalInteractionViews++;
 			}
 		}
@@ -1060,6 +1091,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			if (currentObject instanceof InteractionView)
 			{
 				HashMap<String, Object> state = stateNr < states.size() ? (HashMap<String, Object>) states.get(stateNr) : new HashMap();
+				// het nakijken van de zelftoets doorgeven
 				((InteractionView) currentObject).setState(state);
 				stateNr++;
 			}
@@ -1080,6 +1112,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 	}
 	
+	/**
+	 * Deze methode kijkt de huidige opdracht van een zelftoets na.
+	 */
 	public void kijkNa()
 	{
 		on.pause();
@@ -1089,6 +1124,41 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			if (currentObject instanceof InteractionView)
 			{
 				((InteractionView)currentObject).kijkNa();
+
+				// update de scores en isCorrect
+				on.setScoresZelftoets(on.getCurrentActiviteit(), on.getCurrentOpdracht(), ((InteractionView) currentObject).getScore());
+				on.setIsCorrectZelftoets(on.getCurrentActiviteit(), 
+					on.getCurrentOpdracht(), 
+					((InteractionView) currentObject).isCorrect() == null ? false : ((InteractionView) currentObject).isCorrect());
+				
+				on.setScores(on.getCurrentActiviteit(), on.getCurrentOpdracht(), ((InteractionView) currentObject).getScore());
+				on.setIsCorrect(on.getCurrentActiviteit(), 
+					on.getCurrentOpdracht(), 
+					((InteractionView) currentObject).isCorrect() == null ? false : ((InteractionView) currentObject).isCorrect());
+
+			}
+		}
+		on.unpause();
+	}
+	
+	/**
+	 * Deze methode kijkt de huidige pagina van een zelftoets na 
+	 * als de antwoorden niet veranderd zijn. 
+	 */
+	public void kijkNaOnveranderdeAntwoorden()
+	{
+		on.pause();
+		for (int i = 0; i < opdrachtObjects.size(); i++)
+		{
+			Object currentObject = opdrachtObjects.get(i);
+			if (currentObject instanceof InteractionView)
+			{
+				// eigenlijk wil ik hier van iedere interactionview weten of hij veranderd is na nakijken, zodat ik hem al dan niet kan nakijken:
+//				if (!((InteractionView)currentObject).isVeranderdNaNakijken())
+//					((InteractionView)currentObject).kijkNa();
+				
+				if (!isVeranderdNaNakijken(on.getCurrentActiviteit(), on.getCurrentOpdracht()))
+					((InteractionView)currentObject).kijkNa();
 			}
 		}
 		on.unpause();
@@ -1992,4 +2062,24 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 
 	} // end class ClockImageGenerator
+
+	/**
+	 * Geeft aan of de huidige opdracht in de huidige activiteit veranderd is na het
+	 * nakijken van de zelftoets.
+	 * 
+	 * @param activiteitNr
+	 * @param opdrachtNr
+	 * @return
+	 */
+	public boolean isVeranderdNaNakijken(int activiteitNr, int opdrachtNr)
+	{
+		boolean isVeranderd = false;
+		
+		if (on.getScore(activiteitNr, opdrachtNr) != on.getScoresZelftoets(activiteitNr, opdrachtNr)) 
+			// let op: dit zijn somscores per opdracht; dat die hetzelfde blijven, wil nog niet zeggen dat de antwoorden niet gewijzigd zijn
+			// bovendien weet je nu niet welke interactionview op opdrachtNr al dan niet nagekeken moet worden
+			isVeranderd = true;
+		
+		return isVeranderd;
+	}
 }
