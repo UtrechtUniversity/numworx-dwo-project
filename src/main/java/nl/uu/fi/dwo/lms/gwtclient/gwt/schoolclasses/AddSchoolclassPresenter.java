@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javafx.event.Event.fireEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
@@ -61,34 +62,30 @@ public class AddSchoolclassPresenter {
         schoolClass.setRegistrationKey(regKey);
         promise = manager.submitSchoolClass(schoolClass);
         // onSuccess calculate results and show.
-//        promise.then(new Success<DomSchoolClassFull, Boolean>() {
-//            @Override
-//            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
-//                //flip back to schoolclasses screen 
-//                if (resolved.getValue() == true) {
-//                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
-//                    return null;
-//                } else {
-//                    throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");
-//                }
-//            }
-//        },
-//                new Failure() {
-//            @Override
-//            public void fail(Promise<?> resolved) throws Exception {
-//                Throwable fail = resolved.getFailure();
-//                if (fail instanceof Dwo2Exception) {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                } else {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    //throw directly
-//                }
-//            }
-//        });
-        //success
-        //eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));    }
-        //fail
-        //show error msg;
+        promise.then(new Success<Boolean,Void> () {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                //flip back to schoolclasses screen 
+                if (resolved.getValue() == true) {
+                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                    return null;
+                } else {
+                    throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");
+                }
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    //throw directly
+                }
+            }
+        });
     }
 
     /**

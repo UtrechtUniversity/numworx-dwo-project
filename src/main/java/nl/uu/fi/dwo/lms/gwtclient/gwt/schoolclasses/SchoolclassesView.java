@@ -77,6 +77,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
             }
             super.onBrowserEvent(context, parent, value, event, valueUpdater);
             if ("click".equals(event.getType())) {
+//                LOG.log(Level.INFO, "key "+context.getKey());
                 cellSelected(context.getIndex(), context.getColumn());
             }
         }

@@ -1,25 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
+            <actionName>CUSTOM-gwt:run-codeserver</actionName>
+            <displayName>gwt:run-codeserver</displayName>
+            <goals>
+                <goal>gwt:run-codeserver</goal>
+                
+            </goals>
+            <properties>
+                <gwt.style>PRETTY</gwt.style>
+            </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-tomcat7:deploy</actionName>
+            <displayName>tomcat7:deploy</displayName>
+            <preAction>build-with-dependencies</preAction>
+            <goals>
+                <goal>tomcat7:deploy</goal>
+            </goals>
+            <properties>
+                <jpda.listen>maven</jpda.listen>
+                <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
+            </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-Generatie PropertyConstants</actionName>
+            <displayName>Generatie PropertyConstants</displayName>
+            <goals>
+                <goal>gwt:i18n</goal>
+            </goals>
+            <properties>
+                <gwt.style>PRETTY</gwt.style>
+                
+                
+            </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-pretty</actionName>
+            <displayName>pretty</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                <gwt.style>PRETTY</gwt.style>
+            </properties>
+        </action>
+        <action>
             <actionName>CUSTOM-tomcat7:run</actionName>
             <displayName>tomcat7:run</displayName>
             <goals>
                 <goal>tomcat7:run</goal>
             </goals>
             <properties>
-                <style>DETAILED</style>
-                <draftCompile>true</draftCompile>
+                <gwt.style>PRETTY</gwt.style>
             </properties>
         </action>
-        <action>
-            <actionName>CUSTOM-gwt:run-codeserver</actionName>
-            <displayName>gwt:run-codeserver</displayName>
-            <goals>
-                <goal>gwt:run-codeserver</goal>
-            </goals>
-            <properties>
-                <style>DETAILED</style>
-                <draftCompile>true</draftCompile>
-            </properties>
-        </action>
+        
+        
+        
+        
+        
+        
+        
+        
+        
     </actions>
