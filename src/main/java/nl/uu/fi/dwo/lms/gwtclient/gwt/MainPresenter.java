@@ -20,29 +20,53 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     private EventBus eventBus;
 
     public interface Display {
+
         public void init(ViewFactory clientFactory);
+
         public Widget asWidget();
+
         public MainView getViewInstance();
-        public HasClickHandlers getMenuButton(); // handle clicking on button
+
+//        public HasClickHandlers getMenuButton(); // handle clicking on button
+
         public void showPostLoginWidgets();
+
         public void hidePostLoginWidgets();
+
         public void setSchoolName(String schoolName);
+
         public void setUserRole(String userRole);
+
         public void setPresentationName(String presentationName);
+
         public void setStatusMsg(String statusMsg);
+
         void clear();
+
         public void showAccountView();
+
         public void showLoginView();
+
         public void showSwitchSchoolView();
-        public void showResultsView();  
+
+        public void showResultsView();
+
         public void showSchoolclassesView();
+
         public void showScoResultsView();
+
         public void showMenuButton();
+
         public void hideMenuButton();
+
         public void showMenuView();
+
         public void hideMenuView();
+
         public void showMessageDialog(String msg);
+
         public void showErrorDialog(String msg);
+
         public boolean menuVisible();
     }
 
@@ -71,25 +95,33 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 //        display.showLoginView();
 //    }
 
-    public void menuButtonClicked(){
-       if(display.menuVisible()){
-           display.hideMenuView();
-       }else{
-           display.showMenuView();
-       }
+    public void menuButtonClicked() {
+        if (display.menuVisible()) {
+            display.hideMenuView();
+        } else {
+            display.showMenuView();
+        }
     }
-    
+
     public void selectView(SwitchViewEvent.SelectedView selectedView) {
         eventBus.fireEvent(new SwitchViewEvent(selectedView));
     }
-    
+
     @Override
     public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
         onSwitchViewEvent(switchViewEvent.getEventValue());
     }
 
     private void onSwitchViewEvent(SwitchViewEvent.SelectedView selectedView) {
-        switch(selectedView){
+        if (selectedView == selectedView.LOGIN) {
+            display.hideMenuButton();
+            display.hidePostLoginWidgets();
+        } else {
+            display.showMenuButton();
+            display.showPostLoginWidgets();
+        }
+        
+        switch (selectedView) {
             case ACCOUNT:
                 display.showAccountView();
                 break;
@@ -110,10 +142,9 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         }
     }
 
-
     @Override
     public void onLoginEvent(LoginEvent loginEvent) {
         display.showPostLoginWidgets();
     }
-    
+
 }

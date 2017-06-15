@@ -1,0 +1,24 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+             xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
+    <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+    <g:LayoutPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
+        <g:layer>
+            <g:DockLayoutPanel unit='EM'>
+                <g:north size='2'><FlowPanel>
+                <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addStudentsBtn">add more students</g:Button>
+                <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addToClassBtn">add to schoolclass</g:Button>
+                <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="deleteBtn">delete students</g:Button>
+                </FlowPanel>
+                </g:north>
+                <g:center>
+                <c:DataGrid addStyleNames='{dwoStyle.dwoSchoolclassDataGrid}' ui:field='dataGrid'/>
+                </g:center>
+                <g:south size='2'>
+                <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
+                </g:south>
+            </g:DockLayoutPanel>
+        </g:layer>
+    </g:LayoutPanel>
+</ui:UiBinder>

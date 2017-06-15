@@ -9,12 +9,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
@@ -36,6 +36,11 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 public class MainView extends ResizeComposite implements HasWidgets, ClickHandler, MainPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(MainView.class.getName());
+
+    @Override
+    public MainView getViewInstance() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     interface MyUiBinder extends UiBinder<Widget, MainView> {
     }
@@ -155,16 +160,6 @@ public class MainView extends ResizeComposite implements HasWidgets, ClickHandle
     }
 
     @Override
-    public MainView getViewInstance() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public HasClickHandlers getMenuButton() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void showPostLoginWidgets() {
         schoolName.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         userRole.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
@@ -200,12 +195,12 @@ public class MainView extends ResizeComposite implements HasWidgets, ClickHandle
         this.setStatusMsg(statusMsg);
     }
 
-   @Override
+    @Override
     public void showAccountView() {
         int index = mainDeckPanel.getWidgetIndex(accountView);
         mainDeckPanel.showWidget(index);
     }
-    
+
     @Override
     public void showLoginView() {
         int index = mainDeckPanel.getWidgetIndex(loginView);
@@ -265,14 +260,18 @@ public class MainView extends ResizeComposite implements HasWidgets, ClickHandle
 
     @Override
     public void showMessageDialog(String msg) {
-        Window.confirm(msg);
+        final DialogBox dialogBox = new DialogBox();
+        dialogBox.setText(msg);
+        MainMessageView dialogContent = new MainMessageView(msg);
+        dialogBox.add(dialogContent);
+        dialogBox.show();
     }
 
     @Override
     public void showErrorDialog(String errMsg) {
         Window.alert(errMsg);
     }
-        
+
     @Override
     public boolean menuVisible() {
         return showMenu;
