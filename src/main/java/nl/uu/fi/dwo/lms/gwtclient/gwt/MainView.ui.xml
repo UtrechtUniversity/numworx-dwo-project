@@ -25,10 +25,10 @@
             <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="schoolName"></g:Label>
             <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="schoolLabel">School</g:Label>
         </g:FlowPanel>
-        <!--        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMainPanel}'>
-        <g:FlowPanel>-->
-        <g:LayoutPanel addStyleNames='{dwoStyle.dwoAppMainPanel}'>
-            <g:layer>
+        <g:LayoutPanel  addStyleNames='{dwoStyle.dwoAppMainPanel}'>
+            <g:layer>      
+                <!--<g:FlowPanel addStyleNames='{dwoStyle.dwoAppMainPanel}'>-->
+                <!--<g:FlowPanel>-->
                 <g:DeckPanel addStyleNames='{dwoStyle.dwoDeckPanel}' ui:field="mainDeckPanel" >
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="loginView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="accountView" />
@@ -38,20 +38,21 @@
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="scoResultsView" />
                     <!--</g:FlowPanel>-->
                 </g:DeckPanel>
-            </g:layer>
-            <g:layer>
-                <!--addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView"-->
+            </g:layer>     
+            <g:layer right="8px" top="8px" width="200px" bottom="8px">              
                 <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView" >
                     <g:Label ui:field="accountLabel">account</g:Label>
                     <g:Label ui:field="switchRoleLabel">switch</g:Label>
                     <g:Label ui:field="classesLabel">manage classes</g:Label>
                     <g:Label ui:field="resultsLabel">results</g:Label>
                     <g:Label ui:field="logoutLabel">logout</g:Label>
-                </g:FlowPanel>
+               </g:FlowPanel>
+<!--            </g:layer>     
+            <g:layer  addStyleNames='{dwoStyle.dwoDeckWidget}'>  -->
             </g:layer>
-        </g:LayoutPanel>                
-        <!--            </g:FlowPanel>
-        </g:FlowPanel>-->
+        </g:LayoutPanel>
+        <!--</g:FlowPanel>-->
+        <!--</g:FlowPanel>-->
         <g:FlowPanel addStyleNames='{dwoStyle.dwoAppStatusPanel}' ui:field='statusView' >
             <g:CheckBox  addStyleNames='{dwoStyle.dwoAppStatusMsgBox}' ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox>
             <g:Label addStyleNames='{dwoStyle.dwoAppStatusMsgBox}'  ui:field="statusMsg"></g:Label>

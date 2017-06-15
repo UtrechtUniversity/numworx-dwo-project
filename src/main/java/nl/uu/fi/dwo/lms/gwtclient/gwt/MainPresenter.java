@@ -106,7 +106,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     public void selectView(SwitchViewEvent.SelectedView selectedView) {
         eventBus.fireEvent(new SwitchViewEvent(selectedView));
     }
-
+    
     @Override
     public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
         onSwitchViewEvent(switchViewEvent.getEventValue());

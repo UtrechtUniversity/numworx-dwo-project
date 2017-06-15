@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -20,7 +21,6 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.Iterator;
@@ -33,7 +33,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
  *
  * @author Gert van der Plas
  */
-public class MainView extends ResizeComposite implements HasWidgets, ClickHandler, MainPresenter.Display {
+public class MainView extends Composite implements HasWidgets, ClickHandler, MainPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(MainView.class.getName());
 
@@ -93,6 +93,9 @@ public class MainView extends ResizeComposite implements HasWidgets, ClickHandle
     ResultsView resultsView;
     @UiField(provided = true)
     ScoResultsView scoResultsView;
+
+//    @UiField(provided = true)
+    MainMessageView mainMessageView= new MainMessageView();
 
     @UiField(provided = true)
     Label accountLabel = new MenuLabel();
@@ -205,6 +208,7 @@ public class MainView extends ResizeComposite implements HasWidgets, ClickHandle
     public void showLoginView() {
         int index = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(index);
+                    //    showMessageDialog("hello world");
     }
 
     @Override
@@ -260,11 +264,11 @@ public class MainView extends ResizeComposite implements HasWidgets, ClickHandle
 
     @Override
     public void showMessageDialog(String msg) {
-        final DialogBox dialogBox = new DialogBox();
-        dialogBox.setText(msg);
-        MainMessageView dialogContent = new MainMessageView(msg);
-        dialogBox.add(dialogContent);
-        dialogBox.show();
+        mainMessageView.setMsg(msg);
+        mainMessageView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        final DialogBox box = new DialogBox();
+        box.add(mainMessageView);
+        box.showRelativeTo(this);
     }
 
     @Override

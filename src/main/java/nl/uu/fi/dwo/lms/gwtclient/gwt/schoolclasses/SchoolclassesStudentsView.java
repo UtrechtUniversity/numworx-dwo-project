@@ -138,7 +138,7 @@ public class SchoolclassesStudentsView extends Composite implements ClickHandler
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == addBtn) {
-            schoolclassesPresenter.addASchoolClass();
+            schoolclassesPresenter.addSchoolClass();
         }
     }
 

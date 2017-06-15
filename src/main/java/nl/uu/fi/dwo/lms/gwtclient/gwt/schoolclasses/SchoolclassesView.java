@@ -1,23 +1,26 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
+import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
-import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +41,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     @UiField(provided = true)
-    DataGrid dataGrid;
-//    @UiField(provided = true)            
-//    CellList dataGrid;
+    CellTable dataGrid;
     @UiField(provided = true)
     SimplePager pager;
     @UiField
@@ -49,80 +50,147 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     private SchoolclassesPresenter schoolclassesPresenter;
     SchoolclassesPresenter.ClassItem selected;
     ListDataProvider<SchoolclassesPresenter.ClassItem> dataProvider = new ListDataProvider<SchoolclassesPresenter.ClassItem>();
-    
+
+    public class MyCell extends AbstractCell<String> {
+
+        public MyCell() {
+            super("click", "keydown");
+        }
+
+        @Override
+        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
+            if (value != null) {
+                sb.appendHtmlConstant("<a href='javascript:;'>");
+                sb.appendEscaped(value);
+                sb.appendHtmlConstant("</a>");
+            }
+        }
+
+        @Override
+        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+            if (value == null) {
+                return;
+            }
+            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+            if ("click".equals(event.getType())) {
+                cellSelected(context.getIndex(), context.getColumn());
+            }
+        }
+    }
+
     public SchoolclassesView(SchoolclassesPresenter sp) {
         schoolclassesPresenter = sp;
         schoolclassesPresenter.setView(this);
         String[] tableHeaders = sp.getTableHeaders();
 //        TextCell textCell = new TextCell();
-        dataGrid = new DataGrid<String>();
+        dataGrid = new CellTable<String>();
 
-        ListDataProvider<String> dataProvider = new ListDataProvider<String>();
-
+//        ListDataProvider<String> dataProvider = new ListDataProvider<String>();
         // Connect the table to the data provider.
         dataProvider.addDataDisplay(dataGrid);
+        dataGrid.setSkipRowHoverCheck(true);
+        dataGrid.setKeyboardSelectionPolicy( com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
-        // Add the data to the data provider, which automatically pushes it to the
-        // widget.
-        List<String> data = dataProvider.getList();
-        for (int i = 0; i < 100; i++) {
-            data.add("row" + i);
-        }
+//        // Add the data to the data provider, which automatically pushes it to the
+//        // widget.
+        List<SchoolclassesPresenter.ClassItem> data = dataProvider.getList();
+//        SchoolclassesPresenter.ClassItem item = schoolclassesPresenter.new ClassItem("" + 0, "" + 1);
+//        for (int i = 0; i < 100; i++) {
+//            data.add(item);
+//        }
+        final MyCell cell = new MyCell();
 
-        for (String header : tableHeaders) {
-            TextColumn<String> value = new TextColumn<String>() {
-                @Override
-                public String getValue(String object) {
-                    return object;
-                }
-            };
-            if(header.equals(tableHeaders[0])){
-            value.setSortable(true);
-            ListHandler<String> columnSortHandler = new ListHandler<String>(
-                    data);
-            columnSortHandler.setComparator(value,
-                    new Comparator<String>() {
-                public int compare(String o1, String o2) {
-                    if (o1 == o2) {
-                        return 0;
-                    }
-
-                    // Compare the name columns.
-                    if (o1 != null) {
-                        return (o2 != null) ? o1.compareTo(o2) : 1;
-                    }
-                    return -1;
-                }
-            });
-            dataGrid.addColumnSortHandler(columnSortHandler);
-        }else{
-                value.setSortable(false);
+        //classname
+        Column<SchoolclassesPresenter.ClassItem, String> value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+            @Override
+            public String getValue(SchoolclassesPresenter.ClassItem object) {
+                return object.schoolclassName;
             }
-            dataGrid.addColumn(value, header);
+        };
+        value.setSortable(true);
+        ListHandler<SchoolclassesPresenter.ClassItem> columnSortHandler = new ListHandler<SchoolclassesPresenter.ClassItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<SchoolclassesPresenter.ClassItem>() {
+            public int compare(SchoolclassesPresenter.ClassItem o1, SchoolclassesPresenter.ClassItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
 
-        }
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.schoolclassName.compareTo(o2.schoolclassName) : 1;
+                }
+                return -1;
+            }
+        });
+        dataGrid.addColumnSortHandler(columnSortHandler);
+        dataGrid.addColumn(value, tableHeaders[0]);
+
+        //edit
+        value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+            @Override
+            public String getValue(SchoolclassesPresenter.ClassItem object) {
+                return tableHeaders[1];
+            }
+        ;
+        };
+            value.setSortable(false);
+        dataGrid.addColumn(value, tableHeaders[1]);
+        
+        //modules
+        value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+            @Override
+            public String getValue(SchoolclassesPresenter.ClassItem object) {
+                return tableHeaders[2];
+            }
+        ;
+        };
+            value.setSortable(false);
+        dataGrid.addColumn(value, tableHeaders[2]);
+        
+        
+        //students col
+        value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+            @Override
+            public String getValue(SchoolclassesPresenter.ClassItem object) {
+                return tableHeaders[3];
+            }
+        };
+            value.setSortable(false);
+        dataGrid.addColumn(value, tableHeaders[3]);
+
+        //teachers col
+        value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+            @Override
+            public String getValue(SchoolclassesPresenter.ClassItem object) {
+                return tableHeaders[4];
+            }
+        };
+            value.setSortable(false);
+        dataGrid.addColumn(value, tableHeaders[4]);
+
+        //remove col
+        value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+            @Override
+            public String getValue(SchoolclassesPresenter.ClassItem object) {
+                return tableHeaders[5];
+            }
+        };
+            value.setSortable(false);
+        dataGrid.addColumn(value, tableHeaders[5]);
 
         dataGrid.setRowData(0, data);
-        dataGrid.setRowCount(data.size(), true);
+        dataGrid.setRowCount(data.size());
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
+
         pager.setDisplay(dataGrid);
+
         pager.setPageSize(dataGrid.getPageSize());
 
         initWidget(uiBinder.createAndBindUi(this));
-        //controller must be before clicks occur
         addBtn.addClickHandler(this);
-        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
-        dataGrid.setSelectionModel(selectionModel);
-        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-            public void onSelectionChange(SelectionChangeEvent event) {
-                String selected = selectionModel.getSelectedObject();
-                LOG.log(Level.INFO, "selection key: "+selectionModel.getKey(selected));
-                if (selected != null) {
-                    Window.alert("You selected: " + selected + ".");
-                }
-            }
-        });
 
     }
 
@@ -138,7 +206,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == addBtn) {
-            schoolclassesPresenter.addASchoolClass();
+            schoolclassesPresenter.addSchoolClass();
         }
     }
 
@@ -148,4 +216,9 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataProvider.refresh();
     }
 
+    private void cellSelected(int row, int column) {
+        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataGrid.getVisibleItem(row) + " " + dataGrid.getHeader(column).getValue());
+        dataGrid.getHeader(column);
+        schoolclassesPresenter.selectItem((SchoolclassesPresenter.ClassItem) dataGrid.getVisibleItem(row), column);
+    }
 }

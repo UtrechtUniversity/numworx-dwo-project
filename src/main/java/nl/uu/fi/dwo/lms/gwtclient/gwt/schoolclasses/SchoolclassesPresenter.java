@@ -3,10 +3,10 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
@@ -23,10 +23,10 @@ public class SchoolclassesPresenter {
     private EventBus eventBus;
     private int selectedIndex = 0;
     private List<DomSchoolRoleAndClassV2> sracData;
-    private String[] tableHeaders = { "classname", "edit", "modules","students", "teachers", "remove"};
+    private String[] tableHeaders = {"classname", "edit", "modules", "students", "teachers", "remove"};
 
     private Display view;
-    
+
     /**
      * @param view the view to set
      */
@@ -34,26 +34,68 @@ public class SchoolclassesPresenter {
         this.view = view;
     }
 
-    void addASchoolClass() {
+    void addSchoolClass() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public interface Display {
-        Widget asWidget();
-        void clear();
-        void init();
-        void updateView(Map<String,SchoolclassesPresenter.ClassItem>  data);
+    void updateSchoolClass() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public class ClassItem{
+    void deleteSchoolClass() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    void addTeacher() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void deleteTeacher() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    void addStudent() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void updateStudent() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    void deleteStudent() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }    
+    
+    public interface Display {
+
+        Widget asWidget();
+
+        void clear();
+
+        void init();
+
+        void updateView(Map<String, SchoolclassesPresenter.ClassItem> data);
+    }
+
+    public class ClassItem {
+
         public String key; //unique
         public String schoolclassName;
-        public ClassItem(String aKey, String value){
+
+        public ClassItem(String aKey, String value) {
             key = aKey;
             schoolclassName = value;
         }
+        
+        public String getKey(){
+            return key;
+        }
+        
+        public void setKey(String aKey){
+            key = aKey;
+        }
     }
-    
+
     public SchoolclassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
@@ -72,36 +114,32 @@ public class SchoolclassesPresenter {
     }
 
     public void init() {
-//        sracData = getTeacherRoles();
-//        int i = 0;
-//        selectedIndex = i;
-//        for (DomSchoolRoleAndClassV2 srac : sracData) {
-//            if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
-//                selectedIndex = i;
-//            }
-//            i++;
-//        }
+
+        sracData = getTeacherRoles();
+        Map<String, SchoolclassesPresenter.ClassItem> data = new HashMap<String, SchoolclassesPresenter.ClassItem>(sracData.size());
+        int i = 0;
+        selectedIndex = i;
+        for (DomSchoolRoleAndClassV2 srac : sracData) {
+            data.put(srac.getHasRole().getId().getIdString(), new ClassItem(srac.getHasRole().getId().getIdString(), srac.getSchool().getSchoolName()));
+            if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
+                selectedIndex = i;
+            }
+            i++;
+        }
 //        String[][] data = buildPlotData();
         view.init();
-//        view.updateView(data.length,1,data);
+        view.updateView(data);
     }
 
-    public String[] getTableHeaders(){
+    public String[] getTableHeaders() {
         return tableHeaders;
     }
+
     /**
      * @param row the course to set
      */
-    public void selectRow(int row) {
-        if (row != -1) {
-            selectedIndex = row;
-            return;
-        }
+    public void selectItem(ClassItem item, int op) {
+        
     }
-
-//    public void switchSchool() {
-//        dwoGlobalVars.setActiveSchoolRoleAndClass(sracData.get(selectedIndex));
-//        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
-//    }
 
 }

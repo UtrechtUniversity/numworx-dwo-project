@@ -3,19 +3,12 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
-    <g:LayoutPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
-        <g:layer>
-            <g:DockLayoutPanel unit='EM'>
-                <g:north size='2'>
-                <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addBtn">add schoolclass</g:Button>
-                </g:north>
-                <g:center>
-                <c:DataGrid addStyleNames='{dwoStyle.dwoSchoolclassDataGrid}' ui:field='dataGrid'/>
-                </g:center>
-                <g:south size='2'>
-                <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
-                </g:south>
-            </g:DockLayoutPanel>
-        </g:layer>
-    </g:LayoutPanel>
+    <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
+        <g:FlowPanel>
+                            <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addBtn">add schoolclass</g:Button>
+
+                        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
+                        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
+        </g:FlowPanel>
+    </g:FlowPanel>
 </ui:UiBinder>

@@ -10,13 +10,13 @@ import org.osgi.util.promise.Promise;
  *
  * @author Gert van der Plas
  */
-class SwitchSchoolController {
+class SwitchSchoolService {
 
-    private static final Logger LOG = Logger.getLogger(SwitchSchoolController.class.getName());
+    private static final Logger LOG = Logger.getLogger(SwitchSchoolService.class.getName());
 
     private SecuredUserAccountManager manager = new SecuredUserAccountManager();
 
-    SwitchSchoolController() {
+    SwitchSchoolService() {
         init();
     }
 

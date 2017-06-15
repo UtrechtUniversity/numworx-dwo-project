@@ -57,7 +57,6 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
     public SwitchSchoolView(SwitchSchoolPresenter sp) {
         switchSchoolPresenter = sp;
         switchSchoolPresenter.setView(this);
-        
         String[] tableHeaders = sp.getTableHeaders();
 //        TextCell textCell = new TextCell();
         cellTable = new CellTable<SwitchSchoolPresenter.SchoolItem>();
@@ -91,7 +90,6 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
             });
             cellTable.addColumnSortHandler(columnSortHandler);
             cellTable.addColumn(value, header);
-
         }
 
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);

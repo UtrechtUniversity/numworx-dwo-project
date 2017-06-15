@@ -5,9 +5,11 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**

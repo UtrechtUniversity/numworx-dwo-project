@@ -4,14 +4,8 @@
 >
     <ui:style field="dwoStyle" src="css/dwostyle.css" />    
     <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
-        <g:LayoutPanel addStyleNames='{dwoStyle.dwoMainMessagePanel}'>
-            <g:layer>
-                <g:Label ui:field='msgLabel'>loading...</g:Label> 
-            </g:layer>
-            <g:layer>
-            <g:PushButton addStyleNames='{dwoStyle.dwoButton}'  ui:field="okButton">
-                OK
-            </g:PushButton>            
-            </g:layer>
-        </g:LayoutPanel>                
+        <g:HTMLPanel>
+            <g:Label ui:field="msgLabel">loading...</g:Label> 
+            <g:PushButton addStyleNames='{dwoStyle.dwoButton}' ui:field="okButton">ok</g:PushButton>
+        </g:HTMLPanel>
 </ui:UiBinder> 
