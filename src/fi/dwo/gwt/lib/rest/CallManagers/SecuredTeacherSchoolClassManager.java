@@ -106,7 +106,7 @@ public class SecuredTeacherSchoolClassManager {
     }    
 
             
-    public Promise<Boolean> submiSchoolClass(DomSchoolClassFull schoolClass) {
+    public Promise<Boolean> submitSchoolClass(DomSchoolClassFull schoolClass) {
         RestSchoolClassFull restSchoolClass = new RestSchoolClassFull();
         restSchoolClass.setRestContext(new DomContext());
         restSchoolClass.setDomSchoolClassFull(schoolClass);
