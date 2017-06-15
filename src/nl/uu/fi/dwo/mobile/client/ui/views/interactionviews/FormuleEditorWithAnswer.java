@@ -704,7 +704,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		super.addElement(e);
 		resetimg();
 		
-		if (nagekeken)
+		if (isNagekeken())
 			zetIsVeranderdNaNakijken(true);
 		
 		if (this.fews != null) 
@@ -731,7 +731,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		super.removeCurrentElement();
 		resetimg();
 				
-		if (nagekeken)
+		if (isNagekeken())
 			zetIsVeranderdNaNakijken(true);
 		
 		if (this.fews != null) 
@@ -1714,7 +1714,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//if(mode != 2 && mode != 3)
 			//	kijkNa();
 			setChanged(false);
-			if (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken))
+			if (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (isNagekeken() && !isVeranderdNaNakijken()))
 				kijkNa(true); // FIXME kijkna in setstate
 		}
 		setEditable(editable);
@@ -1728,7 +1728,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return antwoord;
 	}
 	
-		@Override
+	@Override
 	public int getScore()
 	{
 		if(!teltMee)
