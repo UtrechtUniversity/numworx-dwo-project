@@ -41,9 +41,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 
 /**
  * This is the plain and direct restManager. Please use the
- * {@Link StoredRestManager} to minimize memory use. Note this class
- * methods may be called asynchronous. Therefor methods from DWOHelper and
- * others should be handle async calls too.
+ * {@Link StoredRestManager} to minimize memory use. Note this class methods may
+ * be called asynchronous. Therefor methods from DWOHelper and others should be
+ * handle async calls too.
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
@@ -102,7 +102,9 @@ class RestManager {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Authorization", getBasicAuthString());
+            if (getBasicAuthString() != null) {
+                conn.setRequestProperty("Authorization", getBasicAuthString());
+            }
             conn.setUseCaches(false);
 
             if (conn.getResponseCode() != 200) {
@@ -172,7 +174,9 @@ class RestManager {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Accept-Encoding", "application/json");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", getBasicAuthString());
+            if (getBasicAuthString() != null) {
+                conn.setRequestProperty("Authorization", getBasicAuthString());
+            }
             conn.setUseCaches(false);
 
             if (conn.getResponseCode() != 200) {
@@ -235,14 +239,14 @@ class RestManager {
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClasses>>() {
                     });
                 case DomDwoProfile:
-                	return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomDwoProfileFull>>() {
-                	});
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomDwoProfileFull>>() {
+                    });
                 case DomSchoolsRolesAndClassesV2:
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClassesV2>>() {
                     });
                 case DomAppletConfig:
-                	return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomAppletConfig>>() {
-                	});
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomAppletConfig>>() {
+                    });
                 default:
                     String msg = "Programming error, trying to get an unsupported dataType.";
                     LOG.log(Level.SEVERE, msg);
@@ -278,7 +282,9 @@ class RestManager {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Accept-Encoding", "application/json");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", getBasicAuthString());
+            if (getBasicAuthString() != null) {
+                conn.setRequestProperty("Authorization", getBasicAuthString());
+            }
             conn.setRequestProperty("Accept-Charset", "UTF-8");
 //            conn.setDoInput(true);
             conn.setDoOutput(true);
@@ -325,7 +331,7 @@ class RestManager {
             //decode JSON
 //            DomResultsPerTeacher user = genson.deserialize(json.toString(), new GenericType<DomResultsPerTeacher>(){});
             LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
-            
+
             T result = genson.deserialize(json.toString(), c);
             return result;
         } catch (MalformedURLException e) {
@@ -359,7 +365,9 @@ class RestManager {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Accept-Encoding", "application/json");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", getBasicAuthString());
+            if (getBasicAuthString() != null) {
+                conn.setRequestProperty("Authorization", getBasicAuthString());
+            }
             conn.setDoInput(true);
             conn.setDoOutput(true);
             conn.setUseCaches(false);
