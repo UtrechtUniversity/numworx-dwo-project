@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.gwt.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 
 /**
  * Local ViewFactory implementation class.
@@ -26,6 +27,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final SchoolclassesPresenter schoolclassesPresenter;
     private final AccountPresenter accountPresenter;
     private final AddSchoolclassPresenter addSchoolclassPresenter;
+    private final EditSchoolclassPresenter editSchoolclassPresenter;
 
     public PresenterFactoryImpl(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
@@ -38,6 +40,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
         schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
         accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars);
         addSchoolclassPresenter = new AddSchoolclassPresenter(eventBus, dwoGlobalVars);
+        editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
     }
 
     @Override
@@ -104,5 +107,12 @@ public class PresenterFactoryImpl implements PresenterFactory {
      */
     public AddSchoolclassPresenter getAddSchoolclassPresenter() {
         return addSchoolclassPresenter;
+    }
+
+    /**
+     * @return the addSchoolclassPresenter
+     */
+    public EditSchoolclassPresenter getEditSchoolclassPresenter() {
+        return editSchoolclassPresenter;
     }
 }

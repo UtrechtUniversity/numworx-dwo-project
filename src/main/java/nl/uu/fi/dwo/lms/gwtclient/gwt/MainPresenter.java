@@ -2,11 +2,9 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 
 /**
  * Handler for BootPanel actions.
