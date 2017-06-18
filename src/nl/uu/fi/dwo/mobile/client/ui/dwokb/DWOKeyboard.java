@@ -55,15 +55,17 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		style.setPosition(Style.Position.ABSOLUTE);
 		style.setBottom(0, Style.Unit.PX);
 		style.setRight(0, Style.Unit.PX);
-		style.setLeft(0, Style.Unit.PX);
-		style.setBackgroundColor("rgb(210,210,210)");
+		style.setLeft(10, Style.Unit.PX);
+		style.setBackgroundColor("rgb(229,231,233)");
+		
 		
 		style = staticPanel.getElement().getStyle();
 		style.setHeight(getStatusBarHeight(), Unit.PX);
 		style.setWidth(100, Unit.PCT);
-		style.setBackgroundImage("url("
-				+ DWOplayer.PARAMETERS.getResource("images/resources/footerbgimage.png")
-				+ ")");
+		style.setBackgroundColor("rgb(255,255,255)");
+		//style.setBackgroundImage("url("
+		//		+ DWOplayer.PARAMETERS.getResource("images/resources/footerbgimage.png")
+		//		+ ")");
 
 		style = kb.getElement().getStyle();
 		style.setProperty("margin", "0 auto");
@@ -87,16 +89,17 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	@Override
 	public void addKnop(Widget knop, boolean right) {
 		if(knop == null) return;
-		Style style = knop.getElement().getStyle();
-		if(right)
-			style.setFloat(Style.Float.RIGHT);
-		else
-			style.setFloat(Style.Float.LEFT);
-		style.setDisplay(Display.INLINE_BLOCK);
-		style.setMarginTop(10, Style.Unit.PX);
+		//knop.setStylePrimaryName("scoreBtn");
+		//Style style = knop.getElement().getStyle();
+		//if(right)
+			//style.setFloat(Style.Float.RIGHT);
+		//else
+			//style.setFloat(Style.Float.LEFT);
+		//style.setDisplay(Display.INLINE_BLOCK);
+		//style.setMarginTop(10, Style.Unit.PX);
 		//style.setWidth(80 ,Style.Unit.PX); // XXX past niet altijd
-		style.setProperty("minWidth", 80, Unit.PX);
-		style.setProperty("horizontalAlign", "center"); //TODO: helpt dit?
+		//style.setProperty("minWidth", 80, Unit.PX);
+		//style.setProperty("horizontalAlign", "center"); //TODO: helpt dit?
 		staticPanel.add(knop);
 	}
 

@@ -56,6 +56,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.web.bindery.event.shared.EventBus;
@@ -96,6 +97,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int[] aantalOpdrachten;
 	private String[] activiteitNamen;
 	private int maxAantalOpdrachten = 50;
+	private int maxAantalOnBar = 10;
+	private int currentShift = 0;
 
 	private boolean[][] buttonsEnabled;
 
@@ -351,7 +354,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 
 		contentPanel = new FlowPanel();
-		contentPanel.getElement().getStyle().setMargin(5, Unit.PX);
+		contentPanel.getElement().getStyle().setMargin(0, Unit.PX);
 		
 		if (mode == ZELFTOETS)
 		{
@@ -469,7 +472,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public Panel getAsPanel()
 	{
 		mainPanel = new FlowPanel();
+		//mainPanel.getElement().addClassName("opdrnav-bottombar");
 		contentPanel = new FlowPanel();
+		//contentPanel.getElement().addClassName("opdrnav-bottombar");
 		contentPanel.getElement().getStyle().setMargin(5, Unit.PX);
 
 		mainPanel.add(contentPanel);
@@ -586,7 +591,21 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		fp_opdrachten = new FlowPanel();
 		fp_opdrachten.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		// fp_opdrachten.getElement().addClassName("opdrbutton-container");
+		//fp_opdrachten.getElement().addClassName("opdrbutton-container");
+		
+		if(aantalOpdrachten[currentActiviteit]>maxAantalOnBar)
+		{	
+			TouchButton shiftButtonLeft = new TouchButton();
+			shiftButtonLeft.setStylePrimaryName("shiftBtn");
+			addScrollButtonHandler(shiftButtonLeft,-1);
+			shiftButtonLeft.setText("◀◀");
+			fp_opdrachten.add(shiftButtonLeft);
+			Label spaceStart = new Label();
+			spaceStart.setStylePrimaryName("spaceShiftLabel");
+			spaceStart.setText("...");
+			fp_opdrachten.add(spaceStart);
+		}
+		
 		for (int j = 0; j < aantalOpdrachten[index]; j++)
 		{
 			setButton(j);
@@ -595,6 +614,19 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			else
 				setButtonCorrect(buttons.get(j), isCorrect[index][j], j);
 		}
+		
+		if(aantalOpdrachten[currentActiviteit]>maxAantalOnBar)
+		{		
+			Label spaceEnd = new Label();
+			spaceEnd.setStylePrimaryName("spaceShiftLabel");
+			spaceEnd.setText("...");
+			fp_opdrachten.add(spaceEnd);
+			TouchButton shiftButtonRight = new TouchButton();
+			shiftButtonRight.setStylePrimaryName("shiftBtn");
+			addScrollButtonHandler(shiftButtonRight,1);
+			shiftButtonRight.setText("▶▶");
+			fp_opdrachten.add(shiftButtonRight);
+		}
 		fp_opdrachten.getElement().getStyle().setFloat(Style.Float.LEFT);
 		contentPanel.add(fp_opdrachten);
 	}
@@ -602,6 +634,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private void setButton(int j)
 	{
 		TouchButton button = new TouchButton();
+		Label space = new Label();
 		// enable scores, geen toets en scoreMax > 0
 		if (!geefNoScore(currentActiviteit, j))
 		{
@@ -611,6 +644,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 
 		button.setStylePrimaryName("scoreBtn");
+		space.setStylePrimaryName("spaceLabel");
 		final int button_id = j;
 		if (geefNoScore(currentActiviteit, j))
 		{
@@ -620,16 +654,22 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{
 			button.addStyleDependentName("disabled");
 		}
-
-		button.setText(" " + (j + 1) + " ");
+		
+		String nul = j<9 ? "0" : "";
+		button.setText("" + nul + (j + 1) + "");
+		space.setText("−");
 		if (currentOpdracht == j)
 		{
 			setButtonCursor(button);
 		}
 		addButtonHandler(button, j);
-
+		
 		buttons.add(button);
-		fp_opdrachten.add(button);
+		if(aantalOpdrachten[currentActiviteit]>1 && j>currentShift-1 && j<aantalOpdrachten[currentActiviteit] && (j<maxAantalOnBar-2+currentShift || aantalOpdrachten[currentActiviteit]<maxAantalOnBar+1))
+			fp_opdrachten.add(button);
+		if(j>currentShift-1 && j<aantalOpdrachten[currentActiviteit]-1 && (j<maxAantalOnBar-3+currentShift || aantalOpdrachten[currentActiviteit]<maxAantalOnBar+1))
+			fp_opdrachten.add(space);
+		
 	}
 
 	/**
@@ -714,6 +754,30 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		});
 	}
+	
+	
+	private void addScrollButtonHandler(TouchButton button, int s)
+	{
+		final int shift = s;
+		button.addTouchStartHandler(new TouchStartHandler()
+		{
+			@Override
+			public void onTouchStart(TouchStartEvent event)
+			{
+				currentShift+=shift;
+				if(currentShift<0)
+					currentShift = 0;
+				if(currentShift>aantalOpdrachten[currentActiviteit] - maxAantalOnBar+2)
+					currentShift = aantalOpdrachten[currentActiviteit] - maxAantalOnBar+2;
+					
+				System.out.println("currentShift"+currentShift);
+				setOpdrachten(currentActiviteit);
+					
+				
+			}
+
+		});
+	}
 
 	private Timer popupTimer;
 	private int aftrekCorrectieZelftoets;
@@ -749,12 +813,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			{
 				popupTimer = null;
 				btn.setStyleDependentName("popupTime", false);
-				btn.setText(Integer.toString(index + 1));
+				String nul = index<9 ? "0" : "";
+				btn.setText(nul + Integer.toString(index + 1));
 				// logger.info("timer for "+ index + " fired");
 			}
 		};
-		btn.setStyleDependentName("popupTime", true);
-		btn.setText(Integer.toString(score));
+		//btn.setStyleDependentName("popupTime", true);
+		//btn.setText("score\n"+Integer.toString(score));
 		popupTimer.schedule(2000);
 	}
 

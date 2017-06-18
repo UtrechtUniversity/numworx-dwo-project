@@ -76,16 +76,17 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 
 	public ScoreNavFacade() {
 		nakijkKnop = new PushButton(Text.constants.nakijkKnopLabel());
+		nakijkKnop.setStylePrimaryName("myPushButton");
 		nakijkKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
 				checker.checkOpdracht(ScoreNavFacade.this);
 			}
 		});
-		vorigeKnop = new PushButton(new Image(DWOplayer.DWO_BUNDLE.vorigeknop().getSafeUri()));
+		vorigeKnop = new PushButton("<");//(new Image(DWOplayer.DWO_BUNDLE.vorigeknop().getSafeUri()));
 				//Text.constants.vorigeKnopLabel());
-		
-		vorigeKnop.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+		vorigeKnop.setStylePrimaryName("myPushButton");
+		//vorigeKnop.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		vorigeKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{
@@ -94,8 +95,9 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 			}
 		});
 		
-		volgendeKnop = new PushButton(new Image(DWOplayer.DWO_BUNDLE.volgendeknop().getSafeUri()));//Text.constants.volgendeKnopLabel());
-		volgendeKnop.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+		volgendeKnop = new PushButton(">");//(new Image(DWOplayer.DWO_BUNDLE.volgendeknop().getSafeUri()));//Text.constants.volgendeKnopLabel());
+		volgendeKnop.setStylePrimaryName("myPushButton");
+		//volgendeKnop.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		volgendeKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{
@@ -105,6 +107,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 		});
 		
 		eindeKnop = new PushButton("Einde");
+		eindeKnop.setStylePrimaryName("myPushButton");
 		eindeKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{
@@ -116,7 +119,16 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	
 		// De labels voor totaalscore en aantal keer nagekeken
 		totaalScoreLabel = new Label(Text.constants.totaalScoreLabel());
+		totaalScoreLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
+		totaalScoreLabel.getElement().getStyle().setColor("#1D71B8");
+		totaalScoreLabel.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
+		totaalScoreLabel.getElement().getStyle().setPaddingTop(10, Style.Unit.PX);
+		//totaalScoreLabel.setStylePrimaryName("statusBarLabel");
 		keerNagekekenLabel = new Label(0 + Text.constants.nakijkLabel());
+		keerNagekekenLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
+		keerNagekekenLabel.getElement().getStyle().setColor("#1D71B8");
+		keerNagekekenLabel.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
+		//keerNagekekenLabel.setStylePrimaryName("statusBarLabel");
 	}
 	
 	@Override
@@ -138,7 +150,11 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 
 	@Override
 	public void setKijkNaEnabled(boolean enable) {
-		nakijkKnop.setEnabled(enable);		
+		nakijkKnop.setEnabled(enable);	
+		if(!enable)
+			nakijkKnop.addStyleDependentName("disabled");
+		else
+			nakijkKnop.removeStyleDependentName("disabled");
 	}
 
 	@Override
@@ -159,6 +175,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 		if(b) {
 			if(opnieuwKnop ==  null) {
 				opnieuwKnop = new PushButton(Text.constants.opnieuwKnopLabel());
+				opnieuwKnop.setStylePrimaryName("myPushButton");
 				opnieuwKnop.addClickHandler(new ReloadHandler());
 			}
 			if(opnieuwKnop.getParent() == null) {
@@ -175,6 +192,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 		if(b) {
 			if(allesOpnieuwKnop ==  null) {
 				allesOpnieuwKnop = new PushButton(Text.constants.allesOpnieuwKnopLabel());
+				allesOpnieuwKnop.setStylePrimaryName("myPushButton");
 				allesOpnieuwKnop.addClickHandler(new ReloadAllHandler());
 			} 
 			if(allesOpnieuwKnop.getParent() == null) {
@@ -193,6 +211,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 			if(scoresObjectivesKnop == null)
 			{
 				scoresObjectivesKnop = new PushButton(Text.constants.objectivesKnopLabel());
+				scoresObjectivesKnop.setStylePrimaryName("myPushButton");
 				scoresObjectivesKnop.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent e)
 					{
@@ -215,6 +234,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 			if(viewMisconceptionsKnop == null)
 			{
 				viewMisconceptionsKnop = new PushButton(Text.constants.viewMisconceptionsKnopLabel());
+				viewMisconceptionsKnop.setStylePrimaryName("myPushButton");
 				viewMisconceptionsKnop.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent e)
 					{
