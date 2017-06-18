@@ -17,7 +17,7 @@ canvas {outline: none;
  
 div.cbg-RP { background-color:#c3d9ff; }
 .keyboardtabs {background:#000;}
-div.keyboard {background:#dedede; left:0px; right:0px; }
+div.keyboard {background:#E5E7E9; left:0px; right:0px; }
 
 div.tekstvak { overflow: hidden; }
 /*div.tekstregel { overflow: hidden; }*/
@@ -55,7 +55,7 @@ div.scrollformule {overflow:scroll; background:blue; width:210px;}
 
 div.kbd-Button-dwo-numeric {
 	background:#eee;
-	background-image: url(images/resources/numericbuttongradient.png);
+	/*background-image: url(images/resources/numericbuttongradient.png);*/
 }
 div.kbd-Button-noordhoff-numeric {
 	background-color:#64add3;
@@ -164,32 +164,172 @@ div.listItem-dwo-separator {
 
 */
 
+.opdrbutton-container {
+	background-color: #FFFFFF
+}
+
+.opdrnav-bottombar {
+	background-color: #FFFFFF
+}
+
+.myPushButton {
+	float: left;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 4px;
+	padding: 6px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	background-color: #B3C2E5;
+	border-radius: 3px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	cursor: pointer;
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 12px;
+	
+}
+
+.myPushButton-disabled {
+	float: left;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 4px;
+	padding: 6px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	background-color: #d2d2d2;
+	border-radius: 3px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	cursor: pointer;
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 12px;
+	
+}
+
+.spaceLabel {
+	float: left;
+	display: inline-block;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 4px;
+	padding: 0px;
+	padding-top: 1px;
+	padding-bottom: 2px;
+	background-color: white;
+	border-radius: 0px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	cursor: pointer;
+	color: #B3C2E5;
+	/*font-weight: bold;*/
+	font-size: 30px;
+}
+
+.statusBarLabel {
+	
+	display: inline;
+	margin-left: 10px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	background-color: white;
+	border-radius: 0px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	cursor: pointer;
+	color: #1D71B8;
+	/*font-weight: bold;*/
+	font-size: 11px;
+}
+
+.spaceShiftLabel {
+	float: left;
+	display: inline-block;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 4px;
+	padding: 0px;
+	padding-top: 1px;
+	padding-bottom: 2px;
+	background-color: white;
+	border-radius: 0px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	cursor: pointer;
+	color: #B3C2E5;
+	/*font-weight: bold;*/
+	font-size: 20px;
+}
+
+.shiftBtn {
+	float: left;
+	display: inline-block;
+	margin-right: 0px;
+	margin-top: 5px;
+	margin-bottom: 4px;
+	padding: 3px;
+	padding-top: 2px;
+	padding-bottom: 1px;
+	background-color: white;
+	border-radius: 3px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #B3C2E5;
+	cursor: pointer;
+	color: #B3C2E5;
+	/*font-weight: bold;*/
+	font-size: 16px;
+}
+
 .scoreBtn {
 	float: left;
 	display: inline-block;
-	margin-right: 10px;
-	margin-top: 2px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 5px;
 	margin-bottom: 4px;
-	padding: 10px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	background-color: #FFBBBB;
-	border-radius: 20px;
-	border-width: 1px;
+	padding: 6px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	background-color: #B3C2E5;
+	border-radius: 3px;
+	border-width: 0px;
 	border-style: solid;
-	border-color: rgb(121, 127, 144);
+	border-color: white;
 	cursor: pointer;
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 12px;
 }
 
 .scoreBtn-popupTime {
 	border-radius: 0px;
 	text-decoration: underline;
 	font-style: italic;
-	background-color: #C0C0C0
+	font-size: 10px;
+	background-color: white;
+	border-color: #1D71B8;
+	border-width: 1px;
+	color: #1D71B8;
 }
 
 .scoreBtn-max0 {
-	background-color: #909090;
+	background-color: #C0C0C0
 }
 
 .scoreBtn-disabled {
@@ -197,7 +337,24 @@ div.listItem-dwo-separator {
 }
 
 .scoreBtn-correct {
-	background-color: green;
+	background-color: #96C896;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 5px;
+	color: green;
+	font-weight: bold;
+	
+}
+
+.scoreBtn-selectedcorrect {
+	background-color: #96C896;
+	border-color: #1D71B8;
+	border-width: 3px;
+	border-style: solid;
+	margin-right: 0px;
+	color: green;
+	font-weight: bold;
+	
 }
 /*
 		button.getElement().getStyle().setBorderWidth(3, Unit.PX);
@@ -207,9 +364,16 @@ div.listItem-dwo-separator {
 */
 
 .scoreBtn-cursor {
+/*	
 	border-width: 3px;
 	border-color: #484848;
-	margin-top: 0px;	
+	margin-top: 0px;
+*/	margin-top: 2px;
+	border-width: 3px;
+	border-style: solid;
+	border-color: #1D71B8;
+	color: #1D71B8;
+	
 }
 
 .gwt-Tree .gwt-TreeItem-selected {
