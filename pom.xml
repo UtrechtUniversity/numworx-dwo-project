@@ -306,7 +306,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<DWOplayerVersion>2.1.14</DWOplayerVersion>
-		<DWOmAccessVersion>0.0.9-SNAPSHOT</DWOmAccessVersion>
+		<DWOmAccessVersion>0.0.9</DWOmAccessVersion>
 		<jamonVersion>2.80</jamonVersion>
 		<RegisterVersion>2.1.13</RegisterVersion>
 	</properties>
