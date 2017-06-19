@@ -16,13 +16,16 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
 
 /**
- * Local ViewFactory implementation class. 
- * 
+ * Local ViewFactory implementation class.
+ *
  * @author G.A.J. van der Plas
  */
 public class ViewFactoryImpl implements ViewFactory {
+
     private final MainPresenter.Display mainView;
     private final LoginPresenter.Display loginView;
     private final ResultsPresenter.Display resultsView;
@@ -31,21 +34,25 @@ public class ViewFactoryImpl implements ViewFactory {
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AccountPresenter.Display accountView;
     private final AddSchoolclassPresenter.Display addSchoolclassView;
+    private final StudentsInSchoolclassPresenter.Display studentsInSchoolclassView;
+    //private final TeachersInSchoolclassPresenter.Display teachersInSchoolclassView;
     private final EditSchoolclassPresenter.Display editSchoolclassView;
-    
-    public ViewFactoryImpl(PresenterFactory pf){
-    mainView = new MainView(pf.getMainPresenter());
-    loginView = new LoginView(pf.getLoginPresenter());
-    resultsView = new ResultsView(pf.getResultsPresenter());
-    switchSchoolView = new SwitchSchoolView(pf.getSwitchSchoolPresenter());
-    scoResultsView = new ScoResultsView(pf.getScoResultsPresenter());
-    accountView = new AccountView(pf.getAccountPresenter());
-    //ordered!
-    schoolclassesView = new SchoolclassesView(pf.getSchoolclassesPresenter(),this);
-    addSchoolclassView = new AddSchoolclassView(pf.getAddSchoolclassPresenter());
-    editSchoolclassView = new EditSchoolclassView(pf.getEditSchoolclassPresenter());
+
+    public ViewFactoryImpl(PresenterFactory pf) {
+        mainView = new MainView(pf.getMainPresenter());
+        loginView = new LoginView(pf.getLoginPresenter());
+        resultsView = new ResultsView(pf.getResultsPresenter());
+        switchSchoolView = new SwitchSchoolView(pf.getSwitchSchoolPresenter());
+        scoResultsView = new ScoResultsView(pf.getScoResultsPresenter());
+        accountView = new AccountView(pf.getAccountPresenter());
+        //ordered!
+        schoolclassesView = new SchoolclassesView(pf.getSchoolclassesPresenter(), this);
+        addSchoolclassView = new AddSchoolclassView(pf.getAddSchoolclassPresenter());
+        studentsInSchoolclassView = new StudentsInSchoolclassView(pf.getStudentsInSchoolclassPresenter());
+//    teachersInSchoolclassView = new TeachersInSchoolclassView(pf.getTeachersInSchoolclassPresenter());
+        editSchoolclassView = new EditSchoolclassView(pf.getEditSchoolclassPresenter());
     }
-    
+
     @Override
     public MainPresenter.Display getMainView() {
         return mainView;
@@ -60,9 +67,9 @@ public class ViewFactoryImpl implements ViewFactory {
     public ResultsPresenter.Display getResultsView() {
         return resultsView;
     }
-    
+
     @Override
-    public SwitchSchoolPresenter.Display getSwitchSchoolView(){
+    public SwitchSchoolPresenter.Display getSwitchSchoolView() {
         return switchSchoolView;
     }
 
@@ -70,9 +77,9 @@ public class ViewFactoryImpl implements ViewFactory {
     public ScoResultsPresenter.Display getScoResultsView() {
         return scoResultsView;
     }
-    
+
     @Override
-    public SchoolclassesPresenter.Display getSchoolclassesView(){
+    public SchoolclassesPresenter.Display getSchoolclassesView() {
         return schoolclassesView;
     }
 
@@ -82,12 +89,17 @@ public class ViewFactoryImpl implements ViewFactory {
     }
 
     @Override
-    public AddSchoolclassPresenter.Display getAddSchoolclassView(){
+    public AddSchoolclassPresenter.Display getAddSchoolclassView() {
         return addSchoolclassView;
     }
-    
+
     @Override
-    public EditSchoolclassPresenter.Display getEditSchoolclassView(){
+    public StudentsInSchoolclassPresenter.Display getStudentsInSchoolclassView() {
+        return studentsInSchoolclassView;
+    }
+
+    @Override
+    public EditSchoolclassPresenter.Display getEditSchoolclassView() {
         return editSchoolclassView;
     }
 }

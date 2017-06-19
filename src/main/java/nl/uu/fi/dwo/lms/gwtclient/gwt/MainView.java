@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
@@ -90,6 +91,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @UiField(provided = true)
     SchoolclassesView schoolclassesView;
     @UiField(provided = true)
+    StudentsInSchoolclassView studentsInSchoolclassView;
+    @UiField(provided = true)
     ResultsView resultsView;
     @UiField(provided = true)
     ScoResultsView scoResultsView;
@@ -126,6 +129,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         switchSchoolView = (SwitchSchoolView) clientFactory.getSwitchSchoolView();
         scoResultsView = (ScoResultsView) clientFactory.getScoResultsView();
         schoolclassesView = (SchoolclassesView) clientFactory.getSchoolclassesView();
+        studentsInSchoolclassView = (StudentsInSchoolclassView) clientFactory.getStudentsInSchoolclassView();
         initWidget(uiBinder.createAndBindUi(this));
         int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(loginIndex);
@@ -233,6 +237,12 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @Override
     public void showSchoolclassesView() {
         int index = mainDeckPanel.getWidgetIndex(schoolclassesView.asWidget());
+        mainDeckPanel.showWidget(index);
+    }
+
+    @Override
+    public void showStudentsInSchoolclassView() {
+        int index = mainDeckPanel.getWidgetIndex(studentsInSchoolclassView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 

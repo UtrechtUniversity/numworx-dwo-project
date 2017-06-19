@@ -26,7 +26,6 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         public MainView getViewInstance();
 
 //        public HasClickHandlers getMenuButton(); // handle clicking on button
-
         public void showPostLoginWidgets();
 
         public void hidePostLoginWidgets();
@@ -50,6 +49,8 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         public void showResultsView();
 
         public void showSchoolclassesView();
+        
+        public void showStudentsInSchoolclassView();
 
         public void showScoResultsView();
 
@@ -104,7 +105,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     public void selectView(SwitchViewEvent.SelectedView selectedView) {
         eventBus.fireEvent(new SwitchViewEvent(selectedView));
     }
-    
+
     @Override
     public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
         onSwitchViewEvent(switchViewEvent.getEventValue());
@@ -118,7 +119,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
             display.showMenuButton();
             display.showPostLoginWidgets();
         }
-        
+
         switch (selectedView) {
             case ACCOUNT:
                 display.showAccountView();
@@ -134,6 +135,9 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
                 break;
             case SCHOOLCLASSES:
                 display.showSchoolclassesView();
+                break;
+            case STUDENTSINSCHOOLCLASS:
+                display.showStudentsInSchoolclassView();
                 break;
             case SCORESULTS:
                 display.showScoResultsView();

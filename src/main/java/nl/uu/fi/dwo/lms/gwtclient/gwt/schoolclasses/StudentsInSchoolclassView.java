@@ -29,11 +29,11 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-public class SchoolclassesStudentsView extends Composite implements ClickHandler, SchoolclassesPresenter.Display {
+public class StudentsInSchoolclassView extends Composite implements ClickHandler, StudentsInSchoolclassPresenter.Display {
 
-    private static final Logger LOG = Logger.getLogger(SchoolclassesStudentsView.class.getName());
+    private static final Logger LOG = Logger.getLogger(StudentsInSchoolclassView.class.getName());
 
-    interface MyUiBinder extends UiBinder<Widget, SchoolclassesStudentsView> {
+    interface MyUiBinder extends UiBinder<Widget, StudentsInSchoolclassView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
@@ -43,16 +43,16 @@ public class SchoolclassesStudentsView extends Composite implements ClickHandler
 //    CellList dataGrid;
     @UiField(provided = true)
     SimplePager pager;
-    @UiField
+//    @UiField
     Button addBtn;
 
-    private SchoolclassesPresenter schoolclassesPresenter;
-    SchoolclassesPresenter.ClassItem selected;
-    ListDataProvider<SchoolclassesPresenter.ClassItem> dataProvider = new ListDataProvider<SchoolclassesPresenter.ClassItem>();
+    private StudentsInSchoolclassPresenter studentsInSchoolclassPresenter;
+    StudentsInSchoolclassPresenter.ClassItem selected;
+    ListDataProvider<StudentsInSchoolclassPresenter.ClassItem> dataProvider = new ListDataProvider<StudentsInSchoolclassPresenter.ClassItem>();
     
-    public SchoolclassesStudentsView(SchoolclassesPresenter sp) {
-        schoolclassesPresenter = sp;
-        schoolclassesPresenter.setView(this);
+    public StudentsInSchoolclassView(StudentsInSchoolclassPresenter sp) {
+        studentsInSchoolclassPresenter = sp;
+        studentsInSchoolclassPresenter.setView(this);
         String[] tableHeaders = sp.getTableHeaders();
 //        TextCell textCell = new TextCell();
         dataGrid = new DataGrid<String>();
@@ -111,7 +111,7 @@ public class SchoolclassesStudentsView extends Composite implements ClickHandler
 
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
-        addBtn.addClickHandler(this);
+//        addBtn.addClickHandler(this);
         final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
         dataGrid.setSelectionModel(selectionModel);
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -142,7 +142,7 @@ public class SchoolclassesStudentsView extends Composite implements ClickHandler
         }
     }
 
-    public void updateView(Map<String, SchoolclassesPresenter.ClassItem> data) {
+    public void updateView(Map<String, StudentsInSchoolclassPresenter.ClassItem> data) {
         dataProvider.getList().clear();
         dataProvider.getList().addAll(data.values());
         dataProvider.refresh();

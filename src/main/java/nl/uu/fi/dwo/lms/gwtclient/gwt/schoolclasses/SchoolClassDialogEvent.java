@@ -27,7 +27,10 @@ public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandl
     
     public enum Dialogs {
         NewSchoolClass,
-        EditSchoolClass
+        EditSchoolClass,
+        EditStudents,
+        EditTeachers,
+        EditModules
     }
 
     public static Type<SchoolClassDialogEventHandler> TYPE = new Type<SchoolClassDialogEventHandler>();
