@@ -149,8 +149,11 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         String version = BUILD.version;
         String revisie = BUILD.buildNumber;
+        String buildTimeStamp = BUILD.timeStamp;
+
         fiButton = new FIButton("DWO", new String[]{"versie-info: " + version,
-        	"revisie: " + revisie, 
+            "revisie: " + revisie,
+            "timestamp: "+buildTimeStamp,
             "auteur: Peter Boon",
             "programmeur: M.J.B. Kupers,",
             "Gert van der Plas",

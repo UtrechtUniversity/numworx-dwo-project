@@ -14,8 +14,9 @@
     </properties>
     <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
         <configurations>
-            <configuration id="ubuntu-dev" profiles="dev"/>
             <configuration id="macbook-app.dwo.nl" profiles=""/>
+            <configuration id="macbook-app.dwo.nl_clone" profiles=""/>
+            <configuration id="ubuntu-dev" profiles="dev"/>
         </configurations>
     </config-data>
 </project-shared-configuration>

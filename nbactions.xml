@@ -12,7 +12,7 @@
             <properties>
                 <exec.args>-classpath %classpath fi.dwo.dwojapplet.domain.DWO</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.workingdir>/linuxextra/home-extra/plas0006/SURFdrive/DWO-project/DWO2-testruns/DWOJApplet-app.dwo.nl</exec.workingdir>
+                <exec.workingdir>/linuxextra/home-extra/plas0006/SURFdrive/DWO-project/DWO2-testruns/DWOJApplet-ebsdev.dwo.nl</exec.workingdir>
             </properties>
         </action>
         <action>
@@ -28,7 +28,7 @@
                 <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath fi.dwo.dwojapplet.domain.DWO</exec.args>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
-                <exec.workingdir>/linuxextra/home-extra/plas0006/SURFdrive/DWO-project/DWO2-testruns/DWOJApplet-app.dwo.nl</exec.workingdir>
+                <exec.workingdir>/linuxextra/home-extra/plas0006/SURFdrive/DWO-project/DWO2-testruns/DWOJApplet-ebsdev.dwo.nl</exec.workingdir>
             </properties>
         </action>
         <action>
@@ -43,12 +43,11 @@
             <properties>
                 <exec.args>-classpath %classpath fi.dwo.dwojapplet.domain.DWO</exec.args>
                 <exec.executable>java</exec.executable>
-                <exec.workingdir>/linuxextra/home-extra/plas0006/SURFdrive/DWO-project/DWO2-testruns/DWOJApplet-app.dwo.nl</exec.workingdir>
+                <exec.workingdir>/linuxextra/home-extra/plas0006/SURFdrive/DWO-project/DWO2-testruns/DWOJApplet-ebsdev.dwo.nl</exec.workingdir>
             </properties>
         </action>
         <action>
             <actionName>CUSTOM-deploy</actionName>
-            <displayName>deploy</displayName>
             <goals>
                 <goal>deploy</goal>
             </goals>
