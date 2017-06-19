@@ -383,6 +383,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	public void setFocus(boolean b) {
 		comRoot.getKeyboard().setEditor( b ? this : null);
+		
+		// FIXME extra parameter soft of hard focus
+		if (b) 
+			comRoot.getKeyboard().softFocus(); 
+		else 
+			comRoot.getKeyboard().blur();
 	}
 	
 	private void fireJSEvent(JavaScriptObject jso) {
