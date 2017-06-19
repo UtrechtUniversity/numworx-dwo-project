@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
@@ -34,19 +31,8 @@ public class StudentsInSchoolclassPresenter {
     private String[] tableHeaders = {"usercode", "givenname", "insertion", "familyname", "edit", "select"};
     private DomSchoolClass schoolClass;
     private Map<String, DomStudent> studentMap;
-    private Map<String, StudentsInSchoolclassPresenter.ClassItem> viewData;
+    private Map<String, StudentsInSchoolclassPresenter.StudentItem> viewData;
     private Display view;
-
-    /**
-     * @param view the view to set
-     */
-    public void setView(Display view) {
-        this.view = view;
-    }
-
-    void addASchoolClass() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     public interface Display {
 
@@ -56,17 +42,23 @@ public class StudentsInSchoolclassPresenter {
 
         void init();
 
-        void updateView(Map<String, StudentsInSchoolclassPresenter.ClassItem> data);
+        void updateView(Map<String, StudentsInSchoolclassPresenter.StudentItem> data);
     }
 
-    public class ClassItem {
+    public class StudentItem {
 
         public String key; //unique
-        public String schoolclassName;
+        public String givenName;
+        public String insertion;
+        public String familyName;
+        public String usercode;
 
-        public ClassItem(String aKey, String value) {
+        public StudentItem(String aKey, String aFirstName,String anInsertion,String aFamilyName, String aUsercode) {
             key = aKey;
-            schoolclassName = value;
+            givenName = aFirstName;
+            insertion = anInsertion;
+            familyName = aFamilyName;
+            usercode = aUsercode;
         }
     }
 
@@ -75,17 +67,25 @@ public class StudentsInSchoolclassPresenter {
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    private List<DomSchoolRoleAndClassV2> getTeacherRoles() {
-        List<DomSchoolRoleAndClassV2> result = new ArrayList<DomSchoolRoleAndClassV2>();
-        DomSchoolsRolesAndClassesV2 sl = dwoGlobalVars.getSchoolLogins();
-        List<DomSchoolRoleAndClassV2> fullList = sl.getSchoolsRolesAndClassesList();
-        for (DomSchoolRoleAndClassV2 hasRole : fullList) {
-            if (hasRole.getRole().getRoleName().equals("TEACHER")) {
-                result.add(hasRole);
-            }
-        }
-        return result;
+    
+    /**
+     * @param view the view to set
+     */
+    public void setView(Display view) {
+        this.view = view;
     }
+
+//    private List<DomSchoolRoleAndClassV2> getTeacherRoles() {
+//        List<DomSchoolRoleAndClassV2> result = new ArrayList<DomSchoolRoleAndClassV2>();
+//        DomSchoolsRolesAndClassesV2 sl = dwoGlobalVars.getSchoolLogins();
+//        List<DomSchoolRoleAndClassV2> fullList = sl.getSchoolsRolesAndClassesList();
+//        for (DomSchoolRoleAndClassV2 hasRole : fullList) {
+//            if (hasRole.getRole().getRoleName().equals("TEACHER")) {
+//                result.add(hasRole);
+//            }
+//        }
+//        return result;
+//    }
 
     public void init(DomSchoolClass aSchoolClass) {
         view.init();
@@ -104,7 +104,13 @@ public class StudentsInSchoolclassPresenter {
                 viewData = new HashMap(studentMap.size());
                 for (DomStudent sc : resolved.getValue()) {
                     studentMap.put(sc.getId().getIdString(), sc);
-                    viewData.put(sc.getId().getIdString(), new ClassItem(sc.getId().getIdString(), sc.getUniqueDisplayName()));
+                    viewData.put(sc.getId().getIdString(), 
+                            new StudentItem(sc.getId().getIdString(), 
+                                    sc.getGivenName(),
+                                    sc.getInsertion(),
+                                    sc.getFamilyName(),
+                                    sc.getUserName()
+                                    ));
                 }
                 view.updateView(viewData);
                 return null;
@@ -128,5 +134,14 @@ public class StudentsInSchoolclassPresenter {
     public String[] getTableHeaders() {
         return tableHeaders;
     }
-
+    /**
+     * @param item
+     * @param op
+     */
+    public void selectItem(StudentsInSchoolclassPresenter.StudentItem item, int op) {
+        switch (op) {
+            default:
+                throw new UnsupportedOperationException("Not supported yet."); 
+        }
+    }
 }

@@ -87,30 +87,14 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         schoolclassesPresenter = sp;
         viewFactory = vf;
         schoolclassesPresenter.setView(this);
-//            dialogBox.add(addSchoolclassView.asWidget());
-//            dialogBox.setModal(true);
-//            dialogBox.setAutoHideEnabled(true);
-//            dialogBox.setGlassEnabled(true);
-//            dialogBox.setAnimationEnabled(true);
-//            dialogBox.center();
-
         String[] tableHeaders = sp.getTableHeaders();
-//        TextCell textCell = new TextCell();
         dataGrid = new CellTable<String>();
 
-//        ListDataProvider<String> dataProvider = new ListDataProvider<String>();
-        // Connect the table to the data provider.
         dataProvider.addDataDisplay(dataGrid);
         dataGrid.setSkipRowHoverCheck(true);
         dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
-//        // Add the data to the data provider, which automatically pushes it to the
-//        // widget.
         List<SchoolclassesPresenter.ClassItem> data = dataProvider.getList();
-//        SchoolclassesPresenter.ClassItem item = schoolclassesPresenter.new ClassItem("" + 0, "" + 1);
-//        for (int i = 0; i < 100; i++) {
-//            data.add(item);
-//        }
         final MyCell cell = new MyCell();
 
         //classname

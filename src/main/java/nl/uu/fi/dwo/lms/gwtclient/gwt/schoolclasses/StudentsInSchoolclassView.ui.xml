@@ -14,7 +14,7 @@
                     </FlowPanel>
                 </g:north>-->
                 <g:center>
-                    <c:DataGrid addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
+                    <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
                 </g:center>
                 <g:south size='2'>
                     <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
