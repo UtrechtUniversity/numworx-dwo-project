@@ -44,6 +44,19 @@ public class SimpleValidUserFieldsChecker {
 	    }
 	    return true;
 	}
+
+	/**
+	 * Verify required fields are filled.
+	 *
+	 * @param fields
+	 * @return
+	 */
+	public static boolean isNonEmptyNorNull(String field) {
+	        if (field == null || field.trim().isEmpty()) {
+	            return false;
+	        }
+	    return true;
+	}
         
 	SimpleValidUserFieldsChecker() {
 	}
