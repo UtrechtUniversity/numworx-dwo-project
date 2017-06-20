@@ -30,7 +30,6 @@ import java.util.Vector;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnect;
-import fi.beans.scorm.ScormAdapter;
 import fi.beans.scorm2xml.Scorm2Xml;
 //import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.commons.persistence.DbAccessIF;
@@ -4741,7 +4740,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     }
 
     // replace chars > 100 with \ u escapes
-    static private String convertUEsc(String s) {
+    static public String convertUEsc(String s) {
         char[] charArray = s.toCharArray();
         int length = charArray.length;
         int start = 0;
@@ -4911,35 +4910,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         Vector v = executeQueryWithResult(ps);
         LOG.log(Level.FINE, "Testing if hasroleUser with uid {0} and sgid {1} exists with result: {2}", new Object[]{uid, sgid, v});
         return v;
-    }
-}
-
-class CmiConvert extends ScormAdapter {
-
-    protected CmiConvert() {
-        super(true);
-    }
-
-    @Override
-    public String GetValue(String cmiElement) {
-        return null;
-    }
-
-    @Override
-    public String SetValue(String key, String value) {
-        return null;
-    }
-
-    protected long from1_2Timex(String str) {
-        return super.from1_2Time(str);
-    }
-
-    protected String to1_2Timex(long time) {
-        return super.to1_2Time(time);
-    }
-
-    protected String to2004Timex(long time) {
-        return super.to2004Time(time);
     }
 }
 

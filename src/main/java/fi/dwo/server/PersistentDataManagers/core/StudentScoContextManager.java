@@ -61,7 +61,7 @@ public class StudentScoContextManager {
      * @param studentOf
      * @throws Exception
      */
-    public static void edit(PersistentStudentScoContext studentOf) throws PersistenceException, Exception {
+    public static void edit(PersistentStudentScoContext studentOf) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();

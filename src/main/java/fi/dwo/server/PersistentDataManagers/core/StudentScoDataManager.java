@@ -60,7 +60,7 @@ public class StudentScoDataManager {
      * @param ssd studentScoData
      * @throws Exception
      */
-    public static void edit(PersistentStudentScoData ssd) throws PersistenceException, Exception {
+    public static void edit(PersistentStudentScoData ssd) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();

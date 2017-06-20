@@ -844,7 +844,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             try {
                 UserManager.edit(user);
             } catch (PersistenceException ex) {
-                LOG.log(Level.WARNING, "User {0} could not update user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getUserName()});
+                LOG.log(Level.WARNING, "User {0} could not update user with usercode {1}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getDomSingleSchoolStudent().getUserName()});
                 LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user " + sc.getUserPrincipal().getName() + ".");
             }
