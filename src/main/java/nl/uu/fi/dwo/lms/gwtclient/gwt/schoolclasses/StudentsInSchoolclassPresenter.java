@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -28,7 +29,7 @@ public class StudentsInSchoolclassPresenter {
     private EventBus eventBus;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
 
-    private String[] tableHeaders = {"usercode", "givenname", "insertion", "familyname", "edit", "select"};
+    private String[] tableHeaders = {"givenname", "insertion", "familyname", "usercode", "edit", "select"};
     private DomSchoolClass schoolClass;
     private Map<String, DomStudent> studentMap;
     private Map<String, StudentsInSchoolclassPresenter.StudentItem> viewData;
@@ -143,5 +144,9 @@ public class StudentsInSchoolclassPresenter {
             default:
                 throw new UnsupportedOperationException("Not supported yet."); 
         }
+    }
+    
+        void goBackToSchoolClasses() {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
 }

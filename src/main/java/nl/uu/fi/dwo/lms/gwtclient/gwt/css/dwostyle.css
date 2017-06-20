@@ -442,3 +442,6 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     border-color: black;
     background-color: #fefefe;
 }
+.horizontalFloat{
+    float:left;
+}

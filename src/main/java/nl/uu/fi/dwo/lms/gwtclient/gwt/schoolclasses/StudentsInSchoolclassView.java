@@ -47,8 +47,14 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
 //    CellList dataGrid;
     @UiField(provided = true)
     SimplePager pager;
-//    @UiField
-    Button addBtn;
+    @UiField
+    Button backBtn;
+    @UiField
+    Button addStudentsBtn; // single school students
+    @UiField
+    Button addToSchoolClass;
+    @UiField
+    Button deleteSelectedBtn;
 
     private StudentsInSchoolclassPresenter studentsInSchoolclassPresenter;
     StudentsInSchoolclassPresenter.StudentItem selected;
@@ -97,7 +103,6 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
 
         // Connect the table to the data provider.
         //dataProvider.addDataDisplay(dataGrid);
-
         //givenName
         Column<StudentsInSchoolclassPresenter.StudentItem, String> value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
             @Override
@@ -126,7 +131,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         dataGrid.addColumn(value, tableHeaders[0]);
 
         //insertion
-            value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
             @Override
             public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
                 return object.insertion;
@@ -153,7 +158,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         dataGrid.addColumn(value, tableHeaders[1]);
 
         //familyName
-            value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
             @Override
             public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
                 return object.familyName;
@@ -180,7 +185,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         dataGrid.addColumn(value, tableHeaders[2]);
 
         //usercode
-            value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
             @Override
             public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
                 return object.usercode;
@@ -205,8 +210,8 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.addColumn(value, tableHeaders[3]);
-        
-        //usercode col
+
+        //edit student
         value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
             @Override
             public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
@@ -215,6 +220,16 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         };
         value.setSortable(false);
         dataGrid.addColumn(value, tableHeaders[4]);
+
+        //select student
+        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+            @Override
+            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+                return tableHeaders[4];
+            }
+        };
+        value.setSortable(false);
+        dataGrid.addColumn(value, tableHeaders[5]);
 
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);
@@ -225,7 +240,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
 
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
-//        addBtn.addClickHandler(this);
+//        addStudentsBtn.addClickHandler(this);
         final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
         dataGrid.setSelectionModel(selectionModel);
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -237,12 +252,15 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
                 }
             }
         });
-
+        backBtn.addClickHandler(this);
+        deleteSelectedBtn.addClickHandler(this);
+        addStudentsBtn.addClickHandler(this);
+        addToSchoolClass.addClickHandler(this);
     }
 
     @Override
     public void init() {
-//        addBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+//        addStudentsBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
 
     @Override
@@ -251,7 +269,13 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
     }
 
     public void onClick(ClickEvent event) {
-        if (event.getSource() == addBtn) {
+        if (event.getSource() == backBtn) {
+            studentsInSchoolclassPresenter.goBackToSchoolClasses();
+        } else if (event.getSource() == addStudentsBtn) {
+            //      schoolclassesPresenter.addSchoolClass();
+        } else if (event.getSource() == deleteSelectedBtn) {
+            //      schoolclassesPresenter.addSchoolClass();
+        } else if (event.getSource() == addToSchoolClass) {
             //      schoolclassesPresenter.addSchoolClass();
         }
     }
