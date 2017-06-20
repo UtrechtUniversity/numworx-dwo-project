@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -28,12 +29,15 @@ import fi.dwo.gwt.lib.rest.CallManagers.PublicCourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicCoursesOfSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicScoContextManager;
+import fi.dwo.gwt.lib.rest.CallManagers.PublicStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicUserResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.ScoContextManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentCoursesOfSchoolClassManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserCourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserScoContextManager;
+import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.UserResultsManager;
 
 public class RPCHandlerV3 extends RPCHandlerV2 {
@@ -44,6 +48,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	PublicProfileManager profileManager;
 	CoursesOfSchoolClassManager studentManager;
 	UserResultsManager resultManager;
+	StudentScoDataManager scormApi;
 	
 	protected Promise<DomDwoProfileFull> profile;
 	
@@ -56,6 +61,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		profileManager = new PublicProfileManager();
 		studentManager = new PublicCoursesOfSchoolClassManager();
 		resultManager = new PublicUserResultsManager();
+		scormApi = new PublicStudentScoDataManager();
 		
 		this.profile = getDwoProfile(profile);
 	}
@@ -223,6 +229,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				courseManager = new SecuredUserCourseManager(context); // FIXME 
 				studentManager = new SecuredStudentCoursesOfSchoolClassManager();
 				resultManager = new SecuredUserResultsManager();
+				scormApi = new SecuredStudentScoDataManager();
 				return resolved;
 			}
 		});
@@ -235,6 +242,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		courseManager = new PublicCourseManager();
 		studentManager = new PublicCoursesOfSchoolClassManager();
 		resultManager = new PublicUserResultsManager();
+		scormApi = new PublicStudentScoDataManager();
 		super.logout();
 	}
 
@@ -243,6 +251,19 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	public void getUserResults(Object courseID, Object userID,
 			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback) {
 		getUserResultsCallback.onFailure(new Error());
+	}
+
+	@Override
+	public Promise<Map<String, String>> getValues(Object scoID,
+			Collection<String> keys) {
+		DomScoContext sco = toScoContext(scoID);
+		return scormApi.getValues(sco, getContext(), keys);
+	}
+
+	@Override
+	public Promise<Void> setValues(Object scoID, Map<String, String> values) {
+		DomScoContext sco = toScoContext(scoID);
+		return scormApi.setValues(sco, getContext(), values);
 	}
 
 

@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -664,4 +665,11 @@ public class RPCHandlerV1 {
 		return defer.getPromise().map(TO_DWOPROFILE);
 	}
 	
+	public Promise<Map<String,String>> getValues(Object scoID, Collection<String> keys) {
+		return Promises.failed(new IllegalArgumentException());
+	}
+	
+	public Promise<Void> setValues(Object scoID, Map<String, String> values) {
+		return Promises.failed(new IllegalArgumentException());
+	}
 }
