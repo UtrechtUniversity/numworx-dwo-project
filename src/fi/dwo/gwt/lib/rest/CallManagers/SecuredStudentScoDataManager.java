@@ -41,6 +41,7 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		for(String key: keys) {
 			DomMapEntry<String,String> entry = new DomMapEntry<String, String>();
 			entry.setKey(key);
+			entry.setValue("");
 			list.add(entry);
 		}
 		values.setValues(list);
