@@ -23,6 +23,11 @@ public class DomGetSingleSchoolStudent {
     	domStudent = new DomStudent(u);
     }
     
+    public DomGetSingleSchoolStudent(DomStudent u, DomSchoolClass s) {
+    	domStudent = new DomStudent(u);
+        domSchoolClass = new DomSchoolClass(s);
+    }
+
     public void clearSettings(){
         if(domStudent==null){
             domStudent= new DomStudent();
