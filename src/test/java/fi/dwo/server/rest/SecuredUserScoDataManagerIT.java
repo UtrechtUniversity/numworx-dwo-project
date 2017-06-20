@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.PersistenceIdFactory;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
@@ -28,11 +29,13 @@ import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -67,8 +70,32 @@ public class SecuredUserScoDataManagerIT {
 	}
 
 	@Test
-	public void testGetJSONLaunchDataBytes() {
-		fail("Not yet implemented");
+	public void testGetJSONLaunchDataBytes() throws Exception {
+        SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
+        RestScoContext rest = new RestScoContext();
+        DomContext context = new DomContext();
+        DomHasRole domHasRole = null;
+        PersistentUser pUser = UserManager.findByUserName("user02");
+        PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
+
+        try {
+            PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.STUDENT);
+            domHasRole = pHasRole.buildDomHasRole();
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredTeacherResultsManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Could not find student hasRole");
+        }
+        context.setDomHasRole(domHasRole);
+        rest.setRestContext(context);
+		rest.setDomDwoProfile(new DomDwoProfile());
+		rest.setDomScoContext(new DomScoContext());
+		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(1));
+		rest.getDomDwoProfile().setId(id);
+		id = PersistentScoContext.buildPersistenceId(1L);
+		rest.getDomScoContext().setId(id);
+		String result = manager.getJSONLaunchDataBytes(sc, rest);
+		assertTrue(result.length() > 2);
+
 	}
 
 	@Test

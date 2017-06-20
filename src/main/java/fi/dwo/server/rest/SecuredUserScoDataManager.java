@@ -1,12 +1,18 @@
 package fi.dwo.server.rest;
 
 import java.awt.CheckboxMenuItem;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
 import javax.persistence.PersistenceException;
 import javax.ws.rs.DefaultValue;
@@ -18,24 +24,32 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
+import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.CmiConvert;
 import fi.dwo.server.persistence.DbAccess;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
+import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -46,10 +60,10 @@ public class SecuredUserScoDataManager {
     private static final Logger LOG = Logger.getLogger(SecuredUserScoDataManager.class.getName());
 	private static final String COMPLETE = "complete";
 
-    @GET
+    @PUT
     @Produces({"application/json"})    
     @Path("/getJSONLaunchDataBytes")
-    public String getJSONLaunchDataBytes(@Context SecurityContext sc, @DefaultValue("0") @QueryParam("scoId") Long scoId) {
+    public String getJSONLaunchDataBytes(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
 // Context
     	PersistentUser user = null;
     	try {
@@ -59,8 +73,64 @@ public class SecuredUserScoDataManager {
     		LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
     		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
     	}
-    	// FIXME
-    	return "{}";
+
+        Long scoId = MySQLPersistenceId.getNativeId(rest.getDomScoContext());
+        Long profileID = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
+		PersistentScoData scoData = ScoDataManager.findEntity(scoId);
+        if(scoData == null) {
+        	return "{}"; // Not found, not fatal
+        }
+        PersistentScoContext scoContext = ScoContextManager.findEntity(scoId);
+        Long courseID = scoContext.getCourseID();
+        PersistentCourse     course = CourseManager.findEntity(courseID);
+        if(course.getDwoProfileID().longValue() != profileID.longValue())
+        	return "{}";
+        Long schoolID = course.getSchoolID();
+        if(schoolID != null) {
+			DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
+			PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
+            PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+// userid must match
+         		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
+         			return "{}";
+// schoolID must match
+         	if (phr.getSchoolGroup().getSchoolID() != schoolID.longValue())
+         			return "{}";       	
+        }
+        
+        byte[] launchData = scoData.getLaunchdatabytes();
+        if(launchData != null)
+        {  
+        	byte[] buffer = new byte[1024];	
+            try {
+                ByteArrayInputStream inStream = new ByteArrayInputStream(launchData);
+                ByteArrayOutputStream outStream = new ByteArrayOutputStream(launchData.length);
+                GZIPInputStream gzIn = new GZIPInputStream(inStream);
+
+                int len;
+                while ((len = gzIn.read(buffer)) > 0) {
+                    outStream.write(buffer, 0, len);
+                }
+
+                gzIn.close();
+                outStream.close();
+                
+                return outStream.toString("UTF-8");
+            }
+            catch (IOException ex) {
+                LOG.log(Level.SEVERE, "Error while unzipping launchdata with scoid " + scoId + ".", ex);
+            }
+        }
+//The slow conversion, if bytes are missing.     
+        try {
+            Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(scoData.getLaunchdata(), null);
+            StringWriter writer = new StringWriter();
+			JSONEncoder.encode(map, writer, null); // FIXME zie DWOmAccess voor loader with wiskopdr.jar
+	        return writer.toString();
+        } catch(Exception ex) {
+        	LOG.log(Level.SEVERE, "Error while decoding launchdata with scoid " + scoId + ".", ex);
+        }
+        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Error with launchdata with scoid " + scoId + ".");
     }
 
     static private final CmiConvert CMI = new CmiConvert(); // utility class
