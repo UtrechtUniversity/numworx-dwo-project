@@ -1,11 +1,9 @@
 package fi.dwo.server.rest;
 
-import java.awt.CheckboxMenuItem;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +13,9 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 import javax.persistence.PersistenceException;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
@@ -45,7 +40,6 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.CmiConvert;
 import fi.dwo.server.persistence.DbAccess;
-import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
@@ -123,7 +117,7 @@ public class SecuredUserScoDataManager {
         }
 //The slow conversion, if bytes are missing.     
         try {
-            Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(scoData.getLaunchdata(), null);
+            Hashtable<?, ?> map = (Hashtable<?, ?>) StringCodeObject.decodeStringToObject(scoData.getLaunchdata(), null);
             StringWriter writer = new StringWriter();
 			JSONEncoder.encode(map, writer, null); // FIXME zie DWOmAccess voor loader with wiskopdr.jar
 	        return writer.toString();
