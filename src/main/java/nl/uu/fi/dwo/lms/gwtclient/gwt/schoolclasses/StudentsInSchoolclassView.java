@@ -1,10 +1,13 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -15,13 +18,11 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-public class StudentsInSchoolclassView extends Composite implements ClickHandler, StudentsInSchoolclassPresenter.Display {
+public class StudentsInSchoolclassView extends Composite implements ClickHandler, ChangeHandler, StudentsInSchoolclassPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(StudentsInSchoolclassView.class.getName());
 
@@ -55,14 +56,44 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
     Button addToSchoolClass;
     @UiField
     Button deleteSelectedBtn;
+    @UiField
+    ListBox schoolClassListBox;
 
     private StudentsInSchoolclassPresenter studentsInSchoolclassPresenter;
-    StudentsInSchoolclassPresenter.StudentItem selected;
-    ListDataProvider<StudentsInSchoolclassPresenter.StudentItem> dataProvider = new ListDataProvider<StudentsInSchoolclassPresenter.StudentItem>();
+    private StudentsInSchoolclassPresenter.StudentItem selected;
+    private ListDataProvider<StudentsInSchoolclassPresenter.StudentItem> dataProvider = new ListDataProvider<StudentsInSchoolclassPresenter.StudentItem>();
+    private List<SchoolClassItem> schoolClassList;
+    private MyCheckBoxCell checkBox;
 
     public class MyCell extends AbstractCell<String> {
 
         public MyCell() {
+            super("click", "keydown");
+        }
+
+        @Override
+        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
+            if (value != null) {
+                sb.appendEscaped(value);
+            }
+        }
+
+        @Override
+        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+            if (value == null) {
+                return;
+            }
+            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+            if ("click".equals(event.getType())) {
+//                LOG.log(Level.INFO, "key "+context.getKey());
+                cellSelected(context.getIndex(), context.getColumn());
+            }
+        }
+    }
+
+    public class MyClickCell extends AbstractCell<String> {
+
+        public MyClickCell() {
             super("click", "keydown");
         }
 
@@ -88,11 +119,43 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         }
     }
 
+    public class MyCheckBoxCell extends CheckboxCell {
+
+        boolean state = false;
+
+        public MyCheckBoxCell(boolean a, boolean b) {
+            super(a, b);
+        }
+
+        @Override
+        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, Boolean value, NativeEvent event, ValueUpdater<Boolean> valueUpdater) {
+            if (value == null) {
+                return;
+            }
+            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+            if ("change".equals(event.getType())) {
+                studentsInSchoolclassPresenter.selectItem((StudentsInSchoolclassPresenter.StudentItem) context.getKey(), 5);
+                LOG.log(Level.INFO, "key " + context.getKey() + " boolean " + value);
+            }
+        }
+    }
+
     public StudentsInSchoolclassView(StudentsInSchoolclassPresenter sp) {
         studentsInSchoolclassPresenter = sp;
         studentsInSchoolclassPresenter.setView(this);
         String[] tableHeaders = sp.getTableHeaders();
         dataGrid = new CellTable<String>();
+//        schoolClassListBox = new ValueListBox<SchoolClassItem>(new Renderer<SchoolClassItem>() {
+//
+//            public String render(SchoolClassItem item) {                
+//                return item.getSchoolclassName();
+//            }
+//
+//            public void render(SchoolClassItem user, Appendable appendable) throws IOException {
+//                String s = render(user);
+//                appendable.append(s);
+//            }
+//        });
 
         dataProvider.addDataDisplay(dataGrid);
         dataGrid.setSkipRowHoverCheck(true);
@@ -100,9 +163,8 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
 
         List<StudentsInSchoolclassPresenter.StudentItem> data = dataProvider.getList();
         final StudentsInSchoolclassView.MyCell cell = new StudentsInSchoolclassView.MyCell();
+        final StudentsInSchoolclassView.MyClickCell clickCell = new StudentsInSchoolclassView.MyClickCell();
 
-        // Connect the table to the data provider.
-        //dataProvider.addDataDisplay(dataGrid);
         //givenName
         Column<StudentsInSchoolclassPresenter.StudentItem, String> value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
             @Override
@@ -212,24 +274,30 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         dataGrid.addColumn(value, tableHeaders[3]);
 
         //edit student
-        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(clickCell) {
             @Override
             public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
-                return tableHeaders[4];
+                if (object.singleSchool == true) {
+                    return tableHeaders[4];
+                } else {
+                    return "";
+                }
             }
         };
         value.setSortable(false);
         dataGrid.addColumn(value, tableHeaders[4]);
 
         //select student
-        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+        checkBox = new MyCheckBoxCell(true, true);
+        Column<StudentsInSchoolclassPresenter.StudentItem, Boolean> bValue = new Column<StudentsInSchoolclassPresenter.StudentItem, Boolean>(checkBox) {
             @Override
-            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
-                return tableHeaders[4];
+            public Boolean getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+                return object.selected;
             }
         };
-        value.setSortable(false);
-        dataGrid.addColumn(value, tableHeaders[5]);
+
+        bValue.setSortable(false);
+        dataGrid.addColumn(bValue, tableHeaders[5]);
 
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);
@@ -241,24 +309,24 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
 //        addStudentsBtn.addClickHandler(this);
-        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
-        dataGrid.setSelectionModel(selectionModel);
-        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-            public void onSelectionChange(SelectionChangeEvent event) {
-                String selected = selectionModel.getSelectedObject();
-                LOG.log(Level.INFO, "selection key: " + selectionModel.getKey(selected));
-                if (selected != null) {
-                    Window.alert("You selected: " + selected + ".");
-                }
-            }
-        });
+//        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+//        dataGrid.setSelectionModel(selectionModel);
+//        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+//            public void onSelectionChange(SelectionChangeEvent event) {
+//                String selected = selectionModel.getSelectedObject();
+//                LOG.log(Level.INFO, "selection key: " + selectionModel.getKey(selected));
+//                if (selected != null) {
+//                    Window.alert("You selected: " + selected + ".");
+//                }
+//            }
+//        });
         backBtn.addClickHandler(this);
         deleteSelectedBtn.addClickHandler(this);
         addStudentsBtn.addClickHandler(this);
         addToSchoolClass.addClickHandler(this);
+        schoolClassListBox.addChangeHandler(this);
     }
 
-    @Override
     public void init() {
 //        addStudentsBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
@@ -276,14 +344,37 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         } else if (event.getSource() == deleteSelectedBtn) {
             //      schoolclassesPresenter.addSchoolClass();
         } else if (event.getSource() == addToSchoolClass) {
-            //      schoolclassesPresenter.addSchoolClass();
+//            LOG.log(Level.FINE, "Selected item with index:" + schoolClassListBox.getSelectedIndex()
+//                    + ", key " + schoolClassList.get(schoolClassListBox.getSelectedIndex()).getKey()
+//                    + ", value " + schoolClassListBox.getSelectedValue()
+//            );
+//            dataProvider.getList().get(0).
+            studentsInSchoolclassPresenter.addSelectedToSchoolClass(schoolClassList.get(schoolClassListBox.getSelectedIndex()).getKey());
+//        } else if (event.getSource() == schoolClassListBox) {
+//            studentsInSchoolclassPresenter.updateSchoolClasses();
+//        } else if (event.getSource() == checkBox) {
+//
         }
+    }
+
+    @Override
+    public void onChange(ChangeEvent event) {
+        //    LOG.log(Level.INFO, "Listbox event:" + event.getSource().toString());
     }
 
     public void updateView(Map<String, StudentsInSchoolclassPresenter.StudentItem> data) {
         dataProvider.getList().clear();
         dataProvider.getList().addAll(data.values());
         dataProvider.refresh();
+    }
+
+    public void updateSchoolClassList(List<SchoolClassItem> data) {
+        schoolClassList = data;
+
+        schoolClassListBox.clear();
+        for (SchoolClassItem item : data) {
+            schoolClassListBox.addItem(item.getSchoolclassName());
+        }
     }
 
     private void cellSelected(int row, int column) {

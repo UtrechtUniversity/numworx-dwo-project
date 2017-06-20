@@ -48,12 +48,6 @@ public class AccountView extends Composite implements ClickHandler, AccountPrese
     @UiField
     Button updateBtn;
     
-    public class ResultData {
-        
-        int width;
-        int height;
-        String[][] data; //height, width
-    }
     
     public AccountView(AccountPresenter ap) {
         accountPresenter = ap;

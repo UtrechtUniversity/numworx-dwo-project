@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.GwtEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 
 /**
  * GWTEvent that notifies of a login action.
@@ -10,6 +11,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
  */
 public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandler> {
     private DomSchoolClass schoolClass;
+    private DomStudent student;
 
     /**
      * @return the schoolClass
@@ -24,10 +26,25 @@ public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandl
     public void setSchoolClass(DomSchoolClass schoolClass) {
         this.schoolClass = schoolClass;
     }
+
+    /**
+     * @return the student
+     */
+    public DomStudent getStudent() {
+        return student;
+    }
+
+    /**
+     * @param student the student to set
+     */
+    public void setStudent(DomStudent student) {
+        this.student = student;
+    }
     
     public enum Dialogs {
         NewSchoolClass,
         EditSchoolClass,
+        EditStudent,
         EditStudents,
         EditTeachers,
         EditModules
@@ -38,6 +55,11 @@ public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandl
 
     public SchoolClassDialogEvent(Dialogs aState, DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
+        this.setEventValue(aState);
+    }
+
+    public SchoolClassDialogEvent(Dialogs aState, DomStudent aStudent) {
+        student = aStudent;
         this.setEventValue(aState);
     }
 

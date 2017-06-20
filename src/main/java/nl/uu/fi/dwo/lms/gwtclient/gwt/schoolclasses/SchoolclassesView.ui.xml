@@ -3,7 +3,8 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
-    <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
+    <g:FlowPanel  styleName="{dwoStyle.fullPanel}">
+        <!--addStyleNames='{dwoStyle.dwoWidgetPanel}'-->
         <g:FlowPanel>
             <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addBtn">add schoolclass</g:Button>
 

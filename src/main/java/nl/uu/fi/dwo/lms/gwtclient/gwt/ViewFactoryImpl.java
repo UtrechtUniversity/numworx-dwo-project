@@ -16,6 +16,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
 
@@ -37,6 +39,7 @@ public class ViewFactoryImpl implements ViewFactory {
     private final StudentsInSchoolclassPresenter.Display studentsInSchoolclassView;
     //private final TeachersInSchoolclassPresenter.Display teachersInSchoolclassView;
     private final EditSchoolclassPresenter.Display editSchoolclassView;
+    private final EditStudentPresenter.Display editStudentView;
 
     public ViewFactoryImpl(PresenterFactory pf) {
         mainView = new MainView(pf.getMainPresenter());
@@ -51,6 +54,7 @@ public class ViewFactoryImpl implements ViewFactory {
         studentsInSchoolclassView = new StudentsInSchoolclassView(pf.getStudentsInSchoolclassPresenter());
 //    teachersInSchoolclassView = new TeachersInSchoolclassView(pf.getTeachersInSchoolclassPresenter());
         editSchoolclassView = new EditSchoolclassView(pf.getEditSchoolclassPresenter());
+        editStudentView = new EditStudentView(pf.getEditStudentPresenter());
     }
 
     @Override
@@ -101,5 +105,12 @@ public class ViewFactoryImpl implements ViewFactory {
     @Override
     public EditSchoolclassPresenter.Display getEditSchoolclassView() {
         return editSchoolclassView;
+    }
+
+    /**
+     * @return the editStudentView
+     */
+    public EditStudentPresenter.Display getEditStudentView() {
+        return editStudentView;
     }
 }

@@ -9,6 +9,7 @@ import com.google.gwt.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 
 /**
@@ -31,6 +32,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final AccountPresenter accountPresenter;
     private final AddSchoolclassPresenter addSchoolclassPresenter;
     private final EditSchoolclassPresenter editSchoolclassPresenter;
+    private final EditStudentPresenter editStudentPresenter;
 
     public PresenterFactoryImpl(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
@@ -46,6 +48,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
         accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars);
         addSchoolclassPresenter = new AddSchoolclassPresenter(eventBus, dwoGlobalVars);
         editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
+        editStudentPresenter = new EditStudentPresenter(eventBus, dwoGlobalVars);
     }
 
     @Override
@@ -122,5 +125,12 @@ public class PresenterFactoryImpl implements PresenterFactory {
      */
     public EditSchoolclassPresenter getEditSchoolclassPresenter() {
         return editSchoolclassPresenter;
+    }
+
+    /**
+     * @return the editStudentPresenter
+     */
+    public EditStudentPresenter getEditStudentPresenter() {
+        return editStudentPresenter;
     }
 }

@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -258,17 +259,16 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void showMenuView() {
-        menuView.addStyleName("menuGrow");
+        menuView.addStyleName(".dwoMenuOut");
         menuView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-        LOG.log(Level.INFO, "Menu grow.");
+        LOG.log(Level.INFO, "Menu dwoMenuOut.");
         showMenu = true;
     }
 
     @Override
     public void hideMenuView() {
         menuView.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-        menuView.removeStyleName("menuGrow");
-        LOG.log(Level.INFO, "Menu shrink.");
+        menuView.removeStyleName(".dwoMenuIn");
         showMenu = false;
     }
 

@@ -4,15 +4,15 @@
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
     <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
-        <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}">
+        <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="addStudentsBtn">add more students</g:Button>
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="deleteSelectedBtn">delete selected students</g:Button>
            
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="addToSchoolClass">add to schoolclass</g:Button>
-            <g:ListBox addStyleNames='{dwoStyle.dwoButton}'>
+            <g:Button addStyleNames='{dwoStyle.dwoButton} float:right' ui:field="addToSchoolClass">add to schoolclass</g:Button>
+            <g:ListBox addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="schoolClassListBox">
                 <g:item>
-                    click to load
+                    Loading...
                 </g:item>
             </g:ListBox>
 <!--            <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftFullBox}' ui:field="backBtn">back</g:Button>
@@ -26,9 +26,9 @@
                 </g:item>
             </g:ListBox>-->
         </g:FlowPanel>
-        <g:FlowPanel height="2em">
+            <g:FlowPanel height="2em">
         </g:FlowPanel>
-        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="80%" ui:field='dataGrid'/>
+        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="70%" ui:field='dataGrid'/>
         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
     </g:FlowPanel>
     <!--    <g:LayoutPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>

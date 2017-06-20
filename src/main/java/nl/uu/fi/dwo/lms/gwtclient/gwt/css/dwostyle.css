@@ -202,6 +202,7 @@ DWO-overrides
 .dwoAppMenuPanel {
     display:block;
     position: absolute;
+    /*z-index: -1000;*/
     top: 5px;
     right: 8px;
     border-radius: 4px;   
@@ -221,7 +222,6 @@ DWO-overrides
 
 .selectedMenu {
     background-color: #0e7dc0;
-
 }
 
 .dwoMenuOut {
@@ -230,6 +230,8 @@ DWO-overrides
     visibility: visible;
     opacity: 1;
     overflow: hidden; 
+    z-index: 1000;
+    
 }
 
 .dwoMenuIn {
@@ -238,6 +240,7 @@ DWO-overrides
     visibility: hidden;
     opacity: 0;
     overflow: hidden;
+    z-index: -1000;
 }
 
 .box{
@@ -396,6 +399,7 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
 }
 .dwoButton {
     padding: 5px;
+    margin: 5px;
 }
 
 .childCell {
@@ -414,6 +418,8 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
 
 .dwoTextBox{
     width: 15em; width: 15rem;
+    padding: 5px;
+    margin: 5px;    
 }
 
 .dwoMainMessagePanel {
@@ -442,6 +448,7 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     border-color: black;
     background-color: #fefefe;
 }
+
 .horizontalFloat{
-    float:left;
+    display: inline-block;
 }

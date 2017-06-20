@@ -49,7 +49,7 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
 
     @Override
     public void onDialogEvent(SchoolClassDialogEvent dialogEvent) {
-        if (dialogEvent.getEventValue().EditSchoolClass==SchoolClassDialogEvent.Dialogs.EditSchoolClass) {
+        if (dialogEvent.getEventValue()==SchoolClassDialogEvent.Dialogs.EditSchoolClass) {
             schoolClass = (DomSchoolClass) dialogEvent.getSchoolClass();
             Promise<DomSchoolClassFull> promise;
             promise = manager.getFullSchoolClass(schoolClass);
