@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
@@ -95,9 +96,9 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     @Path("/secure/teacher/schoolclass/submitSingleSchoolStudent")
     public void submitSingleSchoolStudent(RestNewSingleSchoolStudent schoolClass, Callback<Boolean> callback);
     
-    @GET
+    @PUT
     @Path("/secure/teacher/schoolclass/getSingleSchoolStudent")
-    public void getSingleSchoolStudent(Callback<DomSingleSchoolStudent> callback);
+    public void getSingleSchoolStudent(RestGetSingleSchoolStudent singleSchoolStudent,Callback<DomSingleSchoolStudent> callback);
     
     @PUT
     @Path("/secure/teacher/schoolclass/submitSingleSchoolStudent")

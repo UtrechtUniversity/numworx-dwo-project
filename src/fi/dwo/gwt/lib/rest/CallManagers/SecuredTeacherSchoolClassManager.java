@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
@@ -244,14 +245,14 @@ public class SecuredTeacherSchoolClassManager {
     }       
     
 
-    public Promise<DomSingleSchoolStudent> getSingleSchoolStudent() {
+    public Promise<DomSingleSchoolStudent> getSingleSchoolStudent(DomGetSingleSchoolStudent singleSchoolStudent) {
         PromiseCallback<DomSingleSchoolStudent> defer = new PromiseCallback<DomSingleSchoolStudent>();
-        this.getSingleSchoolStudent(defer);
+        this.getSingleSchoolStudent(singleSchoolStudent,defer);
         return defer.getPromise();
     }
     
-    public void getSingleSchoolStudent(AsyncCallback<DomSingleSchoolStudent> callBack) {
-        service.getSingleSchoolStudent(new Callback<DomSingleSchoolStudent>(callBack));
+    public void getSingleSchoolStudent(DomGetSingleSchoolStudent singleSchoolStudent, AsyncCallback<DomSingleSchoolStudent> callBack) {
+        service.getSingleSchoolStudent(singleSchoolStudent,new Callback<DomSingleSchoolStudent>(callBack));
     }        
     
     public Promise<Boolean> updateSingleSchoolStudent(DomSingleSchoolStudent updateStudent) {
