@@ -36,8 +36,6 @@ public class SecuredTeacherSchoolClassManager {
     private static final Logger LOG = Logger.getLogger(SecuredTeacherSchoolClassManager.class.getName());
     private SecuredTeacherSchoolClassRestCaller service;
 
-    private GwtRestVars dgv;
-
     public SecuredTeacherSchoolClassManager() {
         service = (SecuredTeacherSchoolClassRestCaller) GWT.create(SecuredTeacherSchoolClassRestCaller.class);
     }
@@ -246,14 +244,14 @@ public class SecuredTeacherSchoolClassManager {
     }       
     
 
-    public Promise<List<DomSingleSchoolStudent>> getSingleSchoolStudent() {
-        PromiseCallback<List<DomSingleSchoolStudent>> defer = new PromiseCallback<List<DomSingleSchoolStudent>>();
+    public Promise<DomSingleSchoolStudent> getSingleSchoolStudent() {
+        PromiseCallback<DomSingleSchoolStudent> defer = new PromiseCallback<DomSingleSchoolStudent>();
         this.getSingleSchoolStudent(defer);
         return defer.getPromise();
     }
     
-    public void getSingleSchoolStudent(AsyncCallback<List<DomSingleSchoolStudent>> callBack) {
-        service.getSingleSchoolStudent(new Callback<List<DomSingleSchoolStudent>>(callBack));
+    public void getSingleSchoolStudent(AsyncCallback<DomSingleSchoolStudent> callBack) {
+        service.getSingleSchoolStudent(new Callback<DomSingleSchoolStudent>(callBack));
     }        
     
     public Promise<Boolean> updateSingleSchoolStudent(DomSingleSchoolStudent updateStudent) {

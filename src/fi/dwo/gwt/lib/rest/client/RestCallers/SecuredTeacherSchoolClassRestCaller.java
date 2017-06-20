@@ -97,7 +97,7 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     
     @GET
     @Path("/secure/teacher/schoolclass/getSingleSchoolStudent")
-    public void getSingleSchoolStudent(Callback<List<DomSingleSchoolStudent>> callback);
+    public void getSingleSchoolStudent(Callback<DomSingleSchoolStudent> callback);
     
     @PUT
     @Path("/secure/teacher/schoolclass/submitSingleSchoolStudent")
