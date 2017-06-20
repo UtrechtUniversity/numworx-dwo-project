@@ -261,7 +261,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	}
 
 	@Override
-	public Promise<Void> setValues(Object scoID, Map<String, String> values) {
+	public Promise<?> setValues(Object scoID, Map<String, String> values) {
 		DomScoContext sco = toScoContext(scoID);
 		return scormApi.setValues(sco, getContext(), values);
 	}

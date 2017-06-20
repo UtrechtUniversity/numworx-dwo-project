@@ -669,7 +669,7 @@ public class RPCHandlerV1 {
 		return Promises.failed(new IllegalArgumentException());
 	}
 	
-	public Promise<Void> setValues(Object scoID, Map<String, String> values) {
+	public Promise<?> setValues(Object scoID, Map<String, String> values) {
 		return Promises.failed(new IllegalArgumentException());
 	}
 }
