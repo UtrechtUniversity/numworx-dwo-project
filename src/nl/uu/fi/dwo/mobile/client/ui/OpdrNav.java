@@ -126,6 +126,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * worden als op de nakijk-knop wordt gedrukt.
 	 */
 	private boolean[][] isCorrectZelftoets;
+	/**
+	 * Een array (per activiteit, per opdracht/pagina) die aangeeft of er voor de 
+	 * betreffende opdracht een zelftoets nakijken pending is. Als de zelftoets is nagekeken
+	 * en een opdracht wordt daarna voor het eerst bezocht, dan is pending true. Daarna false.
+	 */
+	private boolean[][] nakijkenZelftoetsPending;
+	
 	private boolean[][] opdrachtenCorrect;
 	private int[] aantalNakijken; // per activiteit
 
@@ -247,6 +254,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		scoresZelftoets = new int[aantalActiviteiten][maxAantalOpdrachten];
 		isCorrect = new boolean[aantalActiviteiten][maxAantalOpdrachten];
 		isCorrectZelftoets = new boolean[aantalActiviteiten][maxAantalOpdrachten];
+		nakijkenZelftoetsPending = new boolean[aantalActiviteiten][maxAantalOpdrachten];
 		opdrachtenCorrect = new boolean[aantalActiviteiten][maxAantalOpdrachten];
 		states = new HashMap[aantalActiviteiten][maxAantalOpdrachten];
 		scoreMax = 0;
@@ -367,6 +375,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				setIsCorrectZelftoets(memento.isCorrectZelftoets());
 			else
 				setIsCorrectZelftoets(isCorrect);
+			
+			if (memento.nakijkenZelftoetsPending() != null)
+				setNakijkenZelftoetsPending(memento.nakijkenZelftoetsPending());
+			else
+				setNakijkenZelftoetsPending(nakijkenZelftoetsPending);
 		}
 
 		setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij
@@ -374,23 +387,23 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 											// buttons.get() != null
 
 		// initializeer bezocht
+		boolean[][] bezocht;
+		bezocht = new boolean[getAantalActiviteiten()][];
+		for (int j = 0; j < getAantalActiviteiten(); j++)
 		{
-			boolean[][] bezocht;
-			bezocht = new boolean[getAantalActiviteiten()][];
-			for (int j = 0; j < getAantalActiviteiten(); j++)
-			{
-				bezocht[j] = new boolean[getAantalOpdrachten(j)]; // all false
-			}
-			// bezocht[0][0] = true; // eerste niet standaard bezocht zetten,
-			// anders kun je nooit checken of hij al eerder bezocht is
-			entry.bezocht = bezocht;
+			bezocht[j] = new boolean[getAantalOpdrachten(j)]; // all false
 		}
+		// bezocht[0][0] = true; // eerste niet standaard bezocht zetten,
+		// anders kun je nooit checken of hij al eerder bezocht is
+		entry.bezocht = bezocht;
 
+		
 		memento.getBezocht(entry.bezocht);
 		entry.zelftoetsNagekeken = memento.getZelftoetsNagekeken();
 		aantalNakijken = memento.getAantalNakijken();
 		initializeScoresZelftoets();
 		initializeIsCorrectZelftoets();
+		initializeNakijkenZelftoetsPending();
 
 		final HashMap<String, Object> state = states[currentActiviteit][currentOpdracht];
 
@@ -432,6 +445,19 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			isCorrectZelftoets = isCorrectZelftoets();
 		else
 			isCorrectZelftoets = new boolean[getAantalActiviteiten()][getMaxAantalOpdrachten()];
+	}
+	
+	/**
+	 * Initialiseer nakijkenZelftoetsPending, zo mogelijk met
+	 * de nakijkenZelftoetsPending die memento heeft opgeslagen.
+	 * 
+	 */
+	private void initializeNakijkenZelftoetsPending()
+	{
+		if (nakijkenZelftoetsPending() != null)
+			nakijkenZelftoetsPending = nakijkenZelftoetsPending();
+		else
+			nakijkenZelftoetsPending = new boolean[getAantalActiviteiten()][getMaxAantalOpdrachten()];
 	}
 	
 	public boolean isTemptoetsVerlopen()
@@ -1201,6 +1227,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// update zelftoets scores en isCorrect
 		memento.setScoresZelftoets(getScoresZelftoets());
 		memento.setIsCorrectZelftoets(isCorrectZelftoets());
+		memento.setNakijkenZelftoetsPending(nakijkenZelftoetsPending());
 
 		memento.setAantalNakijken(aantalNakijken);
 		memento.setCompletion(suspendDataCompleted(currentActiviteit, currentOpdracht));
@@ -1280,6 +1307,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void kijkToetsNa()
 	{
+		setNakijkenZelftoetsPending();
+		
 		incrAantalNakijken(currentActiviteit);
 		int opdrachtNr = currentOpdracht;
 		pause();
@@ -1305,6 +1334,28 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		source.setTotaalScore((int) getScore());
 		unpause();
+	}
+
+	/**
+	 * Zet zelftoetsNakijken, een array van booleans per opdracht die aangeeft of een opdracht
+	 * moet worden nagekeken. Als op de knop 'zelftoets nakijken' wordt gedrukt, moet
+	 * voor alle behalve de huidige opdracht zelftoets nakijken pending op true worden gezet. 
+	 */
+	private void setNakijkenZelftoetsPending()
+	{
+		for (int actNr = 0; actNr < aantalActiviteiten; actNr++)
+		{
+			for (int opdrNr = 0; opdrNr < getAantalOpdrachten(); opdrNr++)
+			{
+				nakijkenZelftoetsPending[actNr][opdrNr] = true;
+			}
+		}
+		
+		// alleen de huidige wordt al nagekeken, dus false
+		nakijkenZelftoetsPending[getCurrentActiviteit()][getCurrentOpdracht()] = false; 
+		
+		// memento updaten
+		memento.setNakijkenZelftoetsPending(nakijkenZelftoetsPending);
 	}
 
 	private void incrAantalNakijken(int i)
@@ -1901,6 +1952,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			{
 				clearScoresZelftoets();
 				clearIsCorrectZelftoets();
+				clearNakijkenZelftoetsPending();
 			}
 
 			if (getAantalNakijken(currentActiviteit) > 0)
@@ -2167,6 +2219,37 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 	
 	/**
+	 * Zet nakijken zelftoets pending.
+	 * 
+	 * @param pending
+	 */
+	public void setNakijkenZelftoetsPending(boolean[][] pending)
+	{
+		if (pending.length == 0)
+			nakijkenZelftoetsPending = new boolean[0][0];
+		else
+		{
+			nakijkenZelftoetsPending = new boolean[pending.length][pending[0].length];
+			for (int i = 0; i < pending.length; i++)
+			{
+				System.arraycopy(pending[i], 0, nakijkenZelftoetsPending[i], 0, pending[0].length);
+			}
+		}
+	}
+	
+	/**
+	 * Zet nakijken zelftoets pending voor de gegeven activiteit en opdracht.
+	 * 
+	 * @param activiteitNr
+	 * @param opdrachtNr
+	 * @param b
+	 */
+	public void setNakijkenZelftoetsPending(int activiteitNr, int opdrachtNr, boolean b)
+	{
+		nakijkenZelftoetsPending[activiteitNr][opdrachtNr] = b;
+	}
+	
+	/**
 	 * Zet de correctheid voor zelftoets voor de gegeven activiteit en opdracht.
 	 * Dit is de correctheid zoals de zelftoets die moet tonen. Antwoorden die na het
 	 * nakijken van de zelftoets zijn veranderd worden genegeerd en pas
@@ -2209,6 +2292,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return isCorrectZelftoets;
 	}
 
+	public boolean[][] nakijkenZelftoetsPending()
+	{
+		return nakijkenZelftoetsPending;
+	}
+
 	public int getScoresZelftoets(int activiteitNr, int opdrachtNr)
 	{
 		return scoresZelftoets[activiteitNr][opdrachtNr];
@@ -2237,6 +2325,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	/**
+	 * Zet nakijkenZelftoetsPending op false voor de huidige
+	 * activiteit en de gegeven opdracht.
+	 * 
+	 * @param opdracht
+	 */
+	public void clearNakijkenZelftoetsPending(int opdracht)
+	{
+		setNakijkenZelftoetsPending(getCurrentActiviteit(), opdracht, false);
+	}
+
+	/**
 	 * Zet de scores voor zelftoets op 0.
 	 * 
 	 * @param opdracht
@@ -2254,5 +2353,15 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void clearIsCorrectZelftoets()
 	{
 		isCorrectZelftoets = new boolean[getAantalActiviteiten()][getMaxAantalOpdrachten()];
+	}
+	
+	/**
+	 * Zet nakijken zelftoets pending op false.
+	 * 
+	 * @param opdracht
+	 */
+	public void clearNakijkenZelftoetsPending()
+	{
+		nakijkenZelftoetsPending = new boolean[getAantalActiviteiten()][getMaxAantalOpdrachten()];
 	}
 }
