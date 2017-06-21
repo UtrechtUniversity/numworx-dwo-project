@@ -78,6 +78,7 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		for(Map.Entry<String, String> entry: map.entrySet()) {
 			list.add(new DomMapEntry<String,String>(entry));
 		}
+		values.setValues(list);
  		PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
 		service.setValues(rest, defer);
 		return defer.getPromise();
