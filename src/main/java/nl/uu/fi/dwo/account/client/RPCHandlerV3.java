@@ -22,6 +22,7 @@ import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.CallManagers.CourseManager;
@@ -267,13 +268,13 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	}
 
 	@Override
-	public Promise<String> getJSONLaunchDataBytes(Object scoID) {
+	public Promise<JSONValue> getJSONLaunchDataBytes(Object scoID) {
 		final DomScoContext id = toScoContext(scoID);
-		Function<DomDwoProfile, Promise<? extends String>> t;
-		t = new Function<DomDwoProfile, Promise<? extends String>>() {
+		Function<DomDwoProfile, Promise<? extends JSONValue>> t;
+		t = new Function<DomDwoProfile, Promise<? extends JSONValue>>() {
 
 			@Override
-			public Promise<String> apply(DomDwoProfile resolved)
+			public Promise<JSONValue> apply(DomDwoProfile resolved)
 		    {
 				return scormApi.getJSONLaunchDataBytes(id, resolved, getContext());
 			}

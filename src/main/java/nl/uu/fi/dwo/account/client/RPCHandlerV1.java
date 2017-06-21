@@ -16,6 +16,7 @@ import org.osgi.util.promise.Promises;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
@@ -673,7 +674,7 @@ public class RPCHandlerV1 {
 		return Promises.failed(new IllegalArgumentException());
 	}
 	
-	public Promise<String> getJSONLaunchDataBytes(Object scoID) {
+	public Promise<JSONValue> getJSONLaunchDataBytes(Object scoID) {
 		return Promises.failed(new IllegalArgumentException()); // TODO legacy implementation
 	}
 }
