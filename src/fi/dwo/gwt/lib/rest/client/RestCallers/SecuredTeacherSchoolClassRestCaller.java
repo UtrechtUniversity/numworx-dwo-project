@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
@@ -77,7 +78,7 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
 
     @PUT
     @Path("/secure/teacher/schoolclass/removeStudent")
-    public void removeStudentFromSchoolClass(RestStudent student, Callback<Boolean> callback);
+    public void removeStudentFromSchoolClass(RestRemoveStudentFromSchoolClass restData, Callback<Boolean> callback);
     
 
     @PUT
@@ -101,7 +102,7 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     public void getSingleSchoolStudent(RestGetSingleSchoolStudent singleSchoolStudent,Callback<DomSingleSchoolStudent> callback);
     
     @PUT
-    @Path("/secure/teacher/schoolclass/submitSingleSchoolStudent")
+    @Path("/secure/teacher/schoolclass/updateSingleSchoolStudent")
     public void updateSingleSchoolStudent(RestSingleSchoolStudent submit, Callback<Boolean> callback);
     
 }
