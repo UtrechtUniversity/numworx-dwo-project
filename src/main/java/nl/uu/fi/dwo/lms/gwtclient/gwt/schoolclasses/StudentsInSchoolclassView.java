@@ -373,9 +373,9 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
     }
 
     private void cellSelected(int row, int column) {
-        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataGrid.getVisibleItem(row) + " " + dataGrid.getHeader(column).getValue());
+        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).usercode + " " + dataGrid.getHeader(column).getValue());
         dataGrid.getHeader(column);
-        studentsInSchoolclassPresenter.selectItem((StudentsInSchoolclassPresenter.StudentItem) dataGrid.getVisibleItem(row), column);
+        studentsInSchoolclassPresenter.selectItem((StudentsInSchoolclassPresenter.StudentItem) dataProvider.getList().get(row), column);
     }
 
 }

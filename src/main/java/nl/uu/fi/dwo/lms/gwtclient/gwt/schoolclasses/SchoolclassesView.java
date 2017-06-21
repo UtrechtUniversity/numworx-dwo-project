@@ -260,8 +260,8 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
     }
 
     private void cellSelected(int row, int column) {
-        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataGrid.getVisibleItem(row) + " " + dataGrid.getHeader(column).getValue());
+        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).schoolclassName + " " + dataGrid.getHeader(column).getValue());
         dataGrid.getHeader(column);
-        schoolclassesPresenter.selectItem((SchoolclassesPresenter.ClassItem) dataGrid.getVisibleItem(row), column);
+        schoolclassesPresenter.selectItem((SchoolclassesPresenter.ClassItem) dataProvider.getList().get(row), column);
     }
 }

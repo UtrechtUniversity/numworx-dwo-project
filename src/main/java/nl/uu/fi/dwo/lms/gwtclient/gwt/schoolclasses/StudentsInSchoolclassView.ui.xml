@@ -28,7 +28,7 @@
         </g:FlowPanel>
             <g:FlowPanel height="2em">
         </g:FlowPanel>
-        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="70%" ui:field='dataGrid'/>
+        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" ui:field='dataGrid'/>
         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
     </g:FlowPanel>
     <!--    <g:LayoutPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
