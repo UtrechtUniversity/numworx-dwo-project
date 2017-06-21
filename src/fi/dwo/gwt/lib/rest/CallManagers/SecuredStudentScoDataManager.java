@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
+import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 
 import org.osgi.util.function.Function;
@@ -77,6 +79,18 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		}
  		PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
 		service.setValues(rest, defer);
+		return defer.getPromise();
+	}
+
+	@Override
+	public Promise<String> getJSONLaunchDataBytes(DomScoContext id,
+			DomDwoProfile value, DomContext context) {
+		PromiseCallback<String> defer = new PromiseCallback<String>();
+		RestScoContext rest = new RestScoContext();
+		rest.setDomDwoProfile(value);
+		rest.setDomScoContext(id);
+		rest.setRestContext(context);
+		service.getJSONLaunchDataBytes(rest, defer);
 		return defer.getPromise();
 	}
 }

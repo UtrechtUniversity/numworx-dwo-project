@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
@@ -17,4 +18,5 @@ public interface StudentScoDataManager {
 	public abstract Promise<?> setValues(DomScoContext sco, DomContext domContext,
 			Map<String, String> map);
 
+	Promise<String> getJSONLaunchDataBytes(DomScoContext id, DomDwoProfile value, DomContext context);
 }
