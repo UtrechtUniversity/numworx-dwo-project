@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,8 @@ public class SwitchSchoolPresenter {
     private SchoolItem selectedItem;
     private Map<String,DomSchoolRoleAndClassV2> sracData;
         private String[] tableHeaders = {"school"};
+        
+    private SecuredUserSchoolLoginManagerV2 manager = new SecuredUserSchoolLoginManagerV2();
 
     private Display view;
 
@@ -97,21 +100,10 @@ public class SwitchSchoolPresenter {
 
     public void switchSchool() {
         dwoGlobalVars.setActiveSchoolRoleAndClass(sracData.get(selectedItem.key));
+        DomSchoolRoleAndClassV2 srac = dwoGlobalVars.getActiveSchoolRoleAndClass();
+        dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
+        manager.switchToSchoolLogin(srac);
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
     }
 
-//    private String[][] buildPlotData() {
-//        String[][] data = new String[sracData.size()+1][1];
-//        data[0][0] = "School";//<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">School</div>";
-//        int i = 1;
-//        selectedIndex=0;
-//        for (DomSchoolRoleAndClassV2 srac : sracData) {
-//            data[i][0] = srac.getSchool().getSchoolName();
-//            if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
-//                selectedIndex = i;
-//            }
-//            i++;
-//        }
-//        return data;
-//    }
 }
