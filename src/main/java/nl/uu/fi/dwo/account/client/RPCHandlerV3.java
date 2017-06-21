@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
+import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
@@ -42,7 +43,6 @@ import fi.dwo.gwt.lib.rest.CallManagers.UserResultsManager;
 
 public class RPCHandlerV3 extends RPCHandlerV2 {
 
-		
 	ScoContextManager scoManager;	
 	CourseManager courseManager;
 	PublicProfileManager profileManager;
@@ -266,5 +266,21 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return scormApi.setValues(sco, getContext(), values);
 	}
 
+	@Override
+	public Promise<String> getJSONLaunchDataBytes(Object scoID) {
+		final DomScoContext id = toScoContext(scoID);
+		Function<DomDwoProfile, Promise<? extends String>> t;
+		t = new Function<DomDwoProfile, Promise<? extends String>>() {
+
+			@Override
+			public Promise<String> apply(DomDwoProfile resolved)
+		    {
+				return scormApi.getJSONLaunchDataBytes(id, resolved, getContext());
+			}
+			
+		};
+		
+		return profile.flatMap(t);
+	}
 
 }

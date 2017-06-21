@@ -672,4 +672,8 @@ public class RPCHandlerV1 {
 	public Promise<?> setValues(Object scoID, Map<String, String> values) {
 		return Promises.failed(new IllegalArgumentException());
 	}
+	
+	public Promise<String> getJSONLaunchDataBytes(Object scoID) {
+		return Promises.failed(new IllegalArgumentException()); // TODO legacy implementation
+	}
 }
