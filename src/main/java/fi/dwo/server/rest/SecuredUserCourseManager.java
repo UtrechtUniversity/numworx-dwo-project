@@ -57,6 +57,11 @@ public class SecuredUserCourseManager {
 		public int compare(DomCourseStudent o1, DomCourseStudent o2) {
 			Long l1 = o1.getSequenceNr();
 			Long l2 = o2.getSequenceNr();
+			if(l1 == null && l2 == null) {
+				return o1.getName().compareTo(o2.getName());
+			}
+			if(l1 == null) return +1;
+			if(l2 == null) return -1;
 			return l1.compareTo(l2);
 		}
 	}
@@ -141,17 +146,19 @@ public class SecuredUserCourseManager {
             catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
-            }		
-   // test for honest people
-    		if (domDwoProfile.getDwoProfileRights() != null && 
-    				domDwoProfile.getDwoProfileRights().contains(LIMITED))
-    			return Collections.emptyList();
-   // Security, only non limited profiles are public 		
+            }
+			PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);
+            PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+// userid must match hasrole
+         		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
+         			return Collections.emptyList();
+
+// Security, only non limited profiles are public 		
     		long id = MySQLPersistenceId.getNativeId(domDwoProfile);
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(id);
     		if ( profile.getDwoProfileRights().contains(LIMITED))
     		{
-    			PersistentHasRole hr = HasRoleManager.findEntity(MySQLPersistenceId.getNativeId(hasRole));
+    			PersistentHasRole hr = phr;
     			PersistentSchool limited = HasRoleUtilManager.getSchoolforHasRole(hr);
 // SECURITY
     			// if ! limitedschools .contains (limited) return EMPTY_LIST;  			
@@ -167,7 +174,7 @@ public class SecuredUserCourseManager {
     	} catch (Dwo2RestException e) {
     		throw e;
     	} catch (Exception e) {
-    		LOG.log(Level.WARNING, "getCourses", e);
+    		LOG.log(Level.SEVERE, "getCourses", e);
     		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the modules.");	
     	}
     }
@@ -178,7 +185,28 @@ public class SecuredUserCourseManager {
     public List<DomCourseStudent> getCourses(@Context SecurityContext sc, RestCourse rest) {
     	try {
     		DomCourse course = rest.getDomCourse();
+    		DomHasRole hasRole = rest.getRestContext().getDomHasRole();
     		long id = MySQLPersistenceId.getNativeId(course);
+// Context
+            PersistentUser user = null;
+            try {
+                user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+                LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
+            }		
+            PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);        
+    		PersistentHasRole hr = HasRoleManager.findEntity(hasRoleKey);
+// userid must match hasrole
+         		if (user.getId().longValue() != hr.getPersistentHasRolePK().getUserID().longValue())
+         			return Collections.emptyList();
+// FIXME check role is not a guest/student
+    		
+    		PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(hr);
+
+    		
     		PersistentCourse parent = CourseManager.findEntity(id);
 // Verify parent is public and profile is not limited and hasChildren, 
 // or that school of hasRole == school of course (no pun)
@@ -189,7 +217,10 @@ public class SecuredUserCourseManager {
 // Verify context: profile matches...
     			|| !rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId())
     		)
-    			return Collections.emptyList();
+    		{
+    			if(!school.getSchoolID().equals(parent.getSchoolID()))
+    				return Collections.emptyList();
+    		}
     			
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent);    		
     		return courses.stream()
