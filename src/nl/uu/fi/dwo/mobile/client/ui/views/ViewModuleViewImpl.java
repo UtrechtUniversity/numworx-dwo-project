@@ -728,9 +728,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		setState(state);
 		
-		if (on.getMode() == OpdrNav.ZELFTOETS && getZelftoetsNagekeken())
+		if (on.getMode() == OpdrNav.ZELFTOETS && getZelftoetsNagekeken() && isPending())
 		{
-			kijkNaOnveranderdeAntwoorden(); // er is al eerder een keer gedrukt op de knop 'kijk zelftoets na'
+			kijkNaPending(); // er is al eerder een keer gedrukt op de knop 'kijk zelftoets na', het nakijken van deze pagina is pending
+			clearPending();
 		}
 		else if (on.getMode() == OpdrNav.EINDTOETS && on.isVerzegeld())
 		{
@@ -744,6 +745,24 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 			
  	}
+
+	/**
+	 * Zet nakijken zelftoets pending voor de huidige activiteit en de huidige opdracht
+	 * op false.
+	 * 
+	 */
+	void clearPending()
+	{
+		on.setNakijkenZelftoetsPending(on.getCurrentActiviteit(), on.getCurrentOpdracht(), false);
+	}
+
+	/**
+	 * True als er nog een nakijken zelftoets pending is, anders false.
+	 */
+	boolean isPending()
+	{
+		return on.nakijkenZelftoetsPending()[on.getCurrentActiviteit()][on.getCurrentOpdracht()];
+	}
 
 	protected void seal() {
 		for(Object o: opdrachtObjects) {
@@ -1174,9 +1193,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	/**
 	 * Deze methode kijkt de huidige pagina van een zelftoets na 
-	 * als de antwoorden niet veranderd zijn. 
+	 * omdat deze nog pending is. De score-administratie is al tijdens het navigeren gedaan.
 	 */
-	public void kijkNaOnveranderdeAntwoorden()
+	public void kijkNaPending()
 	{
 		on.pause();
 		for (int i = 0; i < opdrachtObjects.size(); i++)
@@ -1184,12 +1203,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			Object currentObject = opdrachtObjects.get(i);
 			if (currentObject instanceof InteractionView)
 			{
-				// eigenlijk wil ik hier van iedere interactionview weten of hij veranderd is na nakijken, zodat ik hem al dan niet kan nakijken:
-//				if (!((InteractionView)currentObject).isVeranderdNaNakijken())
-//					((InteractionView)currentObject).kijkNa();
-				
-				if (!isVeranderdNaNakijken(on.getCurrentActiviteit(), on.getCurrentOpdracht()))
-					((InteractionView)currentObject).kijkNa();
+				((InteractionView)currentObject).kijkNa();
+				((InteractionView)currentObject).zetNagekeken(true);
 			}
 		}
 		on.unpause();
