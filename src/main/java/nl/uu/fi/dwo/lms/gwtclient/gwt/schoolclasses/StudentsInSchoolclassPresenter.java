@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
@@ -178,8 +179,10 @@ public class StudentsInSchoolclassPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -230,12 +233,12 @@ public class StudentsInSchoolclassPresenter {
             }
         }
         cnt = tmp;
-        tmp = 0;        
+        tmp = 0;
         for (StudentItem item : studentItems.values()) {
             if (item.selected == true) {
-                 tmp++;
+                tmp++;
                 final int index = tmp;
-               LOG.log(Level.INFO, "Adding  " + item.usercode + " to targetSchoolClass<key,name> " + targetSchoolClass.getId().getIdString() + " " + targetSchoolClass.getSchoolClassName());
+                LOG.log(Level.INFO, "Adding  " + item.usercode + " to targetSchoolClass<key,name> " + targetSchoolClass.getId().getIdString() + " " + targetSchoolClass.getSchoolClassName());
                 //add to schoolclass and clear item to signal success
 
                 Promise<Boolean> promise;
@@ -264,8 +267,10 @@ public class StudentsInSchoolclassPresenter {
                         Throwable fail = resolved.getFailure();
                         if (fail instanceof Dwo2Exception) {
                             LOG.log(Level.SEVERE, fail.getMessage());
+                            eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                         } else {
                             LOG.log(Level.SEVERE, fail.getMessage());
+                            eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                             //throw directly
                         }
                     }
@@ -319,8 +324,10 @@ public class StudentsInSchoolclassPresenter {
                         Throwable fail = resolved.getFailure();
                         if (fail instanceof Dwo2Exception) {
                             LOG.log(Level.SEVERE, fail.getMessage());
+                            eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                         } else {
                             LOG.log(Level.SEVERE, fail.getMessage());
+                            eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                             //throw directly
                         }
                     }

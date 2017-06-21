@@ -6,6 +6,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoViewer;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -75,7 +76,7 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
             schoolClass = dialogEvent.getSchoolClass();
             DomGetSingleSchoolStudent singleStudent = new DomGetSingleSchoolStudent(student, schoolClass);
             Promise<DomSingleSchoolStudent> promise;
-            promise=manager.getSingleSchoolStudent(singleStudent);
+            promise = manager.getSingleSchoolStudent(singleStudent);
             // onSuccess calculate results and show.
             promise.then(new Success<DomSingleSchoolStudent, Void>() {
                 @Override
@@ -92,8 +93,10 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
                     Throwable fail = resolved.getFailure();
                     if (fail instanceof Dwo2Exception) {
                         LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                     } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                         //throw directly
                     }
                 }
@@ -103,9 +106,9 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
     }
 
     public void updateUserData() {
-            DomGetSingleSchoolStudent singleStudent = new DomGetSingleSchoolStudent(student, schoolClass);
-            Promise<DomSingleSchoolStudent> promise;
-            promise=manager.getSingleSchoolStudent(singleStudent);
+        DomGetSingleSchoolStudent singleStudent = new DomGetSingleSchoolStudent(student, schoolClass);
+        Promise<DomSingleSchoolStudent> promise;
+        promise = manager.getSingleSchoolStudent(singleStudent);
         promise.then(new Success<DomSingleSchoolStudent, Void>() {
             @Override
             public Promise<Void> call(Promise<DomSingleSchoolStudent> resolved) throws Exception {
@@ -113,20 +116,22 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
                 DomSingleSchoolStudent value = resolved.getValue();
                 view.showDialog(value.getUserName(), value.getGivenName(), value.getInsertion(), value.getFamilyName(), value.getEmail());
                 return null;
-            }},
-
-            new Failure() {
-                @Override
-                public void fail
-                (Promise<?> resolved) throws Exception {
-                    Throwable fail = resolved.getFailure();
-                    if (fail instanceof Dwo2Exception) {
-                        //translate and display in gui
-                    } else {
-                        //throw directly
-                    }
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
                 }
             }
+        }
         );
     }
 
@@ -194,8 +199,10 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                     //throw directly
                 }
             }

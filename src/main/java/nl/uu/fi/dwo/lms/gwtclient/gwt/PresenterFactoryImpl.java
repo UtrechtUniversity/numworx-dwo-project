@@ -33,6 +33,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final AddSchoolclassPresenter addSchoolclassPresenter;
     private final EditSchoolclassPresenter editSchoolclassPresenter;
     private final EditStudentPresenter editStudentPresenter;
+    private final MsgDialogPresenter msgDialogPresenter;
 
     public PresenterFactoryImpl(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
@@ -49,6 +50,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
         addSchoolclassPresenter = new AddSchoolclassPresenter(eventBus, dwoGlobalVars);
         editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
         editStudentPresenter = new EditStudentPresenter(eventBus, dwoGlobalVars);
+        msgDialogPresenter = new MsgDialogPresenter(eventBus, dwoGlobalVars);
     }
 
     @Override
@@ -132,5 +134,12 @@ public class PresenterFactoryImpl implements PresenterFactory {
      */
     public EditStudentPresenter getEditStudentPresenter() {
         return editStudentPresenter;
+    }
+
+    /**
+     * @return the msgDialogPresenter
+     */
+    public MsgDialogPresenter getMsgDialogPresenter() {
+        return msgDialogPresenter;
     }
 }

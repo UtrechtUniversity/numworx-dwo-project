@@ -6,6 +6,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javafx.event.Event.fireEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
@@ -80,8 +81,10 @@ public class AddSchoolclassPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                     //throw directly
                 }
             }

@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -49,7 +50,7 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
 
     @Override
     public void onDialogEvent(SchoolClassDialogEvent dialogEvent) {
-        if (dialogEvent.getEventValue()==SchoolClassDialogEvent.Dialogs.EditSchoolClass) {
+        if (dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.EditSchoolClass) {
             schoolClass = (DomSchoolClass) dialogEvent.getSchoolClass();
             Promise<DomSchoolClassFull> promise;
             promise = manager.getFullSchoolClass(schoolClass);
@@ -68,8 +69,10 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
                     Throwable fail = resolved.getFailure();
                     if (fail instanceof Dwo2Exception) {
                         LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                     } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                         //throw directly
                     }
                 }
@@ -117,8 +120,10 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                     //throw directly
                 }
             }

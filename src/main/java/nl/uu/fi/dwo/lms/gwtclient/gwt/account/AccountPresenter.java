@@ -6,6 +6,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoViewer;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -85,8 +86,11 @@ public class AccountPresenter {
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
-                    //translate and display in gui
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                 } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -172,8 +176,10 @@ public class AccountPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                     //throw directly
                 }
             }

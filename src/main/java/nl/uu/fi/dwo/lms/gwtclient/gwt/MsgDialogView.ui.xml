@@ -1,0 +1,12 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+>
+    <ui:style field="dwoStyle" src="css/dwostyle.css" />    
+    <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
+    <g:FlowPanel addStyleNames='{dwoStyle.dwoDialogPanel}'>
+                <g:HTML ui:field="htmlText" > </g:HTML>
+                
+                    <g:PushButton  addStyleNames="{dwoStyle.dwoButton}"  ui:field="okButton">Ok</g:PushButton>
+    </g:FlowPanel>
+</ui:UiBinder> 

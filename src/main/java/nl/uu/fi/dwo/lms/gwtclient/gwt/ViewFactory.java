@@ -29,4 +29,5 @@ public interface ViewFactory {
     public AddSchoolclassPresenter.Display getAddSchoolclassView();
     public EditSchoolclassPresenter.Display getEditSchoolclassView();
     public EditStudentPresenter.Display getEditStudentView();
+    public MsgDialogPresenter.Display getMsgDialogView();
 }

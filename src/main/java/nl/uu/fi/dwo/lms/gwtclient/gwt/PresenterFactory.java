@@ -32,4 +32,5 @@ public interface PresenterFactory {
     public AddSchoolclassPresenter getAddSchoolclassPresenter();
     public EditSchoolclassPresenter getEditSchoolclassPresenter();
     public EditStudentPresenter getEditStudentPresenter();
+    public MsgDialogPresenter getMsgDialogPresenter();
 }

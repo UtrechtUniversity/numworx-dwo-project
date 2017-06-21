@@ -40,6 +40,7 @@ public class ViewFactoryImpl implements ViewFactory {
     //private final TeachersInSchoolclassPresenter.Display teachersInSchoolclassView;
     private final EditSchoolclassPresenter.Display editSchoolclassView;
     private final EditStudentPresenter.Display editStudentView;
+    private final MsgDialogPresenter.Display msgDialogView;
 
     public ViewFactoryImpl(PresenterFactory pf) {
         mainView = new MainView(pf.getMainPresenter());
@@ -55,6 +56,7 @@ public class ViewFactoryImpl implements ViewFactory {
 //    teachersInSchoolclassView = new TeachersInSchoolclassView(pf.getTeachersInSchoolclassPresenter());
         editSchoolclassView = new EditSchoolclassView(pf.getEditSchoolclassPresenter());
         editStudentView = new EditStudentView(pf.getEditStudentPresenter());
+        msgDialogView = new MsgDialogView(pf.getMsgDialogPresenter());
     }
 
     @Override
@@ -113,4 +115,13 @@ public class ViewFactoryImpl implements ViewFactory {
     public EditStudentPresenter.Display getEditStudentView() {
         return editStudentView;
     }
+
+    /**
+     * @return the msgDialogView
+     */
+    public MsgDialogPresenter.Display getMsgDialogView() {
+        return msgDialogView;
+    }
+    
+    
 }

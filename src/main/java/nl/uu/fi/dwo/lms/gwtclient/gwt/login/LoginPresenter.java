@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -57,6 +56,7 @@ public class LoginPresenter {
                     } else {
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                         LOG.log(Level.INFO, "login failed. Firing Login fail event.");
+
                     }
                     return null;
                 }
