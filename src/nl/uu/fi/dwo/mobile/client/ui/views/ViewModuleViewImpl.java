@@ -291,8 +291,15 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 						
 						// zet de nakijkknop enabled/disabled
 						scoreNav.setKijkNaEnabled(isKijkNaEnabled());
-
+						
 						v();
+						
+						// focus weghalen uit antwoordvak als afdekpanel
+						if(disableScreen.isAttached())
+						{
+							getKeyboard().setEditor(null);
+							getKeyboard().blur();
+						}
 					}
 				});
 			}
@@ -558,8 +565,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public void zetOpdracht(HashMap<String, Object> opdracht, boolean randomise)
 	{
-		
-		
 		String randVarString = "";
 		randVarString = (String) opdracht.get("randVarString");
 		if(randVarString == null) randVarString = "";
