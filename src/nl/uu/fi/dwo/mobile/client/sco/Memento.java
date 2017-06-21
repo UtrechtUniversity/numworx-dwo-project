@@ -75,6 +75,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private static final String GOED_FOUT_ZELFTOETS = "isCorrectZelftoets";
 	private static final String SCORES = "orScores"; // TODO correct name? getPagina score gebruikt deze naam
 	private static final String SCORES_ZELFTOETS = "scoresZelftoets"; 
+	private static final String NAKIJKEN_ZELFTOETS_PENDING = "nakijkenZelftoetsPending"; 
 	private static final String ONS_STATE = "onsState";
 	private static final String LOG_STATE = "log";
 	private static final String AANTAL_NAKIJKEN = "aantalNakijken";
@@ -123,6 +124,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	 * worden als op de nakijk-knop wordt gedrukt.
 	 */
 	private JSONArray isCorrectZelftoets;
+	/**
+	 * Een array van booleans (per activiteit, per opdracht/pagina) die aangeeft of er voor de 
+	 * betreffende opdracht een zelftoets nakijken pending is. Als de zelftoets is nagekeken
+	 * en een opdracht wordt daarna voor het eerst bezocht, dan is pending true. Daarna false.
+	 */
+	private JSONArray nakijkenZelftoetsPending;
 	private JSONBoolean zelftoetsNagekeken, zelftoetsGeenCorr;
 	private JSONBoolean tempotoetsLocked;
 	private JSONNumber tempotoetsSecondsLeft;
@@ -162,6 +169,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			isCorrectZelftoets  = (JSONArray) onsState.get(GOED_FOUT_ZELFTOETS);
 			opdrScores    = (JSONArray) onsState.get(SCORES);
 			scoresZelftoets = (JSONArray) onsState.get(SCORES_ZELFTOETS);
+			nakijkenZelftoetsPending = (JSONArray) onsState.get(NAKIJKEN_ZELFTOETS_PENDING);
 			opdrBezocht   = (JSONArray) onsState.get(BEZOCHT);
 			zelftoetsNagekeken = (JSONBoolean) onsState.get(ZELFTOETS_NAGEKEKEN);
 			tempotoetsLocked = (JSONBoolean) onsState.get(TEMPOTOETS_LOCKED);
@@ -1010,6 +1018,41 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		return booleanArray;
 	}
 	
+	public boolean[][] nakijkenZelftoetsPending()
+	{
+		if (nakijkenZelftoetsPending == null)
+		{
+			return null;
+		}
+		
+		int aantalActiviteiten = 0;
+		int aantalOpdrachten = 0;
+		
+		aantalActiviteiten = nakijkenZelftoetsPending.size();
+		
+		for (int i = 0; i < nakijkenZelftoetsPending.size(); i++)
+		{
+			JSONArray array = nakijkenZelftoetsPending.get(i).isArray();
+			aantalOpdrachten = Math.max(array.size(), aantalOpdrachten);
+		}
+		
+		boolean[][] booleanArray = new boolean[aantalActiviteiten][aantalOpdrachten];
+		
+		for (int i = 0; i < nakijkenZelftoetsPending.size(); i++)
+		{
+			JSONArray array = nakijkenZelftoetsPending.get(i).isArray();
+			for (int j = 0; j < array.size(); j++)
+			{
+				JSONBoolean jsonBoolean = array.get(j).isBoolean();
+				if (jsonBoolean != null)
+				{
+					booleanArray[i][j] = jsonBoolean.booleanValue();
+				}
+			}
+		}		
+		return booleanArray;
+	}
+	
 	public void setIsCorrectZelftoets(boolean[][] isCorrect)
 	{
 		JSONArray array = new JSONArray();
@@ -1027,6 +1070,25 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
 		this.isCorrectZelftoets = array;
 		this.onsState.put(GOED_FOUT_ZELFTOETS, this.isCorrectZelftoets);
+	}
+	
+	public void setNakijkenZelftoetsPending(boolean[][] nakijkenZelftoetsPending)
+	{
+		JSONArray array = new JSONArray();
+
+		for (int i = 0; i < nakijkenZelftoetsPending.length; i++)
+		{
+			boolean[] nakijkenZelftoetsPendingPerActiviteit = nakijkenZelftoetsPending[i];
+			Boolean[] booleanScores = new Boolean[nakijkenZelftoetsPendingPerActiviteit.length];
+			for (int j = 0; j < nakijkenZelftoetsPendingPerActiviteit.length; j++)
+			{
+				booleanScores[j] = new Boolean(nakijkenZelftoetsPendingPerActiviteit[j]);
+			}
+			array.set(i, JSONUtilities.toJSONArray(booleanScores));
+		}
+
+		this.nakijkenZelftoetsPending = array;
+		this.onsState.put(NAKIJKEN_ZELFTOETS_PENDING, this.nakijkenZelftoetsPending);
 	}
 	
 	public boolean isTempotoetsVerlopen()
