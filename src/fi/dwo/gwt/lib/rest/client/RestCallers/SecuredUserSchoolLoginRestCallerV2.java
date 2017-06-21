@@ -19,14 +19,14 @@ public interface SecuredUserSchoolLoginRestCallerV2 extends RestService {
     public void getSchoolLogins(MethodCallback<DomSchoolsRolesAndClassesV2> callback);
 
     @PUT
-    @Path("/rest/secure/user/account/loginsV2/select")
+    @Path("/secure/user/account/loginsV2/select")
     public void switchToSchoolLogin(RestSchoolRoleAndClassV2 rsrc, Callback<DomSchoolRoleAndClassV2> callback);
 
     @PUT
-    @Path("/rest/secure/user/account/loginsV2/remove")
+    @Path("/secure/user/account/loginsV2/remove")
     public void removeASchoolLogin(RestSchoolRoleAndClassV2 rsrc, Callback<Boolean> callback);
 
     @PUT
-    @Path("/rest/secure/user/account/lologinsV2gins/submit")
+    @Path("/secure/user/account/lologinsV2gins/submit")
     public void addASchoolLogin(RestNewSchoolLogin rnl, Callback<Boolean> callback);
 }
