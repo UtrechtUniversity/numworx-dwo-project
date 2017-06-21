@@ -8,6 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoViewer;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
@@ -28,6 +31,8 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private DomStudent student;
+    private String password;
+    private DomSchoolClass schoolClass;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
 //    private AccountService accountService = new AccountService();
 
@@ -67,14 +72,17 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
     public void onDialogEvent(SchoolClassDialogEvent dialogEvent) {
         if (dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.EditStudent) {
             student = dialogEvent.getStudent();
+            schoolClass = dialogEvent.getSchoolClass();
+            DomGetSingleSchoolStudent singleStudent = new DomGetSingleSchoolStudent(student, schoolClass);
             Promise<DomSingleSchoolStudent> promise;
-            promise=manager.getSingleSchoolStudent();
+            promise=manager.getSingleSchoolStudent(singleStudent);
             // onSuccess calculate results and show.
             promise.then(new Success<DomSingleSchoolStudent, Void>() {
                 @Override
                 public Promise<Void> call(Promise<DomSingleSchoolStudent> resolved) throws Exception {
                     //flip back to schoolclasses screen 
                     DomSingleSchoolStudent value = resolved.getValue();
+                    password = value.getPassword();
                     view.showDialog(value.getUserName(), value.getGivenName(), value.getInsertion(), value.getFamilyName(), value.getEmail());
                     return null;
                 }
@@ -95,8 +103,9 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
     }
 
     public void updateUserData() {
-        Promise<DomSingleSchoolStudent> promise;
-        promise=manager.getSingleSchoolStudent();
+            DomGetSingleSchoolStudent singleStudent = new DomGetSingleSchoolStudent(student, schoolClass);
+            Promise<DomSingleSchoolStudent> promise;
+            promise=manager.getSingleSchoolStudent(singleStudent);
         promise.then(new Success<DomSingleSchoolStudent, Void>() {
             @Override
             public Promise<Void> call(Promise<DomSingleSchoolStudent> resolved) throws Exception {
@@ -121,16 +130,12 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
         );
     }
 
-    public void updateUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
-        if (!MD5.md5(curPassword).equals(dwoGlobalVars.getCurrentUser().getPassword())) {
-            DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
-            return;
-        }
-
+    public void updateUser(String givenName, String insertion, String familyName, String email, String newPassword, String newPasswordAgain) {
         DomSingleSchoolStudent user = new DomSingleSchoolStudent();
-        user.setUserName(dwoGlobalVars.getCurrentUser().getUserName());
+        user.setId(student.getId());
+        user.setUserName(student.getUserName());
         //set freely allowed values
-        if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(curPassword, familyName, givenName)) {
+        if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(familyName, givenName)) {
             LOG.log(Level.INFO, "valid required fields.");
             user.setFamilyName(familyName.trim());
             user.setGivenName(givenName.trim());
@@ -154,7 +159,7 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
 
         if (!SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
                 && !SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPasswordAgain)) {
-            user.setPassword(dwoGlobalVars.getCurrentUser().getPassword());
+            user.setPassword(password);
         } else if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
                 && SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPasswordAgain)
                 && newPassword.compareTo(newPasswordAgain) == 0) {
@@ -179,6 +184,7 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomUser returned.");
                 Boolean result = resolved.getValue();
+                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass));
                 return null;
             }
         },

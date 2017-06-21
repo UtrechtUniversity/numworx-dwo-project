@@ -58,8 +58,9 @@ public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandl
         this.setEventValue(aState);
     }
 
-    public SchoolClassDialogEvent(Dialogs aState, DomStudent aStudent) {
+    public SchoolClassDialogEvent(Dialogs aState, DomStudent aStudent, DomSchoolClass aSchoolClass) {
         student = aStudent;
+        schoolClass = aSchoolClass;
         this.setEventValue(aState);
     }
 

@@ -37,8 +37,6 @@ public class EditStudentView extends Composite implements EditStudentPresenter.D
     @UiField
     TextBox emailText;
     @UiField
-    PasswordTextBox passwordTextBox;
-    @UiField
     PasswordTextBox newPasswordTextBox;
     @UiField
     PasswordTextBox newPasswordAgainTextBox;
@@ -54,7 +52,7 @@ public class EditStudentView extends Composite implements EditStudentPresenter.D
         editStudentPresenter = ep;
         ep.setView(this);
         initWidget(uiBinder.createAndBindUi(this));
-        usernameText.setReadOnly(false);
+        usernameText.setReadOnly(true);
         //controller must be before clicks occur
         resetBtn.addClickHandler(this);
         updateBtn.addClickHandler(this);
@@ -75,17 +73,16 @@ public class EditStudentView extends Composite implements EditStudentPresenter.D
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == resetBtn) {
-            passwordTextBox.setText("");
             newPasswordTextBox.setText("");
             newPasswordAgainTextBox.setText("");
             editStudentPresenter.updateUserData();
         } else if (event.getSource() == updateBtn) {
+            dialogBox.hide();
             editStudentPresenter.updateUser(
                     firstNameText.getText(),
                     insertionText.getText(),
                     familyNameText.getText(),
                     emailText.getText(),
-                    passwordTextBox.getText(),
                     newPasswordTextBox.getText(),
                     newPasswordAgainTextBox.getText());
         }

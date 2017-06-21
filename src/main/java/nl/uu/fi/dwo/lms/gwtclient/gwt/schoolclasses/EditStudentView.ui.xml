@@ -51,14 +51,6 @@
             <g:row></g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label>current password:</g:Label>
-                </g:customCell>
-                <g:customCell>
-                    <g:PasswordTextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='passwordTextBox'></g:PasswordTextBox>
-                </g:customCell>
-            </g:row>
-            <g:row>
-                <g:customCell>
                     <g:Label>new password:</g:Label>
                 </g:customCell>
                 <g:customCell>

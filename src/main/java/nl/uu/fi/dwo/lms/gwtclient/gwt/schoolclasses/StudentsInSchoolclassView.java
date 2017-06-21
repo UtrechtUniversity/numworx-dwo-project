@@ -340,15 +340,10 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         if (event.getSource() == backBtn) {
             studentsInSchoolclassPresenter.goBackToSchoolClasses();
         } else if (event.getSource() == addStudentsBtn) {
-            //      schoolclassesPresenter.addSchoolClass();
+            //schoolclassesPresenter.addSchoolClass();
         } else if (event.getSource() == deleteSelectedBtn) {
-            //      schoolclassesPresenter.addSchoolClass();
+            studentsInSchoolclassPresenter.removeSelectedFromSchoolClass();
         } else if (event.getSource() == addToSchoolClass) {
-//            LOG.log(Level.FINE, "Selected item with index:" + schoolClassListBox.getSelectedIndex()
-//                    + ", key " + schoolClassList.get(schoolClassListBox.getSelectedIndex()).getKey()
-//                    + ", value " + schoolClassListBox.getSelectedValue()
-//            );
-//            dataProvider.getList().get(0).
             studentsInSchoolclassPresenter.addSelectedToSchoolClass(schoolClassList.get(schoolClassListBox.getSelectedIndex()).getKey());
 //        } else if (event.getSource() == schoolClassListBox) {
 //            studentsInSchoolclassPresenter.updateSchoolClasses();

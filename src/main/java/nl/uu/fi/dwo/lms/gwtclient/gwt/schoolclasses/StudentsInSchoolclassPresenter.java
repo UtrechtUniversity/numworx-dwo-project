@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
@@ -105,7 +106,6 @@ public class StudentsInSchoolclassPresenter {
     }
 
     private void updateViewData(DomSchoolClass sc) {
-        requests++;
         Promise<List<DomStudent>> promise;
         promise = manager.getStudentsInSchoolClass(sc);
         // onSuccess update view
@@ -114,22 +114,25 @@ public class StudentsInSchoolclassPresenter {
             public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
                 //flip back to schoolclasses screen 
                 studentMap = new HashMap<String, DomStudent>();
+                Map<String, StudentsInSchoolclassPresenter.StudentItem> oldStudentItems = studentItems;
                 studentItems = new HashMap(studentMap.size());
                 for (DomStudent sc : resolved.getValue()) {
                     studentMap.put(sc.getId().getIdString(), sc);
-                    studentItems.put(sc.getId().getIdString(),
-                            new StudentItem(sc.getId().getIdString(),
-                                    sc.getGivenName(),
-                                    sc.getInsertion(),
-                                    sc.getFamilyName(),
-                                    sc.getUserName(),
-                                    sc.getSingleSchool()
-                            ));
+                    StudentItem item = new StudentItem(sc.getId().getIdString(),
+                            sc.getGivenName(),
+                            sc.getInsertion(),
+                            sc.getFamilyName(),
+                            sc.getUserName(),
+                            sc.getSingleSchool()
+                    );
+                    if (oldStudentItems != null
+                            && oldStudentItems.containsKey(sc.getId().getIdString())
+                            && oldStudentItems.get(sc.getId().getIdString()).selected) {
+                        item.selected = true;
+                    }
+                    studentItems.put(sc.getId().getIdString(), item);
                 }
-                requests--;
-                if (requests == 0) {
-                    view.updateView(studentItems);
-                }
+                view.updateView(studentItems);
                 return null;
             }
 
@@ -138,10 +141,7 @@ public class StudentsInSchoolclassPresenter {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
-                requests--;
-                if (requests == 0) {
-                    view.updateView(studentItems);
-                }
+                view.updateView(studentItems);
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
                 } else {
@@ -150,6 +150,7 @@ public class StudentsInSchoolclassPresenter {
                 }
             }
         });
+
     }
 
     public void updateSchoolClasses() {
@@ -196,9 +197,9 @@ public class StudentsInSchoolclassPresenter {
     public void selectItem(StudentsInSchoolclassPresenter.StudentItem item, int op) {
         switch (op) {
             case 4:
-                if(item.singleSchool){
-                LOG.log(Level.INFO, "editable item " + item.usercode);
-                eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditStudent, studentMap.get(item.key)));
+                if (item.singleSchool) {
+                    LOG.log(Level.INFO, "editable item " + item.usercode);
+                    eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditStudent, studentMap.get(item.key), schoolClass));
                 }
                 break;
             case 5:
@@ -221,9 +222,20 @@ public class StudentsInSchoolclassPresenter {
      */
     public void addSelectedToSchoolClass(String classKey) {
         DomSchoolClass targetSchoolClass = schoolClassMap.get(classKey);
-        LOG.log(Level.INFO, "targetSchoolClass<key,name> " + targetSchoolClass.getId().getIdString() + " " + targetSchoolClass.getSchoolClassName());
+        final int cnt;
+        int tmp = 0;
+        for (StudentItem item : studentItems.values()) {
+            if (item.selected) {
+                tmp++;
+            }
+        }
+        cnt = tmp;
+        tmp = 0;        
         for (StudentItem item : studentItems.values()) {
             if (item.selected == true) {
+                 tmp++;
+                final int index = tmp;
+               LOG.log(Level.INFO, "Adding  " + item.usercode + " to targetSchoolClass<key,name> " + targetSchoolClass.getId().getIdString() + " " + targetSchoolClass.getSchoolClassName());
                 //add to schoolclass and clear item to signal success
 
                 Promise<Boolean> promise;
@@ -238,9 +250,10 @@ public class StudentsInSchoolclassPresenter {
                     @Override
                     public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                         if (resolved.getValue().booleanValue() == true) {
-                            //remove from selection
                             studentItems.get(fItem.key).selected = false;
-//                            updateViewData(DomSchoolClass sc);
+                            if (index % 10 == 0 || index == cnt) {
+                                updateViewData(schoolClass);
+                            }
                         }
                         return null;
                     }
@@ -265,20 +278,37 @@ public class StudentsInSchoolclassPresenter {
 
     public void removeSelectedFromSchoolClass() {
         DomSchoolClass targetSchoolClass = schoolClass;
+        final int cnt;
+        int tmp = 0;
+        for (StudentItem item : studentItems.values()) {
+            if (item.selected) {
+                tmp++;
+            }
+        }
+        cnt = tmp;
+        tmp = 0;
 //        LOG.log(Level.INFO, "targetSchoolClass<key,name> "+targetSchoolClass.getId().getIdString() + " "+targetSchoolClass.getSchoolClassName());
         for (StudentItem item : studentItems.values()) {
             if (item.selected == true) {
+                tmp++;
+                final int index = tmp;
                 //remove from schoolclass and clear item to signal success                
-                LOG.log(Level.INFO, "targetSchoolClass<key,name> " + targetSchoolClass.getId().getIdString() + " " + targetSchoolClass.getSchoolClassName());
+                LOG.log(Level.INFO, "Removing " + item.usercode + " from targetSchoolClass<key,name> " + targetSchoolClass.getId().getIdString() + " " + targetSchoolClass.getSchoolClassName());
                 Promise<Boolean> promise;
+                DomRemoveStudentFromSchoolClass data = new DomRemoveStudentFromSchoolClass();
+                data.setStudent(studentMap.get(item.key));
+                data.setSchoolClass(schoolClass);
+                promise = manager.removeStudentFromSchoolClass(data);
                 final StudentItem fItem = item;
-                promise = manager.removeStudentFromSchoolClass(studentMap.get(item.key));
                 // onSuccess update view
                 promise.then(new Success<Boolean, Void>() {
                     @Override
                     public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                         if (resolved.getValue().booleanValue() == true) {
-                            updateViewData(schoolClass);
+                            studentItems.get(fItem.key).selected = false;
+                            if (index % 10 == 0 || index == cnt) {
+                                updateViewData(schoolClass);
+                            }
                         }
                         return null;
                     }

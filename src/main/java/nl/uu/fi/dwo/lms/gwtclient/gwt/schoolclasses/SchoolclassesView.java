@@ -64,6 +64,32 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         @Override
         public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
             if (value != null) {
+                sb.appendEscaped(value);
+            }
+        }
+
+        @Override
+        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+            if (value == null) {
+                return;
+            }
+            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+            if ("click".equals(event.getType())) {
+//                LOG.log(Level.INFO, "key "+context.getKey());
+                cellSelected(context.getIndex(), context.getColumn());
+            }
+        }
+    }
+
+    public class MyClickCell extends AbstractCell<String> {
+
+        public MyClickCell() {
+            super("click", "keydown");
+        }
+
+        @Override
+        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
+            if (value != null) {
                 sb.appendHtmlConstant("<a href='javascript:;'>");
                 sb.appendEscaped(value);
                 sb.appendHtmlConstant("</a>");
@@ -96,6 +122,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
 
         List<SchoolclassesPresenter.ClassItem> data = dataProvider.getList();
         final MyCell cell = new MyCell();
+        final MyClickCell clickCell = new MyClickCell();
 
         //classname
         Column<SchoolclassesPresenter.ClassItem, String> value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
@@ -125,7 +152,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.addColumn(value, tableHeaders[0]);
 
         //edit
-        value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+        value = new Column<SchoolclassesPresenter.ClassItem, String>(clickCell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
                 return tableHeaders[1];
@@ -136,7 +163,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.addColumn(value, tableHeaders[1]);
 
         //modules
-        value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+        value = new Column<SchoolclassesPresenter.ClassItem, String>(clickCell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
                 return tableHeaders[2];
@@ -147,7 +174,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.addColumn(value, tableHeaders[2]);
 
         //students col
-        value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+        value = new Column<SchoolclassesPresenter.ClassItem, String>(clickCell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
                 return tableHeaders[3];
@@ -157,7 +184,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.addColumn(value, tableHeaders[3]);
 
         //teachers col
-        value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+        value = new Column<SchoolclassesPresenter.ClassItem, String>(clickCell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
                 return tableHeaders[4];
@@ -167,7 +194,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.addColumn(value, tableHeaders[4]);
 
         //remove col
-        value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
+        value = new Column<SchoolclassesPresenter.ClassItem, String>(clickCell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
                 return tableHeaders[5];
@@ -212,7 +239,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
 //                    dialogBox.hide();
 //                }
 //            };
-            if (dialogBox.getWidget()==null) {
+            if (dialogBox.getWidget() == null) {
                 addSchoolclassView.clear();
                 dialogBox.add(addSchoolclassView.asWidget());
                 dialogBox.setModal(true);
