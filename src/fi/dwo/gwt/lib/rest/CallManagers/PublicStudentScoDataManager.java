@@ -17,6 +17,8 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 
@@ -39,9 +41,9 @@ public class PublicStudentScoDataManager implements StudentScoDataManager {
 	}
 
 	@Override
-	public Promise<String> getJSONLaunchDataBytes(DomScoContext id,
+	public Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext id,
 			DomDwoProfile value, DomContext context) {
-		final Deferred<String> defer = new Deferred<String>();
+		final Deferred<JSONValue> defer = new Deferred<JSONValue>();
 		String scoID = id.getId().getIdString();
 		int komma = scoID.lastIndexOf(';'); // XXX ons kent ons
 		scoID = scoID.substring(komma+1);
@@ -54,7 +56,9 @@ public class PublicStudentScoDataManager implements StudentScoDataManager {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					if(response.getStatusCode() == 200) {
-						defer.resolve(response.getText());
+						String text = response.getText();
+						JSONValue value = JSONParser.parseStrict(text);
+						defer.resolve(value);
 					} else {
 						defer.fail(new RequestException(response.getStatusText()));
 					}
@@ -67,8 +71,7 @@ public class PublicStudentScoDataManager implements StudentScoDataManager {
 			});
 		} catch (RequestException e) {
 			defer.fail(e);
-		}
-		
+		}		
 		return defer.getPromise();
 	}
 

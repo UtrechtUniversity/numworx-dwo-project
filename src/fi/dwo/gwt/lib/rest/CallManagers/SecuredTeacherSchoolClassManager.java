@@ -27,6 +27,8 @@ import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
+
+import org.fusesource.restygwt.client.MethodCallback;
 import org.osgi.util.promise.Promise;
 
 /**
@@ -199,8 +201,8 @@ public class SecuredTeacherSchoolClassManager {
         return defer.getPromise();
     }
 
-    private void updateSchoolClass(RestSchoolClassFull restData, AsyncCallback<Boolean> callBack) {
-        service.updateSchoolClass(restData, new Callback<Boolean>(callBack));
+    private void updateSchoolClass(RestSchoolClassFull restData, MethodCallback<Boolean> callBack) {
+        service.updateSchoolClass(restData, (callBack));
     }
 
     public Promise<DomSchoolClassFull> getFullSchoolClass(DomSchoolClass schoolClass) {
@@ -212,8 +214,8 @@ public class SecuredTeacherSchoolClassManager {
         return defer.getPromise();
     }
 
-    private void getFullSchoolClass(RestSchoolClass restData, AsyncCallback<DomSchoolClassFull> callBack) {
-        service.getFullSchoolClass(restData, new Callback<DomSchoolClassFull>(callBack));
+    private void getFullSchoolClass(RestSchoolClass restData, MethodCallback<DomSchoolClassFull> callBack) {
+        service.getFullSchoolClass(restData, (callBack));
     }
 
     public Promise<List<DomStudent>> getSingleSchoolStudentsInSchool() {
@@ -235,8 +237,8 @@ public class SecuredTeacherSchoolClassManager {
         return defer.getPromise();
     }
 
-    private void submitSingleSchoolStudent(RestNewSingleSchoolStudent restData, AsyncCallback<Boolean> callBack) {
-        service.submitSingleSchoolStudent(restData, new Callback<Boolean>(callBack));
+    private void submitSingleSchoolStudent(RestNewSingleSchoolStudent restData, MethodCallback<Boolean> callBack) {
+        service.submitSingleSchoolStudent(restData, (callBack));
     }
 
     public Promise<DomSingleSchoolStudent> getSingleSchoolStudent(DomGetSingleSchoolStudent singleSchoolStudent) {
@@ -261,8 +263,8 @@ public class SecuredTeacherSchoolClassManager {
         return defer.getPromise();
     }
 
-    private void updateSingleSchoolStudent(RestSingleSchoolStudent restData, AsyncCallback<Boolean> callBack) {
-        service.updateSingleSchoolStudent(restData, new Callback<Boolean>(callBack));
+    private void updateSingleSchoolStudent(RestSingleSchoolStudent restData, MethodCallback<Boolean> callBack) {
+        service.updateSingleSchoolStudent(restData, (callBack));
     }
 
 }

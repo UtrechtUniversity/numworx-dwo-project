@@ -21,6 +21,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.json.client.JSONValue;
 
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentScoDataRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
@@ -83,9 +84,9 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 	}
 
 	@Override
-	public Promise<String> getJSONLaunchDataBytes(DomScoContext id,
+	public Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext id,
 			DomDwoProfile value, DomContext context) {
-		PromiseCallback<String> defer = new PromiseCallback<String>();
+		PromiseCallback<JSONValue> defer = new PromiseCallback<JSONValue>();
 		RestScoContext rest = new RestScoContext();
 		rest.setDomDwoProfile(value);
 		rest.setDomScoContext(id);

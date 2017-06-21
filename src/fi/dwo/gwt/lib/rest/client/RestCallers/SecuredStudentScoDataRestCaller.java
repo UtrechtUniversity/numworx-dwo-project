@@ -10,6 +10,8 @@ import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
+import com.google.gwt.json.client.JSONValue;
+
 public interface SecuredStudentScoDataRestCaller extends RestService {
 	@PUT
     @Path("/secure/user/scoData/getValues")
@@ -21,5 +23,5 @@ public interface SecuredStudentScoDataRestCaller extends RestService {
 
 	@PUT
 	@Path("secure/user/scoData/getJSONLaunchDataBytes")
-	public void getJSONLaunchDataBytes(RestScoContext rest, MethodCallback<String> callback);
+	public void getJSONLaunchDataBytes(RestScoContext rest, MethodCallback<JSONValue> callback);
 }
