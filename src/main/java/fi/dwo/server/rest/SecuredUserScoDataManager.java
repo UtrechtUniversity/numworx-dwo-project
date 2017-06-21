@@ -163,9 +163,33 @@ public class SecuredUserScoDataManager {
 			case SCORE: 
 				entry.setValue(String.valueOf(pssc.getScore())); break;
 			case LOCATION:
-				entry.setValue(String.valueOf(pssc.getLocation()));break;
+				String location = pssc.getLocation();
+				if(location == null) {
+					if(pssd == null) {
+						pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+						if(pssd == null) 
+							pssd = new PersistentStudentScoData();
+					}
+					if(xml == null) {
+						xml = new Scorm2Xml(String.valueOf(pssd.getCocd()));
+					}
+					entry.setValue(xml.LMSGetValue(entry.getKey()));
+				} else
+					entry.setValue(String.valueOf(location));break;
 			case COMPLETION_STATUS:
-				entry.setValue(String.valueOf(pssc.getCompletionStatus())); break;
+				String completionStatus = pssc.getCompletionStatus();
+				if(completionStatus == null) {
+					if(pssd == null) {
+						pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+						if(pssd == null) 
+							pssd = new PersistentStudentScoData();
+					}
+					if(xml == null) {
+						xml = new Scorm2Xml(String.valueOf(pssd.getCocd()));
+					}
+					entry.setValue(xml.LMSGetValue(entry.getKey()));
+				} else
+					entry.setValue(String.valueOf(completionStatus)); break;
 			case SESSION_TIME:
 				entry.setValue(String.valueOf(pssc.getSessionTime()));break;
 			case SESSION_TIME2004:
