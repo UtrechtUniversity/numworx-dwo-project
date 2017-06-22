@@ -338,6 +338,7 @@ public class StudentsInSchoolclassPresenter {
     }
     
     public void addNewStudents(){
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTS,schoolClass));
 //        https://svn.science.uu.nl/viewvc/project.fisme.java/StatistiekGWT/trunk/src/fi/statistiekgwt/client/StatTable.java?view=markup
 //            above code for importing a file.
     }

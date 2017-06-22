@@ -21,7 +21,8 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         SCORESULTS,
         SCHOOLCLASSES,
         STUDENTSINSCHOOLCLASS,
-        TEACHERSINSCHOOLCLASS
+        TEACHERSINSCHOOLCLASS,
+        ADDSTUDENTS
     }
     
     private DomStudent student;
