@@ -284,4 +284,22 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return profile.flatMap(t);
 	}
 
+	@Override
+	public Promise<JSONValue> getCourseDescription(Object courseID) {
+		final DomCourse id = toCourse(courseID);
+		Function<DomDwoProfile, Promise<? extends JSONValue>> t = null;
+		t = new Function<DomDwoProfile, Promise<? extends JSONValue>>() {
+
+			@Override
+			public Promise<JSONValue> apply(DomDwoProfile resolved)
+		    {
+				return courseManager.getCourseDescription(id, resolved);
+			}
+			
+		};
+		
+		
+		return profile.flatMap(t);
+	}
+
 }
