@@ -5,6 +5,7 @@ import java.util.List;
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.json.client.JSONValue;
 
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserCourseRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
@@ -69,6 +70,18 @@ public class SecuredUserCourseManager implements CourseManager {
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(createContext());
 		service.getCoursesSchool(rest, result);
+		return result.getPromise();
+	}
+
+	@Override
+	public Promise<JSONValue> getCourseDescription(DomCourse course,
+			DomDwoProfile profile) {
+		PromiseCallback<JSONValue> result = new PromiseCallback<JSONValue>();
+		RestCourse rest = new RestCourse();
+		rest.setDomDwoProfile(profile);
+		rest.setRestContext(createContext());
+		rest.setDomCourse(course);
+		service.getCourseDescription(rest, result);
 		return result.getPromise();
 	}
 

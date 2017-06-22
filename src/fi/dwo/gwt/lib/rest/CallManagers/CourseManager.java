@@ -8,6 +8,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.json.client.JSONValue;
+
 public interface CourseManager {
 
 	public Promise<List<DomCourseStudent>> getCourses(DomDwoProfile profile);
@@ -19,5 +21,8 @@ public interface CourseManager {
 			DomDwoProfile profile);
 
 	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile);
+
+	public Promise<JSONValue> getCourseDescription(DomCourse id,
+			DomDwoProfile profile);
 
 }

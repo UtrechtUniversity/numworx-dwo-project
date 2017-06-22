@@ -2,6 +2,7 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 
 import java.util.List;
 
+import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -13,7 +14,15 @@ import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.RestCallers.PublicCourseRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 
@@ -73,6 +82,41 @@ public class PublicCourseManager implements CourseManager {
 	@Override
 	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile) {
 		return Promises.failed(new IllegalArgumentException());
+	}
+
+	@Override
+	public Promise<JSONValue> getCourseDescription(DomCourse id,
+			DomDwoProfile profile) {
+		final Deferred<JSONValue> defer = new Deferred<JSONValue>();
+		String courseID = id.getId().getIdString();
+		int komma = courseID.lastIndexOf(';'); // XXX ons kent ons
+		courseID = courseID.substring(komma+1);
+		String url = GwtRestVars.getInstance().getServer() + "public/course/getCourseDescription?courseId=" + courseID;
+		RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, url);
+		rb.setTimeoutMillis(100000);
+		try {
+			rb.sendRequest(null, new RequestCallback() {
+				
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if(response.getStatusCode() == 200) {
+						String text = response.getText();
+						JSONValue value = JSONParser.parseStrict(text);
+						defer.resolve(value);
+					} else {
+						defer.fail(new RequestException(response.getStatusText()));
+					}
+				}
+				
+				@Override
+				public void onError(Request request, Throwable exception) {
+					defer.fail(exception);
+				}
+			});
+		} catch (RequestException e) {
+			defer.fail(e);
+		}		
+		return defer.getPromise();
 	}
 
 }
