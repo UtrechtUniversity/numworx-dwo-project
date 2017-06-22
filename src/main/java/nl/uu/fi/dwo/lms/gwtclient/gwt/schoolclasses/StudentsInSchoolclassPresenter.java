@@ -336,4 +336,9 @@ public class StudentsInSchoolclassPresenter {
             }
         }
     }
+    
+    public void addNewStudents(){
+//        https://svn.science.uu.nl/viewvc/project.fisme.java/StatistiekGWT/trunk/src/fi/statistiekgwt/client/StatTable.java?view=markup
+//            above code for importing a file.
+    }
 }
