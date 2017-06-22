@@ -33,12 +33,12 @@ public class TeachersInSchoolclassPresenter {
     private EventBus eventBus;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
 
-    private String[] tableHeaders = {"givenname", "insertion", "familyname", "usercode", "edit", "select"};
+    private String[] tableHeaders = {"givenname", "insertion", "familyname", "usercode", "select"};
     private DomSchoolClass schoolClass;
     private Map<String, DomTeacher> teacherMap;
     private Map<String, TeachersInSchoolclassPresenter.TeacherItem> teacherItems;
-    private Map<String, DomSchoolClass> schoolClassMap;
-    private List<SchoolClassItem> schoolClassItems;
+    private Map<String, DomTeacher> listBoxMap;
+    private List<TeacherListBoxItem> listBoxList;
     private Display view;
     private int requests = 0;
 
@@ -52,7 +52,7 @@ public class TeachersInSchoolclassPresenter {
 
         void updateView(Map<String, TeachersInSchoolclassPresenter.TeacherItem> data);
 
-        void updateSchoolClassList(List<SchoolClassItem> data);
+        void updateTeacherList(List<TeacherListBoxItem> data);
     }
 
     public class TeacherItem {
@@ -62,16 +62,14 @@ public class TeachersInSchoolclassPresenter {
         public String insertion;
         public String familyName;
         public String usercode;
-        public boolean singleSchool;
         public boolean selected;
 
-        public TeacherItem(String aKey, String aFirstName, String anInsertion, String aFamilyName, String aUsercode, boolean aSingleSchool) {
+        public TeacherItem(String aKey, String aFirstName, String anInsertion, String aFamilyName, String aUsercode) {
             key = aKey;
             givenName = aFirstName;
             insertion = anInsertion;
             familyName = aFamilyName;
             usercode = aUsercode;
-            singleSchool = aSingleSchool;
             selected = false;
         }
     }
@@ -103,7 +101,7 @@ public class TeachersInSchoolclassPresenter {
         schoolClass = aSchoolClass;
         view.init();
         updateViewData(aSchoolClass);
-        updateSchoolClasses();
+        updateTeacherList();
     }
 
     private void updateViewData(DomSchoolClass sc) {
@@ -123,8 +121,7 @@ public class TeachersInSchoolclassPresenter {
                             sc.getGivenName(),
                             sc.getInsertion(),
                             sc.getFamilyName(),
-                            sc.getUserName(),
-                            sc.getSingleSchool()
+                            sc.getUserName()
                     );
                     if (oldTeacherItems != null
                             && oldTeacherItems.containsKey(sc.getId().getIdString())
@@ -154,22 +151,24 @@ public class TeachersInSchoolclassPresenter {
 
     }
 
-    public void updateSchoolClasses() {
-        Promise<List<DomSchoolClass>> promise;
-        promise = manager.getTeachersSchoolClasses();
+    public void updateTeacherList() {
+        Promise<List<DomTeacher>> promise;
+        promise = manager.getTeachersInSchool();
         // onSuccess update view
-        promise.then(new Success<List<DomSchoolClass>, Void>() {
+        promise.then(new Success<List<DomTeacher>, Void>() {
             @Override
-            public Promise<Void> call(Promise<List<DomSchoolClass>> resolved) throws Exception {
-                schoolClassMap = new HashMap<String, DomSchoolClass>(resolved.getValue().size());
-                schoolClassItems = new ArrayList<SchoolClassItem>(resolved.getValue().size());
-                for (DomSchoolClass sc : resolved.getValue()) {
-                    if (!schoolClass.getId().equals(sc.getId())) {
-                        schoolClassMap.put(sc.getId().getIdString(), sc);
-                        schoolClassItems.add(new SchoolClassItem(sc.getId().getIdString(), sc.getSchoolClassName()));
+            public Promise<Void> call(Promise<List<DomTeacher>> resolved) throws Exception {
+                listBoxMap = new HashMap<String, DomTeacher>(resolved.getValue().size());
+                listBoxList = new ArrayList<TeacherListBoxItem>(resolved.getValue().size());
+                for (DomTeacher t : resolved.getValue()) {
+                    if (!teacherMap.containsKey(t.getId().getIdString())) {
+//                    if (!schoolClass.getId().equals(sc.getId())) {
+                        listBoxMap.put(t.getId().getIdString(), t);
+                        listBoxList.add(new TeacherListBoxItem(t.getId().getIdString(), t.getDisplayName()));
                     }
+//                    }
                 }
-                view.updateSchoolClassList(schoolClassItems);
+                view.updateTeacherList(listBoxList);
                 return null;
             }
         },
@@ -199,7 +198,7 @@ public class TeachersInSchoolclassPresenter {
      */
     public void selectItem(TeachersInSchoolclassPresenter.TeacherItem item, int op) {
         switch (op) {
-//            case 4:
+//            case 3:
 //                if (item.singleSchool) {
 //                    LOG.log(Level.INFO, "editable item " + item.usercode);
 //                    eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs., teacherMap.get(item.key), schoolClass));
@@ -207,7 +206,8 @@ public class TeachersInSchoolclassPresenter {
 //                break;
             case 4:
                 item.selected = !item.selected;
-                LOG.log(Level.INFO, "item " + item.usercode + " state " + item.selected);
+//                LOG.log(Level.INFO, "item " + item.usercode + " state " + item.selected);
+//                eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs., teacherMap.get(item.key), schoolClass));
                 break;
             default:
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -216,68 +216,6 @@ public class TeachersInSchoolclassPresenter {
 
     void goBackToSchoolClasses() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
-    }
-
-    /**
-     * Adds a student to a selected schoolclass and updates the view.
-     *
-     * @param classKey
-     */
-    public void addSelectedToSchoolClass(String classKey) {
-        DomSchoolClass targetSchoolClass = schoolClassMap.get(classKey);
-        final int cnt;
-        int tmp = 0;
-        for (TeacherItem item : teacherItems.values()) {
-            if (item.selected) {
-                tmp++;
-            }
-        }
-        cnt = tmp;
-        tmp = 0;
-        for (TeacherItem item : teacherItems.values()) {
-            if (item.selected == true) {
-                tmp++;
-                final int index = tmp;
-                LOG.log(Level.INFO, "Adding  " + item.usercode + " to targetSchoolClass<key,name> " + targetSchoolClass.getId().getIdString() + " " + targetSchoolClass.getSchoolClassName());
-                //add to schoolclass and clear item to signal success
-
-                Promise<Boolean> promise;
-                final TeacherItem fItem = item;
-                DomSubmitTeacherToSchoolClass submit = new DomSubmitTeacherToSchoolClass();
-                submit.setSchoolClass(schoolClass);
-                submit.setTeacher(teacherMap.get(item.key));
-                promise = manager.submitTeacherToSchoolClass(submit);
-                // onSuccess update view
-                promise.then(new Success<Boolean, Void>() {
-                    @Override
-                    public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                        if (resolved.getValue().booleanValue() == true) {
-                            teacherItems.get(fItem.key).selected = false;
-                            if (index % 10 == 0 || index == cnt) {
-                                updateViewData(schoolClass);
-                            }
-                        }
-                        return null;
-                    }
-                },
-                        new Failure() {
-                    @Override
-                    public void fail(Promise<?> resolved) throws Exception {
-                        Throwable fail = resolved.getFailure();
-                        if (fail instanceof Dwo2Exception) {
-                            LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                        } else {
-                            LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                            //throw directly
-                        }
-                    }
-                });
-                item.selected = false;
-            }
-        }
-
     }
 
     public void removeSelectedFromSchoolClass() {
@@ -312,6 +250,7 @@ public class TeachersInSchoolclassPresenter {
                             teacherItems.get(fItem.key).selected = false;
                             if (index % 10 == 0 || index == cnt) {
                                 updateViewData(schoolClass);
+                                updateTeacherList();
                             }
                         }
                         return null;
@@ -334,5 +273,43 @@ public class TeachersInSchoolclassPresenter {
                 );
             }
         }
+    }
+
+    void addTeacherToSchoolClass(String key) {
+        DomTeacher targetTeacher = listBoxMap.get(key);
+        DomSchoolClass targetSchoolClass = schoolClass;
+//        LOG.log(Level.INFO, "targetSchoolClass<key,name> "+targetSchoolClass.getId().getIdString() + " "+targetSchoolClass.getSchoolClassName());
+        LOG.log(Level.INFO, "Submitting " + targetTeacher.getUniqueDisplayName() + " to " + targetSchoolClass.getSchoolClassName());
+        Promise<Boolean> promise;
+        DomSubmitTeacherToSchoolClass data = new DomSubmitTeacherToSchoolClass();
+        data.setTeacher(targetTeacher);
+        data.setSchoolClass(targetSchoolClass);
+        promise = manager.submitTeacherToSchoolClass(data);
+        // onSuccess update view
+        promise.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                if (resolved.getValue().booleanValue() == true) {
+                    updateViewData(schoolClass);
+                    updateTeacherList();
+                }
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }
+        );
     }
 }

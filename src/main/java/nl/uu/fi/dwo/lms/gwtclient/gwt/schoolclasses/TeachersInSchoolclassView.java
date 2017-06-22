@@ -51,17 +51,15 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
     @UiField
     Button backBtn;
     @UiField
-    Button newTeacherBtn; // single school students
-    @UiField
     Button addToSchoolClass;
     @UiField
     Button deleteSelectedBtn;
     @UiField
-    ListBox schoolClassListBox;
+    ListBox teacherListBox;
 
     private TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
     private ListDataProvider<TeachersInSchoolclassPresenter.TeacherItem> dataProvider = new ListDataProvider<TeachersInSchoolclassPresenter.TeacherItem>();
-    private List<SchoolClassItem> schoolClassList;
+    private List<TeacherListBoxItem> addTeacherList;
     private MyCheckBoxCell checkBox;
 
     public class MyCell extends AbstractCell<String> {
@@ -133,7 +131,7 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
             }
             super.onBrowserEvent(context, parent, value, event, valueUpdater);
             if ("change".equals(event.getType())) {
-                teachersInSchoolclassPresenter.selectItem((TeachersInSchoolclassPresenter.TeacherItem) context.getKey(), 5);
+                teachersInSchoolclassPresenter.selectItem((TeachersInSchoolclassPresenter.TeacherItem) context.getKey(), 4);
                 LOG.log(Level.INFO, "key " + context.getKey() + " boolean " + value);
             }
         }
@@ -144,13 +142,13 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
         teachersInSchoolclassPresenter.setView(this);
         String[] tableHeaders = sp.getTableHeaders();
         dataGrid = new CellTable<String>();
-//        schoolClassListBox = new ValueListBox<SchoolClassItem>(new Renderer<SchoolClassItem>() {
+//        teacherListBox = new ValueListBox<SchoolClassItem>(new Renderer<SchoolClassItem>() {
 //
-//            public String render(SchoolClassItem item) {                
+//            public String render(SchoolClassListBoxItem item) {                
 //                return item.getSchoolclassName();
 //            }
 //
-//            public void render(SchoolClassItem user, Appendable appendable) throws IOException {
+//            public void render(SchoolClassListBoxItem user, Appendable appendable) throws IOException {
 //                String s = render(user);
 //                appendable.append(s);
 //            }
@@ -272,19 +270,19 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
         dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.addColumn(value, tableHeaders[3]);
 
-        //edit student
-        value = new Column<TeachersInSchoolclassPresenter.TeacherItem, String>(clickCell) {
-            @Override
-            public String getValue(TeachersInSchoolclassPresenter.TeacherItem object) {
-                if (object.singleSchool == true) {
-                    return tableHeaders[4];
-                } else {
-                    return "";
-                }
-            }
-        };
-        value.setSortable(false);
-        dataGrid.addColumn(value, tableHeaders[4]);
+//        //edit student
+//        value = new Column<TeachersInSchoolclassPresenter.SchoolClassListBoxItem, String>(clickCell) {
+//            @Override
+//            public String getValue(TeachersInSchoolclassPresenter.SchoolClassListBoxItem object) {
+//                if (object.singleSchool == true) {
+//                    return tableHeaders[4];
+//                } else {
+//                    return "";
+//                }
+//            }
+//        };
+//        value.setSortable(false);
+//        dataGrid.addColumn(value, tableHeaders[3]);
 
         //select student
         checkBox = new MyCheckBoxCell(true, true);
@@ -296,7 +294,7 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
         };
 
         bValue.setSortable(false);
-        dataGrid.addColumn(bValue, tableHeaders[5]);
+        dataGrid.addColumn(bValue, tableHeaders[4]);
 
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);
@@ -321,9 +319,8 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
 //        });
         backBtn.addClickHandler(this);
         deleteSelectedBtn.addClickHandler(this);
-        newTeacherBtn.addClickHandler(this);
         addToSchoolClass.addClickHandler(this);
-        schoolClassListBox.addChangeHandler(this);
+        teacherListBox.addChangeHandler(this);
     }
 
     public void init() {
@@ -338,14 +335,12 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
     public void onClick(ClickEvent event) {
         if (event.getSource() == backBtn) {
             teachersInSchoolclassPresenter.goBackToSchoolClasses();
-        } else if (event.getSource() == newTeacherBtn) {
-            //schoolclassesPresenter.addSchoolClass();
         } else if (event.getSource() == deleteSelectedBtn) {
             teachersInSchoolclassPresenter.removeSelectedFromSchoolClass();
         } else if (event.getSource() == addToSchoolClass) {
-            teachersInSchoolclassPresenter.addSelectedToSchoolClass(schoolClassList.get(schoolClassListBox.getSelectedIndex()).getKey());
-//        } else if (event.getSource() == schoolClassListBox) {
-//            studentsInSchoolclassPresenter.updateSchoolClasses();
+            teachersInSchoolclassPresenter.addTeacherToSchoolClass(addTeacherList.get(teacherListBox.getSelectedIndex()).getKey());
+//        } else if (event.getSource() == teacherListBox) {
+//            studentsInSchoolclassPresenter.updateTeacherList();
 //        } else if (event.getSource() == checkBox) {
 //
         }
@@ -362,12 +357,11 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
         dataProvider.refresh();
     }
 
-    public void updateSchoolClassList(List<SchoolClassItem> data) {
-        schoolClassList = data;
-
-        schoolClassListBox.clear();
-        for (SchoolClassItem item : data) {
-            schoolClassListBox.addItem(item.getSchoolclassName());
+    public void updateTeacherList(List<TeacherListBoxItem> data) {
+        addTeacherList = data;
+        teacherListBox.clear();
+        for (TeacherListBoxItem item : data) {
+            teacherListBox.addItem(item.getTeacherName());
         }
     }
 

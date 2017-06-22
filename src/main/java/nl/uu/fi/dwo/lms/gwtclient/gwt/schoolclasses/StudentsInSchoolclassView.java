@@ -62,7 +62,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
     private StudentsInSchoolclassPresenter studentsInSchoolclassPresenter;
     private StudentsInSchoolclassPresenter.StudentItem selected;
     private ListDataProvider<StudentsInSchoolclassPresenter.StudentItem> dataProvider = new ListDataProvider<StudentsInSchoolclassPresenter.StudentItem>();
-    private List<SchoolClassItem> schoolClassList;
+    private List<SchoolClassListBoxItem> schoolClassList;
     private MyCheckBoxCell checkBox;
 
     public class MyCell extends AbstractCell<String> {
@@ -147,11 +147,11 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         dataGrid = new CellTable<String>();
 //        schoolClassListBox = new ValueListBox<SchoolClassItem>(new Renderer<SchoolClassItem>() {
 //
-//            public String render(SchoolClassItem item) {                
+//            public String render(SchoolClassListBoxItem item) {                
 //                return item.getSchoolclassName();
 //            }
 //
-//            public void render(SchoolClassItem user, Appendable appendable) throws IOException {
+//            public void render(SchoolClassListBoxItem user, Appendable appendable) throws IOException {
 //                String s = render(user);
 //                appendable.append(s);
 //            }
@@ -363,11 +363,11 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         dataProvider.refresh();
     }
 
-    public void updateSchoolClassList(List<SchoolClassItem> data) {
+    public void updateSchoolClassList(List<SchoolClassListBoxItem> data) {
         schoolClassList = data;
 
         schoolClassListBox.clear();
-        for (SchoolClassItem item : data) {
+        for (SchoolClassListBoxItem item : data) {
             schoolClassListBox.addItem(item.getSchoolclassName());
         }
     }

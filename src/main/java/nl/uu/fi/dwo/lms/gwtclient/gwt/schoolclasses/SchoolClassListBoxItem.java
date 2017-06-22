@@ -1,16 +1,16 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 /**
- * SchoolClassItem for ListBoxes and Cell renderings.
+ * SchoolClassListBoxItem for ListBoxes and Cell renderings.
  * 
  * @author G.A.J. van der Plas
  */
-public class SchoolClassItem {
+public class SchoolClassListBoxItem {
 
     private String key; //unique
     private String schoolclassName;
 
-    public SchoolClassItem(String aKey, String value) {
+    public SchoolClassListBoxItem(String aKey, String value) {
         key = aKey;
         schoolclassName = value;
     }

@@ -6,11 +6,10 @@
     <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
         <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="newTeacherBtn">add more students</g:Button>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="deleteSelectedBtn">delete selected students</g:Button>
+            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="deleteSelectedBtn">remove selected teachers</g:Button>
            
-            <g:Button addStyleNames='{dwoStyle.dwoButton} float:right' ui:field="addToSchoolClass">add to schoolclass</g:Button>
-            <g:ListBox addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="schoolClassListBox">
+            <g:Button addStyleNames='{dwoStyle.dwoButton} float:right' ui:field="addToSchoolClass">add to this schoolclass</g:Button>
+            <g:ListBox addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="teacherListBox">
                 <g:item>
                     Loading...
                 </g:item>

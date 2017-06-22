@@ -38,7 +38,7 @@ public class StudentsInSchoolclassPresenter {
     private Map<String, DomStudent> studentMap;
     private Map<String, StudentsInSchoolclassPresenter.StudentItem> studentItems;
     private Map<String, DomSchoolClass> schoolClassMap;
-    private List<SchoolClassItem> schoolClassItems;
+    private List<SchoolClassListBoxItem> schoolClassItems;
     private Display view;
     private int requests = 0;
 
@@ -52,7 +52,7 @@ public class StudentsInSchoolclassPresenter {
 
         void updateView(Map<String, StudentsInSchoolclassPresenter.StudentItem> data);
 
-        void updateSchoolClassList(List<SchoolClassItem> data);
+        void updateSchoolClassList(List<SchoolClassListBoxItem> data);
     }
 
     public class StudentItem {
@@ -162,11 +162,11 @@ public class StudentsInSchoolclassPresenter {
             @Override
             public Promise<Void> call(Promise<List<DomSchoolClass>> resolved) throws Exception {
                 schoolClassMap = new HashMap<String, DomSchoolClass>(resolved.getValue().size());
-                schoolClassItems = new ArrayList<SchoolClassItem>(resolved.getValue().size());
+                schoolClassItems = new ArrayList<SchoolClassListBoxItem>(resolved.getValue().size());
                 for (DomSchoolClass sc : resolved.getValue()) {
                     if (!schoolClass.getId().equals(sc.getId())) {
                         schoolClassMap.put(sc.getId().getIdString(), sc);
-                        schoolClassItems.add(new SchoolClassItem(sc.getId().getIdString(), sc.getSchoolClassName()));
+                        schoolClassItems.add(new SchoolClassListBoxItem(sc.getId().getIdString(), sc.getSchoolClassName()));
                     }
                 }
                 view.updateSchoolClassList(schoolClassItems);

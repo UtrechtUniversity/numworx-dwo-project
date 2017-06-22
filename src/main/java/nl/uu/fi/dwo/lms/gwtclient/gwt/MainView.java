@@ -9,7 +9,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -29,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassView;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
@@ -94,6 +94,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @UiField(provided = true)
     StudentsInSchoolclassView studentsInSchoolclassView;
     @UiField(provided = true)
+    TeachersInSchoolclassView teachersInSchoolclassView;
+    @UiField(provided = true)
     ResultsView resultsView;
     @UiField(provided = true)
     ScoResultsView scoResultsView;
@@ -131,6 +133,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         scoResultsView = (ScoResultsView) clientFactory.getScoResultsView();
         schoolclassesView = (SchoolclassesView) clientFactory.getSchoolclassesView();
         studentsInSchoolclassView = (StudentsInSchoolclassView) clientFactory.getStudentsInSchoolclassView();
+        teachersInSchoolclassView = (TeachersInSchoolclassView) clientFactory.getTeachersInSchoolclassView();
         initWidget(uiBinder.createAndBindUi(this));
         int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(loginIndex);
@@ -244,6 +247,12 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @Override
     public void showStudentsInSchoolclassView() {
         int index = mainDeckPanel.getWidgetIndex(studentsInSchoolclassView.asWidget());
+        mainDeckPanel.showWidget(index);
+    }
+
+    @Override
+    public void showTeachersInSchoolclassView() {
+        int index = mainDeckPanel.getWidgetIndex(teachersInSchoolclassView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
