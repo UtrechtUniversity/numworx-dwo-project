@@ -187,8 +187,8 @@ public class SchoolclassesPresenter {
     }
 
     void editTeachers(ClassItem item) {
-//        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditStudents, schoolClassMap.get(item.key)));
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.TEACHERSINSCHOOLCLASS, schoolClassMap.get(item.key)));
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     void editModules(ClassItem item) {

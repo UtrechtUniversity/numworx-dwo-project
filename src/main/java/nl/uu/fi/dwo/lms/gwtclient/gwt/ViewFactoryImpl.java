@@ -20,6 +20,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassView;
 
 /**
  * Local ViewFactory implementation class.
@@ -37,7 +39,7 @@ public class ViewFactoryImpl implements ViewFactory {
     private final AccountPresenter.Display accountView;
     private final AddSchoolclassPresenter.Display addSchoolclassView;
     private final StudentsInSchoolclassPresenter.Display studentsInSchoolclassView;
-    //private final TeachersInSchoolclassPresenter.Display teachersInSchoolclassView;
+    private final TeachersInSchoolclassPresenter.Display teachersInSchoolclassView;
     private final EditSchoolclassPresenter.Display editSchoolclassView;
     private final EditStudentPresenter.Display editStudentView;
     private final MsgDialogPresenter.Display msgDialogView;
@@ -53,7 +55,7 @@ public class ViewFactoryImpl implements ViewFactory {
         schoolclassesView = new SchoolclassesView(pf.getSchoolclassesPresenter(), this);
         addSchoolclassView = new AddSchoolclassView(pf.getAddSchoolclassPresenter());
         studentsInSchoolclassView = new StudentsInSchoolclassView(pf.getStudentsInSchoolclassPresenter());
-//    teachersInSchoolclassView = new TeachersInSchoolclassView(pf.getTeachersInSchoolclassPresenter());
+        teachersInSchoolclassView = new TeachersInSchoolclassView(pf.getTeachersInSchoolclassPresenter());
         editSchoolclassView = new EditSchoolclassView(pf.getEditSchoolclassPresenter());
         editStudentView = new EditStudentView(pf.getEditStudentPresenter());
         msgDialogView = new MsgDialogView(pf.getMsgDialogPresenter());
@@ -122,6 +124,12 @@ public class ViewFactoryImpl implements ViewFactory {
     public MsgDialogPresenter.Display getMsgDialogView() {
         return msgDialogView;
     }
-    
-    
+
+    /**
+     * @return the teachersInSchoolclassView
+     */
+    public TeachersInSchoolclassPresenter.Display getTeachersInSchoolclassView() {
+        return teachersInSchoolclassView;
+    }
+
 }

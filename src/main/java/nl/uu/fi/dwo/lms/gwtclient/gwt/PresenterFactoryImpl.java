@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
 
 /**
  * Local ViewFactory implementation class.
@@ -28,7 +29,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final ScoResultsPresenter scoResultsPresenter;
     private final SchoolclassesPresenter schoolclassesPresenter;
     private final StudentsInSchoolclassPresenter studentsInSchoolclassPresenter;
-//    private final TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
+    private final TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
     private final AccountPresenter accountPresenter;
     private final AddSchoolclassPresenter addSchoolclassPresenter;
     private final EditSchoolclassPresenter editSchoolclassPresenter;
@@ -45,7 +46,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
         scoResultsPresenter = new ScoResultsPresenter(eventBus, dwoGlobalVars);
         schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
         studentsInSchoolclassPresenter = new StudentsInSchoolclassPresenter(eventBus, dwoGlobalVars);
-//        teachersInSchoolclassPresenter = new TeachersInSchoolclassPresenter(eventBus, dwoGlobalVars);
+        teachersInSchoolclassPresenter = new TeachersInSchoolclassPresenter(eventBus, dwoGlobalVars);
         accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars);
         addSchoolclassPresenter = new AddSchoolclassPresenter(eventBus, dwoGlobalVars);
         editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
@@ -141,5 +142,12 @@ public class PresenterFactoryImpl implements PresenterFactory {
      */
     public MsgDialogPresenter getMsgDialogPresenter() {
         return msgDialogPresenter;
+    }
+
+    /**
+     * @return the teachersInSchoolclassPresenter
+     */
+    public TeachersInSchoolclassPresenter getTeachersInSchoolclassPresenter() {
+        return teachersInSchoolclassPresenter;
     }
 }
