@@ -81,6 +81,7 @@ public class AddStudentsPresenter {
         schoolClass = aSchoolClass;
         studentMap = new HashMap<String, DomSingleSchoolStudent>();
         studentItems = new HashMap<String, StudentItem>();
+        studentItems.put("none", new StudentItem("none","","","","",""));
         view.updateView(studentItems);
     }
 
@@ -170,4 +171,8 @@ public class AddStudentsPresenter {
 
     }
  
+    public void loadData() {
+        //call dialog for parsing data
+    }
+    
 }

@@ -1,7 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.cell.client.AbstractCell;
-import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.cell.client.TextInputCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -26,7 +26,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesView.MyCell;
 
 /**
  * GWT Panel that handles switching the role.
@@ -53,38 +52,62 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
     Button addBtn; // single school students
     @UiField
     Button importBtn;
+//    @UiField
+//    FileUpload fileUploadWidget;
 
+//JavaScriptObject files = fileUploadWidget.getElement().getPropertyJSO("files");
+//
+//readTextFile(files);
+//
+//public static void fileLoaded(String fileContents) {
+//    GWT.log("File contents: " + fileContents);
+//}
+//
+//public static native void readTextFile(JavaScriptObject files)
+///*-{
+//    var reader = new FileReader();
+//
+//    reader.onload = function(e) {
+//        @com.example.YourClass::fileLoaded(*)(reader.result);
+//    }
+//
+//    return reader.readAsText(files[0]);
+//}-*/;
     private AddStudentsPresenter addStudentsPresenter;
     private AddStudentsPresenter.StudentItem selected;
     private ListDataProvider<AddStudentsPresenter.StudentItem> dataProvider = new ListDataProvider<AddStudentsPresenter.StudentItem>();
-    private TextCell cell;
+    private TextInputCell cell;
 
-//    public class MyCell extends AbstractCell<String> {
-
-//        public MyCell() {
+    public class DwoInputCell extends TextInputCell {
+        public DwoInputCell() {
 //            super("click", "keydown");
-//        }
-//
-//        @Override
-//        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
-//            if (value != null) {
-//                sb.appendEscaped(value);
-//            }
-//        }
-//
-//        @Override
-//        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-//            if (value == null) {
-//                return;
-//            }
-//            super.onBrowserEvent(context, parent, value, event, valueUpdater);
-//            if ("click".equals(event.getType())) {
-////                LOG.log(Level.INFO, "key "+context.getKey());
-////                cellSelected(context.getIndex(), context.getColumn());
-//            }
-//        }
-//    }
-//
+        }
+
+        @Override
+        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
+            if (value != null) {
+                sb.appendEscaped(value);
+            }
+        }
+
+        @Override
+        public void finishEditing(Element parent,java.lang.String value,java.lang.Object key,ValueUpdater<java.lang.String> valueUpdater){
+//            if(key.)
+        }
+        
+        @Override
+        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+            if (value == null) {
+                return;
+            }
+            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+            if ("click".equals(event.getType())) {
+//                LOG.log(Level.INFO, "key "+context.getKey());
+//                cellSelected(context.getIndex(), context.getColumn());
+            }
+        }
+    }
+
     public class ClickCell extends AbstractCell<String> {
 
         public ClickCell() {
@@ -113,7 +136,6 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
         }
     }
 
-
     public AddStudentsView(AddStudentsPresenter sp) {
         addStudentsPresenter = sp;
         addStudentsPresenter.setView(this);
@@ -134,10 +156,8 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
         dataProvider.addDataDisplay(dataGrid);
         dataGrid.setSkipRowHoverCheck(true);
         dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
-        cell = new TextCell();
+        cell = new TextInputCell();
         List<AddStudentsPresenter.StudentItem> data = dataProvider.getList();
-//        final AddStudentsView.MyCell cell = new AddStudentsView.MyCell();
-//        final AddStudentsView.MyClickCell clickCell = new AddStudentsView.MyClickCell();
 
         //givenName
         Column<AddStudentsPresenter.StudentItem, String> value = new Column<AddStudentsPresenter.StudentItem, String>(cell) {
@@ -248,14 +268,10 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
         dataGrid.addColumn(value, tableHeaders[3]);
 
         //password
-        value = new Column<AddStudentsPresenter.StudentItem, String>(new TextCell()) {
+        value = new Column<AddStudentsPresenter.StudentItem, String>(cell) {
             @Override
             public String getValue(AddStudentsPresenter.StudentItem object) {
-//                if (object.password == true) {
-//                    return tableHeaders[4];
-//                } else {
-                    return "";
-//                }
+                return object.password;
             }
         };
         value.setSortable(false);
@@ -266,7 +282,7 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
         Column<AddStudentsPresenter.StudentItem, String> bValue = new Column<AddStudentsPresenter.StudentItem, String>(clickCell) {
             @Override
             public String getValue(AddStudentsPresenter.StudentItem object) {
-                return "remove";
+                    return "remove";
             }
         };
 
@@ -296,7 +312,7 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
 //        });
         backBtn.addClickHandler(this);
         addBtn.addClickHandler(this);
-        importBtn.addClickHandler(this);
+//        importBtn.addClickHandler(this);
     }
 
     public void init() {
@@ -312,9 +328,9 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
         if (event.getSource() == backBtn) {
             addStudentsPresenter.goBackToSchoolClasses();
         } else if (event.getSource() == addBtn) {
-            //schoolclassesPresenter.addSchoolClass();
+            addStudentsPresenter.addNewStudents();
         } else if (event.getSource() == importBtn) {
-            //schoolclassesPresenter.addSchoolClass();
+            addStudentsPresenter.loadData();
         }
     }
 
@@ -331,5 +347,4 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
 
 //        https://svn.science.uu.nl/viewvc/project.fisme.java/StatistiekGWT/trunk/src/fi/statistiekgwt/client/StatTable.java?view=markup
 //            above code for importing a file.
-    
 }

@@ -214,6 +214,11 @@ public class StudentsInSchoolclassPresenter {
         }
     }
 
+    void addStudents() {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTS));
+    }
+
+    
     void goBackToSchoolClasses() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }

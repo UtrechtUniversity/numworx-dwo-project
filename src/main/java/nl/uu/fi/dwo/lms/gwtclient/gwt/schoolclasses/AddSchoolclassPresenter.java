@@ -95,6 +95,6 @@ public class AddSchoolclassPresenter {
      * Go back to the schoolclasses presentation.
      */
     public void Back() {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS));
     }
 }

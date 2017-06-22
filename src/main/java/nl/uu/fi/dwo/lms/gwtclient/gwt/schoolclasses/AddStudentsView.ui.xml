@@ -7,6 +7,7 @@
         <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="importBtn">import</g:Button>
+            <!--<g:FileUpload ui:field="fileUploadWidget"/>--> 
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="addBtn">make accounts</g:Button>
         </g:FlowPanel>
             <g:FlowPanel height="2em">

@@ -308,7 +308,6 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
 
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
-//        addStudentsBtn.addClickHandler(this);
 //        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
 //        dataGrid.setSelectionModel(selectionModel);
 //        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -340,7 +339,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         if (event.getSource() == backBtn) {
             studentsInSchoolclassPresenter.goBackToSchoolClasses();
         } else if (event.getSource() == addStudentsBtn) {
-            //schoolclassesPresenter.addSchoolClass();
+            studentsInSchoolclassPresenter.addStudents();
         } else if (event.getSource() == deleteSelectedBtn) {
             studentsInSchoolclassPresenter.removeSelectedFromSchoolClass();
         } else if (event.getSource() == addToSchoolClass) {
