@@ -3,7 +3,6 @@ package fi.dwo.server.rest;
 
 import java.io.StringWriter;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
@@ -52,21 +51,7 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 @Path("/secure/user/course")
 public class SecuredUserCourseManager {
 
-    private static final class DomCourseStudentComparator implements Comparator<DomCourseStudent> {
-		@Override
-		public int compare(DomCourseStudent o1, DomCourseStudent o2) {
-			Long l1 = o1.getSequenceNr();
-			Long l2 = o2.getSequenceNr();
-			if(l1 == null && l2 == null) {
-				return o1.getName().compareTo(o2.getName());
-			}
-			if(l1 == null) return +1;
-			if(l2 == null) return -1;
-			return l1.compareTo(l2);
-		}
-	}
-
-	private static final Logger LOG = Logger.getLogger(SecuredUserCourseManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(SecuredUserCourseManager.class.getName());
 
     /**
      * Returns the Course description of a course. This method uses MySQL-based
@@ -74,21 +59,33 @@ public class SecuredUserCourseManager {
      * 
      * @param courseId
      * @return
+     * @throws Dwo2Exception 
      */
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/getCourseDescription")
-    @Deprecated
-    public String getCourseDescription(@DefaultValue("0") @QueryParam("courseId") Long courseId) {
-        try {
+    public String getCourseDescription(@Context SecurityContext sc, RestCourse id) {
+    	try {
+// TODO NPE tests 		    		
+    		DomDwoProfile domDwoProfile = id.getDomDwoProfile();
+    		DomHasRole    hasRole = id.getRestContext().getDomHasRole();
+    		PersistentUser user = getUserFromContext(sc);		
+
+// verify profile/limited
+    		
+    		
+    		Long courseId = MySQLPersistenceId.getNativeId(id.getDomCourse());
             PersistentCourse course = CourseManager.findEntity(courseId);
-            if(course == null) return "{}"; // Not fatal
+            if(course == null) 
+            	return "{}"; // Not fatal
+            if(! course.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile)))
+            	return "{}";
             Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(course.getDescription(), null); // FIXM load wiskopdr.jar
             StringWriter writer = new StringWriter();
 			JSONEncoder.encode(map, writer, null); // FIXME, load wiskopdr.jar
 	        return writer.toString();
 		} catch (Exception e) {
-			LOG.fine("getCourseDescription "  + courseId + " " + e.toString());
+			LOG.fine("getCourseDescription "  + id + " " + e.toString());
 			return "{}";
 		}
     }
@@ -102,17 +99,8 @@ public class SecuredUserCourseManager {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 		DomHasRole    hasRole = rest.getRestContext().getDomHasRole();
-// Context
-        PersistentUser user = null;
-        try {
-            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
-            LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
-        }		
-		long id = MySQLPersistenceId.getNativeId(domDwoProfile);
+		PersistentUser user = getUserFromContext(sc);		
+		Long id = MySQLPersistenceId.getNativeId(domDwoProfile);
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(id);
         PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);        
 		PersistentHasRole hr = HasRoleManager.findEntity(hasRoleKey);
@@ -137,16 +125,7 @@ public class SecuredUserCourseManager {
    // TODO NPE tests 		    		
     		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
     		DomHasRole    hasRole = rest.getRestContext().getDomHasRole();
-   // Context
-            PersistentUser user = null;
-            try {
-                user = UserManager.findByUserName(sc.getUserPrincipal().getName());
-                LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-            }
-            catch (Exception e) {
-                LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
-            }
+    		PersistentUser user = getUserFromContext(sc);
 			PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);
             PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
 // userid must match hasrole
@@ -186,21 +165,14 @@ public class SecuredUserCourseManager {
     	try {
     		DomCourse course = rest.getDomCourse();
     		DomHasRole hasRole = rest.getRestContext().getDomHasRole();
-    		long id = MySQLPersistenceId.getNativeId(course);
+    		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
+    		Long id = MySQLPersistenceId.getNativeId(course);
 // Context
-            PersistentUser user = null;
-            try {
-                user = UserManager.findByUserName(sc.getUserPrincipal().getName());
-                LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-            }
-            catch (Exception e) {
-                LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
-            }		
+            PersistentUser user = getUserFromContext(sc);		
             PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);        
     		PersistentHasRole hr = HasRoleManager.findEntity(hasRoleKey);
 // userid must match hasrole
-         		if (user.getId().longValue() != hr.getPersistentHasRolePK().getUserID().longValue())
+         		if (! user.getId().equals( hr.getPersistentHasRolePK().getUserID()))
          			return Collections.emptyList();
 // FIXME check role is not a guest/student
     		
@@ -215,7 +187,7 @@ public class SecuredUserCourseManager {
     			 ! parent.isWithChildren()	||
     			 profile.getDwoProfileRights().contains(LIMITED)
 // Verify context: profile matches...
-    			|| !rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId())
+    			|| !profile.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile))
     		)
     		{
     			if(!school.getSchoolID().equals(parent.getSchoolID()))
@@ -234,27 +206,48 @@ public class SecuredUserCourseManager {
     		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the modules.");	
     	}    	
     }
+
+	private static PersistentUser getUserFromContext(SecurityContext sc) {
+		PersistentUser user = null;
+		try {
+		    user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+		    LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+		}
+		catch (Exception e) {
+		    LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+		    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
+		}
+		return user;
+	}
     
     @PUT
     @Path("/get")
     @Produces({"application/json"})
-    public DomCourseStudent getCourse(RestCourse rest) {
+    public DomCourseStudent getCourse(@Context SecurityContext sc, RestCourse rest) {
     	try {
+// TODO NPE tests 		    		
+    		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
+    		DomHasRole    hasRole = rest.getRestContext().getDomHasRole();
+    		PersistentUser user = getUserFromContext(sc);		
+
+    		
+    		
     		DomCourse course = rest.getDomCourse();
-    		long id = MySQLPersistenceId.getNativeId(course);
+    		Long id = MySQLPersistenceId.getNativeId(course);
     		PersistentCourse parent = CourseManager.findEntity(id);
-// Verify parent is public and profile is not limited
+// TODO Verify parent is public and profile is not limited OR user.school matches course.school
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
-    		if ( parent.getSchoolID() != null || 
-    			 profile.getDwoProfileRights().contains(LIMITED))
-    			return null;
-// TODO Verify context: profile matches...
-    		if (rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId()))    		
+//    		if ( parent.getSchoolID() != null || 
+//    			 profile.getDwoProfileRights().contains(LIMITED))
+//    			return null;
+
+// Verify context: profile matches...  		
+    		if (profile.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile)))
     			return parent.buildDomCourseStudent();
     	} catch (Dwo2RestException e) {
     		throw e;
     	} catch (Exception e) {
-    		LOG.log(Level.WARNING, "getCourses", e);
+    		LOG.log(Level.WARNING, "getCourse", e);
     		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the module.");	
     	}
     	return null;
