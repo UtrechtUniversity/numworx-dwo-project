@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -22,11 +23,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
-import nl.uu.fi.dwo.rest.entities.RestTeacher;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.osgi.util.promise.Promise;
@@ -153,16 +154,16 @@ public class SecuredTeacherSchoolClassManager {
         service.submitTeacherToSchoolClass(restData, new Callback<Boolean>(callBack));
     }
 
-    public Promise<Boolean> removeTeacherFromSchoolClass(DomTeacher teacher) {
-        RestTeacher restData = new RestTeacher();
+    public Promise<Boolean> removeTeacherFromSchoolClass(DomRemoveTeacherFromSchoolClass data) {
+        RestRemoveTeacherFromSchoolClass restData = new RestRemoveTeacherFromSchoolClass();
         restData.setRestContext(new DomContext());
-        restData.setDomTeacher(teacher);
+        restData.setDomRemoveTeacherFromSchoolClass(data);
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.removeTeacherFromSchoolClass(restData, defer);
         return defer.getPromise();
     }
 
-    private void removeTeacherFromSchoolClass(RestTeacher restData, AsyncCallback<Boolean> callBack) {
+    private void removeTeacherFromSchoolClass(RestRemoveTeacherFromSchoolClass restData, AsyncCallback<Boolean> callBack) {
         service.removeTeacherFromSchoolClass(restData, new Callback<Boolean>(callBack));
     }
 
