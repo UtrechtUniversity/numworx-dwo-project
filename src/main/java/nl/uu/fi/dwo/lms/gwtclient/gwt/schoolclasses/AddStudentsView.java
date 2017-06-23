@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextInputCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
@@ -25,6 +26,7 @@ import com.google.gwt.view.client.ListDataProvider;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -74,38 +76,50 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
 //    return reader.readAsText(files[0]);
 //}-*/;
     private AddStudentsPresenter addStudentsPresenter;
-    private AddStudentsPresenter.StudentItem selected;
     private ListDataProvider<AddStudentsPresenter.StudentItem> dataProvider = new ListDataProvider<AddStudentsPresenter.StudentItem>();
     private TextInputCell cell;
 
     public class DwoInputCell extends TextInputCell {
-        public DwoInputCell() {
-//            super("click", "keydown");
-        }
-
-        @Override
-        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
-            if (value != null) {
-                sb.appendEscaped(value);
-            }
-        }
-
-        @Override
-        public void finishEditing(Element parent,java.lang.String value,java.lang.Object key,ValueUpdater<java.lang.String> valueUpdater){
-//            if(key.)
-        }
-        
-        @Override
-        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-            if (value == null) {
-                return;
-            }
-            super.onBrowserEvent(context, parent, value, event, valueUpdater);
-            if ("click".equals(event.getType())) {
-//                LOG.log(Level.INFO, "key "+context.getKey());
-//                cellSelected(context.getIndex(), context.getColumn());
-            }
-        }
+//
+//        public DwoInputCell() {
+//            super();
+////           super("click", "keydown");
+//        }
+//
+//        @Override
+//        public Set<String> getConsumedEvents() {
+//            HashSet<String> events = new HashSet<String>();
+//            events.add("click");
+//            events.add("keydown");
+//            return events;
+//        }
+////        @Override
+////        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
+////            if (value != null) {
+////                sb.appendEscaped(value);
+////            }
+////        }
+////
+////        @Override
+////        public void finishEditing(Element parent,java.lang.String value,java.lang.Object key,ValueUpdater<java.lang.String> valueUpdater){
+//////            if(key.)
+////        }
+//
+//        @Override
+//        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+//            LOG.log(Level.INFO, "event type " + event.getString());
+//            if (value == null) {
+//                return;
+//            }
+//            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+//            if ("focus".equals(event.getType())) {
+//                LOG.log(Level.INFO, "event type " + event.getString());
+//                //event.stopPropagation();
+//                //              cellSelected(context.getIndex(), context.getColumn());
+//                //}
+//            }
+//
+//        }
     }
 
     public class ClickCell extends AbstractCell<String> {
@@ -130,8 +144,8 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
             }
             super.onBrowserEvent(context, parent, value, event, valueUpdater);
             if ("click".equals(event.getType())) {
-//                LOG.log(Level.INFO, "key "+context.getKey());
-//                cellSelected(context.getIndex(), context.getColumn());
+                LOG.log(Level.INFO, "key " + context.getKey());
+                cellSelected(context.getIndex(), context.getColumn());
             }
         }
     }
@@ -141,17 +155,6 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
         addStudentsPresenter.setView(this);
         String[] tableHeaders = sp.getTableHeaders();
         dataGrid = new CellTable<String>();
-//        schoolClassListBox = new ValueListBox<SchoolClassItem>(new Renderer<SchoolClassItem>() {
-//
-//            public String render(SchoolClassListBoxItem item) {                
-//                return item.getSchoolclassName();
-//            }
-//
-//            public void render(SchoolClassListBoxItem user, Appendable appendable) throws IOException {
-//                String s = render(user);
-//                appendable.append(s);
-//            }
-//        });
 
         dataProvider.addDataDisplay(dataGrid);
         dataGrid.setSkipRowHoverCheck(true);
@@ -160,7 +163,7 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
         List<AddStudentsPresenter.StudentItem> data = dataProvider.getList();
 
         //givenName
-        Column<AddStudentsPresenter.StudentItem, String> value = new Column<AddStudentsPresenter.StudentItem, String>(cell) {
+        Column<AddStudentsPresenter.StudentItem, String> value = new Column<AddStudentsPresenter.StudentItem, String>(new TextInputCell()) {
             @Override
             public String getValue(AddStudentsPresenter.StudentItem object) {
                 return object.givenName;
@@ -183,11 +186,22 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
                 return -1;
             }
         });
+        value.setFieldUpdater(new FieldUpdater<AddStudentsPresenter.StudentItem, String>() {
+            @Override
+            public void update(int index, AddStudentsPresenter.StudentItem object, String value) {
+                if(object.spare==true){
+                    addStudentsPresenter.addItem(object);
+                }
+                object.givenName=value;
+                // do something when value changes
+            }
+        });
+
         dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.addColumn(value, tableHeaders[0]);
 
         //insertion
-        value = new Column<AddStudentsPresenter.StudentItem, String>(cell) {
+        value = new Column<AddStudentsPresenter.StudentItem, String>(new TextInputCell()) {
             @Override
             public String getValue(AddStudentsPresenter.StudentItem object) {
                 return object.insertion;
@@ -210,11 +224,22 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
                 return -1;
             }
         });
+        value.setFieldUpdater(new FieldUpdater<AddStudentsPresenter.StudentItem, String>() {
+            @Override
+            public void update(int index, AddStudentsPresenter.StudentItem object, String value) {
+                 if(object.spare==true){
+                    addStudentsPresenter.addItem(object);
+                }
+               object.insertion=value;
+                // do something when value changes
+            }
+        });
+        
         dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.addColumn(value, tableHeaders[1]);
 
         //familyName
-        value = new Column<AddStudentsPresenter.StudentItem, String>(cell) {
+        value = new Column<AddStudentsPresenter.StudentItem, String>(new TextInputCell()) {
             @Override
             public String getValue(AddStudentsPresenter.StudentItem object) {
                 return object.familyName;
@@ -237,11 +262,22 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
                 return -1;
             }
         });
+        value.setFieldUpdater(new FieldUpdater<AddStudentsPresenter.StudentItem, String>() {
+            @Override
+            public void update(int index, AddStudentsPresenter.StudentItem object, String value) {
+                if(object.spare==true){
+                    addStudentsPresenter.addItem(object);
+                }
+                object.familyName=value;
+                // do something when value changes
+            }
+        });
+        
         dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.addColumn(value, tableHeaders[2]);
 
         //usercode
-        value = new Column<AddStudentsPresenter.StudentItem, String>(cell) {
+        value = new Column<AddStudentsPresenter.StudentItem, String>(new TextInputCell()) {
             @Override
             public String getValue(AddStudentsPresenter.StudentItem object) {
                 return object.usercode;
@@ -264,30 +300,87 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
                 return -1;
             }
         });
+        value.setFieldUpdater(new FieldUpdater<AddStudentsPresenter.StudentItem, String>() {
+            @Override
+            public void update(int index, AddStudentsPresenter.StudentItem object, String value) {
+                 if(object.spare==true){
+                    addStudentsPresenter.addItem(object);
+                }
+               object.usercode=value;
+                // do something when value changes
+            }
+        });
+        
         dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.addColumn(value, tableHeaders[3]);
 
         //password
-        value = new Column<AddStudentsPresenter.StudentItem, String>(cell) {
+        value = new Column<AddStudentsPresenter.StudentItem, String>(new TextInputCell()) {
             @Override
             public String getValue(AddStudentsPresenter.StudentItem object) {
                 return object.password;
             }
         };
-        value.setSortable(false);
+        value.setFieldUpdater(new FieldUpdater<AddStudentsPresenter.StudentItem, String>() {
+            @Override
+            public void update(int index, AddStudentsPresenter.StudentItem object, String value) {
+                object.password=value;
+                // do something when value changes
+            }
+        });
+            value.setSortable(false);
         dataGrid.addColumn(value, tableHeaders[4]);
 
+    
+        //email
+        value = new Column<AddStudentsPresenter.StudentItem, String>(new TextInputCell()) {
+            @Override
+            public String getValue(AddStudentsPresenter.StudentItem object) {
+                return object.usercode;
+            }
+        };
+        value.setSortable(true);
+        columnSortHandler = new ListHandler<AddStudentsPresenter.StudentItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<AddStudentsPresenter.StudentItem>() {
+            public int compare(AddStudentsPresenter.StudentItem o1, AddStudentsPresenter.StudentItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.usercode.compareTo(o2.usercode) : 1;
+                }
+                return -1;
+            }
+        });
+        value.setFieldUpdater(new FieldUpdater<AddStudentsPresenter.StudentItem, String>() {
+            @Override
+            public void update(int index, AddStudentsPresenter.StudentItem object, String value) {
+                 if(object.spare==true){
+                    addStudentsPresenter.addItem(object);
+                }
+               object.email=value;
+                // do something when value changes
+            }
+        });
+        
+        dataGrid.addColumnSortHandler(columnSortHandler);
+        dataGrid.addColumn(value, tableHeaders[5]);
+        
         //remove
         ClickCell clickCell = new ClickCell();
         Column<AddStudentsPresenter.StudentItem, String> bValue = new Column<AddStudentsPresenter.StudentItem, String>(clickCell) {
             @Override
             public String getValue(AddStudentsPresenter.StudentItem object) {
-                    return "remove";
+                return "remove";
             }
         };
 
         bValue.setSortable(false);
-        dataGrid.addColumn(bValue, tableHeaders[5]);
+        dataGrid.addColumn(bValue, tableHeaders[6]);
 
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);
@@ -303,10 +396,10 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
 //        dataGrid.setSelectionModel(selectionModel);
 //        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 //            public void onSelectionChange(SelectionChangeEvent event) {
-//                String success = selectionModel.getSelectedObject();
-//                LOG.log(Level.INFO, "selection key: " + selectionModel.getKey(success));
-//                if (success != null) {
-//                    Window.alert("You success: " + success + ".");
+//                String spare = selectionModel.getSelectedObject();
+//                LOG.log(Level.INFO, "selection key: " + selectionModel.getKey(spare));
+//                if (spare != null) {
+//                    Window.alert("You spare: " + spare + ".");
 //                }
 //            }
 //        });
@@ -326,7 +419,7 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == backBtn) {
-            addStudentsPresenter.goBackToSchoolClasses();
+            addStudentsPresenter.goBackToStudentsInSchoolclass();
         } else if (event.getSource() == addBtn) {
             addStudentsPresenter.addNewStudents();
         } else if (event.getSource() == importBtn) {
@@ -339,10 +432,26 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
         //    LOG.log(Level.INFO, "Listbox event:" + event.getSource().toString());
     }
 
-    public void updateView(Map<String, AddStudentsPresenter.StudentItem> data) {
-        dataProvider.getList().clear();
-        dataProvider.getList().addAll(data.values());
+    public void updateView(List<AddStudentsPresenter.StudentItem> data) {
+        dataProvider.setList(data);
         dataProvider.refresh();
+        dataGrid.redraw();
+    }
+
+    public void refreshView(){
+        dataProvider.refresh();
+         dataGrid.redraw();        
+    }
+    
+        private void cellSelected(int row, AddStudentsPresenter.StudentItem item) {
+        LOG.log(Level.FINE, "Updated row " + row + " " + item.usercode);
+    }
+
+    
+    private void cellSelected(int row, int column) {
+        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).usercode + " " + dataGrid.getHeader(column).getValue());
+        dataGrid.getHeader(column);
+        addStudentsPresenter.selectItem((AddStudentsPresenter.StudentItem) dataProvider.getList().get(row), column);
     }
 
 //        https://svn.science.uu.nl/viewvc/project.fisme.java/StatistiekGWT/trunk/src/fi/statistiekgwt/client/StatTable.java?view=markup
