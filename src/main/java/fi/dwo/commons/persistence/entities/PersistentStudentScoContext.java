@@ -183,7 +183,15 @@ public class PersistentStudentScoContext implements Serializable {
         this.location = location;
     }
 
-    @Override
+    public PersistentHasRolePK getPersistentHasRolePK() {
+		return persistentHasRolePK;
+	}
+
+	public void setPersistentHasRolePK(PersistentHasRolePK persistentHasRolePK) {
+		this.persistentHasRolePK = persistentHasRolePK;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (studentSco != null ? studentSco.hashCode() : 0);
