@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Logger;
 
@@ -30,7 +31,37 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
     FlexTable flexTable;
     @UiField
     Button backBtn;
+    @UiField
+    Frame frame; // Hier komt /dwo/apps/player.html?locale=nl#cmi.launch_data:scoid
 
+    private native static void setAPI(ScoResultsView view) /*-{
+    	var api = {
+    			"LMSGetValue" : function(key) {
+    				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::getValue(Ljava/lang/String;)(key)
+    			},
+    			"LMSSetValue" : function(key, value) {
+    				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
+    			},
+    			"GetValue" : function(key) {
+    				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::getValue(Ljava/lang/String;)(key)
+    			},
+    			"SetValue" : function(key, value) {
+    				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
+    			},
+    // TODO more to follow...			
+    		};
+    	$wnd.API = api;
+    	$wnd.API_1484_11 = api;
+    }-*/;
+    
+    private String getValue(String key) {
+    	return "";
+    }
+    
+    private String setValue(String key, String value) {
+    	return "":
+    }
+    
     public class ResultData {
 
         int width;
