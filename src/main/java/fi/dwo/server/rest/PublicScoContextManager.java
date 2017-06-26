@@ -55,6 +55,9 @@ public class PublicScoContextManager {
 		return list.stream().map((s)->s.buildDomScoContext()).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
     }
 
+    @PUT
+    @Path("/get")
+    @Produces({"application/json"})
     public DomScoContext get(RestScoContext rest) throws Dwo2Exception {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();

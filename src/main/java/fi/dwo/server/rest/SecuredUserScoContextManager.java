@@ -103,6 +103,9 @@ public class SecuredUserScoContextManager {
      * @return a ScoContext
      * @throws Dwo2Exception
      */   
+    @PUT
+    @Path("/get")
+    @Produces({"application/json"})
     public DomScoContext get(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();

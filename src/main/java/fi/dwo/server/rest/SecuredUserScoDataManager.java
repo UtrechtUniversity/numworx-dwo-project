@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -296,6 +298,11 @@ public class SecuredUserScoDataManager {
 		Scorm2Xml xml = null;
 		if (list.isEmpty()) {
 			pssc = new PersistentStudentScoContext();
+			long now = System.currentTimeMillis();
+			pssc.setCreateDate(new Date(now));
+			pssc.setCreateTime(new Time(now));
+			pssc.setScoID(scoContext.getScoID());
+			pssc.setPersistentHasRolePK(hasRoleKey);
 			StudentScoContextManager.create(pssc);
 		} else {
 			pssc = list.get(0);
@@ -318,6 +325,8 @@ public class SecuredUserScoDataManager {
 						pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
 						if(pssd == null) {
 							pssd = new PersistentStudentScoData(pssc.getStudentSco());
+							pssd.setSuspendData("");
+							pssd.setCocd("");
 							StudentScoDataManager.create(pssd);
 						}
 					}
@@ -338,6 +347,8 @@ public class SecuredUserScoDataManager {
 					pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
 					if(pssd == null) {
 						pssd = new PersistentStudentScoData(pssc.getStudentSco(), value);
+						pssd.setSuspendData(value);
+						pssd.setCocd("");
 						StudentScoDataManager.create(pssd);
 					} else {
 						pssd.setSuspendData(value);
