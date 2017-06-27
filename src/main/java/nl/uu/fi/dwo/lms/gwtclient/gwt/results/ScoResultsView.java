@@ -100,64 +100,70 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         }
     }
 
-    public void updateView(int height, int width, String[][] data) {
-//        cellTable.removeAllRows();
-//        int i = height;
-//        int j = width;
-//        // column labels
-//        HTML html;
-////= new HTML(data[0][0]);
-////        html.setStyleName("flexTableHeader");
-////        cellTable.setWidget(0, 0, html);
-////
-//        for (i = 0; i < width; i++) {
-//            html = new HTML("<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">"+data[0][i]+"<div>");
-//            cellTable.setWidget(0, i, html);
-//        }
-// //       cellTable.getRowFormatter().getElement(0).setClassName("flexTableHeader");         
-////
-////        // row labels
-////        for (i = 0; i < height; i++) {
-////            html = new HTML(data[i][0]);
-////            html.setStyleName("flexTableHeader");
-////            cellTable.setWidget(i, 0, html);
-////        }
-//
-//        for (j = 0; j < width; j++) {
-//            for (i = 1; i < height; i++) {
-//                html = new HTML(data[i][j]);
-////                html.setStyleName("flexTableCell");
-//                cellTable.setWidget(i, j, html);
-//            }
-//        }
-//
-//        cellTable.addClickHandler(new ClickHandler() {
-//            @Override
-//            public void onClick(ClickEvent event) {
-//                if (cellTable.getCellForEvent(event) != null) {
-//                    int curSchoolIndex = schoolIndex;
-//                    schoolIndex = cellTable.getCellForEvent(event).getRowIndex() - 1;
-//                    scoResultsPresenter.selectRow(schoolIndex);
-//                    if ((schoolIndex + 1) % 2 == 0) {
-//                        cellTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableOddRow");
-//                    } else {
-//                        cellTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
-//                    }
-//                    cellTable.getRowFormatter().getElement(schoolIndex + 1).setClassName("flexTableSelectedBackground");
-//                    if (curSchoolIndex != schoolIndex) {
-//                        cellTable.getRowFormatter().getElement(curSchoolIndex + 1).removeClassName("flexTableSelectedBackground");
-//                        if ((schoolIndex + 1) % 2 == 0) {
-//                            cellTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableOddRow");
-//                        } else {
-//                            cellTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
-//                        }
-//                    }
-//                    LOG.log(Level.INFO, "Clicked school with index" + schoolIndex);
-//                }
-//            }
-//        });
-//
-//        cellTable.setVisible(true);
+    public void updateView() {
+    	
+    	  String url = "/dwo/apps/player.html#cmi_launch_data:96767";
+    	  frame.setUrl(url);
     }
+
+	public void updateView(int height, int width, String[][] data) {
+//      cellTable.removeAllRows();
+//      int i = height;
+//      int j = width;
+//      // column labels
+//      HTML html;
+////= new HTML(data[0][0]);
+////      html.setStyleName("flexTableHeader");
+////      cellTable.setWidget(0, 0, html);
+////
+//      for (i = 0; i < width; i++) {
+//          html = new HTML("<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">"+data[0][i]+"<div>");
+//          cellTable.setWidget(0, i, html);
+//      }
+////       cellTable.getRowFormatter().getElement(0).setClassName("flexTableHeader");         
+////
+////      // row labels
+////      for (i = 0; i < height; i++) {
+////          html = new HTML(data[i][0]);
+////          html.setStyleName("flexTableHeader");
+////          cellTable.setWidget(i, 0, html);
+////      }
+//
+//      for (j = 0; j < width; j++) {
+//          for (i = 1; i < height; i++) {
+//              html = new HTML(data[i][j]);
+////              html.setStyleName("flexTableCell");
+//              cellTable.setWidget(i, j, html);
+//          }
+//      }
+//
+//      cellTable.addClickHandler(new ClickHandler() {
+//          @Override
+//          public void onClick(ClickEvent event) {
+//              if (cellTable.getCellForEvent(event) != null) {
+//                  int curSchoolIndex = schoolIndex;
+//                  schoolIndex = cellTable.getCellForEvent(event).getRowIndex() - 1;
+//                  scoResultsPresenter.selectRow(schoolIndex);
+//                  if ((schoolIndex + 1) % 2 == 0) {
+//                      cellTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableOddRow");
+//                  } else {
+//                      cellTable.getCellFormatter().removeStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
+//                  }
+//                  cellTable.getRowFormatter().getElement(schoolIndex + 1).setClassName("flexTableSelectedBackground");
+//                  if (curSchoolIndex != schoolIndex) {
+//                      cellTable.getRowFormatter().getElement(curSchoolIndex + 1).removeClassName("flexTableSelectedBackground");
+//                      if ((schoolIndex + 1) % 2 == 0) {
+//                          cellTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableOddRow");
+//                      } else {
+//                          cellTable.getCellFormatter().addStyleName(schoolIndex + 1, 0, "flexTableEvenRow");
+//                      }
+//                  }
+//                  LOG.log(Level.INFO, "Clicked school with index" + schoolIndex);
+//              }
+//          }
+//      });
+//
+//      cellTable.setVisible(true);
+	}
 
 }

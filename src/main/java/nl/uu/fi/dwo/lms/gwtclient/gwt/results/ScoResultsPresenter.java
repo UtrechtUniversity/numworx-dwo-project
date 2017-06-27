@@ -52,6 +52,7 @@ public class ScoResultsPresenter {
         void clear();
         void init();
         void updateView(int height, int width, String[][] data);
+        void updateView();
     }
 
     public ScoResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {

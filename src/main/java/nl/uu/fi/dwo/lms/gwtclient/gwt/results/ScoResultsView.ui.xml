@@ -1,5 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+			 xmlns:c="urn:ui:com.google.gwt.user.cellview.client"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" >
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
     <g:FlowPanel>
@@ -9,6 +10,6 @@
             <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
         </g:FlowPanel>
         <!-- add some wiskopdr stuff here -->
-        <g:Frame ui:field="frame"></g:Frame>
+        <g:Frame ui:field="frame" styleName="{dwoStyle.frame}"></g:Frame>
     </g:FlowPanel>
 </ui:UiBinder> 

@@ -452,3 +452,10 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
 .horizontalFloat{
     display: inline-block;
 }
+
+
+.frame {
+	
+	width: 100%;
+	height: 700px;
+}
