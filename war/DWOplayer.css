@@ -378,7 +378,8 @@ div.listItem-dwo-separator {
 
 .gwt-Tree .gwt-TreeItem-selected {
 	text-decoration: underline;
-	color: oldlace;
+	font-weight: bold;
+	
 }
 
 .textEditor {
