@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 
 /**
  * GWT Panel that handles switching the role.
@@ -192,7 +193,7 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
                 if(object.spare==true){
                     addStudentsPresenter.addItem(object);
                 }
-                object.givenName=value;
+                object.givenName=value;                
                 // do something when value changes
             }
         });
@@ -421,6 +422,8 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
         if (event.getSource() == backBtn) {
             addStudentsPresenter.goBackToStudentsInSchoolclass();
         } else if (event.getSource() == addBtn) {
+            //TODO validate input.
+            //SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
             addStudentsPresenter.addNewStudents();
         } else if (event.getSource() == importBtn) {
             addStudentsPresenter.loadData();
