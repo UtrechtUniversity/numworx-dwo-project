@@ -97,7 +97,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int[] aantalOpdrachten;
 	private String[] activiteitNamen;
 	private int maxAantalOpdrachten = 50;
-	private int maxAantalOnBar = 10;
+	private int maxAantalOnBar = 15;
 	private int currentShift = 0;
 
 	private boolean[][] buttonsEnabled;
