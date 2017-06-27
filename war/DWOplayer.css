@@ -62,6 +62,10 @@ div.kbd-Button-noordhoff-numeric {
 	color: white
 }
 
+.dwo .keyboard-container .keyboard {
+	background-color: transparent;
+}
+
 
 div.apply {background:#eee; }
 
@@ -473,15 +477,19 @@ div.listItem-dwo-separator {
 }
 
 .UserBar {
-	background: initial !important;
-	border: initial !important;
+	background: initial !important; /* not IE */
+	background: inherit !important; /* IE */
+	border: initial !important; /* not IE */
+	border-style: none !important; /* IE */
 }
 
 .UserBar .UserItem.gwt-MenuItem {
 	color: inherit;
+	font-size: 9pt;
 }
 .UserBar .UserItem.gwt-MenuItem-selected {
-	background: initial !important;	
+	background: initial !important; /* not IE */
+	background: inherit !important; 
 }
 
 .correctie {

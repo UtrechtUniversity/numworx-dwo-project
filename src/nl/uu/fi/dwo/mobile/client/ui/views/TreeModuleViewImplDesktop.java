@@ -548,7 +548,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 	private static final TreeItemTemplate TEMPLATE = GWT.create(TreeItemTemplate.class);
 	
 	public interface TreeItemTemplate extends SafeHtmlTemplates {
-		@SafeHtmlTemplates.Template("<div class=''><i class='fa {1} fa-1x treeItem-dwo-icon'></i> <span>{0}</span></div>")
+		@SafeHtmlTemplates.Template("<div class=''><span>{0}</span></div>")
 		SafeHtml content(String text, String type);	
 	}
 	

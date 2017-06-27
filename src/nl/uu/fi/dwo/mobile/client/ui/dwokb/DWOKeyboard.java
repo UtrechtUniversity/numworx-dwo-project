@@ -36,6 +36,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	FlowPanel staticPanel;
 	
 	public DWOKeyboard() {
+		setStylePrimaryName("dwo");
 		OsDetection detection = MGWT.getOsDetection();
 		if(detection.isDesktop()
 				//&& false
