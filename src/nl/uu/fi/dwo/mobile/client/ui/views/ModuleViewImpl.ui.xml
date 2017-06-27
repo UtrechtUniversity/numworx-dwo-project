@@ -16,6 +16,7 @@
 	.content {
 		position: relative;
 		width: 100%;
+		color: #314770;
 	}
 	
 	</ui:style>

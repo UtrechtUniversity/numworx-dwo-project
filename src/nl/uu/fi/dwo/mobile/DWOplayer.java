@@ -229,7 +229,7 @@ public class DWOplayer implements EntryPoint
 	 */
 	public void start()
 	{
-		Logger.getLogger("DWOplayer").log(Level.WARNING, "Version " + BUILD.version + ", build " + BUILD.buildNumber);
+		//Logger.getLogger("DWOplayer").log(Level.WARNING, "Version " + BUILD.version + ", build " + BUILD.buildNumber);
 		deferredProfile = new Deferred<DomDwoProfileFull>();
 		dwoProfile = deferredProfile.getPromise();
 		setupResources();

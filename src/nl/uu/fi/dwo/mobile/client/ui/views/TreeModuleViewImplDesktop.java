@@ -84,6 +84,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 
 	@UiField HeaderPanel  navigationHeaderPanel;
 	@UiField Label navigationLabel;
+	@UiField Label moduleHeaderLabel;
 	@UiField HeaderButton navigationBackButton;
 	@UiField LayoutPanel  navigationPanel;
 	
@@ -212,12 +213,12 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 					module.setDescription(root); // Uit het profiel halen!
 					if (item == schoolMap) {
 						addChildren(schoolModel);
-						navigationLabel.setText(SCHOOL_MODULES);
+						moduleHeaderLabel.setText(SCHOOL_MODULES);
 						tree.setSelectedItem(schoolMap, false);
 						schoolMap.setState(true, false);
 					} else if (item == standardMap) {
 						addChildren(standardModel);
-						navigationLabel.setText(root.getName());
+						moduleHeaderLabel.setText(root.getName());
 						tree.setSelectedItem(standardMap, false);
 						standardMap.setState(true, false);
 					}
@@ -304,8 +305,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			viewModuleViewImpl.setUnitId(id);
 			final SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			
-			//
-			moduleHeaderPanel.setCenter(item.getName());
+			moduleHeaderLabel.setText(item.getName());
 			
 			DWOplayer.api.setScoID(id);
 			AsyncCallback<Void> callback = new AsyncCallback<Void>() {
@@ -381,12 +381,12 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 		// TODO iets met tree.ensureSelectedItemVisible() na setselectedItem(item)
 		if (item != null)
 		{
-			navigationLabel.setText(item.getName());
-			if ( item.isFromSchool() ) // set header of module..
-				moduleHeaderPanel.setCenter(Text.constants.schoolModules());
+			moduleHeaderLabel.setText(item.getName());
+			/*if ( item.isFromSchool() ) // set header of module..
+				moduleHeaderLabel.setText(Text.constants.schoolModules());
 			else
-				moduleHeaderPanel.setCenter(Text.constants.standaardModules());
-			
+				moduleHeaderLabel.setText(Text.constants.standaardModules());
+			*/
 			selected = item;
 			module.setDescription(item);
 			if(item.getType() == SelectModuleItem.Type.FOLDER)
@@ -437,7 +437,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 		if (navigationPanel.getAbsoluteLeft() == 0) {
 			slideNavigationOut();
 				
-		} 	else if (navigationPanel.getAbsoluteLeft() == -350){
+		} 	else if (navigationPanel.getAbsoluteLeft() == -300){
 				
 			slideNavigationIn();	
 		}
@@ -446,7 +446,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 	
 	private void slideNavigationOut() {
 		if (navigationPanel.getAbsoluteLeft() == -0) {
-			slideNavigationToLeftAnimation anim= new slideNavigationToLeftAnimation(-350);
+			slideNavigationToLeftAnimation anim= new slideNavigationToLeftAnimation(-300);
 			anim.run(animation_duration);
 			this.moduleBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-chevron-right' ></span>");	
 	
@@ -455,8 +455,8 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 	
 	private void slideNavigationIn() {
 		
-		if (navigationPanel.getAbsoluteLeft() == -350) {
-			slideNavigationToLeftAnimation anim = new slideNavigationToLeftAnimation(350);
+		if (navigationPanel.getAbsoluteLeft() == -300) {
+			slideNavigationToLeftAnimation anim = new slideNavigationToLeftAnimation(300);
 			anim.run(animation_duration);	
 			this.moduleBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-chevron-left' ></span>");
 		}

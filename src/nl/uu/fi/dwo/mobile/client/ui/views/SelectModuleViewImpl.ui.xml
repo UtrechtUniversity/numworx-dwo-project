@@ -23,6 +23,7 @@
 		right: 0px;
 		top: 0px;
 		left: 0px;
+		background-color: #314770;
 	}
 	.content {
 		position: relative;

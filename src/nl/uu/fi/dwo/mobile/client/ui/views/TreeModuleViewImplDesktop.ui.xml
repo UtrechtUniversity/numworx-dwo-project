@@ -11,17 +11,17 @@
 		}
 
 		.example_area {
-			background-color: #eee;
+			background-color: #F1F0F0;
 		}
 
 		.split_left_area {
 			
-			width: 350px !important;
+			width: 300px !important;
 			
 			border-right:1px solid  #000;
 			float: left;
-			background-color: #b4d1e8;
-			
+			background-color: #F1F0F0;
+			color: #314770;
 
 			position:absolute;
 			left:0px;
@@ -35,34 +35,77 @@
 				min-width: 260px;
 				margin-left: -100px;
 				margin-top: 8px;
+				color: #758296;
+		}
 		
-		}
-
-		.split_right_area {
-				width:auto;
-				height:auto;
-
-	
-				position:absolute;
-				
-				left:350px;	
-				top: 0px;
-				right:0px;
-				bottom:0px;
-		}
-		.tree_area {
+		.navigate_area_title {
+			color: #314770;
+			font-size: 18px;
 			position: absolute !important; 
 			top:    41px;
 			bottom: 0px;
 			left:   0px;
-			width: 350px;
+			right:  0px;
+			margin-left:22px;
+			margin-top: 30px;
 		}
+		
+		.module_center_header {
+				width: 360px;
+				min-width: 360px;
+				margin-left:-300px;
+				margin-top: 8px;
+				color: #758296;
+		}
+
+		.navigation_header_panel {
+				background-color: #314770;
+				color: #758296;
+		}
+		
+		.module_header_panel {
+				width: auto;
+				background-color: #314770;
+				color: #758296;
+		}
+		
+		.split_right_area {
+				width:auto;
+				height:auto;
+				color: #758296;
+				position:absolute;
+				
+				left:300px;	
+				top: 0px;
+				right:0px;
+				bottom:0px;
+				background-color: #D1E3F3;
+		}
+		.tree_area {
+			position: absolute !important; 
+			top:    101px;
+			bottom: 0px;
+			left:   0px;
+			width: 300px;
+		}
+		
+		.decorate_area_module {
+			position: absolute !important; 
+			top:    40px;
+			bottom: 0px;
+			left:   0px;
+			right:  0px;
+			background-image: url(images/resources/gradient.png);
+		}
+		
 		.container_area {
 			position: absolute !important; 
 			top:    41px;
 			bottom: 0px;
 			left:   0px;
 			right:  0px;
+			color: #758296;
+			
 		}	
 	</ui:style>
 	   <mgwt:LayoutPanel height="100%" width="100%" >
@@ -70,34 +113,40 @@
 		<!-- Navigation Area -->
 		<mgwt:LayoutPanel  ui:field="navigationPanel" addStyleNames="{style.split_left_area}" height="100%" >
 		
-			<mgwt:HeaderPanel ui:field="navigationHeaderPanel" >
+			<mgwt:HeaderPanel ui:field="navigationHeaderPanel" addStyleNames="{style.navigation_header_panel}">
 		      	<mgwt:left>
 		    		<mgwt:HeaderButton ui:field="navigationBackButton" backButton="true" >Logout</mgwt:HeaderButton>
 		    	</mgwt:left>
 				<mgwt:center>
 					 <g:HTMLPanel addStyleNames="{style.navigation_center_header}">
-							<g:Label ui:field="navigationLabel">Modules</g:Label>
+							<g:Label ui:field="navigationLabel"></g:Label>
 					</g:HTMLPanel>
 				</mgwt:center>
 			</mgwt:HeaderPanel>
+			<g:Label addStyleNames="{style.navigate_area_title}">Bibliotheek</g:Label>
   			<g:ScrollPanel alwaysShowScrollBars="true" addStyleNames="{style.tree_area}" >
 				<g:Tree ui:field="tree"></g:Tree>
 			</g:ScrollPanel>
 			
 		</mgwt:LayoutPanel>
 		
+			
 		
 		<!-- Module Area -->
 		<mgwt:LayoutPanel  ui:field="modulePanel" addStyleNames="{style.split_right_area}" height="100%" >
-			<mgwt:HeaderPanel ui:field="moduleHeaderPanel" >
+			<mgwt:HeaderPanel ui:field="moduleHeaderPanel" addStyleNames="{style.module_header_panel}">
 				<mgwt:left>
 			   		<mgwt:HeaderButton ui:field="moduleBackButton">	</mgwt:HeaderButton>
 			    </mgwt:left>
-			    <mgwt:center>
-					<g:Label>Modules</g:Label>
-				</mgwt:center>
+			  	<mgwt:center>
+					 		<g:Label ui:field="moduleHeaderLabel" addStyleNames="{style.module_center_header}"></g:Label>
+					</mgwt:center>  
+				
 			</mgwt:HeaderPanel>
-			<g:SimplePanel ui:field="container" addStyleNames="{style.container_area}"></g:SimplePanel>
+			<g:SimplePanel ui:field="container" addStyleNames="{style.container_area}">
+			 <g:SimplePanel ui:field="containerdecorator" addStyleNames="{style.decorate_area_module}"></g:SimplePanel>
+			
+			</g:SimplePanel>
 	    </mgwt:LayoutPanel>
 	 </mgwt:LayoutPanel>
 

@@ -1502,6 +1502,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		mainPanel.setHeight("100%");
 		mainPanel.setWidth("100%");
+		mainPanel.getElement().getStyle().setBackgroundColor("#FFFFFF");
 		//fp.setHeight("428px");
 		//fp.setWidth("886px");
 		sb = DWOplayer.PARAMETERS.getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();

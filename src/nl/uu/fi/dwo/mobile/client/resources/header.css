@@ -224,7 +224,7 @@
 	\-webkit-mask-image: literal('-webkit-gradient(linear, left top, right bottom, from(#000000), color-stop(0.5, #000000), color-stop(0.5, transparent), to(transparent) )');
 }
 
-.mgwt-DropDownMenu .mgwt-HeaderPanel {
+.mgwt-DropDownMenu {
 	padding: 0px 10px;
 	height: 40px;
 	\-webkit-border-top-left-radius: 8px;
@@ -310,7 +310,7 @@
 
 .mgwt-HeaderPanel {
 	height: 40px;
-	background: #FFFFFF;
+	background: #2A4771;
 	border-bottom: 1px solid #797F90;
 }
 
