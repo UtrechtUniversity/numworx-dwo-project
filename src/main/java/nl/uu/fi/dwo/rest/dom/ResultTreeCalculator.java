@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -143,7 +144,7 @@ public class ResultTreeCalculator {
             DomResultCourse aResultCourse = courseLeaves.get(resultCourse.getCourse().getId());
             if (aResultCourse != null) {
                 //aResultCourse.collectActivities(activityMap);
-                activityMap=aResultCourse.getChildren();
+                activityMap = aResultCourse.getChildren();
                 break;
             }
         }
@@ -238,6 +239,63 @@ public class ResultTreeCalculator {
                         scoResult.setStudentScoCount(calc.getStudentScoCount());
                     }
                     result.setMarks(i, j, scoResult);
+                }
+            }
+        } else {
+            result = new DomResultPlotMatrix(students, new DomResultScoContext[0]);
+        }
+        return result;
+    }
+
+    /**
+     * Scores in a schoolclass per student per activity of a course. Every sco
+     * that has no work has score 0.0.
+     *
+     * @param tree
+     * @param resultSco An object in the tree.
+     * @return
+     */
+    public static DomResultPlotMatrix GetScoreOfActivitiesByStudentsInSco(DomResultTree tree, DomResultScoContext resultSco) {
+        DomResultPlotMatrix result = null;
+
+        DomResultSchoolClass resultClass = resultSco.getAncestralSchoolClass();
+        if (resultClass == null) {
+            return null;
+        }
+
+        DomResultSchoolClass studentClass;
+        studentClass = tree.getStudentTree().getChildren().get(resultClass.getSchoolClass().getId());
+
+        //collect students
+        DomStudent[] domStudents = (DomStudent[]) studentClass.getChildren().values().toArray(new DomStudent[0]);
+        DomResultStudent[] students = new DomResultStudent[domStudents.length];
+        for (int i = 0; i < domStudents.length; i++) {
+            students[i] = new DomResultStudent(domStudents[i]);
+        }
+
+        //getCourseLeaves in class
+//        Map<PersistenceId, DomResultStudentSco> studentScoMap = resultSco.getChildren();
+        //collect StudentScos
+        //collect activities
+        DomResultStudentSco[] studentScos;
+
+        if (students != null && students.length > 0) {
+            DomResultScoContext[] scoContexts = new DomResultScoContext[1];
+            scoContexts[0] = resultSco;
+            //create plot matrix
+            result = new DomResultPlotMatrix(students, scoContexts);
+
+            //collect studentSco's into map with a students userid as index.
+            Map<PersistenceId, DomResultStudentSco> studentScoMap = new HashMap<PersistenceId, DomResultStudentSco>(resultSco.getChildren().size());
+            for(DomResultStudentSco item: resultSco.getChildren().values()){
+                studentScoMap.put(item.getStudentSco().getUserID(), item);
+            }
+            
+            for (int i = 0; i < students.length; i++) {
+                if (studentScoMap.containsKey(students[i].getStudent().getId())) {
+                    result.setMarks(i, 0, studentScoMap.get(students[i].getStudent().getId()));
+                } else {
+                    result.setMarks(i, 0, null);
                 }
             }
         } else {

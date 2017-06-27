@@ -393,5 +393,18 @@ public abstract class DomResultScore<T extends DomResultScore> {
         }
 
     }
+    
+    public DomResultSchoolClass getAncestralSchoolClass(){
+        if(this instanceof DomResultSchoolClass){
+            return (DomResultSchoolClass) this;
+        }else{
+            if(this.parent!=null){
+                return this.parent.getAncestralSchoolClass();                
+            }else{
+                return null;
+            }
+        }
+        
+    }
 
 }
