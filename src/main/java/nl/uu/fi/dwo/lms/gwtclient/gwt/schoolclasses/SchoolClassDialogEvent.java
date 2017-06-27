@@ -47,13 +47,21 @@ public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandl
         EditStudent,
         EditStudents,
         EditTeachers,
-        EditModules
+        EditModules,
+        LoadStudentFile
     }
 
     public static Type<SchoolClassDialogEventHandler> TYPE = new Type<SchoolClassDialogEventHandler>();
     public static Dialogs eventValue;
 
+    public SchoolClassDialogEvent(Dialogs aState) {
+        schoolClass=null;
+        student = null;
+        this.setEventValue(aState);
+    }
+    
     public SchoolClassDialogEvent(Dialogs aState, DomSchoolClass aSchoolClass) {
+        student = null;
         schoolClass = aSchoolClass;
         this.setEventValue(aState);
     }

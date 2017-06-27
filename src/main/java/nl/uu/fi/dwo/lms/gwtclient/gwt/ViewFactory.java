@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
 
@@ -33,4 +34,5 @@ public interface ViewFactory {
     public EditStudentPresenter.Display getEditStudentView();
     public AddStudentsPresenter.Display getAddStudentsView();
     public MsgDialogPresenter.Display getMsgDialogView();
+    public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
 }

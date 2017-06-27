@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.logging.Level;
@@ -50,7 +51,8 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
 
     @Override
     public void onDialogEvent(SchoolClassDialogEvent dialogEvent) {
-//        if (dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.ImportStudents) {
+        if (dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.LoadStudentFile) {
+            view.showDialog();
 //            schoolClass = (DomSchoolClass) dialogEvent.getSchoolClass();
 //            Promise<DomSchoolClassFull> promise;
 //            promise = manager.getFullSchoolClass(schoolClass);
@@ -78,7 +80,7 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
 //                }
 //            }
 //            );
-//        }
+        }
     }
 
     public void init() {
@@ -133,7 +135,7 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
     /**
      * Go back to the schoolclasses presentation.
      */
-    public void Back() {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
-    }
+//    public void Cancel() {
+//        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS));
+//    }
 }

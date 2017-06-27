@@ -85,8 +85,8 @@ public class AddStudentsPresenter {
 
     public void init(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
-        studentItems = new ArrayList<StudentItem>(10);
-        studentItems.add(new StudentItem("", "", "", "", ""));
+        studentItems = new ArrayList<AddStudentsPresenter.StudentItem>(10);
+        studentItems.add(new AddStudentsPresenter.StudentItem("", "", "", "", ""));
         view.updateView(studentItems);
     }
 
@@ -109,11 +109,11 @@ public class AddStudentsPresenter {
      * @param classKey
      */
     public void addNewStudents() {
-        for (StudentItem item : studentItems) {
+        for (AddStudentsPresenter.StudentItem item : studentItems) {
             if (item.spare == false) {
                 LOG.log(Level.INFO, "Adding  " + item.usercode + " to targetSchoolClass " + schoolClass.getSchoolClassName());
                 Promise<Boolean> promise;
-                final StudentItem fItem = item;
+                final AddStudentsPresenter.StudentItem fItem = item;
 
                 DomSingleSchoolStudent student = new DomSingleSchoolStudent();
                 student.setGivenName(item.givenName);
@@ -162,17 +162,17 @@ public class AddStudentsPresenter {
         }
     }
 
-    public void addItem(StudentItem item) {
+    public void addItem(AddStudentsPresenter.StudentItem item) {
         studentItems.get(studentItems.size() - 1).spare = false;
         studentItems.add(new StudentItem("", "", "", "", ""));
         view.refreshView();
     }
 
     public void loadData() {
-        //call dialog for parsing data
+        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.LoadStudentFile));
     }
 
-    void selectItem(StudentItem studentItem, int column) {
+    void selectItem(AddStudentsPresenter.StudentItem studentItem, int column) {
         if (column == 6) {
             if (studentItem.spare == false) {
                 studentItems.remove(studentItem);

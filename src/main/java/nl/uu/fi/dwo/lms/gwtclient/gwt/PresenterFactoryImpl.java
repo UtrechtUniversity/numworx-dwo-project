@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
 
@@ -37,6 +38,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final EditStudentPresenter editStudentPresenter;
     private final AddStudentsPresenter addStudentsPresenter;
     private final MsgDialogPresenter msgDialogPresenter;
+    private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
 
     public PresenterFactoryImpl(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
@@ -55,6 +57,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
         editStudentPresenter = new EditStudentPresenter(eventBus, dwoGlobalVars);
         addStudentsPresenter = new AddStudentsPresenter(eventBus, dwoGlobalVars);
         msgDialogPresenter = new MsgDialogPresenter(eventBus, dwoGlobalVars);
+        fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
     }
 
     @Override
@@ -159,5 +162,12 @@ public class PresenterFactoryImpl implements PresenterFactory {
      */
     public AddStudentsPresenter getAddStudentsPresenter() {
         return addStudentsPresenter;
+    }
+
+    /**
+     * @return the fileUploadStudentsPresenter
+     */
+    public FileUploadStudentsPresenter getFileUploadStudentsPresenter() {
+        return fileUploadStudentsPresenter;
     }
 }

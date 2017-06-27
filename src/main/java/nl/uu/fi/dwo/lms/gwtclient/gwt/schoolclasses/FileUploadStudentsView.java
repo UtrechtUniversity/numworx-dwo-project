@@ -49,13 +49,13 @@ public class FileUploadStudentsView extends Composite implements FileUploadStude
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == loadBtn) {
-            LOG.log(Level.INFO, "Add schoolclass now");
+            LOG.log(Level.INFO, "Upload file now.");
             dialogBox.hide();
 //            editSchoolClassPresenter.updateAndBack(schoolclassName.getText(), showTree.getValue(), setClassKey.getValue(), classKey.getValue());
         } else if (event.getSource() == cancelBtn) {
-            LOG.log(Level.INFO, "Add schoolclass now");
+            LOG.log(Level.INFO, "Cancel upload selection window.");
             dialogBox.hide();
-//            editSchoolClassPresenter.Back();
+//            fileUploadPresenter.Cancel();
         }
     }
 

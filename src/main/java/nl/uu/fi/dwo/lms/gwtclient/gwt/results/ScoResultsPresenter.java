@@ -3,17 +3,17 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Handler for for Login actions.
@@ -27,6 +27,12 @@ public class ScoResultsPresenter {
     private EventBus eventBus;
     private int selectedIndex = 0;
     private List<DomStudentScoContext> resultScoData;
+    private DomResultTree resultTree;
+    private DomResultPlotMatrix resultMatrix;
+    private DomResultStudent selectedStudent;
+    private DomResultScoContext scoContext;
+//    private DomSchoolClass selectedSchoolClass;
+//    private DomScoContext selectedDomScoContext;
 
     private Display view;
 
@@ -53,19 +59,20 @@ public class ScoResultsPresenter {
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    public void init(DomResultTree aResultTree, DomScoContext aSelectedScoContext, DomSchoolClass aSelectedSchoolClass, DomStudent aSelectedStudent) {
-//        sracData = getTeacherRoles();
-//        int i = 0;
-//        selectedIndex = i;
-//        for (DomSchoolRoleAndClassV2 srac : sracData) {
-//            if (srac.getHasRole().getId().equals(srac.getHasRole().getId())) {
-//                selectedIndex = i;
-//            }
-//            i++;
-//        }
-//        String[][] data = buildPlotData();
-//        view.init();
-//        view.updateView(data.length,1,data);
+    /**
+     * 
+     * @param aResultTree
+     * @param aScoContext A ScoContext for a schoolClass and Student
+     * @param aSelectedStudent A studentSco inside the resultTree
+     */
+    public void init(DomResultTree aResultTree, DomResultScoContext aScoContext, DomResultStudent aStudent) { //DomScoContext aSelectedScoContext, DomSchoolClass aSelectedSchoolClass,         
+        resultTree = aResultTree;
+        scoContext=aScoContext;
+        selectedStudent = aStudent;
+        resultMatrix = ResultTreeCalculator.GetScoreOfActivitiesByStudentsInSco(resultTree, aScoContext);
+        LOG.log(Level.FINE,"nr students:"+resultMatrix.getvSize());
+        //aStudent is the selected student in the ScoContext;
+        
     }
 
     /**

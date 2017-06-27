@@ -406,7 +406,7 @@ public class AddStudentsView extends Composite implements ClickHandler, ChangeHa
 //        });
         backBtn.addClickHandler(this);
         addBtn.addClickHandler(this);
-//        importBtn.addClickHandler(this);
+        importBtn.addClickHandler(this);
     }
 
     public void init() {

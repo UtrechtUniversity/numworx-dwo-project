@@ -20,6 +20,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
@@ -46,6 +48,7 @@ public class ViewFactoryImpl implements ViewFactory {
     private final EditStudentPresenter.Display editStudentView;
     private final MsgDialogPresenter.Display msgDialogView;
     private final AddStudentsPresenter.Display addStudentsView;
+    private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
 
     public ViewFactoryImpl(PresenterFactory pf) {
         mainView = new MainView(pf.getMainPresenter());
@@ -63,6 +66,7 @@ public class ViewFactoryImpl implements ViewFactory {
         editStudentView = new EditStudentView(pf.getEditStudentPresenter());
         addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
         msgDialogView = new MsgDialogView(pf.getMsgDialogPresenter());
+        fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
     }
 
     @Override
@@ -141,6 +145,13 @@ public class ViewFactoryImpl implements ViewFactory {
      */
     public AddStudentsPresenter.Display getAddStudentsView() {
         return addStudentsView;
+    }
+
+    /**
+     * @return the fileUploadStudentsView
+     */
+    public FileUploadStudentsPresenter.Display getFileUploadStudentsView() {
+        return fileUploadStudentsView;
     }
 
 }

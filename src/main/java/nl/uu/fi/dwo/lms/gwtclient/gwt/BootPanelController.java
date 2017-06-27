@@ -117,8 +117,7 @@ class BootPanelController {
                         presenterFactory.getTeachersInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                         break;
                     case SCORESULTS:
-                    	
-                        presenterFactory.getScoResultsPresenter().init(tree, scoContext, schoolClass, student);
+                        presenterFactory.getScoResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultScoContext(), switchViewEvent.getResultStudent());
                         break;
                     default:
                         LOG.log(Level.INFO, "Switch fail in app controller.");

@@ -13,6 +13,9 @@ import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
@@ -34,7 +37,7 @@ public class ResultsPresenter {
     private Display view;
     private ResultsService resultService = new ResultsService();
     //model
-    private DomResultTree rTree;
+    private DomResultTree resultTree;
     private DomResultPlotMatrix resultMatrix;
     private DomResultCourse course = null; //null means all courses.
     private DomResultSchoolClass schoolClass = null; //null means all classes.
@@ -70,9 +73,9 @@ public class ResultsPresenter {
             public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomResults returned.");
-                rTree = new DomResultTree(resolved.getValue());
+                resultTree = new DomResultTree(resolved.getValue());
                 LOG.log(Level.INFO, "ResultTree obtained.");
-                resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+                resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
                 plotResultsEvent();
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
@@ -105,8 +108,10 @@ public class ResultsPresenter {
     public void selectRowAndCol(int row, int col) {
         if (row != 0 && col != 0 && schoolClass != null && course != null) {
             LOG.log(Level.INFO,"selected a student sco for "+resultMatrix.getMark(row-1, col-1).getLabel()+ " with score "+resultMatrix.getMark(row-1, col-1).getScore());
-            //send event to show studentSco
-            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS /*,extra parameters: student, sco */));
+            //send event to show studentSco Context en Data.
+            DomResultStudent rs = (DomResultStudent) resultMatrix.getvIndex(row-1);
+            DomResultScoContext ssc = (DomResultScoContext) resultMatrix.gethIndex(col-1);
+            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS, resultTree, ssc, rs));
             return;
         }
         if (row == 0 && col == 0 && (schoolClass != null || course != null)) {
@@ -144,9 +149,9 @@ public class ResultsPresenter {
             public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomResults returned.");
-                rTree = new DomResultTree(resolved.getValue());
+                resultTree = new DomResultTree(resolved.getValue());
                 LOG.log(Level.INFO, "ResultTree obtained.");
-                resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+                resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
                 plotResultsEvent();
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
@@ -182,15 +187,15 @@ public class ResultsPresenter {
 
     private DomResultPlotMatrix getResults(DomResultCourse aCourse, DomResultSchoolClass aClass) {
         DomResultPlotMatrix result = null;
-        if (rTree != null) {
+        if (resultTree != null) {
             if (aCourse == null && aClass == null) {
-                result = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
+                result = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
             } else if (aCourse == null && aClass != null) {
-                result = ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree, aClass);
+                result = ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(resultTree, aClass);
             } else if (aCourse != null && aClass == null) {
-                result = ResultTreeCalculator.GetScoreOfTeacherClassesByActivitiesOfCourse(rTree, aCourse);
+                result = ResultTreeCalculator.GetScoreOfTeacherClassesByActivitiesOfCourse(resultTree, aCourse);
             } else if (aCourse != null && aClass != null) {
-                result = ResultTreeCalculator.GetScoreOfActivitiesOfCourseByStudentsInClass(rTree, aCourse, aClass);
+                result = ResultTreeCalculator.GetScoreOfActivitiesOfCourseByStudentsInClass(resultTree, aCourse, aClass);
             }
         }
         return result; // Though in Java 8 return Optional.
