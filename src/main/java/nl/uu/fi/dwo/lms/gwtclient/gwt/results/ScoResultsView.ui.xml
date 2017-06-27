@@ -5,9 +5,9 @@
     <g:FlowPanel>
         <g:FlowPanel>
                 <g:Button addStyleNames='dwoStyle' ui:field='backBtn'>back</g:Button>
+                <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='flexTable'/>
+            <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
         </g:FlowPanel>
-        <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="flexTable">
-        </g:FlexTable>
         <!-- add some wiskopdr stuff here -->
         <g:Frame ui:field="frame"></g:Frame>
     </g:FlowPanel>
