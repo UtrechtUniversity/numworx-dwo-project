@@ -3,10 +3,17 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
+import nl.uu.fi.dwo.rest.dom.DomResultTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Handler for for Login actions.
@@ -46,7 +53,7 @@ public class ScoResultsPresenter {
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    public void init() {
+    public void init(DomResultTree aResultTree, DomScoContext aSelectedScoContext, DomSchoolClass aSelectedSchoolClass, DomStudent aSelectedStudent) {
 //        sracData = getTeacherRoles();
 //        int i = 0;
 //        selectedIndex = i;
@@ -85,4 +92,23 @@ public class ScoResultsPresenter {
 //        }
         return data;
     }
+
+    /**
+     * 
+     * @param key een CMI variable
+     * @return
+     */
+	public String getScormAPIValue(String key) {
+		return "";
+	}
+
+	/**
+	 * 
+	 * @param key een CMI variable
+	 * @param value zijn nieuwe waarde
+	 * @return
+	 */
+	public String setScormAPIValue(String key, String value) {
+		return "";
+	}
 }

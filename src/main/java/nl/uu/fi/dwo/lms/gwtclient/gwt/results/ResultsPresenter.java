@@ -106,7 +106,7 @@ public class ResultsPresenter {
         if (row != 0 && col != 0 && schoolClass != null && course != null) {
             LOG.log(Level.INFO,"selected a student sco for "+resultMatrix.getMark(row-1, col-1).getLabel()+ " with score "+resultMatrix.getMark(row-1, col-1).getScore());
             //send event to show studentSco
-            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS));
+            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS /*,extra parameters: student, sco */));
             return;
         }
         if (row == 0 && col == 0 && (schoolClass != null || course != null)) {

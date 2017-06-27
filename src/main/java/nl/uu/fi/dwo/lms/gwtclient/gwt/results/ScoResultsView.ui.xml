@@ -3,13 +3,12 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" >
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
     <g:FlowPanel>
-        <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="flexTable">
-        </g:FlexTable>
-        <!-- add some wiskopdr stuff here -->
-        <g:Label>Put ScoResults here</g:Label>
-        <g:Frame ui:field="frame"></g:Frame>
         <g:FlowPanel>
                 <g:Button addStyleNames='dwoStyle' ui:field='backBtn'>back</g:Button>
         </g:FlowPanel>
+        <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="flexTable">
+        </g:FlexTable>
+        <!-- add some wiskopdr stuff here -->
+        <g:Frame ui:field="frame"></g:Frame>
     </g:FlowPanel>
 </ui:UiBinder> 

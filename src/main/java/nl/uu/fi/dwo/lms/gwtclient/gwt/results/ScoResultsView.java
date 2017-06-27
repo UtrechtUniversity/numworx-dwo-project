@@ -37,16 +37,16 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
     private native static void setAPI(ScoResultsView view) /*-{
     	var api = {
     			"LMSGetValue" : function(key) {
-    				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::getValue(Ljava/lang/String;)(key)
+    				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::getValue(Ljava/lang/String;)(key)
     			},
     			"LMSSetValue" : function(key, value) {
-    				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
+    				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
     			},
     			"GetValue" : function(key) {
-    				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::getValue(Ljava/lang/String;)(key)
+    				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::getValue(Ljava/lang/String;)(key)
     			},
     			"SetValue" : function(key, value) {
-    				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
+    				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
     			},
     // TODO more to follow...			
     		};
@@ -55,11 +55,11 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
     }-*/;
     
     private String getValue(String key) {
-    	return "";
+    	return scoResultsPresenter.getScormAPIValue(key);
     }
     
     private String setValue(String key, String value) {
-    	return "":
+    	return scoResultsPresenter.setScormAPIValue(key, value);
     }
     
     public class ResultData {

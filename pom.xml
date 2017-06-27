@@ -225,6 +225,15 @@
                             <contextPath>/dwo</contextPath>
                             <contextFile>src/test/tomcat/context-ubuntu.xml</contextFile>
                         </webapp>
+                        <webapp>
+                            <groupId>nl.uu.fi.dwo</groupId>
+                            <artifactId>DWOServer</artifactId> 
+                            <version>2.0</version> 
+                            <type>war</type>    
+                            <asWebapp>true</asWebapp> 
+                            <contextPath>/dwo</contextPath>
+                            <contextFile>src/test/tomcat/context-ubuntu.xml</contextFile>
+                        </webapp>
                     </webapps>                         
                 </configuration> 
                 <dependencies>
