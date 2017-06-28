@@ -108,7 +108,7 @@ public class ScoResultsPresenter {
         scoContext = aScoContext;
         Map<String, DomResultStudentSco> sscMap = new HashMap<String, DomResultStudentSco>(scoContext.getChildren().size());
         for (DomResultStudentSco ss : scoContext.getChildren().values()) {
-            sscMap.put(ss.getStudentSco().getId().getIdString(), ss);
+            sscMap.put(ss.getStudentSco().getUserID().getIdString(), ss);
         }
         selectedStudent = aStudent;
         resultMatrix = ResultTreeCalculator.GetScoreOfActivitiesByStudentsInSco(resultTree, aScoContext);
@@ -119,7 +119,7 @@ public class ScoResultsPresenter {
             // fetch and insert score here.
             Double score = null;
             if (sscMap.containsKey(s.getStudent().getId().getIdString())) {
-                score = sscMap.get(s.getStudent().getId().getIdString()).getScore();
+                score = sscMap.get(s.getStudent().getId().getIdString()).getStudentSco().getScore();
             }
             StudentItem si = new StudentItem(s.getStudent().getId().getIdString(), s.getStudent().getGivenName(),
                     s.getStudent().getInsertion(), s.getStudent().getFamilyName(), s.getStudent().getUserName(), score, new double[0]);
