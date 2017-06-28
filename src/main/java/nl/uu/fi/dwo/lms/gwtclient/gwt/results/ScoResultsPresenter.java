@@ -1,7 +1,11 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Widget;
+
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
+import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,12 +13,18 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.function.Function;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolClassListBoxItem;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
@@ -22,6 +32,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContextFull;
 
 /**
  * Handler for for Login actions.
@@ -47,6 +58,10 @@ public class ScoResultsPresenter {
     private List<SchoolClassListBoxItem> schoolClassItems;
     private Display view;
     private int requests = 0;
+// Voor het Frame:
+	private Promise<String> launchData;
+	private Promise<DomStudentScoContextFull> scormVars1;
+	// private Promise<DomStudenScoDataFull> scormVars2;
 
     public interface Display {
 
@@ -111,6 +126,23 @@ public class ScoResultsPresenter {
     public void init(DomResultTree aResultTree, DomResultScoContext aScoContext, DomResultStudent aStudent) { //DomScoContext aSelectedScoContext, DomSchoolClass aSelectedSchoolClass,         
         resultTree = aResultTree;
         scoContext = aScoContext;
+// fetch JSONValue of scocontext (once)
+        final DomScoContext sco = scoContext.getScoContext();
+// FIXME WRONG MANAGER
+        StudentScoDataManager manager = new SecuredStudentScoDataManager();
+        DomContext context = new DomContext();
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+		DomDwoProfile profile = dwoGlobalVars.getProfile().getValue();
+		launchData = manager.getJSONLaunchDataBytes(sco, profile, context).map(new Function<JSONValue, String>() {
+
+			@Override
+			public String apply(JSONValue t) {
+				return t.toString();
+			}
+		});
+
+        
+        
         Map<String, DomResultStudentSco> sscMap = new HashMap<String, DomResultStudentSco>(scoContext.getChildren().size());
         for (DomResultStudentSco ss : scoContext.getChildren().values()) {
             sscMap.put(ss.getStudentSco().getUserID().getIdString(), ss);
@@ -136,12 +168,26 @@ public class ScoResultsPresenter {
         }
         LOG.log(Level.FINE, "nr students:" + resultMatrix.getvSize());
         view.updateView(selectedItem,studentItems);
-// fetch JSONValue of scocontext (once)
 // fetch ScormValues of student (for each student)
+        DomStudentScoContext ssc = sscMap.get(selectedItem.key).getStudentSco();
+        DomStudentScoContextFull full = new DomStudentScoContextFull();
+        full.setId(ssc.getId());
+        full.setScoID(ssc.getScoID());
+        full.setUserID(ssc.getUserID());
+        full.setSchoolGroupID(ssc.getSchoolGroupID());
+        full.setScore(ssc.getScore());
+        full.setLocation("0");
+// etc...
+        scormVars1 = Promises.resolved(full); // TODO better implementation
 // if both, updateFrame for this sco.
+		Promises.all(launchData, scormVars1).onResolve(new Runnable() {
+
+			@Override
+			public void run() {
+				view.updateFrame(sco);				
+			}});
+		
         
-        DomScoContext sco = aScoContext.getScoContext();      
-        view.updateFrame(sco);
     }
 
     public void select(StudentItem item) {
@@ -161,6 +207,18 @@ public class ScoResultsPresenter {
      * @return
      */
     public String getScormAPIValue(String key) {
+    	if("cmi.launch_data".equals(key))
+    		return launchData.getValue();
+    	if("cmi.completion_status".equals(key)) {
+    		return "completed";
+    	}
+    	if( "cmi.score.raw".equals(key)) {
+    		return String.valueOf(scormVars1.getValue().getScore());
+    	}
+    	if ("cmi.location".equals(key)) {
+    		return scormVars1.getValue().getLocation();
+    	}
+    	
         return "";
     }
 

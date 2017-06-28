@@ -7,13 +7,14 @@ import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import com.google.gwt.user.client.Window;
+
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
-
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.DwoLocale;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -22,6 +23,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -51,7 +53,7 @@ public class DwoGlobalVars {
     private DomLoginContext currentLoginContext;
     private DomSchoolsRolesAndClassesV2 schoolLogins;
     private DomSchoolRoleAndClassV2  activeSchoolRoleAndClass;    
-    private int profileId=1;//default
+    private Promise<DomDwoProfileFull> profile;
 
 
     /**
@@ -121,20 +123,7 @@ public class DwoGlobalVars {
         this.activeSchoolRoleAndClass = activeSchoolRoleAndClass;
     }
 
-    /**
-     * @return the profileId
-     */
-    public int getProfileId() {
-        return profileId;
-    }
-
-    /**
-     * @param profileId the profileId to set
-     */
-    public void setProfileId(int profileId) {
-        this.profileId = profileId;
-    }
-
+ 
 
     /**
      * @return the instance
@@ -385,5 +374,19 @@ public class DwoGlobalVars {
     public void setCurrentSchoolClass(DomSchoolClass currentSchoolClass) {
         schoolLogins.getActiveSchoolRoleAndClass().setSchoolClass(currentSchoolClass);
     }
+
+	/**
+	 * @return the profile
+	 */
+	public Promise<DomDwoProfileFull> getProfile() {
+		return profile;
+	}
+
+	/**
+	 * @param profile the profile to set
+	 */
+	public void setProfile(Promise<DomDwoProfileFull> profile) {
+		this.profile = profile;
+	}
 
 }

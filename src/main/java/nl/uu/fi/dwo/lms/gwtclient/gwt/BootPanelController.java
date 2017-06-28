@@ -2,12 +2,20 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+
+import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.osgi.util.promise.Promise;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
@@ -40,11 +48,13 @@ class BootPanelController {
 
         //parse profile if it exists.
         String value = com.google.gwt.user.client.Window.Location.getParameter("profile");
-        if (value != null) {
-            Integer profile = Integer.parseInt(value);
-            dwoGlobalVars.setProfileId(profile);
-            LOG.log(Level.INFO, "Parsed and set profile id to " + profile + ".");
-        }
+        if (value == null || value.isEmpty()) {
+        	value = "77";
+        }	
+        	
+        Promise<DomDwoProfileFull> profile = new PublicProfileManager().get(value);
+        dwoGlobalVars.setProfile(profile);
+        LOG.log(Level.INFO, "Parsed and set profile id to " + value + ".");
 
         //show main panel
         this.rootPanel = rootPanel;
