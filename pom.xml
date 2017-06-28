@@ -49,7 +49,7 @@
     <!-- Running with Maven -->
     <!-- mvn clean package -->
     <!-- mvn tomcat7:run package -->
-    <!-- mvn gwt:codeserver - start gwt code server -->
+    <!-- mvn gwt:run-codeserver - start gwt code server -->
     <!-- goto http://localhost:8080 -->
   
     <dependencyManagement>

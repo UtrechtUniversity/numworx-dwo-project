@@ -5,6 +5,7 @@
     <ui:style field="dwoStyle" src="css/dwostyle.css" />    
     <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
     <g:HeaderPanel addStyleNames='{dwoStyle.dwoAppPanel}'>
+       <g:FlowPanel height="51px">
         <g:FlowPanel addStyleNames='{dwoStyle.dwoAppHeaderPanel}' ui:field='headerView'>
             <g:Image addStyleNames='{dwoStyle.leftLogoBox}' height = '90%' width = 'auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />            
             <g:PushButton addStyleNames='{dwoStyle.dwoAppMenuButton}'  ui:field="menuButton">
@@ -25,7 +26,8 @@
             <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="schoolName"></g:Label>
             <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="schoolLabel">School</g:Label>
         </g:FlowPanel>
-        <g:LayoutPanel  addStyleNames='{dwoStyle.dwoAppMainPanel}'>
+        </g:FlowPanel>
+        <g:LayoutPanel ui:field="layout" addStyleNames='{dwoStyle.dwoAppMainPanel}'>
             <g:layer>      
                 <!--<g:FlowPanel addStyleNames='{dwoStyle.dwoAppMainPanel}'>-->
                 <!--<g:FlowPanel>-->

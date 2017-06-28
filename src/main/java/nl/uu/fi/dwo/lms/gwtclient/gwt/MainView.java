@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesView;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -20,12 +21,16 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
+
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
+
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
@@ -70,6 +75,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     Label userRole;
     @UiField
     PushButton menuButton;
+    @UiField
+    LayoutPanel layout;
     @UiField
     Image dwoLogo;
     @UiField
@@ -142,6 +149,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(loginIndex);
         menuButton.addClickHandler(this);
+        hideMenuView();
         switchRoleLabel.addClickHandler(this);
         resultsLabel.addClickHandler(this);
         logoutLabel.addClickHandler(this);
@@ -278,17 +286,15 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void showMenuView() {
-        menuView.addStyleName(".dwoMenuOut");
-        menuView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        menuView.addStyleName("dwoMenuIn");
         LOG.log(Level.INFO, "Menu dwoMenuOut.");
-        showMenu = true;
+        setMenuVisible(true);
     }
 
     @Override
     public void hideMenuView() {
-        menuView.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-        menuView.removeStyleName(".dwoMenuIn");
-        showMenu = false;
+        menuView.removeStyleName("dwoMenuIn");
+        setMenuVisible(false);
     }
 
     @Override
@@ -321,18 +327,22 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         return showMenu;
     }
 
+    private void setMenuVisible(boolean visible) {
+    	showMenu = visible;
+    	layout.setWidgetVisible(menuView, visible);
+    }
+    
     public void onClick(ClickEvent event) {
         if (event.getSource() == menuButton) {
             LOG.log(Level.INFO, "Menu button clicked.");
             LOG.log(Level.INFO, menuView.getElement().getStyle().getOpacity());
             if (!showMenu) {
-                menuView.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                setMenuVisible(true);
                 menuView.addStyleName("menuGrow");
                 LOG.log(Level.INFO, "Menu grow.");
-                showMenu = true;
             } else {
-                menuView.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-                menuView.removeStyleName("menuGrow");
+            	setMenuVisible(false);
+            	menuView.removeStyleName("menuGrow");
                 LOG.log(Level.INFO, "Menu shrink.");
                 showMenu = false;
             }

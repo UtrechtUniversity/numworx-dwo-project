@@ -2,11 +2,13 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolClassListBoxItem;
@@ -17,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 
@@ -54,6 +57,8 @@ public class ScoResultsPresenter {
         void init();
 
         void updateView(StudentItem selectedItem, Map<String, StudentItem> data);
+        
+        void updateFrame(DomScoContext context);
     }
 
     public class StudentItem {
@@ -131,7 +136,12 @@ public class ScoResultsPresenter {
         }
         LOG.log(Level.FINE, "nr students:" + resultMatrix.getvSize());
         view.updateView(selectedItem,studentItems);
-
+// fetch JSONValue of scocontext (once)
+// fetch ScormValues of student (for each student)
+// if both, updateFrame for this sco.
+        
+        DomScoContext sco = aScoContext.getScoContext();      
+        view.updateFrame(sco);
     }
 
     public void select(StudentItem item) {
@@ -161,6 +171,6 @@ public class ScoResultsPresenter {
      * @return
      */
     public String setScormAPIValue(String key, String value) {
-        return "";
+        return "true";
     }
 }

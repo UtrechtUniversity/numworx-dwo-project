@@ -22,11 +22,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 /**
  * GWT Panel that handles switching the role.
@@ -48,13 +51,31 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
     CellTable dataTable;
     @UiField
     Button backBtn;
-//    @UiField
+    @UiField
     Frame frame; // Hier komt /dwo/apps/player.html?locale=nl#cmi.launch_data:scoid
 
     private native static void setAPI(ScoResultsView view) /*-{
     	var api = {
     			"LMSGetValue" : function(key) {
     				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::getValue(Ljava/lang/String;)(key)
+    			},
+    			"LMSInitialize" : function(dummy) { 
+    				return "true"
+    			},
+    			"LMSGetLastError": function () {
+    				return "0"
+    			},
+    			"LMSGetDiagnostic": function(dummy) { 
+    				return ""
+    			},
+    			"LMSGetErrorString": function( code ) {
+    				return ""
+    			},
+    			"LMSCommit": function(dummy) {
+    				return "true"
+    			},
+    			"LMSFinish": function(dummy) {
+    				return "true"
     			},
     			"LMSSetValue" : function(key, value) {
     				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
@@ -72,7 +93,11 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
     }-*/;
 
     private String getValue(String key) {
-        return scoResultsPresenter.getScormAPIValue(key);
+    	LOG.info("GetValue " + key);
+        String value = scoResultsPresenter.getScormAPIValue(key);
+        String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
+        LOG.info("result GetValue: " + shortValue);
+		return value;
     }
 
     private String setValue(String key, String value) {
@@ -142,6 +167,7 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
 
     public ScoResultsView(ScoResultsPresenter sp) {
         scoResultsPresenter = sp;
+        setAPI(this);
         scoResultsPresenter.setView(this);
         String[] tableHeaders = sp.getTableHeaders();
         dataTable = new CellTable<String>();
@@ -282,6 +308,18 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         }
     }
 
+    public void updateFrame(DomScoContext sco) {
+    	String scoId = "96797";
+    	String pid = sco.getId().getIdString();
+    	int komma = pid.lastIndexOf(';');
+    	if(komma >=0) {
+    		scoId = pid.substring(komma+1);
+    	}
+    	
+    	String url = "/dwo/apps/player.html?locale=nl#cmi.launch_data:"+scoId;
+    	frame.setUrl(url);
+    }
+    
     private void select(ScoResultsPresenter.StudentItem item) {
         scoResultsPresenter.select(item);
     }
