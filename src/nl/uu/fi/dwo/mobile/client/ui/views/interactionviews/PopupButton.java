@@ -405,7 +405,7 @@ public class PopupButton extends Composite implements ClickHandler, /*TouchStart
 				// other content remains non-resizable
 				box = new DialogBox(false, false, caption);
 			}
-
+			box.addStyleDependentName(DWOplayer.PARAMETERS.keyboardStyle());
 			DragOnTouch t = new DragOnTouch();
 			box.addDomHandler(t, TouchStartEvent.getType());
 			box.addDomHandler(t, TouchMoveEvent.getType());

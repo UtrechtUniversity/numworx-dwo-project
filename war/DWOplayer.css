@@ -32,7 +32,9 @@ div.mainPanel {
 div.mainPanel-dwo {
 	box-shadow: 3px 3px 3px #b0b4c0 inset;
 }
-
+div.gwt-DialogBox-dwo {
+	box-shadow: 0px 0px 15px black;
+}
 
 .kbd-Button { display: inline-block; }
 .kbd-Button-dwo {background:#ddd; color:#000; padding:10px; margin:5px;  border: 1px solid #888; border-radius:5px; text-align:center; overflow:hidden;}

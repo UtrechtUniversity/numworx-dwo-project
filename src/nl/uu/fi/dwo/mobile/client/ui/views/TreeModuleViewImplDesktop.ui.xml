@@ -60,12 +60,14 @@
 
 		.navigation_header_panel {
 				background-color: #314770;
+				background-image: none;
 				color: #758296;
 		}
 		
 		.module_header_panel {
 				width: auto;
 				background-color: #314770;
+				background-image: none;
 				color: #758296;
 		}
 		
