@@ -53,7 +53,7 @@ public class ScoResultsPresenter {
 
         void init();
 
-        void updateView(Map<String, StudentItem> data);
+        void updateView(StudentItem selectedItem, Map<String, StudentItem> data);
     }
 
     public class StudentItem {
@@ -113,6 +113,7 @@ public class ScoResultsPresenter {
         selectedStudent = aStudent;
         resultMatrix = ResultTreeCalculator.GetScoreOfActivitiesByStudentsInSco(resultTree, aScoContext);
         studentItems = new HashMap<String, StudentItem>(resultMatrix.getvSize());
+        StudentItem selectedItem=null;
         //TODO Wim, make the promise to fetch the first scoData and StudentScoData then when resolved execute the code block below
         for (int i = 0; i < resultMatrix.getvSize(); i++) {
             DomResultStudent s = (DomResultStudent) resultMatrix.getvIndex(i);
@@ -123,16 +124,20 @@ public class ScoResultsPresenter {
             }
             StudentItem si = new StudentItem(s.getStudent().getId().getIdString(), s.getStudent().getGivenName(),
                     s.getStudent().getInsertion(), s.getStudent().getFamilyName(), s.getStudent().getUserName(), score, new double[0]);
+            if(selectedStudent.getStudent().getId().getIdString().equals(si.key) && si.score!=null){
+                selectedItem = si;
+            }
             studentItems.put(s.getStudent().getId().getIdString(), si);
         }
         LOG.log(Level.FINE, "nr students:" + resultMatrix.getvSize());
-        view.updateView(studentItems);
+        view.updateView(selectedItem,studentItems);
 
     }
 
     public void select(StudentItem item) {
         //selected item in single select table
-        //show the new student's studenscodata in the window api.
+        //show the new student's studenscodata in the window api if the score is not null
+        //otherwise show message or refuse selection.
     }
 
     //function to be called from the view in the future when subscores are supported.

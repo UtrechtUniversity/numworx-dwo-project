@@ -139,7 +139,7 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
     }
 
     ScoResultsPresenter.StudentItem selected;
-    
+
     public ScoResultsView(ScoResultsPresenter sp) {
         scoResultsPresenter = sp;
         scoResultsPresenter.setView(this);
@@ -157,7 +157,7 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         Column<ScoResultsPresenter.StudentItem, String> value = new Column<ScoResultsPresenter.StudentItem, String>(cell) {
             @Override
             public String getValue(ScoResultsPresenter.StudentItem object) {
-                return object.givenName +" "+object.insertion+" "+object.familyName+" - "+object.usercode;
+                return object.givenName + " " + object.insertion + " " + object.familyName + " - " + object.usercode;
             }
         };
         value.setSortable(true);
@@ -180,11 +180,11 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         dataTable.addColumnSortHandler(columnSortHandler);
         dataTable.addColumn(value, tableHeaders[0]);
 
-        //familyName
+        //total score
         value = new Column<ScoResultsPresenter.StudentItem, String>(cell) {
             @Override
             public String getValue(ScoResultsPresenter.StudentItem object) {
-                return ""+object.score;
+                return (object.score != null) ? "" + object.score : "";
             }
         };
         value.setSortable(true);
@@ -207,17 +207,19 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         dataTable.addColumnSortHandler(columnSortHandler);
         dataTable.addColumn(value, tableHeaders[1]);
         final SingleSelectionModel<ScoResultsPresenter.StudentItem> selectionModel = new SingleSelectionModel<ScoResultsPresenter.StudentItem>();
-        
-                dataTable.setSelectionModel(selectionModel);
+
+        dataTable.setSelectionModel(selectionModel);
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             public void onSelectionChange(SelectionChangeEvent event) {
+                if(((ScoResultsPresenter.StudentItem) selectionModel.getSelectedObject()).score!=null){
                 select(selectionModel.getSelectedObject());
-                LOG.log(Level.INFO, "selection key: "+selectionModel.getSelectedObject().key);
+                }else{
+                    selectionModel.clear();
+                }
+                LOG.log(Level.INFO, "selection key: " + selectionModel.getSelectedObject().key);
             }
-        });        
+        });
 
-
-        
 //        //for each of the subscores add a column and use a clickable cell
 //        value = new Column<ScoResultsPresenter.StudentItem, String>(cell) {
 //            @Override
@@ -244,7 +246,6 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
 //        });
 //        dataTable.addColumnSortHandler(columnSortHandler);
 //        dataTable.addColumn(value, tableHeaders[3]);
-
         dataTable.setRowData(0, data);
         dataTable.setRowCount(data.size(), true);
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
@@ -263,7 +264,7 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void onClick(ClickEvent event) {
@@ -272,16 +273,19 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         }
     }
 
-    public void updateView(Map<String, ScoResultsPresenter.StudentItem> data) {
+    public void updateView(ScoResultsPresenter.StudentItem selectedItem, Map<String, ScoResultsPresenter.StudentItem> data) {
         dataProvider.getList().clear();
         dataProvider.getList().addAll(data.values());
         dataProvider.refresh();
+        if (selectedItem != null) {
+            dataTable.getSelectionModel().setSelected(selectedItem, true);
+        }
     }
 
-    private void select(ScoResultsPresenter.StudentItem item){
+    private void select(ScoResultsPresenter.StudentItem item) {
         scoResultsPresenter.select(item);
     }
-    
+
     private void cellSelected(int row, int col) {
 
     }
