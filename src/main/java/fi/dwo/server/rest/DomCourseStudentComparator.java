@@ -16,4 +16,8 @@ final class DomCourseStudentComparator implements Comparator<DomCourseStudent> {
 		if(l2 == null) return -1;
 		return l1.compareTo(l2);
 	}
+
+	public static DomCourseStudentComparator INSTANCE = new DomCourseStudentComparator();
+	
+	private DomCourseStudentComparator() {};
 }

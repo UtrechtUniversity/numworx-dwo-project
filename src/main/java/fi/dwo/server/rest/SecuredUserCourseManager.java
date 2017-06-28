@@ -71,8 +71,8 @@ public class SecuredUserCourseManager {
     		DomHasRole    hasRole = id.getRestContext().getDomHasRole();
     		PersistentUser user = getUserFromContext(sc);		
 
-// verify profile/limited
-    		
+// TODO verify profile/limited
+// TODO hasRole correct	
     		
     		Long courseId = MySQLPersistenceId.getNativeId(id.getDomCourse());
             PersistentCourse course = CourseManager.findEntity(courseId);
@@ -110,7 +110,7 @@ public class SecuredUserCourseManager {
 		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);		
 		Stream<PersistentCourse> stream = courses.stream();
 		Stream<DomCourseStudent> map = stream.map((c) -> c.buildDomCourseStudent());
-		map = map.sorted(new DomCourseStudentComparator());
+		map = map.sorted(DomCourseStudentComparator.INSTANCE);
 		return map.collect(Collectors.toList());
     }
     
@@ -148,7 +148,7 @@ public class SecuredUserCourseManager {
     		
     		Stream<PersistentCourse> stream = courses.stream();
 			Stream<DomCourseStudent> map = stream.map((c) -> c.buildDomCourseStudent());
-			map = map.sorted(new DomCourseStudentComparator());
+			map = map.sorted(DomCourseStudentComparator.INSTANCE);
     		return map.collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
     		throw e;
@@ -197,7 +197,7 @@ public class SecuredUserCourseManager {
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent);    		
     		return courses.stream()
     				.map( (c)-> c.buildDomCourseStudent())
-    				.sorted(new DomCourseStudentComparator())
+    				.sorted(DomCourseStudentComparator.INSTANCE)
     				.collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
     		throw e;
@@ -229,9 +229,7 @@ public class SecuredUserCourseManager {
     		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
     		DomHasRole    hasRole = rest.getRestContext().getDomHasRole();
     		PersistentUser user = getUserFromContext(sc);		
-
-    		
-    		
+// TODO hasRole is correct    		
     		DomCourse course = rest.getDomCourse();
     		Long id = MySQLPersistenceId.getNativeId(course);
     		PersistentCourse parent = CourseManager.findEntity(id);

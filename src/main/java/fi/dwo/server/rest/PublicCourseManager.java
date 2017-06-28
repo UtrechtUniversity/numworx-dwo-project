@@ -93,6 +93,7 @@ public class PublicCourseManager {
     		
     		Stream<PersistentCourse> stream = courses.stream();
 			Stream<DomCourseStudent> map = stream.map((c) -> c.buildDomCourseStudent());
+			map = map.sorted(DomCourseStudentComparator.INSTANCE);
     		return map.collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
     		throw e;
@@ -121,7 +122,7 @@ public class PublicCourseManager {
     			return Collections.emptyList();
     			
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent);    		
-    		return courses.stream().map( (c)-> c.buildDomCourseStudent()).collect(Collectors.toList());
+    		return courses.stream().map( (c)-> c.buildDomCourseStudent()).sorted(DomCourseStudentComparator.INSTANCE).collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
     		throw e;
     	} catch (Exception e) {
