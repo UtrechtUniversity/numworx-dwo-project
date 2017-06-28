@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -132,10 +133,20 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
         });
     }
 
-    /**
-     * Go back to the schoolclasses presentation.
-     */
-//    public void Cancel() {
-//        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS));
-//    }
+    public void loadFile(String file){
+                String[] lines = file.split("\n");
+                LOG.log(Level.INFO,"Read "+lines.length+" lines.");
+                for(String line : lines){
+                    String[] cols = line.split("\t");
+                    LOG.log(Level.INFO,"Read "+cols.length+" columns.");
+                    for(String field : cols){
+                                            LOG.log(Level.INFO,"Read >"+field+"< field.");
+                    }
+                }
+
+    }
+    
+    public void importData(){
+    
+}
 }

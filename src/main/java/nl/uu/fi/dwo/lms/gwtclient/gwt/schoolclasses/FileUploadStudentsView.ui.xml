@@ -17,7 +17,7 @@
                     
                 </g:customCell>-->
                 <g:customCell>
-                    <g:PushButton ui:field='loadBtn'>load</g:PushButton>
+                    <g:PushButton ui:field='loadBtn'>load and check</g:PushButton>
                 </g:customCell>
             </g:row>
             <g:row></g:row>

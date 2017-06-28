@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -35,8 +36,24 @@ public class FileUploadStudentsView extends Composite implements FileUploadStude
     @UiField
     PushButton loadBtn;
 
-    FileUploadStudentsPresenter fileUploadPresenter;
+    static FileUploadStudentsPresenter fileUploadPresenter;
     final DialogBox dialogBox = new DialogBox();
+
+    public static void fileLoaded(String fileContents) {
+        if(fileUploadPresenter!=null){
+        fileUploadPresenter.loadFile(fileContents);
+        }
+    }
+
+    public static native void readTextFile(JavaScriptObject files) /*-{
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+        @nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsView::fileLoaded(*)(reader.result);
+    }
+
+    return reader.readAsText(files[0]);
+}-*/;
 
     public FileUploadStudentsView(FileUploadStudentsPresenter ap) {
         initWidget(uiBinder.createAndBindUi(this));
@@ -50,6 +67,13 @@ public class FileUploadStudentsView extends Composite implements FileUploadStude
     public void onClick(ClickEvent event) {
         if (event.getSource() == loadBtn) {
             LOG.log(Level.INFO, "Upload file now.");
+            fileUploadPresenter.loadFile(fileUpload.getFilename());
+            JavaScriptObject files = fileUpload.getElement().getPropertyJSO("files");
+            readTextFile(files);
+
+        } else if (event.getSource() == importBtn) {
+            LOG.log(Level.INFO, "Importing data into table now.");
+            fileUploadPresenter.importData();
             dialogBox.hide();
 //            editSchoolClassPresenter.updateAndBack(schoolclassName.getText(), showTree.getValue(), setClassKey.getValue(), classKey.getValue());
         } else if (event.getSource() == cancelBtn) {
