@@ -1498,11 +1498,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		api = GWT.create(Scorm2004IF.class);
 		fp = new FlowPanel(); 
 		mainPanel = FocusOnTouch.wrap(fp, true);
-		
-		
-		mainPanel.setHeight("100%");
-		mainPanel.setWidth("100%");
-		mainPanel.getElement().getStyle().setBackgroundColor("#FFFFFF");
+		mainPanel.setStylePrimaryName("mainPanel");
+		mainPanel.addStyleDependentName(DWOplayer.PARAMETERS.keyboardStyle());
+		mainPanel.setStyleDependentName("standalone", standalone);
+// nu in stylesheet DWOplayer.css		
+//		mainPanel.setHeight("100%");
+//		mainPanel.setWidth("100%");
+//		mainPanel.getElement().getStyle().setBackgroundColor("#FFFFFF");
 		//fp.setHeight("428px");
 		//fp.setWidth("886px");
 		sb = DWOplayer.PARAMETERS.getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();

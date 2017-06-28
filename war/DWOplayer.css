@@ -22,6 +22,18 @@ div.keyboard {background:#E5E7E9; left:0px; right:0px; }
 div.tekstvak { overflow: hidden; }
 /*div.tekstregel { overflow: hidden; }*/
 
+
+div.mainPanel {
+	height: 100%;
+	width: 100%;
+	background-color: rgb(255, 255, 255);
+}
+
+div.mainPanel-dwo {
+	box-shadow: 3px 3px 3px #b0b4c0 inset;
+}
+
+
 .kbd-Button { display: inline-block; }
 .kbd-Button-dwo {background:#ddd; color:#000; padding:10px; margin:5px;  border: 1px solid #888; border-radius:5px; text-align:center; overflow:hidden;}
 .kbd-Button-dwo:active {background:#e00;}
