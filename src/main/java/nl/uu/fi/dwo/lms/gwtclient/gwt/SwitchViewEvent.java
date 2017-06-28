@@ -41,6 +41,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         ACCOUNT,
         SWITCHSCHOOL,
         RESULTS,
+        ACTIVERESULTS,
         SCORESULTS,
         SCHOOLCLASSES,
         STUDENTSINSCHOOLCLASS,

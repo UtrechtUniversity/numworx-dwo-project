@@ -101,6 +101,9 @@ class BootPanelController {
                     case SWITCHSCHOOL:
                         presenterFactory.getSwitchSchoolPresenter().init();
                         break;
+                    case ACTIVERESULTS:
+                        //do nothing presenterFactory.getResultsPresenter().init();
+                        break;
                     case RESULTS:
                         presenterFactory.getResultsPresenter().init();
                         break;
