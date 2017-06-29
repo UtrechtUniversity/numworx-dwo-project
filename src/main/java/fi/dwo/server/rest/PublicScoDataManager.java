@@ -31,7 +31,7 @@ import javax.ws.rs.QueryParam;
 public class PublicScoDataManager {
 
     private static final Logger LOG = Logger.getLogger(PublicScoDataManager.class.getName());
-
+    private static final boolean SECURITY = false;
     /**
      * Returns the JSON launch data bytes of scoData. This method uses MySQL-based
      * indices and should be phased out.
@@ -47,6 +47,9 @@ public class PublicScoDataManager {
     public String getJSONLaunchDataBytes(@DefaultValue("0") @QueryParam("scoId") Long scoId) {
 
             PersistentScoData scoData = ScoDataManager.findEntity(scoId);
+if(SECURITY) {
+			// none yet
+}
             if(scoData == null) {
             	return "{}"; // Not found, not fatal
             }

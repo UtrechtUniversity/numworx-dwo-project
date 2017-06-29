@@ -23,7 +23,9 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 @Path("/public/scoContext")
 public class PublicScoContextManager {
-	
+
+	private static final boolean SECURITY=false;
+
 	private String LIMITED = "l";
 	
 	/** get scos of a course.
@@ -37,16 +39,19 @@ public class PublicScoContextManager {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 // test for honest people 
+if(SECURITY) {
 		if (domDwoProfile.getDwoProfileRights() != null && 
 				domDwoProfile.getDwoProfileRights().contains(LIMITED))
 			return Collections.emptyList();
 // Security, only non limited profiles are public 		
+}
 		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
-		if ( profile.getDwoProfileRights().contains(LIMITED))
+		if ( SECURITY && profile.getDwoProfileRights().contains(LIMITED))
 			return Collections.emptyList();
 		long cid = MySQLPersistenceId.getNativeId(rest.getDomCourse());
 		PersistentCourse parent = CourseManager.findEntity(cid);
+if(SECURITY)		
 		if ( pid != parent.getDwoProfileID().longValue()				// match profile and public school
 				|| parent.getSchoolID() != null)
 			return Collections.emptyList();
@@ -61,19 +66,22 @@ public class PublicScoContextManager {
     public DomScoContext get(RestScoContext rest) throws Dwo2Exception {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
+		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
+if(SECURITY) {
 // test for honest people
 		if (domDwoProfile.getDwoProfileRights() != null && 
 				domDwoProfile.getDwoProfileRights().contains(LIMITED))
 			return null;
 // Security, only non limited profiles are public 		
-		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
 		if ( profile.getDwoProfileRights().contains(LIMITED))
 			return null;
+}
 		long id = MySQLPersistenceId.getNativeId(rest.getDomScoContext());
 		PersistentScoContext scoContext = ScoContextManager.findEntity(id);
 		id = scoContext.getCourseID();
 		PersistentCourse parent = CourseManager.findEntity(id);
+if(SECURITY)
 		if ( pid != parent.getDwoProfileID().longValue()				// match profile and public school
 				|| parent.getSchoolID() != null)
 			return null;
