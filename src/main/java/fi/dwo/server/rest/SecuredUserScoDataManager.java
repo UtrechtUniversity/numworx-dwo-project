@@ -156,11 +156,20 @@ public class SecuredUserScoDataManager {
 		if(list.isEmpty()) {
 			return rest.getDomScormValues();
 		}
+		List<DomMapEntry<String, String>> entryList = rest.getDomScormValues().getValues();
 		PersistentStudentScoContext pssc = list.get(0);
+		getScormValues(entryList, pssc);
+
+    	return rest.getDomScormValues();
+    }
+
+
+	static void getScormValues(List<DomMapEntry<String, String>> entryList,
+			PersistentStudentScoContext pssc) {
 		PersistentStudentScoData pssd = null;
 		Scorm2Xml xml = null;
-		for(DomMapEntry<String,String> entry: rest.getDomScormValues().getValues()) {
-			ScormKey key = getKey(entry.getKey());
+		for(DomMapEntry<String,String> entry: entryList) {
+			ScormKey key = ScormKey.getKey(entry.getKey());
 			switch(key) {
 			case SCORE: 
 				entry.setValue(String.valueOf(pssc.getScore())); break;
@@ -230,46 +239,8 @@ public class SecuredUserScoDataManager {
 				break;
 			}
 		}
-
-    	return rest.getDomScormValues();
-    }
-
-    enum ScormKey {
-    	COCD,
-    	SCORE,
-    	LOCATION,
-    	COMPLETION_STATUS,
-    	TOTAL_TIME,
-    	TOTAL_TIME2004,
-    	SESSION_TIME,
-    	SESSION_TIME2004,
-    	SUSPEND_DATA,
-    	XML
-    }
-    static Map<String,ScormKey> keys = new TreeMap<String,ScormKey>();
-    static {
-    	keys.put("cmi.score.raw", ScormKey.SCORE);
-    	keys.put("cmi.completion_status", ScormKey.COMPLETION_STATUS);
-    	keys.put("completionStatus", ScormKey.COMPLETION_STATUS);
-
-    	keys.put("cmi.location", ScormKey.LOCATION);
-    	keys.put("cmi.core.lesson_location", ScormKey.LOCATION);
-    	keys.put("location", ScormKey.LOCATION);
-    	keys.put("total_time", ScormKey.TOTAL_TIME);
-    	keys.put("cmi.total_time", ScormKey.TOTAL_TIME2004);
-    	keys.put("session_time", ScormKey.SESSION_TIME);
-    	keys.put("cmi.session_time", ScormKey.SESSION_TIME2004);
-    	keys.put("suspendData", ScormKey.SUSPEND_DATA);
-    	keys.put("cmi.suspend_data", ScormKey.SUSPEND_DATA);
-    	keys.put("cocd", ScormKey.XML);
-// MORE to go    	
-    }
-    
-    private static ScormKey getKey(String key) {
-		ScormKey result = keys.get(key);
-		if(result ==  null) return ScormKey.COCD;
-		return result; // never null
 	}
+
 
 	@PUT
     @Produces({"application/json"})
@@ -310,7 +281,7 @@ public class SecuredUserScoDataManager {
 				return Boolean.FALSE;
 		}
 		for(DomMapEntry<String,String> entry: rest.getDomScormValues().getValues()) {
-			ScormKey key = getKey(entry.getKey());
+			ScormKey key = ScormKey.getKey(entry.getKey());
 			String value = entry.getValue();
 			switch(key) {
 			case SCORE: 
