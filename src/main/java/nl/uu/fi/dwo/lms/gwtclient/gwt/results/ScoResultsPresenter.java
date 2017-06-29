@@ -27,7 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -143,8 +143,8 @@ public class ScoResultsPresenter {
 
         
         
-        Map<String, DomResultStudentSco> sscMap = new HashMap<String, DomResultStudentSco>(scoContext.getChildren().size());
-        for (DomResultStudentSco ss : scoContext.getChildren().values()) {
+        Map<String, DomResultStudentScoContext> sscMap = new HashMap<String, DomResultStudentScoContext>(scoContext.getChildren().size());
+        for (DomResultStudentScoContext ss : scoContext.getChildren().values()) {
             sscMap.put(ss.getStudentSco().getUserID().getIdString(), ss);
         }
         selectedStudent = aStudent;
