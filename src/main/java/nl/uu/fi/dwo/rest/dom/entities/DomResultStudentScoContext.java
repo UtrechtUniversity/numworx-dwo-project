@@ -4,10 +4,10 @@ package nl.uu.fi.dwo.rest.dom.entities;
  * Student's results on a Sco
  * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
-public class DomResultStudentSco extends DomResultScore<DomResultScore> {
+public class DomResultStudentScoContext extends DomResultScore<DomResultScore> {
     private DomStudentScoContext studentSco;
 
-    public DomResultStudentSco(DomStudentScoContext aSco, DomStudent student){
+    public DomResultStudentScoContext(DomStudentScoContext aSco, DomStudent student){
         studentSco = aSco;
         super.setLabel(student.getUniqueDisplayName());
     }

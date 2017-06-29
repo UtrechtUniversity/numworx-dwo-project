@@ -174,8 +174,8 @@ public abstract class DomResultScore<T extends DomResultScore> {
         //verified code.
 
         //deepest level, most objects, no recursion
-        if (this instanceof DomResultStudentSco) {
-            DomResultStudentSco ss = (DomResultStudentSco) this;
+        if (this instanceof DomResultStudentScoContext) {
+            DomResultStudentScoContext ss = (DomResultStudentScoContext) this;
             this.setScore(ss.getStudentSco().getScore());
             this.setScoCount(0);
             this.setStudentScoCount(1);
@@ -251,8 +251,8 @@ public abstract class DomResultScore<T extends DomResultScore> {
             return;
         }
         //deepest level, most objects, no recursion
-        if (this instanceof DomResultStudentSco) {
-            DomResultStudentSco ss = (DomResultStudentSco) this;
+        if (this instanceof DomResultStudentScoContext) {
+            DomResultStudentScoContext ss = (DomResultStudentScoContext) this;
             this.setScore(ss.getStudentSco().getScore());
             this.setScoCount(0);
             this.setStudentScoCount(1);
@@ -371,8 +371,8 @@ public abstract class DomResultScore<T extends DomResultScore> {
      * @param studentScores
      */
     public void getStudentCollectedAverageSubtreeScore(Map<PersistenceId, DomResultStudent> studentScores) {
-        if (this instanceof DomResultStudentSco) {
-            DomResultStudentSco ss = (DomResultStudentSco) this;
+        if (this instanceof DomResultStudentScoContext) {
+            DomResultStudentScoContext ss = (DomResultStudentScoContext) this;
             ss.setScore(ss.getStudentSco().getScore());
 //            if (ss != null && ss.getStudentSco() != null) { //impossible else error
             DomResultStudent studentScore = studentScores.get(ss.getStudentSco().getUserID());

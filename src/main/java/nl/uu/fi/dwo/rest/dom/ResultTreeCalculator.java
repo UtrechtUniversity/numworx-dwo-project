@@ -8,7 +8,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -277,7 +277,7 @@ public class ResultTreeCalculator {
 //        Map<PersistenceId, DomResultStudentSco> studentScoMap = resultSco.getChildren();
         //collect StudentScos
         //collect activities
-        DomResultStudentSco[] studentScos;
+        DomResultStudentScoContext[] studentScos;
 
         if (students != null && students.length > 0) {
             DomResultScoContext[] scoContexts = new DomResultScoContext[1];
@@ -286,8 +286,8 @@ public class ResultTreeCalculator {
             result = new DomResultPlotMatrix(students, scoContexts);
 
             //collect studentSco's into map with a students userid as index.
-            Map<PersistenceId, DomResultStudentSco> studentScoMap = new HashMap<PersistenceId, DomResultStudentSco>(resultSco.getChildren().size());
-            for(DomResultStudentSco item: resultSco.getChildren().values()){
+            Map<PersistenceId, DomResultStudentScoContext> studentScoMap = new HashMap<PersistenceId, DomResultStudentScoContext>(resultSco.getChildren().size());
+            for(DomResultStudentScoContext item: resultSco.getChildren().values()){
                 studentScoMap.put(item.getStudentSco().getUserID(), item);
             }
             

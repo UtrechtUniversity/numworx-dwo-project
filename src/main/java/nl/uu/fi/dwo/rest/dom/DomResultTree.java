@@ -12,7 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentSco;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -155,7 +155,7 @@ public class DomResultTree {
                         DomStudent student = resultData.getStudents().get(ss.getUserID());
                         if (student != null && studentClasses.containsKey(curSchoolClass.getSchoolClass().getId())
                                 && studentClasses.get(curSchoolClass.getSchoolClass().getId()).getChildren().containsKey(student.getId())) {
-                            resultSco.getChildren().put(ss.getId(), new DomResultStudentSco(ss, student));
+                            resultSco.getChildren().put(ss.getId(), new DomResultStudentScoContext(ss, student));
                         }
                     }
                 }
