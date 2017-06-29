@@ -25,6 +25,7 @@ public class MsgDialogPresenter implements DialogEventHandler {
         void init();
 
         void showDialog(String text);
+//        void showConfirmDialog(String text);
     }
 
     public MsgDialogPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -40,6 +41,8 @@ public class MsgDialogPresenter implements DialogEventHandler {
             view.showDialog(dialogEvent.getMessage());
         }else if (dialogEvent.getEventValue()==DialogEvent.Dialogs.Dwo2ExceptionDialog){
             view.showDialog(dialogEvent.getException().getLocalizedCodeExplanation(null));
+//        }else if (dialogEvent.getEventValue()==DialogEvent.Dialogs.ConfirmDialog){
+//            view.showConfirmDialog(dialogEvent.getMessage());
         }
     }
 

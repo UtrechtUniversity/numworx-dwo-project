@@ -26,7 +26,9 @@ public class DialogEvent extends GwtEvent<DialogEventHandler> {
 
     public enum Dialogs {
         Message,
+        Dwo2MessageDialog,
         Dwo2ExceptionDialog,
+        
     }
     
     private String message;
@@ -39,6 +41,16 @@ public class DialogEvent extends GwtEvent<DialogEventHandler> {
         this.setEventValue(Dialogs.Message);
         message = localizedMessage;
     }
+//    
+//    public DialogEvent(Dwo2LocaleMessage msg, boolean confirm) {
+//        this.setEventValue(Dialogs.Dwo2MessageDialog);
+//        message = msg;
+//    }
+//
+//    public DialogEvent(String localizedMessage) {
+//        this.setEventValue(Dialogs.Message);
+//        message = localizedMessage;
+//    }
 
     public DialogEvent(Dwo2Exception e) {
         this.setEventValue(Dialogs.Dwo2ExceptionDialog);
