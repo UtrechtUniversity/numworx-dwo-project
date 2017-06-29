@@ -23,7 +23,7 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
-public class AddStudentsPresenter {
+public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
 
     private static final Logger LOG = Logger.getLogger(AddStudentsPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
@@ -61,12 +61,13 @@ public class AddStudentsPresenter {
         public String email;
         public boolean spare;
 
-        public StudentItem(String aFirstName, String anInsertion, String aFamilyName, String aUsercode, String aPassword) {
+        public StudentItem(String aFirstName, String anInsertion, String aFamilyName, String aUsercode, String aPassword, String anEmail) {
             givenName = aFirstName;
             insertion = anInsertion;
             familyName = aFamilyName;
             usercode = aUsercode;
             password = aPassword;
+            email = anEmail;
             spare = true;
         }
     }
@@ -86,7 +87,7 @@ public class AddStudentsPresenter {
     public void init(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
         studentItems = new ArrayList<AddStudentsPresenter.StudentItem>(10);
-        studentItems.add(new AddStudentsPresenter.StudentItem("", "", "", "", ""));
+        studentItems.add(new AddStudentsPresenter.StudentItem("", "", "", "", "",""));
         view.updateView(studentItems);
     }
 
@@ -164,7 +165,7 @@ public class AddStudentsPresenter {
 
     public void addItem(AddStudentsPresenter.StudentItem item) {
         studentItems.get(studentItems.size() - 1).spare = false;
-        studentItems.add(new StudentItem("", "", "", "", ""));
+        studentItems.add(new StudentItem("", "", "", "", "",""));
         view.refreshView();
     }
 
@@ -181,4 +182,13 @@ public class AddStudentsPresenter {
         }
     }
 
+    @Override
+    public void onDialogEvent(SchoolClassDialogEvent dialogEvent) {
+        if (dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.ImportStudentData) {
+            String[][] data = dialogEvent.getImportData();
+            for(int i =0;i<data.length;i++){
+            studentItems.add(new StudentItem(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5]));
+                    }
+        }
+    }
 }

@@ -12,35 +12,15 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandler> {
     private DomSchoolClass schoolClass;
     private DomStudent student;
+    private String[][] importData;
 
     /**
-     * @return the schoolClass
+     * @return the importData
      */
-    public DomSchoolClass getSchoolClass() {
-        return schoolClass;
+    public String[][] getImportData() {
+        return importData;
     }
 
-    /**
-     * @param schoolClass the schoolClass to set
-     */
-    public void setSchoolClass(DomSchoolClass schoolClass) {
-        this.schoolClass = schoolClass;
-    }
-
-    /**
-     * @return the student
-     */
-    public DomStudent getStudent() {
-        return student;
-    }
-
-    /**
-     * @param student the student to set
-     */
-    public void setStudent(DomStudent student) {
-        this.student = student;
-    }
-    
     public enum Dialogs {
         NewSchoolClass,
         EditSchoolClass,
@@ -48,7 +28,8 @@ public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandl
         EditStudents,
         EditTeachers,
         EditModules,
-        LoadStudentFile
+        LoadStudentFile,
+        ImportStudentData
     }
 
     public static Type<SchoolClassDialogEventHandler> TYPE = new Type<SchoolClassDialogEventHandler>();
@@ -57,6 +38,13 @@ public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandl
     public SchoolClassDialogEvent(Dialogs aState) {
         schoolClass=null;
         student = null;
+        this.setEventValue(aState);
+    }
+
+    public SchoolClassDialogEvent(Dialogs aState, String[][] data) {
+        schoolClass=null;
+        student = null;
+        importData = data;
         this.setEventValue(aState);
     }
     
@@ -89,4 +77,34 @@ public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandl
     public Dialogs getEventValue() {
         return eventValue;
     }
+    
+
+    /**
+     * @return the schoolClass
+     */
+    public DomSchoolClass getSchoolClass() {
+        return schoolClass;
+    }
+
+    /**
+     * @param schoolClass the schoolClass to set
+     */
+    public void setSchoolClass(DomSchoolClass schoolClass) {
+        this.schoolClass = schoolClass;
+    }
+
+    /**
+     * @return the student
+     */
+    public DomStudent getStudent() {
+        return student;
+    }
+
+    /**
+     * @param student the student to set
+     */
+    public void setStudent(DomStudent student) {
+        this.student = student;
+    }
+        
 }

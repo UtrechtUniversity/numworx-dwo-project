@@ -97,4 +97,5 @@ public class AddSchoolclassPresenter {
     public void Back() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS));
     }
+    
 }

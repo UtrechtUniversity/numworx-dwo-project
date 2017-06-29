@@ -1,8 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.logging.Level;
@@ -31,16 +29,14 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
     private Display view;
     private DomSchoolClass schoolClass;
-
+    private String[][] importData;
+    
     public interface Display {
-
         Widget asWidget();
-
         void clear();
-
         void init();
-
         void showDialog();
+        void enableImport();
     }
 
     public FileUploadStudentsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -53,6 +49,7 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
     @Override
     public void onDialogEvent(SchoolClassDialogEvent dialogEvent) {
         if (dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.LoadStudentFile) {
+            importData=null;
             view.showDialog();
 //            schoolClass = (DomSchoolClass) dialogEvent.getSchoolClass();
 //            Promise<DomSchoolClassFull> promise;
@@ -85,7 +82,7 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
     }
 
     public void init() {
-
+        importData=null;
     }
 
     /**
@@ -133,20 +130,28 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
         });
     }
 
-    public void loadFile(String file){
-                String[] lines = file.split("\n");
-                LOG.log(Level.INFO,"Read "+lines.length+" lines.");
-                for(String line : lines){
-                    String[] cols = line.split("\t");
-                    LOG.log(Level.INFO,"Read "+cols.length+" columns.");
-                    for(String field : cols){
-                                            LOG.log(Level.INFO,"Read >"+field+"< field.");
-                    }
-                }
-
+    public void loadFile(String file) {
+        
+        String[] lines = file.split("\n");
+        LOG.log(Level.INFO, "Read " + lines.length + " lines.");
+        importData = new String[lines.length][];
+        for (int i=0;i<lines.length; i++) {
+            String[] cols = lines[i].split("\t");
+            importData[i]= cols;
+            LOG.log(Level.INFO, "Read " + cols.length + " columns.");
+            if (cols.length != 6) {
+                eventBus.fireEvent(new DialogEvent("Invalid format"));
+                return;
+            }
+            for (String field : cols) {
+                LOG.log(Level.INFO, "Read >" + field + "< field.");
+            }
+        }
+        eventBus.fireEvent(new DialogEvent("Valid format, click import to add."));
+        view.enableImport();
     }
-    
-    public void importData(){
-    
-}
+
+    public void importData() {
+        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.ImportStudentData,importData));
+    }
 }

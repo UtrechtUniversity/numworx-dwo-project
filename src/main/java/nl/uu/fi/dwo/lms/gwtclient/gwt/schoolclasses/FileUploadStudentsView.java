@@ -57,6 +57,7 @@ public class FileUploadStudentsView extends Composite implements FileUploadStude
 
     public FileUploadStudentsView(FileUploadStudentsPresenter ap) {
         initWidget(uiBinder.createAndBindUi(this));
+        importBtn.setEnabled(false);
         fileUploadPresenter = ap;
         ap.setView(this);
         cancelBtn.addClickHandler(this);
@@ -107,6 +108,11 @@ public class FileUploadStudentsView extends Composite implements FileUploadStude
             dialogBox.center();
         }
         dialogBox.show();
+    }
+    
+    @Override
+    public void enableImport(){
+        importBtn.setEnabled(true);
     }
 
 }
