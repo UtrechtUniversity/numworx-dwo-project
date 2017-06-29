@@ -75,6 +75,7 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
     public AddStudentsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        eventBus.addHandler(SchoolClassDialogEvent.TYPE, this);        
     }
 
     /**
@@ -184,11 +185,17 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
 
     @Override
     public void onDialogEvent(SchoolClassDialogEvent dialogEvent) {
+                      LOG.log(Level.SEVERE, dialogEvent.getAssociatedType().toString());
         if (dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.ImportStudentData) {
             String[][] data = dialogEvent.getImportData();
+            studentItems.remove(studentItems.size()-1);
             for(int i =0;i<data.length;i++){
-            studentItems.add(new StudentItem(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5]));
+            StudentItem item = new StudentItem(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5]);
+            item.spare=false;
+            studentItems.add(item);
                     }
+            studentItems.add(new StudentItem("", "", "", "", "",""));
+            
             view.updateView(studentItems);
         }
         

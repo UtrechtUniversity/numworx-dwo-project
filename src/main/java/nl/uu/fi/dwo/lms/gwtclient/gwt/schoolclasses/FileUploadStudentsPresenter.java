@@ -43,7 +43,6 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         eventBus.addHandler(SchoolClassDialogEvent.TYPE, this);
-
     }
 
     @Override
@@ -130,8 +129,7 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
         });
     }
 
-    public void loadFile(String file) {
-        
+    public void loadFile(String file) {        
         String[] lines = file.split("\n");
         LOG.log(Level.INFO, "Read " + lines.length + " lines.");
         importData = new String[lines.length][];

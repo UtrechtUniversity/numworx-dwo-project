@@ -74,6 +74,7 @@ public class FileUploadStudentsView extends Composite implements FileUploadStude
 
         } else if (event.getSource() == importBtn) {
             LOG.log(Level.INFO, "Importing data into table now.");
+            importBtn.setEnabled(false);
             fileUploadPresenter.importData();
             dialogBox.hide();
 //            editSchoolClassPresenter.updateAndBack(schoolclassName.getText(), showTree.getValue(), setClassKey.getValue(), classKey.getValue());
