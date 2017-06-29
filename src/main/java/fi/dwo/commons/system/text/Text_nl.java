@@ -65,7 +65,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.TBL_PASSWORD, "wachtwoord" },
 			{ TextMapper.TBL_EMAIL, "rol" },
 			{ TextMapper.TBL_EDITCLASS, "bewerk klas" },
-			{ TextMapper.TBL_EDITMODULES, "bewerk modules" },
+			{ TextMapper.TBL_EDITMODULES, "kies modules" },
 			{ TextMapper.TBL_EDITSTUDENTS, "leerlingen" },
 			{ TextMapper.TBL_EDITTEACHERS, "docenten" },
 			{ TextMapper.TBL_CLASSNAME, "klasnaam" },
