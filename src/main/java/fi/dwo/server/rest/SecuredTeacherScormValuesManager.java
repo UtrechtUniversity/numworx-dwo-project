@@ -38,7 +38,7 @@ public class SecuredTeacherScormValuesManager {
     @PUT
     @Produces({"application/json"})
     @Path("/get")
-    DomTeacherScormValues get(@Context SecurityContext sc, RestTeacherScormValues rest) throws Dwo2Exception {
+    public DomTeacherScormValues get(@Context SecurityContext sc, RestTeacherScormValues rest) throws Dwo2Exception {
     	DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
     	DomStudentScoContext ssc = rest.getDomTeacherScormValues().getStudentScoContext();
     	// Context
@@ -64,7 +64,7 @@ public class SecuredTeacherScormValuesManager {
     @PUT
     @Produces({"application/json"})
     @Path("/set")
-    Boolean set(@Context SecurityContext sc, RestTeacherScormValues rest) {
+    public Boolean set(@Context SecurityContext sc, RestTeacherScormValues rest) {
     	return Boolean.FALSE;
     }
 
