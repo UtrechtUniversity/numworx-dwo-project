@@ -5,8 +5,11 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherScormValuesManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +17,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.function.Function;
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolClassListBoxItem;
@@ -33,6 +39,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacherScormValues;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * Handler for for Login actions.
@@ -60,9 +68,32 @@ public class ScoResultsPresenter {
     private int requests = 0;
 // Voor het Frame:
 	private Promise<String> launchData;
-	private Promise<DomStudentScoContextFull> scormVars1;
-	// private Promise<DomStudenScoDataFull> scormVars2;
+	private Promise<Map<String, String>> scormVars;
 
+	final Failure failure = new Failure() {
+        @Override
+        public void fail(Promise<?> resolved) throws Exception {
+            Throwable fail = resolved.getFailure();
+            if (fail instanceof Dwo2Exception) {
+                LOG.log(Level.SEVERE, fail.getMessage());
+                eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+            } else {
+                LOG.log(Level.SEVERE, fail.getMessage());
+                eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                //throw directly
+            }
+        }
+    };
+	
+    final Success identity = new Success() {
+
+		@Override
+		public Promise call(Promise resolved) throws Exception {
+			return resolved;
+		}};
+		
+	final <T> Success<T, T> identity() { return identity; }
+	
     public interface Display {
 
         Widget asWidget();
@@ -140,7 +171,7 @@ public class ScoResultsPresenter {
 				return t.toString();
 			}
 		});
-
+		launchData = launchData.then(identity(), failure);
         
         
         Map<String, DomResultStudentScoContext> sscMap = new HashMap<String, DomResultStudentScoContext>(scoContext.getChildren().size());
@@ -170,17 +201,18 @@ public class ScoResultsPresenter {
         view.updateView(selectedItem,studentItems);
 // fetch ScormValues of student (for each student)
         DomStudentScoContext ssc = sscMap.get(selectedItem.key).getStudentSco();
-        DomStudentScoContextFull full = new DomStudentScoContextFull();
-        full.setId(ssc.getId());
-        full.setScoID(ssc.getScoID());
-        full.setUserID(ssc.getUserID());
-        full.setSchoolGroupID(ssc.getSchoolGroupID());
-        full.setScore(ssc.getScore());
-        full.setLocation("0");
-// etc...
-        scormVars1 = Promises.resolved(full); // TODO better implementation
-// if both, updateFrame for this sco.
-		Promises.all(launchData, scormVars1).onResolve(new Runnable() {
+        SecuredTeacherScormValuesManager valueManager = new SecuredTeacherScormValuesManager();
+        Collection<String> keys = Arrays.asList(
+        		"cmi.suspend_data",
+        		"cmi.location",
+        		"cmi.score.raw",
+        		"cmi.completion_status",
+        		"cmi.comments_from_lms.0.comment"       		
+        		);
+		scormVars = valueManager.getValues(ssc, context, keys );
+        
+        // if both, updateFrame for this sco.
+		Promises.all(launchData, scormVars.then(null, failure)).onResolve(new Runnable() {
 
 			@Override
 			public void run() {
@@ -207,16 +239,16 @@ public class ScoResultsPresenter {
      * @return
      */
     public String getScormAPIValue(String key) {
-    	if("cmi.launch_data".equals(key))
+    	if ("cmi.launch_data".equals(key))
+    	{
     		return launchData.getValue();
-    	if("cmi.completion_status".equals(key)) {
+    	}
+    	if ("cmi.completion_status".equals(key))
+    	{
     		return "completed";
     	}
-    	if( "cmi.score.raw".equals(key)) {
-    		return String.valueOf(scormVars1.getValue().getScore());
-    	}
-    	if ("cmi.location".equals(key)) {
-    		return scormVars1.getValue().getLocation();
+    	if (scormVars.isDone() && scormVars.getFailure() == null) {
+    		return scormVars.getValue().getOrDefault(key, "");
     	}
     	
         return "";
