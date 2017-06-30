@@ -255,7 +255,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}-*/;
 	
 	private native static void zetNagekeken(Object inner, boolean b) /*-{
-		inner.zetNagekeken(b);
+		inner.setNagekeken(b);
 	}-*/;
 
 	@Override
