@@ -4,8 +4,10 @@ package fi.dwo.commons.persistence;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -14,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -187,6 +190,10 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
     	return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentScoContext);
     }
     
+	public static Long getNativeId(DomStudentScoContext o) throws Dwo2Exception {
+        return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentStudentScoContext);
+	}
+
     @Override
     public PersistenceClassType getType() {
         return super.getType();
@@ -220,7 +227,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
     public int hashCode() {
         return super.getIdString().hashCode();
     }
-
+    
 //    /**
 //     * This functionality is only public because of jax-rs.
 //     *
