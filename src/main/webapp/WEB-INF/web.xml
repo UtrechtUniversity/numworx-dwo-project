@@ -175,7 +175,7 @@
         </init-param>
         <init-param>
             <param-name>monitor</param-name>
-            <param-value>true</param-value>
+            <param-value>false</param-value>
         </init-param>
         <init-param>
             <param-name>threading</param-name>
