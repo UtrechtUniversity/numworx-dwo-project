@@ -105,7 +105,6 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private boolean hoofdPanel;
 
-	// call out fields; moet nog verder geimplementeerd worden
 	private boolean callOut = false;
 	private boolean callOutDrag = false;
 	int callOutMargeX0 = 15;
@@ -155,7 +154,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private ObjectMap instellingen;
 	private LayoutPanel mainPanel2 = null;
 	private Grid mainPanel = null;
-	private LayoutPanel randPanel = null;
+	private LayoutPanel callOutPanel = null;
+	//private LayoutPanel randPanel = null;
 	//private LayoutPanel[][] tekstVakken = null;
 	private TekstVak[][] tekstVakken = null;
 	//private FlowPanel[][] tekstVakken = null;
@@ -192,6 +192,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private boolean sleepdoel = false;
 	private boolean sleepHandle = false;
+	private Image crosshair = null;
 	private int sleepdoelMarge = 10;
 	private boolean sleepSnap = false;
 	private boolean pasAanH = false;
@@ -311,14 +312,19 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		mainPanel.setWidget(0, 0, tekstVakken[0][0]);
 		
-		randPanel = new LayoutPanel();
-		randPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
-		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
-		randPanel.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
-		mainPanel2.add(randPanel);
-		mainPanel2.setWidgetLeftRight(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-		mainPanel2.setWidgetTopBottom(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+//		randPanel = new LayoutPanel();
+//		randPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+//		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
+//		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+//		randPanel.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
+//		mainPanel2.add(randPanel);
+//		mainPanel2.setWidgetLeftRight(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+//		mainPanel2.setWidgetTopBottom(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+
+		mainPanel2.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		mainPanel2.getElement().getStyle().setBorderColor(randColor.toString());
+		mainPanel2.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+		mainPanel2.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
 		
 		mainPanel2.add(mainPanel);
 		mainPanel2.setWidgetLeftRight(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
@@ -652,7 +658,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		randDikte = randZichtbaar ? randDikte : 0; 
 
 		mainPanel2 = new LayoutPanel(); 
-		mainPanel2.setStylePrimaryName("tekstvakpanel");
+		if(!callOut)
+			mainPanel2.setStylePrimaryName("tekstvakpanel");
 		
 		setCurrentSize(breedte, hoogte);
 		
@@ -666,18 +673,26 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		mainPanel2.addDomHandler(touchHandler, TouchMoveEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchEndEvent.getType());
 		
-		randPanel = new LayoutPanel();
+//		randPanel = new LayoutPanel();
+//		if(bgColorZichtbaar)
+//			randPanel.getElement().getStyle().setBackgroundColor(bgColor.toString());
+//		randPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+//		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
+//		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+//		randPanel.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
+//		
 		if(bgColorZichtbaar)
-			randPanel.getElement().getStyle().setBackgroundColor(bgColor.toString());
-		randPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
-		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
-		randPanel.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
+			mainPanel2.getElement().getStyle().setBackgroundColor(bgColor.toString());
+		mainPanel2.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		mainPanel2.getElement().getStyle().setBorderColor(randColor.toString());
+		mainPanel2.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+		mainPanel2.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
 		
-		if (callOut)
-		{
-			randPanel.setPixelSize(breedte - callOutMargeX0 - callOutMargeX1, hoogte - callOutMargeY0 - callOutMargeY1);
-		}
+		
+//		if (callOut)
+//		{
+//			mainPanel2.setPixelSize(breedte - callOutMargeX0 - callOutMargeX1 - randDikte, hoogte - callOutMargeY0 - callOutMargeY1 - randDikte);
+//		}
 		
 		horizontalBorders = new LayoutPanel[hoogtes.size() - 1];
 		verticalBorders = new LayoutPanel[breedtes.size() - 1];
@@ -688,7 +703,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			//horizontalBorders[i].setPixelSize(breedte, 1);
 			horizontalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			horizontalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
-			randPanel.add(horizontalBorders[i]);
+			mainPanel2.add(horizontalBorders[i]);
 			if(!tableBorders)
 				horizontalBorders[i].setVisible(false);
 		}
@@ -698,7 +713,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			//verticalBorders[i].setPixelSize(1 , hoogte);
 			verticalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			verticalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
-			randPanel.add(verticalBorders[i]);
+			mainPanel2.add(verticalBorders[i]);
 			if(!tableBorders)
 				verticalBorders[i].setVisible(false);
 			
@@ -709,39 +724,46 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		if (callOut)
 		{
 			// hier moet als eerste een canvas met punttekening op mainPanel2 worden gezet
-			LayoutPanel callOutPanel = new LayoutPanel();
+			callOutPanel = new LayoutPanel();
+			callOutPanel.setStylePrimaryName("tekstvakpanel");
 			Canvas callOutCanvas = Canvas.createIfSupported();
 			setUpCallOutCanvas(callOutCanvas);
 			callOutPanel.add(callOutCanvas);
-			mainPanel2.add(callOutPanel);
-			mainPanel2.setWidgetLeftRight(callOutPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			mainPanel2.setWidgetTopBottom(callOutPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+			callOutPanel.setPixelSize(breedte, hoogte);
+			callOutPanel.add(mainPanel2);
+			
+			callOutPanel.setWidgetLeftRight(mainPanel2, callOutMargeX0, Style.Unit.PX, callOutMargeX1, Style.Unit.PX);
+			callOutPanel.setWidgetTopBottom(mainPanel2, callOutMargeY0, Style.Unit.PX, callOutMargeY1, Style.Unit.PX);
+			
+//			mainPanel2.add(callOutCanvas);
+//			mainPanel2.setWidgetLeftRight(callOutCanvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
+//			mainPanel2.setWidgetTopBottom(callOutCanvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		}
 		
 
 		int callOutExtraIndex = 0;
-		if (callOut)
-		{
-			// for call out create an extra row and column to account for callOutMargeX0 and callOutMargeY0
-			callOutExtraIndex = 1;
-		}
+//		if (callOut)
+//		{
+//			// for call out create an extra row and column to account for callOutMargeX0 and callOutMargeY0
+//			callOutExtraIndex = 1;
+//		}
 		
 		mainPanel = new Grid(hoogtes.size() + callOutExtraIndex, breedtes.size() + callOutExtraIndex);
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
-		mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow) + "px " + (-cellSpaceColumn) + "px");
+		mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow - randDikte) + "px " + (-cellSpaceColumn - randDikte) + "px");
 		
-		if (callOut)
-		{
-			mainPanel.setPixelSize(breedte - callOutMargeX0 - callOutMargeX1, hoogte - callOutMargeY0 - callOutMargeY1);
+//		if (callOut)
+//		{
+//			//mainPanel.setPixelSize(breedte - callOutMargeX0 - callOutMargeX1, hoogte - callOutMargeY0 - callOutMargeY1 );
 
 			// add an extra 'fill' panel to create the callOutMargeX0 and callOutMargeY0
-			LayoutPanel callOutFillPanel = new LayoutPanel();
-			LayoutPanel callOutFillPanel2 = new LayoutPanel();
-			callOutFillPanel.setPixelSize(callOutMargeX0, callOutMargeY0);
-			callOutFillPanel2.setPixelSize(callOutMargeX0, callOutMargeY0);
-			mainPanel.setWidget(0, 0, callOutFillPanel);
-			mainPanel.setWidget(0, 1, callOutFillPanel2);
-		}
+//			LayoutPanel callOutFillPanel = new LayoutPanel();
+//			LayoutPanel callOutFillPanel2 = new LayoutPanel();
+//			callOutFillPanel.setPixelSize(callOutMargeX0, callOutMargeY0);
+//			callOutFillPanel2.setPixelSize(callOutMargeX0, callOutMargeY0);
+//			mainPanel.setWidget(0, 0, callOutFillPanel);
+//			mainPanel.setWidget(0, 1, callOutFillPanel2);
+//		}
 		
 		tekstVakken = new TekstVak[hoogtes.size()][breedtes.size()];
 		for (int i = 0; i < hoogtes.size(); i++)
@@ -773,29 +795,30 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				mainPanel.setWidget(i + callOutExtraIndex, j + callOutExtraIndex, tekstVakken[i][j]);
 			}
 		}
-		mainPanel2.add(randPanel);
-		if (callOut)
-		{
-			// take the margins into account
-			mainPanel2.setWidgetLeftRight(randPanel, callOutMargeX0 + cellSpaceColumn - randDikte, Style.Unit.PX, 0, Style.Unit.PX);
-			mainPanel2.setWidgetTopBottom(randPanel, callOutMargeY0 + cellSpaceRow - randDikte, Style.Unit.PX, 0, Style.Unit.PX);
-		}
-		else
-		{
-			mainPanel2.setWidgetLeftRight(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			mainPanel2.setWidgetTopBottom(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-		}
-		
+		//mainPanel2.add(randPanel);
+		//TODO: fix borders for callout (maybe using callOutPanel?)
+//		if (callOut)
+//		{
+//			// take the margins into account
+//			mainPanel2.setWidgetLeftRight(randPanel, callOutMargeX0 + cellSpaceColumn - randDikte, Style.Unit.PX, 0, Style.Unit.PX);
+//			mainPanel2.setWidgetTopBottom(randPanel, callOutMargeY0 + cellSpaceRow - randDikte, Style.Unit.PX, 0, Style.Unit.PX);
+//		}
+//		else
+//		{
+//			mainPanel2.setWidgetLeftRight(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+//			mainPanel2.setWidgetTopBottom(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+//		}
+//		
 		
 		mainPanel2.add(mainPanel);
 		mainPanel2.setWidgetLeftRight(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		mainPanel2.setWidgetTopBottom(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		
 		if(sleepbaar && sleepHandle)
-		{	Image ic = new Image(DWOplayer.DWO_BUNDLE.crosshair().getSafeUri());
-			mainPanel2.add(ic);
-			mainPanel2.setWidgetLeftWidth(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
-			mainPanel2.setWidgetTopHeight(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
+		{	crosshair = new Image(DWOplayer.DWO_BUNDLE.crosshair().getSafeUri());
+			mainPanel2.add(crosshair);
+			mainPanel2.setWidgetLeftWidth(crosshair, 0, Style.Unit.PX, 20, Style.Unit.PX);
+			mainPanel2.setWidgetTopHeight(crosshair, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		}
 		if(hoek != 0)
 		{	//voor Chrome, Firefox
@@ -861,9 +884,9 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private void resizeForCallOut()
 	{
 		if (hoogtes.size() == 1)
-			hoogtes.set(0, (double) hoogte - callOutMargeY0 - callOutMargeY1);
+			hoogtes.set(0, (double) hoogte - callOutMargeY0 - callOutMargeY1 - 2 * randDikte);
 		if (breedtes.size() == 1)
-			breedtes.set(0, (double) breedte - callOutMargeX0 - callOutMargeX1);
+			breedtes.set(0, (double) breedte - callOutMargeX0 - callOutMargeX1 - 2 * randDikte);
 	}
 	
 //	public void setTableBounds()
@@ -888,21 +911,21 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 
 	public void plaatsTabelRanden()
 	{
-		double hoogteCum = -0.5 - cellSpaceRow / 2;
-		double breedteCum = -0.5 - cellSpaceColumn / 2;
+		double hoogteCum = -0.5 - cellSpaceRow / 2 - randDikte;
+		double breedteCum = -0.5 - cellSpaceColumn / 2 - randDikte;
 		
 		for (int i = 0; i < hoogtes.size() - 1; i++)
 		{	hoogteCum += ((Number) hoogtes.get(i)).doubleValue() + cellSpaceRow;
-			randPanel.setWidgetLeftRight(horizontalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
+			mainPanel2.setWidgetLeftRight(horizontalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
 			//randPanel.setWidgetTopHeight(horizontalBorders[i], Math.round(hoogteCum), Style.Unit.PX, 1, Style.Unit.PX);
-			randPanel.setWidgetTopHeight(horizontalBorders[i], (int) Math.round(hoogteCum), Style.Unit.PX, 1, Style.Unit.PX);
+			mainPanel2.setWidgetTopHeight(horizontalBorders[i], (int) Math.round(hoogteCum), Style.Unit.PX, 1, Style.Unit.PX);
 		}
 		for (int i = 0; i < breedtes.size() - 1; i++)
 		{
 			breedteCum += breedtes.get(i).doubleValue() + cellSpaceColumn;
 			//randPanel.setWidgetLeftWidth(verticalBorders[i], Math.round(breedteCum), Style.Unit.PX, 1, Style.Unit.PX);
-			randPanel.setWidgetLeftWidth(verticalBorders[i], (int) Math.round(breedteCum), Style.Unit.PX, 1, Style.Unit.PX);
-			randPanel.setWidgetTopBottom(verticalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
+			mainPanel2.setWidgetLeftWidth(verticalBorders[i], (int) Math.round(breedteCum), Style.Unit.PX, 1, Style.Unit.PX);
+			mainPanel2.setWidgetTopBottom(verticalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
 			
 		}
 	}
@@ -966,7 +989,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	public void setCurrentSize(int w, int h)
 	{
 		int oldHeight = hoogte;
-		mainPanel2.setPixelSize(w, h);
+		mainPanel2.setPixelSize(w - 2 * randDikte, h - 2 * randDikte);
 		if (w >= 0)
 			breedte = w;
 		if (h >= 0)
@@ -1566,7 +1589,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 
 	public Panel getAsPanel()
 	{
-		return mainPanel2;
+		if(callOut)
+			return callOutPanel;
+		else 
+			return mainPanel2;
 	}
 
 	public void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
@@ -1714,20 +1740,23 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			{	
 				//randPanel.getElement().getStyle().setBorderColor(selectieColor.toString());
 				if(bgColorZichtbaar)
-					randPanel.getElement().getStyle().setBackgroundColor(selectieColor.toString());
+					mainPanel2.getElement().getStyle().setBackgroundColor(selectieColor.toString());
 				else {
-					randPanel.getElement().getStyle().setBorderColor(selectieColor.toString());
+					mainPanel2.getElement().getStyle().setBorderColor(selectieColor.toString());
 					int borderWidth = (int) Math.round(Math.min(new Double(hoogte) / 2, new Double(breedte) / 2));
-					randPanel.getElement().getStyle().setBorderWidth(borderWidth, Unit.PX);
-					randPanel.getElement().getStyle().setOpacity(0.4); 
+					mainPanel2.getElement().getStyle().setBorderWidth(borderWidth, Unit.PX);
+					mainPanel2.getElement().getStyle().setOpacity(0.4); 
+					mainPanel2.setPixelSize(breedte - 2 * borderWidth, hoogte - 2 * borderWidth);					
 				}
 					
 				//
 				
 			}
 			else
-			{	randPanel.getElement().getStyle().setBorderColor(grijs.toString());
-				randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
+			{	mainPanel2.getElement().getStyle().setBorderColor(grijs.toString());
+				mainPanel2.getElement().getStyle().setBorderWidth(5, Unit.PX);
+				mainPanel2.setWidgetLeftRight(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
+				mainPanel2.setWidgetTopBottom(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
 			}
 		
 		}
@@ -1736,19 +1765,22 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			if(colorSelection)
 			{
 				if(bgColorZichtbaar)
-					randPanel.getElement().getStyle().setBackgroundColor(bgColor.toString());
+					mainPanel2.getElement().getStyle().setBackgroundColor(bgColor.toString());
 				else {
-					randPanel.getElement().getStyle().setBorderColor(randColor.toString());
-					randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
-					randPanel.getElement().getStyle().setOpacity(1);
+					mainPanel2.getElement().getStyle().setBorderColor(randColor.toString());
+					mainPanel2.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+					mainPanel2.getElement().getStyle().setOpacity(1);
+					mainPanel2.setPixelSize(breedte - 2 * randDikte, hoogte - 2 * randDikte);
 				}
 					
 			}
 			else
 			{
-				randPanel.getElement().getStyle().setBorderColor(randColor.toString());
+				mainPanel2.getElement().getStyle().setBorderColor(randColor.toString());
 				//randPanel.getElement().getStyle().setOpacity(1);
-				randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+				mainPanel2.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+				mainPanel2.setWidgetLeftRight(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+				mainPanel2.setWidgetTopBottom(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			}
 			
 			
@@ -1885,7 +1917,9 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 
 		if (callOut)
 		{
-			resizeRandPanel();
+			mainPanel2.setPixelSize(breedtes.get(0).intValue(), hoogtes.get(0).intValue());
+			//resizeRandPanel();
+			//TODO: replace by resizeCallOutPanel?
 		}
 
 		for (int i = 0; i < hoogtes.size(); i++)
@@ -1924,10 +1958,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	/**
 	 * Resize randpanel with the current breedtes and hoogtes.
 	 */
-	private void resizeRandPanel()
-	{
-		randPanel.setPixelSize(breedtes.get(0).intValue(), hoogtes.get(0).intValue());
-	}
+//	private void resizeRandPanel()
+//	{
+//		randPanel.setPixelSize(breedtes.get(0).intValue(), hoogtes.get(0).intValue());
+//	}
 
 	public boolean tabFocus(TekstVak source, boolean up)
 	{
@@ -2155,9 +2189,16 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 
 	public void wisGoedFoutSleep()
 	{
-		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
-		randPanel.getElement().getStyle().setOpacity(1);
-		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+		mainPanel2.getElement().getStyle().setBorderColor(randColor.toString());
+		mainPanel2.getElement().getStyle().setOpacity(1);
+		mainPanel2.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+		//mainPanel2.setPixelSize(breedte - 2 * randDikte, hoogte - 2 * randDikte);
+		mainPanel2.setWidgetLeftRight(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		
+		if(sleepbaar && sleepHandle)
+		{	mainPanel2.setWidgetLeftWidth(crosshair, 0, Style.Unit.PX, 20, Style.Unit.PX);
+			mainPanel2.setWidgetTopHeight(crosshair, 0, Style.Unit.PX, 20, Style.Unit.PX);
+		}
 	}
 
 	public void zetGoedFoutSleep(boolean b)
@@ -2181,12 +2222,19 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		{
 			if (b)
 			{
-				randPanel.getElement().getStyle().setBorderColor(CssColor.make(50, 225, 50).toString()); // groen
-				randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
+				mainPanel2.getElement().getStyle().setBorderColor(CssColor.make(50, 225, 50).toString()); // groen
+				
 			}
 			else
-			{	randPanel.getElement().getStyle().setBorderColor(CssColor.make(225, 50, 50).toString()); // rood
-				randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
+			{	mainPanel2.getElement().getStyle().setBorderColor(CssColor.make(225, 50, 50).toString()); // rood
+				
+			}
+			mainPanel2.getElement().getStyle().setBorderWidth(5, Unit.PX);
+			mainPanel2.setWidgetLeftRight(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
+			mainPanel2.setWidgetTopBottom(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
+			if(sleepbaar && sleepHandle)
+			{	mainPanel2.setWidgetLeftWidth(crosshair, - 5, Style.Unit.PX, 20, Style.Unit.PX);
+				mainPanel2.setWidgetTopHeight(crosshair, - 5, Style.Unit.PX, 20, Style.Unit.PX);
 			}
 		}
 	}
@@ -2828,7 +2876,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 					hoogtes.set(i, Double.valueOf(h));
 				}
 				hoogte += hoogtes.get(i) + cellSpaceRow;
-				mainPanel2.setPixelSize(-1, (int)hoogte);
+				mainPanel2.setPixelSize(-1, (int)hoogte - 2 * randDikte);
 				for(int j = 0; j < tekstVakken[i].length; j ++)
 				{
 					tekstVakken[i][j].setVisible(true);
