@@ -108,13 +108,13 @@ public class RightsDialog extends JDialog implements ActionListener {
 
     public RightsDialog(SchoolPanel schoolPanel, DomSchool4DwoAdmin sc) throws Dwo2Exception {
         this(DwoHelper.getFrameForComponent(schoolPanel), "Rechten voor " + sc.getSchoolName(), true);
-        setProfileID(GuiCreator.instance().dwo.getDwoProfile().getID());
+        setProfileID(GuiCreator.instance().dwo.getDwoProfileID());
         setSchool(sc);
     }
 
     public RightsDialog(DomSchool4DwoAdmin sc) throws Dwo2Exception {
         this(DwoHelper.getFrameForComponent(GuiCreator.instance().getMainPanel()), "Rechten voor " + sc.getSchoolName(), true);
-        setProfileID(GuiCreator.instance().dwo.getDwoProfile().getID());
+        setProfileID(GuiCreator.instance().dwo.getDwoProfileID());
         setSchool(sc);
     }
 //

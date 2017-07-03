@@ -85,8 +85,6 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 
     private static final Logger LOG = Logger.getLogger(ImportTask.class.getName());
 
-    public DwoProfile profile;
-
     class ImportTask extends JDialog implements Runnable, ActionListener, WindowListener {
 
         private ImportModuleModel model;
@@ -177,7 +175,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                     String description = c.getDescription();
                     name = CourseManagementPanel.replaceDuplicate(name, set);
                     try {
-                        newc = PersistenceFacade.instance().addCourse(s, name, description, profile, map, false);
+                        newc = PersistenceFacade.instance().addCourse(s, name, description, profileID, map, false);
                         if (map != null) {
                             map.addChild(newc);
                         } else {
@@ -980,11 +978,10 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
      * @throws HeadlessException
      * @throws PersistenceException
      */
-    public ExportImportDialog(Frame owner, User u, DwoProfile p) throws PersistenceException {
+    public ExportImportDialog(Frame owner, User u, int profileID) throws PersistenceException {
         super(owner);
         this.user = u;
-        this.profileID = p.getID();
-        profile = p;
+        this.profileID = profileID;
         initialize();
     }
 
@@ -1026,55 +1023,53 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
         jd.setVisible(true);
     }
 
-    /**
-     * @param args
-     * @throws java.lang.Exception
-     */
-    public static void main(String[] args) throws Exception {
-        DWO dwo = new DWO();
-        dwo.setStub(new AppletStub() {
-
-            @Override
-            public void appletResize(int arg0, int arg1) {
-            }
-
-            @Override
-            public AppletContext getAppletContext() {
-                return null;
-            }
-
-            @Override
-            public URL getCodeBase() {
-                return null;
-            }
-
-            @Override
-            public URL getDocumentBase() {
-                return null;
-            }
-
-            @Override
-            public String getParameter(String arg0) {
-                return null;
-            }
-
-            @Override
-            public boolean isActive() {
-                return false;
-            }
-        });
-        AppletUtil au = new AppletUtil(dwo);
-        DwoHelper.setAu(au);
-        DwoHelper.setApplet(dwo);
-        dwo.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
-        new GuiCreator(dwo);
-        User user = PersistenceFacade.instance().login("peterb");
-        DwoProfile p = new DwoProfile();
-        p.setID(1);
-        ExportImportDialog dialog = new ExportImportDialog(null, user, p);
-        dialog.setVisible(true);
-        System.exit(0);
-    }
+//    /**
+//     * @param args
+//     * @throws java.lang.Exception
+//     */
+//    public static void main(String[] args) throws Exception {
+//        DWO dwo = new DWO();
+//        dwo.setStub(new AppletStub() {
+//
+//            @Override
+//            public void appletResize(int arg0, int arg1) {
+//            }
+//
+//            @Override
+//            public AppletContext getAppletContext() {
+//                return null;
+//            }
+//
+//            @Override
+//            public URL getCodeBase() {
+//                return null;
+//            }
+//
+//            @Override
+//            public URL getDocumentBase() {
+//                return null;
+//            }
+//
+//            @Override
+//            public String getParameter(String arg0) {
+//                return null;
+//            }
+//
+//            @Override
+//            public boolean isActive() {
+//                return false;
+//            }
+//        });
+//        AppletUtil au = new AppletUtil(dwo);
+//        DwoHelper.setAu(au);
+//        DwoHelper.setApplet(dwo);
+//        dwo.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
+//        new GuiCreator(dwo);
+//        User user = PersistenceFacade.instance().login("peterb");
+//        ExportImportDialog dialog = new ExportImportDialog(null, user, 1);
+//        dialog.setVisible(true);
+//        System.exit(0);
+//    }
 
     @Override
     public ResultsModuleIF getUserResultsModule(Course course) {

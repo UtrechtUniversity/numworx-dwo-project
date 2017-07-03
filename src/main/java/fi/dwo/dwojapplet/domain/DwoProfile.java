@@ -2,12 +2,13 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.dwo.dwojapplet.gui.GuiCreator;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 
 /**
  * This class is responsible for containing the DWO configuration. Singleton.
  *
  * @author M.J.B. Kupers
- *
+ * @deprecated use DomDwoProfileFull
  */
 public class DwoProfile implements Descriptor {
 
@@ -28,7 +29,15 @@ public class DwoProfile implements Descriptor {
 
     }
 
-    /**
+    public DwoProfile(DomDwoProfileFull dwoProfile, int id) {
+    	dwoProfileID = id;
+    	description = dwoProfile.getDwoProfileDescription();
+    	text = dwoProfile.getDwoProfileText();
+    	name = dwoProfile.getDwoProfileName();
+		rights = dwoProfile.getDwoProfileRights();
+	}
+
+	/**
      * @return Returns the dwoProfileID.
      */
     public int getID() {

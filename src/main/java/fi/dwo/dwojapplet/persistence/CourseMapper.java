@@ -155,7 +155,7 @@ class CourseMapper extends XmlRpcMapper {
             School s = (School) obj;
             ht.put("schoolID", new Integer(s.getSchoolID()));
             ht.put("parentID", new Integer(0));
-            int profileID = ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
+            int profileID = ((DwoIF) DwoHelper.getApplet()).getDwoProfileID();
             ht.put("dwoProfileID", new Integer(profileID));
         }
         return cached(ht); // was super.get(ht);

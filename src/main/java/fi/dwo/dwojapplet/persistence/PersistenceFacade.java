@@ -545,15 +545,15 @@ public class PersistenceFacade {
         }
     }
 
-    public Sco[] getEditableScos(School school, DwoProfile profile) {
-        try {
-            return (Sco[]) MapperCreator.instance(Sco.class).get(new Object[]{school, profile});
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, null, e);
-        }
-        return EMPTY_SCOS;
-    }
+//    public Sco[] getEditableScos(School school, DwoProfile profile) {
+//        try {
+//            return (Sco[]) MapperCreator.instance(Sco.class).get(new Object[]{school, profile});
+//        }
+//        catch (Exception e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        return EMPTY_SCOS;
+//    }
 
     /**
      * Updates the name and the description of the sco in the database.
@@ -897,7 +897,7 @@ public class PersistenceFacade {
      * @throws CourseException
      */
     public Course addCourse(School s, String name, String description,
-            DwoProfile profile) throws CourseException {
+            int profile) throws CourseException {
         return addCourse(s, name, description, profile, null, false);
     }
 
@@ -1342,13 +1342,13 @@ public class PersistenceFacade {
      * @param school The school wherefore the course must created.
      * @param name The name of the course.
      * @param description The description of the course.
-     * @param dwoProfile
+     * @param profileID
      * @param withChildren
      * @param parent
      * @return The new course. If an exception occurs, null is returned.
      * @throws CourseException
      */
-    public Course addCourse(School school, String name, String description, DwoProfile dwoProfile, Course parent, boolean withChildren)
+    public Course addCourse(School school, String name, String description, int profileID, Course parent, boolean withChildren)
             throws CourseException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
@@ -1356,13 +1356,13 @@ public class PersistenceFacade {
                 int parentID = parent == null ? 0 : parent.getID();
                 int schoolID = parent == null ? school.getSchoolID() : parent.getSchoolID();
                 int result = dbAccess.addCourse(schoolID, name,
-                        description, dwoProfile.getID(), parentID, withChildren);
+                        description, profileID, parentID, withChildren);
                 Course c = new Course();
                 c.setCourseID(result);
                 c.setDescription(description);
                 c.setName(name);
                 c.setImageUrl(school.getImage());
-                c.setDwoProfile(dwoProfile.getID());
+                c.setDwoProfile(profileID);
                 c.setSchoolID(schoolID); // DEZE IS VERGETEN, WIM 9/5/2011
                 c.setParentID(parentID);
                 c.resetParent();
@@ -1503,7 +1503,7 @@ public class PersistenceFacade {
      * @return 
      */
     private static int getDwoProfileID() {
-        return ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
+        return ((DWO) DwoHelper.getApplet()).getDwoProfileID();
     }
 
     /**

@@ -8,6 +8,8 @@ import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+
 import java.awt.Container;
 import java.util.Date;
 
@@ -140,7 +142,7 @@ public interface DwoIF {
      *
      * @return 
      */
-    public DwoProfile getDwoProfile();
+    public DomDwoProfileFull getDwoProfile();
 
     /**
      * Log the user off of the system. Sets all the data to null.
@@ -487,7 +489,7 @@ public interface DwoIF {
 
     public String LMSCommit(ScoBase scoBase, String param);
 
-    public Sco[] getEditableScos();
+//    public Sco[] getEditableScos();
 
     public Course[] sequence(Course[] courses, SchoolClass sc);
 
@@ -496,5 +498,7 @@ public interface DwoIF {
     public void linkViaSAML();
 
 	public boolean setExtraRights(User user);
+
+	public int getDwoProfileID();
 
 }

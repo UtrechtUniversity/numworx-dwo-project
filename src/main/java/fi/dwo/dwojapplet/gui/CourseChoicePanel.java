@@ -57,16 +57,16 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
     private Object userObject;
     private Object jsObject;
 
-    /**
-     * Creates a new instance of a CourseChoisePanel This panel gives an
-     * overview of all the available courses to the user. FIXME ModuleTreePanel
-     * moet worden GuiConstants!
-     *
-     * @param dwoProfile
-     */
-    private CourseChoicePanel(DwoProfile dwoProfile) {
-        this(dwoProfile, GuiCreator.instance().getCourseList(), ModuleTreePanel.ALLE_MODULES);
-    }
+//    /**
+//     * Creates a new instance of a CourseChoisePanel This panel gives an
+//     * overview of all the available courses to the user. FIXME ModuleTreePanel
+//     * moet worden GuiConstants!
+//     *
+//     * @param dwoProfile
+//     */
+//    private CourseChoicePanel(DwoProfile dwoProfile) {
+//        this(dwoProfile, GuiCreator.instance().getCourseList(), ModuleTreePanel.ALLE_MODULES);
+//    }
 
     public CourseChoicePanel(Descriptor descriptor, Object userObject) {
         this(descriptor, descriptor.getChildren(), userObject);
@@ -84,10 +84,10 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
             }
             if (toplevel != null) // FIXME structuur niet transparant
             {
-                return new CourseChoicePanel(new TeacherStrategy.Bridge(GuiCreator.instance().getDWO().getDwoProfile(), toplevel), toplevel.getUserObject());
+                return new CourseChoicePanel(new TeacherStrategy.Bridge(new ProfileDescriptor(), toplevel), toplevel.getUserObject());
             }
         }
-        return new CourseChoicePanel(GuiCreator.instance().dwo.getDwoProfile(), ModuleTreePanel.ALLE_MODULES);
+        return new CourseChoicePanel(new ProfileDescriptor(), ModuleTreePanel.ALLE_MODULES);
     }
 
     @Override

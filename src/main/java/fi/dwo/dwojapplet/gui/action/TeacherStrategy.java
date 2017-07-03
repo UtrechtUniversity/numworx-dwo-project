@@ -13,6 +13,7 @@ import fi.dwo.dwojapplet.gui.CourseChoicePanel;
 import fi.dwo.dwojapplet.gui.CoursePanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
+import fi.dwo.dwojapplet.gui.ProfileDescriptor;
 import fi.dwo.dwojapplet.gui.SelectStrategy;
 import java.awt.Component;
 import java.awt.event.ActionListener;
@@ -253,7 +254,7 @@ public class TeacherStrategy implements SelectStrategy {
             if (value == ModuleTreePanel.ALLE_MODULES) {
                 panel = CourseChoicePanel.newInstance();
             } else {
-                panel = new CourseChoicePanel(new Bridge(instance.getDWO().getDwoProfile(), node), value);
+                panel = new CourseChoicePanel(new Bridge(new ProfileDescriptor(), node), value);
 
             }
             center.loadCenter(panel); // undo side-effect 'select Alle_modules'

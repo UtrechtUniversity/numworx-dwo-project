@@ -1018,18 +1018,18 @@ public class GuiCreator {
 
     }
 
-	public boolean renameProfile(DwoProfile profile, String newName,
-			String newHeader, String newText) {
-		return false;
-	}
-
-	public boolean deleteProfile(DwoProfile profile) {
-		return false;
-	}
-	
-	public boolean addProfile(DwoProfile profile) {
-		return false;
-	}
+//	public boolean renameProfile(DwoProfile profile, String newName,
+//			String newHeader, String newText) {
+//		return false;
+//	}
+//
+//	public boolean deleteProfile(DwoProfile profile) {
+//		return false;
+//	}
+//	
+//	public boolean addProfile(DwoProfile profile) {
+//		return false;
+//	}
 	
 	public CenterSubPanel getDwoProfilePanel() {
 		return null;

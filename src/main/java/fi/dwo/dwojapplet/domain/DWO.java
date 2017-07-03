@@ -8,6 +8,8 @@ import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.scorm.SCORM2004APIInterface;
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
@@ -15,8 +17,10 @@ import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
+import fi.dwo.dwojapplet.domain.rest.PublicProfileManager;
 import fi.dwo.dwojapplet.domain.rest.PublicUserManager;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
@@ -109,7 +113,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     private int nestedWait;
 
-    private DwoProfile dwoProfile;
+    private DomDwoProfileFull dwoProfile;
 
     private int dwoProfileID;
 
@@ -847,7 +851,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         }
         Vector v = new Vector();
         for (Course completeList1 : completeList) {
-            if (completeList1.getDwoProfile() == dwoProfile.getID()) {
+            if (completeList1.getDwoProfile() == dwoProfileID) {
                 v.addElement(completeList1);
             }
         }
@@ -921,8 +925,17 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     }
 
     @Override
-    public DwoProfile getDwoProfile() {
+    public DomDwoProfileFull getDwoProfile() {
         return dwoProfile;
+    }
+    
+    public int getDwoProfileID() {
+    	return dwoProfileID;
+    }
+ 
+    private DwoProfile deprecatedDwoProfile; 
+    public DwoProfile getDwoProfileDeprecated() {
+    	return deprecatedDwoProfile;
     }
 
     /**
@@ -1451,7 +1464,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             String dwoProfileString = getParameter("profile");
             if ((dwoProfileString != null) && (!dwoProfileString.equals(""))) {
                 try {
-                    dwoProfileID = Integer.parseInt(dwoProfileString);
+                	dwoProfile = PublicProfileManager.get(dwoProfileString);
+                	dwoProfileID = MySQLPersistenceId.getNativeId(dwoProfile).intValue();
                 } catch (Exception e) {
                 }
             }
@@ -1460,7 +1474,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         jvmChecker.check();
 
         try {
-            dwoProfile = (DwoProfile) PersistenceFacade.instance().get(dwoProfileID, DwoProfile.class);
+            if (dwoProfile==null)
+            	dwoProfile = PublicProfileManager.get(dwoProfileID);
+            deprecatedDwoProfile = new DwoProfile(dwoProfile, dwoProfileID);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.DLG_SERVER_OUT), e.getMessage(), JOptionPane.ERROR_MESSAGE);
         }
@@ -1996,16 +2012,16 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         }
     }
 
-    /**
-     * Alle aangepaste sco's van een school binnen dit profiel. TODO als de
-     * docent profiel-rechten heeft, wat dan?
-     *
-     * @return
-     */
-    @Override
-    public Sco[] getEditableScos() {
-        return PersistenceFacade.instance().getEditableScos(getUser().getSchool(), getDwoProfile());
-    }
+//    /**
+//     * Alle aangepaste sco's van een school binnen dit profiel. TODO als de
+//     * docent profiel-rechten heeft, wat dan?
+//     *
+//     * @return
+//     */
+//    @Override
+//    public Sco[] getEditableScos() {
+//        return PersistenceFacade.instance().getEditableScos(getUser().getSchool(), getDwoProfileDeprecated());
+//    }
 
     /*
      * (non-Javadoc)
@@ -2017,7 +2033,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public Course addCourse(String name, String description, Course parent, boolean isMap) {
         try {
             return PersistenceFacade.instance().addCourse(DwoHelper.getCurrentFacadeUser().getSchool(), name,
-                    description, dwoProfile, parent, isMap);
+                    description, getDwoProfileID(), parent, isMap);
         } catch (CourseException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;

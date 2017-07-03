@@ -254,19 +254,19 @@ public class GuiCreatorTeacher extends GuiCreator {
         return result;
     }
 
-    @Override
-    public AppletConfig[] getAppletConfigFromTeacher() {
-        Vector ac = new Vector();
-        Sco[] scos = dwo.getEditableScos();
-        for (int j = 0; j < scos.length; j++) {
-            Sco sco = scos[j];
-            AppletConfig config = getAppletConfigFromSco(sco);
-            ac.addElement(config);
-        }
-        AppletConfig[] result = new AppletConfig[ac.size()];
-        ac.toArray(result);
-        return result;
-    }
+//    @Override
+//    public AppletConfig[] getAppletConfigFromTeacher() {
+//        Vector ac = new Vector();
+//        Sco[] scos = dwo.getEditableScos();
+//        for (int j = 0; j < scos.length; j++) {
+//            Sco sco = scos[j];
+//            AppletConfig config = getAppletConfigFromSco(sco);
+//            ac.addElement(config);
+//        }
+//        AppletConfig[] result = new AppletConfig[ac.size()];
+//        ac.toArray(result);
+//        return result;
+//    }
 
     @Override
     public AppletConfig getAppletConfigFromSco(Sco sco) {

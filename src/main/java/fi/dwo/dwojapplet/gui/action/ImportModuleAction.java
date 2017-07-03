@@ -211,7 +211,7 @@ public class ImportModuleAction extends GuiAction {
 			schoolID = parentCourse.getSchoolID(); // takeover schoolid van parentcourse
 		}
 		if(schoolID != 0 || dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
-		{	id = zipper.addCourse(result, dwo.getDwoProfile().getID(), schoolID, id);
+		{	id = zipper.addCourse(result, dwo.getDwoProfileID(), schoolID, id);
 			MapperIF mapper = MapperCreator.instance(Course.class);
 			Course c = (Course) mapper.get(id);
 			mapper.put(id, c);

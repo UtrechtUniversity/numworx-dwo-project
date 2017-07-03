@@ -8,6 +8,8 @@ import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.LogoutURLAction;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -73,7 +75,7 @@ public class MainPanel extends BackgroundPanel {
      *
      * @param dwoProfile
      */
-    public MainPanel(DwoProfile dwoProfile) {
+    public MainPanel(DomDwoProfileFull dwoProfile) {
         this.setVisible(false);
         this.setBackground(GuiConstants.SUB_BACKGROUND);
         this.setLayout(new BorderLayout());
@@ -95,7 +97,7 @@ public class MainPanel extends BackgroundPanel {
 
         Box hbox = Box.createHorizontalBox();
         if (!GuiConstants.GUI_IMAGE_BG) {
-            l = new JLabel(dwoProfile.getDescription());
+            l = new JLabel(dwoProfile.getDwoProfileDescription());
             l.setFont(GuiConstants.RED_TEXT);
             l.setOpaque(false);
             l.setForeground(GuiConstants.RED_COLOR);

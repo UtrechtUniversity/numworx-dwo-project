@@ -183,25 +183,26 @@ class ScoMapper extends XmlRpcMapper {
         if (obj instanceof Course) {
             Course c = (Course) obj;
             ht.put("courseID", new Integer(c.getID()));
-        } else if (obj instanceof Object[]) {
-            Object[] objs = (Object[]) obj;
-            School school = (School) objs[0];
-            DwoProfile profile = (DwoProfile) objs[1];
-            Hashtable wheredef = new Hashtable();
-            wheredef.put("schoolID", new Integer(school.getSchoolID()));
-            wheredef.put("dwoprofileid", new Integer(profile.getID()));
-            String tableName = "tblScoView left join tblCourse on tblScoView.courseid = tblCourse.courseid";
-            String orderBy = "sconame";
-
-            Vector data = (Vector) cachemap.get(wheredef);
-            if (data == null) {
-                data = DbAccessCreator.instance().getTable(tableName, LAZY_SCO_KEYS, wheredef, orderBy);
-                cachemap.put(wheredef, data);
-            } else {
-                return getObjectFromReturn(data);
-            }
-            return fillcache(getObjectFromReturn(data));
         }
+//        else if (obj instanceof Object[]) {
+//            Object[] objs = (Object[]) obj;
+//            School school = (School) objs[0];
+//            DwoProfile profile = (DwoProfile) objs[1];
+//            Hashtable wheredef = new Hashtable();
+//            wheredef.put("schoolID", new Integer(school.getSchoolID()));
+//            wheredef.put("dwoprofileid", new Integer(profile.getID()));
+//            String tableName = "tblScoView left join tblCourse on tblScoView.courseid = tblCourse.courseid";
+//            String orderBy = "sconame";
+//
+//            Vector data = (Vector) cachemap.get(wheredef);
+//            if (data == null) {
+//                data = DbAccessCreator.instance().getTable(tableName, LAZY_SCO_KEYS, wheredef, orderBy);
+//                cachemap.put(wheredef, data);
+//            } else {
+//                return getObjectFromReturn(data);
+//            }
+//            return fillcache(getObjectFromReturn(data));
+//        }
         return cached(ht);
     }
 

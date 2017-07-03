@@ -462,7 +462,7 @@ public class User implements UserGroup, Comparable {
             return;
         }
         String id;
-        id = "[" + ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID() + "]";
+        id = "[" + ((DWO) DwoHelper.getApplet()).getDwoProfileID() + "]";
 
         String rights = getRights();
         int index = rights.indexOf(id);

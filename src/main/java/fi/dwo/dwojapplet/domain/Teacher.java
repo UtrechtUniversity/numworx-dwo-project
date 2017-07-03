@@ -86,7 +86,7 @@ public class Teacher extends User {
     public boolean hasRight(char right) {
         String id;
         //id = "[" + GuiCreator.instance().getDWO().getDwoProfile().getID() + "]";
-        id = "[" + ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID() + "]";
+        id = "[" + ((DWO) DwoHelper.getApplet()).getDwoProfileID() + "]";
 
         String rights = getRights();
         int index = rights.indexOf(id);

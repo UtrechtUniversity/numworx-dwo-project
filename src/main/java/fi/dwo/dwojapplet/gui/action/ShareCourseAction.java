@@ -37,7 +37,7 @@ public class ShareCourseAction extends GuiAction {
         }
         ExportImportDialog dialog;
         try {
-            dialog = new ExportImportDialog(DwoHelper.getFrameForComponent(component), instance().getUser(), instance().getDWO().getDwoProfile());
+            dialog = new ExportImportDialog(DwoHelper.getFrameForComponent(component), instance().getUser(), instance().getDWO().getDwoProfileID());
             dialog.setMap(map);
             dialog.setVisible(true);
             getCenter().updateMap(map);

@@ -149,7 +149,7 @@ public class Save2004Action extends GuiAction {
 // sco
 		out.putNextEntry(new ZipEntry(id + ".html"));
 // sco.txt is profiel afhankelijk!
-		int profile = GuiCreator.instance().getDWO().getDwoProfile().getID();
+		int profile = GuiCreator.instance().getDWO().getDwoProfileID();
 		InputStream in = au.getStream("resources/" + variant + "-" + profile + ".txt");
 		if (in == null) {
 		    in = au.getStream("resources/" + variant + ".txt");

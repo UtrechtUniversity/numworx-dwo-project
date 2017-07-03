@@ -26,6 +26,7 @@ import fi.dwo.dwojapplet.gui.action.SaveAppletAction;
 import fi.dwo.dwojapplet.gui.action.SaveScosAction;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -70,13 +71,13 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
     public static String STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
 
-    public static void initialize(DwoProfile profile) {
-        if(profile ==null){
+    public static void initialize(DomDwoProfileFull dwoProfile) {
+        if(dwoProfile ==null){
 //            GuiCreator.instance().getDWO().getDwoProfile();
         }
-        if (profile!=null && profile.getID() != 1) // TODO overleg met Peter nodig.
+        if (dwoProfile!=null) // TODO overleg met Peter nodig.
         {
-            STANDAARD_DWO_MODULES = profile.getHeader();
+            STANDAARD_DWO_MODULES = dwoProfile.getDwoProfileDescription();
         } else {
             STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
         }
@@ -617,7 +618,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
             root = prune(root);
             root.setParent(null);
         } else {
-            TOP_LEVEL = new TopMap(dwo.getDwoProfile()); // initialize TOP_LEVEL, if admin
+            TOP_LEVEL = new TopMap(new ProfileDescriptor()); // initialize TOP_LEVEL, if admin
         }
 
         DefaultTreeModel model = new DefaultTreeModel(root);
@@ -631,7 +632,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
      * @return root
      */
     protected DefaultMutableTreeNode prune(DefaultMutableTreeNode root) {
-        TOP_LEVEL = new TopMap(dwo.getDwoProfile());
+        TOP_LEVEL = new TopMap(new ProfileDescriptor());
         return root;
     }
 
@@ -866,7 +867,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
                 if (root.getUserObject() instanceof Course) {
                     TOP_LEVEL = new StudentTopMap((Course) root.getUserObject());
                 } else {
-                    TOP_LEVEL = new TopMap(dwo.getDwoProfile());  // TODO wat als root=schoolnode of dwonode? en ADMIN
+                    TOP_LEVEL = new TopMap(new ProfileDescriptor());  // TODO wat als root=schoolnode of dwonode? en ADMIN
                 }
                 return root;
             }
