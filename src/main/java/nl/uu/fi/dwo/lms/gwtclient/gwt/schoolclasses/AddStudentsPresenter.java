@@ -196,7 +196,7 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
                     }
             studentItems.add(new StudentItem("", "", "", "", "",""));
             
-            view.updateView(studentItems);
+            view.updateView(studentItems);            
         }
         
     }
