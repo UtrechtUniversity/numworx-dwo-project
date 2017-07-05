@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogPromise;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
@@ -218,9 +220,8 @@ public class StudentsInSchoolclassPresenter {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTS, schoolClass));
     }
 
-    
     void goBackToSchoolClasses() {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+   eventBus.fireEvent (new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
 
     /**
@@ -256,7 +257,7 @@ public class StudentsInSchoolclassPresenter {
                 // onSuccess update view
                 promise.then(new Success<Boolean, Void>() {
                     @Override
-                    public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+        public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                         if (resolved.getValue().booleanValue() == true) {
                             studentItems.get(fItem.key).selected = false;
                             if (index % 10 == 0 || index == cnt) {
@@ -268,7 +269,7 @@ public class StudentsInSchoolclassPresenter {
                 },
                         new Failure() {
                     @Override
-                    public void fail(Promise<?> resolved) throws Exception {
+        public void fail(Promise<?> resolved) throws Exception {
                         Throwable fail = resolved.getFailure();
                         if (fail instanceof Dwo2Exception) {
                             LOG.log(Level.SEVERE, fail.getMessage());
@@ -313,7 +314,7 @@ public class StudentsInSchoolclassPresenter {
                 // onSuccess update view
                 promise.then(new Success<Boolean, Void>() {
                     @Override
-                    public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+        public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                         if (resolved.getValue().booleanValue() == true) {
                             studentItems.get(fItem.key).selected = false;
                             if (index % 10 == 0 || index == cnt) {
@@ -325,7 +326,7 @@ public class StudentsInSchoolclassPresenter {
                 },
                         new Failure() {
                     @Override
-                    public void fail(Promise<?> resolved) throws Exception {
+        public void fail(Promise<?> resolved) throws Exception {
                         Throwable fail = resolved.getFailure();
                         if (fail instanceof Dwo2Exception) {
                             LOG.log(Level.SEVERE, fail.getMessage());

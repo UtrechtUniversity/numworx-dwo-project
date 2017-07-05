@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogPromise;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -75,7 +77,7 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
     public AddStudentsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        eventBus.addHandler(SchoolClassDialogEvent.TYPE, this);        
+        eventBus.addHandler(SchoolClassDialogEvent.TYPE, this);
     }
 
     /**
@@ -88,7 +90,7 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
     public void init(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
         studentItems = new ArrayList<AddStudentsPresenter.StudentItem>(10);
-        studentItems.add(new AddStudentsPresenter.StudentItem("", "", "", "", "",""));
+        studentItems.add(new AddStudentsPresenter.StudentItem("", "", "", "", "", ""));
         view.updateView(studentItems);
     }
 
@@ -101,8 +103,38 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
     }
 
     void goBackToStudentsInSchoolclass() {
-        SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass);
-        eventBus.fireEvent(event);
+        //DwoConfirmDialogPromise promise = new ConfirmDialogPromise();
+        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
+        p.getPromise().then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                LOG.log(Level.INFO, "returned value" + resolved.getValue());
+                if (resolved.getValue() == true) {
+                    SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass);
+                    eventBus.fireEvent(event);
+                }else{
+                    //do nothing.
+                }
+                return null;
+            }
+        }, new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }
+        );
+
+        eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
+
     }
 
     /**
@@ -166,7 +198,7 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
 
     public void addItem(AddStudentsPresenter.StudentItem item) {
         studentItems.get(studentItems.size() - 1).spare = false;
-        studentItems.add(new StudentItem("", "", "", "", "",""));
+        studentItems.add(new StudentItem("", "", "", "", "", ""));
         view.refreshView();
     }
 
@@ -185,19 +217,19 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
 
     @Override
     public void onDialogEvent(SchoolClassDialogEvent dialogEvent) {
-                      LOG.log(Level.SEVERE, dialogEvent.getAssociatedType().toString());
+        LOG.log(Level.SEVERE, dialogEvent.getAssociatedType().toString());
         if (dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.ImportStudentData) {
             String[][] data = dialogEvent.getImportData();
-            studentItems.remove(studentItems.size()-1);
-            for(int i =0;i<data.length;i++){
-            StudentItem item = new StudentItem(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5]);
-            item.spare=false;
-            studentItems.add(item);
-                    }
-            studentItems.add(new StudentItem("", "", "", "", "",""));
-            
-            view.updateView(studentItems);            
+            studentItems.remove(studentItems.size() - 1);
+            for (int i = 0; i < data.length; i++) {
+                StudentItem item = new StudentItem(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5]);
+                item.spare = false;
+                studentItems.add(item);
+            }
+            studentItems.add(new StudentItem("", "", "", "", "", ""));
+
+            view.updateView(studentItems);
         }
-        
+
     }
 }

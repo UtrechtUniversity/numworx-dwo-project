@@ -47,6 +47,7 @@ public class ViewFactoryImpl implements ViewFactory {
     private final EditSchoolclassPresenter.Display editSchoolclassView;
     private final EditStudentPresenter.Display editStudentView;
     private final MsgDialogPresenter.Display msgDialogView;
+    private final MsgConfirmDialogPresenter.Display msgConfirmDialogView;
     private final AddStudentsPresenter.Display addStudentsView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
 
@@ -66,6 +67,7 @@ public class ViewFactoryImpl implements ViewFactory {
         editStudentView = new EditStudentView(pf.getEditStudentPresenter());
         addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
         msgDialogView = new MsgDialogView(pf.getMsgDialogPresenter());
+        msgConfirmDialogView = new MsgConfirmDialogView(pf.getMsgConfirmDialogPresenter());
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
     }
 
@@ -131,6 +133,13 @@ public class ViewFactoryImpl implements ViewFactory {
      */
     public MsgDialogPresenter.Display getMsgDialogView() {
         return msgDialogView;
+    }
+
+    /**
+     * @return the msgConfirmDialogView
+     */
+    public MsgConfirmDialogPresenter.Display getMsgConfirmDialogView() {
+        return msgConfirmDialogView;
     }
 
     /**

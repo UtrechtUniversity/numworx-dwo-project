@@ -37,5 +37,6 @@ public interface PresenterFactory {
     public EditStudentPresenter getEditStudentPresenter();
     public AddStudentsPresenter getAddStudentsPresenter();
     public MsgDialogPresenter getMsgDialogPresenter();
+    public MsgConfirmDialogPresenter getMsgConfirmDialogPresenter();
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter();
 }

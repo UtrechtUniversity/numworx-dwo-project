@@ -452,6 +452,11 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     display: inline-block;
 }
 
+.horizontalPanel{
+    display: inline-block;
+    float: left;
+}
+
 
 .frame {
 	

@@ -38,7 +38,9 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final EditStudentPresenter editStudentPresenter;
     private final AddStudentsPresenter addStudentsPresenter;
     private final MsgDialogPresenter msgDialogPresenter;
+    private final MsgConfirmDialogPresenter msgConfirmDialogPresenter;
     private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
+    
 
     public PresenterFactoryImpl(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
@@ -58,6 +60,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
         addStudentsPresenter = new AddStudentsPresenter(eventBus, dwoGlobalVars);
         msgDialogPresenter = new MsgDialogPresenter(eventBus, dwoGlobalVars);
         fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
+        msgConfirmDialogPresenter = new MsgConfirmDialogPresenter(eventBus, dwoGlobalVars);
     }
 
     @Override
@@ -148,6 +151,13 @@ public class PresenterFactoryImpl implements PresenterFactory {
      */
     public MsgDialogPresenter getMsgDialogPresenter() {
         return msgDialogPresenter;
+    }
+
+    /**
+     * @return the msgDialogPresenter
+     */
+    public MsgConfirmDialogPresenter getMsgConfirmDialogPresenter() {
+        return msgConfirmDialogPresenter;
     }
 
     /**

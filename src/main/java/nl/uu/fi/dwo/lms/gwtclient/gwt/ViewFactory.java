@@ -34,5 +34,6 @@ public interface ViewFactory {
     public EditStudentPresenter.Display getEditStudentView();
     public AddStudentsPresenter.Display getAddStudentsView();
     public MsgDialogPresenter.Display getMsgDialogView();
+    public MsgConfirmDialogPresenter.Display getMsgConfirmDialogView();
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
 }
