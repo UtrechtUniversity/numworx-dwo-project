@@ -46,7 +46,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @PermitAll
 @Path("/secure/teacher/scormValues")
 public class SecuredTeacherScormValuesManager {
-    private static final Logger LOG = Logger.getLogger(SecuredTeacherScormValuesManagerIT.class.getName());
+    private static final Logger LOG = Logger.getLogger(SecuredTeacherScormValuesManager.class.getName());
 
     @PUT
     @Produces({"application/json"})

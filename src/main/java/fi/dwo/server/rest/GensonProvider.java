@@ -13,7 +13,7 @@ import com.owlike.genson.GensonBuilder;
 @Provider
 public class GensonProvider implements ContextResolver<Genson> {
 	private static final DateFormat yourDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-	private final Genson genson = new GensonBuilder().useDateFormat(yourDateFormat).create();
+	private final Genson genson = new GensonBuilder().useDateFormat(yourDateFormat).useDateAsTimestamp(false).create();
 
 	@Override
 	public Genson getContext(Class<?> type) {
