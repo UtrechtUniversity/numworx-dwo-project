@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerStudentCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -269,13 +270,13 @@ public class RPCHandlerV1 {
 				@Override
 				public DomCoursesOfSchoolClass apply(List<Map<String, Object>> t) {
 					DomCoursesOfSchoolClass result = new DomCoursesOfSchoolClass();
-					Map<PersistenceId, DomClassCourse> classcoursemap = new LinkedHashMap<>();
-					Map<PersistenceId, DomCourseStudent> coursemap = new LinkedHashMap<>();
+					List<DomMapEntry<PersistenceId, DomClassCourse>> classcoursemap = new ArrayList<>();
+					List<DomMapEntry<PersistenceId, DomCourseStudent>> coursemap = new ArrayList<>();
 					for(Map<String,Object> item: t) {
 						DomCourseStudent course = TO_DOMCOURSE.apply(item);
-						coursemap.put(course.getId(), course);
+						coursemap.add(new DomMapEntry<PersistenceId, DomCourseStudent>(course.getId(), course));
 						DomClassCourse classcourse = TO_DOMCLASSCOURSE.apply(item);
-						classcoursemap.put(classcourse.getId(), classcourse);
+						classcoursemap.add(new DomMapEntry<PersistenceId, DomClassCourse>(classcourse.getId(), classcourse));
 					}					
 					result.setClassCourses(classcoursemap);
 					result.setCourses(coursemap);
