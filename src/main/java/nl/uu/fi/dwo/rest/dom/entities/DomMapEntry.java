@@ -21,7 +21,12 @@ public class DomMapEntry<PersistenceId, V>  {
         value = entry.getValue();
     }
 
-    public PersistenceId getKey() {
+    public DomMapEntry(PersistenceId key, V value) {
+		this.key = key;
+		this.value = value;
+	}
+
+	public PersistenceId getKey() {
         return key;
     }
 

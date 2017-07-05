@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,8 +19,8 @@ public class DomCoursesOfSchoolClass {
 
     private Long fetchTimeStamp;   
     private DomSchoolClass schoolClass;
-    private Map<PersistenceId,DomClassCourse> classCourses;
-    private Map<PersistenceId, DomCourseStudent> courses;
+    private List<DomMapEntry<PersistenceId,DomClassCourse>> classCourses;
+    private List<DomMapEntry<PersistenceId, DomCourseStudent>> courses;
 
     /**
      * @return the fetchTimeStamp
@@ -52,28 +53,28 @@ public class DomCoursesOfSchoolClass {
     /**
      * @return the classCourses
      */
-    public Map<PersistenceId,DomClassCourse> getClassCourses() {
+    public List<DomMapEntry<PersistenceId, DomClassCourse>> getClassCourses() {
         return classCourses;
     }
 
     /**
      * @param classCourses the classCourses to set
      */
-    public void setClassCourses(Map<PersistenceId,DomClassCourse> classCourses) {
+    public void setClassCourses(List<DomMapEntry<PersistenceId, DomClassCourse>> classCourses) {
         this.classCourses = classCourses;
     }
 
     /**
      * @return the courses
      */
-    public Map<PersistenceId,DomCourseStudent> getCourses() {
+    public List<DomMapEntry<PersistenceId, DomCourseStudent>> getCourses() {
         return courses;
     }
 
     /**
      * @param courses the courses to set
      */
-    public void setCourses(Map<PersistenceId,DomCourseStudent> courses) {
+    public void setCourses(List<DomMapEntry<PersistenceId, DomCourseStudent>> courses) {
         this.courses = courses;
     }
 
