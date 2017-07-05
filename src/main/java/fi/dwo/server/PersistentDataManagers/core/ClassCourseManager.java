@@ -1,11 +1,14 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
@@ -142,7 +145,7 @@ public class ClassCourseManager {
             javax.persistence.Query q = em.createNamedQuery("PersistentClassCourse.findByClassID");
             q.setParameter("classID", c.getClassID());
             List<PersistentClassCourse> list = q.getResultList();
-            LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with userid {1}", new Object[]{list.size(), c.getClassID()});
+            LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with classid {1}", new Object[]{list.size(), c.getClassID()});
             return list;
         }
         finally {
@@ -150,6 +153,23 @@ public class ClassCourseManager {
         }
     }
 
+    public static List<PersistentClassCourse> findEntities(PersistentCourse c) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.TypedQuery<PersistentClassCourse> q = em.createNamedQuery("PersistentClassCourse.findByCourseID", PersistentClassCourse.class);
+            q.setParameter("courseID", c.getCourseID());
+            List<PersistentClassCourse> list = q.getResultList();
+            LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with courseid {1}", new Object[]{list.size(), c.getCourseID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
+
+    
+    
+    
     public static PersistentClassCourse findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
