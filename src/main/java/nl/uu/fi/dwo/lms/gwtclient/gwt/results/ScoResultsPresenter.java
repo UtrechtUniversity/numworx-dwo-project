@@ -58,7 +58,7 @@ public class ScoResultsPresenter {
     private DomResultStudent selectedStudent;
     private DomResultScoContext scoContext;
 
-    private String[] tableHeaders = {"student name", "total score"};
+    private String[] tableHeaders = {"student name", "total score", "verzegeld"};
     private DomSchoolClass schoolClass;
     private Map<String, DomStudent> studentMap;
     private Map<String, StudentItem> studentItems;
@@ -115,9 +115,11 @@ public class ScoResultsPresenter {
         public String familyName;
         public String usercode;
         public Double score;
-        public double[] subScores;
+ // later pas ingevuld!
+        public Double[] subScores;
+        public Boolean sealed;
 
-        public StudentItem(String aKey, String aFirstName, String anInsertion, String aFamilyName, String aUsercode, Double aScore, double[] aSubScores) {
+        public StudentItem(String aKey, String aFirstName, String anInsertion, String aFamilyName, String aUsercode, Double aScore, Double[] aSubScores) {
             key = aKey;
             givenName = aFirstName;
             insertion = anInsertion;
@@ -191,7 +193,7 @@ public class ScoResultsPresenter {
                 score = sscMap.get(s.getStudent().getId().getIdString()).getStudentSco().getScore();
             }
             StudentItem si = new StudentItem(s.getStudent().getId().getIdString(), s.getStudent().getGivenName(),
-                    s.getStudent().getInsertion(), s.getStudent().getFamilyName(), s.getStudent().getUserName(), score, new double[0]);
+                    s.getStudent().getInsertion(), s.getStudent().getFamilyName(), s.getStudent().getUserName(), score, null);
             if(selectedStudent.getStudent().getId().getIdString().equals(si.key) && si.score!=null){
                 selectedItem = si;
             }

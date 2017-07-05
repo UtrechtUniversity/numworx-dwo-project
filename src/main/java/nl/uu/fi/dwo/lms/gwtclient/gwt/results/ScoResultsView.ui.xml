@@ -6,6 +6,7 @@
     <g:FlowPanel  styleName="{dwoStyle.fullPanel}">
         <g:FlowPanel>
             <g:Button addStyleNames='dwoStyle' ui:field='backBtn'>back</g:Button>            
+            <g:Button addStyleNames='dwoStyle' ui:field='sealBtn'>seal</g:Button>            
             <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataTable'/>            
             <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager' />
         </g:FlowPanel>

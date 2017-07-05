@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.Cell;
+import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -10,6 +12,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
@@ -22,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.mysql.jdbc.log.Log;
 
 import java.util.Comparator;
 import java.util.List;
@@ -29,6 +33,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter.StudentItem;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 /**
@@ -36,7 +42,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
  *
  * @author G.A.J. van der Plas
  */
-public class ScoResultsView extends Composite implements ClickHandler, ScoResultsPresenter.Display {
+public class ScoResultsView extends Composite implements ScoResultsPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(ScoResultsView.class.getName());
 
@@ -51,6 +57,8 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
     CellTable dataTable;
     @UiField
     Button backBtn;
+    @UiField
+    Button sealBtn;
     @UiField
     Frame frame; // Hier komt /dwo/apps/player.html?locale=nl#cmi.launch_data:scoid
 
@@ -163,6 +171,29 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         }
     }
 
+    public class MyCheckBoxCell extends CheckboxCell {
+
+        boolean state = false;
+
+        public MyCheckBoxCell(boolean a, boolean b) {
+            super(a, b);
+        }
+
+        @Override
+        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, Boolean value, NativeEvent event, ValueUpdater<Boolean> valueUpdater) {
+            if (value == null) {
+                return;
+            }
+            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+            if ("change".equals(event.getType())) {
+
+            	LOG.log(Level.INFO, "key " + context.getKey() + " boolean " + value);
+            }
+        }
+    }
+
+    
+    
     ScoResultsPresenter.StudentItem selected;
 
     public ScoResultsView(ScoResultsPresenter sp) {
@@ -207,7 +238,7 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         dataTable.addColumn(value, tableHeaders[0]);
 
         //total score
-        value = new Column<ScoResultsPresenter.StudentItem, String>(cell) {
+        value = new Column<ScoResultsPresenter.StudentItem, String>(clickCell) {
             @Override
             public String getValue(ScoResultsPresenter.StudentItem object) {
                 return (object.score != null) ? "" + object.score : "";
@@ -232,6 +263,20 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         });
         dataTable.addColumnSortHandler(columnSortHandler);
         dataTable.addColumn(value, tableHeaders[1]);
+
+        Cell<Boolean> becel = new MyCheckBoxCell(true,true);
+		Column<StudentItem, Boolean> value2 = new Column<ScoResultsPresenter.StudentItem, Boolean>(becel) {
+
+			@Override
+			public Boolean getValue(StudentItem object) {
+				return Boolean.FALSE;
+			}
+        	
+        };
+        dataTable.addColumn(value2, tableHeaders[2]);
+        
+        
+        
         final SingleSelectionModel<ScoResultsPresenter.StudentItem> selectionModel = new SingleSelectionModel<ScoResultsPresenter.StudentItem>();
 
         dataTable.setSelectionModel(selectionModel);
@@ -280,8 +325,6 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         pager.setPageSize(dataTable.getPageSize());
 
         initWidget(uiBinder.createAndBindUi(this));
-        //controller must be before clicks occur
-        backBtn.addClickHandler(this);
     }
 
     @Override
@@ -293,12 +336,17 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void onClick(ClickEvent event) {
-        if (event.getSource() == backBtn) {
+    @UiHandler("backBtn")
+    public void onBack(ClickEvent event) {
             scoResultsPresenter.goBackToResults();
-        }
     }
 
+    @UiHandler("sealBtn")
+    public void onSeal(ClickEvent event) {
+    	LOG.info("seal all students");
+    }
+    
+    
     public void updateView(ScoResultsPresenter.StudentItem selectedItem, Map<String, ScoResultsPresenter.StudentItem> data) {
         dataProvider.getList().clear();
         dataProvider.getList().addAll(data.values());
@@ -321,10 +369,11 @@ public class ScoResultsView extends Composite implements ClickHandler, ScoResult
     }
     
     private void select(ScoResultsPresenter.StudentItem item) {
+    	LOG.info("select " + item.usercode);
         scoResultsPresenter.select(item);
     }
 
     private void cellSelected(int row, int col) {
-
+    	LOG.info("cellSelected " + row + "," + col);
     }
 }
