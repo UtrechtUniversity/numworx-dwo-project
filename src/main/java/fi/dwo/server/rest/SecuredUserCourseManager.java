@@ -10,12 +10,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
@@ -46,7 +43,7 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 /**
  * Handles the public registration of new users.
  *
- * @author G.A.J. van der Plas
+ * @author W.P.G. 
  */
 @Path("/secure/user/course")
 public class SecuredUserCourseManager {
