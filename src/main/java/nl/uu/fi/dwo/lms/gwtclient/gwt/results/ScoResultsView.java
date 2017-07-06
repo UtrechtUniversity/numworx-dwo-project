@@ -254,8 +254,8 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
                 }
 
                 // Compare the name columns.
-                if (o1 != null) {
-                    return (o2 != null) ? o1.score.compareTo(o2.score) : 1;
+                if (o1 != null && o1.score!=null) {
+                    return (o2 != null && o2.score!=null) ? o1.score.compareTo(o2.score) : 1;
                 }
                 return -1;
             }
