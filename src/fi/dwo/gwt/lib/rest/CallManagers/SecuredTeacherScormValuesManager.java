@@ -60,7 +60,7 @@ public class SecuredTeacherScormValuesManager {
 	/* (non-Javadoc)
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.ScoDataManager#setValues(nl.uu.fi.dwo.rest.dom.entities.DomScoContext, nl.uu.fi.dwo.rest.dom.entities.DomHasRole, java.util.Map)
 	 */
-	public Promise<Boolean> setValues(DomStudentScoContext sco, DomContext context, Map<String,String> map) {
+	public Promise<DomStudentScoContext> setValues(DomStudentScoContext sco, DomContext context, Map<String,String> map) {
 		RestTeacherScormValues rest = new RestTeacherScormValues();
 		DomTeacherScormValues values = new DomTeacherScormValues();
 		rest.setDomTeacherScormValues(values);
@@ -71,7 +71,7 @@ public class SecuredTeacherScormValuesManager {
 			list.add(new DomMapEntry<String,String>(entry));
 		}
 		values.setValues(list);
- 		PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+ 		PromiseCallback<DomStudentScoContext> defer = new PromiseCallback<DomStudentScoContext>();
 		service.set(rest, defer);
 		return defer.getPromise();
 	}

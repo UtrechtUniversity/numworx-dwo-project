@@ -3,6 +3,7 @@ package fi.dwo.gwt.lib.rest.client.RestCallers;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherScormValues;
 import nl.uu.fi.dwo.rest.entities.RestTeacherScormValues;
 
@@ -17,5 +18,5 @@ public interface SecuredTeacherScormValuesRestCaller extends RestService {
 
     @PUT
     @Path("/secure/teacher/scormValues/set")
-    public void set(RestTeacherScormValues rest,MethodCallback<Boolean> callback);
+    public void set(RestTeacherScormValues rest,MethodCallback<DomStudentScoContext> callback);
 }
