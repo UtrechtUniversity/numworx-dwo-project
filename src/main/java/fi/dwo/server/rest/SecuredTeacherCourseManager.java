@@ -85,8 +85,8 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 //     */
 //    @PUT
 //    @Produces({"application/json"})
-//    @Path("/getAll")
-//    public DomResultsPerTeacher getTeachersResults(@Context SecurityContext sc, RestDwoProfile aProfile) {
+//    @Path("/getSchoolCourses")
+//    public DomSchoolCourses getTeachersResults(@Context SecurityContext sc, RestDwoProfile aProfile) {
 //
 //        DomDwoProfile domProfile = aProfile.getDomDwoProfile();
 //        DomContext context = aProfile.getRestContext();
