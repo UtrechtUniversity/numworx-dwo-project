@@ -147,8 +147,8 @@ public class SecuredTeacherScormValuesManagerIT {
         DomStudentScoContext studentScoContext = pssd.buildDomStudentScoContext();
 		domTeacherScormValues.setStudentScoContext(studentScoContext);
 		rest.setDomTeacherScormValues(domTeacherScormValues);
-        Boolean result = manager.set(sc, rest);
-        assertTrue(result.booleanValue());
+        DomStudentScoContext result = manager.set(sc, rest);
+        assertEquals(studentScoContext.getId(), result.getId());
         pssd = StudentScoContextManager.findEntity(sscID);
         assertEquals(value, pssd.getCompletionStatus());
 	}

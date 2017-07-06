@@ -61,13 +61,14 @@ public class StudentScoContextManager {
      * @param studentOf
      * @throws Exception
      */
-    public static void edit(PersistentStudentScoContext studentOf) throws PersistenceException {
+    public static PersistentStudentScoContext edit(PersistentStudentScoContext studentOf) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             studentOf = em.merge(studentOf);
             em.getTransaction().commit();
+            return studentOf;
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {

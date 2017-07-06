@@ -77,7 +77,7 @@ public class SecuredTeacherScormValuesManager {
     @PUT
     @Produces({"application/json"})
     @Path("/set")
-    public Boolean set(@Context SecurityContext sc, RestTeacherScormValues rest) throws Dwo2Exception {
+    public DomStudentScoContext set(@Context SecurityContext sc, RestTeacherScormValues rest) throws Dwo2Exception {
     	DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
     	DomStudentScoContext ssc = rest.getDomTeacherScormValues().getStudentScoContext();
 // Context
@@ -93,9 +93,13 @@ public class SecuredTeacherScormValuesManager {
         PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
 // TODO check if domHasRole is a teacher of same school as pssc
         // ...
-        Long id = MySQLPersistenceId.getNativeId(ssc);
-		List<DomMapEntry<String, String>> entryList = rest.getDomTeacherScormValues().getValues();
-		PersistentStudentScoContext pssc = StudentScoContextManager.findEntity(id);
+        PersistentStudentScoContext pssc;
+        if(ssc.getId() != null) {
+        	Long id = MySQLPersistenceId.getNativeId(ssc); // NPE
+        	pssc = StudentScoContextManager.findEntity(id);
+        } else {
+        	pssc = null;
+        }
 // FIXME Race condition
 		if(pssc == null) {
 			pssc = new PersistentStudentScoContext();
@@ -104,7 +108,7 @@ public class SecuredTeacherScormValuesManager {
 			pssc.setCreateTime(new Time(now));
 			
 // XXX get Native ID from other persistenceId's
-			Long scoId = getSingleNativeId(ssc.getUserID().getIdString(), PersistenceClassType.PersistentUser);
+			Long scoId = getSingleNativeId(ssc.getScoID().getIdString(), PersistenceClassType.PersistentScoContext);
 			PersistentScoContext scoContext = ScoContextManager.findEntity(scoId);
 // NPE if not exists
 			scoId = scoContext.getScoID();
@@ -126,6 +130,7 @@ public class SecuredTeacherScormValuesManager {
 		}
 		PersistentStudentScoData pssd = null;
 		Scorm2Xml xml = null;
+		List<DomMapEntry<String, String>> entryList = rest.getDomTeacherScormValues().getValues();
 
 		for(DomMapEntry<String,String> entry: entryList) {
 			ScormKey key = ScormKey.getKey(entry.getKey());
@@ -192,13 +197,13 @@ public class SecuredTeacherScormValuesManager {
 			if (pssd != null) {
 				StudentScoDataManager.edit(pssd);
 			}
-			StudentScoContextManager.edit(pssc);
+			pssc = StudentScoContextManager.edit(pssc);
 		} catch (PersistenceException ex) {
             LOG.log(Level.WARNING, "User {0} could not update studentscocontext {1}.", new Object[]{sc.getUserPrincipal().getName(), pssc.getStudentSco()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update studentscocontext " + sc.getUserPrincipal().getName() + ".");
 		}
-    	return Boolean.TRUE;
+    	return pssc.buildDomStudentScoContext();
     }
 
 // FIXME Embed into MysqlNative
