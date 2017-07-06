@@ -31,10 +31,10 @@ import org.osgi.util.promise.Success;
 /**
  * Stores global variables The class is state is initialized by calls in
  * different boot phases. Whenever a global state is changed it should be called
- * and have the state updated. The following states exist: Unintialized, 
- * Initializing, NotLoggedIn, LoggedIn, LoggingOut, Closing.
- * Additionally each state can transition to the Uninitialized. Please see the source
- * for an accurate transition description.<p/>
+ * and have the state updated. The following states exist: Unintialized,
+ * Initializing, NotLoggedIn, LoggedIn, LoggingOut, Closing. Additionally each
+ * state can transition to the Uninitialized. Please see the source for an
+ * accurate transition description.<p/>
  *
  * @author Gert van der Plas
  */
@@ -45,16 +45,14 @@ public class DwoGlobalVars {
     private SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
     private SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
 
-
     private DwoGlobalVarsState state = DwoGlobalVarsState.Unintialized;
     private DwoGlobalVarPromise statePromise = new DwoGlobalVarPromise(this, DwoGlobalVarsState.LoggedIn);
     private static volatile DwoGlobalVars instance;
     private DomUserFull currentUser;
     private DomLoginContext currentLoginContext;
     private DomSchoolsRolesAndClassesV2 schoolLogins;
-    private DomSchoolRoleAndClassV2  activeSchoolRoleAndClass;    
+    private DomSchoolRoleAndClassV2 activeSchoolRoleAndClass;
     private Promise<DomDwoProfileFull> profile;
-
 
     /**
      * DwoGlobalStates that define which functions can be called without
@@ -92,7 +90,7 @@ public class DwoGlobalVars {
          */
         Closing
     }
-    
+
     /**
      * @return the state
      */
@@ -109,7 +107,7 @@ public class DwoGlobalVars {
 
     /**
      * Returns the activeSchoolRoleAndClass selected in the Application.
-     * 
+     *
      * @return the activeSchoolRoleAndClass
      */
     public DomSchoolRoleAndClassV2 getActiveSchoolRoleAndClass() {
@@ -122,8 +120,6 @@ public class DwoGlobalVars {
     public void setActiveSchoolRoleAndClass(DomSchoolRoleAndClassV2 activeSchoolRoleAndClass) {
         this.activeSchoolRoleAndClass = activeSchoolRoleAndClass;
     }
-
- 
 
     /**
      * @return the instance
@@ -148,7 +144,6 @@ public class DwoGlobalVars {
 //            Window.alert("System error: app improperly configured.");
 //        }
 //    }
-
     /**
      * @return the dwoLocale
      */
@@ -182,12 +177,13 @@ public class DwoGlobalVars {
 
     /**
      * boot phase one
+     *
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     private void initProperties() throws Dwo2Exception {
         LOG.log(Level.INFO, "Starting initProperties():");
         setServer(DwoConstants.constants.server());
-        LOG.log(Level.INFO, "restserver="+ server+".");
+        LOG.log(Level.INFO, "restserver=" + server + ".");
         LOG.log(Level.INFO, "Done initProperties():");
     }
 
@@ -208,13 +204,14 @@ public class DwoGlobalVars {
 
     /**
      * Performs a login for the given credentials and initializes DwoGlobalVars
-     * to a DwoGlobalVarsState.LoggedIn state if the credentials are correct. Otherwise the
-     * DwoGlobalVarsState returned in the Promise is DwoGlobalVarsState.NotLoggedIn.
-     * 
+     * to a DwoGlobalVarsState.LoggedIn state if the credentials are correct.
+     * Otherwise the DwoGlobalVarsState returned in the Promise is
+     * DwoGlobalVarsState.NotLoggedIn.
+     *
      * @param usercode
      * @param password
      * @return
-     * @throws Dwo2Exception 
+     * @throws Dwo2Exception
      */
     public Promise<DwoGlobalVarsState> initUser(String usercode, String password) throws Dwo2Exception {
         if (state != DwoGlobalVarsState.NotLoggedIn) {
@@ -231,18 +228,19 @@ public class DwoGlobalVars {
             @Override
             public Promise<DwoGlobalVarsState> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
                 LOG.log(Level.INFO, "Login completed setting current user.");
-                
+
                 initUser(resolved.getValue().getDomUserFull());
                 state = DwoGlobalVarsState.LoggedIn;
-        LOG.log(Level.INFO, "state=LoggedIn. Calling statePromise.getPromise.");
+                LOG.log(Level.INFO, "state=LoggedIn. Calling statePromise.getPromise.");
                 return statePromise.getPromise();
             }
         },
                 new Failure() {
             @Override
-            public void fail(Promise<?> resolved) throws Exception {
+            public void fail(Promise<?> fail) throws Exception {
                 clearCurrentUser();
                 state = DwoGlobalVarsState.NotLoggedIn;
+                throw (Dwo2Exception) fail;
             }
         }
         );
@@ -273,10 +271,10 @@ public class DwoGlobalVars {
         },
                 new Failure() {
             @Override
-            public void fail(Promise<?> resolved) throws Exception {
+            public void fail(Promise<?> fail) throws Exception {
                 clearCurrentUser();
                 state = DwoGlobalVarsState.NotLoggedIn;
-                statePromise.fail(new Dwo2Exception());
+                statePromise.fail((Dwo2Exception) fail);
             }
         }
         );
@@ -375,18 +373,18 @@ public class DwoGlobalVars {
         schoolLogins.getActiveSchoolRoleAndClass().setSchoolClass(currentSchoolClass);
     }
 
-	/**
-	 * @return the profile
-	 */
-	public Promise<DomDwoProfileFull> getProfile() {
-		return profile;
-	}
+    /**
+     * @return the profile
+     */
+    public Promise<DomDwoProfileFull> getProfile() {
+        return profile;
+    }
 
-	/**
-	 * @param profile the profile to set
-	 */
-	public void setProfile(Promise<DomDwoProfileFull> profile) {
-		this.profile = profile;
-	}
+    /**
+     * @param profile the profile to set
+     */
+    public void setProfile(Promise<DomDwoProfileFull> profile) {
+        this.profile = profile;
+    }
 
 }

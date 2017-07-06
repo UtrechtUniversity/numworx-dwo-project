@@ -287,7 +287,39 @@ public class StudentsInSchoolclassPresenter {
 
     }
 
-    public void removeSelectedFromSchoolClass() {
+    
+    public void removeSelectedFromSchoolClass(){
+        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
+        p.getPromise().then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                LOG.log(Level.INFO, "returned value" + resolved.getValue());
+                if (resolved.getValue() == true) {
+                    removeStudentsFromSchoolClass();
+                }else{
+                    //do nothing.
+                }
+                return null;
+            }
+        }, new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }
+        );    
+        eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
+    }
+    
+    private void removeStudentsFromSchoolClass() {
         DomSchoolClass targetSchoolClass = schoolClass;
         final int cnt;
         int tmp = 0;

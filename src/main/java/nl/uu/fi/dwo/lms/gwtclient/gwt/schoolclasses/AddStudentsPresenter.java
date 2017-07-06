@@ -103,7 +103,6 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
     }
 
     void goBackToStudentsInSchoolclass() {
-        //DwoConfirmDialogPromise promise = new ConfirmDialogPromise();
         ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
         p.getPromise().then(new Success<Boolean, Void>() {
             @Override

@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
@@ -17,7 +18,7 @@ public class LoginPresenter {
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
 
-    public interface Display extends IsWidget{
+    public interface Display extends IsWidget {
 
         Widget asWidget();
 
@@ -55,6 +56,7 @@ public class LoginPresenter {
                         LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
                     } else {
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
+                        eventBus.fireEvent(new DialogEvent(("Login failed, unknown usercode and password combination.") ));
                         LOG.log(Level.INFO, "login failed. Firing Login fail event.");
 
                     }
@@ -64,17 +66,29 @@ public class LoginPresenter {
                     new Failure() {
                 @Override
                 public void fail(Promise<?> resolved) throws Exception {
-                    eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
-                    LOG.log(Level.INFO, "login failed. Firing Login fail event.");
+                    Throwable fail = resolved.getFailure();
+                    if (fail instanceof Dwo2Exception) {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        //note the order of the events in case ofan exception
+                        //that might break the running thread.
+                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
+                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    } else {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        //throw directly
+                    }
                 }
             }
-            ).onResolve(new Runnable() {
-                public void run() {
-                    System.out.println("Need tot test onResolve and fill data here! Calling stuff to get results promise here!");
-                }
-            });;
+            ); //                    .onResolve(new Runnable() {
+                    //                public void run() {
+                    //                    System.out.println("Need tot test onResolve and fill data here! Calling stuff to get results promise here!");
+                    //                }
+                    //            }
+//         );
         } catch (Dwo2Exception ex) {
             Logger.getLogger(LoginPresenter.class.getName()).log(Level.SEVERE, null, ex);
+            eventBus.fireEvent(new DialogEvent(ex));
         }
     }
 
