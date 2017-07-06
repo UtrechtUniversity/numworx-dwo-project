@@ -41,6 +41,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 /**
  * Handler for for Login actions.
@@ -224,17 +225,31 @@ public class ScoResultsPresenter {
         
     }
 
-    public void select(StudentItem item) {
-        //selected item in single select table
-        //show the new student's studenscodata in the window api if the score is not null
-        //otherwise show message or refuse selection.
-    }
+//    public void select(StudentItem item) {
+//        //selected item in single select table
+//        //show the new student's studenscodata in the window api if the score is not null
+//        //otherwise show message or refuse selection.
+//    }
 
     //function to be called from the view in the future when subscores are supported.
-//    public void selected(int row, int col) {
-//        //selected item in single select table
-//        //show the new student's studenscodata in the window api.
-//    }
+    public void selectItem(StudentItem item, int col) {
+        //TODO Wim. Update the sco result view frame.
+        switch(col){
+            case 0: //Selected studentname (currently an non-click cell)
+            case 1: //Selected score (a MyClickCell)
+                //display scoresult of student in frame
+                break;
+            case 2: //selected selection toggle
+                  //do some magic stuff   
+            break;
+            //
+            default:
+                Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Programmer's error, out of cases!");
+                ex.fillInStackTrace();
+                LOG.log(Level.INFO,""+ex.getDwo2Message()+ex.getStackTrace().toString());
+                break;
+        }
+    }
     /**
      *
      * @param key een CMI variable
