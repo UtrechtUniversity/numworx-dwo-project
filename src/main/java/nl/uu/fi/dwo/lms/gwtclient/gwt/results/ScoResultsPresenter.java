@@ -10,7 +10,9 @@ import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -25,6 +27,7 @@ import org.osgi.util.promise.Success;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter.StudentItem;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolClassListBoxItem;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
@@ -42,6 +45,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Handler for for Login actions.
@@ -50,7 +54,8 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
  */
 public class ScoResultsPresenter {
 
-    private static final Logger LOG = Logger.getLogger(ScoResultsPresenter.class.getName());
+    private static final SecuredTeacherScormValuesManager SECURED_TEACHER_SCORM_VALUES_MANAGER = new SecuredTeacherScormValuesManager();
+	private static final Logger LOG = Logger.getLogger(ScoResultsPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private List<DomStudentScoContext> resultScoData;
@@ -92,6 +97,17 @@ public class ScoResultsPresenter {
 		public Promise call(Promise resolved) throws Exception {
 			return resolved;
 		}};
+	private Map<String, DomResultStudentScoContext> sscMap;
+	private DomContext context;
+	private static final Collection<String> keys = Arrays.asList(
+			"cmi.suspend_data",
+			"cmi.location",
+			"cmi.score.raw",
+			"cmi.completion_status",
+			"cmi.comments_from_lms.0.comment"       		
+			);
+	private StudentItem selectedItem;
+	private PersistenceId schoolGroupID;
 		
 	final <T> Success<T, T> identity() { return identity; }
 	
@@ -160,14 +176,12 @@ public class ScoResultsPresenter {
     public void init(DomResultTree aResultTree, DomResultScoContext aScoContext, DomResultStudent aStudent) { //DomScoContext aSelectedScoContext, DomSchoolClass aSelectedSchoolClass,         
         resultTree = aResultTree;
         scoContext = aScoContext;
-// fetch JSONValue of scocontext (once)
-        final DomScoContext sco = scoContext.getScoContext();
 // FIXME WRONG MANAGER
         StudentScoDataManager manager = new SecuredStudentScoDataManager();
-        DomContext context = new DomContext();
+        context = new DomContext();
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 		DomDwoProfile profile = dwoGlobalVars.getProfile().getValue();
-		launchData = manager.getJSONLaunchDataBytes(sco, profile, context).map(new Function<JSONValue, String>() {
+		launchData = manager.getJSONLaunchDataBytes(scoContext.getScoContext(), profile, context).map(new Function<JSONValue, String>() {
 
 			@Override
 			public String apply(JSONValue t) {
@@ -177,53 +191,77 @@ public class ScoResultsPresenter {
 		launchData = launchData.then(identity(), failure);
         
         
-        Map<String, DomResultStudentScoContext> sscMap = new HashMap<String, DomResultStudentScoContext>(scoContext.getChildren().size());
+        sscMap = new HashMap<String, DomResultStudentScoContext>(scoContext.getChildren().size());
+        studentMap = new HashMap<String, DomStudent>();
         for (DomResultStudentScoContext ss : scoContext.getChildren().values()) {
             sscMap.put(ss.getStudentSco().getUserID().getIdString(), ss);
         }
         selectedStudent = aStudent;
         resultMatrix = ResultTreeCalculator.GetScoreOfActivitiesByStudentsInSco(resultTree, aScoContext);
         studentItems = new HashMap<String, StudentItem>(resultMatrix.getvSize());
-        StudentItem selectedItem=null;
+        selectedItem = null;
         //TODO Wim, make the promise to fetch the first scoData and StudentScoData then when resolved execute the code block below
         for (int i = 0; i < resultMatrix.getvSize(); i++) {
             DomResultStudent s = (DomResultStudent) resultMatrix.getvIndex(i);
             // fetch and insert score here.
             Double score = null;
-            if (sscMap.containsKey(s.getStudent().getId().getIdString())) {
-                score = sscMap.get(s.getStudent().getId().getIdString()).getStudentSco().getScore();
+            DomStudent student = s.getStudent();
+			String studentID = student.getId().getIdString();
+			if (sscMap.containsKey(studentID)) {
+                score = sscMap.get(studentID).getStudentSco().getScore();
             }
-            StudentItem si = new StudentItem(s.getStudent().getId().getIdString(), s.getStudent().getGivenName(),
-                    s.getStudent().getInsertion(), s.getStudent().getFamilyName(), s.getStudent().getUserName(), score, null);
-            if(selectedStudent.getStudent().getId().getIdString().equals(si.key) && si.score!=null){
+            StudentItem si = new StudentItem(studentID, student.getGivenName(),
+                    student.getInsertion(), student.getFamilyName(), student.getUserName(), score, null);
+            if(selectedStudent.getStudent().getId().getIdString().equals(studentID) ){
                 selectedItem = si;
             }
-            studentItems.put(s.getStudent().getId().getIdString(), si);
+            studentItems.put(studentID, si);
+            studentMap.put(studentID, student);
         }
         LOG.log(Level.FINE, "nr students:" + resultMatrix.getvSize());
+  // TODO Gert, at least 1 student met resultaat en alle studenten hebben dezelfde schoolgroupid
+        schoolGroupID = sscMap.values().iterator().next().getStudentSco().getSchoolGroupID();
         view.updateView(selectedItem,studentItems);
 // fetch ScormValues of student (for each student)
-        DomStudentScoContext ssc = sscMap.get(selectedItem.key).getStudentSco();
-        SecuredTeacherScormValuesManager valueManager = new SecuredTeacherScormValuesManager();
-        Collection<String> keys = Arrays.asList(
-        		"cmi.suspend_data",
-        		"cmi.location",
-        		"cmi.score.raw",
-        		"cmi.completion_status",
-        		"cmi.comments_from_lms.0.comment"       		
-        		);
-		scormVars = valueManager.getValues(ssc, context, keys );
+        setStudentFrame(selectedItem);
+		getAllSeals();
         
+    }
+
+	private void setStudentFrame(StudentItem selectedItem) {
+		LOG.info("set Student Frame");
+		DomResultStudentScoContext rssc = sscMap.get(selectedItem.key);
+		if( rssc == null) {
+// als null, insert dummy studentscocontext voor "SEAL"
+			scormVars = Promises.resolved(new HashMap<>());
+			
+		} else {
+			DomStudentScoContext ssc = rssc.getStudentSco();
+	        scormVars = SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(ssc, context, keys );			
+		}
         // if both, updateFrame for this sco.
-		Promises.all(launchData, scormVars.then(null, failure)).onResolve(new Runnable() {
+		Promises.all(launchData, scormVars.then(
+				new Success<Map<String,String>, Void>() {
+
+					@Override
+					public Promise<Void> call(
+							Promise<Map<String, String>> resolved)
+							throws Exception {
+						selectedItem.sealed = 
+								"completed".equals( resolved.getValue().get("cmi.completion_status"));
+						view.updateView(selectedItem, studentItems);
+						return null;
+					}
+				}
+				
+				
+				, failure)).onResolve(new Runnable() {
 
 			@Override
 			public void run() {
-				view.updateFrame(sco);				
+				view.updateFrame(scoContext.getScoContext());				
 			}});
-		
-        
-    }
+	}
 
 //    public void select(StudentItem item) {
 //        //selected item in single select table
@@ -238,6 +276,8 @@ public class ScoResultsPresenter {
             case 0: //Selected studentname (currently an non-click cell)
             case 1: //Selected score (a MyClickCell)
                 //display scoresult of student in frame
+            	selectedItem = item;
+            	setStudentFrame(item);
                 break;
             case 2: //selected selection toggle
                   //do some magic stuff   
@@ -280,4 +320,109 @@ public class ScoResultsPresenter {
     public String setScormAPIValue(String key, String value) {
         return "true";
     }
+
+	public Promise<?> setSeal(StudentItem object, Boolean value) {
+		LOG.info("setSeal  " + object.usercode + " to " + value);
+		object.sealed = value;
+// Send to server
+		String status = Boolean.TRUE.equals(value) ? "completed": "incomplete";
+		
+		DomResultStudentScoContext rssc = sscMap.get(object.key);
+		DomStudentScoContext sco;
+		Success<DomStudentScoContext, Void> succes;
+LOG.info("RSSC = " + rssc);
+		if(rssc != null) {
+			sco = rssc.getStudentSco();
+			succes = null;
+		} else {
+LOG.info("create scc");
+			DomStudentScoContext ssc = new DomStudentScoContext();
+			ssc.setSchoolGroupID(schoolGroupID);
+			ssc.setScoID(scoContext.getScoContext().getId());
+			DomStudent student = studentMap.get(object.key);
+LOG.info("Student = " + student);
+			ssc.setUserID(student.getId());
+			final DomResultStudentScoContext forsuccess = rssc = new DomResultStudentScoContext(ssc, student);
+			sscMap.put(object.key, rssc);
+			sco = ssc;
+LOG.info(ssc.toString());
+			succes = new Success<DomStudentScoContext, Void>() {
+				
+				@Override
+				public Promise<Void> call(Promise<DomStudentScoContext> resolved)
+						throws Exception {
+					LOG.info("set " + forsuccess.getLabel());
+					forsuccess.setStudentSco(resolved.getValue());
+					return null;
+				}
+			};
+		}
+		return SECURED_TEACHER_SCORM_VALUES_MANAGER.setValues(sco, context, Collections.singletonMap("cmi.completion_status", status)).then(succes, failure);
+		
+	}
+
+	public void sealAllStudents() {
+		if(studentItems.isEmpty()) return;
+		Collection<StudentItem> items = studentItems.values();		
+		final Iterator<StudentItem> iterator = items.iterator();
+		final Runnable[] runners = new Runnable[1];
+		runners[0] = new Runnable() {
+
+			@Override
+			public synchronized void run() {
+				while(iterator.hasNext()) {
+					StudentItem next = iterator.next();
+					if(!Boolean.TRUE.equals(next.sealed))
+					{
+						LOG.info("Seal "+ next.usercode);
+						setSeal(next, Boolean.TRUE).onResolve(runners[0]);
+						return;
+					}	
+				}
+				view.updateView(selectedItem, studentItems);
+			}};
+		int n = 1;
+		for(int i = 0; i < n; i++)
+			runners[0].run();
+	}
+	
+	private void getAllSeals() {
+		if(sscMap.isEmpty()) return;
+		Collection<DomResultStudentScoContext> items = sscMap.values();		
+		final Iterator<DomResultStudentScoContext> iterator = items.iterator();
+		final Runnable[] runners = new Runnable[1];
+		runners[0] = new Runnable() {
+
+			@Override
+			public synchronized void run() {
+				while(iterator.hasNext()) {
+					DomResultStudentScoContext next = iterator.next();
+					String key = next.getStudentSco().getUserID().getIdString();
+					StudentItem item = studentItems.get(key);
+					if(item.sealed == null) 
+					{
+						LOG.info("get Seal "+ item.usercode);
+						DomStudentScoContext sco = next.getStudentSco();
+						SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(sco, context, Collections.singleton("cmi.completion_status"))
+						.then(new Success<Map<String,String>, Void>() {
+
+							@Override
+							public Promise<Void> call(
+									Promise<Map<String, String>> resolved)
+									throws Exception {
+								if(item.sealed == null) {
+									String value = resolved.getValue().get("cmi.completion_status");
+									item.sealed = "completed".equals(value);
+								}
+								return null;
+							}}).onResolve(runners[0]);
+						return;
+					}	
+				}
+				view.updateView(selectedItem, studentItems);
+			}};
+		int n = 1;
+		for(int i = 0; i < n; i++)
+			runners[0].run();
+	}
 }

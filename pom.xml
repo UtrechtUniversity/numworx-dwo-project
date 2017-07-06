@@ -41,6 +41,7 @@
         <!-- Don't let your Mac use a crazy non-standard encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <gwt.style>PRETTY</gwt.style>
     </properties>
 
     <scm>
@@ -167,19 +168,19 @@
                     </execution>
                 </executions>
             </plugin> 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--             <plugin> -->
+<!--                 <groupId>org.apache.maven.plugins</groupId> -->
+<!--                 <artifactId>maven-source-plugin</artifactId> -->
+<!--                 <version>3.0.1</version> -->
+<!--                 <executions> -->
+<!--                     <execution> -->
+<!--                         <id>attach-sources</id> -->
+<!--                         <goals> -->
+<!--                             <goal>jar</goal> -->
+<!--                         </goals> -->
+<!--                     </execution> -->
+<!--                 </executions> -->
+<!--             </plugin> -->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.0.0</version>

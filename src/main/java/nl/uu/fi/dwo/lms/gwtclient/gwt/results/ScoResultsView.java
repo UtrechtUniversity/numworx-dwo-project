@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -263,15 +264,24 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
         dataTable.addColumnSortHandler(columnSortHandler);
         dataTable.addColumn(value, tableHeaders[1]);
 
-        Cell<Boolean> becel = new MyCheckBoxCell(true,true);
+        Cell<Boolean> becel = new MyCheckBoxCell(false,false);
 		Column<StudentItem, Boolean> value2 = new Column<ScoResultsPresenter.StudentItem, Boolean>(becel) {
 
 			@Override
 			public Boolean getValue(StudentItem object) {
-				return Boolean.FALSE;
+				return object.sealed;
 			}
         	
         };
+        value2.setFieldUpdater(new FieldUpdater<ScoResultsPresenter.StudentItem, Boolean>() {
+			
+			@Override
+			public void update(int index, StudentItem object, Boolean value) {
+				LOG.info("update value " + index + ", " + object + ", " + value);
+				scoResultsPresenter.setSeal(object, value);
+				
+			}
+		});
         dataTable.addColumn(value2, tableHeaders[2]);
         
         
@@ -349,6 +359,7 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
     @UiHandler("sealBtn")
     public void onSeal(ClickEvent event) {
     	LOG.info("seal all students");
+    	scoResultsPresenter.sealAllStudents();
     }
     
     
@@ -361,6 +372,7 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
         }
     }
 
+    
     public void updateFrame(DomScoContext sco) {
     	String scoId = "96797";
     	String pid = sco.getId().getIdString();
@@ -368,8 +380,9 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
     	if(komma >=0) {
     		scoId = pid.substring(komma+1);
     	}
-    	
-    	String url = "/dwo/apps/player.html?locale=nl#cmi.launch_data:"+scoId;
+    	String random = String.valueOf(System.currentTimeMillis());
+    	LOG.info("Frame = "+random);
+    	String url = "/dwo/apps/player.html?locale=nl&t=" + random + "#cmi.launch_data:"+scoId;
     	frame.setUrl(url);
     }
     
