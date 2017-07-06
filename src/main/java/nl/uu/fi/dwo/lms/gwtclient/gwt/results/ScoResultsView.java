@@ -210,7 +210,7 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
         final MyClickCell clickCell = new MyClickCell();
 
         //fullname column
-        Column<ScoResultsPresenter.StudentItem, String> value = new Column<ScoResultsPresenter.StudentItem, String>(cell) {
+        Column<ScoResultsPresenter.StudentItem, String> value = new Column<ScoResultsPresenter.StudentItem, String>(clickCell) {
             @Override
             public String getValue(ScoResultsPresenter.StudentItem object) {
                 return object.givenName + " " + object.insertion + " " + object.familyName + " - " + object.usercode;
@@ -278,18 +278,18 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
         
 
  //code for row selection        
-//        final SingleSelectionModel<ScoResultsPresenter.StudentItem> selectionModel = new SingleSelectionModel<ScoResultsPresenter.StudentItem>();
-//        dataTable.setSelectionModel(selectionModel);
-//        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-//            public void onSelectionChange(SelectionChangeEvent event) {
+        final SingleSelectionModel<ScoResultsPresenter.StudentItem> selectionModel = new SingleSelectionModel<ScoResultsPresenter.StudentItem>();
+        dataTable.setSelectionModel(selectionModel);
+        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
+        {
+            public void onSelectionChange(SelectionChangeEvent event) {
 //                if(((ScoResultsPresenter.StudentItem) selectionModel.getSelectedObject()).score!=null){
-////                select(selectionModel.getSelectedObject());
-//                }else{
-//                    selectionModel.clear();
-//                }
-//                LOG.log(Level.INFO, "selection key: " + selectionModel.getSelectedObject().key);
-//            }
-//        });
+                selected = selectionModel.getSelectedObject();
+                //selectionModel.setSelected(selected, true);
+                LOG.log(Level.INFO, "selection key: " + selectionModel.getSelectedObject().key);
+            }
+        }
+);
 
 //code for row/column selection
 //        //for each of the subscores add a column and use a clickable cell
@@ -326,8 +326,8 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
         pager.setDisplay(dataTable);
         pager.setPageSize(dataTable.getPageSize());
         //disable yellow keyboard selection bar and hover coloring 
-//        dataTable.setSkipRowHoverCheck(true);
-//        dataTable.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
+        dataTable.setSkipRowHoverCheck(true);
+        dataTable.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
         initWidget(uiBinder.createAndBindUi(this));
     }
@@ -381,6 +381,9 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
     private void cellSelected(int index, int col) {
        LOG.log(Level.FINE, "Clicked index x col " + index + "x" + col + " " + index + " " + dataTable.getHeader(col).getValue());
         //dataTable.getHeader(col);
+        if(!dataTable.getHeader(col).getValue().equals(scoResultsPresenter.getTableHeaders()[scoResultsPresenter.getTableHeaders().length])){
+            dataTable.getSelectionModel().setSelected(dataProvider.getList().get(index), true);
+        }
         scoResultsPresenter.selectItem((ScoResultsPresenter.StudentItem) dataProvider.getList().get(index) , col);
     }
 }
