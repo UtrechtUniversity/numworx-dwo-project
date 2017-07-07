@@ -125,6 +125,7 @@ public class ScoResultsPresenter {
 				throws Exception {
 			LOG.info("set " + forsuccess.getLabel());
 			forsuccess.setStudentSco(resolved.getValue());
+// TODO als de score verandert, dan de bijbehorende studentItem ook aanpassen. 
 			return null;
 		}
 	}
