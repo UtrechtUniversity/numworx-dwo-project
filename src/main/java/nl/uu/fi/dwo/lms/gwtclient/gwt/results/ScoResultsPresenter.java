@@ -54,7 +54,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 public class ScoResultsPresenter {
 
-    private static final SecuredTeacherScormValuesManager SECURED_TEACHER_SCORM_VALUES_MANAGER = new SecuredTeacherScormValuesManager();
+    private static final String COMPLETION_STATUS = "cmi.completion_status";
+	private static final SecuredTeacherScormValuesManager SECURED_TEACHER_SCORM_VALUES_MANAGER = new SecuredTeacherScormValuesManager();
 	private static final Logger LOG = Logger.getLogger(ScoResultsPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
@@ -103,7 +104,7 @@ public class ScoResultsPresenter {
 			"cmi.suspend_data",
 			"cmi.location",
 			"cmi.score.raw",
-			"cmi.completion_status",
+			COMPLETION_STATUS,
 			"cmi.comments_from_lms.0.comment"       		
 			);
 	private StudentItem selectedItem;
@@ -111,7 +112,24 @@ public class ScoResultsPresenter {
 		
 	final <T> Success<T, T> identity() { return identity; }
 	
-    public interface Display {
+    final class StudentScoUpdater implements
+			Success<DomStudentScoContext, Void> {
+		private final DomResultStudentScoContext forsuccess;
+
+		StudentScoUpdater(DomResultStudentScoContext forsuccess) {
+			this.forsuccess = forsuccess;
+		}
+
+		@Override
+		public Promise<Void> call(Promise<DomStudentScoContext> resolved)
+				throws Exception {
+			LOG.info("set " + forsuccess.getLabel());
+			forsuccess.setStudentSco(resolved.getValue());
+			return null;
+		}
+	}
+
+	public interface Display {
 
         Widget asWidget();
 
@@ -248,7 +266,7 @@ public class ScoResultsPresenter {
 							Promise<Map<String, String>> resolved)
 							throws Exception {
 						selectedItem.sealed = 
-								"completed".equals( resolved.getValue().get("cmi.completion_status"));
+								"completed".equals( resolved.getValue().get(COMPLETION_STATUS));
 						view.updateView(selectedItem, studentItems);
 						return null;
 					}
@@ -300,7 +318,7 @@ public class ScoResultsPresenter {
     	{
     		return launchData.getValue();
     	}
-    	if ("cmi.completion_status".equals(key))
+    	if (COMPLETION_STATUS.equals(key))
     	{
     		return "completed";
     	}
@@ -333,31 +351,21 @@ public class ScoResultsPresenter {
 LOG.info("RSSC = " + rssc);
 		if(rssc != null) {
 			sco = rssc.getStudentSco();
-			succes = null;
+			succes = new StudentScoUpdater(rssc);
 		} else {
 LOG.info("create scc");
-			DomStudentScoContext ssc = new DomStudentScoContext();
-			ssc.setSchoolGroupID(schoolGroupID);
-			ssc.setScoID(scoContext.getScoContext().getId());
+			sco = new DomStudentScoContext();
+			sco.setSchoolGroupID(schoolGroupID);
+			sco.setScoID(scoContext.getScoContext().getId());
 			DomStudent student = studentMap.get(object.key);
 LOG.info("Student = " + student);
-			ssc.setUserID(student.getId());
-			final DomResultStudentScoContext forsuccess = rssc = new DomResultStudentScoContext(ssc, student);
+			sco.setUserID(student.getId());
+			rssc = new DomResultStudentScoContext(sco, student);
 			sscMap.put(object.key, rssc);
-			sco = ssc;
-LOG.info(ssc.toString());
-			succes = new Success<DomStudentScoContext, Void>() {
-				
-				@Override
-				public Promise<Void> call(Promise<DomStudentScoContext> resolved)
-						throws Exception {
-					LOG.info("set " + forsuccess.getLabel());
-					forsuccess.setStudentSco(resolved.getValue());
-					return null;
-				}
-			};
+LOG.info(sco.toString());
+			succes = new StudentScoUpdater(rssc);
 		}
-		return SECURED_TEACHER_SCORM_VALUES_MANAGER.setValues(sco, context, Collections.singletonMap("cmi.completion_status", status)).then(succes, failure);
+		return SECURED_TEACHER_SCORM_VALUES_MANAGER.setValues(sco, context, Collections.singletonMap(COMPLETION_STATUS, status)).then(succes, failure);
 		
 	}
 
@@ -403,7 +411,7 @@ LOG.info(ssc.toString());
 					{
 						LOG.info("get Seal "+ item.usercode);
 						DomStudentScoContext sco = next.getStudentSco();
-						SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(sco, context, Collections.singleton("cmi.completion_status"))
+						SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(sco, context, Collections.singleton(COMPLETION_STATUS))
 						.then(new Success<Map<String,String>, Void>() {
 
 							@Override
@@ -411,7 +419,7 @@ LOG.info(ssc.toString());
 									Promise<Map<String, String>> resolved)
 									throws Exception {
 								if(item.sealed == null) {
-									String value = resolved.getValue().get("cmi.completion_status");
+									String value = resolved.getValue().get(COMPLETION_STATUS);
 									item.sealed = "completed".equals(value);
 								}
 								return null;
