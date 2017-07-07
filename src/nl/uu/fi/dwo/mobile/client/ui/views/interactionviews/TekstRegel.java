@@ -47,7 +47,6 @@ public class TekstRegel extends LayoutPanel
 	private TekstVak tekstVak;
 
 	
-	private int font_size;
 	private int font_style;
 	private String font_name = "Arial";
 	private Context2d ctx;
@@ -136,7 +135,6 @@ public class TekstRegel extends LayoutPanel
 	
 	public void setFontSize(int font_size)
 	{
-		this.font_size = font_size;
 		this.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		fm = FormuleFont.createFromFontSize(font_size, true);
 		fm.setFont(font_name);
