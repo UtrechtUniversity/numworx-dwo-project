@@ -18,11 +18,14 @@ import fi.beans.scorm2xml.Scorm2Xml;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -36,6 +39,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherScormValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestTeacherScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -91,8 +95,22 @@ public class SecuredTeacherScormValuesManager {
     	}
         PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
         PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
-// TODO check if domHasRole is a teacher of same school as pssc
-        // ...
+// its own hasrole!
+        Long u1 = phr.getPersistentHasRolePK().getUserID();
+        Long u2 = user.getId();
+        if (! u1.equals(u2)) {
+        	LOG.log(Level.SEVERE,"Wrong hasrole for Username " + sc.getUserPrincipal().getName() );
+        	throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "");
+        }        
+// check if domHasRole is non-student of same school as pssc
+        PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(phr);
+		PersistentSchoolGroup schoolGroup = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
+        Long sg1 = schoolGroup.getSchoolGroupID();
+        Long sg2 = phr.getSchoolGroup().getSchoolGroupID();
+        if ( sg1.equals(sg2)) {
+        	LOG.log(Level.SEVERE, "no student allowed " +sc.getUserPrincipal().getName() );
+        	throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "");
+        }
         PersistentStudentScoContext pssc;
         if(ssc.getId() != null) {
         	Long id = MySQLPersistenceId.getNativeId(ssc); // NPE
@@ -102,6 +120,16 @@ public class SecuredTeacherScormValuesManager {
         }
 // FIXME Race condition
 		if(pssc == null) {
+// A teacher can create studentscocontext of it own school and for students
+			Long schoolGroupID = getSingleNativeId(ssc.getSchoolGroupID().getIdString(), PersistenceClassType.PersistentSchoolGroup);
+
+			if( ! schoolGroupID .equals ( schoolGroup.getSchoolGroupID())
+			  )
+			{
+				LOG.severe("Security: set wrong schoolgroup by "+ sc.getUserPrincipal().getName());
+				throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "");
+			}
+			
 			pssc = new PersistentStudentScoContext();
 			long now = System.currentTimeMillis();
 			pssc.setCreateDate(new Date(now));
@@ -110,13 +138,13 @@ public class SecuredTeacherScormValuesManager {
 // XXX get Native ID from other persistenceId's
 			Long scoId = getSingleNativeId(ssc.getScoID().getIdString(), PersistenceClassType.PersistentScoContext);
 			PersistentScoContext scoContext = ScoContextManager.findEntity(scoId);
-// NPE if not exists
+// TODO NPE if not exists, should be dwo2exception
 			scoId = scoContext.getScoID();
 			pssc.setScoID(scoId);			
-/// XXX DomStudentScoContext should have HASROLE persistenceID
+// XXX DomStudentScoContext should have HASROLE persistenceID
 			PersistentHasRolePK studentRoleKey = idOf(ssc.getUserID(), ssc.getSchoolGroupID());
 			PersistentHasRole   studentRole = HasRoleManager.findEntity(studentRoleKey);
-// NPE if not exists
+// TODO NPE if not exists, DWO2exception
 			studentRoleKey = studentRole.getPersistentHasRolePK();
 			pssc.setPersistentHasRolePK(studentRoleKey);
 // init all.
@@ -127,7 +155,18 @@ public class SecuredTeacherScormValuesManager {
 			
 			StudentScoContextManager.create(pssc);
 
+		} else {
+			Long schoolGroupID = pssc.getPersistentHasRolePK().getSchoolGroupID();
+			if( ! schoolGroupID .equals ( schoolGroup.getSchoolGroupID())
+					  )
+			{
+				LOG.severe("Security: set wrong schoolgroup by "+ sc.getUserPrincipal().getName());
+				throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "");
+			}
 		}
+
+		
+		
 		PersistentStudentScoData pssd = null;
 		Scorm2Xml xml = null;
 		List<DomMapEntry<String, String>> entryList = rest.getDomTeacherScormValues().getValues();
