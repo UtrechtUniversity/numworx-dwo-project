@@ -22,9 +22,14 @@ public class SecuredUserCourseManager implements CourseManager {
 	
 	private DomContext context;
 
-	public SecuredUserCourseManager(DomContext context) {
+        /**
+         * 
+         */
+	public SecuredUserCourseManager() {
 		super();
-		this.context = context;
+           // A rest interface is stateless. DomContext must be given by Service class
+           // of MVP.
+           // this.context = context;
 	}
 
 	@Override
