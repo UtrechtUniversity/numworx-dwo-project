@@ -74,6 +74,28 @@ public class HasRoleUtilManager {
         return hr;
     }
 
+    
+    /** Get hasrole of user and roleType in a school.
+     * 
+     */
+    public static PersistentHasRole getHasRole(Long userID, RoleType r, PersistentSchool school) throws Dwo2Exception {
+        PersistentUser u = (PersistentUser) UserManager.findEntity(userID);
+        if (u == null) {
+            LOG.log(Level.SEVERE, "Given user for userID {0} could not be found.", new Object[]{userID});
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "User could not be found.");
+        }
+		PersistentSchoolGroup schoolGroup = SchoolGroupManager.findBySchoolAndRole(school, r);
+
+        PersistentHasRolePK hrKey = new PersistentHasRolePK(u.getId(), schoolGroup.getSchoolGroupID());
+        PersistentHasRole hr = (PersistentHasRole) HasRoleManager.findEntity(hrKey);
+        if (hr == null) {
+            LOG.log(Level.SEVERE, "HasRole for userID {0} could not be found, {1},{2}", new Object[]{u.getUsername(), r, school.getSchoolLogin()});
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "HasRole could not be found.");
+        }
+        return hr;
+    }
+    
+     
     /**
      * Checks if the user is in the given role. Returns the hasRole, null if
      * false.

@@ -9,7 +9,6 @@ import javax.ws.rs.ext.Provider;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
-//@Component
 @Provider
 public class GensonProvider implements ContextResolver<Genson> {
 	private static final DateFormat yourDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");

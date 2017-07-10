@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,12 +103,12 @@ public class SecuredTeacherScormValuesManager {
         	LOG.log(Level.SEVERE,"Wrong hasrole for Username " + sc.getUserPrincipal().getName() );
         	throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "");
         }        
-// check if domHasRole is non-student of same school as pssc
+// FIXME check if domHasRole is TEACHER  of same school as pssc
         PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(phr);
-		PersistentSchoolGroup schoolGroup = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
-        Long sg1 = schoolGroup.getSchoolGroupID();
+		PersistentSchoolGroup studentSchoolGroup = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
+        Long studentSchoolGroupID = studentSchoolGroup.getSchoolGroupID();
         Long sg2 = phr.getSchoolGroup().getSchoolGroupID();
-        if ( sg1.equals(sg2)) {
+        if ( studentSchoolGroupID.equals(sg2)) {
         	LOG.log(Level.SEVERE, "no student allowed " +sc.getUserPrincipal().getName() );
         	throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "");
         }
@@ -121,14 +122,7 @@ public class SecuredTeacherScormValuesManager {
 // FIXME Race condition
 		if(pssc == null) {
 // A teacher can create studentscocontext of it own school and for students
-			Long schoolGroupID = getSingleNativeId(ssc.getSchoolGroupID().getIdString(), PersistenceClassType.PersistentSchoolGroup);
-
-			if( ! schoolGroupID .equals ( schoolGroup.getSchoolGroupID())
-			  )
-			{
-				LOG.severe("Security: set wrong schoolgroup by "+ sc.getUserPrincipal().getName());
-				throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "");
-			}
+// create 
 			
 			pssc = new PersistentStudentScoContext();
 			long now = System.currentTimeMillis();
@@ -137,27 +131,31 @@ public class SecuredTeacherScormValuesManager {
 			
 // XXX get Native ID from other persistenceId's
 			Long scoId = getSingleNativeId(ssc.getScoID().getIdString(), PersistenceClassType.PersistentScoContext);
+			Long studentUserID = getSingleNativeId(ssc.getUserID().getIdString(), PersistenceClassType.PersistentUser);
+		
 			PersistentScoContext scoContext = ScoContextManager.findEntity(scoId);
 // TODO NPE if not exists, should be dwo2exception
 			scoId = scoContext.getScoID();
-			pssc.setScoID(scoId);			
-// XXX DomStudentScoContext should have HASROLE persistenceID
-			PersistentHasRolePK studentRoleKey = idOf(ssc.getUserID(), ssc.getSchoolGroupID());
-			PersistentHasRole   studentRole = HasRoleManager.findEntity(studentRoleKey);
-// TODO NPE if not exists, DWO2exception
-			studentRoleKey = studentRole.getPersistentHasRolePK();
-			pssc.setPersistentHasRolePK(studentRoleKey);
+			pssc.setScoID(scoId);						
+			PersistentHasRole studentRole = HasRoleUtilManager.getHasRole(studentUserID, RoleType.STUDENT, school);
+			pssc.setPersistentHasRolePK(studentRole.getPersistentHasRolePK());
 // init all.
 			pssc.setLocation("");
 			pssc.setCompletionStatus("");
 			pssc.setSessionTime("");
 			pssc.setTotalTime("");
 			
-			StudentScoContextManager.create(pssc);
+			try {
+				StudentScoContextManager.create(pssc);
+			} catch (PersistenceException e) {
+				String msg = MessageFormat.format("could not create studentscocontext for hasrole {0}, sco {1}", new Object[] {studentRole.getPersistentHasRolePK(), scoId });
+				LOG.log(Level.SEVERE, msg, e);
+				throw new Dwo2RestException(Dwo2ExceptionCode.Rest_StudentScoExists, msg);
+			}
 
 		} else {
 			Long schoolGroupID = pssc.getPersistentHasRolePK().getSchoolGroupID();
-			if( ! schoolGroupID .equals ( schoolGroup.getSchoolGroupID())
+			if( ! schoolGroupID .equals ( studentSchoolGroup.getSchoolGroupID())
 					  )
 			{
 				LOG.severe("Security: set wrong schoolgroup by "+ sc.getUserPrincipal().getName());
