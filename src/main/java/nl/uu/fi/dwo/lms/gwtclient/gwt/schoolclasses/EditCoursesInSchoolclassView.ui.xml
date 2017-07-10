@@ -1,0 +1,18 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+             xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
+    <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+    <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
+        <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
+            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
+            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="saveBtn">add more students</g:Button>           
+            <!--<g:Button addStyleNames='{dwoStyle.dwoButton} float:right' ui:field="addToSchoolClass">add to schoolclass</g:Button>-->
+        <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
+            <g:Tree addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="courseTree">
+        </g:FlowPanel>
+                <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" ui:field='courseTable'/>
+        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
+    </g:FlowPanel>
+    </g:FlowPanel>
+</ui:UiBinder>

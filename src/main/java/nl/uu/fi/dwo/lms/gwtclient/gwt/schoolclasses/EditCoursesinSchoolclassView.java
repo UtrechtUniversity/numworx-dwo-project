@@ -1,0 +1,353 @@
+package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
+
+import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.ValueUpdater;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.Widget;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * GWT Panel that handles switching the role.
+ *
+ * @author G.A.J. van der Plas
+ */
+public class EditCoursesinSchoolclassView extends Composite implements ClickHandler, ChangeHandler, StudentsInSchoolclassPresenter.Display {
+
+    private static final Logger LOG = Logger.getLogger(EditCoursesinSchoolclassView.class.getName());
+
+    interface MyUiBinder extends UiBinder<Widget, EditCoursesinSchoolclassView> {
+    }
+    private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
+
+    @UiField(provided = true)
+    CellTable courseTable;
+//    @UiField(provided = true)            
+//    CellList courseTable;
+    @UiField(provided = true)
+    SimplePager pager;
+    @UiField
+    Button backBtn;
+    @UiField
+    Button saveBtn; // single school students
+    @UiField
+    Tree courseTree;
+
+    private EditCoursesInSchoolclassPresenter editCoursesInSchoolClassPresenter;
+    private EditCoursesInSchoolclassPresenter.CourseItem selected;
+    private MyCheckBoxCell checkBox;
+
+    public class MyCell extends AbstractCell<String> {
+
+        public MyCell() {
+            super("click", "keydown");
+        }
+
+        @Override
+        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
+            if (value != null) {
+                sb.appendEscaped(value);
+            }
+        }
+
+        @Override
+        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+            if (value == null) {
+                return;
+            }
+            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+            if ("click".equals(event.getType())) {
+//                LOG.log(Level.INFO, "key "+context.getKey());
+                cellSelected(context.getIndex(), context.getColumn());
+            }
+        }
+    }
+
+    public class MyClickCell extends AbstractCell<String> {
+
+        public MyClickCell() {
+            super("click", "keydown");
+        }
+
+        @Override
+        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
+            if (value != null) {
+                sb.appendHtmlConstant("<a href='javascript:;'>");
+                sb.appendEscaped(value);
+                sb.appendHtmlConstant("</a>");
+            }
+        }
+
+        @Override
+        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+            if (value == null) {
+                return;
+            }
+            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+            if ("click".equals(event.getType())) {
+//                LOG.log(Level.INFO, "key "+context.getKey());
+                cellSelected(context.getIndex(), context.getColumn());
+            }
+        }
+    }
+
+    public class MyCheckBoxCell extends CheckboxCell {
+
+        boolean state = false;
+
+        public MyCheckBoxCell(boolean a, boolean b) {
+            super(a, b);
+        }
+
+        @Override
+        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, Boolean value, NativeEvent event, ValueUpdater<Boolean> valueUpdater) {
+            if (value == null) {
+                return;
+            }
+            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+            if ("change".equals(event.getType())) {
+                editCoursesInSchoolClassPresenter.selectItem((EditCoursesInSchoolclassPresenter.CourseItem) context.getKey(), 5);
+                LOG.log(Level.INFO, "key " + context.getKey() + " boolean " + value);
+            }
+        }
+    }
+
+    public EditCoursesinSchoolclassView(EditCoursesInSchoolclassPresenter sp) {
+        editCoursesInSchoolClassPresenter = sp;
+        editCoursesInSchoolClassPresenter.setView(this);
+        String[] tableHeaders = sp.getTableHeaders();
+        courseTable = new CellTable<String>();
+//        schoolClassListBox = new ValueListBox<SchoolClassItem>(new Renderer<SchoolClassItem>() {
+//
+//            public String render(SchoolClassListBoxItem item) {                
+//                return item.getSchoolclassName();
+//            }
+//
+//            public void render(SchoolClassListBoxItem user, Appendable appendable) throws IOException {
+//                String s = render(user);
+//                appendable.append(s);
+//            }
+//        });
+
+        dataProvider.addDataDisplay(courseTable);
+        courseTable.setSkipRowHoverCheck(true);
+        courseTable.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
+
+        List<StudentsInSchoolclassPresenter.StudentItem> data = dataProvider.getList();
+        final EditCoursesinSchoolclassView.MyCell cell = new EditCoursesinSchoolclassView.MyCell();
+        final EditCoursesinSchoolclassView.MyClickCell clickCell = new EditCoursesinSchoolclassView.MyClickCell();
+
+        //givenName
+        Column<StudentsInSchoolclassPresenter.StudentItem, String> value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+            @Override
+            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+                return object.givenName;
+            }
+        };
+        value.setSortable(true);
+        ListHandler<StudentsInSchoolclassPresenter.StudentItem> columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
+            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.givenName.compareTo(o2.givenName) : 1;
+                }
+                return -1;
+            }
+        });
+        courseTable.addColumnSortHandler(columnSortHandler);
+        courseTable.addColumn(value, tableHeaders[0]);
+
+        //insertion
+        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+            @Override
+            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+                return object.insertion;
+            }
+        };
+        value.setSortable(true);
+        columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
+            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.insertion.compareTo(o2.insertion) : 1;
+                }
+                return -1;
+            }
+        });
+        courseTable.addColumnSortHandler(columnSortHandler);
+        courseTable.addColumn(value, tableHeaders[1]);
+
+        //familyName
+        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+            @Override
+            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+                return object.familyName;
+            }
+        };
+        value.setSortable(true);
+        columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
+            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.familyName.compareTo(o2.familyName) : 1;
+                }
+                return -1;
+            }
+        });
+        courseTable.addColumnSortHandler(columnSortHandler);
+        courseTable.addColumn(value, tableHeaders[2]);
+
+        //usercode
+        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+            @Override
+            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+                return object.usercode;
+            }
+        };
+        value.setSortable(true);
+        columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
+            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.usercode.compareTo(o2.usercode) : 1;
+                }
+                return -1;
+            }
+        });
+        courseTable.addColumnSortHandler(columnSortHandler);
+        courseTable.addColumn(value, tableHeaders[3]);
+
+        //edit student
+        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(clickCell) {
+            @Override
+            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+                if (object.singleSchool == true) {
+                    return tableHeaders[4];
+                } else {
+                    return "";
+                }
+            }
+        };
+        value.setSortable(false);
+        courseTable.addColumn(value, tableHeaders[4]);
+
+        //select student
+        checkBox = new MyCheckBoxCell(true, true);
+        Column<StudentsInSchoolclassPresenter.StudentItem, Boolean> bValue = new Column<StudentsInSchoolclassPresenter.StudentItem, Boolean>(checkBox) {
+            @Override
+            public Boolean getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+                return object.selected;
+            }
+        };
+
+        bValue.setSortable(false);
+        courseTable.addColumn(bValue, tableHeaders[5]);
+
+        courseTable.setRowData(0, data);
+        courseTable.setRowCount(data.size(), true);
+        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+        pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
+        pager.setDisplay(courseTable);
+        pager.setPageSize(courseTable.getPageSize());
+
+        initWidget(uiBinder.createAndBindUi(this));
+        //controller must be before clicks occur
+//        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+//        courseTable.setSelectionModel(selectionModel);
+//        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+//            public void onSelectionChange(SelectionChangeEvent event) {
+//                String selected = selectionModel.getSelectedObject();
+//                LOG.log(Level.INFO, "selection key: " + selectionModel.getKey(selected));
+//                if (selected != null) {
+//                    Window.alert("You selected: " + selected + ".");
+//                }
+//            }
+//        });
+        backBtn.addClickHandler(this);
+        saveBtn.addClickHandler(this);
+    }
+
+    public void init() {
+//        addStudentsBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void onClick(ClickEvent event) {
+        if (event.getSource() == backBtn) {
+            editCoursesInSchoolClassPresenter.goBackToSchoolClasses();
+        } else if (event.getSource() == saveBtn) {
+            //studentsInSchoolclassPresenter.addStudents();
+        }
+    }
+
+    @Override
+    public void onChange(ChangeEvent event) {
+        //    LOG.log(Level.INFO, "Listbox event:" + event.getSource().toString());
+    }
+
+    public void updateView(Map<String, EditCoursesInSchoolclassPresenter.CourseItem> data) {
+//        dataProvider.getList().clear();
+//        dataProvider.getList().addAll(data.values());
+//        dataProvider.refresh();
+    }
+
+    private void cellSelected(int row, int column) {
+        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).usercode + " " + courseTable.getHeader(column).getValue());
+        courseTable.getHeader(column);
+        editCoursesInSchoolClassPresenter.selectItem((EditCoursesInSchoolclassPresenter.CourseItem) dataProvider.getList().get(row), column);
+    }
+
+}
