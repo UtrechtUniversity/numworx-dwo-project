@@ -1,12 +1,9 @@
 package fi.dwo.gwt.lib.rest.CallManagers;
 
 import java.util.List;
-
 import org.osgi.util.promise.Promise;
-
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.json.client.JSONValue;
-
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserCourseRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
