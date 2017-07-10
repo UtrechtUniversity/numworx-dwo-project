@@ -9,7 +9,7 @@
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="saveBtn">add more students</g:Button>           
             <!--<g:Button addStyleNames='{dwoStyle.dwoButton} float:right' ui:field="addToSchoolClass">add to schoolclass</g:Button>-->
         <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
-            <g:Tree addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="courseTree">
+            <g:Tree addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="courseTree" />
         </g:FlowPanel>
                 <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" ui:field='courseTable'/>
         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>

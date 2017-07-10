@@ -65,7 +65,7 @@ public class ScoResultsPresenter {
     private DomResultStudent selectedStudent;
     private DomResultScoContext scoContext;
 
-    private String[] tableHeaders = {"student name", "total score", "verzegeld"};
+    private String[] tableHeaders = {"student name", "total score", "sealed"}; // FIXME i18n
     private DomSchoolClass schoolClass;
     private Map<String, DomStudent> studentMap;
     private Map<String, StudentItem> studentItems;
@@ -108,7 +108,6 @@ public class ScoResultsPresenter {
 			"cmi.comments_from_lms.0.comment"       		
 			);
 	private StudentItem selectedItem;
-	private PersistenceId schoolGroupID;
 		
 	final <T> Success<T, T> identity() { return identity; }
 	
@@ -238,8 +237,7 @@ public class ScoResultsPresenter {
             studentMap.put(studentID, student);
         }
         LOG.log(Level.FINE, "nr students:" + resultMatrix.getvSize());
-  // TODO Gert, at least 1 student met resultaat en alle studenten hebben dezelfde schoolgroupid
-        schoolGroupID = sscMap.values().iterator().next().getStudentSco().getSchoolGroupID();
+        
         view.updateView(selectedItem,studentItems);
 // fetch ScormValues of student (for each student)
         setStudentFrame(selectedItem);
@@ -356,7 +354,6 @@ LOG.info("RSSC = " + rssc);
 		} else {
 LOG.info("create scc");
 			sco = new DomStudentScoContext();
-			sco.setSchoolGroupID(schoolGroupID);
 			sco.setScoID(scoContext.getScoContext().getId());
 			DomStudent student = studentMap.get(object.key);
 LOG.info("Student = " + student);
