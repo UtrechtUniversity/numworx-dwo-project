@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -33,11 +34,11 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-public class EditCoursesinSchoolclassView extends Composite implements ClickHandler, ChangeHandler, StudentsInSchoolclassPresenter.Display {
+public class EditCoursesInSchoolclassView extends Composite implements ClickHandler, ChangeHandler, EditCoursesInSchoolclassPresenter.Display {
 
-    private static final Logger LOG = Logger.getLogger(EditCoursesinSchoolclassView.class.getName());
+    private static final Logger LOG = Logger.getLogger(EditCoursesInSchoolclassView.class.getName());
 
-    interface MyUiBinder extends UiBinder<Widget, EditCoursesinSchoolclassView> {
+    interface MyUiBinder extends UiBinder<Widget, EditCoursesInSchoolclassView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
@@ -55,6 +56,7 @@ public class EditCoursesinSchoolclassView extends Composite implements ClickHand
     Tree courseTree;
 
     private EditCoursesInSchoolclassPresenter editCoursesInSchoolClassPresenter;
+       ListDataProvider<EditCoursesInSchoolclassPresenter.CourseItem> dataProvider = new ListDataProvider<EditCoursesInSchoolclassPresenter.CourseItem>();
     private EditCoursesInSchoolclassPresenter.CourseItem selected;
     private MyCheckBoxCell checkBox;
 
@@ -127,13 +129,13 @@ public class EditCoursesinSchoolclassView extends Composite implements ClickHand
             }
             super.onBrowserEvent(context, parent, value, event, valueUpdater);
             if ("change".equals(event.getType())) {
-                editCoursesInSchoolClassPresenter.selectItem((EditCoursesInSchoolclassPresenter.CourseItem) context.getKey(), 5);
+                //editCoursesInSchoolClassPresenter.selectItem((EditCoursesInSchoolclassPresenter.CourseItem) context.getKey(), 5);
                 LOG.log(Level.INFO, "key " + context.getKey() + " boolean " + value);
             }
         }
     }
 
-    public EditCoursesinSchoolclassView(EditCoursesInSchoolclassPresenter sp) {
+    public EditCoursesInSchoolclassView(EditCoursesInSchoolclassPresenter sp) {
         editCoursesInSchoolClassPresenter = sp;
         editCoursesInSchoolClassPresenter.setView(this);
         String[] tableHeaders = sp.getTableHeaders();
@@ -154,23 +156,23 @@ public class EditCoursesinSchoolclassView extends Composite implements ClickHand
         courseTable.setSkipRowHoverCheck(true);
         courseTable.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
-        List<StudentsInSchoolclassPresenter.StudentItem> data = dataProvider.getList();
-        final EditCoursesinSchoolclassView.MyCell cell = new EditCoursesinSchoolclassView.MyCell();
-        final EditCoursesinSchoolclassView.MyClickCell clickCell = new EditCoursesinSchoolclassView.MyClickCell();
+        List<EditCoursesInSchoolclassPresenter.CourseItem> data = dataProvider.getList();
+        final EditCoursesInSchoolclassView.MyCell cell = new EditCoursesInSchoolclassView.MyCell();
+        final EditCoursesInSchoolclassView.MyClickCell clickCell = new EditCoursesInSchoolclassView.MyClickCell();
 
         //givenName
-        Column<StudentsInSchoolclassPresenter.StudentItem, String> value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+        Column<EditCoursesInSchoolclassPresenter.CourseItem, String> value = new Column<EditCoursesInSchoolclassPresenter.CourseItem, String>(cell) {
             @Override
-            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+            public String getValue(EditCoursesInSchoolclassPresenter.CourseItem object) {
                 return object.givenName;
             }
         };
         value.setSortable(true);
-        ListHandler<StudentsInSchoolclassPresenter.StudentItem> columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
+        ListHandler<EditCoursesInSchoolclassPresenter.CourseItem> columnSortHandler = new ListHandler<EditCoursesInSchoolclassPresenter.CourseItem>(
                 data);
         columnSortHandler.setComparator(value,
-                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
-            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
+                new Comparator<EditCoursesInSchoolclassPresenter.CourseItem>() {
+            public int compare(EditCoursesInSchoolclassPresenter.CourseItem o1, EditCoursesInSchoolclassPresenter.CourseItem o2) {
                 if (o1 == o2) {
                     return 0;
                 }
@@ -186,18 +188,18 @@ public class EditCoursesinSchoolclassView extends Composite implements ClickHand
         courseTable.addColumn(value, tableHeaders[0]);
 
         //insertion
-        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+        value = new Column<EditCoursesInSchoolclassPresenter.CourseItem, String>(cell) {
             @Override
-            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+            public String getValue(EditCoursesInSchoolclassPresenter.CourseItem object) {
                 return object.insertion;
             }
         };
         value.setSortable(true);
-        columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
+        columnSortHandler = new ListHandler<EditCoursesInSchoolclassPresenter.CourseItem>(
                 data);
         columnSortHandler.setComparator(value,
-                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
-            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
+                new Comparator<EditCoursesInSchoolclassPresenter.CourseItem>() {
+            public int compare(EditCoursesInSchoolclassPresenter.CourseItem o1, EditCoursesInSchoolclassPresenter.CourseItem o2) {
                 if (o1 == o2) {
                     return 0;
                 }
@@ -213,18 +215,18 @@ public class EditCoursesinSchoolclassView extends Composite implements ClickHand
         courseTable.addColumn(value, tableHeaders[1]);
 
         //familyName
-        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+        value = new Column<EditCoursesInSchoolclassPresenter.CourseItem, String>(cell) {
             @Override
-            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+            public String getValue(EditCoursesInSchoolclassPresenter.CourseItem object) {
                 return object.familyName;
             }
         };
         value.setSortable(true);
-        columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
+        columnSortHandler = new ListHandler<EditCoursesInSchoolclassPresenter.CourseItem>(
                 data);
         columnSortHandler.setComparator(value,
-                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
-            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
+                new Comparator<EditCoursesInSchoolclassPresenter.CourseItem>() {
+            public int compare(EditCoursesInSchoolclassPresenter.CourseItem o1, EditCoursesInSchoolclassPresenter.CourseItem o2) {
                 if (o1 == o2) {
                     return 0;
                 }
@@ -240,18 +242,18 @@ public class EditCoursesinSchoolclassView extends Composite implements ClickHand
         courseTable.addColumn(value, tableHeaders[2]);
 
         //usercode
-        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
+        value = new Column<EditCoursesInSchoolclassPresenter.CourseItem, String>(cell) {
             @Override
-            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+            public String getValue(EditCoursesInSchoolclassPresenter.CourseItem object) {
                 return object.usercode;
             }
         };
         value.setSortable(true);
-        columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
+        columnSortHandler = new ListHandler<EditCoursesInSchoolclassPresenter.CourseItem>(
                 data);
         columnSortHandler.setComparator(value,
-                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
-            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
+                new Comparator<EditCoursesInSchoolclassPresenter.CourseItem>() {
+            public int compare(EditCoursesInSchoolclassPresenter.CourseItem o1, EditCoursesInSchoolclassPresenter.CourseItem o2) {
                 if (o1 == o2) {
                     return 0;
                 }
@@ -267,9 +269,9 @@ public class EditCoursesinSchoolclassView extends Composite implements ClickHand
         courseTable.addColumn(value, tableHeaders[3]);
 
         //edit student
-        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(clickCell) {
+        value = new Column<EditCoursesInSchoolclassPresenter.CourseItem, String>(clickCell) {
             @Override
-            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+            public String getValue(EditCoursesInSchoolclassPresenter.CourseItem object) {
                 if (object.singleSchool == true) {
                     return tableHeaders[4];
                 } else {
@@ -282,9 +284,9 @@ public class EditCoursesinSchoolclassView extends Composite implements ClickHand
 
         //select student
         checkBox = new MyCheckBoxCell(true, true);
-        Column<StudentsInSchoolclassPresenter.StudentItem, Boolean> bValue = new Column<StudentsInSchoolclassPresenter.StudentItem, Boolean>(checkBox) {
+        Column<EditCoursesInSchoolclassPresenter.CourseItem, Boolean> bValue = new Column<EditCoursesInSchoolclassPresenter.CourseItem, Boolean>(checkBox) {
             @Override
-            public Boolean getValue(StudentsInSchoolclassPresenter.StudentItem object) {
+            public Boolean getValue(EditCoursesInSchoolclassPresenter.CourseItem object) {
                 return object.selected;
             }
         };
@@ -339,15 +341,15 @@ public class EditCoursesinSchoolclassView extends Composite implements ClickHand
     }
 
     public void updateView(Map<String, EditCoursesInSchoolclassPresenter.CourseItem> data) {
-//        dataProvider.getList().clear();
-//        dataProvider.getList().addAll(data.values());
-//        dataProvider.refresh();
+        dataProvider.getList().clear();
+        dataProvider.getList().addAll(data.values());
+        dataProvider.refresh();
     }
 
     private void cellSelected(int row, int column) {
         LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).usercode + " " + courseTable.getHeader(column).getValue());
         courseTable.getHeader(column);
-        editCoursesInSchoolClassPresenter.selectItem((EditCoursesInSchoolclassPresenter.CourseItem) dataProvider.getList().get(row), column);
+//        editCoursesInSchoolClassPresenter.selectItem((EditCoursesInSchoolclassPresenter.CourseItem) dataProvider.getList().get(row), column);
     }
 
 }
