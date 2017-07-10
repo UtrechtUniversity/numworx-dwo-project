@@ -106,7 +106,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			public Promise<List<DomCourseStudent>> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
 				DomDwoProfile p = resolved.getValue();
-				return courseManager.getCourses(p);
+				return courseManager.getCourses(p,context);
 			}
 		});
 	}
@@ -119,7 +119,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			public Promise<List<DomCourseStudent>> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
 				DomDwoProfile p = resolved.getValue();
-				return courseManager.getCoursesSchool(p);
+				return courseManager.getCoursesSchool(p,context);
 			}
 		});
 	}
@@ -146,7 +146,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<List<DomCourseStudent>> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
-				return courseManager.getCourses(parent, resolved.getValue());
+				return courseManager.getCourses(parent, resolved.getValue(),context);
 			}
 		});
 	}
@@ -166,7 +166,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<DomCourseStudent> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
-				return courseManager.getCourse(course, resolved.getValue());
+				return courseManager.getCourse(course, resolved.getValue(),context);
 			}
 		});
 	}
@@ -227,7 +227,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				DomHasRole hasRole = resolved.getValue().getActiveSchoolRoleAndClass().getHasRole();
 				context.setDomHasRole(hasRole);
 				scoManager = new SecuredUserScoContextManager();
-				courseManager = new SecuredUserCourseManager(context); // FIXME 
+				courseManager = new SecuredUserCourseManager();
 				studentManager = new SecuredStudentCoursesOfSchoolClassManager();
 				resultManager = new SecuredUserResultsManager();
 				scormApi = new SecuredStudentScoDataManager();
@@ -287,13 +287,13 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	@Override
 	public Promise<JSONValue> getCourseDescription(Object courseID) {
 		final DomCourse id = toCourse(courseID);
-		Function<DomDwoProfile, Promise<? extends JSONValue>> t = null;
+		Function<DomDwoProfile, Promise<? extends JSONValue>>
 		t = new Function<DomDwoProfile, Promise<? extends JSONValue>>() {
 
 			@Override
 			public Promise<JSONValue> apply(DomDwoProfile resolved)
 		    {
-				return courseManager.getCourseDescription(id, resolved);
+				return courseManager.getCourseDescription(id, resolved,context);
 			}
 			
 		};
