@@ -42,7 +42,7 @@ public class PublicCourseManager implements CourseManager {
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.CourseManager#getCourses(nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile)
 	 */
 	@Override
-	public Promise<List<DomCourseStudent>>getCourses(DomDwoProfile profile) {
+	public Promise<List<DomCourseStudent>>getCourses(DomDwoProfile profile, DomContext context) {
 		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
 		RestDwoProfile rest = new RestDwoProfile();
 		rest.setDomDwoProfile(profile);
@@ -55,7 +55,7 @@ public class PublicCourseManager implements CourseManager {
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.CourseManager#getCourses(nl.uu.fi.dwo.rest.dom.entities.DomCourse, nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile)
 	 */
 	@Override
-	public Promise<List<DomCourseStudent>> getCourses(DomCourse course, DomDwoProfile profile) {
+	public Promise<List<DomCourseStudent>> getCourses(DomCourse course, DomDwoProfile profile, DomContext context) {
 		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
@@ -69,7 +69,7 @@ public class PublicCourseManager implements CourseManager {
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.CourseManager#getCourse(nl.uu.fi.dwo.rest.dom.entities.DomCourse, nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile)
 	 */
 	@Override
-	public Promise<DomCourseStudent> getCourse(DomCourse course, DomDwoProfile profile) {
+	public Promise<DomCourseStudent> getCourse(DomCourse course, DomDwoProfile profile, DomContext context) {
 		PromiseCallback<DomCourseStudent> result = new PromiseCallback<DomCourseStudent>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
@@ -80,13 +80,13 @@ public class PublicCourseManager implements CourseManager {
 	}
 
 	@Override
-	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile) {
+	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile, DomContext context) {
 		return Promises.failed(new IllegalArgumentException());
 	}
 
 	@Override
 	public Promise<JSONValue> getCourseDescription(DomCourse id,
-			DomDwoProfile profile) {
+			DomDwoProfile profile, DomContext context) {
 		final Deferred<JSONValue> defer = new Deferred<JSONValue>();
 		String courseID = id.getId().getIdString();
 		int komma = courseID.lastIndexOf(';'); // XXX ons kent ons

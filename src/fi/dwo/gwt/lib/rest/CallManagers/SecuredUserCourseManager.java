@@ -20,71 +20,55 @@ public class SecuredUserCourseManager implements CourseManager {
 
 	private SecuredUserCourseRestCaller service = GWT.create(SecuredUserCourseRestCaller.class);
 	
-	private DomContext context;
-
-        /**
-         * 
-         */
-	public SecuredUserCourseManager() {
-		super();
-           // A rest interface is stateless. DomContext must be given by Service class
-           // of MVP.
-           // this.context = context;
-	}
-
 	@Override
-	public Promise<List<DomCourseStudent>> getCourses(DomDwoProfile profile) {
+	public Promise<List<DomCourseStudent>> getCourses(DomDwoProfile profile, DomContext context) {
 		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
 		RestDwoProfile rest = new RestDwoProfile();
 		rest.setDomDwoProfile(profile);
-		rest.setRestContext(createContext());
+		rest.setRestContext(context);
 		service.getCourses(rest, result);
 		return result.getPromise();
 	}
 
-	private DomContext createContext() {
-		return context;
-	}
-
 	@Override
-	public Promise<List<DomCourseStudent>> getCourses(DomCourse course, DomDwoProfile profile) {
+	public Promise<List<DomCourseStudent>> getCourses(DomCourse course, DomDwoProfile profile, DomContext context) {
 		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
-		rest.setRestContext(createContext());
+		rest.setRestContext(context);
 		rest.setDomCourse(course);
 		service.getCourses(rest, result);
 		return result.getPromise();
 	}
 
 	@Override
-	public Promise<DomCourseStudent> getCourse(DomCourse course, DomDwoProfile profile) {
+	public Promise<DomCourseStudent> getCourse(DomCourse course, DomDwoProfile profile, DomContext context) {
 		PromiseCallback<DomCourseStudent> result = new PromiseCallback<DomCourseStudent>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
-		rest.setRestContext(createContext());
+		rest.setRestContext(context);
 		rest.setDomCourse(course);
 		service.getCourse(rest, result);
 		return result.getPromise();
 	}
 
 	@Override
-	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile) {
+	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile, DomContext context) {
 		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
 		RestDwoProfile rest = new RestDwoProfile();
 		rest.setDomDwoProfile(profile);
-		rest.setRestContext(createContext());
+		rest.setRestContext(context);
 		service.getCoursesSchool(rest, result);
 		return result.getPromise();
 	}
 
 	@Override
 	public Promise<JSONValue> getCourseDescription(DomCourse course,
-			DomDwoProfile profile) {
+			DomDwoProfile profile, DomContext context) {
 		PromiseCallback<JSONValue> result = new PromiseCallback<JSONValue>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
-		rest.setRestContext(createContext());
+		rest.setRestContext(context);
 		rest.setDomCourse(course);
 		service.getCourseDescription(rest, result);
 		return result.getPromise();
