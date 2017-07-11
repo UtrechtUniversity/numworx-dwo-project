@@ -5,8 +5,11 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
+
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -26,6 +29,7 @@ public class TranslatorServletContextListener implements ServletContextListener{
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		LOG.log(Level.FINE,"Servlet context intialized.");
-                Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 	}
 }
