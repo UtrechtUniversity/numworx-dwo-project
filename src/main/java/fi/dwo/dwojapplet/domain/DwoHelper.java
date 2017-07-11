@@ -20,6 +20,7 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+
 import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
@@ -32,7 +33,9 @@ import java.net.URL;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
+
 import netscape.javascript.JSObject;
 
 /**
@@ -716,5 +719,34 @@ public final class DwoHelper {
     public static DomLoginContext getCurrentLoginContext() {
         return currentLoginContext;
     }
+
+	//options voor de rights string.
+	public static char READONLY = 'r';
+
+	public static char PREVIEW = 'p';
+
+	// Limited is dat je niet als gast en alleen met "goedgekeurde" schoolid's er in mag.
+	// Goedgekeurd is een "school.properties" bestand.
+	public static char LIMITED = 'l'; // goed voor rekenwise en consorten.
+
+	private static String rights = "";
+
+	/**
+	 * @param rights the rights to set
+	 */
+	public static void setProfileRights(String rights) {
+	    rights = rights;
+	}
+
+	/**
+	 * @return the rights
+	 */
+	public static String getProfileRights() {
+	    return rights;
+	}
+
+	public static boolean hasProfileRight(char right) {
+	    return rights.indexOf(right) >= 0;
+	}
 
 }

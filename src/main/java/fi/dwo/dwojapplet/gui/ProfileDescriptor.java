@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.Descriptor;
 
 /**
@@ -13,12 +14,12 @@ import fi.dwo.dwojapplet.domain.Descriptor;
 final public class ProfileDescriptor implements Descriptor {
 	@Override
 	public String getText() {
-		return GuiCreator.instance().dwo.getDwoProfile().getDwoProfileText();
+		return DWO.getDwoProfile().getDwoProfileText();
 	}
 
 	@Override
 	public String getHeader() {
-		return GuiCreator.instance().dwo.getDwoProfile().getDwoProfileDescription();
+		return DWO.getDwoProfile().getDwoProfileDescription();
 	}
 
 	@Override

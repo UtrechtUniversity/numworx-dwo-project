@@ -1,10 +1,11 @@
 package fi.dwo.dwojapplet.gui.action;
 
 import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.CenterPanel;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
+
 import java.awt.event.ActionEvent;
 
 public class OpenHtml5 extends GuiAction {
@@ -22,7 +23,7 @@ public class OpenHtml5 extends GuiAction {
     public OpenHtml5(Sco sco) {
         this();
         this.sco = sco;
-        setEnabled(sco.hasFeature(Sco.JSON_OUT) && DwoProfile.hasRight(DwoProfile.PREVIEW));
+        setEnabled(sco.hasFeature(Sco.JSON_OUT) && DwoHelper.hasProfileRight(DwoHelper.PREVIEW));
     }
 
     public OpenHtml5(CourseMap map) {

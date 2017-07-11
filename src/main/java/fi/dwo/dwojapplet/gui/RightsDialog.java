@@ -4,8 +4,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminSchoolManager;
+
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.HeadlessException;
@@ -14,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -108,13 +111,13 @@ public class RightsDialog extends JDialog implements ActionListener {
 
     public RightsDialog(SchoolPanel schoolPanel, DomSchool4DwoAdmin sc) throws Dwo2Exception {
         this(DwoHelper.getFrameForComponent(schoolPanel), "Rechten voor " + sc.getSchoolName(), true);
-        setProfileID(GuiCreator.instance().dwo.getDwoProfileID());
+        setProfileID(DWO.getDwoProfileID());
         setSchool(sc);
     }
 
     public RightsDialog(DomSchool4DwoAdmin sc) throws Dwo2Exception {
         this(DwoHelper.getFrameForComponent(GuiCreator.instance().getMainPanel()), "Rechten voor " + sc.getSchoolName(), true);
-        setProfileID(GuiCreator.instance().dwo.getDwoProfileID());
+        setProfileID(DWO.getDwoProfileID());
         setSchool(sc);
     }
 //

@@ -7,12 +7,14 @@ import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
 import static fi.dwo.dwojapplet.domain.Course.NO_CHILDREN;
 import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Enumeration;
@@ -23,6 +25,7 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class CourseMapper extends XmlRpcMapper {
@@ -155,7 +158,7 @@ class CourseMapper extends XmlRpcMapper {
             School s = (School) obj;
             ht.put("schoolID", new Integer(s.getSchoolID()));
             ht.put("parentID", new Integer(0));
-            int profileID = ((DwoIF) DwoHelper.getApplet()).getDwoProfileID();
+            int profileID = DWO.getDwoProfileID();
             ht.put("dwoProfileID", new Integer(profileID));
         }
         return cached(ht); // was super.get(ht);

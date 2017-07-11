@@ -113,9 +113,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     private int nestedWait;
 
-    private DomDwoProfileFull dwoProfile;
+    private static DomDwoProfileFull dwoProfile;
 
-    private int dwoProfileID;
+    private static int dwoProfileID;
 
     private String userName;
 
@@ -924,20 +924,14 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         return selectDwoProfileCourses(courses);
     }
 
-    @Override
-    public DomDwoProfileFull getDwoProfile() {
+    public static DomDwoProfileFull getDwoProfile() {
         return dwoProfile;
     }
     
-    public int getDwoProfileID() {
+    public static int getDwoProfileID() {
     	return dwoProfileID;
     }
  
-    private DwoProfile deprecatedDwoProfile; 
-    public DwoProfile getDwoProfileDeprecated() {
-    	return deprecatedDwoProfile;
-    }
-
     /**
      * Log the user off of the system. Sets all the data to null.
      *
@@ -1476,7 +1470,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             if (dwoProfile==null)
             	dwoProfile = PublicProfileManager.get(dwoProfileID);
-            deprecatedDwoProfile = new DwoProfile(dwoProfile, dwoProfileID);
+    		DwoHelper.setProfileRights(dwoProfile.getDwoProfileRights());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.DLG_SERVER_OUT), e.getMessage(), JOptionPane.ERROR_MESSAGE);
         }
@@ -1488,7 +1482,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (limitedSchoolAccessString != null && limitedSchoolAccessString.equals("true")) {
             limitedSchoolAccess = true;
         } else {
-        	limitedSchoolAccess = DwoProfile.hasRight(DwoProfile.LIMITED); // Haal LIMITED op uit profiel
+        	limitedSchoolAccess = DwoHelper.hasProfileRight(DwoHelper.LIMITED); // Haal LIMITED op uit profiel
         }
 
         if (limitedSchoolAccess) {

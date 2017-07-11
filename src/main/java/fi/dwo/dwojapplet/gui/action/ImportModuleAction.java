@@ -6,6 +6,7 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.Sco;
@@ -17,6 +18,7 @@ import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 
 
 
@@ -211,7 +213,7 @@ public class ImportModuleAction extends GuiAction {
 			schoolID = parentCourse.getSchoolID(); // takeover schoolid van parentcourse
 		}
 		if(schoolID != 0 || dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
-		{	id = zipper.addCourse(result, dwo.getDwoProfileID(), schoolID, id);
+		{	id = zipper.addCourse(result, DWO.getDwoProfileID(), schoolID, id);
 			MapperIF mapper = MapperCreator.instance(Course.class);
 			Course c = (Course) mapper.get(id);
 			mapper.put(id, c);

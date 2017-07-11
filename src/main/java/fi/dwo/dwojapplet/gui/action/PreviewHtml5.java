@@ -1,10 +1,11 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.CenterPanel;
 import fi.dwo.dwojapplet.gui.ParameterManagementPanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
+
 import java.awt.event.ActionEvent;
 import java.util.Hashtable;
 
@@ -25,7 +26,7 @@ public class PreviewHtml5 extends GuiAction {
         this();
         this.panel = panel;
         this.sco = sco;
-        setEnabled(sco.hasFeature(Sco.JSON_OUT) && DwoProfile.hasRight(DwoProfile.PREVIEW));
+        setEnabled(sco.hasFeature(Sco.JSON_OUT) && DwoHelper.hasProfileRight(DwoHelper.PREVIEW));
     }
 
 	@Override

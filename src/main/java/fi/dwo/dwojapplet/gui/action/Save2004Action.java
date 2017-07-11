@@ -4,6 +4,7 @@ import fi.beans.appletutil.AppletUtil;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -149,7 +150,7 @@ public class Save2004Action extends GuiAction {
 // sco
 		out.putNextEntry(new ZipEntry(id + ".html"));
 // sco.txt is profiel afhankelijk!
-		int profile = GuiCreator.instance().getDWO().getDwoProfileID();
+		int profile = DWO.getDwoProfileID();
 		InputStream in = au.getStream("resources/" + variant + "-" + profile + ".txt");
 		if (in == null) {
 		    in = au.getStream("resources/" + variant + ".txt");

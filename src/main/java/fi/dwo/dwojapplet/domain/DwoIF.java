@@ -137,12 +137,12 @@ public interface DwoIF {
      */
     public Course[] getCourses();
 
-    /**
-     * Returns the dwoProfile.
-     *
-     * @return 
-     */
-    public DomDwoProfileFull getDwoProfile();
+//    /**
+//     * Returns the dwoProfile.
+//     *
+//     * @return 
+//     */
+//    public DomDwoProfileFull getDwoProfile();
 
     /**
      * Log the user off of the system. Sets all the data to null.
@@ -499,6 +499,6 @@ public interface DwoIF {
 
 	public boolean setExtraRights(User user);
 
-	public int getDwoProfileID();
+//	public int getDwoProfileID();
 
 }

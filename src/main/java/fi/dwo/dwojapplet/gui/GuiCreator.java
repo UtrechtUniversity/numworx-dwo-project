@@ -247,22 +247,22 @@ public class GuiCreator {
             }
             gc.mainPanel = mainPanel;
             gc.welcomePanel = welcomePanel;
-            gc.mainPanel = new MainPanel(dwo.getDwoProfile());
+            gc.mainPanel = new MainPanel(DWO.getDwoProfile());
             dwo.setPanel(gc.mainPanel);
         } else if (u instanceof Admin) {
             GuiCreator gc = new GuiCreatorAdmin(dwo);
             gc.mainPanel = mainPanel;
             gc.welcomePanel = welcomePanel;
-            gc.mainPanel = new MainPanel(dwo.getDwoProfile());
+            gc.mainPanel = new MainPanel(DWO.getDwoProfile());
             dwo.setPanel(gc.mainPanel);
         } else if (this instanceof GuiCreatorTeacher || this instanceof GuiCreatorAdmin) {
             GuiCreator gc = new GuiCreator(dwo);
             gc.mainPanel = mainPanel;
             gc.welcomePanel = welcomePanel;
-            gc.mainPanel = new MainPanel(dwo.getDwoProfile());
+            gc.mainPanel = new MainPanel(DWO.getDwoProfile());
             dwo.setPanel(gc.mainPanel);
         } else {
-            mainPanel = new MainPanel(dwo.getDwoProfile());
+            mainPanel = new MainPanel(DWO.getDwoProfile());
             dwo.setPanel(mainPanel);
         }
     }

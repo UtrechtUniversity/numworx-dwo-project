@@ -3,9 +3,11 @@ package fi.dwo.dwojapplet.gui.action;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.gui.ExportImportDialog;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
@@ -37,7 +39,7 @@ public class ShareCourseAction extends GuiAction {
         }
         ExportImportDialog dialog;
         try {
-            dialog = new ExportImportDialog(DwoHelper.getFrameForComponent(component), instance().getUser(), instance().getDWO().getDwoProfileID());
+            dialog = new ExportImportDialog(DwoHelper.getFrameForComponent(component), instance().getUser(), DWO.getDwoProfileID());
             dialog.setMap(map);
             dialog.setVisible(true);
             getCenter().updateMap(map);
