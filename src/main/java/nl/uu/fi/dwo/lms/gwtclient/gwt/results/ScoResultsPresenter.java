@@ -1,6 +1,10 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -107,7 +111,11 @@ public class ScoResultsPresenter {
 			COMPLETION_STATUS,
 			"cmi.comments_from_lms.0.comment"       		
 			);
+	private static final String CMI_MODE = "cmi.mode";
+	
 	private StudentItem selectedItem;
+	private Integer aantalOpdrachten;
+	private String location_override;
 		
 	final <T> Success<T, T> identity() { return identity; }
 	
@@ -199,10 +207,18 @@ public class ScoResultsPresenter {
         context = new DomContext();
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 		DomDwoProfile profile = dwoGlobalVars.getProfile().getValue();
+		aantalOpdrachten = null;
 		launchData = manager.getJSONLaunchDataBytes(scoContext.getScoContext(), profile, context).map(new Function<JSONValue, String>() {
 
 			@Override
 			public String apply(JSONValue t) {
+				try {
+					aantalOpdrachten = Integer.valueOf(t.isObject().get("aantalOpdrachten_1").isString().stringValue());
+					LOG.log(Level.FINE, "aantalOpdrachten = " + aantalOpdrachten);
+				} catch (Exception e) {
+					LOG.log(Level.SEVERE, "aantalOpdrachten failed", e);
+					aantalOpdrachten = 0;
+				}
 				return t.toString();
 			}
 		});
@@ -241,7 +257,14 @@ public class ScoResultsPresenter {
         view.updateView(selectedItem,studentItems);
 // fetch ScormValues of student (for each student)
         setStudentFrame(selectedItem);
-		getAllSeals();
+		launchData.then( new Success<String, Void>() {
+
+			@Override
+			public Promise<Void> call(Promise<String> resolved) throws Exception {
+				getAllSeals();
+				return null;
+			}
+		});
         
     }
 
@@ -257,22 +280,7 @@ public class ScoResultsPresenter {
 	        scormVars = SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(ssc, context, keys );			
 		}
         // if both, updateFrame for this sco.
-		Promises.all(launchData, scormVars.then(
-				new Success<Map<String,String>, Void>() {
-
-					@Override
-					public Promise<Void> call(
-							Promise<Map<String, String>> resolved)
-							throws Exception {
-						selectedItem.sealed = 
-								"completed".equals( resolved.getValue().get(COMPLETION_STATUS));
-						view.updateView(selectedItem, studentItems);
-						return null;
-					}
-				}
-				
-				
-				, failure)).onResolve(new Runnable() {
+		Promises.all(launchData, scormVars.then(null, failure)).onResolve(new Runnable() {
 
 			@Override
 			public void run() {
@@ -280,20 +288,15 @@ public class ScoResultsPresenter {
 			}});
 	}
 
-//    public void select(StudentItem item) {
-//        //selected item in single select table
-//        //show the new student's studenscodata in the window api if the score is not null
-//        //otherwise show message or refuse selection.
-//    }
-
     //function to be called from the view in the future when subscores are supported.
     public void selectItem(StudentItem item, int col) {
-        //TODO Wim. Update the sco result view frame.
+        // Update the sco result view frame.
         switch(col){
             case 0: //Selected studentname (currently an non-click cell)
             case 1: //Selected score (a MyClickCell)
                 //display scoresult of student in frame
             	selectedItem = item;
+            	location_override = null;
             	setStudentFrame(item);
                 break;
             case 2: //selected selection toggle
@@ -301,10 +304,10 @@ public class ScoResultsPresenter {
             break;
             //
             default:
-                Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Programmer's error, out of cases!");
-                ex.fillInStackTrace();
-                LOG.log(Level.INFO,""+ex.getDwo2Message()+ex.getStackTrace().toString());
-                break;
+            	location_override = String.valueOf(col-getTableHeaders().length);
+            	selectedItem = item;
+            	setStudentFrame(item);
+        
         }
     }
     /**
@@ -317,10 +320,14 @@ public class ScoResultsPresenter {
     	{
     		return launchData.getValue();
     	}
-    	if (COMPLETION_STATUS.equals(key))
+    	if (CMI_MODE.equals(key))
     	{
-    		return "completed";
+    		return "review";
     	}
+    	if ("cmi.location".equals(key) && location_override != null) {
+    		return location_override;
+    	}
+    	
     	if (scormVars.isDone() && scormVars.getFailure() == null) {
     		return scormVars.getValue().getOrDefault(key, "");
     	}
@@ -405,11 +412,11 @@ LOG.info(sco.toString());
 					DomResultStudentScoContext next = iterator.next();
 					String key = next.getStudentSco().getUserID().getIdString();
 					StudentItem item = studentItems.get(key);
-					if(item.sealed == null) 
+					//if(item.sealed == null) 
 					{
 						LOG.info("get Seal "+ item.usercode);
 						DomStudentScoContext sco = next.getStudentSco();
-						SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(sco, context, Collections.singleton(COMPLETION_STATUS))
+						SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(sco, context, Arrays.asList(COMPLETION_STATUS, "cmi.suspend_data"))
 						.then(new Success<Map<String,String>, Void>() {
 
 							@Override
@@ -420,6 +427,27 @@ LOG.info(sco.toString());
 									String value = resolved.getValue().get(COMPLETION_STATUS);
 									item.sealed = "completed".equals(value);
 								}
+								String suspend_data = resolved.getValue().get("cmi.suspend_data");
+								LOG.fine(suspend_data);
+								try {
+									JSONObject sd = JSONParser.parse(suspend_data).isObject();
+									JSONObject ons_state = sd.get("onsState").isObject();
+									JSONArray  scores = ons_state.get("orScores").isArray().get(0).isArray();
+									item.subScores = new Double[aantalOpdrachten];
+									int max = Math.min(aantalOpdrachten.intValue(), scores.size());
+									for(int i = 0; i < max; i++) {
+										try {
+											JSONNumber number = scores.get(i).isNumber();
+											LOG.log(Level.FINE, "score " + i + " = " + number);
+											item.subScores[i] = number.doubleValue();
+										} catch (Exception e) {
+											LOG.log(Level.FINE, "score " + i, e);
+										}
+									}
+								} catch (Exception e) {
+									LOG.log(Level.FINE, "suspend_data "+ item.usercode, e);
+								}
+								
 								return null;
 							}}).onResolve(runners[0]);
 						return;

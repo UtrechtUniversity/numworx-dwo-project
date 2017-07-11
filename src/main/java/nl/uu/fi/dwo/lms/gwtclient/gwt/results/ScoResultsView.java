@@ -369,6 +369,12 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
         dataProvider.refresh();
         if (selectedItem != null) {
             dataTable.getSelectionModel().setSelected(selectedItem, true);
+            Double[] subScores = selectedItem.subScores;
+			int n = (subScores == null) ? 0 : subScores.length;
+            setSubScoreColumns(n);
+            dataProvider.refresh();
+        } else {
+        	setSubScoreColumns(0);
         }
     }
 
@@ -399,4 +405,59 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
         }
         scoResultsPresenter.selectItem((ScoResultsPresenter.StudentItem) dataProvider.getList().get(index) , col);
     }
+    
+    
+    private void setSubScoreColumns(int n) {
+    	int headerCount = scoResultsPresenter.getTableHeaders().length;
+    	int m = dataTable.getColumnCount();
+    	while(n + headerCount > m) {
+    	    Cell<String> clickCell = new MyClickCell();
+    	    final int offset = m - headerCount;
+			final Column<StudentItem, String> value = new Column<ScoResultsPresenter.StudentItem, String>(clickCell) {
+    	            @Override
+    	            public String getValue(ScoResultsPresenter.StudentItem object) {
+    	            	try {
+							Double d = object.subScores[offset];
+							if(d == null) return "";
+							return String.valueOf(d);
+						} catch (Exception e) {
+							return "";
+						}
+    	            }
+    	        };
+    	        value.setSortable(true);
+    	        List<StudentItem> data = dataProvider.getList();
+				ListHandler<StudentItem> columnSortHandler = new ListHandler<ScoResultsPresenter.StudentItem>(
+    	                data);
+    	        columnSortHandler.setComparator(value,
+    	                new Comparator<ScoResultsPresenter.StudentItem>() {
+    	            public int compare(ScoResultsPresenter.StudentItem o1, ScoResultsPresenter.StudentItem o2) {
+    	                if (o1 == o2) {
+    	                    return 0;
+    	                }
+    	                Double d1;;
+    	                try { 
+    	                	d1 = o1.subScores[offset];
+    	                } catch(Exception e) {d1 = 0.0;}
+    	                Double d2;
+    	                try { 
+    	                	d2 = o2.subScores[offset];
+    	                } catch(Exception e) {d2 = 0.0;}
+    	                
+       	                return d1.compareTo(d2); // nummeriek
+    	            }
+    	        });
+    	        dataTable.addColumnSortHandler(columnSortHandler);
+    	        dataTable.addColumn(value, String.valueOf(offset+1));
+    	        m++;
+    	}
+    	while( n + headerCount < m) {
+    		// weghalen
+    		m--;
+    		dataTable.removeColumn(m);
+    	}
+    	
+    }
+    
+    
 }
