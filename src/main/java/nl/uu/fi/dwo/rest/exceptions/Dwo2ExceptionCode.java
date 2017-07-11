@@ -35,12 +35,14 @@ public enum Dwo2ExceptionCode {
     Rest_ConnectionTimeout, //Connection time-out to REST-interface.
     Rest_InternalError, //Internal software error, a stack trace should be acquired.
     Rest_InterfaceError, // Error due to an improper REST-interface.
-    Rest_FormatError, // Usually rror in the object data send in the message body 
+    Rest_FormatError, // Usually error in the object data send in the message body 
     Rest_UnsupportedFunction,
+    Rest_StudentScoExists,
 
     // REST LoginContext errors
     Rest_LoginContext_exists,
     Rest_No_LoginContext_exists,
+    Rest_LoginNeeded, // no public access to non-public resources.
 
     // REST Registration errors
     Rest_Registration_UserName_exists, //User exists already, can't register.
