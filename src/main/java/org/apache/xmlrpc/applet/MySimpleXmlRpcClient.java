@@ -126,6 +126,9 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
 
     // formats for parsing and generating dateTime values
     static final DateFormat format = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+    static {
+    	format.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
     // used to collect character data of parameter values
     StringBuffer cdata = new StringBuffer();
