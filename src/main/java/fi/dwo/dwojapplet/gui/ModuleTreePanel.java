@@ -7,7 +7,6 @@ import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.Descriptor;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
-import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;

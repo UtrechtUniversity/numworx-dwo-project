@@ -4,7 +4,6 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.LogoutURLAction;

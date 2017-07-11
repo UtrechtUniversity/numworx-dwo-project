@@ -5,7 +5,6 @@ package fi.dwo.dwojapplet.persistence;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.Sco;
 

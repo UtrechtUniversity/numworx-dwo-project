@@ -21,7 +21,6 @@ import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
-import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.Guest;
 import fi.dwo.dwojapplet.domain.School;
