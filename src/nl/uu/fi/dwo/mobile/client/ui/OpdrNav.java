@@ -703,10 +703,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * 
 	 * @return
 	 */
-	public boolean scoresVisible()
+	private boolean scoresVisible()
 	{
 		boolean visible = false;
 		
+		
+		if (memento.isReview())
+			visible = true;
+		else
 		if (entry.getZelftoetsNagekeken())
 			visible = true;
 		else if (mode == EINDTOETS && memento.isEindtoetsVerzegeld())
@@ -724,7 +728,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * 
 	 * @return
 	 */
-	public boolean scoresEnabled()
+	private boolean scoresEnabled()
 	{
 		boolean enabled = false;
 
@@ -2353,6 +2357,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void clearIsCorrectZelftoets()
 	{
 		isCorrectZelftoets = new boolean[getAantalActiviteiten()][getMaxAantalOpdrachten()];
+	}
+
+	public boolean isReview() {
+		return memento.isReview();
 	}
 	
 	/**

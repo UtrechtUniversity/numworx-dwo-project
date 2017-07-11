@@ -87,7 +87,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private static final String TOTAL_TIME = "cmi.total_time";
 	static final String COMPLETION_STATUS = "cmi.completion_status";
 	static final String COMPLETED = "completed";
-	
+	private static final String CMI_MODE = "cmi.mode";
+
 	static final String EXIT_NORMAL = "normal";
 	static final String EXIT_SUSPEND = "suspend";
 	public static final String LEARNER_ID = "cmi.learner_id";
@@ -139,6 +140,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
 	private Number score;
 	private JSONArray aantalNakijken;
+	private CmiMode cmi_mode;
 
 	public Memento(Scorm2004IF api)
 	{
@@ -153,11 +155,17 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		
 		value = getValue(COMPLETION_STATUS);
 		eindtoetsVerzegeld = COMPLETED.equals(value);
-
-		String reviewData = null; 
-		if (eindtoetsVerzegeld)
-			reviewData = getValue(REVIEW_DATA);
+		try {
+			value = getValue(CMI_MODE);
+			cmi_mode = CmiMode.valueOf(value);
+		} catch(Exception not_used) {
+			cmi_mode = CmiMode.normal;
+		}
 		
+		
+		String reviewData = null; 
+		if (eindtoetsVerzegeld || cmi_mode == CmiMode.review)
+			reviewData = getValue(REVIEW_DATA);
 		try
 		{
 			value = getValue(SUSPEND_DATA);
@@ -895,6 +903,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	public boolean isEindtoetsVerzegeld()
 	{
 		return this.eindtoetsVerzegeld;
+	}
+	
+	public boolean isReview() {
+		return cmi_mode == CmiMode.review;
 	}
 	
 	void setShareMap(JSONObject obj) {

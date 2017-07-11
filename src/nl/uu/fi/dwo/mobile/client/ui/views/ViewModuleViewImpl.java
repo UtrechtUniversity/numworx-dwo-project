@@ -629,7 +629,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			setupOldVersion(opdracht, tb);
 		}
 		
-		if(on.isVerzegeld()) {
+		if(on.isVerzegeld()||on.isReview()) {
 			seal(); // push action.setNotEditable
 		}
 
@@ -739,7 +739,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			kijkNa();
 		}
 
-		if(on.isVerzegeld()) 
+		if(on.isVerzegeld()||on.isReview()) 
 		{
 			seal(); // push action.setNotEditable
 		}
