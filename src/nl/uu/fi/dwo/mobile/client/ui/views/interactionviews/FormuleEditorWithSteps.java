@@ -1279,33 +1279,37 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	public void setFont(TekstRegel parentRegel)
 	{
 		//als geen fontOvererving, dan hoeft er niets te gebeuren.
-		if(!fontOvererving)
+		if (!fontOvererving)
 			return;
+		
 		font = FormuleFont.createFromFontSize(parentRegel.getFont().getFontSize(), false);
-		if(!FormuleFont.formTimes)
+		if (!FormuleFont.formTimes)
 			font.setFont(parentRegel.getFont().getFont());
-		if(prefixViewer != null)
+		if (prefixViewer != null)
 			prefixViewer.setFont(font);
-		for(int i = 0; i < viewers.size(); i++)
+		for (int i = 0; i < viewers.size(); i++)
 			viewers.get(i).setFont(font);
-		if(editor != null)
+		if (editor != null)
 		{
 			editor.setFont(font);
 			editor.setDefaultFont(font);
 		}
 		
 		stepPanelY = 0;
-		for(int i = 0; i < viewers.size(); i++)
+		for (int i = 0; i < viewers.size(); i++) // wanneer heb ik hier meerdere viewers?
 		{
 			LayoutPanel p = stepPanels.get(i);
 			FormuleViewer v = viewers.get(i);
 			p.clear();
 			addFormuleViewer(v, p);
 			contentPanel.setWidgetTopHeight(p, stepPanelY, Style.Unit.PX, v.getHeight(), Style.Unit.PX);
-			stepPanelY += v.getHeight() + stapH;
+			if (!linStrategieVersie && !linOefenVersie)
+				stepPanelY += v.getHeight() + stapH;
 		}
-		if(editor != null)
-		{	contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
+		
+		if (editor != null)
+		{
+			contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 			editor.setCurrentElementRepaint();
 		}
 	}
