@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.rest.locale;
 
-import nl.uu.fi.dwo.rest.locale.DwoLocaleMessages;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
 import com.google.gwt.core.client.GWT;
 
 /**
@@ -10,7 +10,7 @@ import com.google.gwt.core.client.GWT;
  * 
  * @author G.A.J. van der Plas
  */
-public interface DwoLocalesForGWT extends DwoLocaleMessages{
+public interface DwoLocalesForGWT extends Dwo2LocaleMessages{
     DwoLocalesForGWT instance = GWT.create(DwoLocalesForGWT.class);
     
 }
