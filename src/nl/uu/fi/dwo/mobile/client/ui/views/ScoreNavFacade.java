@@ -429,7 +429,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	@Override
 	public void setTotaalScoreLabel(int score)
 	{
-		totaalScoreLabel.setText(Text.constants.totaalScoreLabel() + score);
+		totaalScoreLabel.setText(Text.constants.totaalScoreLabel() + score + "%");
 	}
 
 	@Override
