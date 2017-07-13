@@ -3,7 +3,7 @@
 
     <groupId>nl.uu.fi.dwo.account</groupId>
     <artifactId>Account</artifactId>
-    <version>0.0.9</version>
+    <version>0.0.10-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>${project.build.finalName}</name>
@@ -193,6 +193,6 @@
         <relativePath>../ParentGWT</relativePath>
     </parent>
     <scm>
-    	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Account/tags/Account-0.0.9</developerConnection>
+    	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Account/trunk</developerConnection>
     </scm>
 </project>
