@@ -1303,7 +1303,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			p.clear();
 			addFormuleViewer(v, p);
 			contentPanel.setWidgetTopHeight(p, stepPanelY, Style.Unit.PX, v.getHeight(), Style.Unit.PX);
-			if (!linStrategieVersie && !linOefenVersie)
+			if (!linStrategieVersie && !linOefenVersie && !bordjesMethode)
 				stepPanelY += v.getHeight() + stapH;
 		}
 		
