@@ -2,12 +2,14 @@ package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.rest.PublicUserManager;
+
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -16,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -455,7 +458,14 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
                 try {
-                    DomNewUser nur = new DomNewUser();
+
+            		String p1 = password.getText();
+            		String p2 = repassword.getText();
+            		if (!p1.equals( p2)) {
+            			throw new Dwo2Exception(Dwo2ExceptionCode.User_NewPasswordsDoNotMatch, "Passwords do not match");
+            		}
+                	
+                	DomNewUser nur = new DomNewUser();
 
                     nur.setUsername(username.getText());
                     nur.setPassword(MD5.getHashString(password.getText()));
