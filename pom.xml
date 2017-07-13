@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.1.17-SNAPSHOT</version>
+		<version>2.1.17</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>DWOServer</artifactId>
-			<version>2.1.17-SNAPSHOT</version>
+			<version>2.1.17</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
@@ -125,7 +125,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>DWOJClient</artifactId>
-			<version>2.1.17-SNAPSHOT</version>
+			<version>2.1.17</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -316,9 +316,9 @@
 		<DWOmAccessVersion>0.0.9</DWOmAccessVersion>
 		<jamonVersion>2.80</jamonVersion>
 		<RegisterVersion>2.1.13</RegisterVersion>
-		<DWOGwtClientVersion>0.0.9-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>0.0.9</DWOGwtClientVersion>
 	</properties>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/tags/EBServer-2.1.17</developerConnection>
 	</scm>
 </project>
