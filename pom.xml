@@ -33,12 +33,6 @@
 			<version>${jamonVersion}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
@@ -284,9 +278,8 @@
 				<configuration>
 					<server>TomcatServer</server>
 					<path>/</path>
-					<!-- <warFile>target/${project.build.finalName}.war</warFile> -->
 					<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
-                       <contextFile>src/test/tomcat/context.xml</contextFile>
+                    <contextFile>src/test/tomcat/context.xml</contextFile>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -319,7 +312,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.1.15</DWOplayerVersion>
+		<DWOplayerVersion>2.1.16</DWOplayerVersion>
 		<DWOmAccessVersion>0.0.9</DWOmAccessVersion>
 		<jamonVersion>2.80</jamonVersion>
 		<RegisterVersion>2.1.13</RegisterVersion>
