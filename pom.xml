@@ -4,14 +4,14 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.1.17-SNAPSHOT</version>
+        <version>2.1.17</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
 
     <!--<groupId>nl.uu.fi.dwo.gwt</groupId>-->
     <artifactId>DWO-gwt-lib</artifactId>
     <name>${project.build.finalName}</name>
-    <version>2.1.17-SNAPSHOT</version>
+    <version>2.1.17</version>
     
     <packaging>jar</packaging>
     <developers>
@@ -42,8 +42,8 @@
     </properties>
     
     <scm>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-gwt-lib/trunk</connection>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-gwt-lib/trunk</developerConnection>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-gwt-lib/tags/DWO-gwt-lib-2.1.17</connection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-gwt-lib/tags/DWO-gwt-lib-2.1.17</developerConnection>
     </scm>
         
     <build>
@@ -179,12 +179,12 @@
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
             <artifactId>DWO-rest-lib</artifactId>
-            <version>2.1.17-SNAPSHOT</version>
+            <version>2.1.17</version>
         </dependency>      
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
             <artifactId>DWO-rest-lib</artifactId>
-            <version>2.1.17-SNAPSHOT</version>
+            <version>2.1.17</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
