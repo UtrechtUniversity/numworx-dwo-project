@@ -12,9 +12,12 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanel;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * GWT Panel that handles the login-authentication.
@@ -40,10 +43,13 @@ public class LoginView extends Composite implements ClickHandler, LoginPresenter
     CheckBox switchSchoolBox;
     @UiField
     Button loginBtn;
+    @UiField
+    DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
 
     private BootPanel parent;
 
     public LoginView(LoginPresenter lp){
+    	LOG.fine(rb.GUI_NewPasswordAgain());
         initWidget(uiBinder.createAndBindUi(this));
         loginPresenter = lp;
         //controller must be before clicks occur

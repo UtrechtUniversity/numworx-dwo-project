@@ -3,14 +3,17 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+    <ui:with field="rb" type="nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages" />
     <g:FlowPanel  styleName="{dwoStyle.fullPanel}">
+     <g:FlowPanel styleName="{dwoStyle.scrollPanel}">
         <g:FlowPanel>
-            <g:Button addStyleNames='dwoStyle' ui:field='backBtn'>back</g:Button>            
-            <g:Button addStyleNames='dwoStyle' ui:field='sealBtn'>seal</g:Button>            
+            <g:Button addStyleNames='dwoStyle' ui:field='backBtn'><ui:text from='{rb.backBtn}'/></g:Button>            
+            <g:Button addStyleNames='dwoStyle' ui:field='sealBtn'><ui:text from='{rb.sealBtn}'/></g:Button>            
             <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataTable'/>            
             <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager' />
         </g:FlowPanel>
         <!-- add some wiskopdr stuff here -->
         <g:Frame ui:field="frame" styleName="{dwoStyle.frame}"></g:Frame>
+	  </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder> 

@@ -10,7 +10,10 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+
 import java.util.logging.Logger;
+
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * GWT Panel that handles switching the role.
@@ -48,6 +51,8 @@ public class AccountView extends Composite implements ClickHandler, AccountPrese
     @UiField
     Button updateBtn;
     
+    @UiField
+    DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
     
     public AccountView(AccountPresenter ap) {
         accountPresenter = ap;

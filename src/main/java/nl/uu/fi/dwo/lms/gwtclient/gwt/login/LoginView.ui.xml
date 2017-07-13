@@ -2,22 +2,23 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" >
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+ 	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <g:FlowPanel addStyleNames='{dwoStyle.dwoWidgetPanel}'>
             <g:Grid addStyleNames='{dwoStyle.loginWidget}'>
                 <g:row>
                     <g:customCell>
-                        <g:Label>naam:</g:Label>
+                        <g:Label><ui:text from='{rb.GUI_Username}'/>:</g:Label>
                     </g:customCell>
                     <g:customCell>
-                        <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='usernameText'>gert_project</g:TextBox>
+                        <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='usernameText'></g:TextBox>
                     </g:customCell>
                 </g:row>
                 <g:row>
                     <g:customCell>
-                        <g:Label>password:</g:Label>
+                        <g:Label><ui:text from='{rb.GUI_Password}'/>:</g:Label>
                     </g:customCell>
                     <g:customCell>
-                        <g:PasswordTextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='passwordTextBox'>passw</g:PasswordTextBox>
+                        <g:PasswordTextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='passwordTextBox'></g:PasswordTextBox>
                     </g:customCell>
                 </g:row>
                 <g:row></g:row>

@@ -159,8 +159,12 @@
                     <execution>
                         <configuration>
                             <module>nl.uu.fi.dwo.lms.gwtclient.gwtclient</module>
+ 							<i18nConstantsBundles>
+ 								<i18nConstantsBundle>nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages</i18nConstantsBundle>
+ 							</i18nConstantsBundles>
                         </configuration>                           
                         <goals>
+                        	<goal>i18n</goal>
                             <goal>compile</goal>
                             <goal>generateAsync</goal>
                             <goal>test</goal>

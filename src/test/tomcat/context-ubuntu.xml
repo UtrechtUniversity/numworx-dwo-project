@@ -42,7 +42,7 @@
   		username="root"
   		password="E=mc2Dwo"
   		driverClassName="com.mysql.jdbc.Driver"
-  		url="jdbc:mysql://localhost:3306/dwo_devel_v1_4"
+  		url="jdbc:mysql://localhost:3306/dwo_productie"
     />
     <Realm className="org.apache.catalina.realm.DataSourceRealm" dataSourceName="jdbc/dwodb" localDataSource="true" roleNameCol="groupname" userCredCol="passwd" userNameCol="username" userRoleTable="tomcat_roles_view" userTable="tomcat_user_view"/>
 </Context>

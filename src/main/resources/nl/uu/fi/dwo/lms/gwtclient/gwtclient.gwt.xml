@@ -5,6 +5,7 @@
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <!--<inherits name="nl.uu.fi.dwo.account.Account-DWO"/>-->
   <inherits name="com.google.gwt.logging.Logging"/>
+  <inherits name="com.google.gwt.i18n.I18N"/>
   <!--<inherits name="com.googlecode.mgwt.MGWTMin"/>-->
   <inherits name="nl.uu.fi.dwo.rest.DWO-rest-lib"/>
   <inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
@@ -18,8 +19,6 @@
   <set-property name="gwt.logging.enabled" value="TRUE"/>
   <set-property name="gwt.logging.logLevel" value="FINEST"/>
   <source path='gwt'/>
-
-<!--   <extend-property name="locale" values="en"/> -->
   
   <!-- Specify the app entry point class.                         -->
   <entry-point class='nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanel'/>
@@ -29,9 +28,11 @@
     <replace-with class="nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactoryImpl">
     <when-type-is class="nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory"/>
     </replace-with>
-  <!-- local settings -->
+  <!-- locale settings -->
+  <extend-property name="locale" values="en"/>
   <extend-property name="locale" values="nl"/>
-
+  <extend-property name="locale" values="fr"/>
+<!--   <set-property-fallback name="locale" value="en"/> -->
 <!-- gebruik deze linker voor CDPLogica -->
   <add-linker name='xsiframe' />
 <set-configuration-property name="devModeRedirectEnabled" value="true"/>

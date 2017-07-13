@@ -2,11 +2,12 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" >
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+ 	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <g:FlowPanel>
         <g:Grid addStyleNames='{dwoStyle.loginWidget}'>
             <g:row>
                 <g:customCell>
-                    <g:Label>usernaam:</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Username}' />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='usernameText'></g:TextBox>
@@ -14,7 +15,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label>voornaam:</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_GivenName}' />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='firstNameText'>
@@ -23,7 +24,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label>tussenvoegsel:</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Insertion}' />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='insertionText'>
@@ -32,7 +33,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label>familienaam:</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_FamilyName}' />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='familyNameText'>
@@ -41,7 +42,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label>email:</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Email}' />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='emailText'>
@@ -51,7 +52,7 @@
             <g:row></g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label>current password:</g:Label>
+                    <g:Label><ui:text from="{rb.GUI_Password}" />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:PasswordTextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='passwordTextBox'></g:PasswordTextBox>
@@ -59,7 +60,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label>new password:</g:Label>
+                    <g:Label><ui:text from="{rb.GUI_NewPassword}" />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:PasswordTextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='newPasswordTextBox'></g:PasswordTextBox>
@@ -67,7 +68,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label>new password again:</g:Label>
+                    <g:Label><ui:text from="{rb.GUI_NewPasswordAgain}" />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:PasswordTextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='newPasswordAgainTextBox'></g:PasswordTextBox>

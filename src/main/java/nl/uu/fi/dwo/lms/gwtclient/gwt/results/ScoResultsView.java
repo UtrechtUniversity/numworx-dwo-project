@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter.StudentItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
@@ -49,6 +50,10 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     private ScoResultsPresenter scoResultsPresenter;
+    @UiField
+    GwtClientMessages rb = GWT.create(GwtClientMessages.class);
+    
+    
     @UiField(provided = true)
     SimplePager pager;
     @UiField(provided = true)
