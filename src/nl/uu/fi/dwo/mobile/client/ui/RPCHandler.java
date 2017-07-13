@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -11,11 +12,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface RPCHandler {
@@ -55,5 +59,8 @@ public interface RPCHandler {
 	Promise<DomUserFullwLoginContext> login(String username, String password);
 	Promise<DomUserFullwLoginContext> loginMD5(String username, String password);
 
-
+// V3 stuff	
+	Promise<Map<String,String>> getValues(Object scoID, Collection<String> keys);
+	Promise<?> setValues(Object scoID, Map<String, String> values);
+	Promise<JSONValue> getJSONLaunchDataBytes(Object scoID);
 }

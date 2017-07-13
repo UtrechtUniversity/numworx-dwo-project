@@ -6,6 +6,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -18,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
@@ -412,6 +417,39 @@ public abstract class XMLView {
 	}
 
 	void loadJSON(String file) {
+		int is = file.lastIndexOf('=');
+// no scoid=
+		if(is == -1) {
+			loadJSON_org(file);
+			return;
+		}
+// via rest interface.
+		file = file.substring(is+1);
+		Success<JSONValue, Void> success = new Success<JSONValue, Void>() {
+
+			@Override
+			public Promise<Void> call(Promise<JSONValue> resolved) throws Exception {
+				JSONValue response = resolved.getValue();
+				launchData = JSONUtilities.wrapMap(response.isObject());
+				setupView(launchData);
+				return null;
+			}
+		};
+
+		Failure failure = new Failure() {
+			
+			@Override
+			public void fail(Promise<?> resolved) throws Exception {
+				Throwable exception = resolved.getFailure();
+				Window.alert(Text.constants.noJSONreceived() + 
+						"\nerror " + exception);
+				logger.log(Level.SEVERE, exception.toString(), exception);
+			}
+		};
+		DWOplayer.clientfactory.getRPCHandler().getJSONLaunchDataBytes(file).then(success, failure);
+	}
+	
+	void loadJSON_org(String file) {
 		 {
 			RequestBuilder.Method method = RequestBuilder.GET;
 			String url = file;

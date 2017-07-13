@@ -87,7 +87,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		loading.setText("loading course description " + id);
 		main.setWidget(loading);
 		String xml = GET_COURSE_DESCRIPTION + id;
-		loadJSON(xml);
+		loadJSON_org(xml);
 	}
 
 	@SuppressWarnings("unchecked")

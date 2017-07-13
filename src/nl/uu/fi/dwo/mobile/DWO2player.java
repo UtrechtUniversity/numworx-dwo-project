@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.UserBar;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO2;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO3;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
@@ -40,6 +42,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -59,7 +62,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 //		
 //	}
 	
-	private final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV2 implements RPCHandler{
+	private final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV3 implements RPCHandler{
 		private DWO2RPCHandler(String server, int profile) {
 			super(server, profile);
 		}
@@ -153,7 +156,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					Object userID = getUserID();
 					Object sgID = getSchoolGroupID();
 					
-					api = new SCORM_DWO2(userID, sgID);
+					api = new SCORM_DWO3();
 					menuWidget = getUserBar();
 					
 					userBar.setRole(getRoleType());
@@ -265,8 +268,13 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 			modules = promise.map(new Function<DomCoursesOfSchoolClass, List<SelectModuleItem>>() {
 
-				private Collection<DomClassCourse> sort(Collection<DomClassCourse> classcourses, DomCoursesOfSchoolClass t) {
+				private Collection<DomClassCourse> sort(List<DomMapEntry<PersistenceId, DomClassCourse>> list, DomCoursesOfSchoolClass t) {
 					boolean again;
+					List<DomClassCourse> classcourses = null;
+					if(list != null) {
+						classcourses = new ArrayList<DomClassCourse>(list.size());
+						for(DomMapEntry<?,DomClassCourse> e: list) classcourses.add(e.getValue());
+					}
 					if(classcourses == null || classcourses.isEmpty()|| Boolean.FALSE.equals(t.getSchoolClass().getIconizer()))
 						return classcourses;
 					List<DomClassCourse> courses = new ArrayList<>(classcourses);
@@ -309,15 +317,29 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 				private PersistenceId getParentID(DomClassCourse course, DomCoursesOfSchoolClass t) {
 					PersistenceId id = getID(course);
-					DomCourse r = t.getCourses().get(id);
+					DomCourse r = find(t, id);
 					if(r != null)
 					{
 						id = r.getParentID();
 //  IF ROOT, return null
-						if(id == null || PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentCourse) .equals(0) || ! t.getCourses().containsKey(id))
+						if(id == null || PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentCourse) .equals(0) || ! containsKey(t, id))
 								return null;
 						return id;
 					}
+					return null;
+				}
+
+				protected boolean containsKey(DomCoursesOfSchoolClass t, PersistenceId id) {
+					List<DomMapEntry<PersistenceId, DomCourseStudent>> courses = t.getCourses();
+					for(DomMapEntry<PersistenceId, DomCourseStudent> entry : courses)
+						if(id .equals( entry.getKey())) return true;
+					return false;
+				}
+
+				protected DomCourse find(DomCoursesOfSchoolClass t, PersistenceId id) {
+					List<DomMapEntry<PersistenceId, DomCourseStudent>> courses = t.getCourses();
+					for(DomMapEntry<PersistenceId, DomCourseStudent>entry: courses)
+						if(id.equals(entry.getKey())) return entry.getValue();
 					return null;
 				}
 
@@ -331,8 +353,14 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				@Override
 				public List<SelectModuleItem> apply(DomCoursesOfSchoolClass t) {
 					long now = System.currentTimeMillis() + timezone;
-					Map<PersistenceId, DomCourseStudent> courses = t.getCourses();
-					Collection<DomClassCourse> classcourses = sort(t.getClassCourses().values(),t);
+					Long serverNow = t.getFetchTimeStamp();
+// timezone = diff now/servernow
+					if(serverNow != null) {
+						timezone += serverNow.longValue() - now;
+						now = serverNow.longValue();
+					}
+					Map<PersistenceId, DomCourseStudent> courses = map(t.getCourses());
+					Collection<DomClassCourse> classcourses = sort(t.getClassCourses(),t);
 					List<SelectModuleItem> result = new ArrayList<SelectModuleItem>(classcourses.size());
 					for (Iterator<DomClassCourse> iterator = classcourses.iterator(); iterator.hasNext();) {
 						DomClassCourse domClassCourse = iterator.next();
@@ -355,6 +383,14 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 						result.add(item);
 					}
 					return result;
+				}
+
+				private Map<PersistenceId, DomCourseStudent> map(
+						List<DomMapEntry<PersistenceId, DomCourseStudent>> courses) {
+					Map<PersistenceId, DomCourseStudent> map = new HashMap<>();
+					for(DomMapEntry<PersistenceId, DomCourseStudent> entry: courses)
+						map.put(entry.getKey(), entry.getValue());
+					return map;
 				}
 			});
 		} else if (withUser() && RoleType.STUDENT != clientfactory.getRoleType())
