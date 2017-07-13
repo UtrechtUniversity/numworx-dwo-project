@@ -317,7 +317,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if (mode == OpdrNav.ZELFTOETS)
 		{
 			// set values
-			scoreNav.setTotaalScoreLabel(on.getTotaalScore());
+//			scoreNav.setTotaalScoreLabel(on.getTotaalScore());
+			scoreNav.setTotaalScoreLabel((int) on.getScore()); // toon percentagescore
 			scoreNav.setKeerNagekekenLabel(on.getKeerNagekeken());
 
 			// add totaalscore and keer nagekeken labels
@@ -469,7 +470,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig());
 			scoreNav.setViewMisconceptionsKnop(on.zijnMisconceptionsAanwezig());
 			
-			scoreNav.setTotaalScoreLabel(on.getTotaalScore());
+//			scoreNav.setTotaalScoreLabel(on.getTotaalScore());
+			scoreNav.setTotaalScoreLabel((int) on.getScore()); // toon percentagescore
 			scoreNav.setKeerNagekekenLabel(on.getKeerNagekeken());
 		}
 	}
