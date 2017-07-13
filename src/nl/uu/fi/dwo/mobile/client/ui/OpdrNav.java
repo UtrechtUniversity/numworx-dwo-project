@@ -834,7 +834,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			score = getScoresHuidigeActiviteit()[index];
 		
 		if (score == 0)
-			return;
+			return; // dit is het enige waarvoor score wordt gebruikte; De tooltip wordt gezet in setButtonCorrect() en setButtonCorrectZelftoets() 
+		
 		popupTimer = new Timer()
 		{
 
@@ -1097,6 +1098,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return keerNagekeken;
 	}
 
+	/**
+	 * Geef het totaal aantal punten over alle activiteiten (?)
+	 * en opdrachten.
+	 * 
+	 * @return
+	 */
 	private int getTotaalMax()
 	{
 		int totaalMax = 0;
@@ -1963,7 +1970,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				aantalNakijken[currentActiviteit] = 0;
 
 			// reset totaalscore en keer nagekeken
-			entry.scoreNav.setTotaalScoreLabel(getTotaalScore());
+//			entry.scoreNav.setTotaalScoreLabel(getTotaalScore());
+			entry.scoreNav.setTotaalScoreLabel((int) getScore()); // toon percentagescore
 			entry.scoreNav.setKeerNagekekenLabel(getKeerNagekeken());
 
 			// reset bezocht
