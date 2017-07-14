@@ -15,7 +15,7 @@
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>nl.uu.fi.dwo.lms</groupId>
     <artifactId>DWOGwtClient</artifactId>
-    <version>0.0.9-SNAPSHOT</version>
+    <version>0.0.9</version>
     <packaging>war</packaging>
 
     <name>${project.build.finalName}</name>
