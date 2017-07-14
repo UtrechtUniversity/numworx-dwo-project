@@ -740,15 +740,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 //			mainPanel2.setWidgetTopBottom(callOutCanvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		}
 		
-
-		int callOutExtraIndex = 0;
-//		if (callOut)
-//		{
-//			// for call out create an extra row and column to account for callOutMargeX0 and callOutMargeY0
-//			callOutExtraIndex = 1;
-//		}
-		
-		mainPanel = new Grid(hoogtes.size() + callOutExtraIndex, breedtes.size() + callOutExtraIndex);
+		mainPanel = new Grid(hoogtes.size(), breedtes.size());
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
 		mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow - randDikte) + "px " + (-cellSpaceColumn - randDikte) + "px");
 		
@@ -789,7 +781,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				tekstVakken[i][j].setMarges(bovenMarge, cellMarge);
 				tekstVakken[i][j].setInterlinie(interlinie);
 				
-				mainPanel.setWidget(i + callOutExtraIndex, j + callOutExtraIndex, tekstVakken[i][j]);
+				mainPanel.setWidget(i, j, tekstVakken[i][j]);
 			}
 		}
 		
