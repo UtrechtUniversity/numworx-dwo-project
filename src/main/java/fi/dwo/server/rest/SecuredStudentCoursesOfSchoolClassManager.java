@@ -104,6 +104,9 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 				(scc) -> {
 					Long courseID = scc.getCourseID();
 					PersistentCourse course = CourseManager.findEntity(courseID);
+					if(course == null) {
+						LOG.log(Level.SEVERE, "course null for courseid = "+courseID + " sccid = "+scc.getClassCourseID());
+					} else 
 					if (profileID .equals( course.getDwoProfileID())) {
 						DomClassCourse dcc = scc.buildDomClassCourse();
 						classCourseMap.put(dcc.getId(), dcc);
