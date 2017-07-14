@@ -771,10 +771,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			for (int j = 0; j < breedtes.size(); j++)
 			{	
 				double tekstVakBreedte =  breedtes.get(j).doubleValue() - 2 * cellMarge;
-				double tekstVakHoogte = hoogtes.get(i).doubleValue() - 2 * bovenMarge;
-				
 				if( tekstVakBreedte < 0) tekstVakBreedte = 0;
-				if( tekstVakHoogte < 0) tekstVakHoogte = 0;
 				
 				tekstVakken[i][j] = new TekstVak(this, i, j);
 				int th = (int) (Math.round(hoogtes.get(i).doubleValue()));
@@ -795,20 +792,6 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				mainPanel.setWidget(i + callOutExtraIndex, j + callOutExtraIndex, tekstVakken[i][j]);
 			}
 		}
-		//mainPanel2.add(randPanel);
-		//TODO: fix borders for callout (maybe using callOutPanel?)
-//		if (callOut)
-//		{
-//			// take the margins into account
-//			mainPanel2.setWidgetLeftRight(randPanel, callOutMargeX0 + cellSpaceColumn - randDikte, Style.Unit.PX, 0, Style.Unit.PX);
-//			mainPanel2.setWidgetTopBottom(randPanel, callOutMargeY0 + cellSpaceRow - randDikte, Style.Unit.PX, 0, Style.Unit.PX);
-//		}
-//		else
-//		{
-//			mainPanel2.setWidgetLeftRight(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-//			mainPanel2.setWidgetTopBottom(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-//		}
-//		
 		
 		mainPanel2.add(mainPanel);
 		mainPanel2.setWidgetLeftRight(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
