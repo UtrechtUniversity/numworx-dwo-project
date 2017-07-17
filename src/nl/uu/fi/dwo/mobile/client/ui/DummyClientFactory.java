@@ -1,11 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import java.util.Map;
-
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
-import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
-import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -22,6 +18,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 public class DummyClientFactory implements ClientFactory {
 
 	private static EventBus eventBus = new SimpleEventBus();
+	private static RPCHandler handler = new DummyRPCHandler();
 	private ViewModuleView entryView;
 	private IsWidget logoutWidget;
 	
@@ -60,7 +57,7 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public RPCHandler getRPCHandler() {
-		return null;
+		return handler;
 	}
 
 	public void setEntryView(ViewModuleView entryView) {
