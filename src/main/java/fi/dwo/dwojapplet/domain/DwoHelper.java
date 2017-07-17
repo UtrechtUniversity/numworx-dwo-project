@@ -735,7 +735,7 @@ public final class DwoHelper {
 	 * @param rights the rights to set
 	 */
 	public static void setProfileRights(String rights) {
-	    rights = rights;
+	    DwoHelper.rights = rights;
 	}
 
 	/**
