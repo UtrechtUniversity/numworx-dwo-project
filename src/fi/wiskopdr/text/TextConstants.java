@@ -17,6 +17,8 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String klaarKnopLabel();
 	@DefaultStringValue("kijk na")
 	String nakijkKnopLabel();
+	@DefaultStringValue("scoregeschiedenis")
+	String zelftoetsGeschiedenisKnopLabel();
 	@DefaultStringValue("Einde")
 	String eindeKnopLabel();
 	@DefaultStringValue("Volgende")
