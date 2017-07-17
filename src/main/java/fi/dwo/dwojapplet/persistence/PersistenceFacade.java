@@ -347,71 +347,71 @@ public class PersistenceFacade {
 
     }
 
-    /**
-     * =============================================================================
-     * STUDENT FUNCTIONALITY
-     * =============================================================================
-     * @throws fi.dwo.commons.exceptions.PersistenceException
-     */
-    public void addStudentToClass(SchoolClass c, int id) throws PersistenceException {
-        try {
-            DbAccessCreator.instance().addStudentToClass(c.getID(), id);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (DwoXmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-    }
+//    /**
+//     * =============================================================================
+//     * STUDENT FUNCTIONALITY
+//     * =============================================================================
+//     * @throws fi.dwo.commons.exceptions.PersistenceException
+//     */
+//    public void addStudentToClass(SchoolClass c, int id) throws PersistenceException {
+//        try {
+//            DbAccessCreator.instance().addStudentToClass(c.getID(), id);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (DwoXmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//    }
 
-    public boolean removeStudentFromClass(int classId, int userId) throws PersistenceException {
-        try {
-            return DbAccessCreator.instance().removeStudentFromClass(classId, userId);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (DwoXmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-    }
+//    public boolean removeStudentFromClass(int classId, int userId) throws PersistenceException {
+//        try {
+//            return DbAccessCreator.instance().removeStudentFromClass(classId, userId);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (DwoXmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//    }
 
-    /**
-     * =============================================================================
-     * TEACHER FUNCTIONALITY
-     * =============================================================================
-     * @throws fi.dwo.commons.exceptions.PersistenceException
-     */
-    public void addTeacherToClass(SchoolClass c, int id) throws PersistenceException {
-        try {
-            DbAccessCreator.instance().addTeacherToClass(c.getID(), id);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (DwoXmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-    }
+//    /**
+//     * =============================================================================
+//     * TEACHER FUNCTIONALITY
+//     * =============================================================================
+//     * @throws fi.dwo.commons.exceptions.PersistenceException
+//     */
+//    public void addTeacherToClass(SchoolClass c, int id) throws PersistenceException {
+//        try {
+//            DbAccessCreator.instance().addTeacherToClass(c.getID(), id);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (DwoXmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//    }
     
     public boolean setAllowSuspendData(boolean allow) {
     	boolean old = ReadOnly.hasSuspendData;
@@ -419,23 +419,23 @@ public class PersistenceFacade {
     	return old;
     }
 
-    public boolean removeTeacherFromClass(int classId, int userId) throws PersistenceException {
-        try {
-            return DbAccessCreator.instance().removeTeacherFromClass(classId, userId);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (DwoXmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-    }
+//    public boolean removeTeacherFromClass(int classId, int userId) throws PersistenceException {
+//        try {
+//            return DbAccessCreator.instance().removeTeacherFromClass(classId, userId);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (DwoXmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//    }
 
     /**
      * =============================================================================
@@ -2267,114 +2267,114 @@ public class PersistenceFacade {
         }
     }
 
-    /**
-     * Deletes the specified schoolclass. if mustEmpty is true, and the class
-     * contains students, this function returns false. Otherwise it returns true
-     *
-     * @param c The class to delete
-     * @param mustEmpty if true and the schoolclass is not empty, the
-     * schoolclass is not deleted.
-     * @return If mustEmpty is true, and the class contains students, this
-     * function returns false. Otherwise it returns true
-     * @throws fi.dwo.commons.exceptions.ClassException
-     *
-     */
-    public boolean deleteClass(SchoolClass c, boolean mustEmpty)
-            throws ClassException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            boolean returnvalue = dbAccess.deleteClass(c.getID(), mustEmpty);
-            if (returnvalue) {
-                MapperCreator.instance(SchoolClass.class).removeObject(
-                        c.getID());
-            }
-            return returnvalue;
-        }
-        catch (IOException e) {
-            throw new ClassException(ClassException.EX_IO);
-        }
-        catch (XmlRpcException e) {
-            throw new ClassException(ClassException.EX_XML_RPC);
-        }
-        catch (SQLException e) {
-            throw new ClassException(ClassException.EX_DB);
-        }
-    }
+//    /**
+//     * Deletes the specified schoolclass. if mustEmpty is true, and the class
+//     * contains students, this function returns false. Otherwise it returns true
+//     *
+//     * @param c The class to delete
+//     * @param mustEmpty if true and the schoolclass is not empty, the
+//     * schoolclass is not deleted.
+//     * @return If mustEmpty is true, and the class contains students, this
+//     * function returns false. Otherwise it returns true
+//     * @throws fi.dwo.commons.exceptions.ClassException
+//     *
+//     */
+//    public boolean deleteClass(SchoolClass c, boolean mustEmpty)
+//            throws ClassException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            boolean returnvalue = dbAccess.deleteClass(c.getID(), mustEmpty);
+//            if (returnvalue) {
+//                MapperCreator.instance(SchoolClass.class).removeObject(
+//                        c.getID());
+//            }
+//            return returnvalue;
+//        }
+//        catch (IOException e) {
+//            throw new ClassException(ClassException.EX_IO);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new ClassException(ClassException.EX_XML_RPC);
+//        }
+//        catch (SQLException e) {
+//            throw new ClassException(ClassException.EX_DB);
+//        }
+//    }
 
-    /**
-     * Renames the name of the schoolclass in the database.
-     *
-     * @param schoolClass The class to rename.
-     * @param newName The new name of the class.
-     * @param iconizer
-     * @throws ClassException
-     */
-    public void renameClass(SchoolClass schoolClass, String newName, boolean iconizer)
-            throws ClassException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                dbAccess.renameClass(schoolClass.getID(), newName, iconizer);
-            }
-            catch (IOException e) {
-                throw new ClassException(ClassException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (ClassException) getException(e, e.code);
-                } else {
-                    throw new ClassException(ClassException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                throw new ClassException(ClassException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (ClassException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new ClassException(ClassException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    /**
+//     * Renames the name of the schoolclass in the database.
+//     *
+//     * @param schoolClass The class to rename.
+//     * @param newName The new name of the class.
+//     * @param iconizer
+//     * @throws ClassException
+//     */
+//    public void renameClass(SchoolClass schoolClass, String newName, boolean iconizer)
+//            throws ClassException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                dbAccess.renameClass(schoolClass.getID(), newName, iconizer);
+//            }
+//            catch (IOException e) {
+//                throw new ClassException(ClassException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (ClassException) getException(e, e.code);
+//                } else {
+//                    throw new ClassException(ClassException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new ClassException(ClassException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (ClassException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new ClassException(ClassException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
-    /**
-     * Renames the name of the schoolclass in the database.
-     *
-     * @param schoolClass The class to rename.
-     * @param newName The new name of the class.
-     * @param newRegistrationKey
-     * @param iconizer
-     * @throws ClassException
-     */
-    public void renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer)
-            throws ClassException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                dbAccess.renameClass(schoolClass.getID(), newName, newRegistrationKey, iconizer);
-            }
-            catch (IOException e) {
-                throw new ClassException(ClassException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (ClassException) getException(e, e.code);
-                } else {
-                    throw new ClassException(ClassException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                throw new ClassException(ClassException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (ClassException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new ClassException(ClassException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    /**
+//     * Renames the name of the schoolclass in the database.
+//     *
+//     * @param schoolClass The class to rename.
+//     * @param newName The new name of the class.
+//     * @param newRegistrationKey
+//     * @param iconizer
+//     * @throws ClassException
+//     */
+//    public void renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer)
+//            throws ClassException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                dbAccess.renameClass(schoolClass.getID(), newName, newRegistrationKey, iconizer);
+//            }
+//            catch (IOException e) {
+//                throw new ClassException(ClassException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (ClassException) getException(e, e.code);
+//                } else {
+//                    throw new ClassException(ClassException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new ClassException(ClassException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (ClassException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new ClassException(ClassException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
     /**
      * =============================================================================

@@ -287,15 +287,15 @@ public interface DwoIF {
      */
     public void deleteUser();
 
-    /**
-     * Deletes the specified class from the system.
-     *
-     * @param c The class to delete.
-     * @return boolean If the class was successfully deleted it returns true.
-     * Otherwise it returns false.
-     *
-     */
-    public boolean deleteClass(SchoolClass c);
+//    /**
+//     * Deletes the specified class from the system.
+//     *
+//     * @param c The class to delete.
+//     * @return boolean If the class was successfully deleted it returns true.
+//     * Otherwise it returns false.
+//     *
+//     */
+//    public boolean deleteClass(SchoolClass c);
 
     /**
      * Returns the current resultsmodule.
@@ -335,17 +335,17 @@ public interface DwoIF {
      */
     public ResultsModuleIF getResultsModule(Course[] courses, boolean showSco);
 
-    /**
-     * Renames the specified class.
-     *
-     * @param schoolClass The class to rename.
-     * @param newName The new name for the class.
-     * @param newRegistrationKey
-     * @param iconizer
-     * @return If the class is successfully renamed it returns true. Otherwise
-     * it returns false.
-     */
-    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer);
+//    /**
+//     * Renames the specified class.
+//     *
+//     * @param schoolClass The class to rename.
+//     * @param newName The new name for the class.
+//     * @param newRegistrationKey
+//     * @param iconizer
+//     * @return If the class is successfully renamed it returns true. Otherwise
+//     * it returns false.
+//     */
+//    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer);
 
     /**
      * Shows the user that he must wait for a while with the dafault wait

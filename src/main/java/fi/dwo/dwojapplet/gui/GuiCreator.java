@@ -723,17 +723,17 @@ public class GuiCreator {
         logoff();
     }
 
-    /**
-     * Deletes the specified class from the system.
-     *
-     * @param c The class to delete.
-     * @return boolean If the class was successfully deleted it returns true.
-     * Otherwise it returns false.
-     *
-     */
-    public boolean deleteClass(SchoolClass c) {
-        return dwo.deleteClass(c);
-    }
+//    /**
+//     * Deletes the specified class from the system.
+//     *
+//     * @param c The class to delete.
+//     * @return boolean If the class was successfully deleted it returns true.
+//     * Otherwise it returns false.
+//     *
+//     */
+//    public boolean deleteClass(SchoolClass c) {
+//        return dwo.deleteClass(c);
+//    }
 
     /**
      * Returns a panel with results for users of the classes of the teacher. The
@@ -767,16 +767,16 @@ public class GuiCreator {
         return null;
     }
 
-    /**
-     * Returns a panel representing the specified SchoolClass.
-     *
-     * @param c The SchoolClass of the panel to return.
-     * @return A panel representing the specified SchoolClass.
-     *
-     */
-    public CenterSubPanel getClassUsersPanel(SchoolClass c) {
-        return null;
-    }
+//    /**
+//     * Returns a panel representing the specified SchoolClass.
+//     *
+//     * @param c The SchoolClass of the panel to return.
+//     * @return A panel representing the specified SchoolClass.
+//     *
+//     */
+//    public CenterSubPanel getClassUsersPanel(SchoolClass c) {
+//        return null;
+//    }
 
     /**
      * Returns a panel for managing schools.
@@ -808,19 +808,19 @@ public class GuiCreator {
         dwo.setPanel(p);
     }
 
-    /**
-     * Renames the specified class.
-     *
-     * @param schoolClass The class to rename.
-     * @param newName The new name for the class.
-     * @param newRegistrationKey
-     * @param iconizer
-     * @return If the class is successfully renamed it returns true. Otherwise
-     * it returns false.
-     */
-    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer) {
-        return dwo.renameClass(schoolClass, newName, newRegistrationKey, iconizer);
-    }
+//    /**
+//     * Renames the specified class.
+//     *
+//     * @param schoolClass The class to rename.
+//     * @param newName The new name for the class.
+//     * @param newRegistrationKey
+//     * @param iconizer
+//     * @return If the class is successfully renamed it returns true. Otherwise
+//     * it returns false.
+//     */
+//    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer) {
+//        return dwo.renameClass(schoolClass, newName, newRegistrationKey, iconizer);
+//    }
 
     /**
      * @return fi.dwo.client.gui.CenterSubPanel

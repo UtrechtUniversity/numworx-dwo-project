@@ -169,17 +169,17 @@ public class GuiCreatorTeacher extends GuiCreator {
         return csp;
     }
 
-    /**
-     * Returns a panel representing the specified SchoolClass.
-     *
-     * @param c The SchoolClass of the panel to return.
-     * @return A panel representing the specified SchoolClass.
-     *
-     */
-    @Override
-    public CenterSubPanel getClassUsersPanel(SchoolClass c) {
-        return new ClassUsersPanel(c);
-    }
+//    /**
+//     * Returns a panel representing the specified SchoolClass.
+//     *
+//     * @param c The SchoolClass of the panel to return.
+//     * @return A panel representing the specified SchoolClass.
+//     *
+//     */
+//    @Override
+//    public CenterSubPanel getClassUsersPanel(SchoolClass c) {
+//        return new ClassUsersPanel(c);
+//    }
 
     /**
      * Returns a panel for managing schoolclasses.

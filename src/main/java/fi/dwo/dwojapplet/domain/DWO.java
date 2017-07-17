@@ -1179,42 +1179,42 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         }
     }
 
-    /**
-     * Deletes the specified class from the system.
-     *
-     * @param c The class to delete.
-     * @return boolean If the class was successfully deleted it returns true.
-     * Otherwise it returns false.
-     *
-     */
-    @Override
-    public boolean deleteClass(SchoolClass c) {
-        boolean returnvalue = false;
-        try {
-            if (!PersistenceFacade.instance().deleteClass(c, true)) {
-                if (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIC_CLASS_NOT_EMPTY) + "?",
-                        TextMapper.getText(TextMapper.GUIC_CLASS_NOT_EMPTY_TITLE),
-                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    returnvalue = PersistenceFacade.instance().deleteClass(c, false);
-                }
-            } else {
-                returnvalue = true;
-            }
-        } catch (ClassException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-
-        if (returnvalue) {
-            if (DwoHelper.getCurrentFacadeUser() instanceof Teacher) {
-                ((Teacher) DwoHelper.getCurrentFacadeUser()).deleteClass(c);
-            }
-            if (DwoHelper.getCurrentFacadeUser().getSchool() != null) {
-                DwoHelper.getCurrentFacadeUser().getSchool().deleteClass(c);
-            }
-        }
-
-        return returnvalue;
-    }
+//    /**
+//     * Deletes the specified class from the system.
+//     *
+//     * @param c The class to delete.
+//     * @return boolean If the class was successfully deleted it returns true.
+//     * Otherwise it returns false.
+//     *
+//     */
+//    @Override
+//    public boolean deleteClass(SchoolClass c) {
+//        boolean returnvalue = false;
+//        try {
+//            if (!PersistenceFacade.instance().deleteClass(c, true)) {
+//                if (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIC_CLASS_NOT_EMPTY) + "?",
+//                        TextMapper.getText(TextMapper.GUIC_CLASS_NOT_EMPTY_TITLE),
+//                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+//                    returnvalue = PersistenceFacade.instance().deleteClass(c, false);
+//                }
+//            } else {
+//                returnvalue = true;
+//            }
+//        } catch (ClassException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//        }
+//
+//        if (returnvalue) {
+//            if (DwoHelper.getCurrentFacadeUser() instanceof Teacher) {
+//                ((Teacher) DwoHelper.getCurrentFacadeUser()).deleteClass(c);
+//            }
+//            if (DwoHelper.getCurrentFacadeUser().getSchool() != null) {
+//                DwoHelper.getCurrentFacadeUser().getSchool().deleteClass(c);
+//            }
+//        }
+//
+//        return returnvalue;
+//    }
 
     /**
      * Returns the current resultsmodule.
@@ -1862,31 +1862,31 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         return new Dimension(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
     }
 
-    /**
-     * Renames the specified class.
-     *
-     * @param schoolClass The class to rename.
-     * @param newName The new name for the class.
-     * @param newRegistrationKey
-     * @return If the class is successfully renamed it returns true. Otherwise
-     * it returns false.
-     * @see
-     * fi.dwo.client.domain.DwoIF#renameClass(fi.dwo.client.domain.SchoolClass,
-     * java.lang.String)
-     */
-    @Override
-    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer) {
-        try {
-            PersistenceFacade.instance().renameClass(schoolClass, newName, newRegistrationKey, iconizer);
-            schoolClass.setClassName(newName);
-            schoolClass.setRegistrationKey(newRegistrationKey);
-            schoolClass.setIconizer(iconizer);
-            return true;
-        } catch (ClassException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return false;
-        }
-    }
+//    /**
+//     * Renames the specified class.
+//     *
+//     * @param schoolClass The class to rename.
+//     * @param newName The new name for the class.
+//     * @param newRegistrationKey
+//     * @return If the class is successfully renamed it returns true. Otherwise
+//     * it returns false.
+//     * @see
+//     * fi.dwo.client.domain.DwoIF#renameClass(fi.dwo.client.domain.SchoolClass,
+//     * java.lang.String)
+//     */
+//    @Override
+//    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer) {
+//        try {
+//            PersistenceFacade.instance().renameClass(schoolClass, newName, newRegistrationKey, iconizer);
+//            schoolClass.setClassName(newName);
+//            schoolClass.setRegistrationKey(newRegistrationKey);
+//            schoolClass.setIconizer(iconizer);
+//            return true;
+//        } catch (ClassException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//            return false;
+//        }
+//    }
 
     /**
      * Shows a wait cursor and the default wait message to indicate that the
@@ -2386,33 +2386,33 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         return null;
     }
 
-    /**
-     * Zet een gebruiker in een klas.
-     *
-     * @param className naam van klas
-     * @param u de gebruiker
-     * @param school die van u
-     */
-    private void setInitialUserInClass(String className, User u, School school) {
-        SchoolClass schoolClass = u.getInClass();
-        if (className != null && (schoolClass == null || !schoolClass.getName().equals(className))) {
-            SchoolClass[] classes = school.getClassList();
-            for (SchoolClass classe : classes) {
-                if (className.equals(classe.getName())) {
-                    u.setInClass(classe);
-                    try {
-                        PersistenceFacade.instance().changeAccount(u, null, null, u.getFirstname(), u.getMiddleName(),
-                                u.getLastName(), u.getEmail());
-                        PersistenceFacade.instance().addStudentToClass(u.getInClass(), u.getID());
-                    } catch (PersistenceException e) {
-                        LOG.log(Level.SEVERE, "", e);
-                    } catch (RegisterException ex) {
-                        LOG.log(Level.SEVERE, "", ex);
-                    }
-                }
-            }
-        }
-    }
+//    /**
+//     * Zet een gebruiker in een klas.
+//     *
+//     * @param className naam van klas
+//     * @param u de gebruiker
+//     * @param school die van u
+//     */
+//    private void setInitialUserInClass(String className, User u, School school) {
+//        SchoolClass schoolClass = u.getInClass();
+//        if (className != null && (schoolClass == null || !schoolClass.getName().equals(className))) {
+//            SchoolClass[] classes = school.getClassList();
+//            for (SchoolClass classe : classes) {
+//                if (className.equals(classe.getName())) {
+//                    u.setInClass(classe);
+//                    try {
+//                        PersistenceFacade.instance().changeAccount(u, null, null, u.getFirstname(), u.getMiddleName(),
+//                                u.getLastName(), u.getEmail());
+//                        PersistenceFacade.instance().addStudentToClass(u.getInClass(), u.getID());
+//                    } catch (PersistenceException e) {
+//                        LOG.log(Level.SEVERE, "", e);
+//                    } catch (RegisterException ex) {
+//                        LOG.log(Level.SEVERE, "", ex);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     /**
      * Converteer een role naar een Group. De namen van de group zijn niet
