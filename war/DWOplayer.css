@@ -1,5 +1,6 @@
 @import url("KeyboardGWT.css");
 @import url("images/font-awesome-4.1.0/css/font-awesome.min.css");
+@import url("https://fonts.googleapis.com/css?family=Ubuntu")
 
 html,body{margin:0px; padding:0px;}
 
@@ -520,4 +521,13 @@ div.listItem-dwo-separator {
 
 .gwt-DialogBox .Caption {
    cursor: auto !important;
+}
+
+.numworx-navItem {
+		font-family: "Ubuntu" !important;
+		line-height: 27px;
+		margin-right: 18px;
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+		border-bottom-color: #A8ABB1;
 }

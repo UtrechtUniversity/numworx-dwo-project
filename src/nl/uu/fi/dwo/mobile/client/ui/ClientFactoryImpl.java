@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
@@ -93,10 +94,16 @@ public class ClientFactoryImpl implements ClientFactory
 	public TreeModuleView getTreeModuleView()
 	{
 		if (treeModuleView == null){
+			if(false)
+				return new TreeModuleViewNumworx();
+			
+			
+			
+			
 			OsDetection detection = MGWT.getOsDetection();
 			if(detection.isDesktop()
 					//&& false
-					|| true
+					//|| true
 					) {
 				this.treeModuleView = new TreeModuleViewImplDesktop();
 			} else {
