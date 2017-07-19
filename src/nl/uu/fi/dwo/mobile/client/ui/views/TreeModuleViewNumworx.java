@@ -37,8 +37,9 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 
-public class TreeModuleViewNumworx extends TreeModuleBase {
+public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext {
 
 	final class ProvideCells implements Success<List<SelectModuleItem>, Void> {
 		@Override
@@ -101,7 +102,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase {
 
 			  sb.appendHtmlConstant("<div class='" + style.tileBody() + "'>");
 			    String description = value.getDescription();
-			    if(description.isEmpty()) {
+			    if(description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
 			    	switch(value.getType()) {
 			    	case MODULE: 
 			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
@@ -123,7 +124,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase {
 			    	
 			    	
 			    } else {
-			    	sb.appendEscaped(description);
+			    	if(description.startsWith("<html"))
+			    		sb.appendHtmlConstant(description);
+			    	else
+			    		sb.appendEscaped(description);
 			    }
 			    sb.appendHtmlConstant("</div>");
 
@@ -280,11 +284,11 @@ public class TreeModuleViewNumworx extends TreeModuleBase {
 		switch(item.getType()) {
 		case ROOT:
 				title.setText(item.getName());
-				description.setWidget(new Label(item.getDescription()));
+				description.setWidget(getLabel(item));
 			break;
 		case FOLDER:
 				title.setText(item.getName());
-				description.setWidget(new Label(item.getDescription()));
+				description.setWidget(getLabel(item));
 				if(item.showChildren());
 				{
 					getChildrenPromise(item).then(new ProvideCells());
@@ -294,7 +298,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase {
 			break;
 		case MODULE:
 				title.setText(item.getName());
-				description.setWidget(new Label(item.getDescription()));
+				description.setWidget(getLabel(item));
 				if(item.showChildren());
 				{
 					getScosPromise(item).then(new ProvideCells());
@@ -306,6 +310,21 @@ public class TreeModuleViewNumworx extends TreeModuleBase {
 		tiles.redraw();
 	}
 
+	private Widget getLabel(SelectModuleItem item) {
+		Widget w;
+		String description = item.getDescription();
+		if(description.startsWith(DescriptionView.GZIPPREFIX))
+		{
+			w = new DescriptionViewImpl(item.getID(), this).asWidget();
+		} else
+		if(description.startsWith("<html>")) {
+			w = new HTML(description);
+		}else
+		{
+			w = new Label(description);
+		}
+		return w;
+	}
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
@@ -320,6 +339,11 @@ public class TreeModuleViewNumworx extends TreeModuleBase {
 
 	@Override
 	public void setMenuWidget(IsWidget w) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void gotoUrl(String href) {
 		// TODO Auto-generated method stub
 		
 	}

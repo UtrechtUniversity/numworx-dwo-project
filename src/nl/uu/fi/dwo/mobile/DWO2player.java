@@ -37,6 +37,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.Login2ViewImpl;
+import nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -133,6 +134,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			public LoginView getLoginView()
 			{
 				if (loginView == null)
+					if(true) loginView = new Login3ViewImpl(); else
 					loginView = new Login2ViewImpl();
 				return loginView;
 			}

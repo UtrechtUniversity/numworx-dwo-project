@@ -1,0 +1,135 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with type="nl.uu.fi.dwo.mobile.client.text.Text" field="rb" />
+	<ui:with type="java.lang.String" field="build" />
+	<ui:with type="java.lang.String" field="back" />
+	<ui:with type="java.lang.String" field="logo" />
+	<ui:style>
+	.screen {
+		top: 0px;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		position: absolute;
+		background-color: #8ebee6;
+	}
+	.logo {
+		position: absolute;
+		width: 272px;
+		height: 500px;
+		left: 192px;
+		top: 60px;
+	}
+	.logotekst {
+		top: 150px;
+		width: 500px;
+		height: 284px;
+		position: absolute;
+		left: 272px;
+		color: white;
+	}
+	.logotext h1 i {
+		color: #1B75BB;
+	}
+	.logotekst h1 {
+		font-size: 54px;
+		font-family: Ubuntu;
+	}
+	.logotekst p {
+		font-size: 18px;
+		font-family: Ubuntu;
+	}
+	
+	
+	.messages {
+		top: 306px;
+		width: 242px;
+		padding: 5px;
+		left: 192px;
+		color: white;
+		font-family: Ubuntu;
+		font-size: 18px;
+		line-height: 24px;
+		background-color: #1B75BB;
+		position: absolute;
+	}
+	.login {
+		top: 306px;
+		width: 306px;
+		height: 180px;
+		left: 462px;
+		background-color: #314770;
+		position: absolute;
+		font-family: Ubuntu;
+		font-size: 18px;
+	}
+	.username {
+		width: 252px;
+		height: 30px;
+		background-color: #1B75BB;
+		top: 30px;
+		left: 25px;
+		color: white;
+		position: absolute;
+		font-family: Ubuntu;
+		font-size: 18px;
+	}
+	.password {
+		width: 252px;
+		height: 30px;
+		left: 25px;
+		top: 80px;	
+		background-color: #1B75BB;
+		color: white;
+		position: absolute;
+		font-family: Ubuntu;
+		font-size: 18px;
+	}
+	
+	.button {
+		color: white;
+		background-color: #1B75BB;
+		height: 26px;
+		width: 126px;
+		right: 25px;
+		top: 140px;
+		position: absolute;
+		font-size: 12px;
+		font-family: Ubuntu;
+		font-weight: bold;
+	}
+	.links {
+		top: 496px;
+		width: 306px;
+		left: 462px;
+		position: absolute;
+		font-size: 14px;
+		line-height: 27px;
+		color: white;
+	}
+	
+	</ui:style>
+	<g:FlowPanel styleName='{style.screen}'>
+		<g:HTML styleName="{style.logo}">
+			<img src='{logo}' />
+		</g:HTML>
+		<g:HTML ui:field='logoPanel' styleName='{style.logotekst}'>
+			<h1>numw<i style='color: #1B75BB;' class='fa fa-cog'></i>rx</h1>
+			<p>Voor leerlingen en studenten</p>
+		</g:HTML>
+		<g:Label ui:field='messagePanel' styleName='{style.messages}'>
+			Vanwege onderhoud kunt u niet inloggen tussen 8:00 en 14:00
+		</g:Label>
+		<g:FlowPanel styleName='{style.login}'>
+			<g:TextBox ui:field='username' styleName='{style.username}' >Gebruikersnaam</g:TextBox>
+			<g:PasswordTextBox ui:field='password' styleName='{style.password}' >Wachtwoord</g:PasswordTextBox>
+			<g:Button  ui:field='loginBtn' styleName='{style.button}' >AANMELDEN</g:Button>
+		</g:FlowPanel>
+		<g:HTML styleName='{style.links}' >
+			<p><a>Wachtwoord vergeten?</a></p>
+			<p><a>Nog geen account?</a></p>
+			<p><a href='http://www.numworx.nl'>Meer informatie over Numworx</a></p>
+		</g:HTML>
+	</g:FlowPanel>
+</ui:UiBinder> 
