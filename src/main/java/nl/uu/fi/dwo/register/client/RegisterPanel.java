@@ -63,7 +63,7 @@ public class RegisterPanel extends Composite {
 			return;
 		}
 		DomNewUser n = domUser; //FIXME java.util.regex niet in GWT
-        if ( ! SimpleValidUserFieldsChecker.isEmptyOrNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), password.getText()))
+        if ( ! SimpleValidUserFieldsChecker.isNonEmptyNorNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), password.getText()))
         {
         	Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Required_Fields());
         	return;
