@@ -315,7 +315,7 @@
 		<DWOplayerVersion>2.1.16</DWOplayerVersion>
 		<DWOmAccessVersion>0.0.9</DWOmAccessVersion>
 		<jamonVersion>2.80</jamonVersion>
-		<RegisterVersion>2.1.13</RegisterVersion>
+		<RegisterVersion>2.1.16</RegisterVersion>
 		<DWOGwtClientVersion>0.0.9</DWOGwtClientVersion>
 	</properties>
 	<scm>
