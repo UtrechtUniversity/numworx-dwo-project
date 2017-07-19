@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -25,8 +24,6 @@ import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 import com.google.gwt.animation.client.Animation;
@@ -505,27 +502,6 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 //		
 //	};
 	
-	private final class COURSE_TO_MODULEITEM implements Function<List<DomCourseStudent>, List<SelectModuleItem>> {
-		private final SelectModuleItem item;
-
-		private COURSE_TO_MODULEITEM(SelectModuleItem item) {
-			this.item = item;
-		}
-
-		@Override
-		public List<SelectModuleItem> apply(List<DomCourseStudent> t) {
-			List<SelectModuleItem> items = new ArrayList<SelectModuleItem>(t.size());
-			for (Iterator<DomCourseStudent> iterator = t.iterator(); iterator.hasNext();) {
-				DomCourseStudent map = iterator.next();
-				SelectModuleItem item = new SelectModuleItem(map, (DomClassCourse) null);
-				item.setParent(this.item);
-				SelectModuleItemHolder.insert(item);
-				items.add(item);
-			}
-			return items;
-		}
-	}
-
 	private void loadChildren(final SelectModuleItem item) {
 		Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
 
