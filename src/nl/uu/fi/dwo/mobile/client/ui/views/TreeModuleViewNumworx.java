@@ -104,13 +104,19 @@ public class TreeModuleViewNumworx extends TreeModuleBase {
 			    if(description.isEmpty()) {
 			    	switch(value.getType()) {
 			    	case MODULE: 
-			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='images/numworx/module-numworx.png' />");
+			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
+			    				+ r("images/numworx/module-numworx.png")
+			    				+ "' />");
 			    		break;
 			    	case FOLDER:
-			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='images/numworx/folder-numworx.png' />");
+			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
+			    				+ r("images/numworx/folder-numworx.png")
+			    				+ "' />");
 			    		break;
 			    	case SCO:
-			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='images/numworx/activiteit_numworx.png' />");
+			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
+			    				+ r("images/numworx/activiteit_numworx.png")
+			    				+ "' />");
 			    		break;
 			    	default:
 			    	}
@@ -140,6 +146,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase {
 			
 		}
 		
+		private String r(String string) {
+			return DWOplayer.PARAMETERS.getResource(string);
+		}
+
 		public TileCell() {
 			super("click");
 		}

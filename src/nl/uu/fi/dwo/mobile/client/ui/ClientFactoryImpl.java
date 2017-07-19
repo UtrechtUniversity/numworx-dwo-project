@@ -95,7 +95,7 @@ public class ClientFactoryImpl implements ClientFactory
 	{
 		if (treeModuleView == null){
 			if(false)
-				return new TreeModuleViewNumworx();
+				return this.treeModuleView = new TreeModuleViewNumworx();
 			
 			
 			
