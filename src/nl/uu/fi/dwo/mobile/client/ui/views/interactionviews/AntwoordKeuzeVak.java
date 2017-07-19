@@ -466,7 +466,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			catch (Exception e)
 			{	
 			}
-			ArrayList<Object> keuzeOptie = tb.convertTekst(keuzeMogelijkheden[i], null, false);
+			ArrayList<Object> keuzeOptie = tb.convertTekst(keuzeMogelijkheden[i].trim(), null, false);
 					
 			keuzeOptieVakken[i + 1].setObjects(keuzeOptie);
 			keuzeOptieVakken[i + 1].resize();
