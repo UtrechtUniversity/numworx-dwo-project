@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -42,6 +43,7 @@ import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -52,10 +54,13 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -66,6 +71,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -234,18 +240,21 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			scoreNav.setTotaalScore((int) on.getScore());
 			scoreNav.setGotoOpdracht(on);
 // FIXME authELO
-	if(false) {
-			boolean authELOcheck = wrap.getBoolean("authELOcheck", false);
-			scoreNav.setAuthELOcheck(authELOcheck);
-			boolean authELOhelp = wrap.getBoolean("authELOhelp", false);
-			scoreNav.setAuthELOhelp(authELOhelp);
-			if(authELOcheck || authELOhelp) {
-				HTML w = new HTML("<img id=\"helper\" data-toggle=\"popover\" title=\"Feedback\" data-placement=\"auto\" data-trigger=\"focus\" data-content=\"I have nothing to tell you right now\"  src=\"http://hansen.dcs.bbk.ac.uk/authELO/public_html/img/glasses_owl.png\" alt=\"Helper\" />");
-				w.getElement().getStyle().setPosition(Position.ABSOLUTE);
-				w.getElement().getStyle().setTop(0, Unit.PX);
-				fp.add(w);
+			if (false)
+			{
+				boolean authELOcheck = wrap.getBoolean("authELOcheck", false);
+				scoreNav.setAuthELOcheck(authELOcheck);
+				boolean authELOhelp = wrap.getBoolean("authELOhelp", false);
+				scoreNav.setAuthELOhelp(authELOhelp);
+				if (authELOcheck || authELOhelp)
+				{
+					HTML w = new HTML(
+							"<img id=\"helper\" data-toggle=\"popover\" title=\"Feedback\" data-placement=\"auto\" data-trigger=\"focus\" data-content=\"I have nothing to tell you right now\"  src=\"http://hansen.dcs.bbk.ac.uk/authELO/public_html/img/glasses_owl.png\" alt=\"Helper\" />");
+					w.getElement().getStyle().setPosition(Position.ABSOLUTE);
+					w.getElement().getStyle().setTop(0, Unit.PX);
+					fp.add(w);
+				}
 			}
-	}		
 		}
 		catch (Exception e)
 		{
@@ -260,7 +269,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if (this.loadingHandler != null)
 		{
 			this.loadingHandler.viewModuleViewSetupDone();
-			;
 		}
 
 		// benodigde knoppen toevoegen.
@@ -270,6 +278,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			scoreNav.setKijkNaEnabled(isKijkNaEnabled());
 			
 			sb.addKnop(scoreNav.getKijkNaButton(), false);
+			
+			if (zelftoetsGeschiedenis)
+			{
+				// voeg geschiedenis-knop toe
+				sb.addKnop(getZelftoetsGeschiedenisButton(), false);
+			}
 		}
 		scoreNav.setKijkNa(new ScoreNavIF.Checker()
 		{
@@ -391,6 +405,53 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			zetAfdekPanelTempotoets(tempotoetsLocked, isAllCorrect());
 		}
+	}
+
+	private PushButton getZelftoetsGeschiedenisButton()
+	{
+		final PushButton zelftoetsGeschiedenisKnop = new PushButton(fi.wiskopdr.text.Text.constants.zelftoetsGeschiedenisKnopLabel());
+		zelftoetsGeschiedenisKnop.setStylePrimaryName("myPushButton");
+		zelftoetsGeschiedenisKnop.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{
+				e.stopPropagation();
+				// toon popup met scores
+				final PopupPanel panel = new PopupPanel(true);
+				panel.add(getScorePanel());
+				panel.setVisible(false);
+				panel.show();
+
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+					   @Override
+					   public void execute()
+					   {
+					      panel.setPopupPosition(zelftoetsGeschiedenisKnop.getAbsoluteLeft(), 
+									zelftoetsGeschiedenisKnop.getAbsoluteTop() - panel.getOffsetHeight());
+					      panel.setVisible(true);
+					   }
+					});
+			}
+		});
+		
+		return zelftoetsGeschiedenisKnop;
+	}
+
+	/**
+	 * Geef een panel met op elke regel een score uit de
+	 * zelftoets-score-geschiedenis.
+	 * 
+	 * @return
+	 */
+	protected Widget getScorePanel()
+	{
+		TextCell textCell = new TextCell();
+		CellList<String> scoreList = new CellList<>(textCell);
+		if (on.getScoresZelftoetsHistorie() == null || on.getScoresZelftoetsHistorie().size() == 0)
+			scoreList.setRowData(Arrays.asList("leeg"));
+		else
+			scoreList.setRowData(on.getScoresZelftoetsHistorie());
+		
+		return scoreList;
 	}
 
 	/**
