@@ -75,6 +75,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private static final String GOED_FOUT_ZELFTOETS = "isCorrectZelftoets";
 	private static final String SCORES = "orScores"; // TODO correct name? getPagina score gebruikt deze naam
 	private static final String SCORES_ZELFTOETS = "scoresZelftoets"; 
+	private static final String SCORES_ZELFTOETS_HISTORIE = "scoresZelftoetsHistorie"; 
+	private static final String ZELFTOETS_HIGH_SCORE = "zelftoetsHighScore"; 
 	private static final String NAKIJKEN_ZELFTOETS_PENDING = "nakijkenZelftoetsPending"; 
 	private static final String ONS_STATE = "onsState";
 	private static final String LOG_STATE = "log";
@@ -115,6 +117,16 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	 * worden als op de nakijk-knop wordt gedrukt.
 	 */
 	private JSONArray scoresZelftoets;
+	/**
+	 * Een array van behaalde scores voor de zelftoets, in chronologische volgorde.
+	 * Iedere keer dat er op de nakijkknop wordt gedrukt, wordt de totaalscore (percentage)
+	 * aan de array toegevoegd.
+	 */
+	private JSONArray scoresZelftoetsHistorie;
+	/**
+	 * De high score van de zelftoets.
+	 */
+	private JSONNumber zelftoetsHighScore;
 	/**
 	 * Correctheid (per activiteit, per opdracht/pagina, vgl. opdrGoedFout) die getoond wordt
 	 * in een nagekeken zelftoets dmv een groen of rood bolletje.
@@ -177,6 +189,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			isCorrectZelftoets  = (JSONArray) onsState.get(GOED_FOUT_ZELFTOETS);
 			opdrScores    = (JSONArray) onsState.get(SCORES);
 			scoresZelftoets = (JSONArray) onsState.get(SCORES_ZELFTOETS);
+			scoresZelftoetsHistorie = (JSONArray) onsState.get(SCORES_ZELFTOETS_HISTORIE);
+			zelftoetsHighScore = (JSONNumber) onsState.get(ZELFTOETS_HIGH_SCORE);
 			nakijkenZelftoetsPending = (JSONArray) onsState.get(NAKIJKEN_ZELFTOETS_PENDING);
 			opdrBezocht   = (JSONArray) onsState.get(BEZOCHT);
 			zelftoetsNagekeken = (JSONBoolean) onsState.get(ZELFTOETS_NAGEKEKEN);
@@ -941,6 +955,48 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		this.onsState.put(TEMPOTOETS_SECONDS_LEFT, this.tempotoetsSecondsLeft);
 	}
 	
+	/**
+	 * Geef de high score van de zelftoets.
+	 * 
+	 * @return
+	 */
+	public double getZelftoetsHighScore()
+	{
+		double highScore = 0;
+
+		if (zelftoetsHighScore != null)
+			highScore = zelftoetsHighScore.doubleValue();
+		
+		return highScore;
+	}
+	
+	/**
+	 * Geef de array van scores die eerder behaald zijn in de zelftoets.
+	 * 
+	 * @return
+	 */
+	public String[] getScoresZelftoetsHistorie()
+	{
+		if (scoresZelftoetsHistorie == null)
+		{
+			return new String[0];
+		}
+		
+		String[] scoreArray = new String [scoresZelftoetsHistorie.size()];
+		
+		for (int i = 0; i < scoresZelftoetsHistorie.size(); i++)
+		{
+			JSONNumber score = scoresZelftoetsHistorie.get(i).isNumber();
+			
+			if (score != null)
+			{
+				scoreArray[i] = String.valueOf((int) score.doubleValue()) + "%";
+			}
+		}		
+
+		return scoreArray;
+	}
+	
 	public int[][] getScoresZelftoets()
 	{
 		if (scoresZelftoets == null)
@@ -974,6 +1030,57 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			}
 		}		
 		return intArray;
+	}
+	
+	/**
+	 * Voeg de gegeven score toe aan de zelftoetshistorie.
+	 * 
+	 */
+	public void addScoreZelftoetsHistorie(int score)
+	{
+		if (this.scoresZelftoetsHistorie == null)
+		{
+			setScoresZelftoetsHistorie(new int[]{score});
+		}
+		else
+		{
+			this.scoresZelftoetsHistorie.set(scoresZelftoetsHistorie.size(), JSONUtilities.toJSONValue(new Integer(score)));
+		}
+	}
+	
+	/**
+	 * Zet de zelftoets high score op de gegeven score als
+	 * deze hoger is dan de huidige high score.
+	 * 
+	 * @param score
+	 */
+	public void setZelftoetsHighScore(double score)
+	{
+		if (zelftoetsHighScore == null || (score > getZelftoetsHighScore()))
+		{
+			zelftoetsHighScore = new JSONNumber(score);
+		}
+		
+		this.onsState.put(ZELFTOETS_HIGH_SCORE, this.zelftoetsHighScore);
+	}
+	
+	/**
+	 * Zet de zelftoets-score-historie.
+	 * 
+	 * @param scores
+	 */
+	public void setScoresZelftoetsHistorie(int[] scores)
+	{
+		JSONArray array = new JSONArray();
+
+		for (int j = 0; j < scores.length; j++)
+		{
+			Integer integerScore = new Integer(scores[j]);
+			array.set(j, JSONUtilities.toJSONValue(integerScore));
+		}
+		
+		this.scoresZelftoetsHistorie = array;
+		this.onsState.put(SCORES_ZELFTOETS_HISTORIE, this.scoresZelftoetsHistorie);
 	}
 	
 	public void setScoresZelftoets(int[][] scores)
@@ -1155,5 +1262,4 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		setValue(SESSION_TIME, format(millis));
 		setValue(TOTAL_TIME, format(total + millis));
 	}
-
 }
