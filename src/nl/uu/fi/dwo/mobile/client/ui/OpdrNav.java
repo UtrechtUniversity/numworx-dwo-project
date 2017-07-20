@@ -378,6 +378,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			else
 				setScoresZelftoets(scores);
 			
+			if (entry.zelftoetsHighScore)
+				setZelftoetsHighScore((int) memento.getZelftoetsHighScore());
+			
 			if (memento.isCorrectZelftoets() != null)
 				setIsCorrectZelftoets(memento.isCorrectZelftoets());
 			else
