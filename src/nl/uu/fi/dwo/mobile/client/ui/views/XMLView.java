@@ -97,6 +97,17 @@ public abstract class XMLView {
 	public boolean zelftoetsGeenCorr = false;
 	public boolean eerderGeenCorr = false;
 	/**
+	 * Boolean die aangeeft of de geschiedenis van zelftoetsscores
+	 * (percentages) moet worden bijgehouden en getoond.
+	 */
+	public boolean zelftoetsGeschiedenis = false;
+	/**
+	 * Boolean die aangeeft of de high score van de zelftoets
+	 * moet worden getoond als totaalscore (percentage).
+	 * Kan alleen true zijn als zelftoetsGeschiedenis true is.
+	 */
+	public boolean zelftoetsHighScore = false;
+	/**
 	 * Boolean indicating timer for a tempotoets.
 	 */
 	public boolean timer = false;
@@ -213,6 +224,10 @@ public abstract class XMLView {
 				zelftoetsGeenCorr = wrap.getBoolean("zelftoetsGeenCorr");
 			if (wrap.containsKey("eerderGeenCorr"))
 				eerderGeenCorr = wrap.getBoolean("eerderGeenCorr");
+			if (wrap.containsKey("zelftoetsGeschiedenis"))
+				zelftoetsGeschiedenis = wrap.getBoolean("zelftoetsGeschiedenis");
+			if (wrap.containsKey("zelftoetsHighScore"))
+				zelftoetsHighScore = wrap.getBoolean("zelftoetsHighScore");
 			if (wrap.containsKey("timer"))
 				timer = wrap.getBoolean("timer");
 			if (wrap.containsKey("timeLimit"))
