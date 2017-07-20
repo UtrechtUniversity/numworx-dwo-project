@@ -5,6 +5,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import nl.uu.fi.dwo.mobile.BUILD;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -46,6 +47,8 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	@UiField Button loginBtn;
 	@UiField TextBox username;
 	@UiField PasswordTextBox password;
+	@UiField Text rb = Text.constants;
+
 	/**
 	 * Because this class has a default constructor, it can
 	 * be used as a binder template. In other words, it can be used in other
@@ -66,6 +69,8 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	
 	public Login3ViewImpl() {
 		initWidget(createAndBindUi());
+		username.getElement().setPropertyString("placeholder", rb.gebruikersnaam());
+		password.getElement().setPropertyString("placeholder", rb.wachtwoord());
 	}
 	
 	@Override

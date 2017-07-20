@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
+import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -43,6 +44,8 @@ public class ClientFactoryImpl implements ClientFactory
 	private TreeModuleView treeModuleView;
 	private RPCHandler handler;
 	private IsWidget logoutWidget;
+	
+	protected final static boolean NUMWORX = false;
 
 	public ClientFactoryImpl()
 	{
@@ -66,9 +69,17 @@ public class ClientFactoryImpl implements ClientFactory
 	{
 		if(entryView == null)
 		{
-			ViewModuleViewImpl impl = new ViewModuleViewImpl(true);
-			entryView = impl.initialize();
-			impl.zetMaat();
+			
+			if(NUMWORX) {
+				ViewModuleViewNumworx impl = new ViewModuleViewNumworx();
+				entryView = impl.initialize();
+			} else			
+			{
+			
+				ViewModuleViewImpl impl = new ViewModuleViewImpl(true);
+				entryView = impl.initialize();
+				impl.zetMaat();
+			}
 		}
 		entryView.setApi(DWOplayer.api);
 		return entryView;
@@ -94,7 +105,7 @@ public class ClientFactoryImpl implements ClientFactory
 	public TreeModuleView getTreeModuleView()
 	{
 		if (treeModuleView == null){
-			if(false)
+			if(NUMWORX)
 				return this.treeModuleView = new TreeModuleViewNumworx();
 			
 			

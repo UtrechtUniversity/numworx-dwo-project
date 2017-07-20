@@ -122,13 +122,13 @@
 			Vanwege onderhoud kunt u niet inloggen tussen 8:00 en 14:00
 		</g:Label>
 		<g:FlowPanel styleName='{style.login}'>
-			<g:TextBox ui:field='username' styleName='{style.username}' >Gebruikersnaam</g:TextBox>
-			<g:PasswordTextBox ui:field='password' styleName='{style.password}' >Wachtwoord</g:PasswordTextBox>
+			<g:TextBox ui:field='username' styleName='{style.username}' ></g:TextBox>
+			<g:PasswordTextBox ui:field='password' styleName='{style.password}' ></g:PasswordTextBox>
 			<g:Button  ui:field='loginBtn' styleName='{style.button}' >AANMELDEN</g:Button>
 		</g:FlowPanel>
 		<g:HTML styleName='{style.links}' >
-			<p><a>Wachtwoord vergeten?</a></p>
-			<p><a>Nog geen account?</a></p>
+			<p><a href="/dwo/rest/public/user/requestNewPassword?language={rb.locale}&amp;back={back}">Wachtwoord vergeten?</a></p>
+			<p><a href="/dwo/register?locale={rb.locale}&amp;next={back}">Nog geen account?</a></p>
 			<p><a href='http://www.numworx.nl'>Meer informatie over Numworx</a></p>
 		</g:HTML>
 	</g:FlowPanel>

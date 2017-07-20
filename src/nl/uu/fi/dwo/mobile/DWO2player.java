@@ -134,7 +134,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			public LoginView getLoginView()
 			{
 				if (loginView == null)
-					if(true) loginView = new Login3ViewImpl(); else
+					if(NUMWORX) loginView = new Login3ViewImpl(); else
 					loginView = new Login2ViewImpl();
 				return loginView;
 			}

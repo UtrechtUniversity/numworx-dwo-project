@@ -8,10 +8,10 @@ import com.google.gwt.i18n.client.Constants;
 public interface Text extends Constants {
 	Text constants = DWOplayer.PARAMETERS.getTextBundle();
 	
-	@DefaultStringValue("Gebruikersnaam:")
+	@DefaultStringValue("Gebruikersnaam")
 	String gebruikersnaam();
 	
-	@DefaultStringValue("Wachtwoord:")
+	@DefaultStringValue("Wachtwoord")
 	String wachtwoord();
 	
 	@DefaultStringValue("Login")

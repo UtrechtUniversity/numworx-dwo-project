@@ -104,9 +104,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
-	//@Deprecated // FIXME NIET GEBRUIKEN, CONVERTEREN NAAR Text.constants.xxxx()
-	//static Text_nl rb = new Text_nl();
-
 	OpdrNav on;
 	private FocusPanel mainPanel;
 	LayoutPanel contentScrollPanel = null;
