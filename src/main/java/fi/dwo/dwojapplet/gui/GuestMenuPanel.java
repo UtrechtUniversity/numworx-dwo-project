@@ -5,7 +5,8 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.DWO;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -13,6 +14,7 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -94,7 +96,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
  //   protected DwoIF dwo;
 
 
-    public GuestMenuPanel(DwoIF dwo) {
+    public GuestMenuPanel(DWO dwo) {
         this();
     }
     

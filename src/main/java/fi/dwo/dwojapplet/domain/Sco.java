@@ -126,7 +126,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      * @return A panel representing this sco.
      *
      */
-    public ScoPanel getScoPanel(DwoIF dwo, User user) {
+    public ScoPanel getScoPanel(DWO dwo, User user) {
         this.dwo = dwo;
 //        User lastUser = this.user;
         setUser(user);

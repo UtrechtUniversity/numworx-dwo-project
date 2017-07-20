@@ -4,17 +4,19 @@ package fi.dwo.dwojapplet.gui;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JSpinnerDateEditor;
+
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -39,6 +41,7 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -823,7 +826,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             tree = new ModuleTreePanel() {
 
                 @Override
-                protected void createModel(DwoIF dwo) {
+                protected void createModel(DWO dwo) {
 //        			super.createModel(null);
 
                     DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);

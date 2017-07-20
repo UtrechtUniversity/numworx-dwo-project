@@ -86,7 +86,7 @@ import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
  * stand alone application.
  *
  */
-public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM2004APIInterface {
+public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInterface {
 
     private static final String DWO_ENV = "dwo_env";
 
@@ -452,7 +452,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
-    @Override
     public boolean login(String username, String password) throws LoginException {
     	setUserName(username);
     	setPassWord(password);
@@ -482,7 +481,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
-    @Override
     public boolean loginWithMd5(String username, String password) throws LoginException {
         PersistenceFacade.instance().clearCurrentMapperDataCache(Sco.class);
         PersistenceFacade.instance().clearCurrentMapperDataCache(Course.class);
@@ -562,7 +560,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * Otherwise it returns false.
      *
      */
-    @Override
     public boolean login() throws LoginException {
         DwoHelper.setCurrentFacadeUser(Guest.instance());
 
@@ -605,7 +602,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.RegisterException
      *
      */
-    @Override
     public boolean register(String username, String password, String rePassword, String firstname, String middlename,
             String lastname, String email) throws RegisterException {
 
@@ -755,7 +751,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.RegisterException
      *
      */
-    @Override
     public boolean register(String username, String password, String rePassword, String firstname, String middlename,
             String lastname, String email, String schoolLogin, Group group, String groupPassword)
             throws RegisterException {
@@ -821,8 +816,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @return An array of all the available groups.
      *
      */
-    @Override
-
     public Group[] getGroups() {
         try {
             return (Group[]) PersistenceFacade.instance().get(Group.class);
@@ -840,7 +833,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * guest, Guest.instance is returned.
      *
      */
-    @Override
     public User getUser() {
         return DwoHelper.getCurrentFacadeUser();
     }
@@ -869,7 +861,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @return An sorted array of all the courses for the current user.
      *
      */
-    @Override
     public Course[] getCourses() {
         try {
             courseList = PersistenceFacade.instance().getCoursesJS(DwoHelper.getCurrentFacadeUser()); // was getCourses
@@ -890,7 +881,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @return
      * @deprecated er is geen class meer, altijd school
      */
-    @Override
     public Course[] sequence(Course[] courses, SchoolClass inclass) {
         if (!SEQUENCE) {
             return courses;
@@ -936,7 +926,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * Log the user off of the system. Sets all the data to null.
      *
      */
-    @Override
     public void logoff() {
         try {
             if(DwoHelper.getCurrentUser()!=null) SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
@@ -966,7 +955,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @return A panel representing the course.
      *
      */
-    @Override
     public CenterSubPanel loadCourse(Course course) {
         currentCourse = course;
         return course.getCoursePanel();
@@ -980,7 +968,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @return A panel with the sco-applet.
      *
      */
-    @Override
     public CenterSubPanel loadSco(Sco sco) {
         if (currentCourse != null) {
             currentCourse.setCurrentSco(sco);
@@ -1042,7 +1029,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.RegisterException
      *
      */
-    @Override
     public void changeAccount(String password, String newPassword, String reNewPassword, String firstName,
             String middleName, String lastName, String email, String schoolLogin, Group group, String groupPassword)
             throws RegisterException {
@@ -1091,7 +1077,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.RegisterException
      *
      */
-    @Override
     public void changeAccount(String password, String newPassword, String reNewPassword, String firstName,
             String middleName, String lastName, String email) throws RegisterException {
 
@@ -1152,7 +1137,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.ClassException
      *
      */
-    @Override
     public boolean addClass(String className) throws ClassException {
         if (DwoHelper.getCurrentFacadeUser() instanceof Teacher) {
             SchoolClass sc = PersistenceFacade.instance().addClass((Teacher) DwoHelper.getCurrentFacadeUser(),
@@ -1170,7 +1154,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * Deletes the current user.
      *
      */
-    @Override
     public void deleteUser() {
         try {
             PersistenceFacade.instance().deleteUser(DwoHelper.getCurrentFacadeUser());
@@ -1222,7 +1205,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @return The current results module.
      *
      */
-    @Override
     public ResultsModuleIF getResultsModule() {
         return getResultsModule(getCourses(), false);
     }
@@ -1234,7 +1216,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @return The current results module.
      *
      */
-    @Override
     public ResultsModuleIF getResultsModule(Course[] courses) {
         return getResultsModule(courses, true);
     }
@@ -1247,7 +1228,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @return The current results module.
      *
      */
-    @Override
     public ResultsModuleIF getResultsModule(SchoolClass schoolClass) {
         if (resultsModule == null) {
             resultsModule = new ResultsModule(new Course[0], (Teacher) DwoHelper.getCurrentFacadeUser(), this);
@@ -1266,7 +1246,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @return The current results module.
      *
      */
-    @Override
     public ResultsModuleIF getResultsModule(Course[] courses, boolean showSco) {
         if (resultsModule == null) {
             resultsModule = new ResultsModule(new Course[0], (Teacher) DwoHelper.getCurrentFacadeUser(), this);
@@ -1613,24 +1592,20 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     }
 
-    @Override
     public void setWelcomePanel() {
         setPanel(GuiCreator.instance().getWelcomePanel(testViewKeys != null || schoolAccessKeys != null));
     }
 
-    @Override
     public void setWelcomePanel(String username) {
         WelcomePanel p = GuiCreator.instance().getWelcomePanel(testViewKeys != null || schoolAccessKeys != null);
         p.setUsername(username);
         setPanel(p);
     }
 
-    @Override
     public int getCourseViewNr() {
         return courseViewNr;
     }
 
-    @Override
     public int getScoViewNr() {
         return scoViewNr;
     }
@@ -1661,9 +1636,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * Sets the current panel of the applet.
      *
      * @param p The panel to set.
-     * @see fi.dwo.client.domain.DwoIF#setPanel(java.awt.Panel)
      */
-    @Override
     public void setPanel(Container p) {
         if (panel != null) {
             panel.setVisible(false);
@@ -1693,7 +1666,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @param iDataModelElement The parameter to ask for.
      * @return The value representing for the specified sco, user and parameter.
      */
-    @Override
     public String LMSGetValue(ScoBase sco, User user, String iDataModelElement) {
         if (LEARNER_ID.equals(iDataModelElement)) {
             if (user == null) {
@@ -1743,7 +1715,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * unsuccessful</li>
      * </ul>
      */
-    @Override
     public String LMSSetValue(ScoBase sco, User user, String iDataModelElement, String iValue) {
         try {
             return PersistenceFacade.instance().LMSSetValue(sco, user, iDataModelElement, iValue);
@@ -1809,7 +1780,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         DwoHelper.clrApplet(this);
     }
 
-    @Override
     public void setCurrentSco(Sco sco) {
         currentSco = sco;
     }
@@ -1862,39 +1832,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         return new Dimension(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
     }
 
-//    /**
-//     * Renames the specified class.
-//     *
-//     * @param schoolClass The class to rename.
-//     * @param newName The new name for the class.
-//     * @param newRegistrationKey
-//     * @return If the class is successfully renamed it returns true. Otherwise
-//     * it returns false.
-//     * @see
-//     * fi.dwo.client.domain.DwoIF#renameClass(fi.dwo.client.domain.SchoolClass,
-//     * java.lang.String)
-//     */
-//    @Override
-//    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer) {
-//        try {
-//            PersistenceFacade.instance().renameClass(schoolClass, newName, newRegistrationKey, iconizer);
-//            schoolClass.setClassName(newName);
-//            schoolClass.setRegistrationKey(newRegistrationKey);
-//            schoolClass.setIconizer(iconizer);
-//            return true;
-//        } catch (ClassException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage());
-//            return false;
-//        }
-//    }
-
     /**
      * Shows a wait cursor and the default wait message to indicate that the
      * user must wait for a while.
      *
-     * @see fi.dwo.client.domain.DwoIF#setWait()
      */
-    @Override
     public void setWait() {
         setWait(TextMapper.getText(TextMapper.GUI_WAIT_A_MOMENT));
     }
@@ -1939,9 +1881,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * user must wait for a while.
      *
      * @param waitText
-     * @see fi.dwo.client.domain.DwoIF#setWait()
      */
-    @Override
     public void setWait(String waitText) {
         nestedWait++;
         if (nestedWait == 1) {
@@ -1960,9 +1900,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * Hides the wait cursor and the message what was showed up with
      * <code>setWait()</code>
      *
-     * @see fi.dwo.client.domain.DwoIF#setReady()
      */
-    @Override
     public void setReady() {
         if (nestedWait == 1) {
             getGlassPane().setVisible(false);
@@ -1978,9 +1916,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * Clears all the information of the current user out of the memory, so no
      * cashing problems can appear.
      *
-     * @see fi.dwo.client.domain.DwoIF#clearCurrentUserData()
      */
-    @Override
     public void clearCurrentUserData(int uid) {
         // MapperCreator.instance(User.class).removeObject(DwoHelper.getCurrentFacadeUser().getUserID());
         PersistenceFacade.instance().clearCurrentUserDataCache(uid);
@@ -1993,9 +1929,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.domain.DwoIF#getEditableCourses()
      */
-    @Override
     public Course[] getEditableCourses() {
         try {
             courseList = PersistenceFacade.instance().getEditableCourses(DwoHelper.getCurrentFacadeUser());
@@ -2020,10 +1954,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.domain.DwoIF#addCourse(java.lang.String,
-     * java.lang.String)
      */
-    @Override
     public Course addCourse(String name, String description, Course parent, boolean isMap) {
         try {
             return PersistenceFacade.instance().addCourse(DwoHelper.getCurrentFacadeUser().getSchool(), name,
@@ -2037,9 +1968,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.domain.DwoIF#updateCourse(fi.dwo.client.domain.Course)
      */
-    @Override
     public boolean updateCourse(Course course) {
         try {
             return PersistenceFacade.instance().updateCourse(course);
@@ -2052,10 +1981,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.domain.DwoIF#addSco(int, java.lang.String,
-     * java.lang.String)
      */
-    @Override
     public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
         try {
             return PersistenceFacade.instance().addSco(course, appletConfig, name, description, showScore);
@@ -2068,9 +1994,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.domain.DwoIF#updateSco(fi.dwo.client.domain.Sco)
      */
-    @Override
     public boolean updateSco(Sco sco) {
         try {
             return PersistenceFacade.instance().updateSco(sco);
@@ -2083,9 +2007,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.domain.DwoIF#deleteCourse(fi.dwo.client.domain.Course)
      */
-    @Override
     public boolean deleteCourse(Course course) {
         try {
             return PersistenceFacade.instance().deleteCourse(course);
@@ -2098,9 +2020,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.domain.DwoIF#deleteSco(fi.dwo.client.domain.Sco)
      */
-    @Override
     public boolean deleteSco(Sco sco) {
         try {
             return PersistenceFacade.instance().deleteSco(sco);
@@ -2113,9 +2033,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.domain.DwoIF#getAppletConfig()
      */
-    @Override
     public AppletConfig[] getAppletConfig() {
         try {
             AppletConfig[] ac = (AppletConfig[]) PersistenceFacade.instance().get(AppletConfig.class, getLocale());
@@ -2133,9 +2051,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.domain.DwoIF#getSchools()
      */
-    @Override
     public School[] getSchool() {
         try {
             School[] sc = (School[]) PersistenceFacade.instance().get(School.class);
@@ -2149,10 +2065,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * fi.dwo.client.domain.DwoIF#previewSco(fi.dwo.client.domain.AppletConfig)
      */
-    @Override
     public ScoPanel previewSco(AppletConfig appletConfig) {
         Sco dummy = new Sco();
         dummy.setAppletID(appletConfig.getAppletID());
@@ -2165,9 +2078,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.domain.DwoIF#previewSco(fi.dwo.client.domain.Sco)
      */
-    @Override
     public ScoPanel previewSco(Sco sco) {
         sco.setLessonMode(Sco.BROWSE);
         return sco.getScoPanel(this, null);
@@ -2263,7 +2174,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         return LMSCommit(iParam);
     }
 
-    @Override
     public String LMSCommit(ScoBase sco, String param) {
         try {
             return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
@@ -2370,7 +2280,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         return null;
     }
 
-    @Override
     public void linkViaSAML() {
         PersistenceFacade.instance().linkViaSAML(getUser(), samlData.get(DWO_SAML_USER_ID).toString(),
                 samlData.get(DWO_SAML_ORGANIZATION_ID).toString());
@@ -2443,7 +2352,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         return null;
     }
 
-    @Override
     public boolean deleteSchool(School sc) {
         try {
             return PersistenceFacade.instance().deleteSchool(sc);
@@ -2461,7 +2369,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @param sco2 Sco
      * @return boolean: succes of gefaald
      */
-    @Override
     public boolean swapSco(Sco sco1, Sco sco2) {
         try {
             return PersistenceFacade.instance().swapScoSequenceNr(sco1, sco2);
@@ -2471,7 +2378,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         }
     }
 
-    @Override
     public ResultsModuleIF getUserResultsModule(Course course) {
         if (DwoHelper.getCurrentFacadeUser() instanceof Guest) {
             return null;
@@ -2511,7 +2417,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.SchoolException
      *
      */
-    @Override
     public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date)
             throws SchoolException {
 
@@ -2534,7 +2439,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.SchoolException
      *
      */
-    @Override
     public School editSchool(int schoolID, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap,
             Date date) throws SchoolException {
         // String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
@@ -2544,7 +2448,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date);
     }
 
-    @Override
     public boolean updateLogo(Course c) {
         return PersistenceFacade.instance().updateLogo(c);
     }

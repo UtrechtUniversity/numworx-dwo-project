@@ -9,7 +9,6 @@ import static fi.dwo.dwojapplet.domain.Course.NO_CHILDREN;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;

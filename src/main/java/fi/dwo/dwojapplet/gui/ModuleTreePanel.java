@@ -4,9 +4,9 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.Descriptor;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
@@ -97,7 +97,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
     protected JTree tree;
     private JScrollPane pane;
     private JMenuBar bar;
-    protected DwoIF dwo;
+    protected DWO dwo;
     private CenterPanel center;
     private IconizedPanel ip;
 
@@ -535,7 +535,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
     }
 
-    protected void createModel(DwoIF dwo) {
+    protected void createModel(DWO dwo) {
         this.dwo = dwo;
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);
@@ -826,13 +826,13 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         return null;
     }
 
-    public static ModuleTreePanel newInstance(DwoIF dwo) {
+    public static ModuleTreePanel newInstance(DWO dwo) {
         ModuleTreePanel panel = new ModuleTreePanel();
         panel.createModel(dwo);
         return panel;
     }
 
-    public static ModuleTreePanel newStudentInstance(DwoIF dwo) {
+    public static ModuleTreePanel newStudentInstance(DWO dwo) {
         ModuleTreePanel panel = new ModuleTreePanel() {
             /*
              * Hier een aanpassing, voor leerlingen/gasten wordt de tree afgeknot tot het punt 
@@ -877,7 +877,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
     }
 
-    public static void create(DwoIF dwo) {
+    public static void create(DWO dwo) {
         JFrame frame = new JFrame("modules");
         ModuleTreePanel newInstance = newInstance(dwo);
         frame.setContentPane(newInstance.getIP());

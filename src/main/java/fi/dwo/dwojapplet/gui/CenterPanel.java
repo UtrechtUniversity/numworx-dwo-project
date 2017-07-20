@@ -5,8 +5,8 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.ResultsModuleIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
@@ -14,6 +14,7 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.NullStrategy;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -23,6 +24,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -518,7 +520,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
                 } else {
                     cp = GuiCreator.instance().getCoursePanel(course);
                 }
-                DwoIF dwo = GuiCreator.instance().dwo;
+                DWO dwo = GuiCreator.instance().dwo;
 // Deeplink modus
                 if (GuiConstants.DEEP_LINK) {
                     loadTotal(cp);

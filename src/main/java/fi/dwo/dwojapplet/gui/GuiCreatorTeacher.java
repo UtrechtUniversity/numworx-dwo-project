@@ -11,7 +11,7 @@ import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
@@ -75,7 +75,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     /**
      * @param dwo
      */
-    public GuiCreatorTeacher(DwoIF dwo) {
+    public GuiCreatorTeacher(DWO dwo) {
         super(dwo);
         noAdmin = !dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
         readOnly = !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT);
@@ -359,7 +359,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return fi.dwo.client.domain.DWO
      */
     @Override
-    public DwoIF getDWO() {
+    public DWO getDWO() {
         return dwo;
     }
 

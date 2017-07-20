@@ -9,7 +9,7 @@ import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
@@ -18,10 +18,12 @@ import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -44,7 +46,7 @@ public class GuiCreatorAdmin extends GuiCreator {
     /**
      * @param dwo
      */
-    public GuiCreatorAdmin(DwoIF dwo) {
+    public GuiCreatorAdmin(DWO dwo) {
         super(dwo);
     }
 

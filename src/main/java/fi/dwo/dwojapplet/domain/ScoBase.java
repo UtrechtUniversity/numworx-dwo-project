@@ -30,7 +30,7 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
     public static final String BROWSE = "browse";
     protected static String defaultLessonMode = NORMAL;
     protected int scoID;
-    public DwoIF dwo;
+    public DWO dwo;
     protected User user;
     public static final String LESSON_MODE = "cmi.mode";
     public static final String LAUNCH_DATA = "cmi.launch_data";

@@ -8,7 +8,6 @@ import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.form.DWOFile;
@@ -200,7 +199,7 @@ public class ImportModuleAction extends GuiAction {
 		String title = (String)result.get("name");
 		title = CourseManagementPanel.replaceDuplicate(title, names);
 		result.put("name", title);
-		final DwoIF dwo = GuiCreator.instance().getDWO();
+		final DWO dwo = GuiCreator.instance().getDWO();
 		int schoolID = dwo.getUser().getSchool().getSchoolID();
 		if(parent.getUserObject() == ModuleTreePanel.STANDAARD_DWO_MODULES)
 			schoolID = 0; // import in standaard map 

@@ -15,7 +15,6 @@ import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.Guest;
 import fi.dwo.dwojapplet.domain.School;
@@ -49,7 +48,7 @@ public class GuiCreator {
 
     private static final Logger LOG = Logger.getLogger(GuiCreator.class.getName());
 
-    protected DwoIF dwo;
+    protected DWO dwo;
 
     private static GuiCreator _instance;
 
@@ -64,7 +63,7 @@ public class GuiCreator {
      * @param dwo The dwo to communicate with.
      */
     //TODO WIM fix memory leak, instantiation should occur different.
-    public GuiCreator(DwoIF dwo) {
+    public GuiCreator(DWO dwo) {
         this.dwo = dwo;
         GuiCreator._instance = this;
 
@@ -889,11 +888,8 @@ public class GuiCreator {
     /**
      * @return fi.dwo.client.domain.DWO
      */
-    public DwoIF getDWO() {
-        if (dwo instanceof DWO) {
-            return (DWO) dwo;
-        }
-        return null;
+    public DWO getDWO() {
+        return dwo;
     }
 
     /**

@@ -4,8 +4,8 @@ import fi.beans.scorm.PartialScoreIF;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletData;
 import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -120,12 +120,11 @@ class WrapSco extends Sco {
      */
     @Override
     public String LMSGetValue(String key) {
-        System.out.println("GetValue " + key);
+        LOG.fine("GetValue " + key);
         try {
 			return super.LMSGetValue(key);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.log(Level.WARNING, "GetValue " + key, e);
 			return "";
 		}
     }
@@ -335,7 +334,7 @@ class WrapSco extends Sco {
 		return super.GetValue(iDataModelElement);
 	}
     @Override
-	public ScoPanel getScoPanel(DwoIF dwo, User user) {
+	public ScoPanel getScoPanel(DWO dwo, User user) {
     	delegate.dwo = dwo;
     	return super.getScoPanel(dwo, user);
 	}

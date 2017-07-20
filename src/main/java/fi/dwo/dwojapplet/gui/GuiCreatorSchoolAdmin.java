@@ -1,9 +1,10 @@
 package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.SchoolAdmin;
-import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.User;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,7 +12,7 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
 
     private static final Logger LOG = Logger.getLogger(GuiCreatorSchoolAdmin.class.getName());
 
-    public GuiCreatorSchoolAdmin(DwoIF dwo) {
+    public GuiCreatorSchoolAdmin(DWO dwo) {
         super(dwo);
 
     }
