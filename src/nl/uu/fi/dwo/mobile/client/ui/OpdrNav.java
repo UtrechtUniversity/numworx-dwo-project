@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -115,6 +116,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * worden als op de nakijk-knop wordt gedrukt.
 	 */
 	private int[][] scoresZelftoets;
+	/**
+	 * De high score van de zelftoets. Wordt in memento opgeslagen,
+	 * en ook hier zodat bij het afsluiten de high score kan
+	 * worden doorgegeven t.b.v. activiteitenoverzicht met progress bar.
+	 */
+	private int zelftoetsHighScore;
 	private boolean[][] isCorrect;
 	/**
 	 * Correctheid (per activiteit, per opdracht/pagina, vgl. isCorrect) die getoond wordt
@@ -1010,9 +1017,35 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	/**
 	 * Berekent de totale score van het applet, en geeft deze terug, geschaald
-	 * naar 100%.
+	 * naar 100%. Als het een zelftoets is het high score, dan wordt de
+	 * high score teruggegeven.
 	 */
 	public double getScore()
+	{
+		if (entry.zelftoetsHighScore)
+			return getZelftoetsHighScore();
+		else
+		{
+			int totaalScore = getTotaalScore();
+			int totaalMax = getTotaalMax();
+	
+			if (totaalMax == 0)
+				return 0;
+	
+			double doubleScore = Math.round(100.0 * totaalScore / totaalMax);
+	
+			if (Double.isInfinite(doubleScore) || Double.isNaN(doubleScore))
+				doubleScore = 0;
+	
+			return doubleScore;
+		}
+	}
+
+	/**
+	 * Berekent de totale score van het applet, en geeft deze terug, geschaald
+	 * naar 100%.
+	 */
+	public double getActualScore()
 	{
 		int totaalScore = getTotaalScore();
 		int totaalMax = getTotaalMax();
@@ -1337,6 +1370,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		setScoresZelftoets(scores);
 		setIsCorrectZelftoets(isCorrect);
 
+		memento.setZelftoetsHighScore(getActualScore());
+		setZelftoetsHighScore((int) getActualScore());
+		memento.addScoreZelftoetsHistorie((int) getActualScore());
+
 		for (int j = 0; j < aantalOpdrachten[currentActiviteit]; j++)
 		{
 			setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[currentActiviteit][j], j);
@@ -1345,6 +1382,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		source.setTotaalScore((int) getScore());
 		unpause();
+	}
+
+	/**
+	 * Zet de high score op de gegeven score als deze hoger is
+	 * dan de huidige.
+	 * 
+	 * @param actualScore
+	 */
+	private void setZelftoetsHighScore(int score)
+	{
+		if (zelftoetsHighScore < score)
+			zelftoetsHighScore = score;
 	}
 
 	/**
@@ -2379,5 +2428,26 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void clearNakijkenZelftoetsPending()
 	{
 		nakijkenZelftoetsPending = new boolean[getAantalActiviteiten()][getMaxAantalOpdrachten()];
+	}
+
+	/**
+	 * Geef de lijst van scores van de zelftoetshistorie.
+	 * 
+	 * @return
+	 */
+	public List<? extends String> getScoresZelftoetsHistorie()
+	{
+		List<String> lijst = Arrays.asList(this.memento.getScoresZelftoetsHistorie());
+		return lijst;
+	}
+
+	/**
+	 * Geef de high score van de zelftoets.
+	 * 
+	 * @return
+	 */
+	public int getZelftoetsHighScore()
+	{
+		return zelftoetsHighScore;
 	}
 }
