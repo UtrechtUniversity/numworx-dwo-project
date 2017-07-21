@@ -194,6 +194,11 @@
 			<artifactId>formule</artifactId>
 			<version>0.0.4</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.github.wokier</groupId>
+		    <artifactId>gwt-fullscreen</artifactId>
+		    <version>0.0.1</version>
+		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>fi.parentgwt</groupId>
