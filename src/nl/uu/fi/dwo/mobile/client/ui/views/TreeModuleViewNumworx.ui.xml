@@ -16,7 +16,7 @@
 					<g:MenuItem ui:field='user' addStyleNames='{style.menuItem}' />
 				</g:MenuBar>
 				<g:Label ui:field='loginLabel' styleName='{style.loginname}'>Jolanda van den Berg</g:Label>
-				<g:ToggleButton styleName='{style.nav}'>
+				<g:ToggleButton ui:field='fullBtn' styleName='{style.nav}'>
 					<g:upFace><img src='{pfx}images/numworx/fullscreen-numworx.svg'/></g:upFace>
 					<g:downFace><img src='{pfx}images/numworx/borderdscreen-numworx.svg'/></g:downFace>
 				</g:ToggleButton>

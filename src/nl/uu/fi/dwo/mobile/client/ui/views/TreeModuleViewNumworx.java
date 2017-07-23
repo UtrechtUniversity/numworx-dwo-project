@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -140,7 +141,16 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 			  sb.appendHtmlConstant("<div class='" + style.tileFooter() + "'>");
 			  	sb.appendHtmlConstant("<span class='"+style.tileResult()+ "'>");
-			  	sb.appendHtmlConstant("<span class='fa-stack fa-lg'><i class='fa fa-circle fa-stack-1x' style='color:red;'></i><i class='fa fa-times fa-stack-1x' style='color:white;'></i></span>");
+			  	String type;
+			  	if(value.isShowScore() && value.getType() == Type.SCO) {
+			  		int score = value.getScore().intValue();
+			  		if(score < 20) type = "fout";
+			  		else if(score >=65) type = "goed";
+			  		else type = "half";
+			  	} else {
+			  		type = "geen-score";
+			  	}
+			  	sb.appendHtmlConstant("<img src='"+r("images/numworx/"+type+"-numworx.svg")+"' />");
 			  	sb.appendHtmlConstant("</span>");
 			  	if(value.isShowScore()) {
 			  		sb.appendHtmlConstant("<span class='"+style.tileScore()+ "'>");
@@ -148,7 +158,11 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  		sb.appendHtmlConstant("</span>");
 			  	}
 			  	sb.appendHtmlConstant("<span class='"+style.tileType()+ "'>");
-			  	sb.appendHtmlConstant("<i class='fa fa-file-text-o'></i>");
+			  	String lesstof = "lesstof";
+			  	//lesstof = "zelftoets";
+				sb.appendHtmlConstant("<img height='18' src='"+r("images/numworx/"
+			  			+ lesstof
+			  			+ "-numworx.svg")+"'/>");
 			  	sb.appendHtmlConstant("</span>");
 			  sb.appendHtmlConstant("</div>");
 		    sb.appendHtmlConstant("</div>");
@@ -198,6 +212,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@UiField FocusPanel homeBtn;
 	@UiField InlineHTML searchBtn;
 	@UiField TextBox searchInput;
+	@UiField ToggleButton fullBtn;
 	@UiField Label loginLabel;
 	
 	
@@ -208,9 +223,18 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	@UiHandler("searchBtn")
 	void onSearch(ClickEvent ev) {
-		Window.alert("Search : " + searchInput.getText());
+		System.err.println("Search : " + searchInput.getText());
 	}
-		
+	
+	@UiHandler("fullBtn")
+	void onFull(ClickEvent ev) {
+		System.err.println("Full = "+fullBtn.getValue());
+		if(fullBtn.getValue())
+			gwtfullscreen.Fullscreen.requestFullscreen(true);
+		else 
+			gwtfullscreen.Fullscreen.exitFullscreen();
+	}
+	
 	private List<SelectModuleItem> list;
 
 	@UiField(provided=true) String pfx;
@@ -253,6 +277,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : "GUEST";
 		loginLabel.setText(login);
 		
+		fullBtn.setValue(gwtfullscreen.Fullscreen.isFullscreen(), false);
+
 		items.clearItems();
 		MenuItem m;
 		if(DWOplayer.withUser()) {

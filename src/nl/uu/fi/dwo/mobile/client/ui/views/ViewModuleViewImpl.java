@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.MisconceptionsHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.ObjectivesHandler;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
@@ -2190,5 +2191,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			isVeranderd = true;
 		
 		return isVeranderd;
+	}
+
+	@Override
+	public void setTrail(List<SelectModuleItem> trail) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -46,6 +47,15 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		panel.setWidget(view);
 		{
 			final String id = sco.getID().toString();
+			List<SelectModuleItem> trail = new ArrayList<SelectModuleItem>();
+			SelectModuleItem parent = sco.getParent();
+			while(parent != null) {
+				trail.add(parent);
+				parent = parent.getParent();
+			}
+			view.setTrail(trail);
+			view.setTitle(sco.getName());
+			
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
 			view.setUnitId(id);

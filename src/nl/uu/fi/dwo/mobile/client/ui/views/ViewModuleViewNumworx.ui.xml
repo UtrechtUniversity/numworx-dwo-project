@@ -3,7 +3,7 @@
 	xmlns:v="nl.uu.fi.dwo.mobile.client.ui.views"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field="pfx" type="java.lang.String" />
-	<ui:style field='t' src='TreeModuleViewNumworx.css' />
+	<ui:style field='t' src='TreeModuleViewNumworx.css' type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss' />
 	<ui:style>
 	@def color15 #314770;
 	@def color10 #E4F2FB;
@@ -14,7 +14,7 @@
 	@def regular 400;
 	
 	.rootPanel {
-		width: 100%;
+		width: 1024px;
 		height: 100%;
 	}
 
@@ -88,13 +88,16 @@
 		<g:north size="90">
 			<g:FlowPanel styleName='{style.headerPanel}'>
 			  <g:FlowPanel styleName='{style.headerTop}' >
-			  	<g:FlowPanel styleName='{t.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs.svg"></g:Image></g:FlowPanel>
-			  	<g:HTML styleName='{style.kruimels}'><a href="#TreeModulePlace:0">VWO/HAVO 2,3</a> &gt; <a href="#TreeModulePlace:0">Module Formules en grafieken</a></g:HTML>
+			  	<g:FlowPanel styleName='{t.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs2.svg"></g:Image></g:FlowPanel>
+			  	<g:HTML ui:field='kruimels' styleName='{style.kruimels}'><a href="#TreeModulePlace:0">VWO/HAVO 2,3</a> &gt; <a href="#TreeModulePlace:0">Module Formules en grafieken</a></g:HTML>
 				<g:MenuBar addStyleNames='{t.menu}'>
 					<g:MenuItem ui:field='user' addStyleNames='{t.menuItem}' />
 				</g:MenuBar>
 				<g:Label ui:field='loginLabel' styleName='{t.loginname}'>Jolanda van den Berg</g:Label>
-				<g:FocusPanel styleName='{t.nav}'><g:Image url='{pfx}images/numworx/fullscreen-numworx.svg'/></g:FocusPanel>
+				<g:ToggleButton ui:field='fullBtn' styleName='{t.nav}'>
+					<g:upFace><img src='{pfx}images/numworx/fullscreen-numworx.svg'></img></g:upFace>
+					<g:downFace><img src='{pfx}images/numworx/borderdscreen-numworx.svg'/></g:downFace>
+				</g:ToggleButton>
 				<g:FocusPanel styleName='{t.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FocusPanel>
 				<g:FocusPanel ui:field='homeBtn' styleName='{t.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel>
 			  </g:FlowPanel>
@@ -103,7 +106,7 @@
 			  		<g:Image styleName='{style.icon}' addStyleNames='{style.hide}' url="{pfx}images/numworx/zelftoets-numworx.svg"/>
 			  		<g:Label styleName='{style.knop}'>LESSTOF</g:Label>
 			  		<g:Image styleName='{style.icon}' url='{pfx}images/numworx/lesstof-numworx.svg' />
-			  		<g:Label styleName='{style.title}'>Hypotheses en betrouwbaarheidsintervallen (activiteit)</g:Label>
+			  		<g:Label ui:field='title' styleName='{style.title}'>Hypotheses en betrouwbaarheidsintervallen (activiteit)</g:Label>
 				</g:FlowPanel>
 			</g:FlowPanel>
 		</g:north>

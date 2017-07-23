@@ -1,8 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.util.List;
+
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -39,4 +42,5 @@ public interface ViewModuleView extends IsWidget
 	
 	void setReadonly(boolean readonly);
 	boolean isReadonly();
+	void setTrail(List<SelectModuleItem> trail);
 }
