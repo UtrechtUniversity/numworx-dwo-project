@@ -1,0 +1,74 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	@def color15 #314770;
+	@def color10 #E4F2FB;
+	@def color12 #AAC1DC;
+	@def color13 #7297C7;
+	@def color14 #1B75BB;
+	@def medium 500;
+	@def regular 400;
+	
+	.info-root {
+		background-color: color10;
+		color: color13;
+		padding: 18px;
+		border-color: color10;
+		border-size: 1px;
+		border-style: solid;
+		width: 614px;
+		height: 400px;
+	}
+	.info-header {
+		background-color: color10;
+	}
+	.info-header-west {
+		margin-right: 14px;
+		display: inline-block;
+		font-size: 9px;
+		color: color13;
+	}
+	.info-header-center {
+		display: inline-block;
+		font: Ubuntu;
+		font-weight: bold;
+		font-size: 12px;
+	}
+	.info-header-east {
+		float: right;
+		display: inline-block;
+		font-size: 9px;
+		color: color13;
+	}
+	.info-center {
+		overflow: auto;
+		background-color: color10;
+	}
+	</ui:style>
+	<g:DockLayoutPanel unit='PX' styleName='{style.info-root}'>
+		<g:north size="35">
+			<g:FlowPanel styleName='{style.info-header}'>
+			<g:InlineHTML styleName='{style.info-header-west}'>
+				<span class="fa-stack fa-lg">
+  					<i class="fa fa-circle-o fa-stack-2x"></i>
+  					<i class="fa fa-info fa-stack-1x"></i>
+					</span>
+			</g:InlineHTML>
+			<g:Label  styleName='{style.info-header-center}'>Logarithmen</g:Label>
+			<g:InlineHTML styleName='{style.info-header-east}'><i class='fa fa-times fa-2x'></i></g:InlineHTML>		
+			</g:FlowPanel>
+		</g:north>
+		<g:center>
+			<g:SimplePanel styleName='{style.info-center}'>
+				<g:Label>asdsad asda;klsd asd;l kasd;laskd ;laskd a;sldk as;dlks ad;laksd ;alsdk as;ldk as;dlkas d;laskd ;ask</g:Label>
+			</g:SimplePanel>		
+		</g:center>
+	</g:DockLayoutPanel>
+	
+	
+	
+	
+	
+	
+</ui:UiBinder> 

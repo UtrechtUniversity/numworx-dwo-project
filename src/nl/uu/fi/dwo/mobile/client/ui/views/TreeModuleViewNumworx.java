@@ -13,6 +13,7 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -32,6 +33,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -89,6 +91,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	}
 	
 	class TileCell extends AbstractCell<SelectModuleItem> {
+
 
 		@Override
 		public void render(Context context,
@@ -165,6 +168,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  			+ "-numworx.svg")+"'/>");
 			  	sb.appendHtmlConstant("</span>");
 			  sb.appendHtmlConstant("</div>");
+			  sb.appendHtmlConstant("<div class='" + style.tileInfo()
+			  		+ "'><i class='fa fa-info'></i></div>");
 		    sb.appendHtmlConstant("</div>");
 			  
 			  
@@ -183,6 +188,27 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		public void onBrowserEvent(Context context, Element parent, SelectModuleItem value, NativeEvent event,
 				ValueUpdater<SelectModuleItem> valueUpdater) {
 		    String eventType = event.getType();
+		    
+		    if("click".equals(eventType)) {
+		    	int x = event.getClientX();
+		    	int y = event.getClientY();
+		    	EventTarget eventTarget = event.getEventTarget();
+		    	final PopupPanel popup = new PopupPanel(true);
+		    	popup.setGlassEnabled(true);
+		    	popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+		            public void setPosition(int offsetWidth, int offsetHeight) {
+		                int left = (Window.getClientWidth() - offsetWidth) / 4;
+		                int top = (Window.getClientHeight() - offsetHeight) / 4;
+		                popup.setPopupPosition(left, top);
+		              }
+		            });
+		    	popup.setWidget(new InfoPanel());
+		    	
+		    	popup.show();
+		    	return;
+		    }
+		    
+		    
 		    if("click".equals(eventType)) {
 		    	Place place;
 		    	if(value.getType() == Type.SCO)

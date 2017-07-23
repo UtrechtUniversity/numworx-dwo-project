@@ -198,3 +198,10 @@
 			height: 18px;
 		}
 		
+		.tileInfo { 
+			position: absolute;
+			bottom: 100px;
+			right: 100px;
+			width: 40px;
+			height: 40px;
+		}
