@@ -1,10 +1,14 @@
 @import url("KeyboardGWT.css");
 @import url("images/font-awesome-4.1.0/css/font-awesome.min.css");
-@import url("//fonts.googleapis.com/css?family=Ubuntu");
+@import url("//fonts.googleapis.com/css?family=Ubuntu:regular,medium,bold");
+@import url("//fonts.googleapis.com/css?family=Ubuntu+Condensed");
 
 html,body{margin:0px; padding:0px;}
 
 body#main {margin:0px; background:white; color:#000;}
+
+
+.RootPanel { background-color: #EFF1F3; }
 
 /** Example rules used by the template application (remove for your app) */
 
@@ -31,7 +35,7 @@ div.mainPanel {
 }
 
 div.mainPanel-dwo {
-	box-shadow: 3px 3px 3px #b0b4c0 inset;
+	/*box-shadow: 3px 3px 3px #b0b4c0 inset;*/
 }
 div.gwt-DialogBox-dwo {
 	box-shadow: 0px 0px 15px black;
