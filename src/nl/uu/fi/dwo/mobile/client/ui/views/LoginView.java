@@ -14,4 +14,6 @@ public interface LoginView extends IsWidget
 	HasTapHandlers getLoginBtn();
 	HasTapHandlers getGuestBtn();
 	HasAllKeyHandlers getMainPanel();
+	
+	void showError(String msg);
 }

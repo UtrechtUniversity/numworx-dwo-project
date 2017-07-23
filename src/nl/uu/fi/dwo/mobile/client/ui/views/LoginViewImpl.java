@@ -50,6 +50,11 @@ public class LoginViewImpl extends Composite implements LoginView
 	{
 	}
 
+	public void showError(String string) {
+		if(string != null)
+			MessageDialog.alert(string);
+	}
+
 	/**
 	 * @return
 	 */

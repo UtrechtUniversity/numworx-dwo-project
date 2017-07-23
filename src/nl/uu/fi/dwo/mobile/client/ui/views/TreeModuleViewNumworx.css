@@ -1,11 +1,19 @@
+	@def color15 #314770;
+	@def color10 #E4F2FB;
+	@def color12 #AAC1DC;
+	@def color13 #7297C7;
+	@def color14 #1B75BB;
+	@def medium 500;
+	@def regular 400;
+
 		.rootPanel {
 			height: 100%;
-			width: 100%;
+			width: 1024px;
 			font-family: "Ubuntu" !important;
 		}
 
 		.headerPanel {
-			background-color: #314770; /*15*/
+			background-color: color15;
 			color: #8eBee5;
 			font-size: 13px;
 			font-family: "Ubuntu" !important;
@@ -13,7 +21,7 @@
 		
 		.navPanel {
 			background-color: #DDE0E3;
-			color: #314770; /*15*/
+			color: color15;
 			padding-top: 40px;
 			padding-left: 22px;
 			font-size: 14px;
@@ -53,16 +61,15 @@
 			width: 152px;
 		}
 		
-		.numworx {
-			font-size: 24px;
-			margin-top: 10px;
-			margin-left: 22px;
-			margin-right: 22px;
-			color: #A8ABB1;
-			display: inline-block;
-			font-family: Ubuntu;
-			font-weight: bold;
-		}
+	.numworx {
+		height:30px;
+		margin-top: -20px;
+		margin-left: 20px;
+		margin-right: 20px;
+		width: 140px;
+		display: inline-block;
+		vertical-align: top;
+	}
 		.search {
 			width: 40px;
 			color: white;
@@ -70,40 +77,52 @@
 			text-align: center;
 			display: inline-block;
 			cursor: pointer;
-			
+			border-radius: 3px;
 		}
 		.nav {
 			float: right;
 			display: inline-block;
 			margin-top: 10px;
-			color: #798291;
-			margin-right: 18px;
+			color: color13;
+			margin-right: 10px;
 			cursor: pointer;
 		}
 		.loginname {
 			float: right;
 			display:inline-block;
 			margin-top: 18px;
-			color: #7297C7; /* 13 */
+			color: color13;
 			font-size: 13px;
 			font-family: "Ubuntu" !important;
+			font-weight: medium;
 		}
 		.menu {
 			float: right;
 			display: inline-block;
-			margin-top: 18px;
+			margin-top: 8px;
 			margin-right: 22px;
 			margin-left: 5px;
+			background: initial !important; /* not IE */
+			background: inherit !important; /* IE */
+			border: initial !important; /* not IE */
+			border-style: none !important; /* IE */
 		}
+		.menuItem {
+			color: color13 !important;
+			font-size: 13px;
+			font-family: "Ubuntu Condensed" !important;
+		}	
 		.search-input {
 			font-family: "Ubuntu" !important;
 			background-color: black;
 			color: #E4F2FB;
 			margin-left: 22px;
-			margin-top: 18px;
+			margin-top: 16px;
 			display: inline-block;
 			padding-left: 4px;
 			width: 400px;
+			height: 18px;
+			border-radius: 3px;
 		}
 		.navItem {
 			font-family: "Ubuntu" !important;

@@ -3,6 +3,7 @@
 	xmlns:v="nl.uu.fi.dwo.mobile.client.ui.views"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field="pfx" type="java.lang.String" />
+	<ui:style field='t' src='TreeModuleViewNumworx.css' />
 	<ui:style>
 	@def color15 #314770;
 	@def color10 #E4F2FB;
@@ -35,15 +36,6 @@
 	.centerPanel {
 		background-color: color10;
 	}
-	.numworx {
-		height:30px;
-		margin-top: 14px;
-		margin-left: 20px;
-		margin-right: 20px;
-		width: 140px;
-		display: inline-block;
-		vertical-align: top;
-	}
 	.kruimels {
 		font-family: Ubuntu;
 		color: color13;
@@ -57,39 +49,6 @@
 		font-weight: medium;
 		color: color13 !important;
 	}
-
-		.nav {
-			float: right;
-			display: inline-block;
-			margin-top: 10px;
-			color: color13;
-			margin-right: 10px;
-			cursor: pointer;
-		}
-		.loginname {
-			float: right;
-			display:inline-block;
-			margin-top: 18px;
-			color: color13;
-			font-size: 13px;
-			font-family: "Ubuntu" !important;
-			font-weight: medium;
-		}
-		.menu {
-			float: right;
-			display: inline-block;
-			margin-top: 8px;
-			margin-right: 22px;
-			margin-left: 5px;
-			background: initial !important; /* not IE */
-			background: inherit !important; /* IE */
-			border: initial !important; /* not IE */
-			border-style: none !important; /* IE */
-		}
-		.menuItem {
-			color: color13 !important;
-			font-size: 13px;
-		}	
 	
 		.title {
 			color: color14;
@@ -129,15 +88,15 @@
 		<g:north size="90">
 			<g:FlowPanel styleName='{style.headerPanel}'>
 			  <g:FlowPanel styleName='{style.headerTop}' >
-			  	<g:FlowPanel styleName='{style.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs.svg"></g:Image></g:FlowPanel>
+			  	<g:FlowPanel styleName='{t.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs.svg"></g:Image></g:FlowPanel>
 			  	<g:HTML styleName='{style.kruimels}'><a href="#TreeModulePlace:0">VWO/HAVO 2,3</a> &gt; <a href="#TreeModulePlace:0">Module Formules en grafieken</a></g:HTML>
-				<g:MenuBar addStyleNames='{style.menu}'>
-					<g:MenuItem ui:field='user' addStyleNames='{style.menuItem}' />
+				<g:MenuBar addStyleNames='{t.menu}'>
+					<g:MenuItem ui:field='user' addStyleNames='{t.menuItem}' />
 				</g:MenuBar>
-				<g:Label ui:field='loginLabel' styleName='{style.loginname}'>Jolanda van den Berg</g:Label>
-				<g:FlowPanel styleName='{style.nav}'><g:Image url='{pfx}images/numworx/fullscreen-numworx.svg'/></g:FlowPanel>
-				<g:FlowPanel styleName='{style.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FlowPanel>
-				<g:FlowPanel ui:field='homeBtn' styleName='{style.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FlowPanel>
+				<g:Label ui:field='loginLabel' styleName='{t.loginname}'>Jolanda van den Berg</g:Label>
+				<g:FocusPanel styleName='{t.nav}'><g:Image url='{pfx}images/numworx/fullscreen-numworx.svg'/></g:FocusPanel>
+				<g:FocusPanel styleName='{t.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FocusPanel>
+				<g:FocusPanel ui:field='homeBtn' styleName='{t.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel>
 			  </g:FlowPanel>
 			  <g:FlowPanel styleName='{style.headerBottom}' >
 			  		<g:Label styleName='{style.knop}' addStyleNames='{style.hide}' >ZELFTOETS</g:Label>

@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasAllKeyHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -38,16 +39,24 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	interface Login3ViewImplUiBinder extends UiBinder<Widget, Login3ViewImpl> {
 	}
 
+	interface Login3ViewImplCSS extends CssResource {
+		String loginError();
+		String linksError();
+	}
+	
+	@UiField Login3ViewImplCSS style;
 	@UiField(provided=true) String back;
 	@UiField(provided=true) String build;
-	@UiField(provided=true) String logo;
 	
 	@UiField HTML logoPanel;
 	@UiField Label messagePanel;
+	@UiField Widget loginPanel;
+	@UiField Widget linksPanel;
 	@UiField Button loginBtn;
 	@UiField TextBox username;
 	@UiField PasswordTextBox password;
 	@UiField Text rb = Text.constants;
+	@UiField(provided=true) String pfx;
 
 	/**
 	 * Because this class has a default constructor, it can
@@ -63,7 +72,8 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	Widget createAndBindUi() {
 		back = URL.encodePathSegment(Window.Location.getHref());
 		build = "Version " + BUILD.version + "." + BUILD.buildNumber;
-		logo = DWOplayer.PARAMETERS.getResource("images/numworx/login.png");
+		pfx = DWOplayer.PARAMETERS.getResource("");
+
 		return uiBinder.createAndBindUi(this);
 	}
 	
@@ -136,4 +146,11 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		return username;
 	}
 
+	public void showError(String string) {
+		boolean shown = string != null;
+		loginPanel.setStyleName(style.loginError(), shown);
+		linksPanel.setStyleName(style.linksError(), shown);
+		
+	}
+	
 }

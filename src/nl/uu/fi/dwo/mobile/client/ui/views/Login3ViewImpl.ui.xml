@@ -4,8 +4,10 @@
 	<ui:with type="nl.uu.fi.dwo.mobile.client.text.Text" field="rb" />
 	<ui:with type="java.lang.String" field="build" />
 	<ui:with type="java.lang.String" field="back" />
-	<ui:with type="java.lang.String" field="logo" />
-	<ui:style>
+	<ui:with type="java.lang.String" field="pfx" />
+	<ui:style field='style' type='nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl.Login3ViewImplCSS'>
+	@def regular 400;
+	@def medium 500;
 	.screen {
 		top: 0px;
 		bottom: 0px;
@@ -32,13 +34,14 @@
 	.logotext h1 i {
 		color: #1B75BB;
 	}
-	.logotekst h1 {
-		font-size: 54px;
-		font-family: Ubuntu;
+	.logotekst img {
+		height: 70px;
+		margin-left: -20px;	
 	}
 	.logotekst p {
 		font-size: 18px;
 		font-family: Ubuntu;
+		font-weight: regular;
 	}
 	
 	
@@ -50,9 +53,13 @@
 		color: white;
 		font-family: Ubuntu;
 		font-size: 18px;
+		font-weight: regular;
 		line-height: 24px;
 		background-color: #1B75BB;
 		position: absolute;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
 	}
 	.login {
 		top: 306px;
@@ -63,7 +70,17 @@
 		position: absolute;
 		font-family: Ubuntu;
 		font-size: 18px;
+		overflow: hidden;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
 	}
+	.loginError {
+		height: 240px;
+		z-index: 1;
+	}
+	
+	
 	.username {
 		width: 252px;
 		height: 30px;
@@ -74,6 +91,9 @@
 		position: absolute;
 		font-family: Ubuntu;
 		font-size: 18px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
 	}
 	.password {
 		width: 252px;
@@ -85,6 +105,9 @@
 		position: absolute;
 		font-family: Ubuntu;
 		font-size: 18px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
 	}
 	
 	.button {
@@ -98,6 +121,10 @@
 		font-size: 12px;
 		font-family: Ubuntu;
 		font-weight: bold;
+		letter-spacing: 2px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
 	}
 	.links {
 		top: 496px;
@@ -108,25 +135,69 @@
 		line-height: 27px;
 		color: white;
 	}
+
+	.links a {
+		color: white;
+		font-weight: medium;
+		font-family: Ubuntu;
+	}
+	
+	
+	.linksError {
+		top: 556px;
+	}
+	
+	.nologin {
+		background-color: black;
+		color: white;
+		position: absolute;
+		left: 20px;
+		padding-left: 5px;
+		right: 20px;
+		top: 184px;
+		font-family: Ubuntu;
+		font-size: 18px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+	}
+	
+	
+	::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+	  color: white;
+	}
+	::-moz-placeholder { /* Firefox 19+ */
+	  color: white;
+	}
+	:-ms-input-placeholder { /* IE 10+ */
+	  color: white;
+	}
+	:-moz-placeholder { /* Firefox 18- */
+	  color: white;
+	}
+	::-moz-placeholder {
+  		opacity: 1;
+	}
 	
 	</ui:style>
 	<g:FlowPanel styleName='{style.screen}'>
 		<g:HTML styleName="{style.logo}">
-			<img src='{logo}' />
+			<img src='{pfx}images/numworx/login.png' title="{build}"/>
 		</g:HTML>
 		<g:HTML ui:field='logoPanel' styleName='{style.logotekst}'>
-			<h1>numw<i style='color: #1B75BB;' class='fa fa-cog'></i>rx</h1>
+			<img src='{pfx}images/numworx/logo-Numworx-wit-blauw.svg' />
 			<p>Voor leerlingen en studenten</p>
 		</g:HTML>
 		<g:Label ui:field='messagePanel' styleName='{style.messages}'>
 			Vanwege onderhoud kunt u niet inloggen tussen 8:00 en 14:00
 		</g:Label>
-		<g:FlowPanel styleName='{style.login}'>
+		<g:FlowPanel ui:field='loginPanel' styleName='{style.login}' addStyleNames='{style.loginError}'>
 			<g:TextBox ui:field='username' styleName='{style.username}' ></g:TextBox>
 			<g:PasswordTextBox ui:field='password' styleName='{style.password}' ></g:PasswordTextBox>
 			<g:Button  ui:field='loginBtn' styleName='{style.button}' >AANMELDEN</g:Button>
+			<g:Label styleName='{style.nologin}'>Het inloggen is mislukt, probeer het opnieuw</g:Label>
 		</g:FlowPanel>
-		<g:HTML styleName='{style.links}' >
+		<g:HTML ui:field='linksPanel' styleName='{style.links}' addStyleNames='{style.linksError}'>
 			<p><a href="/dwo/rest/public/user/requestNewPassword?language={rb.locale}&amp;back={back}">Wachtwoord vergeten?</a></p>
 			<p><a href="/dwo/register?locale={rb.locale}&amp;next={back}">Nog geen account?</a></p>
 			<p><a href='http://www.numworx.nl'>Meer informatie over Numworx</a></p>

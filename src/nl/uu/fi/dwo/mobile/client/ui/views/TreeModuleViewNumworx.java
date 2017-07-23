@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.awt.FlowLayout;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -22,11 +24,16 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -106,17 +113,17 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			    	switch(value.getType()) {
 			    	case MODULE: 
 			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
-			    				+ r("images/numworx/module-numworx.png")
+			    				+ r("images/numworx/module-numworx.svg")
 			    				+ "' />");
 			    		break;
 			    	case FOLDER:
 			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
-			    				+ r("images/numworx/folder-numworx.png")
+			    				+ r("images/numworx/folder-numworx.svg")
 			    				+ "' />");
 			    		break;
 			    	case SCO:
 			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
-			    				+ r("images/numworx/activiteit_numworx.png")
+			    				+ r("images/numworx/activiteit_numworx.svg")
 			    				+ "' />");
 			    		break;
 			    	default:
@@ -188,7 +195,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@UiField HTML title;
 	@UiField SimplePanel description;
 	@UiField TreeModuleViewNumworxCss style;
-	@UiField InlineHTML homeBtn, searchBtn;
+	@UiField FocusPanel homeBtn;
+	@UiField InlineHTML searchBtn;
+	@UiField TextBox searchInput;
 	@UiField Label loginLabel;
 	
 	
@@ -196,12 +205,20 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	void onHomeBtn(ClickEvent ev) {
 		presenter.goTo(new TreeModulePlace());
 	}
+
 	@UiHandler("searchBtn")
 	void onSearch(ClickEvent ev) {
-		presenter.goTo(new LoginPlace());
+		Window.alert("Search : " + searchInput.getText());
 	}
 		
 	private List<SelectModuleItem> list;
+
+	@UiField(provided=true) String pfx;
+
+	private MenuBar items = new MenuBar(true);
+
+	@UiField(provided=true)
+	MenuItem user;
 	
 	interface TreeModuleViewNumworxUiBinder extends UiBinder<Widget, TreeModuleViewNumworx> {
 	}
@@ -212,7 +229,19 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		tiles = new CellList<SelectModuleItem>(new TileCell(), cellResources);
+		pfx = DWOplayer.PARAMETERS.getResource("");
+        final int correctie = 10; // width popup 
+		user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
+            @Override
+            public int getAbsoluteLeft() {
+                int w1 = items.getOffsetWidth();
+                int w2 = this.getOffsetWidth();
+                return super.getAbsoluteLeft() - w1 + w2 - correctie;
+            }
+		};
+		
 		initWidget(uiBinder.createAndBindUi(this));
+		searchInput.getElement().setPropertyString("placeholder", "zoek toets of lesstof");
 		root.forceLayout();
 	}
 
@@ -223,6 +252,27 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		cells.redraw();
 		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : "GUEST";
 		loginLabel.setText(login);
+		
+		items.clearItems();
+		MenuItem m;
+		if(DWOplayer.withUser()) {
+			m=items.addItem("Logout", new ScheduledCommand() {
+				
+				@Override
+				public void execute() {
+					presenter.goTo(new LoginPlace());					
+				}
+			});
+		} else {
+			m=items.addItem("Aanmelden", new ScheduledCommand() {
+				
+				@Override
+				public void execute() {
+					presenter.goTo(new LoginPlace());
+				}
+			});
+		}
+		m.addStyleName(style.menuItem());
 	}
 
 	Promise<List<SelectModuleItem>> getChildrenPromise(final SelectModuleItem parent) {

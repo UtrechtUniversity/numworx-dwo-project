@@ -2,9 +2,13 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ResizeComposite;
@@ -12,6 +16,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
@@ -53,7 +58,8 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	@UiField(provided=true)
 	String pfx;
 	@UiField
-	Widget homeBtn;
+	FocusPanel homeBtn;
+	@UiField Label loginLabel;
 	
 	ViewModuleViewImpl delegate;
 
@@ -62,6 +68,8 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	}
 
 	public void setupModule(String name, String file) {
+		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : "GUEST";
+		loginLabel.setText(login);
 		delegate.setupModule(name, file);
 	}
 

@@ -3,18 +3,25 @@
 	xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget"
 	xmlns:cl="urn:import:com.google.gwt.user.cellview.client"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with field='pfx' type='java.lang.String'/>
 	<ui:style field='style' src="TreeModuleViewNumworx.css" type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss'/>	
 	<g:DockLayoutPanel unit='PX' ui:field='root' styleName='{style.rootPanel}'>
 		<g:north size="50">
 			<g:FlowPanel styleName='{style.headerPanel}'>
-				<g:InlineHTML styleName='{style.numworx}'>numw<i class='fa fa-cog'></i>rx</g:InlineHTML>
-				<g:TextBox styleName='{style.search-input}'>zoek toets of lesstof</g:TextBox>
-				<g:InlineHTML ui:field='searchBtn' styleName='{style.search}'><i class='fa fa-search'></i></g:InlineHTML>
+			  	<g:FlowPanel styleName='{style.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs2.svg"></g:Image></g:FlowPanel>
+				<g:TextBox ui:field='searchInput' styleName='{style.search-input}'></g:TextBox>
+				<g:InlineHTML ui:field='searchBtn' styleName='{style.search}'><img src='{pfx}images/numworx/search-numworx.svg'/></g:InlineHTML>
 
-				<g:InlineHTML styleName='{style.menu}'><i class='fa fa-caret-down'></i></g:InlineHTML>
+				<g:MenuBar addStyleNames='{style.menu}'>
+					<g:MenuItem ui:field='user' addStyleNames='{style.menuItem}' />
+				</g:MenuBar>
 				<g:Label ui:field='loginLabel' styleName='{style.loginname}'>Jolanda van den Berg</g:Label>
-				<g:InlineHTML styleName='{style.nav}'>&#x00A0; <i class='fa fa-2x fa-star-o'></i> &#x00A0; <i class='fa fa-2x fa-square-o'></i></g:InlineHTML>
-				<g:InlineHTML ui:field='homeBtn' styleName='{style.nav}'><i class='fa fa-2x fa-home'></i></g:InlineHTML>
+				<g:ToggleButton styleName='{style.nav}'>
+					<g:upFace><img src='{pfx}images/numworx/fullscreen-numworx.svg'/></g:upFace>
+					<g:downFace><img src='{pfx}images/numworx/borderdscreen-numworx.svg'/></g:downFace>
+				</g:ToggleButton>
+				<g:FocusPanel styleName='{style.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FocusPanel>
+				<g:FocusPanel ui:field='homeBtn' styleName='{style.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel>
 			</g:FlowPanel>
 		</g:north>
 		<g:west size="192">

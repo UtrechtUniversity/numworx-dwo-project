@@ -17,7 +17,6 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
-import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -41,7 +40,7 @@ public class LoginActivity extends MGWTAbstractActivity
 	
 	static final Logger LOG = Logger.getLogger(LoginActivity.class.getName()); 
 
-	public static final Failure FAILURE1 = new Failure() {
+	public final Failure FAILURE1 = new Failure() {
 		
 		@Override
 		public void fail(Promise<?> promise) throws Exception {
@@ -56,8 +55,8 @@ public class LoginActivity extends MGWTAbstractActivity
 				alert("Unable to login"); // if exception is DWO2exception?
 		}
 
-		private Promise<Integer> alert(String string) {
-			return MessageDialog.alert(string);
+		private void alert(String string) {
+			view.showError(string);
 		}
 	};
 
@@ -174,6 +173,7 @@ public class LoginActivity extends MGWTAbstractActivity
 		String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
 		String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
 		view = clientFactory.getLoginView();
+		view.showError(null);
 		DWOplayer.dwoProfile.then(new Success<DomDwoProfile, Void>() {
 
 			@Override

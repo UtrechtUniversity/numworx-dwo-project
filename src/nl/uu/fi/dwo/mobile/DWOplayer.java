@@ -288,6 +288,9 @@ public class DWOplayer implements EntryPoint
 		TabletAnimationMapper animationMapper = new TabletAnimationMapper();
 		AnimatingActivityManager activityMapper = new AnimatingActivityManager(appActivityMapper, animationMapper, clientfactory.getEventBus());
 		activityMapper.setDisplay(display);
+		
+		display.asWidget().addStyleName("RootPanel");
+		
 		RootPanel.get().add(display);
 	}
 

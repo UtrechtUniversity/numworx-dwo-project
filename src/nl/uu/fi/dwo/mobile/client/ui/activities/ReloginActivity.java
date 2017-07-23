@@ -1,5 +1,9 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.NoSuchElementException;
+import java.util.logging.Level;
+
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
@@ -11,8 +15,10 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 
 public class ReloginActivity extends MGWTAbstractActivity {
 
@@ -41,6 +47,26 @@ public class ReloginActivity extends MGWTAbstractActivity {
 		}
 	};
 
+	public static final Failure FAILURE1 = new Failure() {
+		
+		@Override
+		public void fail(Promise<?> promise) throws Exception {
+			Throwable caught = promise.getFailure();
+			//LOG.log(Level.WARNING, "login failure ", caught);
+			if (caught instanceof NoSuchElementException)
+				alert("Geen toegang voor deze site"); // Rekenwise limited
+			else
+			if (caught.getMessage().contains("LoginException"))
+				alert(Text.constants.EXR_WRONG_USERNAME_PASSWORD());
+			else
+				alert("Unable to login"); // if exception is DWO2exception?
+		}
+
+		private void alert(String string) {
+			MessageDialog.alert(string);
+		}
+	};
+
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
@@ -51,7 +77,7 @@ public class ReloginActivity extends MGWTAbstractActivity {
 		panel.setWidget(new Label());
 		clientFactory.getRPCHandler().loginMD5(getUsername(), getPassword())
 			.then(LoginActivity.LOGIN_STAP1)
-			.then(LoginActivity.LOGIN_STAP2, LoginActivity.FAILURE1)
+			.then(LoginActivity.LOGIN_STAP2, FAILURE1)
 			.then(LOGIN_STAP3);
 	}
 
