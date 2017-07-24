@@ -7,12 +7,14 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ReloginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.SearchActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SelectModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
@@ -107,6 +109,11 @@ public class TabletActivityMapper implements ActivityMapper
 				return new LoginActivity(clientFactory);
 			return new TreeModuleActivity(clientFactory, item); // Anders geen activity reset action;
 		}
+		if (place instanceof SearchPlace) {
+			SearchPlace tmp = (SearchPlace) place;
+			return new SearchActivity(clientFactory, tmp.getId());
+		}
+		
 		return null;
 	}
 

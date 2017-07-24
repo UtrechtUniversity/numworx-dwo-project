@@ -14,19 +14,28 @@
   zoom: 1;
 }
 
+
+.cellListKeyboardSelectedItem {
+	
+}
 .cellListKeyboardSelectedItem div {
 	background-color: inherit;
-	border-bottom-color: #1B75BB !important;
+	border-bottom-color: #1B75BB;
 }
 
 .cellListKeyboardSelectedItem div div:first-child {
   background-color: #1B75BB;
 }
 
- @sprite .cellListSelectedItem {
-  gwt-image: 'cellListSelectedBackground';
-  background-color: transparent;
-  color: white;
-  height: auto;
-  overflow: visible;
+.cellListSelectedItem {
+}
+
+.cellListSelectedItem div {
+	background-color: #A8ABB1;
+/* 	background-color: inherit; */
+	border-bottom-color: #1B75BB;
+}
+
+.cellListSelectedItem div div:first-child {
+  background-color: #1B75BB;
 }

@@ -37,7 +37,7 @@ public class SelectModuleItem
 	
 	public enum Type
 	{
-		SCO, MODULE, FOLDER, ROOT, SEPARATOR
+		SCO, MODULE, FOLDER, ROOT, SEPARATOR, SEARCH
 	}
 
 	public static final SelectModuleItem ROOT = new SelectModuleItem(null, SelectModuleItem.Type.ROOT);

@@ -1,15 +1,20 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
@@ -21,6 +26,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -30,6 +36,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -41,16 +48,23 @@ import com.google.gwt.view.client.SetSelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.account.client.ProfileCommand;
+import nl.uu.fi.dwo.account.client.SchoolClassStudentCommand;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
-public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext {
+public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext, Command {
 
 	class ProvideTileKey implements ProvidesKey<SelectModuleItem> {
 
@@ -58,7 +72,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		
 		@Override
 		public Object getKey(SelectModuleItem item) {
-			if(tiles.contains(item))
+			if(item != null)
 				return item.getID();
 			return null;
 		}
@@ -276,9 +290,64 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	@UiHandler("searchBtn")
 	void onSearch(ClickEvent ev) {
-		System.err.println("Search : " + searchInput.getText());
+		long id = System.currentTimeMillis();
+		String search = searchInput.getText().trim();
+		SelectModuleItem item = SelectModuleItemHolder.getSearch(search);
+		if(item == null)
+		{
+			item = new SelectModuleItem(id, SelectModuleItem.Type.SEARCH);
+			item.setName(search);
+			item.setDescription("Nog geen resultaat..."); // XXX wat komt hier....
+// FIXME hier de zoek functie....
+			Promise<List<SelectModuleItem>> searchMock = searchMock(search);			
+			final SelectModuleItem i = item;
+			item.setChildrenAsync(searchMock.then(new Success<List<SelectModuleItem>,List<SelectModuleItem>>(){
+
+				@Override
+				public Promise<List<SelectModuleItem>> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+					i.setDescription("Aantal resultaten: " + resolved.getValue().size());
+					return resolved;
+				}})
+				.recover(new Function<Promise<?>, List<SelectModuleItem>>(){
+
+					@Override
+					public List<SelectModuleItem> apply(Promise<?> t) {
+						i.setDescription("Geen resultaat: " + t.getFailure().getMessage());
+						return Collections.emptyList();
+					}})	
+					
+					);
+			SelectModuleItemHolder.insert(item);
+		}
+		presenter.goTo(new SearchPlace(item.getID()));
+	}
+
+	private Promise<List<SelectModuleItem>> searchMock(String search) {
+		if(search.contains("error")) {
+			return Promises.failed(new IllegalArgumentException(search));
+		}
+		search = search.toLowerCase();
+		List<SelectModuleItem> list = new ArrayList<>();
+		List<SelectModuleItem> items = SelectModuleItemHolder.getItems();
+		search(search, items, list);
+		return Promises.resolved(list);
 	}
 	
+	private void search(String search, List<SelectModuleItem> items, List<SelectModuleItem> list) {
+		for(SelectModuleItem item: items) {
+			String name = item.getName();
+			String description = item.getDescription();
+			if( (name + description).toLowerCase().contains(search)) {
+				list.add(item);
+			} else {
+				Promise<List<SelectModuleItem>> p = item.getChildrenAsync();
+				if(p != null && p.isDone() && p.getFailure() == null) {
+					search(search, p.getValue(), list);
+				}
+			}
+		}
+	}
+
 	@UiHandler("fullBtn")
 	void onFull(ClickEvent ev) {
 		System.err.println("Full = "+fullBtn.getValue());
@@ -303,10 +372,12 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	public TreeModuleViewNumworx() {
 		CellList.Resources cellResources;
 		cellResources = GWT.create(CellList.Resources.class);
-		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
-		cells.setSelectionModel(new NoSelectionModel<SelectModuleItem>());
 		cellResources = GWT.create(HorizontalCellListResources.class);
+		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
+		cells.setSelectionModel(new SingleSelectionModel<SelectModuleItem>(keyprovider));
+		cells.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 		tiles = new CellList<SelectModuleItem>(new TileCell(), cellResources);
+		tiles.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 		SingleSelectionModel<SelectModuleItem> model = new SingleSelectionModel<SelectModuleItem>(keyprovider);
 		tiles.setSelectionModel(model);
 		pfx = DWOplayer.PARAMETERS.getResource("");
@@ -338,6 +409,14 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		items.clearItems();
 		MenuItem m;
 		if(DWOplayer.withUser()) {
+			m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand());
+			m.addStyleName(style.menuItem());
+			if(DWOplayer.clientfactory.getRoleType() == RoleType.STUDENT) {
+				ScheduledCommand cmd = new SchoolClassStudentCommand(this);
+				m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), cmd);
+				m.addStyleName(style.menuItem());
+			}
+			
 			m=items.addItem("Logout", new ScheduledCommand() {
 				
 				@Override
@@ -355,6 +434,20 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			});
 		}
 		m.addStyleName(style.menuItem());
+// Slow get all stuff;
+		final Iterator<SelectModuleItem> iterator = currentModel.iterator();
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			
+			@Override
+			public void execute() {
+				if(iterator.hasNext()) {
+					SelectModuleItem item = iterator.next();
+					if(item.getType() == SelectModuleItem.Type.FOLDER)
+						getChildrenPromise(item);
+					Scheduler.get().scheduleDeferred(this);
+				}
+			}
+		});
 	}
 
 	Promise<List<SelectModuleItem>> getChildrenPromise(final SelectModuleItem parent) {
@@ -412,23 +505,24 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	
 	@Override
 	public void selectModule(SelectModuleItem item) {
-		((SingleSelectionModel) tiles.getSelectionModel()).clear();
+		((SetSelectionModel<?>) tiles.getSelectionModel()).clear();
 		keyprovider.tiles = Collections.emptyList();
 		tiles.setRowData(keyprovider.tiles);
 		switch(item.getType()) {
 		case ROOT:
 				title.setText(item.getName());
 				description.setWidget(getLabel(item));
+				((SetSelectionModel<?>) cells.getSelectionModel()).clear();
 			break;
+		case SEARCH:
+			((SetSelectionModel<?>) cells.getSelectionModel()).clear();
 		case FOLDER:
 				title.setText(item.getName());
 				description.setWidget(getLabel(item));
 				if(item.showChildren());
 				{
 					getChildrenPromise(item).then(new ProvideCells());
-				}
-				
-				
+				}			
 			break;
 		case MODULE:
 				title.setText(item.getName());
@@ -480,6 +574,11 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	public void gotoUrl(String href) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void execute() {
+		presenter.goTo(new ReloginPlace());
 	}
 
 }

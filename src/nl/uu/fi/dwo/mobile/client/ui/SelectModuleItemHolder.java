@@ -16,6 +16,7 @@ public class SelectModuleItemHolder
 {
 	private static List<SelectModuleItem> list;
 	private static HashMap<String, SelectModuleItem> map, scos;
+	private static HashMap<Object, SelectModuleItem> searches;
 
 	private static void init()
 	{
@@ -24,6 +25,7 @@ public class SelectModuleItemHolder
 		list = new ArrayList<SelectModuleItem>();
 		map = new HashMap<String, SelectModuleItem>();
 		scos = new HashMap<String, SelectModuleItem>();
+		searches = new HashMap<Object, SelectModuleItem>();
 		
 		/*
 				insert(0, "test1", "test.xml");
@@ -56,6 +58,10 @@ public class SelectModuleItemHolder
 		switch(item.getType()) {
 		case SCO: scos.put(item.getID().toString(), item);
 				break;
+		case SEARCH:
+					searches.put(item.getID(), item);
+					searches.put(item.getName(), item);
+					break;
 		default:
 			map.put(item.getID().toString(), item);
 			if(item.getParent() == null) list.add(item);
@@ -84,6 +90,11 @@ public class SelectModuleItemHolder
 		return scos.get(id.toString());
 	}
 
+	public static SelectModuleItem getSearch(Object id) {
+		init();
+		return searches.get(id);
+	}
+	
 	public static void clear() {
 		init();
 		list.clear();
@@ -91,11 +102,13 @@ public class SelectModuleItemHolder
 		map.put("0",  SelectModuleItem.ROOT);
 		map.put("", SelectModuleItem.ROOT);
 		scos.clear();
+		searches.clear();
 	}
 	
 	public static void destroy() {
 		list = null;
 		map = null;
 		scos = null;
+		searches = null;
 	}
 }
