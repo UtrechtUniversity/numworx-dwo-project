@@ -150,6 +150,8 @@
 			margin-bottom: 18px;
 			display: inline-block;
 			overflow: hidden;
+			position: relative;
+			border-bottom-color: color12;
 		}
 		.tileHeader {
 			width: 247px;
@@ -171,7 +173,7 @@
 		.tileBody {
 			border-bottom-style: solid;
 			border-bottom-width: 6px;
-			border-bottom-color: #AAC1DC;
+			border-bottom-color: inherit;
 			width: 252px;
 			height: 160px;
 			background-color: #E4F2FB;		
@@ -200,8 +202,7 @@
 		
 		.tileInfo { 
 			position: absolute;
-			bottom: 100px;
-			right: 100px;
-			width: 40px;
-			height: 40px;
+			bottom: 34px;
+			right: 2px;
+			font-size: 11px;
 		}

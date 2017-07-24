@@ -14,13 +14,18 @@
   zoom: 1;
 }
 
-.cellListKeyboardSelectedItem {
-  background: #ffc;
+.cellListKeyboardSelectedItem div {
+	background-color: inherit;
+	border-bottom-color: #1B75BB !important;
+}
+
+.cellListKeyboardSelectedItem div div:first-child {
+  background-color: #1B75BB;
 }
 
  @sprite .cellListSelectedItem {
   gwt-image: 'cellListSelectedBackground';
-  background-color: green;
+  background-color: transparent;
   color: white;
   height: auto;
   overflow: visible;

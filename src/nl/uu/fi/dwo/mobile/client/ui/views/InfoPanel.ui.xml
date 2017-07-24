@@ -13,10 +13,6 @@
 	.info-root {
 		background-color: color10;
 		color: color13;
-		padding: 18px;
-		border-color: color10;
-		border-size: 1px;
-		border-style: solid;
 		width: 614px;
 		height: 400px;
 	}
@@ -24,7 +20,7 @@
 		background-color: color10;
 	}
 	.info-header-west {
-		margin-right: 14px;
+		padding: 18px;
 		display: inline-block;
 		font-size: 9px;
 		color: color13;
@@ -33,21 +29,24 @@
 		display: inline-block;
 		font: Ubuntu;
 		font-weight: bold;
-		font-size: 12px;
+		font-size: 16px;
+		padding: 18px;
 	}
 	.info-header-east {
 		float: right;
 		display: inline-block;
 		font-size: 9px;
 		color: color13;
+		padding: 18px;
 	}
 	.info-center {
 		overflow: auto;
 		background-color: color10;
+		padding: 18px;
 	}
 	</ui:style>
 	<g:DockLayoutPanel unit='PX' styleName='{style.info-root}'>
-		<g:north size="35">
+		<g:north size="54">
 			<g:FlowPanel styleName='{style.info-header}'>
 			<g:InlineHTML styleName='{style.info-header-west}'>
 				<span class="fa-stack fa-lg">
@@ -55,20 +54,14 @@
   					<i class="fa fa-info fa-stack-1x"></i>
 					</span>
 			</g:InlineHTML>
-			<g:Label  styleName='{style.info-header-center}'>Logarithmen</g:Label>
-			<g:InlineHTML styleName='{style.info-header-east}'><i class='fa fa-times fa-2x'></i></g:InlineHTML>		
+			<g:Label ui:field='title' styleName='{style.info-header-center}'>Logarithmen</g:Label>
+			<g:InlineHTML ui:field='closeBtn' styleName='{style.info-header-east}'><i class='fa fa-times fa-2x'></i></g:InlineHTML>		
 			</g:FlowPanel>
 		</g:north>
 		<g:center>
-			<g:SimplePanel styleName='{style.info-center}'>
+			<g:SimplePanel ui:field='description' styleName='{style.info-center}'>
 				<g:Label>asdsad asda;klsd asd;l kasd;laskd ;laskd a;sldk as;dlks ad;laksd ;alsdk as;ldk as;dlkas d;laskd ;ask</g:Label>
 			</g:SimplePanel>		
 		</g:center>
 	</g:DockLayoutPanel>
-	
-	
-	
-	
-	
-	
 </ui:UiBinder> 

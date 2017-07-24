@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
-import java.awt.FlowLayout;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -25,7 +23,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
@@ -38,6 +35,10 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.NoSelectionModel;
+import com.google.gwt.view.client.ProvidesKey;
+import com.google.gwt.view.client.SetSelectionModel;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -51,12 +52,29 @@ import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 
 public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext {
 
+	class ProvideTileKey implements ProvidesKey<SelectModuleItem> {
+
+		List<SelectModuleItem> tiles = Collections.emptyList();
+		
+		@Override
+		public Object getKey(SelectModuleItem item) {
+			if(tiles.contains(item))
+				return item.getID();
+			return null;
+		}
+		
+	}
+	ProvideTileKey keyprovider = new ProvideTileKey();
+	
 	final class ProvideCells implements Success<List<SelectModuleItem>, Void> {
 		@Override
 		public Promise<Void> call(
 				Promise<List<SelectModuleItem>> resolved)
 				throws Exception {
-			tiles.setRowData(resolved.getValue());
+			List<SelectModuleItem> value = resolved.getValue();
+			((SetSelectionModel<?>) tiles.getSelectionModel()).clear();
+			keyprovider.tiles = value;
+			tiles.setRowData(value);
 			tiles.redraw();
 			return null;
 		}
@@ -113,7 +131,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 			  sb.appendHtmlConstant("<div class='" + style.tileBody() + "'>");
 			    String description = value.getDescription();
-			    if(description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
+			    if(true || description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
 			    	switch(value.getType()) {
 			    	case MODULE: 
 			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
@@ -168,8 +186,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  			+ "-numworx.svg")+"'/>");
 			  	sb.appendHtmlConstant("</span>");
 			  sb.appendHtmlConstant("</div>");
+			  if(!description.isEmpty())
 			  sb.appendHtmlConstant("<div class='" + style.tileInfo()
-			  		+ "'><i class='fa fa-info'></i></div>");
+			  		+ "'><span class='fa-stack fa-lg'><i class='fa fa-circle-o fa-stack-2x'></i><i class='fa fa-info fa-stack-1x'></i></span></div>");
 		    sb.appendHtmlConstant("</div>");
 			  
 			  
@@ -190,22 +209,30 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		    String eventType = event.getType();
 		    
 		    if("click".equals(eventType)) {
-		    	int x = event.getClientX();
-		    	int y = event.getClientY();
 		    	EventTarget eventTarget = event.getEventTarget();
-		    	final PopupPanel popup = new PopupPanel(true);
-		    	popup.setGlassEnabled(true);
-		    	popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+		    	Element e = null;
+		    	if(Element.is(eventTarget)) {
+		    		e = Element.as(eventTarget);
+		    		while ( e != null && e != parent && !style.tileInfo().equals(e.getClassName()))
+		    			e = e.getParentElement();
+		    	}
+		    	if ( e.getClassName().equals(style.tileInfo()))
+		    	{ final PopupPanel popup = new PopupPanel(true);
+		    		popup.setGlassEnabled(true);
+		    		popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 		            public void setPosition(int offsetWidth, int offsetHeight) {
 		                int left = (Window.getClientWidth() - offsetWidth) / 4;
 		                int top = (Window.getClientHeight() - offsetHeight) / 4;
 		                popup.setPopupPosition(left, top);
 		              }
 		            });
-		    	popup.setWidget(new InfoPanel());
-		    	
-		    	popup.show();
-		    	return;
+		    		InfoPanel info = new InfoPanel(popup);
+		    		info.setName(value.getName());
+		    		info.setDescription(getLabel(value));
+					popup.setWidget(info);
+		    		popup.show();
+		    		return;
+		    	}
 		    }
 		    
 		    
@@ -277,8 +304,11 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		CellList.Resources cellResources;
 		cellResources = GWT.create(CellList.Resources.class);
 		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
+		cells.setSelectionModel(new NoSelectionModel<SelectModuleItem>());
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		tiles = new CellList<SelectModuleItem>(new TileCell(), cellResources);
+		SingleSelectionModel<SelectModuleItem> model = new SingleSelectionModel<SelectModuleItem>(keyprovider);
+		tiles.setSelectionModel(model);
 		pfx = DWOplayer.PARAMETERS.getResource("");
         final int correctie = 10; // width popup 
 		user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
@@ -382,7 +412,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	
 	@Override
 	public void selectModule(SelectModuleItem item) {
-		tiles.setRowData(Collections.<SelectModuleItem> emptyList());
+		((SingleSelectionModel) tiles.getSelectionModel()).clear();
+		keyprovider.tiles = Collections.emptyList();
+		tiles.setRowData(keyprovider.tiles);
 		switch(item.getType()) {
 		case ROOT:
 				title.setText(item.getName());
