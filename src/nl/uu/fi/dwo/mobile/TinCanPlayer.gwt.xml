@@ -4,6 +4,7 @@
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
 	<inherits name="nl.uu.fi.dwo.keyboard.KeyboardGWT-DWO" />	
+	<inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
 	<add-linker name='xsiframe' />
 	
     <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />

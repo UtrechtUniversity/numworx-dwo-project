@@ -16,7 +16,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	
 	static {
 		script("scripts/tincan-1.0.1.js"); 
-		script("scripts/Content_Api-0.2.13.js");
+//		script("scripts/Content_Api-0.2.13.js"); overwrites tincan prototype
 		script("scripts/xapi.js");
 	}
 	
@@ -226,7 +226,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	@Override
 	public void Initialize(AsyncCallback<Void> callback) {
 		this.callback = callback;
-		if(true)
+		if(false)
 			Initialize0(this);
 		else {
 			Initialize0(this);
