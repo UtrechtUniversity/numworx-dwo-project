@@ -1,9 +1,5 @@
 // Simplified version of Lms_Api.js, used to display statements on the page
-var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-var eventer = window[eventMethod];
-var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-
-eventer(messageEvent, handleMessage, false);
+var tincan
 
 var xapi = function(msg) {
 		
@@ -15,22 +11,69 @@ var actor = new TinCan.Agent({ "mbox": "hello@learninglocker.net"})
 var activityId = "http://www.dwo.nl/activiteit/96797"
 var activity = new TinCan.Activity({"id": activityId})
 var registration = "760e3480-ba55-4991-94b0-01820dbd23a3"
+var context = new TinCan.Context({"registration":registration})
 var endpoint = "http://localhost:8080/data/xAPI/"
+var fetch = null
+	
+function initFromURL(url) {
+        console.log("initFromURL");
 
-function handleMessage(message) {
-	var msg = JSON.parse(message.data);
-	var isArray = msg.constructor == Array;
-	if ( !isArray ) 
-		xapi(msg)
-	else 
-	{
-		var arrayLength = msg.length;
-		for (var i = 0; i < arrayLength; i++) {
-		    xapi(msg[i]);
-		}
-	}
+        var i,
+            prop,
+            qsParams = TinCan.Utils.parseURL(url).params,
+            lrsCfg = {},
+            contextCfg,
+            extended = null
+        ;
+
+        if (qsParams.hasOwnProperty("actor")) {
+            console.log("_initFromQueryString - found actor: " + qsParams.actor);
+            try {
+                actor = TinCan.Agent.fromJSON(qsParams.actor);
+                delete qsParams.actor;
+            }
+            catch (ex) {
+                console.log("_initFromURL - failed to set actor: " + ex);
+            }
+        }
+
+        if (qsParams.hasOwnProperty("activityId")) {
+            activity = new TinCan.Activity (
+                {
+                    id: qsParams.activityId
+                }
+            );
+            delete qsParams.activity_id;
+        }
+
+        {
+            contextCfg = {};
+            contextCfg.registration = registration
+
+            if (qsParams.hasOwnProperty("registration")) {
+                //
+                // stored in two locations cause we always want it in the default
+                // context, but we also want to be able to get to it for Statement
+                // queries
+                //
+                contextCfg.registration = registration = qsParams.registration;
+                delete qsParams.registration;
+            }
+            
+            context = new TinCan.Context (contextCfg);
+        }
+
+        //
+        // order matters here, process the URL provided LRS last because it gets
+        // all the remaining parameters so that they get passed through
+        //
+        if (qsParams.hasOwnProperty("endpoint")) {
+        	endpoint = qsParams.endpoint
+        }
 }
 
+initFromURL(window.location.href.split('#')[0])
+	
 function decompressFromBase64(state) {
 	if(state.length > 0)
 		state = LZString.decompressFromBase64(state);
@@ -56,17 +99,18 @@ function sendAnsweredStatement(succes, duration, scoreScaled, completion) {
 function sendModuleDataRequest() {
 	tincan.getState("cmi.suspend_data", {"callback":function(x, msg) {
 		msg = msg || {}
-		msg.contents = msg.contents|| "{}"
-		xapi(msg.contents)
+		var state = msg.contents || ""
+		if(state.length > 0)
+			state = LZString.decompressFromBase64(state);
+		xapi(state)
 	}})
 	var statement = new TinCan.Statement({"verb": {"id":"http://adlnet.gov/expapi/verbs/initialized"}})
     tincan.sendStatement(statement);
 }
 
 function sendModuleDataStatement(moduledata) {
-	tincan.setState("cmi.suspend_data", moduledata, {"callback":function() {
-		var a = arguments;
-		console.log(JSON.stringify(a));
+	var Data = LZString.compressToBase64(moduledata);
+	tincan.setState("cmi.suspend_data", Data, {"callback":function() {
 	}});
 }
 
@@ -92,4 +136,4 @@ var lrs = new TinCan.LRS(
 		  "password": "e2bab2ca1c546d09cdb411a6e3dfeed19edcd32a",
 		});
 
-tincan = new TinCan({"actor": actor, "activity": activity, "recordStores": [lrs], "registration": registration});
+tincan = new TinCan({"actor": actor, "activity": activity, "recordStores": [lrs], "context": context});

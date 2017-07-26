@@ -242,6 +242,9 @@
 			<properties>
 				<gwtModule>${project.groupId}.TinCanPlayer</gwtModule>
 				<finalName>TinCanPlayer</finalName>
+				<warClassifier>xapi</warClassifier>
+				<maven.war.webxml>war/WEB-INF/web-dwo2.xml</maven.war.webxml>
+				<gwt.copyWebapp>false</gwt.copyWebapp>
 			</properties>
 		</profile>
 		<!-- MC Squared profiles -->

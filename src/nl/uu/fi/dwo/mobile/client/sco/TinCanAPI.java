@@ -15,6 +15,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	}-*/;
 	
 	static {
+		script("scripts/lz-string.js");
 		script("scripts/tincan-1.0.1.js"); 
 //		script("scripts/Content_Api-0.2.13.js"); overwrites tincan prototype
 		script("scripts/xapi.js");
@@ -29,7 +30,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	private float scoreScaled = 0.0f;
 	private boolean completion = false;
 	private boolean success = false;
-	private long    startTime;
+	private long    startTime  = System.currentTimeMillis();
 	private String duration;
 	/**
 	 * @return the completion
@@ -141,7 +142,6 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	}-*/;
 
 	private static native void sendCompletedStatement(String duration, float scoreScaled) /*-{
-		// TODO Auto-generated method stub
 		$wnd.sendCompletedStatement(duration, scoreScaled)
 	}-*/;
 
@@ -156,11 +156,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	private static native void sendAnswerAndModuleDataStatements(boolean succes, String duration, double scoreScaled, boolean completion, String moduledata) /*-{
 		$wnd.sendAnswerAndModuleDataStatements(succes, duration, scoreScaled, completion, moduledata)
 	}-*/; 
-	
-	private static native String decompressFromBase64(String data) /*-{
-		return $wnd.decompressFromBase64(data)
-	}-*/;
-	
+		
 	
 // Dit kan in GWT zelf?	
 	private static native void Initialize0(TinCanAPI api) /*-{
@@ -182,66 +178,14 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 		})(api)
 	}-*/;
 	
-	public final static class Statement extends JavaScriptObject {
-		protected Statement() {
-		}
 
-		native String getResponseJson() /*-{
-			return this.result.extensions["http://bao.mijnklas.nl/xapi/extensions/json"];
-		}-*/;
-
-		native String getObjectId() /*-{
-			if(this.object)
-				return this.object.id;
-			return null
-		}-*/;
-		
-		native String getVerb() /*-{
-			return this.verb.id;
-		}-*/;
-	}
-	
 	
 	void onMessage(String s) {
 		setModuleData(s);
+		startTime = System.currentTimeMillis();
 		if(callback!=null)
 			callback.onSuccess(null);
 		callback = null;
-	}
-	
-	
-	void onMessage(JavaScriptObject obj) {
-		Statement s = obj.cast();
-		String verb = s.getVerb();
-		String id   = s.getObjectId();
-		LOG.info("verb = " + verb + ", object.id =" + id);
-		// if ( something equals verb) 
-		if(  MODULEDATA_VERB.equals(verb)
-			 //&&	MODULEDATA_RESPONSE.equals( id ) 
-			&& callback != null
-		  ) {
-			setModuleData(getResponseJson(s));
-			startTime = System.currentTimeMillis();
-			callback.onSuccess(null);
-			callback = null;
-		} else if (NAVIGATE_VERB.equals(verb)) {
-			Memento.unload();
-		}
-	}
-	
-	/**
-	 * Get suspend_data from Tincan statement.
-	 * Decompression is needed. Cannot be done by the xapi.js routines.
-	 * @param s statement
-	 * @return suspend_data
-	 */
-	private static String getResponseJson(Statement s) {
-		try {
-			return decompressFromBase64(s.getResponseJson());
-		} catch (Exception e) {
-			LOG.severe("ResponseJSON " + e);
-			return "";
-		}
 	}
 
 	@Override
@@ -252,7 +196,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	@Override
 	public void Initialize(AsyncCallback<Void> callback) {
 		this.callback = callback;
-		if(false)
+		if(true)
 			Initialize0(this);
 		else {
 			Initialize0(this);
