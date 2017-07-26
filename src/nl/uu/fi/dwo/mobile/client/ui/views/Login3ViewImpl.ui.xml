@@ -9,11 +9,9 @@
 	@def regular 400;
 	@def medium 500;
 	.screen {
-		top: 0px;
-		bottom: 0px;
-		left: 0px;
-		right: 0px;
-		position: absolute;
+		width: 1024px;
+		margin: 0 auto;
+		position: relative;
 		background-color: #8ebee6;
 	}
 	.logo {
@@ -47,19 +45,10 @@
 	
 	.messages {
 		top: 306px;
-		width: 242px;
-		padding: 5px;
+		width: 252px;
+		padding: 0px;
 		left: 192px;
-		color: white;
-		font-family: Ubuntu;
-		font-size: 18px;
-		font-weight: regular;
-		line-height: 24px;
-		background-color: #1B75BB;
 		position: absolute;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
-		border-radius: 3px;
 	}
 	.login {
 		top: 306px;
@@ -179,7 +168,16 @@
   		opacity: 1;
 	}
 	
+	.outer {
+			background-color: #8ebee6;
+			position: absolute;
+			top: 0px;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+	}
 	</ui:style>
+	<g:FlowPanel styleName='{style.outer}'>
 	<g:FlowPanel styleName='{style.screen}'>
 		<g:HTML styleName="{style.logo}">
 			<img src='{pfx}images/numworx/login.png' title="{build}"/>
@@ -188,9 +186,7 @@
 			<img src='{pfx}images/numworx/logo-Numworx-wit-blauw.svg' />
 			<p>Voor leerlingen en studenten</p>
 		</g:HTML>
-		<g:Label ui:field='messagePanel' styleName='{style.messages}'>
-			Vanwege onderhoud kunt u niet inloggen tussen 8:00 en 14:00
-		</g:Label>
+		<g:Frame ui:field='messagePanel' styleName='{style.messages}' />
 		<g:FlowPanel ui:field='loginPanel' styleName='{style.login}' addStyleNames='{style.loginError}'>
 			<g:TextBox ui:field='username' styleName='{style.username}' ></g:TextBox>
 			<g:PasswordTextBox ui:field='password' styleName='{style.password}' ></g:PasswordTextBox>
@@ -202,5 +198,6 @@
 			<p><a href="/dwo/register?locale={rb.locale}&amp;next={back}">Nog geen account?</a></p>
 			<p><a href='http://www.numworx.nl'>Meer informatie over Numworx</a></p>
 		</g:HTML>
+	</g:FlowPanel>
 	</g:FlowPanel>
 </ui:UiBinder> 

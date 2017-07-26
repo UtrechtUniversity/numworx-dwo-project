@@ -19,6 +19,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -49,8 +50,8 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	@UiField(provided=true) String build;
 	
 	@UiField HTML logoPanel;
-	@UiField Label messagePanel;
 	@UiField Widget loginPanel;
+	@UiField Frame  messagePanel;
 	@UiField Widget linksPanel;
 	@UiField Button loginBtn;
 	@UiField TextBox username;
@@ -81,6 +82,8 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		initWidget(createAndBindUi());
 		username.getElement().setPropertyString("placeholder", rb.gebruikersnaam());
 		password.getElement().setPropertyString("placeholder", rb.wachtwoord());
+// FIXME
+		messagePanel.setUrl("http://www.fi.uu.nl/dwo/resources/alert_nl.html");
 	}
 	
 	@Override
