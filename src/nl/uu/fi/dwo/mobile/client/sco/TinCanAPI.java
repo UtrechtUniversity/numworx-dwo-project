@@ -108,8 +108,15 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 			else if(Memento.EXIT_STATUS.equals(name))
 			{
 				final boolean equals = Memento.EXIT_NORMAL.equals(value);
-				LOG.info("setCompleted(" + value  + " ) " + equals);
-				if(equals)
+				LOG.info("setExitStatus(" + value  + " ) " + equals);
+//				if(equals)
+//					setCompletion(equals);
+			}
+			else if(Memento.COMPLETION_STATUS.equals(name))
+			{
+				boolean equals = Memento.COMPLETED.equals(value);
+				LOG.info("setCompletionStatus(" + value  + " ) " + equals);
+				if (equals)
 					setCompletion(equals);
 			}
 			else
@@ -124,8 +131,19 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	@Override
 	public String Terminate() {
 		sendModuleDataStatement(moduleData);
+		if(isCompletion()) sendCompletedStatement(getDuration(), getScoreScaled());
+		sendTerminatedStatement();
 		return super.Terminate();
 	}
+
+	private static native void sendTerminatedStatement() /*-{
+		$wnd.sendTerminatedStatement();
+	}-*/;
+
+	private static native void sendCompletedStatement(String duration, float scoreScaled) /*-{
+		// TODO Auto-generated method stub
+		$wnd.sendCompletedStatement(duration, scoreScaled)
+	}-*/;
 
 	private static native void sendAnsweredStatement(boolean succes, String duration, double scoreScaled, boolean completion) /*-{
 		$wnd.sendAnsweredStatement(succes, duration, scoreScaled, completion)
@@ -152,7 +170,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 				if ( $wnd.sendModuleDataRequest ) 
 			    {			
 					$wnd.xapi = function (msg) { 
-						api.@nl.uu.fi.dwo.mobile.client.sco.TinCanAPI::onMessage(Lcom/google/gwt/core/client/JavaScriptObject;)(msg)
+						api.@nl.uu.fi.dwo.mobile.client.sco.TinCanAPI::onMessage(Ljava/lang/String;)(msg)
 					}
 					$wnd.sendModuleDataRequest();
 			    } else {
@@ -181,6 +199,14 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 		native String getVerb() /*-{
 			return this.verb.id;
 		}-*/;
+	}
+	
+	
+	void onMessage(String s) {
+		setModuleData(s);
+		if(callback!=null)
+			callback.onSuccess(null);
+		callback = null;
 	}
 	
 	

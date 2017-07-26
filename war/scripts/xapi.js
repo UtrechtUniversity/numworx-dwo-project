@@ -12,9 +12,9 @@ var xapi = function(msg) {
 TinCan.enableDebug()
 // variables from Window.query "actor" "activityId" "registration" "endpoint"
 var actor = new TinCan.Agent({ "mbox": "hello@learninglocker.net"})
-var activityId = "http://www.dwo.nl/activiteit/105645"
+var activityId = "http://www.dwo.nl/activiteit/96797"
 var activity = new TinCan.Activity({"id": activityId})
-var registration = "760e3480-ba55-4991-94b0-01820dbd23a2"
+var registration = "760e3480-ba55-4991-94b0-01820dbd23a3"
 var endpoint = "http://localhost:8080/data/xAPI/"
 
 function handleMessage(message) {
@@ -43,9 +43,8 @@ function createAnsweredStatement(success, duration, scoreScaled, completion) {
 	//var duration  = 'PT3M15S'
 	var score = { "scaled": scoreScaled };
 	//var completion = false;
-	var id = window.location.toString()
-	var answer = Bao.buildAnswer(id, null, success, duration, score, null, null, null, null, completion);
-	var statement = Bao.buildAnsweredStatement(answer);
+	var answer = new TinCan.Result({"success":success, "duration": duration, "score":score, "completion":completion})
+	var statement = new TinCan.Statement({"result":answer,"verb":{"id":"http://adlnet.gov/expapi/verbs/answered"}})
 	return statement;
 }
 
@@ -55,29 +54,37 @@ function sendAnsweredStatement(succes, duration, scoreScaled, completion) {
 }
 
 function sendModuleDataRequest() {
+	tincan.getState("cmi.suspend_data", {"callback":function(x, msg) {
+		msg = msg || {}
+		msg.contents = msg.contents|| "{}"
+		xapi(msg.contents)
+	}})
 	var statement = new TinCan.Statement({"verb": {"id":"http://adlnet.gov/expapi/verbs/initialized"}})
     tincan.sendStatement(statement);
 }
 
-function createModuleDataStatement(moduledata) {
-	var json = moduledata;
-	json = LZString.compressToBase64(moduledata);
-	var statement = Bao.buildSetModuleDataRequestStatement(json)
-    return statement;
-}
-
 function sendModuleDataStatement(moduledata) {
-	var statement = createModuleDataStatement(moduledata)
-	tincan.sendStatement(statement)
+	tincan.setState("cmi.suspend_data", moduledata, {"callback":function() {
+		var a = arguments;
+		console.log(JSON.stringify(a));
+	}});
 }
 
 function sendAnswerAndModuleDataStatements(succes, duration, scoreScaled, completion, moduledata) {
-	var statements = [ createModuleDataStatement(moduledata), createAnsweredStatement(succes, duration, scoreScaled, completion) ]
-	tincan.sendStatements(statements);
+	sendModuleDataStatement(moduledata);
+	sendAnsweredStatement(succes, duration, scoreScaled, completion)
 }
  
+function sendCompletedStatement(duration, scoreScaled) {
+	var score = { "scaled": scoreScaled };
+	var answer = new TinCan.Result({'duration': duration, "score":score});
+	var statement = new TinCan.Statement({'result':answer, 'verb':{'id':"http://adlnet.gov/expapi/verbs/completed"}});
+}
 
-//var lrs = new ContentApiLrs();
+function sendTerminatedStatement() {
+	var statement = new TinCan.Statement({"verb": {"id":"http://adlnet.gov/expapi/verbs/terminated"}})
+    tincan.sendStatement(statement);
+}
 
 var lrs = new TinCan.LRS(
 		{ "endpoint": endpoint,

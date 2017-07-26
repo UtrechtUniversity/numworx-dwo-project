@@ -15,7 +15,7 @@
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
 
-	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOplayerCDPLogica">
+	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOplayerNoordhoff">
         <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
     </replace-with>
 
