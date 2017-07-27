@@ -45,7 +45,7 @@ public class ClientFactoryImpl implements ClientFactory
 	private RPCHandler handler;
 	private IsWidget logoutWidget;
 	
-	protected final static boolean NUMWORX = true;
+	protected final static boolean NUMWORX = false;
 
 	public ClientFactoryImpl()
 	{
