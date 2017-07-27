@@ -31,9 +31,21 @@
 			</g:FlowPanel>
 		</g:west>
 		<g:center>
-			<g:FlowPanel styleName='{style.centerPanel}'>
-				<g:HTML styleName='{style.title}' ui:field='title' >Modules voor ....</g:HTML>
-				<g:SimplePanel styleName='{style.description}' ui:field='description' />
+			<g:FlowPanel ui:field='centerPanel' styleName='{style.centerPanel}'>
+				<g:FlowPanel>
+						<g:FlowPanel styleName='{style.titlePanel}'> 
+							<g:HTML styleName='{style.title}' ui:field='title' >Modules voor ....</g:HTML>
+							<g:SimplePanel styleName='{style.description}' ui:field='description' />
+						</g:FlowPanel>
+						<g:Image styleName='{style.favicon}' ui:field='favIcon'
+							url="{pfx}images/numworx/favicon-numworx-wit.svg"
+							height="160"
+							width='252'
+						/>
+				
+				</g:FlowPanel>
+				
+				
 				<cl:CellList ui:field='tiles'></cl:CellList>
 			</g:FlowPanel>
 		</g:center>

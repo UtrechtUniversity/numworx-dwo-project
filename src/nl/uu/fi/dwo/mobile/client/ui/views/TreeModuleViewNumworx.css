@@ -46,7 +46,8 @@
 			font-size: 18px;
 			margin-bottom: 20px;
 			margin-left: 18px;
-			font-family: "Ubuntu" !important;
+			font-family: "Roboto Condensed" !important;
+			font-weight: bold;
 		}
 		.description {
 			margin-bottom: 36px;
@@ -61,7 +62,8 @@
 			padding-bottom: 20px;
 			padding-left: 22px;
 			margin-right: 18px;
-			font-family: "Ubuntu" !important;
+			font-family: "Roboto Condensed" !important;
+			font-weight: bold;
 			width: 152px;
 			line-height: normal;
 		}
@@ -136,9 +138,10 @@
 			border-style: none;
 		}
 		.navItem {
-			font-family: "Ubuntu Condensed" !important;
+			font-family: "Roboto Condensed" !important;
+			font-weight: bold;
 			line-height: 27px;
-			margin-right: 18px;
+/* 			margin-right: 18px; */
 			border-bottom-style: solid;
 			border-bottom-width: 1px;
 			border-bottom-color: #A8ABB1 !important;
@@ -200,6 +203,7 @@
 			font-family: Ubuntu;
 			font-size: 14px;
 			font-weight: bold;
+			color: color14;
 		}
 		.tileType {
 			float: right;
@@ -214,3 +218,17 @@
 			right: 2px;
 			font-size: 11px;
 		}
+
+.favicon {
+	display: inline-block;
+	width: 252px;
+	height: 160px;
+	float: right;
+	margin-right: 18px;	
+}
+
+.titlePanel {
+	width: 500px;
+	display: inline-block;
+
+}

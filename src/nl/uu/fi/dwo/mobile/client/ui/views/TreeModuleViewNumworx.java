@@ -376,14 +376,15 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	}
 
 	public TreeModuleViewNumworx() {
-		CellList.Resources cellResources;
-		cellResources = GWT.create(CellList.Resources.class);
+		HorizontalCellListResources cellResources;
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
 		cells.setSelectionModel(new SingleSelectionModel<SelectModuleItem>(keyprovider));
 		cells.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
+		cells.addStyleName(cellResources.cellListStyle().navCellList());
 		tiles = new CellList<SelectModuleItem>(new TileCell(), cellResources);
 		tiles.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
+		tiles.addStyleName(cellResources.cellListStyle().tileCellList());
 		SingleSelectionModel<SelectModuleItem> model = new SingleSelectionModel<SelectModuleItem>(keyprovider);
 		tiles.setSelectionModel(model);
 		pfx = DWOplayer.PARAMETERS.getResource("");
@@ -442,18 +443,23 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		m.addStyleName(style.menuItem());
 // Slow get all stuff;
 		final Iterator<SelectModuleItem> iterator = currentModel.iterator();
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-			
+		final ScheduledCommand cmd = (new ScheduledCommand() {
+			ScheduledCommand cmd = this;
 			@Override
 			public void execute() {
 				if(iterator.hasNext()) {
 					SelectModuleItem item = iterator.next();
 					if(item.getType() == SelectModuleItem.Type.FOLDER)
-						getChildrenPromise(item);
-					Scheduler.get().scheduleDeferred(this);
+						getChildrenPromise(item).onResolve(new Runnable() {
+
+							@Override
+							public void run() {
+								Scheduler.get().scheduleDeferred(cmd);
+							}});
 				}
 			}
 		});
+		Scheduler.get().scheduleDeferred(cmd);
 	}
 
 	Promise<List<SelectModuleItem>> getChildrenPromise(final SelectModuleItem parent) {

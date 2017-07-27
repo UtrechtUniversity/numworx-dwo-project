@@ -2,13 +2,39 @@
 
 }
 
+.navCellList {
+	margin-right: 18px;
+}
+.tileCellList {
+	
+}
+
 .cellListEvenItem {
   display: inline-block;
   cursor: pointer;
   zoom: 1;
 }
-.cellListEvenItem:hover, .cellListOddItem:hover {
+.navCellList .cellListSelectedItem,
+.navCellList  .cellListEvenItem:hover, 
+.navCellList  .cellListOddItem:hover {
 	color: white;
+	background-color: #A8ABB1;
+}
+
+.tileCellList  .cellListEvenItem:hover div div:first-child, 
+.tileCellList  .cellListOddItem:hover  div div:first-child {
+  background-color: #1B75BB;
+}
+
+.tileCellList .cellListSelectedItem div div:first-child+div,
+.tileCellList  .cellListEvenItem:hover div div:first-child+div, 
+.tileCellList  .cellListOddItem:hover  div div:first-child+div {
+  background-color: white;
+}
+
+.tileCellList  .cellListEvenItem:hover div, 
+.tileCellList  .cellListOddItem:hover  div {
+  border-bottom-color: #1B75BB;
 }
 
 
@@ -34,14 +60,10 @@
 .cellListSelectedItem {
 }
 
-.cellListSelectedItem div {
-	background-color: #A8ABB1;
-/* 	background-color: inherit; */
-	border-bottom-color: #1B75BB;
-	color: white:
-	
+.tileCellList .cellListSelectedItem div {
+	border-bottom-color: #1B75BB;	
 }
 
-.cellListSelectedItem div div:first-child {
+.tileCellList .cellListSelectedItem div div:first-child {
   background-color: #1B75BB;
 }
