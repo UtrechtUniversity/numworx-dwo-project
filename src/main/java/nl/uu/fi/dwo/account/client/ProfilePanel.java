@@ -206,7 +206,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             user.setFamilyName(familyName.getText());
             user.setGivenName(givenName.getText());
             user.setInsertion(insertion.getText());
-            if ( ! SimpleValidUserFieldsChecker.isEmptyOrNull(user.getFamilyName(), user.getGivenName()))
+            if ( ! SimpleValidUserFieldsChecker.isNonEmptyNorNull(user.getFamilyName(), user.getGivenName()))
             {
             	Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Required_Fields());
             	return;
