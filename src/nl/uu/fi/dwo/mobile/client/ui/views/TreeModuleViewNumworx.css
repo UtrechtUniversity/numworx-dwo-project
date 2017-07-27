@@ -131,15 +131,15 @@
 			border-radius: 3px;
 		}
 		.navItem {
-			font-family: "Ubuntu" !important;
+			font-family: "Ubuntu Condensed" !important;
 			line-height: 27px;
 			margin-right: 18px;
 			border-bottom-style: solid;
 			border-bottom-width: 1px;
 			border-bottom-color: #A8ABB1 !important;
 			width: 152px;
-			transform: scale(0.9,1);
-			transform-origin: left;
+/* 			transform: scale(0.9,1); */
+/* 			transform-origin: left; */
 		}
 		.tiles {
 

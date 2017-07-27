@@ -28,9 +28,10 @@
 
 <!-- deze -->
     <extend-property name="locale" values="nl"/>
+    <extend-property name="locale" values="fr"/>
   	<set-property-fallback name="locale" value="nl"/>
 <!-- of deze -->
-    <set-property name="locale" value="nl"/>
+<!--     <set-property name="locale" value="nl"/> -->
 	
 <!--  chrome only -->
 <!-- <set-property name="user.agent" value="safari" /> -->
