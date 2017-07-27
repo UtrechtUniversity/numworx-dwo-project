@@ -145,8 +145,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 			  sb.appendHtmlConstant("<div class='" + style.tileBody() + "'>");
 			    String description = value.getDescription();
-			    if(true || description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
-			    	switch(value.getType()) {
+			    Type typeof = value.getType();
+				if(true || description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
+			    	switch(typeof) {
 			    	case MODULE: 
 			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
 			    				+ r("images/numworx/module-numworx.svg")
@@ -177,7 +178,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  sb.appendHtmlConstant("<div class='" + style.tileFooter() + "'>");
 			  	sb.appendHtmlConstant("<span class='"+style.tileResult()+ "'>");
 			  	String type;
-			  	if(value.isShowScore() && value.getType() == Type.SCO) {
+			  	if(value.isShowScore() && typeof == Type.SCO) {
 			  		int score = value.getScore().intValue();
 			  		if(score < 20) type = "fout";
 			  		else if(score >=65) type = "goed";
@@ -185,6 +186,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  	} else {
 			  		type = "geen-score";
 			  	}
+			  	if(typeof == Type.SCO || typeof == Type.MODULE)
 			  	sb.appendHtmlConstant("<img src='"+r("images/numworx/"+type+"-numworx.svg")+"' />");
 			  	sb.appendHtmlConstant("</span>");
 			  	if(value.isShowScore()) {
@@ -192,13 +194,17 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  		sb.append(value.getScore().intValue()); sb.appendEscaped("%");
 			  		sb.appendHtmlConstant("</span>");
 			  	}
-			  	sb.appendHtmlConstant("<span class='"+style.tileType()+ "'>");
-			  	String lesstof = "lesstof";
-			  	//lesstof = "zelftoets";
-				sb.appendHtmlConstant("<img height='18' src='"+r("images/numworx/"
-			  			+ lesstof
-			  			+ "-numworx.svg")+"'/>");
-			  	sb.appendHtmlConstant("</span>");
+			  	if(typeof == Type.SCO)
+			  	{
+				  	sb.appendHtmlConstant("<span class='"+style.tileType()+ "'>");
+				  	String lesstof = "lesstof";
+				  	if(value.getName().contains("oets"))
+				  		lesstof = "zelftoets";
+					sb.appendHtmlConstant("<img height='18' src='"+r("images/numworx/"
+				  			+ lesstof
+				  			+ "-numworx.svg")+"'/>");
+				  	sb.appendHtmlConstant("</span>");
+			  	}	
 			  sb.appendHtmlConstant("</div>");
 			  if(!description.isEmpty())
 			  sb.appendHtmlConstant("<div class='" + style.tileInfo()
@@ -392,7 +398,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		};
 		
 		initWidget(uiBinder.createAndBindUi(this));
-		searchInput.getElement().setPropertyString("placeholder", "zoek toets of lesstof");
+		searchInput.getElement().setPropertyString("placeholder", "Zoek toets of lesstof");
 		root.forceLayout();
 	}
 

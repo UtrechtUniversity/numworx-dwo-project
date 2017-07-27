@@ -23,11 +23,11 @@
 			background-color: #DDE0E3;
 			color: color15;
 			padding-top: 40px;
-			padding-left: 22px;
+			padding-left: 0px;
 			font-size: 14px;
 			line-height: 27px;
 			font-family: "Ubuntu" !important;
-			box-shadow: 2px 2px 2px #314770 inset;
+/* 			box-shadow: 2px 2px 2px #314770 inset; */
 		}
 		.centerPanel {
 			background-color: #D2E5F5;
@@ -37,7 +37,7 @@
 			padding-top: 40px;
 /* 			padding-left: 18px; */
 /* 			padding-right: 22px; */
-			box-shadow: 8px 0px 14px 0px rgba(0,0,0,0.46) inset;			
+/* 			box-shadow: 8px 0px 14px 0px rgba(0,0,0,0.46) inset;			 */
 /* 			box-shadow: 2px 2px 2px #314770 inset; */
 			font-family: "Ubuntu" !important;
 			overflow-y: scroll;
@@ -59,14 +59,16 @@
 			border-bottom-color: #A8ABB1 ;
 			font-size: 18px;
 			padding-bottom: 20px;
+			padding-left: 22px;
 			margin-right: 18px;
 			font-family: "Ubuntu" !important;
 			width: 152px;
+			line-height: normal;
 		}
 		
 	.numworx {
 		height:30px;
-		margin-top: -20px;
+		margin-top: -24px;
 		margin-left: 20px;
 		margin-right: 20px;
 		width: 140px;
@@ -81,9 +83,11 @@
 			display: inline-block;
 			cursor: pointer;
 			border-radius: 3px;
-			margin-top: 14px;
+			margin-top: 16px;
 			vertical-align: top;
 			border-radius: 3px;
+			height: 22px;
+			margin-left: 9px;
 		}
 		.nav {
 			float: right;
@@ -116,10 +120,10 @@
 		.menuItem {
 			color: color13 !important;
 			font-size: 13px;
-			font-family: "Ubuntu Condensed" !important;
+			font-family: "Ubuntu" !important;
 		}	
 		.search-input {
-			font-family: "Ubuntu Condensed" !important;
+			font-family: "Ubuntu" !important;
 			background-color: black;
 			color: #E4F2FB;
 			margin-left: 22px;
@@ -127,8 +131,9 @@
 			display: inline-block;
 			padding-left: 4px;
 			width: 400px;
-			height: 18px;
+			height: 22px;
 			border-radius: 3px;
+			border-style: none;
 		}
 		.navItem {
 			font-family: "Ubuntu Condensed" !important;
@@ -138,6 +143,7 @@
 			border-bottom-width: 1px;
 			border-bottom-color: #A8ABB1 !important;
 			width: 152px;
+			padding-left: 22px;
 /* 			transform: scale(0.9,1); */
 /* 			transform-origin: left; */
 		}

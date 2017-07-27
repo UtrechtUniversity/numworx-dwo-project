@@ -39,7 +39,7 @@
 	.kruimels {
 		font-family: Ubuntu;
 		color: color13;
-		font-size: 16px;
+		font-size: 13px;
 		font-weight: medium;
 		margin-top: 18px;
 		display: inline-block;

@@ -7,6 +7,10 @@
   cursor: pointer;
   zoom: 1;
 }
+.cellListEvenItem:hover, .cellListOddItem:hover {
+	color: white;
+}
+
 
 .cellListOddItem {
   display: inline-block;    
@@ -34,6 +38,8 @@
 	background-color: #A8ABB1;
 /* 	background-color: inherit; */
 	border-bottom-color: #1B75BB;
+	color: white:
+	
 }
 
 .cellListSelectedItem div div:first-child {
