@@ -215,7 +215,7 @@
 			float: right;
 			display: inline-block;
 			vertical-align: bottom;
-			height: 18px;
+			height: 26px;
 		}
 		
 		.tileInfo { 
@@ -244,5 +244,7 @@
 .popup {
 	box-shadow: 0px 1px 10px 4px rgba(0,0,0,0.30);
 	border-radius: 3px;
-	
+	border-style: solid;
+	border-color: color14;
+	border-width: 1px;
 }

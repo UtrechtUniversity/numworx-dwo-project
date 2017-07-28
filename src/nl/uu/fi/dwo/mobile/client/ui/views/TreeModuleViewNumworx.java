@@ -124,9 +124,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		}
 
 	}
-	
-	class TileCell extends AbstractCell<SelectModuleItem> {
 
+	int flip;
+
+	class TileCell extends AbstractCell<SelectModuleItem> {
 
 		@Override
 		public void render(Context context,
@@ -150,19 +151,27 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			    String description = value.getDescription();
 			    Type typeof = value.getType();
 				if(true || description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
-			    	switch(typeof) {
+					flip = ( flip  ) % 5+1;
+					switch(typeof) {
 			    	case MODULE: 
-			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
+			    		sb.appendHtmlConstant("<img style='height: 85px; margin: auto auto;' src='"
 			    				+ r("images/numworx/module-numworx.svg")
 			    				+ "' />");
 			    		break;
 			    	case FOLDER:
-			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
+			    		sb.appendHtmlConstant("<img style='height: 85px; margin: auto auto;' src='"
 			    				+ r("images/numworx/folder-numworx.svg")
 			    				+ "' />");
 			    		break;
 			    	case SCO:
-			    		sb.appendHtmlConstant("<img style='height: 60%; margin-top: 10%; margin-left: 34%;' src='"
+			    		if(flip != 1)
+			    		sb.appendHtmlConstant("<img style='margin: auto auto' src='"
+			    				+ r("images/courses/"
+			    						+ flip
+			    						+ ".png")
+			    				+ "' />");
+			    		else 
+			    			sb.appendHtmlConstant("<img style='height: 85px; margin: auto auto;' src='"
 			    				+ r("images/numworx/activiteit_numworx.svg")
 			    				+ "' />");
 			    		break;
@@ -559,8 +568,9 @@ String Jolanda =
 				title.setText(item.getName());
 				String url = DWOplayer.PARAMETERS.getResource("images/courses/2.png");
 				favIcon.setUrl(url);
-				favIcon.setVisible(true);
-				centerPanel.setStyleName(style.centerBackground(), false);
+				flip = (flip%5)+1;
+				favIcon.setVisible(flip!=1);
+				centerPanel.setStyleName(style.centerBackground(), flip==1);
 				description.setWidget(getLabel(item));
 				if(item.showChildren());
 				{
