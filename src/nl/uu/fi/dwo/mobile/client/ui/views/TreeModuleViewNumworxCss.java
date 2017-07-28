@@ -13,4 +13,6 @@ interface TreeModuleViewNumworxCss extends CssResource {
 	String tileType();
 	String menuItem();
 	String tileInfo();
+	String centerBackground();
+	String popup();
 }

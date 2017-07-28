@@ -31,8 +31,10 @@
 			</g:FlowPanel>
 		</g:west>
 		<g:center>
-			<g:FlowPanel ui:field='centerPanel' styleName='{style.centerPanel}'>
-				<g:FlowPanel>
+			<g:FlowPanel ui:field='centerPanel' styleName='{style.centerPanel}'
+				addStyleNames='{style.centerBackground}'
+			>
+				<g:FlowPanel styleName='{style.itemPanel}'>
 						<g:FlowPanel styleName='{style.titlePanel}'> 
 							<g:HTML styleName='{style.title}' ui:field='title' >Modules voor ....</g:HTML>
 							<g:SimplePanel styleName='{style.description}' ui:field='description' />

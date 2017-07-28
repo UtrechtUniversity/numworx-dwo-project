@@ -19,6 +19,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -29,8 +30,10 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -208,7 +211,11 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  sb.appendHtmlConstant("</div>");
 			  if(!description.isEmpty())
 			  sb.appendHtmlConstant("<div class='" + style.tileInfo()
-			  		+ "'><span class='fa-stack fa-lg'><i class='fa fa-circle-o fa-stack-2x'></i><i class='fa fa-info fa-stack-1x'></i></span></div>");
+			  		+ "'>"
+			  		+ "<img height='18' src='"+r("images/numworx/"
+				  			+ "info"
+				  			+ "-numworx.svg")+"'/>"
+			  		+ "</div>");
 		    sb.appendHtmlConstant("</div>");
 			  
 			  
@@ -237,8 +244,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		    			e = e.getParentElement();
 		    	}
 		    	if ( e.getClassName().equals(style.tileInfo()))
-		    	{ final PopupPanel popup = new PopupPanel(true);
-		    		popup.setGlassEnabled(true);
+		    	{ final PopupPanel popup = new PopupPanel(true, true);
+		    		popup.setStyleName(style.popup());
+		    		popup.setGlassEnabled(false);
 		    		popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 		            public void setPosition(int offsetWidth, int offsetHeight) {
 		                int left = (Window.getClientWidth() - offsetWidth) / 4;
@@ -281,12 +289,14 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	CellList<SelectModuleItem> tiles;
 	@UiField HTML title;
 	@UiField SimplePanel description;
+	@UiField Image favIcon;
 	@UiField TreeModuleViewNumworxCss style;
 	@UiField FocusPanel homeBtn;
 	@UiField InlineHTML searchBtn;
 	@UiField TextBox searchInput;
 	@UiField ToggleButton fullBtn;
 	@UiField Label loginLabel;
+	@UiField FlowPanel centerPanel;
 	
 	
 	@UiHandler("homeBtn")
@@ -459,7 +469,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				}
 			}
 		});
-		Scheduler.get().scheduleDeferred(cmd);
+		//Scheduler.get().scheduleDeferred(cmd);
 	}
 
 	Promise<List<SelectModuleItem>> getChildrenPromise(final SelectModuleItem parent) {
@@ -522,14 +532,35 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		tiles.setRowData(keyprovider.tiles);
 		switch(item.getType()) {
 		case ROOT:
-				title.setText(item.getName());
-				description.setWidget(getLabel(item));
+String AanJolanda = "Hallo Jolanda van den Berg, welkom bij Numworx!";
+				title.setText(AanJolanda);
+String Jolanda =
+"Numworkx helpt je met wiskunde en rekenen. Werken met formules lastig op een computer? Schrijf de fomule op je tablet en Numworx"
++ " zet je handschrift om in echte wiskudige invoer. Met slepen en swipen maak je grafieken. Opgaven los je in stappen op, waarbij"
++ "Numworx steeds vertelt wat je wel en niet goed doet.<br><br>"
++ "Je docent biedt les- en oefenmateriaal precies op maat aan, zodat je gericht kunt werken aan de onderwerpen die belangrijk voor"
++ "jou zijn. Dat materiaal vind je in de map in het <span style='color: #1b75BB;font-family:inherit'>linkermenu</span>.<br><br>"
++ "In de bibliotheek van Numworx is het lesmateriaal georganiseerd in schooltypen en"
++ " <span style='color:#1b75BB;font-family:inherit'>mappen</span>. In de mappen vind je "
++ "<span style='color:#1b75BB;font-family:inherit'>modules</span> en daarbinnen de <span style='color:#1b75BB;font-family:inherit'>activiteiten</span>. "
++ "Activiteiten zijn afgeronde stukken lesstof of toetsen over een bepaald onderwerp. Je kunt in alle mappen kijken en werken.<br>"
++ "Klik op een keuze in het menu aan de linkerkant om te beginnen.";
+			Widget w = new HTML(Jolanda);
+			w.getElement().getStyle().setFontSize(18, Style.Unit.PX);
+			w.getElement().getStyle().setProperty("fontFamily", "Ubuntu Condensed");
+			description.setWidget(w);
+				favIcon.setVisible(false);
+				centerPanel.setStyleName(style.centerBackground(), true);
 				((SetSelectionModel<?>) cells.getSelectionModel()).clear();
 			break;
 		case SEARCH:
 			((SetSelectionModel<?>) cells.getSelectionModel()).clear();
 		case FOLDER:
 				title.setText(item.getName());
+				String url = DWOplayer.PARAMETERS.getResource("images/courses/2.png");
+				favIcon.setUrl(url);
+				favIcon.setVisible(true);
+				centerPanel.setStyleName(style.centerBackground(), false);
 				description.setWidget(getLabel(item));
 				if(item.showChildren());
 				{
@@ -539,6 +570,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		case MODULE:
 				title.setText(item.getName());
 				description.setWidget(getLabel(item));
+				url = DWOplayer.PARAMETERS.getResource("images/courses/1.png");
+				favIcon.setUrl(url);
+				favIcon.setVisible(true);
+				centerPanel.setStyleName(style.centerBackground(), false);
 				if(item.showChildren());
 				{
 					getScosPromise(item).then(new ProvideCells());

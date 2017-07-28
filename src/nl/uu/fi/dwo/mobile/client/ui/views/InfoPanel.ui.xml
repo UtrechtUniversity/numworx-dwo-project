@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with field='pfx' type='java.lang.String'/>
 	<ui:style>
 	@def color15 #314770;
 	@def color10 #E4F2FB;
@@ -49,10 +50,10 @@
 		<g:north size="54">
 			<g:FlowPanel styleName='{style.info-header}'>
 			<g:InlineHTML styleName='{style.info-header-west}'>
-				<span class="fa-stack fa-lg">
-  					<i class="fa fa-circle-o fa-stack-2x"></i>
-  					<i class="fa fa-info fa-stack-1x"></i>
-					</span>
+				<img src='{pfx}images/numworx/info-numworx.svg'
+					height='18'
+					width='18'
+				/>
 			</g:InlineHTML>
 			<g:Label ui:field='title' styleName='{style.info-header-center}'>Logarithmen</g:Label>
 			<g:InlineHTML ui:field='closeBtn' styleName='{style.info-header-east}'><i class='fa fa-times fa-2x'></i></g:InlineHTML>		

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -24,6 +26,7 @@ public class InfoPanel extends ResizeComposite {
 	private PopupPanel parent;
 	public InfoPanel(PopupPanel popup) {
 		DockLayoutPanel root;
+		pfx = DWOplayer.PARAMETERS.getResource("");
 		initWidget(root = uiBinder.createAndBindUi(this));
 		root.forceLayout();
 		parent = popup;
@@ -32,6 +35,7 @@ public class InfoPanel extends ResizeComposite {
 	@UiField HasClickHandlers closeBtn;
 	@UiField Label title;
 	@UiField SimplePanel description;
+	@UiField String pfx;
 	
 	@UiHandler("closeBtn")
 	void close(ClickEvent e) {
