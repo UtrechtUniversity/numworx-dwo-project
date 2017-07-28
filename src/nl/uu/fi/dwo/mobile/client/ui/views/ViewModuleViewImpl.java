@@ -2,8 +2,10 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -131,6 +134,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private int[][][] beginStateMeasuredMisconceptions;
 
 	private Scorm2004IF api;
+	private DWOLogger dwologger;
 
 	public ViewModuleViewImpl(boolean b) 
 	{
@@ -1958,6 +1962,35 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	@Override
 	public void openObjectivesPanel(ScoreNavIF source) {
 		on.openObjectivesPanel(pilotObjectives);
+	}
+	
+	public void logObjectivesPanelOpen(String studentModel)
+	{
+		if(dwologger == null)
+		{
+			dwologger = new DWOLogger();
+		    dwologger.setMaxScore(0);
+		    dwologger.setLogID("StudentModelButton");
+		}
+		
+		Map<String, Object> log  = new HashMap<String, Object>();
+		log.put("success", Boolean.TRUE);
+		log.put("response", studentModel);
+		log.put("score", Collections.singletonMap("raw", 0));
+		log.put("step", "");
+		
+		dwologger.log(log);
+	}
+	
+	public void logObjectivesPanelClose()
+	{
+		Map<String, Object> log  = new HashMap<String, Object>();
+		log.put("success", Boolean.TRUE);
+		log.put("response", "close");
+		log.put("score", Collections.singletonMap("raw", 0));
+		log.put("step", "");
+		
+		dwologger.log(log);
 	}
 	
 	@Override

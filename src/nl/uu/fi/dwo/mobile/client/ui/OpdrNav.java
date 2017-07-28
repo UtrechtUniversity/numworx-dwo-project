@@ -45,6 +45,8 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.DOM;
@@ -1698,7 +1700,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		scoresObjectivesDialog = new MyDialog(true); // evt argument true
 														// meegeven voor
 														// autohide.
+		if(pilot)
+		{
+			scoresObjectivesDialog.addCloseHandler(new CloseHandler(){
 
+				@Override
+				public void onClose(CloseEvent event) {
+					entry.logObjectivesPanelClose(); 
+				}
+				
+			});
+		}
 		// Misschien geen dialogbox maar een popup. Moet in elk geval ook weer
 		// te sluiten zijn.
 		// scoresObjectivesDialog = new DialogBox(true);
@@ -1924,6 +1936,26 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		h.put("categorieScoreObjectives", categorieScoreObjectives);
 		h.put("categorieMaxObjectives", categorieMaxObjectives);
 
+		//since this method is only called when opening the student model, logging can happen here
+		//(and the calculated student model can immediately be sent to the logger)
+		String studentModel = "";
+		for(int i = 0; i < categorieScoreObjectives.length; i++)
+		{
+			if(categorieMaxObjectives[i] == 0)
+				studentModel += "0:: ";
+			else
+				studentModel += Math.round(100* categorieScoreObjectives[i]/categorieMaxObjectives[i]) + ":: ";
+			for(int j = 0; j < totaalScoreObjectives[i].length; j++)
+			{
+				if(totaalMaxObjectives[i][j] == 0)
+					studentModel += "0: ";
+				else
+					studentModel += Math.round(100*totaalScoreObjectives[i][j]/totaalMaxObjectives[i][j]) + ": ";
+			}
+			studentModel += "\n";
+		}
+		entry.logObjectivesPanelOpen(studentModel);
+		
 		return h;
 	}
 

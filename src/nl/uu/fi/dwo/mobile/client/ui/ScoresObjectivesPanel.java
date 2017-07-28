@@ -2,12 +2,14 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -75,6 +77,8 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	
 	private boolean colorNeutral;
 	private CssColor cssColorNeutral = CssColor.make(202, 222, 255);
+	
+	private DWOLogger dwologger;
 	
 	public ScoresObjectivesPanel(HashMap<String, Object> map, boolean pilot)
 	{
@@ -248,6 +252,14 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		//tbv nieuwe weergave
 		if(pilot)
 		{
+			if(dwologger == null)
+			{
+				dwologger = new DWOLogger();
+			    dwologger.setMaxScore(0);
+			    dwologger.setLogID("StudentModel");
+			}
+			
+			
 			categoryLabels = new Label[objectivesForDiagram.length];
 			margin = 10;
 			
@@ -273,6 +285,16 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 							{
 								categoryFoldedOut[j] = !categoryFoldedOut[j];
 								paint();
+								Map<String, Object> log  = new HashMap<String, Object>();
+								log.put("success", Boolean.TRUE);
+								if(categoryFoldedOut[j])
+									log.put("response", "category " + j + " opened");
+								else
+									log.put("response", "category " + j + " closed");
+								log.put("score", Collections.singletonMap("raw", 0));
+								log.put("step", "");
+								
+								dwologger.log(log);
 								break;
 							}
 						}
