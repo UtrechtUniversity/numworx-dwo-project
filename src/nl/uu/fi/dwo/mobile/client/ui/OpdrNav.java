@@ -48,6 +48,7 @@ import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -1904,6 +1905,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 				// voor elk aan deze opdracht gekoppelde leerdoel score optellen
 				// en maxscore ophogen.
+				// If score 0, then only increase maxscore if task is obligatory (teltMee). 
+				boolean teltMee = logState.get(key).isObject().get("teltMee").isBoolean().booleanValue();
+				
 				for (int i = 0; i < objectives.length; i++)
 				{
 					for (int j = 0; j < objectives[i].length; j++)
@@ -1911,16 +1915,28 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 						boolean categorieGescoord = false;
 						if (logObjectives.get(i).isArray().get(j).isBoolean().booleanValue())
 						{
-							totaalScoreObjectives[i][j] += score;
-							totaalMaxObjectives[i][j]++;
-							if (!categorieGescoord)
+							if(score > 0)
 							{
-								categorieScoreObjectives[i] += score;
-								categorieMaxObjectives[i]++;
-								categorieGescoord = true;
+								totaalScoreObjectives[i][j] += score;
+								totaalMaxObjectives[i][j]++;
+								if (!categorieGescoord)
+								{
+									categorieScoreObjectives[i] += score;
+									categorieMaxObjectives[i]++;
+									categorieGescoord = true;
+								}
 							}
+							else if(teltMee)
+							{
+								totaalMaxObjectives[i][j]++;
+								if (!categorieGescoord)
+								{
+									categorieMaxObjectives[i]++;
+									categorieGescoord = true;
+								}
+							}
+							
 						}
-
 					}
 				}
 			}

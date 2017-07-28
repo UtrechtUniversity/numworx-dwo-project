@@ -403,6 +403,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						String Formule = isVergelijkingVak ? "Vergelijking" : "Formule";
 						logging.setClassName("fi.wiskOpdr.SimpelAntwoord"+Formule+"Vak");
 						dwoLogger.setLogObjectives(logObjectives);
+						dwoLogger.setTeltMee(teltMee);
 						
 						
 						

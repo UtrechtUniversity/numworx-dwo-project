@@ -675,6 +675,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 			dwologger.setLogID(logID);
 			dwologger.setMaxScore(scoreMax);
 			dwologger.setLogObjectives(logObjectives);
+			dwologger.setTeltMee(teltMee);
 		}
 
 		

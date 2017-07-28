@@ -342,6 +342,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				if(map.containsKey("logIDLabel"))
 					dwologger.setLogIDLabel(map.getString("logIDLabel"));
 				dwologger.setLogObjectives(logObjectives);
+				dwologger.setTeltMee(teltMee);
 				logging = dwologger;
 			}
 			if (map.containsKey("boxMetRand"))

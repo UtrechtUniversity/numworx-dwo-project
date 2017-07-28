@@ -184,6 +184,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 				dwologger.setLogID(logID);
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setLogObjectives(logObjectives);
+				dwologger.setTeltMee(teltMee);
 			}
 
 		}

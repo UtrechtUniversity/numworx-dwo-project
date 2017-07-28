@@ -268,6 +268,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					dwologger.setLogIDLabel(launchStateMap.getString("logIDLabel"));
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setLogObjectives(logObjectives);
+				dwologger.setTeltMee(teltMee);
 			}
 			
 			rmknop = !isVergelijkingVak && launchStateMap.getBoolean("rmKnop", false);

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -35,6 +36,7 @@ public class DWOLogger implements Logging {
 	private JSONString logIDLabel;
 	private boolean[][] logObjectives;
 	private int errorCount, attemptsCount;
+	private JSONBoolean teltMee;
 
 	public DWOLogger() {
 		this(DWOplayer.PARAMETERS.getLogging());
@@ -67,6 +69,8 @@ public class DWOLogger implements Logging {
 			map.put(LOGKEY_MAXSCORE, maxScore);
 		if(logIDLabel != null)
 			map.put("logIDLabel", logIDLabel);
+		if(teltMee != null)
+			map.put("teltMee", teltMee);
 		if (error) errorCount++;
 		map.put(LOG_ERROR_COUNT, new JSONNumber(errorCount));
 		attempts.set(attemptsCount, new JSONString(attempt));
@@ -92,6 +96,8 @@ public class DWOLogger implements Logging {
 			map.put(LOGKEY_MAXSCORE, maxScore);
 		if(logIDLabel != null)
 			map.put("logIDLabel", logIDLabel);
+		if(teltMee != null)
+			map.put("teltMee", teltMee);
 		map.put(LOG_ERROR_COUNT, new JSONNumber(errorCount));
 		map.put(LOG_ATTEMPTS_COUNT, new JSONNumber(attemptsCount));
 		if(logIDLabel != null)
@@ -192,6 +198,10 @@ public class DWOLogger implements Logging {
 		this.logObjectives = logObjectives;
 		if(logObjectives != null)
 			map.put("logObjectives", JSONUtilities.toJSONArray(logObjectives));
+	}
+	
+	public void setTeltMee(boolean teltMee) {
+		this.teltMee = JSONBoolean.getInstance(teltMee);
 	}
 	
 	public void setLogIDLabel(String label) {
