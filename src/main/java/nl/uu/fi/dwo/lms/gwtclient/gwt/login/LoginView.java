@@ -54,14 +54,21 @@ public class LoginView extends Composite implements ClickHandler, LoginPresenter
         loginPresenter = lp;
         //controller must be before clicks occur
         loginBtn.addClickHandler(this);
-
+        //parse test if it exists.
+        String testString = com.google.gwt.user.client.Window.Location.getParameter("test");
+        Boolean test = false;
+        if (testString != null && !testString.isEmpty()) {
+        	usernameText.setText("gert_project");
+                passwordTextBox.setText("passw");
+        }	
+                
     }
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == loginBtn) {
             LOG.log(Level.INFO, "Login button clicked.");
             loginPresenter.loginClicked(this.usernameText.getText(), this.passwordTextBox.getText(), switchSchoolBox.getValue());
-            //            curUser.setPassword("passw"); //md5Hash = d79096188b670c2f81b7001f73801117
+            //            curUser.setPassword("passw"); //md5Hash = d79096188b670c2f81b7001f73801117 
         }
     }
 
