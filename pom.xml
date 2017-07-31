@@ -30,7 +30,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-        <dwoVersion>2.1.17</dwoVersion>
+        <dwoVersion>2.1.18-SNAPSHOT</dwoVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.test.skip>true</maven.test.skip>
         <!-- Convenience property to set the GWT version -->
@@ -159,12 +159,12 @@
                     <execution>
                         <configuration>
                             <module>nl.uu.fi.dwo.lms.gwtclient.gwtclient</module>
- 							<i18nConstantsBundles>
- 								<i18nConstantsBundle>nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages</i18nConstantsBundle>
- 							</i18nConstantsBundles>
+                            <i18nConstantsBundles>
+                                <i18nConstantsBundle>nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages</i18nConstantsBundle>
+                            </i18nConstantsBundles>
                         </configuration>                           
                         <goals>
-                        	<goal>i18n</goal>
+                            <goal>i18n</goal>
                             <goal>compile</goal>
                             <goal>generateAsync</goal>
                             <goal>test</goal>
@@ -172,19 +172,19 @@
                     </execution>
                 </executions>
             </plugin> 
-<!--             <plugin> -->
-<!--                 <groupId>org.apache.maven.plugins</groupId> -->
-<!--                 <artifactId>maven-source-plugin</artifactId> -->
-<!--                 <version>3.0.1</version> -->
-<!--                 <executions> -->
-<!--                     <execution> -->
-<!--                         <id>attach-sources</id> -->
-<!--                         <goals> -->
-<!--                             <goal>jar</goal> -->
-<!--                         </goals> -->
-<!--                     </execution> -->
-<!--                 </executions> -->
-<!--             </plugin> -->
+            <!--             <plugin> -->
+            <!--                 <groupId>org.apache.maven.plugins</groupId> -->
+            <!--                 <artifactId>maven-source-plugin</artifactId> -->
+            <!--                 <version>3.0.1</version> -->
+            <!--                 <executions> -->
+            <!--                     <execution> -->
+            <!--                         <id>attach-sources</id> -->
+            <!--                         <goals> -->
+            <!--                             <goal>jar</goal> -->
+            <!--                         </goals> -->
+            <!--                     </execution> -->
+            <!--                 </executions> -->
+            <!--             </plugin> -->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.0.0</version>

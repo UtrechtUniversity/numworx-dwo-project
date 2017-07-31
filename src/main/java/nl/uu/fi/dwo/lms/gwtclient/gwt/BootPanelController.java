@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
+import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +18,7 @@ import org.osgi.util.promise.Promise;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 
 /**
  * Controller for Login.
@@ -34,6 +36,7 @@ class BootPanelController {
     static {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
+        Dwo2LocaleMessageTranslator.setTranslator(new Dwo2LocaleMessageGWTTranslator());
     }
 
     EventBus eventBus;

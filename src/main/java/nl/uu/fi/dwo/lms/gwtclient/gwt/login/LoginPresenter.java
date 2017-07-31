@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -73,9 +74,10 @@ public class LoginPresenter {
                         //that might break the running thread.
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                         eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                    } else {
+                  } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError,fail.getMessage())));
+//                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                         //throw directly
                     }
                 }

@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Logger;
-import org.osgi.util.promise.Promise;
 
 /**
  * Handler for for Login actions.
@@ -23,7 +22,6 @@ public class MsgConfirmDialogPresenter implements ConfirmDialogEventHandler {
         Widget asWidget();
         void clear();
         void init();
-//        void showDialog(String text);
         void showConfirmDialog(String text);
     }
 
