@@ -24,7 +24,7 @@
                 <g:row></g:row>
                 <g:row>
                     <g:customCell>
-                        <g:CheckBox ui:field='switchSchoolBox' checked="false"><ui:text from='{rb.GUI_SwitchSchool}'</g:CheckBox>
+                        <g:CheckBox ui:field='switchSchoolBox' checked="false"><ui:text from='{rb.GUI_SwitchSchool}'/></g:CheckBox>
                     </g:customCell>
                     <g:customCell>
                         <g:Button ui:field='loginBtn'><ui:text from='{rb.GUI_Login}'/></g:Button>
