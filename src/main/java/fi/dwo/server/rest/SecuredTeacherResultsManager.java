@@ -109,7 +109,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             }
             profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(domProfile));
             if (profile == null) {
-                LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using unknown profileId {1} in HasRole differs from user principal name {0}.", new Object[]{sc.getUserPrincipal().getName(), domProfile.getId()});
+                LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using unknown profileId {1}.", new Object[]{sc.getUserPrincipal().getName(), domProfile.getId()});
                 throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
         } catch (Dwo2Exception ex) {
@@ -206,6 +206,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 List<PersistentClassCourse> ccList = ClassCourseManager.findEntities(schoolClass);
                 ccList.forEach((classCourse) -> {
                     //fetch course and check profile
+                    //TODO optimize and fetch only leaves for the current profile and set the parent node to 0?
                     PersistentCourse course = CourseManager.findEntity(classCourse.getCourseID());
                     //note currently one class course per higher tree node
                     if (course != null && !course.isWithChildren()
@@ -297,6 +298,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
             for (PersistentScoContext sco : scosMap.values()) {
                 for (PersistentHasRolePK hasRoleKey : studentHasRoleSet) {
+                    //TODO optimize
                     List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findEntities(sco, hasRoleKey);
                     studentScos.forEach((studentSco) -> {
                         studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
