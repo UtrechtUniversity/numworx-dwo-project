@@ -13,22 +13,22 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
 @XmlRootElement
-public class DomCoursesOfSchoolClass extends DomClassCoursesOfSchoolClass {
-    private static Logger LOG = Logger.getLogger(DomCoursesOfSchoolClass.class.getName());
+public class DomCoursesOfSchoolClass4Teacher extends DomClassCoursesOfSchoolClass {
+    private static Logger LOG = Logger.getLogger(DomCoursesOfSchoolClass4Teacher.class.getName());
 
-    private List<DomMapEntry<PersistenceId, DomCourseStudent>> courses;
+    private List<DomMapEntry<PersistenceId, DomCourse>> courses;
 
     /**
      * @return the courses
      */
-    public List<DomMapEntry<PersistenceId, DomCourseStudent>> getCourses() {
+    public List<DomMapEntry<PersistenceId, DomCourse>> getCourses() {
         return courses;
     }
 
     /**
      * @param courses the courses to set
      */
-    public void setCourses(List<DomMapEntry<PersistenceId, DomCourseStudent>> courses) {
+    public void setCourses(List<DomMapEntry<PersistenceId, DomCourse>> courses) {
         this.courses = courses;
     }
 
