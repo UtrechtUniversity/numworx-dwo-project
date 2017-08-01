@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogPromise;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -37,9 +39,13 @@ public class SchoolclassesPresenter {
     private Display view;
 
     public interface Display {
+
         Widget asWidget();
+
         void clear();
+
         void init();
+
         void updateView(Map<String, SchoolclassesPresenter.ClassItem> data);
     }
 
@@ -119,6 +125,39 @@ public class SchoolclassesPresenter {
     }
 
     private void removeSchoolClass(DomSchoolClass schoolClass) {
+        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure you want to remove schoolclass" + schoolClass.getSchoolClassName() + ".");
+        p.getPromise().then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                LOG.log(Level.INFO, "returned value" + resolved.getValue());
+                if (resolved.getValue() == true) {
+                    executeRemoveSchoolClass(schoolClass);
+                } else {
+                    //do nothing.
+                }
+                return null;
+            }
+        }, new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }
+        );
+
+        eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
+    }
+
+    private void executeRemoveSchoolClass(DomSchoolClass schoolClass) {
+
         Promise<Boolean> promise;
         promise = manager.removeSchoolClass(schoolClass);
         // onSuccess update view
@@ -151,11 +190,12 @@ public class SchoolclassesPresenter {
         });
     }
 
-    /**
-     * @param item
-     * @param op
-     */
-    public void selectItem(ClassItem item, int op) {
+
+/**
+ * @param item
+ * @param op
+ */
+public void selectItem(ClassItem item, int op) {
         switch (op) {
             case 1:
                 editSchoolClass(item);
@@ -176,6 +216,7 @@ public class SchoolclassesPresenter {
                 throw new UnsupportedOperationException("Not supported yet."); 
         }
     }
+
 
     void editSchoolClass(ClassItem item) {
          eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditSchoolClass, schoolClassMap.get(item.key)));

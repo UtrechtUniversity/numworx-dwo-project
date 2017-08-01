@@ -103,37 +103,48 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
     }
 
     void goBackToStudentsInSchoolclass() {
-        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
-        p.getPromise().then(new Success<Boolean, Void>() {
-            @Override
-            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                LOG.log(Level.INFO, "returned value" + resolved.getValue());
-                if (resolved.getValue() == true) {
-                    SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass);
-                    eventBus.fireEvent(event);
-                }else{
-                    //do nothing.
-                }
-                return null;
-            }
-        }, new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                    //throw directly
-                }
+        boolean flag = false;
+        for (AddStudentsPresenter.StudentItem item : studentItems) {
+            if (item.spare == false) {
+                flag = true;
+                break;
             }
         }
-        );
+        if (flag) {
+            ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
+            p.getPromise().then(new Success<Boolean, Void>() {
+                @Override
+                public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                    LOG.log(Level.INFO, "returned value" + resolved.getValue());
+                    if (resolved.getValue() == true) {
+                        SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass);
+                        eventBus.fireEvent(event);
+                    } else {
+                        //do nothing.
+                    }
+                    return null;
+                }
+            }, new Failure() {
+                @Override
+                public void fail(Promise<?> resolved) throws Exception {
+                    Throwable fail = resolved.getFailure();
+                    if (fail instanceof Dwo2Exception) {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    } else {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        //throw directly
+                    }
+                }
+            }
+            );
 
-        eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
-
+            eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
+        } else {
+            SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass);
+            eventBus.fireEvent(event);
+        }
     }
 
     /**

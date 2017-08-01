@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogPromise;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -215,7 +217,39 @@ public class TeachersInSchoolclassPresenter {
     }
 
     void goBackToSchoolClasses() {
+        if (teacherItems.size()!=0) {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+        }else{
+            ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there are no teachers in the class.");
+            p.getPromise().then(new Success<Boolean, Void>() {
+                @Override
+                public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                    LOG.log(Level.INFO, "returned value" + resolved.getValue());
+                    if (resolved.getValue() == true) {
+                          eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                    } else {
+                        //do nothing.
+                    }
+                    return null;
+                }
+            }, new Failure() {
+                @Override
+                public void fail(Promise<?> resolved) throws Exception {
+                    Throwable fail = resolved.getFailure();
+                    if (fail instanceof Dwo2Exception) {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    } else {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        //throw directly
+                    }
+                }
+            }
+            );
+
+            eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
+        }
     }
 
     public void removeSelectedFromSchoolClass() {
@@ -231,7 +265,8 @@ public class TeachersInSchoolclassPresenter {
         tmp = 0;
 //        LOG.log(Level.INFO, "targetSchoolClass<key,name> "+targetSchoolClass.getId().getIdString() + " "+targetSchoolClass.getSchoolClassName());
         for (TeacherItem item : teacherItems.values()) {
-            if (item.selected == true) {
+            if (item.selected == true && !item.usercode.equals(dwoGlobalVars.getCurrentUser().getUserName())) {
+                //can't remove yourself.
                 tmp++;
                 final int index = tmp;
                 //remove from schoolclass and clear item to signal success                
@@ -248,7 +283,7 @@ public class TeachersInSchoolclassPresenter {
                     public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                         if (resolved.getValue().booleanValue() == true) {
                             teacherItems.get(fItem.key).selected = false;
-                            if (index % 10 == 0 || index == cnt) {
+                            if (index == cnt) {
                                 updateViewData(schoolClass);
                                 updateTeacherList();
                             }
