@@ -1,16 +1,18 @@
-	@def color15 #314770;
-	@def color10 #E4F2FB;
-	@def color12 #AAC1DC;
-	@def color13 #7297C7;
-	@def color14 #1B75BB;
-	@def medium 500;
-	@def regular 400;
+@eval favicon nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.getFaviconUrl();
+@eval foldericon nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.getFolderUrl();
+@def color15 #314770;
+@def color10 #E4F2FB;
+@def color12 #AAC1DC;
+@def color13 #7297C7;
+@def color14 #1B75BB;
+@def medium 500;
+@def regular 400;
 
-		.rootPanel {
-			height: 100%;
-			width: 1024px;
-			font-family: "Ubuntu" !important;
-		}
+.rootPanel {
+	height: 100%;
+	width: 1024px;
+	font-family: "Ubuntu" !important;
+}
 
 		.headerPanel {
 			background-color: color15;
@@ -43,11 +45,19 @@
 			overflow-y: scroll;
 }
 .centerBackground {	
-			background-size: 360px 349px;
-			background-repeat: no-repeat;
-			background-position: 460px 20px;
-			background-image: url("http://127.0.0.1:8889/images/numworx/favicon-numworx-wit.svg")
-		}
+	background-size: 360px 349px;
+	background-repeat: no-repeat;
+	background-position: 460px 20px;
+	background-image: favicon;
+}
+
+.folderBackground {
+	background-size: 360px 360px;
+	background-repeat: no-repeat;
+	background-position: 460px 20px;
+	background-image: foldericon;
+	
+}
 		.title {
 			font-size: 18px;
 			margin-bottom: 20px;
@@ -170,6 +180,7 @@
 			position: relative;
 			border-bottom-color: color12;
 		}
+
 		.tileHeader {
 			width: 247px;
 			height: 32px;
@@ -180,7 +191,15 @@
 			line-height: 16px;
 			padding-left: 5px;
 			font-family: Ubuntu;
+			display: table;
 		}
+		
+		.tileSpan {
+			display: table-cell;
+			vertical-align: middle;
+		}
+		
+		
 		.tileFooter {
 			width: 252px;
 			height: 22px;
@@ -193,8 +212,18 @@
 			border-bottom-color: inherit;
 			width: 252px;
 			height: 160px;
-			background-color: #E4F2FB;		
+			background-color: #E4F2FB;
+			display: table;
 		}
+		.tileBodySpan {
+			display: table-cell;
+			vertical-align: middle;
+		}
+		.tileBodyImg {
+			display: inherit;
+			margin: auto;
+		}
+		
 		.tileResult {
 			display: inline-block;
 			vertical-align: bottom;

@@ -143,24 +143,27 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					</g:FlowPanel>
 */			
 			sb.appendHtmlConstant("<div class='"+style.tile()+"'>");
-			  sb.appendHtmlConstant("<div class='" + style.tileHeader() + "'>");
+			  sb.appendHtmlConstant("<div class='" + style.tileHeader() + "'><span class='" + style.tileSpan() + "'>");
 			    sb.appendEscaped(value.getName());
-			  sb.appendHtmlConstant("</div>");
+			  sb.appendHtmlConstant("</span></div>");
 
 			  sb.appendHtmlConstant("<div class='" + style.tileBody() + "'>");
 			    String description = value.getDescription();
 			    Type typeof = value.getType();
 				if(true || description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
 					flip = ( flip  ) % 5+1;
+					sb.appendHtmlConstant("<span class='" + style.tileBodySpan() + "'>");
 					switch(typeof) {
 			    	case MODULE: 
-			    		sb.appendHtmlConstant("<img style='height: 85px; margin: auto auto;' src='"
+			    		sb.appendHtmlConstant("<img style='height: 85px' src='"
 			    				+ r("images/numworx/module-numworx.svg")
-			    				+ "' />");
+			    				+ "' class='" + style.tileBodyImg()
+			    				+ "'/>");
 			    		break;
 			    	case FOLDER:
-			    		sb.appendHtmlConstant("<img style='height: 85px; margin: auto auto;' src='"
+			    		sb.appendHtmlConstant("<img style='height: 85px' src='"
 			    				+ r("images/numworx/folder-numworx.svg")
+			    				+ "' class='" + style.tileBodyImg()
 			    				+ "' />");
 			    		break;
 			    	case SCO:
@@ -169,15 +172,17 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			    				+ r("images/courses/"
 			    						+ flip
 			    						+ ".png")
+			    				+ "' class='" + style.tileBodyImg()
 			    				+ "' />");
 			    		else 
-			    			sb.appendHtmlConstant("<img style='height: 85px; margin: auto auto;' src='"
+			    			sb.appendHtmlConstant("<img style='height: 85px' src='"
 			    				+ r("images/numworx/activiteit_numworx.svg")
+			    				+ "' class='" + style.tileBodyImg()
 			    				+ "' />");
 			    		break;
 			    	default:
 			    	}
-			    	
+			    	sb.appendHtmlConstant("</span>");
 			    	
 			    } else {
 			    	if(description.startsWith("<html"))
@@ -230,11 +235,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  
 			
 		}
-		
-		private String r(String string) {
-			return DWOplayer.PARAMETERS.getResource(string);
-		}
-
+	
 		public TileCell() {
 			super("click");
 		}
@@ -391,6 +392,22 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@UiField(provided=true)
 	MenuItem user;
 	
+	static String getFaviconUrl() {
+		return "url('"+
+				r("images/numworx/favicon-numworx-wit.svg") +
+				"')";	
+	}
+
+	static String getFolderUrl() {
+		return "url('"+
+				r("images/numworx/folder-wit-numworx.svg") +
+				"')";	
+	}
+	
+	private static String r(String string) {
+		return DWOplayer.PARAMETERS.getResource(string);
+	}
+
 	interface TreeModuleViewNumworxUiBinder extends UiBinder<Widget, TreeModuleViewNumworx> {
 	}
 
@@ -406,7 +423,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		tiles.addStyleName(cellResources.cellListStyle().tileCellList());
 		SingleSelectionModel<SelectModuleItem> model = new SingleSelectionModel<SelectModuleItem>(keyprovider);
 		tiles.setSelectionModel(model);
-		pfx = DWOplayer.PARAMETERS.getResource("");
+		pfx = r("");
         final int correctie = 10; // width popup 
 		user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
             @Override
@@ -556,21 +573,23 @@ String Jolanda =
 + "Klik op een keuze in het menu aan de linkerkant om te beginnen.";
 			Widget w = new HTML(Jolanda);
 			w.getElement().getStyle().setFontSize(18, Style.Unit.PX);
-			w.getElement().getStyle().setProperty("fontFamily", "Ubuntu Condensed");
+			w.getElement().getStyle().setProperty("fontFamily", "Ubuntu");
 			description.setWidget(w);
 				favIcon.setVisible(false);
 				centerPanel.setStyleName(style.centerBackground(), true);
+				centerPanel.setStyleName(style.folderBackground(), false);
 				((SetSelectionModel<?>) cells.getSelectionModel()).clear();
 			break;
 		case SEARCH:
 			((SetSelectionModel<?>) cells.getSelectionModel()).clear();
 		case FOLDER:
 				title.setText(item.getName());
-				String url = DWOplayer.PARAMETERS.getResource("images/courses/2.png");
+				String url = r("images/courses/2.png");
 				favIcon.setUrl(url);
-				flip = (flip%5)+1;
+				flip = (flip%5)+1; flip=1;
 				favIcon.setVisible(flip!=1);
-				centerPanel.setStyleName(style.centerBackground(), flip==1);
+				centerPanel.setStyleName(style.folderBackground(), flip==1);
+				centerPanel.setStyleName(style.centerBackground(), false);
 				description.setWidget(getLabel(item));
 				if(item.showChildren());
 				{
@@ -580,10 +599,11 @@ String Jolanda =
 		case MODULE:
 				title.setText(item.getName());
 				description.setWidget(getLabel(item));
-				url = DWOplayer.PARAMETERS.getResource("images/courses/1.png");
+				url = r("images/courses/1.png");
 				favIcon.setUrl(url);
 				favIcon.setVisible(true);
 				centerPanel.setStyleName(style.centerBackground(), false);
+				centerPanel.setStyleName(style.folderBackground(), false);
 				if(item.showChildren());
 				{
 					getScosPromise(item).then(new ProvideCells());
