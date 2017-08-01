@@ -9,6 +9,7 @@ import com.google.gwt.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
@@ -30,6 +31,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final ResultsPresenter resultsPresenter;
     private final ScoResultsPresenter scoResultsPresenter;
     private final SchoolclassesPresenter schoolclassesPresenter;
+    private final CoursesOfSchoolclassPresenter coursesOfSchoolclassPresenter;
     private final StudentsInSchoolclassPresenter studentsInSchoolclassPresenter;
     private final TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
     private final AccountPresenter accountPresenter;
@@ -51,6 +53,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
         switchSchoolPresenter = new SwitchSchoolPresenter(eventBus, dwoGlobalVars);
         scoResultsPresenter = new ScoResultsPresenter(eventBus, dwoGlobalVars);
         schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
+        coursesOfSchoolclassPresenter = new CoursesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
         studentsInSchoolclassPresenter = new StudentsInSchoolclassPresenter(eventBus, dwoGlobalVars);
         teachersInSchoolclassPresenter = new TeachersInSchoolclassPresenter(eventBus, dwoGlobalVars);
         accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars);
@@ -114,9 +117,14 @@ public class PresenterFactoryImpl implements PresenterFactory {
         return schoolclassesPresenter;
     }
 
+    public CoursesOfSchoolclassPresenter getCoursesOfSchoolclassPresenter(){
+        return coursesOfSchoolclassPresenter;
+    }
+    
     public StudentsInSchoolclassPresenter getStudentsInSchoolclassPresenter(){
         return studentsInSchoolclassPresenter;
     }
+
     /**
      * @return the accountPresenter
      */

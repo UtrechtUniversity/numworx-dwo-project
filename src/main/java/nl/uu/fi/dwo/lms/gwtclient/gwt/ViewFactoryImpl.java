@@ -16,6 +16,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
@@ -42,6 +44,7 @@ public class ViewFactoryImpl implements ViewFactory {
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AccountPresenter.Display accountView;
     private final AddSchoolclassPresenter.Display addSchoolclassView;
+    private final CoursesOfSchoolclassPresenter.Display coursesOfSchoolclassView;
     private final StudentsInSchoolclassPresenter.Display studentsInSchoolclassView;
     private final TeachersInSchoolclassPresenter.Display teachersInSchoolclassView;
     private final EditSchoolclassPresenter.Display editSchoolclassView;
@@ -61,6 +64,7 @@ public class ViewFactoryImpl implements ViewFactory {
         //ordered!
         schoolclassesView = new SchoolclassesView(pf.getSchoolclassesPresenter(), this);
         addSchoolclassView = new AddSchoolclassView(pf.getAddSchoolclassPresenter());
+        coursesOfSchoolclassView = new CoursesOfSchoolclassView(pf.getCoursesOfSchoolclassPresenter());
         studentsInSchoolclassView = new StudentsInSchoolclassView(pf.getStudentsInSchoolclassPresenter());
         teachersInSchoolclassView = new TeachersInSchoolclassView(pf.getTeachersInSchoolclassPresenter());
         editSchoolclassView = new EditSchoolclassView(pf.getEditSchoolclassPresenter());
@@ -111,6 +115,11 @@ public class ViewFactoryImpl implements ViewFactory {
         return addSchoolclassView;
     }
 
+    @Override
+    public CoursesOfSchoolclassPresenter.Display getCoursesOfSchoolclassView() {
+        return coursesOfSchoolclassView;
+    }
+    
     @Override
     public StudentsInSchoolclassPresenter.Display getStudentsInSchoolclassView() {
         return studentsInSchoolclassView;

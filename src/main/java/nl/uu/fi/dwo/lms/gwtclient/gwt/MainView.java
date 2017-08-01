@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassView;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -100,6 +101,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @UiField(provided = true)
     SchoolclassesView schoolclassesView;
     @UiField(provided = true)
+    CoursesOfSchoolclassView coursesOfSchoolclassView;
+    @UiField(provided = true)
     StudentsInSchoolclassView studentsInSchoolclassView;
     @UiField(provided = true)
     AddStudentsView addStudentsView;
@@ -142,6 +145,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         switchSchoolView = (SwitchSchoolView) clientFactory.getSwitchSchoolView();
         scoResultsView = (ScoResultsView) clientFactory.getScoResultsView();
         schoolclassesView = (SchoolclassesView) clientFactory.getSchoolclassesView();
+        coursesOfSchoolclassView = (CoursesOfSchoolclassView) clientFactory.getCoursesOfSchoolclassView();
         studentsInSchoolclassView = (StudentsInSchoolclassView) clientFactory.getStudentsInSchoolclassView();
         addStudentsView = (AddStudentsView) clientFactory.getAddStudentsView();
         teachersInSchoolclassView = (TeachersInSchoolclassView) clientFactory.getTeachersInSchoolclassView();
@@ -253,6 +257,12 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @Override
     public void showSchoolclassesView() {
         int index = mainDeckPanel.getWidgetIndex(schoolclassesView.asWidget());
+        mainDeckPanel.showWidget(index);
+    }
+
+    @Override
+    public void showCoursesOfSchoolclassView() {
+        int index = mainDeckPanel.getWidgetIndex(coursesOfSchoolclassView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 

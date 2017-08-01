@@ -6,15 +6,6 @@
     <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
         <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="addStudentsBtn">add more students</g:Button>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="deleteSelectedBtn">delete selected students</g:Button>
-           
-            <g:Button addStyleNames='{dwoStyle.dwoButton} float:right' ui:field="addToSchoolClass">add to schoolclass</g:Button>
-            <g:ListBox addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="schoolClassListBox">
-                <g:item>
-                    Loading...
-                </g:item>
-            </g:ListBox>
 <!--            <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftFullBox}' ui:field="backBtn">back</g:Button>
             <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftHalfBox}' ui:field="addStudentsBtn">add more students</g:Button>
             <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftHalfBox}' ui:field="deleteSelectedBtn">delete selected students</g:Button>
@@ -28,8 +19,9 @@
         </g:FlowPanel>
             <g:FlowPanel height="2em">
         </g:FlowPanel>
-        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" ui:field='dataGrid'/>
-        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
+        <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
+            <g:Tree ui:field='tree' height="auto"></g:Tree><c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" ui:field='dataGrid'/>
+        </g:FlowPanel>        
     </g:FlowPanel>
     <!--    <g:LayoutPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
     <g:layer>-->

@@ -50,6 +50,8 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
         public void showSchoolclassesView();
         
+        public void showCoursesOfSchoolclassView();
+
         public void showStudentsInSchoolclassView();
         
         public void showAddStudentsView();
@@ -142,6 +144,9 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
                 break;
             case SCHOOLCLASSES:
                 display.showSchoolclassesView();
+                break;
+            case COURSESOFSCHOOLCLASS:
+                display.showCoursesOfSchoolclassView();
                 break;
             case STUDENTSINSCHOOLCLASS:
                 display.showStudentsInSchoolclassView();

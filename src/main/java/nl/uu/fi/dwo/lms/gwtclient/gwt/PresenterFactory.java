@@ -9,6 +9,7 @@ import com.google.gwt.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
@@ -29,6 +30,7 @@ public interface PresenterFactory {
     public ResultsPresenter getResultsPresenter();
     public ScoResultsPresenter getScoResultsPresenter();
     public SchoolclassesPresenter getSchoolclassesPresenter();
+    public CoursesOfSchoolclassPresenter getCoursesOfSchoolclassPresenter();
     public StudentsInSchoolclassPresenter getStudentsInSchoolclassPresenter();
     public TeachersInSchoolclassPresenter getTeachersInSchoolclassPresenter();
     public AccountPresenter getAccountPresenter();

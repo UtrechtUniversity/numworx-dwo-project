@@ -14,18 +14,10 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.cellview.client.SimplePager;
-import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.ListDataProvider;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,25 +37,13 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 
     @UiField(provided = true)
     CellTable dataGrid;
-//    @UiField(provided = true)            
-//    CellList dataGrid;
-    @UiField(provided = true)
-    SimplePager pager;
+    @UiField(provided = true)            
+    Tree tree;
     @UiField
     Button backBtn;
-    @UiField
-    Button addStudentsBtn; // single school students
-    @UiField
-    Button addToSchoolClass;
-    @UiField
-    Button deleteSelectedBtn;
-    @UiField
-    ListBox schoolClassListBox;
 
     private CoursesOfSchoolclassPresenter coursesOfSchoolclassPresenter;
     private CoursesOfSchoolclassPresenter.CourseItem selected;
-    private ListDataProvider<CoursesOfSchoolclassPresenter.CourseItem> dataProvider = new ListDataProvider<CoursesOfSchoolclassPresenter.CourseItem>();
-    private List<SchoolClassListBoxItem> schoolClassList;
     private MyCheckBoxCell checkBox;
 
     public class MyCell extends AbstractCell<String> {
@@ -135,7 +115,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             }
             super.onBrowserEvent(context, parent, value, event, valueUpdater);
             if ("change".equals(event.getType())) {
-                coursesOfSchoolclassPresenter.selectItem((CoursesOfSchoolclassPresenter.CourseItem) context.getKey(), 5);
+//                coursesOfSchoolclassPresenter.selectItem((CoursesOfSchoolclassPresenter.CourseItem) context.getKey(), 5);
                 LOG.log(Level.INFO, "key " + context.getKey() + " boolean " + value);
             }
         }
@@ -146,6 +126,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         coursesOfSchoolclassPresenter.setView(this);
         String[] tableHeaders = sp.getTableHeaders();
         dataGrid = new CellTable<String>();
+        tree = new Tree();
 //        schoolClassListBox = new ValueListBox<SchoolClassItem>(new Renderer<SchoolClassItem>() {
 //
 //            public String render(SchoolClassListBoxItem item) {                
@@ -321,10 +302,6 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //            }
 //        });
         backBtn.addClickHandler(this);
-        deleteSelectedBtn.addClickHandler(this);
-        addStudentsBtn.addClickHandler(this);
-        addToSchoolClass.addClickHandler(this);
-        schoolClassListBox.addChangeHandler(this);
     }
 
     public void init() {
@@ -339,16 +316,6 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
     public void onClick(ClickEvent event) {
         if (event.getSource() == backBtn) {
             coursesOfSchoolclassPresenter.goBackToSchoolClasses();
-        } else if (event.getSource() == addStudentsBtn) {
-            coursesOfSchoolclassPresenter.addStudents();
-        } else if (event.getSource() == deleteSelectedBtn) {
-            coursesOfSchoolclassPresenter.removeSelectedFromSchoolClass();
-        } else if (event.getSource() == addToSchoolClass) {
-            coursesOfSchoolclassPresenter.addSelectedToSchoolClass(schoolClassList.get(schoolClassListBox.getSelectedIndex()).getKey());
-//        } else if (event.getSource() == schoolClassListBox) {
-//            studentsInSchoolclassPresenter.updateSchoolClasses();
-//        } else if (event.getSource() == checkBox) {
-//
         }
     }
 
@@ -358,24 +325,15 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
     }
 
     public void updateView(Map<String, CoursesOfSchoolclassPresenter.CourseItem> data) {
-        dataProvider.getList().clear();
-        dataProvider.getList().addAll(data.values());
-        dataProvider.refresh();
-    }
-
-    public void updateCourseList(List<SchoolClassListBoxItem> data) {
-        schoolClassList = data;
-
-        schoolClassListBox.clear();
-        for (SchoolClassListBoxItem item : data) {
-            schoolClassListBox.addItem(item.getSchoolclassName());
-        }
+//        dataProvider.getList().clear();
+//        dataProvider.getList().addAll(data.values());
+//        dataProvider.refresh();
     }
 
     private void cellSelected(int row, int column) {
-        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).usercode + " " + dataGrid.getHeader(column).getValue());
-        dataGrid.getHeader(column);
-        coursesOfSchoolclassPresenter.selectItem((CoursesOfSchoolclassPresenter.CourseItem) dataProvider.getList().get(row), column);
+//        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).usercode + " " + dataGrid.getHeader(column).getValue());
+//        dataGrid.getHeader(column);
+//        coursesOfSchoolclassPresenter.selectItem((CoursesOfSchoolclassPresenter.CourseItem) dataProvider.getList().get(row), column);
     }
 
 }

@@ -36,6 +36,7 @@
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="accountView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="switchSchoolView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="schoolclassesView"/>
+                    <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="coursesOfSchoolclassView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="studentsInSchoolclassView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="addStudentsView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="teachersInSchoolclassView" />
