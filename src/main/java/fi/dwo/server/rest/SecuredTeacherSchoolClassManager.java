@@ -45,6 +45,7 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
+import java.text.MessageFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,7 +66,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
@@ -942,9 +942,9 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 
     @PUT
     @Produces({"application/json"})
-    @Path("/get")
-    public DomCoursesOfSchoolClass4Teacher get(@Context SecurityContext sc, RestSchoolClassAndProfile rest) throws Dwo2Exception {
-// verify user is student of class
+    @Path("/getModules")
+    public DomCoursesOfSchoolClass4Teacher getModules(@Context SecurityContext sc, RestSchoolClassAndProfile rest) throws Dwo2Exception {
+        //init
         PersistentHasRole phr = null;
         PersistentHasRolePK phrPK = MySQLPersistenceId.getNativeId(rest.getRestContext().getDomHasRole());
         PersistentSchool school = null;
@@ -961,12 +961,20 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        } catch (Exception e) {
+            //in case use disappeared and such
+            LOG.log(Level.WARNING, "Username {0}: Internal error.", new Object[]{sc.getUserPrincipal().getName()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error.");
         }
 
         //fetch schoolclass from parameter
         Long classID = MySQLPersistenceId.getNativeId(rest.getDomSchoolClass());
         schoolClass = SchoolClassManager.findEntity(classID);
-
+        if (schoolClass == null) {
+            String msg = MessageFormat.format("Username {0}: Given schoolclass with id {1} can not be found.", new Object[]{sc.getUserPrincipal().getName(), classID});
+            LOG.log(Level.WARNING, msg);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_SchoolclassDoesNotExist, msg);
+        }
         //verify if user is in class
         PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
         key.setClassID(schoolClass.getClassID());
@@ -974,15 +982,15 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         key.setUserID(phr.getPersistentHasRolePK().getUserID());
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(key);
         if (toc == null) {
-            return null;
+            String msg = MessageFormat.format("Username {0} is not a teacher of schoolclass {1}.", new Object[]{sc.getUserPrincipal().getName(), classID});
+            LOG.log(Level.WARNING, msg);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
-
         //verify if schoolClass is in school
         if (schoolClass == null || !schoolClass.getSchoolID().equals(school.getSchoolID())) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Active schoolClass {2} from a different school that registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), schoolClass.getClassID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-
 // end verification		
         DomCoursesOfSchoolClass4Teacher result = new DomCoursesOfSchoolClass4Teacher();
 
@@ -999,13 +1007,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     PersistentCourse course = CourseManager.findEntity(courseID);
                     if (course == null) {
                         LOG.log(Level.SEVERE, "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
-                    } else {
-                        if (profileID.equals(course.getDwoProfileID())) {
-                            DomClassCourse dcc = scc.buildDomClassCourse();
-                            classCourseMap.put(dcc.getId(), dcc);
-                            DomCourse dcs = course.buildDomCourse();
-                            courseMap.put(dcs.getId(), dcs);
-                        }
+                    } else if (profileID.equals(course.getDwoProfileID())) {
+                        DomClassCourse dcc = scc.buildDomClassCourse();
+                        classCourseMap.put(dcc.getId(), dcc);
+                        DomCourse dcs = course.buildDomCourse();
+                        courseMap.put(dcs.getId(), dcs);
                     }
                 });
 
