@@ -3,13 +3,16 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import org.osgi.util.promise.Promise;
 
 /**
  * Handler for for Login actions. Fetches courses in classcourses of
@@ -22,10 +25,11 @@ public class CoursesOfSchoolclassPresenter {
     private static final Logger LOG = Logger.getLogger(CoursesOfSchoolclassPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
-    private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
+    private CoursesOfSchoolclassService service = new CoursesOfSchoolclassService();
 
     private String[] tableHeaders = {"Module name", "studentdata", "type", "from", "to"};
     private DomSchoolClass schoolClass;
+    private DomCoursesOfSchoolClass4Teacher moduleInfo;
     private Map<String, DomStudent> studentMap;
     private Map<String, CoursesOfSchoolclassPresenter.CourseItem> studentItems;
     private Map<String, DomSchoolClass> schoolClassMap;
@@ -46,23 +50,21 @@ public class CoursesOfSchoolclassPresenter {
     }
 
     public class CourseItem {
-
+//        /"Module name", "studentdata", "type", "from", "to"
         public String key; //unique
-        public String givenName;
-        public String insertion;
-        public String familyName;
-        public String usercode;
-        public boolean singleSchool;
-        public boolean selected;
+        public String name;
+        public String hasStudentData;
+        public String type;
+        public Date from;
+        public Date to;
 
-        public CourseItem(String aKey, String aFirstName, String anInsertion, String aFamilyName, String aUsercode, boolean aSingleSchool) {
+        public CourseItem(String aKey, String aName, String hasData, String aType, Date aFrom, Date aTo) {
             key = aKey;
-            givenName = aFirstName;
-            insertion = anInsertion;
-            familyName = aFamilyName;
-            usercode = aUsercode;
-            singleSchool = aSingleSchool;
-            selected = false;
+            name = aName;
+            hasStudentData = hasData;
+            type = aType;
+            from = aFrom;
+            to = aTo;
         }
     }
 
@@ -85,8 +87,8 @@ public class CoursesOfSchoolclassPresenter {
     }
 
     private void updateViewData(DomSchoolClass sc) {
-//        Promise<List<DomStudent>> promise;
-//        promise = manager.getStudentsInSchoolClass(sc);
+        Promise<DomCoursesOfSchoolClass4Teacher> promise;        
+        promise = service.getModules(sc);
 //        // onSuccess update view
 //        promise.then(new Success<List<DomStudent>, Void>() {
 //            @Override
