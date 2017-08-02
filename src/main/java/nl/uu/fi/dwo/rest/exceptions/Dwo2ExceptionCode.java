@@ -38,6 +38,7 @@ public enum Dwo2ExceptionCode {
     Rest_FormatError, // Usually error in the object data send in the message body 
     Rest_UnsupportedFunction,
     Rest_StudentScoExists,
+    Rest_SchoolclassDoesNotExist,
 
     // REST LoginContext errors
     Rest_LoginContext_exists,
