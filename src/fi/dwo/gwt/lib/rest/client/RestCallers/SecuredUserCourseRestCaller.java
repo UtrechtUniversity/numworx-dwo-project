@@ -10,7 +10,6 @@ import org.fusesource.restygwt.client.RestService;
 
 import com.google.gwt.json.client.JSONValue;
 
-import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;

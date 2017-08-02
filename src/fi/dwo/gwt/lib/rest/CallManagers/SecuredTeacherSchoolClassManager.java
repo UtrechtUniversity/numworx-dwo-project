@@ -10,10 +10,12 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -24,6 +26,7 @@ import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
@@ -268,4 +271,16 @@ public class SecuredTeacherSchoolClassManager {
         service.updateSingleSchoolStudent(restData, (callBack));
     }
 
+    public Promise<DomCoursesOfSchoolClass4Teacher> getModules(DomSchoolClassAndProfile submit) {
+        RestSchoolClassAndProfile restData = new RestSchoolClassAndProfile();
+        restData.setRestContext(new DomContext());
+        restData.setDomSchoolClassAndProfile(submit);
+        PromiseCallback<DomCoursesOfSchoolClass4Teacher> defer = new PromiseCallback<DomCoursesOfSchoolClass4Teacher>();
+        this.getModules(restData, defer);
+        return defer.getPromise();
+    }
+
+    private void getModules(RestSchoolClassAndProfile restData, MethodCallback<DomCoursesOfSchoolClass4Teacher> callBack) {
+        service.getModules(restData, (callBack));
+    }
 }
