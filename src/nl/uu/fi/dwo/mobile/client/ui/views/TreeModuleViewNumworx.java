@@ -2,8 +2,11 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
@@ -21,14 +24,18 @@ import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -44,6 +51,8 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
@@ -54,16 +63,20 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.ProfileCommand;
 import nl.uu.fi.dwo.account.client.SchoolClassStudentCommand;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop.TreeAnchorContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
@@ -95,6 +108,28 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			tiles.redraw();
 			return null;
 		}
+	}
+	
+	final class ProvideTreeItems implements Success<List<SelectModuleItem>,List<SelectModuleItem>> {
+
+		private TreeItem parent;
+		
+		ProvideTreeItems(TreeItem parent) {
+			this.parent = parent;
+		}
+		
+		@Override
+		public Promise<List<SelectModuleItem>> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+			if(parent != null)
+			{
+				initTree(resolved.getValue(), parent, true);
+				while((parent = parent.getParentItem()) != null) {
+					parent.setState(true);
+				}
+			}
+			return resolved;
+		}
+		
 	}
 
 	class NavCell extends AbstractCell<SelectModuleItem> {
@@ -295,6 +330,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@UiField DockLayoutPanel root;
 	@UiField(provided=true)
 	CellList<SelectModuleItem> cells;
+	@UiField
+	Tree tree;
 	@UiField(provided=true)
 	CellList<SelectModuleItem> tiles;
 	@UiField HTML title;
@@ -374,6 +411,62 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		}
 	}
 
+	@UiHandler("tree")
+	public void onSelection(final SelectionEvent<TreeItem> event)
+	{
+		final TreeItem item = event.getSelectedItem();
+		final SelectModuleItem o = (SelectModuleItem) item.getUserObject();
+		OpdrNav.defer(
+		new ScheduledCommand() {
+			public void execute() {
+				if (o != null)
+					selectItem(o); // send stop event
+				else {
+//					close();
+//					container.setWidget(module);
+//					SelectModuleItem root = SelectModuleItemHolder
+//							.getItemByID("0");
+//					module.setDescription(root); // Uit het profiel halen!
+//					if (item == schoolMap) {
+//						addChildren(schoolModel);
+//						moduleHeaderLabel.setText(SCHOOL_MODULES);
+//						tree.setSelectedItem(schoolMap, false);
+//						schoolMap.setState(true, false);
+//					} else if (item == standardMap) {
+//						addChildren(standardModel);
+//						moduleHeaderLabel.setText(root.getName());
+//						tree.setSelectedItem(standardMap, false);
+//						standardMap.setState(true, false);
+//					}
+				}
+			}
+		});
+	}
+	
+	private void selectItem(SelectModuleItem o) {
+		Place place = null;
+		switch(o.getType()) {
+		default:
+		case ROOT:
+			place = new TreeModulePlace("0");
+			break;
+		case SCO:
+			place = new ViewModulePlace(o.getID());
+			break;
+		case MODULE:
+			//place = new SelectModulePlace(o.getID());
+			place = new TreeModulePlace(o.getID());
+			break;
+		case FOLDER:
+			place = new TreeModulePlace(o.getID());
+			break;
+		}
+		
+		if (place != null) {
+			this.presenter.goTo(place);
+		}
+	}
+	
 	@UiHandler("fullBtn")
 	void onFull(ClickEvent ev) {
 		System.err.println("Full = "+fullBtn.getValue());
@@ -391,6 +484,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	@UiField(provided=true)
 	MenuItem user;
+
+	private TreeItem standardMap;
 	
 	static String getFaviconUrl() {
 		return "url('"+
@@ -437,10 +532,21 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		initWidget(uiBinder.createAndBindUi(this));
 		searchInput.getElement().setPropertyString("placeholder", "Zoek toets of lesstof");
 		root.forceLayout();
+// tree stuff		
+		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
+		standardMap.setState(true);
+
+		
 	}
 
 	@Override
 	public void render(List<SelectModuleItem> currentModel) {
+		
+		
+		boolean nieuw = this.list != currentModel;
+		
+		
+		
 		this.list = currentModel;
 		cells.setRowData(list);
 		cells.redraw();
@@ -496,6 +602,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			}
 		});
 		//Scheduler.get().scheduleDeferred(cmd);
+		
+		//if(nieuw)
+			initTree();
 	}
 
 	Promise<List<SelectModuleItem>> getChildrenPromise(final SelectModuleItem parent) {
@@ -574,6 +683,7 @@ String Jolanda =
 			Widget w = new HTML(Jolanda);
 			w.getElement().getStyle().setFontSize(18, Style.Unit.PX);
 			w.getElement().getStyle().setProperty("fontFamily", "Ubuntu");
+			w.getElement().getStyle().setLineHeight(27, Style.Unit.PX);
 			description.setWidget(w);
 				favIcon.setVisible(false);
 				centerPanel.setStyleName(style.centerBackground(), true);
@@ -592,8 +702,10 @@ String Jolanda =
 				centerPanel.setStyleName(style.centerBackground(), false);
 				description.setWidget(getLabel(item));
 				if(item.showChildren());
-				{
-					getChildrenPromise(item).then(new ProvideCells());
+				{	TreeItem parent = inverseMap.get(item);
+					getChildrenPromise(item)
+					.then(new ProvideTreeItems(parent))
+					.then(new ProvideCells());
 				}			
 			break;
 		case MODULE:
@@ -605,8 +717,10 @@ String Jolanda =
 				centerPanel.setStyleName(style.centerBackground(), false);
 				centerPanel.setStyleName(style.folderBackground(), false);
 				if(item.showChildren());
-				{
-					getScosPromise(item).then(new ProvideCells());
+				{	TreeItem parent = inverseMap.get(item);
+					getScosPromise(item)
+					.then(new ProvideTreeItems(parent))
+					.then(new ProvideCells());
 				}
 			break;
 		default:
@@ -637,6 +751,11 @@ String Jolanda =
 	}
 
 	Presenter presenter;
+
+	private String SCHOOL_MODULES;
+	private TreeItem schoolMap;
+	private Map<SelectModuleItem,TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
+
 	@Override
 	public void setPresenter(Presenter presenter) {
 		this.presenter = presenter;
@@ -656,6 +775,67 @@ String Jolanda =
 	@Override
 	public void execute() {
 		presenter.goTo(new ReloginPlace());
+	}
+
+	//================================================================================
+    // Init and format the tree and cells
+    //================================================================================
+	
+	private void initTree()
+	{
+		List<SelectModuleItem> model = this.list;
+		ArrayList<SelectModuleItem> schoolModel = new ArrayList<SelectModuleItem>(model.size());
+		ArrayList<SelectModuleItem> standardModel = new ArrayList<SelectModuleItem>(model.size());
+		Object schoolName = "school";
+		if(DWOplayer.withUser() && DWOplayer.clientfactory.getSchool() != null)
+			schoolName = DWOplayer.clientfactory.getSchool().getSchoolName();
+		SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
+		schoolMap = new TreeItem(toSafeHTML(SCHOOL_MODULES));
+		schoolMap.setState(true);
+		standardMap.removeItems();
+		tree.removeItems();
+		inverseMap.clear();
+		for (SelectModuleItem item : model)
+		{
+			
+			TreeItem treeItem = getTreeItem(item);
+			treeItem.setUserObject(item);
+			inverseMap.put(item, treeItem);
+			(item.isFromSchool() ? schoolModel : standardModel).add(item);
+			(item.isFromSchool() ? schoolMap : standardMap).addItem(treeItem);
+			
+			if(item.getChildren() != null)
+				initTree(item.getChildren(), treeItem, true);
+		}
+		if(standardMap.getChildCount() != 0) tree.addItem(standardMap);
+		if(schoolMap.getChildCount() != 0) tree.addItem(schoolMap);
+	}
+
+	private SafeHtml toSafeHTML(String string) {
+		return new SafeHtmlBuilder().
+				appendHtmlConstant("<span class='"+style.treeItem()+"'>").
+				appendEscaped(string).
+				appendHtmlConstant("</span>").
+				toSafeHtml();
+	}
+
+	private void initTree(List<SelectModuleItem> model, TreeItem tree, boolean open) {
+//		sort(model);
+		tree.removeItems(); // the tree should be empty, but it is not always. NPE HERE, tree = null?
+		for (SelectModuleItem item : model)
+		{
+			TreeItem treeItem = getTreeItem(item);
+			treeItem.setUserObject(item);
+			inverseMap.put(item, treeItem);
+			tree.addItem(treeItem);	
+			if(item.getChildren() != null)
+				initTree(item.getChildren(), treeItem, false);
+		}
+		tree.setState(open);
+	}
+
+	private TreeItem getTreeItem(SelectModuleItem item) {
+		return new TreeItem(toSafeHTML(item.getName()));
 	}
 
 }

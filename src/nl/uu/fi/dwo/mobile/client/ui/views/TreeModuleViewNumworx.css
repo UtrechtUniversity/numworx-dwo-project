@@ -277,3 +277,7 @@
 	border-color: color14;
 	border-width: 1px;
 }
+
+.treeItem {
+	font-size: 13px;
+}

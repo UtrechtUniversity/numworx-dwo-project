@@ -28,6 +28,7 @@
 			<g:FlowPanel styleName='{style.navPanel}'>
 				<g:HTML styleName='{style.navTitle}'>Bibliotheek</g:HTML>
 				<cl:CellList ui:field='cells'></cl:CellList>
+				<g:FlowPanel><g:Tree ui:field="tree"></g:Tree></g:FlowPanel>
 			</g:FlowPanel>
 		</g:west>
 		<g:center>

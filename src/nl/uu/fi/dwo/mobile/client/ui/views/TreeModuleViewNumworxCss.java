@@ -19,4 +19,5 @@ interface TreeModuleViewNumworxCss extends CssResource {
 	String centerBackground();
 	String folderBackground();
 	String popup();
+	String treeItem();
 }
