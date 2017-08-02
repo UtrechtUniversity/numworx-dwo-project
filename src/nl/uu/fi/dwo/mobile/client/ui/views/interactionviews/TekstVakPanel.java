@@ -1709,29 +1709,33 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	public void setSelected(boolean b)
 	{ 
 		selected = b;
+		Style style = mainPanel2.getElement().getStyle();
 		if (selected)
 		{
 			if (colorSelection)
 			{	
 				//randPanel.getElement().getStyle().setBorderColor(selectieColor.toString());
 				if(bgColorZichtbaar)
-					mainPanel2.getElement().getStyle().setBackgroundColor(selectieColor.toString());
+					style.setBackgroundColor(selectieColor.toString());
 				else {
-					mainPanel2.getElement().getStyle().setBorderColor(selectieColor.toString());
-					int borderWidth = (int) Math.round(Math.min(new Double(hoogte) / 2, new Double(breedte) / 2));
-					mainPanel2.getElement().getStyle().setBorderWidth(borderWidth, Unit.PX);
-					mainPanel2.getElement().getStyle().setOpacity(0.4); 
-					mainPanel2.setPixelSize(breedte - 2 * borderWidth, hoogte - 2 * borderWidth);					
+					style.setBackgroundColor(selectieColor.toString());
+					style.setBorderColor(selectieColor.toString());
+					//int borderWidth = (int) Math.round(Math.min(new Double(hoogte) / 2, new Double(breedte) / 2));
+					//style.setBorderWidth(borderWidth, Unit.PX);
+					//style.setOpacity(0.4); 
+					//mainPanel2.setPixelSize(breedte - 2 * borderWidth, hoogte - 2 * borderWidth);					
 				}
 					
 				//
 				
 			}
 			else
-			{	mainPanel2.getElement().getStyle().setBorderColor(grijs.toString());
-				mainPanel2.getElement().getStyle().setBorderWidth(5, Unit.PX);
+			{	style.setBorderColor(grijs.toString());
+				style.setBorderWidth(5, Unit.PX);
 				mainPanel2.setWidgetLeftRight(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
 				mainPanel2.setWidgetTopBottom(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
+				style.clearHeight();
+				style.clearWidth();
 			}
 		
 		}
@@ -1740,20 +1744,21 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			if(colorSelection)
 			{
 				if(bgColorZichtbaar)
-					mainPanel2.getElement().getStyle().setBackgroundColor(bgColor.toString());
+					style.setBackgroundColor(bgColor.toString());
 				else {
-					mainPanel2.getElement().getStyle().setBorderColor(randColor.toString());
-					mainPanel2.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
-					mainPanel2.getElement().getStyle().setOpacity(1);
+					style.clearBackgroundColor();
+					style.setBorderColor(randColor.toString());
+					style.setBorderWidth(randDikte, Unit.PX);
+					style.setOpacity(1);
 					mainPanel2.setPixelSize(breedte - 2 * randDikte, hoogte - 2 * randDikte);
 				}
 					
 			}
 			else
 			{
-				mainPanel2.getElement().getStyle().setBorderColor(randColor.toString());
+				style.setBorderColor(randColor.toString());
 				//randPanel.getElement().getStyle().setOpacity(1);
-				mainPanel2.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+				style.setBorderWidth(randDikte, Unit.PX);
 				mainPanel2.setWidgetLeftRight(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 				mainPanel2.setWidgetTopBottom(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			}

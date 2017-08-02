@@ -985,10 +985,14 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		zetVorigeKnoppenEnabled(opdrNr > 0);
 		zetNakijkKnopEnabled();
-		if(!disableScreen.isAttached())
+		if(!disableScreen.isAttached() && isDesktop())
 			hoofdPanel.tabFocus(null, false);
 	}
 	
+	private static boolean isDesktop() {
+		return MGWT.getOsDetection().isDesktop();
+	}
+
 	/**
 	 * Als de tempotoets gelocked is, zet dan een afdekpanel met de bijpassende melding.
 	 * Als de tempotoets niet gelocked is, verwijder dan het afdekpanel.
