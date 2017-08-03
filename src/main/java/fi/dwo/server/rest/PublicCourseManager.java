@@ -159,4 +159,29 @@ if(SECURITY)
     	return null;
     }
     
+@GET
+    @Path("/getImage")
+    @Produces({"application/json"})
+    public DomCourseStudent getImage() {
+//    	try {
+//    		DomCourse course = rest.getDomCourse();
+//    		long id = MySQLPersistenceId.getNativeId(course);
+//    		PersistentCourse parent = CourseManager.findEntity(id);
+//// Verify parent is public and profile is not limited
+//    		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
+//if(SECURITY) 
+//    		if ( parent.getSchoolID() != null || 
+//    			 profile.getDwoProfileRights().contains(LIMITED))
+//    			return null;
+//// TODO Verify context: profile matches...
+//    		if (!SECURITY || rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId()))    		
+//    			return parent.buildDomCourseStudent();
+//    	} catch (Dwo2RestException e) {
+//    		throw e;
+//    	} catch (Exception e) {
+//    		LOG.log(Level.WARNING, "getCourses", e);
+//    		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the module.");	
+//    	}
+    	return null;
+    }    
 }
