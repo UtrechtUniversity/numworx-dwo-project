@@ -9,13 +9,13 @@
 	
     <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
 
-	<entry-point class='nl.uu.fi.dwo.mobile.NoordhoffPlayer'/>
+	<entry-point class='nl.uu.fi.dwo.mobile.WiskOpdrPlayer'/>
 	
 	 <replace-with class="nl.uu.fi.dwo.mobile.client.sco.TinCanAPI">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
 
-	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOplayerNoordhoff">
+	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOplayerTinCan">
         <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
     </replace-with>
 
