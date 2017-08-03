@@ -38,7 +38,7 @@ class CoursesOfSchoolclassService {
                 DomSchoolClassAndProfile sap = new DomSchoolClassAndProfile();
                 sap.setDomDwoProfile(resolved.getValue());
                 sap.setDomSchoolClass(sc);
-                return manager.getModules(sap);
+                return manager.getModules(context, sap);
             }
         });
     }
