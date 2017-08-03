@@ -14,4 +14,12 @@ public class WiskOpdrDefaults extends DWOplayerDefaults {
 		return "www.dwo.nl";
 	}
 
+	public WiskOpdrDefaults() {
+		super();
+	}
+
+	public WiskOpdrDefaults(String launchData) {
+		super(launchData);
+	}
+
 }
