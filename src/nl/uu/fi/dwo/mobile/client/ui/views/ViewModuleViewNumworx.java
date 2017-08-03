@@ -141,6 +141,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	void setupMenu(MenuBar items) {
 		items.clearItems();
 		MenuItem m;
+		String back = delegate.getBackButton().getText();
 		if(DWOplayer.withUser()) {
 			m=items.addItem("Logout", new ScheduledCommand() {
 				
