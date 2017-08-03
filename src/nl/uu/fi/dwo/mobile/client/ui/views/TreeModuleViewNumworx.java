@@ -189,17 +189,27 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					flip = ( flip  ) % 5+1;
 					sb.appendHtmlConstant("<span class='" + style.tileBodySpan() + "'>");
 					switch(typeof) {
-			    	case MODULE: 
-			    		sb.appendHtmlConstant("<img style='height: 85px' src='"
+			    	case MODULE:
+			    		if(value.getImage() != null) {
+			    			String html = "<img src='"+value.getImage()+"' class='"+style.tileBodyImg() + "'/>";
+			    			sb.appendHtmlConstant(html);
+			    		} else {
+			    			sb.appendHtmlConstant("<img style='height: 85px' src='"
 			    				+ r("images/numworx/module-numworx.svg")
 			    				+ "' class='" + style.tileBodyImg()
 			    				+ "'/>");
+			    		}
 			    		break;
 			    	case FOLDER:
-			    		sb.appendHtmlConstant("<img style='height: 85px' src='"
+			    		if(value.getImage() != null) {
+			    			String html = "<img src='"+value.getImage()+"' class='"+style.tileBodyImg() + "'/>";
+			    			sb.appendHtmlConstant(html);
+			    		} else {
+			    			sb.appendHtmlConstant("<img style='height: 85px' src='"
 			    				+ r("images/numworx/folder-numworx.svg")
 			    				+ "' class='" + style.tileBodyImg()
 			    				+ "' />");
+			    		}
 			    		break;
 			    	case SCO:
 			    		if(flip != 1)

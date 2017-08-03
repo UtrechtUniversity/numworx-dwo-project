@@ -82,7 +82,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		initWidget(createAndBindUi());
 		username.getElement().setPropertyString("placeholder", rb.gebruikersnaam());
 		password.getElement().setPropertyString("placeholder", rb.wachtwoord());
-		messagePanel.setUrl("http://www.fi.uu.nl/dwo/resources/alert_"
+		messagePanel.setUrl("//cdn.dwo.nl/resources/alert_"
 				+ Text.constants.language()
 				+ ".html");
 	}
