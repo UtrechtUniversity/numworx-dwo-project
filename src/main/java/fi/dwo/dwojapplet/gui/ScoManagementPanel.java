@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -32,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.jar.Attributes.Name;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -42,11 +44,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
@@ -79,6 +84,59 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     private JLabel noScosLabel;
     private FileDialog saveDial, openDial;
 
+    class IconDialog extends JFileChooser implements ActionListener {
+    	JTextField url;
+    	JDialog dialog;
+    	IconDialog() {
+    		setDialogType(OPEN_DIALOG);
+    		setControlButtonsAreShown(false);
+    		url = new JTextField();
+    		url.addActionListener(this);
+     	}
+        @Override
+        protected JDialog createDialog(Component parent) throws HeadlessException {
+            dialog = super.createDialog(parent);
+            JComponent north = createTop();
+            dialog.getContentPane().add(north, BorderLayout.NORTH);
+            JComponent south = createBottom();
+            dialog.getContentPane().add(south,  BorderLayout.SOUTH);
+            return dialog;
+        }
+		private JComponent createTop() {
+			Box top = Box.createHorizontalBox();
+			top.add(new JLabel("URL:"));
+			top.add(url);
+			return top;
+		}
+		private JComponent createBottom() {
+			Box box = Box.createHorizontalBox();
+			JButton okay = new JButton("OK");
+			okay.setActionCommand("OKAY");
+			okay.addActionListener(this);
+			JButton cancel = new JButton("Cancel");
+			cancel.addActionListener(this);
+			box.add(okay);
+			box.add(Box.createGlue());
+			box.add(cancel);
+			return box;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == url || "OKAY".equals(e.getActionCommand()))
+			{
+				if(url.getText().length()>0) {
+					setSelectedFile(null); // URL is preferred
+				}
+				approveSelection();
+			}
+			else
+				cancelSelection();
+		}
+    	
+    }
+    private IconDialog iconDial;
+    
+    
     private JCheckBox editorCB;
     private Box editorBox = Box.createVerticalBox();
 
@@ -628,24 +686,43 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      }*/
     private void importCourseLogo() throws IOException {
         String naam; // FIXME
-        openDial.setTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
-        openDial.show();
-        naam = openDial.getFile();
+ //       openDial.setTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
+ //       openDial.show();
+ //       naam = openDial.getFile();
+        if (iconDial == null) iconDial = new IconDialog();
+        iconDial.setDialogTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
+        int r = iconDial.showOpenDialog(this);
+        File file = iconDial.getSelectedFile();
+		naam = (r == iconDial.CANCEL_OPTION || file == null) ? null : file.getName();
+        if(naam != null && r == iconDial.APPROVE_OPTION) {
+        	naam = iconDial.url.getText();
+        	try {
+				PersistenceFacade.instance().setLogo(course.getID(),naam.getBytes("UTF-8"));
+			} catch (PersistenceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	return;
+        }
+        
+        
         if (naam != null) {
             ByteArrayOutputStream output = new ByteArrayOutputStream();
-            File dir = new File(openDial.getDirectory());
-            File file = new File(dir, naam);
+            //File dir = new File(openDial.getDirectory());
             BufferedImage img = ImageIO.read(file);
             Image reduced;
-            if (img.getWidth() <= 64 && img.getHeight() <= 64) {
+            if (img.getWidth() <= 252 && img.getHeight() <= 160) {
                 reduced = img;
             } else {
-                reduced = img.getScaledInstance(Math.min(64, img.getWidth()), Math.min(64, img.getHeight()), Image.SCALE_SMOOTH);
+            	float scalex = img.getWidth()/252f;
+            	float scaley = img.getHeight()/160f;
+            	float scale = Math.max(scalex, scaley);
+                reduced = img.getScaledInstance(Math.round(scale*img.getWidth()), Math.round(scale*img.getHeight()), Image.SCALE_SMOOTH);
             }
             if (reduced instanceof BufferedImage) {
                 img = (BufferedImage) reduced;
             } else {
-                img = new BufferedImage(Math.min(64, img.getWidth()), Math.min(64, img.getHeight()), BufferedImage.TYPE_INT_ARGB);
+                img = new BufferedImage(Math.min(252, img.getWidth()), Math.min(160, img.getHeight()), BufferedImage.TYPE_INT_ARGB);
                 img.createGraphics().drawImage(reduced, 0, 0, null);
             }
             ImageIO.write(img, "png", output);
