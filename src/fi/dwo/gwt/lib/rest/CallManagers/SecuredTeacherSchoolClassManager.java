@@ -271,9 +271,9 @@ public class SecuredTeacherSchoolClassManager {
         service.updateSingleSchoolStudent(restData, (callBack));
     }
 
-    public Promise<DomCoursesOfSchoolClass4Teacher> getModules(DomSchoolClassAndProfile submit) {
+    public Promise<DomCoursesOfSchoolClass4Teacher> getModules(DomContext context, DomSchoolClassAndProfile submit) {
         RestSchoolClassAndProfile restData = new RestSchoolClassAndProfile();
-        restData.setRestContext(new DomContext());
+        restData.setRestContext(context);
         restData.setDomSchoolClassAndProfile(submit);
         PromiseCallback<DomCoursesOfSchoolClass4Teacher> defer = new PromiseCallback<DomCoursesOfSchoolClass4Teacher>();
         this.getModules(restData, defer);

@@ -7,4 +7,11 @@
                 <goal>gwt:i18n</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-gwt:i18n</actionName>
+            <displayName>gwt:i18n</displayName>
+            <goals>
+                <goal>gwt:i18n</goal>
+            </goals>
+        </action>
     </actions>
