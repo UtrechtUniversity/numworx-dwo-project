@@ -675,6 +675,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		((SetSelectionModel<?>) tiles.getSelectionModel()).clear();
 		keyprovider.tiles = Collections.emptyList();
 		tiles.setRowData(keyprovider.tiles);
+		boolean hasImage = item.getImage() != null;
 		switch(item.getType()) {
 		case ROOT:
 String AanJolanda = "Hallo Jolanda van den Berg, welkom bij Numworx!";
@@ -704,11 +705,11 @@ String Jolanda =
 			((SetSelectionModel<?>) cells.getSelectionModel()).clear();
 		case FOLDER:
 				title.setText(item.getName());
-				String url = r("images/courses/2.png");
+				String url = (hasImage) ? item.getImage(): r("images/courses/2.png");
 				favIcon.setUrl(url);
 				flip = (flip%5)+1; flip=1;
-				favIcon.setVisible(flip!=1);
-				centerPanel.setStyleName(style.folderBackground(), flip==1);
+				favIcon.setVisible(hasImage || flip!=1);
+				centerPanel.setStyleName(style.folderBackground(), !hasImage && flip==1);
 				centerPanel.setStyleName(style.centerBackground(), false);
 				description.setWidget(getLabel(item));
 				if(item.showChildren());
@@ -721,11 +722,11 @@ String Jolanda =
 		case MODULE:
 				title.setText(item.getName());
 				description.setWidget(getLabel(item));
-				url = r("images/courses/1.png");
+				url = (hasImage) ? item.getImage(): r("images/courses/1.png");
 				favIcon.setUrl(url);
-				favIcon.setVisible(true);
+				favIcon.setVisible(hasImage);
 				centerPanel.setStyleName(style.centerBackground(), false);
-				centerPanel.setStyleName(style.folderBackground(), false);
+				centerPanel.setStyleName(style.folderBackground(), !hasImage);
 				if(item.showChildren());
 				{	TreeItem parent = inverseMap.get(item);
 					getScosPromise(item)

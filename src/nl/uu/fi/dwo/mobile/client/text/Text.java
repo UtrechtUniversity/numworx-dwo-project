@@ -73,4 +73,7 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("Cancel")
 	String cancel();
+	
+	@DefaultStringValue("Bibliotheek")
+	String bibliotheek();
 }

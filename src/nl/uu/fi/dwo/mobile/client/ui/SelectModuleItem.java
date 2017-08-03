@@ -182,6 +182,7 @@ public class SelectModuleItem
 			toetsType = domClassCourse.getType();
 		}
 		image = course.getImage();
+		if("".equals(image)) image = null;
 	}
 
 	public SelectModuleItem(DomScoContext sco) {

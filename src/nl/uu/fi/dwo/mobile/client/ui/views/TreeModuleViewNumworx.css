@@ -24,7 +24,6 @@
 		.navPanel {
 			background-color: #DDE0E3;
 			color: color15;
-			padding-top: 40px;
 			padding-left: 0px;
 			font-size: 14px;
 			line-height: 27px;
@@ -75,6 +74,7 @@
 			border-bottom-width: 1px;
 			border-bottom-color: #A8ABB1 ;
 			font-size: 18px;
+			padding-top: 40px;
 			padding-bottom: 20px;
 			padding-left: 22px;
 			margin-right: 18px;
