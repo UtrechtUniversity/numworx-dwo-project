@@ -1,6 +1,9 @@
 package fi.dwo.server.rest;
 
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -10,12 +13,17 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.imageio.ImageIO;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -107,7 +115,7 @@ if(SECURITY)
     @PUT
     @Path("/getChildren")
     @Produces({"application/json"})
-    public List<DomCourseStudent> getCourses(RestCourse rest) {
+    public List<DomCourseStudent> getCourses(RestCourse rest, @Context UriInfo info) {
     	try {
     		DomCourse course = rest.getDomCourse();
     		long id = MySQLPersistenceId.getNativeId(course);
@@ -123,8 +131,16 @@ if(SECURITY)
     		)
     			return Collections.emptyList();
     			
-    		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent);    		
-    		return courses.stream().map( (c)-> c.buildDomCourseStudent()).sorted(DomCourseStudentComparator.INSTANCE).collect(Collectors.toList());
+    		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent); 
+    		final String PFX = info.getRequestUri().resolve("getImage").toString();
+    		return courses.stream().map( (c)-> {
+				DomCourseStudent build = c.buildDomCourseStudent();
+				if(c.getImageData() != null) {
+					build.setImage(PFX + "?courseId=" + c.getCourseID());
+					build.setImageData(null);
+				}
+				return build;
+			}).sorted(DomCourseStudentComparator.INSTANCE).collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
     		throw e;
     	} catch (Exception e) {
@@ -159,29 +175,21 @@ if(SECURITY)
     	return null;
     }
     
-@GET
+    @GET
     @Path("/getImage")
-    @Produces({"application/json"})
-    public DomCourseStudent getImage() {
-//    	try {
-//    		DomCourse course = rest.getDomCourse();
-//    		long id = MySQLPersistenceId.getNativeId(course);
-//    		PersistentCourse parent = CourseManager.findEntity(id);
-//// Verify parent is public and profile is not limited
-//    		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
-//if(SECURITY) 
-//    		if ( parent.getSchoolID() != null || 
-//    			 profile.getDwoProfileRights().contains(LIMITED))
-//    			return null;
-//// TODO Verify context: profile matches...
-//    		if (!SECURITY || rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId()))    		
-//    			return parent.buildDomCourseStudent();
-//    	} catch (Dwo2RestException e) {
-//    		throw e;
-//    	} catch (Exception e) {
-//    		LOG.log(Level.WARNING, "getCourses", e);
-//    		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the module.");	
-//    	}
-    	return null;
+    @Produces({"image/png"})
+    public Response getImage(@QueryParam("courseId") Long courseId) {
+    	try {
+    		PersistentCourse course = CourseManager.findEntity(courseId);
+    		byte[] imageData = course.getImageData();
+    		BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
+    		ByteArrayOutputStream out = new ByteArrayOutputStream();
+    		ImageIO.write(image, "png", out);
+    		imageData = out.toByteArray();
+    		return Response.ok(imageData, "image/png").build();    		
+    	} catch(Exception e) {
+    		LOG.log(Level.SEVERE, "getImage error", e);
+    	}
+    	return Response.status(Status.NOT_FOUND).build();
     }    
 }
