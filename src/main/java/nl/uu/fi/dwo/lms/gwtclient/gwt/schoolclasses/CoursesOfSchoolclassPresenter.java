@@ -2,17 +2,21 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
 
 /**
  * Handler for for Login actions. Fetches courses in classcourses of
@@ -31,7 +35,7 @@ public class CoursesOfSchoolclassPresenter {
     private DomSchoolClass schoolClass;
     private DomCoursesOfSchoolClass4Teacher moduleInfo;
     private Map<String, DomStudent> studentMap;
-    private Map<String, CoursesOfSchoolclassPresenter.CourseItem> studentItems;
+    private Map<String, CoursesOfSchoolclassPresenter.CourseItem> courseItems;
     private Map<String, DomSchoolClass> schoolClassMap;
     private List<SchoolClassListBoxItem> schoolClassItems;
     private Display view;
@@ -89,48 +93,32 @@ public class CoursesOfSchoolclassPresenter {
     private void updateViewData(DomSchoolClass sc) {
         Promise<DomCoursesOfSchoolClass4Teacher> promise;        
         promise = service.getModules(sc);
-//        // onSuccess update view
-//        promise.then(new Success<List<DomStudent>, Void>() {
-//            @Override
-//            public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
-//                //flip back to schoolclasses screen 
-//                studentMap = new HashMap<String, DomStudent>();
-//                Map<String, CoursesOfSchoolclassPresenter.CourseItem> oldStudentItems = studentItems;
-//                studentItems = new HashMap(studentMap.size());
-//                for (DomStudent sc : resolved.getValue()) {
-//                    studentMap.put(sc.getId().getIdString(), sc);
-//                    CourseItem item = new CourseItem(sc.getId().getIdString(),
-//                            sc.getGivenName(),
-//                            sc.getInsertion(),
-//                            sc.getFamilyName(),
-//                            sc.getUserName(),
-//                            sc.getSingleSchool()
-//                    );
-//                    if (oldStudentItems != null
-//                            && oldStudentItems.containsKey(sc.getId().getIdString())
-//                            && oldStudentItems.get(sc.getId().getIdString()).selected) {
-//                        item.selected = true;
-//                    }
-//                    studentItems.put(sc.getId().getIdString(), item);
-//                }
-//                view.updateView(studentItems);
-//                return null;
-//            }
-//
-//        },
-//                new Failure() {
-//            @Override
-//            public void fail(Promise<?> resolved) throws Exception {
-//                Throwable fail = resolved.getFailure();
-//                view.updateView(studentItems);
-//                if (fail instanceof Dwo2Exception) {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                } else {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    //throw directly
-//                }
-//            }
-//        });
+        // onSuccess update view
+        promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void>() {
+            @Override
+            public Promise<Void> call(Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {                
+                //flip back to schoolclasses screen 
+                DomCoursesOfSchoolClass4Teacher value = resolved.getValue();
+                
+                //parse results into a tree.
+                view.updateView(courseItems);
+                return null;
+            }
+
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                view.updateView(courseItems);
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    //throw directly
+                }
+            }
+        });
 
     }
 

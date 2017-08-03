@@ -14,13 +14,19 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditCoursesInSchoolclassPresenter.CourseItem;
 
 /**
  * GWT Panel that handles switching the role.
@@ -43,6 +49,8 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
     Button backBtn;
 
     private CoursesOfSchoolclassPresenter coursesOfSchoolclassPresenter;
+    private ListDataProvider<CoursesOfSchoolclassPresenter.CourseItem> dataProvider = new ListDataProvider<CoursesOfSchoolclassPresenter.CourseItem>();
+    
     private CoursesOfSchoolclassPresenter.CourseItem selected;
     private MyCheckBoxCell checkBox;
 
@@ -127,162 +135,154 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         String[] tableHeaders = sp.getTableHeaders();
         dataGrid = new CellTable<String>();
         tree = new Tree();
-//        schoolClassListBox = new ValueListBox<SchoolClassItem>(new Renderer<SchoolClassItem>() {
-//
-//            public String render(SchoolClassListBoxItem item) {                
-//                return item.getSchoolclassName();
-//            }
-//
-//            public void render(SchoolClassListBoxItem user, Appendable appendable) throws IOException {
-//                String s = render(user);
-//                appendable.append(s);
-//            }
-//        });
-//
-//        dataProvider.addDataDisplay(dataGrid);
-//        dataGrid.setSkipRowHoverCheck(true);
-//        dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
-//
-//        List<CoursesOfSchoolclassPresenter.CourseItem> data = dataProvider.getList();
-//        final CoursesOfSchoolclassView.MyCell cell = new CoursesOfSchoolclassView.MyCell();
-//        final CoursesOfSchoolclassView.MyClickCell clickCell = new CoursesOfSchoolclassView.MyClickCell();
-//
-//        //givenName
-//        Column<StudentsInSchoolclassPresenter.StudentItem, String> value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
-//            @Override
-//            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
-//                return object.givenName;
-//            }
-//        };
-//        value.setSortable(true);
-//        ListHandler<StudentsInSchoolclassPresenter.StudentItem> columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
-//                data);
-//        columnSortHandler.setComparator(value,
-//                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
-//            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
-//                if (o1 == o2) {
-//                    return 0;
-//                }
-//
-//                // Compare the name columns.
-//                if (o1 != null) {
-//                    return (o2 != null) ? o1.givenName.compareTo(o2.givenName) : 1;
-//                }
-//                return -1;
-//            }
-//        });
-//        dataGrid.addColumnSortHandler(columnSortHandler);
-//        dataGrid.addColumn(value, tableHeaders[0]);
-//
-//        //insertion
-//        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
-//            @Override
-//            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
-//                return object.insertion;
-//            }
-//        };
-//        value.setSortable(true);
-//        columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
-//                data);
-//        columnSortHandler.setComparator(value,
-//                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
-//            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
-//                if (o1 == o2) {
-//                    return 0;
-//                }
-//
-//                // Compare the name columns.
-//                if (o1 != null) {
-//                    return (o2 != null) ? o1.insertion.compareTo(o2.insertion) : 1;
-//                }
-//                return -1;
-//            }
-//        });
-//        dataGrid.addColumnSortHandler(columnSortHandler);
-//        dataGrid.addColumn(value, tableHeaders[1]);
-//
-//        //familyName
-//        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
-//            @Override
-//            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
-//                return object.familyName;
-//            }
-//        };
-//        value.setSortable(true);
-//        columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
-//                data);
-//        columnSortHandler.setComparator(value,
-//                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
-//            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
-//                if (o1 == o2) {
-//                    return 0;
-//                }
-//
-//                // Compare the name columns.
-//                if (o1 != null) {
-//                    return (o2 != null) ? o1.familyName.compareTo(o2.familyName) : 1;
-//                }
-//                return -1;
-//            }
-//        });
-//        dataGrid.addColumnSortHandler(columnSortHandler);
-//        dataGrid.addColumn(value, tableHeaders[2]);
-//
-//        //usercode
-//        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
-//            @Override
-//            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
-//                return object.usercode;
-//            }
-//        };
-//        value.setSortable(true);
-//        columnSortHandler = new ListHandler<StudentsInSchoolclassPresenter.StudentItem>(
-//                data);
-//        columnSortHandler.setComparator(value,
-//                new Comparator<StudentsInSchoolclassPresenter.StudentItem>() {
-//            public int compare(StudentsInSchoolclassPresenter.StudentItem o1, StudentsInSchoolclassPresenter.StudentItem o2) {
-//                if (o1 == o2) {
-//                    return 0;
-//                }
-//
-//                // Compare the name columns.
-//                if (o1 != null) {
-//                    return (o2 != null) ? o1.usercode.compareTo(o2.usercode) : 1;
-//                }
-//                return -1;
-//            }
-//        });
-//        dataGrid.addColumnSortHandler(columnSortHandler);
-//        dataGrid.addColumn(value, tableHeaders[3]);
-//
-//        //edit student
-//        value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(clickCell) {
-//            @Override
-//            public String getValue(StudentsInSchoolclassPresenter.StudentItem object) {
-//                if (object.singleSchool == true) {
-//                    return tableHeaders[4];
-//                } else {
-//                    return "";
-//                }
-//            }
-//        };
-//        value.setSortable(false);
-//        dataGrid.addColumn(value, tableHeaders[4]);
-//
-//        //select student
-//        checkBox = new MyCheckBoxCell(true, true);
-//        Column<StudentsInSchoolclassPresenter.StudentItem, Boolean> bValue = new Column<StudentsInSchoolclassPresenter.StudentItem, Boolean>(checkBox) {
-//            @Override
-//            public Boolean getValue(StudentsInSchoolclassPresenter.StudentItem object) {
-//                return object.selected;
-//            }
-//        };
+        
+       
+        dataProvider.addDataDisplay(dataGrid);
+        dataGrid.setSkipRowHoverCheck(true);
+        dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
-//        bValue.setSortable(false);
-//        dataGrid.addColumn(bValue, tableHeaders[5]);
-//
-//        dataGrid.setRowData(0, data);
-//        dataGrid.setRowCount(data.size(), true);
+        List<CoursesOfSchoolclassPresenter.CourseItem> data = dataProvider.getList();
+        final CoursesOfSchoolclassView.MyCell cell = new CoursesOfSchoolclassView.MyCell();
+        final CoursesOfSchoolclassView.MyClickCell clickCell = new CoursesOfSchoolclassView.MyClickCell();
+
+        //name
+        Column<CoursesOfSchoolclassPresenter.CourseItem, String> value = new Column<CoursesOfSchoolclassPresenter.CourseItem, String>(cell) {
+            @Override
+            public String getValue(CoursesOfSchoolclassPresenter.CourseItem object) {
+                return object.name;
+            }
+        };
+        value.setSortable(true);
+        ListHandler<CoursesOfSchoolclassPresenter.CourseItem> columnSortHandler = new ListHandler<CoursesOfSchoolclassPresenter.CourseItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<CoursesOfSchoolclassPresenter.CourseItem>() {
+            public int compare(CoursesOfSchoolclassPresenter.CourseItem o1, CoursesOfSchoolclassPresenter.CourseItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.name.compareTo(o2.name) : 1;
+                }
+                return -1;
+            }
+        });
+        dataGrid.addColumnSortHandler(columnSortHandler);
+        dataGrid.addColumn(value, tableHeaders[0]);
+
+        //hasData
+        value = new Column<CoursesOfSchoolclassPresenter.CourseItem, String>(cell) {
+            @Override
+            public String getValue(CoursesOfSchoolclassPresenter.CourseItem object) {
+                return object.hasStudentData;
+            }
+        };
+        value.setSortable(true);
+        columnSortHandler = new ListHandler<CoursesOfSchoolclassPresenter.CourseItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<CoursesOfSchoolclassPresenter.CourseItem>() {
+            public int compare(CoursesOfSchoolclassPresenter.CourseItem o1, CoursesOfSchoolclassPresenter.CourseItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.hasStudentData.compareTo(o2.hasStudentData) : 1;
+                }
+                return -1;
+            }
+        });
+        dataGrid.addColumnSortHandler(columnSortHandler);
+        dataGrid.addColumn(value, tableHeaders[1]);        
+
+        //hasType
+        value = new Column<CoursesOfSchoolclassPresenter.CourseItem, String>(cell) {
+            @Override
+            public String getValue(CoursesOfSchoolclassPresenter.CourseItem object) {
+                return object.type;
+            }
+        };
+        value.setSortable(true);
+        columnSortHandler = new ListHandler<CoursesOfSchoolclassPresenter.CourseItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<CoursesOfSchoolclassPresenter.CourseItem>() {
+            public int compare(CoursesOfSchoolclassPresenter.CourseItem o1, CoursesOfSchoolclassPresenter.CourseItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.type.compareTo(o2.type) : 1;
+                }
+                return -1;
+            }
+        });
+        dataGrid.addColumnSortHandler(columnSortHandler);
+        dataGrid.addColumn(value, tableHeaders[2]); 
+        
+        //from
+        value = new Column<CoursesOfSchoolclassPresenter.CourseItem, String>(cell) {
+            @Override
+            public String getValue(CoursesOfSchoolclassPresenter.CourseItem object) {
+                return object.from.toString();
+            }
+        };
+        value.setSortable(true);
+        columnSortHandler = new ListHandler<CoursesOfSchoolclassPresenter.CourseItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<CoursesOfSchoolclassPresenter.CourseItem>() {
+            public int compare(CoursesOfSchoolclassPresenter.CourseItem o1, CoursesOfSchoolclassPresenter.CourseItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.from.compareTo(o2.from) : 1;
+                }
+                return -1;
+            }
+        });
+        dataGrid.addColumnSortHandler(columnSortHandler);
+        dataGrid.addColumn(value, tableHeaders[3]);     
+                
+
+        //to
+        value = new Column<CoursesOfSchoolclassPresenter.CourseItem, String>(cell) {
+            @Override
+            public String getValue(CoursesOfSchoolclassPresenter.CourseItem object) {
+                return object.to.toString();
+            }
+        };
+        value.setSortable(true);
+        columnSortHandler = new ListHandler<CoursesOfSchoolclassPresenter.CourseItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<CoursesOfSchoolclassPresenter.CourseItem>() {
+            public int compare(CoursesOfSchoolclassPresenter.CourseItem o1, CoursesOfSchoolclassPresenter.CourseItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null) {
+                    return (o2 != null) ? o1.to.compareTo(o2.to) : 1;
+                }
+                return -1;
+            }
+        });
+        dataGrid.addColumnSortHandler(columnSortHandler);
+        dataGrid.addColumn(value, tableHeaders[3]);     
+                        
+        dataGrid.setRowData(0, data);
+        dataGrid.setRowCount(data.size(), true);
 //        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 //        pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
 //        pager.setDisplay(dataGrid);
