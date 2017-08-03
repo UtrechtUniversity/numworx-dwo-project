@@ -53,7 +53,8 @@ public class SelectModuleItem
 	private Object id;
 	private boolean showScore, fromSchool;
 	private int sequencenr;
-
+	private String image;
+	
 	private Type type = Type.ROOT;
 	private Promise<List<SelectModuleItem>> childrenAsync;
 	private Object parent;
@@ -180,6 +181,7 @@ public class SelectModuleItem
 			notBefore = domClassCourse.getNotBefore();
 			toetsType = domClassCourse.getType();
 		}
+		image = course.getImage();
 	}
 
 	public SelectModuleItem(DomScoContext sco) {
@@ -349,6 +351,10 @@ public class SelectModuleItem
 
 	public void showChildren(boolean showChildren) {
 		this.showChildren = showChildren;
+	}
+
+	public String getImage() {
+		return image;
 	}
 	
 }
