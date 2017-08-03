@@ -27,7 +27,8 @@ public final class CourseBuilder implements
 		if(c.getImageData() != null) {
 			build.setImage(pfx + "?courseId=" + c.getCourseID() + hasRoleId);
 			build.setImageData(null);
-		}
+		} else if ("" .equals(build.getImage()))
+			build.setImage(null);
 		return build;
 }
 	}

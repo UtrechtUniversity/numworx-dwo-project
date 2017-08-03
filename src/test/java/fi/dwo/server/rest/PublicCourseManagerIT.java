@@ -24,6 +24,7 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import fi.dwo.server.testutil.TestUriInfo;
 
 public class PublicCourseManagerIT {
 	
@@ -63,7 +64,7 @@ public class PublicCourseManagerIT {
 		
 		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(1));
 		rest.getDomDwoProfile().setId(id);
-		List<?> result = manager.getCourses(rest);
+		List<?> result = manager.getCourses(rest, new TestUriInfo());
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
 	}
@@ -75,7 +76,7 @@ public class PublicCourseManagerIT {
 		
 		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(3));
 		rest.getDomDwoProfile().setId(id);
-		List<?> result = manager.getCourses(rest);
+		List<?> result = manager.getCourses(rest, new TestUriInfo());
 		assertNotNull(result);
 		assertTrue(result.isEmpty());
 	}
@@ -109,7 +110,7 @@ public class PublicCourseManagerIT {
 		profile.setId(profileID);
 		rest.setDomDwoProfile(profile);	
 
-		List<DomCourseStudent> result = manager.getCourses(rest);
+		List<DomCourseStudent> result = manager.getCourses(rest, new TestUriInfo());
 
 		assertFalse(result.isEmpty());
 	}
