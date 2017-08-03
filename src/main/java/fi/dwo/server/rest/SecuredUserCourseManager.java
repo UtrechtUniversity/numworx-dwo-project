@@ -1,6 +1,9 @@
 package fi.dwo.server.rest;
 
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -10,11 +13,17 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.imageio.ImageIO;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -25,6 +34,7 @@ import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -39,6 +49,7 @@ import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.rest.util.CourseBuilder;
 
 /**
  * Handles the public registration of new users.
@@ -92,7 +103,7 @@ public class SecuredUserCourseManager {
     @PUT
     @Path("/getSchool")
     @Produces({"application/json"})
-    public List<DomCourseStudent> getCoursesSchool(@Context SecurityContext sc, RestDwoProfile rest) throws Dwo2Exception {
+    public List<DomCourseStudent> getCoursesSchool(@Context SecurityContext sc, RestDwoProfile rest, @Context UriInfo info) throws Dwo2Exception {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 		DomHasRole    hasRole = rest.getRestContext().getDomHasRole();
@@ -106,7 +117,8 @@ public class SecuredUserCourseManager {
 		PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(hr);
 		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);		
 		Stream<PersistentCourse> stream = courses.stream();
-		Stream<DomCourseStudent> map = stream.map((c) -> c.buildDomCourseStudent());
+		String pfx = info.getRequestUri().resolve("getImage").toString();
+		Stream<DomCourseStudent> map = stream.map(new CourseBuilder(pfx, hasRole));
 		map = map.sorted(DomCourseStudentComparator.INSTANCE);
 		return map.collect(Collectors.toList());
     }
@@ -116,7 +128,7 @@ public class SecuredUserCourseManager {
     @PUT
     @Path("/getRoot")
     @Produces({"application/json"})
-    public List<DomCourseStudent> getCourses(@Context SecurityContext sc, RestDwoProfile rest) 
+    public List<DomCourseStudent> getCourses(@Context SecurityContext sc, RestDwoProfile rest, @Context UriInfo info) 
     {
     	try {
    // TODO NPE tests 		    		
@@ -142,9 +154,9 @@ public class SecuredUserCourseManager {
     		
     		PersistentSchool school = new PersistentSchool(null);
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);
-    		
+    		String pfx = info.getRequestUri().resolve("getImage").toString();
     		Stream<PersistentCourse> stream = courses.stream();
-			Stream<DomCourseStudent> map = stream.map((c) -> c.buildDomCourseStudent());
+			Stream<DomCourseStudent> map = stream.map(new CourseBuilder(pfx,hasRole));
 			map = map.sorted(DomCourseStudentComparator.INSTANCE);
     		return map.collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
@@ -158,7 +170,7 @@ public class SecuredUserCourseManager {
     @PUT
     @Path("/getChildren")
     @Produces({"application/json"})
-    public List<DomCourseStudent> getCourses(@Context SecurityContext sc, RestCourse rest) {
+    public List<DomCourseStudent> getCourses(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) {
     	try {
     		DomCourse course = rest.getDomCourse();
     		DomHasRole hasRole = rest.getRestContext().getDomHasRole();
@@ -191,9 +203,10 @@ public class SecuredUserCourseManager {
     				return Collections.emptyList();
     		}
     			
-    		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent);    		
+    		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent);
+    		String pfx = info.getRequestUri().resolve("getImage").toString();
     		return courses.stream()
-    				.map( (c)-> c.buildDomCourseStudent())
+    				.map( new CourseBuilder(pfx, hasRole) )
     				.sorted(DomCourseStudentComparator.INSTANCE)
     				.collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
@@ -247,5 +260,36 @@ public class SecuredUserCourseManager {
     	}
     	return null;
     }
-    
+ 
+    @GET
+    @Path("/getImage")
+    @Produces({"image/png"})
+    public Response getImage(@Context SecurityContext sc, @QueryParam("courseId") Long courseId, @QueryParam("hasRoleId") String hasRoleId) {
+    	try {
+    		PersistentCourse course = CourseManager.findEntity(courseId);
+        	PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
+// TODO Security
+        	PersistenceId pid = new PersistenceId();
+        	pid.setIdString(hasRoleId);
+        	DomHasRole hasRole = new DomHasRole();
+        	hasRole.setId(pid);
+			PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);
+			PersistentHasRole hr = HasRoleManager.findEntity(hasRoleKey);
+			PersistentUser user = getUserFromContext(sc);
+// user.id == hr.getuserid
+// schoolid = course.schoolid or course.schoolid = null
+// profileRights != limited
+        	
+    		byte[] imageData = course.getImageData();
+    		BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
+    		ByteArrayOutputStream out = new ByteArrayOutputStream();
+    		ImageIO.write(image, "png", out);
+    		imageData = out.toByteArray();
+    		return Response.ok(imageData, "image/png").build();    		
+    	} catch(Exception e) {
+    		LOG.log(Level.SEVERE, "getImage error", e);
+    	}
+    	return Response.status(Status.NOT_FOUND).build();
+    }    
+   
 }

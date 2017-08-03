@@ -40,6 +40,7 @@ import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import fi.dwo.server.rest.util.CourseBuilder;
 
 /**
  * Handles the public registration of new users.
@@ -81,7 +82,7 @@ public class PublicCourseManager {
     @PUT
     @Path("/getRoot")
     @Produces({"application/json"})
-    public List<DomCourseStudent> getCourses(RestDwoProfile rest) 
+    public List<DomCourseStudent> getCourses(RestDwoProfile rest, @Context UriInfo info) 
     {
     	try {
    // TODO NPE tests 		    		
@@ -101,7 +102,8 @@ if(SECURITY)
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);
     		
     		Stream<PersistentCourse> stream = courses.stream();
-			Stream<DomCourseStudent> map = stream.map((c) -> c.buildDomCourseStudent());
+    		String uri = info.getRequestUri().resolve("getImage").toString();
+			Stream<DomCourseStudent> map = stream.map(new CourseBuilder(uri));
 			map = map.sorted(DomCourseStudentComparator.INSTANCE);
     		return map.collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
@@ -133,14 +135,8 @@ if(SECURITY)
     			
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent); 
     		final String PFX = info.getRequestUri().resolve("getImage").toString();
-    		return courses.stream().map( (c)-> {
-				DomCourseStudent build = c.buildDomCourseStudent();
-				if(c.getImageData() != null) {
-					build.setImage(PFX + "?courseId=" + c.getCourseID());
-					build.setImageData(null);
-				}
-				return build;
-			}).sorted(DomCourseStudentComparator.INSTANCE).collect(Collectors.toList());
+    		return courses.stream().map(
+    			new CourseBuilder(PFX)).sorted(DomCourseStudentComparator.INSTANCE).collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
     		throw e;
     	} catch (Exception e) {
@@ -181,6 +177,17 @@ if(SECURITY)
     public Response getImage(@QueryParam("courseId") Long courseId) {
     	try {
     		PersistentCourse course = CourseManager.findEntity(courseId);
+    		if(SECURITY) {
+        		PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
+        		if(
+        				course.getSchoolID() != null ||
+        				profile.getDwoProfileRights().contains(LIMITED))
+        		{
+        			LOG.log(Level.WARNING, "Illegal access to " + courseId);
+        			return Response.status(Status.NOT_FOUND).build();
+        		}
+    		
+    		}
     		byte[] imageData = course.getImageData();
     		BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
     		ByteArrayOutputStream out = new ByteArrayOutputStream();
