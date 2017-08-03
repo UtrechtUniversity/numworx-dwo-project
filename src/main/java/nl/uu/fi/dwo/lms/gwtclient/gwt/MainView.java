@@ -368,7 +368,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
             mainPresenter.selectView(SwitchViewEvent.SelectedView.RESULTS);
         } else if (event.getSource() == logoutLabel) {
             hideMenuView();
-            Window.Location.assign("");
+          Window.Location.replace(Window.Location.getHref());
         } else if (event.getSource() == classesLabel) {
             hideMenuView();
             mainPresenter.selectView(SwitchViewEvent.SelectedView.SCHOOLCLASSES);

@@ -43,6 +43,7 @@ public class MsgDialogView extends Composite implements MsgDialogPresenter.Displ
     public void onClick(ClickEvent event) {
         if (event.getSource() == okButton) {
             dialogBox.hide();
+            msgDialogPresenter.Back();
 //        } else if (event.getSource() == cancelButton) {
 //            LOG.log(Level.INFO, "Add schoolclass now");
 //            dialogBox.hide();

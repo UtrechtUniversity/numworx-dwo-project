@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
@@ -22,11 +23,8 @@ public class LoginPresenter {
     public interface Display extends IsWidget {
 
         Widget asWidget();
-
         void clear();
-
         public void setUsername(String username);
-
         public void setPassword(String password);
     }
 
@@ -55,9 +53,11 @@ public class LoginPresenter {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_RESULTS));
                         }
                         LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
-                    } else {
-                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
+                    } else {                        
+//                        dwoGlobalVars.clearCurrentUser();
                         eventBus.fireEvent(new DialogEvent(("Login failed, unknown usercode and password combination.") ));
+                        // TODO fix login stuff
+//                        Window.Location.assign("");
                         LOG.log(Level.INFO, "login failed. Firing Login fail event.");
 
                     }
@@ -77,6 +77,8 @@ public class LoginPresenter {
                   } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
                         eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError,fail.getMessage())));
+                        // TODO fix login stuff
+//                        Window.Location.assign("");
 //                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
                         //throw directly
                     }
