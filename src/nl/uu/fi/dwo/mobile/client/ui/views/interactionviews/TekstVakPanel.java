@@ -182,7 +182,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	CssColor randColor = CssColor.make(150, 150, 150);
 	CssColor selectieColor = CssColor.make(255, 128, 0);
 	CssColor grijs = CssColor.make(128, 128, 128);
-	int randDikte = 0;
+	int randDikte, randDikte0;
 	private boolean popup;
 	//private boolean tableBorders;
 	private LayoutPanel[] horizontalBorders;
@@ -655,7 +655,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			resizeForCallOut();
 		}
 		
-		randDikte = randZichtbaar ? randDikte : 0; 
+		randDikte0 = randDikte = randZichtbaar ? randDikte : 0; 
 
 		mainPanel2 = new LayoutPanel(); 
 		if(!callOut)
@@ -1731,11 +1731,13 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			}
 			else
 			{	style.setBorderColor(grijs.toString());
-				style.setBorderWidth(5, Unit.PX);
-				mainPanel2.setWidgetLeftRight(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
-				mainPanel2.setWidgetTopBottom(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
-				style.clearHeight();
-				style.clearWidth();
+				style.setBorderWidth(randDikte = 5, Unit.PX);
+				int extra = randDikte0 - randDikte;
+				mainPanel2.setWidgetLeftRight(mainPanel, extra, Style.Unit.PX, extra, Style.Unit.PX);
+				mainPanel2.setWidgetTopBottom(mainPanel, extra, Style.Unit.PX, extra, Style.Unit.PX);
+// does not work, after setstate position with setHeight
+				mainPanel2.setPixelSize(breedte - 2 * randDikte, hoogte - 2 * randDikte);
+
 			}
 		
 		}
@@ -1747,10 +1749,9 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 					style.setBackgroundColor(bgColor.toString());
 				else {
 					style.clearBackgroundColor();
-					style.setBorderColor(randColor.toString());
-					style.setBorderWidth(randDikte, Unit.PX);
-					style.setOpacity(1);
-					mainPanel2.setPixelSize(breedte - 2 * randDikte, hoogte - 2 * randDikte);
+//					style.setBorderColor(randColor.toString());
+//					style.setBorderWidth(randDikte, Unit.PX);
+//					style.setOpacity(1);
 				}
 					
 			}
@@ -1758,9 +1759,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			{
 				style.setBorderColor(randColor.toString());
 				//randPanel.getElement().getStyle().setOpacity(1);
-				style.setBorderWidth(randDikte, Unit.PX);
+				style.setBorderWidth(randDikte = randDikte0, Unit.PX);
 				mainPanel2.setWidgetLeftRight(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 				mainPanel2.setWidgetTopBottom(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+				mainPanel2.setPixelSize(breedte - 2 * randDikte, hoogte - 2 * randDikte);
 			}
 			
 			
