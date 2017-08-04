@@ -1,8 +1,7 @@
-package nl.uu.fi.dwo.rest.dom.entities;
+package nl.uu.fi.dwo.rest.dom;
 
 import java.util.HashMap;
 import java.util.Map;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Node of the DomTree. The tree is crawled to calculate a result matrix
@@ -15,7 +14,7 @@ public class DomTree<T> {
 
     private DomTree parent = null;
     T object;
-    private Map<PersistenceId, DomTree<T>> children = new HashMap<PersistenceId, DomTree<T>>();
+    private Map<String, DomTree<T>> children = new HashMap<String, DomTree<T>>();
     
     public DomTree(T anObject){
         object = anObject;
@@ -46,14 +45,14 @@ public class DomTree<T> {
     /**
      * @return the children
      */
-    public Map<PersistenceId, DomTree<T>> getChildren() {
+    public Map<String, DomTree<T>> getChildren() {
         return children;
     }
 
     /**
      * @param children the children to set
      */
-    public void setChildren(Map<PersistenceId, DomTree<T>> children) {
+    public void setChildren(Map<String, DomTree<T>> children) {
         this.children = children;
     }
 
