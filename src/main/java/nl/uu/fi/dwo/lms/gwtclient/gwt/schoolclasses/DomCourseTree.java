@@ -9,7 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
-import nl.uu.fi.dwo.rest.dom.entities.DomTree;
+import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -17,55 +17,84 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * Client side class, not meant to be transported.
  *
  * The information in the DomResultsPerTeacher class is inserted client-side
- into this simplified kd-range tree. The kd-tree has a search range of 1 and
- has a node type from courseTree to leave a sequence of: DomTeacher,
- DomSchoolClass, DomClassCourse referred DomCourse,DomCourse, ..., DomCourse.
- A leave of the kd-tree is by definition a course-leave.
+ * into this simplified kd-range tree. The kd-tree has a search range of 1 and
+ * has a node type from courseTree to leave a sequence of: DomTeacher,
+ * DomSchoolClass, DomClassCourse referred DomCourse,DomCourse, ..., DomCourse.
+ * A leave of the kd-tree is by definition a course-leave.
  *
  * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  */
 public class DomCourseTree {
-
+    
     private static final Logger LOG = Logger.getLogger(DomCourseTree.class.getName());
-
+    
     private DomTree<DomCourseOfClass> courseTree;
-
+    
     public DomCourseTree(DomCoursesOfSchoolClass4Teacher resultData) {
         //restData = resultData;
         LOG.log(Level.INFO, "Initializing a DomCoureTree.");
         courseTree = buildCourseTree(resultData);
         //reCalculateResults();
     }
-
     
-    private DomTree<DomCourseOfClass> buildCourseTree(DomCoursesOfSchoolClass4Teacher resultData){
-        Map<PersistenceId, DomTree> cocMap = new HashMap<PersistenceId, DomTree>(resultData.getCourses().size());
-        Map<PersistenceId, DomClassCourse> classCourseMap = new HashMap<PersistenceId, DomClassCourse>(resultData.getClassCourses().size());
+    private DomTree<DomCourseOfClass> buildCourseTree(DomCoursesOfSchoolClass4Teacher resultData) {
+        Map<String, DomTree> cocMap = new HashMap<String, DomTree>(resultData.getCourses().size());
+        Map<String, DomClassCourse> classCourseMap = new HashMap<String, DomClassCourse>(resultData.getClassCourses().size());
         
-        for (DomMapEntry<PersistenceId, DomCourse> course : resultData.getCourses()) {
+        for (DomMapEntry<PersistenceId, DomCourse> courseEntry : resultData.getCourses()) {
             
-                cocMap.put(course.getKey(), new DomTree<DomCourseOfClass>(new DomCourseOfClass(course.getValue())));
-            }
-
-        for (DomMapEntry<PersistenceId, DomClassCourse> cc : resultData.getClassCourses()) {
-                classCourseMap.put(cc.getValue().getCourseId(), cc.getValue());
-            }
+            cocMap.put(courseEntry.getKey().getIdString(), new DomTree<DomCourseOfClass>(new DomCourseOfClass(courseEntry.getValue())));
+        }
         
+        for (DomMapEntry<PersistenceId, DomClassCourse> ccEntry : resultData.getClassCourses()) {
+            classCourseMap.put(ccEntry.getValue().getCourseId().getIdString(), ccEntry.getValue());
+        }
+
         //build tree
         DomTree<DomCourseOfClass> root = new DomTree<DomCourseOfClass>(new DomCourseOfClass());
-        for(DomTree<DomCourseOfClass> n: cocMap.values()){
-            if(n.getObject().getCourse().getParentID()==null) {                
+        for (DomTree<DomCourseOfClass> n : cocMap.values()) {
+            //attach classCourse if it exists
+            if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())) {
+                    n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId().getIdString()));
+                }
+            //build tree in O(n) time
+            if (n.getObject().getCourse().getParentID() == null) {
                 //if c exists in classCourses add to node
-                if(classCourseMap.containsKey(n.getObject().getCourse().getId())){
-                    n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId()));
+                if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())) {
+                    n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId().getIdString()));
                 }
                 //add to root node
-                courseTree.getChildren().put(n.getObject().getCourse().getId(),n);
-            }else{
+                root.getChildren().put(n.getObject().getCourse().getId().getIdString(), n);
+            } else {
                 //add to parent in tree
-                cocMap.get(n.getObject().getCourse().getId());
+                //get course parent
+                String stringIdParent = n.getObject().getCourse().getParentID().getIdString();
+                cocMap.get(stringIdParent).getChildren().put(n.getObject().getCourse().getId().getIdString(), n);
             }
-        }        
+        }
+        //dump tree to logging
+        LOG.log(Level.FINE, "Dumping DomCourseTree (depth, name).");
+        DFSTreePrint(root);
         return root;
+    }
+    
+    private void DFSTreePrint(DomTree<DomCourseOfClass> node) {
+        DFSTreePrint(node, 0);
+    }
+    private void DFSTreePrint(DomTree<DomCourseOfClass> node, int depth) {
+        // do depth first search       
+        if(node.getChildren() != null && !node.getChildren().isEmpty()) {
+                depth++;
+            for (DomTree<DomCourseOfClass> coc : node.getChildren().values()) {
+                LOG.log(Level.FINE, "(" + depth + ","+coc.getObject().getCourse().getName()+")");
+                if (coc.getChildren() != null && !coc.getChildren().isEmpty()) {
+                    for (DomTree<DomCourseOfClass> child : node.getChildren().values()) {
+                        DFSTreePrint(child, depth);
+                    }
+                }
+            }
+            depth--;
+        }
+        
     }
 }

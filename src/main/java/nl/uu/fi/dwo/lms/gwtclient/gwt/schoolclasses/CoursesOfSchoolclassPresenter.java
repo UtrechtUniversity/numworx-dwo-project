@@ -32,10 +32,11 @@ public class CoursesOfSchoolclassPresenter {
     private CoursesOfSchoolclassService service = new CoursesOfSchoolclassService();
 
     private String[] tableHeaders = {"Module name", "studentdata", "type", "from", "to"};
-    private DomSchoolClass schoolClass;
+    private DomSchoolClass schoolClass;    
     private DomCoursesOfSchoolClass4Teacher moduleInfo;
+    private DomCourseTree tree;
     private Map<String, DomStudent> studentMap;
-    private Map<String, CoursesOfSchoolclassPresenter.CourseItem> courseItems;
+    private Map<String, CoursesOfSchoolclassPresenter.CourseClassItem> courseItems;
     private Map<String, DomSchoolClass> schoolClassMap;
     private List<SchoolClassListBoxItem> schoolClassItems;
     private Display view;
@@ -49,11 +50,17 @@ public class CoursesOfSchoolclassPresenter {
 
         void init();
 
-        void updateView(Map<String, CoursesOfSchoolclassPresenter.CourseItem> data);
+        void updateView(Map<String, CoursesOfSchoolclassPresenter.CourseClassItem> data);
 
     }
 
     public class CourseItem {
+        public CourseItem parent;
+        public CourseItem children;
+    }
+
+    
+    public class CourseClassItem {
 //        /"Module name", "studentdata", "type", "from", "to"
         public String key; //unique
         public String name;
@@ -62,7 +69,7 @@ public class CoursesOfSchoolclassPresenter {
         public Date from;
         public Date to;
 
-        public CourseItem(String aKey, String aName, String hasData, String aType, Date aFrom, Date aTo) {
+        public CourseClassItem(String aKey, String aName, String hasData, String aType, Date aFrom, Date aTo) {
             key = aKey;
             name = aName;
             hasStudentData = hasData;
@@ -99,7 +106,7 @@ public class CoursesOfSchoolclassPresenter {
             public Promise<Void> call(Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {                
                 //flip back to schoolclasses screen 
                 DomCoursesOfSchoolClass4Teacher value = resolved.getValue();
-                
+                tree = new DomCourseTree(value);
                 //parse results into a tree.
                 view.updateView(courseItems);
                 return null;
@@ -131,7 +138,7 @@ public class CoursesOfSchoolclassPresenter {
 //     * @param item
 //     * @param op
 //     */
-//    public void selectItem(CoursesOfSchoolclassPresenter.CourseItem item, int op) {
+//    public void selectItem(CoursesOfSchoolclassPresenter.CourseClassItem item, int op) {
 //        switch (op) {
 //            case 4:
 //                if (item.singleSchool) {

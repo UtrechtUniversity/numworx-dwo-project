@@ -20,7 +20,7 @@
             <g:FlowPanel height="2em">
         </g:FlowPanel>
         <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
-            <g:Tree ui:field='tree' height="auto"></g:Tree><c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" ui:field='dataGrid'/>
+            <c:CellTree ui:field='tree' height="auto"></c:CellTree><c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" ui:field='dataGrid'/>
         </g:FlowPanel>        
     </g:FlowPanel>
     <!--    <g:LayoutPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
