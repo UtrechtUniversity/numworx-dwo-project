@@ -8,6 +8,7 @@ import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.scorm.SCORM2004APIInterface;
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -18,11 +19,13 @@ import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
 import fi.dwo.dwojapplet.domain.rest.PublicProfileManager;
 import fi.dwo.dwojapplet.domain.rest.PublicUserManager;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
+import fi.dwo.dwojapplet.domain.rest.SecuredTeacherCourseManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -1969,15 +1972,42 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * (non-Javadoc)
      * 
      */
-    public boolean updateCourse(Course course) {
-        try {
-            return PersistenceFacade.instance().updateCourse(course);
-        } catch (CourseException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return false;
-        }
-    }
+//    public boolean updateCourse(Course course) {
+//        try {
+//            return PersistenceFacade.instance().updateCourse(course);
+//        } catch (CourseException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//            return false;
+//        }
+//    }
 
+    public boolean updateCourse(Course course) {
+    	PersistentCourse pc = new PersistentCourse();
+    	try {
+ // if Course extends persistentCourse
+    		pc.setCourseID(Long.valueOf(course.getID()));
+    		pc.setDescription(course.getDescription());
+    		pc.setName(course.getName());
+    		pc.setDwoProfileID(Long.valueOf(getDwoProfileID()));
+    		pc.setExport(course.isExport());
+    		pc.setImage(course.getImageUrl());
+    		pc.setImageData(course.getImageData());
+    		pc.setParentID(Long.valueOf(course.getParentID()));
+    		pc.setSchoolID(Long.valueOf(course.getSchoolID()));
+    		pc.setSequencenr(Long.valueOf(course.sequencenr));
+    		pc.setTreeIndex(null);
+    		pc.setWithChildren(null); // not updatable
+ // should work with DomCourseFull
+    		DomCourseFull edit = pc.buildDomCourseFull();
+			SecuredTeacherCourseManager.update(edit);
+    		return true;
+    	} catch(Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+    		return false;
+    	}
+    }
+    
+    
     /*
      * (non-Javadoc)
      * 

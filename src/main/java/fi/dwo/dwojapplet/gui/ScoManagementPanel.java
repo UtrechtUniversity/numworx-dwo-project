@@ -84,6 +84,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     private JLabel noScosLabel;
     private FileDialog saveDial, openDial;
 
+    private JCheckBox editorCB, visibleCB;
+
     class IconDialog extends JFileChooser implements ActionListener {
     	JTextField url;
     	JDialog dialog;
@@ -137,7 +139,6 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     private IconDialog iconDial;
     
     
-    private JCheckBox editorCB;
     private Box editorBox = Box.createVerticalBox();
 
     //private JButton publishButton;
@@ -254,6 +255,10 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             pane.setBorder(BorderFactory.createLineBorder(Color.black));
             editorBox.add(pane);
         }
+        visibleCB = new JCheckBox("Not Visible");
+        visibleCB.setSelected(course.isNotVisible());
+        editorBox.add(visibleCB);
+ 
         panel1.add(editorBox, BorderLayout.NORTH);
 
         panel1.add(cpanel, BorderLayout.CENTER);
@@ -602,7 +607,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             if (editorCB.isSelected()) {
                 if (wiskOpdrEditPanel == null) {
                     wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
-                    wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
+                    wiskOpdrEditPanel.setPreferredSize(new Dimension(800, 350));
                     editorBox.add(wiskOpdrEditPanel);
                 }
                 wiskOpdrEditPanel.setVisible(true);
@@ -694,14 +699,17 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         int r = iconDial.showOpenDialog(this);
         File file = iconDial.getSelectedFile();
 		naam = (r == iconDial.CANCEL_OPTION || file == null) ? null : file.getName();
-        if(naam != null && r == iconDial.APPROVE_OPTION) {
+        if(naam == null && r == iconDial.APPROVE_OPTION) {
         	naam = iconDial.url.getText();
-        	try {
-				PersistenceFacade.instance().setLogo(course.getID(),naam.getBytes("UTF-8"));
-			} catch (PersistenceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        	course.setImageUrl(naam);
+        	course.setImageData(new byte[0]);
+        	update = true;
+//        	try {
+//				PersistenceFacade.instance().setLogo(course.getID(),naam.getBytes("UTF-8"));
+//			} catch (PersistenceException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
         	return;
         }
         
@@ -711,13 +719,17 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             //File dir = new File(openDial.getDirectory());
             BufferedImage img = ImageIO.read(file);
             Image reduced;
-            if (img.getWidth() <= 252 && img.getHeight() <= 160) {
+            int w = img.getWidth();
+			int h = img.getHeight();
+			if (w <= 252 && h <= 160) {
                 reduced = img;
             } else {
-            	float scalex = img.getWidth()/252f;
-            	float scaley = img.getHeight()/160f;
+            	float scalex = w/252f;
+            	float scaley = h/160f;
             	float scale = Math.max(scalex, scaley);
-                reduced = img.getScaledInstance(Math.round(scale*img.getWidth()), Math.round(scale*img.getHeight()), Image.SCALE_SMOOTH);
+            	w = Math.round(w/scale);
+            	h = Math.round(h/scale);
+                reduced = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
             }
             if (reduced instanceof BufferedImage) {
                 img = (BufferedImage) reduced;
@@ -733,12 +745,13 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             course.setCourseLogo(reduced);
             courseLogoButton.setIcon(new ImageIcon(reduced));
 // TODO omzetten in PersistenceFacade!
-            try {
-                PersistenceFacade.instance().setLogo(course.getID(), data);
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE,null,e);
-            }
-
+//            try {
+//                PersistenceFacade.instance().setLogo(course.getID(), data);
+//            } catch (Exception e) {
+//                LOG.log(Level.SEVERE,null,e);
+//            }
+            course.setImageData(data);
+            course.setImageUrl("");
         }
     }
 
@@ -758,21 +771,33 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         return this;
     }
 
+	private boolean update = false;
     /* (non-Javadoc)
      * @see fi.dwo.client.gui.CenterSubPanel#end()
      */
     @Override
     public void end() {
+    	
         if (editorCB.isSelected() && !wiskOpdrEditPanel.getText().equals(course.getDescription())) {
             course.setDescription(wiskOpdrEditPanel.getText());
-            GuiCreator.instance().updateCourse(course);
+            update = true;
         } else
             if (!editorCB.isSelected() && pane != null && !pane.getText().equals(course.getDescription())) {
             course.setDescription(pane.getText());
-            GuiCreator.instance().updateCourse(course);
-        }
-        center.getMenu().setEditing(false);
-        center.setStrategy(null);
+            update = true;
+       }
+       if(course.isNotVisible() != visibleCB.isSelected())
+       {
+    	   update = true;
+    	   course.setNotVisible(visibleCB.isSelected());
+       }
+       if(update) 
+       {
+    	   GuiCreator.instance().updateCourse(course);
+    	   update = false;
+       }
+       center.getMenu().setEditing(false);
+       center.setStrategy(null);
     }
 
     /**
