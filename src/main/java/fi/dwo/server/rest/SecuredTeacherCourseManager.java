@@ -27,6 +27,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,9 +45,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
@@ -57,6 +60,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -73,6 +77,56 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredTeacherCourseManager.class.getName());
 
+    
+    @PUT
+    @Path("update")
+    @Produces({"application/json"})
+    DomCourseFull update(@Context SecurityContext sc, RestCourseFull rest) {
+		DomCourseFull course = rest.getDomCourse();
+    	try {
+// Security...
+			Long courseID = MySQLPersistenceId.getNativeId(course);
+			PersistentCourse pc = CourseManager.findEntity(courseID);
+// editable fields?
+			if(course.getName() != null) pc.setName(course.getName());
+			else course.setName(pc.getName());
+			if(course.getDescription() != null) pc.setDescription(course.getDescription());
+			else course.setDescription(pc.getDescription());
+			if(course.getImage() != null) pc.setImage(course.getImage());
+			else course.setImage(pc.getImage());
+			if(course.getImageData()!=null) pc.setImageData(course.getImageData());
+			else course.setImageData(pc.getImageData());
+			pc.setNotVisible(course.isNotVisible());
+			if(course.getExport() != null)
+				pc.setExport(course.getExport().booleanValue());
+			else
+				course.setExport(pc.getExport());
+			if(course.getSequenceNr() != null)
+				pc.setSequencenr(course.getSequenceNr());
+			else 
+				course.setSequenceNr(pc.getSequencenr());
+
+// SCHOOL to NULL-school 
+			if(course.getSchoolId() != null) {
+				// not for teachers, only profile-admin and dwo-admin
+			}
+// MOVE to different parent
+			if(course.getParentID() != null) {				
+				long parentID = pc.getParentID();
+				pc.setParentID(parentID);
+			}
+			
+			// 
+			// parent,export, notvisible, school, sequence
+			
+			
+		} catch (Dwo2Exception e) {
+			throw new Dwo2RestException(e);
+		}
+    	
+    	return course;
+    }
+    
 // needs get, update, delete, etc...
     
     
