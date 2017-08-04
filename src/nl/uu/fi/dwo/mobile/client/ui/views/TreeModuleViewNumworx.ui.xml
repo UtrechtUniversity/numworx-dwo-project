@@ -26,7 +26,7 @@
 			</g:FlowPanel>
 		</g:north>
 		<g:west size="192">
-		    <g:DockLayoutPanel unit='PX' styleName='{style.navPanel}'>
+		    <g:DockLayoutPanel unit='PX' styleName='{style.navPanel}' ui:field='westPanel'>
 				<g:north size="83">
 					<g:HTML styleName='{style.navTitle}'><ui:text from='{rb.bibliotheek}'/></g:HTML>
 				</g:north>
@@ -34,7 +34,7 @@
 				   <g:ScrollPanel>
 					<g:FlowPanel>
 						<cl:CellList ui:field='cells' />
-						<g:Tree ui:field="tree" />
+						<g:Tree ui:field="tree" addStyleNames='{style.tree}'/>
 					</g:FlowPanel>
 				   </g:ScrollPanel>
 				</g:center>
@@ -47,7 +47,7 @@
 				<g:FlowPanel styleName='{style.itemPanel}'>
 						<g:FlowPanel styleName='{style.titlePanel}'> 
 							<g:HTML styleName='{style.title}' ui:field='title' >Modules voor ....</g:HTML>
-							<g:SimplePanel styleName='{style.description}' ui:field='description' />
+							<g:SimplePanel ui:field='description' />
 						</g:FlowPanel>
 						<g:FlowPanel styleName='{style.favicon}'>
 							<g:Image ui:field='favIcon'

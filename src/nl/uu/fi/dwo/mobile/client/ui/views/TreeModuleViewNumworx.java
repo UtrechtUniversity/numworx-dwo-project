@@ -355,7 +355,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@UiField ToggleButton fullBtn;
 	@UiField Label loginLabel;
 	@UiField FlowPanel centerPanel;
-	
+	@UiField DockLayoutPanel westPanel;
 	
 	@UiHandler("homeBtn")
 	void onHomeBtn(ClickEvent ev) {
@@ -567,6 +567,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	class TreeNavStrategy implements NavStrategy {
 		TreeNavStrategy() {
 			cells.removeFromParent();
+			root.setWidgetSize(westPanel, 300);
 		}
 	}
 	
@@ -701,24 +702,26 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		boolean hasImage = item.getImage() != null;
 		switch(item.getType()) {
 		case ROOT:
-String AanJolanda = "Hallo Jolanda van den Berg, welkom bij Numworx!";
-				title.setText(AanJolanda);
-String Jolanda =
-"Numworkx helpt je met wiskunde en rekenen. Werken met formules lastig op een computer? Schrijf de fomule op je tablet en Numworx"
-+ " zet je handschrift om in echte wiskudige invoer. Met slepen en swipen maak je grafieken. Opgaven los je in stappen op, waarbij"
-+ "Numworx steeds vertelt wat je wel en niet goed doet.<br><br>"
-+ "Je docent biedt les- en oefenmateriaal precies op maat aan, zodat je gericht kunt werken aan de onderwerpen die belangrijk voor"
-+ "jou zijn. Dat materiaal vind je in de map in het <span style='color: #1b75BB;font-family:inherit'>linkermenu</span>.<br><br>"
-+ "In de bibliotheek van Numworx is het lesmateriaal georganiseerd in schooltypen en"
-+ " <span style='color:#1b75BB;font-family:inherit'>mappen</span>. In de mappen vind je "
-+ "<span style='color:#1b75BB;font-family:inherit'>modules</span> en daarbinnen de <span style='color:#1b75BB;font-family:inherit'>activiteiten</span>. "
-+ "Activiteiten zijn afgeronde stukken lesstof of toetsen over een bepaald onderwerp. Je kunt in alle mappen kijken en werken.<br>"
-+ "Klik op een keuze in het menu aan de linkerkant om te beginnen.";
-			Widget w = new HTML(Jolanda);
-			w.getElement().getStyle().setFontSize(18, Style.Unit.PX);
-			w.getElement().getStyle().setProperty("fontFamily", "Ubuntu");
-			w.getElement().getStyle().setLineHeight(27, Style.Unit.PX);
-			description.setWidget(w);
+			title.setText(item.getName());
+			description.setWidget(getLabel(item));
+//String AanJolanda = "Hallo Jolanda van den Berg, welkom bij Numworx!";
+//				title.setText(AanJolanda);
+//String Jolanda =
+//"Numworkx helpt je met wiskunde en rekenen. Werken met formules lastig op een computer? Schrijf de fomule op je tablet en Numworx"
+//+ " zet je handschrift om in echte wiskudige invoer. Met slepen en swipen maak je grafieken. Opgaven los je in stappen op, waarbij"
+//+ "Numworx steeds vertelt wat je wel en niet goed doet.<br><br>"
+//+ "Je docent biedt les- en oefenmateriaal precies op maat aan, zodat je gericht kunt werken aan de onderwerpen die belangrijk voor"
+//+ "jou zijn. Dat materiaal vind je in de map in het <span style='color: #1b75BB;font-family:inherit'>linkermenu</span>.<br><br>"
+//+ "In de bibliotheek van Numworx is het lesmateriaal georganiseerd in schooltypen en"
+//+ " <span style='color:#1b75BB;font-family:inherit'>mappen</span>. In de mappen vind je "
+//+ "<span style='color:#1b75BB;font-family:inherit'>modules</span> en daarbinnen de <span style='color:#1b75BB;font-family:inherit'>activiteiten</span>. "
+//+ "Activiteiten zijn afgeronde stukken lesstof of toetsen over een bepaald onderwerp. Je kunt in alle mappen kijken en werken.<br>"
+//+ "Klik op een keuze in het menu aan de linkerkant om te beginnen.";
+//			Widget w = new HTML(Jolanda);
+//			w.getElement().getStyle().setFontSize(18, Style.Unit.PX);
+//			w.getElement().getStyle().setProperty("fontFamily", "Ubuntu");
+//			w.getElement().getStyle().setLineHeight(27, Style.Unit.PX);
+//			description.setWidget(w);
 				favIcon.setVisible(false);
 				centerPanel.setStyleName(style.centerBackground(), true);
 				centerPanel.setStyleName(style.folderBackground(), false);
@@ -730,8 +733,8 @@ String Jolanda =
 				title.setText(item.getName());
 				String url = (hasImage) ? item.getImage(): r("images/courses/2.png");
 				favIcon.setUrl(url);
-				flip = (flip%5)+1; flip=1;
-				favIcon.setVisible(hasImage || flip!=1);
+				flip = (flip%5)+1; //flip=1;
+				favIcon.setVisible( (hasImage || flip!=1) && isLabel(item));
 				centerPanel.setStyleName(style.folderBackground(), !hasImage && flip==1);
 				centerPanel.setStyleName(style.centerBackground(), false);
 				description.setWidget(getLabel(item));
@@ -763,6 +766,15 @@ String Jolanda =
 		tiles.redraw();
 	}
 
+	private boolean isLabel(SelectModuleItem item) {
+		String description = item.getDescription();
+		if(description.startsWith(DescriptionView.GZIPPREFIX))
+			return false;
+		if(description.startsWith("<html>"))
+			return false;
+		return true;
+	}
+	
 	private Widget getLabel(SelectModuleItem item) {
 		Widget w;
 		String description = item.getDescription();
@@ -775,6 +787,7 @@ String Jolanda =
 		}else
 		{
 			w = new Label(description);
+			w.setStyleName(style.description());
 		}
 		return w;
 	}
