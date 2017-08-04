@@ -58,6 +58,7 @@ import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SetSelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.googlecode.mgwt.ui.client.MGWT;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.ProfileCommand;
@@ -545,10 +546,32 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 // tree stuff		
 		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
 		standardMap.setState(true);
-
-		
+// Strategy stuff desktop/tablet
+		final boolean desktop = MGWT.getOsDetection().isDesktop();
+		navigation = desktop ? new TreeNavStrategy() : new ListNavStrategy();
 	}
 
+	interface NavStrategy {
+		
+	}
+	
+	NavStrategy navigation;
+
+	
+	class ListNavStrategy implements NavStrategy {
+		ListNavStrategy() {
+			tree.removeFromParent();
+		}
+	}
+	
+	class TreeNavStrategy implements NavStrategy {
+		TreeNavStrategy() {
+			cells.removeFromParent();
+		}
+	}
+	
+	
+	
 	@Override
 	public void render(List<SelectModuleItem> currentModel) {
 		
