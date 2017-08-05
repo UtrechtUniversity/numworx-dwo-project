@@ -13,11 +13,6 @@
 	@def medium 500;
 	@def regular 400;
 	
-	.rootPanel {
-		width: 1024px;
-		height: 100%;
-	}
-
 	.headerPanel {
 		background-color: color10;
 		height: 90px;
@@ -84,7 +79,7 @@
 		}
 		
 	</ui:style>
-	<g:DockLayoutPanel unit='PX' styleName='{style.rootPanel}'>
+	<g:DockLayoutPanel unit='PX' styleName='{t.rootPanel}'>
 		<g:north size="90">
 			<g:FlowPanel styleName='{style.headerPanel}'>
 			  <g:FlowPanel styleName='{style.headerTop}' >

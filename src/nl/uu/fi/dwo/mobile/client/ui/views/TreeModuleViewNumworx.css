@@ -63,7 +63,7 @@
 			margin-bottom: 20px;
 			margin-left: 18px;
 			font-family: Ubuntu;
-			font-weight: normal;
+			font-weight: regular;
 		}
 		.description {
 			margin-bottom: 36px;
@@ -80,7 +80,7 @@
 			padding-left: 22px;
 			margin-right: 18px;
 			font-family: Ubuntu !important;
-			font-weight: normal;
+			font-weight: regular;
 			width: 152px;
 			line-height: normal;
 		}
@@ -156,7 +156,7 @@
 		}
 		.navItem {
 			font-family: "Ubuntu" !important;
-			font-weight: normal;
+			font-weight: regular;
 			line-height: 27px;
 /* 			margin-right: 18px; */
 			border-bottom-style: solid;
