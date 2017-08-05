@@ -10,26 +10,36 @@ import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.ScoManagementPanel.IconDialog;
 import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
 import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -102,6 +112,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	
 	private JCheckBox editorCB;
 	private Box editorBox = Box.createVerticalBox();
+
+
+	private JButton courseLogoButton;
 
 	class CourseModelForTree extends AbstractTableModel {
 
@@ -388,7 +401,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
        this.courses = courses;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout(5,5));
         panel.setOpaque(false);
         add(panel, BorderLayout.CENTER);
         //this.setSize(620, 485);
@@ -402,21 +415,35 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         	editorCB = new JCheckBox("Editor");
             editorCB.addActionListener(this);
             editorBox.add(editorCB);
-            if(((Course) userObject).getText().startsWith("H4sIAAAAAA"))
+            Course course = (Course) userObject;
+			if(course.getText().startsWith("H4sIAAAAAA"))
             {	editorCB.setSelected(true);
-            	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(((Course) userObject).getText());
+            	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getText());
             	wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
             	editorBox.add(wiskOpdrEditPanel);
             }
             else
             {	area = new JTextArea();
-	            area.setText(((Course) userObject).getText());
+	            area.setText(course.getText());
 	            area.setBorder(BorderFactory.createLineBorder(Color.black));
             	editorBox.add(area);
             }
             panel.add(editorBox, BorderLayout.NORTH);
-        	
-        	
+        	Image logo = course.getCourseLogo();
+            courseLogoButton = new JButton(new ImageIcon(logo));
+            courseLogoButton.setBorderPainted(false);
+    // TODO Mac?
+            courseLogoButton.setBorder(BorderFactory.createLineBorder(getForeground()));
+            courseLogoButton.setContentAreaFilled(false);
+            if (DwoHelper.isSecure()) {
+                courseLogoButton.addActionListener(this);
+                courseLogoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                courseLogoButton.setBorderPainted(true);
+            }
+            courseLogoButton.setSize(courseLogoButton.getPreferredSize());
+            Box hulp = Box.createVerticalBox();
+            hulp.add(courseLogoButton);
+            panel.add(hulp, BorderLayout.EAST);
         	
         	
         	
@@ -628,7 +655,15 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 //				e1.printStackTrace();
 //			}
         } 
-            
+           
+    	if( src == courseLogoButton) {
+    		try {
+				importCourseLogo((Course) userObject);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}
     }
 
 
@@ -725,12 +760,16 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         {	Course course = (Course) userObject;
         	if(editorCB.isSelected() &&  !wiskOpdrEditPanel.getText().equals(course.getText()))
             {	course.setDescription(wiskOpdrEditPanel.getText());
-    	    	GuiCreator.instance().updateCourse(course);
+    	    	update = true;
     	    }
         	else if(!editorCB.isSelected() && area!=null && !area.getText().equals(course.getText()))
             {	course.setDescription(area.getText());
-            	GuiCreator.instance().updateCourse(course);
+            	update = true;
             }
+        	if (update) {
+        		GuiCreator.instance().updateCourse(course);
+        		update = false;
+        	}
         }
     }
 
@@ -778,6 +817,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 	private ImportModuleAction importAction;
 	private ShareCourseAction  shareAction;
+
+
+	private IconDialog iconDial;
+
+
+	private boolean update;
 	private void noUpdate() {
 		ok = false;
 		center.updateMap(map);
@@ -822,5 +867,68 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		if(importAction!=null)importAction.setCourse(map);
 		if(shareAction != null) shareAction.setMap(map);
 	}
-    
+
+// KOPIE van ScoManagement
+    private void importCourseLogo(Course course) throws IOException {
+        String naam; // FIXME
+ //       openDial.setTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
+ //       openDial.show();
+ //       naam = openDial.getFile();
+        if (iconDial == null) iconDial = new IconDialog();
+        iconDial.setDialogTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
+        int r = iconDial.showOpenDialog(this);
+        File file = iconDial.getSelectedFile();
+		naam = (r == iconDial.CANCEL_OPTION || file == null) ? null : file.getName();
+        if(naam == null && r == iconDial.APPROVE_OPTION) {
+        	naam = iconDial.url.getText();
+        	course.setImageUrl(naam);
+        	course.setImageData(new byte[0]);
+        	update = true;
+        	return;
+        }
+        
+        
+        if (naam != null) {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            //File dir = new File(openDial.getDirectory());
+            BufferedImage img = ImageIO.read(file);
+            Image reduced;
+            int w = img.getWidth();
+			int h = img.getHeight();
+			if (w <= 252 && h <= 160) {
+                reduced = img;
+            } else {
+            	float scalex = w/252f;
+            	float scaley = h/160f;
+            	float scale = Math.max(scalex, scaley);
+            	w = Math.round(w/scale);
+            	h = Math.round(h/scale);
+                reduced = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
+            }
+            if (reduced instanceof BufferedImage) {
+                img = (BufferedImage) reduced;
+            } else {
+                img = new BufferedImage(Math.min(252, w), Math.min(160, h), BufferedImage.TYPE_INT_ARGB);
+                img.createGraphics().drawImage(reduced, 0, 0, null);
+            }
+            ImageIO.write(img, "png", output);
+            output.close();
+            byte[] data = output.toByteArray();
+            reduced = Toolkit.getDefaultToolkit().createImage(data);
+            course.setImageData(data);
+            course.setCourseLogo(reduced);
+            courseLogoButton.setIcon(new ImageIcon(reduced));
+// TODO omzetten in PersistenceFacade!
+//            try {
+//                PersistenceFacade.instance().setLogo(course.getID(), data);
+//            } catch (Exception e) {
+//                LOG.log(Level.SEVERE,null,e);
+//            }
+            course.setImageData(data);
+            course.setImageUrl("");
+            update = true;
+        }
+    }
+
+	
 }

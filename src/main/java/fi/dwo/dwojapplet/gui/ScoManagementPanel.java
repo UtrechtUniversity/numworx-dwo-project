@@ -86,7 +86,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 
     private JCheckBox editorCB, visibleCB;
 
-    class IconDialog extends JFileChooser implements ActionListener {
+    static class IconDialog extends JFileChooser implements ActionListener {
     	JTextField url;
     	JDialog dialog;
     	IconDialog() {
