@@ -752,6 +752,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 //            }
             course.setImageData(data);
             course.setImageUrl("");
+            update = true;
         }
     }
 

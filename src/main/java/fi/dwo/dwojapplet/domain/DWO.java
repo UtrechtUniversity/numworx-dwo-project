@@ -1994,14 +1994,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     		pc.setImageData(course.getImageData());
     		pc.setParentID(Long.valueOf(course.getParentID()));
     		pc.setSchoolID(Long.valueOf(course.getSchoolID()));
-    		pc.setSequencenr(Long.valueOf(course.sequencenr));
+    		if(course.sequencenr != null)
+    			pc.setSequencenr(Long.valueOf(course.sequencenr.longValue()));
+    		else 
+    			pc.setSequencenr(null);
+
     		pc.setTreeIndex(null);
     		pc.setWithChildren(null); // not updatable
  // should work with DomCourseFull
     		DomCourseFull edit = pc.buildDomCourseFull();
-			SecuredTeacherCourseManager.update(edit);
+			edit = SecuredTeacherCourseManager.update(edit);
     		return true;
     	} catch(Exception e) {
+    		LOG.log(Level.SEVERE, "update course", e);
             JOptionPane.showMessageDialog(this, e.getMessage());
     		return false;
     	}
