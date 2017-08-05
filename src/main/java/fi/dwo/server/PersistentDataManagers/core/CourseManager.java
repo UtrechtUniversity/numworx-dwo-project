@@ -55,8 +55,9 @@ public class CourseManager {
      * Update
      *
      * @param course
+     * @return jpa merged course
      */
-    public static void edit(PersistentCourse course) throws PersistenceException {
+    public static PersistentCourse edit(PersistentCourse course) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -78,6 +79,7 @@ public class CourseManager {
                 em.close();
             }
         }
+        return course;
     }
 
     /**

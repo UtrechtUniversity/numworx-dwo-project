@@ -54,6 +54,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -81,7 +82,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     @PUT
     @Path("update")
     @Produces({"application/json"})
-    DomCourseFull update(@Context SecurityContext sc, RestCourseFull rest) {
+    public DomCourseFull update(@Context SecurityContext sc, RestCourseFull rest) {
 		DomCourseFull course = rest.getDomCourse();
     	try {
 // Security...
@@ -89,37 +90,46 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			PersistentCourse pc = CourseManager.findEntity(courseID);
 // editable fields?
 			if(course.getName() != null) pc.setName(course.getName());
-			else course.setName(pc.getName());
 			if(course.getDescription() != null) pc.setDescription(course.getDescription());
-			else course.setDescription(pc.getDescription());
 			if(course.getImage() != null) pc.setImage(course.getImage());
-			else course.setImage(pc.getImage());
 			if(course.getImageData()!=null) pc.setImageData(course.getImageData());
-			else course.setImageData(pc.getImageData());
 			pc.setNotVisible(course.isNotVisible());
 			if(course.getExport() != null)
 				pc.setExport(course.getExport().booleanValue());
-			else
-				course.setExport(pc.getExport());
 			if(course.getSequenceNr() != null)
 				pc.setSequencenr(course.getSequenceNr());
-			else 
-				course.setSequenceNr(pc.getSequencenr());
-
-// SCHOOL to NULL-school 
+// SCHOOL to NULL-school NOT YET
+			Long schoolId = null;
 			if(course.getSchoolId() != null) {
-				// not for teachers, only profile-admin and dwo-admin
-			}
-// MOVE to different parent
-			if(course.getParentID() != null) {				
-				long parentID = pc.getParentID();
+				DomSchool ds = new DomSchool(); ds.setId(course.getSchoolId());
+				schoolId = MySQLPersistenceId.getNativeId(ds);
+			}			
+			if(schoolId != null && ! schoolId.equals(pc.getSchoolID())) {
+	            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+			} else
+// MOVE to different parent within the same school
+			if(course.getParentID() != null) {		
+				DomCourse parent = new DomCourse();
+				parent.setId(course.getParentID());
+				Long parentID = MySQLPersistenceId.getNativeId(parent);
+				if(parentID.longValue() != 0L) {
+					PersistentCourse parentcourse = CourseManager.findEntity(parentID);
+					if ( !parentcourse.isWithChildren()) {
+			            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Wrong parent using usercode " + sc.getUserPrincipal().getName() + ".");
+					}
+				}
+// verify parent exists OR parentID = 0 has "haschildren"
+				
 				pc.setParentID(parentID);
 			}
-			
-			// 
-			// parent,export, notvisible, school, sequence
-			
-			
+// optimistic locking or user managed?
+			if(course.getLastChangeTimeStamp() != null)
+				pc.setLastChangeTimeStamp(course.getLastChangeTimeStamp()); // Optimistic locking?
+			else 
+				pc.setLastChangeTimeStamp(System.currentTimeMillis()); // FIXME Gert is dit de bedoeling of JPA managed?
+
+			pc=CourseManager.edit(pc);
+			course = pc.buildDomCourseFull();
 		} catch (Dwo2Exception e) {
 			throw new Dwo2RestException(e);
 		}
