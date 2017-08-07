@@ -54,7 +54,7 @@
 .folderBackground {
 	background-size: 360px 360px;
 	background-repeat: no-repeat;
-	background-position: 460px 20px;
+	background-position: right 60px top 20px;
 	background-image: foldericon;
 	
 }
@@ -261,14 +261,23 @@
 	height: 160px;
 	margin-left: 18px;
 	vertical-align: top;
+	float: right;
 }
 
+.faviconOFF {
+	display: none;
+}
+.titlePanelFULL {
+	width: 100%;
+}
+
+
 .titlePanel {
-	width: 540px;
 	display: inline-block;
 }
 .itemPanel {
 	min-height: 252px;
+	width: 100%;
 }
 
 .popup {
@@ -284,4 +293,5 @@
 }
 .treeItem {
 	font-size: 13px;
+	font-family: Ubuntu;
 }

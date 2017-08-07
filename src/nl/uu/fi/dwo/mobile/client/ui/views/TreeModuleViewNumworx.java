@@ -743,7 +743,11 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					getChildrenPromise(item)
 					.then(new ProvideTreeItems(parent))
 					.then(new ProvideCells());
-				}			
+				}	
+
+				favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
+				title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
+				
 			break;
 		case MODULE:
 				title.setText(item.getName());
@@ -759,6 +763,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					.then(new ProvideTreeItems(parent))
 					.then(new ProvideCells());
 				}
+				favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
+				title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
 			break;
 		default:
 			

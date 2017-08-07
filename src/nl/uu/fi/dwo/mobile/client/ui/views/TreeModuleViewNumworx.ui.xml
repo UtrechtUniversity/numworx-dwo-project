@@ -44,17 +44,17 @@
 			<g:FlowPanel ui:field='centerPanel' styleName='{style.centerPanel}'
 				addStyleNames='{style.centerBackground}'
 			>
-				<g:FlowPanel styleName='{style.itemPanel}'>
-						<g:FlowPanel styleName='{style.titlePanel}'> 
-							<g:HTML styleName='{style.title}' ui:field='title' >Modules voor ....</g:HTML>
+				<g:HorizontalPanel styleName='{style.itemPanel}'>
+					<g:FlowPanel styleName='{style.titlePanel}'> 
+							<g:HTML styleName='{style.title}' ui:field='title' ></g:HTML>
 							<g:SimplePanel ui:field='description' />
-						</g:FlowPanel>
-						<g:FlowPanel styleName='{style.favicon}'>
-							<g:Image ui:field='favIcon'
+					</g:FlowPanel>
+					<g:FlowPanel styleName='{style.favicon}'>
+						<g:Image ui:field='favIcon'
 								url=""
-							/>
-						</g:FlowPanel>
-				</g:FlowPanel>
+						/>
+					</g:FlowPanel>
+				</g:HorizontalPanel>
 				
 				
 				<cl:CellList ui:field='tiles'></cl:CellList>
