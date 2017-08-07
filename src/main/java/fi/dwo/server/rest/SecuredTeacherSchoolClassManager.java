@@ -940,6 +940,14 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         return true;
     }
 
+    /**
+     * Fetches all the course and classcourse information that a teacher should see from within a school.
+     * 
+     * @param sc
+     * @param rest
+     * @return
+     * @throws Dwo2Exception 
+     */
     @PUT
     @Produces({"application/json"})
     @Path("/getModules")

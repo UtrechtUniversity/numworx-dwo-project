@@ -1,42 +1,11 @@
 package fi.dwo.server.rest;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
-import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
-import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
-import fi.dwo.commons.persistence.entities.PersistentScoContext;
-import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
-import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
-import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
-import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.util.DwoDateUtilities;
-import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
-import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
-import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
-import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
-import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
-import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
-import fi.dwo.server.PersistentDataManagers.core.UserManager;
-import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
@@ -46,24 +15,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
-import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
-import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestCourseFull;
-import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Operations for the GUI Component that manages the school classes.
