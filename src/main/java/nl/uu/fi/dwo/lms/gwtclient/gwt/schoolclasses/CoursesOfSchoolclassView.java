@@ -23,7 +23,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,19 +41,19 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 
     @UiField(provided = true)
     CellTable dataGrid;
-    @UiField(provided = true)            
+    @UiField(provided = true)
     CellTree tree;
     @UiField
     Button backBtn;
 
     private CoursesOfSchoolclassPresenter coursesOfSchoolclassPresenter;
-    private ListDataProvider<CoursesOfSchoolclassPresenter.CourseClassItem> dataProvider = new ListDataProvider<CoursesOfSchoolclassPresenter.CourseClassItem>();
-    
-    private CoursesOfSchoolclassPresenter.CourseClassItem selected;
+    private ListDataProvider<ClassCourseItem> dataProvider = new ListDataProvider<ClassCourseItem>();
+
+    private ClassCourseItem selected;
     private MyCheckBoxCell checkBox;
 
     public class MyCell extends AbstractCell<String> {
-        
+
         public MyCell() {
             super("click", "keydown");
         }
@@ -74,7 +73,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             super.onBrowserEvent(context, parent, value, event, valueUpdater);
             if ("click".equals(event.getType())) {
 //                LOG.log(Level.INFO, "key "+context.getKey());
-                cellSelected(context.getIndex(), context.getColumn());
+//                cellSelected(context.getIndex(), context.getColumn());
             }
         }
     }
@@ -107,21 +106,21 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         }
     }
 
-    public class MyTreeCell extends AbstractCell<CoursesOfSchoolclassPresenter.CourseClassItem> {
-        
+    public static class MyTreeCell extends AbstractCell<CourseItem> {
+
         public MyTreeCell() {
             super("click", "keydown");
         }
-
+        
         @Override
-        public void render(com.google.gwt.cell.client.Cell.Context context, CoursesOfSchoolclassPresenter.CourseClassItem value, SafeHtmlBuilder sb) {
+        public void render(com.google.gwt.cell.client.Cell.Context context, CourseItem value, SafeHtmlBuilder sb) {
             if (value != null) {
-                sb.appendEscaped(value.name);
+                sb.appendEscaped(value.getName());
             }
         }
-//
+
 //        @Override
-//        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, CoursesOfSchoolclassPresenter.CourseClassItem value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+//        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, ClassCourseItem value, NativeEvent event, ValueUpdater<String> valueUpdater) {
 //            if (value == null) {
 //                return;
 //            }
@@ -132,7 +131,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //            }
 //        }
     }
-    
+
     public class MyCheckBoxCell extends CheckboxCell {
 
         boolean state = false;
@@ -148,7 +147,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             }
             super.onBrowserEvent(context, parent, value, event, valueUpdater);
             if ("change".equals(event.getType())) {
-//                coursesOfSchoolclassPresenter.selectItem((CoursesOfSchoolclassPresenter.CourseClassItem) context.getKey(), 5);
+//                coursesOfSchoolclassPresenter.selectItem((ClassCourseItem) context.getKey(), 5);
                 LOG.log(Level.INFO, "key " + context.getKey() + " boolean " + value);
             }
         }
@@ -158,13 +157,12 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         coursesOfSchoolclassPresenter = sp;
         coursesOfSchoolclassPresenter.setView(this);
         String[] tableHeaders = sp.getTableHeaders();
-        dataGrid = new CellTable<String>();       
-       
+        dataGrid = new CellTable<String>();
+
         dataProvider.addDataDisplay(dataGrid);
         dataGrid.setSkipRowHoverCheck(true);
         dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
-        List<CoursesOfSchoolclassPresenter.CourseClassItem> data = dataProvider.getList();
-
+        List<ClassCourseItem> data = dataProvider.getList();
 
         //Celltree inits
 //        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>(ContactDatabase.ContactInfo.KEY_PROVIDER);
@@ -187,37 +185,34 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //            //selectedLabel.setText(sb.toString());
 //          }
 //        });
-
         CellTree.Resources res = GWT.create(CellTree.BasicResources.class);
 //        tree = new CellTree(new CoursesOfSchoolclassTreeModel(coursesOfSchoolclassPresenter), MyTreeCell(coursesOfSchoolclassPresenter.getTree()));
-        tree = new CellTree(new CoursesOfSchoolclassTreeModel(coursesOfSchoolclassPresenter), "node");
+        tree = new CellTree(new CoursesOfSchoolclassTreeModel(coursesOfSchoolclassPresenter), "root");
         tree.setAnimationEnabled(true);
-        
-
 
         final CoursesOfSchoolclassView.MyCell cell = new CoursesOfSchoolclassView.MyCell();
         final CoursesOfSchoolclassView.MyClickCell clickCell = new CoursesOfSchoolclassView.MyClickCell();
 
         //name
-        Column<CoursesOfSchoolclassPresenter.CourseClassItem, String> value = new Column<CoursesOfSchoolclassPresenter.CourseClassItem, String>(cell) {
+        Column<ClassCourseItem, String> value = new Column<ClassCourseItem, String>(cell) {
             @Override
-            public String getValue(CoursesOfSchoolclassPresenter.CourseClassItem object) {
-                return object.name;
+            public String getValue(ClassCourseItem object) {
+                return object.getName();
             }
         };
         value.setSortable(true);
-        ListHandler<CoursesOfSchoolclassPresenter.CourseClassItem> columnSortHandler = new ListHandler<CoursesOfSchoolclassPresenter.CourseClassItem>(
+        ListHandler<ClassCourseItem> columnSortHandler = new ListHandler<ClassCourseItem>(
                 data);
         columnSortHandler.setComparator(value,
-                new Comparator<CoursesOfSchoolclassPresenter.CourseClassItem>() {
-            public int compare(CoursesOfSchoolclassPresenter.CourseClassItem o1, CoursesOfSchoolclassPresenter.CourseClassItem o2) {
+                new Comparator<ClassCourseItem>() {
+            public int compare(ClassCourseItem o1, ClassCourseItem o2) {
                 if (o1 == o2) {
                     return 0;
                 }
 
                 // Compare the name columns.
                 if (o1 != null) {
-                    return (o2 != null) ? o1.name.compareTo(o2.name) : 1;
+                    return (o2 != null) ? o1.getName().compareTo(o2.getName()) : 1;
                 }
                 return -1;
             }
@@ -226,114 +221,113 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         dataGrid.addColumn(value, tableHeaders[0]);
 
         //hasData
-        value = new Column<CoursesOfSchoolclassPresenter.CourseClassItem, String>(cell) {
+        value = new Column<ClassCourseItem, String>(cell) {
             @Override
-            public String getValue(CoursesOfSchoolclassPresenter.CourseClassItem object) {
-                return object.hasStudentData;
+            public String getValue(ClassCourseItem object) {
+                return object.getHasStudentData().toString();
             }
         };
         value.setSortable(true);
-        columnSortHandler = new ListHandler<CoursesOfSchoolclassPresenter.CourseClassItem>(
+        columnSortHandler = new ListHandler<ClassCourseItem>(
                 data);
         columnSortHandler.setComparator(value,
-                new Comparator<CoursesOfSchoolclassPresenter.CourseClassItem>() {
-            public int compare(CoursesOfSchoolclassPresenter.CourseClassItem o1, CoursesOfSchoolclassPresenter.CourseClassItem o2) {
+                new Comparator<ClassCourseItem>() {
+            public int compare(ClassCourseItem o1, ClassCourseItem o2) {
                 if (o1 == o2) {
                     return 0;
                 }
 
                 // Compare the name columns.
                 if (o1 != null) {
-                    return (o2 != null) ? o1.hasStudentData.compareTo(o2.hasStudentData) : 1;
+                    return (o2 != null) ? o1.getHasStudentData().compareTo(o2.getHasStudentData()) : 1;
                 }
                 return -1;
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[1]);        
+        dataGrid.addColumn(value, tableHeaders[1]);
 
         //hasType
-        value = new Column<CoursesOfSchoolclassPresenter.CourseClassItem, String>(cell) {
+        value = new Column<ClassCourseItem, String>(cell) {
             @Override
-            public String getValue(CoursesOfSchoolclassPresenter.CourseClassItem object) {
-                return object.type;
+            public String getValue(ClassCourseItem object) {
+                return object.getType();
             }
         };
         value.setSortable(true);
-        columnSortHandler = new ListHandler<CoursesOfSchoolclassPresenter.CourseClassItem>(
+        columnSortHandler = new ListHandler<ClassCourseItem>(
                 data);
         columnSortHandler.setComparator(value,
-                new Comparator<CoursesOfSchoolclassPresenter.CourseClassItem>() {
-            public int compare(CoursesOfSchoolclassPresenter.CourseClassItem o1, CoursesOfSchoolclassPresenter.CourseClassItem o2) {
+                new Comparator<ClassCourseItem>() {
+            public int compare(ClassCourseItem o1, ClassCourseItem o2) {
                 if (o1 == o2) {
                     return 0;
                 }
 
                 // Compare the name columns.
                 if (o1 != null) {
-                    return (o2 != null) ? o1.type.compareTo(o2.type) : 1;
+                    return (o2 != null) ? o1.getType().compareTo(o2.getType()) : 1;
                 }
                 return -1;
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[2]); 
-        
+        dataGrid.addColumn(value, tableHeaders[2]);
+
         //from
-        value = new Column<CoursesOfSchoolclassPresenter.CourseClassItem, String>(cell) {
+        value = new Column<ClassCourseItem, String>(cell) {
             @Override
-            public String getValue(CoursesOfSchoolclassPresenter.CourseClassItem object) {
-                return object.from.toString();
+            public String getValue(ClassCourseItem object) {
+                return object.getFrom().toString();
             }
         };
         value.setSortable(true);
-        columnSortHandler = new ListHandler<CoursesOfSchoolclassPresenter.CourseClassItem>(
-                data);
-        columnSortHandler.setComparator(value,
-                new Comparator<CoursesOfSchoolclassPresenter.CourseClassItem>() {
-            public int compare(CoursesOfSchoolclassPresenter.CourseClassItem o1, CoursesOfSchoolclassPresenter.CourseClassItem o2) {
-                if (o1 == o2) {
-                    return 0;
-                }
-
-                // Compare the name columns.
-                if (o1 != null) {
-                    return (o2 != null) ? o1.from.compareTo(o2.from) : 1;
-                }
-                return -1;
-            }
-        });
-        dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[3]);     
-                
+//        columnSortHandler = new ListHandler<ClassCourseItem>(
+//                data);
+//        columnSortHandler.setComparator(value,
+//                new Comparator<ClassCourseItem>() {
+//            public int compare(ClassCourseItem o1, ClassCourseItem o2) {
+//                if (o1 == o2) {
+//                    return 0;
+//                }
+//
+//                // Compare the name columns.
+//                if (o1 != null) {
+//                    return (o2 != null) ? o1.getFrom()(0.compareTo(o2.getFrom())) : 1;
+//                }
+//                return -1;
+//            }
+//        });
+//        dataGrid.addColumnSortHandler(columnSortHandler);
+        dataGrid.addColumn(value, tableHeaders[3]);
 
         //to
-        value = new Column<CoursesOfSchoolclassPresenter.CourseClassItem, String>(cell) {
+        value = new Column<ClassCourseItem, String>(cell) {
             @Override
-            public String getValue(CoursesOfSchoolclassPresenter.CourseClassItem object) {
-                return object.to.toString();
+            public String getValue(ClassCourseItem object) {
+                return object.getTo().toString();
             }
         };
         value.setSortable(true);
-        columnSortHandler = new ListHandler<CoursesOfSchoolclassPresenter.CourseClassItem>(
-                data);
-        columnSortHandler.setComparator(value,
-                new Comparator<CoursesOfSchoolclassPresenter.CourseClassItem>() {
-            public int compare(CoursesOfSchoolclassPresenter.CourseClassItem o1, CoursesOfSchoolclassPresenter.CourseClassItem o2) {
-                if (o1 == o2) {
-                    return 0;
-                }
+//        columnSortHandler = new ListHandler<ClassCourseItem>(
+//                data);
+//        columnSortHandler.setComparator(value,
+//                new Comparator<ClassCourseItem>() {
+//            public int compare(ClassCourseItem o1, ClassCourseItem o2) {
+//                if (o1 == o2) {
+//                    return 0;
+//                }
+//
+//                // Compare the name columns.
+//                if (o1 != null) {
+//                    return (o2 != null) ? o1.getTo().compareTo(o2.getTo()) : 1;
+//                }
+//                return -1;
+//            }
+//        });
+//        dataGrid.addColumnSortHandler(columnSortHandler);
+        dataGrid.addColumn(value, tableHeaders[3]);
 
-                // Compare the name columns.
-                if (o1 != null) {
-                    return (o2 != null) ? o1.to.compareTo(o2.to) : 1;
-                }
-                return -1;
-            }
-        });
-        dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[3]);     
-                        
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);
 //        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
@@ -377,16 +371,14 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         //    LOG.log(Level.INFO, "Listbox event:" + event.getSource().toString());
     }
 
-    public void updateView(Map<String, CoursesOfSchoolclassPresenter.CourseClassItem> data) {
-//        dataProvider.getList().clear();
-//        dataProvider.getList().addAll(data.values());
-//        dataProvider.refresh();
+    public void refreshView() {
+
     }
 
     private void cellSelected(int row, int column) {
 //        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).usercode + " " + dataGrid.getHeader(column).getValue());
 //        dataGrid.getHeader(column);
-//        coursesOfSchoolclassPresenter.selectItem((CoursesOfSchoolclassPresenter.CourseClassItem) dataProvider.getList().get(row), column);
+//        coursesOfSchoolclassPresenter.selectItem((ClassCourseItem) dataProvider.getList().get(row), column);
     }
 
 }

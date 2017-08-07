@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
-import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -24,13 +24,13 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  */
-public class DomCourseTree {
+public class CourseTree {
     
-    private static final Logger LOG = Logger.getLogger(DomCourseTree.class.getName());
+    private static final Logger LOG = Logger.getLogger(CourseTree.class.getName());
     
     private DomTree<DomCourseOfClass> courseTree;
     
-    public DomCourseTree(DomCoursesOfSchoolClass4Teacher resultData) {
+    public CourseTree(DomCoursesOfSchoolClass4Teacher resultData) {
         //restData = resultData;
         LOG.log(Level.INFO, "Initializing a DomCoureTree.");
         courseTree = buildCourseTree(resultData);
@@ -72,6 +72,9 @@ public class DomCourseTree {
                 cocMap.get(stringIdParent).getChildren().put(n.getObject().getCourse().getId().getIdString(), n);
             }
         }
+        
+        //convert domTree to itemTree
+        
         //dump tree to logging
         LOG.log(Level.FINE, "Dumping DomCourseTree (depth, name).");
         setCourseTree(root);

@@ -2,14 +2,15 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.rest.dom.DomTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -34,9 +35,9 @@ public class CoursesOfSchoolclassPresenter {
     private String[] tableHeaders = {"Module name", "studentdata", "type", "from", "to"};
     private DomSchoolClass schoolClass;    
     private DomCoursesOfSchoolClass4Teacher moduleInfo;
-    private DomCourseTree tree;
+    private CoursesOfSchoolclassTree tree;
     private Map<String, DomStudent> studentMap;
-    private Map<String, CoursesOfSchoolclassPresenter.CourseClassItem> courseItems;
+    private Map<String, ClassCourseItem> courseItems;
     private Map<String, DomSchoolClass> schoolClassMap;
     private List<SchoolClassListBoxItem> schoolClassItems;
     private Display view;
@@ -50,34 +51,10 @@ public class CoursesOfSchoolclassPresenter {
 
         void init();
 
-        void updateView(Map<String, CoursesOfSchoolclassPresenter.CourseClassItem> data);
+        void refreshView();
 
     }
-
-    public class CourseItem {
-        public CourseItem parent;
-        public CourseItem children;
-        public String name;
-    }
-
     
-    public class CourseClassItem extends CourseItem{
-//        /"Module name", "studentdata", "type", "from", "to"
-        public String key; //unique
-        public String hasStudentData;
-        public String type;
-        public Date from;
-        public Date to;
-
-        public CourseClassItem(String aKey, String aName, String hasData, String aType, Date aFrom, Date aTo) {
-            key = aKey;
-            name = aName;
-            hasStudentData = hasData;
-            type = aType;
-            from = aFrom;
-            to = aTo;
-        }
-    }
 
 //    public CourseItem getRoot(){
 //        CourseItem item = new CourseItem();
@@ -113,9 +90,10 @@ public class CoursesOfSchoolclassPresenter {
             public Promise<Void> call(Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {                
                 //flip back to schoolclasses screen 
                 DomCoursesOfSchoolClass4Teacher value = resolved.getValue();
-                tree = new DomCourseTree(value);
+                tree = new CoursesOfSchoolclassTree(value);
+                CourseItem item = new CourseItem (tree.getCourseTree().getObject().getCourse().getName(),tree.getCourseTree().getObject().getCourse().getId().getIdString());                
                 //parse results into a tree.
-                view.updateView(courseItems);
+                view.refreshView();
                 return null;
             }
 
@@ -124,7 +102,7 @@ public class CoursesOfSchoolclassPresenter {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
-                view.updateView(courseItems);
+//                view.updateView(courseItems);
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
                 } else {
@@ -134,6 +112,25 @@ public class CoursesOfSchoolclassPresenter {
             }
         });
 
+    }
+
+    public CourseItem getNode(String key){
+        DomTree<DomCourseOfClass>  c = tree.getNode(key);
+        CourseItem item = new CourseItem(key, c.getObject().getCourse().getName());
+        return item;
+    }
+
+    
+    public List<CourseItem> getNodeChildren(String key){
+        DomTree<DomCourseOfClass>  c = tree.getNode(key);
+        
+        List<CourseItem> itemList = new ArrayList<CourseItem>(c.getChildren().size());
+        for(DomTree<DomCourseOfClass> coc : c.getChildren().values()){
+            CourseItem item = new CourseItem(key, c.getObject().getCourse().getName());
+            itemList.add(item);
+        }
+        
+        return itemList;
     }
 
 
