@@ -328,7 +328,7 @@ class CourseMapper extends XmlRpcMapper {
         c.setImageUrl((String) data.get("image"));
         c.setDwoProfile(((Integer) data.get("dwoProfileID")).intValue());
         c.setNotVisible(EEN.equals(data.get("notVisible")));
-        c.setNotVisible(c.isNotVisible() && !(DwoHelper.getCurrentFacadeUser() instanceof Teacher));
+//        c.setNotVisible(c.isNotVisible() && !(DwoHelper.getCurrentFacadeUser() instanceof Teacher));
 // fill sequencenr
         Object sequencenr = data.get("sequencenr");
         if(sequencenr instanceof Integer)

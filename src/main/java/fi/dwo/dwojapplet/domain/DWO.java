@@ -1994,6 +1994,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     		pc.setImageData(course.getImageData());
     		pc.setParentID(Long.valueOf(course.getParentID()));
     		pc.setSchoolID(Long.valueOf(course.getSchoolID()));
+    		pc.setNotVisible(course.isNotVisible());
     		if(course.sequencenr != null)
     			pc.setSequencenr(Long.valueOf(course.sequencenr.longValue()));
     		else 
