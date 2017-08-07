@@ -57,13 +57,13 @@ public class CoursesOfSchoolclassPresenter {
     public class CourseItem {
         public CourseItem parent;
         public CourseItem children;
+        public String name;
     }
 
     
-    public class CourseClassItem {
+    public class CourseClassItem extends CourseItem{
 //        /"Module name", "studentdata", "type", "from", "to"
         public String key; //unique
-        public String name;
         public String hasStudentData;
         public String type;
         public Date from;
@@ -79,6 +79,13 @@ public class CoursesOfSchoolclassPresenter {
         }
     }
 
+//    public CourseItem getRoot(){
+//        CourseItem item = new CourseItem();
+//        item.name = tree.getCourseTree().getObject().getCourse().getName();
+//        item.parent = tree.getCourseTree().getObject().getCourse().getId().getIdString();
+//        item.children = null;
+//    }
+    
     public CoursesOfSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;

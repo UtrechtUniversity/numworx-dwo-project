@@ -12,8 +12,10 @@ import com.google.gwt.view.client.TreeViewModel;
 public class CoursesOfSchoolclassTreeModel implements TreeViewModel {
     
     
-    CoursesOfSchoolclassTreeModel(){
-        
+    private CoursesOfSchoolclassPresenter coursesOfSchoolclassPresenter;
+    
+    CoursesOfSchoolclassTreeModel(CoursesOfSchoolclassPresenter sp){
+        coursesOfSchoolclassPresenter = sp;
     }
     
     @Override

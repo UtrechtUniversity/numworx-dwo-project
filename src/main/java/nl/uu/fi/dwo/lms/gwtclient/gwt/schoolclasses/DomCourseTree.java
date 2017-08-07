@@ -74,6 +74,7 @@ public class DomCourseTree {
         }
         //dump tree to logging
         LOG.log(Level.FINE, "Dumping DomCourseTree (depth, name).");
+        setCourseTree(root);
         DFSTreePrint(root);
         return root;
     }
@@ -96,5 +97,19 @@ public class DomCourseTree {
             depth--;
         }
         
+    }
+
+    /**
+     * @return the courseTree
+     */
+    public DomTree<DomCourseOfClass> getCourseTree() {
+        return courseTree;
+    }
+
+    /**
+     * @param courseTree the courseTree to set
+     */
+    public void setCourseTree(DomTree<DomCourseOfClass> courseTree) {
+        this.courseTree = courseTree;
     }
 }

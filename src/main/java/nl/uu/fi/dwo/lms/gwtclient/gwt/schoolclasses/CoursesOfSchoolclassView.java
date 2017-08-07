@@ -54,7 +54,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
     private MyCheckBoxCell checkBox;
 
     public class MyCell extends AbstractCell<String> {
-
+        
         public MyCell() {
             super("click", "keydown");
         }
@@ -107,6 +107,32 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         }
     }
 
+    public class MyTreeCell extends AbstractCell<CoursesOfSchoolclassPresenter.CourseClassItem> {
+        
+        public MyTreeCell() {
+            super("click", "keydown");
+        }
+
+        @Override
+        public void render(com.google.gwt.cell.client.Cell.Context context, CoursesOfSchoolclassPresenter.CourseClassItem value, SafeHtmlBuilder sb) {
+            if (value != null) {
+                sb.appendEscaped(value.name);
+            }
+        }
+//
+//        @Override
+//        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, CoursesOfSchoolclassPresenter.CourseClassItem value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+//            if (value == null) {
+//                return;
+//            }
+//            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+//            if ("click".equals(event.getType())) {
+////                LOG.log(Level.INFO, "key "+context.getKey());
+//                cellSelected(context.getIndex(), context.getColumn());
+//            }
+//        }
+    }
+    
     public class MyCheckBoxCell extends CheckboxCell {
 
         boolean state = false;
@@ -163,7 +189,8 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //        });
 
         CellTree.Resources res = GWT.create(CellTree.BasicResources.class);
-        tree = new CellTree(new CoursesOfSchoolclassTreeModel(), "Item 1");
+//        tree = new CellTree(new CoursesOfSchoolclassTreeModel(coursesOfSchoolclassPresenter), MyTreeCell(coursesOfSchoolclassPresenter.getTree()));
+        tree = new CellTree(new CoursesOfSchoolclassTreeModel(coursesOfSchoolclassPresenter), "node");
         tree.setAnimationEnabled(true);
         
 
