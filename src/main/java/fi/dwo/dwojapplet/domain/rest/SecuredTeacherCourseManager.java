@@ -25,6 +25,8 @@ public class SecuredTeacherCourseManager {
     public static DomCourseFull update(DomCourseFull edit) throws Dwo2Exception {
     	RestCourseFull rest = new RestCourseFull();
     	DomContext context = new DomContext();
+// XXX is dit wel de goede plaats?
+    	context.setDomHasRole(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
     	rest.setDomCourse(edit);
     	rest.setRestContext(context);
         DomCourseFull result = StoredRestManager.getInstance().put("rest/secure/teacher/course/update",DomCourseFull.class, rest);

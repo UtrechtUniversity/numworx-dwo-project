@@ -255,7 +255,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             pane.setBorder(BorderFactory.createLineBorder(Color.black));
             editorBox.add(pane);
         }
-        visibleCB = new JCheckBox("Not Visible");
+        visibleCB = new JCheckBox("Activiteitenlijst verbergen");
         visibleCB.setSelected(course.isNotVisible());
         editorBox.add(visibleCB);
  

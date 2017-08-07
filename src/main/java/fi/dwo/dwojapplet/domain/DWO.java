@@ -2483,6 +2483,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date);
     }
 
+    @Deprecated /* use update Course */
     public boolean updateLogo(Course c) {
         return PersistenceFacade.instance().updateLogo(c);
     }
