@@ -35,7 +35,7 @@ public class InfoPanel extends ResizeComposite {
 	@UiField HasClickHandlers closeBtn;
 	@UiField Label title;
 	@UiField SimplePanel description;
-	@UiField String pfx;
+	@UiField(provided=true) String pfx;
 	
 	@UiHandler("closeBtn")
 	void close(ClickEvent e) {

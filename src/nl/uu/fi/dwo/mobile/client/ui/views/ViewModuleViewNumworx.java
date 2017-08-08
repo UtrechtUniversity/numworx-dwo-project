@@ -183,7 +183,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		kruimels.setHTML(builder.toSafeHtml());
 
 		if(!trail.isEmpty())
-			upId = trail.get(0).getParentID();
+			upId = trail.get(0).getID();
 		else
 			upId = null;
 	}
