@@ -134,11 +134,17 @@ public class SecuredUserScoContextManager {
 		
 // profile match		
 		if ( pid != parent.getDwoProfileID().longValue())
-			return null;
+		{
+            LOG.log(Level.WARNING, "profile mismatch " + sc.getUserPrincipal().getName() );		
+			//return null;
+		}
 // schools matches
 		if (parent.getSchoolID() != null) {
 			if (parent.getSchoolID().longValue() != school.getSchoolID().longValue())
+			{
+	            LOG.log(Level.SEVERE, "school mismatch " + sc.getUserPrincipal().getName() );		
 				return null;
+			}
 		} else {
 			if (profile.getDwoProfileRights().contains(LIMITED)) {
 				// assert school in profile database....
@@ -146,7 +152,10 @@ public class SecuredUserScoContextManager {
 		}
 // userid must match
 		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
+		{
+            LOG.log(Level.SEVERE, "user mismatch " + sc.getUserPrincipal().getName() );
 			return null;
+		}
 		
 		return scoContext.buildDomScoContext();    	
     }
