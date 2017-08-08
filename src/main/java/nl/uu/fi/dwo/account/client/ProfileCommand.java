@@ -28,6 +28,8 @@ public class ProfileCommand implements Command {
         }
         // Create the new popup.
         PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
+		popup.setStyleName("numworx-popup");
+
         //popup.setSize("500", "400");
         ProfilePanel panel = new ProfilePanel(DwoGlobalVars.instance().getCurrentUser());
         panel.setPopup(popup);

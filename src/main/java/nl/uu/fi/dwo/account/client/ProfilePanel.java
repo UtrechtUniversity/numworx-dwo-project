@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -119,6 +120,8 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
      * @param user
      */
     ProfilePanel(DomUserFull user) {
+    	Style style = getElement().getStyle();
+    	style.setBackgroundColor("#E4F2FB");
         control = new ProfileController(this, user);
         init(user);
     }

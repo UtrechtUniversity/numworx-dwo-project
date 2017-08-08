@@ -52,7 +52,8 @@ public class SchoolClassStudentCommand implements Command {
         }
         // Create the new popup.
         final PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
-        //popup.setSize("500", "400");
+		popup.setStyleName("numworx-popup");
+       //popup.setSize("500", "400");
         SchoolClassStudentPanel panel = new SchoolClassStudentPanel(resetLogin, DwoGlobalVars.instance().getCurrentUser());
         panel.setPopup(popup);
         //panel.setSize("300", "200");
