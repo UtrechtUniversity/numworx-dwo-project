@@ -213,7 +213,7 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>0.0.10</accountVersion>
+		<accountVersion>0.0.11-SNAPSHOT</accountVersion>
 	</properties>
 	<profiles>
 		<profile>
@@ -271,7 +271,8 @@
 				<maven.war.webxml>war/WEB-INF/web-dwo2.xml</maven.war.webxml>
 				<gwt.copyWebapp>false</gwt.copyWebapp>
 <!-- 				<gwt.style>PRETTY</gwt.style> -->
-				<gwt.compiler.force>true</gwt.compiler.force>	
+				<gwt.compiler.force>true</gwt.compiler.force>
+				<gwt.compiler.localWorkers>1</gwt.compiler.localWorkers>	
 			</properties>
 		</profile>
 		<profile> <!-- gebruik deze voor gwt:run -->

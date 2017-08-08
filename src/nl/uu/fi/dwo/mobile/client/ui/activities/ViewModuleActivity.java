@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -8,6 +9,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
@@ -15,8 +17,10 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Label;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
@@ -33,6 +37,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	private ViewModuleView view;
 	private AnchorContext defaultContext;
 	private SelectModuleItem sco;
+	private Timer tm;
 	public ViewModuleActivity(ClientFactory clientFactory, SelectModuleItem sco)
 	{
 		this.clientFactory = clientFactory;
@@ -43,6 +48,33 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
+// Eindtijd
+// History.back is terug naar waar je vandaan komt
+		Date notAfter = sco.getNotAfter();
+		if(notAfter != null && notAfter.getTime() < System.currentTimeMillis() + DWOplayer.timezone)
+		{
+			panel.setWidget(new Label("Activiteit verlopen"));
+			History.back();
+			view = null;
+			return;
+		} else if (notAfter != null) {
+			long timeToGo = notAfter.getTime()-System.currentTimeMillis() - DWOplayer.timezone;
+			timeToGo = Math.min(timeToGo, Integer.MAX_VALUE);
+			timeToGo = Math.max(timeToGo,1);
+			tm = new Timer() {
+
+				@Override
+				public void run() {
+					tm = null;
+					History.back();
+				}};
+			tm.schedule((int)timeToGo); 
+		}			
+// All systems go
+		
+		
+		
+		
 		view = clientFactory.getEntryView();
 		panel.setWidget(view);
 		{
@@ -87,9 +119,15 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 
 	@Override
 	public void onStop() {
-		view.setAnchorContext(defaultContext); // unwrap
-		view.close();
-		sco.setScore(view.getScoreRaw());
+		if (tm != null) {
+			tm.cancel();
+			tm = null;
+		}
+		if(view != null) {
+			view.setAnchorContext(defaultContext); // unwrap
+			view.close();
+			sco.setScore(view.getScoreRaw());
+		}
 		super.onStop();
 	}
 
@@ -101,6 +139,8 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			href = href.substring(5);
 			SelectModuleItem parent = sco.getParent();
 			List<SelectModuleItem> list = parent.getChildren();
+			int page = href.lastIndexOf('.');
+			if(page >= 0) href = href.substring(0, page);
 			int sconr = -1;
 			try {
 				sconr = Integer.parseInt(href)-1;

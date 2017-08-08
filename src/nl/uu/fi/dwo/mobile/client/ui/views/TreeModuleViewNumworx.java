@@ -571,6 +571,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	
 	NavStrategy navigation;
 
+	private SelectModuleItem selection;
+
 	
 	class ListNavStrategy implements NavStrategy {
 		ListNavStrategy() {
@@ -739,6 +741,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	
 	@Override
 	public void selectModule(SelectModuleItem item) {
+		this.selection = item;
 		((SetSelectionModel<?>) tiles.getSelectionModel()).clear();
 		keyprovider.tiles = Collections.emptyList();
 		tiles.setRowData(keyprovider.tiles);
@@ -817,6 +820,13 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		tiles.redraw();
 	}
 
+	private Promise<List<SelectModuleItem>> getChildrenOrScosPromise(SelectModuleItem parent) {
+		if(parent.getType() == Type.SCO)
+			return getScosPromise(parent);
+		return getChildrenPromise(parent);
+	}
+	
+	
 	private boolean isLabel(SelectModuleItem item) {
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
@@ -866,8 +876,43 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	}
 	@Override
 	public void gotoUrl(String href) {
-		// TODO Auto-generated method stub
-		
+		gotoSelected(href, selection);		
+	}
+	
+	void gotoSelected(String href, SelectModuleItem parent) {
+		//String page = "";
+		href = href.substring(5);
+		int dot = href.lastIndexOf('.');
+		if(dot > 0) {
+			//page = href.substring(dot+1);
+			href = href.substring(0,dot);
+		}
+		Promise<List<SelectModuleItem>> children = getChildrenOrScosPromise(parent);
+		final String ref = href;
+		children.then(
+			new Success<List<SelectModuleItem>,Void>() {
+
+				@Override
+				public Promise<Void> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
+					List<SelectModuleItem> children = resolved.getValue();
+					try { 
+						// try numeric first
+						int sconr = Integer.parseInt(ref)-1;
+						SelectModuleItem is = children.get(sconr);
+						selectItem(is);
+					} catch (Exception ex) {
+						for (Iterator<SelectModuleItem> iterator = children.iterator(); iterator.hasNext();) {
+							SelectModuleItem is = iterator.next();
+							if(is.getName().startsWith(ref))
+							{
+								selectItem(is);
+								break;
+							}
+						}
+					}
+					return null;
+				}}
+		);
 	}
 
 	@Override
