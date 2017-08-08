@@ -74,13 +74,17 @@ public class SecuredUserScoDataManager {
         Long profileID = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
 		PersistentScoData scoData = ScoDataManager.findEntity(scoId);
         if(scoData == null) {
-        	return "{}"; // Not found, not fatal
+            LOG.log(Level.WARNING, "not found " + sc.getUserPrincipal().getName() );		
+       	return "{}"; // Not found, not fatal
         }
         PersistentScoContext scoContext = ScoContextManager.findEntity(scoId);
         Long courseID = scoContext.getCourseID();
         PersistentCourse     course = CourseManager.findEntity(courseID);
         if(course.getDwoProfileID().longValue() != profileID.longValue())
-        	return "{}";
+        {
+            LOG.log(Level.WARNING, "profile mismatch " + sc.getUserPrincipal().getName() );		
+        	//return "{}";
+        }
         Long schoolID = course.getSchoolID();
         if(schoolID != null) {
 			DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
@@ -88,10 +92,16 @@ public class SecuredUserScoDataManager {
             PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
 // userid must match
          		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
-         			return "{}";
+         		{
+    	            LOG.log(Level.SEVERE, "user mismatch " + sc.getUserPrincipal().getName() );		
+        			//return "{}";
+         		}
 // schoolID must match
          	if (phr.getSchoolGroup().getSchoolID() != schoolID.longValue())
-         			return "{}";       	
+         	{
+	            LOG.log(Level.SEVERE, "school mismatch " + sc.getUserPrincipal().getName() );		
+        		//return "{}";       	
+         	}
         }
         
         byte[] launchData = scoData.getLaunchdatabytes();
