@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ClassCourseItem extends CourseItem {
         private Boolean hasStudentData;
-        private String type;
+        private int type;
         private Date from;
         private Date to;
 
@@ -18,7 +18,7 @@ public class ClassCourseItem extends CourseItem {
         
     }
     
-    public ClassCourseItem (String aKey, CourseItem aParent, List<CourseItem> myChildren, String aName, Boolean hasData, String aType, Date aFrom, Date aTo){
+    public ClassCourseItem (String aKey, String aName, Boolean hasData, int aType, Date aFrom, Date aTo){
         hasStudentData = hasData;
         type = aType;
         from = aFrom;
@@ -42,14 +42,14 @@ public class ClassCourseItem extends CourseItem {
     /**
      * @return the type
      */
-    public String getType() {
+    public int getType() {
         return type;
     }
 
     /**
      * @param type the type to set
      */
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 

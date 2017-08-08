@@ -1,7 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
-import java.util.List;
-
 /**
  *
  * @author G.A.J. van der Plas
@@ -9,6 +7,7 @@ import java.util.List;
 public class CourseItem {
     private String key; //unique
     private String name;
+    private boolean isLeaf=false;
 
     public CourseItem (){
         
@@ -45,6 +44,20 @@ public class CourseItem {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the getIsLeaf
+     */
+    public boolean getIsLeaf() {
+        return isLeaf;
+    }
+
+    /**
+     * @param isLeaf the getIsLeaf to set
+     */
+    public void setIsLeaf(boolean isLeaf) {
+        this.isLeaf = isLeaf;
     }
 
 }
