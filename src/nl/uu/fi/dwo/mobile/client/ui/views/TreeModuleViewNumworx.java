@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -81,7 +82,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop.TreeAnchorC
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
-public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext, Command {
+public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext, Command, Comparator<SelectModuleItem> {
 
 	class ProvideTileKey implements ProvidesKey<SelectModuleItem> {
 
@@ -138,7 +139,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		@Override
 		public void render(Context context, SelectModuleItem value,
 				SafeHtmlBuilder sb) {
-			sb.appendHtmlConstant("<div class='" + style.navItem() +"'>");
+		    Type type = value.getType();
+			String clazz = style.navItem();
+			if(type == Type.SEPARATOR) clazz = style.navTitle();
+			sb.appendHtmlConstant("<div class='" + clazz +"'>");
 			sb.appendEscaped(value.getName());
 			sb.appendHtmlConstant("</div>");
 		}
@@ -151,7 +155,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		public void onBrowserEvent(Context context, Element parent, SelectModuleItem value, NativeEvent event,
 				ValueUpdater<SelectModuleItem> valueUpdater) {
 		    String eventType = event.getType();
-		    if("click".equals(eventType)) {
+		    Type type = value.getType();
+		    if("click".equals(eventType) && type != Type.SEPARATOR) {
 		    	GWT.log(value.getName());
 		    	presenter.goTo(new TreeModulePlace(value.getID()));
 		    	return;
@@ -161,7 +166,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	}
 
-	int flip;
+	//int flip;
 
 	class TileCell extends AbstractCell<SelectModuleItem> {
 
@@ -187,7 +192,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			    String description = value.getDescription();
 			    Type typeof = value.getType();
 				if(true || description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
-					flip = ( flip  ) % 5+1;
+					//flip = ( flip  ) % 5+1;
 					sb.appendHtmlConstant("<span class='" + style.tileBodySpan() + "'>");
 					switch(typeof) {
 			    	case MODULE:
@@ -213,14 +218,14 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			    		}
 			    		break;
 			    	case SCO:
-			    		if(flip != 1)
-			    		sb.appendHtmlConstant("<img style='margin: auto auto' src='"
-			    				+ r("images/courses/"
-			    						+ flip
-			    						+ ".png")
-			    				+ "' class='" + style.tileBodyImg()
-			    				+ "' />");
-			    		else 
+//			    		if(flip != 1)
+//			    		sb.appendHtmlConstant("<img style='margin: auto auto' src='"
+//			    				+ r("images/courses/"
+//			    						+ flip
+//			    						+ ".png")
+//			    				+ "' class='" + style.tileBodyImg()
+//			    				+ "' />");
+//			    		else 
 			    			sb.appendHtmlConstant("<img style='height: 85px' src='"
 			    				+ r("images/numworx/activiteit_numworx.svg")
 			    				+ "' class='" + style.tileBodyImg()
@@ -349,10 +354,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@UiField SimplePanel description;
 	@UiField Image favIcon;
 	@UiField TreeModuleViewNumworxCss style;
-	@UiField FocusPanel homeBtn;
+	@UiField FocusPanel homeBtn, upBtn;
 	@UiField InlineHTML searchBtn;
 	@UiField TextBox searchInput;
-	@UiField ToggleButton fullBtn;
+	//@UiField ToggleButton fullBtn;
 	@UiField Label loginLabel;
 	@UiField FlowPanel centerPanel;
 	@UiField DockLayoutPanel westPanel;
@@ -361,7 +366,16 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	void onHomeBtn(ClickEvent ev) {
 		presenter.goTo(new TreeModulePlace());
 	}
-
+	
+	Object upId = "0";
+	@UiHandler("upBtn")
+	void onUpBtn(ClickEvent ev) {
+		Object parent = upId;
+		if (parent == null) parent = "0"; // wrong place?
+		presenter.goTo(new TreeModulePlace(parent));
+	}
+	
+	
 	@UiHandler("searchBtn")
 	void onSearch(ClickEvent ev) {
 		long id = System.currentTimeMillis();
@@ -478,14 +492,14 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		}
 	}
 	
-	@UiHandler("fullBtn")
-	void onFull(ClickEvent ev) {
-		System.err.println("Full = "+fullBtn.getValue());
-		if(fullBtn.getValue())
-			gwtfullscreen.Fullscreen.requestFullscreen(true);
-		else 
-			gwtfullscreen.Fullscreen.exitFullscreen();
-	}
+//	@UiHandler("fullBtn")
+//	void onFull(ClickEvent ev) {
+//		System.err.println("Full = "+fullBtn.getValue());
+//		if(fullBtn.getValue())
+//			gwtfullscreen.Fullscreen.requestFullscreen(true);
+//		else 
+//			gwtfullscreen.Fullscreen.exitFullscreen();
+//	}
 	
 	private List<SelectModuleItem> list;
 
@@ -547,7 +561,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
 		standardMap.setState(true);
 // Strategy stuff desktop/tablet
-		final boolean desktop = MGWT.getOsDetection().isDesktop();
+		final boolean desktop = MGWT.getOsDetection().isDesktop() /*&& false*/;
 		navigation = desktop ? new TreeNavStrategy() : new ListNavStrategy();
 	}
 
@@ -571,7 +585,36 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		}
 	}
 	
-	
+	private List<SelectModuleItem> massage(List<SelectModuleItem> list) {
+		if(list == null)
+			list = Collections.emptyList();
+		int len = list.size();
+		if(len > 2) {
+			Collections.sort(list, this);
+			SelectModuleItem first = list.get(0);
+			SelectModuleItem last  = list.get(len-1);
+			if( first.isFromSchool() != last.isFromSchool()) 
+			{
+				list = new ArrayList<SelectModuleItem>(list);
+				while(len > 0 && (first.isFromSchool() != last.isFromSchool())) {
+					len --;
+					last  = list.get(len-1);
+				}
+				SelectModuleItem separator = new SelectModuleItem(null, SelectModuleItem.Type.SEPARATOR);
+
+				Object schoolName = "school";
+				if(DWOplayer.withUser() && DWOplayer.clientfactory.getSchool() != null)
+					schoolName = DWOplayer.clientfactory.getSchool().getSchoolName();
+				String SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
+
+				separator.setName(SCHOOL_MODULES);
+				list.add(len, separator);
+			}
+			
+		}
+		return list;
+	}
+
 	
 	@Override
 	public void render(List<SelectModuleItem> currentModel) {
@@ -582,12 +625,12 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		
 		
 		this.list = currentModel;
-		cells.setRowData(list);
+		cells.setRowData(massage(list));
 		cells.redraw();
 		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : "GUEST";
 		loginLabel.setText(login);
 		
-		fullBtn.setValue(gwtfullscreen.Fullscreen.isFullscreen(), false);
+//		fullBtn.setValue(gwtfullscreen.Fullscreen.isFullscreen(), false);
 
 		items.clearItems();
 		MenuItem m;
@@ -637,7 +680,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		});
 		//Scheduler.get().scheduleDeferred(cmd);
 		
-		//if(nieuw)
+		if(nieuw)
 			initTree();
 	}
 
@@ -702,6 +745,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		boolean hasImage = item.getImage() != null;
 		switch(item.getType()) {
 		case ROOT:
+			upId=null;
 			title.setText(item.getName());
 			description.setWidget(getLabel(item));
 //String AanJolanda = "Hallo Jolanda van den Berg, welkom bij Numworx!";
@@ -733,9 +777,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				title.setText(item.getName());
 				String url = (hasImage) ? item.getImage(): r("images/courses/2.png");
 				favIcon.setUrl(url);
-				flip = (flip%5)+1; //flip=1;
-				favIcon.setVisible( (hasImage || flip!=1) && isLabel(item));
-				centerPanel.setStyleName(style.folderBackground(), !hasImage && flip==1);
+//				flip = (flip%5)+1; //flip=1;
+				favIcon.setVisible( (hasImage /*|| flip!=1*/) && isLabel(item));
+				centerPanel.setStyleName(style.folderBackground(), !hasImage/* && flip==1*/);
 				centerPanel.setStyleName(style.centerBackground(), false);
 				description.setWidget(getLabel(item));
 				if(item.showChildren());
@@ -747,7 +791,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 				favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
 				title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
-				
+				upId=item.getParentID();
 			break;
 		case MODULE:
 				title.setText(item.getName());
@@ -765,6 +809,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				}
 				favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
 				title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
+				upId = item.getParentID();
 			break;
 		default:
 			
@@ -889,6 +934,22 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	private TreeItem getTreeItem(SelectModuleItem item) {
 		return new TreeItem(toSafeHTML(item.getName()));
+	}
+
+	public int compare(SelectModuleItem o1, SelectModuleItem o2) {
+		boolean b1 = o1.isFromSchool();
+		boolean b2 = o2.isFromSchool();
+		if(b1 != b2) {
+			return Boolean.compare(b1, b2);
+		}
+		
+//		if (o1.getType()== SelectModuleItem.Type.SCO & o2.getType() == SelectModuleItem.Type.SCO)
+		return Integer.signum(o1.getSequencenr()-o2.getSequencenr());
+
+//		if(sortModel != null)
+//			return sortModel.compare(o1, o2);
+//		else
+//			return o1.getName().compareTo(o2.getName()); // FIXME NIET GOED
 	}
 
 }

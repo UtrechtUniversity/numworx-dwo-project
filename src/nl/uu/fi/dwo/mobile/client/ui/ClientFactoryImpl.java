@@ -70,7 +70,7 @@ public class ClientFactoryImpl implements ClientFactory
 		if(entryView == null)
 		{
 			
-			if(NUMWORX) {
+			if(false) {
 				ViewModuleViewNumworx impl = new ViewModuleViewNumworx();
 				entryView = impl.initialize();
 			} else			
@@ -106,7 +106,14 @@ public class ClientFactoryImpl implements ClientFactory
 	{
 		if (treeModuleView == null){
 			if(NUMWORX)
+			{
+				
+				ViewModuleViewNumworx impl = new ViewModuleViewNumworx();
+				entryView = impl.initialize();
+
+				
 				return this.treeModuleView = new TreeModuleViewNumworx();
+			}
 			
 			
 			

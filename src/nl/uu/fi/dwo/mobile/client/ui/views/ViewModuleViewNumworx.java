@@ -71,8 +71,10 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	String pfx;
 	@UiField
 	FocusPanel homeBtn;
+	@UiField
+	FocusPanel upBtn;
 	@UiField Label loginLabel;
-	@UiField ToggleButton fullBtn;
+//	@UiField ToggleButton fullBtn;
 	@UiField Label title;
 	@UiField TreeModuleViewNumworxCss t;
 	@UiField HTML kruimels;
@@ -169,9 +171,8 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	@Override
 	public void setTrail(List<SelectModuleItem> trail) {
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
-		ListIterator<SelectModuleItem> iter = trail.listIterator(trail.size());
-		int max = 3;
-		while (max-->0 && iter.hasPrevious()) {
+		ListIterator<SelectModuleItem> iter = trail.listIterator(Math.min(trail.size(),3));
+		while (iter.hasPrevious()) {
 			SelectModuleItem selectModuleItem = (SelectModuleItem) iter.previous();
 			String title = selectModuleItem.getName();
 			String id = selectModuleItem.getID().toString();
@@ -180,11 +181,23 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 			builder.appendHtmlConstant("</a> &gt; ");			
 		}
 		kruimels.setHTML(builder.toSafeHtml());
+
+		if(!trail.isEmpty())
+			upId = trail.get(0).getParentID();
+		else
+			upId = null;
 	}
 	
 	@UiHandler("homeBtn")
 	void onHomeBtn(ClickEvent ev) {
 		goTo(new TreeModulePlace());
 	}
-
+	
+	private Object upId;
+	@UiHandler("upBtn")
+	void onUpBtn(ClickEvent ev) {
+		Object parent = upId;
+		if(parent == null) parent = "0";
+		goTo(new TreeModulePlace(parent));
+	}
 }

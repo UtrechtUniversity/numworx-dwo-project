@@ -84,6 +84,11 @@
 			width: 152px;
 			line-height: normal;
 		}
+
+		.navTitle:hover {
+/* 			background-color: #DDE0E3; */
+			color: color15;
+		}
 		
 	.numworx {
 		height:30px;

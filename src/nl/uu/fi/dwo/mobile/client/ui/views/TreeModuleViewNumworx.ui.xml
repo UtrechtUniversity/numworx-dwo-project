@@ -17,11 +17,14 @@
 					<g:MenuItem ui:field='user' addStyleNames='{style.menuItem}' />
 				</g:MenuBar>
 				<g:Label ui:field='loginLabel' styleName='{style.loginname}'>Jolanda van den Berg</g:Label>
-				<g:ToggleButton ui:field='fullBtn' styleName='{style.nav}'>
-					<g:upFace><img src='{pfx}images/numworx/fullscreen-numworx.svg'/></g:upFace>
-					<g:downFace><img src='{pfx}images/numworx/borderdscreen-numworx.svg'/></g:downFace>
-				</g:ToggleButton>
-				<g:FocusPanel styleName='{style.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FocusPanel>
+<!-- 				<g:ToggleButton ui:field='fullBtn' styleName='{style.nav}'> -->
+<!-- 					<g:upFace><img src='{pfx}images/numworx/fullscreen-numworx.svg'/></g:upFace> -->
+<!-- 					<g:downFace><img src='{pfx}images/numworx/borderdscreen-numworx.svg'/></g:downFace> -->
+<!-- 				</g:ToggleButton> -->
+<!-- 				<g:FocusPanel styleName='{style.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FocusPanel> -->
+				<g:FocusPanel ui:field='upBtn' styleName='{style.nav}'>
+					<g:InlineHTML><i style='color:#798291' class='fa fa-2x fa-arrow-up' ></i></g:InlineHTML>
+				</g:FocusPanel>
 				<g:FocusPanel ui:field='homeBtn' styleName='{style.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel>
 			</g:FlowPanel>
 		</g:north>
