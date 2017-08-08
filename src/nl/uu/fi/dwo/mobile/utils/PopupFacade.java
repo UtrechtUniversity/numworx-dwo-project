@@ -120,7 +120,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	
 	public Widget wrap(MC2View container) {
 		if(popup) {
-			if(popupBtn == null)
+			if (popupBtn == null)
 				popupBtn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
 			list.add(popupBtn);
 			return popupBtn;
@@ -130,7 +130,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	
 	public Widget wrap(GeogebraView container) {
 		if(popup) {
-			if(popupBtn!=null)
+			if (popupBtn==null)
 				popupBtn = new PopupButton(container.getWidget(), getImage(), container, popupListener);
 			list.add(popupBtn);
 			return popupBtn;
