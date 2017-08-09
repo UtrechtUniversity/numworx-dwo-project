@@ -200,7 +200,9 @@ public class SecuredUserCourseManager {
     		)
     		{
     			if(!school.getSchoolID().equals(parent.getSchoolID()))
-    				return Collections.emptyList();
+    			{
+    				//return Collections.emptyList();
+    			}
     		}
     			
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent);
@@ -250,7 +252,7 @@ public class SecuredUserCourseManager {
 //    			return null;
 
 // Verify context: profile matches...  		
-    		if (profile.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile)))
+    		//if (profile.getDwoProfileID().equals(MySQLPersistenceId.getNativeId(domDwoProfile)))
     			return parent.buildDomCourseStudent();
     	} catch (Dwo2RestException e) {
     		throw e;
@@ -258,7 +260,7 @@ public class SecuredUserCourseManager {
     		LOG.log(Level.WARNING, "getCourse", e);
     		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the module.");	
     	}
-    	return null;
+    	//return null;
     }
  
     @GET

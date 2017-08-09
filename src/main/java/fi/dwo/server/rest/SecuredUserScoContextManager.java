@@ -77,11 +77,17 @@ public class SecuredUserScoContextManager {
         PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(phr);
 // match profile		
 		if ( pid != parent.getDwoProfileID().longValue())
-			return Collections.emptyList();
+		{
+            LOG.log(Level.WARNING, "profile mismatch " + sc.getUserPrincipal().getName() );		
+			//return Collections.emptyList();
+		}
 // match school
 		if (parent.getSchoolID() != null) {
 			if (parent.getSchoolID().longValue() != school.getSchoolID().longValue())
-				return Collections.emptyList();
+			{
+	            LOG.log(Level.SEVERE, "school mismatch " + sc.getUserPrincipal().getName() );		
+				//return Collections.emptyList();
+			}
 		} else {
 			if (profile.getDwoProfileRights().contains(LIMITED)) {
 				// assert school in profile database....
@@ -89,7 +95,10 @@ public class SecuredUserScoContextManager {
 		}
 // userid must match
 		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
-			return Collections.emptyList();
+		{
+            LOG.log(Level.SEVERE, "user mismatch " + sc.getUserPrincipal().getName() );
+			//return Collections.emptyList();
+		}
 
 		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);
 		return list.stream().map((s)->s.buildDomScoContext()).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
@@ -143,7 +152,7 @@ public class SecuredUserScoContextManager {
 			if (parent.getSchoolID().longValue() != school.getSchoolID().longValue())
 			{
 	            LOG.log(Level.SEVERE, "school mismatch " + sc.getUserPrincipal().getName() );		
-				return null;
+				//return null;
 			}
 		} else {
 			if (profile.getDwoProfileRights().contains(LIMITED)) {
@@ -154,7 +163,7 @@ public class SecuredUserScoContextManager {
 		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
 		{
             LOG.log(Level.SEVERE, "user mismatch " + sc.getUserPrincipal().getName() );
-			return null;
+			//return null;
 		}
 		
 		return scoContext.buildDomScoContext();    	
