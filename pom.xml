@@ -45,7 +45,7 @@
     </properties>
 
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOResults/trunk</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</developerConnection>
     </scm>
     <!-- Running with Maven -->
     <!-- mvn clean package -->
