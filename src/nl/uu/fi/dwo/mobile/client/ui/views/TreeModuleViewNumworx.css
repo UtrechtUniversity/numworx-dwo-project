@@ -295,6 +295,7 @@
 
 .tree {
 	line-height: normal;
+	margin-left: 3px;
 }
 .treeItem {
 	font-size: 13px;

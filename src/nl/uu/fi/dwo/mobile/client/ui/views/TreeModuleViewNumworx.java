@@ -248,8 +248,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  	String type;
 			  	if(value.isShowScore() && typeof == Type.SCO) {
 			  		int score = value.getScore().intValue();
-			  		if(score < 20) type = "fout";
-			  		else if(score >=65) type = "goed";
+			  		//if(score < 20) type = "fout";
+			  		//else 
+			  		if(score >= 100) type = "goed";
 			  		else type = "half";
 			  	} else {
 			  		type = "geen-score";
