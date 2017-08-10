@@ -193,7 +193,22 @@ public class CourseManager {
             javax.persistence.Query q = em.createNamedQuery("PersistentCourse.findBySchoolID");
             q.setParameter("schoolID", s.getSchoolID());
             List<PersistentCourse> list = q.getResultList();
-            LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourse with userid {1}", new Object[]{list.size(), s.getSchoolID()});
+            LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourse with schoolid {1}", new Object[]{list.size(), s.getSchoolID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
+
+    public static List<PersistentCourse> findEntities(Long profileID, Long schoolID) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentCourse.findByProfileAndSchoolID");
+            q.setParameter("dwoProfileID", profileID);
+            q.setParameter("schoolID", schoolID);
+            List<PersistentCourse> list = q.getResultList();
+            LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourses with profileId {1} and schoolId {2}", new Object[]{list.size(), profileID, schoolID});
             return list;
         }
         finally {

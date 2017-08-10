@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
@@ -36,6 +37,7 @@ import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
@@ -67,8 +69,10 @@ import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -941,12 +945,13 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     }
 
     /**
-     * Fetches all the course and classcourse information that a teacher should see from within a school.
-     * 
+     * Fetches all the course and classcourse information that a teacher should
+     * see from within a school.
+     *
      * @param sc
      * @param rest
      * @return
-     * @throws Dwo2Exception 
+     * @throws Dwo2Exception
      */
     @PUT
     @Produces({"application/json"})
@@ -957,7 +962,8 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         PersistentHasRolePK phrPK = MySQLPersistenceId.getNativeId(rest.getRestContext().getDomHasRole());
         PersistentSchool school = null;
         PersistentSchoolClass schoolClass = null;
-
+        DomDwoProfile domProfile = rest.getDomSchoolClassAndProfile().getDomDwoProfile();
+        final PersistentDwoProfile profile;
         //check if user has matching hasRole
         try {
             PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
@@ -966,6 +972,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             }
             phr = HasRoleManager.findEntity(phrPK);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
+            profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(domProfile));
+            if (profile == null) {
+                LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using unknown profileId {1}.", new Object[]{sc.getUserPrincipal().getName(), domProfile.getId()});
+                throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+            }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -1004,6 +1015,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 
         Long profileID = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
 
+        //fetch all courses in the school and profile
+        List<PersistentCourse> listCourse = CourseManager.findEntities(profile.getDwoProfileID(), school.getSchoolID());
+        result.setCourses(listCourse.stream().map((e) -> new DomMapEntry<PersistenceId, DomCourse>(e.buildPersistenceId(), e.buildDomCourse()))
+                .collect(Collectors.toList()));
+
         List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass);
 
         Map<PersistenceId, DomClassCourse> classCourseMap = new HashMap<>();
@@ -1028,12 +1044,44 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 .stream()
                 .map((e) -> new DomMapEntry<PersistenceId, DomClassCourse>(e))
                 .collect(Collectors.toList()));
-        result.setCourses(courseMap.entrySet()
-                .stream()
-                .map((e) -> new DomMapEntry<PersistenceId, DomCourse>(e))
-                .collect(Collectors.toList()));
+//        result.setCourses(courseMap.entrySet()
+//                .stream()
+//                .map((e) -> new DomMapEntry<PersistenceId, DomCourse>(e))
+//                .collect(Collectors.toList()));
         result.setFetchTimeStamp(Long.valueOf(System.currentTimeMillis()));
         return result;
 
+    }
+
+    /**
+     * Fetches all the course and classcourse information that a teacher should
+     * see from within a school.
+     *
+     * @param sc
+     * @param rest
+     * @return
+     * @throws Dwo2Exception
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/attachCourseToClass")
+    public DomClassCourse attachModuleToClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
+        return new DomClassCourse();
+    }
+
+    /**
+     * Fetches all the course and classcourse information that a teacher should
+     * see from within a school.
+     *
+     * @param sc
+     * @param rest
+     * @return
+     * @throws Dwo2Exception
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/detachCourseFromClass")
+    public Boolean detachModuleToClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
+        return false;
     }
 }
