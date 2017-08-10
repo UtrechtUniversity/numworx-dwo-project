@@ -247,7 +247,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         if (course.getDescription().startsWith("H4sIAAAAAA")) {
             editorCB.setSelected(true);
             wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
-            wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
+            wiskOpdrEditPanel.setPreferredSize(new Dimension(800, 350));
             editorBox.add(wiskOpdrEditPanel);
         } else {
             pane = new JTextArea();

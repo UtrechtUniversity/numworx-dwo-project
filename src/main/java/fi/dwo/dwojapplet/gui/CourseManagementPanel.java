@@ -419,7 +419,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			if(course.getText().startsWith("H4sIAAAAAA"))
             {	editorCB.setSelected(true);
             	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getText());
-            	wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
+            	wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
             	editorBox.add(wiskOpdrEditPanel);
             }
             else
@@ -611,7 +611,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     	{	if(editorCB.isSelected())
     		{	if(wiskOpdrEditPanel==null)
     			{	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel("");
-            		wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
+            		wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
             		editorBox.add(wiskOpdrEditPanel);
     			}
     			wiskOpdrEditPanel.setVisible(true);
