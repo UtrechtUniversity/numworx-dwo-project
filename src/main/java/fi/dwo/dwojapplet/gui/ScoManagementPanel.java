@@ -202,7 +202,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             //top.add(Box.createHorizontalStrut(10));
 
         }
-        courseLogoButton = new JButton(new ImageIcon(logo));
+        courseLogoButton = new JButton(new ReducedImageIcon(logo));
         courseLogoButton.setBorderPainted(false);
 // TODO Mac?
         courseLogoButton.setBorder(BorderFactory.createLineBorder(getForeground()));
@@ -743,7 +743,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             reduced = Toolkit.getDefaultToolkit().createImage(data);
             course.setImageData(data);
             course.setCourseLogo(reduced);
-            courseLogoButton.setIcon(new ImageIcon(reduced));
+            courseLogoButton.setIcon(new ReducedImageIcon(reduced));
 // TODO omzetten in PersistenceFacade!
 //            try {
 //                PersistenceFacade.instance().setLogo(course.getID(), data);

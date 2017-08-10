@@ -70,7 +70,7 @@ public class CourseIcon extends JButton implements CourseIconIF {
             tr.waitForAll();
         } catch (Exception e) {
         }
-        ImageIcon icon = new ImageIcon(courseLogo) {
+        ImageIcon icon = new ReducedImageIcon(courseLogo) {
             @Override
             public int getIconHeight() {
                 return 60;

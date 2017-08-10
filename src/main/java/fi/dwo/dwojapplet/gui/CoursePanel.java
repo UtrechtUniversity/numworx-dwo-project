@@ -154,7 +154,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
             tr.waitForAll();
         } catch (Exception e) {
         }
-        ip = new JLabel(new ImageIcon(courseLogo));
+        ip = new JLabel(new ReducedImageIcon(courseLogo));
         ip.setSize(courseLogo.getWidth(null), courseLogo.getHeight(null));
         ip.setLocation(this.getSize().width - ip.getSize().width - 50, startY);
         if (!htmlMode) {
@@ -334,7 +334,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
                 tr.waitForAll();
             } catch (Exception e) {
             }
-            ImageIcon icon = new ImageIcon(courseLogo);
+            ImageIcon icon = new ReducedImageIcon(courseLogo);
             hp.setIcon(icon);
             hp.setIconTextGap(20);
             Border oldBorder = hp.getBorder();
