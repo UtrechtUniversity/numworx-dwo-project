@@ -9,22 +9,22 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author G.A.J. van der Plas
  */
-
 @XmlRootElement
 public class DomSchoolClassAndProfile {
+
     private DomSchoolClass domSchoolClass;
     private DomDwoProfile domDwoProfile;
-    
+
+    public DomSchoolClassAndProfile() {
+
+    }
+
     public DomDwoProfile getDomDwoProfile() {
-		return domDwoProfile;
-	}
+        return domDwoProfile;
+    }
 
-	public void setDomDwoProfile(DomDwoProfile domDwoProfile) {
-		this.domDwoProfile = domDwoProfile;
-	}
-
-	public DomSchoolClassAndProfile(){
-        
+    public void setDomDwoProfile(DomDwoProfile domDwoProfile) {
+        this.domDwoProfile = domDwoProfile;
     }
 
     /**
@@ -41,5 +41,4 @@ public class DomSchoolClassAndProfile {
         this.domSchoolClass = domSchoolClass;
     }
 
-    
 }
