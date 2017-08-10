@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *
  * @author Gert van der Plas
  */
-public class CourseCellNode extends CourseItem {
+public class CourseCellNode extends ClassCourseItem {
 
     private CourseCell cell;
     private ArrayList<CourseCellNode> list; //nodes childrens

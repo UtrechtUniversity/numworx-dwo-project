@@ -4,15 +4,15 @@
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
     <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
-        <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
+        <g:FlowPanel  width="100%">
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="saveBtn">add more students</g:Button>           
             <!--<g:Button addStyleNames='{dwoStyle.dwoButton} float:right' ui:field="addToSchoolClass">add to schoolclass</g:Button>-->
-        <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
-            <g:Tree addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="courseTree" />
-        </g:FlowPanel>
-                <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" ui:field='courseTable'/>
-        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
     </g:FlowPanel>
+        <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%" height="100%" >
+            <g:Tree addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="courseTree" />
+                <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' width="50%" height="100%" ui:field='courseTable'/>
+        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
+        </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>

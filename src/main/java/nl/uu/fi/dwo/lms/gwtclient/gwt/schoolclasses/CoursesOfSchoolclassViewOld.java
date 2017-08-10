@@ -353,7 +353,7 @@ public class CoursesOfSchoolclassViewOld extends Composite implements ClickHandl
         //    LOG.log(Level.INFO, "Listbox event:" + event.getSource().toString());
     }
 
-    public void updateTree(CourseItem item) {
+    public void updateTree(ClassCourseItem item) {
         CoursesOfSchoolclassTreeModel model = new CoursesOfSchoolclassTreeModel(coursesOfSchoolclassPresenter);
         treePanel.add(tree);
 //        

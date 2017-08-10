@@ -39,6 +39,7 @@ public class CoursesOfSchoolclassTree {
     }
 
     private DomTree<DomCourseOfClass> buildCourseTree(DomCoursesOfSchoolClass4Teacher resultData) {
+        //built hashmaps for classcourses and courses from lists
         cocMap = new HashMap<String, DomTree>(resultData.getCourses().size());
         Map<String, DomClassCourse> classCourseMap = new HashMap<String, DomClassCourse>(resultData.getClassCourses().size());
 
@@ -51,35 +52,47 @@ public class CoursesOfSchoolclassTree {
             classCourseMap.put(ccEntry.getValue().getCourseId().getIdString(), ccEntry.getValue());
         }
 
-        //build tree
-        DomTree<DomCourseOfClass> root = new DomTree<DomCourseOfClass>(null);
+        //build DomTree<DomCourseOfClass> tree add every course
+        DomTree<DomCourseOfClass> root = new DomTree<DomCourseOfClass>(new DomCourseOfClass());
+        DomCourse rootCourse = new DomCourse();
+        rootCourse.setName("root");
+        root.setParent(null);
+        root.setObject(new DomCourseOfClass());
         for (DomTree<DomCourseOfClass> n : cocMap.values()) {
-            //attach classCourse if it exists
+            //attach classCourse to DomTree<DomCourseOfClass> n if it exists
+            LOG.log(Level.FINE, " id, parent id " + n.getObject().getCourse().getId() + ", " + n.getObject().getCourse().getParentID());
             if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())) {
                 n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId().getIdString()));
             }
-            //build tree in O(n) time
-            if (n.getObject().getCourse().getParentID() == null) {
-                //if c exists in classCourses add to node
-                if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())) {
-                    n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId().getIdString()));
-                }
+            //build tree in O(n) time, link parents and kids
+            PersistenceId pId = n.getObject().getCourse().getParentID();
+            if (pId == null) {// ref to root course
+//                if c exists in classCourses add to node
+//                if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())) {
+//                    n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId().getIdString()));
+//                }
                 //add to root node if not root node
-                    root.getChildren().put(n.getObject().getCourse().getId().getIdString(), n);
-            } else {
-                //add to parent in tree
-                //get course parent
-                String stringIdParent = n.getObject().getCourse().getParentID().getIdString();
-                cocMap.get(stringIdParent).getChildren().put(n.getObject().getCourse().getId().getIdString(), n);
+                if (!root.getChildren().containsKey(n.getObject().getCourse().getId().getIdString())
+                        && n.getObject().getCourse().getWithChildren()) {
+                    DomCourseOfClass coc = n.getObject();
+                    DomCourse c = coc.getCourse();
+                    root.getChildren().put(c.getId().getIdString(), n);
+                }
+//                cocMap.get("root").getChildren().put(n.getObject().getCourse().getId().getIdString(), n);
+            } else //add to parent in DomTree<DomCourseOfClass> tree
+            //get course parent                
+            if (cocMap.containsKey(pId.getIdString())) {
+                Map<String,DomTree<DomCourseOfClass>> children = cocMap.get(pId.getIdString()).getChildren(); 
+                children.put(n.getObject().getCourse().getId().getIdString(), n);
             }
         }
         // add root node in cocMap
-        cocMap.put("root", root);
-
+        cocMap.put(null, root);
+        LOG.log(Level.FINE, "cocMap entry for null: " + cocMap.get(null));
         //dump tree to logging
         LOG.log(Level.FINE, "Dumping DomCourseTree (depth, name).");
         setCourseTree(root);
-        DFSTreePrint(root);
+        //DFSTreePrint(root);
         return root;
     }
 

@@ -32,16 +32,24 @@ public class CoursesOfSchoolclassPresenter {
     private EventBus eventBus;
     private CoursesOfSchoolclassService service = new CoursesOfSchoolclassService();
 
-    private String[] tableHeaders = {"Module name", "studentdata", "type", "from", "to"};
+    private String[] tableHeaders = {"module name", "assigned", "type", "from", "to"};
     private DomSchoolClass schoolClass;
-    private DomCoursesOfSchoolClass4Teacher moduleInfo;
+//    private DomCoursesOfSchoolClass4Teacher moduleInfo;
     private CoursesOfSchoolclassTree tree;
-    private Map<String, DomStudent> studentMap;
-    private Map<String, ClassCourseItem> courseItems;
-    private Map<String, DomSchoolClass> schoolClassMap;
-    private List<SchoolClassListBoxItem> schoolClassItems;
+//    private Map<String, DomStudent> studentMap;
+//    private Map<String, ClassCourseItem> courseItems;
+//    private Map<String, DomSchoolClass> schoolClassMap;
+//    private List<SchoolClassListBoxItem> schoolClassItems;
     private Display view;
     private int requests = 0;
+
+    void detachItemFromSchoolClass(ClassCourseItem classCourseItem) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void attachItemFromSchoolClass(ClassCourseItem classCourseItem) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     public interface Display {
 
@@ -50,8 +58,10 @@ public class CoursesOfSchoolclassPresenter {
         void clear();
 
         void init();
+
         void updateTable(List<ClassCourseItem> item);
-        void updateTree(CourseItem item);
+
+        void updateTree(ClassCourseItem item);
 
     }
 
@@ -76,12 +86,12 @@ public class CoursesOfSchoolclassPresenter {
     public void init(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
         view.init();
-        updateViewData(aSchoolClass);
+        updateViewData();
     }
 
-    private void updateViewData(DomSchoolClass sc) {
+    private void updateViewData() {
         Promise<DomCoursesOfSchoolClass4Teacher> promise;
-        promise = service.getModules(sc);
+        promise = service.getModules(schoolClass);
         // onSuccess update view
         promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void>() {
             @Override
@@ -89,7 +99,7 @@ public class CoursesOfSchoolclassPresenter {
                 //flip back to schoolclasses screen 
                 DomCoursesOfSchoolClass4Teacher value = resolved.getValue();
                 tree = new CoursesOfSchoolclassTree(value);
-                CourseItem item = new CourseItem("root", "root");
+                ClassCourseItem item = new ClassCourseItem(null, "root");
                 //parse results into a tree.
                 view.updateTree(item);
                 return null;
@@ -112,10 +122,10 @@ public class CoursesOfSchoolclassPresenter {
 
     }
 
-    public CourseItem getRootNode() {
+    public ClassCourseItem getRootNode() {
         DomTree<DomCourseOfClass> c = tree.getCourseTree();
         if (c.getObject().getClassCourse() == null) {
-            CourseItem item = new CourseItem(null, c.getObject().getCourse().getName());
+            ClassCourseItem item = new ClassCourseItem(null, c.getObject().getCourse().getName());
             return item;
         } else {
 //            /String aKey, CourseItem aParent, List<CourseItem> myChildren, String aName, Boolean hasData, String aType, Date aFrom, Date aTo
@@ -131,10 +141,10 @@ public class CoursesOfSchoolclassPresenter {
 
     }
 
-    public CourseItem getNode(String key) {
+    public ClassCourseItem getNode(String key) {
         DomTree<DomCourseOfClass> c = tree.getNode(key);
         if (c.getObject().getClassCourse() == null) {
-            CourseItem item = new CourseItem(null, c.getObject().getCourse().getName());
+            ClassCourseItem item = new ClassCourseItem(null, c.getObject().getCourse().getName());
             if (c.getChildren() == null || c.getChildren().size() == 0) {
                 item.setIsLeaf(true);
             }
@@ -143,7 +153,7 @@ public class CoursesOfSchoolclassPresenter {
 //            /String aKey, CourseItem aParent, List<CourseItem> myChildren, String aName, Boolean hasData, String aType, Date aFrom, Date aTo
             ClassCourseItem item = new ClassCourseItem(key,
                     c.getObject().getCourse().getName(),
-                    false,
+                    true,
                     c.getObject().getClassCourse().getType(),
                     c.getObject().getClassCourse().getNotBefore(),
                     c.getObject().getClassCourse().getNotAfter()
@@ -156,15 +166,18 @@ public class CoursesOfSchoolclassPresenter {
 
     }
 
-    public List<CourseItem> getNodeChildren(String key) {
+    public List<ClassCourseItem> getNodeChildren(String key) {
         if (tree == null) {
-            return new ArrayList<CourseItem>();
+            return new ArrayList<ClassCourseItem>();
         }
         DomTree<DomCourseOfClass> c = tree.getNode(key);
 
-        List<CourseItem> itemList = new ArrayList<CourseItem>(c.getChildren().size());
+        List<ClassCourseItem> itemList = new ArrayList<ClassCourseItem>(c.getChildren().size());
         for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
-            CourseItem item = new CourseItem(coc.getObject().getCourse().getId().getIdString(), coc.getObject().getCourse().getName());
+            ClassCourseItem item = new ClassCourseItem(coc.getObject().getCourse().getId().getIdString(), coc.getObject().getCourse().getName());
+            if(coc.getObject().getClassCourse()!=null){
+                item.setHasStudentData(true);
+            }
             if (coc.getChildren() == null || coc.getChildren().size() == 0) {
                 item.setIsLeaf(true);
             }
@@ -178,32 +191,38 @@ public class CoursesOfSchoolclassPresenter {
         return tableHeaders;
     }
 
-    void setSelectedItem(CourseItem item) {
-        boolean flag = false;
+    void setSelectedItem(ClassCourseItem item) {
+        boolean isLeaf = false;
         DomTree<DomCourseOfClass> c = tree.getNode(item.getKey());
         for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
-            if (coc.getChildren().size() == 0) {
-                flag = true;
+            if (coc.getChildren()==null || coc.getChildren().isEmpty()) {
+                isLeaf = true;
                 break;
             }
         }
-        if (flag) {
+        if (isLeaf) {
             //Show children in cellTable
             LOG.log(Level.INFO, "Going to show children in table");
             List<ClassCourseItem> ccList = new ArrayList<>(c.getChildren().size());
-            for (DomTree<DomCourseOfClass> coc :c.getChildren().values()){
+            for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
                 //creat list for table
+                if(coc.getChildren()==null || coc.getChildren().isEmpty()){
                 ClassCourseItem cc = new ClassCourseItem();
-                cc.setKey(coc.getObject().getCourse().getId().getIdString());
-                cc.setName(coc.getObject().getCourse().getName());
-                cc.setHasStudentData(false);
-                cc.setFrom(coc.getObject().getClassCourse().getNotBefore());
-                cc.setTo(coc.getObject().getClassCourse().getNotAfter());
+                    cc.setKey(coc.getObject().getCourse().getId().getIdString());
+                    cc.setName(coc.getObject().getCourse().getName());
+                    cc.setHasStudentData(false);
+                if (coc.getObject().getClassCourse()!=null) {
+                    cc.setType(coc.getObject().getClassCourse().getType());
+                    cc.setFrom(coc.getObject().getClassCourse().getNotBefore());
+                    cc.setTo(coc.getObject().getClassCourse().getNotAfter());
+                    cc.setHasStudentData(true);
+                }
 //                ClassCourseItem cc = new ClassCourseItem(coc.getObject().getCourse().getId().getIdString(), 
 //                        coc.getObject().getCourse().getName(), false, coc.getObject().getClassCourse().getType(), 
 //                        coc.getObject().getClassCourse().getNotBefore(), 
 //                        coc.getObject().getClassCourse().getNotAfter());
-                ccList.add(cc);
+                    ccList.add(cc);
+                }
             };
             view.updateTable(ccList);
         } else {

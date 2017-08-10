@@ -3,13 +3,12 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.ProvidesKey;
 
 /**
  *
  * @author Gert van der Plas
  */
-public class CourseCell extends AbstractCell<CourseItem> {
+public class CourseCell extends AbstractCell<ClassCourseItem> {
 
     ListDataProvider<CourseCellNode> dataProvider; //for refresh
 
@@ -23,7 +22,7 @@ public class CourseCell extends AbstractCell<CourseItem> {
     }
 
     @Override
-    public void render(com.google.gwt.cell.client.Cell.Context context, CourseItem value, SafeHtmlBuilder sb) {
+    public void render(com.google.gwt.cell.client.Cell.Context context, ClassCourseItem value, SafeHtmlBuilder sb) {
         if (value != null) {
             sb.appendEscaped(value.getName());
         } else {

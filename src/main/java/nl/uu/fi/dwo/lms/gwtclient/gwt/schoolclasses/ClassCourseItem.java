@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * ClassCourseItem expresses the join of a ClassCourse and Course object.
@@ -9,7 +8,7 @@ import java.util.List;
  * @author G.A.J. van der Plas
  */
 public class ClassCourseItem extends CourseItem {
-        private Boolean hasStudentData;
+        private Boolean hasStudentData=false;
         private int type;
         private Date from;
         private Date to;
@@ -18,7 +17,12 @@ public class ClassCourseItem extends CourseItem {
         
     }
     
+   public ClassCourseItem (String aKey, String aName){
+        super(aKey,aName);
+       
+   }
     public ClassCourseItem (String aKey, String aName, Boolean hasData, int aType, Date aFrom, Date aTo){
+        super(aKey,aName);
         hasStudentData = hasData;
         type = aType;
         from = aFrom;
