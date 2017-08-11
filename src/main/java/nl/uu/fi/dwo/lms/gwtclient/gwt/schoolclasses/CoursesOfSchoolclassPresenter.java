@@ -4,7 +4,6 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
@@ -13,7 +12,6 @@ import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -44,11 +42,59 @@ public class CoursesOfSchoolclassPresenter {
     private int requests = 0;
 
     void detachItemFromSchoolClass(ClassCourseItem classCourseItem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Promise<Boolean> promise;
+        promise = service.detachCourseFromClass(schoolClass,tree.getNode(classCourseItem.getKey()).getObject().getCourse());
+        // onSuccess update view
+        promise.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                //flip back to schoolclasses screen 
+                updateViewData();
+                return null;
+            }
+
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+//                view.updateView(courseItems);
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    //throw directly
+                }
+            }
+        });
     }
 
-    void attachItemFromSchoolClass(ClassCourseItem classCourseItem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    void attachItemToSchoolClass(ClassCourseItem classCourseItem) {
+        Promise<Boolean> promise;
+        promise = service.attachCourseToClass(schoolClass,tree.getNode(classCourseItem.getKey()).getObject().getCourse());
+        // onSuccess update view
+        promise.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                //flip back to schoolclasses screen 
+                updateViewData();
+                return null;
+            }
+
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+//                view.updateView(courseItems);
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    //throw directly
+                }
+            }
+        });
     }
 
     public interface Display {
@@ -132,7 +178,7 @@ public class CoursesOfSchoolclassPresenter {
             ClassCourseItem item = new ClassCourseItem("root",
                     c.getObject().getCourse().getName(),
                     false,
-                    c.getObject().getClassCourse().getType(),
+                    c.getObject().getClassCourse().getType().name(),
                     c.getObject().getClassCourse().getNotBefore(),
                     c.getObject().getClassCourse().getNotAfter()
             );
@@ -154,7 +200,7 @@ public class CoursesOfSchoolclassPresenter {
             ClassCourseItem item = new ClassCourseItem(key,
                     c.getObject().getCourse().getName(),
                     true,
-                    c.getObject().getClassCourse().getType(),
+                    c.getObject().getClassCourse().getType().name(),
                     c.getObject().getClassCourse().getNotBefore(),
                     c.getObject().getClassCourse().getNotAfter()
             );
@@ -212,7 +258,7 @@ public class CoursesOfSchoolclassPresenter {
                     cc.setName(coc.getObject().getCourse().getName());
                     cc.setHasStudentData(false);
                 if (coc.getObject().getClassCourse()!=null) {
-                    cc.setType(coc.getObject().getClassCourse().getType());
+                    cc.setType(coc.getObject().getClassCourse().getType().name());
                     cc.setFrom(coc.getObject().getClassCourse().getNotBefore());
                     cc.setTo(coc.getObject().getClassCourse().getNotAfter());
                     cc.setHasStudentData(true);

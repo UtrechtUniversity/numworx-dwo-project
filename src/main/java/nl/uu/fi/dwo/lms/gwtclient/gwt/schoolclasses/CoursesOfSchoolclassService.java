@@ -6,10 +6,13 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
@@ -43,4 +46,47 @@ class CoursesOfSchoolclassService {
         });
     }
 
+    public Promise<Boolean> attachCourseToClass(final DomSchoolClass sc, final DomCourse course) {
+        DomContext context = new DomContext();
+        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
+        
+        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, Boolean>() {
+
+            @Override
+            public Promise<Boolean> call(
+                    Promise<DomDwoProfile> resolved) throws Exception {
+                DomSchoolClassCourseAndProfile data = new DomSchoolClassCourseAndProfile();
+                DomSchoolClassCourseAndProfile sap = new DomSchoolClassCourseAndProfile();
+                sap.setDomDwoProfile(resolved.getValue());
+                sap.setDomSchoolClass(sc);
+                sap.setCourse(course);
+                RestSchoolClassCourseAndProfile rest = new RestSchoolClassCourseAndProfile();
+                rest.setRestContext(context);
+                rest.setDomSchoolClassCourseAndProfile(sap);
+                return manager.attachCourseToClass(rest);
+            }
+        });
+    }    
+
+    public Promise<Boolean> detachCourseFromClass(final DomSchoolClass sc, final DomCourse course) {
+        DomContext context = new DomContext();
+        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
+        
+        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, Boolean>() {
+
+            @Override
+            public Promise<Boolean> call(
+                    Promise<DomDwoProfile> resolved) throws Exception {
+                DomSchoolClassCourseAndProfile data = new DomSchoolClassCourseAndProfile();
+                DomSchoolClassCourseAndProfile sap = new DomSchoolClassCourseAndProfile();
+                sap.setDomDwoProfile(resolved.getValue());
+                sap.setDomSchoolClass(sc);
+                sap.setCourse(course);
+                RestSchoolClassCourseAndProfile rest = new RestSchoolClassCourseAndProfile();
+                rest.setRestContext(context);
+                rest.setDomSchoolClassCourseAndProfile(sap);
+                return manager.detachCourseFromClass(rest);
+            }
+        });
+    }    
 }

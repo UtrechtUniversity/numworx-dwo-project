@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class ClassCourseItem extends CourseItem {
         private Boolean hasStudentData=false;
-        private int type;
+        private String type;
         private Date from;
         private Date to;
 
@@ -21,7 +21,7 @@ public class ClassCourseItem extends CourseItem {
         super(aKey,aName);
        
    }
-    public ClassCourseItem (String aKey, String aName, Boolean hasData, int aType, Date aFrom, Date aTo){
+    public ClassCourseItem (String aKey, String aName, Boolean hasData, String aType, Date aFrom, Date aTo){
         super(aKey,aName);
         hasStudentData = hasData;
         type = aType;
@@ -46,14 +46,14 @@ public class ClassCourseItem extends CourseItem {
     /**
      * @return the type
      */
-    public int getType() {
+    public String getType() {
         return type;
     }
 
     /**
      * @param type the type to set
      */
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 

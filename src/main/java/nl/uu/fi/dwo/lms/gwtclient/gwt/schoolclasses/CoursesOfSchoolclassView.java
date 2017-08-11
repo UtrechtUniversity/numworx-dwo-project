@@ -133,10 +133,10 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             if ("change".equals(event.getType())) {
                 if(value.booleanValue()==true){
                     //attach a classcourse
-                    coursesOfSchoolclassPresenter.detachItemFromSchoolClass((ClassCourseItem) context.getKey());
+                    coursesOfSchoolclassPresenter.attachItemToSchoolClass((ClassCourseItem) context.getKey());
                 }else{
                     //detach a classcourse
-                    coursesOfSchoolclassPresenter.attachItemFromSchoolClass((ClassCourseItem) context.getKey());
+                    coursesOfSchoolclassPresenter.detachItemFromSchoolClass((ClassCourseItem) context.getKey());
                 }
                 LOG.log(Level.INFO, "key " + context.getKey() + " boolean " + value);
             }
@@ -249,8 +249,8 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             @Override
             public String getValue(ClassCourseItem object) {
                 try {
-                    CourseType type = CourseType.values()[object.getType()];
-                    return type.name();
+                    
+                    return object.getType();
                 } catch (Exception e) {
                     return "";
 
