@@ -1,7 +1,6 @@
 /* Copyrighted 2015. */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -19,6 +18,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -47,26 +47,12 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentClassCourse.findAll", query = "SELECT p FROM PersistentClassCourse p"),
     @NamedQuery(name = "PersistentClassCourse.findByClassCourseID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classCourseID = :classCourseID"),
     @NamedQuery(name = "PersistentClassCourse.findByClassID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classID = :classID"),
+    @NamedQuery(name = "PersistentClassCourse.findByClassIDAndCourseID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classID = :classID and p.courseID = :courseID"),
     @NamedQuery(name = "PersistentClassCourse.findByType", query = "SELECT p FROM PersistentClassCourse p WHERE p.type = :type"),
     @NamedQuery(name = "PersistentClassCourse.findByNotBefore", query = "SELECT p FROM PersistentClassCourse p WHERE p.notBefore = :notBefore"),
     @NamedQuery(name = "PersistentClassCourse.findByNotAfter", query = "SELECT p FROM PersistentClassCourse p WHERE p.notAfter = :notAfter"),
     @NamedQuery(name = "PersistentClassCourse.findByCourseID", query = "SELECT p FROM PersistentClassCourse p WHERE p.courseID = :courseID")})
 public class PersistentClassCourse implements Serializable {
-
-    public enum CourseType {
-        NORMAL(0),
-        ASSESSMENT(1);
-        
-        private final int value;
-
-        private CourseType(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -188,7 +174,7 @@ public class PersistentClassCourse implements Serializable {
         classCourse.setCourseId(PersistentCourse.buildPersistenceId(this.courseID));
         classCourse.setNotAfter(this.notAfter);
         classCourse.setNotBefore(this.notBefore);
-        classCourse.setType(this.type);
+        classCourse.setType(CourseType.values()[this.type]);
     }
     
        /** Builds a PersistenceId using this object's data.
