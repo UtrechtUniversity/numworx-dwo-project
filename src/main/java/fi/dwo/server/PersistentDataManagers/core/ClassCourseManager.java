@@ -35,13 +35,15 @@ public class ClassCourseManager {
      *
      * @param classCourse
      */
-    public static void create(PersistentClassCourse classCourse) throws PersistenceException {
+    public static PersistentClassCourse create(PersistentClassCourse classCourse) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(classCourse);
             em.getTransaction().commit();
+            em.flush();
+            return classCourse;
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentClassCourse.", e);
@@ -167,7 +169,20 @@ public class ClassCourseManager {
         }
     }
 
-    
+    public static List<PersistentClassCourse> findEntities(PersistentSchoolClass schoolClass, PersistentCourse course) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.TypedQuery<PersistentClassCourse> q = em.createNamedQuery("PersistentClassCourse.findByClassID", PersistentClassCourse.class);
+            q.setParameter("courseID", course.getCourseID());
+            q.setParameter("classID", schoolClass.getClassID());
+            List<PersistentClassCourse> list = q.getResultList();
+            LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with courseid {1} and classId {2}", new Object[]{list.size(), course.getCourseID(), schoolClass.getClassID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }    
     
     
     public static PersistentClassCourse findEntity(Long id) {
