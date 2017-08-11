@@ -1,11 +1,12 @@
 package nl.uu.fi.dwo.rest.dom.entities.util;
 
 /**
- * CourseType that allows custom values.
+ * CourseType of a ClassCourse.
+ * 
  * @author Gert van der Plas
  */
 public enum CourseType {
     normal,
-    shielded,
+    assesment,
     exam;
 }

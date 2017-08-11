@@ -39,14 +39,14 @@ public class RestSchoolClassCourseAndProfile {
     /**
      * @return the domSchoolClassAndProfile
      */
-    public DomSchoolClassCourseAndProfile getDomSchoolClassAndProfile() {
+    public DomSchoolClassCourseAndProfile getDomSchoolClassCourseAndProfile() {
         return domSchoolClassCourseAndProfile;
     }
 
     /**
      * @param aDomSchoolClassCourseAndProfile the domSchoolClassAndProfile to set
      */
-    public void setDomSchoolClassAndProfile(DomSchoolClassCourseAndProfile aDomSchoolClassCourseAndProfile) {
+    public void setDomSchoolClassCourseAndProfile(DomSchoolClassCourseAndProfile aDomSchoolClassCourseAndProfile) {
         this.domSchoolClassCourseAndProfile = aDomSchoolClassCourseAndProfile;
     }
 
