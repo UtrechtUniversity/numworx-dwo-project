@@ -651,7 +651,8 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
         //keep, required for comparing gui data with new REST-results
 //        DomResultsPerTeacher results;
 //        try {
-//            DomDwoProfile profile = new DomDwoProfile();
+//            dwoGlobalVars.getProfile();
+//             = new DomDwoProfile();
 //            profile.setId(new PersistenceId("MYSQL;PersistentDwoProfile;000000000000000000001"));;
 //            profile.setDwoProfileName("test");
 //            profile.setDwoProfileRights("_");
@@ -661,7 +662,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 //            DomResultPlotMatrix matrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(rTree);
 //            LOG.log(Level.INFO, matrix.toString());
 //            for(DomResultSchoolClass c: rTree.getResultTree().getChildren().values()){
-//               matrix = ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree.getStudentTree().getChildren().get(c.getSchoolClass().getId()), c);
+//               matrix = ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(rTree, c);
 //            LOG.log(Level.INFO, c.getLabel()+"\n\n"+matrix.toString());
 //            }
 //        } catch (Dwo2Exception ex) {
