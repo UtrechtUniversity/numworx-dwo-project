@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
@@ -283,4 +284,25 @@ public class SecuredTeacherSchoolClassManager {
     private void getModules(RestSchoolClassAndProfile restData, MethodCallback<DomCoursesOfSchoolClass4Teacher> callBack) {
         service.getModules(restData, (callBack));
     }
+
+    public Promise<Boolean> attachCourseToClass(RestSchoolClassCourseAndProfile rest) {
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.attachCourseToClass(rest, defer);
+        return defer.getPromise();
+    }
+    
+    private void attachCourseToClass(RestSchoolClassCourseAndProfile restData, MethodCallback<Boolean> callBack) {
+        service.attachCourseToClass(restData, (callBack));
+    }            
+
+    public Promise<Boolean> detachCourseFromClass(RestSchoolClassCourseAndProfile rest) {
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.detachCourseFromClass(rest, defer);
+        return defer.getPromise();
+    }
+    
+    private void detachCourseFromClass(RestSchoolClassCourseAndProfile restData, MethodCallback<Boolean> callBack) {
+        service.detachCourseFromClass(restData, (callBack));
+    }            
+
 }
