@@ -1127,7 +1127,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         Long courseId = MySQLPersistenceId.getNativeId(rest.getDomSchoolClassCourseAndProfile().getCourse());
         course = CourseManager.findEntity(courseId);
         //verify if course is in school
-        if (course == null || !course.getSchoolID().equals(school.getSchoolID())) {
+        if (course == null || (course.getSchoolID() != null && !course.getSchoolID().equals(school.getSchoolID()))) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
@@ -1150,7 +1150,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         //Loop the treepath list  from top  to down and add classCourses, ignore if it already exists.   
         while (!treePath.empty()) {
             curCourse = treePath.pop();
-            if (!ClassCourseManager.findEntities(schoolClass, course).isEmpty()) {
+            if (ClassCourseManager.findEntities(schoolClass, course).isEmpty()) {
                 PersistentClassCourse pcc = new PersistentClassCourse();
                 pcc.setClassID(schoolClass.getClassID());
                 pcc.setCourseID(curCourse.getCourseID());
@@ -1158,7 +1158,8 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 pcc.setNotBefore(null);
                 pcc.setType(CourseType.normal.ordinal());
                 try {
-                    ClassCourseManager.create(pcc);
+                    pcc = ClassCourseManager.create(pcc);
+                    LOG.log(Level.FINE, "User {3} adds a ClassCourse {0} for Course {1} and Class {2}", new Object[]{pcc.getClassCourseID(), pcc.getCourseID(), pcc.getClassID(), sc.getUserPrincipal().getName()});
                 } catch (PersistenceException e) {
                     // ignore as it might already exist.
                 }
@@ -1240,7 +1241,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         Long courseId = MySQLPersistenceId.getNativeId(rest.getDomSchoolClassCourseAndProfile().getCourse());
         course = CourseManager.findEntity(courseId);
         //verify if course is in school
-        if (course == null || !course.getSchoolID().equals(school.getSchoolID())) {
+        if (course == null || (course.getSchoolID() != null && !course.getSchoolID().equals(school.getSchoolID()))) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
@@ -1253,28 +1254,44 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         while (curCourse.getParentID() != 0) {
             curCourse = CourseManager.findEntity(curCourse.getParentID());
             //if no classCourse add to stack
-            if (ClassCourseManager.findEntities(schoolClass, course).isEmpty()) {
-                treePath.addLast(curCourse);
-            } else {
-                break; // Someone might erase an existing classcourse in the background, yet this failure will be visible after a tree refresh.
-            }
+            treePath.addLast(curCourse);
         }// stop when added course with parentid = 0;
 
         //Loop the treepath list  from top  to down and add classCourses, ignore if it already exists.   
         while (!treePath.isEmpty()) {
             curCourse = treePath.pollFirst();
-            List<PersistentClassCourse> result = ClassCourseManager.findEntities(schoolClass, course);
+            //check if a class course exists for current course 
+            List<PersistentClassCourse> result = ClassCourseManager.findEntities(schoolClass, curCourse);
             if (!result.isEmpty()) {
+                //class course for curCourse exists
+                //check if classcourse of curCourse is the only child with a classcourse
+//                PersistentCourse parent = CourseManager.findEntity(course.getParentID());
+//                if (parent == null) {
+//                    //there is no parent (anymore). Exit loop.
+//                    break;
+//                }
+//                
+                List<PersistentCourse> kids = CourseManager.findChildrenOf(curCourse);
+                int count = 0;
+                // count the siblings of curCourse that own one or more class courses.
+                for (PersistentCourse pcc : kids) {
+                    if (ClassCourseManager.findEntities(pcc).size() >0) {
+                        count++;
+                    }
+                }
+                if (count > 1) {
+                    break;
+                }
                 for (PersistentClassCourse cc : result) {
                     try {
                         ClassCourseManager.destroy(cc.getClassCourseID());
+                        LOG.log(Level.FINE, "User {3} deletes a ClassCourse {0} for Course {1} and Class {2}", new Object[]{cc.getClassCourseID(), cc.getCourseID(), cc.getClassID(), sc.getUserPrincipal().getName()});
                     } catch (PersistenceException e) {
-                        // ignore as it might already exist.
+                        // ignore as it might be destroyed already;
                     }
                 }
             }
         }
-
         //commit
         return true;
     }

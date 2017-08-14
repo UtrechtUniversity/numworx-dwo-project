@@ -172,7 +172,7 @@ public class ClassCourseManager {
     public static List<PersistentClassCourse> findEntities(PersistentSchoolClass schoolClass, PersistentCourse course) {
         EntityManager em = getEntityManager();
         try {
-            javax.persistence.TypedQuery<PersistentClassCourse> q = em.createNamedQuery("PersistentClassCourse.findByClassID", PersistentClassCourse.class);
+            javax.persistence.TypedQuery<PersistentClassCourse> q = em.createNamedQuery("PersistentClassCourse.findByClassIDAndCourseID", PersistentClassCourse.class);
             q.setParameter("courseID", course.getCourseID());
             q.setParameter("classID", schoolClass.getClassID());
             List<PersistentClassCourse> list = q.getResultList();
