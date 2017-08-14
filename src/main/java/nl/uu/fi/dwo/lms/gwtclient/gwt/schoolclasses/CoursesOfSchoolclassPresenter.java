@@ -191,7 +191,8 @@ public class CoursesOfSchoolclassPresenter {
         DomTree<DomCourseOfClass> c = tree.getNode(key);
         if (c.getObject().getClassCourse() == null) {
             ClassCourseItem item = new ClassCourseItem(null, c.getObject().getCourse().getName());
-            if (c.getChildren() == null || c.getChildren().size() == 0) {
+            item.setHasStudentData(false);
+                if (c.getChildren() == null || c.getChildren().size() == 0) {
                 item.setIsLeaf(true);
             }
             return item;
@@ -223,6 +224,8 @@ public class CoursesOfSchoolclassPresenter {
             ClassCourseItem item = new ClassCourseItem(coc.getObject().getCourse().getId().getIdString(), coc.getObject().getCourse().getName());
             if(coc.getObject().getClassCourse()!=null){
                 item.setHasStudentData(true);
+            }else{
+                item.setHasStudentData(false);
             }
             if (coc.getChildren() == null || coc.getChildren().size() == 0) {
                 item.setIsLeaf(true);

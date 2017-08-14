@@ -67,10 +67,6 @@ public class CoursesOfSchoolclassTree {
             //build tree in O(n) time, link parents and kids
             PersistenceId pId = n.getObject().getCourse().getParentID();
             if (pId == null) {// ref to root course
-//                if c exists in classCourses add to node
-//                if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())) {
-//                    n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId().getIdString()));
-//                }
                 //add to root node if not root node
                 if (!root.getChildren().containsKey(n.getObject().getCourse().getId().getIdString())
                         && n.getObject().getCourse().getWithChildren()) {

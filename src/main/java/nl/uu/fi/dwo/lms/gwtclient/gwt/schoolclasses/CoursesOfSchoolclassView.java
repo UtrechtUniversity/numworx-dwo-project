@@ -28,11 +28,11 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 
 /**
  * GWT Panel that handles switching the role.
@@ -131,7 +131,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             }
             super.onBrowserEvent(context, parent, value, event, valueUpdater);
             if ("change".equals(event.getType())) {
-                if(value.booleanValue()==true){
+                if(value.booleanValue()!=true){
                     //attach a classcourse
                     coursesOfSchoolclassPresenter.attachItemToSchoolClass((ClassCourseItem) context.getKey());
                 }else{
@@ -407,6 +407,8 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         tree.addItem(treeItem);
         treeItem.setState(true);
         fillTreeNode(treeItem);
+        tree.setSelectedItem(treeItem);
+       coursesOfSchoolclassPresenter.setSelectedItem(item);
     }
 
     private void fillTreeNode(TreeItem treeItem) {
@@ -421,7 +423,8 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
                     childItem.getElement().getStyle().setColor("blue");
                     //setProperty("backgroundColor", "red");//.setProperty("font-weight","bold");
                 } else {
-//                    treeItem.addStyleName("leaf");
+                    childItem.getElement().getStyle().setFontStyle(Style.FontStyle.NORMAL);
+                    childItem.getElement().getStyle().setColor("black");
                 }
                 childItem.setText(name);
                 childItem.setUserObject(i);
