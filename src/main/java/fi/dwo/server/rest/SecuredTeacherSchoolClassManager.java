@@ -1245,47 +1245,60 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
+
+        if (course.isWithChildren()) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is not a leaf in the course tree of school {1} for usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
         // end verification		
 
-        //Loop up the course tree
-        LinkedList<PersistentCourse> treePath = new LinkedList<>();
-        PersistentCourse curCourse = course;
-        treePath.add(curCourse);
-        while (curCourse.getParentID() != 0) {
-            curCourse = CourseManager.findEntity(curCourse.getParentID());
-            //if no classCourse add to stack
-            treePath.addLast(curCourse);
-        }// stop when added course with parentid = 0;
+        //detach leaf course
+        List<PersistentClassCourse> ccResult = ClassCourseManager.findEntities(schoolClass, course);
+        for (PersistentClassCourse cc : ccResult) {
+            try {
+                ClassCourseManager.destroy(cc.getClassCourseID());
+            } catch (PersistenceException e) {
+                // ignore as it might be destroyed already;
+            }
+        }
+            //Loop up the course tree and detach required maps
+            LinkedList<PersistentCourse> treePath = new LinkedList<>();
+            PersistentCourse curCourse = course;
+            while (curCourse.getParentID() != 0) {
+                curCourse = CourseManager.findEntity(curCourse.getParentID());
+                //if no classCourse add to stack
+                treePath.addLast(curCourse);
+            }// stop when added course with parentid = 0;
 
-        //Loop the treepath list  from top  to down and add classCourses, ignore if it already exists.   
-        while (!treePath.isEmpty()) {
-            curCourse = treePath.pollFirst();
-            //check if a class course exists for current course 
-            List<PersistentClassCourse> result = ClassCourseManager.findEntities(schoolClass, curCourse);
-            int cSize = result.size();
-            if (cSize!=0 && curCourse.getParentID()!=0) {// not empty, asynchroneous may allow for more than one classcourse
-                List<PersistentCourse> kids = CourseManager.findChildrenOf(CourseManager.findEntity(curCourse.getParentID()));
-                int count = 0;
-                // count the siblings of curCourse that own one or more class courses.
-                for (PersistentCourse pcc : kids) {
-                    if (ClassCourseManager.findEntities(pcc).size() >0) {
-                        count++;
+            //Loop the treepath list  from top  to down and add classCourses, ignore if it already exists.   
+            while (!treePath.isEmpty()) {
+                curCourse = treePath.pollFirst();
+                //check if a class course exists for current course 
+                ccResult = ClassCourseManager.findEntities(schoolClass, curCourse);
+                int cSize = ccResult.size();
+                if (cSize != 0 && curCourse.getCourseID() != 0) {// not empty, asynchroneous may allow for more than one classcourse
+                    List<PersistentCourse> kids = CourseManager.findChildrenOf(curCourse);
+                    int count = 0;
+                    // count the siblings of curCourse that own one or more class courses.
+                    for (PersistentCourse pc : kids) {
+                        if (ClassCourseManager.findEntities(schoolClass, pc).size() > 0) {
+                            count++;
+                        }
                     }
-                }
-                if (count > cSize) {
-                    break; 
-                }
-                for (PersistentClassCourse cc : result) {
-                    try {
-                        ClassCourseManager.destroy(cc.getClassCourseID());
-                        LOG.log(Level.FINE, "User {3} deletes a ClassCourse {0} for Course {1} and Class {2}", new Object[]{cc.getClassCourseID(), cc.getCourseID(), cc.getClassID(), sc.getUserPrincipal().getName()});
-                    } catch (PersistenceException e) {
-                        // ignore as it might be destroyed already;
+                    if (count > 0) {
+                        break;
+                    }
+                    for (PersistentClassCourse pcc : ccResult) {
+                        try {
+                            ClassCourseManager.destroy(pcc.getClassCourseID());
+                            LOG.log(Level.FINE, "User {3} deletes a ClassCourse {0} for Course {1} and Class {2}", new Object[]{pcc.getClassCourseID(), pcc.getCourseID(), pcc.getClassID(), sc.getUserPrincipal().getName()});
+                        } catch (PersistenceException e) {
+                            // ignore as it might be destroyed already;
+                        }
                     }
                 }
             }
+            //commit
+            return true;
         }
-        //commit
-        return true;
     }
-}
