@@ -227,7 +227,7 @@ public class CoursesOfSchoolclassPresenter {
             }else{
                 item.setHasStudentData(false);
             }
-            if (coc.getChildren() == null || coc.getChildren().size() == 0) {
+            if (!coc.getObject().getCourse().getWithChildren()) {
                 item.setIsLeaf(true);
             }
             itemList.add(item);

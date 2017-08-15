@@ -56,6 +56,17 @@
                 <gwt.style>PRETTY</gwt.style>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-tomcat7:run (debug)</actionName>
+            <displayName>tomcat7:run (debug)</displayName>
+            <goals>
+                <goal>tomcat7:run</goal>
+            </goals>
+            <properties>
+                <gwt.style>PRETTY</gwt.style>
+                <jpda.listen>maven</jpda.listen>
+            </properties>
+        </action>
         
         
         

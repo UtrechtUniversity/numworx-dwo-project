@@ -397,9 +397,6 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 
     @Override
     public void updateTree(ClassCourseItem item) {
-        for (int i = tree.getItemCount() - 1; i >= 0; i--) {
-            tree.removeItem(tree.getItem(i));
-        }
         TreeItem treeItem = new TreeItem();
         String name = (item.getName() != null ? item.getName() : "root");
         treeItem.setText(name);
