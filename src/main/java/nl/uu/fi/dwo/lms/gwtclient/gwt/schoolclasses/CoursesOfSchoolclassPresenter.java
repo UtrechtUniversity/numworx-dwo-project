@@ -107,7 +107,7 @@ public class CoursesOfSchoolclassPresenter {
 
         void updateTable(List<ClassCourseItem> item);
 
-        void updateTree(ClassCourseItem item);
+        void setTree(ClassCourseItem item);
 
     }
 
@@ -147,7 +147,7 @@ public class CoursesOfSchoolclassPresenter {
                 tree = new CoursesOfSchoolclassTree(value);
                 ClassCourseItem item = new ClassCourseItem(null, "root");
                 //parse results into a tree.
-                view.updateTree(item);
+                view.setTree(item);
                 return null;
             }
 
@@ -249,13 +249,14 @@ public class CoursesOfSchoolclassPresenter {
                 break;
             }
         }
-        if (isLeaf) {
+        if (isLeaf ) {
             //Show children in cellTable
             LOG.log(Level.INFO, "Going to show children in table");
             List<ClassCourseItem> ccList = new ArrayList<>(c.getChildren().size());
             for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
                 //creat list for table
-                if(coc.getChildren()==null || coc.getChildren().isEmpty()){
+                if(!coc.getObject().getCourse().getWithChildren() &&
+                        (coc.getChildren()==null || coc.getChildren().isEmpty())){
                 ClassCourseItem cc = new ClassCourseItem();
                     cc.setKey(coc.getObject().getCourse().getId().getIdString());
                     cc.setName(coc.getObject().getCourse().getName());
@@ -266,10 +267,7 @@ public class CoursesOfSchoolclassPresenter {
                     cc.setTo(coc.getObject().getClassCourse().getNotAfter());
                     cc.setHasStudentData(true);
                 }
-//                ClassCourseItem cc = new ClassCourseItem(coc.getObject().getCourse().getId().getIdString(), 
-//                        coc.getObject().getCourse().getName(), false, coc.getObject().getClassCourse().getType(), 
-//                        coc.getObject().getClassCourse().getNotBefore(), 
-//                        coc.getObject().getClassCourse().getNotAfter());
+                    cc.setIsLeaf(coc.getObject().getCourse().getWithChildren());
                     ccList.add(cc);
                 }
             };

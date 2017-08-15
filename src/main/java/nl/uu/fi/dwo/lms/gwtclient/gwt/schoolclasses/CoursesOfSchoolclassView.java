@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.DatePickerCell;
+import com.google.gwt.cell.client.SelectionCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -13,6 +15,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -30,9 +34,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 
 /**
  * GWT Panel that handles switching the role.
@@ -131,10 +137,10 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             }
             super.onBrowserEvent(context, parent, value, event, valueUpdater);
             if ("change".equals(event.getType())) {
-                if(value.booleanValue()!=true){
+                if (value.booleanValue() != true) {
                     //attach a classcourse
                     coursesOfSchoolclassPresenter.attachItemToSchoolClass((ClassCourseItem) context.getKey());
-                }else{
+                } else {
                     //detach a classcourse
                     coursesOfSchoolclassPresenter.detachItemFromSchoolClass((ClassCourseItem) context.getKey());
                 }
@@ -143,6 +149,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         }
     }
 
+    
     public CoursesOfSchoolclassView(CoursesOfSchoolclassPresenter sp) {
         coursesOfSchoolclassPresenter = sp;
         coursesOfSchoolclassPresenter.setView(this);
@@ -244,12 +251,17 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         bValue.setSortable(false);
         dataGrid.addColumn(bValue, tableHeaders[1]);
 
-        //hasType
-        value = new Column<ClassCourseItem, String>(cell) {
+        //hasType    
+    List<String> categoryNames = new ArrayList<String>();
+    for (CourseType ct : CourseType.values()) {
+      categoryNames.add(ct.name());
+    }
+    SelectionCell categoryCell = new SelectionCell(categoryNames);
+        value = new Column<ClassCourseItem, String>(categoryCell) {
             @Override
             public String getValue(ClassCourseItem object) {
                 try {
-                    
+
                     return object.getType();
                 } catch (Exception e) {
                     return "";
@@ -257,39 +269,42 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
                 }
             }
         };
-//        value.setSortable(true);
-//        columnSortHandler = new ListHandler<ClassCourseItem>(
-//                data);
-//        columnSortHandler.setComparator(value,
-//                new Comparator<ClassCourseItem>() {
-//            public int compare(ClassCourseItem o1, ClassCourseItem o2) {
-//                if (o1 == o2) {
-//                    return 0;
-//                }
-//
-//                // Compare the name columns.
-//                if (o1 != null) {
-//                    return (o2.getType() != o1.getType()) ? 0 : 1;
-//                }
-//                return -1;
-//            }
-//        });
-//        dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.addColumn(value, tableHeaders[2]);
 
         //from
-        value = new Column<ClassCourseItem, String>(cell) {
-            @Override
-            public String getValue(ClassCourseItem object) {
-                try {
-                    return object.getFrom().toString();
-                } catch (Exception e) {
-                    return "";
+        DatePickerCell datePicker = new DatePickerCell();
+        
+       Column<ClassCourseItem, Date> dateColumn = new Column<ClassCourseItem, Date>(new DatePickerCell(DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM))) {
+//use //https://chmln.github.io/flatpickr/examples/ to pick stuff and then parse
 
-                }
-            }
-        };
-        value.setSortable(true);
+    @Override
+    public Date getValue(ClassCourseItem object) {
+      return new Date(); //object.getFrom();
+    }
+
+  };
+//  dateColumn.setFieldUpdater(new FieldUpdater<LectureProxy, Date>() {
+//
+//    @Override
+//    public void update(@SuppressWarnings("unused") int index, LectureProxy object, Date value) {
+//      final LectureProxy lecture = getPresenter().edit(object);
+//      lecture.setDate(value);
+//      getPresenter().save(lecture);
+//    }
+//  });
+  
+//        value = new Column<ClassCourseItem, String>(datePicker) {
+//            @Override
+//            public String getValue(ClassCourseItem object) {
+//                try {
+//                    return object.getFrom().toString();
+//                } catch (Exception e) {
+//                    return "";
+//
+//                }
+//            }
+//        };
+//        value.setSortable(true);
 //        columnSortHandler = new ListHandler<ClassCourseItem>(
 //                data);
 //        columnSortHandler.setComparator(value,
@@ -307,7 +322,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //            }
 //        });
 //        dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[3]);
+        dataGrid.addColumn(dateColumn, tableHeaders[3]);
 
         //to
         value = new Column<ClassCourseItem, String>(cell) {
@@ -389,25 +404,26 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         dataProvider.getList().clear();
         dataProvider.getList().addAll(items);
         dataProvider.refresh();
-//        dataProvider.setList(items);
-//        dataProvider.flush();
-//        dataProvider.refresh();
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
-    public void updateTree(ClassCourseItem item) {
-        TreeItem treeItem = new TreeItem();
-        String name = (item.getName() != null ? item.getName() : "root");
-        treeItem.setText(name);
-        treeItem.setUserObject(item);
-        tree.addItem(treeItem);
-        treeItem.setState(true);
-        fillTreeNode(treeItem);
-        tree.setSelectedItem(treeItem);
-       coursesOfSchoolclassPresenter.setSelectedItem(item);
+    public void setTree(ClassCourseItem item) {
+        for (int i = tree.getItemCount() - 1; i >= 0; i--) {
+            tree.removeItem(tree.getItem(i));
+        }
+        for (ClassCourseItem child : coursesOfSchoolclassPresenter.getNodeChildren(item.getKey())) {
+            TreeItem treeItem = new TreeItem();
+            String name = (child.getName() != null ? child.getName() : "null");
+            treeItem.setText(name);
+            treeItem.setUserObject(child);
+            tree.addItem(treeItem);
+            tree.setSelectedItem(treeItem);
+            fillTreeNode(treeItem);
+            treeItem.setState(true);
+        }
+        coursesOfSchoolclassPresenter.setSelectedItem(item);
     }
-
+    
     private void fillTreeNode(TreeItem treeItem) {
         ClassCourseItem item = (ClassCourseItem) treeItem.getUserObject();
         for (ClassCourseItem i : coursesOfSchoolclassPresenter.getNodeChildren(item.getKey())) {
@@ -428,6 +444,9 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
                 treeItem.addItem(childItem);
                 //treeItem.setState(true);
                 fillTreeNode(childItem);
+                if (i.getHasStudentData() || treeItem.isSelected()) {
+                    childItem.setState(true);
+                }
             }
         }
     }

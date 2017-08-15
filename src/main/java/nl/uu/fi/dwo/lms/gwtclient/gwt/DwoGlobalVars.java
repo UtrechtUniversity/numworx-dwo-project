@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
-import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;

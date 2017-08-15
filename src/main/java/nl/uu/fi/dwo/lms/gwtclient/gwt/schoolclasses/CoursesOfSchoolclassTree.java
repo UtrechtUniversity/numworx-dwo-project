@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
@@ -58,6 +59,27 @@ public class CoursesOfSchoolclassTree {
         rootCourse.setName("root");
         root.setParent(null);
         root.setObject(new DomCourseOfClass());
+
+        DomTree<DomCourseOfClass> publicRoot = new DomTree<DomCourseOfClass>(new DomCourseOfClass());
+        DomCourse publicRootCourse = new DomCourse();
+        publicRootCourse.setId(new PersistenceId("MYSQL;PersistentCourse;publicRoot"));
+        publicRootCourse.setName("public");
+        publicRootCourse.setWithChildren(true);
+        publicRootCourse.setSchoolId(null);
+        publicRoot.setParent(root);
+        root.getChildren().put(publicRootCourse.getId().getIdString(), publicRoot);
+        publicRoot.setObject(new DomCourseOfClass(publicRootCourse));
+
+        DomTree<DomCourseOfClass> schoolRoot = new DomTree<DomCourseOfClass>(new DomCourseOfClass());
+        DomCourse schoolRootCourse = new DomCourse();
+        schoolRootCourse.setName(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getSchoolName());
+        schoolRootCourse.setId(new PersistenceId("MYSQL;PersistentCourse;schoolRoot"));
+        schoolRootCourse.setWithChildren(true);
+        schoolRootCourse.setSchoolId(DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getId());
+        schoolRoot.setParent(root);
+        root.getChildren().put(schoolRootCourse.getId().getIdString(), schoolRoot);
+        schoolRoot.setObject(new DomCourseOfClass(schoolRootCourse));
+
         for (DomTree<DomCourseOfClass> n : cocMap.values()) {
             //attach classCourse to DomTree<DomCourseOfClass> n if it exists
             LOG.log(Level.FINE, " id, parent id " + n.getObject().getCourse().getId() + ", " + n.getObject().getCourse().getParentID());
@@ -72,17 +94,28 @@ public class CoursesOfSchoolclassTree {
                         && n.getObject().getCourse().getWithChildren()) {
                     DomCourseOfClass coc = n.getObject();
                     DomCourse c = coc.getCourse();
-                    root.getChildren().put(c.getId().getIdString(), n);
+                    //proxy the new maps with fake persistence id's, ugly but effective.
+                    if (n.getObject().getCourse().getSchoolId() == null) {
+                        n.setParent(publicRoot);
+                        n.getObject().getCourse().setParentID(publicRootCourse.getId());
+                        publicRoot.getChildren().put(c.getId().getIdString(), n);
+                    } else {
+                        n.setParent(schoolRoot);
+                        n.getObject().getCourse().setParentID(schoolRootCourse.getId());
+                        schoolRoot.getChildren().put(c.getId().getIdString(), n);
+                    }
                 }
 //                cocMap.get("root").getChildren().put(n.getObject().getCourse().getId().getIdString(), n);
-            } else //add to parent in DomTree<DomCourseOfClass> tree
+            } else//add to parent in DomTree<DomCourseOfClass> tree
             //get course parent                
             if (cocMap.containsKey(pId.getIdString())) {
-                Map<String,DomTree<DomCourseOfClass>> children = cocMap.get(pId.getIdString()).getChildren(); 
+                Map<String, DomTree<DomCourseOfClass>> children = cocMap.get(pId.getIdString()).getChildren();
                 children.put(n.getObject().getCourse().getId().getIdString(), n);
             }
         }
         // add root node in cocMap
+        cocMap.put(schoolRootCourse.getId().getIdString(), schoolRoot);
+        cocMap.put(publicRootCourse.getId().getIdString(), publicRoot);
         cocMap.put(null, root);
         LOG.log(Level.FINE, "cocMap entry for null: " + cocMap.get(null));
         //dump tree to logging

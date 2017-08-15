@@ -12,6 +12,7 @@ public class ClassCourseItem extends CourseItem {
         private String type;
         private Date from;
         private Date to;
+        private String school;
 
    public ClassCourseItem (){
         
@@ -23,6 +24,7 @@ public class ClassCourseItem extends CourseItem {
    }
     public ClassCourseItem (String aKey, String aName, Boolean hasData, String aType, Date aFrom, Date aTo){
         super(aKey,aName);
+        
         hasStudentData = hasData;
         type = aType;
         from = aFrom;

@@ -6,7 +6,10 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
  */
 public class CourseItem {
     private String key; //unique
-    private String name;
+    private String name;        
+    private String school;
+
+    
     private boolean isLeaf=false;
 
     public CourseItem (){
