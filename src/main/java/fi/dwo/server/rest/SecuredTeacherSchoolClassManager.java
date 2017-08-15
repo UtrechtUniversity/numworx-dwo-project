@@ -1262,16 +1262,9 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             curCourse = treePath.pollFirst();
             //check if a class course exists for current course 
             List<PersistentClassCourse> result = ClassCourseManager.findEntities(schoolClass, curCourse);
-            if (!result.isEmpty()) {
-                //class course for curCourse exists
-                //check if classcourse of curCourse is the only child with a classcourse
-//                PersistentCourse parent = CourseManager.findEntity(course.getParentID());
-//                if (parent == null) {
-//                    //there is no parent (anymore). Exit loop.
-//                    break;
-//                }
-//                
-                List<PersistentCourse> kids = CourseManager.findChildrenOf(curCourse);
+            int cSize = result.size();
+            if (cSize!=0 && curCourse.getParentID()!=0) {// not empty, asynchroneous may allow for more than one classcourse
+                List<PersistentCourse> kids = CourseManager.findChildrenOf(CourseManager.findEntity(curCourse.getParentID()));
                 int count = 0;
                 // count the siblings of curCourse that own one or more class courses.
                 for (PersistentCourse pcc : kids) {
@@ -1279,8 +1272,8 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                         count++;
                     }
                 }
-                if (count > 1) {
-                    break;
+                if (count > cSize) {
+                    break; 
                 }
                 for (PersistentClassCourse cc : result) {
                     try {
