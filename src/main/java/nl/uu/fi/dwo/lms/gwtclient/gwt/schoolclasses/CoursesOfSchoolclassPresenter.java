@@ -1,11 +1,14 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.DomTree;
@@ -13,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -30,7 +34,7 @@ public class CoursesOfSchoolclassPresenter {
     private EventBus eventBus;
     private CoursesOfSchoolclassService service = new CoursesOfSchoolclassService();
 
-    private String[] tableHeaders = {"module name", "assigned", "type", "from", "to"};
+    private String[] tableHeaders = {"module name", "assigned", "type", "from [?]", "to [?]"};
     private DomSchoolClass schoolClass;
 //    private DomCoursesOfSchoolClass4Teacher moduleInfo;
     private CoursesOfSchoolclassTree tree;
@@ -43,7 +47,7 @@ public class CoursesOfSchoolclassPresenter {
 
     void detachItemFromSchoolClass(ClassCourseItem classCourseItem) {
         Promise<Boolean> promise;
-        promise = service.detachCourseFromClass(schoolClass,tree.getNode(classCourseItem.getKey()).getObject().getCourse());
+        promise = service.detachCourseFromClass(schoolClass, tree.getNode(classCourseItem.getKey()).getObject().getCourse());
         // onSuccess update view
         promise.then(new Success<Boolean, Void>() {
             @Override
@@ -71,7 +75,7 @@ public class CoursesOfSchoolclassPresenter {
 
     void attachItemToSchoolClass(ClassCourseItem classCourseItem) {
         Promise<Boolean> promise;
-        promise = service.attachCourseToClass(schoolClass,tree.getNode(classCourseItem.getKey()).getObject().getCourse());
+        promise = service.attachCourseToClass(schoolClass, tree.getNode(classCourseItem.getKey()).getObject().getCourse());
         // onSuccess update view
         promise.then(new Success<Boolean, Void>() {
             @Override
@@ -192,7 +196,7 @@ public class CoursesOfSchoolclassPresenter {
         if (c.getObject().getClassCourse() == null) {
             ClassCourseItem item = new ClassCourseItem(null, c.getObject().getCourse().getName());
             item.setHasStudentData(false);
-                if (c.getChildren() == null || c.getChildren().size() == 0) {
+            if (c.getChildren() == null || c.getChildren().size() == 0) {
                 item.setIsLeaf(true);
             }
             return item;
@@ -222,9 +226,9 @@ public class CoursesOfSchoolclassPresenter {
         List<ClassCourseItem> itemList = new ArrayList<ClassCourseItem>(c.getChildren().size());
         for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
             ClassCourseItem item = new ClassCourseItem(coc.getObject().getCourse().getId().getIdString(), coc.getObject().getCourse().getName());
-            if(coc.getObject().getClassCourse()!=null){
+            if (coc.getObject().getClassCourse() != null) {
                 item.setHasStudentData(true);
-            }else{
+            } else {
                 item.setHasStudentData(false);
             }
             if (!coc.getObject().getCourse().getWithChildren()) {
@@ -244,29 +248,29 @@ public class CoursesOfSchoolclassPresenter {
         boolean isLeaf = false;
         DomTree<DomCourseOfClass> c = tree.getNode(item.getKey());
         for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
-            if (coc.getChildren()==null || coc.getChildren().isEmpty()) {
+            if (coc.getChildren() == null || coc.getChildren().isEmpty()) {
                 isLeaf = true;
                 break;
             }
         }
-        if (isLeaf ) {
+        if (isLeaf) {
             //Show children in cellTable
             LOG.log(Level.INFO, "Going to show children in table");
             List<ClassCourseItem> ccList = new ArrayList<>(c.getChildren().size());
             for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
                 //creat list for table
-                if(!coc.getObject().getCourse().getWithChildren() &&
-                        (coc.getChildren()==null || coc.getChildren().isEmpty())){
-                ClassCourseItem cc = new ClassCourseItem();
+                if (!coc.getObject().getCourse().getWithChildren()
+                        && (coc.getChildren() == null || coc.getChildren().isEmpty())) {
+                    ClassCourseItem cc = new ClassCourseItem();
                     cc.setKey(coc.getObject().getCourse().getId().getIdString());
                     cc.setName(coc.getObject().getCourse().getName());
                     cc.setHasStudentData(false);
-                if (coc.getObject().getClassCourse()!=null) {
-                    cc.setType(coc.getObject().getClassCourse().getType().name());
-                    cc.setFrom(coc.getObject().getClassCourse().getNotBefore());
-                    cc.setTo(coc.getObject().getClassCourse().getNotAfter());
-                    cc.setHasStudentData(true);
-                }
+                    if (coc.getObject().getClassCourse() != null) {
+                        cc.setType(coc.getObject().getClassCourse().getType().name());
+                        cc.setFrom(coc.getObject().getClassCourse().getNotBefore());
+                        cc.setTo(coc.getObject().getClassCourse().getNotAfter());
+                        cc.setHasStudentData(true);
+                    }
                     cc.setIsLeaf(coc.getObject().getCourse().getWithChildren());
                     ccList.add(cc);
                 }
@@ -283,4 +287,53 @@ public class CoursesOfSchoolclassPresenter {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
 
+    void setFromDate(String key, String dateString) {
+        Date date;
+        if (dateString.isEmpty()) {
+            date = null;
+        } else {
+            try {
+                date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(dateString);
+                LOG.log(Level.FINE, "Setting From-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
+            } catch (Exception e) {
+
+                eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
+                return;
+            }
+            DomTree<DomCourseOfClass> c = tree.getNode(key);
+            if ( (c.getObject().getClassCourse().getNotAfter()!= null
+                    &&  c.getObject().getClassCourse().getNotAfter().after(date))
+                    || (c.getObject().getClassCourse().getNotAfter() == null ) ) {
+                //update data
+            } else {
+                eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
+                return;
+            }
+        }
+    }
+
+    void setToDate(String key, String dateString) {
+        Date date;
+        if (dateString.isEmpty()) {
+            date = null;
+        } else {
+            try {
+                date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(dateString);
+                LOG.log(Level.FINE, "Setting To-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
+            } catch (Exception e) {
+                eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
+                return;
+            }
+            DomTree<DomCourseOfClass> c = tree.getNode(key);
+            if ( ( c.getObject().getClassCourse().getNotAfter() != null
+                    && c.getObject().getClassCourse().getNotBefore().before(date) )
+                    || c.getObject().getClassCourse().getNotBefore()==null) {           
+                //update data
+            } else {
+                eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
+                return;
+            }
+
+        }
+    }
 }

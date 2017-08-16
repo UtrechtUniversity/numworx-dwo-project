@@ -2,7 +2,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.CheckboxCell;
-import com.google.gwt.cell.client.DatePickerCell;
+import com.google.gwt.cell.client.EditTextCell;
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SelectionCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
@@ -15,8 +16,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -34,7 +33,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,7 +75,9 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         @Override
         public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
             if (value != null) {
+                sb.appendHtmlConstant("<div title=\"I'm a tooltip\">");
                 sb.appendEscaped(value);
+                sb.appendHtmlConstant("</div>");
             }
         }
 
@@ -149,7 +149,6 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         }
     }
 
-    
     public CoursesOfSchoolclassView(CoursesOfSchoolclassPresenter sp) {
         coursesOfSchoolclassPresenter = sp;
         coursesOfSchoolclassPresenter.setView(this);
@@ -237,7 +236,11 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[0]);
+        SafeHtmlBuilder builder = new SafeHtmlBuilder();
+        builder.appendHtmlConstant("<div title=\"Click to sort\">")
+                .appendHtmlConstant(tableHeaders[0])
+                .appendHtmlConstant("</div>");
+        dataGrid.addColumn(value, builder.toSafeHtml());
 
         //hasData
         checkBox = new MyCheckBoxCell(true, true);
@@ -249,14 +252,18 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         };
 
         bValue.setSortable(false);
-        dataGrid.addColumn(bValue, tableHeaders[1]);
+        builder = new SafeHtmlBuilder();
+        builder.appendHtmlConstant("<div title=\"selected means available to class\">")
+                .appendHtmlConstant(tableHeaders[1])
+                .appendHtmlConstant("</div>");
+        dataGrid.addColumn(bValue, builder.toSafeHtml());
 
         //hasType    
-    List<String> categoryNames = new ArrayList<String>();
-    for (CourseType ct : CourseType.values()) {
-      categoryNames.add(ct.name());
-    }
-    SelectionCell categoryCell = new SelectionCell(categoryNames);
+        List<String> categoryNames = new ArrayList<String>();
+        for (CourseType ct : CourseType.values()) {
+            categoryNames.add(ct.name());
+        }
+        SelectionCell categoryCell = new SelectionCell(categoryNames);
         value = new Column<ClassCourseItem, String>(categoryCell) {
             @Override
             public String getValue(ClassCourseItem object) {
@@ -272,71 +279,63 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         dataGrid.addColumn(value, tableHeaders[2]);
 
         //from
-        DatePickerCell datePicker = new DatePickerCell();
-        
-       Column<ClassCourseItem, Date> dateColumn = new Column<ClassCourseItem, Date>(new DatePickerCell(DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM))) {
+        EditTextCell textCell = new EditTextCell();
+
+        Column<ClassCourseItem, String> dateColumn = new Column<ClassCourseItem, String>(textCell) {
 //use //https://chmln.github.io/flatpickr/examples/ to pick stuff and then parse
 
-    @Override
-    public Date getValue(ClassCourseItem object) {
-      return new Date(); //object.getFrom();
-    }
-
-  };
-//  dateColumn.setFieldUpdater(new FieldUpdater<LectureProxy, Date>() {
-//
-//    @Override
-//    public void update(@SuppressWarnings("unused") int index, LectureProxy object, Date value) {
-//      final LectureProxy lecture = getPresenter().edit(object);
-//      lecture.setDate(value);
-//      getPresenter().save(lecture);
-//    }
-//  });
-  
-//        value = new Column<ClassCourseItem, String>(datePicker) {
-//            @Override
-//            public String getValue(ClassCourseItem object) {
-//                try {
-//                    return object.getFrom().toString();
-//                } catch (Exception e) {
-//                    return "";
-//
-//                }
-//            }
-//        };
-//        value.setSortable(true);
-//        columnSortHandler = new ListHandler<ClassCourseItem>(
-//                data);
-//        columnSortHandler.setComparator(value,
-//                new Comparator<ClassCourseItem>() {
-//            public int compare(ClassCourseItem o1, ClassCourseItem o2) {
-//                if (o1 == o2) {
-//                    return 0;
-//                }
-//
-//                // Compare the name columns.
-//                if (o1 != null) {
-//                    return (o2 != null) ? o1.getFrom()(0.compareTo(o2.getFrom())) : 1;
-//                }
-//                return -1;
-//            }
-//        });
-//        dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(dateColumn, tableHeaders[3]);
-
-        //to
-        value = new Column<ClassCourseItem, String>(cell) {
             @Override
             public String getValue(ClassCourseItem object) {
-                try {
-                    return object.getTo().toString();
-                } catch (Exception e) {
-                    return "";
-
-                }
+                return (object.getFrom() == null) ? "" : object.getFrom().toString(); //object.getFrom();
             }
+
         };
+        dateColumn.setFieldUpdater(new FieldUpdater<ClassCourseItem, String>() {
+
+        @Override
+        public void update(int index, ClassCourseItem t, String value) {
+            coursesOfSchoolclassPresenter.setFromDate(t.getKey(), value);
+            dataProvider.refresh();
+        }
+    });
+
         value.setSortable(true);
+        columnSortHandler = new ListHandler<ClassCourseItem>(
+                data);
+        columnSortHandler.setComparator(value,
+                new Comparator<ClassCourseItem>() {
+            public int compare(ClassCourseItem o1, ClassCourseItem o2) {
+                if (o1 == o2) {
+                    return 0;
+                }
+
+                // Compare the name columns.
+                if (o1 != null && o1.getFrom()!=null && o2!=null) {
+                    return (o1.getFrom().before(o2.getFrom())) ? -1 : 1;
+                }
+                return -1;
+            }
+        });
+        dataGrid.addColumnSortHandler(columnSortHandler);
+        builder = new SafeHtmlBuilder();
+        builder.appendHtmlConstant("<div title=\"Enter YYYY-MM-DD HH:SS or empty to reset.\">")
+                .appendHtmlConstant(tableHeaders[3])
+                .appendHtmlConstant("</div>");
+        
+        dataGrid.addColumn(dateColumn, builder.toSafeHtml());
+
+        //to
+        textCell = new EditTextCell();
+        dateColumn = new Column<ClassCourseItem, String>(textCell) {
+//use //https://chmln.github.io/flatpickr/examples/ to pick stuff and then parse
+
+            @Override
+            public String getValue(ClassCourseItem object) {
+                return (object.getTo() == null) ? "" : object.getTo().toString(); //object.getFrom();
+            }
+
+        };
+//        value.setSortable(true);
 //        columnSortHandler = new ListHandler<ClassCourseItem>(
 //                data);
 //        columnSortHandler.setComparator(value,
@@ -354,8 +353,29 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //            }
 //        });
 //        dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[4]);
-        dataGrid.setEmptyTableWidget(new Label("empty"));
+        dateColumn = new Column<ClassCourseItem, String>(textCell) {
+//use //https://chmln.github.io/flatpickr/examples/ to pick stuff and then parse
+
+            @Override
+            public String getValue(ClassCourseItem object) {
+                return (object.getTo() == null) ? "" : object.getTo().toString(); //object.getFrom();
+            }            
+        };
+        dateColumn.setFieldUpdater(new FieldUpdater<ClassCourseItem, String>() {
+
+        @Override
+        public void update(int index, ClassCourseItem t, String value) {
+    //        presenter.updateText(t, value);
+            dataProvider.refresh();
+        }
+    });
+        builder = new SafeHtmlBuilder();
+         builder.appendHtmlConstant("<div title=\"Enter 'YYYY-MM-DD HH:SS' or empty to reset.\">")
+                .appendHtmlConstant(tableHeaders[4])
+                .appendHtmlConstant("</div>");
+        
+        dataGrid.addColumn(dateColumn, builder.toSafeHtml());
+       dataGrid.setEmptyTableWidget(new Label("empty"));
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
@@ -405,7 +425,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         dataProvider.getList().addAll(items);
         dataProvider.refresh();
     }
-    
+
     @Override
     public void setTree(ClassCourseItem item) {
         for (int i = tree.getItemCount() - 1; i >= 0; i--) {
@@ -423,7 +443,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         }
         coursesOfSchoolclassPresenter.setSelectedItem(item);
     }
-    
+
     private void fillTreeNode(TreeItem treeItem) {
         ClassCourseItem item = (ClassCourseItem) treeItem.getUserObject();
         for (ClassCourseItem i : coursesOfSchoolclassPresenter.getNodeChildren(item.getKey())) {
