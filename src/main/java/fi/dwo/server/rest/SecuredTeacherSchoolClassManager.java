@@ -1131,6 +1131,12 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
+        
+        
+        if (course.getDwoProfileID()==null || !course.getDwoProfileID().equals(profile.getDwoProfileID())) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {1} is from a different profile than requested with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(),(course != null) ? course.getCourseID() : null});
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
         // end verification		
 
         //Loop up the course tree
