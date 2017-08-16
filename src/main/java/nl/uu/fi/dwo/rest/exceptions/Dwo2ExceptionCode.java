@@ -26,6 +26,7 @@ public enum Dwo2ExceptionCode {
     User_ConfirmTeacherFromSchoolDelete,
     User_ConfirmSchoolAdminFromSchoolDelete,
     User_ConfirmDeleteMultiUsersFromSchool,
+    User_NotAValidDateString,
     User_Q_ForgotPassword,
 
     //PersistentId errors
