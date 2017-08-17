@@ -35,6 +35,8 @@ import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.server.PersistentDataManagers.access.ClassCourseRWAccessData;
+import fi.dwo.server.PersistentDataManagers.access.ClassCourseSecurityBuilder;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -1057,8 +1059,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     }
 
     /**
-     * Fetches all the course and classcourse information that a teacher should
-     * see from within a school.
+     * Attaches a leaf course that a class in a school can see.
      *
      * @param sc
      * @param rest
@@ -1177,8 +1178,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     }
 
     /**
-     * Fetches all the course and classcourse information that a teacher should
-     * see from within a school.
+     * Detaches a leaf course that a class in a school can see.
      *
      * @param sc
      * @param rest
@@ -1256,6 +1256,10 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is not a leaf in the course tree of school {1} for usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
+        if (course.getDwoProfileID()==null || !course.getDwoProfileID().equals(profile.getDwoProfileID())) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {1} is from a different profile than requested with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(),(course != null) ? course.getCourseID() : null});
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
         // end verification		
 
         //detach leaf course
@@ -1307,4 +1311,61 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             //commit
             return true;
         }
+    
+    /**
+     * Updates the from time of a class-course of a class in a school.
+     *
+     * @param sc
+     * @param rest
+     * @return
+     * @throws Dwo2Exception
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/setFromDateClassCourse")
+    public Boolean setFromDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
+        ClassCourseRWAccessData data = ClassCourseSecurityBuilder.HasRWAccessClassCourse(sc,
+                rest.getRestContext().getDomHasRole(), 
+                        rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile(),
+                        rest.getDomSchoolClassCourseAndProfile().getCourse(),
+                        rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass());
+        //Call manager with data to update stuff.
+        return false;
+    }
+
+    /**
+     * Updates the to time of a class-course of a class in a school.
+     *
+     * @param sc
+     * @param rest
+     * @return
+     * @throws Dwo2Exception
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/setToDateClassCourse")
+    public Boolean setToDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
+        ClassCourseRWAccessData data = ClassCourseSecurityBuilder.HasRWAccessClassCourse(sc,
+                rest.getRestContext().getDomHasRole(), 
+                        rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile(),
+                        rest.getDomSchoolClassCourseAndProfile().getCourse(),
+                        rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass());
+        //Call manager with data to update stuff.
+        return false;
+    }
+
+    /**
+     * Updates the type of a class-course of a class in a school.
+     *
+     * @param sc
+     * @param rest
+     * @return
+     * @throws Dwo2Exception
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/setClassCourseType")
+    public Boolean setClassCourseType(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
+        return false;
+    }
     }
