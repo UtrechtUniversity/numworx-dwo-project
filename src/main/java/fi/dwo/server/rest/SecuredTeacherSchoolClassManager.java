@@ -35,8 +35,7 @@ import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.util.DwoDateUtilities;
-import fi.dwo.server.PersistentDataManagers.access.ClassCourseRWAccessData;
-import fi.dwo.server.PersistentDataManagers.access.ClassCourseSecurityBuilder;
+import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -78,6 +77,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -436,7 +438,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 //            LOG.log(Level.FINER, "Fetched all {0} schoolClasses. ", new Object[]{schoolClasses.size()});
 //            restSchoolClasses = new ArrayList<RestSchoolClass>(schoolClasses.size());
 //            for (PersistentSchoolClass s : schoolClasses) {
-//                restSchoolClasses.add(new RestSchoolClass(s));
+//                restSchoolClasses.addPrincipalUser(new RestSchoolClass(s));
 //            }
 //        }
 //        catch (Exception e) {
@@ -1132,10 +1134,9 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-        
-        
-        if (course.getDwoProfileID()==null || !course.getDwoProfileID().equals(profile.getDwoProfileID())) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {1} is from a different profile than requested with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(),(course != null) ? course.getCourseID() : null});
+
+        if (course.getDwoProfileID() == null || !course.getDwoProfileID().equals(profile.getDwoProfileID())) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {1} is from a different profile than requested with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), (course != null) ? course.getCourseID() : null});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
         // end verification		
@@ -1146,7 +1147,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         treePath.add(curCourse);
         while (curCourse.getParentID() != 0) {
             curCourse = CourseManager.findEntity(curCourse.getParentID());
-            //if no classCourse add to stack
+            //if no classCourse addPrincipalUser to stack
             if (ClassCourseManager.findEntities(schoolClass, course).isEmpty()) {
                 treePath.push(curCourse);
             } else {
@@ -1154,7 +1155,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             }
         }// stop when added course with parentid = 0;
 
-        //Loop the treepath list  from top  to down and add classCourses, ignore if it already exists.   
+        //Loop the treepath list  from top  to down and addPrincipalUser classCourses, ignore if it already exists.   
         while (!treePath.empty()) {
             curCourse = treePath.pop();
             if (ClassCourseManager.findEntities(schoolClass, course).isEmpty()) {
@@ -1256,8 +1257,8 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is not a leaf in the course tree of school {1} for usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-        if (course.getDwoProfileID()==null || !course.getDwoProfileID().equals(profile.getDwoProfileID())) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {1} is from a different profile than requested with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(),(course != null) ? course.getCourseID() : null});
+        if (course.getDwoProfileID() == null || !course.getDwoProfileID().equals(profile.getDwoProfileID())) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {1} is from a different profile than requested with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), (course != null) ? course.getCourseID() : null});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
         }
         // end verification		
@@ -1271,47 +1272,47 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 // ignore as it might be destroyed already;
             }
         }
-            //Loop up the course tree and detach required maps
-            LinkedList<PersistentCourse> treePath = new LinkedList<>();
-            PersistentCourse curCourse = course;
-            while (curCourse.getParentID() != 0) {
-                curCourse = CourseManager.findEntity(curCourse.getParentID());
-                //if no classCourse add to stack
-                treePath.addLast(curCourse);
-            }// stop when added course with parentid = 0;
+        //Loop up the course tree and detach required maps
+        LinkedList<PersistentCourse> treePath = new LinkedList<>();
+        PersistentCourse curCourse = course;
+        while (curCourse.getParentID() != 0) {
+            curCourse = CourseManager.findEntity(curCourse.getParentID());
+            //if no classCourse addPrincipalUser to stack
+            treePath.addLast(curCourse);
+        }// stop when added course with parentid = 0;
 
-            //Loop the treepath list  from top  to down and add classCourses, ignore if it already exists.   
-            while (!treePath.isEmpty()) {
-                curCourse = treePath.pollFirst();
-                //check if a class course exists for current course 
-                ccResult = ClassCourseManager.findEntities(schoolClass, curCourse);
-                int cSize = ccResult.size();
-                if (cSize != 0 && curCourse.getCourseID() != 0) {// not empty, asynchroneous may allow for more than one classcourse
-                    List<PersistentCourse> kids = CourseManager.findChildrenOf(curCourse);
-                    int count = 0;
-                    // count the siblings of curCourse that own one or more class courses.
-                    for (PersistentCourse pc : kids) {
-                        if (ClassCourseManager.findEntities(schoolClass, pc).size() > 0) {
-                            count++;
-                        }
+        //Loop the treepath list  from top  to down and addPrincipalUser classCourses, ignore if it already exists.   
+        while (!treePath.isEmpty()) {
+            curCourse = treePath.pollFirst();
+            //check if a class course exists for current course 
+            ccResult = ClassCourseManager.findEntities(schoolClass, curCourse);
+            int cSize = ccResult.size();
+            if (cSize != 0 && curCourse.getCourseID() != 0) {// not empty, asynchroneous may allow for more than one classcourse
+                List<PersistentCourse> kids = CourseManager.findChildrenOf(curCourse);
+                int count = 0;
+                // count the siblings of curCourse that own one or more class courses.
+                for (PersistentCourse pc : kids) {
+                    if (ClassCourseManager.findEntities(schoolClass, pc).size() > 0) {
+                        count++;
                     }
-                    if (count > 0) {
-                        break;
-                    }
-                    for (PersistentClassCourse pcc : ccResult) {
-                        try {
-                            ClassCourseManager.destroy(pcc.getClassCourseID());
-                            LOG.log(Level.FINE, "User {3} deletes a ClassCourse {0} for Course {1} and Class {2}", new Object[]{pcc.getClassCourseID(), pcc.getCourseID(), pcc.getClassID(), sc.getUserPrincipal().getName()});
-                        } catch (PersistenceException e) {
-                            // ignore as it might be destroyed already;
-                        }
+                }
+                if (count > 0) {
+                    break;
+                }
+                for (PersistentClassCourse pcc : ccResult) {
+                    try {
+                        ClassCourseManager.destroy(pcc.getClassCourseID());
+                        LOG.log(Level.FINE, "User {3} deletes a ClassCourse {0} for Course {1} and Class {2}", new Object[]{pcc.getClassCourseID(), pcc.getCourseID(), pcc.getClassID(), sc.getUserPrincipal().getName()});
+                    } catch (PersistenceException e) {
+                        // ignore as it might be destroyed already;
                     }
                 }
             }
-            //commit
-            return true;
         }
-    
+        //commit
+        return true;
+    }
+
     /**
      * Updates the from time of a class-course of a class in a school.
      *
@@ -1323,13 +1324,19 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @PUT
     @Produces({"application/json"})
     @Path("/setFromDateClassCourse")
-    public Boolean setFromDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
-        ClassCourseRWAccessData data = ClassCourseSecurityBuilder.HasRWAccessClassCourse(sc,
-                rest.getRestContext().getDomHasRole(), 
-                        rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile(),
-                        rest.getDomSchoolClassCourseAndProfile().getCourse(),
-                        rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass());
-        //Call manager with data to update stuff.
+    public Boolean setFromDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseProfilewFrom rest) throws Dwo2Exception {
+        //secure builder
+        CascadingPersistenceBuilder.Build build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+                .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
+                .addSchoolClass(rest.getDomSchoolClassCourseProfilewFrom().getDomSchoolClass())
+                .addProfile(rest.getDomSchoolClassCourseProfilewFrom().getDomDwoProfile())
+                .addCourse(rest.getDomSchoolClassCourseProfilewFrom().getCourse()).getContext();
+        List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
+        if(pcc.size()>0){
+            //update type.
+            ClassCourseManager.editFrom(pcc.get(0).getClassCourseID(), rest.getDomSchoolClassCourseProfilewFrom().getFrom());
+            return true;
+        }
         return false;
     }
 
@@ -1344,13 +1351,19 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @PUT
     @Produces({"application/json"})
     @Path("/setToDateClassCourse")
-    public Boolean setToDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
-        ClassCourseRWAccessData data = ClassCourseSecurityBuilder.HasRWAccessClassCourse(sc,
-                rest.getRestContext().getDomHasRole(), 
-                        rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile(),
-                        rest.getDomSchoolClassCourseAndProfile().getCourse(),
-                        rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass());
-        //Call manager with data to update stuff.
+    public Boolean setToDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseProfilewTo rest) throws Dwo2Exception {
+        //secure builder
+        CascadingPersistenceBuilder.Build build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+                .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
+                .addSchoolClass(rest.getDomSchoolClassCourseProfilewTo().getDomSchoolClass())
+                .addProfile(rest.getDomSchoolClassCourseProfilewTo().getDomDwoProfile())
+                .addCourse(rest.getDomSchoolClassCourseProfilewTo().getCourse()).getContext();
+        List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
+        if(pcc.size()>0){
+            //update type.
+            ClassCourseManager.editTo(pcc.get(0).getClassCourseID(), rest.getDomSchoolClassCourseProfilewTo().getTo());
+            return true;
+        }
         return false;
     }
 
@@ -1365,7 +1378,19 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @PUT
     @Produces({"application/json"})
     @Path("/setClassCourseType")
-    public Boolean setClassCourseType(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
+    public Boolean setClassCourseType(@Context SecurityContext sc, RestSchoolClassCourseProfilewType rest) throws Dwo2Exception {
+        //secure builder
+        CascadingPersistenceBuilder.Build build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+                .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
+                .addSchoolClass(rest.getDomSchoolClassCourseProfilewType().getDomSchoolClass())
+                .addProfile(rest.getDomSchoolClassCourseProfilewType().getDomDwoProfile())
+                .addCourse(rest.getDomSchoolClassCourseProfilewType().getCourse()).getContext();
+        List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
+        if(pcc.size()>0){
+            //update type.
+            ClassCourseManager.editType(pcc.get(0).getClassCourseID(), rest.getDomSchoolClassCourseProfilewType().getType());
+            return true;
+        }
         return false;
     }
-    }
+}

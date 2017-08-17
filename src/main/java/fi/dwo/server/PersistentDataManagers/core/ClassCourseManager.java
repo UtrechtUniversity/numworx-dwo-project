@@ -4,6 +4,7 @@ import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import java.util.Date;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -15,6 +16,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 
 /**
  * Manages class courses in the persistent storage.
@@ -87,6 +89,105 @@ public class ClassCourseManager {
         }
     }
 
+/**
+     * Updates the CourseType.
+     *
+     * @param classCourse
+     */
+    public static void editType(Long id, CourseType type) throws PersistenceException {
+        EntityManager em = null;
+        PersistentClassCourse cc=null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            cc = findEntity(id);
+            cc.setType(type.ordinal());
+            cc = em.merge(cc);
+            em.getTransaction().commit();
+        }
+        catch (Exception e) {
+            String msg = e.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                if (cc == null) {
+                    LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
+                    throw new PersistenceException(e);
+                }
+            }
+            throw new PersistenceException(e);
+        }
+        finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+/**
+     * Updates the CourseType.
+     *
+     * @param classCourse
+     */
+    public static void editFrom(Long id, Date date) throws PersistenceException {
+        EntityManager em = null;
+        PersistentClassCourse cc=null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            cc = findEntity(id);
+            cc.setNotBefore(date);
+            cc = em.merge(cc);
+            em.getTransaction().commit();
+        }
+        catch (Exception e) {
+            String msg = e.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                if (cc == null) {
+                    LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
+                    throw new PersistenceException(e);
+                }
+            }
+            throw new PersistenceException(e);
+        }
+        finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+    
+/**
+     * Updates the CourseType.
+     *
+     * @param classCourse
+     */
+    public static void editTo(Long id, Date date) throws PersistenceException {
+        EntityManager em = null;
+        PersistentClassCourse cc=null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            cc = findEntity(id);
+            cc.setNotAfter(date);
+            cc = em.merge(cc);
+            em.getTransaction().commit();
+        }
+        catch (Exception e) {
+            String msg = e.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                if (cc == null) {
+                    LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
+                    throw new PersistenceException(e);
+                }
+            }
+            throw new PersistenceException(e);
+        }
+        finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+    
     /**
      * Removes a user from the persistent store.
      *
