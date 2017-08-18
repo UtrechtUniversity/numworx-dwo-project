@@ -1122,7 +1122,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
         //verify if schoolClass is in school
-        if (schoolClass == null || !schoolClass.getSchoolID().equals(school.getSchoolID())) {
+        if (!schoolClass.getSchoolID().equals(school.getSchoolID())) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Active schoolClass {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (schoolClass != null) ? schoolClass.getClassID() : null});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
         }

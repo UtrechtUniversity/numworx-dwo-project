@@ -215,7 +215,7 @@ public class CourseManager {
             em.close();
         }
     }
-    
+
     public static PersistentCourse findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {

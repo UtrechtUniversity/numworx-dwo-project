@@ -214,7 +214,7 @@ public class CascadingPersistenceBuilder {
         private CascadingPersistenceBuilder instance = new CascadingPersistenceBuilder();
 
         public Builder(String username) throws Dwo2Exception {
-            instance.user(username);
+            this.user(username);
         }
 
         /**
@@ -251,6 +251,13 @@ public class CascadingPersistenceBuilder {
                     throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + getUser().getUsername() + ".");
                 }
                 phr = HasRoleManager.findEntity(phrPK);
+                if (phr==null) {
+                    String msg = MessageFormat.format("Hasrole {1} for userlogin {0} could not be found.",
+                            new Object[]{getUser().getUsername(), this.instance.context.getHasRole().getPersistentHasRolePK()});
+                    LOG.log(Level.SEVERE, msg);
+                    throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
+                }
+                this.instance.context.setHasRole(phr);
                 Long roleId = (long) RoleType.NONE.ordinal();
                 try {
                     roleId = this.instance.context.getHasRole().getSchoolGroup().getRole().getGroupID();
@@ -336,17 +343,17 @@ public class CascadingPersistenceBuilder {
         @Override
         public FromCourse addCourse(DomCourse c) throws Dwo2Exception {
             Long courseId = MySQLPersistenceId.getNativeId(c);
-            List<PersistentCourse> courseList = CourseManager.findEntities(this.instance.context.getProfile().getDwoProfileID(), courseId);
-            if (courseList.size() != 1) {
+            PersistentCourse course = CourseManager.findEntity(courseId);
+            if (course==null || course.getDwoProfileID()!=instance.context.profile.getDwoProfileID()) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is not available in the profile {1} with usercode {0}.", new Object[]{this.instance.context.getUser().getUsername(), instance.context.getProfile().getDwoProfileID(), c.getId()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.context.getUser().getUsername() + ".");
             }
-            PersistentCourse course = courseList.get(0);
             //verify if course is in school
-            if (course == null || (this.instance.context.getCourse().getSchoolID() == null && !this.instance.context.getCourse().getSchoolID().equals(instance.context.getSchool().getSchoolID()))) {
+            if (course == null || (course.getSchoolID() != null && !this.instance.context.getCourse().getSchoolID().equals(instance.context.getSchool().getSchoolID()))) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{this.instance.context.getUser().getUsername(), instance.context.getSchool().getSchoolID(), (course != null) ? course.getSchoolID() : "course==null"});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.context.getUser().getUsername() + ".");
             }
+            this.instance.context.setCourse(course);
             return this;
         }
 
