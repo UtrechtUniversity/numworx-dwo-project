@@ -1,7 +1,6 @@
 /*Copyrighted 2015. */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -48,12 +47,13 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @UniqueConstraint(columnNames = {"name", "schoolID", "dwoProfileID", "parentID"})})
 @XmlRootElement
 @NamedQueries({
-	@NamedQuery(name = "PersistentCourse.findBySchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID"),
-	@NamedQuery(name = "PersistentCourse.findByNullSchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL"),
+    @NamedQuery(name = "PersistentCourse.findBySchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID"),
+    @NamedQuery(name = "PersistentCourse.findByNullSchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL"),
     @NamedQuery(name = "PersistentCourse.findAll", query = "SELECT p FROM PersistentCourse p"),
     @NamedQuery(name = "PersistentCourse.findByCourseID", query = "SELECT p FROM PersistentCourse p WHERE p.courseID = :courseID"),
     @NamedQuery(name = "PersistentCourse.findBySchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.schoolID = :schoolID"),
     @NamedQuery(name = "PersistentCourse.findByProfileAndSchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND (p.schoolID = :schoolID or p.schoolID is null)"),
+    @NamedQuery(name = "PersistentCourse.findByProfileAndCourseID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND (p.courseID = :courseID or p.courseID is null)"),
     @NamedQuery(name = "PersistentCourse.findByName", query = "SELECT p FROM PersistentCourse p WHERE p.name = :name"),
     @NamedQuery(name = "PersistentCourse.findByImage", query = "SELECT p FROM PersistentCourse p WHERE p.image = :image"),
     @NamedQuery(name = "PersistentCourse.findByDwoProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID"),
