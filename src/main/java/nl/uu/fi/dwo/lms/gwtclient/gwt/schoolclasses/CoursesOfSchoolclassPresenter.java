@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
@@ -287,6 +288,19 @@ public class CoursesOfSchoolclassPresenter {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
 
+    void setCourseType(String key, String typeString) {
+        CourseType type = CourseType.normal;
+        if (typeString != null) {
+            try {
+                type = CourseType.valueOf(typeString);
+            } catch (Exception e) {
+                eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Unknown course type submitted.")));
+            }
+            DomTree<DomCourseOfClass> c = tree.getNode(key);
+            service.setTypeClassCourse(schoolClass, c.getObject().getCourse(), type);
+        }
+    }
+
     void setFromDate(String key, String dateString) {
         Date date;
         if (dateString.isEmpty()) {
@@ -300,15 +314,15 @@ public class CoursesOfSchoolclassPresenter {
                 eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
                 return;
             }
-            DomTree<DomCourseOfClass> c = tree.getNode(key);
-            if ( (c.getObject().getClassCourse().getNotAfter()!= null
-                    &&  c.getObject().getClassCourse().getNotAfter().after(date))
-                    || (c.getObject().getClassCourse().getNotAfter() == null ) ) {
-                //update data
-            } else {
-                eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
-                return;
-            }
+        }
+        DomTree<DomCourseOfClass> c = tree.getNode(key);
+        if (date == null || (c.getObject().getClassCourse().getNotAfter() != null
+                && c.getObject().getClassCourse().getNotAfter().after(date))
+                || (c.getObject().getClassCourse().getNotAfter() == null)) {
+            service.setFromDateClassCourse(schoolClass, c.getObject().getCourse(), date);
+        } else {
+            eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
+            return;
         }
     }
 
@@ -324,16 +338,15 @@ public class CoursesOfSchoolclassPresenter {
                 eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
                 return;
             }
-            DomTree<DomCourseOfClass> c = tree.getNode(key);
-            if ( ( c.getObject().getClassCourse().getNotAfter() != null
-                    && c.getObject().getClassCourse().getNotBefore().before(date) )
-                    || c.getObject().getClassCourse().getNotBefore()==null) {           
-                //update data
-            } else {
-                eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
-                return;
-            }
-
+        }
+        DomTree<DomCourseOfClass> c = tree.getNode(key);
+        if (date == null || c.getObject().getClassCourse().getNotBefore() == null
+                || (c.getObject().getClassCourse().getNotBefore() != null
+                && c.getObject().getClassCourse().getNotBefore().before(date))) {
+            service.setToDateClassCourse(schoolClass, c.getObject().getCourse(), date);
+        } else {
+            eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
+            return;
         }
     }
 }
