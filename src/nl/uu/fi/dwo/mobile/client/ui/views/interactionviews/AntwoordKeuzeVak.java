@@ -638,11 +638,11 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		{
 			kijkNa();
 			attemptsCount++;
-			setAttempt();
 		} 
 		else if(checkExternal) {
 			zetGoedFout(GEEN);
 		}
+		setAttempt();
 	}
 	
 	
