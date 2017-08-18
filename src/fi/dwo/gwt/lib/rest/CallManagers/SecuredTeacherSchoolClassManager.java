@@ -28,6 +28,9 @@ import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
@@ -305,4 +308,33 @@ public class SecuredTeacherSchoolClassManager {
         service.detachCourseFromClass(restData, (callBack));
     }            
 
+    public Promise<Boolean> setFromDateClassCourse(RestSchoolClassCourseProfilewFrom rest) {
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.setFromDateClassCourse(rest, defer);
+        return defer.getPromise();
+    }
+    
+    private void setFromDateClassCourse(RestSchoolClassCourseProfilewFrom restData, MethodCallback<Boolean> callBack) {
+        service.setFromDateClassCourse(restData, (callBack));
+    }            
+
+    public Promise<Boolean> setToDateClassCourse(RestSchoolClassCourseProfilewTo rest) {
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.setToDateClassCourse(rest, defer);
+        return defer.getPromise();
+    }
+    
+    private void setToDateClassCourse(RestSchoolClassCourseProfilewTo restData, MethodCallback<Boolean> callBack) {
+        service.setToDateClassCourse(restData, (callBack));
+    }            
+
+    public Promise<Boolean> setClassCourseType(RestSchoolClassCourseProfilewType rest) {
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.setClassCourseType(rest, defer);
+        return defer.getPromise();
+    }
+    
+    private void setClassCourseType(RestSchoolClassCourseProfilewType restData, MethodCallback<Boolean> callBack) {
+        service.setClassCourseType(restData, (callBack));
+    }            
 }

@@ -22,6 +22,9 @@ import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
@@ -61,9 +64,6 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     @Path("/secure/teacher/schoolclass/getSchoolsList")
     public void getSchoolsClasses(MethodCallback<List<DomSchoolClass>> callback);
 
-//    @GET
-//    @Path("/secure/teacher/schoolclass/getActive")
-//    public void getActiveSchoolClass(Callback<DomSchoolClass> callback);
     @PUT
     @Path("/secure/teacher/schoolclass/submitTeacher")
     public void submitTeacherToSchoolClass(RestSubmitTeacherToSchoolClass restData, MethodCallback<Boolean> callback);
@@ -115,4 +115,16 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     @PUT
     @Path("/secure/teacher/schoolclass/detachCourseFromClass")
     public void detachCourseFromClass(RestSchoolClassCourseAndProfile submit, MethodCallback<Boolean> callback);
+
+    @PUT
+    @Path("/secure/teacher/schoolclass/setFromDateClassCourse")
+    public void setFromDateClassCourse(RestSchoolClassCourseProfilewFrom submit, MethodCallback<Boolean> callback);
+
+    @PUT
+    @Path("/secure/teacher/schoolclass/setToDateClassCourse")
+    public void setToDateClassCourse(RestSchoolClassCourseProfilewTo submit, MethodCallback<Boolean> callback);
+
+    @PUT
+    @Path("/secure/teacher/schoolclass/setClassCourseType")
+    public void setClassCourseType(RestSchoolClassCourseProfilewType submit, MethodCallback<Boolean> callback);
 }

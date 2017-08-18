@@ -13,7 +13,6 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import org.osgi.util.promise.Promise;
 
 /**
