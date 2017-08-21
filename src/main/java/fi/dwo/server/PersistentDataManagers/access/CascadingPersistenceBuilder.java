@@ -8,11 +8,17 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import java.text.MessageFormat;
@@ -22,6 +28,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -191,8 +198,14 @@ public class CascadingPersistenceBuilder {
     public interface FromSchoolClass {
 
         Build getContext();
-
+        FromScoContext addScoContext(DomScoContext s) throws Dwo2Exception;
         FromProfile addProfile(DomDwoProfile p) throws Dwo2Exception;
+    }
+    
+    public interface FromScoContext {
+        Build getContext();
+
+        
     }
 
     public interface FromProfile {
@@ -202,6 +215,8 @@ public class CascadingPersistenceBuilder {
         FromCourse addCourse(DomCourse c) throws Dwo2Exception;
     }
 
+    
+    
     public interface FromCourse {
 
         Build getContext();
@@ -220,10 +235,12 @@ public class CascadingPersistenceBuilder {
         PersistentSchoolClass getSchoolClass();
 
         PersistentDwoProfile getProfile();
+
+        RoleType getRoleType();
     }
 
     private static class Builder implements ToHasRole, FromHasRole,
-            FromSchoolClass, FromProfile, FromCourse, Build {
+            FromSchoolClass, FromProfile, FromCourse, FromScoContext, Build {
 
         private CascadingPersistenceBuilder instance = new CascadingPersistenceBuilder();
 
@@ -249,7 +266,7 @@ public class CascadingPersistenceBuilder {
 
         /**
          * Verifies the existence of the hasRole for the given RoleType and
-         * stores it into the context.
+         * stores it and the RoleType into the context.
          *
          * @param hr
          * @param r
@@ -265,7 +282,7 @@ public class CascadingPersistenceBuilder {
                     throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + getUser().getUsername() + ".");
                 }
                 phr = HasRoleManager.findEntity(phrPK);
-                if (phr==null) {
+                if (phr == null) {
                     String msg = MessageFormat.format("Hasrole {1} for userlogin {0} could not be found.",
                             new Object[]{getUser().getUsername(), this.instance.context.getHasRole().getPersistentHasRolePK()});
                     LOG.log(Level.SEVERE, msg);
@@ -297,7 +314,7 @@ public class CascadingPersistenceBuilder {
 
         /**
          * Verifies the existence of the schoolClass for the data in the context
-         * and adds it to the context.
+         * and adds it and the school to the context.
          *
          * @param s
          * @return
@@ -321,13 +338,43 @@ public class CascadingPersistenceBuilder {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Active schoolClass {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{instance.context.getUser().getUsername(), school.getSchoolID(), (schoolClass != null) ? schoolClass.getClassID() : null});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.context.getUser().getUsername() + ".");
             }
+            //verify if roleType is in SchoolClass.
+            switch (this.getRoleType()) {
+                case TEACHER:
+                    PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(
+                            new PersistentTeacherOfClassPK(this.instance.context.getHasRole().getPersistentHasRolePK().getUserID(),
+                                    schoolClass.getClassID(), this.instance.context.getHasRole().getPersistentHasRolePK().getSchoolGroupID()));
+                    if (!toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
+                        //invalid schoolClass
+                        String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Not a teacher in the SchoolClass.", new Object[]{getUser().getUsername()});
+                        LOG.log(Level.WARNING, msg);
+                        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+                    }
+                    break;
+                case STUDENT:
+                    PersistentStudentOfClass soc = StudentOfClassManager.findEntity(
+                            new PersistentStudentOfClassPK(this.instance.context.getHasRole().getPersistentHasRolePK().getUserID(),
+                                    schoolClass.getClassID(), this.instance.context.getHasRole().getPersistentHasRolePK().getSchoolGroupID()));
+                    if (!soc.getPersistentStudentOfClassPK().getClassID().equals(schoolClass.getClassID())) {
+                        //invalid schoolClass
+                        String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Not a student in the SchoolClass.", new Object[]{getUser().getUsername()});
+                        LOG.log(Level.WARNING, msg);
+                        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+                    }
+                    break;
+                default:
+                    String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Invalid roleType for setting a SchoolClass.", new Object[]{getUser().getUsername()});
+                    LOG.log(Level.WARNING, msg);
+                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+            }
+
             this.instance.context.setSchoolClass(schoolClass);
             return this;
         }
 
         /**
-         * Verifies the existence of the profile for the data in the context
-         * and adds it to the context.
+         * Verifies the existence of the profile for the data in the context and
+         * adds it to the context.
          *
          * @param p
          * @return
@@ -348,18 +395,18 @@ public class CascadingPersistenceBuilder {
         }
 
         /**
-         * Verifies the existence of the course for the data in the context
-         * and adds it to the context.
-         * 
+         * Verifies the existence of the course for the data in the context and
+         * adds it to the context.
+         *
          * @param c
          * @return
-         * @throws Dwo2Exception 
+         * @throws Dwo2Exception
          */
         @Override
         public FromCourse addCourse(DomCourse c) throws Dwo2Exception {
             Long courseId = MySQLPersistenceId.getNativeId(c);
             PersistentCourse course = CourseManager.findEntity(courseId);
-            if (course==null || course.getDwoProfileID()!=instance.context.profile.getDwoProfileID()) {
+            if (course == null || course.getDwoProfileID() != instance.context.profile.getDwoProfileID()) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is not available in the profile {1} with usercode {0}.", new Object[]{this.instance.context.getUser().getUsername(), instance.context.getProfile().getDwoProfileID(), c.getId()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.context.getUser().getUsername() + ".");
             }
@@ -373,15 +420,25 @@ public class CascadingPersistenceBuilder {
         }
 
         /**
-         * Returns the context data.
          * 
-         * @return 
+         * @param s
+         * @return
+         * @throws Dwo2Exception 
+         */
+        @Override
+        FromScoContext addScoContext(DomScoContext s) throws Dwo2Exception {
+            return this;
+        }
+        /**
+         * Returns the context data.
+         *
+         * @return
          */
         @Override
         public Build getContext() {
             return this;
         }
-        
+
         @Override
         public PersistentUser getUser() {
             return instance.context.getUser();
@@ -412,6 +469,10 @@ public class CascadingPersistenceBuilder {
             return instance.context.getProfile();
         }
 
+        @Override
+        public RoleType getRoleType() {
+            return instance.context.getRoleType();
+        }
     }
 
 //               

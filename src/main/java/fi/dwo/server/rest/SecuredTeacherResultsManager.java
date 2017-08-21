@@ -18,6 +18,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -57,6 +58,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -188,7 +191,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 DomStudentOfClass s = keyValuePair.getValue().buildDomStudentOfClass();
                 domSocs.putIfAbsent(s.getId(), s);
                 PersistentHasRolePK key = new PersistentHasRolePK(keyValuePair.getKey());
-                                        studentHasRoleSet.add(key);
+                studentHasRoleSet.add(key);
 
             });
             List<DomMapEntry<PersistenceId, DomStudentOfClass>> socsList = new ArrayList<>(domSocs.size());
@@ -327,4 +330,29 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
         }
     }
 
+    /**
+     *
+     * @param sc
+     * @param rest
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/clearStudentResults")
+    public Boolean getTeachersResults(@Context SecurityContext sc, RestClearStudentDataForScoAndClass rest) throws Dwo2RestException {
+        //secure builder
+        try {
+            CascadingPersistenceBuilder.Build build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+                    .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
+                    .addSchoolClass(rest.getClearStudentDataForScoAndClass().getDomSchoolClass())
+                    .addScoContext(rest.getClearStudentDataForScoAndClass().getDomScoContext())
+                    .getContext();
+            //check for each student if it is in the class and then clear the sco data. After which:
+            if(1==2)
+                return true;
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
+        }
+        return false;
+    }
 }

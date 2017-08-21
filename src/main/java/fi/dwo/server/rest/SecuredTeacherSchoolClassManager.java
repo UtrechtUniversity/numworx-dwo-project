@@ -1332,7 +1332,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 .addProfile(rest.getDomSchoolClassCourseProfilewFrom().getDomDwoProfile())
                 .addCourse(rest.getDomSchoolClassCourseProfilewFrom().getCourse()).getContext();
         List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
-        if(pcc.size()>0){
+        if (pcc.size() > 0) {
             //update type.
             ClassCourseManager.editFrom(pcc.get(0).getClassCourseID(), rest.getDomSchoolClassCourseProfilewFrom().getFrom());
             return true;
@@ -1359,7 +1359,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 .addProfile(rest.getDomSchoolClassCourseProfilewTo().getDomDwoProfile())
                 .addCourse(rest.getDomSchoolClassCourseProfilewTo().getCourse()).getContext();
         List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
-        if(pcc.size()>0){
+        if (pcc.size() > 0) {
             //update type.
             ClassCourseManager.editTo(pcc.get(0).getClassCourseID(), rest.getDomSchoolClassCourseProfilewTo().getTo());
             return true;
@@ -1378,18 +1378,22 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @PUT
     @Produces({"application/json"})
     @Path("/setClassCourseType")
-    public Boolean setClassCourseType(@Context SecurityContext sc, RestSchoolClassCourseProfilewType rest) throws Dwo2Exception {
+    public Boolean setClassCourseType(@Context SecurityContext sc, RestSchoolClassCourseProfilewType rest) throws Dwo2RestException {
         //secure builder
-        CascadingPersistenceBuilder.Build build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
-                .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
-                .addSchoolClass(rest.getDomSchoolClassCourseProfilewType().getDomSchoolClass())
-                .addProfile(rest.getDomSchoolClassCourseProfilewType().getDomDwoProfile())
-                .addCourse(rest.getDomSchoolClassCourseProfilewType().getCourse()).getContext();
-        List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
-        if(pcc.size()>0){
-            //update type.
-            ClassCourseManager.editType(pcc.get(0).getClassCourseID(), rest.getDomSchoolClassCourseProfilewType().getType());
-            return true;
+        try {
+            CascadingPersistenceBuilder.Build build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+                    .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
+                    .addSchoolClass(rest.getDomSchoolClassCourseProfilewType().getDomSchoolClass())
+                    .addProfile(rest.getDomSchoolClassCourseProfilewType().getDomDwoProfile())
+                    .addCourse(rest.getDomSchoolClassCourseProfilewType().getCourse()).getContext();
+            List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
+            if (pcc.size() > 0) {
+                //update type.
+                ClassCourseManager.editType(pcc.get(0).getClassCourseID(), rest.getDomSchoolClassCourseProfilewType().getType());
+                return true;
+            }
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
         }
         return false;
     }
