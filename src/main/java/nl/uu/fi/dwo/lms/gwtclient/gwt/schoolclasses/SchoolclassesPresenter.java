@@ -217,6 +217,9 @@ public void selectItem(ClassItem item, int op) {
         }
     }
 
+    void addSchoolClass() {
+         eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.AddSchoolClass, new DomSchoolClass()));
+    }
 
     void editSchoolClass(ClassItem item) {
          eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditSchoolClass, schoolClassMap.get(item.key)));

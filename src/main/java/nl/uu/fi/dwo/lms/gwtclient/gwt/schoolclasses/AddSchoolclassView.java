@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 /**
  * Panel to configure and add a schoolclass.
- * 
+ *
  * @author Gert van der Plas
  */
 public class AddSchoolclassView extends Composite implements AddSchoolclassPresenter.Display, ClickHandler {
@@ -65,6 +65,7 @@ public class AddSchoolclassView extends Composite implements AddSchoolclassPrese
         showTree.setValue(false);
         setClassKey.setValue(false);
         classKey.setText("");
+        schoolclassName.setFocus(true);
     }
 
     @Override

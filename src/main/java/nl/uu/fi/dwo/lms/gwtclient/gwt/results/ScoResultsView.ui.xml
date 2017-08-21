@@ -9,6 +9,7 @@
         <g:FlowPanel>
             <g:Button addStyleNames='dwoStyle' ui:field='backBtn'><ui:text from='{rb.backBtn}'/></g:Button>            
             <g:Button addStyleNames='dwoStyle' ui:field='sealBtn'><ui:text from='{rb.sealBtn}'/></g:Button>            
+            <g:Button addStyleNames='dwoStyle' ui:field='clearResultsBtn'>clear all student results</g:Button>            
             <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataTable'/>            
             <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager' />
         </g:FlowPanel>

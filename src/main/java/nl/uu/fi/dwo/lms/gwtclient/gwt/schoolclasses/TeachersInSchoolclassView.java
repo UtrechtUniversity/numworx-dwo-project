@@ -53,7 +53,7 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
     @UiField
     Button addToSchoolClass;
     @UiField
-    Button deleteSelectedBtn;
+    Button removeSelectedBtn;
     @UiField
     ListBox teacherListBox;
 
@@ -318,7 +318,7 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
 //            }
 //        });
         backBtn.addClickHandler(this);
-        deleteSelectedBtn.addClickHandler(this);
+        removeSelectedBtn.addClickHandler(this);
         addToSchoolClass.addClickHandler(this);
         teacherListBox.addChangeHandler(this);
     }
@@ -335,7 +335,7 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
     public void onClick(ClickEvent event) {
         if (event.getSource() == backBtn) {
             teachersInSchoolclassPresenter.goBackToSchoolClasses();
-        } else if (event.getSource() == deleteSelectedBtn) {
+        } else if (event.getSource() == removeSelectedBtn) {
             teachersInSchoolclassPresenter.removeSelectedFromSchoolClass();
         } else if (event.getSource() == addToSchoolClass) {
             teachersInSchoolclassPresenter.addTeacherToSchoolClass(addTeacherList.get(teacherListBox.getSelectedIndex()).getKey());

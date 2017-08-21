@@ -62,6 +62,8 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
     @UiField
     Button sealBtn;
     @UiField
+    Button clearResultsBtn;
+    @UiField
     Frame frame; // Hier komt /dwo/apps/player.html?locale=nl#cmi.launch_data:scoid
 
     private native static void setAPI(ScoResultsView view) /*-{
@@ -366,7 +368,11 @@ public class ScoResultsView extends Composite implements ScoResultsPresenter.Dis
     	scoResultsPresenter.sealAllStudents();
     }
     
-    
+    @UiHandler("clearResultsBtn")
+    public void onClearResults(ClickEvent event) {
+            scoResultsPresenter.clearAllStudentResults();
+    }
+
     public void updateView(ScoResultsPresenter.StudentItem selectedItem, Map<String, ScoResultsPresenter.StudentItem> data) {
         dataProvider.getList().clear();
         dataProvider.getList().addAll(data.values());

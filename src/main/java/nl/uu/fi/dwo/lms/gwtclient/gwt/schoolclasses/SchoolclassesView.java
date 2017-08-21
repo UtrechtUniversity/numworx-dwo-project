@@ -239,17 +239,18 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
 //                    dialogBox.hide();
 //                }
 //            };
-            if (dialogBox.getWidget() == null) {
-                addSchoolclassView.clear();
-                dialogBox.add(addSchoolclassView.asWidget());
-                dialogBox.setModal(true);
-                dialogBox.setAutoHideEnabled(true);
-                dialogBox.setGlassEnabled(true);
-                dialogBox.setAnimationEnabled(true);
-                dialogBox.center();
-            }
-            dialogBox.show();
-//            schoolclassesPresenter.addSchoolClass();
+//            if (dialogBox.getWidget() == null) {
+//                addSchoolclassView.clear();
+//                dialogBox.add(addSchoolclassView.asWidget());
+//                dialogBox.setModal(true);
+//                dialogBox.setAutoHideEnabled(true);
+//                dialogBox.setGlassEnabled(true);
+//                dialogBox.setAnimationEnabled(true);
+//                dialogBox.center();
+//            }
+//            dialogBox.show();
+            
+            schoolclassesPresenter.addSchoolClass();
         }
     }
 

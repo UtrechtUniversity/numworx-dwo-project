@@ -18,10 +18,6 @@
             <goals>
                 <goal>tomcat7:deploy</goal>
             </goals>
-            <properties>
-                <jpda.listen>maven</jpda.listen>
-                <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
-            </properties>
         </action>
         <action>
             <actionName>CUSTOM-Generatie PropertyConstants</actionName>
@@ -49,11 +45,16 @@
         <action>
             <actionName>CUSTOM-tomcat7:run</actionName>
             <displayName>tomcat7:run</displayName>
+            <preAction>build-with-dependencies</preAction>
             <goals>
                 <goal>tomcat7:run</goal>
             </goals>
             <properties>
                 <gwt.style>PRETTY</gwt.style>
+                
+                
+                
+                
             </properties>
         </action>
         <action>
@@ -67,6 +68,33 @@
                 <jpda.listen>maven</jpda.listen>
             </properties>
         </action>
+        <action>
+            <actionName>debug</actionName>
+            <packagings>
+                <packaging>war</packaging>
+                <packaging>ear</packaging>
+                <packaging>ejb</packaging>
+            </packagings>
+            <goals>
+                <goal>gwt:run</goal>
+            </goals>
+            <properties>
+                <gwt.style>PRETTY</gwt.style>
+                <jpda.listen>maven</jpda.listen>
+            </properties>
+        </action>
+        <action>
+            <actionName>run</actionName>
+            <packagings>
+                <packaging>war</packaging>
+                <packaging>ear</packaging>
+                <packaging>ejb</packaging>
+            </packagings>
+            <goals>
+                <goal>gwt:run</goal>
+            </goals>
+        </action>
+        
         
         
         

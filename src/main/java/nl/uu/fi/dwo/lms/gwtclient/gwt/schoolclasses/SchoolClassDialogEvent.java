@@ -23,6 +23,7 @@ public class SchoolClassDialogEvent extends GwtEvent<SchoolClassDialogEventHandl
 
     public enum Dialogs {
         NewSchoolClass,
+        AddSchoolClass,
         EditSchoolClass,
         EditStudent,
         EditStudents,

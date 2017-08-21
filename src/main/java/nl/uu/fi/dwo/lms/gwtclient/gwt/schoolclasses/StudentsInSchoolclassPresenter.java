@@ -44,6 +44,7 @@ public class StudentsInSchoolclassPresenter {
     private Display view;
     private int requests = 0;
 
+
     public interface Display {
 
         Widget asWidget();
@@ -371,6 +372,95 @@ public class StudentsInSchoolclassPresenter {
                     }
                 }
                 );
+            }
+        }
+    }
+
+    
+    void removeSelectedSingleSchoolStudentsFromSchool() {
+        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
+        p.getPromise().then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                LOG.log(Level.INFO, "returned value" + resolved.getValue());
+                if (resolved.getValue() == true) {
+                    removeSingleSchoolStudentsFromSchool();
+                }else{
+                    //do nothing.
+                }
+                return null;
+            }
+        }, new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }
+        );    
+        eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
+    }
+    
+    private void removeSingleSchoolStudentsFromSchool() {
+        DomSchoolClass targetSchoolClass = schoolClass;
+        final int cnt;
+        int tmp = 0;
+        for (StudentItem item : studentItems.values()) {
+            if (item.selected) {
+                tmp++;
+            }
+        }
+        cnt = tmp;
+        tmp = 0;
+//        LOG.log(Level.INFO, "targetSchoolClass<key,name> "+targetSchoolClass.getId().getIdString() + " "+targetSchoolClass.getSchoolClassName());
+        for (StudentItem item : studentItems.values()) {
+            if (item.selected == true && item.singleSchool) {
+                tmp++;
+                final int index = tmp;
+                //remove from schoolclass and clear item to signal success                
+                LOG.log(Level.INFO, "Removing " + item.usercode + " from targetSchoolClass<key,name> " + targetSchoolClass.getId().getIdString() + " " + targetSchoolClass.getSchoolClassName());
+                Promise<Boolean> promise;
+                DomRemoveStudentFromSchoolClass data = new DomRemoveStudentFromSchoolClass();
+                data.setStudent(studentMap.get(item.key));
+                data.setSchoolClass(schoolClass);
+                promise = manager.removeStudentFromSchoolClass(data);
+                final StudentItem fItem = item;
+                // onSuccess update view
+                promise.then(new Success<Boolean, Void>() {
+                    @Override
+        public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                        if (resolved.getValue().booleanValue() == true) {
+                            studentItems.get(fItem.key).selected = false;
+                            if (index % 10 == 0 || index == cnt) {
+                                updateViewData(schoolClass);
+                            }
+                        }
+                        return null;
+                    }
+                },
+                        new Failure() {
+                    @Override
+        public void fail(Promise<?> resolved) throws Exception {
+                        Throwable fail = resolved.getFailure();
+                        if (fail instanceof Dwo2Exception) {
+                            LOG.log(Level.SEVERE, fail.getMessage());
+                            eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                        } else {
+                            LOG.log(Level.SEVERE, fail.getMessage());
+                            eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                            //throw directly
+                        }
+                    }
+                }
+                );
+            }else{
             }
         }
     }

@@ -6,7 +6,7 @@
     <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
         <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="deleteSelectedBtn">remove selected teachers</g:Button>
+            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="removeSelectedBtn">remove selected teachers</g:Button>
            
             <g:Button addStyleNames='{dwoStyle.dwoButton} float:right' ui:field="addToSchoolClass">add to this schoolclass</g:Button>
             <g:ListBox addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="teacherListBox">
@@ -16,7 +16,7 @@
             </g:ListBox>
 <!--            <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftFullBox}' ui:field="backBtn">back</g:Button>
             <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftHalfBox}' ui:field="addStudentsBtn">add more students</g:Button>
-            <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftHalfBox}' ui:field="deleteSelectedBtn">delete selected students</g:Button>
+            <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftHalfBox}' ui:field="deleteSelectedBtn">remove selected students</g:Button>
            
             <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.rightHalfBox}' ui:field="addToSchoolClass">add to schoolclass</g:Button>
             <g:ListBox addStyleNames='{dwoStyle.dwoButton} {dwoStyle.rightHalfBox}'>

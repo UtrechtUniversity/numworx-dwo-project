@@ -38,7 +38,7 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
 
         void init();
 
-        void showDialog(String name, Boolean showTree, Boolean hasRegKey, String regKey);
+        void showDialog(String name, Boolean showTree, Boolean hasRegKey, String regKey, boolean edit);
     }
 
     public EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -60,7 +60,7 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
                 public Promise<Void> call(Promise<DomSchoolClassFull> resolved) throws Exception {
                     //flip back to schoolclasses screen 
                     DomSchoolClassFull value = resolved.getValue();
-                    view.showDialog(value.getSchoolClassName(), value.getIconizer(), value.getHasRegKey(), value.getRegistrationKey());
+                    view.showDialog(value.getSchoolClassName(), value.getIconizer(), value.getHasRegKey(), value.getRegistrationKey(), true);
                     return null;
                 }
             }, new Failure() {
@@ -78,6 +78,8 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
                 }
             }
             );
+        }else if(dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.AddSchoolClass) {
+                    view.showDialog("", false, false, null, false);
         }
     }
 
@@ -91,7 +93,43 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
     public void setView(Display view) {
         this.view = view;
     }
-
+    public void addAndBack(String name, Boolean showTree, Boolean hasRegKey, String regKey) {
+        Promise<Boolean> promise;
+        DomSchoolClassFull schoolClass = new DomSchoolClassFull();
+        schoolClass.setSchoolClassName(name);
+        schoolClass.setIconizer(showTree);
+        schoolClass.setHasRegKey(hasRegKey);
+        schoolClass.setRegistrationKey(regKey);
+        promise = manager.submitSchoolClass(schoolClass);
+        // onSuccess calculate results and show.
+        promise.then(new Success<Boolean,Void> () {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                //flip back to schoolclasses screen 
+                if (resolved.getValue() == true) {
+                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                    return null;
+                } else {
+                    throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");
+                }
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
+    }
+    
     public void updateAndBack(String name, Boolean showTree, Boolean hasRegKey, String regKey) {
         Promise<Boolean> promise;
         DomSchoolClassFull fullSchoolClass = new DomSchoolClassFull();

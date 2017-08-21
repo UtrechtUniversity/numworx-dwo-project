@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogPromise;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
@@ -45,11 +47,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContextFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomTeacherScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Handler for for Login actions.
@@ -59,8 +57,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class ScoResultsPresenter {
 
     private static final String COMPLETION_STATUS = "cmi.completion_status";
-	private static final SecuredTeacherScormValuesManager SECURED_TEACHER_SCORM_VALUES_MANAGER = new SecuredTeacherScormValuesManager();
-	private static final Logger LOG = Logger.getLogger(ScoResultsPresenter.class.getName());
+    private static final SecuredTeacherScormValuesManager SECURED_TEACHER_SCORM_VALUES_MANAGER = new SecuredTeacherScormValuesManager();
+    private static final Logger LOG = Logger.getLogger(ScoResultsPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private List<DomStudentScoContext> resultScoData;
@@ -78,10 +76,10 @@ public class ScoResultsPresenter {
     private Display view;
     private int requests = 0;
 // Voor het Frame:
-	private Promise<String> launchData;
-	private Promise<Map<String, String>> scormVars;
+    private Promise<String> launchData;
+    private Promise<Map<String, String>> scormVars;
 
-	final Failure failure = new Failure() {
+    final Failure failure = new Failure() {
         @Override
         public void fail(Promise<?> resolved) throws Exception {
             Throwable fail = resolved.getFailure();
@@ -95,49 +93,53 @@ public class ScoResultsPresenter {
             }
         }
     };
-	
+
     final Success identity = new Success() {
 
-		@Override
-		public Promise call(Promise resolved) throws Exception {
-			return resolved;
-		}};
-	private Map<String, DomResultStudentScoContext> sscMap;
-	private DomContext context;
-	private static final Collection<String> keys = Arrays.asList(
-			"cmi.suspend_data",
-			"cmi.location",
-			"cmi.score.raw",
-			COMPLETION_STATUS,
-			"cmi.comments_from_lms.0.comment"       		
-			);
-	private static final String CMI_MODE = "cmi.mode";
-	
-	private StudentItem selectedItem;
-	private Integer aantalOpdrachten;
-	private String location_override;
-		
-	final <T> Success<T, T> identity() { return identity; }
-	
+        @Override
+        public Promise call(Promise resolved) throws Exception {
+            return resolved;
+        }
+    };
+    private Map<String, DomResultStudentScoContext> sscMap;
+    private DomContext context;
+    private static final Collection<String> keys = Arrays.asList(
+            "cmi.suspend_data",
+            "cmi.location",
+            "cmi.score.raw",
+            COMPLETION_STATUS,
+            "cmi.comments_from_lms.0.comment"
+    );
+    private static final String CMI_MODE = "cmi.mode";
+
+    private StudentItem selectedItem;
+    private Integer aantalOpdrachten;
+    private String location_override;
+
+    final <T> Success<T, T> identity() {
+        return identity;
+    }
+
     final class StudentScoUpdater implements
-			Success<DomStudentScoContext, Void> {
-		private final DomResultStudentScoContext forsuccess;
+            Success<DomStudentScoContext, Void> {
 
-		StudentScoUpdater(DomResultStudentScoContext forsuccess) {
-			this.forsuccess = forsuccess;
-		}
+        private final DomResultStudentScoContext forsuccess;
 
-		@Override
-		public Promise<Void> call(Promise<DomStudentScoContext> resolved)
-				throws Exception {
-			LOG.info("set " + forsuccess.getLabel());
-			forsuccess.setStudentSco(resolved.getValue());
+        StudentScoUpdater(DomResultStudentScoContext forsuccess) {
+            this.forsuccess = forsuccess;
+        }
+
+        @Override
+        public Promise<Void> call(Promise<DomStudentScoContext> resolved)
+                throws Exception {
+            LOG.info("set " + forsuccess.getLabel());
+            forsuccess.setStudentSco(resolved.getValue());
 // TODO als de score verandert, dan de bijbehorende studentItem ook aanpassen. 
-			return null;
-		}
-	}
+            return null;
+        }
+    }
 
-	public interface Display {
+    public interface Display {
 
         Widget asWidget();
 
@@ -146,7 +148,7 @@ public class ScoResultsPresenter {
         void init();
 
         void updateView(StudentItem selectedItem, Map<String, StudentItem> data);
-        
+
         void updateFrame(DomScoContext context);
     }
 
@@ -158,7 +160,7 @@ public class ScoResultsPresenter {
         public String familyName;
         public String usercode;
         public Double score;
- // later pas ingevuld!
+        // later pas ingevuld!
         public Double[] subScores;
         public Boolean sealed;
 
@@ -206,25 +208,24 @@ public class ScoResultsPresenter {
         StudentScoDataManager manager = new SecuredStudentScoDataManager();
         context = new DomContext();
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
-		DomDwoProfile profile = dwoGlobalVars.getProfile().getValue();
-		aantalOpdrachten = null;
-		launchData = manager.getJSONLaunchDataBytes(scoContext.getScoContext(), profile, context).map(new Function<JSONValue, String>() {
+        DomDwoProfile profile = dwoGlobalVars.getProfile().getValue();
+        aantalOpdrachten = null;
+        launchData = manager.getJSONLaunchDataBytes(scoContext.getScoContext(), profile, context).map(new Function<JSONValue, String>() {
 
-			@Override
-			public String apply(JSONValue t) {
-				try {
-					aantalOpdrachten = Integer.valueOf(t.isObject().get("aantalOpdrachten_1").isString().stringValue());
-					LOG.log(Level.FINE, "aantalOpdrachten = " + aantalOpdrachten);
-				} catch (Exception e) {
-					LOG.log(Level.SEVERE, "aantalOpdrachten failed", e);
-					aantalOpdrachten = 0;
-				}
-				return t.toString();
-			}
-		});
-		launchData = launchData.then(identity(), failure);
-        
-        
+            @Override
+            public String apply(JSONValue t) {
+                try {
+                    aantalOpdrachten = Integer.valueOf(t.isObject().get("aantalOpdrachten_1").isString().stringValue());
+                    LOG.log(Level.FINE, "aantalOpdrachten = " + aantalOpdrachten);
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, "aantalOpdrachten failed", e);
+                    aantalOpdrachten = 0;
+                }
+                return t.toString();
+            }
+        });
+        launchData = launchData.then(identity(), failure);
+
         sscMap = new HashMap<String, DomResultStudentScoContext>(scoContext.getChildren().size());
         studentMap = new HashMap<String, DomStudent>();
         for (DomResultStudentScoContext ss : scoContext.getChildren().values()) {
@@ -240,98 +241,98 @@ public class ScoResultsPresenter {
             // fetch and insert score here.
             Double score = null;
             DomStudent student = s.getStudent();
-			String studentID = student.getId().getIdString();
-			if (sscMap.containsKey(studentID)) {
+            String studentID = student.getId().getIdString();
+            if (sscMap.containsKey(studentID)) {
                 score = sscMap.get(studentID).getStudentSco().getScore();
             }
             StudentItem si = new StudentItem(studentID, student.getGivenName(),
                     student.getInsertion(), student.getFamilyName(), student.getUserName(), score, null);
-            if(selectedStudent.getStudent().getId().getIdString().equals(studentID) ){
+            if (selectedStudent.getStudent().getId().getIdString().equals(studentID)) {
                 selectedItem = si;
             }
             studentItems.put(studentID, si);
             studentMap.put(studentID, student);
         }
         LOG.log(Level.FINE, "nr students:" + resultMatrix.getvSize());
-        
-        view.updateView(selectedItem,studentItems);
+
+        view.updateView(selectedItem, studentItems);
 // fetch ScormValues of student (for each student)
         setStudentFrame(selectedItem);
-		launchData.then( new Success<String, Void>() {
+        launchData.then(new Success<String, Void>() {
 
-			@Override
-			public Promise<Void> call(Promise<String> resolved) throws Exception {
-				getAllSeals();
-				return null;
-			}
-		});
-        
+            @Override
+            public Promise<Void> call(Promise<String> resolved) throws Exception {
+                getAllSeals();
+                return null;
+            }
+        });
+
     }
 
-	private void setStudentFrame(StudentItem selectedItem) {
-		LOG.info("set Student Frame");
-		DomResultStudentScoContext rssc = sscMap.get(selectedItem.key);
-		if( rssc == null) {
+    private void setStudentFrame(StudentItem selectedItem) {
+        LOG.info("set Student Frame");
+        DomResultStudentScoContext rssc = sscMap.get(selectedItem.key);
+        if (rssc == null) {
 // als null, insert dummy studentscocontext voor "SEAL"
-			scormVars = Promises.resolved(new HashMap<>());
-			
-		} else {
-			DomStudentScoContext ssc = rssc.getStudentSco();
-	        scormVars = SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(ssc, context, keys );			
-		}
-        // if both, updateFrame for this sco.
-		Promises.all(launchData, scormVars.then(null, failure)).onResolve(new Runnable() {
+            scormVars = Promises.resolved(new HashMap<>());
 
-			@Override
-			public void run() {
-				view.updateFrame(scoContext.getScoContext());				
-			}});
-	}
+        } else {
+            DomStudentScoContext ssc = rssc.getStudentSco();
+            scormVars = SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(ssc, context, keys);
+        }
+        // if both, updateFrame for this sco.
+        Promises.all(launchData, scormVars.then(null, failure)).onResolve(new Runnable() {
+
+            @Override
+            public void run() {
+                view.updateFrame(scoContext.getScoContext());
+            }
+        });
+    }
 
     //function to be called from the view in the future when subscores are supported.
     public void selectItem(StudentItem item, int col) {
         // Update the sco result view frame.
-        switch(col){
+        switch (col) {
             case 0: //Selected studentname (currently an non-click cell)
             case 1: //Selected score (a MyClickCell)
                 //display scoresult of student in frame
-            	selectedItem = item;
-            	location_override = null;
-            	setStudentFrame(item);
+                selectedItem = item;
+                location_override = null;
+                setStudentFrame(item);
                 break;
             case 2: //selected selection toggle
-                  //do some magic stuff   
-            break;
+                //do some magic stuff   
+                break;
             //
             default:
-            	location_override = String.valueOf(col-getTableHeaders().length);
-            	selectedItem = item;
-            	setStudentFrame(item);
-        
+                location_override = String.valueOf(col - getTableHeaders().length);
+                selectedItem = item;
+                setStudentFrame(item);
+
         }
     }
+
     /**
      *
      * @param key een CMI variable
      * @return
      */
     public String getScormAPIValue(String key) {
-    	if ("cmi.launch_data".equals(key))
-    	{
-    		return launchData.getValue();
-    	}
-    	if (CMI_MODE.equals(key))
-    	{
-    		return "review";
-    	}
-    	if ("cmi.location".equals(key) && location_override != null) {
-    		return location_override;
-    	}
-    	
-    	if (scormVars.isDone() && scormVars.getFailure() == null) {
-    		return scormVars.getValue().getOrDefault(key, "");
-    	}
-    	
+        if ("cmi.launch_data".equals(key)) {
+            return launchData.getValue();
+        }
+        if (CMI_MODE.equals(key)) {
+            return "review";
+        }
+        if ("cmi.location".equals(key) && location_override != null) {
+            return location_override;
+        }
+
+        if (scormVars.isDone() && scormVars.getFailure() == null) {
+            return scormVars.getValue().getOrDefault(key, "");
+        }
+
         return "";
     }
 
@@ -345,118 +346,159 @@ public class ScoResultsPresenter {
         return "true";
     }
 
-	public Promise<?> setSeal(StudentItem object, Boolean value) {
-		LOG.info("setSeal  " + object.usercode + " to " + value);
-		object.sealed = value;
+    public Promise<?> setSeal(StudentItem object, Boolean value) {
+        LOG.info("setSeal  " + object.usercode + " to " + value);
+        object.sealed = value;
 // Send to server
-		String status = Boolean.TRUE.equals(value) ? "completed": "incomplete";
-		
-		DomResultStudentScoContext rssc = sscMap.get(object.key);
-		DomStudentScoContext sco;
-		Success<DomStudentScoContext, Void> succes;
-LOG.info("RSSC = " + rssc);
-		if(rssc != null) {
-			sco = rssc.getStudentSco();
-			succes = new StudentScoUpdater(rssc);
-		} else {
-LOG.info("create scc");
-			sco = new DomStudentScoContext();
-			sco.setScoID(scoContext.getScoContext().getId());
-			DomStudent student = studentMap.get(object.key);
-LOG.info("Student = " + student);
-			sco.setUserID(student.getId());
-			rssc = new DomResultStudentScoContext(sco, student);
-			sscMap.put(object.key, rssc);
-LOG.info(sco.toString());
-			succes = new StudentScoUpdater(rssc);
-		}
-		return SECURED_TEACHER_SCORM_VALUES_MANAGER.setValues(sco, context, Collections.singletonMap(COMPLETION_STATUS, status)).then(succes, failure);
-		
-	}
+        String status = Boolean.TRUE.equals(value) ? "completed" : "incomplete";
 
-	public void sealAllStudents() {
-		if(studentItems.isEmpty()) return;
-		Collection<StudentItem> items = studentItems.values();		
-		final Iterator<StudentItem> iterator = items.iterator();
-		final Runnable[] runners = new Runnable[1];
-		runners[0] = new Runnable() {
+        DomResultStudentScoContext rssc = sscMap.get(object.key);
+        DomStudentScoContext sco;
+        Success<DomStudentScoContext, Void> succes;
+        LOG.info("RSSC = " + rssc);
+        if (rssc != null) {
+            sco = rssc.getStudentSco();
+            succes = new StudentScoUpdater(rssc);
+        } else {
+            LOG.info("create scc");
+            sco = new DomStudentScoContext();
+            sco.setScoID(scoContext.getScoContext().getId());
+            DomStudent student = studentMap.get(object.key);
+            LOG.info("Student = " + student);
+            sco.setUserID(student.getId());
+            rssc = new DomResultStudentScoContext(sco, student);
+            sscMap.put(object.key, rssc);
+            LOG.info(sco.toString());
+            succes = new StudentScoUpdater(rssc);
+        }
+        return SECURED_TEACHER_SCORM_VALUES_MANAGER.setValues(sco, context, Collections.singletonMap(COMPLETION_STATUS, status)).then(succes, failure);
 
-			@Override
-			public synchronized void run() {
-				while(iterator.hasNext()) {
-					StudentItem next = iterator.next();
-					if(!Boolean.TRUE.equals(next.sealed))
-					{
-						LOG.info("Seal "+ next.usercode);
-						setSeal(next, Boolean.TRUE).onResolve(runners[0]);
-						return;
-					}	
-				}
-				view.updateView(selectedItem, studentItems);
-			}};
-		int n = 1;
-		for(int i = 0; i < n; i++)
-			runners[0].run();
-	}
-	
-	private void getAllSeals() {
-		if(sscMap.isEmpty()) return;
-		Collection<DomResultStudentScoContext> items = sscMap.values();		
-		final Iterator<DomResultStudentScoContext> iterator = items.iterator();
-		final Runnable[] runners = new Runnable[1];
-		runners[0] = new Runnable() {
+    }
 
-			@Override
-			public synchronized void run() {
-				while(iterator.hasNext()) {
-					DomResultStudentScoContext next = iterator.next();
-					String key = next.getStudentSco().getUserID().getIdString();
-					StudentItem item = studentItems.get(key);
-					//if(item.sealed == null) 
-					{
-						LOG.info("get Seal "+ item.usercode);
-						DomStudentScoContext sco = next.getStudentSco();
-						SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(sco, context, Arrays.asList(COMPLETION_STATUS, "cmi.suspend_data"))
-						.then(new Success<Map<String,String>, Void>() {
+    public void sealAllStudents() {
+        if (studentItems.isEmpty()) {
+            return;
+        }
+        Collection<StudentItem> items = studentItems.values();
+        final Iterator<StudentItem> iterator = items.iterator();
+        final Runnable[] runners = new Runnable[1];
+        runners[0] = new Runnable() {
 
-							@Override
-							public Promise<Void> call(
-									Promise<Map<String, String>> resolved)
-									throws Exception {
-								if(item.sealed == null) {
-									String value = resolved.getValue().get(COMPLETION_STATUS);
-									item.sealed = "completed".equals(value);
-								}
-								String suspend_data = resolved.getValue().get("cmi.suspend_data");
-								LOG.fine(suspend_data);
-								try {
-									JSONObject sd = JSONParser.parse(suspend_data).isObject();
-									JSONObject ons_state = sd.get("onsState").isObject();
-									JSONArray  scores = ons_state.get("orScores").isArray().get(0).isArray();
-									item.subScores = new Double[aantalOpdrachten];
-									int max = Math.min(aantalOpdrachten.intValue(), scores.size());
-									for(int i = 0; i < max; i++) {
-										try {
-											JSONNumber number = scores.get(i).isNumber();
-											LOG.log(Level.FINE, "score " + i + " = " + number);
-											item.subScores[i] = number.doubleValue();
-										} catch (Exception e) {
-											LOG.log(Level.FINE, "score " + i, e);
-										}
-									}
-								} catch (Exception e) {
-									LOG.log(Level.FINE, "suspend_data "+ item.usercode, e);
-								}
-								
-								return null;
-							}}).onResolve(runners[0]);
-						return;
-					}	
-				}
-				view.updateView(selectedItem, studentItems);
-			}};
-		int n = 1;
-		for(int i = 0; i < n; i++)
-			runners[0].run();
-	}
+            @Override
+            public synchronized void run() {
+                while (iterator.hasNext()) {
+                    StudentItem next = iterator.next();
+                    if (!Boolean.TRUE.equals(next.sealed)) {
+                        LOG.info("Seal " + next.usercode);
+                        setSeal(next, Boolean.TRUE).onResolve(runners[0]);
+                        return;
+                    }
+                }
+                view.updateView(selectedItem, studentItems);
+            }
+        };
+        int n = 1;
+        for (int i = 0; i < n; i++) {
+            runners[0].run();
+        }
+    }
+
+    private void getAllSeals() {
+        if (sscMap.isEmpty()) {
+            return;
+        }
+        Collection<DomResultStudentScoContext> items = sscMap.values();
+        final Iterator<DomResultStudentScoContext> iterator = items.iterator();
+        final Runnable[] runners = new Runnable[1];
+        runners[0] = new Runnable() {
+
+            @Override
+            public synchronized void run() {
+                while (iterator.hasNext()) {
+                    DomResultStudentScoContext next = iterator.next();
+                    String key = next.getStudentSco().getUserID().getIdString();
+                    StudentItem item = studentItems.get(key);
+                    //if(item.sealed == null) 
+                    {
+                        LOG.info("get Seal " + item.usercode);
+                        DomStudentScoContext sco = next.getStudentSco();
+                        SECURED_TEACHER_SCORM_VALUES_MANAGER.getValues(sco, context, Arrays.asList(COMPLETION_STATUS, "cmi.suspend_data"))
+                                .then(new Success<Map<String, String>, Void>() {
+
+                                    @Override
+                                    public Promise<Void> call(
+                                            Promise<Map<String, String>> resolved)
+                                            throws Exception {
+                                        if (item.sealed == null) {
+                                            String value = resolved.getValue().get(COMPLETION_STATUS);
+                                            item.sealed = "completed".equals(value);
+                                        }
+                                        String suspend_data = resolved.getValue().get("cmi.suspend_data");
+                                        LOG.fine(suspend_data);
+                                        try {
+                                            JSONObject sd = JSONParser.parse(suspend_data).isObject();
+                                            JSONObject ons_state = sd.get("onsState").isObject();
+                                            JSONArray scores = ons_state.get("orScores").isArray().get(0).isArray();
+                                            item.subScores = new Double[aantalOpdrachten];
+                                            int max = Math.min(aantalOpdrachten.intValue(), scores.size());
+                                            for (int i = 0; i < max; i++) {
+                                                try {
+                                                    JSONNumber number = scores.get(i).isNumber();
+                                                    LOG.log(Level.FINE, "score " + i + " = " + number);
+                                                    item.subScores[i] = number.doubleValue();
+                                                } catch (Exception e) {
+                                                    LOG.log(Level.FINE, "score " + i, e);
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            LOG.log(Level.FINE, "suspend_data " + item.usercode, e);
+                                        }
+
+                                        return null;
+                                    }
+                                }).onResolve(runners[0]);
+                        return;
+                    }
+                }
+                view.updateView(selectedItem, studentItems);
+            }
+        };
+        int n = 1;
+        for (int i = 0; i < n; i++) {
+            runners[0].run();
+        }
+    }
+
+    void clearAllStudentResults() {
+        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, this will remove results from other classes using the same course too.");
+        p.getPromise().then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                LOG.log(Level.INFO, "returned value" + resolved.getValue());
+                if (resolved.getValue() == true) {
+                   // removeSingleSchoolStudentsFromSchool();
+                }else{
+                    //do nothing.
+                }
+                return null;
+            }
+        }, new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }
+        );    
+        eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
+    }
+    
+ 
 }

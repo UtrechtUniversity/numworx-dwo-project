@@ -20,7 +20,6 @@ import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -56,10 +55,10 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
     @UiField
     Button addToSchoolClass;
     @UiField
-    Button deleteSelectedBtn;
+    Button removeSelectedBtn;
     @UiField
     ListBox schoolClassListBox;
-
+    
     private StudentsInSchoolclassPresenter studentsInSchoolclassPresenter;
     private StudentsInSchoolclassPresenter.StudentItem selected;
     private ListDataProvider<StudentsInSchoolclassPresenter.StudentItem> dataProvider = new ListDataProvider<StudentsInSchoolclassPresenter.StudentItem>();
@@ -321,7 +320,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
 //            }
 //        });
         backBtn.addClickHandler(this);
-        deleteSelectedBtn.addClickHandler(this);
+        removeSelectedBtn.addClickHandler(this);
         addStudentsBtn.addClickHandler(this);
         addToSchoolClass.addClickHandler(this);
         schoolClassListBox.addChangeHandler(this);
@@ -341,7 +340,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
             studentsInSchoolclassPresenter.goBackToSchoolClasses();
         } else if (event.getSource() == addStudentsBtn) {
             studentsInSchoolclassPresenter.addStudents();
-        } else if (event.getSource() == deleteSelectedBtn) {
+        } else if (event.getSource() == removeSelectedBtn) {
             studentsInSchoolclassPresenter.removeSelectedFromSchoolClass();
         } else if (event.getSource() == addToSchoolClass) {
             studentsInSchoolclassPresenter.addSelectedToSchoolClass(schoolClassList.get(schoolClassListBox.getSelectedIndex()).getKey());

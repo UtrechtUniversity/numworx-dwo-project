@@ -41,6 +41,7 @@ public class EditSchoolclassView extends Composite implements EditSchoolclassPre
     PushButton addButton;
 
     EditSchoolclassPresenter editSchoolClassPresenter;
+    boolean edit = false;
     final DialogBox dialogBox = new DialogBox();
 
     public EditSchoolclassView(EditSchoolclassPresenter ap) {
@@ -55,7 +56,11 @@ public class EditSchoolclassView extends Composite implements EditSchoolclassPre
         if (event.getSource() == addButton) {
             LOG.log(Level.INFO, "Add schoolclass now");
             dialogBox.hide();
-            editSchoolClassPresenter.updateAndBack(schoolclassName.getText(), showTree.getValue(), setClassKey.getValue(), classKey.getValue());
+            if(edit){
+                editSchoolClassPresenter.updateAndBack(schoolclassName.getText(), showTree.getValue(), setClassKey.getValue(), classKey.getValue());
+            }else{
+                editSchoolClassPresenter.addAndBack(schoolclassName.getText(), showTree.getValue(), setClassKey.getValue(), classKey.getValue());
+            }
         } else if (event.getSource() == cancelButton) {
             LOG.log(Level.INFO, "Add schoolclass now");
             dialogBox.hide();
@@ -77,11 +82,17 @@ public class EditSchoolclassView extends Composite implements EditSchoolclassPre
     }
 
     @Override
-    public void showDialog(String name, Boolean showTreeValue, Boolean hasRegKey, String regKey) {
+    public void showDialog(String name, Boolean showTreeValue, Boolean hasRegKey, String regKey, boolean doEdit) {
         schoolclassName.setText(name);
         showTree.setValue(showTreeValue);
         setClassKey.setValue(hasRegKey);
         classKey.setText(regKey);
+        edit =doEdit;
+        if(edit){
+            addButton.setText("Update");
+        }else{
+            addButton.setText("Add");
+        }
         if (dialogBox.getWidget() == null) {
             dialogBox.add(this.asWidget());
             dialogBox.setModal(true);
@@ -91,6 +102,7 @@ public class EditSchoolclassView extends Composite implements EditSchoolclassPre
             dialogBox.center();
         }
         dialogBox.show();
+        schoolclassName.setFocus(true);
     }
 
 }

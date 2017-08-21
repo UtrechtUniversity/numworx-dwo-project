@@ -430,6 +430,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 
     @Override
     public void setTree(ClassCourseItem item) {
+        TreeItem selItem = tree.getSelectedItem();
         for (int i = tree.getItemCount() - 1; i >= 0; i--) {
             tree.removeItem(tree.getItem(i));
         }
@@ -439,7 +440,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             treeItem.setText(name);
             treeItem.setUserObject(child);
             tree.addItem(treeItem);
-            tree.setSelectedItem(treeItem);
+            //tree.setSelectedItem(treeItem);
             fillTreeNode(treeItem);
             treeItem.setState(true);
         }
