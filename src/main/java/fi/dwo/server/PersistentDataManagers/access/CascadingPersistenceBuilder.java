@@ -43,6 +43,7 @@ public class CascadingPersistenceBuilder {
 
         private PersistentUser user;
         private PersistentHasRole hasRole;
+        private RoleType roleType;
         private PersistentSchool school;
         private PersistentSchoolGroup schoolGroup;
         private PersistentSchoolClass schoolClass;
@@ -145,6 +146,20 @@ public class CascadingPersistenceBuilder {
          */
         public void setProfile(PersistentDwoProfile profile) {
             this.profile = profile;
+        }
+
+        /**
+         * @return the roleType
+         */
+        public RoleType getRoleType() {
+            return roleType;
+        }
+
+        /**
+         * @param roleType the roleType to set
+         */
+        public void setRoleType(RoleType roleType) {
+            this.roleType = roleType;
         }
     }
 
@@ -267,6 +282,7 @@ public class CascadingPersistenceBuilder {
                 }
                 if (roleId.intValue() == r.ordinal()) {
                     this.instance.context.setHasRole(phr);
+                    this.instance.context.setRoleType(r);
                     return this;
                 } else {
                     String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Trying to access non-existing role by user with usercode {0}.", new Object[]{getUser().getUsername()});
