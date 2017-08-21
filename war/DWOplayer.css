@@ -5,6 +5,16 @@
 @import url("//fonts.googleapis.com/css?family=Ubuntu+Condensed");
 @import url("//fonts.googleapis.com/css?family=Roboto");
 
+@font-face {
+    font-family: 'Omega Math';
+    src: url('fonts/omega_0.eot');
+    src: url('fonts/omega_0.eot') format('embedded-opentype'),
+         url('fonts/omega_0.woff2') format('woff2'),
+         url('fonts/omega_0.woff') format('woff'),
+         url('fonts/omega_0.ttf') format('truetype'),
+         url('fonts/omega_0.svg#omega_0') format('svg');
+}
+
 html,body{margin:0px; padding:0px;}
 
 body#main {margin:0px; background:white; color:#000;}
