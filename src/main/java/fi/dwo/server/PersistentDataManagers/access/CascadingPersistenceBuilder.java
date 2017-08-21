@@ -426,7 +426,7 @@ public class CascadingPersistenceBuilder {
          * @throws Dwo2Exception 
          */
         @Override
-        FromScoContext addScoContext(DomScoContext s) throws Dwo2Exception {
+        public FromScoContext addScoContext(DomScoContext s) throws Dwo2Exception {
             return this;
         }
         /**
