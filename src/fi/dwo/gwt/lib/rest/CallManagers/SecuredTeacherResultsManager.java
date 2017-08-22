@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
@@ -34,23 +35,39 @@ public class SecuredTeacherResultsManager {
         LOG.log(Level.INFO, "" + service);
     }
 
-   public Promise<DomResultsPerTeacher> getTeachersResults(DomContext domContext, DomDwoProfile aProfile) {
+    public Promise<DomResultsPerTeacher> getTeachersResults(DomContext domContext, DomDwoProfile aProfile) {
         PromiseCallback<DomResultsPerTeacher> defer = new PromiseCallback<DomResultsPerTeacher>();
-        this.getTeachersResults(domContext,aProfile,defer);
+        this.getTeachersResults(domContext, aProfile, defer);
         return defer.getPromise();
     }
-   
+
     /**
-     * Returns the current teacher result data. 
+     * Returns the current teacher result data.
+     *
      * @param domContext A valid domContext for a teacher in a school.
      * @param aProfile The profile for which this is valid.
-     * @param callBack 
-     */    
+     * @param callBack
+     */
     public void getTeachersResults(DomContext domContext, DomDwoProfile aProfile, AsyncCallback<DomResultsPerTeacher> callBack) {
         RestDwoProfile restPut = new RestDwoProfile();
         restPut.setRestContext(domContext);
         restPut.setDomDwoProfile(aProfile);
         service.getTeachersResults(restPut, new Callback<DomResultsPerTeacher>(callBack));
     }
-    
+
+    public Promise<Boolean> clearStudentResults(RestClearStudentDataForScoAndClass rest) {
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.clearStudentResults(rest, defer);
+        return defer.getPromise();
+    }
+
+    /**
+     *
+     * @param rest
+     * @param callBack
+     */
+    public void clearStudentResults(RestClearStudentDataForScoAndClass rest, AsyncCallback<Boolean> callBack) {
+        service.clearStudentResults(rest, new Callback<Boolean>(callBack));
+    }
+
 }
