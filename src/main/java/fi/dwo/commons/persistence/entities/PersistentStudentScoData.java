@@ -29,7 +29,9 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentStudentScoData.findAll", query = "SELECT p FROM PersistentStudentScoData p"),
-    @NamedQuery(name = "PersistentStudentScoData.findByStudentSco", query = "SELECT p FROM PersistentStudentScoData p WHERE p.studentSco = :studentSco")})
+    @NamedQuery(name = "PersistentStudentScoData.findByStudentSco", query = "SELECT p FROM PersistentStudentScoData p WHERE p.studentSco = :studentSco"),
+    @NamedQuery(name = "PersistentStudentScoData.removeByScoIDandHasRolePK", query = "DELETE FROM PersistentStudentScoData p WHERE p.studentSco=:studentSco")})
+
 public class PersistentStudentScoData implements Serializable {
 
     private static final long serialVersionUID = 1L;
