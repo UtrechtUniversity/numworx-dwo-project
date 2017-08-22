@@ -5,6 +5,9 @@
  */
 package fi.dwo.server.PersistentDataManagers.core;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;

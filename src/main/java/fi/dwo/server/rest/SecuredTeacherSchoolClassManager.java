@@ -1326,11 +1326,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Path("/setFromDateClassCourse")
     public Boolean setFromDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseProfilewFrom rest) throws Dwo2Exception {
         //secure builder
-        CascadingPersistenceBuilder.Build build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+        CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
                 .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
                 .addSchoolClass(rest.getDomSchoolClassCourseProfilewFrom().getDomSchoolClass())
                 .addProfile(rest.getDomSchoolClassCourseProfilewFrom().getDomDwoProfile())
-                .addCourse(rest.getDomSchoolClassCourseProfilewFrom().getCourse()).getContext();
+                .addCourse(rest.getDomSchoolClassCourseProfilewFrom().getCourse());
         List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
         if (pcc.size() > 0) {
             //update type.
@@ -1353,11 +1353,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Path("/setToDateClassCourse")
     public Boolean setToDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseProfilewTo rest) throws Dwo2Exception {
         //secure builder
-        CascadingPersistenceBuilder.Build build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+        CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
                 .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
                 .addSchoolClass(rest.getDomSchoolClassCourseProfilewTo().getDomSchoolClass())
                 .addProfile(rest.getDomSchoolClassCourseProfilewTo().getDomDwoProfile())
-                .addCourse(rest.getDomSchoolClassCourseProfilewTo().getCourse()).getContext();
+                .addCourse(rest.getDomSchoolClassCourseProfilewTo().getCourse());
         List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
         if (pcc.size() > 0) {
             //update type.
@@ -1381,11 +1381,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     public Boolean setClassCourseType(@Context SecurityContext sc, RestSchoolClassCourseProfilewType rest) throws Dwo2RestException {
         //secure builder
         try {
-            CascadingPersistenceBuilder.Build build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+            CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
                     .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
                     .addSchoolClass(rest.getDomSchoolClassCourseProfilewType().getDomSchoolClass())
                     .addProfile(rest.getDomSchoolClassCourseProfilewType().getDomDwoProfile())
-                    .addCourse(rest.getDomSchoolClassCourseProfilewType().getCourse()).getContext();
+                    .addCourse(rest.getDomSchoolClassCourseProfilewType().getCourse());
             List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
             if (pcc.size() > 0) {
                 //update type.

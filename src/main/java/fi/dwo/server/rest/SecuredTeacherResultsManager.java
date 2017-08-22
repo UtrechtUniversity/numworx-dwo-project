@@ -339,20 +339,17 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     @PUT
     @Produces({"application/json"})
     @Path("/clearStudentResults")
-    public Boolean getTeachersResults(@Context SecurityContext sc, RestClearStudentDataForScoAndClass rest) throws Dwo2RestException {
+    public Boolean clearStudentResults(@Context SecurityContext sc, RestClearStudentDataForScoAndClass rest) throws Dwo2RestException {
         //secure builder
         try {
-            CascadingPersistenceBuilder.Build build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+            CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SCO_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
                     .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
                     .addSchoolClass(rest.getClearStudentDataForScoAndClass().getDomSchoolClass())
-                    .addScoContext(rest.getClearStudentDataForScoAndClass().getDomScoContext())
-                    .getContext();
-            //check for each student if it is in the class and then clear the sco data. After which:
-            if(1==2)
-                return true;
+                    .addProfile(rest.getClearStudentDataForScoAndClass().getDomProfile())
+                    .addScoContext(rest.getClearStudentDataForScoAndClass().getDomScoContext());
+            return build.removeStudentScoforClassAndCourse();
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
         }
-        return false;
     }
 }

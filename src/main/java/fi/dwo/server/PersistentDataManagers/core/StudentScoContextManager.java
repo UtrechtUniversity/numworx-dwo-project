@@ -20,7 +20,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages a student's studentScoContext data in the persistent storage. 
+ * Manages a student's studentScoContext data in the persistent storage.
  *
  * @author G.A.J. van der Plas
  */
@@ -96,7 +96,7 @@ public class StudentScoContextManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-                PersistentStudentScoContext ssc = null;
+            PersistentStudentScoContext ssc = null;
             try {
                 ssc = em.getReference(PersistentStudentScoContext.class, id);
                 ssc.getStudentSco();
@@ -145,27 +145,38 @@ public class StudentScoContextManager {
             List<PersistentStudentScoContext> list = q.getResultList();
             LOG.log(Level.FINE, "StudentScoContextManager-manager retrieved {0} PersistentStudentScoContext with scoId {1}", new Object[]{list.size(), scoContext.getScoID()});
             return list;
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
 
-public static List<PersistentStudentScoContext> findEntities(PersistentScoContext scoContext, PersistentHasRolePK key) {
+    public static List<PersistentStudentScoContext> findEntities(PersistentScoContext scoContext, PersistentHasRolePK key) {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentStudentScoContext.findByScoIDandHasRolePK");
             q.setParameter("scoID", scoContext.getScoID());
             q.setParameter("keyID", key);
             List<PersistentStudentScoContext> list = q.getResultList();
-            LOG.log(Level.FINE, "StudentScoContextManager-manager retrieved {0} PersistentStudentScoContext with scoId {1} and key {2}", new Object[]{list.size(), scoContext.getScoID(),key.toString()});
+            LOG.log(Level.FINE, "StudentScoContextManager-manager retrieved {0} PersistentStudentScoContext with scoId {1} and key {2}", new Object[]{list.size(), scoContext.getScoID(), key.toString()});
             return list;
-        }
-        finally {
+        } finally {
             em.close();
         }
-    }    
+    }
 
+   public static void destroyEntities(PersistentScoContext scoContext, PersistentHasRolePK key) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentStudentScoContext.deleteByScoIDandHasRolePK");
+            q.setParameter("scoID", scoContext.getScoID());
+            q.setParameter("keyID", key);
+            List<PersistentStudentScoContext> list = q.getResultList();
+            LOG.log(Level.FINE, "StudentScoContextManager-manager retrieved {0} PersistentStudentScoContext with scoId {1} and key {2}", new Object[]{list.size(), scoContext.getScoID(), key.toString()});
+        } finally {
+            em.close();
+        }
+    }
+   
     public static List<PersistentStudentScoContext> findEntities(PersistentHasRolePK key) {
         EntityManager em = getEntityManager();
         try {
@@ -174,12 +185,11 @@ public static List<PersistentStudentScoContext> findEntities(PersistentScoContex
             List<PersistentStudentScoContext> list = q.getResultList();
             LOG.log(Level.FINE, "StudentScoContextManager-manager retrieved {0} PersistentStudentScoContext with key {1}", new Object[]{list.size(), key.toString()});
             return list;
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
-    
+
     public static PersistentStudentScoContext findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
