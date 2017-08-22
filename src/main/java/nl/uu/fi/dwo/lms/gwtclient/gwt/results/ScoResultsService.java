@@ -8,7 +8,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -21,22 +22,30 @@ import org.osgi.util.promise.Success;
  * 
  * @author Gert van der Plas
  */
-class ResultsService {
+class ScoResultsService {
 
-    private static final Logger LOG = Logger.getLogger(ResultsService.class.getName());
+    private static final Logger LOG = Logger.getLogger(ScoResultsService.class.getName());
 
     private SecuredTeacherResultsManager manager = new SecuredTeacherResultsManager();
     
-    public Promise<DomResultsPerTeacher> getResultsPerTeacher() {
+    public Promise<Boolean> clearStudentResults(DomSchoolClass sc, DomScoContext sco) {
         DomContext context = new DomContext();
         context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
-        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, DomResultsPerTeacher>() {
+        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, Boolean>() {
 
 			@Override
-			public Promise<DomResultsPerTeacher> call(
+			public Promise<Boolean> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
-				return manager.getTeachersResults(context, resolved.getValue());
+                            RestClearStudentDataForScoAndClass rest = new RestClearStudentDataForScoAndClass();
+                            rest.setRestContext(context);
+                            DomClearStudentDataForScoAndClass dom = new DomClearStudentDataForScoAndClass();
+                            dom.setDomProfile(resolved.getValue());
+                            dom.setDomSchoolClass(sc);
+                            dom.setDomScoContext(sco);
+                            dom.setDomStudentList(null);
+                            rest.setClearStudentDataForScoAndClass(dom);
+				return manager.clearStudentResults(rest);
 			}});
     }
-
+   
 }

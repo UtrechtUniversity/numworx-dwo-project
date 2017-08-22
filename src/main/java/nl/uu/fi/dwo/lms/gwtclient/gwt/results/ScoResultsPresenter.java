@@ -34,12 +34,13 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter.StudentItem;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolClassListBoxItem;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
+import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
@@ -55,10 +56,12 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  * @author Gert van der Plas
  */
 public class ScoResultsPresenter {
+    private static final Logger LOG = Logger.getLogger(ScoResultsPresenter.class.getName());
+
+    private ScoResultsService service = new ScoResultsService();
 
     private static final String COMPLETION_STATUS = "cmi.completion_status";
     private static final SecuredTeacherScormValuesManager SECURED_TEACHER_SCORM_VALUES_MANAGER = new SecuredTeacherScormValuesManager();
-    private static final Logger LOG = Logger.getLogger(ScoResultsPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private List<DomStudentScoContext> resultScoData;
@@ -71,8 +74,8 @@ public class ScoResultsPresenter {
     private DomSchoolClass schoolClass;
     private Map<String, DomStudent> studentMap;
     private Map<String, StudentItem> studentItems;
-    private Map<String, DomSchoolClass> schoolClassMap;
-    private List<SchoolClassListBoxItem> schoolClassItems;
+//    private Map<String, DomSchoolClass> schoolClassMap;
+//    private List<SchoolClassListBoxItem> schoolClassItems;
     private Display view;
     private int requests = 0;
 // Voor het Frame:
@@ -201,7 +204,8 @@ public class ScoResultsPresenter {
      * @param aScoContext A ScoContext for a schoolClass and Student
      * @param aSelectedStudent A studentSco inside the resultTree object
      */
-    public void init(DomResultTree aResultTree, DomResultScoContext aScoContext, DomResultStudent aStudent) { //DomScoContext aSelectedScoContext, DomSchoolClass aSelectedSchoolClass,         
+    public void init(DomResultTree aResultTree, DomResultScoContext aScoContext, DomResultStudent aStudent, DomSchoolClass aSchoolClass) { //DomScoContext aSelectedScoContext,  
+        schoolClass = aSchoolClass;
         resultTree = aResultTree;
         scoContext = aScoContext;
 // FIXME WRONG MANAGER
@@ -476,7 +480,32 @@ public class ScoResultsPresenter {
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 LOG.log(Level.INFO, "returned value" + resolved.getValue());
                 if (resolved.getValue() == true) {
-                   // removeSingleSchoolStudentsFromSchool();
+                    DomClearStudentDataForScoAndClass dom = new DomClearStudentDataForScoAndClass();
+                    Promise<Boolean> promResults;
+                    promResults= service.clearStudentResults(schoolClass, scoContext.getScoContext());
+        // onSuccess calculate results and show.
+         promResults.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACTIVERESULTS));
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
+                    
                 }else{
                     //do nothing.
                 }

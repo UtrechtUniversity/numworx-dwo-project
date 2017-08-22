@@ -110,7 +110,7 @@ public class ResultsPresenter {
             //send event to show studentSco Context en Data.
             DomResultStudent rs = (DomResultStudent) resultMatrix.getvIndex(row-1);
             DomResultScoContext ssc = (DomResultScoContext) resultMatrix.gethIndex(col-1);
-            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS, resultTree, ssc, rs));
+            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS, resultTree, ssc, rs, schoolClass.getSchoolClass()));
             return;
         }
         if (row == 0 && col == 0 && (schoolClass != null || course != null)) {

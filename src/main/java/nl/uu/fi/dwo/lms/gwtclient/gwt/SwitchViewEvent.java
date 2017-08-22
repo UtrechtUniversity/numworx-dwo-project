@@ -75,12 +75,12 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         schoolClass = aSchoolClass;
     }
 
-    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree, DomResultScoContext aStudentSco, DomResultStudent aResultStudent){
+    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree, DomResultScoContext aStudentSco, DomResultStudent aResultStudent, DomSchoolClass aSchoolClass){
         this.setEventValue(aState);
         resultTree= aResultTree;
         resultScoContext = aStudentSco;
         resultStudent = aResultStudent;
-//        schoolClass = aSchoolClass;
+        schoolClass = aSchoolClass;
     }
 
     @Override
