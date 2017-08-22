@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomClearStudentDataForScoAndClass {
     private DomScoContext domScoContext;
     private DomSchoolClass domSchoolClass;
+    private DomDwoProfile domProfile;
     private List<DomStudent> domStudentList;
 
     /**
@@ -56,6 +57,20 @@ public class DomClearStudentDataForScoAndClass {
      */
     public void setDomStudentList(List<DomStudent> domStudentList) {
         this.domStudentList = domStudentList;
+    }
+
+    /**
+     * @return the domProfile
+     */
+    public DomDwoProfile getDomProfile() {
+        return domProfile;
+    }
+
+    /**
+     * @param domProfile the domProfile to set
+     */
+    public void setDomProfile(DomDwoProfile domProfile) {
+        this.domProfile = domProfile;
     }
     
 }
