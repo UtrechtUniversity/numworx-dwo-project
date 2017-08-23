@@ -65,7 +65,7 @@ public class MsgDialogPresenter implements DialogEventHandler {
      * Go back to the schoolclasses presentation.
      */
     public void Back() {
-        if(dialogEvent.getException().getDwo2Code().equals(Dwo2ExceptionCode.User_AuthenticationError)){
+        if(dialogEvent!=null && dialogEvent.getException()!=null && dialogEvent.getException().getDwo2Code().equals(Dwo2ExceptionCode.User_AuthenticationError)){
 //          Window.Location.reload();
           Window.Location.replace(Window.Location.getHref());
         }

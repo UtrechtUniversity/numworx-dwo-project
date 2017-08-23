@@ -40,7 +40,6 @@ import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
@@ -56,6 +55,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  * @author Gert van der Plas
  */
 public class ScoResultsPresenter {
+
     private static final Logger LOG = Logger.getLogger(ScoResultsPresenter.class.getName());
 
     private ScoResultsService service = new ScoResultsService();
@@ -482,31 +482,32 @@ public class ScoResultsPresenter {
                 if (resolved.getValue() == true) {
                     DomClearStudentDataForScoAndClass dom = new DomClearStudentDataForScoAndClass();
                     Promise<Boolean> promResults;
-                    promResults= service.clearStudentResults(schoolClass, scoContext.getScoContext());
-        // onSuccess calculate results and show.
-         promResults.then(new Success<Boolean, Void>() {
-            @Override
-            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACTIVERESULTS));
-                return null;
-            }
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    promResults = service.clearStudentResults(schoolClass, scoContext.getScoContext());
+                    // onSuccess calculate results and show.
+                    promResults.then(new Success<Boolean, Void>() {
+                        @Override
+                        public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACTIVERESULTS));
+                            eventBus.fireEvent(new DialogEvent(("Done.") ));
+                            return null;
+                        }
+                    },
+                            new Failure() {
+                        @Override
+                        public void fail(Promise<?> resolved) throws Exception {
+                            Throwable fail = resolved.getFailure();
+                            if (fail instanceof Dwo2Exception) {
+                                LOG.log(Level.SEVERE, fail.getMessage());
+                                eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                            } else {
+                                LOG.log(Level.SEVERE, fail.getMessage());
+                                eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                                //throw directly
+                            }
+                        }
+                    });
+
                 } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
-                    
-                }else{
                     //do nothing.
                 }
                 return null;
@@ -525,9 +526,8 @@ public class ScoResultsPresenter {
                 }
             }
         }
-        );    
+        );
         eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
     }
-    
- 
+
 }
