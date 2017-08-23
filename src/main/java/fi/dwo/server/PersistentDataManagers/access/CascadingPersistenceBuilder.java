@@ -47,9 +47,10 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 /**
  * Builder to retrieve persistence data in a cascading way an verify access and
- * dynamic model rules. It basically is a state machine using a regular language
- * that throws a Dwo2Exception whenever a security or data constraint has
- * failed.
+ * dynamic model rules. This builder is fluid builder. Technically the class
+ * forms a state machine where the interfaces denote the possible transitions
+ * (edges in a directed graph). Thus a regular language for the security access
+ * can be built.
  *
  * @author G.A.J. van der Plas
  */
@@ -579,16 +580,17 @@ public class CascadingPersistenceBuilder {
                     LOG.log(Level.WARNING, msg);
                     throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
                 }
-                List<PersistentClassCourse> ccList = ClassCourseManager.findEntities(instance.context.schoolClass, instance.context.course);
+
+                List<PersistentClassCourse> ccList = ClassCourseManager.findEntities(instance.context.schoolClass, c);
                 if (ccList.size() == 0) {
                     String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: ClassCourse {1} not found.", new Object[]{instance.context.user.getUsername(), c.getCourseID()});
                     LOG.log(Level.WARNING, msg);
                     throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
                 }
-                instance.context.classCourse = (ccList.get(0));
-                instance.context.course = (c);
+                instance.context.classCourse = ccList.get(0);
+                instance.context.course = c;
             }
-            instance.context.scoContext = (sco);
+            instance.context.scoContext = sco;
             return this;
         }
 
@@ -599,8 +601,10 @@ public class CascadingPersistenceBuilder {
                 PersistentHasRolePK key = new PersistentHasRolePK(soc.getPersistentStudentOfClassPK().getUserID(), soc.getPersistentStudentOfClassPK().getSchoolGroupID());
                 List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(instance.context.scoContext, key);
                 for (PersistentStudentScoContext ssc : sscList) {
-                    StudentScoDataManager.destroy(ssc.getScoID());
-                    StudentScoContextManager.destroy(ssc.getScoID());
+                    String msg = MessageFormat.format("Username {0} is learing studentSco id {1} for userid  {2} schoolgroupid {3} and course {4} {5}.", new Object[]{instance.context.user.getUsername(), ssc.getScoID(), ssc.getPersistentHasRolePK().getUserID(), ssc.getPersistentHasRolePK().getSchoolGroupID(), instance.context.course.getCourseID(), instance.context.course.getName()});
+                    LOG.log(Level.INFO, msg);
+                    StudentScoDataManager.destroy(ssc.getStudentSco());
+                    StudentScoContextManager.destroy(ssc.getStudentSco());
                 }
             }
             return true;
