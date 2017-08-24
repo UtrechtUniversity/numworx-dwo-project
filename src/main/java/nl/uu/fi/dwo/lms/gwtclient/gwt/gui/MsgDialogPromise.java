@@ -6,14 +6,16 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
 
 /**
  * GWTDialogPromise.
  *
  * @author G.A.J. van der Plas
  */
-public class MsgDialogPromise<T> extends Deferred<T> implements ClickHandler{
+public class MsgDialogPromise<T> implements ClickHandler, Success, Failure{ //should implement success and fail overload
 
     private T value;
     private Promise promise;
@@ -42,32 +44,19 @@ public class MsgDialogPromise<T> extends Deferred<T> implements ClickHandler{
         dialogBox.center();
         cancelButton.addClickHandler(this);
         dialogBox.show();
+        promise.then(this, this);
+    }
+
+
+    @Override
+    public Promise call(Promise resolved) throws Exception {
+        dialogBox.hide();
+        return resolved ;
     }
 
     @Override
-    public void fail(Throwable caught) {
+    public void fail(Promise<?> resolved) throws Exception {
         dialogBox.hide();
-        super.fail(caught);
-    }
-
-    @Override
-    public void resolve(T result) {
-        dialogBox.hide();
-        value = result;
-        super.resolve(getValue());
-    }
-
-    /**
-     * @return the state
-     */
-    public T getValue() {
-        return value;
-    }
-
-    /**
-     * @return the msg
-     */
-    public String getMsg() {
-        return msg;
+        //show fail dialog resolved.getFailure();
     }
 }
