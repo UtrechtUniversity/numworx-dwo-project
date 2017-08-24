@@ -341,7 +341,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             @Override
             public String getValue(ClassCourseItem object) {
                 return (object.getTo() == null) ? "" : DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").format(object.getTo()); //object.getFrom();
-           }
+            }
 
         };
 //        value.setSortable(true);
@@ -362,7 +362,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //            }
 //        });
 //        dataGrid.addColumnSortHandler(columnSortHandler);
-        
+
         dateColumn.setFieldUpdater(new FieldUpdater<ClassCourseItem, String>() {
 
             @Override
@@ -441,13 +441,13 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             treeItem.setUserObject(child);
             tree.addItem(treeItem);
             //tree.setSelectedItem(treeItem);
-            fillTreeNode(treeItem);
-            treeItem.setState(true);
+            fillTreeNode(treeItem, selItem);
+            treeItem.setState(true);//do after adding to tree.
         }
-        coursesOfSchoolclassPresenter.setSelectedItem(item);
+//        coursesOfSchoolclassPresenter.setSelectedItem(item);
     }
 
-    private void fillTreeNode(TreeItem treeItem) {
+    private void fillTreeNode(TreeItem treeItem, TreeItem selItem) {
         ClassCourseItem item = (ClassCourseItem) treeItem.getUserObject();
         for (ClassCourseItem i : coursesOfSchoolclassPresenter.getNodeChildren(item.getKey())) {
             if (!i.getIsLeaf()) {
@@ -457,7 +457,6 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
                 if (i.getHasStudentData()) {
                     childItem.getElement().getStyle().setFontStyle(Style.FontStyle.ITALIC);
                     childItem.getElement().getStyle().setColor("blue");
-                    //setProperty("backgroundColor", "red");//.setProperty("font-weight","bold");
                 } else {
                     childItem.getElement().getStyle().setFontStyle(Style.FontStyle.NORMAL);
                     childItem.getElement().getStyle().setColor("black");
@@ -465,13 +464,22 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
                 childItem.setText(name);
                 childItem.setUserObject(i);
                 treeItem.addItem(childItem);
-                //treeItem.setState(true);
-                fillTreeNode(childItem);
+                treeItem.setState(true);
+                fillTreeNode(childItem, selItem);
                 if (i.getHasStudentData() || treeItem.isSelected()) {
                     childItem.setState(true);
                 }
             }
+//            else if (item.getKey().equals(((ClassCourseItem) selItem.getUserObject()).getKey())) {
+//                treeItem.setSelected(true);
+//            }
+
         }
+               if (((ClassCourseItem)treeItem.getUserObject()).getKey().equals(((ClassCourseItem) selItem.getUserObject()).getKey())) {
+                    treeItem.setSelected(true);
+                    coursesOfSchoolclassPresenter.setSelectedItem(((ClassCourseItem)treeItem.getUserObject()));
+                }
+         
     }
 
     private void cellSelected(int row, int column) {
