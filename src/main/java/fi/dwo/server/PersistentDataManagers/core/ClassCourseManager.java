@@ -43,8 +43,8 @@ public class ClassCourseManager {
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(classCourse);
+//            em.flush();
             em.getTransaction().commit();
-            em.flush();
             return classCourse;
         }
         catch (Exception e) {
