@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
 
 import com.google.gwt.event.shared.GwtEvent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -41,16 +41,6 @@ public class DialogEvent extends GwtEvent<DialogEventHandler> {
         this.setEventValue(Dialogs.Message);
         message = localizedMessage;
     }
-//    
-//    public DialogEvent(Dwo2LocaleMessage msg, boolean confirm) {
-//        this.setEventValue(Dialogs.Dwo2MessageDialog);
-//        message = msg;
-//    }
-//
-//    public DialogEvent(String localizedMessage) {
-//        this.setEventValue(Dialogs.Message);
-//        message = localizedMessage;
-//    }
 
     public DialogEvent(Dwo2Exception e) {
         this.setEventValue(Dialogs.Dwo2ExceptionDialog);

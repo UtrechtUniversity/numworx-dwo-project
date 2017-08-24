@@ -9,9 +9,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgDialogPromise;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
@@ -143,8 +144,11 @@ public class CoursesOfSchoolclassPresenter {
     }
 
     private void updateViewData() {
-        Promise<DomCoursesOfSchoolClass4Teacher> promise;
-        promise = service.getModules(schoolClass);
+        //MsgDialogPromise
+        Promise<DomCoursesOfSchoolClass4Teacher> promise = service.getModules(schoolClass);
+//        Promise<DomCoursesOfSchoolClass4Teacher> p = service.getModules(schoolClass);
+//        MsgDialogPromise<DomCoursesOfSchoolClass4Teacher> deferred = new MsgDialogPromise<DomCoursesOfSchoolClass4Teacher>(promise, "test");
+//        Promise promise = deferred.getPromise();
         // onSuccess update view
         promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void>() {
             @Override

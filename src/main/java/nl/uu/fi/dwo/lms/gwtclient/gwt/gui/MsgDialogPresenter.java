@@ -1,9 +1,12 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEventHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 /**
@@ -28,7 +31,7 @@ public class MsgDialogPresenter implements DialogEventHandler {
         void init();
 
         void showDialog(String text);
-//        void showConfirmDialog(String text);
+        void hideDialog();
     }
 
     public MsgDialogPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -45,8 +48,6 @@ public class MsgDialogPresenter implements DialogEventHandler {
         }else if (aDialogEvent.getEventValue()==DialogEvent.Dialogs.Dwo2ExceptionDialog){
             view.showDialog(aDialogEvent.getException().getLocalizedCodeExplanation(null));
             dialogEvent = aDialogEvent;
-//        }else if (dialogEvent.getEventValue()==DialogEvent.Dialogs.ConfirmDialog){
-//            view.showConfirmDialog(dialogEvent.getMessage());
         }
     }
 
@@ -61,13 +62,7 @@ public class MsgDialogPresenter implements DialogEventHandler {
         this.view = view;
     }
 
-    /**
-     * Go back to the schoolclasses presentation.
-     */
-    public void Back() {
-        if(dialogEvent!=null && dialogEvent.getException()!=null && dialogEvent.getException().getDwo2Code().equals(Dwo2ExceptionCode.User_AuthenticationError)){
-//          Window.Location.reload();
-          Window.Location.replace(Window.Location.getHref());
-        }
+    public void hide() {
+        view.hideDialog();
     }
 }

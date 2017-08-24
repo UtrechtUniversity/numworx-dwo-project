@@ -5,7 +5,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;

@@ -1,8 +1,12 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogEventHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogPromise;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 
 /**
  * Handler for for Login actions.

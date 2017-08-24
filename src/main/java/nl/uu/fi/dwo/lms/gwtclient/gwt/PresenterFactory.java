@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgConfirmDialogPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;

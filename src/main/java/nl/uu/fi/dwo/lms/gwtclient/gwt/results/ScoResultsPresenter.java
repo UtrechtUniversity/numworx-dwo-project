@@ -30,7 +30,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter.StudentItem;

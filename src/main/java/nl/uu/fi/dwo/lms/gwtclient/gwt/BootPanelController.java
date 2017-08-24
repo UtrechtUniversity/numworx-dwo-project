@@ -1,25 +1,32 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
+
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
-
 import java.util.logging.Level;
+
 import java.util.logging.Logger;
-
-import org.osgi.util.promise.Promise;
-
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
+import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
+import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
+import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS;
+import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_RESULTS;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
+import org.osgi.util.promise.Promise;
 
 /**
  * Controller for Login.
@@ -48,10 +55,26 @@ class BootPanelController {
     }
 
     public void go(RootLayoutPanel rootPanel) {
+        
+        //intialize our global and environmental variables instance.
         try{
         dwoGlobalVars = new DwoGlobalVars();
         }catch(Dwo2Exception e){
-            LOG.log(Level.SEVERE,"Internal error, can\'t instantiate a DwoGlobalVars object:"+e.getDwo2Message());
+            //ugly emergency code in case server fails.
+            String msg = "Fatal server error! "+e.getDwo2Message();
+            LOG.log(Level.INFO,e.getDwo2Message());
+            DialogBox dialogBox = new DialogBox();
+            Label label=new Label();
+            label.setText(msg);
+            dialogBox.add(label);
+            dialogBox.add(new Button ("OK"));
+            dialogBox.setModal(true);
+            dialogBox.setAutoHideEnabled(false);
+            dialogBox.setGlassEnabled(true);
+            dialogBox.setAnimationEnabled(true);
+            dialogBox.center();
+            dialogBox.show();
+            return;
         }
 
         //parse profile if it exists.
@@ -80,7 +103,7 @@ class BootPanelController {
                         LOG.log(Level.INFO, "Login succeeded. Showing results view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
 //                        viewFactory.getMainView().showMenuButton();
-//                        viewFactory.getMainView().showPostLoginWidgets();
+                        viewFactory.getMainView().showPostLoginWidgets();
                         presenterFactory.getResultsPresenter().init();
                         break;
                     case SUCCESS:
@@ -92,6 +115,7 @@ class BootPanelController {
                         break;
                     case FAIL:
                         eventBus.fireEvent(new DialogEvent("Login failed."));
+                        Window.Location.replace(Window.Location.getHref());
                         break;
                     case LOGOUT:
                         LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");

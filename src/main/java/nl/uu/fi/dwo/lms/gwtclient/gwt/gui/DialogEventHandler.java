@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
 
 import com.google.gwt.event.shared.EventHandler;
 

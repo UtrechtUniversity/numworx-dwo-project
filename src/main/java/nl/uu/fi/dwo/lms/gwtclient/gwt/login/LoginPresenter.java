@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -72,8 +72,8 @@ public class LoginPresenter {
                         LOG.log(Level.SEVERE, fail.getMessage());
                         //note the order of the events in case ofan exception
                         //that might break the running thread.
-                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                         eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                   } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
                         eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError,fail.getMessage())));

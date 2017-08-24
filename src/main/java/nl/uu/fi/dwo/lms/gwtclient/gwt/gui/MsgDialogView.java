@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,39 +17,36 @@ import java.util.logging.Logger;
  *
  * @author Gert van der Plas
  */
-public class MsgConfirmDialogView extends Composite implements MsgConfirmDialogPresenter.Display, ClickHandler {
+public class MsgDialogView extends Composite implements MsgDialogPresenter.Display, ClickHandler {
 
-    private static Logger LOG = Logger.getLogger(MsgConfirmDialogView.class.getName());
+    private static Logger LOG = Logger.getLogger(MsgDialogView.class.getName());
 
-    interface MyUiBinder extends UiBinder<Widget, MsgConfirmDialogView> {
+    interface MyUiBinder extends UiBinder<Widget, MsgDialogView> {
     }
     private static MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-    @UiField
-    PushButton cancelButton;
     @UiField
     PushButton okButton;
     @UiField
     HTML htmlText;
             
-    MsgConfirmDialogPresenter msgConfirmDialogPresenter;
+    MsgDialogPresenter msgDialogPresenter;
     final DialogBox dialogBox = new DialogBox();
 
-    public MsgConfirmDialogView(MsgConfirmDialogPresenter mp) {
+    public MsgDialogView(MsgDialogPresenter mp) {
         initWidget(uiBinder.createAndBindUi(this));
-        msgConfirmDialogPresenter = mp;
+        msgDialogPresenter = mp;
         mp.setView(this);
         okButton.addClickHandler(this);
-        cancelButton.addClickHandler(this);
     }
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == okButton) {
-            msgConfirmDialogPresenter.confirm();
-            dialogBox.hide();
-        } else if (event.getSource() == cancelButton) {
-            msgConfirmDialogPresenter.cancel();
-            dialogBox.hide();
+            msgDialogPresenter.hide();
+//        } else if (event.getSource() == cancelButton) {
+//            LOG.log(Level.INFO, "Add schoolclass now");
+//            dialogBox.hide();
+//            editSchoolClassPresenter.Back();
         }
     }
 
@@ -63,7 +60,7 @@ public class MsgConfirmDialogView extends Composite implements MsgConfirmDialogP
     }
 
     @Override
-    public void showConfirmDialog(String msg) {
+    public void showDialog(String msg) {
         htmlText.setText(msg);
         if (dialogBox.getWidget() == null) {
             dialogBox.add(this.asWidget());
@@ -74,6 +71,9 @@ public class MsgConfirmDialogView extends Composite implements MsgConfirmDialogP
             dialogBox.center();
         }
         dialogBox.show();
+    }
+    public void hideDialog(){
+        dialogBox.hide();
     }
 
 }
