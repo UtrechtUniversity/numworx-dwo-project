@@ -50,6 +50,7 @@ public enum Dwo2ExceptionCode {
     // REST Registration errors
     Rest_Registration_UserName_exists, //User exists already, can't register.
     Rest_Registration_UserNames_exists, //Users exists already, can't register.
+    Rest_Registration_Invalid_Full_Name, //User exists already, can't register.
     Rest_Registration_Invalid_school_role_credentials, //Illegal combination of school login and passcode.
     Rest_Registration_Invalid_schoolclass_registration_key, //Illegal combination of school login and passcode.
     Rest_Registration_School_authentication_failed,
