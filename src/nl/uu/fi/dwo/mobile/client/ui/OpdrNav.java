@@ -1508,14 +1508,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			if (misconceptions != null)
 				entry.setMeasuredMisconceptions(measuredMisconceptions);
 		}
-		if (entry.isPilotObjectives())
-		{
-			if (currentOpdracht == states[currentActiviteit].length - 1 && entry.isPilotObjectives())
-				entry.scoreNav.setScoresObjectivesKnop(zijnObjectivesAanwezig());
-			else
-				entry.scoreNav.setScoresObjectivesKnop(false);
-
-		}
+//		if (entry.isPilotObjectives())
+//		{
+//			if (currentOpdracht == states[currentActiviteit].length - 1 && entry.isPilotObjectives())
+//				entry.scoreNav.setScoresObjectivesKnop(zijnObjectivesAanwezig());
+//			else
+//				entry.scoreNav.setScoresObjectivesKnop(false);
+//
+//		}
 
 	}
 
@@ -1906,7 +1906,15 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				// voor elk aan deze opdracht gekoppelde leerdoel score optellen
 				// en maxscore ophogen.
 				// If score 0, then only increase maxscore if task is obligatory (teltMee). 
-				boolean teltMee = logState.get(key).isObject().get("teltMee").isBoolean().booleanValue();
+				boolean teltMee = true;
+				if(logState.get(key).isObject().get("teltMee") != null)
+				{	
+					JSONBoolean teltMeeB = logState.get(key).isObject().get("teltMee").isBoolean();
+					teltMee = teltMeeB.booleanValue();
+				}
+					
+					
+			
 				
 				for (int i = 0; i < objectives.length; i++)
 				{

@@ -197,7 +197,13 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			}
 			if(map.containsKey("logID")) 
 				logID = map.getString("logID");
-		    if(map.containsKey("logOption")) 
+		    if(map.containsKey("check")) 
+				check = map.getBoolean("check");
+			if(map.containsKey("teltMee")) 
+				teltMee = map.getBoolean("teltMee");
+			if(map.containsKey("checkExternal"))
+				checkExternal = map.getBoolean("checkExternal");
+			if(map.containsKey("logOption")) 
 		    	logOption = map.getBoolean("logOption");
 		    if (logOption)
 		    {	
@@ -211,12 +217,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		    	dwologger.setTeltMee(teltMee);
 		    	logging = dwologger;
 		    }
-			if(map.containsKey("check")) 
-				check = map.getBoolean("check");
-			if(map.containsKey("teltMee")) 
-				teltMee = map.getBoolean("teltMee");
-			if(map.containsKey("checkExternal"))
-				checkExternal = map.getBoolean("checkExternal");	
+			
 		}
 		
 		

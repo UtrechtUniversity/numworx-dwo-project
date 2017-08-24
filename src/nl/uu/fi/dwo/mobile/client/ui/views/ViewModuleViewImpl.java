@@ -323,7 +323,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		scoreNav.setNextPrevHandler(this);
 		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig()
-			&& mode != OpdrNav.EINDTOETS && !pilotObjectives);
+			&& mode != OpdrNav.EINDTOETS);// && !pilotObjectives);
 		scoreNav.setViewMisconceptionsKnop(on.zijnMisconceptionsAanwezig() 
 			&& mode != OpdrNav.EINDTOETS);
 		scoreNav.setObjectivesHandler(this);
