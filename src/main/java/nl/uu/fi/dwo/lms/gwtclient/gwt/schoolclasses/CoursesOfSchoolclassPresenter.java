@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
+import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Widget;
@@ -33,12 +34,12 @@ public class CoursesOfSchoolclassPresenter {
     private static final Logger LOG = Logger.getLogger(CoursesOfSchoolclassPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
-    private CoursesOfSchoolclassService service = new CoursesOfSchoolclassService();
+    private CoursesOfSchoolclassService service;
 
     private String[] tableHeaders = {"module name", "assigned", "type", "from [?]", "to [?]"};
     private DomSchoolClass schoolClass;
 //    private DomCoursesOfSchoolClass4Teacher moduleInfo;
-    private CoursesOfSchoolclassTree tree;
+    private DomCoursesOfSchoolclassTree tree;
 //    private Map<String, DomStudent> studentMap;
 //    private Map<String, ClassCourseItem> courseItems;
 //    private Map<String, DomSchoolClass> schoolClassMap;
@@ -125,6 +126,7 @@ public class CoursesOfSchoolclassPresenter {
     public CoursesOfSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        service = new CoursesOfSchoolclassService(dwoGlobalVars);
     }
 
     /**
@@ -149,7 +151,7 @@ public class CoursesOfSchoolclassPresenter {
             public Promise<Void> call(Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {
                 //flip back to schoolclasses screen 
                 DomCoursesOfSchoolClass4Teacher value = resolved.getValue();
-                tree = new CoursesOfSchoolclassTree(value);
+                tree = new DomCoursesOfSchoolclassTree(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool(), value);
                 ClassCourseItem item = new ClassCourseItem(null, "root");
                 //parse results into a tree.
                 view.setTree(item);

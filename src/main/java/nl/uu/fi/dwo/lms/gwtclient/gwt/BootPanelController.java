@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import org.osgi.util.promise.Promise;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 
@@ -47,7 +48,11 @@ class BootPanelController {
     }
 
     public void go(RootLayoutPanel rootPanel) {
-        dwoGlobalVars = DwoGlobalVars.instance();
+        try{
+        dwoGlobalVars = new DwoGlobalVars();
+        }catch(Dwo2Exception e){
+            LOG.log(Level.SEVERE,"Internal error, can\'t instantiate a DwoGlobalVars object:"+e.getDwo2Message());
+        }
 
         //parse profile if it exists.
         String value = com.google.gwt.user.client.Window.Location.getParameter("profile");

@@ -26,12 +26,17 @@ class ScoResultsService {
 
     private static final Logger LOG = Logger.getLogger(ScoResultsService.class.getName());
 
-    private SecuredTeacherResultsManager manager = new SecuredTeacherResultsManager();
+    private SecuredTeacherResultsManager manager = new SecuredTeacherResultsManager();    
+    private final DwoGlobalVars dwoGlobalVars;
+    
+    public ScoResultsService(DwoGlobalVars aDwoGlobalVars){
+        dwoGlobalVars=aDwoGlobalVars;
+    }
     
     public Promise<Boolean> clearStudentResults(DomSchoolClass sc, DomScoContext sco) {
         DomContext context = new DomContext();
-        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
-        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, Boolean>() {
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, Boolean>() {
 
 			@Override
 			public Promise<Boolean> call(

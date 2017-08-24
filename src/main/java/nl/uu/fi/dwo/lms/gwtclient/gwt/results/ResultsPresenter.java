@@ -32,22 +32,24 @@ public class ResultsPresenter {
 
     private final EventBus eventBus;
     private final DwoGlobalVars dwoGlobalVars;
-         
+
     private Display view;
-    private ResultsService resultService = new ResultsService();
+    private ResultsService resultService;
     //model
     private DomResultTree resultTree;
     private DomResultPlotMatrix resultMatrix;
     private DomResultCourse course = null; //null means all courses.
     private DomResultSchoolClass schoolClass = null; //null means all classes.
 
-
     public interface Display {
+
         Widget asWidget();
+
         void clear();
+
         void plot(int height, int width, String[][] data);
-    }    
-    
+    }
+
     protected enum mode {
         CoursesClasses, //All Courses over all Classes
         CoursesClass, //All Courses over a Class
@@ -55,13 +57,14 @@ public class ResultsPresenter {
         CourseClass     //A Course for a Class
     }
 
-    public ResultsPresenter(EventBus anEventBus,DwoGlobalVars aDwoGlobalVars) {
+    public ResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        resultService = new ResultsService(dwoGlobalVars);
     }
 
     public void init() {
-        LOG.log(Level.INFO, "DwoGlobalVarsState = " + DwoGlobalVars.instance().getState().name());
+        LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
         course = null;
         schoolClass = null;
         Promise<DomResultsPerTeacher> promResults;
@@ -96,8 +99,8 @@ public class ResultsPresenter {
             }
         });
     }
-    
-    public void setView(Display aView){
+
+    public void setView(Display aView) {
         view = aView;
     }
 
@@ -106,10 +109,10 @@ public class ResultsPresenter {
      */
     public void selectRowAndCol(int row, int col) {
         if (row != 0 && col != 0 && schoolClass != null && course != null) {
-            LOG.log(Level.INFO,"selected a student sco for "+resultMatrix.getMark(row-1, col-1).getLabel()+ " with score "+resultMatrix.getMark(row-1, col-1).getScore());
+            LOG.log(Level.INFO, "selected a student sco for " + resultMatrix.getMark(row - 1, col - 1).getLabel() + " with score " + resultMatrix.getMark(row - 1, col - 1).getScore());
             //send event to show studentSco Context en Data.
-            DomResultStudent rs = (DomResultStudent) resultMatrix.getvIndex(row-1);
-            DomResultScoContext ssc = (DomResultScoContext) resultMatrix.gethIndex(col-1);
+            DomResultStudent rs = (DomResultStudent) resultMatrix.getvIndex(row - 1);
+            DomResultScoContext ssc = (DomResultScoContext) resultMatrix.gethIndex(col - 1);
             eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS, resultTree, ssc, rs, schoolClass.getSchoolClass()));
             return;
         }
@@ -222,7 +225,7 @@ public class ResultsPresenter {
         } else {
             nulLabel += "courses";
         }
-        data[0][0] = "<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">"+nulLabel+"</div>";
+        data[0][0] = "<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">" + nulLabel + "</div>";
 
         // col labels
         for (i = 0; i < getResultMatrix().gethSize(); i++) {
@@ -230,7 +233,7 @@ public class ResultsPresenter {
             if (course != null) {
                 action = "[-] ";
             }
-            data[0][i + 1] = "<div style=\"text-align: right; background-color: #aaaaaa; padding: 2px; overflow auto;\">" +  action + getResultMatrix().gethIndex(i).getLabel()+"</div>";
+            data[0][i + 1] = "<div style=\"text-align: right; background-color: #aaaaaa; padding: 2px; overflow auto;\">" + action + getResultMatrix().gethIndex(i).getLabel() + "</div>";
         }
 
         // row labels
@@ -239,7 +242,7 @@ public class ResultsPresenter {
             if (schoolClass != null) {
                 action = "[-] ";
             }
-            data[i + 1][0] = "<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">" + action + getResultMatrix().getvIndex(i).getLabel()+"</div>";
+            data[i + 1][0] = "<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">" + action + getResultMatrix().getvIndex(i).getLabel() + "</div>";
         }
 
         for (j = 0;

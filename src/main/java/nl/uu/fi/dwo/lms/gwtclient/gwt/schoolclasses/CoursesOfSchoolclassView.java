@@ -440,7 +440,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
             treeItem.setText(name);
             treeItem.setUserObject(child);
             tree.addItem(treeItem);
-            //tree.setSelectedItem(treeItem);
+//            tree.setSelectedItem(treeItem);
             fillTreeNode(treeItem, selItem);
             treeItem.setState(true);//do after adding to tree.
         }
@@ -475,7 +475,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //            }
 
         }
-               if (((ClassCourseItem)treeItem.getUserObject()).getKey().equals(((ClassCourseItem) selItem.getUserObject()).getKey())) {
+               if (selItem!=null && ((ClassCourseItem)treeItem.getUserObject()).getKey().equals(((ClassCourseItem) selItem.getUserObject()).getKey())) {
                     treeItem.setSelected(true);
                     coursesOfSchoolclassPresenter.setSelectedItem(((ClassCourseItem)treeItem.getUserObject()));
                 }

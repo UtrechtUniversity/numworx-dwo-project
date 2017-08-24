@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoViewer;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -17,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -150,13 +150,14 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
                 user.setInsertion(null);
             }
         } else {
-            DwoViewer.showMessage(Dwo2ExceptionCode.Rest_Registration_Required_Fields);
+//            /Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.instance().getDwoLocale(), code)
+            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Invalid_Full_Name)));
             return;
         }
 
         //check values
         if (!SimpleValidUserFieldsChecker.isValidEmail(email)) {
-            DwoViewer.showMessage(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid);
+            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid)));
             return;
         } else {
             user.setEmail(email.trim());
@@ -170,12 +171,12 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
                 && newPassword.compareTo(newPasswordAgain) == 0) {
             if (!SimpleValidUserFieldsChecker.isValidPassword(newPassword)) {
                 //invalid password format
-                DwoViewer.showMessage(Dwo2ExceptionCode.User_NewPasswordsDoNotMatch);
+            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
             } else {
                 user.setPassword(MD5.md5(newPassword));
             }
         } else {
-            DwoViewer.showMessage(Dwo2ExceptionCode.User_NewPasswordsDoNotMatch);
+            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
             return;
         }
 

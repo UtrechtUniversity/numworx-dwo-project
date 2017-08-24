@@ -120,19 +120,19 @@ public class DwoGlobalVars {
         this.activeSchoolRoleAndClass = activeSchoolRoleAndClass;
     }
 
-    /**
-     * @return the instance
-     */
-    public static DwoGlobalVars instance() {
-        if (instance == null) {
-            try {
-                instance = new DwoGlobalVars();
-            } catch (Dwo2Exception ex) {
-                LOG.log(Level.SEVERE, "", ex);
-            }
-        }
-        return instance;
-    }
+//    /**
+//     * @return the instance
+//     */
+//    private static DwoGlobalVars instance() {
+//        if (instance == null) {
+//            try {
+//                instance = new DwoGlobalVars();
+//            } catch (Dwo2Exception ex) {
+//                LOG.log(Level.SEVERE, "", ex);
+//            }
+//        }
+//        return instance;
+//    }
 
 //    static {
 //        try {
@@ -165,7 +165,7 @@ public class DwoGlobalVars {
      *
      * @throws Dwo2Exception
      */
-    private DwoGlobalVars() throws Dwo2Exception {
+    public DwoGlobalVars() throws Dwo2Exception {
         //TODO define initialization stages: Unintialized, Initializing, NotLoggedIn, LoggedIn. Closing.
         setState(DwoGlobalVarsState.Initializing);
         initProperties();

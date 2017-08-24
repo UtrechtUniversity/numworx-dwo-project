@@ -58,7 +58,7 @@ public class ScoResultsPresenter {
 
     private static final Logger LOG = Logger.getLogger(ScoResultsPresenter.class.getName());
 
-    private ScoResultsService service = new ScoResultsService();
+    private ScoResultsService service;
 
     private static final String COMPLETION_STATUS = "cmi.completion_status";
     private static final SecuredTeacherScormValuesManager SECURED_TEACHER_SCORM_VALUES_MANAGER = new SecuredTeacherScormValuesManager();
@@ -196,6 +196,7 @@ public class ScoResultsPresenter {
     public ScoResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        service = new ScoResultsService(dwoGlobalVars);
     }
 
     /**
@@ -487,8 +488,8 @@ public class ScoResultsPresenter {
                     promResults.then(new Success<Boolean, Void>() {
                         @Override
                         public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACTIVERESULTS));
-                            eventBus.fireEvent(new DialogEvent(("Done.") ));
+                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
+                            eventBus.fireEvent(new DialogEvent(("Done.")));
                             return null;
                         }
                     },

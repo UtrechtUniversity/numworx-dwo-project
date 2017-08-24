@@ -8,13 +8,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoViewer;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -31,7 +31,7 @@ public class AccountPresenter {
     private EventBus eventBus;
     private int selectedIndex = 0;
     private List<DomStudentScoContext> resultScoData;
-    private AccountService accountService = new AccountService();
+    private AccountService service;
 
     private Display view;
 
@@ -60,6 +60,7 @@ public class AccountPresenter {
     public AccountPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        service = new AccountService(dwoGlobalVars);
     }
 
     public void init() {
@@ -68,7 +69,7 @@ public class AccountPresenter {
 
     public void updateUserData() {
         Promise<DomUserFull> userPromise;
-        userPromise = accountService.getUserData();
+        userPromise = service.getUserData();
         // onSuccess calculate results and show.
         userPromise.then(new Success<DomUserFull, Void>() {
             @Override
@@ -109,7 +110,8 @@ public class AccountPresenter {
 
     public void updateUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
         if (!MD5.md5(curPassword).equals(dwoGlobalVars.getCurrentUser().getPassword())) {
-            DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
+            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
+            //DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
             return;
         }
 
@@ -126,13 +128,13 @@ public class AccountPresenter {
                 user.setInsertion(null);
             }
         } else {
-            DwoViewer.showMessage(Dwo2ExceptionCode.Rest_Registration_Required_Fields);
+            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Required_Fields)));
             return;
         }
 
         //check values
         if (!SimpleValidUserFieldsChecker.isValidEmail(email)) {
-            DwoViewer.showMessage(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid);
+            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid)));
             return;
         } else {
             user.setEmail(email.trim());
@@ -146,18 +148,18 @@ public class AccountPresenter {
                 && newPassword.compareTo(newPasswordAgain) == 0) {
             if (!SimpleValidUserFieldsChecker.isValidPassword(newPassword)) {
                 //invalid password format
-                DwoViewer.showMessage(Dwo2ExceptionCode.User_NewPasswordsDoNotMatch);
+            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
             } else {
                 user.setPassword(MD5.md5(newPassword));
             }
         } else {
-            DwoViewer.showMessage(Dwo2ExceptionCode.User_NewPasswordsDoNotMatch);
+            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
             return;
         }
 
         //All is well, proceed with REST-request
         Promise<DomUserFull> promisedUser;
-        promisedUser = accountService.UpdateUserData(user);
+        promisedUser = service.UpdateUserData(user);
         // onSuccess calculate results and show.
         promisedUser.then(new Success<DomUserFull, Void>() {
             @Override

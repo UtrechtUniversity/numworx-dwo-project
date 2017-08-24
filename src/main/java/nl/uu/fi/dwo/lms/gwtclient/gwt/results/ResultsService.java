@@ -26,11 +26,16 @@ class ResultsService {
     private static final Logger LOG = Logger.getLogger(ResultsService.class.getName());
 
     private SecuredTeacherResultsManager manager = new SecuredTeacherResultsManager();
+    private final DwoGlobalVars dwoGlobalVars;
+    
+    public ResultsService(DwoGlobalVars aDwoGlobalVars){
+        dwoGlobalVars=aDwoGlobalVars;
+    }
     
     public Promise<DomResultsPerTeacher> getResultsPerTeacher() {
         DomContext context = new DomContext();
-        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
-        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, DomResultsPerTeacher>() {
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, DomResultsPerTeacher>() {
 
 			@Override
 			public Promise<DomResultsPerTeacher> call(

@@ -37,11 +37,16 @@ class CoursesOfSchoolclassService {
     private static final Logger LOG = Logger.getLogger(CoursesOfSchoolclassService.class.getName());
 
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
-
+    private final DwoGlobalVars dwoGlobalVars;
+    
+    public CoursesOfSchoolclassService(DwoGlobalVars aDwoGlobalVars){
+        dwoGlobalVars=aDwoGlobalVars;
+    }
+    
     public Promise<DomCoursesOfSchoolClass4Teacher> getModules(final DomSchoolClass sc) {
         DomContext context = new DomContext();
-        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
-        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, DomCoursesOfSchoolClass4Teacher>() {
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, DomCoursesOfSchoolClass4Teacher>() {
 
             @Override
             public Promise<DomCoursesOfSchoolClass4Teacher> call(
@@ -56,9 +61,9 @@ class CoursesOfSchoolclassService {
 
     public Promise<Boolean> attachCourseToClass(final DomSchoolClass sc, final DomCourse course) {
         DomContext context = new DomContext();
-        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 
-        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, Boolean>() {
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, Boolean>() {
 
             @Override
             public Promise<Boolean> call(
@@ -77,9 +82,9 @@ class CoursesOfSchoolclassService {
 
     public Promise<Boolean> detachCourseFromClass(final DomSchoolClass sc, final DomCourse course) {
         DomContext context = new DomContext();
-        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 
-        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, Boolean>() {
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, Boolean>() {
 
             @Override
             public Promise<Boolean> call(
@@ -98,9 +103,9 @@ class CoursesOfSchoolclassService {
 
     public Promise<Boolean> setTypeClassCourse(final DomSchoolClass sc, final DomCourse course, final CourseType type) {
         DomContext context = new DomContext();
-        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 
-        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, Boolean>() {
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, Boolean>() {
             @Override
             public Promise<Boolean> call(
                     Promise<DomDwoProfile> resolved) throws Exception {
@@ -119,9 +124,9 @@ class CoursesOfSchoolclassService {
 
    public Promise<Boolean> setFromDateClassCourse(final DomSchoolClass sc, final DomCourse course, final Date from) {
         DomContext context = new DomContext();
-        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 
-        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, Boolean>() {
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, Boolean>() {
 
             @Override
             public Promise<Boolean> call(
@@ -141,9 +146,9 @@ class CoursesOfSchoolclassService {
     
    public Promise<Boolean> setToDateClassCourse(final DomSchoolClass sc, final DomCourse course, final Date to) {
         DomContext context = new DomContext();
-        context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 
-        return DwoGlobalVars.instance().getProfile().then(new Success<DomDwoProfile, Boolean>() {
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, Boolean>() {
 
             @Override
             public Promise<Boolean> call(
