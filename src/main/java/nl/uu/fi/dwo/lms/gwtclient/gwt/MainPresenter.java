@@ -118,11 +118,16 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     }
 
     private void onSwitchViewEvent(SwitchViewEvent.SelectedView selectedView) {
-        if (selectedView == selectedView.LOGIN) {
+        if (selectedView == selectedView.LOGIN || selectedView == selectedView.SWITCHSCHOOL) {
             display.hideMenuButton();
-            display.hidePostLoginWidgets();
+            if(dwoGlobalVars.getState()!=DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
+                display.hidePostLoginWidgets();
+            }
         } else {
             display.showMenuButton();
+            display.setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
+            display.setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
+            display.setUserRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
             display.showPostLoginWidgets();
         }
 

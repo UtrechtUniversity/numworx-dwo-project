@@ -150,6 +150,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         addStudentsView = (AddStudentsView) clientFactory.getAddStudentsView();
         teachersInSchoolclassView = (TeachersInSchoolclassView) clientFactory.getTeachersInSchoolclassView();
         initWidget(uiBinder.createAndBindUi(this));
+         hidePostLoginWidgets();
         int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(loginIndex);
         menuButton.addClickHandler(this);
@@ -188,6 +189,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void showPostLoginWidgets() {
+        schoolLabel.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         schoolName.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         userRole.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         presentationName.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
@@ -196,6 +198,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void hidePostLoginWidgets() {
+        schoolLabel.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
         schoolName.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
         userRole.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
         presentationName.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);

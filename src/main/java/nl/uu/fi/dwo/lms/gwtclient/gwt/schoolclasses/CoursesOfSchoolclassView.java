@@ -464,7 +464,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
                 childItem.setText(name);
                 childItem.setUserObject(i);
                 treeItem.addItem(childItem);
-                treeItem.setState(true);
+                //treeItem.setState(true);
                 fillTreeNode(childItem, selItem);
                 if (i.getHasStudentData() || treeItem.isSelected()) {
                     childItem.setState(true);

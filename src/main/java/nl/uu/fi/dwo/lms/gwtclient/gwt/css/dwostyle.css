@@ -149,6 +149,21 @@ DWO-overrides
 }
 
 .dwoDataGridWidget{
+    /*min-width: 20em; min-width: 20rem;*/
+    height: auto;
+    width: auto;
+    padding-left: auto;
+    padding-right: auto;
+    margin: auto;
+    margin-top: 10px;
+    padding:0px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    background-color: #fefefe;
+}
+
+/*.dwoDataGridWidget{
     min-width: 20em; min-width: 20rem;
     padding-left: auto;
     padding-right: auto;
@@ -160,7 +175,7 @@ DWO-overrides
     border-width: 1px;
     border-color: black;
     background-color: #fefefe;
-}
+}*/
 
 .dwoDataGridWidget th{
     background-color: #aaaaaa;
@@ -278,7 +293,6 @@ DWO-overrides
     margin-left: 10px;
     margin-right: 5px;
     vertical-align: bottom;
-    visibility: hidden;
 }
 
 .leftHalfBox{
@@ -288,7 +302,6 @@ DWO-overrides
     margin-left: 0px;
     margin-right: 5px;
     vertical-align: bottom;
-    visibility: hidden;
 }
 
 .rightFullBox{
@@ -299,7 +312,6 @@ DWO-overrides
     margin-bottom:10px;
     margin-left: 10px;
     margin-right: 0px;
-    visibility: hidden;
 }
 
 .rightHalfBox{
@@ -312,7 +324,6 @@ DWO-overrides
     margin-right: 0px;
     position: relative;
     bottom: -5px;
-    visibility: hidden;
 }
 
 .rightBox{
@@ -323,7 +334,6 @@ DWO-overrides
     margin-left: 10px;
     margin-right: 5px;
     vertical-align: bottom;    
-    visibility: hidden;
 }
 /*
 .widget {
@@ -413,6 +423,15 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     height: auto;
     overflow: auto;
 }
+
+.absPanel {
+    margin-top: 10px;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: auto;
+}
+
 .dwoButton {
     padding: 5px;
     margin: 5px;

@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
@@ -38,7 +39,7 @@ public class LoginPresenter {
 
     }
 
-    public void loginClicked(String user, String password, Boolean switchRole) {
+    public void loginClicked(String user, String password, final Boolean switchRole) {
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
         try {
             loginUser = dwoGlobalVars.initUser(user, password);
@@ -46,8 +47,12 @@ public class LoginPresenter {
                 @Override
                 public Promise<Void> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
+                        boolean switchR = switchRole;
                         LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
-                        if (switchRole) {
+                        if(!dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())){
+                            switchR = true;
+                        }
+                        if (switchR) {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS));
                         } else {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_RESULTS));

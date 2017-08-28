@@ -1,13 +1,9 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEventHandler;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 /**
  * Handler for for Login actions.

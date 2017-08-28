@@ -19,7 +19,7 @@
                 <g:downHoveringFace image='{downButton}'/>-->
                 &#9776;
             </g:PushButton>            
-            <!--<g:Label addStyleNames='{dwoStyle.leftFullBox}' ui:field="userLabel">gebruikernaam:</g:Label>-->
+            <g:Label addStyleNames='{dwoStyle.rightHalfBox}'>&nbsp;</g:Label>
             <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="presentationName"></g:Label>
             <!--<g:Label addStyleNames='{dwoStyle.leftFullBox}' ui:field="roleLabel">rol:</g:Label>-->
             <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="userRole"></g:Label>
