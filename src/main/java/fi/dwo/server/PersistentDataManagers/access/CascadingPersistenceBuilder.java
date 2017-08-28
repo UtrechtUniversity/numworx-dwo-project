@@ -399,7 +399,8 @@ public class CascadingPersistenceBuilder {
 
         /**
          * Verifies the existence of the hasRole for the given RoleType and
-         * stores it and the RoleType into the context.
+         * stores it and the RoleType into the context. If hr is null the
+         * default hasRole configured in the user entity is tried.
          *
          * @param hr
          * @param r
@@ -410,7 +411,15 @@ public class CascadingPersistenceBuilder {
             PersistentHasRole phr = null;
             //check if user has matching hasRole
             try {
-                PersistentHasRolePK phrPK = MySQLPersistenceId.getNativeId(hr);
+                PersistentHasRolePK phrPK;
+                if (hr == null) {
+                    phrPK = new PersistentHasRolePK(
+                            this.instance.context.user.getId(),
+                            this.instance.context.user.getPersistentSchoolGroup().getSchoolGroupID()
+                    );
+                } else {
+                    phrPK = MySQLPersistenceId.getNativeId(hr);
+                }
                 if (!this.instance.context.user.getId().equals(phrPK.getUserID())) {
                     throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + instance.context.user.getUsername() + ".");
                 }
