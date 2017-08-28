@@ -19,12 +19,12 @@
                 <g:downHoveringFace image='{downButton}'/>-->
                 &#9776;
             </g:PushButton>            
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox}'>&nbsp;</g:Label>
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="presentationName"></g:Label>
+            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}'>&nbsp;</g:Label>
+            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="presentationName"></g:Label>
             <!--<g:Label addStyleNames='{dwoStyle.leftFullBox}' ui:field="roleLabel">rol:</g:Label>-->
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="userRole"></g:Label>
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="schoolName"></g:Label>
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox}' ui:field="schoolLabel">School</g:Label>
+            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="userRole"></g:Label>
+            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="schoolName"></g:Label>
+            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="schoolLabel">School</g:Label>
         </g:FlowPanel>
         </g:FlowPanel>
         <g:LayoutPanel ui:field="layout" addStyleNames='{dwoStyle.dwoAppMainPanel}'>

@@ -137,10 +137,11 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
         }
     }
 
-    public void updateView(Map<String,SwitchSchoolPresenter.SchoolItem> data) {
+    public void updateView(Map<String,SwitchSchoolPresenter.SchoolItem> data,SwitchSchoolPresenter.SchoolItem selectedItem) {
         dataProvider.getList().clear();
         dataProvider.getList().addAll(data.values());
         dataProvider.refresh();
+        cellTable.getSelectionModel().setSelected(selectedItem, true);
     }
 
 }

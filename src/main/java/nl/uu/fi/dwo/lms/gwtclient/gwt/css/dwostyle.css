@@ -89,8 +89,6 @@ DWO-overrides
     padding: 8px;
     margin:8px;
     background-color: #f4f7f9;
-    /*    border-radius: 4px;   
-        border-style: solid;*/
     align-content: center;
 }
 
@@ -99,8 +97,8 @@ DWO-overrides
     position: inherit;
     height:100%;
     width:auto;
-    padding: 0px;
-    margin: 0px;
+    padding: inherit;
+    margin: inherit;
     background-color: #f4f7f9;
     vertical-align: middle;
 }
@@ -197,16 +195,23 @@ DWO-overrides
     align-content: center;
 }
 
-.loginWidget {
+.centralWidget { /** A Gwt Grid that creates a central widget **/
     margin-top: 10px;
     margin-bottom: auto;
     margin-left: auto;
     margin-right: auto;
+}
+
+.dwoWidgetBorder{
     padding: 8px;
     border: 1px;
     border-style: solid;
     border-color: black;
-    background-color: #fefefe;
+    background-color: #fefefe;    
+}
+
+.dwoMinWidth{
+    min-width: 400px;
 }
 
 .dwoAppMenuButton{
@@ -303,6 +308,24 @@ DWO-overrides
     margin-right: 5px;
     vertical-align: bottom;
 }
+
+.floatRight{
+    display: inline;
+    float: right;
+    height: available;
+}
+
+.floatCenter{
+    display: inline;
+    float: center;
+    height: available;
+}
+
+.margin5{
+    padding: 5px;
+    margin: 5px;
+}
+
 
 .rightFullBox{
     display: inline;
@@ -483,6 +506,9 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     border-color: black;
     background-color: #fefefe;
 }
+
+.hidden{visibility: hidden}
+.visible{visibility: hidden}
 
 .horizontalFloat{
     display: inline-block;

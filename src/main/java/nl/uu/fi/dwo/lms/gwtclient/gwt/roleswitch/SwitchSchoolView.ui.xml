@@ -4,20 +4,21 @@
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
     <g:FlowPanel addStyleNames='{dwoStyle.dwoWidgetPanel}'>
-       <g:FlowPanel>
-                        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='cellTable'/>
+       <!--<g:FlowPanel>-->
+                        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget} {dwoStyle.dwoMinWidth}' ui:field='cellTable'/>
                         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
 <!--        </g:FlowPanel>
        <g:FlowPanel>-->
-                <g:Button addStyleNames='dwoStyle' ui:field="switchBtn">switch</g:Button>
-                <g:Button addStyleNames='dwoStyle'  ui:field="cancelBtn">cancel</g:Button>
-        </g:FlowPanel>
+       <g:Grid width="100%">
+            <g:row>
+                <g:customCell>
+                <g:Button ui:field="cancelBtn">cancel</g:Button>
+                </g:customCell>
+                <g:customCell>
+                <g:Button addStyleNames='{dwoStyle.floatCenter} {dwoStyle.margin5}' ui:field="switchBtn">switch</g:Button>
+                </g:customCell>
+            </g:row>
+        </g:Grid>                
+        <!--</g:FlowPanel>-->
  </g:FlowPanel>
- <!--    </g:FlowPanel>        
- <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="flexTable"/>
-     <g:FlowPanel>
-             <g:Button addStyleNames='dwoStyle' ui:field="switchBtn">switch</g:Button>
-             <g:Button addStyleNames='dwoStyle'  ui:field="cancelBtn">cancel</g:Button>
-     </g:FlowPanel>
- </g:FlowPanel>-->
 </ui:UiBinder> 

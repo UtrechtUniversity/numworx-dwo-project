@@ -4,7 +4,7 @@
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
  	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <g:FlowPanel>
-        <g:Grid addStyleNames='{dwoStyle.loginWidget}'>
+        <g:Grid addStyleNames='{dwoStyle.centralWidget} {dwoStyle.dwoWidgetBorder}'>
             <g:row>
                 <g:customCell>
                     <g:Label><ui:text from='{rb.GUI_Username}' />:</g:Label>
@@ -80,25 +80,9 @@
                     <g:Button ui:field='resetBtn'>reset</g:Button>
                 </g:customCell>
                 <g:customCell>
-                    <g:Button ui:field='updateBtn'>update</g:Button>
+                    <g:Button ui:field='updateBtn' addStyleNames='{dwoStyle.floatRight} {dwoStyle.margin5}'>update</g:Button>
                 </g:customCell>
             </g:row>
-            <!--                <g:row>
-                    <g:cell>
-                    <g:Label>password:</g:Label>
-                </g:cell>
-                <g:cell>
-                    <g:PasswordTextBox ui:field='passwordTextBox'>passw</g:PasswordTextBox>
-                </g:cell>
-            </g:row>
-            <g:row>
-                <g:cell>
-                    <g:CheckBox ui:field='checkBox' checked="true">switch to teacher</g:CheckBox>
-                </g:cell>
-                <g:cell>
-                    <g:Button ui:field='loginBtn'>Login</g:Button>
-                </g:cell>
-            </g:row>-->
         </g:Grid>        
     </g:FlowPanel>
 </ui:UiBinder> 

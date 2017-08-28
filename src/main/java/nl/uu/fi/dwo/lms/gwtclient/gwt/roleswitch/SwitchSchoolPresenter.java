@@ -54,7 +54,7 @@ public class SwitchSchoolPresenter {
         Widget asWidget();
         void clear();
         void init();
-        void updateView(Map<String,SwitchSchoolPresenter.SchoolItem>  data);
+        void updateView(Map<String,SwitchSchoolPresenter.SchoolItem>  data, SwitchSchoolPresenter.SchoolItem selected);
     }
 
     public SwitchSchoolPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -85,7 +85,7 @@ public class SwitchSchoolPresenter {
             data.put(item.key,item);
         }
         view.init();
-        view.updateView(data);
+        view.updateView(data, selectedItem);
     }
 
     /**

@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 /**
  * Handler for BootPanel actions.
@@ -118,17 +119,17 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     }
 
     private void onSwitchViewEvent(SwitchViewEvent.SelectedView selectedView) {
-        if (selectedView == selectedView.LOGIN || selectedView == selectedView.SWITCHSCHOOL) {
+        if (selectedView == selectedView.LOGIN) {
             display.hideMenuButton();
-            if(dwoGlobalVars.getState()!=DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
                 display.hidePostLoginWidgets();
-            }
-        } else {
-            display.showMenuButton();
+        } else if(selectedView == selectedView.SWITCHSCHOOL) {
             display.setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
             display.setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
             display.setUserRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
             display.showPostLoginWidgets();
+            if(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())){
+                            display.showMenuButton();
+            }
         }
 
         switch (selectedView) {

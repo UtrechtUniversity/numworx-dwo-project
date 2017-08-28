@@ -193,7 +193,6 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         schoolName.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         userRole.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
         presentationName.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
-        menuButton.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
 
     @Override
@@ -202,7 +201,6 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         schoolName.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
         userRole.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
         presentationName.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-        menuButton.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
     }
 
     @Override
