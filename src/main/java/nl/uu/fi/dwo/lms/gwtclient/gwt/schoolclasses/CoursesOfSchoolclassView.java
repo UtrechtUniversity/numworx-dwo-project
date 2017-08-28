@@ -51,7 +51,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
     interface MyUiBinder extends UiBinder<Widget, CoursesOfSchoolclassView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-
+    
     @UiField(provided = true)
     CellTable dataGrid;
     @UiField(provided = true)
