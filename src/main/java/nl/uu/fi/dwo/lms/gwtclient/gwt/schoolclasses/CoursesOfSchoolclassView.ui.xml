@@ -17,55 +17,55 @@
                 </g:item>
             </g:ListBox>-->
         </g:FlowPanel>
-    <g:FlowPanel>
-<g:SplitLayoutPanel addStyleNames='{dwoStyle.dwoFlowPanel}' width='90%' height='90%'>
-    <g:west size="400" >
-        <g:ScrollPanel>
-            <g:Tree ui:field='tree' ></g:Tree>
-        </g:ScrollPanel>
-    </g:west>
-    <g:center>
-        <g:ScrollPanel height="300px">
-        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="300px"  ui:field='dataGrid'/>
-        </g:ScrollPanel>
-    </g:center>
-</g:SplitLayoutPanel>
-    <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
-        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
-    </g:FlowPanel>
-    </g:FlowPanel>
-<!--    <g:south size="200">
-        <g:VerticalPanel />
-    </g:south>
-    <g:north size="200">
-        <g:VerticalPanel />
-    </g:north>-->
-<!--</g:SplitLayoutPanel>        
+        <g:FlowPanel>
+            <g:SplitLayoutPanel addStyleNames='{dwoStyle.dwoFlowPanel}' width='90%' height='90%'>
+                <g:west size="400" >
+                    <g:ScrollPanel>
+                        <g:Tree ui:field='tree' ></g:Tree>
+                    </g:ScrollPanel>
+                </g:west>
+                <g:center>
+                    <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
+                        <g:ScrollPanel height="300px">
+                            <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="300px"  ui:field='dataGrid'/>
+                        </g:ScrollPanel>
+                        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
+                    </g:FlowPanel>
+                </g:center>
+            </g:SplitLayoutPanel>
+        </g:FlowPanel>
+        <!--    <g:south size="200">
+            <g:VerticalPanel />
+        </g:south>
+        <g:north size="200">
+            <g:VerticalPanel />
+        </g:north>-->
+        <!--</g:SplitLayoutPanel>        
         <g:FlowPanel>
             <g:Tree ui:field='tree' ></g:Tree>
         </g:FlowPanel>
         <g:FlowPanel>
             <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' width="50%" height="100%"  ui:field='dataGrid'/>
         </g:FlowPanel>-->
-</g:FlowPanel>
+    </g:FlowPanel>
 
-        <!--    <g:LayoutPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
-        <g:layer>-->
-        <!--    <g:DockLayoutPanel unit='EM' addStyleNames='{dwoStyle.dwoWidgetPanel}'>
-            <g:north size='2'>
-                <FlowPanel>
-                <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addStudentsBtn">add more students</g:Button>
-                <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addToClassBtn">add to schoolclass</g:Button>
-                <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="deleteBtn">delete students</g:Button>
-                </FlowPanel>
-            </g:north>
-            <g:center>
-                <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
-            </g:center>
-            <g:south size='2'>
-                <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
-            </g:south>
-        </g:DockLayoutPanel>-->
-        <!--        </g:layer>
-        </g:LayoutPanel>-->
+    <!--    <g:LayoutPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
+    <g:layer>-->
+    <!--    <g:DockLayoutPanel unit='EM' addStyleNames='{dwoStyle.dwoWidgetPanel}'>
+        <g:north size='2'>
+            <FlowPanel>
+            <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addStudentsBtn">add more students</g:Button>
+            <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addToClassBtn">add to schoolclass</g:Button>
+            <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="deleteBtn">delete students</g:Button>
+            </FlowPanel>
+        </g:north>
+        <g:center>
+            <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
+        </g:center>
+        <g:south size='2'>
+            <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
+        </g:south>
+    </g:DockLayoutPanel>-->
+    <!--        </g:layer>
+    </g:LayoutPanel>-->
 </ui:UiBinder>

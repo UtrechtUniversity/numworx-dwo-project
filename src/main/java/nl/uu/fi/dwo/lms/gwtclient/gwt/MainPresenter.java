@@ -50,11 +50,11 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         public void showResultsView();
 
         public void showSchoolclassesView();
-        
+
         public void showCoursesOfSchoolclassView();
 
         public void showStudentsInSchoolclassView();
-        
+
         public void showAddStudentsView();
 
         public void showTeachersInSchoolclassView();
@@ -121,15 +121,17 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     private void onSwitchViewEvent(SwitchViewEvent.SelectedView selectedView) {
         if (selectedView == selectedView.LOGIN) {
             display.hideMenuButton();
-                display.hidePostLoginWidgets();
-        } else if(selectedView == selectedView.SWITCHSCHOOL) {
+            display.hidePostLoginWidgets();
+            display.showMenuButton();
+        } else if (selectedView == selectedView.SWITCHSCHOOL) {
             display.setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
             display.setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
             display.setUserRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
             display.showPostLoginWidgets();
-            if(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())){
-                            display.showMenuButton();
-            }
+        }
+        if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+            display.setUserRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+            display.showMenuButton();
         }
 
         switch (selectedView) {
