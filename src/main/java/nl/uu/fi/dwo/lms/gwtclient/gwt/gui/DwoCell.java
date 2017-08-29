@@ -8,7 +8,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
 
 /**
- * Basic gwt cell component.
+ * Basic GWT cell component.
  * 
  * @author G.A.J. van der Plas
  */

@@ -27,6 +27,7 @@ import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
@@ -37,6 +38,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 
 /**
@@ -61,6 +63,10 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
     @UiField
     Button backBtn;
 
+    private static final DwoResources resources = GWT.create(DwoResources.class);
+    Image loadingImage = new Image(resources.loadingIcon());
+    Image emptyImage = new Image(resources.emptyIcon());
+    
     private CoursesOfSchoolclassPresenter coursesOfSchoolclassPresenter;
     private ListDataProvider<ClassCourseItem> dataProvider = new ListDataProvider<ClassCourseItem>();
 
@@ -487,5 +493,11 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //        dataGrid.getHeader(column);
 //        coursesOfSchoolclassPresenter.selectItem((ClassCourseItem) dataProvider.getList().get(row), column);
     }
+    public void setEmptyTableMessage(){
+        dataGrid.setEmptyTableWidget(emptyImage);
+    }
 
+    public void setLoadingTableMessage(){
+        dataGrid.setEmptyTableWidget(loadingImage);
+    }
 }

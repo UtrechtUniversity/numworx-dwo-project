@@ -41,6 +41,10 @@ public class EditCoursesInSchoolclassPresenter {
         void init();
 
         void updateView(Map<String, EditCoursesInSchoolclassPresenter.CourseItem> data);
+        
+//        void setEmptyTableMessage();
+//        void setLoadingTableMessage();
+
     }
 
     public class CourseItem {

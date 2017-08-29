@@ -41,7 +41,9 @@ public class EditCoursesInSchoolclassView extends Composite implements ClickHand
     interface MyUiBinder extends UiBinder<Widget, EditCoursesInSchoolclassView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-
+//    private static final DwoResources resources = GWT.create(DwoResources.class);
+//    Image loadingImage = new Image(resources.loadingIcon());
+    
     @UiField(provided = true)
     CellTable courseTable;
 //    @UiField(provided = true)            
@@ -351,5 +353,9 @@ public class EditCoursesInSchoolclassView extends Composite implements ClickHand
         courseTable.getHeader(column);
 //        editCoursesInSchoolClassPresenter.selectItem((EditCoursesInSchoolclassPresenter.CourseItem) dataProvider.getList().get(row), column);
     }
+    
+//    public void setEmptyTableMessage(String msg){
+//        courseTable.setEmptyTableWidget(loadingImage);
+//    }
 
 }

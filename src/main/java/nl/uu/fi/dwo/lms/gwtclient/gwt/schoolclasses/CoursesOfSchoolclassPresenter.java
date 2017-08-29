@@ -115,7 +115,9 @@ public class CoursesOfSchoolclassPresenter {
         void updateTable(List<ClassCourseItem> item);
 
         void setTree(ClassCourseItem item);
-
+        
+        void setEmptyTableMessage();
+        void setLoadingTableMessage();
     }
 
 //    public CourseItem getRoot(){
@@ -140,6 +142,7 @@ public class CoursesOfSchoolclassPresenter {
     public void init(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
         view.init();
+        view.setLoadingTableMessage();
         updateViewData();
     }
 
@@ -159,6 +162,7 @@ public class CoursesOfSchoolclassPresenter {
                 ClassCourseItem item = new ClassCourseItem(null, "root");
                 //parse results into a tree.
                 view.setTree(item);
+                view.setEmptyTableMessage();
                 return null;
             }
 

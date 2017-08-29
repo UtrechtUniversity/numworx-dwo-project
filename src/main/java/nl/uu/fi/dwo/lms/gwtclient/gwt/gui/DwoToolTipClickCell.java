@@ -1,14 +1,17 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
 
+import com.google.gwt.cell.client.ValueUpdater;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 /**
  *
  * @author G.A.J. van der Plas
  */
-public class DwoToolTipClickCell extends DwoToolTipCell {
+public class DwoToolTipClickCell extends DwoToolTipCell{
 
-    final String toolTip;
+    SelectedCellHandler handler;
 
     public DwoToolTipClickCell(){
         super();
@@ -16,8 +19,7 @@ public class DwoToolTipClickCell extends DwoToolTipCell {
     }
     
     public DwoToolTipClickCell(String toolTipText) {
-        super();
-        toolTip = toolTipText;
+        super(toolTipText);
     }
 
     @Override
@@ -36,4 +38,21 @@ public class DwoToolTipClickCell extends DwoToolTipCell {
         }
     }
 
+    @Override
+    public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+        if (value == null) {
+            return;
+        }
+        super.onBrowserEvent(context, parent, value, event, valueUpdater);
+        if ("click".equals(event.getType())) {
+            if (handler != null) {
+                handler.onSelectedCell(context, value);
+            }
+        }
+    }
+    
+    public void addSelectedCellHandler(SelectedCellHandler aHandler){
+        handler = aHandler;
+    }
+    
 }

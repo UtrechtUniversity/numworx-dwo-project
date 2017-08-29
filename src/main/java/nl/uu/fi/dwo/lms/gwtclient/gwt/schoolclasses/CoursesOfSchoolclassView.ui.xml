@@ -3,8 +3,8 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
-    <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
-        <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
+    <g:DockLayoutPanel  unit="EM" addStyleNames='{dwoStyle.dwoWidgetPanel}'>
+        <g:north addStyleNames="{dwoStyle.horizontalFloat}" size='3'>
             <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
 <!--            <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftFullBox}' ui:field="backBtn">back</g:Button>
             <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftHalfBox}' ui:field="addStudentsBtn">add more students</g:Button>
@@ -16,9 +16,9 @@
                     click to load
                 </g:item>
             </g:ListBox>-->
-        </g:FlowPanel>
-        <g:FlowPanel>
-            <g:SplitLayoutPanel addStyleNames='{dwoStyle.dwoFlowPanel}' width='90%' height='90%'>
+        </g:north>
+        <g:center>
+            <g:SplitLayoutPanel addStyleNames='{dwoStyle.dwoFlowPanel}' width='90%' height='auto'>
                 <g:west size="400" >
                     <g:ScrollPanel>
                         <g:Tree ui:field='tree' ></g:Tree>
@@ -26,14 +26,14 @@
                 </g:west>
                 <g:center>
                     <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
-                        <g:ScrollPanel height="300px">
-                            <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="300px"  ui:field='dataGrid'/>
-                        </g:ScrollPanel>
                         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
+                    <g:ScrollPanel height="auto">
+                        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto"  ui:field='dataGrid'/>
+                    </g:ScrollPanel>
                     </g:FlowPanel>
                 </g:center>
             </g:SplitLayoutPanel>
-        </g:FlowPanel>
+        </g:center>
         <!--    <g:south size="200">
             <g:VerticalPanel />
         </g:south>
@@ -47,7 +47,7 @@
         <g:FlowPanel>
             <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' width="50%" height="100%"  ui:field='dataGrid'/>
         </g:FlowPanel>-->
-    </g:FlowPanel>
+    </g:DockLayoutPanel>
 
     <!--    <g:LayoutPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
     <g:layer>-->

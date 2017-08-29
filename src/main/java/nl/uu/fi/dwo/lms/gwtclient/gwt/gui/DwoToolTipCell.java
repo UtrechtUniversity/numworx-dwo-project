@@ -31,15 +31,4 @@ public class DwoToolTipCell extends DwoCell {
             }
         }
     }
-
-//    @Override
-//    public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-//        if (value == null) {
-//            return;
-//        }
-//        super.onBrowserEvent(context, parent, value, event, valueUpdater);
-//        if ("click".equals(event.getType())) {
-//            Window.alert("key, row x col "+context.getKey().toString()+","+context.getIndex()+"x"+context.getColumn());
-//        }
-//    }
 }

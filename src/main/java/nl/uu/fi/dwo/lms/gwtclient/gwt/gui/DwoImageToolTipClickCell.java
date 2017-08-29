@@ -1,11 +1,9 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
 
-import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -14,6 +12,8 @@ import com.google.gwt.user.client.ui.Image;
  * @author G.A.J. van der Plas
  */
 public class DwoImageToolTipClickCell extends DwoImageToolTipCell {
+
+    SelectedCellHandler handler;
 
     public DwoImageToolTipClickCell(Image anImage, String aToolTip) {
         super(anImage, aToolTip);
@@ -32,6 +32,23 @@ public class DwoImageToolTipClickCell extends DwoImageToolTipCell {
         if (toolTip != null) {
             sb.appendHtmlConstant("</div>");
         }
-
     }
+
+    @Override
+    public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
+        if (value == null) {
+            return;
+        }
+        super.onBrowserEvent(context, parent, value, event, valueUpdater);
+        if ("click".equals(event.getType())) {
+            if (handler != null) {
+                handler.onSelectedCell(context, value);
+            }
+        }
+    }
+
+    public void addSelectedCellHandler(SelectedCellHandler aHandler) {
+        handler = aHandler;
+    }
+
 }

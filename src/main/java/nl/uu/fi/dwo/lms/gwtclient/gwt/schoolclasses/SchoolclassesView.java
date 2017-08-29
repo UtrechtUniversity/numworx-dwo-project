@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -30,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoImageToolTipClickCell;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 
 /**
@@ -37,7 +39,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
  *
  * @author G.A.J. van der Plas
  */
-public class SchoolclassesView extends Composite implements ClickHandler, SchoolclassesPresenter.Display {
+public class SchoolclassesView extends Composite implements ClickHandler, SelectedCellHandler, SchoolclassesPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(SchoolclassesView.class.getName());
 
@@ -299,13 +301,6 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
 
         List<SchoolclassesPresenter.ClassItem> data = dataProvider.getList();
         final MyCell cell = new MyCell();
-        final MyClickCell clickCell = new MyClickCell();
-        final ModulesImageClickCell modulesClickCell = new ModulesImageClickCell();
-        final EditImageClickCell editClickCell = new EditImageClickCell();
-        final StudentListImageClickCell studentClickCell = new StudentListImageClickCell();
-        final TeacherListImageClickCell teacherClickCell = new TeacherListImageClickCell();
-        final DeleteImageClickCell deleteClickCell = new DeleteImageClickCell();
-
         //classname
         Column<SchoolclassesPresenter.ClassItem, String> value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
             @Override
@@ -334,6 +329,8 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.addColumn(value, tableHeaders[0]);
 
         //edit
+        final DwoImageToolTipClickCell editClickCell = new DwoImageToolTipClickCell(editImage, "click to edit");
+        editClickCell.addSelectedCellHandler(this);
         value = new Column<SchoolclassesPresenter.ClassItem, String>(editClickCell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
@@ -346,6 +343,9 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.addColumn(value, tableHeaders[1]);
 
         //modules
+        final DwoImageToolTipClickCell modulesClickCell = new DwoImageToolTipClickCell(modulesImage, "click to edit");
+        modulesClickCell.addSelectedCellHandler(this);
+
         value = new Column<SchoolclassesPresenter.ClassItem, String>(modulesClickCell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
@@ -359,6 +359,9 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.addColumn(value, tableHeaders[2]);
 
         //students col
+        final DwoImageToolTipClickCell studentClickCell = new DwoImageToolTipClickCell(studentsImage, "click to edit");
+        studentClickCell.addSelectedCellHandler(this);
+
         value = new Column<SchoolclassesPresenter.ClassItem, String>(studentClickCell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
@@ -371,6 +374,8 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.addColumn(value, tableHeaders[3]);
 
         //teachers col
+        final DwoImageToolTipClickCell teacherClickCell = new DwoImageToolTipClickCell(teachersImage, "click to edit");
+        teacherClickCell.addSelectedCellHandler(this);
         value = new Column<SchoolclassesPresenter.ClassItem, String>(teacherClickCell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
@@ -383,6 +388,8 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         dataGrid.addColumn(value, tableHeaders[4]);
 
         //remove col
+        final DwoImageToolTipClickCell deleteClickCell = new DwoImageToolTipClickCell(deleteImage, "select to delete");
+        deleteClickCell.addSelectedCellHandler(this);
         value = new Column<SchoolclassesPresenter.ClassItem, String>(deleteClickCell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
@@ -455,5 +462,9 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).schoolclassName + " " + dataGrid.getHeader(column).getValue());
         dataGrid.getHeader(column);
         schoolclassesPresenter.selectItem((SchoolclassesPresenter.ClassItem) dataProvider.getList().get(row), column);
+    }
+
+    public void onSelectedCell(Context context, String value) {
+        cellSelected(context.getIndex(), context.getColumn());
     }
 }

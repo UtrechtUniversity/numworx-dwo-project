@@ -5,14 +5,15 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.Window;
 
 /**
- * Basic gwt cell component.
- * 
+ * Basic GWT cell component.
+ *
  * @author G.A.J. van der Plas
  */
 public class DwoClickCell extends AbstractCell<String> {
+
+    SelectedCellHandler handler;
 
     public DwoClickCell() {
         super("click", "keydown");
@@ -34,8 +35,13 @@ public class DwoClickCell extends AbstractCell<String> {
         }
         super.onBrowserEvent(context, parent, value, event, valueUpdater);
         if ("click".equals(event.getType())) {
-
-            Window.alert("key, row x col "+context.getKey().toString()+","+context.getIndex()+"x"+context.getColumn());
+            if (handler != null) {
+                handler.onSelectedCell(context, value);
+            }
         }
+    }
+
+    public void addSelectedCellHandler(SelectedCellHandler aHandler) {
+        handler = aHandler;
     }
 }

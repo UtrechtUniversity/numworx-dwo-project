@@ -36,4 +36,6 @@ public interface DwoResources extends ClientBundle{
    @Source("teacherlist.gif")
    public ImageResource teachersIcon();
 
+   @Source("loading.gif")
+   public ImageResource loadingIcon();
 }
