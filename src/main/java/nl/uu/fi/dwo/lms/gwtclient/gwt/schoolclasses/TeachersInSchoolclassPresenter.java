@@ -55,6 +55,11 @@ public class TeachersInSchoolclassPresenter {
         void updateView(Map<String, TeachersInSchoolclassPresenter.TeacherItem> data);
 
         void updateTeacherList(List<TeacherListBoxItem> data);
+
+        void setEmptyTableMessage();
+
+        void setLoadingTableMessage();
+
     }
 
     public class TeacherItem {
@@ -102,11 +107,13 @@ public class TeachersInSchoolclassPresenter {
     public void init(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
         view.init();
+        view.setLoadingTableMessage();
         updateViewData(aSchoolClass);
         updateTeacherList();
     }
 
     private void updateViewData(DomSchoolClass sc) {
+        view.clear();
         Promise<List<DomTeacher>> promise;
         promise = manager.getTeachersInSchoolClass(sc);
         // onSuccess update view
@@ -132,6 +139,7 @@ public class TeachersInSchoolclassPresenter {
                     }
                     teacherItems.put(sc.getId().getIdString(), item);
                 }
+                view.setEmptyTableMessage();
                 view.updateView(teacherItems);
                 return null;
             }
@@ -217,16 +225,16 @@ public class TeachersInSchoolclassPresenter {
     }
 
     void goBackToSchoolClasses() {
-        if (teacherItems.size()!=0) {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
-        }else{
+        if (teacherItems.size() != 0) {
+            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+        } else {
             ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there are no teachers in the class.");
             p.getPromise().then(new Success<Boolean, Void>() {
                 @Override
                 public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                     LOG.log(Level.INFO, "returned value" + resolved.getValue());
                     if (resolved.getValue() == true) {
-                          eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
                     } else {
                         //do nothing.
                     }

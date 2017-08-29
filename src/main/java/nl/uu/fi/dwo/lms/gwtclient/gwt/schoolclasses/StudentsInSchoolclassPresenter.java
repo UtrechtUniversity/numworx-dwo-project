@@ -56,6 +56,8 @@ public class StudentsInSchoolclassPresenter {
         void updateView(Map<String, StudentsInSchoolclassPresenter.StudentItem> data);
 
         void updateSchoolClassList(List<SchoolClassListBoxItem> data);
+        void setEmptyTableMessage();
+        void setLoadingTableMessage();
     }
 
     public class StudentItem {
@@ -105,11 +107,13 @@ public class StudentsInSchoolclassPresenter {
     public void init(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
         view.init();
+        view.setLoadingTableMessage();
         updateViewData(aSchoolClass);
         updateSchoolClasses();
     }
 
     private void updateViewData(DomSchoolClass sc) {
+        view.clear();
         Promise<List<DomStudent>> promise;
         promise = manager.getStudentsInSchoolClass(sc);
         // onSuccess update view
@@ -136,6 +140,7 @@ public class StudentsInSchoolclassPresenter {
                     }
                     studentItems.put(sc.getId().getIdString(), item);
                 }
+                view.setEmptyTableMessage();
                 view.updateView(studentItems);
                 return null;
             }

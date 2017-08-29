@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
@@ -20,6 +21,7 @@ import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -28,13 +30,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 
 /**
  * GWT Panel that handles switching the role.
  *
  * @author G.A.J. van der Plas
  */
-public class TeachersInSchoolclassView extends Composite implements ClickHandler, ChangeHandler, TeachersInSchoolclassPresenter.Display {
+public class TeachersInSchoolclassView extends Composite implements ClickHandler, ChangeHandler, SelectedCellHandler, TeachersInSchoolclassPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(TeachersInSchoolclassView.class.getName());
 
@@ -57,6 +61,11 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
     @UiField
     ListBox teacherListBox;
 
+    private static final DwoResources resources = GWT.create(DwoResources.class);
+    Image editImage = new Image(resources.editIcon());
+    Image loadingImage = new Image(resources.loadingIcon());
+    Image emptyImage = new Image(resources.emptyIcon());
+        
     private TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
     private ListDataProvider<TeachersInSchoolclassPresenter.TeacherItem> dataProvider = new ListDataProvider<TeachersInSchoolclassPresenter.TeacherItem>();
     private List<TeacherListBoxItem> addTeacherList;
@@ -329,7 +338,7 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        dataProvider.getList().clear();
     }
 
     public void onClick(ClickEvent event) {
@@ -370,5 +379,18 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
         dataGrid.getHeader(column);
         teachersInSchoolclassPresenter.selectItem((TeachersInSchoolclassPresenter.TeacherItem) dataProvider.getList().get(row), column);
     }
+    
+    
+    public void onSelectedCell(Cell.Context context, String value) {
+        cellSelected(context.getIndex(), context.getColumn());
+    } 
+    
+    public void setEmptyTableMessage(){
+        dataGrid.setEmptyTableWidget(emptyImage);
+    }
 
+    public void setLoadingTableMessage(){
+        dataGrid.setEmptyTableWidget(loadingImage);
+    }    
+    
 }

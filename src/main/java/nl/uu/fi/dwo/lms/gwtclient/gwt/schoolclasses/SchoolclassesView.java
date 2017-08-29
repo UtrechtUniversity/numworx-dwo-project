@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoImageToolTipClickCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
@@ -68,196 +69,6 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
     ListDataProvider<SchoolclassesPresenter.ClassItem> dataProvider = new ListDataProvider<SchoolclassesPresenter.ClassItem>();
     AddSchoolclassView addSchoolclassView;
     final DialogBox dialogBox = new DialogBox();
-
-    public class MyCell extends AbstractCell<String> {
-
-        public MyCell() {
-            super("click", "keydown");
-        }
-
-        @Override
-        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
-            if (value != null) {
-                sb.appendEscaped(value);
-            }
-        }
-
-        @Override
-        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-            if (value == null) {
-                return;
-            }
-            super.onBrowserEvent(context, parent, value, event, valueUpdater);
-            if ("click".equals(event.getType())) {
-//                LOG.log(Level.INFO, "key "+context.getKey());
-                cellSelected(context.getIndex(), context.getColumn());
-            }
-        }
-    }
-
-    public class deleteImageClickCell extends AbstractCell<String> {
-
-        public deleteImageClickCell() {
-            super("click", "keydown");
-        }
-
-        @Override
-        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
-            if (value != null) {
-                sb.appendHtmlConstant("<a href='javascript:;'>");
-                sb.appendHtmlConstant("<img src=\'" + deleteImage.getUrl() + "\'></img>");
-                sb.appendHtmlConstant("</a>");
-
-            }
-        }
-
-        @Override
-        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-            if (value == null) {
-                return;
-            }
-            super.onBrowserEvent(context, parent, value, event, valueUpdater);
-            if ("click".equals(event.getType())) {
-//                LOG.log(Level.INFO, "key "+context.getKey());
-                cellSelected(context.getIndex(), context.getColumn());
-            }
-        }
-    }
-
-    public class TeacherListImageClickCell extends AbstractCell<String> {
-
-        public TeacherListImageClickCell() {
-            super("click", "keydown");
-        }
-
-        @Override
-        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
-            if (value != null) {
-                sb.appendHtmlConstant("<a href='javascript:;'>");
-                sb.appendHtmlConstant("<img src=\'" + teachersImage.getUrl() + "\'></img>");
-                sb.appendHtmlConstant("</a>");
-
-            }
-        }
-
-        @Override
-        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-            if (value == null) {
-                return;
-            }
-            super.onBrowserEvent(context, parent, value, event, valueUpdater);
-            if ("click".equals(event.getType())) {
-//                LOG.log(Level.INFO, "key "+context.getKey());
-                cellSelected(context.getIndex(), context.getColumn());
-            }
-        }
-    }
-
-    public class StudentListImageClickCell extends AbstractCell<String> {
-
-        public StudentListImageClickCell() {
-            super("click", "keydown");
-        }
-
-        @Override
-        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
-            if (value != null) {
-                sb.appendHtmlConstant("<a href='javascript:;'>");
-                sb.appendHtmlConstant("<img src=\'" + studentsImage.getUrl() + "\'></img>");
-                sb.appendHtmlConstant("</a>");
-
-            }
-        }
-
-        @Override
-        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-            if (value == null) {
-                return;
-            }
-            super.onBrowserEvent(context, parent, value, event, valueUpdater);
-            if ("click".equals(event.getType())) {
-//                LOG.log(Level.INFO, "key "+context.getKey());
-                cellSelected(context.getIndex(), context.getColumn());
-            }
-        }
-    }
-
-    public class DeleteImageClickCell extends AbstractCell<String> {
-
-        public DeleteImageClickCell() {
-            super("click", "keydown");
-        }
-
-        @Override
-        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
-            if (value != null) {
-                sb.appendHtmlConstant("<a href='javascript:;'>");
-                sb.appendHtmlConstant("<img src=\'" + deleteImage.getUrl() + "\'></img>");
-                sb.appendHtmlConstant("</a>");
-
-            }
-        }
-
-        @Override
-        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-            if (value == null) {
-                return;
-            }
-            super.onBrowserEvent(context, parent, value, event, valueUpdater);
-            if ("click".equals(event.getType())) {
-//                LOG.log(Level.INFO, "key "+context.getKey());
-                cellSelected(context.getIndex(), context.getColumn());
-            }
-        }
-    }
-
-    public class ModulesImageClickCell extends AbstractCell<String> {
-
-        public ModulesImageClickCell() {
-            super("click", "keydown");
-        }
-
-        @Override
-        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
-            if (value != null) {
-                sb.appendHtmlConstant("<a href='javascript:;'>");
-                sb.appendHtmlConstant("<img src=\'" + modulesImage.getUrl() + "\'></img>");
-                sb.appendHtmlConstant("</a>");
-
-            }
-        }
-
-        @Override
-        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-            if (value == null) {
-                return;
-            }
-            super.onBrowserEvent(context, parent, value, event, valueUpdater);
-            if ("click".equals(event.getType())) {
-//                LOG.log(Level.INFO, "key "+context.getKey());
-                cellSelected(context.getIndex(), context.getColumn());
-            }
-        }
-    }
-
-    public class EditImageClickCell extends DwoImageToolTipClickCell {
-
-        public EditImageClickCell() {
-            super(editImage, "click to edit schoolclass properties");
-        }
-
-        @Override
-        public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> valueUpdater) {
-            if (value == null) {
-                return;
-            }
-            super.onBrowserEvent(context, parent, value, event, valueUpdater);
-            if ("click".equals(event.getType())) {
-//                LOG.log(Level.INFO, "key "+context.getKey());
-                cellSelected(context.getIndex(), context.getColumn());
-            }
-        }
-    }
 
     public class MyClickCell extends AbstractCell<String> {
 
@@ -300,7 +111,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
         dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
         List<SchoolclassesPresenter.ClassItem> data = dataProvider.getList();
-        final MyCell cell = new MyCell();
+        final DwoCell cell = new DwoCell();
         //classname
         Column<SchoolclassesPresenter.ClassItem, String> value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
             @Override

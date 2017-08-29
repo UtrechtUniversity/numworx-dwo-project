@@ -6,9 +6,13 @@
     <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
     <g:FlowPanel addStyleNames='{dwoStyle.dwoDialogPanel}'>                
                         <g:HTML ui:field="htmlText" > </g:HTML>
-                    <g:HorizontalPanel addStyleNames="{dwoStyle.horizontalFloat}">
+                    <g:HorizontalPanel width='90%'>
+                        <g:cell addStyleNames='{dwoStyle.floatRight}'>
                     <g:PushButton  addStyleNames="{dwoStyle.dwoButton}"  ui:field="cancelButton">Cancel</g:PushButton>
+                    </g:cell>
+                        <g:cell addStyleNames='{dwoStyle.floatRight}'>
                     <g:PushButton  addStyleNames="{dwoStyle.dwoButton}"  ui:field="okButton">Ok</g:PushButton>
+                    </g:cell>
                     </g:HorizontalPanel>
     </g:FlowPanel>
 </ui:UiBinder> 
