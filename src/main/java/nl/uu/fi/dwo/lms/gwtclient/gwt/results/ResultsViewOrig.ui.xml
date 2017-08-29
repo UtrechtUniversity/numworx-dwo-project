@@ -1,18 +1,22 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-             xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" >
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+<!--        <g:ScrollPanel styleName="{dwoStyle.fullPanel}">
+            <g:FlowPanel>
+                <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="resultTable"/>
+            </g:FlowPanel>
+        </g:ScrollPanel>-->
     <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
         <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="importBtn">import</g:Button>
+            <!--<g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>-->
+            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="exportBtn">export</g:Button>
             <!--<g:FileUpload ui:field="fileUploadWidget"/>--> 
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="addBtn">make accounts</g:Button>
+            <!--<g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="addBtn">make accounts</g:Button>-->
         </g:FlowPanel>
             <g:FlowPanel height="2em">
         </g:FlowPanel>
         <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" ui:field='dataGrid'/>
         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
-    </g:FlowPanel>
+    </g:FlowPanel>        
 </ui:UiBinder>

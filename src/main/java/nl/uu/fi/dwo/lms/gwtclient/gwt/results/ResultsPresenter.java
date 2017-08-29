@@ -1,8 +1,9 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.Widget;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
@@ -14,6 +15,7 @@ import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -47,7 +49,10 @@ public class ResultsPresenter {
 
         void clear();
 
-        void plot(int height, int width, String[][] data);
+        void plot(ResultPlot data);
+        void setEmptyTableMessage();
+        void setLoadingTableMessage();
+        
     }
 
     protected enum mode {
@@ -57,6 +62,67 @@ public class ResultsPresenter {
         CourseClass     //A Course for a Class
     }
 
+    public class ResultPlot {
+
+        private List<List<ResultItem>> marks = null;
+        private ResultItem[] vIndex; //uses label property for display
+        private ResultItem[] hIndex; //uses label property for display    
+
+        /**
+         * @return the marks
+         */
+        public List<List<ResultItem>> getMarks() {
+            return marks;
+        }
+
+        /**
+         * @param marks the marks to set
+         */
+        public void setMarks(List<List<ResultItem>> aMarks) {
+            this.marks = aMarks;
+        }
+
+        /**
+         * @return the vIndex
+         */
+        public ResultItem[] getvIndex() {
+            return vIndex;
+        }
+
+        /**
+         * @param vIndex the vIndex to set
+         */
+        public void setvIndex(ResultItem[] vIndex) {
+            this.vIndex = vIndex;
+        }
+
+        /**
+         * @return the hIndex
+         */
+        public ResultItem[] gethIndex() {
+            return hIndex;
+        }
+
+        /**
+         * @param hIndex the hIndex to set
+         */
+        public void sethIndex(ResultItem[] hIndex) {
+            this.hIndex = hIndex;
+        }
+
+    }
+
+    public class ResultItem {
+
+        public String label; //unique
+        public Double score;
+
+        public ResultItem(String aLabel, Double aScore) {
+            label = aLabel;
+            score = aScore;
+        }
+    }
+
     public ResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
@@ -64,6 +130,7 @@ public class ResultsPresenter {
     }
 
     public void init() {
+        view.clear();
         LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
         course = null;
         schoolClass = null;
@@ -79,6 +146,7 @@ public class ResultsPresenter {
                 LOG.log(Level.INFO, "ResultTree obtained.");
                 resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
+                view.setEmptyTableMessage();
                 plotResultsEvent();
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
                 return null;
@@ -175,8 +243,8 @@ public class ResultsPresenter {
 
     public void plotResultsEvent() {
         resultMatrix = getResults(course, schoolClass);
-        String[][] data = buildPlotMatrix();
-        view.plot(data.length, data[0].length, data);
+        ResultPlot plotData = buildPlotMatrix(resultMatrix);
+        view.plot(plotData);
     }
 
     public void updateResults() {
@@ -203,86 +271,37 @@ public class ResultsPresenter {
         return result; // Though in Java 8 return Optional.
     }
 
-    public String[][] buildPlotMatrix() {
+    public ResultPlot buildPlotMatrix(DomResultPlotMatrix matrix) {
+        ResultPlot data = new ResultPlot();
 
-        int i = this.getResultMatrix().getvSize();
-        int j = this.getResultMatrix().gethSize();
-        String[][] data = new String[i + 1][j + 1];
+        ResultItem[] hHeaders = new ResultItem[matrix.gethSize()];
+        for (int i = 0; i < matrix.gethSize(); i++) {
+            DomResultScore score = matrix.gethIndex(i);
+            hHeaders[i] = new ResultItem(score.getLabel(), score.getScore());
+        }
+        data.sethIndex(hHeaders);
 
-        // nul label
-        String nulLabel = "";
-        if (schoolClass != null || course != null) {
-            nulLabel += "[-]\\[-] ";
+        ResultItem[] vHeaders = new ResultItem[matrix.getvSize()];
+        for (int i = 0; i < matrix.getvSize(); i++) {
+            DomResultScore score = matrix.getvIndex(i);
+            vHeaders[i] = new ResultItem(score.getLabel(), score.getScore());
         }
-        if (schoolClass != null) {
-            nulLabel += schoolClass.getLabel();
-        } else {
-            nulLabel += "classes";
-        }
-        nulLabel += "\\";
-        if (course != null) {
-            nulLabel += course.getLabel();
-        } else {
-            nulLabel += "courses";
-        }
-        data[0][0] = "<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">" + nulLabel + "</div>";
+        data.setvIndex(vHeaders);
 
-        // col labels
-        for (i = 0; i < getResultMatrix().gethSize(); i++) {
-            String action = "[+] ";
-            if (course != null) {
-                action = "[-] ";
-            }
-            data[0][i + 1] = "<div style=\"text-align: right; background-color: #aaaaaa; padding: 2px; overflow auto;\">" + action + getResultMatrix().gethIndex(i).getLabel() + "</div>";
-        }
-
-        // row labels
-        for (i = 0; i < getResultMatrix().getvSize(); i++) {
-            String action = "[+] ";
-            if (schoolClass != null) {
-                action = "[-] ";
-            }
-            data[i + 1][0] = "<div style=\"text-align: left; background-color: #aaaaaa; padding: 2px; overflow auto;\">" + action + getResultMatrix().getvIndex(i).getLabel() + "</div>";
-        }
-
-        for (j = 0;
-                j < getResultMatrix()
-                .gethSize(); j++) {
-            for (i = 0; i < getResultMatrix().getvSize(); i++) {
-                double score = 0.0;
-                if (getResultMatrix().getMark(i, j) != null && getResultMatrix().getMark(i, j).getScore() != null) {
-                    if (getResultMatrix().getMark(i, j).getScoCount() > 0.0) {
-                        score = getResultMatrix().getMark(i, j).getScore();
-                    } else if (getResultMatrix().getMark(i, j).getStudentScoCount() > 0.0) {
-                        score = getResultMatrix().getMark(i, j).getScore();
-                    } else {
-                        score = 0.0;
-                    }
+        List<List<ResultItem>> marks = new ArrayList<List<ResultItem>>(matrix.gethSize());
+        for (int i = 0; i < matrix.gethSize(); i++) {
+            marks.add(new ArrayList<ResultItem>(matrix.getvSize()));
+            for (int j = 0; j < matrix.getvSize(); j++) {
+                DomResultScore score = matrix.getMark(j, i);
+                if (score == null) {
+                    marks.get(i).add(null);
                 } else {
-                    score = 0.0;
+                    marks.get(i).add(new ResultItem(score.getLabel(), score.getScore()));
                 }
-                String color = "red";
-                if (score > 10.0 && score < 60.0) {
-                    color = "orange";
-                } else if (score >= 60) {
-                    color = "green";
-                }
-                String prefix;
-                if (score > 0) {
-                    int r, g, b;
-                    b = 0;
-                    g = (int) (255 * (score / 50));
-                    r = (int) (255 * (1 - (score - 50) / 50));
-                    prefix = "<div style=\"text-align: right; padding: 2px; background:rgb(" + r + "," + g + "," + b + ");\">";
-                } else {
-                    prefix = "<div style=\"text-align: right; padding: 2px; overflow auto;\">"; // use default of style
-                }
-                long iScore = Math.round(score);
-                String formattedScore = NumberFormat.getFormat("0").format(iScore);
-                data[i + 1][j + 1] = prefix + formattedScore + "</div>";
-
             }
         }
+        int s = marks.size();
+        data.setMarks(marks);
         return data;
     }
 }
