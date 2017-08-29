@@ -1,34 +1,26 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
 
+import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.ui.Image;
 
 /**
- * Basic GWT cell component.
+ * Image cell component.
  * 
  * @author G.A.J. van der Plas
  */
-public class DwoToolTipCell extends DwoCell {
-    String toolTip;
+public class DwoImageCell extends AbstractCell<String> {
+    Image image;
 
-    public DwoToolTipCell() {
-        super();
-        toolTip = null;
-    }
-    
-    public DwoToolTipCell(String aToolTip) {
-        super();
-        toolTip = aToolTip;
+    public DwoImageCell(Image anImage) {
+        super("click", "keydown");
+        image = anImage;
     }
 
+    @Override
     public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
         if (value != null) {
-            if(toolTip!=null) {
-                sb.appendHtmlConstant("<div title=\"" + toolTip + "\">");
-            }
-                sb.appendEscaped(value);
-            if(toolTip!=null) {
-                sb.appendHtmlConstant("</div>");
-            }
+            sb.appendHtmlConstant("<img src=\'" + image.getUrl() + "\'></img>");
         }
     }
 
@@ -39,6 +31,7 @@ public class DwoToolTipCell extends DwoCell {
 //        }
 //        super.onBrowserEvent(context, parent, value, event, valueUpdater);
 //        if ("click".equals(event.getType())) {
+//
 //            Window.alert("key, row x col "+context.getKey().toString()+","+context.getIndex()+"x"+context.getColumn());
 //        }
 //    }

@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoImageToolTipClickCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 
 /**
@@ -237,20 +238,10 @@ public class SchoolclassesView extends Composite implements ClickHandler, School
         }
     }
 
-    public class EditImageClickCell extends AbstractCell<String> {
+    public class EditImageClickCell extends DwoImageToolTipClickCell {
 
         public EditImageClickCell() {
-            super("click", "keydown");
-        }
-
-        @Override
-        public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
-            if (value != null) {
-                sb.appendHtmlConstant("<a href='javascript:;'>");
-                sb.appendHtmlConstant("<img src=\'" + editImage.getUrl() + "\'></img>");
-                sb.appendHtmlConstant("</a>");
-
-            }
+            super(editImage, "click to edit schoolclass properties");
         }
 
         @Override
