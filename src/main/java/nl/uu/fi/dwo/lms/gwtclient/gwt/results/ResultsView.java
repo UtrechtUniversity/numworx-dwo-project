@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
-import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -18,6 +18,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoClickCell;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 
@@ -27,7 +29,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
  *
  * @author G.A.J. van der Plas
  */
-public class ResultsView extends Composite implements ResultsPresenter.Display {
+public class ResultsView extends Composite implements SelectedCellHandler, ResultsPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(ResultsView.class.getName());
 
@@ -122,7 +124,7 @@ public class ResultsView extends Composite implements ResultsPresenter.Display {
         }
 
         //create schoolclass/student column
-        TextCell cell = new TextCell();
+        DwoClickCell cell = new DwoClickCell();
         //schoolclass/student
 //        if(data.getvIndex().length>0){
 //        Column<List<ResultsPresenter.ResultItem>, String> value = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
@@ -138,8 +140,11 @@ public class ResultsView extends Composite implements ResultsPresenter.Display {
 //        LOG.log(Level.INFO, "adding schoolclass/student column");
 //        }
         for (int i = 0; i < data.gethIndex().length; i++) {
-            //create column
-            cell = new TextCell();
+            cell = new DwoClickCell();
+            cell.addSelectedCellHandler(this);
+//            }else{
+//                cell = new DwoClickCell();
+//            }
             int colVal = i;
             //givenName
             Column<List<ResultsPresenter.ResultItem>, String> dynValue = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
@@ -189,4 +194,16 @@ public class ResultsView extends Composite implements ResultsPresenter.Display {
     public void setLoadingTableMessage() {
         dataGrid.setEmptyTableWidget(loadingImage);
     }
+    
+    
+    private void cellSelected(int row, int column) {
+        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column  + " " + dataProvider.getList().get(row).get(0).label + ","+ dataGrid.getHeader(column).getValue());
+        resultsPresenter.selectRowAndCol(row, column);
+    }
+
+    public void onSelectedCell(Cell.Context context, String value) {
+        cellSelected(context.getIndex(), context.getColumn());
+    }
+
+
 }

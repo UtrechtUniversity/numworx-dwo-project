@@ -178,6 +178,7 @@ public class ResultsPresenter {
      * @param row the course to set
      */
     public void selectRowAndCol(int row, int col) {
+        row=row-1;
         if (row != 0 && col != 0 && schoolClass != null && course != null) {
             LOG.log(Level.INFO, "selected a student sco for " + resultMatrix.getMark(row - 1, col - 1).getLabel() + " with score " + resultMatrix.getMark(row - 1, col - 1).getScore());
             //send event to show studentSco Context en Data.
@@ -203,6 +204,9 @@ public class ResultsPresenter {
         } else if (col != 0 && course != null) {
             course = null;
         }
+        resultMatrix = calculateResults(course, schoolClass);
+        ResultPlot plotData = buildPlotMatrix(resultMatrix);
+        view.plot(plotData);
     }
 
     /**
