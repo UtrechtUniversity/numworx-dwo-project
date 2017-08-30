@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.Timer;
@@ -13,8 +14,12 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import java.util.Comparator;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 
 /**
  * Shows the students results of activities individually or grouped by school
@@ -54,7 +59,7 @@ public class ResultsView extends Composite implements ResultsPresenter.Display {
 
     private ResultsPresenter resultsPresenter;
 
-    private ListDataProvider<ResultsPresenter.ResultItem> dataProvider = new ListDataProvider<ResultsPresenter.ResultItem>();
+    private ListDataProvider<List<ResultsPresenter.ResultItem>> dataProvider = new ListDataProvider<List<ResultsPresenter.ResultItem>>();
 
     public class ResultData {
 
@@ -65,11 +70,10 @@ public class ResultsView extends Composite implements ResultsPresenter.Display {
 
     public ResultsView(ResultsPresenter rp) {
         resultsPresenter = rp;
-        rp.setView(this);
         resultsPresenter.setView(this);
-        dataGrid = new DataGrid<String>();
+        dataGrid = new DataGrid<List<ResultsPresenter.ResultItem>>();
         dataProvider.addDataDisplay(dataGrid);
-        dataGrid.setSkipRowHoverCheck(true);
+//        dataGrid.setSkipRowHoverCheck(true);
         dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
         Timer t = new Timer() {
@@ -105,58 +109,84 @@ public class ResultsView extends Composite implements ResultsPresenter.Display {
     }
 
     public void init() {
-        for (int i = 0; i < dataGrid.getColumnCount(); i++) {
-            dataGrid.removeColumn(0);
-        }
+//        for (int i = 0; i < dataGrid.getColumnCount(); i++) {
+//            dataGrid.removeColumn(0);
+//        }
         clear();
-        resultsPresenter.plotResultsEvent();
+        //resultsPresenter.plotResultsEvent();
     }
 
     public void plot(ResultsPresenter.ResultPlot data) {
-        for (int i = 0; i < dataGrid.getColumnCount(); i++) {
+        for (int i = dataGrid.getColumnCount() - 1; i >= 0; i--) {
             dataGrid.removeColumn(0);
         }
+
+        //create schoolclass/student column
+        TextCell cell = new TextCell();
+        //schoolclass/student
+//        if(data.getvIndex().length>0){
+//        Column<List<ResultsPresenter.ResultItem>, String> value = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
+//            @Override
+//            public String getValue(List<ResultsPresenter.ResultItem> object) {
+//                //return "test" ;
+//                int r=3+timer;
+//                LOG.log(Level.INFO, ""+r);
+//                return (object!=null && object.get(0)!=null && object.get(0).label!=null) ? object.get(0).label : "unknown class";
+//            }
+//        };
+//        dataGrid.addColumn(value, "zoom out");
+//        LOG.log(Level.INFO, "adding schoolclass/student column");
+//        }
         for (int i = 0; i < data.gethIndex().length; i++) {
             //create column
-            TextCell cell = new TextCell();
+            cell = new TextCell();
+            int colVal = i;
             //givenName
-            Column<ResultsPresenter.ResultItem, String> value = new Column<ResultsPresenter.ResultItem, String>(cell) {
+            Column<List<ResultsPresenter.ResultItem>, String> dynValue = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
                 @Override
-                public String getValue(ResultsPresenter.ResultItem object) {
-                    return object.label;
+                public String getValue(List<ResultsPresenter.ResultItem> object) {
+//                    return "b";
+                    if (colVal == 0 && object.get(colVal) != null && object.get(colVal).score != null) {
+                        return object.get(colVal).label;
+                    } else if (object.get(colVal) != null && object.get(colVal).score != null) {
+                        return object.get(colVal).score.toString();
+                    } else {
+                        return "0";
+                    }
                 }
             };
-//            value.setSortable(true);
-//            List<ResultsPresenter.ResultItem> colList = new ArrayList<ResultsPresenter.ResultItem>(data.getvIndex().length);
-//            for (int j = 0; j < data.getvIndex().length; j++) {
-//                colList.add(data.getMarks()[i][j]);
-//            }
-//            ListHandler<ResultsPresenter.ResultItem> columnSortHandler = new ListHandler<ResultsPresenter.ResultItem>(colList);
-//            columnSortHandler.setComparator(value,
-//                    new Comparator<ResultsPresenter.ResultItem>() {
-//                public int compare(ResultsPresenter.ResultItem o1, ResultsPresenter.ResultItem o2) {
-//                    if (o1 == o2) {
-//                        return 0;
-//                    }
-//
-//                    // Compare the name columns.
-//                    if (o1 != null) {
-//                        return (o2 != null) ? o1.label.compareTo(o2.label) : 1;
-//                    }
-//                    return -1;
-//                }
-//            });
-//            dataGrid.addColumnSortHandler(columnSortHandler);
-            dataGrid.addColumn(value, data.gethIndex()[i].label);
-        }
-    }
-    
+            dynValue.setSortable(true);
+            ListHandler<List<ResultsPresenter.ResultItem>> columnSortHandler = new ListHandler<List<ResultsPresenter.ResultItem>>(
+                    dataProvider.getList());
+            columnSortHandler.setComparator(dynValue,
+                    new Comparator<List<ResultsPresenter.ResultItem>>() {
+                public int compare(List<ResultsPresenter.ResultItem> o1, List<ResultsPresenter.ResultItem> o2) {
+                    if (o1.get(colVal) == o2.get(colVal)) {
+                        return 0;
+                    }
 
-    public void setEmptyTableMessage(){
+                    // Compare the name columns.
+                    if (o1.get(colVal) != null) {
+                        return (o2.get(colVal) != null) ? o1.get(colVal).label.compareTo(o2.get(colVal).label) : 1;
+                    }
+                    return -1;
+                }
+            });
+            dataGrid.addColumnSortHandler(columnSortHandler);
+            dataGrid.addColumn(dynValue, data.gethIndex()[i].label);
+            LOG.log(Level.INFO, "adding column " + data.gethIndex()[i].label);
+
+        }
+        dataProvider.getList().clear();;
+        dataProvider.setList(data.getMarks());
+
+    }
+
+    public void setEmptyTableMessage() {
         dataGrid.setEmptyTableWidget(emptyImage);
     }
 
-    public void setLoadingTableMessage(){
+    public void setLoadingTableMessage() {
         dataGrid.setEmptyTableWidget(loadingImage);
-    }        
+    }
 }

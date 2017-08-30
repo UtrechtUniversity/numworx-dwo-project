@@ -104,7 +104,7 @@ class BootPanelController {
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
 //                        viewFactory.getMainView().showMenuButton();
                         viewFactory.getMainView().showPostLoginWidgets();
-                        presenterFactory.getResultsPresenter().init();
+                        //presenterFactory.getResultsPresenter().init();
                         break;
                     case SUCCESS:
                         LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");

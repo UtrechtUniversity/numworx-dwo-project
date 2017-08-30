@@ -50,9 +50,11 @@ public class ResultsPresenter {
         void clear();
 
         void plot(ResultPlot data);
+
         void setEmptyTableMessage();
+
         void setLoadingTableMessage();
-        
+
     }
 
     protected enum mode {
@@ -64,7 +66,7 @@ public class ResultsPresenter {
 
     public class ResultPlot {
 
-        private List<List<ResultItem>> marks = null;
+        private List<List<ResultItem>> marks = null; //row, col order.
         private ResultItem[] vIndex; //uses label property for display
         private ResultItem[] hIndex; //uses label property for display    
 
@@ -242,20 +244,20 @@ public class ResultsPresenter {
     }
 
     public void plotResultsEvent() {
-        resultMatrix = getResults(course, schoolClass);
+        resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
         view.plot(plotData);
     }
 
     public void updateResults() {
-        resultMatrix = getResults(course, schoolClass);
+        resultMatrix = calculateResults(course, schoolClass);
     }
 
     public DomResultPlotMatrix getResults() {
         return resultMatrix;
     }
 
-    private DomResultPlotMatrix getResults(DomResultCourse aCourse, DomResultSchoolClass aClass) {
+    private DomResultPlotMatrix calculateResults(DomResultCourse aCourse, DomResultSchoolClass aClass) {
         DomResultPlotMatrix result = null;
         if (resultTree != null) {
             if (aCourse == null && aClass == null) {
@@ -274,25 +276,38 @@ public class ResultsPresenter {
     public ResultPlot buildPlotMatrix(DomResultPlotMatrix matrix) {
         ResultPlot data = new ResultPlot();
 
-        ResultItem[] hHeaders = new ResultItem[matrix.gethSize()];
+        //set column headers
+        ResultItem[] hHeaders = new ResultItem[matrix.gethSize()+1];
+        List<ResultItem> colHeaders = new ArrayList<ResultItem>(matrix.gethSize() + 1);
+        colHeaders.add(null);
+        hHeaders[0] = new ResultItem("drill up ", null);
         for (int i = 0; i < matrix.gethSize(); i++) {
             DomResultScore score = matrix.gethIndex(i);
-            hHeaders[i] = new ResultItem(score.getLabel(), score.getScore());
+            hHeaders[i+1] = new ResultItem(score.getLabel(), score.getScore());
+            colHeaders.add(new ResultItem(score.getLabel(), score.getScore()));
         }
         data.sethIndex(hHeaders);
 
         ResultItem[] vHeaders = new ResultItem[matrix.getvSize()];
+        List<ResultItem> rowHeaders = new ArrayList<ResultItem>(matrix.getvSize() + 1);
+        rowHeaders.add(null);
         for (int i = 0; i < matrix.getvSize(); i++) {
             DomResultScore score = matrix.getvIndex(i);
             vHeaders[i] = new ResultItem(score.getLabel(), score.getScore());
+            rowHeaders.add(new ResultItem(score.getLabel(), score.getScore()));
         }
         data.setvIndex(vHeaders);
 
-        List<List<ResultItem>> marks = new ArrayList<List<ResultItem>>(matrix.gethSize());
-        for (int i = 0; i < matrix.gethSize(); i++) {
-            marks.add(new ArrayList<ResultItem>(matrix.getvSize()));
-            for (int j = 0; j < matrix.getvSize(); j++) {
-                DomResultScore score = matrix.getMark(j, i);
+        // built row, col order.
+        List<List<ResultItem>> marks = new ArrayList<List<ResultItem>>(matrix.getvSize());
+    //    marks.add(colHeaders);
+        for (int i = 0; i < matrix.getvSize(); i++) {
+            marks.add(new ArrayList<ResultItem>(matrix.gethSize()));
+            for (int j = 0; j < matrix.gethSize(); j++) {
+                if (j == 0) {
+                    marks.get(i).add(rowHeaders.get(i+1));
+                }
+                DomResultScore score = matrix.getMark(i, j); //row, col
                 if (score == null) {
                     marks.get(i).add(null);
                 } else {

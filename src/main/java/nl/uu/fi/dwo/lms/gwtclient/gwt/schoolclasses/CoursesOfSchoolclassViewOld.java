@@ -46,6 +46,16 @@ public class CoursesOfSchoolclassViewOld extends Composite implements ClickHandl
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void setEmptyTableMessage() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setLoadingTableMessage() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     interface MyUiBinder extends UiBinder<Widget, CoursesOfSchoolclassViewOld> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
