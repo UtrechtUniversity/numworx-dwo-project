@@ -1,27 +1,42 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.gwt.cell.client.Cell;
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.builder.shared.DivBuilder;
+import com.google.gwt.dom.builder.shared.TableCellBuilder;
+import com.google.gwt.dom.builder.shared.TableRowBuilder;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.AbstractCellTable;
+import com.google.gwt.user.cellview.client.AbstractCellTable.Style;
+import com.google.gwt.user.cellview.client.AbstractHeaderOrFooterBuilder;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.ColumnSortEvent;
+import com.google.gwt.user.cellview.client.ColumnSortList;
+import com.google.gwt.user.cellview.client.ColumnSortList.ColumnSortInfo;
 import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.cellview.client.Header;
 import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.SingleSelectionModel;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoClickCell;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoToolTipCell;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoToolTipClickCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 
 /**
  * Shows the students results of activities individually or grouped by school
@@ -49,6 +64,7 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
     private static final DwoResources resources = GWT.create(DwoResources.class);
     Image emptyImage = new Image(resources.emptyIcon());
     Image loadingImage = new Image(resources.loadingIcon());
+    Image zoomImage = new Image(resources.studentIcon());
 
 //    
 //    public interface Style extends CssResource {
@@ -76,6 +92,8 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         dataGrid = new DataGrid<List<ResultsPresenter.ResultItem>>();
         dataProvider.addDataDisplay(dataGrid);
 //        dataGrid.setSkipRowHoverCheck(true);
+        final SingleSelectionModel<List<ResultsPresenter.ResultItem>> selectionModel = new SingleSelectionModel<List<ResultsPresenter.ResultItem>>();
+        dataGrid.setSelectionModel(selectionModel);
         dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
         Timer t = new Timer() {
@@ -100,6 +118,7 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         pager.setDisplay(dataGrid);
         pager.setPageSize(dataGrid.getPageSize());
         initWidget(uiBinder.createAndBindUi(this));
+        TextHeader header;
         clear();
 
     }
@@ -122,9 +141,11 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         for (int i = dataGrid.getColumnCount() - 1; i >= 0; i--) {
             dataGrid.removeColumn(0);
         }
+        dataProvider.getList().clear();
+        dataProvider.setList(data.getMarks());
 
         //create schoolclass/student column
-        DwoClickCell cell = new DwoClickCell();
+        DwoToolTipCell cell = new DwoToolTipCell("select to color row");
         //schoolclass/student
 //        if(data.getvIndex().length>0){
 //        Column<List<ResultsPresenter.ResultItem>, String> value = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
@@ -139,9 +160,17 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
 //        dataGrid.addColumn(value, "zoom out");
 //        LOG.log(Level.INFO, "adding schoolclass/student column");
 //        }
+        ColumnSortEvent.ListHandler<List<ResultsPresenter.ResultItem>> columnSortHandler = new ColumnSortEvent.ListHandler<>(
+                dataProvider.getList());
+
         for (int i = 0; i < data.gethIndex().length; i++) {
-            cell = new DwoClickCell();
-            cell.addSelectedCellHandler(this);
+            if (i == 0) {
+                DwoToolTipClickCell c = new DwoToolTipClickCell();
+                c.addSelectedCellHandler(this);
+                cell = c;
+            } else {
+                cell = new DwoToolTipCell();
+            }
 //            }else{
 //                cell = new DwoClickCell();
 //            }
@@ -150,8 +179,16 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
             Column<List<ResultsPresenter.ResultItem>, String> dynValue = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
                 @Override
                 public String getValue(List<ResultsPresenter.ResultItem> object) {
-//                    return "b";
+//                    SafeHtmlBuilder sb = new SafeHtmlBuilder();
                     if (colVal == 0 && object.get(colVal) != null && object.get(colVal).score != null) {
+//                        if (object.get(colVal).toolTip != null) {
+//                        sb.appendHtmlConstant("<div title=\"" + object.get(colVal).toolTip + "\">");
+//                    }
+//                        sb.appendEscaped(object.get(colVal).label);
+//                    if (object.get(colVal).toolTip != null) {
+//                        sb.appendHtmlConstant("</div>");
+//                    }
+//                        return sb.toSafeHtml().asString();
                         return object.get(colVal).label;
                     } else if (object.get(colVal) != null && object.get(colVal).score != null) {
                         return object.get(colVal).score.toString();
@@ -161,10 +198,7 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
                 }
             };
             dynValue.setSortable(true);
-            ListHandler<List<ResultsPresenter.ResultItem>> columnSortHandler = new ListHandler<List<ResultsPresenter.ResultItem>>(
-                    dataProvider.getList());
-            columnSortHandler.setComparator(dynValue,
-                    new Comparator<List<ResultsPresenter.ResultItem>>() {
+            Comparator<List<ResultsPresenter.ResultItem>> comp = new Comparator<List<ResultsPresenter.ResultItem>>() {
                 public int compare(List<ResultsPresenter.ResultItem> o1, List<ResultsPresenter.ResultItem> o2) {
                     if (o1.get(colVal) == o2.get(colVal)) {
                         return 0;
@@ -172,19 +206,24 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
 
                     // Compare the name columns.
                     if (o1.get(colVal) != null) {
-                        return (o2.get(colVal) != null) ? o1.get(colVal).label.compareTo(o2.get(colVal).label) : 1;
+                        if (colVal == 0) {
+                            return (o2.get(colVal) != null) ? o1.get(colVal).label.compareTo(o2.get(colVal).label) : 1;
+                        } else {
+                            return (o2.get(colVal) != null) ? Double.compare(o1.get(colVal).score.doubleValue(), o2.get(colVal).score.doubleValue()) : 1;
+                        }
                     }
                     return -1;
                 }
-            });
-            dataGrid.addColumnSortHandler(columnSortHandler);
-            dataGrid.setColumnWidth(dynValue, "150PX");
+            };
+            columnSortHandler.setComparator(dynValue, comp);
+            dataGrid.setColumnWidth(dynValue, "200PX");
+            dynValue.setDataStoreName(data.gethIndex()[i].label);
             dataGrid.addColumn(dynValue, data.gethIndex()[i].label);
             LOG.log(Level.INFO, "adding column " + data.gethIndex()[i].label);
-
         }
-        dataProvider.getList().clear();
-        dataProvider.setList(data.getMarks());
+        dataGrid.addColumnSortHandler(columnSortHandler);
+        dataGrid.setHeaderBuilder(new CustomResultHeaderBuilder(dataGrid, false));
+        dataGrid.redraw();
 
     }
 
@@ -195,10 +234,9 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
     public void setLoadingTableMessage() {
         dataGrid.setEmptyTableWidget(loadingImage);
     }
-    
-    
+
     private void cellSelected(int row, int column) {
-        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column  + " " + dataProvider.getList().get(row).get(0).label + ","+ dataGrid.getHeader(column).getValue());
+        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).get(0).label + "," + dataGrid.getHeader(column).getValue());
         resultsPresenter.selectRowAndCol(row, column);
     }
 
@@ -206,5 +244,125 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         cellSelected(context.getIndex(), context.getColumn());
     }
 
+    public class CustomResultHeaderBuilder extends AbstractHeaderOrFooterBuilder<List<ResultsPresenter.ResultItem>> {
 
+        public CustomResultHeaderBuilder(AbstractCellTable<List<ResultsPresenter.ResultItem>> table,
+                boolean isFooter) {
+            super(table, isFooter);
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        public boolean buildHeaderOrFooterImpl() {
+            int cols = this.getTable().getColumnCount();
+
+            TableRowBuilder row;
+            TableCellBuilder th;
+            DivBuilder div;
+            setSortIconStartOfLine(false);
+
+            Style style = dataGrid.getResources().style();
+            ColumnSortList sortList = dataGrid.getColumnSortList();
+            ColumnSortInfo sortedInfo = (sortList.size() == 0) ? null : sortList.get(0);
+            Column<?, ?> sortedColumn = (sortedInfo == null) ? null : sortedInfo.getColumn();
+            boolean isSortAscending = (sortedInfo == null) ? false : sortedInfo.isAscending();
+//            StringBuilder classesBuilder = new StringBuilder(style.header());
+//            if (isFirst) {
+//                classesBuilder.append(" " + style.firstColumnHeader());
+//            }
+//            if (isLast) {
+//                classesBuilder.append(" " + style.lastColumnHeader());
+//            }
+//            if (column.isSortable()) {
+//                classesBuilder.append(" " + style.sortableHeader());
+//            }
+//            if (isSorted) {
+//                classesBuilder.append(" "
+//                        + (isSortAscending ? style.sortedHeaderAscending() : style.sortedHeaderDescending()));
+//            }
+
+            // Create the table cell.
+//            TableCellBuilder th = out.startTH().className(classesBuilder.toString());
+//
+//            // Associate the cell with the column to enable sorting of the column.
+//            enableColumnHandlers(th, column);
+            row = startRow();
+            for (int col = 0; col < cols - 1; col++) {
+                Column column = dataGrid.getColumn(col);
+                th = row.startTH();
+//                if (col == 0) {
+//                    StringBuilder classesBuilder = new StringBuilder(style.header());
+//                    th.className(classesBuilder.toString());
+//                }
+
+                div = th.startDiv();
+            div.startImage().src(zoomImage.getUrl()).endImage();
+            
+//                Button alertHtml = new Button("test");
+//                alertHtml.addClickHandler(new ClickHandler(){
+//                   public void onClick(ClickEvent event) {
+//                    com.google.gwt.user.client.Window.alert("I've been clicked");
+//                }});
+////                div.html(html)
+//                        Button popupButton = new Button("View Property");
+//                        HTML h = new HTML("test");
+//                        h.
+//                        div.startBase().html(HTML(new SafeHTML(popupButton.getElement())));
+//                div.startBase().(button.getElement());
+                div.end();
+
+                th.endTH();
+//                row.endTR();
+//                row.startTR();
+            }
+            th = row.startTH();
+
+            div = th.startDiv();
+            div.startImage().src(zoomImage.getUrl()).endImage();
+//            SafeHtmlBuilder h = new SafeHtmlBuilder();
+//            h.appendHtmlConstant(new Button("View Property").html());
+//            div.startBase().html(h.toSafeHtml())).endBase();
+            div.end();
+
+            th.endTH();
+            row.endTR();
+
+            row = startRow();
+            for (int col = 0; col < cols - 1; col++) {
+                StringBuilder classesBuilder = new StringBuilder(style.sortableHeader());
+                if (col == 0) {
+                    classesBuilder.append(" " + style.firstColumnHeader());
+                }
+                if (col == cols - 1) {
+                    classesBuilder.append(" " + style.lastColumnHeader());
+                }
+
+                Column column = dataGrid.getColumn(col);
+                if (column.isSortable()) {
+                    classesBuilder.append(" " + style.sortableHeader());
+                }
+                boolean isSorted = (sortedColumn == column);
+                if ((sortedColumn == column)) {
+                    classesBuilder.append(" "
+                            + (isSortAscending ? style.sortedHeaderAscending() : style.sortedHeaderDescending()));
+                }
+                th = row.startTH().className(classesBuilder.toString());//.className(classesBuilder.toString());
+                enableColumnHandlers(th, dataGrid.getColumn(col));
+                Header header = getHeader(col);
+                Context context = new Context(0, 2, header.getKey());
+                renderSortableHeader(th, context, header, isSorted, isSortAscending);
+                th.endTH();
+            }
+            th = row.startTH();
+
+            div = th.startDiv();
+            div.html(SafeHtmlUtils.fromTrustedString(this.getTable().getColumn(cols - 1).getDataStoreName()));
+            div.end();
+//            th.draggable(Element.DRAGGABLE_TRUE);
+            th.endTH();
+            row.endTR();
+
+            return true;
+        }
+    }
 }
