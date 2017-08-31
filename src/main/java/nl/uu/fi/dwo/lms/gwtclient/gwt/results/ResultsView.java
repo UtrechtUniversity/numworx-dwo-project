@@ -178,11 +178,12 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
                 }
             });
             dataGrid.addColumnSortHandler(columnSortHandler);
+            dataGrid.setColumnWidth(dynValue, "150PX");
             dataGrid.addColumn(dynValue, data.gethIndex()[i].label);
             LOG.log(Level.INFO, "adding column " + data.gethIndex()[i].label);
 
         }
-        dataProvider.getList().clear();;
+        dataProvider.getList().clear();
         dataProvider.setList(data.getMarks());
 
     }
