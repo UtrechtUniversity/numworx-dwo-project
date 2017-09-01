@@ -6,9 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.builder.shared.DivBuilder;
 import com.google.gwt.dom.builder.shared.TableCellBuilder;
 import com.google.gwt.dom.builder.shared.TableRowBuilder;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.AbstractCellTable;
@@ -22,7 +20,11 @@ import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.Header;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
@@ -92,8 +94,8 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         dataGrid = new DataGrid<List<ResultsPresenter.ResultItem>>();
         dataProvider.addDataDisplay(dataGrid);
 //        dataGrid.setSkipRowHoverCheck(true);
-        final SingleSelectionModel<List<ResultsPresenter.ResultItem>> selectionModel = new SingleSelectionModel<List<ResultsPresenter.ResultItem>>();
-        dataGrid.setSelectionModel(selectionModel);
+//        final SingleSelectionModel<List<ResultsPresenter.ResultItem>> selectionModel = new SingleSelectionModel<List<ResultsPresenter.ResultItem>>();
+//        dataGrid.setSelectionModel(selectionModel);
         dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
         Timer t = new Timer() {
@@ -164,13 +166,13 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
                 dataProvider.getList());
 
         for (int i = 0; i < data.gethIndex().length; i++) {
-            if (i == 0) {
+        //    if (i == 0) {
                 DwoToolTipClickCell c = new DwoToolTipClickCell();
                 c.addSelectedCellHandler(this);
                 cell = c;
-            } else {
-                cell = new DwoToolTipCell();
-            }
+     //       } else {
+      //          cell = new DwoToolTipCel();
+      //      }
 //            }else{
 //                cell = new DwoClickCell();
 //            }
@@ -223,6 +225,17 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         }
         dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.setHeaderBuilder(new CustomResultHeaderBuilder(dataGrid, false));
+        Element elem = DOM.getElementById("resultCol0");
+        DOM.sinkEvents(elem, Event.ONCLICK | Event.ONMOUSEOUT | Event.ONMOUSEOVER);
+        DOM.setEventListener(elem, new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                if (Event.ONCLICK == event.getTypeInt()) {
+                    LOG.log(Level.INFO, "clicked column 1");
+                    Window.alert("click");
+                }
+            }
+        });
         dataGrid.redraw();
 
     }
@@ -287,7 +300,7 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
 //            // Associate the cell with the column to enable sorting of the column.
 //            enableColumnHandlers(th, column);
             row = startRow();
-            for (int col = 0; col < cols - 1; col++) {
+            for (int col = 0; col < cols; col++) {
                 Column column = dataGrid.getColumn(col);
                 th = row.startTH();
 //                if (col == 0) {
@@ -296,39 +309,18 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
 //                }
 
                 div = th.startDiv();
-            div.startImage().src(zoomImage.getUrl()).endImage();
-            
-//                Button alertHtml = new Button("test");
-//                alertHtml.addClickHandler(new ClickHandler(){
-//                   public void onClick(ClickEvent event) {
-//                    com.google.gwt.user.client.Window.alert("I've been clicked");
-//                }});
-////                div.html(html)
-//                        Button popupButton = new Button("View Property");
-//                        HTML h = new HTML("test");
-//                        h.
-//                        div.startBase().html(HTML(new SafeHTML(popupButton.getElement())));
-//                div.startBase().(button.getElement());
+                //get rid this and add a cell row that has buttons below the header
+                div.startImage().src(zoomImage.getUrl()).attribute("href", "\"javascript:void(0);\"").id("resultCol" + col).endImage();
                 div.end();
 
                 th.endTH();
 //                row.endTR();
 //                row.startTR();
             }
-            th = row.startTH();
-
-            div = th.startDiv();
-            div.startImage().src(zoomImage.getUrl()).endImage();
-//            SafeHtmlBuilder h = new SafeHtmlBuilder();
-//            h.appendHtmlConstant(new Button("View Property").html());
-//            div.startBase().html(h.toSafeHtml())).endBase();
-            div.end();
-
-            th.endTH();
             row.endTR();
 
             row = startRow();
-            for (int col = 0; col < cols - 1; col++) {
+            for (int col = 0; col < cols; col++) {
                 StringBuilder classesBuilder = new StringBuilder(style.sortableHeader());
                 if (col == 0) {
                     classesBuilder.append(" " + style.firstColumnHeader());
@@ -353,13 +345,13 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
                 renderSortableHeader(th, context, header, isSorted, isSortAscending);
                 th.endTH();
             }
-            th = row.startTH();
-
-            div = th.startDiv();
-            div.html(SafeHtmlUtils.fromTrustedString(this.getTable().getColumn(cols - 1).getDataStoreName()));
-            div.end();
-//            th.draggable(Element.DRAGGABLE_TRUE);
-            th.endTH();
+//            th = row.startTH();
+//
+//            div = th.startDiv();
+//            div.html(SafeHtmlUtils.fromTrustedString(this.getTable().getColumn(cols - 1).getDataStoreName()));
+//            div.end();
+////            th.draggable(Element.DRAGGABLE_TRUE);
+//            th.endTH();
             row.endTR();
 
             return true;

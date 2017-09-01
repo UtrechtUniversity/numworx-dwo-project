@@ -185,13 +185,13 @@ public class ResultsPresenter {
      */
     public void selectRowAndCol(int row, int col) {
         //col = 0 indicates clicked in student/class column
-        if (row == 0 && schoolClass == null && resultMatrix.getvIndex(row) instanceof DomResultSchoolClass) {
+        if (col == 0 && schoolClass == null && resultMatrix.getvIndex(row) instanceof DomResultSchoolClass) {
         //if(col==0 && schoolClass ==null select schoolclass
             schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row);
-        } else if (row == 0 && schoolClass != null) {
+        } else if (col == 0 && schoolClass != null) {
         //if(col==0 && schoolClass ==null set schoolclass = null
             schoolClass = null;
-        }else if (col != 0 && schoolClass != null && course != null) {       
+        }else if(col != 0 && schoolClass != null && course != null){
             //open sco
             LOG.log(Level.INFO, "selected a student sco for " + resultMatrix.getMark(row, col - 1).getLabel() + " with score " + resultMatrix.getMark(row, col - 1).getScore());
             //send event to show studentSco Context en Data.
