@@ -225,11 +225,12 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         }
         dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.setHeaderBuilder(new CustomResultHeaderBuilder(dataGrid, false));
-        Element elem = DOM.getElementById("resultCol0");
+        Element elem = this.getElement();//DOM.getElementById("resultCol1");
         DOM.sinkEvents(elem, Event.ONCLICK | Event.ONMOUSEOUT | Event.ONMOUSEOVER);
         DOM.setEventListener(elem, new EventListener() {
             @Override
             public void onBrowserEvent(Event event) {
+                LOG.log(Level.INFO, " "+event.getEventTarget().toSource());
                 if (Event.ONCLICK == event.getTypeInt()) {
                     LOG.log(Level.INFO, "clicked column 1");
                     Window.alert("click");
