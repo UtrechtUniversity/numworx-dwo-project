@@ -1,20 +1,13 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen;
 
-import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.TreeMap;
-import java.util.Vector;
-
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -238,12 +231,15 @@ public class StelselRekenVak extends LayoutPanel  {
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
-		if(hoofdEditor != null)
+		if (hoofdEditor != null)
 		{
 			hoofdEditor.setCommunicationRoot(comRoot);
 		}
-			
-		
+	}
+
+	public void setParentRegel(TekstRegel regel)
+	{
+		hoofdEditor.setParentRegel(regel);
 	}
 	
 }
